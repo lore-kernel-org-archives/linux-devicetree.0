@@ -1,88 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] phy: add support for a reset-gpio specification
-Date: Mon, 16 May 2016 10:33:59 -0500
-Message-ID: <20160516153359.GA20923@rob-hp-laptop>
-References: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 4/9] dt-bindings: Add a binding for Mediatek Video
+ Decoder
+Date: Mon, 16 May 2016 10:37:31 -0500
+Message-ID: <20160516153731.GA22492@rob-hp-laptop>
+References: <1463052250-38262-1-git-send-email-tiffany.lin@mediatek.com>
+ <1463052250-38262-2-git-send-email-tiffany.lin@mediatek.com>
+ <1463052250-38262-3-git-send-email-tiffany.lin@mediatek.com>
+ <1463052250-38262-4-git-send-email-tiffany.lin@mediatek.com>
+ <1463052250-38262-5-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de, "Andrew F . Davis" <afd@ti.com>, Nishanth Menon <nm@ti.com>
+In-Reply-To: <1463052250-38262-5-git-send-email-tiffany.lin@mediatek.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 12, 2016 at 12:00:33PM +0200, Uwe Kleine-K=F6nig wrote:
-> The framework only asserts (for now) that the reset gpio is not activ=
-e.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+On Thu, May 12, 2016 at 07:24:05PM +0800, Tiffany Lin wrote:
+> Add a DT binding documentation of Video Decoder for the
+> MT8173 SoC from Mediatek.
+> 
+> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/net/phy.txt | 3 +++
->  drivers/net/phy/phy_device.c                  | 8 ++++++++
->  2 files changed, 11 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Document=
-ation/devicetree/bindings/net/phy.txt
-> index bc1c3c8bf8fa..c00a9a894547 100644
-> --- a/Documentation/devicetree/bindings/net/phy.txt
-> +++ b/Documentation/devicetree/bindings/net/phy.txt
-> @@ -35,6 +35,8 @@ Optional Properties:
->  - broken-turn-around: If set, indicates the PHY device does not corr=
-ectly
->    release the turn around line low at the end of a MDIO transaction.
-> =20
-> +- reset-gpios: Reference to a GPIO used to reset the phy.
-> +
+>  .../devicetree/bindings/media/mediatek-vcodec.txt  |   50 ++++++++++++++++++--
+>  1 file changed, 46 insertions(+), 4 deletions(-)
 
-And also active mode flag should be specified.
-
->  Example:
-> =20
->  ethernet-phy@0 {
-> @@ -42,4 +44,5 @@ ethernet-phy@0 {
->  	interrupt-parent =3D <40000>;
->  	interrupts =3D <35 1>;
->  	reg =3D <0>;
-> +	reset-gpios =3D <&gpio1 17 GPIO_ACTIVE_LOW>;
->  };
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_devic=
-e.c
-> index e551f3a89cfd..7d666ab47271 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -34,6 +34,7 @@
->  #include <linux/io.h>
->  #include <linux/uaccess.h>
->  #include <linux/of.h>
-> +#include <linux/gpio/consumer.h>
-> =20
->  #include <asm/irq.h>
-> =20
-> @@ -1569,9 +1570,16 @@ static int phy_probe(struct device *dev)
->  	struct device_driver *drv =3D phydev->mdio.dev.driver;
->  	struct phy_driver *phydrv =3D to_phy_driver(drv);
->  	int err =3D 0;
-> +	struct gpio_descs *reset_gpios;
-> =20
->  	phydev->drv =3D phydrv;
-> =20
-> +	/* take phy out of reset */
-> +	reset_gpios =3D devm_gpiod_get_array_optional(dev, "reset",
-> +						    GPIOD_OUT_LOW);
-> +	if (IS_ERR(reset_gpios))
-> +		return PTR_ERR(reset_gpios);
-> +
->  	/* Disable the interrupt if the PHY doesn't support it
->  	 * but the interrupt is still a valid one
->  	 */
-> --=20
-> 2.8.0.rc3
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree"=
- in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please add acks when posting new versions.
