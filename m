@@ -1,194 +1,69 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v2 2/5] of: Support hashtable lookups for phandles
-Date: Mon, 16 May 2016 19:52:33 +0300
-Message-ID: <1463417556-23087-3-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] gpio: dt-bindings: add ibm,ppc4xx-gpio binding
+Date: Mon, 16 May 2016 11:56:18 -0500
+Message-ID: <20160516165618.GA29776@rob-hp-laptop>
+References: <c7b118c342c161954126e2e82cf1a0a6a127b4c2.1463002267.git.chunkeey@googlemail.com>
+ <20160516152746.GA13649@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160516152746.GA13649@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: linux-gpio@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Alistair Popple <alistair@popple.id.au>, Matt Porter <mporter@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-When a device tree contains a lot of phandles, resolving one
-takes time because the original method uses a search against
-all nodes (not just the ones with phandles).
+On Mon, May 16, 2016 at 10:27:46AM -0500, Rob Herring wrote:
+> On Thu, May 12, 2016 at 12:07:48AM +0200, Christian Lamparter wrote:
+> > This patch adds binding information for IBM/AMCC/APM GPIO
+> > Controllers of the PowerPC 4XX series and compatible SoCs.
+> > 
+> > The "PowerPC 405EP Embedded Processor Data Sheet" has the
+> > following to say about the GPIO controllers: "
+> > 
+> >  - Controller functions and GPIO registers are programmed
+> >    and accessed via memory-mapped OPB bus master accesses
+> > 
+> >  - All GPIOs are pin-shared with other functions. DCRs control
+> >    whether a particular pin that has GPIO capabilities acts
+> >    as a GPIO or is used for another purpose.
+> > 
+> >  - Each GPIO outputs is separately programmable to emulate
+> >    an open-drain driver (i.e. drives to zero, threestated if
+> >    output bit is 1)
+> > 
+> > "
+> > The ppc4xx_gpio.c driver is part of the platform/sysdev drivers
+> > in arch/powerpc/sysdev.
+> > 
+> > Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+> > ---
+> > I looked into arch/powerpc/sysdev/ppc4xx_gpio.c driver and
+> > it doesn't have support for the tri-state logic (open drain
+> > is disabled), but the hardware would support it.
+> > (the #gpio-cells description suffers because of this, since
+> > the high-z option isn't there).
+> > 
+> > Also there's another problem: There's no DCR pinmux driver?!
+> > So sadly, there's not much information on how to use the DCRs
+> > to control the which pin is muxed to the GPIO or to a SoC
+> > function like the i2c.
+> > 
+> > This was all the valuable information I could find about the
+> > hardware, so it is included it in the binding text, even
+> > though there's no support for it... Is there anything else
+> > to add?
+> > ---
+> >  .../devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt   | 24 ++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt
+> 
+> Normally, we don't allow wildcards for compatible strings, but given 
+> this is an established binding it is okay.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/of/base.c       | 41 ++++++++++++++++++++++++++++++++++++++---
- drivers/of/dynamic.c    |  8 ++++++++
- drivers/of/of_private.h | 33 +++++++++++++++++++++++++++++++++
- include/linux/of.h      |  2 ++
- 4 files changed, 81 insertions(+), 3 deletions(-)
+As this is just a binding doc, I've applied it.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 20bbc2f..436a088 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -27,6 +27,7 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/proc_fs.h>
-+#include <linux/rhashtable.h>
- 
- #include "of_private.h"
- 
-@@ -41,6 +42,18 @@ static const char *of_stdout_options;
- 
- struct kset *of_kset;
- 
-+const struct rhashtable_params of_phandle_ht_params = {
-+	.key_offset = offsetof(struct device_node, phandle), /* base offset */
-+	.key_len = sizeof(phandle),
-+	.head_offset = offsetof(struct device_node, ht_node),
-+	.automatic_shrinking = true,
-+};
-+
-+struct rhashtable *of_phandle_ht;
-+
-+/* default is false */
-+bool of_phandle_ht_is_disabled;
-+
- /*
-  * Used to protect the of_aliases, to hold off addition of nodes to sysfs.
-  * This mutex must be held whenever modifications are being made to the
-@@ -162,6 +175,12 @@ int __of_attach_node_post(struct device_node *np)
- 	struct property *pp;
- 	int rc;
- 
-+	if (of_phandle_ht_available()) {
-+		rc = of_phandle_ht_insert(np);
-+		WARN(rc, "insert to phandle hash fail @%s\n",
-+				of_node_full_name(np));
-+	}
-+
- 	if (!IS_ENABLED(CONFIG_SYSFS))
- 		return 0;
- 
-@@ -194,6 +213,17 @@ void __init of_core_init(void)
- 	struct device_node *np;
- 	int ret;
- 
-+	of_phandle_ht = kzalloc(sizeof(*of_phandle_ht), GFP_KERNEL);
-+	if (!of_phandle_ht) {
-+		pr_warn("devicetree: Failed to allocate hashtable\n");
-+		return;
-+	}
-+	ret = rhashtable_init(of_phandle_ht, &of_phandle_ht_params);
-+	if (ret) {
-+		pr_warn("devicetree: Failed to initialize hashtable\n");
-+		return;
-+	}
-+
- 	/* Create the kset, and register existing nodes */
- 	mutex_lock(&of_mutex);
- 	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
-@@ -1073,9 +1103,14 @@ struct device_node *of_find_node_by_phandle(phandle handle)
- 		return NULL;
- 
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
--	for_each_of_allnodes(np)
--		if (np->phandle == handle)
--			break;
-+	/* when we're ready use the hash table (and not disabled) */
-+	if (of_phandle_ht_available() && !of_phandle_ht_is_disabled)
-+		np = of_phandle_ht_lookup(handle);
-+	else { /* fallback */
-+		for_each_of_allnodes(np)
-+			if (np->phandle == handle)
-+				break;
-+	}
- 	of_node_get(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 	return np;
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 34ca783..931b905 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -11,6 +11,7 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/proc_fs.h>
-+#include <linux/rhashtable.h>
- 
- #include "of_private.h"
- 
-@@ -44,6 +45,13 @@ EXPORT_SYMBOL(of_node_put);
- void __of_detach_node_post(struct device_node *np)
- {
- 	struct property *pp;
-+	int rc;
-+
-+	if (of_phandle_ht_available()) {
-+		rc = of_phandle_ht_remove(np);
-+		WARN(rc, "remove from phandle hash fail @%s\n",
-+				of_node_full_name(np));
-+	}
- 
- 	if (!IS_ENABLED(CONFIG_SYSFS))
- 		return;
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 10b0342..386ae71 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -101,4 +101,37 @@ static inline int of_overlay_init(void)
- }
- #endif
- 
-+extern const struct rhashtable_params of_phandle_ht_params;
-+extern struct rhashtable *of_phandle_ht;
-+
-+/* for unittest use */
-+extern bool of_phandle_ht_is_disabled;
-+
-+static inline bool of_phandle_ht_available(void)
-+{
-+	return of_phandle_ht != NULL;
-+}
-+
-+static inline int of_phandle_ht_insert(struct device_node *np)
-+{
-+	if (!np || !np->phandle)
-+		return 0;
-+	return rhashtable_insert_fast(of_phandle_ht,
-+		&np->ht_node, of_phandle_ht_params);
-+}
-+
-+static inline int of_phandle_ht_remove(struct device_node *np)
-+{
-+	if (!np || !np->phandle)
-+		return 0;
-+	return rhashtable_remove_fast(of_phandle_ht,
-+		&np->ht_node, of_phandle_ht_params);
-+}
-+
-+static inline struct device_node *of_phandle_ht_lookup(phandle handle)
-+{
-+	return rhashtable_lookup_fast(of_phandle_ht,
-+			&handle, of_phandle_ht_params);
-+}
-+
- #endif /* _LINUX_OF_PRIVATE_H */
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 18a8e59..9de9a3f 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -25,6 +25,7 @@
- #include <linux/notifier.h>
- #include <linux/property.h>
- #include <linux/list.h>
-+#include <linux/rhashtable.h>
- 
- #include <asm/byteorder.h>
- #include <asm/errno.h>
-@@ -52,6 +53,7 @@ struct device_node {
- 	phandle phandle;
- 	const char *full_name;
- 	struct fwnode_handle fwnode;
-+	struct rhash_head ht_node;
- 
- 	struct	property *properties;
- 	struct	property *deadprops;	/* removed properties */
--- 
-1.7.12
+Rob
