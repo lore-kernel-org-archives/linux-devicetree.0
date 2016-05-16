@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v2 5/6] of: unittest: Unit-tests for target root overlays.
-Date: Mon, 16 May 2016 23:18:11 +0300
-Message-ID: <1463429892-3369-6-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v2 6/6] doc: dt: Document the target root overlay method
+Date: Mon, 16 May 2016 23:18:12 +0300
+Message-ID: <1463429892-3369-7-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
@@ -10,325 +10,36 @@ To: Rob Herring <robherring2@gmail.com>
 Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Add unittests for target-root based overlays.
+Add a description of the target root overlay method to the overlay
+documention file.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/unittest-data/testcases.dts      |   5 +
- drivers/of/unittest-data/tests-overlay.dtsi |  48 +++++++
- drivers/of/unittest.c                       | 213 ++++++++++++++++++++++++++++
- 3 files changed, 266 insertions(+)
+ Documentation/devicetree/overlay-notes.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/of/unittest-data/testcases.dts b/drivers/of/unittest-data/testcases.dts
-index 74e8805..a6ded1b6 100644
---- a/drivers/of/unittest-data/testcases.dts
-+++ b/drivers/of/unittest-data/testcases.dts
-@@ -80,5 +80,10 @@
- 				target = <0x00000000 0x00000004>;
- 			};
- 		};
-+		overlay18 {
-+			fragment@0 {
-+				target = <0x00000000>;
-+			};
-+		};
- 	};
- }; };
-diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
-index ab32996..170b04d 100644
---- a/drivers/of/unittest-data/tests-overlay.dtsi
-+++ b/drivers/of/unittest-data/tests-overlay.dtsi
-@@ -116,6 +116,24 @@
- 					status = "disabled";
- 					reg = <16>;
- 				};
-+
-+				unittest17: test-unittest17 {
-+					compatible = "unittest";
-+					status = "disabled";
-+					reg = <17>;
-+				};
-+
-+				unittest18: test-unittest18 {
-+					compatible = "unittest";
-+					status = "disabled";
-+					reg = <18>;
-+				};
-+
-+				unittest19: test-unittest19 {
-+					compatible = "unittest";
-+					status = "disabled";
-+					reg = <19>;
-+				};
- 			};
- 		};
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+index 6995fc1..3e8df30 100644
+--- a/Documentation/devicetree/overlay-notes.txt
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -104,6 +104,10 @@ If your board has multiple slots/places where a single overlay can work
+ and each slot is defined by a node, you can use the
+ of_overlay_create_target_index() method to select the target.
  
-@@ -340,5 +358,35 @@
- 				};
- 			};
- 		};
++For overlays on probeable busses, use the of_overlay_create_target_root() method
++in which you supply a device node as a target root, and which all target
++references in the overlay are performed relative to that node.
 +
-+		/* test enable using target root (relative path) */
-+		overlay17 {
-+			fragment@0 {
-+				target-path = "/";
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
-+
-+		/* test enable using target phandle */
-+		overlay18 {
-+			fragment@0 {
-+				target = <&unittest18>;
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
-+
-+		/* test trying to enable out of root (should fail) */
-+		overlay19 {
-+			fragment@0 {
-+				target = <&unittest19>;
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
- 	};
- };
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index af4c571..7f288e6 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1979,6 +1979,215 @@ out:
- 	unittest(1, "overlay test %d passed\n", 16);
- }
+ Overlay DTS Format
+ ------------------
  
-+static void of_unittest_overlay_17(void)
-+{
-+	int ret;
-+	int overlay_nr = 17;
-+	int unittest_nr = 17;
-+	enum overlay_type ovtype = PDEV_OVERLAY;
-+	int before = 0;
-+	int after = 1;
-+	const char *root_path;
-+	struct device_node *np = NULL, *target_root = NULL;
-+	int id = -1;
+@@ -141,3 +145,7 @@ contains the information required to map from a phandle to a tree location.
+ Using a target index requires the use of a selector target on the call to
+ of_overlay_create_target_index(). I.e. passing an index of 0 will select the
+ target in the foo node, an index of 1 the bar node, etc.
 +
-+	/* unittest device must not be in before state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != before) {
-+		unittest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!before ? "enabled" : "disabled");
-+		return;
-+	}
-+
-+	np = of_find_node_by_path(overlay_path(overlay_nr));
-+	if (np == NULL) {
-+		unittest(0, "could not find overlay node @\"%s\"\n",
-+				overlay_path(overlay_nr));
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	root_path = "/testcase-data/overlay-node/test-bus/test-unittest17";
-+	target_root = of_find_node_by_path(root_path);
-+	if (!target_root) {
-+		unittest(0, "could not find target_root node @\"%s\"\n",
-+				root_path);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	ret = of_overlay_create_target_root(np, target_root);
-+	of_node_put(target_root);
-+
-+	if (ret < 0) {
-+		unittest(0, "could not create overlay from \"%s\"\n",
-+				overlay_path(overlay_nr));
-+		goto out;
-+	}
-+	id = ret;
-+	of_unittest_track_overlay(id);
-+
-+	ret = 0;
-+
-+out:
-+	of_node_put(np);
-+
-+	if (ret)
-+		return;
-+
-+	/* unittest device must be to set to after state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != after) {
-+		unittest(0, "overlay @\"%s\" failed to create @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!after ? "enabled" : "disabled");
-+		return;
-+	}
-+
-+	unittest(1, "overlay test %d passed\n", 17);
-+}
-+
-+static void of_unittest_overlay_18(void)
-+{
-+	int ret;
-+	int overlay_nr = 18;
-+	int unittest_nr = 18;
-+	enum overlay_type ovtype = PDEV_OVERLAY;
-+	int before = 0;
-+	int after = 1;
-+	const char *root_path;
-+	struct device_node *np = NULL, *target_root = NULL;
-+	int id = -1;
-+
-+	/* unittest device must not be in before state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != before) {
-+		unittest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!before ? "enabled" : "disabled");
-+		return;
-+	}
-+
-+	np = of_find_node_by_path(overlay_path(overlay_nr));
-+	if (np == NULL) {
-+		unittest(0, "could not find overlay node @\"%s\"\n",
-+				overlay_path(overlay_nr));
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	root_path = "/testcase-data/overlay-node/test-bus/test-unittest18";
-+	target_root = of_find_node_by_path(root_path);
-+	if (!target_root) {
-+		unittest(0, "could not find target_root node @\"%s\"\n",
-+				root_path);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	ret = of_overlay_create_target_root(np, target_root);
-+	of_node_put(target_root);
-+
-+	if (ret < 0) {
-+		unittest(0, "could not create overlay from \"%s\"\n",
-+				overlay_path(overlay_nr));
-+		goto out;
-+	}
-+	id = ret;
-+	of_unittest_track_overlay(id);
-+
-+	ret = 0;
-+
-+out:
-+	of_node_put(np);
-+
-+	if (ret)
-+		return;
-+
-+	/* unittest device must be to set to after state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != after) {
-+		unittest(0, "overlay @\"%s\" failed to create @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!after ? "enabled" : "disabled");
-+		return;
-+	}
-+
-+	unittest(1, "overlay test %d passed\n", 18);
-+}
-+
-+static void of_unittest_overlay_19(void)
-+{
-+	int ret;
-+	int overlay_nr = 19;
-+	int unittest_nr = 19;
-+	enum overlay_type ovtype = PDEV_OVERLAY;
-+	int before = 0;
-+	int after = 0;
-+	const char *root_path;
-+	struct device_node *np = NULL, *target_root = NULL;
-+	int id = -1;
-+
-+	/* unittest device must not be in before state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != before) {
-+		unittest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!before ? "enabled" : "disabled");
-+		return;
-+	}
-+
-+	np = of_find_node_by_path(overlay_path(overlay_nr));
-+	if (np == NULL) {
-+		unittest(0, "could not find overlay node @\"%s\"\n",
-+				overlay_path(overlay_nr));
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	root_path = "/testcase-data/overlay-node/test-bus/test-unittest19";
-+	target_root = of_find_node_by_path(root_path);
-+	if (!target_root) {
-+		unittest(0, "could not find target_root node @\"%s\"\n",
-+				root_path);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	ret = of_overlay_create_target_root(np, target_root);
-+	of_node_put(target_root);
-+
-+	if (ret >= 0) {
-+		unittest(0, "created overlay from \"%s\" while we shouldn't\n",
-+				overlay_path(overlay_nr));
-+		id = ret;
-+		of_unittest_track_overlay(id);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	ret = 0;
-+
-+out:
-+	of_node_put(np);
-+
-+	if (ret)
-+		return;
-+
-+	/* unittest device must be to set to after state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != after) {
-+		unittest(0, "overlay @\"%s\" failed to create @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!after ? "enabled" : "disabled");
-+		return;
-+	}
-+
-+	unittest(1, "overlay test %d passed\n", 16);
-+}
-+
-+
- static void __init of_unittest_overlay(void)
- {
- 	struct device_node *bus_np = NULL;
-@@ -2032,6 +2241,10 @@ static void __init of_unittest_overlay(void)
- 
- 	of_unittest_overlay_16();
- 
-+	of_unittest_overlay_17();
-+	of_unittest_overlay_18();
-+	of_unittest_overlay_19();
-+
- #if IS_BUILTIN(CONFIG_I2C)
- 	if (unittest(of_unittest_overlay_i2c_init() == 0, "i2c init failed\n"))
- 		goto out;
++Note that when using the target root create method all target references must
++lie under the target root node. I.e. the overlay is not allowed to 'break' out
++of the root.
 -- 
 1.7.12
