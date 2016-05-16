@@ -1,54 +1,39 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 04/20] clk: sunxi: display: Add per-clock flags
-Date: Mon, 16 May 2016 14:47:04 +0200
-Message-ID: <1463402840-17062-5-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 01/20] clk: fixed-factor: Pass clk rates change to the parent
+Date: Mon, 16 May 2016 14:47:01 +0200
+Message-ID: <1463402840-17062-2-git-send-email-maxime.ripard@free-electrons.com>
 References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-clk-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFRDT04gY2hhbm5lbCAwIGNsb2NrIHRoYXQgaXMgdGhlIHBhcmVudCBjbG9jayBvZiBvdXIg
-cGl4ZWwgY2xvY2sgaXMKZXhwZWN0ZWQgdG8gY2hhbmdlIGl0cyByYXRlIGRlcGVuZGluZyBvbiB0
-aGUgcmVzb2x1dGlvbiB3ZSB3YW50IHRvIG91dHB1dAppbiBvdXIgZGlzcGxheSBlbmdpbmUuCgpI
-b3dldmVyLCBzaW5jZSBpdCdzIG9ubHkgYSBtdXgsIHRoZSBvbmx5IHdheSBpdCBjYW4gZG8gdGhh
-dCBpcyBieSBjaGFuZ2luZwppdHMgcGFyZW50cyByYXRlLgoKQWxsb3cgdG8gZ2l2ZSBmbGFncyBp
-biBvdXIgZGlzcGxheSBjbG9ja3MgZGVzY3JpcHRpb24sIGFuZCBhZGQgdGhlCkNMS19TRVRfUkFU
-RV9QQVJFTlQgZmxhZyBmb3IgdGhlIFRDT04gY2hhbm5lbCAwIGZsYWcuCgpGaXhlczogYTNiNDk1
-NmVlNmQ5ICgiY2xrOiBzdW54aTogZGlzcGxheTogQWRkIHBlci1jbG9jayBmbGFncyIpClNpZ25l
-ZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29t
-PgotLS0KIGRyaXZlcnMvY2xrL3N1bnhpL2Nsay1zdW40aS1kaXNwbGF5LmMgfCA1ICsrKystCiAx
-IGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9jbGsvc3VueGkvY2xrLXN1bjRpLWRpc3BsYXkuYyBiL2RyaXZlcnMvY2xrL3N1
-bnhpL2Nsay1zdW40aS1kaXNwbGF5LmMKaW5kZXggNDQ1YTc0OThkNmRmLi45NzgwZmFjNmQwMjkg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xrL3N1bnhpL2Nsay1zdW40aS1kaXNwbGF5LmMKKysrIGIv
-ZHJpdmVycy9jbGsvc3VueGkvY2xrLXN1bjRpLWRpc3BsYXkuYwpAQCAtMzMsNiArMzMsOCBAQCBz
-dHJ1Y3Qgc3VuNGlfYTEwX2Rpc3BsYXlfY2xrX2RhdGEgewogCiAJdTgJd2lkdGhfZGl2OwogCXU4
-CXdpZHRoX211eDsKKworCXUzMglmbGFnczsKIH07CiAKIHN0cnVjdCByZXNldF9kYXRhIHsKQEAg
-LTE2Niw3ICsxNjgsNyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgc3VuNGlfYTEwX2Rpc3BsYXlfaW5p
-dChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsCiAJCQkJICAgICBkYXRhLT5oYXNfZGl2ID8gJmRp
-di0+aHcgOiBOVUxMLAogCQkJCSAgICAgZGF0YS0+aGFzX2RpdiA/ICZjbGtfZGl2aWRlcl9vcHMg
-OiBOVUxMLAogCQkJCSAgICAgJmdhdGUtPmh3LCAmY2xrX2dhdGVfb3BzLAotCQkJCSAgICAgMCk7
-CisJCQkJICAgICBkYXRhLT5mbGFncyk7CiAJaWYgKElTX0VSUihjbGspKSB7CiAJCXByX2Vycigi
-JXM6IENvdWxkbid0IHJlZ2lzdGVyIHRoZSBjbG9ja1xuIiwgY2xrX25hbWUpOwogCQlnb3RvIGZy
-ZWVfZGl2OwpAQCAtMjMyLDYgKzIzNCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3VuNGlfYTEw
-X2Rpc3BsYXlfY2xrX2RhdGEgc3VuNGlfYTEwX3Rjb25fY2gwX2RhdGEgX19pbml0Y29uCiAJLm9m
-ZnNldF9yc3QJPSAyOSwKIAkub2Zmc2V0X211eAk9IDI0LAogCS53aWR0aF9tdXgJPSAyLAorCS5m
-bGFncwkJPSBDTEtfU0VUX1JBVEVfUEFSRU5ULAogfTsKIAogc3RhdGljIHZvaWQgX19pbml0IHN1
-bjRpX2ExMF90Y29uX2NoMF9zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpCi0tIAoyLjgu
-MgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+A fixed factor clock, if it needs to change its rate, by definition do not
+have any choice but to modify its parent rate.
+
+Add the CLK_SET_RATE_PARENT flag to that clock so that it can happen
+
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ drivers/clk/clk-fixed-factor.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
+index 75cd6c792cb8..3363abd9b4ae 100644
+--- a/drivers/clk/clk-fixed-factor.c
++++ b/drivers/clk/clk-fixed-factor.c
+@@ -167,7 +167,8 @@ void __init of_fixed_factor_clk_setup(struct device_node *node)
+ 	of_property_read_string(node, "clock-output-names", &clk_name);
+ 	parent_name = of_clk_get_parent_name(node, 0);
+ 
+-	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
++	clk = clk_register_fixed_factor(NULL, clk_name, parent_name,
++					CLK_SET_RATE_PARENT,
+ 					mult, div);
+ 	if (!IS_ERR(clk))
+ 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+-- 
+2.8.2
+
