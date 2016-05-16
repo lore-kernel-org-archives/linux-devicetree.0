@@ -1,64 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Mon, 16 May 2016 11:14:33 -0500
-Message-ID: <20160516161433.GA9247@rob-hp-laptop>
-References: <1463114260-8724-1-git-send-email-oss@buserror.net>
+From: Hoan Tran <hotran@apm.com>
+Subject: [PATCH 0/3] Add support for X-Gene hwmon driver
+Date: Mon, 16 May 2016 09:17:24 -0700
+Message-ID: <1463415447-29903-1-git-send-email-hotran@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463114260-8724-1-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, lho@apm.com, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Hoan Tran <hotran@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 12, 2016 at 11:37:39PM -0500, Scott Wood wrote:
-> Erratum A-008585 says that the ARM generic timer counter "has the
-> potential to contain an erroneous value for a small number of core
-> clock cycles every time the timer value changes".  Accesses to TVAL
-> (both read and write) are also affected due to the implicit counter
-> read.  Accesses to CVAL are not affected.
-> 
-> The workaround is to reread TVAL and count registers until successive reads
-> return the same value, and when writing TVAL to retry until counter
-> reads before and after the write return the same value.
-> 
-> This erratum can be found on LS1043A and LS2080A.
-> 
-> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-> ---
-> v2:
-> Significant rework based on feedback, including using static_key,
-> disabling VDSO counter access rather than adding the workaround to the
-> VDSO, and uninlining the loops.
-> 
-> Dropped the separate property for indicating that writes to TVAL are
-> affected, as I believe that's just a side effect of the implicit
-> counter read being corrupted, and thus a chip that is affected by one
-> will always be affected by the other.
-> 
-> Dropped the arm32 portion as it seems there was confusion about whether
-> LS1021A is affected.  Currently I am being told that it is not
-> affected.
-> 
-> I considered writing to CVAL rather than looping on TVAL writes, but
-> that would still have required separate set_next_event() code for the
-> erratum, and adding CVAL to the enum would have required a bunch of
-> extra handlers in switch statements (even where unused, due to compiler
-> warnings about unhandled enum values) including in an arm32 header.  It
-> seemed better to avoid the arm32 interaction and new untested
-> accessors.
-> ---
->  .../devicetree/bindings/arm/arch_timer.txt         |   6 ++
+This patch set adds hardware temperature and power reading support =E2=80=
+=8Bfor
+APM X-Gene SoC's using the mailbox communication interface.
+=46or device tree, it is the standard DT mailbox.
+=46or ACPI, it is the PCC mailbox.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+=46or ACPI, tested with this patch[1] which supports PCC subspace 2
+[1] https://lkml.org/lkml/2016/5/6/482
+ - [PATCH v2] mailbox: pcc: Support HW-Reduced Communication Subspace T=
+ype 2
 
->  arch/arm64/include/asm/arch_timer.h                |  37 +++++--
->  drivers/clocksource/arm_arch_timer.c               | 110 +++++++++++++++++++++
->  3 files changed, 144 insertions(+), 9 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hoan Tran (3):
+  Documentation: dtb: xgene: Add hwmon dts binding documentation
+  hwmon: xgene: Adds hwmon driver
+  arm64: dts: apm: Add X-Gene SoC hwmon to device tree
+
+ .../devicetree/bindings/hwmon/apm-xgene-hwmon.txt  |  14 +
+ Documentation/hwmon/xgene-hwmon                    |  32 +
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi         |   5 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   5 +
+ drivers/hwmon/Kconfig                              |   7 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/xgene-hwmon.c                        | 801 +++++++++++++=
+++++++++
+ 7 files changed, 865 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/apm-xgene-h=
+wmon.txt
+ create mode 100644 Documentation/hwmon/xgene-hwmon
+ create mode 100644 drivers/hwmon/xgene-hwmon.c
+
+--=20
+1.9.1
