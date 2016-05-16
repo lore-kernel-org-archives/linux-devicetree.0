@@ -1,131 +1,221 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: [PATCH v2 4/6] ir-rx51: add DT support to driver
-Date: Mon, 16 May 2016 22:34:12 +0300
-Message-ID: <1463427254-7728-5-git-send-email-ivo.g.dimitrov.75@gmail.com>
-References: <1463427254-7728-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] of: Support hashtable lookups for phandles
+Date: Mon, 16 May 2016 14:37:20 -0500
+Message-ID: <CAL_Jsq+J4QF5jvUOF_J71W0YWswTBSu=RZkwy+=gR2F-dwq7XA@mail.gmail.com>
+References: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com> <1463417556-23087-3-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1463427254-7728-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com
-Cc: devicetree@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, pali.rohar@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463417556-23087-3-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With the upcoming removal of legacy boot, lets add support to one of the
-last N900 drivers remaining without it. As the driver still uses omap
-dmtimer, add auxdata as well.
+On Mon, May 16, 2016 at 11:52 AM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> When a device tree contains a lot of phandles, resolving one
+> takes time because the original method uses a search against
+> all nodes (not just the ones with phandles).
+>
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/of/base.c       | 41 ++++++++++++++++++++++++++++++++++++++---
+>  drivers/of/dynamic.c    |  8 ++++++++
+>  drivers/of/of_private.h | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/of.h      |  2 ++
+>  4 files changed, 81 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 20bbc2f..436a088 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/string.h>
+>  #include <linux/proc_fs.h>
+> +#include <linux/rhashtable.h>
+>
+>  #include "of_private.h"
+>
+> @@ -41,6 +42,18 @@ static const char *of_stdout_options;
+>
+>  struct kset *of_kset;
+>
+> +const struct rhashtable_params of_phandle_ht_params = {
 
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
----
- .../devicetree/bindings/media/nokia,n900-ir          | 20 ++++++++++++++++++++
- arch/arm/mach-omap2/pdata-quirks.c                   |  6 +-----
- drivers/media/rc/ir-rx51.c                           | 11 ++++++++++-
- 3 files changed, 31 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/nokia,n900-ir
+static
 
-diff --git a/Documentation/devicetree/bindings/media/nokia,n900-ir b/Documentation/devicetree/bindings/media/nokia,n900-ir
-new file mode 100644
-index 0000000..13a18ce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/nokia,n900-ir
-@@ -0,0 +1,20 @@
-+Device-Tree bindings for LIRC TX driver for Nokia N900(RX51)
-+
-+Required properties:
-+	- compatible: should be "nokia,n900-ir".
-+	- pwms: specifies PWM used for IR signal transmission.
-+
-+Example node:
-+
-+	pwm9: dmtimer-pwm@9 {
-+		compatible = "ti,omap-dmtimer-pwm";
-+		ti,timers = <&timer9>;
-+		ti,clock-source = <0x00>; /* timer_sys_ck */
-+		#pwm-cells = <3>;
-+	};
-+
-+	ir: n900-ir {
-+		compatible = "nokia,n900-ir";
-+
-+		pwms = <&pwm9 0 26316 0>; /* 38000 Hz */
-+	};
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index af65781..436c6e6 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -273,8 +273,6 @@ static struct platform_device omap3_rom_rng_device = {
- 	},
- };
- 
--static struct platform_device rx51_lirc_device;
--
- static void __init nokia_n900_legacy_init(void)
- {
- 	hsmmc2_internal_input_clk();
-@@ -293,10 +291,7 @@ static void __init nokia_n900_legacy_init(void)
- 
- 		pr_info("RX-51: Registering OMAP3 HWRNG device\n");
- 		platform_device_register(&omap3_rom_rng_device);
--
- 	}
--
--	platform_device_register(&rx51_lirc_device);
- }
- 
- static void __init omap3_tao3530_legacy_init(void)
-@@ -534,6 +529,7 @@ static struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
- 		       &omap3_iommu_pdata),
- 	OF_DEV_AUXDATA("ti,omap3-hsmmc", 0x4809c000, "4809c000.mmc", &mmc_pdata[0]),
- 	OF_DEV_AUXDATA("ti,omap3-hsmmc", 0x480b4000, "480b4000.mmc", &mmc_pdata[1]),
-+	OF_DEV_AUXDATA("nokia,n900-ir", 0, "n900-ir", &rx51_lirc_data),
- 	/* Only on am3517 */
- 	OF_DEV_AUXDATA("ti,davinci_mdio", 0x5c030000, "davinci_mdio.0", NULL),
- 	OF_DEV_AUXDATA("ti,am3517-emac", 0x5c000000, "davinci_emac.0",
-diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
-index 5096ef3..1cbb43d 100644
---- a/drivers/media/rc/ir-rx51.c
-+++ b/drivers/media/rc/ir-rx51.c
-@@ -21,6 +21,7 @@
- #include <linux/sched.h>
- #include <linux/wait.h>
- #include <linux/pwm.h>
-+#include <linux/of.h>
- 
- #include <media/lirc.h>
- #include <media/lirc_dev.h>
-@@ -478,6 +479,14 @@ static int lirc_rx51_remove(struct platform_device *dev)
- 	return lirc_unregister_driver(lirc_rx51_driver.minor);
- }
- 
-+static const struct of_device_id lirc_rx51_match[] = {
-+	{
-+		.compatible = "nokia,n900-ir",
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, lirc_rx51_match);
-+
- struct platform_driver lirc_rx51_platform_driver = {
- 	.probe		= lirc_rx51_probe,
- 	.remove		= lirc_rx51_remove,
-@@ -485,7 +494,7 @@ struct platform_driver lirc_rx51_platform_driver = {
- 	.resume		= lirc_rx51_resume,
- 	.driver		= {
- 		.name	= DRIVER_NAME,
--		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(lirc_rx51_match),
- 	},
- };
- module_platform_driver(lirc_rx51_platform_driver);
--- 
-1.9.1
+> +       .key_offset = offsetof(struct device_node, phandle), /* base offset */
+> +       .key_len = sizeof(phandle),
+> +       .head_offset = offsetof(struct device_node, ht_node),
+> +       .automatic_shrinking = true,
+> +};
+> +
+> +struct rhashtable *of_phandle_ht;
+> +
+> +/* default is false */
+> +bool of_phandle_ht_is_disabled;
+
+I think this should go. The unittest alone is not enough reason to keep.
+
+> +
+>  /*
+>   * Used to protect the of_aliases, to hold off addition of nodes to sysfs.
+>   * This mutex must be held whenever modifications are being made to the
+> @@ -162,6 +175,12 @@ int __of_attach_node_post(struct device_node *np)
+>         struct property *pp;
+>         int rc;
+>
+> +       if (of_phandle_ht_available()) {
+
+This can never be false as this function should only get called after init.
+
+> +               rc = of_phandle_ht_insert(np);
+> +               WARN(rc, "insert to phandle hash fail @%s\n",
+> +                               of_node_full_name(np));
+> +       }
+> +
+>         if (!IS_ENABLED(CONFIG_SYSFS))
+>                 return 0;
+>
+> @@ -194,6 +213,17 @@ void __init of_core_init(void)
+>         struct device_node *np;
+>         int ret;
+>
+> +       of_phandle_ht = kzalloc(sizeof(*of_phandle_ht), GFP_KERNEL);
+> +       if (!of_phandle_ht) {
+> +               pr_warn("devicetree: Failed to allocate hashtable\n");
+> +               return;
+> +       }
+> +       ret = rhashtable_init(of_phandle_ht, &of_phandle_ht_params);
+> +       if (ret) {
+> +               pr_warn("devicetree: Failed to initialize hashtable\n");
+> +               return;
+> +       }
+> +
+>         /* Create the kset, and register existing nodes */
+>         mutex_lock(&of_mutex);
+>         of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
+> @@ -1073,9 +1103,14 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+>                 return NULL;
+>
+>         raw_spin_lock_irqsave(&devtree_lock, flags);
+> -       for_each_of_allnodes(np)
+> -               if (np->phandle == handle)
+> -                       break;
+> +       /* when we're ready use the hash table (and not disabled) */
+> +       if (of_phandle_ht_available() && !of_phandle_ht_is_disabled)
+
+Just "if (of_phandle_ht)"
+
+> +               np = of_phandle_ht_lookup(handle);
+> +       else { /* fallback */
+> +               for_each_of_allnodes(np)
+> +                       if (np->phandle == handle)
+> +                               break;
+> +       }
+>         of_node_get(np);
+>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>         return np;
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index 34ca783..931b905 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/string.h>
+>  #include <linux/proc_fs.h>
+> +#include <linux/rhashtable.h>
+>
+>  #include "of_private.h"
+>
+> @@ -44,6 +45,13 @@ EXPORT_SYMBOL(of_node_put);
+>  void __of_detach_node_post(struct device_node *np)
+>  {
+>         struct property *pp;
+> +       int rc;
+> +
+> +       if (of_phandle_ht_available()) {
+
+Likewise, this can't be false either.
+
+> +               rc = of_phandle_ht_remove(np);
+> +               WARN(rc, "remove from phandle hash fail @%s\n",
+> +                               of_node_full_name(np));
+> +       }
+>
+>         if (!IS_ENABLED(CONFIG_SYSFS))
+>                 return;
+> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+> index 10b0342..386ae71 100644
+> --- a/drivers/of/of_private.h
+> +++ b/drivers/of/of_private.h
+> @@ -101,4 +101,37 @@ static inline int of_overlay_init(void)
+>  }
+>  #endif
+>
+> +extern const struct rhashtable_params of_phandle_ht_params;
+> +extern struct rhashtable *of_phandle_ht;
+> +
+> +/* for unittest use */
+> +extern bool of_phandle_ht_is_disabled;
+> +
+> +static inline bool of_phandle_ht_available(void)
+> +{
+> +       return of_phandle_ht != NULL;
+> +}
+> +
+> +static inline int of_phandle_ht_insert(struct device_node *np)
+> +{
+> +       if (!np || !np->phandle)
+> +               return 0;
+> +       return rhashtable_insert_fast(of_phandle_ht,
+> +               &np->ht_node, of_phandle_ht_params);
+> +}
+> +
+> +static inline int of_phandle_ht_remove(struct device_node *np)
+> +{
+> +       if (!np || !np->phandle)
+> +               return 0;
+> +       return rhashtable_remove_fast(of_phandle_ht,
+> +               &np->ht_node, of_phandle_ht_params);
+> +}
+> +
+> +static inline struct device_node *of_phandle_ht_lookup(phandle handle)
+> +{
+> +       return rhashtable_lookup_fast(of_phandle_ht,
+> +                       &handle, of_phandle_ht_params);
+> +}
+> +
+>  #endif /* _LINUX_OF_PRIVATE_H */
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 18a8e59..9de9a3f 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/notifier.h>
+>  #include <linux/property.h>
+>  #include <linux/list.h>
+> +#include <linux/rhashtable.h>
+>
+>  #include <asm/byteorder.h>
+>  #include <asm/errno.h>
+> @@ -52,6 +53,7 @@ struct device_node {
+>         phandle phandle;
+>         const char *full_name;
+>         struct fwnode_handle fwnode;
+> +       struct rhash_head ht_node;
+
+Place next to .phandle as both will be accessed at the same time.
+
+>
+>         struct  property *properties;
+>         struct  property *deadprops;    /* removed properties */
+> --
+> 1.7.12
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
