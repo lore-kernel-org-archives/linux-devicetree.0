@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 05/20] drm/sun4i: request exact rates to our parents
-Date: Mon, 16 May 2016 14:47:05 +0200
-Message-ID: <1463402840-17062-6-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 16/20] ARM: sun5i: a13-olinuxino: Enable VGA bridge
+Date: Mon, 16 May 2016 14:47:16 +0200
+Message-ID: <1463402840-17062-17-git-send-email-maxime.ripard@free-electrons.com>
 References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
@@ -10,71 +10,66 @@ To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquet
 Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Our pixel clock currently only tries to deal with the current parent rate.
+Now that we have support for the VGA bridges using our DRM driver, enable
+the display engine for the Olimex A13-Olinuxino.
 
-While that works when the resolution is the same than the one already
-program, or when we can compute directly the rate from the current parent
-rate, it cannot work in most situation when we want to change the
-frequency, and we end up with an improper pixel clock rate, which obviously
-doesn't work as expected.
-
-Ask our parent for all the possible dividers if it can reach that
-frequency, and return the best parent rate to the clock framework so that
-we can use it.
-
-Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/gpu/drm/sun4i/sun4i_dotclock.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts | 34 +++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_dotclock.c b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
-index 6c9c090a8006..1ddf6d7a7107 100644
---- a/drivers/gpu/drm/sun4i/sun4i_dotclock.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
-@@ -72,14 +72,40 @@ static unsigned long sun4i_dclk_recalc_rate(struct clk_hw *hw,
- static long sun4i_dclk_round_rate(struct clk_hw *hw, unsigned long rate,
- 				  unsigned long *parent_rate)
- {
--	return *parent_rate / DIV_ROUND_CLOSEST(*parent_rate, rate);
-+	unsigned long best_parent = 0;
-+	u8 best_div = 1;
-+	int i;
+diff --git a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
+index b3c234c65ea1..b3298d231258 100644
+--- a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
++++ b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
+@@ -72,6 +72,27 @@
+ 			default-state = "on";
+ 		};
+ 	};
 +
-+	for (i = 6; i < 127; i++) {
-+		unsigned long ideal = rate * i;
-+		unsigned long rounded;
++	bridge {
++		compatible = "dumb-vga-bridge";
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+		rounded = clk_hw_round_rate(clk_hw_get_parent(hw),
-+					    ideal);
++		port@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+		if (rounded == ideal) {
-+			best_parent = rounded;
-+			best_div = i;
-+			goto out;
-+		}
++			vga_input: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&tcon0_out_vga>;
++			};
++		};
++	};
++};
 +
-+		if ((rounded < ideal) && (rounded > best_parent)) {
-+			best_parent = rounded;
-+			best_div = i;
-+		}
-+	}
-+
-+out:
-+	*parent_rate = best_parent;
-+
-+	return best_parent / best_div;
- }
++&be0 {
++	status = "okay";
+ };
  
- static int sun4i_dclk_set_rate(struct clk_hw *hw, unsigned long rate,
- 			       unsigned long parent_rate)
- {
- 	struct sun4i_dclk *dclk = hw_to_dclk(hw);
--	int div = DIV_ROUND_CLOSEST(parent_rate, rate);
-+	u8 div = parent_rate / rate;
+ &ehci0 {
+@@ -211,6 +232,19 @@
+ 	status = "okay";
+ };
  
- 	return regmap_update_bits(dclk->regmap, SUN4I_TCON0_DCLK_REG,
- 				  GENMASK(6, 0), div);
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
++	status = "okay";
++};
++
++&tcon0_out {
++	tcon0_out_vga: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&vga_input>;
++	};
++};
++
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins_b>;
 -- 
 2.8.2
 
