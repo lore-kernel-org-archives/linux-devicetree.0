@@ -1,64 +1,79 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] phy: remove irq param to fix crash in fixed_phy_add()
-Date: Mon, 16 May 2016 14:29:03 +0200
-Message-ID: <20160516122903.GA27725@lunn.ch>
-References: <1463397356-5656-1-git-send-email-rabin.vincent@axis.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 00/20] drm: Add Support for Passive RGB to VGA bridges
+Date: Mon, 16 May 2016 14:47:00 +0200
+Message-ID: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-m68k-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1463397356-5656-1-git-send-email-rabin.vincent@axis.com>
-Sender: linux-m68k-owner@vger.kernel.org
-To: Rabin Vincent <rabin.vincent@axis.com>
-Cc: "David S. Miller" <davem@davemloft.net>, f.fainelli@gmail.com, netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Rabin Vincent <rabinv@axis.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 16, 2016 at 01:15:56PM +0200, Rabin Vincent wrote:
-> From: Rabin Vincent <rabinv@axis.com>
-> 
-> Since e7f4dc3536a ("mdio: Move allocation of interrupts into core"),
-> platforms which call fixed_phy_add() before fixed_mdio_bus_init() is
-> called (for example, because the platform code and the fixed_phy driver
-> use the same initcall level) crash in fixed_phy_add() since the
-> ->mii_bus is not allocated.
-> 
-> Also since e7f4dc3536a, these interrupts are initalized to polling by
-> default.  All callers of both fixed_phy_register() and fixed_phy_add()
-> pass PHY_POLL for the irq argument, so we can fix these crashes by
-> simply removing the irq parameter, since the default is correct for all
-> users.
+Hi,
 
-Hi Rabin
+This serie is about adding support for the RGB to VGA bridge found in
+the A13-Olinuxino and the CHIP VGA adapter.
 
-Thanks for the patch. However, this is more of a work around than a
-fix. And it leaves one case still open for bad things to happen. Take
-the call sequence:
+Both these boards rely on an entirely passive bridge made out of
+resitor ladders that do not require any initialisation. The only thing
+needed is to get the timings from the screen if available (and if not,
+fall back on XGA standards), set up the display pipeline to output on
+the RGB bus with the proper timings, and you're done.
 
-	ret = of_phy_register_fixed_link(port_dn);
-        if (ret) {
-        	netdev_err(slave_dev, "failed to register fixed PHY: %d\n", ret);
-                return ret;
-  	}
+This serie also fixes a bunch of bugs uncovered when trying to
+increase the resolution, and hence the pixel clock, of our
+pipeline. It also fixes a few bugs in the DRM driver itself that went
+unnoticed before.
 
-	p->phy = of_phy_connect(slave_dev, phy_dn,
-        			dsa_slave_adjust_link,
-                                phy_flags,
-                                p->phy_interface);
- 
-This is taken from net/dsa/slave.c
+Let me know what you think,
+Maxime
 
-With your patch, of_phy_register_fixed_link() will be successful, but
-the call to of_phy_connect() will fail, returning NULL, because the
-mdio bus the phy is on has not yet been added to the bus.
+Maxime Ripard (20):
+  clk: fixed-factor: Pass clk rates change to the parent
+  clk: multiplier: Prevent the multiplier from under / over flowing
+  clk: sunxi: tcon-ch1: Do not return a negative error in get_parent
+  clk: sunxi: display: Add per-clock flags
+  drm/sun4i: request exact rates to our parents
+  drm/sun4i: allow dclk to modify its parent rate
+  drm/sun4i: rgb: Validate the clock rate
+  drm/sun4i: rgb: panel is an error pointer
+  drm/sun4i: defer only if we didn't find our panel
+  drm/sun4i: remove simplefb at probe
+  drm/sun4i: Convert to connector register helpers
+  drm/sun4i: Add bridge support
+  drm/bridge: Add RGB to VGA bridge support
+  ARM: sun5i: a13: Add LCD pins
+  ARM: sun5i: Move display blocks to A13
+  ARM: sun5i: a13-olinuxino: Enable VGA bridge
+  ARM: multi_v7: Enable sun4i DRM driver
+  ARM: multi_v7: enable VGA bridge
+  ARM: sunxi: Enable sun4i DRM driver
+  ARM: sunxi: Enable VGA bridge
 
-What i think is better is to make fixed_phy_add() return -EPROBE_DEFER
-if it is called before fixed_mdio_bus_init().
+ .../bindings/display/bridge/dumb-vga.txt           |  40 +++++
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts          |  34 ++++
+ arch/arm/boot/dts/sun5i-a13.dtsi                   | 122 ++++++++++++++
+ arch/arm/boot/dts/sun5i-r8.dtsi                    | 120 +------------
+ arch/arm/configs/multi_v7_defconfig                |   2 +
+ arch/arm/configs/sunxi_defconfig                   |   3 +
+ drivers/clk/clk-fixed-factor.c                     |   3 +-
+ drivers/clk/clk-multiplier.c                       |  20 ++-
+ drivers/clk/sunxi/clk-sun4i-display.c              |   5 +-
+ drivers/clk/sunxi/clk-sun4i-tcon-ch1.c             |   3 -
+ drivers/gpu/drm/bridge/Kconfig                     |   6 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/dumb-vga.c                  | 186 +++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_dotclock.c             |  31 +++-
+ drivers/gpu/drm/sun4i/sun4i_drv.c                  |  54 +++---
+ drivers/gpu/drm/sun4i/sun4i_rgb.c                  |  70 ++++++--
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                 |  59 +++++--
+ drivers/gpu/drm/sun4i/sun4i_tcon.h                 |   1 +
+ 18 files changed, 578 insertions(+), 182 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/dumb-vga.txt
+ create mode 100644 drivers/gpu/drm/bridge/dumb-vga.c
 
-I also think it is a bad idea to remove the interrupt
-parameter. fixed_phy can actually change it state, so maybe at some
-point in the future, somebody will want an interrupt for this? We
-should try to keep this phy emulation as similar to real phys as
-possible, so lets keep the interrupt for the moment.
+-- 
+2.8.2
 
-	Thanks
-	  Andrew
