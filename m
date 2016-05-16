@@ -1,32 +1,41 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] of: dynamic: changeset prop-update revert fix
-Date: Mon, 16 May 2016 09:08:04 -0500
-Message-ID: <20160516140804.GA21849@rob-hp-laptop>
-References: <1462800045-10943-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1462800045-10943-2-git-send-email-pantelis.antoniou@konsulko.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drivers/of: Fix depth when unflattening devicetree
+Date: Mon, 16 May 2016 09:10:54 -0500
+Message-ID: <20160516141054.GB21849@rob-hp-laptop>
+References: <1462988217-29314-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462800045-10943-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+In-Reply-To: <1462988217-29314-1-git-send-email-rklein@nvidia.com>
+Sender: stable-owner@vger.kernel.org
+To: Rhyland Klein <rklein@nvidia.com>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 09, 2016 at 04:20:42PM +0300, Pantelis Antoniou wrote:
-> When reverting an update property changeset entry that created a
-> property the reverse operation is a remove property and not an update.
+On Wed, May 11, 2016 at 01:36:57PM -0400, Rhyland Klein wrote:
+> When the implementation for unflatten_dt_node() changed from being
+> recursive to being non-recursive, it had a side effect of increasing the
+> depth passed to fdt_next_node() by 1. This is fine most of the time, but
+> it seems that when the end of the dtb is being parsed, it will cause the
+> FDT_END condition in fdt_next_node() to return a different value
+> (returning nextoffset instead of -FDT_ERR_NOTFOUND). This ends up passing
+> an FDT_ERR_TRUNCATED error back to the unflatten_dt_node() which then
+> sees that and complains "Error -8 processing FDT" causing boot to fail.
 > 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> This patch simply avoids incrementing depth and uses modified accesses
+> for local array indices so that the depth is the same as it was before
+> the change as far as fdt_next_node() is concerned.
+> 
+> This problem was discovered trying to boot Tegra210-Smaug platforms.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 9ffa9eb41763 ("drivers/of: Avoid recursively calling unflatten_dt_node()")
+> Signed-off-by: Rhyland Klein <rklein@nvidia.com>
 > ---
->  drivers/of/dynamic.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/of/fdt.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 
-I've applied this one.
+Applied, thanks.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
