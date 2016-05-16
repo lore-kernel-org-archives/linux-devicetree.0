@@ -1,97 +1,38 @@
-From: "jeffrey.lin" <yajohn@gmail.com>
-Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
-Date: Mon, 16 May 2016 23:57:28 +0800
-Message-ID: <1463414248-422-1-git-send-email-jeffrey.lin@rad-ic.com>
-References: <20160513041852.GA8932@dtor-ws>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160513041852.GA8932@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org
-Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] dt: bindings: add bcm2835-memory-controller
+ documentation
+Date: Mon, 16 May 2016 11:04:17 -0500
+Message-ID: <20160516160417.GA1278@rob-hp-laptop>
+References: <1463056732-5607-1-git-send-email-kernel@martin.sperl.org>
+ <1463056732-5607-2-git-send-email-kernel@martin.sperl.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463056732-5607-2-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->static int raydium_i2c_do_update_firmware(struct raydium_data *ts,
->					 const struct firmware *fw)
->{
->	struct i2c_client *client = ts->client;
->	const void *data;
->	size_t data_len;
->	size_t len;
->	int page_nr;
->	int i;
->	int error;
->	u16 fw_checksum;
->
->	if (fw->size == 0) {
-additional protect.
-	if (fw->size == 0 || fw->size > RM_MAX_FW_SIZE) {
->		dev_err(&client->dev, "Invalid firmware length\n");
->		return -EINVAL;
->	}
->
->	error = raydium_i2c_check_fw_status(ts);
->	if (error) {
->		dev_err(&client->dev, "Unable to access IC %d\n", error);
->		return error;
->	}
->
->	if (ts->boot_mode == RAYDIUM_TS_MAIN) {
->		for (i = 0; i < RM_MAX_RETRIES; i++) {
->			error = raydium_i2c_enter_bl(client);
->			if (!error) {
->				error = raydium_i2c_check_fw_status(ts);
->				if (error) {
->					dev_err(&client->dev,
->						"unable to access IC: %d\n",
->						error);
->					return error;
->				}
->
->				if (ts->boot_mode == RAYDIUM_TS_BLDR)
->					break;
->			}
->		}
->
->		if (ts->boot_mode == RAYDIUM_TS_MAIN) {
->			dev_err(&client->dev,
->				"failied to jump to boot loader: %d\n",
->				error);
->			return -EIO;
->		}
->	}
->
->	error = raydium_i2c_disable_watch_dog(client);
->	if (error)
->		return error;
->
->	error = raydium_i2c_check_path(client);
->	if (error)
->		return error;
->
->	error = raydium_i2c_boot_trigger(client);
->	if (error) {
->		dev_err(&client->dev, "send boot trigger fail: %d\n", error);
->		return error;
->	}
-additonal delay for safe
-	msleep(RM_BOOT_DELAY_MS);
->
->	data = fw->data;
->	data_len = fw->size;
->	page_nr = 0;
->
->	while (data_len) {
->		len = min_t(size_t, data_len, RM_FW_PAGE_SIZE);
->
->		error = raydium_i2c_fw_write_page(client, page_nr++, data, len);
->		if (error)
->			return error;
->
->		// XXX FIXME: we already sleep in raydium_i2c_fw_write_page(),
->		// do we really need to sleep here as well?
-		/*FIXME, remove delay in raydium_i2c_fw_write_page()*/
->		msleep(20);
->
->		data += len;
->		data_len -= len;
->	}
+On Thu, May 12, 2016 at 12:38:49PM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> 
+> Add memory controller dt-binding documentation for the
+> bcm2835 soc.
+> 
+> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> ---
+>  .../bindings/memory-controllers/brcm,bcm2835-sdram.txt   | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/brcm,bcm2835-sdram.txt
+
+I'd suspect a DDR controller has more than one clock, but otherwise 
+looks fine. And this binding is pretty much independent of the 
+discussion for this series.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
