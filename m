@@ -1,53 +1,28 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 07/20] drm/sun4i: rgb: Validate the clock rate
-Date: Mon, 16 May 2016 14:47:07 +0200
-Message-ID: <1463402840-17062-8-git-send-email-maxime.ripard@free-electrons.com>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Rabin Vincent <rabin-66gdRtMMWGc@public.gmane.org>
+Subject: Re: [PATCH] phy: remove irq param to fix crash in fixed_phy_add()
+Date: Mon, 16 May 2016 15:11:35 +0200
+Message-ID: <20160516131134.GA31094@lnxartpec.se.axis.com>
+References: <1463397356-5656-1-git-send-email-rabin.vincent@axis.com>
+ <20160516122903.GA27725@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160516122903.GA27725-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Rabin Vincent <rabin.vincent-VrBV9hrLPhE@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-m68k-cunTk1MwBs8S/qaLPR03pWD2FQJk+8+b@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rabin Vincent <rabinv-VrBV9hrLPhE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T3VyIHBpeGVsIGNsb2NrIGNhbm5vdCByZWFjaCBhIGhpZ2ggZW5vdWdoIHJhdGUgZm9yIHNvbWUg
-cmF0aGVyIGhpZ2ggd2hpbGUKY29tbW9uIHJlc29sdXRpb25zIChsaWtlIDEwODBwNjApLgoKTWFr
-ZSBzdXJlIHdlIGZpbHRlciB0aGUgcmVzb2x1dGlvbnMgd2UgY2Fubm90IHJlYWNoIGluIG91ciBt
-b2RlX3ZhbGlkCmZ1bmN0aW9uLgoKRml4ZXM6IDI5ZTU3ZmFiOTdmYyAoImRybTogc3VuNGk6IEFk
-ZCBSR0Igb3V0cHV0IikKU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFy
-ZEBmcmVlLWVsZWN0cm9ucy5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Jn
-Yi5jIHwgMTQgKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCsp
-CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3JnYi5jIGIvZHJpdmVy
-cy9ncHUvZHJtL3N1bjRpL3N1bjRpX3JnYi5jCmluZGV4IGFiNjQ5NDgxODA1MC4uOTIzZjU1MDM5
-Y2IxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfcmdiLmMKKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3JnYi5jCkBAIC01NCw4ICs1NCwxMyBAQCBzdGF0
-aWMgaW50IHN1bjRpX3JnYl9nZXRfbW9kZXMoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
-cikKIHN0YXRpYyBpbnQgc3VuNGlfcmdiX21vZGVfdmFsaWQoc3RydWN0IGRybV9jb25uZWN0b3Ig
-KmNvbm5lY3RvciwKIAkJCQlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkKIHsKKwlzdHJ1
-Y3Qgc3VuNGlfcmdiICpyZ2IgPSBkcm1fY29ubmVjdG9yX3RvX3N1bjRpX3JnYihjb25uZWN0b3Ip
-OworCXN0cnVjdCBzdW40aV9kcnYgKmRydiA9IHJnYi0+ZHJ2OworCXN0cnVjdCBzdW40aV90Y29u
-ICp0Y29uID0gZHJ2LT50Y29uOwogCXUzMiBoc3luYyA9IG1vZGUtPmhzeW5jX2VuZCAtIG1vZGUt
-PmhzeW5jX3N0YXJ0OwogCXUzMiB2c3luYyA9IG1vZGUtPnZzeW5jX2VuZCAtIG1vZGUtPnZzeW5j
-X3N0YXJ0OworCXVuc2lnbmVkIGxvbmcgcmF0ZSA9IG1vZGUtPmNydGNfY2xvY2sgKiAxMDAwOwor
-CWxvbmcgcm91bmRlZF9yYXRlOwogCiAJRFJNX0RFQlVHX0RSSVZFUigiVmFsaWRhdGluZyBtb2Rl
-cy4uLlxuIik7CiAKQEAgLTg3LDYgKzkyLDE1IEBAIHN0YXRpYyBpbnQgc3VuNGlfcmdiX21vZGVf
-dmFsaWQoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwKIAogCURSTV9ERUJVR19EUklW
-RVIoIlZlcnRpY2FsIHBhcmFtZXRlcnMgT0tcbiIpOwogCisJcm91bmRlZF9yYXRlID0gY2xrX3Jv
-dW5kX3JhdGUodGNvbi0+ZGNsaywgcmF0ZSk7CisJaWYgKHJvdW5kZWRfcmF0ZSA8IHJhdGUpCisJ
-CXJldHVybiBNT0RFX0NMT0NLX0xPVzsKKworCWlmIChyb3VuZGVkX3JhdGUgPiByYXRlKQorCQly
-ZXR1cm4gTU9ERV9DTE9DS19ISUdIOworCisJRFJNX0RFQlVHX0RSSVZFUigiQ2xvY2sgcmF0ZSBP
-S1xuIik7CisKIAlyZXR1cm4gTU9ERV9PSzsKIH0KIAotLSAKMi44LjIKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, May 16, 2016 at 02:29:03PM +0200, Andrew Lunn wrote:
+> What i think is better is to make fixed_phy_add() return -EPROBE_DEFER
+> if it is called before fixed_mdio_bus_init().
+
+I don't see how this will work for platforms such as ar7 and bcm47xx
+which call fixed_phy_add() from platform code.  There is no probe to
+retry there so while the EPROBE_DEFER will certainly fix the crash it
+will also leave the platforms without a phy.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
