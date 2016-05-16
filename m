@@ -1,38 +1,60 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 20/20] ARM: sunxi: Enable VGA bridge
-Date: Mon, 16 May 2016 14:47:20 +0200
-Message-ID: <1463402840-17062-21-git-send-email-maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 09/20] drm/sun4i: defer only if we didn't find our panel
+Date: Mon, 16 May 2016 14:47:09 +0200
+Message-ID: <1463402840-17062-10-git-send-email-maxime.ripard@free-electrons.com>
 References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable the VGA bridge used on the A13-Olinuxino in the sunxi defconfig
+Our code currently defers our probe on any error, even if we were not
+expecting to have one at all.
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Make sure we return -EPROBE_DEFER only when we were supposed to have a
+panel, but it's not probed yet.
+
+Fixes: 29e57fab97fc ("drm: sun4i: Add RGB output")
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/configs/sunxi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 6a1447cf8feb..3676cc2db2eb 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -98,6 +98,7 @@ CONFIG_MEDIA_RC_SUPPORT=y
- CONFIG_RC_DEVICES=y
- CONFIG_IR_SUNXI=y
- CONFIG_DRM=y
-+CONFIG_DRM_DUMB_VGA=y
- CONFIG_DRM_SUN4I=y
- CONFIG_FB=y
- CONFIG_FB_SIMPLE=y
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 9f19b0e08560..eed6a9e8d9a6 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -429,7 +429,7 @@ static struct drm_panel *sun4i_tcon_find_panel(struct device_node *node)
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	return of_drm_find_panel(remote);
++	return of_drm_find_panel(remote) ?: ERR_PTR(-EPROBE_DEFER);
+ }
+ 
+ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+@@ -522,12 +522,13 @@ static int sun4i_tcon_probe(struct platform_device *pdev)
+ 	 * Defer the probe.
+ 	 */
+ 	panel = sun4i_tcon_find_panel(node);
+-	if (IS_ERR(panel)) {
+-		/*
+-		 * If we don't have a panel endpoint, just go on
+-		 */
+-		if (PTR_ERR(panel) != -ENODEV)
+-			return -EPROBE_DEFER;
++
++	/*
++	 * If we don't have a panel endpoint, just go on
++	 */
++	if (PTR_ERR(panel) == -EPROBE_DEFER) {
++		DRM_DEBUG_DRIVER("Still waiting for our panel. Deferring...\n");
++		return -EPROBE_DEFER;
+ 	}
+ 
+ 	return component_add(&pdev->dev, &sun4i_tcon_ops);
 -- 
 2.8.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
