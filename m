@@ -1,30 +1,22 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 01/11] of: Add bindings of hw throttle for Tegra
- soctherm
-Date: Mon, 16 May 2016 10:01:26 -0500
-Message-ID: <20160516150126.GA4530@rob-hp-laptop>
-References: <1462962026-19653-1-git-send-email-wni@nvidia.com>
- <1462962026-19653-2-git-send-email-wni@nvidia.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 19/20] ARM: sunxi: Enable sun4i DRM driver
+Date: Mon, 16 May 2016 23:01:26 +0800
+Message-ID: <CAGb2v64EGkfgqiZ=PYd-SZLOfnvkoEUDfB5bo__qca5sR5H0mQ@mail.gmail.com>
+References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1463402840-17062-20-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462962026-19653-2-git-send-email-wni@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>
-Cc: edubezval@gmail.com, thierry.reding@gmail.com, rui.zhang@intel.com, MLongnecker@nvidia.com, swarren@wwwdotorg.org, mikko.perttunen@kapsi.fi, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1463402840-17062-20-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 06:20:16PM +0800, Wei Ni wrote:
-> Add HW throttle configuration sub-node for soctherm, which
-> is used to describe the throttle event, and worked as a
-> cooling device. The "hot" type trip in thermal zone can
-> be bound to this cooling device, and trigger the throttle
-> function.
-> 
-> Signed-off-by: Wei Ni <wni@nvidia.com>
-> ---
->  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 121 ++++++++++++++++++++-
->  1 file changed, 119 insertions(+), 2 deletions(-)
+On Mon, May 16, 2016 at 8:47 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Enable the new DRM driver in the sunxi default configuration
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
