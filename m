@@ -1,52 +1,217 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v10 0/8] add i2c driver supported for rk3399
-Date: Mon, 16 May 2016 13:17:38 -0700
-Message-ID: <CAD=FV=VqEpmODcnKOGb5P=Fu84c5pBOJXD9pfFMRc2aERfWmRg@mail.gmail.com>
-References: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
+From: David Mosberger-Tang <davidm@egauge.net>
+Subject: [PATCH] drivers: nvmem: atmel-secumod: New driver for Atmel Secumod
+ nvram
+Date: Mon, 16 May 2016 14:17:10 -0600
+Message-ID: <1463429830-20539-1-git-send-email-davidm@egauge.net>
+References: <alpine.LNX.2.00.1605121505320.21379@nippy.intranet>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <alpine.LNX.2.00.1605121505320.21379@nippy.intranet>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, David Mosberger-Tang <davidm@egauge.net>, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: David Mosberger <davidm@egauge.net>
+---
+ .../devicetree/bindings/nvmem/atmel-secumod.txt    |  46 ++++++++
+ drivers/nvmem/atmel-secumod.c                      | 125 +++++++++++++++++++++
+ 2 files changed, 171 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
+ create mode 100644 drivers/nvmem/atmel-secumod.c
 
-On Mon, May 16, 2016 at 6:57 AM, David Wu <david.wu@rock-chips.com> wrote:
-> There are three points differert from others:
->  - new method to caculate i2c timings for rk3399
->  - pclk and function clk are separated at rk3399
->  - add fast-plus mode supported for rk3399
->
-> David Wu (8):
->   i2c: rk3x: add documentation to fields in "struct rk3x_i2c"
->   i2c: rk3x: use struct "rk3x_i2c_calced_timings"
->   i2c: rk3x: Remove redundant rk3x_i2c_clean_ipd()
->   i2c: rk3x: Change SoC data to not use array
->   i2c: rk3x: Move spec timing data to "static const" structs
->   dt-bindings: i2c: rk3x: add support for rk3399
->   i2c: rk3x: add i2c support for rk3399 soc
->   i2c: rk3x: support fast-mode plus for rk3399
->
->  Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  16 +-
->  drivers/i2c/busses/i2c-rk3x.c                      | 498 +++++++++++++++++----
->  2 files changed, 434 insertions(+), 80 deletions(-)
-
-I haven't put these on the scope or anything, but I have:
-
-* Tested that my i2c busses on rk3288-veyron still seem to work OK
-after these patches.
-
-* Tested that my i2c busses on an rk3399 board seem to work after
-these patches (plus device tree changes).
-
-Thus, for the series:
-
-Tested-by: Douglas Anderson <dianders@chromium.org>
-
-...possibly could leave off the Tested-by tag for the last in the
-series since I have no Fast Mode Plus devices to test against.  ;)
-
--Doug
+diff --git a/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt b/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
+new file mode 100644
+index 0000000..85db709
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
+@@ -0,0 +1,46 @@
++= Atmel Secumod device tree bindings =
++
++This binding is intended to represent Atmel's Secumod which is found
++in SAMA5D2 and perhaps others.
++
++Required properties:
++- compatible: should be "atmel,sama5d2-secumod"
++- reg: Should contain registers location and length of the RAM, followed
++       by register location and length of the Secumod controller.
++
++= Data cells =
++Are child nodes of secumod, bindings of which as described in
++bindings/nvmem/nvmem.txt
++
++Example:
++
++    secumod@fc040000 {
++            compatible = "atmel,sama5d2-secumod";
++            reg = <0xf8044000 0x1420
++                   0xfc040000 0x4000>;
++            status = "okay";
++
++            #address-cells = <1>;
++            #size-cells = <1>;
++
++            secram_auto_erasable@0000 {
++                    reg = <0x0000 0x1000>;
++            };
++            secram@1000 {
++                    reg = <0x1000 0x400>;
++            };
++            ram@1400 {
++                    reg = <0x1400 0x20>;
++            };
++    };
++
++= Data consumers =
++Are device nodes which consume nvmem data cells.
++
++For example:
++
++	ram {
++		...
++		nvmem-cells = <&ram>;
++		nvmem-cell-names = "RAM";
++	};
+diff --git a/drivers/nvmem/atmel-secumod.c b/drivers/nvmem/atmel-secumod.c
+new file mode 100644
+index 0000000..fda83c9
+--- /dev/null
++++ b/drivers/nvmem/atmel-secumod.c
+@@ -0,0 +1,125 @@
++/*
++ * Driver for SAMA5D2 secure module (SECUMOD).
++ *
++ * Copyright (C) 2016 eGauge Systems LLC
++ *
++ * David Mosberger <davidm@egauge.net>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/nvmem-provider.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++static struct regmap_config secumod_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4
++};
++
++static struct nvmem_config econfig = {
++	.name = "secumod",
++	.owner = THIS_MODULE,
++};
++
++/*
++ * Security-module register definitions:
++ */
++#define SECUMOD_RAMRDY	0x0014
++
++/*
++ * Since the secure module may need to automatically erase some of the
++ * RAM, it may take a while for it to be ready.  As far as I know,
++ * it's not documented how long this might take in the worst-case.
++ */
++static void
++secumod_wait_ready (void *regs)
++{
++	unsigned long start, stop;
++
++	start = jiffies;
++	while (!(readl(regs + SECUMOD_RAMRDY) & 1))
++		msleep_interruptible(1);
++	stop = jiffies;
++	if (stop != start)
++		pr_info("nvmem-atmel-secumod: it took %u msec for SECUMOD "
++			"to become ready...\n", jiffies_to_msecs(stop - start));
++	else
++		pr_info("nvmem-atmel-secumod: ready\n");
++}
++
++static int secumod_remove(struct platform_device *pdev)
++{
++	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
++
++	return nvmem_unregister(nvmem);
++}
++
++static int secumod_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct nvmem_device *nvmem;
++	struct regmap *regmap;
++	void __iomem *base;
++
++	/*
++	 * Map controller address temporarily so we can ensure that
++	 * the hardware is ready:
++	 */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	secumod_wait_ready(base);
++	devm_iounmap(dev, base);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	secumod_regmap_config.max_register = resource_size(res) - 1;
++
++	regmap = devm_regmap_init_mmio(dev, base, &secumod_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "%s: regmap init failed\n", __func__);
++		return PTR_ERR(regmap);
++	}
++	econfig.dev = dev;
++	nvmem = nvmem_register(&econfig);
++	if (IS_ERR(nvmem))
++		return PTR_ERR(nvmem);
++
++	platform_set_drvdata(pdev, nvmem);
++
++	return 0;
++}
++
++static const struct of_device_id secumod_of_match[] = {
++	{ .compatible = "atmel,sama5d2-secumod",},
++	{/* sentinel */},
++};
++MODULE_DEVICE_TABLE(of, secumod_of_match);
++
++static struct platform_driver secumod_driver = {
++	.probe = secumod_probe,
++	.remove = secumod_remove,
++	.driver = {
++		.name = "atmel,sama5d2-secumod",
++		.of_match_table = secumod_of_match,
++	},
++};
++module_platform_driver(secumod_driver);
++MODULE_AUTHOR("David Mosberger <davidm@egauge.net>");
++MODULE_DESCRIPTION("Atmel Secumod driver");
++MODULE_LICENSE("GPL v2");
+-- 
+1.9.1
