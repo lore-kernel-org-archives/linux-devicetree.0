@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v2 1/5] of: rename *_node_sysfs to _node_post
-Date: Mon, 16 May 2016 19:52:32 +0300
-Message-ID: <1463417556-23087-2-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v2 3/5] of: unittest: hashed phandles unitest
+Date: Mon, 16 May 2016 19:52:34 +0300
+Message-ID: <1463417556-23087-4-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
@@ -10,121 +10,116 @@ To: Rob Herring <robherring2@gmail.com>
 Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Renames the *_node_sysfs methods to _node_post which is more accurate
-when more work takes place besides sysfs tweaking (as in with
-phandle hash management).
+Add a benchmarking hashed phandles unittest which report what kind
+of speed up we get switching to hashed phandle lookups.
+
+ ### dt-test ### the hash method is 8.2 times faster than the original
+
+On the beaglebone we perform about 1877 phandle lookups until that
+point in the unittest. Each non-hashed lookup takes about 23us when
+the cash is hot, while the hash lookup takes about 3us.
+
+For those 1877 lookup we get a speedup in the boot sequence of
+1877 * (23 - 3) = 37.5ms, which is not spectacular but there's no
+point in wasting cycles and energy.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/base.c       |  4 ++--
- drivers/of/dynamic.c    | 10 +++++-----
- drivers/of/of_private.h |  4 ++--
- drivers/of/unittest.c   |  4 ++--
- 4 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/of/unittest.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 9bbca56..20bbc2f 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -156,7 +156,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
- 	return rc;
- }
- 
--int __of_attach_node_sysfs(struct device_node *np)
-+int __of_attach_node_post(struct device_node *np)
- {
- 	const char *name;
- 	struct property *pp;
-@@ -203,7 +203,7 @@ void __init of_core_init(void)
- 		return;
- 	}
- 	for_each_of_allnodes(np)
--		__of_attach_node_sysfs(np);
-+		__of_attach_node_post(np);
- 	mutex_unlock(&of_mutex);
- 
- 	/* Symlink in /proc as required by userspace ABI */
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index b07fec2..34ca783 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -41,7 +41,7 @@ void of_node_put(struct device_node *node)
- }
- EXPORT_SYMBOL(of_node_put);
- 
--void __of_detach_node_sysfs(struct device_node *np)
-+void __of_detach_node_post(struct device_node *np)
- {
- 	struct property *pp;
- 
-@@ -251,7 +251,7 @@ int of_attach_node(struct device_node *np)
- 	__of_attach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	__of_attach_node_sysfs(np);
-+	__of_attach_node_post(np);
- 	mutex_unlock(&of_mutex);
- 
- 	of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, &rd);
-@@ -304,7 +304,7 @@ int of_detach_node(struct device_node *np)
- 	__of_detach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	__of_detach_node_sysfs(np);
-+	__of_detach_node_post(np);
- 	mutex_unlock(&of_mutex);
- 
- 	of_reconfig_notify(OF_RECONFIG_DETACH_NODE, &rd);
-@@ -628,10 +628,10 @@ static int __of_changeset_entry_apply(struct of_changeset_entry *ce)
- 
- 	switch (ce->action) {
- 	case OF_RECONFIG_ATTACH_NODE:
--		__of_attach_node_sysfs(ce->np);
-+		__of_attach_node_post(ce->np);
- 		break;
- 	case OF_RECONFIG_DETACH_NODE:
--		__of_detach_node_sysfs(ce->np);
-+		__of_detach_node_post(ce->np);
- 		break;
- 	case OF_RECONFIG_ADD_PROPERTY:
- 		/* ignore duplicate names */
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 092cba7..10b0342 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -79,9 +79,9 @@ extern void __of_update_property_sysfs(struct device_node *np,
- 		struct property *newprop, struct property *oldprop);
- 
- extern void __of_attach_node(struct device_node *np);
--extern int __of_attach_node_sysfs(struct device_node *np);
-+extern int __of_attach_node_post(struct device_node *np);
- extern void __of_detach_node(struct device_node *np);
--extern void __of_detach_node_sysfs(struct device_node *np);
-+extern void __of_detach_node_post(struct device_node *np);
- 
- /* iterators for transactions, used for overlays */
- /* forward iterator */
 diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index e5a5ec0..7ea3689 100644
+index 7ea3689..59cad84 100644
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -931,7 +931,7 @@ static int attach_node_and_children(struct device_node *np)
- 	of_node_clear_flag(np, OF_DETACHED);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+@@ -25,6 +25,9 @@
  
--	__of_attach_node_sysfs(np);
-+	__of_attach_node_post(np);
- 	mutex_unlock(&of_mutex);
+ #include <linux/bitops.h>
  
- 	while (child) {
-@@ -989,7 +989,7 @@ static int __init unittest_data_add(void)
- 	if (!of_root) {
- 		of_root = unittest_data_node;
- 		for_each_of_allnodes(np)
--			__of_attach_node_sysfs(np);
-+			__of_attach_node_post(np);
- 		of_aliases = of_find_node_by_path("/aliases");
- 		of_chosen = of_find_node_by_path("/chosen");
- 		return 0;
++#include <linux/timekeeping.h>
++#include <linux/random.h>
++
+ #include "of_private.h"
+ 
+ static struct unittest_results {
+@@ -2266,6 +2269,70 @@ out:
+ static inline void __init of_unittest_overlay(void) { }
+ #endif
+ 
++#define PHANDLE_LOOKUPS	1000
++
++static void __init of_unittest_phandle_hash(void)
++{
++	struct device_node *node;
++	phandle max_phandle;
++	u32 ph;
++	unsigned long flags;
++	int i, j, total;
++	ktime_t start, end;
++	s64 dur[2];
++	int dec, frac;
++
++	/* test only available when hashing is available */
++	if (!of_phandle_ht_available()) {
++		pr_warn("phandle hash test requires hash to be initialized\n");
++		return;
++	}
++
++	/* find the maximum phandle of the tree */
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++	max_phandle = 0;
++	total = 0;
++	for_each_of_allnodes(node) {
++		if (node->phandle != (phandle)-1U &&
++				node->phandle > max_phandle)
++			max_phandle = node->phandle;
++		total++;
++	}
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	max_phandle++;
++
++	pr_debug("phandle: max-phandle #%u, #%d total nodes\n",
++			(u32)max_phandle, total);
++
++	/* perform random lookups using the hash */
++	for (j = 0; j < 2; j++) {
++
++		/* disabled for pass #0, enabled for pass #1 */
++		of_phandle_ht_is_disabled = j == 0;
++
++		start = ktime_get_raw();
++		for (i = 0; i < PHANDLE_LOOKUPS; i++) {
++			ph = prandom_u32() % max_phandle;
++			node = of_find_node_by_phandle(ph);
++			of_node_put(node);
++		}
++		end = ktime_get_raw();
++
++		dur[j] = ktime_to_us(end) - ktime_to_us(start);
++		pr_debug("#%d lookups in %lld us (%s)\n",
++				PHANDLE_LOOKUPS, dur[j],
++				j == 0 ? "original" : "hashed");
++	}
++
++	unittest(dur[0] > dur[1], "Non hashing phandles are faster!?");
++
++	dec = (int)div64_s64(dur[0] * 10 + 5, dur[1]);
++	frac = dec % 10;
++	dec /= 10;
++	pr_info("the hash method is %d.%d times faster than the original\n",
++			dec, frac);
++}
++
+ static int __init of_unittest(void)
+ {
+ 	struct device_node *np;
+@@ -2300,6 +2367,7 @@ static int __init of_unittest(void)
+ 	of_unittest_match_node();
+ 	of_unittest_platform_populate();
+ 	of_unittest_overlay();
++	of_unittest_phandle_hash();
+ 
+ 	/* Double check linkage after removing testcase data */
+ 	of_unittest_check_tree_linkage();
 -- 
 1.7.12
