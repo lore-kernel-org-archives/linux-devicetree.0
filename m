@@ -1,146 +1,98 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v8 08/14] usb: otg: add OTG/dual-role core
-Date: Mon, 16 May 2016 12:00:06 +0300
-Message-ID: <57398C16.5050805@ti.com>
-References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
- <1463133808-10630-9-git-send-email-rogerq@ti.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 3/4] soc: mediatek: Add MT2701 power dt-bindings
+Date: Mon, 16 May 2016 17:28:13 +0800
+Message-ID: <1463390894-32062-4-git-send-email-jamesjj.liao@mediatek.com>
+References: <1463390894-32062-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463133808-10630-9-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: peter.chen@freescale.com
-Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463390894-32062-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/05/16 13:03, Roger Quadros wrote:
-> It provides APIs for the following tasks
-> 
-> - Registering an OTG/dual-role capable controller
-> - Registering Host and Gadget controllers to OTG core
-> - Providing inputs to and kicking the OTG state machine
-> 
-> Provide a dual-role device (DRD) state machine.
-> DRD mode is a reduced functionality OTG mode. In this mode
-> we don't support SRP, HNP and dynamic role-swap.
-> 
-> In DRD operation, the controller mode (Host or Peripheral)
-> is decided based on the ID pin status. Once a cable plug (Type-A
-> or Type-B) is attached the controller selects the state
-> and doesn't change till the cable in unplugged and a different
-> cable type is inserted.
-> 
-> As we don't need most of the complex OTG states and OTG timers
-> we implement a lean DRD state machine in usb-otg.c.
-> The DRD state machine is only interested in 2 hardware inputs
-> 'id' and 'b_sess_vld'.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  drivers/usb/common/Makefile  |    2 +-
->  drivers/usb/common/usb-otg.c | 1042 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/usb/core/Kconfig     |    4 +-
->  include/linux/usb/gadget.h   |    2 +
->  include/linux/usb/hcd.h      |    1 +
->  include/linux/usb/otg-fsm.h  |    7 +
->  include/linux/usb/otg.h      |  154 ++++++-
->  7 files changed, 1206 insertions(+), 6 deletions(-)
->  create mode 100644 drivers/usb/common/usb-otg.c
+From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
+Add power dt-bindings for MT2701.
 
-This patch causes the following build issues when CONFIG_USB_GADGET=m, CONFIG_USB=m,
-CONFIG_USB_COMMON=m and CONFIG_USB_OTG=y
+Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/soc/mediatek/scpsys.txt    | 13 +++++++----
+ include/dt-bindings/power/mt2701-power.h           | 27 ++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 5 deletions(-)
+ create mode 100644 include/dt-bindings/power/mt2701-power.h
 
-ERROR: "usb_otg_register_gadget" [drivers/usb/gadget/udc/udc-core.ko] undefined!
-ERROR: "usb_otg_unregister_gadget" [drivers/usb/gadget/udc/udc-core.ko] undefined!
-ERROR: "usb_otg_register_hcd" [drivers/usb/core/usbcore.ko] undefined!
-ERROR: "usb_otg_unregister_hcd" [drivers/usb/core/usbcore.ko] undefined!
-ERROR: "otg_statemachine" [drivers/usb/chipidea/ci_hdrc.ko] undefined!
-scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-make[1]: *** [__modpost] Error 1
-Makefile:1141: recipe for target 'modules' failed
-make: *** [modules] Error 2
-make: *** Waiting for unfinished jobs....
-
-drivers/built-in.o: In function `drd_set_state':
-usb-otg.c:(.text+0x2b4242): undefined reference to `usb_otg_state_string'
-drivers/built-in.o: In function `drd_statemachine':
-(.text+0x2b4b4c): undefined reference to `usb_otg_state_string'
-Makefile:937: recipe for target 'vmlinux' failed
-
-I'll fix it up with the following diff.
-
-diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
-index dca7856..16a5b55 100644
---- a/drivers/usb/Makefile
-+++ b/drivers/usb/Makefile
-@@ -59,5 +59,6 @@ obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
- obj-$(CONFIG_USB_GADGET)	+= gadget/
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+index e8f15e3..16fe94d 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
++++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+@@ -9,17 +9,20 @@ domain control.
  
- obj-$(CONFIG_USB_COMMON)	+= common/
-+obj-$(CONFIG_USB_OTG)		+= common/
+ The driver implements the Generic PM domain bindings described in
+ power/power_domain.txt. It provides the power domains defined in
+-include/dt-bindings/power/mt8173-power.h.
++include/dt-bindings/power/mt8173-power.h and mt2701-power.h.
  
- obj-$(CONFIG_USBIP_CORE)	+= usbip/
-diff --git a/drivers/usb/common/usb-otg.c b/drivers/usb/common/usb-otg.c
-index 77048aa..17e449e 100644
---- a/drivers/usb/common/usb-otg.c
-+++ b/drivers/usb/common/usb-otg.c
-@@ -56,6 +56,30 @@ static int usb_otg_hcd_is_primary_hcd(struct usb_hcd *hcd)
- 	return hcd == hcd->primary_hcd;
- }
+ Required properties:
+-- compatible: Must be "mediatek,mt8173-scpsys"
++- compatible: Should be one of:
++	- "mediatek,mt2701-scpsys"
++	- "mediatek,mt8173-scpsys"
+ - #power-domain-cells: Must be 1
+ - reg: Address range of the SCPSYS unit
+ - infracfg: must contain a phandle to the infracfg controller
+ - clock, clock-names: clocks according to the common clock binding.
+-                      The clocks needed "mm", "mfg", "venc" and "venc_lt".
+-		      These are the clocks which hardware needs to be enabled
+-		      before enabling certain power domains.
++                      These are clocks which hardware needs to be
++                      enabled before enabling certain power domains.
++	Required clocks for MT2701: "mm", "mfg", "ethif"
++	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
  
-+static const char *otg_state_string(enum usb_otg_state state)
-+{
-+	static const char *const names[] = {
-+		[OTG_STATE_A_IDLE] = "a_idle",
-+		[OTG_STATE_A_WAIT_VRISE] = "a_wait_vrise",
-+		[OTG_STATE_A_WAIT_BCON] = "a_wait_bcon",
-+		[OTG_STATE_A_HOST] = "a_host",
-+		[OTG_STATE_A_SUSPEND] = "a_suspend",
-+		[OTG_STATE_A_PERIPHERAL] = "a_peripheral",
-+		[OTG_STATE_A_WAIT_VFALL] = "a_wait_vfall",
-+		[OTG_STATE_A_VBUS_ERR] = "a_vbus_err",
-+		[OTG_STATE_B_IDLE] = "b_idle",
-+		[OTG_STATE_B_SRP_INIT] = "b_srp_init",
-+		[OTG_STATE_B_PERIPHERAL] = "b_peripheral",
-+		[OTG_STATE_B_WAIT_ACON] = "b_wait_acon",
-+		[OTG_STATE_B_HOST] = "b_host",
-+	};
+ Optional properties:
+ - vdec-supply: Power supply for the vdec power domain
+diff --git a/include/dt-bindings/power/mt2701-power.h b/include/dt-bindings/power/mt2701-power.h
+new file mode 100644
+index 0000000..64cc826
+--- /dev/null
++++ b/include/dt-bindings/power/mt2701-power.h
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (C) 2015 MediaTek Inc.
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
 +
-+	if (state < 0 || state >= ARRAY_SIZE(names))
-+		return "UNDEFINED";
++#ifndef _DT_BINDINGS_POWER_MT2701_POWER_H
++#define _DT_BINDINGS_POWER_MT2701_POWER_H
 +
-+	return names[state];
-+}
++#define MT2701_POWER_DOMAIN_CONN	0
++#define MT2701_POWER_DOMAIN_DISP	1
++#define MT2701_POWER_DOMAIN_MFG		2
++#define MT2701_POWER_DOMAIN_VDEC	3
++#define MT2701_POWER_DOMAIN_ISP		4
++#define MT2701_POWER_DOMAIN_BDP		5
++#define MT2701_POWER_DOMAIN_ETH		6
++#define MT2701_POWER_DOMAIN_HIF		7
++#define MT2701_POWER_DOMAIN_IFR_MSC	8
 +
- /**
-  * Check if the OTG device is in our wait list and return
-  * otg_wait_data, else NULL.
-@@ -433,7 +457,7 @@ static void drd_set_state(struct otg_fsm *fsm, enum usb_otg_state new_state)
- 
- 	fsm->state_changed = 1;
- 	dev_dbg(otg->dev, "otg: set state: %s\n",
--		usb_otg_state_string(new_state));
-+		otg_state_string(new_state));
- 	switch (new_state) {
- 	case OTG_STATE_B_IDLE:
- 		drd_set_protocol(fsm, PROTO_UNDEF);
-@@ -449,7 +473,7 @@ static void drd_set_state(struct otg_fsm *fsm, enum usb_otg_state new_state)
- 		break;
- 	default:
- 		dev_warn(otg->dev, "%s: otg: invalid state: %s\n",
--			 __func__, usb_otg_state_string(new_state));
-+			 __func__, otg_state_string(new_state));
- 		break;
- 	}
- 
-@@ -507,7 +531,7 @@ int drd_statemachine(struct usb_otg *otg)
- 
- 	default:
- 		dev_err(otg->dev, "%s: otg: invalid usb-drd state: %s\n",
--			__func__, usb_otg_state_string(state));
-+			__func__, otg_state_string(state));
- 		break;
- 	}
- 
++#endif /* _DT_BINDINGS_POWER_MT2701_POWER_H */
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
