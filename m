@@ -1,61 +1,217 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] of: overlay: Pick up label symbols from overlays.
-Date: Mon, 16 May 2016 21:40:08 +0200
-Message-ID: <CAMuHMdWTC4hmQbcrT3iRMUWWPCa2g2Jt6GQw=UL6+LeSzn1-8g@mail.gmail.com>
-References: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1463417556-23087-5-git-send-email-pantelis.antoniou@konsulko.com>
-	<CAMuHMdXHzhO3M6oG-ONn1y+mVJPdGM8890tT5-QfJEyBVkJ9ug@mail.gmail.com>
-	<86DB0786-6636-4259-B69F-9BAACE9C9CAD@konsulko.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <86DB0786-6636-4259-B69F-9BAACE9C9CAD-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] arm64: dts: rockchip: add i2c nodes for rk3399
+Date: Mon, 16 May 2016 13:09:31 -0700
+Message-ID: <1463429371-10950-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, david.wu@rock-chips.com, jay.xu@rock-chips.com, briannorris@chromium.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pantelis,
+From: David Wu <david.wu@rock-chips.com>
 
-On Mon, May 16, 2016 at 9:27 PM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> On May 16, 2016, at 22:06 , Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org=
-> wrote:
->> On Mon, May 16, 2016 at 6:52 PM, Pantelis Antoniou
->> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>> Insert overlay symbols to the base tree when applied.
->>> This makes it possible to apply an overlay that references a label
->>> that a previously inserted overlay had.
->>>
->>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>
->> This patch hasn't changed, so I think you can keep my
->
-> It=E2=80=99s been tweaked slightly that=E2=80=99s why I dropped your =
-tested-by
-> signoff. Could you test this version again please to verify it
-> works for you?
+We've got 9 (count em!) i2c controllers on rk3399, some of which are in
+the PMU power domain and some of which are normal peripherals.  Add them
+all to the main rk3399 dtsi file so future patches can turn them on in
+the board dts files.
 
-Oh, I missed that you did make some changes...
+Note: by default we try to set the i2c clock rate to 200 MHz so that we
+can achieve good i2c functional clock rates.  200 MHz gives us the
+ability to make very close to 100 kHz / 400 kHz / 1 MHz rates.  If
+boards want to tune clock rates further they can always override.
+Possibly boards could want to tune this if:
+- they wanted to save an infinitesimal amount of power and they knew
+  their i2c bus was slow anyway.  Since we gate the functional clock
+  when the i2c bus is not active, power savings would only be while i2c
+  transfers were happening and probably won't be very big anyway.
+- they wanted to eek out a bit more speed by carefully tuning the source
+  clock to make divisions work out perfectly, accounting for the rise /
+  fall time measured on an actual board.
 
-Will test again and report back to you...
+Note also that we still request 200 MHz for the PMU i2c busses even
+though we expect that we won't make that exactly (currently PPLL is 676
+MHz which gives us 169 MHz).
 
-Gr{oetje,eeting}s,
+Signed-off-by: David Wu <david.wu@rock-chips.com>
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+[dianders: wrote desc; put in assigned-clocks; reordered nodes]
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+Note: this patch is based upon David Wu's patch series to add rk3399
+support to i2c-rk3x.c and shouldn't land until at least device tree
+bindings land.
 
-                        Geert
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 144 +++++++++++++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 46f325a143b0..753a91728b4c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -54,6 +54,15 @@
+ 	#size-cells = <2>;
+ 
+ 	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
++		i2c4 = &i2c4;
++		i2c5 = &i2c5;
++		i2c6 = &i2c6;
++		i2c7 = &i2c7;
++		i2c8 = &i2c8;
+ 		serial0 = &uart0;
+ 		serial1 = &uart1;
+ 		serial2 = &uart2;
+@@ -272,6 +281,96 @@
+ 		};
+ 	};
+ 
++	i2c1: i2c@ff110000 {
++		compatible = "rockchip,rk3399-i2c";
++		reg = <0x0 0xff110000 0x0 0x1000>;
++		assigned-clocks = <&cru SCLK_I2C1>;
++		assigned-clock-rates = <200000000>;
++		clocks = <&cru SCLK_I2C1>, <&cru PCLK_I2C1>;
++		clock-names = "i2c", "pclk";
++		interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c1_xfer>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c2: i2c@ff120000 {
++		compatible = "rockchip,rk3399-i2c";
++		reg = <0x0 0xff120000 0x0 0x1000>;
++		assigned-clocks = <&cru SCLK_I2C2>;
++		assigned-clock-rates = <200000000>;
++		clocks = <&cru SCLK_I2C2>, <&cru PCLK_I2C2>;
++		clock-names = "i2c", "pclk";
++		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c2_xfer>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c3: i2c@ff130000 {
++		compatible = "rockchip,rk3399-i2c";
++		reg = <0x0 0xff130000 0x0 0x1000>;
++		assigned-clocks = <&cru SCLK_I2C3>;
++		assigned-clock-rates = <200000000>;
++		clocks = <&cru SCLK_I2C3>, <&cru PCLK_I2C3>;
++		clock-names = "i2c", "pclk";
++		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c3_xfer>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c5: i2c@ff140000 {
++		compatible = "rockchip,rk3399-i2c";
++		reg = <0x0 0xff140000 0x0 0x1000>;
++		assigned-clocks = <&cru SCLK_I2C5>;
++		assigned-clock-rates = <200000000>;
++		clocks = <&cru SCLK_I2C5>, <&cru PCLK_I2C5>;
++		clock-names = "i2c", "pclk";
++		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c5_xfer>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c6: i2c@ff150000 {
++		compatible = "rockchip,rk3399-i2c";
++		reg = <0x0 0xff150000 0x0 0x1000>;
++		assigned-clocks = <&cru SCLK_I2C6>;
++		assigned-clock-rates = <200000000>;
++		clocks = <&cru SCLK_I2C6>, <&cru PCLK_I2C6>;
++		clock-names = "i2c", "pclk";
++		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c6_xfer>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c7: i2c@ff160000 {
++		compatible = "rockchip,rk3399-i2c";
++		reg = <0x0 0xff160000 0x0 0x1000>;
++		assigned-clocks = <&cru SCLK_I2C7>;
++		assigned-clock-rates = <200000000>;
++		clocks = <&cru SCLK_I2C7>, <&cru PCLK_I2C7>;
++		clock-names = "i2c", "pclk";
++		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c7_xfer>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	uart0: serial@ff180000 {
+ 		compatible = "rockchip,rk3399-uart", "snps,dw-apb-uart";
+ 		reg = <0x0 0xff180000 0x0 0x100>;
+@@ -420,6 +519,51 @@
+ 		status = "disabled";
+ 	};
+ 
++	i2c0: i2c@ff3c0000 {
++		compatible = "rockchip,rk3399-i2c";
++		reg = <0x0 0xff3c0000 0x0 0x1000>;
++		assigned-clocks = <&pmucru SCLK_I2C0_PMU>;
++		assigned-clock-rates = <200000000>;
++		clocks = <&pmucru SCLK_I2C0_PMU>, <&pmucru PCLK_I2C0_PMU>;
++		clock-names = "i2c", "pclk";
++		interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c0_xfer>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c4: i2c@ff3d0000 {
++		compatible = "rockchip,rk3399-i2c";
++		reg = <0x0 0xff3d0000 0x0 0x1000>;
++		assigned-clocks = <&pmucru SCLK_I2C4_PMU>;
++		assigned-clock-rates = <200000000>;
++		clocks = <&pmucru SCLK_I2C4_PMU>, <&pmucru PCLK_I2C4_PMU>;
++		clock-names = "i2c", "pclk";
++		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c4_xfer>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c8: i2c@ff3e0000 {
++		compatible = "rockchip,rk3399-i2c";
++		reg = <0x0 0xff3e0000 0x0 0x1000>;
++		assigned-clocks = <&pmucru SCLK_I2C8_PMU>;
++		assigned-clock-rates = <200000000>;
++		clocks = <&pmucru SCLK_I2C8_PMU>, <&pmucru PCLK_I2C8_PMU>;
++		clock-names = "i2c", "pclk";
++		interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c8_xfer>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	pwm0: pwm@ff420000 {
+ 		compatible = "rockchip,rk3399-pwm", "rockchip,rk3288-pwm";
+ 		reg = <0x0 0xff420000 0x0 0x10>;
+-- 
+2.8.0.rc3.226.g39d4020
