@@ -1,63 +1,81 @@
-Return-Path: <philip.j.elwell@gmail.com>
+Return-Path: <mtk07307@kernel.org>
+From: Weiqing Kong <weiqing.kong@mediatek.com>
+Subject: [PATCH 3/3] dts: Add disp bls dsti and dts config for MT2701
+Date: Mon, 16 May 2016 16:14:24 +0800
+Message-ID: <1463386464-15707-4-git-send-email-weiqing.kong@mediatek.com>
+In-Reply-To: <1463386464-15707-1-git-send-email-weiqing.kong@mediatek.com>
+References: <1463386464-15707-1-git-send-email-weiqing.kong@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJkJyMi4_RoxLAiVD3GXst8CX_8ekounavztXZKxdMKtg@mail.gmail.com>
-References: <1462477724-8092-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1462477724-8092-4-git-send-email-pantelis.antoniou@konsulko.com>
-	<CAL_JsqJkJyMi4_RoxLAiVD3GXst8CX_8ekounavztXZKxdMKtg@mail.gmail.com>
-Date: Fri, 6 May 2016 10:14:43 +0100
-Message-ID: <CAPhXvM4QNbtt9mdUhn+3VJv1vvCN8gtAkR4S5QFiwviF+0JVrQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] plugin: Transparently support old style syntax
-From: Phil Elwell <philip.j.elwell@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11423120ac0d26053228e30f
-To: Rob Herring <robherring2@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jan Luebbe <jlu@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Matt Porter <mporter@konsulko.com>, devicetree-compiler@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+To: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, weiqing.kong@mediatek.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
 List-ID: <devicetree@vger.kernel.org>
 
---001a11423120ac0d26053228e30f
-Content-Type: text/plain; charset=UTF-8
+Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
+---
+ arch/arm/boot/dts/mt2701-evb.dts | 29 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/mt2701.dtsi    |  9 +++++++++
+ 2 files changed, 38 insertions(+)
 
-On Fri, May 6, 2016 at 1:58 AM, Rob Herring <robherring2@gmail.com> wrote:
-
-> In the wild where?
->
-> IMO, too bad. That's the danger of deploying prototype code. Perhaps a
-> tool to convert them would be better.
-
-
-At Raspberry Pi we've been making good use of overlays for over a year now.
-They have been an invaluable tool, allowing us to reduce the need for
-downstream code while retaining and extending the flexibility our users
-need. Without the circulating patches I would have pressed ahead with a
-homegrown equivalent, which would have made switching to overlays much more
-painful.
-
-I hope to see Pantelis's overlay configfs code in a kernel release soon,
-but until then we'll continue to apply the patches downstream.
-
-Phil
-
---001a11423120ac0d26053228e30f
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On F=
-ri, May 6, 2016 at 1:58 AM, Rob Herring <span dir=3D"ltr">&lt;<a href=3D"ma=
-ilto:robherring2@gmail.com" target=3D"_blank">robherring2@gmail.com</a>&gt;=
-</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px=
- 0px 0.8ex;border-left-width:1px;border-left-style:solid;border-left-color:=
-rgb(204,204,204);padding-left:1ex">In the wild where?<br>
-<br>
-IMO, too bad. That&#39;s the danger of deploying prototype code. Perhaps a<=
-br>
-tool to convert them would be better.</blockquote><div><br></div><div>At Ra=
-spberry Pi we&#39;ve been making good use of overlays for over a year now. =
-They have been an invaluable tool, allowing us to reduce the need for downs=
-tream code while retaining and extending the flexibility our users need. Wi=
-thout the circulating patches I would have pressed ahead with a homegrown e=
-quivalent, which would have made switching to overlays much more painful.</=
-div><div><br></div><div>I hope to see Pantelis&#39;s overlay configfs code =
-in a kernel release soon, but until then we&#39;ll continue to apply the pa=
-tches downstream.</div><div class=3D"gmail_extra"><br></div><div class=3D"g=
-mail_extra">Phil</div></div></div></div>
-
---001a11423120ac0d26053228e30f--
+diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+index 082ca88..6d572f4 100644
+--- a/arch/arm/boot/dts/mt2701-evb.dts
++++ b/arch/arm/boot/dts/mt2701-evb.dts
+@@ -22,6 +22,35 @@
+ 	memory {
+ 		reg = <0 0x80000000 0 0x40000000>;
+ 	};
++
++	backlight_lcd: backlight_lcd {
++		compatible = "pwm-backlight";
++		pwms = <&disp_bls 0 100000>;
++		brightness-levels = <
++			  0  16  32  48  64  80  96 112
++			128 144 160 176 192 208 224 240
++			255
++		>;
++		default-brightness-level = <9>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm_bls_gpio>;
++	};
++};
++
++&disp_bls {
++	status = "okay";
++};
++
++&mmsys {
++	status = "okay";
++};
++
++&pio {
++	pwm_bls_gpio: pwm_bls_gpio {
++		pins_cmd_dat {
++			pinmux = <MT2701_PIN_208_AUD_EXT_CK1__FUNC_DISP_PWM>;
++		};
++	};
+ };
+ 
+ &uart0 {
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 42d5a37..dae55d6 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -234,6 +234,15 @@
+ 		status = "disabled";
+ 	};
+ 
++	disp_bls: dispsys@1400a000 {
++		compatible = "mediatek,mt2701-disp-bls";
++		reg = <0 0x1400a000 0 0x1000>;
++		#pwm-cells = <2>;
++		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
++		clock-names = "main", "mm";
++		status = "disabled";
++	};
++
+ 	imgsys: syscon@15000000 {
+ 		compatible = "mediatek,mt2701-imgsys", "syscon";
+ 		reg = <0 0x15000000 0 0x1000>;
+-- 
+1.9.1
