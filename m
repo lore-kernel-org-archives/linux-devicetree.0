@@ -1,51 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
- device tree binding documentation
-Date: Mon, 16 May 2016 11:22:05 -0500
-Message-ID: <20160516162205.GA11930@rob-hp-laptop>
-References: <1463123033-5443-1-git-send-email-appanad@xilinx.com>
+Subject: Re: [PATCH v3] ASoC: MAX9860: new driver
+Date: Mon, 16 May 2016 11:22:54 -0500
+Message-ID: <20160516162254.GA15499@rob-hp-laptop>
+References: <1463124333-9489-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463123033-5443-1-git-send-email-appanad@xilinx.com>
+In-Reply-To: <1463124333-9489-1-git-send-email-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Misbah Ullah Khan <Misbahk@danlawinc.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 13, 2016 at 12:33:52PM +0530, Kedareswara rao Appana wrote:
-> Device-tree binding documentation for Xilinx zynqmp dma engine
-> used in Zynq UltraScale+ MPSoC.
+On Fri, May 13, 2016 at 09:25:33AM +0200, Peter Rosin wrote:
+> This is a driver for the MAX9860 Mono Audio Voice Codec.
 > 
-> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> https://datasheets.maximintegrated.com/en/ds/MAX9860.pdf
+> 
+> This driver does not support sidetone since the DVST register field is
+> backwards with the mute near the maximum level instead of the minimum.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
-> Changs in v9:
-> - Removed include sg runtime configuration parameter
->   from the binding doc as suggested by Lars.
-> Changes in v8:
-> - Removed all the software runtime configuration parameters
->   from the binding doc as suggested by the Lars.
-> Changes in v7:
-> - None.
-> Changes in v6:
-> - Removed desc-axi-cache/dst-axi-cache/src-axi-cache properties
->   from the binding doc as it allow broken combinations when dma-coherent
->   is set as suggested by Rob.
-> - Fixed minor comments given by Rob related coding(lower case DT node name).
-> Changes in v5:
-> - Use dma-coherent flag for coherent transfers as suggested by rob.
-> - Removed unnecessary properties from binding doc as suggested by Rob.
-> Changes in v4:
-> - None
-> Changes in v3:
-> - None
-> Changes in v2:
-> - None.
-> 
->  .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>  .../devicetree/bindings/sound/max9860.txt          |  28 +
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  MAINTAINERS                                        |   7 +
+>  sound/soc/codecs/Kconfig                           |   6 +
+>  sound/soc/codecs/Makefile                          |   2 +
+>  sound/soc/codecs/max9860.c                         | 761 +++++++++++++++++++++
+>  sound/soc/codecs/max9860.h                         | 162 +++++
+>  6 files changed, 966 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/max9860.txt
+>  create mode 100644 sound/soc/codecs/max9860.c
+>  create mode 100644 sound/soc/codecs/max9860.h
