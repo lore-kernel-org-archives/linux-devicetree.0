@@ -1,73 +1,63 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 04/20] clk: sunxi: display: Add per-clock flags
-Date: Mon, 16 May 2016 23:21:41 +0800
-Message-ID: <CAGb2v66-GzV=1wrJnHBObLVPVHPk87o0PaJtNyYasp2wFsZabw@mail.gmail.com>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
- <1463402840-17062-5-git-send-email-maxime.ripard@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] gpio: dt-bindings: add ibm,ppc4xx-gpio binding
+Date: Mon, 16 May 2016 10:27:46 -0500
+Message-ID: <20160516152746.GA13649@rob-hp-laptop>
+References: <c7b118c342c161954126e2e82cf1a0a6a127b4c2.1463002267.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1463402840-17062-5-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c7b118c342c161954126e2e82cf1a0a6a127b4c2.1463002267.git.chunkeey@googlemail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: linux-gpio@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Alistair Popple <alistair@popple.id.au>, Matt Porter <mporter@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, May 16, 2016 at 8:47 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> The TCON channel 0 clock that is the parent clock of our pixel clock is
-> expected to change its rate depending on the resolution we want to output
-> in our display engine.
->
-> However, since it's only a mux, the only way it can do that is by changing
-> its parents rate.
->
-> Allow to give flags in our display clocks description, and add the
-> CLK_SET_RATE_PARENT flag for the TCON channel 0 flag.
->
-> Fixes: a3b4956ee6d9 ("clk: sunxi: display: Add per-clock flags")
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+On Thu, May 12, 2016 at 12:07:48AM +0200, Christian Lamparter wrote:
+> This patch adds binding information for IBM/AMCC/APM GPIO
+> Controllers of the PowerPC 4XX series and compatible SoCs.
+> 
+> The "PowerPC 405EP Embedded Processor Data Sheet" has the
+> following to say about the GPIO controllers: "
+> 
+>  - Controller functions and GPIO registers are programmed
+>    and accessed via memory-mapped OPB bus master accesses
+> 
+>  - All GPIOs are pin-shared with other functions. DCRs control
+>    whether a particular pin that has GPIO capabilities acts
+>    as a GPIO or is used for another purpose.
+> 
+>  - Each GPIO outputs is separately programmable to emulate
+>    an open-drain driver (i.e. drives to zero, threestated if
+>    output bit is 1)
+> 
+> "
+> The ppc4xx_gpio.c driver is part of the platform/sysdev drivers
+> in arch/powerpc/sysdev.
+> 
+> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 > ---
->  drivers/clk/sunxi/clk-sun4i-display.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/sunxi/clk-sun4i-display.c b/drivers/clk/sunxi/clk-sun4i-display.c
-> index 445a7498d6df..9780fac6d029 100644
-> --- a/drivers/clk/sunxi/clk-sun4i-display.c
-> +++ b/drivers/clk/sunxi/clk-sun4i-display.c
-> @@ -33,6 +33,8 @@ struct sun4i_a10_display_clk_data {
->
->         u8      width_div;
->         u8      width_mux;
-> +
+> I looked into arch/powerpc/sysdev/ppc4xx_gpio.c driver and
+> it doesn't have support for the tri-state logic (open drain
+> is disabled), but the hardware would support it.
+> (the #gpio-cells description suffers because of this, since
+> the high-z option isn't there).
+> 
+> Also there's another problem: There's no DCR pinmux driver?!
+> So sadly, there's not much information on how to use the DCRs
+> to control the which pin is muxed to the GPIO or to a SoC
+> function like the i2c.
+> 
+> This was all the valuable information I could find about the
+> hardware, so it is included it in the binding text, even
+> though there's no support for it... Is there anything else
+> to add?
+> ---
+>  .../devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt   | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt
 
-Don't really need this separator, but I'm ok either way.
+Normally, we don't allow wildcards for compatible strings, but given 
+this is an established binding it is okay.
 
-> +       u32     flags;
->  };
->
->  struct reset_data {
-> @@ -166,7 +168,7 @@ static void __init sun4i_a10_display_init(struct device_node *node,
->                                      data->has_div ? &div->hw : NULL,
->                                      data->has_div ? &clk_divider_ops : NULL,
->                                      &gate->hw, &clk_gate_ops,
-> -                                    0);
-> +                                    data->flags);
->         if (IS_ERR(clk)) {
->                 pr_err("%s: Couldn't register the clock\n", clk_name);
->                 goto free_div;
-> @@ -232,6 +234,7 @@ static const struct sun4i_a10_display_clk_data sun4i_a10_tcon_ch0_data __initcon
->         .offset_rst     = 29,
->         .offset_mux     = 24,
->         .width_mux      = 2,
-> +       .flags          = CLK_SET_RATE_PARENT,
->  };
->
->  static void __init sun4i_a10_tcon_ch0_setup(struct device_node *node)
-> --
-> 2.8.2
->
-
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Rob Herring <robh@kernel.org>
