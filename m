@@ -1,37 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drivers/of: Fix depth when unflattening devicetree
-Date: Mon, 16 May 2016 09:10:54 -0500
-Message-ID: <20160516141054.GB21849@rob-hp-laptop>
-References: <1462988217-29314-1-git-send-email-rklein@nvidia.com>
+Subject: Re: [PATCH] drivers/of: Fix build warning in populate_node()
+Date: Mon, 16 May 2016 09:11:26 -0500
+Message-ID: <20160516141126.GC21849@rob-hp-laptop>
+References: <CAMuHMdUnsDhTS5-C6_SvrqGb6hVTBZOz00=HBGhtqAQbwYv6hg@mail.gmail.com>
+ <1463139099-23363-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462988217-29314-1-git-send-email-rklein@nvidia.com>
-Sender: stable-owner@vger.kernel.org
-To: Rhyland Klein <rklein@nvidia.com>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <1463139099-23363-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, geert@linux-m68k.org, robherring2@gmail.com, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 01:36:57PM -0400, Rhyland Klein wrote:
-> When the implementation for unflatten_dt_node() changed from being
-> recursive to being non-recursive, it had a side effect of increasing the
-> depth passed to fdt_next_node() by 1. This is fine most of the time, but
-> it seems that when the end of the dtb is being parsed, it will cause the
-> FDT_END condition in fdt_next_node() to return a different value
-> (returning nextoffset instead of -FDT_ERR_NOTFOUND). This ends up passing
-> an FDT_ERR_TRUNCATED error back to the unflatten_dt_node() which then
-> sees that and complains "Error -8 processing FDT" causing boot to fail.
+On Fri, May 13, 2016 at 09:31:39PM +1000, Gavin Shan wrote:
+> Function populate_node() is used to unflatten FDT blob to device
+> tree. It supports maximal 64 level of device nodes. There is one
+> array @fpsizes[64] tracking the full name length of last unflattened
+> device node in the corresponding level (index of element in the
+> array - 1). Build warning is seen with CONFIG_FRAME_WARN=1024 like
+> below on ARM64 as Geert reported. The issue can be reproduced on
+> PPC64 as well.
 > 
-> This patch simply avoids incrementing depth and uses modified accesses
-> for local array indices so that the depth is the same as it was before
-> the change as far as fdt_next_node() is concerned.
+>   $ make drivers/of/fdt.o
+>   drivers/of/fdt.c:443:1: warning: the frame size of 1136 bytes is \
+>   larger than 1024 bytes [-Wframe-larger-than=]
 > 
-> This problem was discovered trying to boot Tegra210-Smaug platforms.
+> This changes the data type of @fpsizes[i] from "unsigned long" to
+> "unsigned int" to avoid the build warning. The return value type
+> of populate_node() and its @fpsize argument is adjusted accordingly.
+> With this applied, 256 bytes saved from the stack frame on ARM64 and
+> PPC64 platforms and the above warning isn't seen.
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 9ffa9eb41763 ("drivers/of: Avoid recursively calling unflatten_dt_node()")
-> Signed-off-by: Rhyland Klein <rklein@nvidia.com>
+> Fixes: 9ffa9eb ("drivers/of: Avoid recursively calling unflatten_dt_node()")
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 > ---
 >  drivers/of/fdt.c | 16 ++++++++--------
 >  1 file changed, 8 insertions(+), 8 deletions(-)
