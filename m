@@ -1,62 +1,124 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH-V2 1/5] dt: bindings: add thermal device driver for
- bcm2835
-Date: Mon, 16 May 2016 11:32:43 -0500
-Message-ID: <20160516163243.GA20435@rob-hp-laptop>
-References: <1463145186-12906-1-git-send-email-kernel@martin.sperl.org>
- <1463145186-12906-2-git-send-email-kernel@martin.sperl.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ASoC: cs35l33: Add device tree bindings file for
+ cs35l33
+Date: Mon, 16 May 2016 11:39:22 -0500
+Message-ID: <20160516163922.GA21073@rob-hp-laptop>
+References: <1463173373-648-1-git-send-email-Paul.Handrigan@cirrus.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1463145186-12906-2-git-send-email-kernel@martin.sperl.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: kernel@martin.sperl.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, linux-pm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1463173373-648-1-git-send-email-Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 13, 2016 at 01:13:02PM +0000, kernel@martin.sperl.org wrote:
-> From: Martin Sperl <kernel@martin.sperl.org>
+On Fri, May 13, 2016 at 04:02:53PM -0500, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org wrote:
+> From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 > 
-> Add documentation for bcm2835 SOC thermal sensor.
+> Add device tree bindings file for the cs35l33 8V boosted
+> class D amplifier.
 > 
-> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> Acked-by: Eric Anholt <eric@anholt.net>
-> 
-> Changelog:
->  V1 -> V2: renamed file to follow naming conventions
+> Signed-off-by: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 > ---
->  .../bindings/thermal/brcm,bcm2835-thermal.txt           | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
+>  .../devicetree/bindings/sound/cs35l33.txt          | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/cs35l33.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
+> diff --git a/Documentation/devicetree/bindings/sound/cs35l33.txt b/Documentation/devicetree/bindings/sound/cs35l33.txt
 > new file mode 100644
-> index 0000000..09de164
+> index 0000000..273d73a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
-> @@ -0,0 +1,17 @@
-> +Binding for Thermal Sensor driver for BCM2835 SoCs.
+> +++ b/Documentation/devicetree/bindings/sound/cs35l33.txt
+> @@ -0,0 +1,73 @@
+> +CS35L33 Speaker Amplifier
 > +
-> +Required parameters:
-> +-------------------
+> +Required properties:
 > +
-> +compatible: 	should be one of: "brcm,bcm2835-thermal",
-> +		"brcm,bcm2836-thermal" or "brcm,bcm2837-thermal"
-> +reg:		Address range of the thermal registers.
-> +clocks: 	Phandle of the clock used by the thermal sensor.
+> +  - compatible : "cirrus,cs35l33"
+> +
+> +  - reg : the I2C address of the device for I2C
+> +
+> +  - VA-supply, VP-supply : power supplies for the device,
+> +    as covered in
+> +    Documentation/devicetree/bindings/regulator/regulator.txt.
+> +
+> +Optional properties:
+> +
+> +  - reset-gpios : gpio used to reset the amplifier
+> +
+> +  - interrupt-parent : Specifies the phandle of the interrupt controller to
+> +    which the IRQs from CS35L33 are delivered to.
+> + -  interrupts : IRQ line info CS35L33.
+> +    (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +    for further information relating to interrupt properties)
+> +
+> +  - boost-ctl : Booster voltage use to supply the amp. If the value is
+> +    0, then VBST = VP. If greater than 0, the boost voltage will be 3.3V with
+> +    a value of 1 and will increase at a step size of 0.1V until a maximum of
+> +    8.0V.
+
+Can you just specify this is microvolts? Looks like an easy conversion.
+
+> +
+> +  - ramp-rate : On power up, it affects the time from when the power
+> +    up sequence begins to the time the audio reaches a full-scale output.
+> +    On power down, it affects the time from when the power-down sequence
+> +    begins to when the amplifier disables the PWM outputs. If this property
+> +    is not set then soft ramping will be disabled and ramp time would be
+> +    20ms. If this property is set to 0,1,2,3 then ramp times would be 40ms,
+> +    60ms,100ms,175ms respectively for 48KHz sample rate.
+
+Either use time units or add vendor prefix.
+
+> +  - boost-ipk : The maximum current allowed for the boost converter.
+> +    The range starts at 1.85A (0xF0) and goes to a maximum of 3.60A (0xE0)
+> +    with a step size of 0.015625A. The default is 2.50A (0x90).
+
+Can this be in microamps?
+
+Are these standard/typical properties for Class D amps?
+
+> +
+> +  - hg-algo : Parameters for internal Class H/G algorithm that
+> +    controls the amplifier supplies.
+
+Each property in this node needs to be defined.
+
 > +
 > +Example:
 > +
-> +thermal: thermal@0x7e212000 {
-
-Drop the '0x'. Otherwise,
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-> +	compatible = "brcm,bcm2835-thermal";
-> +	reg = <0x7e212000 0x8>;
-> +	clocks = <&clocks BCM2835_CLOCK_TSENS>;
+> +cs35l33: cs35l33@40 {
+> +	compatible = "cirrus,cs35l33";
+> +	reg = <0x40>;
+> +
+> +	VA-supply = <&ldo5_reg>;
+> +	VP-supply = <&ldo5_reg>;
+> +
+> +	interrupt-parent = <&gpio8>;
+> +	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +	reset-gpios = <&cs47l91 34 0>;
+> +
+> +	ramp-rate = <0x0>;
+> +	boost-ctl = <0x30>;  /* VBST = 8.0V */
+> +	boost-ipk = <0xE0>; /* 3.60A */
+> +
+> +	hg-algo {
+> +		mem-depth = <0x3>;
+> +		release-rate = <0x3>;
+> +		hd-rm = <0xA>;
+> +		ldo-thld = <0x1>;
+> +		ldo-path-disable = <0x0>;
+> +		ldo-entry-delay=<0x4>;
+> +		vp-hg-auto;
+> +		vp-hg=<0xF>;
+> +		vp-hg-rate=<0x2>;
+> +		vp-hg-va=<0x0>;
+> +	};
 > +};
-> --
-> 2.1.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
