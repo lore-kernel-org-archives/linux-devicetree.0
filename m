@@ -1,45 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drivers/of: Fix build warning in populate_node()
-Date: Mon, 16 May 2016 09:11:26 -0500
-Message-ID: <20160516141126.GC21849@rob-hp-laptop>
-References: <CAMuHMdUnsDhTS5-C6_SvrqGb6hVTBZOz00=HBGhtqAQbwYv6hg@mail.gmail.com>
- <1463139099-23363-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1463139099-23363-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, geert@linux-m68k.org, robherring2@gmail.com, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, panto@antoniou-consulting.com, frowand.list@gmail.com
+From: David Wu <david.wu@rock-chips.com>
+Subject: [PATCH v10 0/8] add i2c driver supported for rk3399
+Date: Mon, 16 May 2016 21:57:35 +0800
+Message-ID: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, wsa@the-dreams.de
+Cc: robh+dt@kernel.org, dianders@chromium.org, andy.shevchenko@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, briannorris@google.com, davidriley@google.com, huangtao@rock-chips.com, hl@rock-chips.com, xjq@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Wu <david.wu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 13, 2016 at 09:31:39PM +1000, Gavin Shan wrote:
-> Function populate_node() is used to unflatten FDT blob to device
-> tree. It supports maximal 64 level of device nodes. There is one
-> array @fpsizes[64] tracking the full name length of last unflattened
-> device node in the corresponding level (index of element in the
-> array - 1). Build warning is seen with CONFIG_FRAME_WARN=1024 like
-> below on ARM64 as Geert reported. The issue can be reproduced on
-> PPC64 as well.
-> 
->   $ make drivers/of/fdt.o
->   drivers/of/fdt.c:443:1: warning: the frame size of 1136 bytes is \
->   larger than 1024 bytes [-Wframe-larger-than=]
-> 
-> This changes the data type of @fpsizes[i] from "unsigned long" to
-> "unsigned int" to avoid the build warning. The return value type
-> of populate_node() and its @fpsize argument is adjusted accordingly.
-> With this applied, 256 bytes saved from the stack frame on ARM64 and
-> PPC64 platforms and the above warning isn't seen.
-> 
-> Fixes: 9ffa9eb ("drivers/of: Avoid recursively calling unflatten_dt_node()")
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->  drivers/of/fdt.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+There are three points differert from others:
+ - new method to caculate i2c timings for rk3399
+ - pclk and function clk are separated at rk3399
+ - add fast-plus mode supported for rk3399
 
-Applied, thanks.
+David Wu (8):
+  i2c: rk3x: add documentation to fields in "struct rk3x_i2c"
+  i2c: rk3x: use struct "rk3x_i2c_calced_timings"
+  i2c: rk3x: Remove redundant rk3x_i2c_clean_ipd()
+  i2c: rk3x: Change SoC data to not use array
+  i2c: rk3x: Move spec timing data to "static const" structs
+  dt-bindings: i2c: rk3x: add support for rk3399
+  i2c: rk3x: add i2c support for rk3399 soc
+  i2c: rk3x: support fast-mode plus for rk3399
 
-Rob
+ Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  16 +-
+ drivers/i2c/busses/i2c-rk3x.c                      | 498 +++++++++++++++++----
+ 2 files changed, 434 insertions(+), 80 deletions(-)
+
+-- 
+1.9.1
