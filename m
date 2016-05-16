@@ -1,226 +1,53 @@
-From: Rabin Vincent <rabin.vincent@axis.com>
-Subject: [PATCH] phy: remove irq param to fix crash in fixed_phy_add()
-Date: Mon, 16 May 2016 13:15:56 +0200
-Message-ID: <1463397356-5656-1-git-send-email-rabin.vincent@axis.com>
-Return-path: <linux-m68k-owner@vger.kernel.org>
-Sender: linux-m68k-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Rabin Vincent <rabinv@axis.com>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: Re: [RFC 2/3] drm/mediatek: add support for Mediatek SoC MT2701
+Date: Mon, 16 May 2016 19:39:41 +0800
+Message-ID: <1463398781.13038.4.camel@mtksdaap41>
+References: <1463053795-55455-1-git-send-email-yt.shen@mediatek.com>
+ <1463053795-55455-3-git-send-email-yt.shen@mediatek.com>
+ <1463111956.12239.15.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1463111956.12239.15.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mao Huang <littlecvr@chromium.org>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rabin Vincent <rabinv@axis.com>
-
-Since e7f4dc3536a ("mdio: Move allocation of interrupts into core"),
-platforms which call fixed_phy_add() before fixed_mdio_bus_init() is
-called (for example, because the platform code and the fixed_phy driver
-use the same initcall level) crash in fixed_phy_add() since the
-->mii_bus is not allocated.
-
-Also since e7f4dc3536a, these interrupts are initalized to polling by
-default.  All callers of both fixed_phy_register() and fixed_phy_add()
-pass PHY_POLL for the irq argument, so we can fix these crashes by
-simply removing the irq parameter, since the default is correct for all
-users.
-
-Fixes: e7f4dc3536a400 ("mdio: Move allocation of interrupts into core")
-Signed-off-by: Rabin Vincent <rabinv@axis.com>
----
- arch/m68k/coldfire/m5272.c                   |  2 +-
- arch/mips/ar7/platform.c                     |  5 ++---
- arch/mips/bcm47xx/setup.c                    |  2 +-
- drivers/net/ethernet/broadcom/bgmac.c        |  2 +-
- drivers/net/ethernet/broadcom/genet/bcmmii.c |  2 +-
- drivers/net/phy/fixed_phy.c                  | 10 +++-------
- drivers/of/of_mdio.c                         |  6 +++---
- include/linux/phy_fixed.h                    | 16 ++++++----------
- 8 files changed, 18 insertions(+), 27 deletions(-)
-
-diff --git a/arch/m68k/coldfire/m5272.c b/arch/m68k/coldfire/m5272.c
-index c525e4c..217e2e0 100644
---- a/arch/m68k/coldfire/m5272.c
-+++ b/arch/m68k/coldfire/m5272.c
-@@ -126,7 +126,7 @@ static struct fixed_phy_status nettel_fixed_phy_status __initdata = {
- static int __init init_BSP(void)
- {
- 	m5272_uarts_init();
--	fixed_phy_add(PHY_POLL, 0, &nettel_fixed_phy_status, -1);
-+	fixed_phy_add(0, &nettel_fixed_phy_status, -1);
- 	return 0;
- }
- 
-diff --git a/arch/mips/ar7/platform.c b/arch/mips/ar7/platform.c
-index 58fca9a..0a024b0 100644
---- a/arch/mips/ar7/platform.c
-+++ b/arch/mips/ar7/platform.c
-@@ -678,8 +678,7 @@ static int __init ar7_register_devices(void)
- 	}
- 
- 	if (ar7_has_high_cpmac()) {
--		res = fixed_phy_add(PHY_POLL, cpmac_high.id,
--				    &fixed_phy_status, -1);
-+		res = fixed_phy_add(cpmac_high.id, &fixed_phy_status, -1);
- 		if (!res) {
- 			cpmac_get_mac(1, cpmac_high_data.dev_addr);
- 
-@@ -692,7 +691,7 @@ static int __init ar7_register_devices(void)
- 	} else
- 		cpmac_low_data.phy_mask = 0xffffffff;
- 
--	res = fixed_phy_add(PHY_POLL, cpmac_low.id, &fixed_phy_status, -1);
-+	res = fixed_phy_add(cpmac_low.id, &fixed_phy_status, -1);
- 	if (!res) {
- 		cpmac_get_mac(0, cpmac_low_data.dev_addr);
- 		res = platform_device_register(&cpmac_low);
-diff --git a/arch/mips/bcm47xx/setup.c b/arch/mips/bcm47xx/setup.c
-index c807e32..ca3fbd1 100644
---- a/arch/mips/bcm47xx/setup.c
-+++ b/arch/mips/bcm47xx/setup.c
-@@ -243,7 +243,7 @@ static int __init bcm47xx_register_bus_complete(void)
- 	bcm47xx_leds_register();
- 	bcm47xx_workarounds();
- 
--	fixed_phy_add(PHY_POLL, 0, &bcm47xx_fixed_phy_status, -1);
-+	fixed_phy_add(0, &bcm47xx_fixed_phy_status, -1);
- 	return 0;
- }
- device_initcall(bcm47xx_register_bus_complete);
-diff --git a/drivers/net/ethernet/broadcom/bgmac.c b/drivers/net/ethernet/broadcom/bgmac.c
-index 38db2e4..0c8f467 100644
---- a/drivers/net/ethernet/broadcom/bgmac.c
-+++ b/drivers/net/ethernet/broadcom/bgmac.c
-@@ -1460,7 +1460,7 @@ static int bgmac_fixed_phy_register(struct bgmac *bgmac)
- 	struct phy_device *phy_dev;
- 	int err;
- 
--	phy_dev = fixed_phy_register(PHY_POLL, &fphy_status, -1, NULL);
-+	phy_dev = fixed_phy_register(&fphy_status, -1, NULL);
- 	if (!phy_dev || IS_ERR(phy_dev)) {
- 		bgmac_err(bgmac, "Failed to register fixed PHY device\n");
- 		return -ENODEV;
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index 457c3bc..f181fd1 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -595,7 +595,7 @@ static int bcmgenet_mii_pd_init(struct bcmgenet_priv *priv)
- 			.asym_pause = 0,
- 		};
- 
--		phydev = fixed_phy_register(PHY_POLL, &fphy_status, -1, NULL);
-+		phydev = fixed_phy_register(&fphy_status, -1, NULL);
- 		if (!phydev || IS_ERR(phydev)) {
- 			dev_err(kdev, "failed to register fixed PHY device\n");
- 			return -ENODEV;
-diff --git a/drivers/net/phy/fixed_phy.c b/drivers/net/phy/fixed_phy.c
-index fc07a88..295e6bd 100644
---- a/drivers/net/phy/fixed_phy.c
-+++ b/drivers/net/phy/fixed_phy.c
-@@ -241,8 +241,7 @@ int fixed_phy_update_state(struct phy_device *phydev,
- }
- EXPORT_SYMBOL(fixed_phy_update_state);
- 
--int fixed_phy_add(unsigned int irq, int phy_addr,
--		  struct fixed_phy_status *status,
-+int fixed_phy_add(int phy_addr, struct fixed_phy_status *status,
- 		  int link_gpio)
- {
- 	int ret;
-@@ -255,8 +254,6 @@ int fixed_phy_add(unsigned int irq, int phy_addr,
- 
- 	memset(fp->regs, 0xFF,  sizeof(fp->regs[0]) * MII_REGS_NUM);
- 
--	fmb->mii_bus->irq[phy_addr] = irq;
--
- 	fp->addr = phy_addr;
- 	fp->status = *status;
- 	fp->link_gpio = link_gpio;
-@@ -304,8 +301,7 @@ static void fixed_phy_del(int phy_addr)
- static int phy_fixed_addr;
- static DEFINE_SPINLOCK(phy_fixed_addr_lock);
- 
--struct phy_device *fixed_phy_register(unsigned int irq,
--				      struct fixed_phy_status *status,
-+struct phy_device *fixed_phy_register(struct fixed_phy_status *status,
- 				      int link_gpio,
- 				      struct device_node *np)
- {
-@@ -323,7 +319,7 @@ struct phy_device *fixed_phy_register(unsigned int irq,
- 	phy_addr = phy_fixed_addr++;
- 	spin_unlock(&phy_fixed_addr_lock);
- 
--	ret = fixed_phy_add(irq, phy_addr, status, link_gpio);
-+	ret = fixed_phy_add(phy_addr, status, link_gpio);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 8453f08..bc4ef2ce 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -411,7 +411,7 @@ int of_phy_register_fixed_link(struct device_node *np)
- 	if (err == 0) {
- 		if (strcmp(managed, "in-band-status") == 0) {
- 			/* status is zeroed, namely its .link member */
--			phy = fixed_phy_register(PHY_POLL, &status, -1, np);
-+			phy = fixed_phy_register(&status, -1, np);
- 			return PTR_ERR_OR_ZERO(phy);
- 		}
- 	}
-@@ -433,7 +433,7 @@ int of_phy_register_fixed_link(struct device_node *np)
- 		if (link_gpio == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
- 
--		phy = fixed_phy_register(PHY_POLL, &status, link_gpio, np);
-+		phy = fixed_phy_register(&status, link_gpio, np);
- 		return PTR_ERR_OR_ZERO(phy);
- 	}
- 
-@@ -445,7 +445,7 @@ int of_phy_register_fixed_link(struct device_node *np)
- 		status.speed = be32_to_cpu(fixed_link_prop[2]);
- 		status.pause = be32_to_cpu(fixed_link_prop[3]);
- 		status.asym_pause = be32_to_cpu(fixed_link_prop[4]);
--		phy = fixed_phy_register(PHY_POLL, &status, -1, np);
-+		phy = fixed_phy_register(&status, -1, np);
- 		return PTR_ERR_OR_ZERO(phy);
- 	}
- 
-diff --git a/include/linux/phy_fixed.h b/include/linux/phy_fixed.h
-index 1d41ec4..43aca21 100644
---- a/include/linux/phy_fixed.h
-+++ b/include/linux/phy_fixed.h
-@@ -12,11 +12,9 @@ struct fixed_phy_status {
- struct device_node;
- 
- #if IS_ENABLED(CONFIG_FIXED_PHY)
--extern int fixed_phy_add(unsigned int irq, int phy_id,
--			 struct fixed_phy_status *status,
-+extern int fixed_phy_add(int phy_id, struct fixed_phy_status *status,
- 			 int link_gpio);
--extern struct phy_device *fixed_phy_register(unsigned int irq,
--					     struct fixed_phy_status *status,
-+extern struct phy_device *fixed_phy_register(struct fixed_phy_status *status,
- 					     int link_gpio,
- 					     struct device_node *np);
- extern void fixed_phy_unregister(struct phy_device *phydev);
-@@ -27,16 +25,14 @@ extern int fixed_phy_update_state(struct phy_device *phydev,
- 			   const struct fixed_phy_status *status,
- 			   const struct fixed_phy_status *changed);
- #else
--static inline int fixed_phy_add(unsigned int irq, int phy_id,
--				struct fixed_phy_status *status,
-+static inline int fixed_phy_add(int phy_id, struct fixed_phy_status *status,
- 				int link_gpio)
- {
- 	return -ENODEV;
- }
--static inline struct phy_device *fixed_phy_register(unsigned int irq,
--						struct fixed_phy_status *status,
--						int gpio_link,
--						struct device_node *np)
-+static inline struct phy_device *
-+fixed_phy_register(struct fixed_phy_status *status, int gpio_link,
-+		   struct device_node *np)
- {
- 	return ERR_PTR(-ENODEV);
- }
--- 
-2.1.4
+SGkgQ0ssCk9uIEZyaSwgMjAxNi0wNS0xMyBhdCAxMTo1OSArMDgwMCwgQ0sgSHUgd3JvdGU6Cj4g
+SGksIFlUOgo+IAo+IE9uIFRodSwgMjAxNi0wNS0xMiBhdCAxOTo0OSArMDgwMCwgeXQuc2hlbkBt
+ZWRpYXRlay5jb20gd3JvdGU6Cj4gPiBGcm9tOiBZVCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNv
+bT4KPiA+IAo+ID4gVGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgdGhlIE1lZGlhdGVrIE1UMjcw
+MSBESVNQIHN1YnN5c3RlbS4KPiA+IFRoZXJlIGlzIG9ubHkgb25lIE9WTCBlbmdpbmUgaW4gTVQy
+NzAxLCBhbmQgd2UgaGF2ZSBzaGFkb3cKPiA+IHJlZ2lzdGVyIHN1cHBvcnQgaGVyZS4KPiA+IAo+
+ID4gU2lnbmVkLW9mZi1ieTogWVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+Cj4gPiAtLS0K
+PiAKPiA+IEBAIC0zODUsMTIgKzQyMiwxNiBAQCBzdGF0aWMgdm9pZCBtdGtfZHJtX2NydGNfYXRv
+bWljX2JlZ2luKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywKPiA+ICAJCW10a19jcnRjLT5ldmVudCA9
+IHN0YXRlLT5iYXNlLmV2ZW50Owo+ID4gIAkJc3RhdGUtPmJhc2UuZXZlbnQgPSBOVUxMOwo+ID4g
+IAl9Cj4gPiArCj4gPiArCWlmIChwcml2LT5kYXRhLT5zaGFkb3dfcmVnaXN0ZXIpCj4gPiArCQlt
+dGtfZGlzcF9tdXRleF9hY3F1aXJlKG10a19jcnRjLT5tdXRleCk7Cj4gPiAgfQo+ID4gIAo+ID4g
+QEAgLTQwOSw2ICs0NTAsMTEgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRjX2F0b21pY19mbHVz
+aChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCj4gPiAgCX0KPiA+ICAJaWYgKHBlbmRpbmdfcGxhbmVz
+KQo+ID4gIAkJbXRrX2NydGMtPnBlbmRpbmdfcGxhbmVzID0gdHJ1ZTsKPiA+ICsKPiA+ICsJaWYg
+KHByaXYtPmRhdGEtPnNoYWRvd19yZWdpc3Rlcikgewo+ID4gKwkJbXRrX2NydGNfZGRwX2NvbmZp
+ZyhjcnRjKTsKPiA+ICsJCW10a19kaXNwX211dGV4X3JlbGVhc2UobXRrX2NydGMtPm11dGV4KTsK
+PiA+ICsJfQo+ID4gIH0KPiA+ICAKPiAKPiBJIHRoaW5rIGl0J3MgYmV0dGVyIHRvIGNhbGwgbXRr
+X2Rpc3BfbXV0ZXhfYWNxdWlyZSgpIGFuZAo+IG10a19kaXNwX211dGV4X3JlbGVhc2UoKSBhcyBu
+ZWFyIGFzIHBvc3NpYmxlIHRvIHByZXZlbnQgbXV0ZXggbG9ja2VkIGZvcgo+IGEgbG9uZyB0aW1l
+LiBBbGwgSFcgcmVnaXN0ZXIgYWNjZXNzIG9mIHRoaXMgYXRvbWljIHNldHRpbmcgaXMgaW4KPiBt
+dGtfY3J0Y19kZHBfY29uZmlnKCksIHNvIGl0J3MgYmV0dGVyIHRvIG1vdmUgbXRrX2Rpc3BfbXV0
+ZXhfYWNxdWlyZSgpCj4ganVzdCBiZWZvcmUgbXRrX2NydGNfZGRwX2NvbmZpZygpLgo+IAo+IFJl
+Z2FyZHMsCj4gQ0sKSSdsbCBkbyB0aGlzIGluIHRoZSBuZXh0IHZlcnNpb24uICBUaGFua3MgZm9y
+IHRoZSByZXZpZXcuCgpSZWdhcmRzLAp5dC5zaGVuCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
