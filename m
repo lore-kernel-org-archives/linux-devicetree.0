@@ -1,37 +1,73 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] docs: Document BCM23550 bindings
-Date: Mon, 16 May 2016 10:16:12 -0500
-Message-ID: <20160516151612.GA7348@rob-hp-laptop>
-References: <1463002582-6875-1-git-send-email-chris.brand@broadcom.com>
- <1463002582-6875-4-git-send-email-chris.brand@broadcom.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 04/20] clk: sunxi: display: Add per-clock flags
+Date: Mon, 16 May 2016 23:21:41 +0800
+Message-ID: <CAGb2v66-GzV=1wrJnHBObLVPVHPk87o0PaJtNyYasp2wFsZabw@mail.gmail.com>
+References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1463402840-17062-5-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463002582-6875-4-git-send-email-chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1463402840-17062-5-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 02:36:19PM -0700, Chris Brand wrote:
-> Add binding document for Broadcom BCM23550 SoC.
-> 
-> BCM23550 has a Cluster Dormant Control IP block that holds cores
-> in an idle state. Introduce a new CPU enable method in which the CDC is
-> accessed to bring the core online.
-> 
-> Signed-off-by: Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  .../bindings/arm/bcm/brcm,bcm23550-cpu-method.txt  | 36 ++++++++++++++++++++++
->  .../devicetree/bindings/arm/bcm/brcm,bcm23550.txt  | 15 +++++++++
->  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->  3 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.txt
+Hi,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, May 16, 2016 at 8:47 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> The TCON channel 0 clock that is the parent clock of our pixel clock is
+> expected to change its rate depending on the resolution we want to output
+> in our display engine.
+>
+> However, since it's only a mux, the only way it can do that is by changing
+> its parents rate.
+>
+> Allow to give flags in our display clocks description, and add the
+> CLK_SET_RATE_PARENT flag for the TCON channel 0 flag.
+>
+> Fixes: a3b4956ee6d9 ("clk: sunxi: display: Add per-clock flags")
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> ---
+>  drivers/clk/sunxi/clk-sun4i-display.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/sunxi/clk-sun4i-display.c b/drivers/clk/sunxi/clk-sun4i-display.c
+> index 445a7498d6df..9780fac6d029 100644
+> --- a/drivers/clk/sunxi/clk-sun4i-display.c
+> +++ b/drivers/clk/sunxi/clk-sun4i-display.c
+> @@ -33,6 +33,8 @@ struct sun4i_a10_display_clk_data {
+>
+>         u8      width_div;
+>         u8      width_mux;
+> +
+
+Don't really need this separator, but I'm ok either way.
+
+> +       u32     flags;
+>  };
+>
+>  struct reset_data {
+> @@ -166,7 +168,7 @@ static void __init sun4i_a10_display_init(struct device_node *node,
+>                                      data->has_div ? &div->hw : NULL,
+>                                      data->has_div ? &clk_divider_ops : NULL,
+>                                      &gate->hw, &clk_gate_ops,
+> -                                    0);
+> +                                    data->flags);
+>         if (IS_ERR(clk)) {
+>                 pr_err("%s: Couldn't register the clock\n", clk_name);
+>                 goto free_div;
+> @@ -232,6 +234,7 @@ static const struct sun4i_a10_display_clk_data sun4i_a10_tcon_ch0_data __initcon
+>         .offset_rst     = 29,
+>         .offset_mux     = 24,
+>         .width_mux      = 2,
+> +       .flags          = CLK_SET_RATE_PARENT,
+>  };
+>
+>  static void __init sun4i_a10_tcon_ch0_setup(struct device_node *node)
+> --
+> 2.8.2
+>
+
+Acked-by: Chen-Yu Tsai <wens@csie.org>
