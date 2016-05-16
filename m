@@ -1,230 +1,120 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v7 4/4] soc: mediatek: Add MT2701 scpsys driver
-Date: Mon, 16 May 2016 17:28:14 +0800
-Message-ID: <1463390894-32062-5-git-send-email-jamesjj.liao@mediatek.com>
-References: <1463390894-32062-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
+Date: Mon, 16 May 2016 17:23:23 +0800
+Message-ID: <20160516092323.GD24609@shlinux2.ap.freescale.net>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
+ <1463133808-10630-14-git-send-email-rogerq@ti.com>
+ <20160516070249.GB24609@shlinux2.ap.freescale.net>
+ <57398451.2060103@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463390894-32062-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57398451.2060103-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Mon, May 16, 2016 at 11:26:57AM +0300, Roger Quadros wrote:
+> Hi,
+> 
+> On 16/05/16 10:02, Peter Chen wrote:
+> > On Fri, May 13, 2016 at 01:03:27PM +0300, Roger Quadros wrote:
+> >> +
+> >> +static int usb_gadget_connect_control(struct usb_gadget *gadget, bool connect)
+> >> +{
+> >> +	struct usb_udc *udc;
+> >> +
+> >> +	mutex_lock(&udc_lock);
+> >> +	udc = usb_gadget_to_udc(gadget);
+> >> +	if (!udc) {
+> >> +		dev_err(gadget->dev.parent, "%s: gadget not registered.\n",
+> >> +			__func__);
+> >> +		mutex_unlock(&udc_lock);
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >> +	if (connect) {
+> >> +		if (!gadget->connected)
+> >> +			usb_gadget_connect(udc->gadget);
+> >> +	} else {
+> >> +		if (gadget->connected) {
+> >> +			usb_gadget_disconnect(udc->gadget);
+> >> +			udc->driver->disconnect(udc->gadget);
+> >> +		}
+> >> +	}
+> >> +
+> >> +	mutex_unlock(&udc_lock);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> > 
+> > Since this is called for vbus interrupt, why not using
+> > usb_udc_vbus_handler directly, and call udc->driver->disconnect
+> > at usb_gadget_stop.
+> 
+> We can't assume that this is always called for vbus interrupt so
+> I decided not to call usb_udc_vbus_handler.
+> 
+> udc->vbus is really pointless for us. We keep vbus states in our
+> state machine and leave udc->vbus as ture always.
+> 
+> Why do you want to move udc->driver->disconnect() to stop?
+> If USB controller disconnected from bus then the gadget driver
+> must be notified about the disconnect immediately. The controller
+> may or may not be stopped by the core.
+> 
 
-Add scpsys driver for MT2701.
+Then, would you give some comments when this API will be used?
+I was assumed it is only used for drd state machine.
 
-mtk-scpsys now supports MT8173 (arm64) and MT2701 (arm). So it should
-be enabled on both arm64 and arm platforms.
+> > 
+> >>  	return 0;
+> >> @@ -660,9 +830,15 @@ static ssize_t usb_udc_softconn_store(struct device *dev,
+> >>  		return -EOPNOTSUPP;
+> >>  	}
+> >>  
+> >> +	/* In OTG mode we don't support softconnect, but b_bus_req */
+> >> +	if (udc->gadget->otg_dev) {
+> >> +		dev_err(dev, "soft-connect not supported in OTG mode\n");
+> >> +		return -EOPNOTSUPP;
+> >> +	}
+> >> +
+> > 
+> > The soft-connect can be supported at dual-role mode currently, we can
+> > use b_bus_req entry once it is implemented later.
+> 
+> Soft-connect should be done via sysfs handling within the OTG core.
+> This can be added later. I don't want anything outside the OTG core
+> to handle soft-connect behaviour as it will be hard to keep things
+> in sync.
+> 
+> I can update the comment to something like this.
+> 
+> /* In OTG/dual-role mode, soft-connect should be handled by OTG core */
 
-Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- drivers/soc/mediatek/Kconfig      |   2 +-
- drivers/soc/mediatek/mtk-scpsys.c | 117 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 116 insertions(+), 3 deletions(-)
+Ok, let's Felipe decide it.
 
-diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-index 0a4ea80..609bb34 100644
---- a/drivers/soc/mediatek/Kconfig
-+++ b/drivers/soc/mediatek/Kconfig
-@@ -23,7 +23,7 @@ config MTK_PMIC_WRAP
- config MTK_SCPSYS
- 	bool "MediaTek SCPSYS Support"
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
--	default ARM64 && ARCH_MEDIATEK
-+	default ARCH_MEDIATEK
- 	select REGMAP
- 	select MTK_INFRACFG
- 	select PM_GENERIC_DOMAINS if PM
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index 00c0adb..f4d1230 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -20,6 +20,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/soc/mediatek/infracfg.h>
- 
-+#include <dt-bindings/power/mt2701-power.h>
- #include <dt-bindings/power/mt8173-power.h>
- 
- #define SPM_VDE_PWR_CON			0x0210
-@@ -27,8 +28,13 @@
- #define SPM_VEN_PWR_CON			0x0230
- #define SPM_ISP_PWR_CON			0x0238
- #define SPM_DIS_PWR_CON			0x023c
-+#define SPM_CONN_PWR_CON		0x0280
- #define SPM_VEN2_PWR_CON		0x0298
--#define SPM_AUDIO_PWR_CON		0x029c
-+#define SPM_AUDIO_PWR_CON		0x029c	/* MT8173 */
-+#define SPM_BDP_PWR_CON			0x029c	/* MT2701 */
-+#define SPM_ETH_PWR_CON			0x02a0
-+#define SPM_HIF_PWR_CON			0x02a4
-+#define SPM_IFR_MSC_PWR_CON		0x02a8
- #define SPM_MFG_2D_PWR_CON		0x02c0
- #define SPM_MFG_ASYNC_PWR_CON		0x02c4
- #define SPM_USB_PWR_CON			0x02cc
-@@ -42,10 +48,15 @@
- #define PWR_ON_2ND_BIT			BIT(3)
- #define PWR_CLK_DIS_BIT			BIT(4)
- 
-+#define PWR_STATUS_CONN			BIT(1)
- #define PWR_STATUS_DISP			BIT(3)
- #define PWR_STATUS_MFG			BIT(4)
- #define PWR_STATUS_ISP			BIT(5)
- #define PWR_STATUS_VDEC			BIT(7)
-+#define PWR_STATUS_BDP			BIT(14)
-+#define PWR_STATUS_ETH			BIT(15)
-+#define PWR_STATUS_HIF			BIT(16)
-+#define PWR_STATUS_IFR_MSC		BIT(17)
- #define PWR_STATUS_VENC_LT		BIT(20)
- #define PWR_STATUS_VENC			BIT(21)
- #define PWR_STATUS_MFG_2D		BIT(22)
-@@ -59,6 +70,7 @@ enum clk_id {
- 	CLK_MFG,
- 	CLK_VENC,
- 	CLK_VENC_LT,
-+	CLK_ETHIF,
- 	CLK_MAX,
- };
- 
-@@ -321,7 +333,8 @@ static void init_clks(struct platform_device *pdev, struct clk *clk[CLK_MAX])
- 		CLK_MM,
- 		CLK_MFG,
- 		CLK_VENC,
--		CLK_VENC_LT
-+		CLK_VENC_LT,
-+		CLK_ETHIF
- 	};
- 
- 	static const char * const clk_names[] = {
-@@ -329,6 +342,7 @@ static void init_clks(struct platform_device *pdev, struct clk *clk[CLK_MAX])
- 		"mfg",
- 		"venc",
- 		"venc_lt",
-+		"ethif",
- 	};
- 
- 	int i;
-@@ -459,6 +473,102 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- }
- 
- /*
-+ * MT2701 power domain support
-+ */
-+
-+static const struct scp_domain_data scp_domain_data_mt2701[] = {
-+	[MT2701_POWER_DOMAIN_CONN] = {
-+		.name = "conn",
-+		.sta_mask = PWR_STATUS_CONN,
-+		.ctl_offs = SPM_CONN_PWR_CON,
-+		.bus_prot_mask = 0x0104,
-+		.active_wakeup = true,
-+	},
-+	[MT2701_POWER_DOMAIN_DISP] = {
-+		.name = "disp",
-+		.sta_mask = PWR_STATUS_DISP,
-+		.ctl_offs = SPM_DIS_PWR_CON,
-+		.sram_pdn_bits = GENMASK(11, 8),
-+		.clk_id = {CLK_MM},
-+		.bus_prot_mask = 0x0002,
-+		.active_wakeup = true,
-+	},
-+	[MT2701_POWER_DOMAIN_MFG] = {
-+		.name = "mfg",
-+		.sta_mask = PWR_STATUS_MFG,
-+		.ctl_offs = SPM_MFG_PWR_CON,
-+		.sram_pdn_bits = GENMASK(11, 8),
-+		.sram_pdn_ack_bits = GENMASK(12, 12),
-+		.clk_id = {CLK_MFG},
-+		.active_wakeup = true,
-+	},
-+	[MT2701_POWER_DOMAIN_VDEC] = {
-+		.name = "vdec",
-+		.sta_mask = PWR_STATUS_VDEC,
-+		.ctl_offs = SPM_VDE_PWR_CON,
-+		.sram_pdn_bits = GENMASK(11, 8),
-+		.sram_pdn_ack_bits = GENMASK(12, 12),
-+		.clk_id = {CLK_MM},
-+		.active_wakeup = true,
-+	},
-+	[MT2701_POWER_DOMAIN_ISP] = {
-+		.name = "isp",
-+		.sta_mask = PWR_STATUS_ISP,
-+		.ctl_offs = SPM_ISP_PWR_CON,
-+		.sram_pdn_bits = GENMASK(11, 8),
-+		.sram_pdn_ack_bits = GENMASK(13, 12),
-+		.clk_id = {CLK_MM},
-+		.active_wakeup = true,
-+	},
-+	[MT2701_POWER_DOMAIN_BDP] = {
-+		.name = "bdp",
-+		.sta_mask = PWR_STATUS_BDP,
-+		.ctl_offs = SPM_BDP_PWR_CON,
-+		.sram_pdn_bits = GENMASK(11, 8),
-+		.active_wakeup = true,
-+	},
-+	[MT2701_POWER_DOMAIN_ETH] = {
-+		.name = "eth",
-+		.sta_mask = PWR_STATUS_ETH,
-+		.ctl_offs = SPM_ETH_PWR_CON,
-+		.sram_pdn_bits = GENMASK(11, 8),
-+		.sram_pdn_ack_bits = GENMASK(15, 12),
-+		.clk_id = {CLK_ETHIF},
-+		.active_wakeup = true,
-+	},
-+	[MT2701_POWER_DOMAIN_HIF] = {
-+		.name = "hif",
-+		.sta_mask = PWR_STATUS_HIF,
-+		.ctl_offs = SPM_HIF_PWR_CON,
-+		.sram_pdn_bits = GENMASK(11, 8),
-+		.sram_pdn_ack_bits = GENMASK(15, 12),
-+		.clk_id = {CLK_ETHIF},
-+		.active_wakeup = true,
-+	},
-+	[MT2701_POWER_DOMAIN_IFR_MSC] = {
-+		.name = "ifr_msc",
-+		.sta_mask = PWR_STATUS_IFR_MSC,
-+		.ctl_offs = SPM_IFR_MSC_PWR_CON,
-+		.active_wakeup = true,
-+	},
-+};
-+
-+#define NUM_DOMAINS_MT2701	ARRAY_SIZE(scp_domain_data_mt2701)
-+
-+static int __init scpsys_probe_mt2701(struct platform_device *pdev)
-+{
-+	struct scp *scp;
-+
-+	scp = init_scp(pdev, scp_domain_data_mt2701, NUM_DOMAINS_MT2701);
-+	if (IS_ERR(scp))
-+		return PTR_ERR(scp);
-+
-+	mtk_register_power_domains(pdev, scp, NUM_DOMAINS_MT2701);
-+
-+	return 0;
-+}
-+
-+/*
-  * MT8173 power domain support
-  */
- 
-@@ -587,6 +697,9 @@ static int __init scpsys_probe_mt8173(struct platform_device *pdev)
- 
- static const struct of_device_id of_scpsys_match_tbl[] = {
- 	{
-+		.compatible = "mediatek,mt2701-scpsys",
-+		.data = scpsys_probe_mt2701,
-+	}, {
- 		.compatible = "mediatek,mt8173-scpsys",
- 		.data = scpsys_probe_mt8173,
- 	}, {
+> 
+> > 
+> >>  	if (sysfs_streq(buf, "connect")) {
+> >>  		usb_gadget_udc_start(udc);
+> >> -		usb_gadget_connect(udc->gadget);
+> >> +		usb_udc_connect_control(udc);
+> > 
+> > This line seems to be not related with this patch.
+> > 
+> Right. I'll remove it.
+> 
+> cheers,
+> -roger
+
 -- 
-1.9.1
 
+Best Regards,
+Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
