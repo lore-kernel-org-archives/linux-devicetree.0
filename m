@@ -1,300 +1,80 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 15/20] ARM: sun5i: Move display blocks to A13
-Date: Mon, 16 May 2016 14:47:15 +0200
-Message-ID: <1463402840-17062-16-git-send-email-maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 05/20] drm/sun4i: request exact rates to our parents
+Date: Mon, 16 May 2016 14:47:05 +0200
+Message-ID: <1463402840-17062-6-git-send-email-maxime.ripard@free-electrons.com>
 References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Most of the display engine is shared between the R8 and the A13. Move t=
-he
-common parts to the =C3=8113 DTSI.
+Our pixel clock currently only tries to deal with the current parent rate.
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+While that works when the resolution is the same than the one already
+program, or when we can compute directly the rate from the current parent
+rate, it cannot work in most situation when we want to change the
+frequency, and we end up with an improper pixel clock rate, which obviously
+doesn't work as expected.
+
+Ask our parent for all the possible dividers if it can reach that
+frequency, and return the best parent rate to the clock framework so that
+we can use it.
+
+Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/sun5i-a13.dtsi | 112 +++++++++++++++++++++++++++++++=
-+++++
- arch/arm/boot/dts/sun5i-r8.dtsi  | 120 ++-----------------------------=
---------
- 2 files changed, 117 insertions(+), 115 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_dotclock.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i=
--a13.dtsi
-index 79b5d513c142..e012890e0cf2 100644
---- a/arch/arm/boot/dts/sun5i-a13.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a13.dtsi
-@@ -207,7 +207,50 @@
- 		};
- 	};
-=20
-+	display-engine {
-+		compatible =3D "allwinner,sun5i-a13-display-engine";
-+		allwinner,pipelines =3D <&fe0>;
-+	};
+diff --git a/drivers/gpu/drm/sun4i/sun4i_dotclock.c b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+index 6c9c090a8006..1ddf6d7a7107 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_dotclock.c
++++ b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+@@ -72,14 +72,40 @@ static unsigned long sun4i_dclk_recalc_rate(struct clk_hw *hw,
+ static long sun4i_dclk_round_rate(struct clk_hw *hw, unsigned long rate,
+ 				  unsigned long *parent_rate)
+ {
+-	return *parent_rate / DIV_ROUND_CLOSEST(*parent_rate, rate);
++	unsigned long best_parent = 0;
++	u8 best_div = 1;
++	int i;
 +
- 	soc@01c00000 {
-+		tcon0: lcd-controller@01c0c000 {
-+			compatible =3D "allwinner,sun5i-a13-tcon";
-+			reg =3D <0x01c0c000 0x1000>;
-+			interrupts =3D <44>;
-+			resets =3D <&tcon_ch0_clk 1>;
-+			reset-names =3D "lcd";
-+			clocks =3D <&ahb_gates 36>,
-+				 <&tcon_ch0_clk>,
-+				 <&tcon_ch1_clk>;
-+			clock-names =3D "ahb",
-+				      "tcon-ch0",
-+				      "tcon-ch1";
-+			clock-output-names =3D "tcon-pixel-clock";
-+			status =3D "disabled";
++	for (i = 6; i < 127; i++) {
++		unsigned long ideal = rate * i;
++		unsigned long rounded;
 +
-+			ports {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
++		rounded = clk_hw_round_rate(clk_hw_get_parent(hw),
++					    ideal);
 +
-+				tcon0_in: port@0 {
-+					#address-cells =3D <1>;
-+					#size-cells =3D <0>;
-+					reg =3D <0>;
++		if (rounded == ideal) {
++			best_parent = rounded;
++			best_div = i;
++			goto out;
++		}
 +
-+					tcon0_in_be0: endpoint@0 {
-+						reg =3D <0>;
-+						remote-endpoint =3D <&be0_out_tcon0>;
-+					};
-+				};
++		if ((rounded < ideal) && (rounded > best_parent)) {
++			best_parent = rounded;
++			best_div = i;
++		}
++	}
 +
-+				tcon0_out: port@1 {
-+					#address-cells =3D <1>;
-+					#size-cells =3D <0>;
-+					reg =3D <1>;
-+				};
-+			};
-+		};
++out:
++	*parent_rate = best_parent;
 +
- 		pwm: pwm@01c20e00 {
- 			compatible =3D "allwinner,sun5i-a13-pwm";
- 			reg =3D <0x01c20e00 0xc>;
-@@ -215,6 +258,75 @@
- 			#pwm-cells =3D <3>;
- 			status =3D "disabled";
- 		};
-+
-+		fe0: display-frontend@01e00000 {
-+			compatible =3D "allwinner,sun5i-a13-display-frontend";
-+			reg =3D <0x01e00000 0x20000>;
-+			interrupts =3D <47>;
-+			clocks =3D <&ahb_gates 46>, <&de_fe_clk>,
-+				 <&dram_gates 25>;
-+			clock-names =3D "ahb", "mod",
-+				      "ram";
-+			resets =3D <&de_fe_clk>;
-+			status =3D "disabled";
-+
-+			ports {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				fe0_out: port@1 {
-+					#address-cells =3D <1>;
-+					#size-cells =3D <0>;
-+					reg =3D <1>;
-+
-+					fe0_out_be0: endpoint@0 {
-+						reg =3D <0>;
-+						remote-endpoint =3D <&be0_in_fe0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		be0: display-backend@01e60000 {
-+			compatible =3D "allwinner,sun5i-a13-display-backend";
-+			reg =3D <0x01e60000 0x10000>;
-+			clocks =3D <&ahb_gates 44>, <&de_be_clk>,
-+				 <&dram_gates 26>;
-+			clock-names =3D "ahb", "mod",
-+				      "ram";
-+			resets =3D <&de_be_clk>;
-+			status =3D "disabled";
-+
-+			assigned-clocks =3D <&de_be_clk>;
-+			assigned-clock-rates =3D <300000000>;
-+
-+			ports {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				be0_in: port@0 {
-+					#address-cells =3D <1>;
-+					#size-cells =3D <0>;
-+					reg =3D <0>;
-+
-+					be0_in_fe0: endpoint@0 {
-+						reg =3D <0>;
-+						remote-endpoint =3D <&fe0_out_be0>;
-+					};
-+				};
-+
-+				be0_out: port@1 {
-+					#address-cells =3D <1>;
-+					#size-cells =3D <0>;
-+					reg =3D <1>;
-+
-+					be0_out_tcon0: endpoint@0 {
-+						reg =3D <0>;
-+						remote-endpoint =3D <&tcon0_in_be0>;
-+					};
-+				};
-+			};
-+		};
- 	};
- };
-=20
-diff --git a/arch/arm/boot/dts/sun5i-r8.dtsi b/arch/arm/boot/dts/sun5i-=
-r8.dtsi
-index c04cf690b858..8b058f53b7dc 100644
---- a/arch/arm/boot/dts/sun5i-r8.dtsi
-+++ b/arch/arm/boot/dts/sun5i-r8.dtsi
-@@ -76,122 +76,12 @@
- 				};
- 			};
- 		};
--
--		tcon0: lcd-controller@01c0c000 {
--			compatible =3D "allwinner,sun5i-a13-tcon";
--			reg =3D <0x01c0c000 0x1000>;
--			interrupts =3D <44>;
--			resets =3D <&tcon_ch0_clk 1>;
--			reset-names =3D "lcd";
--			clocks =3D <&ahb_gates 36>,
--				 <&tcon_ch0_clk>,
--				 <&tcon_ch1_clk>;
--			clock-names =3D "ahb",
--				      "tcon-ch0",
--				      "tcon-ch1";
--			clock-output-names =3D "tcon-pixel-clock";
--			status =3D "disabled";
--
--			ports {
--				#address-cells =3D <1>;
--				#size-cells =3D <0>;
--
--				tcon0_in: port@0 {
--					#address-cells =3D <1>;
--					#size-cells =3D <0>;
--					reg =3D <0>;
--
--					tcon0_in_be0: endpoint@0 {
--						reg =3D <0>;
--						remote-endpoint =3D <&be0_out_tcon0>;
--					};
--				};
--
--				tcon0_out: port@1 {
--					#address-cells =3D <1>;
--					#size-cells =3D <0>;
--					reg =3D <1>;
--
--					tcon0_out_tve0: endpoint@1 {
--						reg =3D <1>;
--						remote-endpoint =3D <&tve0_in_tcon0>;
--					};
--				};
--			};
--		};
--
--		fe0: display-frontend@01e00000 {
--			compatible =3D "allwinner,sun5i-a13-display-frontend";
--			reg =3D <0x01e00000 0x20000>;
--			interrupts =3D <47>;
--			clocks =3D <&ahb_gates 46>, <&de_fe_clk>,
--				 <&dram_gates 25>;
--			clock-names =3D "ahb", "mod",
--				      "ram";
--			resets =3D <&de_fe_clk>;
--			status =3D "disabled";
--
--			ports {
--				#address-cells =3D <1>;
--				#size-cells =3D <0>;
--
--				fe0_out: port@1 {
--					#address-cells =3D <1>;
--					#size-cells =3D <0>;
--					reg =3D <1>;
--
--					fe0_out_be0: endpoint@0 {
--						reg =3D <0>;
--						remote-endpoint =3D <&be0_in_fe0>;
--					};
--				};
--			};
--		};
--
--		be0: display-backend@01e60000 {
--			compatible =3D "allwinner,sun5i-a13-display-backend";
--			reg =3D <0x01e60000 0x10000>;
--			clocks =3D <&ahb_gates 44>, <&de_be_clk>,
--				 <&dram_gates 26>;
--			clock-names =3D "ahb", "mod",
--				      "ram";
--			resets =3D <&de_be_clk>;
--			status =3D "disabled";
--
--			assigned-clocks =3D <&de_be_clk>;
--			assigned-clock-rates =3D <300000000>;
--
--			ports {
--				#address-cells =3D <1>;
--				#size-cells =3D <0>;
--
--				be0_in: port@0 {
--					#address-cells =3D <1>;
--					#size-cells =3D <0>;
--					reg =3D <0>;
--
--					be0_in_fe0: endpoint@0 {
--						reg =3D <0>;
--						remote-endpoint =3D <&fe0_out_be0>;
--					};
--				};
--
--				be0_out: port@1 {
--					#address-cells =3D <1>;
--					#size-cells =3D <0>;
--					reg =3D <1>;
--
--					be0_out_tcon0: endpoint@0 {
--						reg =3D <0>;
--						remote-endpoint =3D <&tcon0_in_be0>;
--					};
--				};
--			};
--		};
- 	};
-+};
-=20
--	display-engine {
--		compatible =3D "allwinner,sun5i-a13-display-engine";
--		allwinner,pipelines =3D <&fe0>;
-+&tcon0_out {
-+	tcon0_out_tve0: endpoint@1 {
-+		reg =3D <1>;
-+		remote-endpoint =3D <&tve0_in_tcon0>;
- 	};
- };
---=20
++	return best_parent / best_div;
+ }
+ 
+ static int sun4i_dclk_set_rate(struct clk_hw *hw, unsigned long rate,
+ 			       unsigned long parent_rate)
+ {
+ 	struct sun4i_dclk *dclk = hw_to_dclk(hw);
+-	int div = DIV_ROUND_CLOSEST(parent_rate, rate);
++	u8 div = parent_rate / rate;
+ 
+ 	return regmap_update_bits(dclk->regmap, SUN4I_TCON0_DCLK_REG,
+ 				  GENMASK(6, 0), div);
+-- 
 2.8.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
