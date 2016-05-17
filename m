@@ -1,105 +1,60 @@
-From: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 2/2] extcon: gpio: add DT binding doc for extcon-gpio
-Date: Tue, 17 May 2016 11:27:05 +0000
-Message-ID: <ba0810bd193345399b94251f8499d28b@bgmail102.nvidia.com>
-References: <1462254591-8907-1-git-send-email-vreddytalla@nvidia.com>
- <1462254591-8907-2-git-send-email-vreddytalla@nvidia.com>
- <20160504133037.GA23334@rob-hp-laptop>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] of: unittest: Unit-tests for target root overlays.
+Date: Tue, 17 May 2016 14:37:42 +0200
+Message-ID: <CAMuHMdVQzTRrJQmgem=D-+fG7syDnTP_+uGxg2buvUV-jAZc0A@mail.gmail.com>
+References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1463429892-3369-6-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160504133037.GA23334@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <1463429892-3369-6-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for review, please find my inline reply.
+On Mon, May 16, 2016 at 10:18 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Add unittests for target-root based overlays.
+>
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/of/unittest-data/testcases.dts      |   5 +
+>  drivers/of/unittest-data/tests-overlay.dtsi |  48 +++++++
+>  drivers/of/unittest.c                       | 213 ++++++++++++++++++++++++++++
+>  3 files changed, 266 insertions(+)
+>
+> diff --git a/drivers/of/unittest-data/testcases.dts b/drivers/of/unittest-data/testcases.dts
+> index 74e8805..a6ded1b6 100644
+> --- a/drivers/of/unittest-data/testcases.dts
+> +++ b/drivers/of/unittest-data/testcases.dts
+> @@ -80,5 +80,10 @@
+>                                 target = <0x00000000 0x00000004>;
+>                         };
+>                 };
+> +               overlay18 {
+> +                       fragment@0 {
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Wednesday, May 04, 2016 7:01 PM
-> To: Venkat Reddy Talla
-> Cc: MyungJoo Ham; Chanwoo Choi; Pawel Moll; Mark Rutland; Ian Campbell;
-> Kumar Gala; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> Laxman Dewangan
-> Subject: Re: [PATCH 2/2] extcon: gpio: add DT binding doc for extcon-gpio
-> 
-> On Tue, May 03, 2016 at 11:19:51AM +0530, Venkat Reddy Talla wrote:
-> > Addiing DT binding doc for the extcon gpios properties.
-> >
-> > Signed-off-by: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/extcon/extcon-gpio.txt        | 19
-> +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> > b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> > new file mode 100644
-> > index 0000000..4a49c23
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> > @@ -0,0 +1,19 @@
-> > +EXTCON FOR GPIO
-> 
-> This needs a better description of what this is and what h/w this applies to.
-> 
-I will take care in my next patch.
+Warning (unit_address_vs_reg): Node .../fragment@0 has a unit name,
+but no reg property
 
-> > +
-> > +Required Properties:
-> > + - compatible : Should be "extcon-gpio";
-> > +
-> > +Optional Properties:
-> > + - extcon-gpio,name: Name of extcon device.
-> > + - gpio: gpio number.
-> 
-> Should be 'gpios'.
-> 
-OK, I will take care in my next patch.
+(I didn't really run dtc, just copying a warning message from somewhere else)
 
-> > + - extcon-gpio,irq-flags: IRQ flags for GPIO.
-> 
-> If this is an interrupt, then you should be using the interrupts property.
-> 
-Need to provide GPIO number instead of interrupt from DTS to read GPIO value when external connected attached/detached and also driver supports platform data with passing GPIO number.
-So need to pass irq-flags using separate dts property or need to hardcode in driver.
+> +                               target = <0x00000000>;
+> +                       };
+> +               };
+>         };
 
-> > + - extcon-gpio,debounce: Debounce time in ms.
-> 
-> extcon-gpio is not a vendor prefix, so drop it.
-> 
-> Add unit suffix (-ms).
-> 
-OK, I will take care in my next patch.
+Gr{oetje,eeting}s,
 
-> > + - extcon-gpio,connection-state-low: boolean, Connection state with
-> > +                gpio state. True if gpio low means connected.
-> 
-> The active state should be in the GPIO flags cell.
-> 
-OK, I will take care in my next patch.
-> > +
-> > +extcon-gpio {
-> > +	compatible = "extcon-gpio";
-> > +        extcon-gpio,name = "VBUS";
-> 
-> How is VBus a gpio?
-> 
-Here VBUS is not gpio number, VBUS is extcon device name, extcon gpio is used to detect VBUS.
+                        Geert
 
-> > +	gpio = <&gpio 20 0>;
-> > +	extcon-gpio,cable-names = <EXTCON_USB EXTCON_NONE>;
-> 
-> Not documented.
-> 
-> Rob
-OK, I will take care in my next patch.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
