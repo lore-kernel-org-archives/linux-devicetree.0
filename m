@@ -1,77 +1,92 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 09/20] drm/sun4i: defer only if we didn't find our panel
-Date: Tue, 17 May 2016 11:52:10 +0800
-Message-ID: <CAGb2v655q_w8s7Eg8xnpzdX9PDxSEhRLvMu3bNOd==U4APgg0Q@mail.gmail.com>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
- <1463402840-17062-10-git-send-email-maxime.ripard@free-electrons.com>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: Re: [PATCH v3 7/7] dt-bindings: drm/bridge: Update bindings for
+ ADV7533
+Date: Tue, 17 May 2016 12:18:18 +0800
+Message-ID: <CAGd==06i9ojb-C=LRxPkvh-CrkEFjZ8tiEkkVzYfaqODndfqaQ@mail.gmail.com>
+References: <1441625800-1858-1-git-send-email-architt@codeaurora.org>
+ <1992414.kkmfQUJ8oO@avalon> <5719B942.8070907@codeaurora.org>
+ <1987165.vo5BTWVL5e@avalon> <573A935D.7010301@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463402840-17062-10-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <573A935D.7010301@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, treding@nvidia.com, Amit Kucheria <amit.kucheria@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, May 16, 2016 at 8:47 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Our code currently defers our probe on any error, even if we were not
-> expecting to have one at all.
->
-> Make sure we return -EPROBE_DEFER only when we were supposed to have a
-> panel, but it's not probed yet.
->
-> Fixes: 29e57fab97fc ("drm: sun4i: Add RGB output")
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/sun4i_tcon.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> index 9f19b0e08560..eed6a9e8d9a6 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> @@ -429,7 +429,7 @@ static struct drm_panel *sun4i_tcon_find_panel(struct device_node *node)
->                 return ERR_PTR(-EINVAL);
->         }
->
-> -       return of_drm_find_panel(remote);
-> +       return of_drm_find_panel(remote) ?: ERR_PTR(-EPROBE_DEFER);
-
-There's also a typo in the DRM_DEBUG_DRIVER call a few lines up. Could you
-fix it as well?
-
-ChenYu
-
->  }
->
->  static int sun4i_tcon_bind(struct device *dev, struct device *master,
-> @@ -522,12 +522,13 @@ static int sun4i_tcon_probe(struct platform_device *pdev)
->          * Defer the probe.
->          */
->         panel = sun4i_tcon_find_panel(node);
-> -       if (IS_ERR(panel)) {
-> -               /*
-> -                * If we don't have a panel endpoint, just go on
-> -                */
-> -               if (PTR_ERR(panel) != -ENODEV)
-> -                       return -EPROBE_DEFER;
-> +
-> +       /*
-> +        * If we don't have a panel endpoint, just go on
-> +        */
-> +       if (PTR_ERR(panel) == -EPROBE_DEFER) {
-> +               DRM_DEBUG_DRIVER("Still waiting for our panel. Deferring...\n");
-> +               return -EPROBE_DEFER;
->         }
->
->         return component_add(&pdev->dev, &sun4i_tcon_ops);
-> --
-> 2.8.2
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTcgTWF5IDIwMTYgYXQgMTE6NDMsIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9y
+YS5vcmc+IHdyb3RlOgo+Cj4KPiBPbiAwNS8xNi8yMDE2IDA1OjMxIFBNLCBMYXVyZW50IFBpbmNo
+YXJ0IHdyb3RlOgo+Pgo+PiBIaSBBcmNoaXQsCj4+Cj4+IE9uIEZyaWRheSAyMiBBcHIgMjAxNiAx
+MToxMDoxOCBBcmNoaXQgVGFuZWphIHdyb3RlOgo+Pj4KPj4+IE9uIDA0LzIyLzIwMTYgMDQ6MDIg
+QU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+Pj4KPj4+PiBPbiBXZWRuZXNkYXkgMDkgTWFy
+IDIwMTYgMTY6Mjc6MTggQXJjaGl0IFRhbmVqYSB3cm90ZToKPj4+Pj4KPj4+Pj4gQWRkIGRlc2Ny
+aXB0aW9uIG9mIEFEVjc1MzMuIEFkZCB0aGUgcmVxdWlyZWQgYW5kIG9wdGlvbmFsIHByb3BlcnRp
+ZXMKPj4+Pj4gdGhhdAo+Pj4+PiBhcmUgc3BlY2lmaWMgdG8gaXQuCj4+Pj4+Cj4+Pj4+IENjOiBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+Pj4+PiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
+bmVsLm9yZz4KPj4+Pj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0
+dEBjb2RlYXVyb3JhLm9yZz4KPj4+Pj4gLS0tCj4+Pj4+Cj4+Pj4+IC4uLi9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQgICAgICAgIHwgMjUKPj4+Pj4gKysrKysrKysrKysr
+LS0tLS0KPj4+Pj4gMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25z
+KC0pCj4+Pj4+Cj4+Pj4+IGRpZmYgLS1naXQKPj4+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEudHh0Cj4+Pj4+IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTExLnR4
+dAo+Pj4+PiBpbmRleAo+Pj4+PiA5NmMyNWVlLi40MjBkYTVhIDEwMDY0NAo+Pj4+PiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1
+MTEudHh0Cj4+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQKPj4KPj4KPj4gW3NuaXBdCj4+Cj4+Pj4+ICstIGFk
+aSxkaXNhYmxlLXRpbWluZy1nZW5lcmF0b3I6IE9ubHkgZm9yIEFEVjc1MzMuIERpc2FibGVzIHRo
+ZQo+Pj4+PiBpbnRlcm5hbAo+Pj4+PiB0aW1pbmcKPj4+Pj4gKyAgZ2VuZXJhdG9yLiBUaGUgY2hp
+cCB3aWxsIHJlbHkgb24gdGhlIHN5bmMgc2lnbmFscyBpbiB0aGUgRFNJIGRhdGEKPj4+Pj4gbGFu
+ZXMsCj4+Pj4+ICsgIHJhdGhlciB0aGFuIGdlbmVyYXRlIGl0cyBvd24gdGltaW5ncyBmb3IgSERN
+SSBvdXRwdXQuCj4+Pj4KPj4+Pgo+Pj4+IElzbid0IHRoYXQgc29tZXRoaW5nIHRoYXQgc2hvdWxk
+IGJlIHNlbGVjdGFibGUgYXQgcnVudGltZSA/Cj4+Pgo+Pj4KPj4+IFRoZSB0aW1pbmcgZ2VuZXJh
+dG9yIGNhbiBiZSBlbmFibGVkL2Rpc2FibGVkIGF0IHJ1bnRpbWUuIEFsdGhvdWdoLCB3ZQo+Pj4g
+ZG9uJ3QgaGF2ZSBhIHdheSB0byB0ZWxsIHRoZSBkcml2ZXIgd2hldGhlciB3ZSB3YW50IHRvIGtl
+ZXAgaXQgZW5hYmxlZAo+Pj4gb3Igbm90Lgo+Pj4KPj4+IEl0J3MgYSBoYXJkd2FyZSBmZWF0dXJl
+IHRoYXQgd29ya3Mgd2VsbCBvbiBtb3N0IHBsYXRmb3JtcywgYnV0IG5vdCBvbgo+Pj4gYWxsLiBJ
+biBwYXJ0aWN1bGFyLCBpdCB3b3JrcyB3ZWxsIG9uIERCNDEwYywgYnV0IGNhdXNlcyBpc3N1ZXMg
+d2l0aAo+Pj4gdGhlIEhpa2V5IDk2IGJvYXJkLiBUaGUgRFNJIGhvc3Qgb24gSGlrZXkgaGFzIGRp
+ZmZlcmVudCBjbG9jayBzb3VyY2VzCj4+PiB0aGF0IGdlbmVyYXRlIHRoZSBkaXNwbGF5IGNvbnRy
+b2xsZXIncyBwaXhlbCBjbG9jayBhbmQgRFNJIGJ5dGUgY2xvY2ssCj4+PiB3aGVyZWFzIHRoZSBR
+dWFsY29tbSBTb0MgdXNlcyB0aGUgc2FtZSBzb3VyY2UuIE15IGd1ZXNzIGlzIHRoYXQgdGhlCj4+
+PiBBRFY3NTMzJ3MgdGltaW5nIGdlbmVyYXRvciBkb2Vzbid0IGxpa2UgaXQgd2hlbiB0aGUgcGl4
+ZWwgZGF0YSBhbmQKPj4+IGNsb2NrIGFyZSBvdXQgb2YgcGhhc2Ugb3Igc29tZXRoaW5nLgo+Pj4K
+Pj4+IFNpbmNlIGl0IGlzIGEgaGFyZHdhcmUgZmVhdHVyZSB3aGljaCBuZWVkcyB0d2Vha2luZywg
+SSB0aG91Z2h0IGl0Cj4+PiBxdWFsaWZpZWQgYXMgYSBEVCBwcm9wZXJ0eS4KPj4KPj4KPj4gVGhl
+IGZhY3QgdGhhdCBhIGhhcmR3YXJlIGdlbmVyYXRvciBpcyBwcmVzZW50IGlzIGNlcnRhaW5seSBk
+ZXNjcmliZXMgdGhlCj4+IGhhcmR3YXJlLCBidXQgSSdtIG5vdCBzdXJlIHdoZXRoZXIgdG8gZW5h
+YmxlIGl0IG9yIG5vdCBhbHNvIHF1YWxpZmllcyBhcyBhCj4+IGhhcmR3YXJlIGZlYXR1cmUuCj4+
+Cj4+IEFyZSB0aGVyZSB1c2UgY2FzZXMgZm9yIHVzaW5nIHRoZSB0aW1pbmcgZ2VuZXJhdG9yIGNv
+bmRpdGlvbmFsbHkgb24gYQo+PiBnaXZlbgo+PiBib2FyZCA/IEFzIHlvdSBpbXBsZW1lbnQgc3Vw
+cG9ydCBmb3IgZGlzYWJsaW5nIGl0LCBJIGFzc3VtZSBpdCdzIG5vdAo+PiBtYW5kYXRvcnkuIFdo
+YXQgZmVhdHVyZShzKSBkbyB3ZSBsb3NlIGlmIHdlIGtlZXAgaXQgZGlzYWJsZWQgPwo+Pgo+Cj4g
+VGhlIHNwZWMgc2F5cyBpdCdzIHJlY29tbWVuZGVkIHRvIHVzZSB0aGUgaW50ZXJuYWwgdGltaW5n
+IGdlbmVyYXRvci4gSW4KPiB0aGUgY2FzZSBvZiBkYjQxMGMsIEkgb2JzZXJ2ZSBhbiB1bnN0YWJs
+ZSBvdXRwdXQvZmxpY2tlciBmb3IgY2VydGFpbgo+IG1vZGVzIGlmIEkgZG9uJ3QgZW5hYmxlIGl0
+Lgo+Cj4gSW4gdGhlIGNhc2Ugb2YgaGlrZXkgcGxhdGZvcm0sIGl0J3MgdGhlIG90aGVyIHdheSBy
+b3VuZC4KPgo+IFhpbmxpYW5nLCBjb3VsZCB5b3UgZGVzY3JpYmUgdGhlIHByb2JsZW1zIHlvdSBm
+YWNlIHdoZW4gdGhlIHRpbWluZwo+IGdlbmVyYXRvciBpcyBlbmFibGVkPwoKWWVzLCAgb3Blbmlu
+ZyB0aGUgdGltaW5nIGdlbmVyYXRvciBvZiBBRFY3NTMzIGNhbiBiZW5lZml0IHRoZSBIRE1JCm91
+dHB1dCBzaWduYWwuCkJ1dCwgZm9yIHNvbWUgY2lyY3Vtc3RhbmNlcywgd2UgbmVlZCB0byBkaXNh
+YmxlIHRpbWluZyBnZW5lcmF0b3I6ClRvIG1ha2UgbW9kZXMgd29yaywgdGhlIHRpbWluZyBwYXJh
+bWV0ZXJzIChoZnAsIGhicCwgZXRjLikgdXNlZCBieQpBRFY3NTMzIHRpbWluZyBnZW5lcmF0b3Ig
+c2hvdWxkIG1hdGNoIHRoZSBvbmVzIHVzZWQgaW4gRFNJLgpJZiB0aGUgdGltaW5nIHBhcmFtZXRl
+cnMgY2hhbmdlZCBpbiBEU0kgYW5kIHRoZXNlIGNoYW5naW5nICB0aW1pbmcKcGFyYW1ldGVycyBj
+YW4ndCBwYXNzIHRvIEFEVjc1MzMsIHRoZW4gaXQgbmVlZCB0byBkaXNhYmxlIHRoZSB0aW1pbmcK
+Z2VuZXJhdG9yIG9mIEFEVjc1MzMgdG8gbWFrZSBtb2RlIHdvcmsuClNvbWUgbW9kZXMgaW4gSGlL
+ZXkgaXMgaW4gdGhpcyBjYXNlLgoKVGhhbmtzLAoteGlubGlhbmcKCj4KPgo+IFRoYW5rcywKPiBB
+cmNoaXQKPgo+IC0tCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEg
+bWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBob3N0ZWQgYnkgVGhlIExpbnV4IEZv
+dW5kYXRpb24KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
