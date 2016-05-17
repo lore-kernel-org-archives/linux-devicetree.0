@@ -1,142 +1,342 @@
-From: Jan Viktorin <viktorin@rehivetech.com>
-Subject: [PATCH 4/4] uio: bind uio_pdrv_genirq via OF
-Date: Tue, 17 May 2016 11:22:20 +0200
-Message-ID: <1463476940-26791-5-git-send-email-viktorin@rehivetech.com>
-References: <1463476940-26791-1-git-send-email-viktorin@rehivetech.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463476940-26791-1-git-send-email-viktorin@rehivetech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jan Viktorin <viktorin@rehivetech.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH 2/5] i2c: Add STM32F4 I2C driver
+Date: Tue, 17 May 2016 11:48:08 +0200
+Message-ID: <CALszF6A-jiCBtSO1RFDdgHKTKmsonRXFVs0x2zHha1LJ3UhwtQ@mail.gmail.com>
+References: <1462980974-22091-1-git-send-email-cedric.madianga@gmail.com>
+	<1462980974-22091-3-git-send-email-cedric.madianga@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1462980974-22091-3-git-send-email-cedric.madianga@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: Patrice Chotard <patrice.chotard@st.com>, wsa@the-dreams.de, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The uio_dmem_genirq works in a similar way as uio_pdrv_genirq now.
-It accepts the of_id module parameter to bind to a specific device.
-The information about dynamic memory is obtained from OF.
+Hi Cedric,
 
-This patch implements the two OF bindings:
+2016-05-11 17:36 GMT+02:00 M'boumba Cedric Madianga <cedric.madianga@gmail.com>:
+> This patch adds support for the STM32F4 I2C controller.
+>
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+> ---
+>  drivers/i2c/busses/Kconfig       |  10 +
+>  drivers/i2c/busses/Makefile      |   1 +
+>  drivers/i2c/busses/i2c-stm32f4.c | 872 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 883 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-stm32f4.c
+>
+...
+> diff --git a/drivers/i2c/busses/i2c-stm32f4.c b/drivers/i2c/busses/i2c-stm32f4.c
+> new file mode 100644
+> index 0000000..4692213
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-stm32f4.c
+...
+> +enum stm32f4_i2c_speed {
+> +       STM32F4_I2C_SPEED_STANDARD, /* 100 kHz */
+> +       STM32F4_I2C_SPEED_FAST, /* 400 kHz */
+> +       STM32F4_I2C_SPEED_END,
+> +};
+> +
+> +/**
+> + * struct stm32f4_i2c_timings - per-Mode tuning parameters
+> + * @rate: I2C bus rate
+> + * @duty: Fast mode duty cycle
+> + */
+> +struct stm32f4_i2c_timings {
+> +       u32 rate;
+> +       u32 duty;
+> +};
+...
+> +/**
+> + * struct stm32f4_i2c_dev - private data of the controller
+> + * @adap: I2C adapter for this controller
+> + * @dev: device for this controller
+> + * @base: virtual memory area
+> + * @complete: completion of I2C message
+> + * @irq_event: interrupt event line for the controller
+> + * @irq_error: interrupt error line for the controller
+> + * @clk: hw i2c clock
+> + * speed: I2C clock frequency of the controller. Standard or Fast only supported
+> + * @client: I2C transfer information
+> + * @busy: I2C transfer on-going
+> + * @rst: I2C reset line
+> + */
+> +struct stm32f4_i2c_dev {
+> +       struct i2c_adapter              adap;
+> +       struct device                   *dev;
+> +       void __iomem                    *base;
+> +       struct completion               complete;
+> +       int                             irq_event;
+> +       int                             irq_error;
+> +       struct clk                      *clk;
+> +       int                             speed;
+> +       struct stm32f4_i2c_client       client;
+> +       bool                            busy;
+> +       struct reset_control            *rst;
+> +};
+> +
+> +static struct stm32f4_i2c_timings i2c_timings[] = {
+> +       [STM32F4_I2C_SPEED_STANDARD] = {
+> +               .rate                   = 100000,
+> +               .duty                   = 0,
+> +       },
+> +       [STM32F4_I2C_SPEED_FAST] = {
+> +               .rate                   = 400000,
+> +               .duty                   = 0,
+> +       },
+> +};
+Is this table really needed?
+As duty value seems to always be 0, couldn't you just store the rate
+in the speed field?
 
- * uio,number-of-dynamic-regions
- * uio,dynamic-regions-sizes
 
-Signed-off-by: Jan Viktorin <viktorin@rehivetech.com>
----
- drivers/uio/uio_dmem_genirq.c | 76 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 58 insertions(+), 18 deletions(-)
+> +static void stm32f4_i2c_set_rise_time(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       u32 trise, freq, cr2;
+> +
+> +       cr2 = readl_relaxed(i2c_dev->base + STM32F4_I2C_CR2);
+> +       freq = cr2 & STM32F4_I2C_CR2_FREQ_MASK;
+> +
+> +       trise = readl_relaxed(i2c_dev->base + STM32F4_I2C_TRISE);
+> +       trise &= ~STM32F4_I2C_TRISE_TRISE_MASK;
+> +
+> +       if (i2c_dev->speed == STM32F4_I2C_SPEED_STANDARD)
+> +               trise |= STM32F4_I2C_TRISE_TRISE((freq + 1));
+> +       else
+> +               trise |= STM32F4_I2C_TRISE_TRISE((((freq * 300) / 1000) + 1));
+Or if you keep the timings struct, maybe the rise time should be part of it.
+Doing, that, you will avoid the if/else
 
-diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
-index 945515d..ade650a 100644
---- a/drivers/uio/uio_dmem_genirq.c
-+++ b/drivers/uio/uio_dmem_genirq.c
-@@ -144,29 +144,70 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
- 	return 0;
- }
- 
-+static int uio_dmem_genirq_alloc_platdata(struct platform_device *pdev)
-+{
-+	struct uio_dmem_genirq_pdata pdata;
-+	u32 regions;
-+	u32 sizes[MAX_UIO_MAPS];
-+	int ret;
-+
-+	memset(&pdata, 0, sizeof(pdata));
-+
-+	ret = of_property_read_u32(pdev->dev.of_node,
-+		"uio,number-of-dynamic-regions", &regions);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Missing property uio,number-of-dynamic-regions\n");
-+		return ret;
-+	}
-+
-+	regions = min_t(u32, regions, MAX_UIO_MAPS);
-+
-+	ret = of_property_read_u32_array(pdev->dev.of_node,
-+		"uio,dynamic-regions-sizes", sizes, regions);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Missing or invalid property "
-+			"uio,dynamic-regions-sizes\n");
-+		return ret;
-+	}
-+
-+	pdata.dynamic_region_sizes = devm_kzalloc(&pdev->dev,
-+			sizeof(*pdata.dynamic_region_sizes) *
-+			pdata.num_dynamic_regions, GFP_KERNEL);
-+	if (!pdata.dynamic_region_sizes) {
-+		dev_err(&pdev->dev, "Unable to alloc dynamic_region_sizes\n");
-+		ret = -ENOMEM;
-+		return ret;
-+	}
-+
-+	pdata.num_dynamic_regions = regions;
-+	while (regions--)
-+		pdata.dynamic_region_sizes[regions] = sizes[regions];
-+
-+	pdata.uioinfo.name = pdev->dev.of_node->name;
-+	pdata.uioinfo.version = "devicetree";
-+
-+	return platform_device_add_data(pdev, &pdata, sizeof(pdata));
-+}
-+
- static int uio_dmem_genirq_probe(struct platform_device *pdev)
- {
--	struct uio_dmem_genirq_pdata *pdata = dev_get_platdata(&pdev->dev);
--	struct uio_info *uioinfo = &pdata->uioinfo;
-+	struct uio_dmem_genirq_pdata *pdata;
-+	struct uio_info *uioinfo;
- 	struct uio_dmem_genirq_platdata *priv;
- 	struct uio_mem *uiomem;
- 	int ret = -EINVAL;
- 	int i;
- 
- 	if (pdev->dev.of_node) {
--		int irq;
--
--		/* alloc uioinfo for one device */
--		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
--		if (!uioinfo) {
--			ret = -ENOMEM;
--			dev_err(&pdev->dev, "unable to kmalloc\n");
-+		ret = uio_dmem_genirq_alloc_platdata(pdev);
-+		if (ret)
- 			goto bad2;
--		}
--		uioinfo->name = pdev->dev.of_node->name;
--		uioinfo->version = "devicetree";
- 	}
- 
-+	pdata = dev_get_platdata(&pdev->dev);
-+	uioinfo = &pdata->uioinfo;
-+
- 	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
- 		dev_err(&pdev->dev, "missing platform_data\n");
- 		goto bad0;
-@@ -298,10 +339,6 @@ static int uio_dmem_genirq_remove(struct platform_device *pdev)
- 	priv->uioinfo->handler = NULL;
- 	priv->uioinfo->irqcontrol = NULL;
- 
--	/* kfree uioinfo for OF */
--	if (pdev->dev.of_node)
--		kfree(priv->uioinfo);
--
- 	kfree(priv);
- 	return 0;
- }
-@@ -329,10 +366,13 @@ static const struct dev_pm_ops uio_dmem_genirq_dev_pm_ops = {
- };
- 
- #ifdef CONFIG_OF
--static const struct of_device_id uio_of_genirq_match[] = {
--	{ /* empty for now */ },
-+static struct of_device_id uio_of_genirq_match[] = {
-+	{ /* This is filled with module_parm */ },
-+	{ /* end of list */ },
- };
- MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
-+module_param_string(of_id, uio_of_genirq_match[0].compatible, 128, 0);
-+MODULE_PARM_DESC(of_id, "Openfirmware id of the device to be handled by uio");
- #endif
- 
- static struct platform_driver uio_dmem_genirq = {
--- 
-2.8.0
+> +
+> +       writel_relaxed(trise, i2c_dev->base + STM32F4_I2C_TRISE);
+> +}
+> +
+> +static void stm32f4_i2c_set_speed_mode(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       struct stm32f4_i2c_timings *t = &i2c_timings[i2c_dev->speed];
+> +       u32 ccr, val, clk_rate;
+> +
+> +       ccr = readl_relaxed(i2c_dev->base + STM32F4_I2C_CCR);
+> +       ccr &= ~(STM32F4_I2C_CCR_FS | STM32F4_I2C_CCR_DUTY |
+> +                STM32F4_I2C_CCR_CCR_MASK);
+> +
+> +       clk_rate = clk_get_rate(i2c_dev->clk);
+> +
+> +       switch (i2c_dev->speed) {
+> +       case STM32F4_I2C_SPEED_STANDARD:
+> +               val = clk_rate / t->rate * 2;
+> +               if (val < STM32F4_I2C_MIN_CCR)
+> +                       ccr |= STM32F4_I2C_CCR_CCR(STM32F4_I2C_MIN_CCR);
+> +               else
+> +                       ccr |= STM32F4_I2C_CCR_CCR(val);
+> +               break;
+> +       case STM32F4_I2C_SPEED_FAST:
+> +               ccr |= STM32F4_I2C_CCR_FS;
+> +               if (t->duty) {
+> +                       ccr |= STM32F4_I2C_CCR_DUTY;
+> +                       ccr |= STM32F4_I2C_CCR_CCR(clk_rate / t->rate * 25);
+> +               } else {
+> +                       ccr |= STM32F4_I2C_CCR_CCR(clk_rate / t->rate * 3);
+> +               }
+Is it really useful since duty seems to always be 0?
+
+> +               break;
+> +       default:
+> +               dev_err(i2c_dev->dev, "I2C speed mode not supported\n");
+> +       }
+> +
+> +       writel_relaxed(ccr, i2c_dev->base + STM32F4_I2C_CCR);
+> +}
+> +
+> +static void stm32f4_i2c_set_filter(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       u32 filter;
+> +
+> +       /* Enable analog noise filter and disable digital noise filter */
+Maybe a stupid question, but is it always what we want?
+Are there some cases we would prefer to use the digital noise filter
+instead of the analog one?
+
+> +       filter = readl_relaxed(i2c_dev->base + STM32F4_I2C_FLTR);
+> +       filter &= ~(STM32F4_I2C_FLTR_ANOFF | STM32F4_I2C_FLTR_DNF_MASK);
+> +       writel_relaxed(filter, i2c_dev->base + STM32F4_I2C_FLTR);
+> +}
+> +
+> +/**
+> + * stm32f4_i2c_hw_config() - Prepare I2C block
+> + * @i2c_dev: Controller's private data
+> + */
+> +static void stm32f4_i2c_hw_config(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR1;
+> +
+> +       /* Disable I2C */
+> +       stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR1_PE);
+> +
+> +       stm32f4_i2c_set_periph_clk_freq(i2c_dev);
+> +
+> +       stm32f4_i2c_set_rise_time(i2c_dev);
+> +
+> +       stm32f4_i2c_set_speed_mode(i2c_dev);
+> +
+> +       stm32f4_i2c_set_filter(i2c_dev);
+> +
+> +       /* Enable I2C */
+> +       stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_PE);
+> +}
+> +
+> +static int stm32f4_i2c_wait_free_bus(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       u32 status;
+> +       int ret;
+> +
+> +       ret = readl_relaxed_poll_timeout(i2c_dev->base + STM32F4_I2C_SR2,
+> +                                        status,
+> +                                        !(status & STM32F4_I2C_SR2_BUSY),
+> +                                        10, 1000);
+> +       if (ret) {
+> +               dev_err(i2c_dev->dev, "bus not free\n");
+> +               ret = -EBUSY;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +/**
+> + * stm32f4_i2c_write_ byte() - Write a byte in the data register
+> + * @i2c_dev: Controller's private data
+> + * @byte: Data to write in the register
+> + */
+> +static void stm32f4_i2c_write_byte(struct stm32f4_i2c_dev *i2c_dev, u8 byte)
+> +{
+> +       writel_relaxed(byte, i2c_dev->base + STM32F4_I2C_DR);
+> +}
+> +
+> +/**
+> + * stm32f4_i2c_write_msg() - Fill the data register in write mode
+> + * @i2c_dev: Controller's private data
+> + *
+> + * This function fills the data register with I2C transfer buffer
+> + */
+> +static void stm32f4_i2c_write_msg(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
+> +
+> +       stm32f4_i2c_write_byte(i2c_dev, *c->buf++);
+> +       c->count--;
+> +}
+> +
+> +static void stm32f4_i2c_read_msg(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
+> +       u32 rbuf;
+> +
+> +       rbuf = readl_relaxed(i2c_dev->base + STM32F4_I2C_DR);
+> +       *c->buf++ = (u8)rbuf & 0xff;
+> +       c->count--;
+> +}
+> +
+> +static void stm32f4_i2c_terminate_xfer(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
+> +       void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
+> +
+> +       /* Disable all interrupts */
+> +       stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_IRQ_MASK);
+> +
+> +       /* Set STOP or REPSTART */
+> +       reg = i2c_dev->base + STM32F4_I2C_CR1;
+> +       if (c->stop)
+> +               stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_STOP);
+> +       else
+> +               stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_START);
+> +
+> +       complete(&i2c_dev->complete);
+> +}
+> +
+> +/**
+> + * stm32f4_i2c_handle_write() - Handle FIFO empty interrupt in case of write
+> + * @i2c_dev: Controller's private data
+> + */
+> +static void stm32f4_i2c_handle_write(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
+> +       void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
+> +
+> +       if (c->count) {
+> +               stm32f4_i2c_write_msg(i2c_dev);
+> +               if (!c->count) {
+> +                       /* Disable BUF interrupt */
+> +                       stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_ITBUFEN);
+> +               }
+> +       } else {
+> +               stm32f4_i2c_terminate_xfer(i2c_dev);
+> +       }
+> +}
+> +
+> +/**
+> + * stm32f4_i2c_handle_tx_btf() - Handle byte transfer finished interrupt
+> + * in case of write
+> + * @i2c_dev: Controller's private data
+> + */
+> +static void stm32f4_i2c_handle_tx_btf(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
+> +
+> +       if (c->count)
+> +               stm32f4_i2c_write_msg(i2c_dev);
+> +       else
+> +               stm32f4_i2c_terminate_xfer(i2c_dev);
+> +}
+The two functions above look very similar.
+Isn't there a way to factorize?
+
+> +
+> +/**
+> + * stm32f4_i2c_handle_read() - Handle FIFO enmpty interrupt in case of read
+s/enmpty/empty/
+
+
+...
+> +
+> +/**
+> + * stm32f4_i2c_xfer() - Transfer combined I2C message
+> + * @i2c_adap: Adapter pointer to the controller
+> + * @msgs: Pointer to data to be written.
+> + * @num: Number of messages to be executed
+> + */
+> +static int stm32f4_i2c_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msgs[],
+> +                           int num)
+> +{
+> +       struct stm32f4_i2c_dev *i2c_dev = i2c_get_adapdata(i2c_adap);
+> +       int ret, i;
+> +
+> +       i2c_dev->busy = true;
+> +
+> +       ret = clk_prepare_enable(i2c_dev->clk);
+> +       if (ret) {
+> +               dev_err(i2c_dev->dev, "Failed to prepare_enable clock\n");
+> +               return ret;
+> +       }
+> +
+> +       stm32f4_i2c_hw_config(i2c_dev);
+Maybe you could call this only at probe and resume time?
+You would save some register accesses.
+
+> +
+> +       for (i = 0; i < num && !ret; i++)
+> +               ret = stm32f4_i2c_xfer_msg(i2c_dev, &msgs[i], i == 0,
+> +                                          i == num - 1);
+> +
+> +       clk_disable_unprepare(i2c_dev->clk);
+> +
+> +       i2c_dev->busy = false;
+> +
+> +       return (ret < 0) ? ret : i;
+> +}
+> +
+
+Thanks!
+Maxime
