@@ -1,37 +1,86 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB PCIe
- bindings
-Date: Mon, 16 May 2016 18:52:31 -0700
-Message-ID: <573A795F.2040209@gmail.com>
-References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
- <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
- <8520D5D51A55D047800579B094147198258955CE@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v6 6/7] T104xRDB: Add qe node to t104xrdb
+Date: Tue, 17 May 2016 10:39:02 +0800
+Message-ID: <1463452743-21462-6-git-send-email-qiang.zhao@nxp.com>
+References: <1463452743-21462-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8520D5D51A55D047800579B094147198258955CE@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "jim2101024@gmail.com" <jim2101024@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463452743-21462-1-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/11/2016 07:45 AM, Bharat Kumar Gogada wrote:
->> +- brcm,log2-scb-sizes: log2 size of the SCB window that is mapped to
->> +PCIe space
->> +  there must be exactly one value per memory controller present in the
->> +system
->> +  (ranges from 1 to 3)
-> 
-> Can you please give more insight on what does this property do ?
+add qe node to t104xrdb.dtsi
 
-There is another part of the thread that should tell you a bit more what
-this is about, here is where it starts:
+Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+---
+Changes for v2
+	- rebase
+Changes for v3
+	- rebase
+Changes for v4
+	- rebase
+Changes for v5
+	- rebase
+Changes for v6
+	- NA
 
-http://www.spinics.net/lists/linux-pci/msg50973.html
+ arch/powerpc/boot/dts/fsl/t104xrdb.dtsi | 38 +++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-And this is where we discuss what we should be doing about it:
-
-http://www.spinics.net/lists/linux-pci/msg51070.html
+diff --git a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
+index 830ea48..69d5057 100644
+--- a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
+@@ -186,4 +186,42 @@
+ 				  0 0x00010000>;
+ 		};
+ 	};
++
++	qe: qe@ffe140000 {
++		ranges = <0x0 0xf 0xfe140000 0x40000>;
++		reg = <0xf 0xfe140000 0 0x480>;
++		brg-frequency = <0>;
++		bus-frequency = <0>;
++
++		si1: si@700 {
++			compatible = "fsl,t1040-qe-si";
++			reg = <0x700 0x80>;
++		};
++
++		siram1: siram@1000 {
++			compatible = "fsl,t1040-qe-siram";
++			reg = <0x1000 0x800>;
++		};
++
++		ucc_hdlc: ucc@2000 {
++			compatible = "fsl,ucc-hdlc";
++			rx-clock-name = "clk8";
++			tx-clock-name = "clk9";
++			fsl,rx-sync-clock = "rsync_pin";
++			fsl,tx-sync-clock = "tsync_pin";
++			fsl,tx-timeslot-mask = <0xfffffffe>;
++			fsl,rx-timeslot-mask = <0xfffffffe>;
++			fsl,tdm-framer-type = "e1";
++			fsl,tdm-id = <0>;
++			fsl,siram-entry-id = <0>;
++			fsl,tdm-interface;
++		};
++
++		ucc_serial: ucc@2200 {
++			compatible = "fsl,t1040-ucc-uart";
++			port-number = <0>;
++			rx-clock-name = "brg2";
++			tx-clock-name = "brg2";
++		};
++	};
+ };
 -- 
-Florian
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
