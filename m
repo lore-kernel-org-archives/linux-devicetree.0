@@ -1,7 +1,7 @@
 From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v6 6/7] T104xRDB: Add qe node to t104xrdb
-Date: Tue, 17 May 2016 10:39:02 +0800
-Message-ID: <1463452743-21462-6-git-send-email-qiang.zhao@nxp.com>
+Subject: [PATCH v6 7/7] T104xQDS: Add qe node to t104xqds
+Date: Tue, 17 May 2016 10:39:03 +0800
+Message-ID: <1463452743-21462-7-git-send-email-qiang.zhao@nxp.com>
 References: <1463452743-21462-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,7 +12,7 @@ To: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add qe node to t104xrdb.dtsi
+add qe node to t104xqds.dtsi
 
 Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 ---
@@ -27,14 +27,14 @@ Changes for v5
 Changes for v6
 	- NA
 
- arch/powerpc/boot/dts/fsl/t104xrdb.dtsi | 38 +++++++++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/t104xqds.dtsi | 38 +++++++++++++++++++++++++++++++++
  1 file changed, 38 insertions(+)
 
-diff --git a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
-index 830ea48..69d5057 100644
---- a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
-@@ -186,4 +186,42 @@
+diff --git a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+index 1498d1e..3358d4c 100644
+--- a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+@@ -190,4 +190,42 @@
  				  0 0x00010000>;
  		};
  	};
