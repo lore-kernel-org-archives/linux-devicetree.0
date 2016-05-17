@@ -1,57 +1,67 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 5/6] ARM: dts: sun5i: q8-common: Enable audio codec
-Date: Tue, 17 May 2016 23:56:10 +0800
-Message-ID: <1463500571-28970-6-git-send-email-wens@csie.org>
-References: <1463500571-28970-1-git-send-email-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463500571-28970-1-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 0/6] ARM: dts: sun5i: q8-common: Enable various peripherals
+Date: Tue, 17 May 2016 23:56:05 +0800
+Message-ID: <1463500571-28970-1-git-send-email-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Q8 tablets use the audio codec to provide audio output via a
-headphone jack or a small mono speaker. A GPIO output is used to
-control speaker amp.
+Hi everyone,
 
-The tablets may or may not have an internal microphone.
+This series enables more peripherals for Allwinner A13-based Q8 devices.
+The peripherals include the WiFi, the PMIC's micro-usb power supply
+(driver), audio codec (headphone and speaker), and full display support
+with the new DRM KMS driver. The series is based on parts of Maxime's
+"drm: Add Support for Passive RGB to VGA bridges" series, specifically
+the clk and drm fixes, and common DTS bits.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/sun5i-q8-common.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Hans, since you have a collection of q8 tablets, I'm hoping you could
+test these bits and provide some feedback.
 
-diff --git a/arch/arm/boot/dts/sun5i-q8-common.dtsi b/arch/arm/boot/dts/sun5i-q8-common.dtsi
-index 8fc1b6110fb8..5b065fd542f0 100644
---- a/arch/arm/boot/dts/sun5i-q8-common.dtsi
-+++ b/arch/arm/boot/dts/sun5i-q8-common.dtsi
-@@ -61,6 +61,13 @@
- 	};
- };
- 
-+&codec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&codec_pa_pin>;
-+	allwinner,pa-gpios = <&pio 6 10 GPIO_ACTIVE_HIGH>; /* PG10 */
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&reg_dcdc2>;
- };
-@@ -100,6 +107,13 @@
- };
- 
- &pio {
-+	codec_pa_pin: codec_pa_pin@0 {
-+		allwinner,pins = "PG10";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
- 	mmc0_cd_pin_q8: mmc0_cd_pin@0 {
- 		allwinner,pins = "PG0";
- 		allwinner,function = "gpio_in";
+
+Patch 1 is a small fix for part of the init failure path.
+
+Patch 2 disables ldo5 on the axp209 by default. This regulator output is
+muxed with a gpio, and the regulator on/off settings override the gpio.
+
+Patch 3 enables the USB WiFi module found.
+
+Patch 4 enables the USB/VBUS power supply of the PMIC.
+
+Patch 5 enables the audio codec, with support for the speaker amp.
+
+Patch 6 enables the LCD panel with the display pipeline.
+
+
+Regards
+ChenYu
+
+
+Chen-Yu Tsai (6):
+  drm: sun4i: do cleanup if RGB output init fails
+  ARM: dts: axp209: Disable ldo5 by default
+  ARM: dts: sun5i: q8-common: Enable USB-based WiFi
+  ARM: dts: sun5i: q8-common: Enable USB power supply
+  ARM: dts: sun5i: q8-common: Enable audio codec
+  ARM: dts: sun5i: q8-common: Enable display pipeline and LCD display
+
+ arch/arm/boot/dts/axp209.dtsi          |  1 +
+ arch/arm/boot/dts/sun5i-q8-common.dtsi | 62 ++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_tcon.c     |  6 +++-
+ 3 files changed, 68 insertions(+), 1 deletion(-)
+
 -- 
 2.8.1
