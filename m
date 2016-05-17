@@ -1,63 +1,60 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: Re: [PATCH v2 0/3] input: rmi4: Regulator supply support
-Date: Mon, 16 May 2016 16:55:51 -0700
-Message-ID: <573A5E07.4010500@synaptics.com>
-References: <1462596008-21381-1-git-send-email-bjorn.andersson@linaro.org>
- <57312CFB.2040304@synaptics.com> <20160510154904.GI1256@tuxbot>
- <5733C088.1090700@synaptics.com> <20160512030524.GA1256@tuxbot>
- <57352536.7040909@synaptics.com> <20160513222948.GD1256@tuxbot>
+From: Qiang Zhao <qiang.zhao@nxp.com>
+Subject: RE: [v5,1/7] QE: Add IC, SI and SIRAM document to device tree
+ bindings.
+Date: Tue, 17 May 2016 01:18:52 +0000
+Message-ID: <AM3PR04MB118504BB6430CBEC8AA4886491480@AM3PR04MB1185.eurprd04.prod.outlook.com>
+References: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
+ <20160516232210.GA21087@home.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160513222948.GD1256@tuxbot>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christopher Heiny <cheiny@synaptics.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20160516232210.GA21087@home.buserror.net>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <oss@buserror.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Xiaobo Xie <xiaobo.xie@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2016 03:29 PM, Bjorn Andersson wrote:
-> On Thu 12 May 17:52 PDT 2016, Andrew Duggan wrote:
->
->> On 05/11/2016 08:05 PM, Bjorn Andersson wrote:
->>> On Wed 11 May 16:30 PDT 2016, Andrew Duggan wrote:
->>>
->>>> Hi Bjorn,
->>>>
->>>> On 05/10/2016 08:49 AM, Bjorn Andersson wrote:
->>> [..]
->>>>> So either we duplicate the regulator support in spi/i2c or we make them
->>>>> optional in the core driver. Sounds like you prefer the prior, i.e. v1
->>>>> of my patch.
->>>> Yes, after all this I think it makes sense to put regulator support in the
->>>> spi/i2c transports like in your v1 patch. I essentially duplicated the irq
->>>> handling code in both transports so I would be ok with duplicating regulator
->>>> support too. It doesn't seem like that much code. But, if this is too much
->>>> duplication we could create some sort of common file and put the common irq
->>>> and regulator support functions which could be called in the transports.
->>>> Similar to how rmi_2d_sensor.c defines some common functions shared between
->>>> rmi_f11 and rmi_f12.
->>>>
->>> Sounds reasonable, I'm okay with this. Did you have any comments on the
->>> implementation I had in v1?
->> I tested on a device which has an always on regulators so I didn't add
->> anything to device tree for the device. But, it returned 0 when it didn't
->> find anything which seems to be the correct behavior. Is there an easy way
->> to avoid sleeping for 10ms when there are no regulators? Maybe check if both
->> the supplies .consumer pointer is null?
->>
-> I did look at this as well, but unfortunately the regulators does not
-> come back as NULL, but rather as dummy regulators.
->
-> The delay matches Tpowerup (iirc) from the data sheet, which I assume is
-> firmware/hardware dependant. Should we provide a knob for that and
-> default the sleep to 0ms?
-
-Making  the default 0 and then setting an appropriate time out for 
-devices which need it sounds like a good idea to me.
-
-Thanks,
-Andrew
-
-> Regards,
-> Bjorn
+T24gVHVlLCBNYXkgMTcsIDIwMTYgYXQgMDc6MjJBTSwgU2NvdHQgV29vZCB3cm90ZToKPiAtLS0t
+LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+IEZyb206IFNjb3R0IFdvb2QgW21haWx0bzpvc3NAYnVz
+ZXJyb3IubmV0XQo+IFNlbnQ6IFR1ZXNkYXksIE1heSAxNywgMjAxNiA3OjIyIEFNCj4gVG86IFFp
+YW5nIFpoYW8gPHFpYW5nLnpoYW9AbnhwLmNvbT4KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtCj4ga2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgWGlhb2JvIFhpZSA8eGlhb2JvLnhpZUBueHAuY29tPjsgWWFuZy1MZW8gTGkKPiA8bGVveWFu
+Zy5saUBueHAuY29tPjsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKPiBTdWJqZWN0OiBS
+ZTogW3Y1LDEvN10gUUU6IEFkZCBJQywgU0kgYW5kIFNJUkFNIGRvY3VtZW50IHRvIGRldmljZSB0
+cmVlCj4gYmluZGluZ3MuCj4gCj4gT24gV2VkLCBNYXIgMDksIDIwMTYgYXQgMDk6MjE6MjhBTSAr
+MDgwMCwgWmhhbyBRaWFuZyB3cm90ZToKPiA+IEFkZCBJQywgU0kgYW5kIFNJUkFNIGRvY3VtZW50
+IG9mIFFFIHRvCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9m
+c2wvY3BtX3FlL3FlLnR4dAo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IFpoYW8gUWlhbmcgPHFpYW5n
+LnpoYW9AbnhwLmNvbT4KPiA+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+Pgo+ID4gLS0tCj4gPiBjaGFuZ2VzIGZvciB2Mgo+ID4gCS0gQWRkIGludGVycnVwdC1jb250cm9s
+bGVyIGluIFJlcXVpcmVkIHByb3BlcnRpZXMKPiA+IAktIGRlbGV0ZSBhZGRyZXNzLWNlbGxzIGFu
+ZCBzaXplLWNlbGxzIGZvciBxZS1zaSBhbmQgcWUtc2lyYW0gQ2hhbmdlcwo+ID4gZm9yIHYzCj4g
+PiAJLSBBZGQgU29DIHNwZWNpZmljIGNhb21wYXRpYmxlIHN0cmluZ3MgdG8gcWUtc2kgYW5kIHFl
+LXNpcmFtIENoYW5nZXMKPiA+IGZvciB2NAo+ID4gCS0gTkEKPiA+IENoYW5nZXMgZm9yIHY1Cj4g
+PiAJLSBOQQo+ID4KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1f
+cWUvcWUudHh0ICB8IDUwCj4gPiArKysrKysrKysrKysrKysrKysrKysrCj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDUwIGluc2VydGlvbnMoKykKPiA+ICsqIFNlcmlhbCBJbnRlcmZhY2UgQmxvY2sgKFNJ
+KQo+ID4gKwo+ID4gK1RoZSBTSSBtYW5hZ2VzIHRoZSByb3V0aW5nIG9mIGVpZ2h0IFRETSBsaW5l
+cyB0byB0aGUgUUUgYmxvY2sgc2VyaWFsCj4gPiArZHJpdmVycyAsIHRoZSBNQ0MgYW5kIHRoZSBV
+Q0NzLCBmb3IgcmVjZWl2ZSBhbmQgdHJhbnNtaXQuCj4gPiArCj4gPiArUmVxdWlyZWQgcHJvcGVy
+dGllczoKPiA+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImZzbCx0MTA0MC1xZS1zaSIuCj4g
+PiArLSByZWcgOiBBZGRyZXNzIHJhbmdlIG9mIFNJIHJlZ2lzdGVyIHNldC4KPiAKPiBJcyB0MTA0
+MCB0aGUgb25seSBjaGlwIHRoYXQgaGFzIG9yIHdpbGwgZXZlciBoYXZlIHRoaXM/CgpUaGVyZSBh
+bHNvIGJlIHQxMDI0IGFuZCBsczEwNDMgc3VwcG9ydGluZyBzaS4KSSB0aG91Z2h0IHRvIGFkZCB0
+aGVtIHdoZW4gYWRkaW5nIHRoZWlyIGRldmljZSBub2RlLgpJZiB5b3UgdGhpbmsgaXQgaXMgYmV0
+dGVyIHRvIGFkZCB0aGVtIG5vdywgSSB3aWxsIG1vZGlmeS4KCi1aaGFvIFFpYW5nCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1h
+aWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96
+bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
