@@ -1,74 +1,104 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] doc: dt: Document the target root overlay method
-Date: Tue, 17 May 2016 07:58:22 -0500
-Message-ID: <CAL_JsqKX1m-gKBGUcxaHJm-ih-QHhHbpHBqMJbb5KXeG9eStQQ@mail.gmail.com>
-References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com> <1463429892-3369-7-git-send-email-pantelis.antoniou@konsulko.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC 4/4] arm64: dts: r8a7795: Add Z clock scaling support
+Date: Tue, 17 May 2016 15:03:23 +0200
+Message-ID: <CAMuHMdW52t9SZq89QjdB=P-aM8dCSq-YYLCxRA7Wk1NVGLsUPg@mail.gmail.com>
+References: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
+	<573166EB.70908@rvc.renesas.com>
+	<5731678E.3080003@rvc.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463429892-3369-7-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <5731678E.3080003@rvc.renesas.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Khiem Nguyen <khiem.nguyen.xt@rvc.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Toru Oishi <toru.oishi.zj@rvc.renesas.com>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 16, 2016 at 3:18 PM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Add a description of the target root overlay method to the overlay
-> documention file.
+On Tue, May 10, 2016 at 6:46 AM, Khiem Nguyen
+<khiem.nguyen.xt@rvc.renesas.com> wrote:
+> This patch adds Z clock scaling support for CA57 in R8A7795 SoC.
+> An OPP table is created with the supported frequency scaling.
 >
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Dien Pham <dien.pham.ry@rvc.renesas.com>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@rvc.renesas.com>
 > ---
->  Documentation/devicetree/overlay-notes.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 >
-> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
-> index 6995fc1..3e8df30 100644
-> --- a/Documentation/devicetree/overlay-notes.txt
-> +++ b/Documentation/devicetree/overlay-notes.txt
-> @@ -104,6 +104,10 @@ If your board has multiple slots/places where a single overlay can work
->  and each slot is defined by a node, you can use the
->  of_overlay_create_target_index() method to select the target.
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> index 7181db0..041d0f2 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -43,6 +43,8 @@
+>                         power-domains = <&sysc R8A7795_PD_CA57_CPU0>;
+>                         next-level-cache = <&L2_CA57>;
+>                         enable-method = "psci";
+> +                       clocks =<&cpg CPG_CORE R8A7795_CLK_Z>;
+> +                       operating-points-v2 = <&cluster0_opp_tb0>;
+>                 };
 >
-> +For overlays on probeable busses, use the of_overlay_create_target_root() method
-> +in which you supply a device node as a target root, and which all target
-> +references in the overlay are performed relative to that node.
-
-This needs a better explanation and an example. "Applying overlays to
-multiple places for probeable busses" is not sufficient. Describe what
-is the problem/flow, and then how does the implementation work. I
-don't think this problem is limited to probeable busses either. Not
-knowing the target to apply the overlay to is the same problem for
-connectors with non-probeable signals.
-
-I find a couple of things problematic with the implementation. There's
-no way to validate that an overlay should apply to a base node. If
-users just always make the target "/", then any overlay can apply to
-any location the nodes could apply anywhere. It requires a kernel
-change for every location you want to apply the overlay to. Maybe I
-don't understand the usecase.
-
-I feel like we are creating too many syntax's to apply overlays. I get
-that there are different usecases, but that doesn't necessarily mean
-the syntax needs to be different.
-
+>                 a57_1: cpu@1 {
+> @@ -52,6 +54,7 @@
+>                         power-domains = <&sysc R8A7795_PD_CA57_CPU1>;
+>                         next-level-cache = <&L2_CA57>;
+>                         enable-method = "psci";
+> +                       operating-points-v2 = <&cluster0_opp_tb0>;
+>                 };
+>                 a57_2: cpu@2 {
+>                         compatible = "arm,cortex-a57","arm,armv8";
+> @@ -60,6 +63,7 @@
+>                         power-domains = <&sysc R8A7795_PD_CA57_CPU2>;
+>                         next-level-cache = <&L2_CA57>;
+>                         enable-method = "psci";
+> +                       operating-points-v2 = <&cluster0_opp_tb0>;
+>                 };
+>                 a57_3: cpu@3 {
+>                         compatible = "arm,cortex-a57","arm,armv8";
+> @@ -68,6 +72,28 @@
+>                         power-domains = <&sysc R8A7795_PD_CA57_CPU3>;
+>                         next-level-cache = <&L2_CA57>;
+>                         enable-method = "psci";
+> +                       operating-points-v2 = <&cluster0_opp_tb0>;
+> +               };
+> +       };
 > +
->  Overlay DTS Format
->  ------------------
->
-> @@ -141,3 +145,7 @@ contains the information required to map from a phandle to a tree location.
->  Using a target index requires the use of a selector target on the call to
->  of_overlay_create_target_index(). I.e. passing an index of 0 will select the
->  target in the foo node, an index of 1 the bar node, etc.
+> +       cluster0_opp_tb0: opp_table0 {
+> +               compatible = "operating-points-v2";
+> +               opp-shared;
 > +
-> +Note that when using the target root create method all target references must
-> +lie under the target root node. I.e. the overlay is not allowed to 'break' out
-> +of the root.
+> +               opp@500000000 {
+> +                       opp-hz = /bits/ 64 <500000000>;
+> +                       opp-microvolt = <820000>;
+> +                       clock-latency-ns = <300000>;
+> +               };
+> +               opp@1000000000 {
+> +                       opp-hz = /bits/ 64 <1000000000>;
+> +                       opp-microvolt = <820000>;
+> +                       clock-latency-ns = <300000>;
+> +               };
+> +               opp@1500000000 {
+> +                       opp-hz = /bits/ 64 <1500000000>;
+> +                       opp-microvolt = <820000>;
+> +                       clock-latency-ns = <300000>;
 
-That is not enforceable though, right?
+With W=1:
 
-Rob
+Warning (unit_address_vs_reg): Node /opp_table0/opp@500000000 has a
+unit name, but no reg property
+Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+unit name, but no reg property
+Warning (unit_address_vs_reg): Node /opp_table0/opp@1500000000 has a
+unit name, but no reg property
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
