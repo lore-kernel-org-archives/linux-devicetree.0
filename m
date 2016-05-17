@@ -1,112 +1,145 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] doc: dt: Document the target root overlay method
-Date: Tue, 17 May 2016 19:02:50 +0300
-Message-ID: <61DBCE84-AD7C-4C73-AC26-A7D06BF4F44D@konsulko.com>
-References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com> <1463429892-3369-7-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqKX1m-gKBGUcxaHJm-ih-QHhHbpHBqMJbb5KXeG9eStQQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKX1m-gKBGUcxaHJm-ih-QHhHbpHBqMJbb5KXeG9eStQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: "jeffrey.lin" <yajohn@gmail.com>
+Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
+Date: Wed, 18 May 2016 00:07:02 +0800
+Message-ID: <1463501223-20723-1-git-send-email-jeffrey.lin@rad-ic.com>
+References: <20160513041852.GA8932@dtor-ws>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160513041852.GA8932@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org
+Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Dmitry:
+> >static int raydium_i2c_read_message(struct i2c_client *client,
+> >				    u32 addr, void *data, size_t len)
+> >{
+> >	__be32 be_addr;
+> >	size_t xfer_len;
+> >	int error;
+> >	while (len) {
+> >		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
+> >
+> >		be_addr = cpu_to_be32(addr);
+> >
+> >		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
+> >					 &be_addr, sizeof(be_addr));
+> >		if (!error)
+> >			error = raydium_i2c_read(client, addr & 0xff,
+> >						 data, xfer_len);
+> Change as:
+> 		if (!error)
+> 			error = raydium_i2c_read(client, (be_addr >> 24) & 0xff,
+> 						 data, xfer_len);
 
-> On May 17, 2016, at 15:58 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
-:
->=20
-> On Mon, May 16, 2016 at 3:18 PM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> Add a description of the target root overlay method to the overlay
->> documention file.
->>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> ---
->> Documentation/devicetree/overlay-notes.txt | 8 ++++++++
->> 1 file changed, 8 insertions(+)
->>=20
->> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentat=
-ion/devicetree/overlay-notes.txt
->> index 6995fc1..3e8df30 100644
->> --- a/Documentation/devicetree/overlay-notes.txt
->> +++ b/Documentation/devicetree/overlay-notes.txt
->> @@ -104,6 +104,10 @@ If your board has multiple slots/places where a=
- single overlay can work
->> and each slot is defined by a node, you can use the
->> of_overlay_create_target_index() method to select the target.
->>=20
->> +For overlays on probeable busses, use the of_overlay_create_target_=
-root() method
->> +in which you supply a device node as a target root, and which all t=
-arget
->> +references in the overlay are performed relative to that node.
->=20
-> This needs a better explanation and an example. "Applying overlays to
-> multiple places for probeable busses" is not sufficient. Describe wha=
-t
-> is the problem/flow, and then how does the implementation work. I
-> don't think this problem is limited to probeable busses either. Not
-> knowing the target to apply the overlay to is the same problem for
-> connectors with non-probeable signals.
->=20
+>I think it is the same on LE, and I suspect it will not work correctly
+>on BE... You want to have the 8 least significant bits of the bank to be
+>used as the address, right?
+This function work correctly with the kernel 3.18 of chromebook in my hand. Raydium touch direct access mode can recieve the BE address after bank switch command 0xaa. For example, if we'll read 10 bytes data begin on 0x12345678. We need send the command sequences as 0xaa-> 0x12->0x34->0x56-> 0x78 and then recive 10 bytes from 0x78.
 
-OK.
+> static int raydium_i2c_fw_write_page(struct i2c_client *client,
+> 				     u16 page_idx, const void *data, size_t len)
+> {
+> 	u8 buf[RM_BL_WRT_LEN];
+> 	u8 pkg_idx = 1;
+> 	u8 div_cnt;
+> 	size_t xfer_len;
+> 	int error;
+> 	int i;
+> 
+> 	div_cnt = len % RM_BL_WRT_PKG_SIZE ?
+> 		len / RM_BL_WRT_PKG_SIZE + 1:len / RM_BL_WRT_PKG_SIZE;
+>
+>Drop this. BTW, if you ever need it we have DIV_ROUND_UP macro.
 
-> I find a couple of things problematic with the implementation. There'=
-s
-> no way to validate that an overlay should apply to a base node. If
-> users just always make the target "/", then any overlay can apply to
-> any location the nodes could apply anywhere. It requires a kernel
-> change for every location you want to apply the overlay to. Maybe I
-> don't understand the usecase.
->=20
+> 
+> 	for (i = 0; i < div_cnt; i++) {
+>
+>	while (len) {
+>
+> 		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
+> 		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
+> 		/*FIXME,Touch MCU need zero index as start page*/
+> 		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
+> 		buf[BL_PKG_IDX] = pkg_idx++;
+> 
+> 		memcpy(&buf[BL_DATA_STR], data, xfer_len);
+>
+>		/* we need to pad to full page size */
+>		if (len < RM_BL_WRT_PKG_SIZE)
+>			memset(&buf[BL_DATA_STR] + len, 0xff,
+>				RM_BL_WRT_PKG_SIZE - len);
+> 
+> 		if (len == 0)
+> 			memset(buf + BL_DATA_STR, 0xff, RM_BL_WRT_PKG_SIZE);
+> 		else if (len < RM_BL_WRT_PKG_SIZE)
+> 			memset(buf + BL_DATA_STR + xfer_len, 0xff,
+> 			RM_BL_WRT_PKG_SIZE - xfer_len);
+> 
+> 		error = raydium_i2c_write_object(client, buf, RM_BL_WRT_LEN,
+> 						 RAYDIUM_WAIT_READY);
+> 		if (error) {
+> 			dev_err(&client->dev,
+> 				"page write command failed for page %d, chunk %d: %d\n",
+> 				page_idx, pkg_idx, error);
+> 			return error;
+> 		}
+> 		data += RM_BL_WRT_PKG_SIZE;
+> 		len -= RM_BL_WRT_PKG_SIZE;
+> 	}
+> 
+> 	return error;
+> }
+Modify as below.
 
-No, this doesn=E2=80=99t work like this. This is an in kernel interface=
-=2E
-The piece of kernel software that applies the overlay has an additional
-security policy about where the target root may point to.
+static int raydium_i2c_fw_write_page(struct i2c_client *client,
+				     u16 page_idx, const void *data, size_t len)
+{
+	u8 buf[RM_BL_WRT_LEN];
+	u8 pkg_idx = 1;
+	size_t xfer_len;
+	int error;
 
-> I feel like we are creating too many syntax's to apply overlays. I ge=
-t
-> that there are different usecases, but that doesn't necessarily mean
-> the syntax needs to be different.
->=20
->> +
->> Overlay DTS Format
->> ------------------
->>=20
->> @@ -141,3 +145,7 @@ contains the information required to map from a =
-phandle to a tree location.
->> Using a target index requires the use of a selector target on the ca=
-ll to
->> of_overlay_create_target_index(). I.e. passing an index of 0 will se=
-lect the
->> target in the foo node, an index of 1 the bar node, etc.
->> +
->> +Note that when using the target root create method all target refer=
-ences must
->> +lie under the target root node. I.e. the overlay is not allowed to =
-'break' out
->> +of the root.
->=20
-> That is not enforceable though, right?
->=20
+	while (len) {
+		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
+		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
+		/*FIXME,Touch MCU need zero index as start page*/
+		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
+		buf[BL_PKG_IDX] = pkg_idx++;
 
-It is enforceable. All the targets of an overlay incur an additional ch=
-eck that
-make sure that no targets break out.
+		memcpy(&buf[BL_DATA_STR], data, xfer_len);
 
-> Rob
+		if (len < RM_BL_WRT_PKG_SIZE) {
+			buf[BL_PKG_IDX] = 4;
+			memset(buf + BL_DATA_STR + xfer_len, 0xff,
+				RM_BL_WRT_PKG_SIZE - xfer_len);
+		}
 
-Regards
+		error = raydium_i2c_write_object(client, buf, RM_BL_WRT_LEN,
+						 RAYDIUM_WAIT_READY);
+		if (error) {
+			dev_err(&client->dev,
+				"page write command failed for page %d, chunk %d: %d\n",
+				page_idx, pkg_idx, error);
+			return error;
+		}
+		data += xfer_len;
+		len -= xfer_len;
+	}
 
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	return error;
+> 
+> >static void raydium_mt_event(struct raydium_data *ts)
+> >{
+> >	int i;
+> >	int error;
+> memory allocate
+> 	ts->report_data = kmalloc(ts->report_size, GFP_KERNEL);
+> 	if (!ts->report_data)
+> 		return;
+>
+>I thought I was allocating it after I queried the touchscreen
+>parameters... If not it was oversight. I do not think we should be
+>doing this on every interrupt, so please do the allocation in ->probe()
+>code.
+Move memory allocate to raydium_i2c_probe(). 
