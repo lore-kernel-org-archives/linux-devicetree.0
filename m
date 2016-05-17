@@ -1,92 +1,127 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v3 7/7] dt-bindings: drm/bridge: Update bindings for
- ADV7533
-Date: Tue, 17 May 2016 12:18:18 +0800
-Message-ID: <CAGd==06i9ojb-C=LRxPkvh-CrkEFjZ8tiEkkVzYfaqODndfqaQ@mail.gmail.com>
-References: <1441625800-1858-1-git-send-email-architt@codeaurora.org>
- <1992414.kkmfQUJ8oO@avalon> <5719B942.8070907@codeaurora.org>
- <1987165.vo5BTWVL5e@avalon> <573A935D.7010301@codeaurora.org>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v8 0/10] Add clock support for Mediatek MT2701
+Date: Tue, 17 May 2016 13:05:01 +0800
+Message-ID: <1463461511-25019-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <573A935D.7010301@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, treding@nvidia.com, Amit Kucheria <amit.kucheria@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcgTWF5IDIwMTYgYXQgMTE6NDMsIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9y
-YS5vcmc+IHdyb3RlOgo+Cj4KPiBPbiAwNS8xNi8yMDE2IDA1OjMxIFBNLCBMYXVyZW50IFBpbmNo
-YXJ0IHdyb3RlOgo+Pgo+PiBIaSBBcmNoaXQsCj4+Cj4+IE9uIEZyaWRheSAyMiBBcHIgMjAxNiAx
-MToxMDoxOCBBcmNoaXQgVGFuZWphIHdyb3RlOgo+Pj4KPj4+IE9uIDA0LzIyLzIwMTYgMDQ6MDIg
-QU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+Pj4KPj4+PiBPbiBXZWRuZXNkYXkgMDkgTWFy
-IDIwMTYgMTY6Mjc6MTggQXJjaGl0IFRhbmVqYSB3cm90ZToKPj4+Pj4KPj4+Pj4gQWRkIGRlc2Ny
-aXB0aW9uIG9mIEFEVjc1MzMuIEFkZCB0aGUgcmVxdWlyZWQgYW5kIG9wdGlvbmFsIHByb3BlcnRp
-ZXMKPj4+Pj4gdGhhdAo+Pj4+PiBhcmUgc3BlY2lmaWMgdG8gaXQuCj4+Pj4+Cj4+Pj4+IENjOiBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+Pj4+PiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz4KPj4+Pj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0
-dEBjb2RlYXVyb3JhLm9yZz4KPj4+Pj4gLS0tCj4+Pj4+Cj4+Pj4+IC4uLi9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQgICAgICAgIHwgMjUKPj4+Pj4gKysrKysrKysrKysr
-LS0tLS0KPj4+Pj4gMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25z
-KC0pCj4+Pj4+Cj4+Pj4+IGRpZmYgLS1naXQKPj4+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEudHh0Cj4+Pj4+IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTExLnR4
-dAo+Pj4+PiBpbmRleAo+Pj4+PiA5NmMyNWVlLi40MjBkYTVhIDEwMDY0NAo+Pj4+PiAtLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1
-MTEudHh0Cj4+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQKPj4KPj4KPj4gW3NuaXBdCj4+Cj4+Pj4+ICstIGFk
-aSxkaXNhYmxlLXRpbWluZy1nZW5lcmF0b3I6IE9ubHkgZm9yIEFEVjc1MzMuIERpc2FibGVzIHRo
-ZQo+Pj4+PiBpbnRlcm5hbAo+Pj4+PiB0aW1pbmcKPj4+Pj4gKyAgZ2VuZXJhdG9yLiBUaGUgY2hp
-cCB3aWxsIHJlbHkgb24gdGhlIHN5bmMgc2lnbmFscyBpbiB0aGUgRFNJIGRhdGEKPj4+Pj4gbGFu
-ZXMsCj4+Pj4+ICsgIHJhdGhlciB0aGFuIGdlbmVyYXRlIGl0cyBvd24gdGltaW5ncyBmb3IgSERN
-SSBvdXRwdXQuCj4+Pj4KPj4+Pgo+Pj4+IElzbid0IHRoYXQgc29tZXRoaW5nIHRoYXQgc2hvdWxk
-IGJlIHNlbGVjdGFibGUgYXQgcnVudGltZSA/Cj4+Pgo+Pj4KPj4+IFRoZSB0aW1pbmcgZ2VuZXJh
-dG9yIGNhbiBiZSBlbmFibGVkL2Rpc2FibGVkIGF0IHJ1bnRpbWUuIEFsdGhvdWdoLCB3ZQo+Pj4g
-ZG9uJ3QgaGF2ZSBhIHdheSB0byB0ZWxsIHRoZSBkcml2ZXIgd2hldGhlciB3ZSB3YW50IHRvIGtl
-ZXAgaXQgZW5hYmxlZAo+Pj4gb3Igbm90Lgo+Pj4KPj4+IEl0J3MgYSBoYXJkd2FyZSBmZWF0dXJl
-IHRoYXQgd29ya3Mgd2VsbCBvbiBtb3N0IHBsYXRmb3JtcywgYnV0IG5vdCBvbgo+Pj4gYWxsLiBJ
-biBwYXJ0aWN1bGFyLCBpdCB3b3JrcyB3ZWxsIG9uIERCNDEwYywgYnV0IGNhdXNlcyBpc3N1ZXMg
-d2l0aAo+Pj4gdGhlIEhpa2V5IDk2IGJvYXJkLiBUaGUgRFNJIGhvc3Qgb24gSGlrZXkgaGFzIGRp
-ZmZlcmVudCBjbG9jayBzb3VyY2VzCj4+PiB0aGF0IGdlbmVyYXRlIHRoZSBkaXNwbGF5IGNvbnRy
-b2xsZXIncyBwaXhlbCBjbG9jayBhbmQgRFNJIGJ5dGUgY2xvY2ssCj4+PiB3aGVyZWFzIHRoZSBR
-dWFsY29tbSBTb0MgdXNlcyB0aGUgc2FtZSBzb3VyY2UuIE15IGd1ZXNzIGlzIHRoYXQgdGhlCj4+
-PiBBRFY3NTMzJ3MgdGltaW5nIGdlbmVyYXRvciBkb2Vzbid0IGxpa2UgaXQgd2hlbiB0aGUgcGl4
-ZWwgZGF0YSBhbmQKPj4+IGNsb2NrIGFyZSBvdXQgb2YgcGhhc2Ugb3Igc29tZXRoaW5nLgo+Pj4K
-Pj4+IFNpbmNlIGl0IGlzIGEgaGFyZHdhcmUgZmVhdHVyZSB3aGljaCBuZWVkcyB0d2Vha2luZywg
-SSB0aG91Z2h0IGl0Cj4+PiBxdWFsaWZpZWQgYXMgYSBEVCBwcm9wZXJ0eS4KPj4KPj4KPj4gVGhl
-IGZhY3QgdGhhdCBhIGhhcmR3YXJlIGdlbmVyYXRvciBpcyBwcmVzZW50IGlzIGNlcnRhaW5seSBk
-ZXNjcmliZXMgdGhlCj4+IGhhcmR3YXJlLCBidXQgSSdtIG5vdCBzdXJlIHdoZXRoZXIgdG8gZW5h
-YmxlIGl0IG9yIG5vdCBhbHNvIHF1YWxpZmllcyBhcyBhCj4+IGhhcmR3YXJlIGZlYXR1cmUuCj4+
-Cj4+IEFyZSB0aGVyZSB1c2UgY2FzZXMgZm9yIHVzaW5nIHRoZSB0aW1pbmcgZ2VuZXJhdG9yIGNv
-bmRpdGlvbmFsbHkgb24gYQo+PiBnaXZlbgo+PiBib2FyZCA/IEFzIHlvdSBpbXBsZW1lbnQgc3Vw
-cG9ydCBmb3IgZGlzYWJsaW5nIGl0LCBJIGFzc3VtZSBpdCdzIG5vdAo+PiBtYW5kYXRvcnkuIFdo
-YXQgZmVhdHVyZShzKSBkbyB3ZSBsb3NlIGlmIHdlIGtlZXAgaXQgZGlzYWJsZWQgPwo+Pgo+Cj4g
-VGhlIHNwZWMgc2F5cyBpdCdzIHJlY29tbWVuZGVkIHRvIHVzZSB0aGUgaW50ZXJuYWwgdGltaW5n
-IGdlbmVyYXRvci4gSW4KPiB0aGUgY2FzZSBvZiBkYjQxMGMsIEkgb2JzZXJ2ZSBhbiB1bnN0YWJs
-ZSBvdXRwdXQvZmxpY2tlciBmb3IgY2VydGFpbgo+IG1vZGVzIGlmIEkgZG9uJ3QgZW5hYmxlIGl0
-Lgo+Cj4gSW4gdGhlIGNhc2Ugb2YgaGlrZXkgcGxhdGZvcm0sIGl0J3MgdGhlIG90aGVyIHdheSBy
-b3VuZC4KPgo+IFhpbmxpYW5nLCBjb3VsZCB5b3UgZGVzY3JpYmUgdGhlIHByb2JsZW1zIHlvdSBm
-YWNlIHdoZW4gdGhlIHRpbWluZwo+IGdlbmVyYXRvciBpcyBlbmFibGVkPwoKWWVzLCAgb3Blbmlu
-ZyB0aGUgdGltaW5nIGdlbmVyYXRvciBvZiBBRFY3NTMzIGNhbiBiZW5lZml0IHRoZSBIRE1JCm91
-dHB1dCBzaWduYWwuCkJ1dCwgZm9yIHNvbWUgY2lyY3Vtc3RhbmNlcywgd2UgbmVlZCB0byBkaXNh
-YmxlIHRpbWluZyBnZW5lcmF0b3I6ClRvIG1ha2UgbW9kZXMgd29yaywgdGhlIHRpbWluZyBwYXJh
-bWV0ZXJzIChoZnAsIGhicCwgZXRjLikgdXNlZCBieQpBRFY3NTMzIHRpbWluZyBnZW5lcmF0b3Ig
-c2hvdWxkIG1hdGNoIHRoZSBvbmVzIHVzZWQgaW4gRFNJLgpJZiB0aGUgdGltaW5nIHBhcmFtZXRl
-cnMgY2hhbmdlZCBpbiBEU0kgYW5kIHRoZXNlIGNoYW5naW5nICB0aW1pbmcKcGFyYW1ldGVycyBj
-YW4ndCBwYXNzIHRvIEFEVjc1MzMsIHRoZW4gaXQgbmVlZCB0byBkaXNhYmxlIHRoZSB0aW1pbmcK
-Z2VuZXJhdG9yIG9mIEFEVjc1MzMgdG8gbWFrZSBtb2RlIHdvcmsuClNvbWUgbW9kZXMgaW4gSGlL
-ZXkgaXMgaW4gdGhpcyBjYXNlLgoKVGhhbmtzLAoteGlubGlhbmcKCj4KPgo+IFRoYW5rcywKPiBB
-cmNoaXQKPgo+IC0tCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEg
-bWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBob3N0ZWQgYnkgVGhlIExpbnV4IEZv
-dW5kYXRpb24KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This series is based on clk-next, add clock and reset controller support
+for Mediatek MT2701.
+
+This series also refined makefile and Kconfig to support configurable
+multiple SoC clock support.
+
+There some code borrowed from [2] in clk-mtk.h, and may need to resolve
+conflicts while merging these two series.
+
+changes since v7:
+- Rebase to clk-next.
+- Implement subsystem clocks in seperated files.
+- Replace critical clock enabling with CLK_IS_CRITICAL flag.
+- Reduce most clock registrations in CLK_OF_DECLARE().
+- Remove __init and __initconst from most init fucntions and data,
+  and replace driver registration with platform_driver_register().
+- Replace some common function or variable names with unique names.
+- Use real clock for UARTs.
+
+changes since v6:
+- Rebase to v4.6-rc1.
+- Register subsystem clocks in probe() instead of CLK_OF_DECLARE().
+- Add clocks that referred by subsystem clocks.
+- Fix clk_data size of apmixedsys.
+- Add config options for each subsystem clock provider.
+
+changes since v5:
+- Rebase to v4.5-rc1 and [1].
+- Enable critical clocks for MT2701
+- Refine dt-binding documents, add reset controller support for hifsys.
+
+changes since v4:
+- Rebase to v4.5-rc1.
+- Remove CLK_SET_RATE_PARENT from divider flags.
+- Add img_jpgdec_smi clock.
+- Move clk/mediatek/Kconfig into menu section in clk/Kconfig.
+
+changes since v3:
+- Change the parent of mm_mdp_bls_26m from clk26m to pwm_sel.
+
+changes since v2:
+- Fix ethsys definition.
+- Replace read-modify-write with regmap_update_bits() in clock operations.
+- Move mt2701-resets.h to include/dt-bindings/reset/.
+- Add hifsys reset patch from John Crispin.
+
+changes since v1:
+- Document MT2701 compatible strings.
+
+[1] https://patchwork.kernel.org/patch/8147901/
+[2] http://www.spinics.net/lists/dri-devel/msg106726.html
+
+Erin Lo (1):
+  arm: dts: mt2701: Use real clock for UARTs
+
+James Liao (5):
+  clk: fix initial state of critical clock's parents
+  clk: mediatek: remove __init from clk registration functions
+  clk: mediatek: Refine the makefile to support multiple clock drivers
+  dt-bindings: ARM: Mediatek: Document bindings for MT2701
+  arm: dts: mt2701: Add clock controller device nodes
+
+Shunli Wang (4):
+  clk: mediatek: Add dt-bindings for MT2701 clocks
+  clk: mediatek: Add MT2701 clock support
+  reset: mediatek: Add MT2701 reset controller dt-binding file
+  reset: mediatek: Add MT2701 reset driver
+
+ .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    3 +-
+ .../bindings/arm/mediatek/mediatek,bdpsys.txt      |   22 +
+ .../bindings/arm/mediatek/mediatek,ethsys.txt      |   22 +
+ .../bindings/arm/mediatek/mediatek,hifsys.txt      |   24 +
+ .../bindings/arm/mediatek/mediatek,imgsys.txt      |    3 +-
+ .../bindings/arm/mediatek/mediatek,infracfg.txt    |    3 +-
+ .../bindings/arm/mediatek/mediatek,mmsys.txt       |    3 +-
+ .../bindings/arm/mediatek/mediatek,pericfg.txt     |    3 +-
+ .../bindings/arm/mediatek/mediatek,topckgen.txt    |    3 +-
+ .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    3 +-
+ arch/arm/boot/dts/mt2701.dtsi                      |   50 +-
+ drivers/clk/Kconfig                                |    1 +
+ drivers/clk/clk.c                                  |    9 +-
+ drivers/clk/mediatek/Kconfig                       |   73 ++
+ drivers/clk/mediatek/Makefile                      |   13 +-
+ drivers/clk/mediatek/clk-gate.c                    |   54 +-
+ drivers/clk/mediatek/clk-gate.h                    |    2 +
+ drivers/clk/mediatek/clk-mt2701-bdp.c              |  140 +++
+ drivers/clk/mediatek/clk-mt2701-eth.c              |   82 ++
+ drivers/clk/mediatek/clk-mt2701-hif.c              |   81 ++
+ drivers/clk/mediatek/clk-mt2701-img.c              |   82 ++
+ drivers/clk/mediatek/clk-mt2701-mm.c               |  125 +++
+ drivers/clk/mediatek/clk-mt2701-vdec.c             |   93 ++
+ drivers/clk/mediatek/clk-mt2701.c                  | 1037 ++++++++++++++++++++
+ drivers/clk/mediatek/clk-mtk.c                     |   52 +-
+ drivers/clk/mediatek/clk-mtk.h                     |   52 +-
+ drivers/clk/mediatek/clk-pll.c                     |    3 +-
+ include/dt-bindings/clock/mt2701-clk.h             |  486 +++++++++
+ include/dt-bindings/reset/mt2701-resets.h          |   83 ++
+ 29 files changed, 2578 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
+ create mode 100644 drivers/clk/mediatek/Kconfig
+ create mode 100644 drivers/clk/mediatek/clk-mt2701-bdp.c
+ create mode 100644 drivers/clk/mediatek/clk-mt2701-eth.c
+ create mode 100644 drivers/clk/mediatek/clk-mt2701-hif.c
+ create mode 100644 drivers/clk/mediatek/clk-mt2701-img.c
+ create mode 100644 drivers/clk/mediatek/clk-mt2701-mm.c
+ create mode 100644 drivers/clk/mediatek/clk-mt2701-vdec.c
+ create mode 100644 drivers/clk/mediatek/clk-mt2701.c
+ create mode 100644 include/dt-bindings/clock/mt2701-clk.h
+ create mode 100644 include/dt-bindings/reset/mt2701-resets.h
+
+--
+1.9.1
+
