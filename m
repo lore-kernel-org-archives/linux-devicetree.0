@@ -1,40 +1,53 @@
-From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: [PATCH v6 0/2] J-Core interrupt controller support
-Date: Wed, 3 Aug 2016 01:08:49 +0000
-Message-ID: <cover.1470186529.git.dalias@libc.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Rich Felker <dalias@libc.org>
+Subject: [PATCH v6 1/2] of: add J-Core interrupt controller bindings
+Date: Tue, 17 May 2016 23:18:29 +0000
+Message-ID: <c8aae4597153595cf965efe96422f699639c9d51.1470186529.git.dalias@libc.org>
+References: <cover.1470186529.git.dalias@libc.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1470186529.git.dalias@libc.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Updated based on feedback from Thomas Gleixner. Removal of unnecessary
-data allowed some simplification. Magic numbers have been replaced
-with meaningful (I hope) macro constants, comments added, and minor
-style issues fixed.
-
-Also, driver was made conditional in Kconfig to avoid it showing up in
-configurations where it's not relevant.
-
-Rich
-
-
-Rich Felker (2):
-  of: add J-Core interrupt controller bindings
-  irqchip: add J-Core AIC driver
-
- .../bindings/interrupt-controller/jcore,aic.txt    | 26 ++++++
- drivers/irqchip/Kconfig                            |  7 ++
- drivers/irqchip/Makefile                           |  1 +
- drivers/irqchip/irq-jcore-aic.c                    | 94 ++++++++++++++++++++++
- 4 files changed, 128 insertions(+)
+Signed-off-by: Rich Felker <dalias@libc.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/interrupt-controller/jcore,aic.txt    | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
- create mode 100644 drivers/irqchip/irq-jcore-aic.c
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+new file mode 100644
+index 0000000..ee2ad36
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+@@ -0,0 +1,26 @@
++J-Core Advanced Interrupt Controller
++
++Required properties:
++
++- compatible: Should be "jcore,aic1" for the (obsolete) first-generation aic
++  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
++  the "aic2" core with 64 interrupts.
++
++- reg: Memory region(s) for configuration. For SMP, there should be one
++  region per cpu, indexed by the sequential, zero-based hardware cpu
++  number.
++
++- interrupt-controller: Identifies the node as an interrupt controller
++
++- #interrupt-cells: Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++
++
++Example:
++
++aic: interrupt-controller@200 {
++	compatible = "jcore,aic2";
++	reg = < 0x200 0x30 0x500 0x30 >;
++	interrupt-controller;
++	#interrupt-cells = <1>;
++};
 -- 
 2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
