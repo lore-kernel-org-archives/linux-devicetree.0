@@ -1,65 +1,38 @@
-From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v6 3/7] QE: Add uqe_serial document to bindings
-Date: Tue, 17 May 2016 10:38:59 +0800
-Message-ID: <1463452743-21462-3-git-send-email-qiang.zhao@nxp.com>
-References: <1463452743-21462-1-git-send-email-qiang.zhao@nxp.com>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH 2/8] Documentation: regulator: tps65218: Update examples
+Date: Tue, 17 May 2016 08:52:06 +0530
+Message-ID: <573A8E5E.2080809@ti.com>
+References: <1462945691-904-1-git-send-email-j-keerthy@ti.com>
+ <1462945691-904-3-git-send-email-j-keerthy@ti.com>
+ <20160516144847.GA26659@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463452743-21462-1-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160516144847.GA26659@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Keerthy <j-keerthy@ti.com>
+Cc: broonie@kernel.org, tony@atomide.com, mark.rutland@arm.com, lee.jones@linaro.org, nm@ti.com, devicetree@vger.kernel.org, nikita@compulab.co.il, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add uqe_serial document to
-Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
 
-Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
----
-Changes for v2
-	- modify tx/rx-clock-name specification
-Changes for v3
-	- NA 
-Changes for v4
-	- drop device_type
-	- modify to SoC specific compatible 
-Changes for v5
-	- add fsl to compatible as prefix 
-Changes for v6
-	- modify property to "fsl,<chip>-ucc-uart"
 
- .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt          | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+On Monday 16 May 2016 08:18 PM, Rob Herring wrote:
+> On Wed, May 11, 2016 at 11:18:05AM +0530, Keerthy wrote:
+>> This updates the device tree according to the preferred way of parsing
+>> the nodes using the regulator framework.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>   .../devicetree/bindings/regulator/tps65218.txt     | 87 ++++++++++++++++++----
+>>   1 file changed, 71 insertions(+), 16 deletions(-)
+>
+> It wasn't exactly clear that the compatible string "added" here is
+> already used, so it looked like you were breaking compatibility at
+> first. Otherwise,
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-new file mode 100644
-index 0000000..8823c86
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-@@ -0,0 +1,17 @@
-+* Serial
-+
-+Required Properties:
-+compatible : must be "fsl,<chip>-ucc-uart". For t1040, must be
-+"fsl,t1040-ucc-uart".
-+port-number : port number of UCC-UART
-+tx/rx-clock-name : should be "brg1"-"brg16" for internal clock source,
-+		   should be "clk1"-"clk28" for external clock source.
-+
-+Example:
-+
-+	ucc_serial: ucc@2200 {
-+		compatible = "fsl,t1040-ucc-uart";
-+		port-number = <0>;
-+		rx-clock-name = "brg2";
-+		tx-clock-name = "brg2";
-+	};
--- 
-2.1.0.27.g96db324
+Thanks Rob.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
