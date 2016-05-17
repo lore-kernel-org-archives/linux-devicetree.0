@@ -1,145 +1,44 @@
-From: "jeffrey.lin" <yajohn@gmail.com>
-Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
-Date: Wed, 18 May 2016 00:07:02 +0800
-Message-ID: <1463501223-20723-1-git-send-email-jeffrey.lin@rad-ic.com>
-References: <20160513041852.GA8932@dtor-ws>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160513041852.GA8932@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org
-Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [RESEND PATCH v6 0/6] Add Ethernet support on STM32F429
+Date: Tue, 17 May 2016 12:25:27 -0400 (EDT)
+Message-ID: <20160517.122527.1937360418899371800.davem@davemloft.net>
+References: <1462789899-13153-1-git-send-email-alexandre.torgue@gmail.com>
+	<20160509.150634.213732321950308841.davem@davemloft.net>
+	<CALszF6Cfs02-tGvFqpyJpUy7jSfjGTY8fVaaLQ8iQaGfCxvDtQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALszF6Cfs02-tGvFqpyJpUy7jSfjGTY8fVaaLQ8iQaGfCxvDtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry:
-> >static int raydium_i2c_read_message(struct i2c_client *client,
-> >				    u32 addr, void *data, size_t len)
-> >{
-> >	__be32 be_addr;
-> >	size_t xfer_len;
-> >	int error;
-> >	while (len) {
-> >		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
-> >
-> >		be_addr = cpu_to_be32(addr);
-> >
-> >		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
-> >					 &be_addr, sizeof(be_addr));
-> >		if (!error)
-> >			error = raydium_i2c_read(client, addr & 0xff,
-> >						 data, xfer_len);
-> Change as:
-> 		if (!error)
-> 			error = raydium_i2c_read(client, (be_addr >> 24) & 0xff,
-> 						 data, xfer_len);
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Tue, 17 May 2016 11:20:16 +0200
 
->I think it is the same on LE, and I suspect it will not work correctly
->on BE... You want to have the 8 least significant bits of the bank to be
->used as the address, right?
-This function work correctly with the kernel 3.18 of chromebook in my hand. Raydium touch direct access mode can recieve the BE address after bank switch command 0xaa. For example, if we'll read 10 bytes data begin on 0x12345678. We need send the command sequences as 0xaa-> 0x12->0x34->0x56-> 0x78 and then recive 10 bytes from 0x78.
-
-> static int raydium_i2c_fw_write_page(struct i2c_client *client,
-> 				     u16 page_idx, const void *data, size_t len)
-> {
-> 	u8 buf[RM_BL_WRT_LEN];
-> 	u8 pkg_idx = 1;
-> 	u8 div_cnt;
-> 	size_t xfer_len;
-> 	int error;
-> 	int i;
+> Hi David,
 > 
-> 	div_cnt = len % RM_BL_WRT_PKG_SIZE ?
-> 		len / RM_BL_WRT_PKG_SIZE + 1:len / RM_BL_WRT_PKG_SIZE;
->
->Drop this. BTW, if you ever need it we have DIV_ROUND_UP macro.
+> 2016-05-09 21:06 GMT+02:00 David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>:
+>> From: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Date: Mon,  9 May 2016 12:31:33 +0200
+>>
+>>> STM32F429 Chip embeds a Synopsys 3.50a MAC IP.
+>>> This series:
+>>>  -enhance current stmmac driver to control it (code already
+>>> available) and adds basic glue for STM32F429 chip.
+>>>  -Enable basic Net config in kernel.
+>>
+>> I assume this will go via the ARM tree, for the networking bits:
+> I would expect patches 1, 2 & 3 to got via your tree, to avoid conflicts.
 
-> 
-> 	for (i = 0; i < div_cnt; i++) {
->
->	while (len) {
->
-> 		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
-> 		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
-> 		/*FIXME,Touch MCU need zero index as start page*/
-> 		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
-> 		buf[BL_PKG_IDX] = pkg_idx++;
-> 
-> 		memcpy(&buf[BL_DATA_STR], data, xfer_len);
->
->		/* we need to pad to full page size */
->		if (len < RM_BL_WRT_PKG_SIZE)
->			memset(&buf[BL_DATA_STR] + len, 0xff,
->				RM_BL_WRT_PKG_SIZE - len);
-> 
-> 		if (len == 0)
-> 			memset(buf + BL_DATA_STR, 0xff, RM_BL_WRT_PKG_SIZE);
-> 		else if (len < RM_BL_WRT_PKG_SIZE)
-> 			memset(buf + BL_DATA_STR + xfer_len, 0xff,
-> 			RM_BL_WRT_PKG_SIZE - xfer_len);
-> 
-> 		error = raydium_i2c_write_object(client, buf, RM_BL_WRT_LEN,
-> 						 RAYDIUM_WAIT_READY);
-> 		if (error) {
-> 			dev_err(&client->dev,
-> 				"page write command failed for page %d, chunk %d: %d\n",
-> 				page_idx, pkg_idx, error);
-> 			return error;
-> 		}
-> 		data += RM_BL_WRT_PKG_SIZE;
-> 		len -= RM_BL_WRT_PKG_SIZE;
-> 	}
-> 
-> 	return error;
-> }
-Modify as below.
+I don't think putting them all via the ARM tree is going to create much
+in the way of conflicts, and right now during the merge window offloading
+that work from me would really help my backlog a lot.
 
-static int raydium_i2c_fw_write_page(struct i2c_client *client,
-				     u16 page_idx, const void *data, size_t len)
-{
-	u8 buf[RM_BL_WRT_LEN];
-	u8 pkg_idx = 1;
-	size_t xfer_len;
-	int error;
-
-	while (len) {
-		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
-		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
-		/*FIXME,Touch MCU need zero index as start page*/
-		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
-		buf[BL_PKG_IDX] = pkg_idx++;
-
-		memcpy(&buf[BL_DATA_STR], data, xfer_len);
-
-		if (len < RM_BL_WRT_PKG_SIZE) {
-			buf[BL_PKG_IDX] = 4;
-			memset(buf + BL_DATA_STR + xfer_len, 0xff,
-				RM_BL_WRT_PKG_SIZE - xfer_len);
-		}
-
-		error = raydium_i2c_write_object(client, buf, RM_BL_WRT_LEN,
-						 RAYDIUM_WAIT_READY);
-		if (error) {
-			dev_err(&client->dev,
-				"page write command failed for page %d, chunk %d: %d\n",
-				page_idx, pkg_idx, error);
-			return error;
-		}
-		data += xfer_len;
-		len -= xfer_len;
-	}
-
-	return error;
-> 
-> >static void raydium_mt_event(struct raydium_data *ts)
-> >{
-> >	int i;
-> >	int error;
-> memory allocate
-> 	ts->report_data = kmalloc(ts->report_size, GFP_KERNEL);
-> 	if (!ts->report_data)
-> 		return;
->
->I thought I was allocating it after I queried the touchscreen
->parameters... If not it was oversight. I do not think we should be
->doing this on every interrupt, so please do the allocation in ->probe()
->code.
-Move memory allocate to raydium_i2c_probe(). 
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
