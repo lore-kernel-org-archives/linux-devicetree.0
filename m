@@ -1,60 +1,72 @@
-From: Qiang Zhao <qiang.zhao@nxp.com>
-Subject: RE: [v5,1/7] QE: Add IC, SI and SIRAM document to device tree
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [v5,1/7] QE: Add IC, SI and SIRAM document to device tree
  bindings.
-Date: Tue, 17 May 2016 01:18:52 +0000
-Message-ID: <AM3PR04MB118504BB6430CBEC8AA4886491480@AM3PR04MB1185.eurprd04.prod.outlook.com>
+Date: Mon, 16 May 2016 20:41:33 -0500
+Message-ID: <1463449293.16584.127.camel@buserror.net>
 References: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
- <20160516232210.GA21087@home.buserror.net>
+	 <20160516232210.GA21087@home.buserror.net>
+	 <AM3PR04MB118504BB6430CBEC8AA4886491480@AM3PR04MB1185.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20160516232210.GA21087@home.buserror.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <oss@buserror.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Xiaobo Xie <xiaobo.xie@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM3PR04MB118504BB6430CBEC8AA4886491480@AM3PR04MB1185.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qiang Zhao <qiang.zhao@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXkgMTcsIDIwMTYgYXQgMDc6MjJBTSwgU2NvdHQgV29vZCB3cm90ZToKPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+IEZyb206IFNjb3R0IFdvb2QgW21haWx0bzpvc3NAYnVz
-ZXJyb3IubmV0XQo+IFNlbnQ6IFR1ZXNkYXksIE1heSAxNywgMjAxNiA3OjIyIEFNCj4gVG86IFFp
-YW5nIFpoYW8gPHFpYW5nLnpoYW9AbnhwLmNvbT4KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtCj4ga2VybmVsQHZnZXIua2VybmVsLm9y
-ZzsgWGlhb2JvIFhpZSA8eGlhb2JvLnhpZUBueHAuY29tPjsgWWFuZy1MZW8gTGkKPiA8bGVveWFu
-Zy5saUBueHAuY29tPjsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKPiBTdWJqZWN0OiBS
-ZTogW3Y1LDEvN10gUUU6IEFkZCBJQywgU0kgYW5kIFNJUkFNIGRvY3VtZW50IHRvIGRldmljZSB0
-cmVlCj4gYmluZGluZ3MuCj4gCj4gT24gV2VkLCBNYXIgMDksIDIwMTYgYXQgMDk6MjE6MjhBTSAr
-MDgwMCwgWmhhbyBRaWFuZyB3cm90ZToKPiA+IEFkZCBJQywgU0kgYW5kIFNJUkFNIGRvY3VtZW50
-IG9mIFFFIHRvCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9m
-c2wvY3BtX3FlL3FlLnR4dAo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IFpoYW8gUWlhbmcgPHFpYW5n
-LnpoYW9AbnhwLmNvbT4KPiA+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
-Pgo+ID4gLS0tCj4gPiBjaGFuZ2VzIGZvciB2Mgo+ID4gCS0gQWRkIGludGVycnVwdC1jb250cm9s
-bGVyIGluIFJlcXVpcmVkIHByb3BlcnRpZXMKPiA+IAktIGRlbGV0ZSBhZGRyZXNzLWNlbGxzIGFu
-ZCBzaXplLWNlbGxzIGZvciBxZS1zaSBhbmQgcWUtc2lyYW0gQ2hhbmdlcwo+ID4gZm9yIHYzCj4g
-PiAJLSBBZGQgU29DIHNwZWNpZmljIGNhb21wYXRpYmxlIHN0cmluZ3MgdG8gcWUtc2kgYW5kIHFl
-LXNpcmFtIENoYW5nZXMKPiA+IGZvciB2NAo+ID4gCS0gTkEKPiA+IENoYW5nZXMgZm9yIHY1Cj4g
-PiAJLSBOQQo+ID4KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1f
-cWUvcWUudHh0ICB8IDUwCj4gPiArKysrKysrKysrKysrKysrKysrKysrCj4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDUwIGluc2VydGlvbnMoKykKPiA+ICsqIFNlcmlhbCBJbnRlcmZhY2UgQmxvY2sgKFNJ
-KQo+ID4gKwo+ID4gK1RoZSBTSSBtYW5hZ2VzIHRoZSByb3V0aW5nIG9mIGVpZ2h0IFRETSBsaW5l
-cyB0byB0aGUgUUUgYmxvY2sgc2VyaWFsCj4gPiArZHJpdmVycyAsIHRoZSBNQ0MgYW5kIHRoZSBV
-Q0NzLCBmb3IgcmVjZWl2ZSBhbmQgdHJhbnNtaXQuCj4gPiArCj4gPiArUmVxdWlyZWQgcHJvcGVy
-dGllczoKPiA+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImZzbCx0MTA0MC1xZS1zaSIuCj4g
-PiArLSByZWcgOiBBZGRyZXNzIHJhbmdlIG9mIFNJIHJlZ2lzdGVyIHNldC4KPiAKPiBJcyB0MTA0
-MCB0aGUgb25seSBjaGlwIHRoYXQgaGFzIG9yIHdpbGwgZXZlciBoYXZlIHRoaXM/CgpUaGVyZSBh
-bHNvIGJlIHQxMDI0IGFuZCBsczEwNDMgc3VwcG9ydGluZyBzaS4KSSB0aG91Z2h0IHRvIGFkZCB0
-aGVtIHdoZW4gYWRkaW5nIHRoZWlyIGRldmljZSBub2RlLgpJZiB5b3UgdGhpbmsgaXQgaXMgYmV0
-dGVyIHRvIGFkZCB0aGVtIG5vdywgSSB3aWxsIG1vZGlmeS4KCi1aaGFvIFFpYW5nCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1h
-aWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96
-bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+On Tue, 2016-05-17 at 01:18 +0000, Qiang Zhao wrote:
+> On Tue, May 17, 2016 at 07:22AM, Scott Wood wrote:
+> > -----Original Message-----
+> > From: Scott Wood [mailto:oss@buserror.net]
+> > Sent: Tuesday, May 17, 2016 7:22 AM
+> > To: Qiang Zhao <qiang.zhao@nxp.com>
+> > Cc: robh+dt@kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Xiaobo Xie <xiaobo.xie@nxp.com>; Yang-Leo Li
+> > <leoyang.li@nxp.com>; linuxppc-dev@lists.ozlabs.org
+> > Subject: Re: [v5,1/7] QE: Add IC, SI and SIRAM document to device tree
+> > bindings.
+> > 
+> > On Wed, Mar 09, 2016 at 09:21:28AM +0800, Zhao Qiang wrote:
+> > > Add IC, SI and SIRAM document of QE to
+> > > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+> > > 
+> > > Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> > > Acked-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > changes for v2
+> > > 	- Add interrupt-controller in Required properties
+> > > 	- delete address-cells and size-cells for qe-si and qe-siram Changes
+> > > for v3
+> > > 	- Add SoC specific caompatible strings to qe-si and qe-siram Changes
+> > > for v4
+> > > 	- NA
+> > > Changes for v5
+> > > 	- NA
+> > > 
+> > >  .../devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt  | 50
+> > > ++++++++++++++++++++++
+> > >  1 file changed, 50 insertions(+)
+> > > +* Serial Interface Block (SI)
+> > > +
+> > > +The SI manages the routing of eight TDM lines to the QE block serial
+> > > +drivers , the MCC and the UCCs, for receive and transmit.
+> > > +
+> > > +Required properties:
+> > > +- compatible : should be "fsl,t1040-qe-si".
+> > > +- reg : Address range of SI register set.
+> > 
+> > Is t1040 the only chip that has or will ever have this?
+> 
+> There also be t1024 and ls1043 supporting si.
+> I thought to add them when adding their device node.
+> If you think it is better to add them now, I will modify.
+
+The binding is saying that the compatible "should" be "fsl,t1040-qe-si"
+regardless of whether it's actually a t1040.  Instead say that compatible must
+include "fsl,<chip>-qe-si" and give t1040 as an example.  If you intend
+"fsl,t1040-qe-si" to be something that other compatible chips list, in
+addition to their own <chip> compatibles, then also say that explicitly.
+
+-Scott
