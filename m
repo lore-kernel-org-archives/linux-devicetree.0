@@ -1,81 +1,22 @@
-From: Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH v6 2/7] QE: Add ucc hdlc document to bindings
-Date: Tue, 17 May 2016 10:38:58 +0800
-Message-ID: <1463452743-21462-2-git-send-email-qiang.zhao@nxp.com>
-References: <1463452743-21462-1-git-send-email-qiang.zhao@nxp.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 17/20] ARM: multi_v7: Enable sun4i DRM driver
+Date: Tue, 17 May 2016 11:36:27 +0800
+Message-ID: <CAGb2v67_wpUiVVP9C2k040GDqe03JCAw_N2i+0QsAasHE11wfQ@mail.gmail.com>
+References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1463402840-17062-18-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1463452743-21462-1-git-send-email-qiang.zhao@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: oss@buserror.net
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, xiaobo.xie@nxp.com, Zhao Qiang <qiang.zhao@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1463402840-17062-18-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHVjYyBoZGxjIGRvY3VtZW50IHRvCkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wb3dlcnBjL2ZzbC9jcG1fcWUvbmV0d29yay50eHQKClNpZ25lZC1vZmYtYnk6IFpoYW8gUWlh
-bmcgPHFpYW5nLnpoYW9AbnhwLmNvbT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
-bC5vcmc+Ci0tLQpoYW5nZXMgZm9yIHYyCgktIHVzZSB1Y2MtaGRsYyBpbnN0ZWFkIG9mIHVjY19o
-ZGxjCgktIGFkZCBtb3JlIGluZm9ybWF0aW9uIHRvIHByb3BlcnRpZXMuCkNoYW5nZXMgZm9yIHYz
-CgktIHVzZSBmc2wsdHgtdGltZXNsb3QtbWFzayBpbnN0ZWFkIG9mIGZzbCx0eC10aW1lc2xvdCAK
-CS0gdXNlIGZzbCxyeC10aW1lc2xvdC1tYXNrIGluc3RlYWQgb2YgZnNsLHJ4LXRpbWVzbG90IAoJ
-LSBhZGQgbW9yZSBpbmZvCkNoYW5nZXMgZm9yIHY0CgktIE5BIApDaGFuZ2VzIGZvciB2NQoJLSBO
-QSAKQ2hhbmdlcyBmb3IgdjYKCS0gTkEgCgogLi4uL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9x
-ZS9uZXR3b3JrLnR4dCAgICAgICAgfCA4MSArKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUg
-Y2hhbmdlZCwgODEgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvbmV0d29yay50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL25ldHdvcmsudHh0
-CmluZGV4IDI5YjI4YjguLjAzYzc0MTYgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvbmV0d29yay50eHQKKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9uZXR3b3JrLnR4
-dApAQCAtNDEsMyArNDEsODQgQEAgRXhhbXBsZToKIAkJZnNsLG1kaW8tcGluID0gPDEyPjsKIAkJ
-ZnNsLG1kYy1waW4gPSA8MTM+OwogCX07CisKKyogSERMQworCitDdXJyZW50bHkgZGVmaW5lZCBj
-b21wYXRpYmxlczoKKy0gZnNsLHVjYy1oZGxjCisKK1Byb3BlcnRpZXMgZm9yIGZzbCx1Y2MtaGRs
-YzoKKy0gcngtY2xvY2stbmFtZQorLSB0eC1jbG9jay1uYW1lCisJVXNhZ2U6IHJlcXVpcmVkCisJ
-VmFsdWUgdHlwZTogPHN0cmluZz4KKwlEZWZpbml0aW9uIDogTXVzdCBiZSAiYnJnMSItImJyZzE2
-IiBmb3IgaW50ZXJuYWwgY2xvY2sgc291cmNlLAorCQkgICAgIE11c3QgYmUgImNsazEiLSJjbGsy
-NCIgZm9yIGV4dGVybmFsIGNsb2NrIHNvdXJjZS4KKworLSBmc2wsdGRtLWludGVyZmFjZQorCVVz
-YWdlOiBvcHRpb25hbAorCVZhbHVlIHR5cGU6IDxlbXB0eT4KKwlEZWZpbml0aW9uIDogU3BlY2lm
-eSB0aGF0IGhkbGMgaXMgYmFzZWQgb24gdGRtLWludGVyZmFjZQorCitUaGUgcHJvcGVydHkgYmVs
-b3cgaXMgZGVwZW5kZW50IG9uIGZzbCx0ZG0taW50ZXJmYWNlOgorLSBmc2wscngtc3luYy1jbG9j
-aworCVVzYWdlOiByZXF1aXJlZAorCVZhbHVlIHR5cGU6IDxzdHJpbmc+CisJRGVmaW5pdGlvbiA6
-IE11c3QgYmUgIm5vbmUiLCAicnN5bmNfcGluIiwgImJyZzktMTEiIGFuZCAiYnJnMTMtMTUiLgor
-CistIGZzbCx0eC1zeW5jLWNsb2NrCisJVXNhZ2U6IHJlcXVpcmVkCisJVmFsdWUgdHlwZTogPHN0
-cmluZz4KKwlEZWZpbml0aW9uIDogTXVzdCBiZSAibm9uZSIsICJ0c3luY19waW4iLCAiYnJnOS0x
-MSIgYW5kICJicmcxMy0xNSIuCisKKy0gZnNsLHRkbS1mcmFtZXItdHlwZQorCVVzYWdlOiByZXF1
-aXJlZCBmb3IgdGRtIGludGVyZmFjZQorCVZhbHVlIHR5cGU6IDxzdHJpbmc+CisJRGVmaW5pdGlv
-biA6ICJlMSIgb3IgInQxIi5Ob3cgZTEgYW5kIHQxIGFyZSB1c2VkLCBvdGhlciBmcmFtZXIgdHlw
-ZXMKKwkJICAgICBhcmUgbm90IHN1cHBvcnRlZC4KKworLSBmc2wsdGRtLWlkCisJVXNhZ2U6IHJl
-cXVpcmVkIGZvciB0ZG0gaW50ZXJmYWNlCisJVmFsdWUgdHlwZTogPHUzMj4KKwlEZWZpbml0aW9u
-IDogbnVtYmVyIG9mIFRETSBJRAorCistIGZzbCx0eC10aW1lc2xvdC1tYXNrCistIGZzbCxyeC10
-aW1lc2xvdC1tYXNrCisJVXNhZ2U6IHJlcXVpcmVkIGZvciB0ZG0gaW50ZXJmYWNlCisJVmFsdWUg
-dHlwZTogPHUzMj4KKwlEZWZpbml0aW9uIDogdGltZSBzbG90IG1hc2sgZm9yIFRETSBvcGVyYXRp
-b24uIEluZGljYXRlcyB3aGljaCB0aW1lCisJCSAgICAgc2xvdHMgdXNlZCBmb3IgdHJhbnNtaXR0
-aW5nIGFuZCByZWNlaXZpbmcuCisKKy0gZnNsLHNpcmFtLWVudHJ5LWlkCisJVXNhZ2U6IHJlcXVp
-cmVkIGZvciB0ZG0gaW50ZXJmYWNlCisJVmFsdWUgdHlwZTogPHUzMj4KKwlEZWZpbml0aW9uIDog
-TXVzdCBiZSAwLDIsNC4uLjY0LiB0aGUgbnVtYmVyIG9mIFRETSBlbnRyeS4KKworLSBmc2wsdGRt
-LWludGVybmFsLWxvb3BiYWNrCisJdXNhZ2U6IG9wdGlvbmFsIGZvciB0ZG0gaW50ZXJmYWNlCisJ
-dmFsdWUgdHlwZTogPGVtcHR5PgorCURlZmluaXRpb24gOiBJbnRlcm5hbCBsb29wYmFjayBjb25u
-ZWN0aW5nIG9uIFRETSBsYXllci4KKworRXhhbXBsZSBmb3IgdGRtIGludGVyZmFjZToKKworCXVj
-Y0AyMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsdWNjLWhkbGMiOworCQlyeC1jbG9jay1uYW1l
-ID0gImNsazgiOworCQl0eC1jbG9jay1uYW1lID0gImNsazkiOworCQlmc2wscngtc3luYy1jbG9j
-ayA9ICJyc3luY19waW4iOworCQlmc2wsdHgtc3luYy1jbG9jayA9ICJ0c3luY19waW4iOworCQlm
-c2wsdHgtdGltZXNsb3QtbWFzayA9IDwweGZmZmZmZmZlPjsKKwkJZnNsLHJ4LXRpbWVzbG90LW1h
-c2sgPSA8MHhmZmZmZmZmZT47CisJCWZzbCx0ZG0tZnJhbWVyLXR5cGUgPSAiZTEiOworCQlmc2ws
-dGRtLWlkID0gPDA+OworCQlmc2wsc2lyYW0tZW50cnktaWQgPSA8MD47CisJCWZzbCx0ZG0taW50
-ZXJmYWNlOworCX07CisKK0V4YW1wbGUgZm9yIGhkbGMgd2l0aG91dCB0ZG0gaW50ZXJmYWNlOgor
-CisJdWNjQDIwMDAgeworCQljb21wYXRpYmxlID0gImZzbCx1Y2MtaGRsYyI7CisJCXJ4LWNsb2Nr
-LW5hbWUgPSAiYnJnMSI7CisJCXR4LWNsb2NrLW5hbWUgPSAiYnJnMSI7CisJfTsKLS0gCjIuMS4w
-LjI3Lmc5NmRiMzI0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
-b3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+On Mon, May 16, 2016 at 8:47 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Enable the new DRM driver in the multi_v7 defconfig
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+Acked-by: Chen-Yu Tsai <wens@csie.org>
