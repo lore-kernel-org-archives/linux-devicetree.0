@@ -1,67 +1,82 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 0/6] ARM: dts: sun5i: q8-common: Enable various peripherals
-Date: Tue, 17 May 2016 23:56:05 +0800
-Message-ID: <1463500571-28970-1-git-send-email-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 6/6] ARM: dts: sun5i: q8-common: Enable display pipeline and LCD display
+Date: Tue, 17 May 2016 23:56:11 +0800
+Message-ID: <1463500571-28970-7-git-send-email-wens@csie.org>
+References: <1463500571-28970-1-git-send-email-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463500571-28970-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+Q8 form factor A13 tablets have a 7" LCD panel. Unfortunately we
+don't know the exact model of the panel. Just pick a panel with
+display timings close to what we know.
 
-This series enables more peripherals for Allwinner A13-based Q8 devices.
-The peripherals include the WiFi, the PMIC's micro-usb power supply
-(driver), audio codec (headphone and speaker), and full display support
-with the new DRM KMS driver. The series is based on parts of Maxime's
-"drm: Add Support for Passive RGB to VGA bridges" series, specifically
-the clk and drm fixes, and common DTS bits.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun5i-q8-common.dtsi | 36 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Hans, since you have a collection of q8 tablets, I'm hoping you could
-test these bits and provide some feedback.
-
-
-Patch 1 is a small fix for part of the init failure path.
-
-Patch 2 disables ldo5 on the axp209 by default. This regulator output is
-muxed with a gpio, and the regulator on/off settings override the gpio.
-
-Patch 3 enables the USB WiFi module found.
-
-Patch 4 enables the USB/VBUS power supply of the PMIC.
-
-Patch 5 enables the audio codec, with support for the speaker amp.
-
-Patch 6 enables the LCD panel with the display pipeline.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (6):
-  drm: sun4i: do cleanup if RGB output init fails
-  ARM: dts: axp209: Disable ldo5 by default
-  ARM: dts: sun5i: q8-common: Enable USB-based WiFi
-  ARM: dts: sun5i: q8-common: Enable USB power supply
-  ARM: dts: sun5i: q8-common: Enable audio codec
-  ARM: dts: sun5i: q8-common: Enable display pipeline and LCD display
-
- arch/arm/boot/dts/axp209.dtsi          |  1 +
- arch/arm/boot/dts/sun5i-q8-common.dtsi | 62 ++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_tcon.c     |  6 +++-
- 3 files changed, 68 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm/boot/dts/sun5i-q8-common.dtsi b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+index 5b065fd542f0..a5de28d12b16 100644
+--- a/arch/arm/boot/dts/sun5i-q8-common.dtsi
++++ b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+@@ -59,6 +59,29 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	panel: panel {
++		compatible = "urt,umsh-8596md-t", "simple-panel";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			/* TODO: lcd panel uses axp gpio0 as enable pin */
++			backlight = <&backlight>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			panel_input: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&tcon0_out_lcd>;
++			};
++		};
++	};
++};
++
++&be0 {
++	status = "okay";
+ };
+ 
+ &codec {
+@@ -179,6 +202,19 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
++	status = "okay";
++};
++
++&tcon0_out {
++	tcon0_out_lcd: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&panel_input>;
++	};
++};
++
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins_b>;
 -- 
 2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
