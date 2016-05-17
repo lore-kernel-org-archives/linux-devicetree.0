@@ -1,342 +1,145 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH 2/5] i2c: Add STM32F4 I2C driver
-Date: Tue, 17 May 2016 11:48:08 +0200
-Message-ID: <CALszF6A-jiCBtSO1RFDdgHKTKmsonRXFVs0x2zHha1LJ3UhwtQ@mail.gmail.com>
-References: <1462980974-22091-1-git-send-email-cedric.madianga@gmail.com>
-	<1462980974-22091-3-git-send-email-cedric.madianga@gmail.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [RFC 2/3] drm/mediatek: add support for Mediatek SoC MT2701
+Date: Tue, 17 May 2016 10:55:43 +0100
+Message-ID: <CACvgo52qc4E=MAGLoCaUH+GZuyvPexHchZnvuv-fF8P23e_1Uw@mail.gmail.com>
+References: <1463053795-55455-1-git-send-email-yt.shen@mediatek.com>
+ <1463053795-55455-3-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1462980974-22091-3-git-send-email-cedric.madianga@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: Patrice Chotard <patrice.chotard@st.com>, wsa@the-dreams.de, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1463053795-55455-3-git-send-email-yt.shen@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YT Shen <yt.shen@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Cedric,
-
-2016-05-11 17:36 GMT+02:00 M'boumba Cedric Madianga <cedric.madianga@gmail.com>:
-> This patch adds support for the STM32F4 I2C controller.
->
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> ---
->  drivers/i2c/busses/Kconfig       |  10 +
->  drivers/i2c/busses/Makefile      |   1 +
->  drivers/i2c/busses/i2c-stm32f4.c | 872 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 883 insertions(+)
->  create mode 100644 drivers/i2c/busses/i2c-stm32f4.c
->
-...
-> diff --git a/drivers/i2c/busses/i2c-stm32f4.c b/drivers/i2c/busses/i2c-stm32f4.c
-> new file mode 100644
-> index 0000000..4692213
-> --- /dev/null
-> +++ b/drivers/i2c/busses/i2c-stm32f4.c
-...
-> +enum stm32f4_i2c_speed {
-> +       STM32F4_I2C_SPEED_STANDARD, /* 100 kHz */
-> +       STM32F4_I2C_SPEED_FAST, /* 400 kHz */
-> +       STM32F4_I2C_SPEED_END,
-> +};
-> +
-> +/**
-> + * struct stm32f4_i2c_timings - per-Mode tuning parameters
-> + * @rate: I2C bus rate
-> + * @duty: Fast mode duty cycle
-> + */
-> +struct stm32f4_i2c_timings {
-> +       u32 rate;
-> +       u32 duty;
-> +};
-...
-> +/**
-> + * struct stm32f4_i2c_dev - private data of the controller
-> + * @adap: I2C adapter for this controller
-> + * @dev: device for this controller
-> + * @base: virtual memory area
-> + * @complete: completion of I2C message
-> + * @irq_event: interrupt event line for the controller
-> + * @irq_error: interrupt error line for the controller
-> + * @clk: hw i2c clock
-> + * speed: I2C clock frequency of the controller. Standard or Fast only supported
-> + * @client: I2C transfer information
-> + * @busy: I2C transfer on-going
-> + * @rst: I2C reset line
-> + */
-> +struct stm32f4_i2c_dev {
-> +       struct i2c_adapter              adap;
-> +       struct device                   *dev;
-> +       void __iomem                    *base;
-> +       struct completion               complete;
-> +       int                             irq_event;
-> +       int                             irq_error;
-> +       struct clk                      *clk;
-> +       int                             speed;
-> +       struct stm32f4_i2c_client       client;
-> +       bool                            busy;
-> +       struct reset_control            *rst;
-> +};
-> +
-> +static struct stm32f4_i2c_timings i2c_timings[] = {
-> +       [STM32F4_I2C_SPEED_STANDARD] = {
-> +               .rate                   = 100000,
-> +               .duty                   = 0,
-> +       },
-> +       [STM32F4_I2C_SPEED_FAST] = {
-> +               .rate                   = 400000,
-> +               .duty                   = 0,
-> +       },
-> +};
-Is this table really needed?
-As duty value seems to always be 0, couldn't you just store the rate
-in the speed field?
-
-
-> +static void stm32f4_i2c_set_rise_time(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       u32 trise, freq, cr2;
-> +
-> +       cr2 = readl_relaxed(i2c_dev->base + STM32F4_I2C_CR2);
-> +       freq = cr2 & STM32F4_I2C_CR2_FREQ_MASK;
-> +
-> +       trise = readl_relaxed(i2c_dev->base + STM32F4_I2C_TRISE);
-> +       trise &= ~STM32F4_I2C_TRISE_TRISE_MASK;
-> +
-> +       if (i2c_dev->speed == STM32F4_I2C_SPEED_STANDARD)
-> +               trise |= STM32F4_I2C_TRISE_TRISE((freq + 1));
-> +       else
-> +               trise |= STM32F4_I2C_TRISE_TRISE((((freq * 300) / 1000) + 1));
-Or if you keep the timings struct, maybe the rise time should be part of it.
-Doing, that, you will avoid the if/else
-
-> +
-> +       writel_relaxed(trise, i2c_dev->base + STM32F4_I2C_TRISE);
-> +}
-> +
-> +static void stm32f4_i2c_set_speed_mode(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       struct stm32f4_i2c_timings *t = &i2c_timings[i2c_dev->speed];
-> +       u32 ccr, val, clk_rate;
-> +
-> +       ccr = readl_relaxed(i2c_dev->base + STM32F4_I2C_CCR);
-> +       ccr &= ~(STM32F4_I2C_CCR_FS | STM32F4_I2C_CCR_DUTY |
-> +                STM32F4_I2C_CCR_CCR_MASK);
-> +
-> +       clk_rate = clk_get_rate(i2c_dev->clk);
-> +
-> +       switch (i2c_dev->speed) {
-> +       case STM32F4_I2C_SPEED_STANDARD:
-> +               val = clk_rate / t->rate * 2;
-> +               if (val < STM32F4_I2C_MIN_CCR)
-> +                       ccr |= STM32F4_I2C_CCR_CCR(STM32F4_I2C_MIN_CCR);
-> +               else
-> +                       ccr |= STM32F4_I2C_CCR_CCR(val);
-> +               break;
-> +       case STM32F4_I2C_SPEED_FAST:
-> +               ccr |= STM32F4_I2C_CCR_FS;
-> +               if (t->duty) {
-> +                       ccr |= STM32F4_I2C_CCR_DUTY;
-> +                       ccr |= STM32F4_I2C_CCR_CCR(clk_rate / t->rate * 25);
-> +               } else {
-> +                       ccr |= STM32F4_I2C_CCR_CCR(clk_rate / t->rate * 3);
-> +               }
-Is it really useful since duty seems to always be 0?
-
-> +               break;
-> +       default:
-> +               dev_err(i2c_dev->dev, "I2C speed mode not supported\n");
-> +       }
-> +
-> +       writel_relaxed(ccr, i2c_dev->base + STM32F4_I2C_CCR);
-> +}
-> +
-> +static void stm32f4_i2c_set_filter(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       u32 filter;
-> +
-> +       /* Enable analog noise filter and disable digital noise filter */
-Maybe a stupid question, but is it always what we want?
-Are there some cases we would prefer to use the digital noise filter
-instead of the analog one?
-
-> +       filter = readl_relaxed(i2c_dev->base + STM32F4_I2C_FLTR);
-> +       filter &= ~(STM32F4_I2C_FLTR_ANOFF | STM32F4_I2C_FLTR_DNF_MASK);
-> +       writel_relaxed(filter, i2c_dev->base + STM32F4_I2C_FLTR);
-> +}
-> +
-> +/**
-> + * stm32f4_i2c_hw_config() - Prepare I2C block
-> + * @i2c_dev: Controller's private data
-> + */
-> +static void stm32f4_i2c_hw_config(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR1;
-> +
-> +       /* Disable I2C */
-> +       stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR1_PE);
-> +
-> +       stm32f4_i2c_set_periph_clk_freq(i2c_dev);
-> +
-> +       stm32f4_i2c_set_rise_time(i2c_dev);
-> +
-> +       stm32f4_i2c_set_speed_mode(i2c_dev);
-> +
-> +       stm32f4_i2c_set_filter(i2c_dev);
-> +
-> +       /* Enable I2C */
-> +       stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_PE);
-> +}
-> +
-> +static int stm32f4_i2c_wait_free_bus(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       u32 status;
-> +       int ret;
-> +
-> +       ret = readl_relaxed_poll_timeout(i2c_dev->base + STM32F4_I2C_SR2,
-> +                                        status,
-> +                                        !(status & STM32F4_I2C_SR2_BUSY),
-> +                                        10, 1000);
-> +       if (ret) {
-> +               dev_err(i2c_dev->dev, "bus not free\n");
-> +               ret = -EBUSY;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +/**
-> + * stm32f4_i2c_write_ byte() - Write a byte in the data register
-> + * @i2c_dev: Controller's private data
-> + * @byte: Data to write in the register
-> + */
-> +static void stm32f4_i2c_write_byte(struct stm32f4_i2c_dev *i2c_dev, u8 byte)
-> +{
-> +       writel_relaxed(byte, i2c_dev->base + STM32F4_I2C_DR);
-> +}
-> +
-> +/**
-> + * stm32f4_i2c_write_msg() - Fill the data register in write mode
-> + * @i2c_dev: Controller's private data
-> + *
-> + * This function fills the data register with I2C transfer buffer
-> + */
-> +static void stm32f4_i2c_write_msg(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
-> +
-> +       stm32f4_i2c_write_byte(i2c_dev, *c->buf++);
-> +       c->count--;
-> +}
-> +
-> +static void stm32f4_i2c_read_msg(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
-> +       u32 rbuf;
-> +
-> +       rbuf = readl_relaxed(i2c_dev->base + STM32F4_I2C_DR);
-> +       *c->buf++ = (u8)rbuf & 0xff;
-> +       c->count--;
-> +}
-> +
-> +static void stm32f4_i2c_terminate_xfer(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
-> +       void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
-> +
-> +       /* Disable all interrupts */
-> +       stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_IRQ_MASK);
-> +
-> +       /* Set STOP or REPSTART */
-> +       reg = i2c_dev->base + STM32F4_I2C_CR1;
-> +       if (c->stop)
-> +               stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_STOP);
-> +       else
-> +               stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_START);
-> +
-> +       complete(&i2c_dev->complete);
-> +}
-> +
-> +/**
-> + * stm32f4_i2c_handle_write() - Handle FIFO empty interrupt in case of write
-> + * @i2c_dev: Controller's private data
-> + */
-> +static void stm32f4_i2c_handle_write(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
-> +       void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
-> +
-> +       if (c->count) {
-> +               stm32f4_i2c_write_msg(i2c_dev);
-> +               if (!c->count) {
-> +                       /* Disable BUF interrupt */
-> +                       stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_ITBUFEN);
-> +               }
-> +       } else {
-> +               stm32f4_i2c_terminate_xfer(i2c_dev);
-> +       }
-> +}
-> +
-> +/**
-> + * stm32f4_i2c_handle_tx_btf() - Handle byte transfer finished interrupt
-> + * in case of write
-> + * @i2c_dev: Controller's private data
-> + */
-> +static void stm32f4_i2c_handle_tx_btf(struct stm32f4_i2c_dev *i2c_dev)
-> +{
-> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
-> +
-> +       if (c->count)
-> +               stm32f4_i2c_write_msg(i2c_dev);
-> +       else
-> +               stm32f4_i2c_terminate_xfer(i2c_dev);
-> +}
-The two functions above look very similar.
-Isn't there a way to factorize?
-
-> +
-> +/**
-> + * stm32f4_i2c_handle_read() - Handle FIFO enmpty interrupt in case of read
-s/enmpty/empty/
-
-
-...
-> +
-> +/**
-> + * stm32f4_i2c_xfer() - Transfer combined I2C message
-> + * @i2c_adap: Adapter pointer to the controller
-> + * @msgs: Pointer to data to be written.
-> + * @num: Number of messages to be executed
-> + */
-> +static int stm32f4_i2c_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msgs[],
-> +                           int num)
-> +{
-> +       struct stm32f4_i2c_dev *i2c_dev = i2c_get_adapdata(i2c_adap);
-> +       int ret, i;
-> +
-> +       i2c_dev->busy = true;
-> +
-> +       ret = clk_prepare_enable(i2c_dev->clk);
-> +       if (ret) {
-> +               dev_err(i2c_dev->dev, "Failed to prepare_enable clock\n");
-> +               return ret;
-> +       }
-> +
-> +       stm32f4_i2c_hw_config(i2c_dev);
-Maybe you could call this only at probe and resume time?
-You would save some register accesses.
-
-> +
-> +       for (i = 0; i < num && !ret; i++)
-> +               ret = stm32f4_i2c_xfer_msg(i2c_dev, &msgs[i], i == 0,
-> +                                          i == num - 1);
-> +
-> +       clk_disable_unprepare(i2c_dev->clk);
-> +
-> +       i2c_dev->busy = false;
-> +
-> +       return (ret < 0) ? ret : i;
-> +}
-> +
-
-Thanks!
-Maxime
+SGkgWVQgU2hlbiwKCk9uIDEyIE1heSAyMDE2IGF0IDEyOjQ5LCAgPHl0LnNoZW5AbWVkaWF0ZWsu
+Y29tPiB3cm90ZToKPiBGcm9tOiBZVCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNvbT4KPgo+IFRo
+aXMgcGF0Y2ggYWRkIHN1cHBvcnQgZm9yIHRoZSBNZWRpYXRlayBNVDI3MDEgRElTUCBzdWJzeXN0
+ZW0uCj4gVGhlcmUgaXMgb25seSBvbmUgT1ZMIGVuZ2luZSBpbiBNVDI3MDEsIGFuZCB3ZSBoYXZl
+IHNoYWRvdwo+IHJlZ2lzdGVyIHN1cHBvcnQgaGVyZS4KPgo+IFNpZ25lZC1vZmYtYnk6IFlUIFNo
+ZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2Rpc3Bfb3ZsLmMgICAgIHwgICA0OSArKysrKystLS0KPiAgZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kaXNwX3JkbWEuYyAgICB8ICAgMzYgKysrKystLQo+ICBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgICAgIHwgICA3OCArKysrKysrKystLS0tLQo+
+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyAgICAgIHwgIDE1MSArKysr
+KysrKysrKysrKysrKysrKy0tLS0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZGRwLmggICAgICB8ICAgIDIgKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kZHBfY29tcC5jIHwgICA2MyArKysrKysrKystLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kZHBfY29tcC5oIHwgICAxNSArKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZHJ2LmMgICAgICB8ICAgNzIgKysrKysrKysrKystLQo+ICBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCAgICAgIHwgICAgOSArKwo+ICBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYyAgICAgIHwgICAgNCArCj4gIDEwIGZpbGVzIGNo
+YW5nZWQsIDM3MyBpbnNlcnRpb25zKCspLCAxMDYgZGVsZXRpb25zKC0pCj4KVGhpcyBwYXRjaCBk
+b2VzIGEgYml0IHRvbyBtYW55IHRoaW5ncyBhdCBvbmNlIGltaG8KIC0gUmVuYW1lcyBleGlzdGlu
+ZyBtYWNyb3MKIC0gRmFjdG9ycyBvdXQgaGVscGVyIGZ1bmN0aW9ucyAtIG10a19jcnRjX2RkcF9j
+b25maWcgYW5kIGFsaWtlLgogLSBJbnRyb2R1Y2VzICpkcml2ZXJfZGF0YSBmb3IgZXhpc3Rpbmcg
+aGFyZHdhcmUgYW5kIHVzZXMgaXQKIC0gYW5kIGFkZHMgc3VwcG9ydCBmb3IgdGhlIGRpZmZlcmVu
+dCBoYXJkd2FyZS4KCkknbSBubyBleHBlcnQgaW4gdGhlIGFyZWEsIGJ1dCBpdCBmZWVscyBsaWtl
+IHlvdSB3YW50IHRvIHNwbGl0IHRoaW5ncwpyb3VnaGx5IGFzIHBlciBhYm92ZS4KQSByYXRoZXIg
+c2VyaW91cyBtYWxpIG5vdGUgYW5kIHNvbWUgInRoaXMgc2hvdWxkIGJlIGNvbnN0IiBmb2xsb3cK
+c3VnZ2VzdGlvbnMgaW5saW5lLgoKCj4KPiArc3RhdGljIHN0cnVjdCBtdGtfZGRwX2NvbXBfZHJp
+dmVyX2RhdGEgbXQyNzAxX292bF9kcml2ZXJfZGF0YSA9IHsKPiArICAgICAgIC5vdmwgPSB7MHgw
+MDQwLCAxIDw8IDEyLCAwfQo+ICt9Owo+ICsKPiArc3RhdGljIHN0cnVjdCBtdGtfZGRwX2NvbXBf
+ZHJpdmVyX2RhdGEgbXQ4MTczX292bF9kcml2ZXJfZGF0YSA9IHsKPiArICAgICAgIC5vdmwgPSB7
+MHgwZjQwLCAwLCAxIDw8IDEyfQo+ICt9Owo+ICsKVGhlc2UgdHdvIHNob3VsZCBiZSBjb25zdCBy
+aWdodCA/CgoKPgo+ICtzdGF0aWMgc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSBtdDI3
+MDFfcmRtYV9kcml2ZXJfZGF0YSA9IHsKPiArICAgICAgIC5yZG1hX2ZpZm9fcHNldWRvX3NpemUg
+PSBTWl80SywKPiArfTsKPiArCj4gK3N0YXRpYyBzdHJ1Y3QgbXRrX2RkcF9jb21wX2RyaXZlcl9k
+YXRhIG10ODE3M19yZG1hX2RyaXZlcl9kYXRhID0gewo+ICsgICAgICAgLnJkbWFfZmlmb19wc2V1
+ZG9fc2l6ZSA9IFNaXzhLLAo+ICt9Owo+ICsKU2FtZSBoZXJlLgoKCj4KPiAtI2RlZmluZSBNVVRF
+WF9NT0RfRElTUF9PVkwwICAgICAgICAgICAgQklUKDExKQo+IC0jZGVmaW5lIE1VVEVYX01PRF9E
+SVNQX09WTDEgICAgICAgICAgICBCSVQoMTIpCj4gLSNkZWZpbmUgTVVURVhfTU9EX0RJU1BfUkRN
+QTAgICAgICAgICAgIEJJVCgxMykKPiAtI2RlZmluZSBNVVRFWF9NT0RfRElTUF9SRE1BMSAgICAg
+ICAgICAgQklUKDE0KQo+IC0jZGVmaW5lIE1VVEVYX01PRF9ESVNQX1JETUEyICAgICAgICAgICBC
+SVQoMTUpCj4gLSNkZWZpbmUgTVVURVhfTU9EX0RJU1BfV0RNQTAgICAgICAgICAgIEJJVCgxNikK
+PiAtI2RlZmluZSBNVVRFWF9NT0RfRElTUF9XRE1BMSAgICAgICAgICAgQklUKDE3KQo+IC0jZGVm
+aW5lIE1VVEVYX01PRF9ESVNQX0NPTE9SMCAgICAgICAgICBCSVQoMTgpCj4gLSNkZWZpbmUgTVVU
+RVhfTU9EX0RJU1BfQ09MT1IxICAgICAgICAgIEJJVCgxOSkKPiAtI2RlZmluZSBNVVRFWF9NT0Rf
+RElTUF9BQUwgICAgICAgICAgICAgQklUKDIwKQo+IC0jZGVmaW5lIE1VVEVYX01PRF9ESVNQX0dB
+TU1BICAgICAgICAgICBCSVQoMjEpCj4gLSNkZWZpbmUgTVVURVhfTU9EX0RJU1BfVUZPRSAgICAg
+ICAgICAgIEJJVCgyMikKPiAtI2RlZmluZSBNVVRFWF9NT0RfRElTUF9QV00wICAgICAgICAgICAg
+QklUKDIzKQo+IC0jZGVmaW5lIE1VVEVYX01PRF9ESVNQX1BXTTEgICAgICAgICAgICBCSVQoMjQp
+Cj4gLSNkZWZpbmUgTVVURVhfTU9EX0RJU1BfT0QgICAgICAgICAgICAgIEJJVCgyNSkKPiArI2Rl
+ZmluZSBNVVRFWF9NT0RfTVQ4MTczX0RJU1BfT1ZMMCAgICAgICAgICAgICBCSVQoMTEpCj4gKyNk
+ZWZpbmUgTVVURVhfTU9EX01UODE3M19ESVNQX09WTDEgICAgICAgICAgICAgQklUKDEyKQo+ICsj
+ZGVmaW5lIE1VVEVYX01PRF9NVDgxNzNfRElTUF9SRE1BMCAgICAgICAgICAgIEJJVCgxMykKPiAr
+I2RlZmluZSBNVVRFWF9NT0RfTVQ4MTczX0RJU1BfUkRNQTEgICAgICAgICAgICBCSVQoMTQpCj4g
+KyNkZWZpbmUgTVVURVhfTU9EX01UODE3M19ESVNQX1JETUEyICAgICAgICAgICAgQklUKDE1KQo+
+ICsjZGVmaW5lIE1VVEVYX01PRF9NVDgxNzNfRElTUF9XRE1BMCAgICAgICAgICAgIEJJVCgxNikK
+PiArI2RlZmluZSBNVVRFWF9NT0RfTVQ4MTczX0RJU1BfV0RNQTEgICAgICAgICAgICBCSVQoMTcp
+Cj4gKyNkZWZpbmUgTVVURVhfTU9EX01UODE3M19ESVNQX0NPTE9SMCAgICAgICAgICAgQklUKDE4
+KQo+ICsjZGVmaW5lIE1VVEVYX01PRF9NVDgxNzNfRElTUF9DT0xPUjEgICAgICAgICAgIEJJVCgx
+OSkKPiArI2RlZmluZSBNVVRFWF9NT0RfTVQ4MTczX0RJU1BfQUFMICAgICAgICAgICAgICBCSVQo
+MjApCj4gKyNkZWZpbmUgTVVURVhfTU9EX01UODE3M19ESVNQX0dBTU1BICAgICAgICAgICAgQklU
+KDIxKQo+ICsjZGVmaW5lIE1VVEVYX01PRF9NVDgxNzNfRElTUF9VRk9FICAgICAgICAgICAgIEJJ
+VCgyMikKPiArI2RlZmluZSBNVVRFWF9NT0RfTVQ4MTczX0RJU1BfUFdNMCAgICAgICAgICAgICBC
+SVQoMjMpCj4gKyNkZWZpbmUgTVVURVhfTU9EX01UODE3M19ESVNQX1BXTTEgICAgICAgICAgICAg
+QklUKDI0KQo+ICsjZGVmaW5lIE1VVEVYX01PRF9NVDgxNzNfRElTUF9PRCAgICAgICAgICAgICAg
+IEJJVCgyNSkKPiArCj4gKyNkZWZpbmUgTVVURVhfTU9EX01UMjcwMV9ESVNQX09WTCAgICAgICAg
+ICAgICAgQklUKDMpCj4gKyNkZWZpbmUgTVVURVhfTU9EX01UMjcwMV9ESVNQX1dETUEgICAgICAg
+ICAgICAgQklUKDYpCj4gKyNkZWZpbmUgTVVURVhfTU9EX01UMjcwMV9ESVNQX0NPTE9SICAgICAg
+ICAgICAgQklUKDcpCj4gKyNkZWZpbmUgTVVURVhfTU9EX01UMjcwMV9ESVNQX0JMUyAgICAgICAg
+ICAgICAgQklUKDkpCj4gKyNkZWZpbmUgTVVURVhfTU9EX01UMjcwMV9ESVNQX1JETUEwICAgICAg
+ICAgICAgQklUKDEwKQo+ICsjZGVmaW5lIE1VVEVYX01PRF9NVDI3MDFfRElTUF9SRE1BMSAgICAg
+ICAgICAgIEJJVCgxMikKPgpFdmVuIHRob3VnaCB0aGUgZHJpdmVyIG5vdCBkb2VzIHVzZSBhIHVu
+aXF1ZSBwcmVmaXgvbmFtZXNwYWNlIGZvcgp0aGVzZSBtYWNyb3MgKHdoaWNoIGl0IHNob3VsZCBp
+bWhvKSwgaXQncyBiZXR0ZXIgdG8ga2VlcCB0aGUgaGFyZHdhcmUKbmFtZS9wYXJ0IGZpcnN0LiBJ
+ZGVhbGx5IHRoZSByZW5hbWUgd2lsbCBiZSBhIHNlcGFyYXRlIHBhdGNoLgoKCj4gQEAgLTEzMSw2
+ICsxNTMsMzIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfbWF0Y2ggbXRrX2Rk
+cF9tYXRjaGVzW0REUF9DT01QT05FTlRfSURfTUFYXSA9IHsKPiAgICAgICAgIFtERFBfQ09NUE9O
+RU5UX1dETUExXSAgID0geyBNVEtfRElTUF9XRE1BLCAgICAgIDEsIE5VTEwgfSwKPiAgfTsKPgo+
+ICtzdGF0aWMgc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSBtdDI3MDFfY29sb3JfZHJp
+dmVyX2RhdGEgPSB7Cj4gKyAgICAgICAuY29sb3Jfb2Zmc2V0ID0gMHgwZjAwLAo+ICt9Owo+ICsK
+PiArc3RhdGljIHN0cnVjdCBtdGtfZGRwX2NvbXBfZHJpdmVyX2RhdGEgbXQ4MTczX2NvbG9yX2Ry
+aXZlcl9kYXRhID0gewo+ICsgICAgICAgLmNvbG9yX29mZnNldCA9IDB4MGMwMCwKPiArfTsKPiAr
+CmNvbnN0IGFnYWluID8gWW91IGNhbiBldmVuIHR3ZWFrIHRoZSAqX2dldF9kcml2ZXJfZGF0YSBo
+ZWxwZXJzLCB0bwpyZXR1cm4gY29uc3Qgc3RydWN0IGZvbyosIGFuZCByZXNvbHZlIHRoZSBvZGQg
+d2FybmluZyB0aGF0IHRoZQpjb21waWxlciB3aWxsIGdpdmUgeW91LgoKCj4gIHN0cnVjdCBtdGtf
+ZGRwX2NvbXAgewo+ICAgICAgICAgc3RydWN0IGNsayAqY2xrOwo+ICAgICAgICAgdm9pZCBfX2lv
+bWVtICpyZWdzOwo+IEBAIC04Miw2ICs5Niw3IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXAgewo+ICAg
+ICAgICAgc3RydWN0IGRldmljZSAqbGFyYl9kZXY7Cj4gICAgICAgICBlbnVtIG10a19kZHBfY29t
+cF9pZCBpZDsKPiAgICAgICAgIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3MgKmZ1bmNz
+Owo+ICsgICAgICAgc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSAqZGF0YTsKY29uc3QK
+Cgo+ICtzdGF0aWMgc3RydWN0IG10a19tbXN5c19kcml2ZXJfZGF0YSBtdDI3MDFfbW1zeXNfZHJp
+dmVyX2RhdGEgPSB7Cj4gKyAgICAgICAubWFpbl9wYXRoID0gbXRrX2RkcF9tYWluXzI3MDEsCj4g
+KyAgICAgICAubWFpbl9sZW4gPSBBUlJBWV9TSVpFKG10a19kZHBfbWFpbl8yNzAxKSwKPiArICAg
+ICAgIC5leHRfcGF0aCA9IG10a19kZHBfZXh0XzI3MDEsCj4gKyAgICAgICAuZXh0X2xlbiA9IEFS
+UkFZX1NJWkUobXRrX2RkcF9leHRfMjcwMSksCj4gKyAgICAgICAuc2hhZG93X3JlZ2lzdGVyID0g
+dHJ1ZSwKPiArfTsKPiArCj4gK3N0YXRpYyBzdHJ1Y3QgbXRrX21tc3lzX2RyaXZlcl9kYXRhIG10
+ODE3M19tbXN5c19kcml2ZXJfZGF0YSA9IHsKPiArICAgICAgIC5tYWluX3BhdGggPSBtdGtfZGRw
+X21haW5fODE3MywKPiArICAgICAgIC5tYWluX2xlbiA9IEFSUkFZX1NJWkUobXRrX2RkcF9tYWlu
+XzgxNzMpLAo+ICsgICAgICAgLmV4dF9wYXRoID0gbXRrX2RkcF9leHRfODE3MywKPiArICAgICAg
+IC5leHRfbGVuID0gQVJSQVlfU0laRShtdGtfZGRwX2V4dF84MTczKSwKPiArICAgICAgIC5zaGFk
+b3dfcmVnaXN0ZXIgPSBmYWxzZSwKPiArfTsKPiArCmNvbnN0CgoKPiBAQCAtNDAsNiArNDgsNyBA
+QCBzdHJ1Y3QgbXRrX2RybV9wcml2YXRlIHsKPiAgICAgICAgIHZvaWQgX19pb21lbSAqY29uZmln
+X3JlZ3M7Cj4gICAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKmNvbXBfbm9kZVtERFBfQ09NUE9O
+RU5UX0lEX01BWF07Cj4gICAgICAgICBzdHJ1Y3QgbXRrX2RkcF9jb21wICpkZHBfY29tcFtERFBf
+Q09NUE9ORU5UX0lEX01BWF07Cj4gKyAgICAgICBzdHJ1Y3QgbXRrX21tc3lzX2RyaXZlcl9kYXRh
+ICpkYXRhOwpjb25zdCA/CgoKPiBAQCAtMTA4LDYgKzEwOCwxMCBAQCBpbnQgbXRrX2RybV9nZW1f
+ZHVtYl9jcmVhdGUoc3RydWN0IGRybV9maWxlICpmaWxlX3ByaXYsIHN0cnVjdCBkcm1fZGV2aWNl
+ICpkZXYsCj4gICAgICAgICBpbnQgcmV0Owo+Cj4gICAgICAgICBhcmdzLT5waXRjaCA9IERJVl9S
+T1VORF9VUChhcmdzLT53aWR0aCAqIGFyZ3MtPmJwcCwgOCk7Cj4gKyAgICAgICAvKgo+ICsgICAg
+ICAgKiBhbGlnbiB0byA4IGJ5dGVzIHNpbmNlIE1hbGkgcmVxdWlyZXMgaXQuCj4gKyAgICAgICAq
+Lwo+ICsgICAgICAgYXJncy0+cGl0Y2ggPSBBTElHTihhcmdzLT5waXRjaCwgOCk7CkFyZSB5b3Ug
+c3VyZSB3ZSBuZWVkIHRoaXMsIGJhc2VkIG9uIHRoZSBsaW5lIGp1c3QgYWJvdmUgPwoKSWlyYyB3
+ZSBoYWQgYSBjaGF0IGVhcmxpZXIgdGhhdCB1cHN0cmVhbSBrZXJuZWwgY29kZSBzaG91bGQgbm90
+IGJlCnRhaWxvdXJlZCBmb3IgdGhlIG5lZWRzIHRvIGNsb3NlZCBzb3VyY2UgdXNlcnNwYWNlLi4u
+IHNlZW1zIGxpa2UgdGhlCmNvbW1lbnQgZ290IHJlbW92ZWQgYnV0IHRoZSBjb2RlIHJlbWFpbmVk
+LiBQaGlsaXBwIFphYmVsIEkgYmVsaWV2ZSB5b3UKd2VyZSB0aGUgcGVyc29uIHdobyBkaWQgdGhl
+IG9yaWdpbmFsIHVwc3RyZWFtaW5nIC0gY2FuIHdlIHJlbW92ZSB0aGlzCmhhY2svd29ya2Fyb3Vu
+ZCBhbmQga2VlcCBpdCBkb3duc3RyZWFtIHVudGlsIHdlIGhhdmUgYW4gb3Blbi1zb3VyY2UKdXNl
+ciB0aGF0IHJlcXVpcmVzIGl0ID8KCkNhbiB3ZSBoYXZlIGEgTUFJTlRBSU5FUlMgZW50cnkgZm9y
+IHRoaXMgZHJpdmVyID8KClRoYW5rcwpFbWlsCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
