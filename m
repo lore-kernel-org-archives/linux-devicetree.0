@@ -1,70 +1,73 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] ASoC: wm8985: add device tree binding for WM8985
-Date: Tue, 17 May 2016 14:49:48 +0200
-Message-ID: <1463489389-17719-1-git-send-email-petr@barix.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] doc: dt: Document the target root overlay method
+Date: Tue, 17 May 2016 07:58:22 -0500
+Message-ID: <CAL_JsqKX1m-gKBGUcxaHJm-ih-QHhHbpHBqMJbb5KXeG9eStQQ@mail.gmail.com>
+References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com> <1463429892-3369-7-git-send-email-pantelis.antoniou@konsulko.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463429892-3369-7-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, plamen-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding for the WM8985 codec driver.
+On Mon, May 16, 2016 at 3:18 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Add a description of the target root overlay method to the overlay
+> documention file.
+>
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/overlay-notes.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+> index 6995fc1..3e8df30 100644
+> --- a/Documentation/devicetree/overlay-notes.txt
+> +++ b/Documentation/devicetree/overlay-notes.txt
+> @@ -104,6 +104,10 @@ If your board has multiple slots/places where a single overlay can work
+>  and each slot is defined by a node, you can use the
+>  of_overlay_create_target_index() method to select the target.
+>
+> +For overlays on probeable busses, use the of_overlay_create_target_root() method
+> +in which you supply a device node as a target root, and which all target
+> +references in the overlay are performed relative to that node.
 
-Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-v1: initial
-v2: no change
+This needs a better explanation and an example. "Applying overlays to
+multiple places for probeable busses" is not sufficient. Describe what
+is the problem/flow, and then how does the implementation work. I
+don't think this problem is limited to probeable busses either. Not
+knowing the target to apply the overlay to is the same problem for
+connectors with non-probeable signals.
 
- Documentation/devicetree/bindings/sound/wm8985.txt | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/wm8985.txt
+I find a couple of things problematic with the implementation. There's
+no way to validate that an overlay should apply to a base node. If
+users just always make the target "/", then any overlay can apply to
+any location the nodes could apply anywhere. It requires a kernel
+change for every location you want to apply the overlay to. Maybe I
+don't understand the usecase.
 
-diff --git a/Documentation/devicetree/bindings/sound/wm8985.txt b/Documentation/devicetree/bindings/sound/wm8985.txt
-new file mode 100644
-index 000000000000..788d64766257
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/wm8985.txt
-@@ -0,0 +1,36 @@
-+Wolfson Microelectronics WM8985 and WM8758 audio codecs
-+
-+These devices support both I2C and SPI (configured with pin strapping
-+on the board).
-+
-+Required properties:
-+
-+  - compatible : "wlf,wm8985" or "wlf,wm8758"
-+
-+  - reg : the I2C address of the device for I2C, the chip select
-+          number for SPI.
-+
-+Pins on the device for linking into audio routes:
-+
-+  * LIN      : left microphone pre-amp negative input
-+  * LIP      : left microphone pre-amp positive input
-+  * RIN      : right microphone pre-amp negative input
-+  * RIP      : right microphone pre-amp positive input
-+  * L2       : left line input / secondary pre-amp positive input
-+  * R2       : right line input / secondary pre-amp positive input
-+  * AUXL     : left auxiliary input (WM8985 only)
-+  * AUXR     : right auxiliary input (WM8985 only)
-+
-+  * HPL      : left headphone / line output (the LOUT1 pin)
-+  * HPR      : right headphone / line output (the ROUT1 pin)
-+  * SPKL     : left headphone / line output (the LOUT2 pin)
-+  * SPKR     : right headphone / line output (the ROUT2 pin)
-+  * Mic Bias : microphone bias
-+
-+
-+Example:
-+
-+wm8758: audio-codec@1a {
-+	compatible = "wlf,wm8758";
-+	reg = <0x1a>;
-+};
--- 
-1.9.1
+I feel like we are creating too many syntax's to apply overlays. I get
+that there are different usecases, but that doesn't necessarily mean
+the syntax needs to be different.
 
+> +
+>  Overlay DTS Format
+>  ------------------
+>
+> @@ -141,3 +145,7 @@ contains the information required to map from a phandle to a tree location.
+>  Using a target index requires the use of a selector target on the call to
+>  of_overlay_create_target_index(). I.e. passing an index of 0 will select the
+>  target in the foo node, an index of 1 the bar node, etc.
+> +
+> +Note that when using the target root create method all target references must
+> +lie under the target root node. I.e. the overlay is not allowed to 'break' out
+> +of the root.
+
+That is not enforceable though, right?
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
