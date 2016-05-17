@@ -1,72 +1,44 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [v5,1/7] QE: Add IC, SI and SIRAM document to device tree
- bindings.
-Date: Mon, 16 May 2016 20:41:33 -0500
-Message-ID: <1463449293.16584.127.camel@buserror.net>
-References: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
-	 <20160516232210.GA21087@home.buserror.net>
-	 <AM3PR04MB118504BB6430CBEC8AA4886491480@AM3PR04MB1185.eurprd04.prod.outlook.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 2/2] pci: host: Add Broadcom STB PCIE RC controller
+Date: Mon, 16 May 2016 18:50:08 -0700
+Message-ID: <573A78D0.9090000@gmail.com>
+References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
+ <1462475700-1654-3-git-send-email-f.fainelli@gmail.com>
+ <8520D5D51A55D047800579B094147198258955D9@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB118504BB6430CBEC8AA4886491480@AM3PR04MB1185.eurprd04.prod.outlook.com>
+In-Reply-To: <8520D5D51A55D047800579B094147198258955D9@XAP-PVEXMBX01.xlnx.xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Qiang Zhao <qiang.zhao@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "jim2101024@gmail.com" <jim2101024@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-05-17 at 01:18 +0000, Qiang Zhao wrote:
-> On Tue, May 17, 2016 at 07:22AM, Scott Wood wrote:
-> > -----Original Message-----
-> > From: Scott Wood [mailto:oss@buserror.net]
-> > Sent: Tuesday, May 17, 2016 7:22 AM
-> > To: Qiang Zhao <qiang.zhao@nxp.com>
-> > Cc: robh+dt@kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; Xiaobo Xie <xiaobo.xie@nxp.com>; Yang-Leo Li
-> > <leoyang.li@nxp.com>; linuxppc-dev@lists.ozlabs.org
-> > Subject: Re: [v5,1/7] QE: Add IC, SI and SIRAM document to device tree
-> > bindings.
-> > 
-> > On Wed, Mar 09, 2016 at 09:21:28AM +0800, Zhao Qiang wrote:
-> > > Add IC, SI and SIRAM document of QE to
-> > > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
-> > > 
-> > > Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > changes for v2
-> > > 	- Add interrupt-controller in Required properties
-> > > 	- delete address-cells and size-cells for qe-si and qe-siram Changes
-> > > for v3
-> > > 	- Add SoC specific caompatible strings to qe-si and qe-siram Changes
-> > > for v4
-> > > 	- NA
-> > > Changes for v5
-> > > 	- NA
-> > > 
-> > >  .../devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt  | 50
-> > > ++++++++++++++++++++++
-> > >  1 file changed, 50 insertions(+)
-> > > +* Serial Interface Block (SI)
-> > > +
-> > > +The SI manages the routing of eight TDM lines to the QE block serial
-> > > +drivers , the MCC and the UCCs, for receive and transmit.
-> > > +
-> > > +Required properties:
-> > > +- compatible : should be "fsl,t1040-qe-si".
-> > > +- reg : Address range of SI register set.
-> > 
-> > Is t1040 the only chip that has or will ever have this?
-> 
-> There also be t1024 and ls1043 supporting si.
-> I thought to add them when adding their device node.
-> If you think it is better to add them now, I will modify.
+On 05/11/2016 07:47 AM, Bharat Kumar Gogada wrote:
 
-The binding is saying that the compatible "should" be "fsl,t1040-qe-si"
-regardless of whether it's actually a t1040.  Instead say that compatible must
-include "fsl,<chip>-qe-si" and give t1040 as an example.  If you intend
-"fsl,t1040-qe-si" to be something that other compatible chips list, in
-addition to their own <chip> compatibles, then also say that explicitly.
+[snip]
 
--Scott
+>> +	/* Get the value for the log2 of the scb sizes. Subtract 15 from
+>> +	 * each because the target register field has 0==disabled and 1==6KB.
+>> +	 */
+>> +	log2_scb_sizes = of_get_property(dn, "brcm,log2-scb-sizes", &rlen);
+>> +	if (log2_scb_sizes) {
+>> +		for (i = 0; i < rlen / sizeof(u32); i++) {
+>> +			pcie->scb_size_vals[i]
+>> +				= (int)of_read_number(log2_scb_sizes + i, 1)
+>> +					- 15;
+>> +			pcie->num_memc++;
+>> +		}
+>> +	}
+> In your device tree documentation this is required property, what if this property 
+> is missing ?
+
+If you look at the driver, you will see that it assumes a 1GB SCB window
+size if this property is absent.
+
+PS: Do you mind trimming your replies in the future just to quote the
+relevant part? Pretty much like I just did, this greatly improves the
+ability to jump right to where the comments are. Thanks
+-- 
+Florian
