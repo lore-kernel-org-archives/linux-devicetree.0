@@ -1,7 +1,7 @@
 From: Purna Chandra Mandal <purna.mandal@microchip.com>
-Subject: [PATCH 06/11] dt/bindings: Correct clk binding example for PIC32 SDHCI
-Date: Tue, 17 May 2016 10:35:55 +0530
-Message-ID: <1463461560-9629-6-git-send-email-purna.mandal@microchip.com>
+Subject: [PATCH 07/11] dt/bindings: Correct clk binding example for PIC32 pinctrl
+Date: Tue, 17 May 2016 10:35:56 +0530
+Message-ID: <1463461560-9629-7-git-send-email-purna.mandal@microchip.com>
 References: <1463461560-9629-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,30 +9,30 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1463461560-9629-1-git-send-email-purna.mandal@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Purna Chandra Mandal <purna.mandal@microchip.com>, devicetree@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Joshua Henderson <joshua.henderson@microchip.com>, Andrei Pistirica <andrei.pistirica@microchip.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Purna Chandra Mandal <purna.mandal@microchip.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Joshua Henderson <joshua.henderson@microchip.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Update binding example based on new clock binding documentation.
+Update binding example based on new clock binding scheme.
 [1] Documentation/devicetree/bindings/clock/microchip,pic32.txt
 
 Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
 ---
 
- Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt | 2 +-
+ Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-index 71ad57e..3149297 100644
---- a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-+++ b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
-@@ -20,7 +20,7 @@ Example:
- 		compatible = "microchip,pic32mzda-sdhci";
- 		reg = <0x1f8ec000 0x100>;
- 		interrupts = <191 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&REFCLKO4>, <&PBCLK5>;
-+		clocks = <&rootclk REF4CLK>, <&rootclk PB5CLK>;
- 		clock-names = "base_clk", "sys_clk";
- 		bus-width = <4>;
- 		cap-sd-highspeed;
+diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+index 4b5efa5..29b72e3 100644
+--- a/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+@@ -34,7 +34,7 @@ pic32_pinctrl: pinctrl@1f801400{
+ 	#size-cells = <1>;
+ 	compatible = "microchip,pic32mzda-pinctrl";
+ 	reg = <0x1f801400 0x400>;
+-	clocks = <&PBCLK1>;
++	clocks = <&rootclk PB1CLK>;
+ 
+ 	pinctrl_uart2: pinctrl_uart2 {
+ 		uart2-tx {
 -- 
 1.8.3.1
