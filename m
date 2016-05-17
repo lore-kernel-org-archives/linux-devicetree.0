@@ -1,38 +1,67 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH 2/8] Documentation: regulator: tps65218: Update examples
-Date: Tue, 17 May 2016 08:52:06 +0530
-Message-ID: <573A8E5E.2080809@ti.com>
-References: <1462945691-904-1-git-send-email-j-keerthy@ti.com>
- <1462945691-904-3-git-send-email-j-keerthy@ti.com>
- <20160516144847.GA26659@rob-hp-laptop>
+From: Zhao Qiang <qiang.zhao@nxp.com>
+Subject: [PATCH v6 1/7] QE: Add IC,
+ SI and SIRAM document to device tree bindings.
+Date: Tue, 17 May 2016 10:38:57 +0800
+Message-ID: <1463452743-21462-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160516144847.GA26659@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Keerthy <j-keerthy@ti.com>
-Cc: broonie@kernel.org, tony@atomide.com, mark.rutland@arm.com, lee.jones@linaro.org, nm@ti.com, devicetree@vger.kernel.org, nikita@compulab.co.il, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: oss@buserror.net
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, xiaobo.xie@nxp.com, Zhao Qiang <qiang.zhao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Monday 16 May 2016 08:18 PM, Rob Herring wrote:
-> On Wed, May 11, 2016 at 11:18:05AM +0530, Keerthy wrote:
->> This updates the device tree according to the preferred way of parsing
->> the nodes using the regulator framework.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   .../devicetree/bindings/regulator/tps65218.txt     | 87 ++++++++++++++++++----
->>   1 file changed, 71 insertions(+), 16 deletions(-)
->
-> It wasn't exactly clear that the compatible string "added" here is
-> already used, so it looked like you were breaking compatibility at
-> first. Otherwise,
->
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Thanks Rob.
-
->
+QWRkIElDLCBTSSBhbmQgU0lSQU0gZG9jdW1lbnQgb2YgUUUgdG8KRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9xZS50eHQKClNpZ25lZC1vZmYtYnk6
+IFpoYW8gUWlhbmcgPHFpYW5nLnpoYW9AbnhwLmNvbT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+Ci0tLQpjaGFuZ2VzIGZvciB2MgoJLSBBZGQgaW50ZXJydXB0LWNvbnRy
+b2xsZXIgaW4gUmVxdWlyZWQgcHJvcGVydGllcwoJLSBkZWxldGUgYWRkcmVzcy1jZWxscyBhbmQg
+c2l6ZS1jZWxscyBmb3IgcWUtc2kgYW5kIHFlLXNpcmFtCkNoYW5nZXMgZm9yIHYzCgktIEFkZCBT
+b0Mgc3BlY2lmaWMgY2FvbXBhdGlibGUgc3RyaW5ncyB0byBxZS1zaSBhbmQgcWUtc2lyYW0KQ2hh
+bmdlcyBmb3IgdjQKCS0gTkEgCkNoYW5nZXMgZm9yIHY1CgktIE5BIApDaGFuZ2VzIGZvciB2NgoJ
+LSBtb2RpZnkgcHJvcGVydHkgdG8gImZzbCw8Y2hpcD4tcWUtc2kiIGFuZCAiZnNsLDxjaGlwPi1x
+ZS1zaXJhbSIKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvcWUu
+dHh0ICB8IDUyICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA1MiBpbnNl
+cnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3Bvd2VycGMvZnNsL2NwbV9xZS9xZS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3FlLnR4dAppbmRleCA0Zjg5MzAyLi5kN2FmYWZmIDEw
+MDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wv
+Y3BtX3FlL3FlLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
+ZXJwYy9mc2wvY3BtX3FlL3FlLnR4dApAQCAtNjksNiArNjksNTggQEAgRXhhbXBsZToKIAl9Owog
+ICAgICB9OwogCisqIEludGVycnVwdCBDb250cm9sbGVyIChJQykKKworUmVxdWlyZWQgcHJvcGVy
+dGllczoKKy0gY29tcGF0aWJsZSA6IHNob3VsZCBiZSAiZnNsLHFlLWljIi4KKy0gcmVnIDogQWRk
+cmVzcyByYW5nZSBvZiBJQyByZWdpc3RlciBzZXQuCistIGludGVycnVwdHMgOiBpbnRlcnJ1cHRz
+IGdlbmVyYXRlZCBieSB0aGUgZGV2aWNlLgorLSBpbnRlcnJ1cHQtY29udHJvbGxlciA6IHRoaXMg
+ZGV2aWNlIGlzIGEgaW50ZXJydXB0IGNvbnRyb2xsZXIuCisKK0V4YW1wbGU6CisKKwlxZWljOiBp
+bnRlcnJ1cHQtY29udHJvbGxlckA4MCB7CisJCWludGVycnVwdC1jb250cm9sbGVyOworCQljb21w
+YXRpYmxlID0gImZzbCxxZS1pYyI7CisJCSNhZGRyZXNzLWNlbGxzID0gPDA+OworCQkjaW50ZXJy
+dXB0LWNlbGxzID0gPDE+OworCQlyZWcgPSA8MHg4MCAweDgwPjsKKwkJaW50ZXJydXB0cyA9IDw5
+NSAyIDAgMCAgOTQgMiAwIDA+OworCX07CisKKyogU2VyaWFsIEludGVyZmFjZSBCbG9jayAoU0kp
+CisKK1RoZSBTSSBtYW5hZ2VzIHRoZSByb3V0aW5nIG9mIGVpZ2h0IFRETSBsaW5lcyB0byB0aGUg
+UUUgYmxvY2sgc2VyaWFsIGRyaXZlcnMKKywgdGhlIE1DQyBhbmQgdGhlIFVDQ3MsIGZvciByZWNl
+aXZlIGFuZCB0cmFuc21pdC4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZSA6
+IG11c3QgYmUgImZzbCw8Y2hpcD4tcWUtc2kiLiBGb3IgdDEwNDAsIG11c3QgY29udGFpbgorICAi
+ZnNsLHQxMDQwLXFlLXNpIi4KKy0gcmVnIDogQWRkcmVzcyByYW5nZSBvZiBTSSByZWdpc3RlciBz
+ZXQuCisKK0V4YW1wbGU6CisKKwlzaTE6IHNpQDcwMCB7CisJCWNvbXBhdGlibGUgPSAiZnNsLHQx
+MDQwLXFlLXNpIjsKKwkJcmVnID0gPDB4NzAwIDB4ODA+OworCX07CisKKyogU2VyaWFsIEludGVy
+ZmFjZSBCbG9jayBSQU0oU0lSQU0pCisKK3N0b3JlIHRoZSByb3V0aW5nIGVudHJpZXMgb2YgU0kK
+KworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZSA6IHNob3VsZCBiZSAiZnNsLDxj
+aGlwPi1xZS1zaXJhbSIuIEZvciB0MTA0MCwgbXVzdCBjb250YWluCisgICJmc2wsdDEwNDAtcWUt
+c2lyYW0iLgorLSByZWcgOiBBZGRyZXNzIHJhbmdlIG9mIFNJIFJBTS4KKworRXhhbXBsZToKKwor
+CXNpcmFtMTogc2lyYW1AMTAwMCB7CisJCWNvbXBhdGlibGUgPSAiZnNsLHQxMDQwLXFlLXNpcmFt
+IjsKKwkJcmVnID0gPDB4MTAwMCAweDgwMD47CisJfTsKKwogKiBRRSBGaXJtd2FyZSBOb2RlCiAK
+IFRoaXMgbm9kZSBkZWZpbmVzIGEgZmlybXdhcmUgYmluYXJ5IHRoYXQgaXMgZW1iZWRkZWQgaW4g
+dGhlIGRldmljZSB0cmVlLCBmb3IKLS0gCjIuMS4wLjI3Lmc5NmRiMzI0CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBs
+aXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9y
+Zy9saXN0aW5mby9saW51eHBwYy1kZXY=
