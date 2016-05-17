@@ -1,50 +1,44 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 1/6] drm: sun4i: do cleanup if RGB output init fails
-Date: Tue, 17 May 2016 23:56:06 +0800
-Message-ID: <1463500571-28970-2-git-send-email-wens@csie.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 4/6] ARM: dts: sun5i: q8-common: Enable USB power supply
+Date: Tue, 17 May 2016 23:56:09 +0800
+Message-ID: <1463500571-28970-5-git-send-email-wens@csie.org>
 References: <1463500571-28970-1-git-send-email-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463500571-28970-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463500571-28970-1-git-send-email-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-sun4i_rgb_init() can fail, which results in TCON failing to bind.
-In this case we need to do cleanup, specificly unregistering the
-dotclock, which is regmap based, and the regmap is registered as
-part of the sun4i_tcon_bind().
+On the A13 Q8 tablets, the PMIC's USB power supply (VBUS) is connected
+to the external OTG port. This can be used to provide power and OTG VBUS
+sensing.
 
-Failing to do so results in a NULL pointer reference when the CCF
-tries to turn off unused clocks.
-
-Fixes: 29e57fab97fc ("drm: sun4i: Add RGB output")
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/sun5i-q8-common.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 9f19b0e08560..dea673275356 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -490,7 +490,11 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- 		return 0;
- 	}
+diff --git a/arch/arm/boot/dts/sun5i-q8-common.dtsi b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+index dcaaa085ac77..8fc1b6110fb8 100644
+--- a/arch/arm/boot/dts/sun5i-q8-common.dtsi
++++ b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+@@ -176,11 +176,16 @@
+ 	status = "okay";
+ };
  
--	return sun4i_rgb_init(drm);
-+	ret = sun4i_rgb_init(drm);
-+	if (ret < 0)
-+		goto err_free_clocks;
++&usb_power_supply {
++	status = "okay";
++};
 +
-+	return 0;
- 
- err_free_clocks:
- 	sun4i_tcon_free_clocks(tcon);
+ &usbphy {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
+ 	usb0_id_det-gpio = <&pio 6 2 GPIO_ACTIVE_HIGH>; /* PG2 */
+ 	usb0_vbus_det-gpio = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
++	usb0_vbus_power-supply = <&usb_power_supply>;
+ 	usb0_vbus-supply = <&reg_usb0_vbus>;
+ 	usb1_vbus-supply = <&reg_ldo3>;
+ 	status = "okay";
 -- 
 2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
