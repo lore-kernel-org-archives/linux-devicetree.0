@@ -1,85 +1,44 @@
-From: Crestez Dan Leonard <leonard.crestez@intel.com>
-Subject: [PATCH v2 1/7] iio: inv_mpu6050: Do burst reads using spi/i2c directly
-Date: Wed, 18 May 2016 18:00:48 +0300
-Message-ID: <b4ba111a1e33f60ed4d3d21421c3250243d40fba.1463582011.git.leonard.crestez@intel.com>
-References: <cover.1463582011.git.leonard.crestez@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1463582011.git.leonard.crestez@intel.com>
-In-Reply-To: <cover.1463582011.git.leonard.crestez@intel.com>
-References: <cover.1463582011.git.leonard.crestez@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, Crestez Dan Leonard <leonard.crestez@intel.com>, Ge Gao <ggao@invensense.com>, Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v6 0/3] auxdisplay: Introduce ht16k33 driver
+Date: Wed, 18 May 2016 08:09:24 -0700
+Message-ID: <20160518150924.GA3871@kroah.com>
+References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463574199-21077-1-git-send-email-robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Using regmap_read_bulk is wrong because it assumes that a range of
-registers is being read. In our case reading from the fifo register will
-return multiple values but this is *not* auto-increment.
+On Wed, May 18, 2016 at 02:23:16PM +0200, Robin van der Gracht wrote:
+> This patchset adds a new driver to the auxdisplay subsystem. It also adds
+> devicetree bindings documentation and a new vendor prefix.
+> 
+> I added myself as maintainer to the MAINTAINERS file.
 
-This currently works by accident.
+First off, if you want me to apply patches, put me in the to: line, and
+say so, otherwise I don't know.
 
-Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
----
- drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 33 ++++++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 4 deletions(-)
+Secondly, it's the middle of the merge window, and we can't take new
+patches into our trees (go read Documentation/development_model please),
+so this will have to wait until after 4.7-rc1 is out.
 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-index d070062..8455af0 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-@@ -21,6 +21,7 @@
- #include <linux/interrupt.h>
- #include <linux/kfifo.h>
- #include <linux/poll.h>
-+#include <linux/spi/spi.h>
- #include "inv_mpu_iio.h"
- 
- static void inv_clear_kfifo(struct inv_mpu6050_state *st)
-@@ -128,6 +129,13 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
- 	u16 fifo_count;
- 	s64 timestamp;
- 
-+	struct device *regmap_dev = regmap_get_device(st->map);
-+	struct i2c_client *i2c;
-+	struct spi_device *spi = NULL;
-+
-+	i2c = i2c_verify_client(regmap_dev);
-+	spi = i2c ? NULL: to_spi_device(regmap_dev);
-+
- 	mutex_lock(&indio_dev->mlock);
- 	if (!(st->chip_config.accl_fifo_enable |
- 		st->chip_config.gyro_fifo_enable))
-@@ -160,10 +168,27 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
- 	    fifo_count / bytes_per_datum + INV_MPU6050_TIME_STAMP_TOR)
- 		goto flush_fifo;
- 	while (fifo_count >= bytes_per_datum) {
--		result = regmap_bulk_read(st->map, st->reg->fifo_r_w,
--					  data, bytes_per_datum);
--		if (result)
--			goto flush_fifo;
-+		/*
-+		 * We need to do a large burst read from a single register.
-+		 *
-+		 * regmap_read_bulk assumes that multiple registers are
-+		 * involved but in our case st->reg->fifo_r_w + 1 is something
-+		 * completely unrelated.
-+		 */
-+		if (spi) {
-+			u8 cmd = st->reg->fifo_r_w | 0x80;
-+			result = spi_write_then_read(spi,
-+					&cmd, 1,
-+					data, bytes_per_datum);
-+			if (result)
-+				goto flush_fifo;
-+		} else {
-+			result = i2c_smbus_read_i2c_block_data(i2c,
-+					st->reg->fifo_r_w,
-+					bytes_per_datum, data);
-+			if (result != bytes_per_datum)
-+				goto flush_fifo;
-+		}
- 
- 		result = kfifo_out(&st->timestamps, &timestamp, 1);
- 		/* when there is no timestamp, put timestamp as 0 */
--- 
-2.5.5
+Thirdly, I need an ack for the DT-related change before I can accept
+that, hopefully you included the correct people on it.
+
+And 4th, what is with the insane number of people on cc:?  Use
+get_maintainer.pl correctly please, and don't just hit everyone you can
+possibly think of with a cc: for no good reason.
+
+I'll put this in my "to-review" queue to look at after 4.7-rc1 is out.
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
