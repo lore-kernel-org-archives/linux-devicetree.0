@@ -1,32 +1,28 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 09/11] dt/bindings: Correct clk binding example for PIC32
- DMT.
-Date: Wed, 18 May 2016 11:51:45 -0500
-Message-ID: <20160518165145.GA4112@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 10/11] dt/bindings: Correct clk binding example for PIC32
+ WDT.
+Date: Wed, 18 May 2016 11:52:05 -0500
+Message-ID: <20160518165205.GA4407@rob-hp-laptop>
 References: <1463461560-9629-1-git-send-email-purna.mandal@microchip.com>
- <1463461560-9629-9-git-send-email-purna.mandal@microchip.com>
+ <1463461560-9629-10-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463461560-9629-9-git-send-email-purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1463461560-9629-10-git-send-email-purna.mandal@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Purna Chandra Mandal <purna.mandal@microchip.com>
+Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Joshua Henderson <joshua.henderson@microchip.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 17, 2016 at 10:35:58AM +0530, Purna Chandra Mandal wrote:
+On Tue, May 17, 2016 at 10:35:59AM +0530, Purna Chandra Mandal wrote:
 > Update binding example based on new clock binding scheme.
 > [1] Documentation/devicetree/bindings/clock/microchip,pic32.txt
 > 
-> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
 > ---
 > 
->  Documentation/devicetree/bindings/watchdog/microchip,pic32-dmt.txt | 4 ++--
+>  Documentation/devicetree/bindings/watchdog/microchip,pic32-wdt.txt | 4 ++--
 >  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
