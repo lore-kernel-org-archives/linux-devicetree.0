@@ -1,44 +1,59 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: [PATCH 1/1] arm: dts: ls1021a: Fix dspi chip select amount
-Date: Wed, 18 May 2016 16:02:03 +0200
-Message-ID: <1463580123-16713-1-git-send-email-alexander.stein@systec-electronic.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH] configfs: Remove ppos increment in configfs_write_bin_file
+Date: Wed, 18 May 2016 16:16:51 +0200
+Message-ID: <1463581011-9910-1-git-send-email-marex@denx.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The DSPI periphery has 6 chip selects.
+The simple_write_to_buffer() already increments the @ppos on success,
+see fs/libfs.c simple_write_to_buffer() comment:
 
-Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+"
+On success, the number of bytes written is returned and the offset @ppos
+advanced by this number, or negative value is returned on error.
+"
+
+If the configfs_write_bin_file() is invoked with @count smaller than the
+total length of the written binary file, it will be invoked multiple times.
+Since configfs_write_bin_file() increments @ppos on success, after calling
+simple_write_to_buffer(), the @ppos is incremented twice.
+
+Subsequent invocation of configfs_write_bin_file() will result in the next
+piece of data being written to the offset twice as long as the length of
+the previous write, thus creating buffer with "holes" in it.
+
+The simple testcase using DTO follows:
+  $ mkdir /sys/kernel/config/device-tree/overlays/1
+  $ dd bs=1 if=foo.dtbo of=/sys/kernel/config/device-tree/overlays/1/dtbo
+Without this patch, the testcase will result in twice as big buffer in the
+kernel, which is then passed to the cfs_overlay_item_dtbo_write() .
+
+Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/configfs/file.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 726372d..1406e98 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -245,7 +245,7 @@
- 			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&platform_clk 1>;
--			spi-num-chipselects = <5>;
-+			spi-num-chipselects = <6>;
- 			big-endian;
- 			status = "disabled";
- 		};
-@@ -258,7 +258,7 @@
- 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&platform_clk 1>;
--			spi-num-chipselects = <5>;
-+			spi-num-chipselects = <6>;
- 			big-endian;
- 			status = "disabled";
- 		};
+diff --git a/fs/configfs/file.c b/fs/configfs/file.c
+index 33b7ee3..bbc1252 100644
+--- a/fs/configfs/file.c
++++ b/fs/configfs/file.c
+@@ -357,8 +357,6 @@ configfs_write_bin_file(struct file *file, const char __user *buf,
+ 
+ 	len = simple_write_to_buffer(buffer->bin_buffer,
+ 			buffer->bin_buffer_size, ppos, buf, count);
+-	if (len > 0)
+-		*ppos += len;
+ out:
+ 	mutex_unlock(&buffer->mutex);
+ 	return len;
 -- 
-2.7.3
+2.7.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
