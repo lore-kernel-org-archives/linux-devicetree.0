@@ -1,62 +1,123 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/4] Add Amlogic secure monitor driver
-Date: Wed, 18 May 2016 16:56:18 +0200
-Message-ID: <1463583382-15614-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Crestez Dan Leonard <leonard.crestez@intel.com>
+Subject: [PATCH v2 2/7] iio: inv_mpu6050: Initial regcache support
+Date: Wed, 18 May 2016 18:00:49 +0300
+Message-ID: <e29974565e941e37684fcd883330915cfaf2cf47.1463582011.git.leonard.crestez@intel.com>
+References: <cover.1463582011.git.leonard.crestez@intel.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <cover.1463582011.git.leonard.crestez@intel.com>
+In-Reply-To: <cover.1463582011.git.leonard.crestez@intel.com>
+References: <cover.1463582011.git.leonard.crestez@intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, Crestez Dan Leonard <leonard.crestez@intel.com>, Ge Gao <ggao@invensense.com>, Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
+---
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 47 ++++++++++++++++++++++++++++++
+ drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  |  5 ----
+ drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  1 +
+ drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c  |  5 ----
+ 4 files changed, 48 insertions(+), 10 deletions(-)
 
-In the Amlogic SoCs the secure monitor calls are used for a lot of reasons:
-interact with the NVMEM (efuses), check the reboot reason, set USB boot, ...
-
-This driver defines a generic interface towards the secure monitor that can be
-used by more specialized drivers to interact with the secure monitor itself
-without worrying about bounce buffers managing.
-
-Changelog:
-
-v2:
-  * All the SMC function identifiers are now in a SoC-specific header file to
-    be included by the DTS files so the SMC commands are now defined in the DT
-    instead to be hardcoded into the driver
-  * Patchset is no longer an RFC
-  * Better error management and boundary checking
-  * s/unsigned int/u32/
-  * SMC call not only on CPU 0
-  * Fix memory leaking
-  * s/amlogic/meson/ in the directory names
-
-Carlo Caione (4):
-  soc: Amlogic: Add secure monitor driver
-  soc: dt-bindings: Add secure monitor header file for GXBB
-  ARM64: dts: amlogic: gxbb: Enable secure monitor
-  documentation: Add secure monitor binding documentation
-
- .../devicetree/bindings/soc/meson/meson_sm.txt     |  45 ++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   7 +
- drivers/soc/Kconfig                                |   1 +
- drivers/soc/Makefile                               |   1 +
- drivers/soc/meson/Kconfig                          |   8 ++
- drivers/soc/meson/Makefile                         |   1 +
- drivers/soc/meson/meson_sm.c                       | 155 +++++++++++++++++++++
- include/dt-bindings/soc/meson-gxbb-sm.h            |  44 ++++++
- include/linux/soc/meson/meson_sm.h                 |  22 +++
- 9 files changed, 284 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/meson/meson_sm.txt
- create mode 100644 drivers/soc/meson/Kconfig
- create mode 100644 drivers/soc/meson/Makefile
- create mode 100644 drivers/soc/meson/meson_sm.c
- create mode 100644 include/dt-bindings/soc/meson-gxbb-sm.h
- create mode 100644 include/linux/soc/meson/meson_sm.h
-
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+index b269b37..5918c23 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -116,6 +116,53 @@ static const struct inv_mpu6050_hw hw_info[] = {
+ 	},
+ };
+ 
++static bool inv_mpu6050_volatile_reg(struct device *dev, unsigned int reg)
++{
++	if (reg >= INV_MPU6050_REG_RAW_ACCEL && reg < INV_MPU6050_REG_RAW_ACCEL + 6)
++		return true;
++	if (reg >= INV_MPU6050_REG_RAW_GYRO && reg < INV_MPU6050_REG_RAW_GYRO + 6)
++		return true;
++	switch (reg) {
++	case INV_MPU6050_REG_TEMPERATURE:
++	case INV_MPU6050_REG_TEMPERATURE + 1:
++	case INV_MPU6050_REG_USER_CTRL:
++	case INV_MPU6050_REG_PWR_MGMT_1:
++	case INV_MPU6050_REG_FIFO_COUNT_H:
++	case INV_MPU6050_REG_FIFO_COUNT_H + 1:
++	case INV_MPU6050_REG_FIFO_R_W:
++		return true;
++	default:
++		return false;
++	}
++}
++
++static bool inv_mpu6050_precious_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case INV_MPU6050_REG_FIFO_R_W:
++		return true;
++	default:
++		return false;
++	}
++}
++
++/*
++ * Common regmap config for inv_mpu devices
++ *
++ * The current volatile/precious registers are common among supported devices.
++ * When that changes the volatile/precious callbacks should go through the
++ * inv_mpu6050_reg_map structs.
++ */
++const struct regmap_config inv_mpu_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.cache_type = REGCACHE_RBTREE,
++	.volatile_reg = inv_mpu6050_volatile_reg,
++	.precious_reg = inv_mpu6050_precious_reg,
++};
++EXPORT_SYMBOL_GPL(inv_mpu_regmap_config);
++
+ int inv_mpu6050_switch_engine(struct inv_mpu6050_state *st, bool en, u32 mask)
+ {
+ 	unsigned int d, mgmt_1;
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+index 1a424a6..1a8d1a5 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+@@ -20,11 +20,6 @@
+ #include <linux/module.h>
+ #include "inv_mpu_iio.h"
+ 
+-static const struct regmap_config inv_mpu_regmap_config = {
+-	.reg_bits = 8,
+-	.val_bits = 8,
+-};
+-
+ /*
+  * The i2c read/write needs to happen in unlocked mode. As the parent
+  * adapter is common. If we use locked versions, it will fail as
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+index 47ca25b..297b0ef 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+@@ -291,3 +291,4 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+ int inv_mpu_core_remove(struct device *dev);
+ int inv_mpu6050_set_power_itg(struct inv_mpu6050_state *st, bool power_on);
+ extern const struct dev_pm_ops inv_mpu_pmops;
++extern const struct regmap_config inv_mpu_regmap_config;
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+index 190a4a5..b3bd977 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+@@ -17,11 +17,6 @@
+ #include <linux/iio/iio.h>
+ #include "inv_mpu_iio.h"
+ 
+-static const struct regmap_config inv_mpu_regmap_config = {
+-	.reg_bits = 8,
+-	.val_bits = 8,
+-};
+-
+ static int inv_mpu_i2c_disable(struct iio_dev *indio_dev)
+ {
+ 	struct inv_mpu6050_state *st = iio_priv(indio_dev);
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.5
