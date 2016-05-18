@@ -1,57 +1,73 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 09/14] ARM: dts: omap4-var-som-om44: Add pdmclk binding for
- audio
-Date: Wed, 18 May 2016 16:46:31 +0300
-Message-ID: <1463579196-5484-10-git-send-email-peter.ujfalusi@ti.com>
-References: <1463579196-5484-1-git-send-email-peter.ujfalusi@ti.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] doc/devicetree: Add Aspeed VIC bindings
+Date: Wed, 18 May 2016 23:20:31 +0930
+Message-ID: <CACPK8Xe6TDdV3dC=gizXLxLjUziDFhsupUbXSuYsn6bcrAxahQ@mail.gmail.com>
+References: <462797239-14765-1-git-send-email-joel@jms.id.au>
+ <1462802317-27086-1-git-send-email-joel@jms.id.au> <1462802317-27086-2-git-send-email-joel@jms.id.au>
+ <20160511143313.GA7426@rob-hp-laptop> <1463014882.20290.203.camel@kernel.crashing.org>
+ <CAL_JsqJDGmvDxm1kN1w6NQZs0JLeA-V=X_BWi=VOaMTwftLn-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1463579196-5484-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, tony@atomide.com, lee.jones@linaro.org, robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJDGmvDxm1kN1w6NQZs0JLeA-V=X_BWi=VOaMTwftLn-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The twl6040 codec is generating the pdmclk, which is used by the McPDM as
-functional clock.
+On Fri, May 13, 2016 at 2:50 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, May 11, 2016 at 8:01 PM, Benjamin Herrenschmidt
+> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+>> On Wed, 2016-05-11 at 09:33 -0500, Rob Herring wrote:
+>>> > +- interrupt-controller : Identifies the node as an interrupt controller
+>>> > +- #interrupt-cells : Specifies the number of cells needed to encode an
+>>> > +  interrupt source. The value shall be 1.
+>>>
+>>> No need for level vs. edge flags?
+>>
+>> That's an open question. Most interrupts are fixed. A handful of GPIOs
+>> can be configured either way. For now I am relying on uboot setting up
+>> the right config for them and I read it back at boot time, but we could
+>> make it part of the binding I suppose.
+>
+> It is almost standard to just use 2 cells here even if reserved for
+> future use. Especially since the IP block seems to have registers to
+> control that.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/omap4-var-som-om44.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Yep, makes sense. I've added this to the bindings document.
 
-diff --git a/arch/arm/boot/dts/omap4-var-som-om44.dtsi b/arch/arm/boot/dts/omap4-var-som-om44.dtsi
-index a17997f4e9aa..873cfc87260c 100644
---- a/arch/arm/boot/dts/omap4-var-som-om44.dtsi
-+++ b/arch/arm/boot/dts/omap4-var-som-om44.dtsi
-@@ -189,6 +189,7 @@
- 
- 	twl6040: twl@4b {
- 		compatible = "ti,twl6040";
-+		#clock-cells = <0>;
- 		reg = <0x4b>;
- 
- 		pinctrl-names = "default";
-@@ -252,6 +253,10 @@
- &mcpdm {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mcpdm_pins>;
-+
-+	clocks = <&twl6040>;
-+	clock-names = "pdmclk";
-+
- 	status = "okay";
- };
- 
--- 
-2.8.2
+I was trying to use the second cell in our driver:
+
+  static struct irq_domain_ops avic_dom_ops = {
+          .map = avic_map,
+         .xlate = irq_domain_xlate_twocell,
+  };
+
+ So we have irq_domain_xlate_twocell to parse the device tree and
+grabs the type property from the second cell.
+
+In avic_map we set the irq handler:
+
+         if (vic->edge_sources[sidx] & sbit) {
+                 /* TODO: Check aginst type from dt and warn if not edge */
+                 irq_set_chip_and_handler(irq, &avic_chip, handle_edge_irq);
+         } else {
+                 /* TODO: Check aginst type from dt and warn if not level */
+                 irq_set_chip_and_handler(irq, &avic_chip, handle_level_irq);
+         }
+
+However, we don't have the type here, so we can't use it to check that
+we're setting the correct edge/level callback (or use it to set the
+register in the future if we want to use the device tree to override
+the bootloader settings).
+
+I had a look at some other drivers and they don't seem to use the dt
+property when mapping the irq. What am I missing here?
+
+Cheers,
+
+Joel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
