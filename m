@@ -1,39 +1,52 @@
-From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: NS2: Add all of the UARTs
-Date: Wed, 18 May 2016 13:50:14 +0800
-Message-ID: <573C0296.1060503@huawei.com>
-References: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
- <57341FCE.6050403@huawei.com>
- <CAC3K-4qbkt3DCgd6qurNo3V+++x70bbFC--aunR0DbCTBvBNZg@mail.gmail.com>
- <57353761.5020409@huawei.com>
- <CAC3K-4oXcwR--879sCFR=MCG1Uman7DoGvaHLVXWr+0QH2WeJg@mail.gmail.com>
- <57391E45.8010209@huawei.com> <573B775F.4060503@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH INTERNAL v2 1/3] Documentation: dt: Add Broadcom iproc pwm controller binding
+Date: Wed, 18 May 2016 02:53:59 -0400
+Message-ID: <1463554441-47982-2-git-send-email-yendapally.reddy@broadcom.com>
+References: <1463554441-47982-1-git-send-email-yendapally.reddy@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <573B775F.4060503-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1463554441-47982-1-git-send-email-yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add a binding for Broadcom iproc pwm controller
 
+Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/pwm/brcm,iproc-pwm.txt      | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
 
-On 2016/5/18 3:56, Florian Fainelli wrote:
-> On 05/15/2016 06:11 PM, Kefeng Wang wrote:
->>> I can confirm that with your change and the change to the bootargs you describe above, it works as desired.  Was your change already accepted?
->>>
->>
->> Great, thanks a lot. it is still being reviewing for now and waiting for response for now.
-> 
-> Then I would be inclined to take Jon's patch as-is, and follow up with
-> an additional patch to the NS2 DTS once yours lands in.
-> 
-
-Sure, please.
-
-Kefeng
+diff --git a/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
+new file mode 100644
+index 0000000..21f75bb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
+@@ -0,0 +1,21 @@
++Broadcom iProc PWM controller device tree bindings
++
++This controller has 4 channels.
++
++Required Properties :
++- compatible: must be "brcm,iproc-pwm"
++- reg: physical base address and length of the controller's registers
++- clocks: phandle + clock specifier pair for the external clock
++- #pwm-cells: Should be 3. See pwm.txt in this directory for a
++  description of the cells format.
++
++Refer to clocks/clock-bindings.txt for generic clock consumer properties.
++
++Example:
++
++pwm: pwm@18031000 {
++	compatible = "brcm,iproc-pwm";
++	reg = <0x18031000 0x28>;
++	clocks = <&osc>;
++	#pwm-cells = <3>;
++};
+-- 
+2.1.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
