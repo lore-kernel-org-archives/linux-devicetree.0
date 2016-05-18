@@ -1,102 +1,29 @@
-From: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Subject: Re:
-Date: Wed, 18 May 2016 16:01:59 -0600
-Message-ID: <CANCZdfr5=udwB3NQ+Tim8=Q90UwtXJsFU6w3gkLEZCo+gwv3Hg@mail.gmail.com>
-References: <CANCZdfow154vh3kHqUNUM6CoBsC9Vu3_+SEjFG1dz=FOkc9vsg@mail.gmail.com>
-	<CAL_Jsq+s3PjzKCaT03EaqNCoyuwDQ6dXHDF808+U=hjvvfRYdg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH INTERNAL v2 1/3] Documentation: dt: Add Broadcom iproc
+ pwm controller binding
+Date: Wed, 18 May 2016 17:15:47 -0500
+Message-ID: <20160518221546.GA32596@rob-hp-laptop>
+References: <1463554441-47982-1-git-send-email-yendapally.reddy@broadcom.com>
+ <1463554441-47982-2-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+s3PjzKCaT03EaqNCoyuwDQ6dXHDF808+U=hjvvfRYdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1463554441-47982-2-git-send-email-yendapally.reddy@broadcom.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 12:02 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> +devicetree-spec which is the right list.
->
-> On Wed, May 18, 2016 at 11:26 AM, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org> wrote:
->> Greetings,
->>
->> I was looking at the draft link posted here
->> https://github.com/devicetree-org/devicetree-specification-released/blob/master/prerelease/devicetree-specification-v0.1-pre1-20160429.pdf
->> a while ago. I hope this is the right place to ask about it.
->>
->> It raised a bit of a question. There's nothing in it talking about the
->> current
->> practice of using CPP to pre-process the .dts/.dtsi files before passing
->> them
->> into dtc to compile them into dtb.
->
-> Can't say I'm really a fan of it.
+Am I supposed to ignore since this is "internal"?
 
-Yes. But fan or no, there's a huge base that depends on it, and on some quirky
-behavior to boot. So better to accept and document and move on.
+On Wed, May 18, 2016 at 02:53:59AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
+> Add a binding for Broadcom iproc pwm controller
+> 
+> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+> ---
+>  .../devicetree/bindings/pwm/brcm,iproc-pwm.txt      | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
 
->> Normally, I see such things outside the scope of standardization. However,
->> many of the .dts files that are in the wild today use a number of #define
->> constants to make things more readable (having GPIO_ACTIVE_HIGH
->> instead of '0' makes the .dts files easier to read). However, there's a
->> small
->> issue that I've had. The files that contain those definitions are currently
->> in the Linux kernel and have a wide variety of licenses (including none
->> at all).
->
-> Yes, this is a problem. In lieu of any explicit license, I'd say the
-> license defaults to GPL. There is also the same issue with the
-> Documentation as we plan to move some of the common bindings such as
-> clocks, gpio, etc. into the spec which is Apache licensed.
-
-I tend to agree.
-
-> In both cases, we're going to need to get permission of the authors to
-> re-license. For the headers, these should be patches to the kernel.
-> For the docs, we just need to record the permission when committing
-> the addition to the spec. Neither should be too hard as they should
-> not be changing much and we have complete history in git.
-
-Personally, I'd opt to cut the original authors completely out
-of the loop and generate the files. I have nothing against the
-original authors, but to be maximally interoperable, I think this
-option should be seriously considered.
-
->> So before even getting to the notion of licenses and such (which past
->> expereince suggests may be the worst place to start a discussion), I'm
->> wondering where that will be defined, and if these #defines will become
->> part of the standard for each of the bindings that are defined.
->
-> Perhaps. We need to at least define the standard flag values if not
-> the symbolic name. I don't think it makes sense to both document and
-> maintain headers of the defines. We should ideally just have 1 source
-> for all and generate what we need from it. There's been some related
-> discussion around having machine parseable bindings as both the
-> documentation source and binding validation source, but nothing
-> concrete.
-
-I think it would make sense to have a machine-parseable format that
-allows generation of the header files. Once they become generated,
-the license issue goes away. None of these files have much creative
-content anyway, and they certainly don't need to have what little
-creative content they have if it were included as part of a
-machine-parseable file.
-
->> I'm also wondering where the larger issue of using cpp to process the dts
->> files will be discussed, since FreeBSD's BSDL dtc suffers interoperability
->> due to this issue. Having the formal spec will also be helpful for its care and
->> feeding since many fine points have had to be decided based on .dts
->> files in the wild rather than a clear spec.
->>
->> Thanks again for spear-heading the effort to get a new version out now
->> that ePAPR has fallen on hard times.
->>
->> Warner
->>
->> P.S. I'm mostly a FreeBSD guy, but just spent some time digging into this
->> issue for another of the BSDs that's considering adopting DTS files.
->
-> We certainly need and want the BSD folks involved in the spec.
-
-Excellent! There's many people that are quire interested.
-
-Warner
+Acked-by: Rob Herring <robh@kernel.org>
