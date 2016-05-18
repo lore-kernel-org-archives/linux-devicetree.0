@@ -1,73 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] [media] media: i2c/ov5645: add the device tree
- binding document
-Date: Wed, 18 May 2016 18:16:37 -0500
-Message-ID: <20160518231637.GA31413@rob-hp-laptop>
-References: <1463572208-8826-1-git-send-email-todor.tomov@linaro.org>
- <1463572208-8826-2-git-send-email-todor.tomov@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] of: add vendor prefix for Holtek Semiconductor
+Date: Wed, 18 May 2016 18:17:15 -0500
+Message-ID: <20160518231715.GA3148@rob-hp-laptop>
+References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
+ <1463574199-21077-2-git-send-email-robin@protonic.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1463572208-8826-2-git-send-email-todor.tomov@linaro.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Todor Tomov <todor.tomov@linaro.org>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, mchehab@osg.samsung.com, hverkuil@xs4all.nl, geert@linux-m68k.org, matrandg@cisco.com, linux-media@vger.kernel.org, laurent.pinchart@ideasonboard.com
+In-Reply-To: <1463574199-21077-2-git-send-email-robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 02:50:07PM +0300, Todor Tomov wrote:
-> Add the document for ov5645 device tree binding.
-> 
-> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+On Wed, May 18, 2016 at 02:23:17PM +0200, Robin van der Gracht wrote:
+> Signed-off-by: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/i2c/ov5645.txt       | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> new file mode 100644
-> index 0000000..8799000
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> @@ -0,0 +1,56 @@
-> +* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
-> +
-> +The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-> +an active array size of 2592H x 1944V. It is programmable through a serial SCCB
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-s/SCCB/I2C/ because that is the more common name.
-
-> +interface.
-> +
-> +Required Properties:
-> +- compatible: value should be "ovti,ov5645"
-> +- clocks: reference to the xclk clock
-> +- clock-names: should be "xclk"
-> +- assigned-clocks: reference to the xclk clock
-
-This should be optional as it only makes sense if there is more than one 
-option.
-
-> +- assigned-clock-rates: should be "23880000"
-
-Doesn't this depend on the board? Most parts take a range of 
-frequencies. The driver should know what the range is and request a rate 
-within this range.
-
-> +
-> +Optional Properties:
-> +- reset-gpios: Chip reset GPIO
-> +- pwdn-gpios: Chip power down GPIO
-
-Use enable-gpios as it is more common and would just be the inverse of 
-this.
-
-Both need to specify the polarity.
-
-> +- dovdd-supply: Chip IO regulator
-> +- dvdd-supply: Chip core regulator
-> +- avdd-supply: Chip analog regulator
-> +
-> +The device node must contain one 'port' child node for its digital output
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
