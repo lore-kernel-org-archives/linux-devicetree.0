@@ -1,7 +1,7 @@
 From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: [PATCH 02/11] drivers: clk: st: Add clock propagation for audio clocks
-Date: Wed, 18 May 2016 10:41:23 +0200
-Message-ID: <1463560892-7209-3-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH 07/11] ARM: DT: STiH407: Enable synchronous clock mode on clkgend2
+Date: Wed, 18 May 2016 10:41:28 +0200
+Message-ID: <1463560892-7209-8-git-send-email-gabriel.fernandez@linaro.org>
 References: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
@@ -10,83 +10,27 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian C
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, arnaud.pouliquen@st.com, benjamin.gaignard@st.com, vincent.abriou@st.com
 List-Id: devicetree@vger.kernel.org
 
-This patch allows fine tuning of the quads FS for audio clocks
-accuracy.
+This patch adds a compatibility string on clkgend2 to allow the clock
+driver to handle the synchronous/asynchronous modes of STiH407
 
 Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- .../devicetree/bindings/clock/st/st,flexgen.txt    |  1 +
- drivers/clk/st/clk-flexgen.c                       | 24 ++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+ arch/arm/boot/dts/stih407-clock.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-index b7ee5c7..15b33c7 100644
---- a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-@@ -60,6 +60,7 @@ This binding uses the common clock binding[2].
- Required properties:
- - compatible : shall be:
-   "st,flexgen"
-+  "st,stih407-clkgend0", "st,flexgen" (enable clock propagation on parent)
+diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
+index 76c6984..bdf3998 100644
+--- a/arch/arm/boot/dts/stih407-clock.dtsi
++++ b/arch/arm/boot/dts/stih407-clock.dtsi
+@@ -256,7 +256,7 @@
  
- - #clock-cells : from common clock binding; shall be set to 1 (multiple clock
-   outputs).
-diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
-index 627267c..3ff51ec 100644
---- a/drivers/clk/st/clk-flexgen.c
-+++ b/drivers/clk/st/clk-flexgen.c
-@@ -15,6 +15,10 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
+ 			clk_s_d2_flexgen: clk-s-d2-flexgen {
+ 				#clock-cells = <1>;
+-				compatible = "st,flexgen";
++				compatible = "st,stih407-clkgend2", "st,flexgen";
  
-+struct clkgen_data {
-+	unsigned long flags;
-+};
-+
- struct flexgen {
- 	struct clk_hw hw;
- 
-@@ -259,6 +263,18 @@ static const char ** __init flexgen_get_parents(struct device_node *np,
- 	return parents;
- }
- 
-+static const struct clkgen_data clkgen_d0 = {
-+	.flags = CLK_SET_RATE_PARENT,
-+};
-+
-+static const struct of_device_id flexgen_of_match[] = {
-+	{
-+		.compatible = "st,stih407-clkgend0",
-+		.data = &clkgen_d0,
-+	},
-+	{}
-+};
-+
- static void __init st_of_flexgen_setup(struct device_node *np)
- {
- 	struct device_node *pnode;
-@@ -267,6 +283,8 @@ static void __init st_of_flexgen_setup(struct device_node *np)
- 	const char **parents;
- 	int num_parents, i;
- 	spinlock_t *rlock = NULL;
-+	const struct of_device_id *match;
-+	struct clkgen_data *data = NULL;
- 	unsigned long flex_flags = 0;
- 	int ret;
- 
-@@ -282,6 +300,12 @@ static void __init st_of_flexgen_setup(struct device_node *np)
- 	if (!parents)
- 		return;
- 
-+	match = of_match_node(flexgen_of_match, np);
-+	if (match) {
-+		data = (struct clkgen_data *)match->data;
-+		flex_flags = data->flags;
-+	}
-+
- 	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
- 	if (!clk_data)
- 		goto err;
+ 				clocks = <&clk_s_d2_quadfs 0>,
+ 					 <&clk_s_d2_quadfs 1>,
 -- 
 1.9.1
