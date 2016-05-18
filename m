@@ -1,148 +1,73 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Wed, 18 May 2016 18:05:22 -0500
-Message-ID: <20160518230522.GA3198@rob-hp-laptop>
-References: <1463557590-29318-1-git-send-email-songjun.wu@atmel.com>
- <1463557590-29318-3-git-send-email-songjun.wu@atmel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] [media] media: i2c/ov5645: add the device tree
+ binding document
+Date: Wed, 18 May 2016 18:16:37 -0500
+Message-ID: <20160518231637.GA31413@rob-hp-laptop>
+References: <1463572208-8826-1-git-send-email-todor.tomov@linaro.org>
+ <1463572208-8826-2-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463557590-29318-3-git-send-email-songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1463572208-8826-2-git-send-email-todor.tomov@linaro.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, mchehab@osg.samsung.com, hverkuil@xs4all.nl, geert@linux-m68k.org, matrandg@cisco.com, linux-media@vger.kernel.org, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 03:46:29PM +0800, Songjun Wu wrote:
-> DT binding documentation for ISC driver.
+On Wed, May 18, 2016 at 02:50:07PM +0300, Todor Tomov wrote:
+> Add the document for ov5645 device tree binding.
 > 
-> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
 > ---
+>  .../devicetree/bindings/media/i2c/ov5645.txt       | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
 > 
-> Changes in v2:
-> - Remove the unit address of the endpoint.
-> - Add the unit address to the clock node.
-> - Avoid using underscores in node names.
-> - Drop the "0x" in the unit address of the i2c node.
-> - Modify the description of "atmel,sensor-preferred".
-> - Add the description for the ISC internal clock.
-> 
->  .../devicetree/bindings/media/atmel-isc.txt        | 100 +++++++++++++++++++++
->  1 file changed, 100 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
 > new file mode 100644
-> index 0000000..9e65395
+> index 0000000..8799000
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> @@ -0,0 +1,100 @@
-> +Atmel Image Sensor Controller (ISC)
-> +----------------------------------------------
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> @@ -0,0 +1,56 @@
+> +* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
 > +
-> +Required properties for ISC:
-> +- compatible
-> +	Must be "atmel,sama5d2-isc"
-> +- reg
-> +	Physical base address and length of the registers set for the device;
-> +- interrupts
-> +	Should contain IRQ line for the ISC;
-> +- clocks
-> +	List of clock specifiers, corresponding to entries in
-> +	the clock-names property;
-> +	Please refer to clock-bindings.txt.
-> +- clock-names
-> +	Required elements: "hclock", "ispck".
-> +- pinctrl-names, pinctrl-0
-> +	Please refer to pinctrl-bindings.txt.
-> +- clk-in-isc
-> +	ISC internal clock node, it includes two clock nodes,
-> +	isc-ispck and isc-mck.
+> +The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+> +an active array size of 2592H x 1944V. It is programmable through a serial SCCB
 
-And you need to describe each of these nodes and the properties they 
-have. But more on this below...
+s/SCCB/I2C/ because that is the more common name.
 
-> +- atmel,sensor-preferred
-> +	ISC may convert the raw format to the specified format when the sensor
-> +	outputs the raw format, and the sensor may output the specified format
-> +	directly. If sensor is preferred to output the specified format
-> +	directly, the value should be 1 (1-preferred, 0-not).
-> +	The default value is 1.
+> +interface.
+> +
+> +Required Properties:
+> +- compatible: value should be "ovti,ov5645"
+> +- clocks: reference to the xclk clock
+> +- clock-names: should be "xclk"
+> +- assigned-clocks: reference to the xclk clock
 
-I don't think this belongs in DT. It sounds more like a configuration 
-and userspace decision. It is still not clear what you mean by 
-"specified format".
+This should be optional as it only makes sense if there is more than one 
+option.
+
+> +- assigned-clock-rates: should be "23880000"
+
+Doesn't this depend on the board? Most parts take a range of 
+frequencies. The driver should know what the range is and request a rate 
+within this range.
 
 > +
-> +ISC supports a single port node with parallel bus. It should contain one
-> +'port' child node with child 'endpoint' node. Please refer to the bindings
-> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Required properties for the ISC internal clocks:
-> +- #address-cells
-> +	should be 1 (reg is used to encode clk id).
-> +- #size-cells
-> +	should be 0 (reg is used to encode clk id).
-> +- name
-> +	device tree node describing a ISC internal clock.
-> +	* #clock-cells: from common clock binding; should be set to 0.
-> +	* reg: clock id, there are two values,
-> +	       <0> is ISP clock, <1> is master clock.
-> +	* clocks: shall be the isc internal clock source phandles.
-> +		  e.g. clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-> +
-> +Example:
-> +isc: isc@f0008000 {
-> +	compatible = "atmel,sama5d2-isc";
-> +	reg = <0xf0008000 0x4000>;
-> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
-> +	clocks = <&isc_clk>, <&isc_ispck>;
-> +	clock-names = "hclock", "ispck";
-> +	atmel,sensor-preferred = <1>;
-> +
-> +	port {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		isc_0: endpoint {
-> +			remote-endpoint = <&ov7740_0>;
-> +			hsync-active = <1>;
-> +			vsync-active = <0>;
-> +			pclk-sample = <1>;
-> +		};
-> +	};
-> +
-> +	clk-in-isc {
+> +Optional Properties:
+> +- reset-gpios: Chip reset GPIO
+> +- pwdn-gpios: Chip power down GPIO
 
-Is this really separate from the rest of the isc block. It would be 
-much more simple to define all the input clocks at the parent and then 
-reference these 2 clocks with <&isc 0> and <&isc 1>.
+Use enable-gpios as it is more common and would just be the inverse of 
+this.
 
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+Both need to specify the polarity.
+
+> +- dovdd-supply: Chip IO regulator
+> +- dvdd-supply: Chip core regulator
+> +- avdd-supply: Chip analog regulator
 > +
-> +		isc_ispck: isc-ispck@0 {
-
-These would need a compatible string otherwise.
-
-> +			#clock-cells = <0>;
-> +			reg = <0>;
-
-Are 0 and 1 meaningful in terms of the hardware description?
-
-> +			clocks = <&isc_clk>, <&iscck>;
-> +		};
-> +
-> +		isc_mck: isc-mck@1 {
-> +			#clock-cells = <0>;
-> +			reg = <1>;
-> +			clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-> +		};
-> +	};
-> +};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +The device node must contain one 'port' child node for its digital output
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
