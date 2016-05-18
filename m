@@ -1,14 +1,15 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: [PATCH 05/11] ARM: DT: STiH410: Add compatibility string on clkgend0
- for audio clocks
-Date: Wed, 18 May 2016 10:41:26 +0200
-Message-ID: <1463560892-7209-6-git-send-email-gabriel.fernandez@linaro.org>
-References: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RESEND PATCH v6 0/6] Add Ethernet support on STM32F429
+Date: Wed, 18 May 2016 11:31:17 +0200
+Message-ID: <2535270.dCFPoM2olB@wuerfel>
+References: <1462789899-13153-1-git-send-email-alexandre.torgue@gmail.com>
+ <20160517.122527.1937360418899371800.davem@davemloft.net>
+ <CALszF6AE7jkRX3sSNm=PCvEmkmZM-Sv5LxFSj7J3vMbvi8M5Cg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
+In-Reply-To: <CALszF6AE7jkRX3sSNm=PCvEmkmZM-Sv5LxFSj7J3vMbvi8M5Cg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,31 +19,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, vincent.abriou@st.com, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, netdev@vger.kernel.org, Joachim Eastwood <manabian@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Alexandre Torgue <alexandre.torgue@gmail.com>, Olof Johansson <olof@lixom.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch is used in the clock driver to apply a clock propagation
-flag on the audio clocks of STiH410
+On Wednesday 18 May 2016 09:48:53 Maxime Coquelin wrote:
+> 2016-05-17 18:25 GMT+02:00 David Miller <davem@davemloft.net>:
+> > From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> > Date: Tue, 17 May 2016 11:20:16 +0200
+> >
+> >> Hi David,
+> >>
+> >> 2016-05-09 21:06 GMT+02:00 David Miller <davem@davemloft.net>:
+> >>> From: Alexandre TORGUE <alexandre.torgue@gmail.com>
+> >>> Date: Mon,  9 May 2016 12:31:33 +0200
+> >>>
+> >>>> STM32F429 Chip embeds a Synopsys 3.50a MAC IP.
+> >>>> This series:
+> >>>>  -enhance current stmmac driver to control it (code already
+> >>>> available) and adds basic glue for STM32F429 chip.
+> >>>>  -Enable basic Net config in kernel.
+> >>>
+> >>> I assume this will go via the ARM tree, for the networking bits:
+> >> I would expect patches 1, 2 & 3 to got via your tree, to avoid conflicts.
+> >
+> > I don't think putting them all via the ARM tree is going to create much
+> > in the way of conflicts, and right now during the merge window offloading
+> > that work from me would really help my backlog a lot.
+> 
+> Ok, I understand this is not the best time to pick it.
+> 
+> Arnd, Olof & Kevin, would you accept to pick the series in your tree?
+> 
 
-Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- arch/arm/boot/dts/stih410-clock.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It's too late for v4.7 for us too, please pick up the arch/arm patches
+in your normal stm32 tree and send them to us along with any other changes
+you may have, and resend the driver by itself to netdev time after the
+merge window.
 
-diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
-index d1f2aca..c265e54 100644
---- a/arch/arm/boot/dts/stih410-clock.dtsi
-+++ b/arch/arm/boot/dts/stih410-clock.dtsi
-@@ -226,7 +226,7 @@
- 
- 			clk_s_d0_flexgen: clk-s-d0-flexgen {
- 				#clock-cells = <1>;
--				compatible = "st,flexgen";
-+				compatible = "st,stih407-clkgend0", "st,flexgen";
- 
- 				clocks = <&clk_s_d0_quadfs 0>,
- 					 <&clk_s_d0_quadfs 1>,
--- 
-1.9.1
+The binding document can go either way, with the dts changes or with
+the driver. I see no dependencies between the patches, so we just need
+to land them all in v4.8.
+
+	Arnd
