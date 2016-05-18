@@ -1,42 +1,92 @@
 From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: [PATCH 00/11] Clock improvement for video playback
-Date: Wed, 18 May 2016 10:41:21 +0200
-Message-ID: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
+Subject: [PATCH 02/11] drivers: clk: st: Add clock propagation for audio clocks
+Date: Wed, 18 May 2016 10:41:23 +0200
+Message-ID: <1463560892-7209-3-git-send-email-gabriel.fernandez@linaro.org>
+References: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, arnaud.pouliquen@st.com, benjamin.gaignard@st.com, vincent.abriou@st.com
 List-Id: devicetree@vger.kernel.org
 
-This serie allows to increase video resolutions and make audio
-adjustment during a video playback.
+This patch allows fine tuning of the quads FS for audio clocks
+accuracy.
 
-Gabriel Fernandez (11):
-  drivers: clk: st: Add fs660c32 synthesizer algorithm
-  drivers: clk: st: Add clock propagation for audio clocks
-  drivers: clk: st: Handle clkgenD2 clk synchronous mode
-  ARM: DT: STiH407: Add compatibility string on clkgend0 for audio
-    clocks
-  ARM: DT: STiH410: Add compatibility string on clkgend0 for audio
-    clocks
-  ARM: DT: STiH418: Add compatibility string on clkgend0 for audio
-    clocks
-  ARM: DT: STiH407: Enable synchronous clock mode on clkgend2
-  ARM: DT: STiH410: Enable synchronous clock mode on clkgend2
-  ARM: DT: STiH418: Enable synchronous clock mode on clkgend2
-  ARM: DT: STi: STiH407: clock configuration to address 720p and 1080p
-  ARM: DT: STi: STiH410: clock configuration to address 720p and 1080p
+Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ .../devicetree/bindings/clock/st/st,flexgen.txt    |  1 +
+ drivers/clk/st/clk-flexgen.c                       | 24 ++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
- .../devicetree/bindings/clock/st/st,flexgen.txt    |   3 +
- arch/arm/boot/dts/stih407-clock.dtsi               |   4 +-
- arch/arm/boot/dts/stih407.dtsi                     |  16 ++-
- arch/arm/boot/dts/stih410-clock.dtsi               |   4 +-
- arch/arm/boot/dts/stih410.dtsi                     |  16 ++-
- arch/arm/boot/dts/stih418-clock.dtsi               |   4 +-
- drivers/clk/st/clk-flexgen.c                       |  61 +++++++-
- drivers/clk/st/clkgen-fsyn.c                       | 159 +++++++++++++++------
- 8 files changed, 211 insertions(+), 56 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+index b7ee5c7..15b33c7 100644
+--- a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
++++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+@@ -60,6 +60,7 @@ This binding uses the common clock binding[2].
+ Required properties:
+ - compatible : shall be:
+   "st,flexgen"
++  "st,stih407-clkgend0", "st,flexgen" (enable clock propagation on parent)
+ 
+ - #clock-cells : from common clock binding; shall be set to 1 (multiple clock
+   outputs).
+diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+index 627267c..3ff51ec 100644
+--- a/drivers/clk/st/clk-flexgen.c
++++ b/drivers/clk/st/clk-flexgen.c
+@@ -15,6 +15,10 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ 
++struct clkgen_data {
++	unsigned long flags;
++};
++
+ struct flexgen {
+ 	struct clk_hw hw;
+ 
+@@ -259,6 +263,18 @@ static const char ** __init flexgen_get_parents(struct device_node *np,
+ 	return parents;
+ }
+ 
++static const struct clkgen_data clkgen_d0 = {
++	.flags = CLK_SET_RATE_PARENT,
++};
++
++static const struct of_device_id flexgen_of_match[] = {
++	{
++		.compatible = "st,stih407-clkgend0",
++		.data = &clkgen_d0,
++	},
++	{}
++};
++
+ static void __init st_of_flexgen_setup(struct device_node *np)
+ {
+ 	struct device_node *pnode;
+@@ -267,6 +283,8 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 	const char **parents;
+ 	int num_parents, i;
+ 	spinlock_t *rlock = NULL;
++	const struct of_device_id *match;
++	struct clkgen_data *data = NULL;
+ 	unsigned long flex_flags = 0;
+ 	int ret;
+ 
+@@ -282,6 +300,12 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 	if (!parents)
+ 		return;
+ 
++	match = of_match_node(flexgen_of_match, np);
++	if (match) {
++		data = (struct clkgen_data *)match->data;
++		flex_flags = data->flags;
++	}
++
+ 	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+ 	if (!clk_data)
+ 		goto err;
 -- 
 1.9.1
-
