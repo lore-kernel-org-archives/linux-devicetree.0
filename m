@@ -1,63 +1,215 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 0/6] ARM: dts: sun5i: q8-common: Enable various peripherals
-Date: Wed, 18 May 2016 10:13:52 +0200
-Message-ID: <abbb9686-bbc7-cfad-ec1d-e5f099ac124b@redhat.com>
-References: <1463500571-28970-1-git-send-email-wens@csie.org>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: Re: [RFC 2/3] drm/mediatek: add support for Mediatek SoC MT2701
+Date: Wed, 18 May 2016 16:33:21 +0800
+Message-ID: <1463560401.8576.15.camel@mtksdaap41>
+References: <1463053795-55455-1-git-send-email-yt.shen@mediatek.com>
+	 <1463053795-55455-3-git-send-email-yt.shen@mediatek.com>
+	 <CACvgo52qc4E=MAGLoCaUH+GZuyvPexHchZnvuv-fF8P23e_1Uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1463500571-28970-1-git-send-email-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACvgo52qc4E=MAGLoCaUH+GZuyvPexHchZnvuv-fF8P23e_1Uw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, ML dri-devel <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2hlbi1ZdSwKCk9uIDE3LTA1LTE2IDE3OjU2LCBDaGVuLVl1IFRzYWkgd3JvdGU6Cj4gSGkg
-ZXZlcnlvbmUsCj4KPiBUaGlzIHNlcmllcyBlbmFibGVzIG1vcmUgcGVyaXBoZXJhbHMgZm9yIEFs
-bHdpbm5lciBBMTMtYmFzZWQgUTggZGV2aWNlcy4KPiBUaGUgcGVyaXBoZXJhbHMgaW5jbHVkZSB0
-aGUgV2lGaSwgdGhlIFBNSUMncyBtaWNyby11c2IgcG93ZXIgc3VwcGx5Cj4gKGRyaXZlciksIGF1
-ZGlvIGNvZGVjIChoZWFkcGhvbmUgYW5kIHNwZWFrZXIpLCBhbmQgZnVsbCBkaXNwbGF5IHN1cHBv
-cnQKPiB3aXRoIHRoZSBuZXcgRFJNIEtNUyBkcml2ZXIuIFRoZSBzZXJpZXMgaXMgYmFzZWQgb24g
-cGFydHMgb2YgTWF4aW1lJ3MKPiAiZHJtOiBBZGQgU3VwcG9ydCBmb3IgUGFzc2l2ZSBSR0IgdG8g
-VkdBIGJyaWRnZXMiIHNlcmllcywgc3BlY2lmaWNhbGx5Cj4gdGhlIGNsayBhbmQgZHJtIGZpeGVz
-LCBhbmQgY29tbW9uIERUUyBiaXRzLgo+Cj4gSGFucywgc2luY2UgeW91IGhhdmUgYSBjb2xsZWN0
-aW9uIG9mIHE4IHRhYmxldHMsIEknbSBob3BpbmcgeW91IGNvdWxkCj4gdGVzdCB0aGVzZSBiaXRz
-IGFuZCBwcm92aWRlIHNvbWUgZmVlZGJhY2suCgpJJ3ZlIG5vdCBydW4gYW55IHRlc3RzLCBqdXN0
-IGxvb2tlZCBhdCB0aGUgcGF0Y2hlcywgdGhlIHN0dWZmIGluCnBhdGNoIDMgaXMgYWxyZWFkeSBw
-cmVzZW50IGluIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjVpLWExMy1xOC10YWJsZXQuZHRzCkkgcHV0
-IGl0IHRoZXJlIGJlY2F1c2UgSSBzYXcgc29tZSAuZmV4IGZpbGVzIHdoaWNoIGRvbid0IHVzZSBs
-ZG8zIGZvciB3aWZpCkknbSBmaW5lIHdpdGggbW92aW5nIGl0IHRvIC1jb21tb24gdGhvdWdoLCBJ
-IGJlbGlldmUgdGhhdCB5b3UncmUgcmlnaHQKdGhhdCBpdCBtYWtlcyBtb3JlIHNlbnNlIHRoZXJl
-LCBoYXZpbmcgaXQgaW4gMiBwbGFjZXMgaXMgbm90IHJlYWxseQp1c2VmdWwgdGhvdWdoLgoKVGhl
-IG90aGVyIHBhdGNoZXMgbG9vayBnb29kLgoKVGhhbmtzICYgUmVnYXJkcywKCkhhbnMKCgo+Cj4K
-PiBQYXRjaCAxIGlzIGEgc21hbGwgZml4IGZvciBwYXJ0IG9mIHRoZSBpbml0IGZhaWx1cmUgcGF0
-aC4KPgo+IFBhdGNoIDIgZGlzYWJsZXMgbGRvNSBvbiB0aGUgYXhwMjA5IGJ5IGRlZmF1bHQuIFRo
-aXMgcmVndWxhdG9yIG91dHB1dCBpcwo+IG11eGVkIHdpdGggYSBncGlvLCBhbmQgdGhlIHJlZ3Vs
-YXRvciBvbi9vZmYgc2V0dGluZ3Mgb3ZlcnJpZGUgdGhlIGdwaW8uCj4KPiBQYXRjaCAzIGVuYWJs
-ZXMgdGhlIFVTQiBXaUZpIG1vZHVsZSBmb3VuZC4KPgo+IFBhdGNoIDQgZW5hYmxlcyB0aGUgVVNC
-L1ZCVVMgcG93ZXIgc3VwcGx5IG9mIHRoZSBQTUlDLgo+Cj4gUGF0Y2ggNSBlbmFibGVzIHRoZSBh
-dWRpbyBjb2RlYywgd2l0aCBzdXBwb3J0IGZvciB0aGUgc3BlYWtlciBhbXAuCj4KPiBQYXRjaCA2
-IGVuYWJsZXMgdGhlIExDRCBwYW5lbCB3aXRoIHRoZSBkaXNwbGF5IHBpcGVsaW5lLgo+Cj4KPiBS
-ZWdhcmRzCj4gQ2hlbll1Cj4KPgo+IENoZW4tWXUgVHNhaSAoNik6Cj4gICBkcm06IHN1bjRpOiBk
-byBjbGVhbnVwIGlmIFJHQiBvdXRwdXQgaW5pdCBmYWlscwo+ICAgQVJNOiBkdHM6IGF4cDIwOTog
-RGlzYWJsZSBsZG81IGJ5IGRlZmF1bHQKPiAgIEFSTTogZHRzOiBzdW41aTogcTgtY29tbW9uOiBF
-bmFibGUgVVNCLWJhc2VkIFdpRmkKPiAgIEFSTTogZHRzOiBzdW41aTogcTgtY29tbW9uOiBFbmFi
-bGUgVVNCIHBvd2VyIHN1cHBseQo+ICAgQVJNOiBkdHM6IHN1bjVpOiBxOC1jb21tb246IEVuYWJs
-ZSBhdWRpbyBjb2RlYwo+ICAgQVJNOiBkdHM6IHN1bjVpOiBxOC1jb21tb246IEVuYWJsZSBkaXNw
-bGF5IHBpcGVsaW5lIGFuZCBMQ0QgZGlzcGxheQo+Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2F4cDIw
-OS5kdHNpICAgICAgICAgIHwgIDEgKwo+ICBhcmNoL2FybS9ib290L2R0cy9zdW41aS1xOC1jb21t
-b24uZHRzaSB8IDYyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVy
-cy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyAgICAgfCAgNiArKystCj4gIDMgZmlsZXMgY2hh
-bmdlZCwgNjggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Emil,
+
+On Tue, 2016-05-17 at 10:55 +0100, Emil Velikov wrote:
+> Hi YT Shen,
+> 
+> On 12 May 2016 at 12:49,  <yt.shen@mediatek.com> wrote:
+> > From: YT Shen <yt.shen@mediatek.com>
+> >
+> > This patch add support for the Mediatek MT2701 DISP subsystem.
+> > There is only one OVL engine in MT2701, and we have shadow
+> > register support here.
+> >
+> > Signed-off-by: YT Shen <yt.shen@mediatek.com>
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |   49 ++++++---
+> >  drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |   36 +++++--
+> >  drivers/gpu/drm/mediatek/mtk_drm_crtc.c     |   78 +++++++++-----
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c      |  151 ++++++++++++++++++++-------
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.h      |    2 +
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |   63 +++++++++--
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |   15 +++
+> >  drivers/gpu/drm/mediatek/mtk_drm_drv.c      |   72 +++++++++++--
+> >  drivers/gpu/drm/mediatek/mtk_drm_drv.h      |    9 ++
+> >  drivers/gpu/drm/mediatek/mtk_drm_gem.c      |    4 +
+> >  10 files changed, 373 insertions(+), 106 deletions(-)
+> >
+> This patch does a bit too many things at once imho
+>  - Renames existing macros
+>  - Factors out helper functions - mtk_crtc_ddp_config and alike.
+>  - Introduces *driver_data for existing hardware and uses it
+>  - and adds support for the different hardware.
+> 
+> I'm no expert in the area, but it feels like you want to split things
+> roughly as per above.
+> A rather serious mali note and some "this should be const" follow
+> suggestions inline.
+Thanks for your suggestions.  I will split this patch into several small
+patches.  They are easier to understand, and easier to review.
+> 
+> 
+> >
+> > +static struct mtk_ddp_comp_driver_data mt2701_ovl_driver_data = {
+> > +       .ovl = {0x0040, 1 << 12, 0}
+> > +};
+> > +
+> > +static struct mtk_ddp_comp_driver_data mt8173_ovl_driver_data = {
+> > +       .ovl = {0x0f40, 0, 1 << 12}
+> > +};
+> > +
+> These two should be const right ?
+Yes, they should.
+> 
+> 
+> >
+> > +static struct mtk_ddp_comp_driver_data mt2701_rdma_driver_data = {
+> > +       .rdma_fifo_pseudo_size = SZ_4K,
+> > +};
+> > +
+> > +static struct mtk_ddp_comp_driver_data mt8173_rdma_driver_data = {
+> > +       .rdma_fifo_pseudo_size = SZ_8K,
+> > +};
+> > +
+> Same here.
+OK.
+> 
+> 
+> >
+> > -#define MUTEX_MOD_DISP_OVL0            BIT(11)
+> > -#define MUTEX_MOD_DISP_OVL1            BIT(12)
+> > -#define MUTEX_MOD_DISP_RDMA0           BIT(13)
+> > -#define MUTEX_MOD_DISP_RDMA1           BIT(14)
+> > -#define MUTEX_MOD_DISP_RDMA2           BIT(15)
+> > -#define MUTEX_MOD_DISP_WDMA0           BIT(16)
+> > -#define MUTEX_MOD_DISP_WDMA1           BIT(17)
+> > -#define MUTEX_MOD_DISP_COLOR0          BIT(18)
+> > -#define MUTEX_MOD_DISP_COLOR1          BIT(19)
+> > -#define MUTEX_MOD_DISP_AAL             BIT(20)
+> > -#define MUTEX_MOD_DISP_GAMMA           BIT(21)
+> > -#define MUTEX_MOD_DISP_UFOE            BIT(22)
+> > -#define MUTEX_MOD_DISP_PWM0            BIT(23)
+> > -#define MUTEX_MOD_DISP_PWM1            BIT(24)
+> > -#define MUTEX_MOD_DISP_OD              BIT(25)
+> > +#define MUTEX_MOD_MT8173_DISP_OVL0             BIT(11)
+> > +#define MUTEX_MOD_MT8173_DISP_OVL1             BIT(12)
+> > +#define MUTEX_MOD_MT8173_DISP_RDMA0            BIT(13)
+> > +#define MUTEX_MOD_MT8173_DISP_RDMA1            BIT(14)
+> > +#define MUTEX_MOD_MT8173_DISP_RDMA2            BIT(15)
+> > +#define MUTEX_MOD_MT8173_DISP_WDMA0            BIT(16)
+> > +#define MUTEX_MOD_MT8173_DISP_WDMA1            BIT(17)
+> > +#define MUTEX_MOD_MT8173_DISP_COLOR0           BIT(18)
+> > +#define MUTEX_MOD_MT8173_DISP_COLOR1           BIT(19)
+> > +#define MUTEX_MOD_MT8173_DISP_AAL              BIT(20)
+> > +#define MUTEX_MOD_MT8173_DISP_GAMMA            BIT(21)
+> > +#define MUTEX_MOD_MT8173_DISP_UFOE             BIT(22)
+> > +#define MUTEX_MOD_MT8173_DISP_PWM0             BIT(23)
+> > +#define MUTEX_MOD_MT8173_DISP_PWM1             BIT(24)
+> > +#define MUTEX_MOD_MT8173_DISP_OD               BIT(25)
+> > +
+> > +#define MUTEX_MOD_MT2701_DISP_OVL              BIT(3)
+> > +#define MUTEX_MOD_MT2701_DISP_WDMA             BIT(6)
+> > +#define MUTEX_MOD_MT2701_DISP_COLOR            BIT(7)
+> > +#define MUTEX_MOD_MT2701_DISP_BLS              BIT(9)
+> > +#define MUTEX_MOD_MT2701_DISP_RDMA0            BIT(10)
+> > +#define MUTEX_MOD_MT2701_DISP_RDMA1            BIT(12)
+> >
+> Even though the driver not does use a unique prefix/namespace for
+> these macros (which it should imho), it's better to keep the hardware
+> name/part first. Ideally the rename will be a separate patch.
+OK, I will rename the macros and put it in a separate patch.
+> 
+> 
+> > @@ -131,6 +153,32 @@ static const struct mtk_ddp_comp_match mtk_ddp_matches[DDP_COMPONENT_ID_MAX] = {
+> >         [DDP_COMPONENT_WDMA1]   = { MTK_DISP_WDMA,      1, NULL },
+> >  };
+> >
+> > +static struct mtk_ddp_comp_driver_data mt2701_color_driver_data = {
+> > +       .color_offset = 0x0f00,
+> > +};
+> > +
+> > +static struct mtk_ddp_comp_driver_data mt8173_color_driver_data = {
+> > +       .color_offset = 0x0c00,
+> > +};
+> > +
+> const again ? You can even tweak the *_get_driver_data helpers, to
+> return const struct foo*, and resolve the odd warning that the
+> compiler will give you.
+OK, I will do it in the next version.
+> 
+> 
+> >  struct mtk_ddp_comp {
+> >         struct clk *clk;
+> >         void __iomem *regs;
+> > @@ -82,6 +96,7 @@ struct mtk_ddp_comp {
+> >         struct device *larb_dev;
+> >         enum mtk_ddp_comp_id id;
+> >         const struct mtk_ddp_comp_funcs *funcs;
+> > +       struct mtk_ddp_comp_driver_data *data;
+> const
+OK.
+> 
+> 
+> > +static struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
+> > +       .main_path = mtk_ddp_main_2701,
+> > +       .main_len = ARRAY_SIZE(mtk_ddp_main_2701),
+> > +       .ext_path = mtk_ddp_ext_2701,
+> > +       .ext_len = ARRAY_SIZE(mtk_ddp_ext_2701),
+> > +       .shadow_register = true,
+> > +};
+> > +
+> > +static struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
+> > +       .main_path = mtk_ddp_main_8173,
+> > +       .main_len = ARRAY_SIZE(mtk_ddp_main_8173),
+> > +       .ext_path = mtk_ddp_ext_8173,
+> > +       .ext_len = ARRAY_SIZE(mtk_ddp_ext_8173),
+> > +       .shadow_register = false,
+> > +};
+> > +
+> const
+OK.
+> 
+> 
+> > @@ -40,6 +48,7 @@ struct mtk_drm_private {
+> >         void __iomem *config_regs;
+> >         struct device_node *comp_node[DDP_COMPONENT_ID_MAX];
+> >         struct mtk_ddp_comp *ddp_comp[DDP_COMPONENT_ID_MAX];
+> > +       struct mtk_mmsys_driver_data *data;
+> const ?
+Yes.
+> 
+> 
+> > @@ -108,6 +108,10 @@ int mtk_drm_gem_dumb_create(struct drm_file *file_priv, struct drm_device *dev,
+> >         int ret;
+> >
+> >         args->pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
+> > +       /*
+> > +       * align to 8 bytes since Mali requires it.
+> > +       */
+> > +       args->pitch = ALIGN(args->pitch, 8);
+> Are you sure we need this, based on the line just above ?
+I think bpp stands for bits per pixel, so width * bpp / 8 simply transfer from bits to bytes, which
+cannot guarantee align to 8.
+
+I will remove this align part from the patch, this constraint is not from display controller.
+Thanks.
+
+
+> 
+> Iirc we had a chat earlier that upstream kernel code should not be
+> tailoured for the needs to closed source userspace... seems like the
+> comment got removed but the code remained. Philipp Zabel I believe you
+> were the person who did the original upstreaming - can we remove this
+> hack/workaround and keep it downstream until we have an open-source
+> user that requires it ?
+> 
+> Can we have a MAINTAINERS entry for this driver ?
+> 
+> Thanks
+> Emil
