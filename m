@@ -1,373 +1,46 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] i2c: Add STM32F4 I2C driver
-Date: Wed, 18 May 2016 09:24:50 +0200
-Message-ID: <CAOAejn0Fsizp9fK1mNn3BBeL2LeoVgt5_zF5656La4G2uDPH7g@mail.gmail.com>
-References: <1462980974-22091-1-git-send-email-cedric.madianga@gmail.com>
-	<1462980974-22091-3-git-send-email-cedric.madianga@gmail.com>
-	<CALszF6A-jiCBtSO1RFDdgHKTKmsonRXFVs0x2zHha1LJ3UhwtQ@mail.gmail.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [RESEND PATCH v6 0/6] Add Ethernet support on STM32F429
+Date: Wed, 18 May 2016 09:48:53 +0200
+Message-ID: <CALszF6AE7jkRX3sSNm=PCvEmkmZM-Sv5LxFSj7J3vMbvi8M5Cg@mail.gmail.com>
+References: <1462789899-13153-1-git-send-email-alexandre.torgue@gmail.com>
+	<20160509.150634.213732321950308841.davem@davemloft.net>
+	<CALszF6Cfs02-tGvFqpyJpUy7jSfjGTY8fVaaLQ8iQaGfCxvDtQ@mail.gmail.com>
+	<20160517.122527.1937360418899371800.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALszF6A-jiCBtSO1RFDdgHKTKmsonRXFVs0x2zHha1LJ3UhwtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160517.122527.1937360418899371800.davem@davemloft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>
+Cc: Alexandre Torgue <alexandre.torgue@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Joachim Eastwood <manabian@gmail.com>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-2016-05-17 11:48 GMT+02:00 Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Hi Cedric,
+2016-05-17 18:25 GMT+02:00 David Miller <davem@davemloft.net>:
+> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Date: Tue, 17 May 2016 11:20:16 +0200
 >
-> 2016-05-11 17:36 GMT+02:00 M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> This patch adds support for the STM32F4 I2C controller.
+>> Hi David,
 >>
->> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/i2c/busses/Kconfig       |  10 +
->>  drivers/i2c/busses/Makefile      |   1 +
->>  drivers/i2c/busses/i2c-stm32f4.c | 872 +++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 883 insertions(+)
->>  create mode 100644 drivers/i2c/busses/i2c-stm32f4.c
->>
-> ...
->> diff --git a/drivers/i2c/busses/i2c-stm32f4.c b/drivers/i2c/busses/i2c-stm32f4.c
->> new file mode 100644
->> index 0000000..4692213
->> --- /dev/null
->> +++ b/drivers/i2c/busses/i2c-stm32f4.c
-> ...
->> +enum stm32f4_i2c_speed {
->> +       STM32F4_I2C_SPEED_STANDARD, /* 100 kHz */
->> +       STM32F4_I2C_SPEED_FAST, /* 400 kHz */
->> +       STM32F4_I2C_SPEED_END,
->> +};
->> +
->> +/**
->> + * struct stm32f4_i2c_timings - per-Mode tuning parameters
->> + * @rate: I2C bus rate
->> + * @duty: Fast mode duty cycle
->> + */
->> +struct stm32f4_i2c_timings {
->> +       u32 rate;
->> +       u32 duty;
->> +};
-> ...
->> +/**
->> + * struct stm32f4_i2c_dev - private data of the controller
->> + * @adap: I2C adapter for this controller
->> + * @dev: device for this controller
->> + * @base: virtual memory area
->> + * @complete: completion of I2C message
->> + * @irq_event: interrupt event line for the controller
->> + * @irq_error: interrupt error line for the controller
->> + * @clk: hw i2c clock
->> + * speed: I2C clock frequency of the controller. Standard or Fast only supported
->> + * @client: I2C transfer information
->> + * @busy: I2C transfer on-going
->> + * @rst: I2C reset line
->> + */
->> +struct stm32f4_i2c_dev {
->> +       struct i2c_adapter              adap;
->> +       struct device                   *dev;
->> +       void __iomem                    *base;
->> +       struct completion               complete;
->> +       int                             irq_event;
->> +       int                             irq_error;
->> +       struct clk                      *clk;
->> +       int                             speed;
->> +       struct stm32f4_i2c_client       client;
->> +       bool                            busy;
->> +       struct reset_control            *rst;
->> +};
->> +
->> +static struct stm32f4_i2c_timings i2c_timings[] = {
->> +       [STM32F4_I2C_SPEED_STANDARD] = {
->> +               .rate                   = 100000,
->> +               .duty                   = 0,
->> +       },
->> +       [STM32F4_I2C_SPEED_FAST] = {
->> +               .rate                   = 400000,
->> +               .duty                   = 0,
->> +       },
->> +};
-> Is this table really needed?
-> As duty value seems to always be 0, couldn't you just store the rate
-> in the speed field?
-You are right. I will directly use speed field in the V2
+>> 2016-05-09 21:06 GMT+02:00 David Miller <davem@davemloft.net>:
+>>> From: Alexandre TORGUE <alexandre.torgue@gmail.com>
+>>> Date: Mon,  9 May 2016 12:31:33 +0200
+>>>
+>>>> STM32F429 Chip embeds a Synopsys 3.50a MAC IP.
+>>>> This series:
+>>>>  -enhance current stmmac driver to control it (code already
+>>>> available) and adds basic glue for STM32F429 chip.
+>>>>  -Enable basic Net config in kernel.
+>>>
+>>> I assume this will go via the ARM tree, for the networking bits:
+>> I would expect patches 1, 2 & 3 to got via your tree, to avoid conflicts.
+>
+> I don't think putting them all via the ARM tree is going to create much
+> in the way of conflicts, and right now during the merge window offloading
+> that work from me would really help my backlog a lot.
 
->
->
->> +static void stm32f4_i2c_set_rise_time(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       u32 trise, freq, cr2;
->> +
->> +       cr2 = readl_relaxed(i2c_dev->base + STM32F4_I2C_CR2);
->> +       freq = cr2 & STM32F4_I2C_CR2_FREQ_MASK;
->> +
->> +       trise = readl_relaxed(i2c_dev->base + STM32F4_I2C_TRISE);
->> +       trise &= ~STM32F4_I2C_TRISE_TRISE_MASK;
->> +
->> +       if (i2c_dev->speed == STM32F4_I2C_SPEED_STANDARD)
->> +               trise |= STM32F4_I2C_TRISE_TRISE((freq + 1));
->> +       else
->> +               trise |= STM32F4_I2C_TRISE_TRISE((((freq * 300) / 1000) + 1));
-> Or if you keep the timings struct, maybe the rise time should be part of it.
-> Doing, that, you will avoid the if/else
-As timings struct will be removed, I will keep this piece of code but
-thanks for this remark.
+Ok, I understand this is not the best time to pick it.
 
->
->> +
->> +       writel_relaxed(trise, i2c_dev->base + STM32F4_I2C_TRISE);
->> +}
->> +
->> +static void stm32f4_i2c_set_speed_mode(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       struct stm32f4_i2c_timings *t = &i2c_timings[i2c_dev->speed];
->> +       u32 ccr, val, clk_rate;
->> +
->> +       ccr = readl_relaxed(i2c_dev->base + STM32F4_I2C_CCR);
->> +       ccr &= ~(STM32F4_I2C_CCR_FS | STM32F4_I2C_CCR_DUTY |
->> +                STM32F4_I2C_CCR_CCR_MASK);
->> +
->> +       clk_rate = clk_get_rate(i2c_dev->clk);
->> +
->> +       switch (i2c_dev->speed) {
->> +       case STM32F4_I2C_SPEED_STANDARD:
->> +               val = clk_rate / t->rate * 2;
->> +               if (val < STM32F4_I2C_MIN_CCR)
->> +                       ccr |= STM32F4_I2C_CCR_CCR(STM32F4_I2C_MIN_CCR);
->> +               else
->> +                       ccr |= STM32F4_I2C_CCR_CCR(val);
->> +               break;
->> +       case STM32F4_I2C_SPEED_FAST:
->> +               ccr |= STM32F4_I2C_CCR_FS;
->> +               if (t->duty) {
->> +                       ccr |= STM32F4_I2C_CCR_DUTY;
->> +                       ccr |= STM32F4_I2C_CCR_CCR(clk_rate / t->rate * 25);
->> +               } else {
->> +                       ccr |= STM32F4_I2C_CCR_CCR(clk_rate / t->rate * 3);
->> +               }
-> Is it really useful since duty seems to always be 0?
-Agree, I will rework it by directly set duty at 0 in the register.
+Arnd, Olof & Kevin, would you accept to pick the series in your tree?
 
->
->> +               break;
->> +       default:
->> +               dev_err(i2c_dev->dev, "I2C speed mode not supported\n");
->> +       }
->> +
->> +       writel_relaxed(ccr, i2c_dev->base + STM32F4_I2C_CCR);
->> +}
->> +
->> +static void stm32f4_i2c_set_filter(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       u32 filter;
->> +
->> +       /* Enable analog noise filter and disable digital noise filter */
-> Maybe a stupid question, but is it always what we want?
-> Are there some cases we would prefer to use the digital noise filter
-> instead of the analog one?
-I don't have any use case where the digital noise filter is used.
-So as I cannot test it, I prefer to only use the default filter (analog)
-
->
->> +       filter = readl_relaxed(i2c_dev->base + STM32F4_I2C_FLTR);
->> +       filter &= ~(STM32F4_I2C_FLTR_ANOFF | STM32F4_I2C_FLTR_DNF_MASK);
->> +       writel_relaxed(filter, i2c_dev->base + STM32F4_I2C_FLTR);
->> +}
->> +
->> +/**
->> + * stm32f4_i2c_hw_config() - Prepare I2C block
->> + * @i2c_dev: Controller's private data
->> + */
->> +static void stm32f4_i2c_hw_config(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR1;
->> +
->> +       /* Disable I2C */
->> +       stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR1_PE);
->> +
->> +       stm32f4_i2c_set_periph_clk_freq(i2c_dev);
->> +
->> +       stm32f4_i2c_set_rise_time(i2c_dev);
->> +
->> +       stm32f4_i2c_set_speed_mode(i2c_dev);
->> +
->> +       stm32f4_i2c_set_filter(i2c_dev);
->> +
->> +       /* Enable I2C */
->> +       stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_PE);
->> +}
->> +
->> +static int stm32f4_i2c_wait_free_bus(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       u32 status;
->> +       int ret;
->> +
->> +       ret = readl_relaxed_poll_timeout(i2c_dev->base + STM32F4_I2C_SR2,
->> +                                        status,
->> +                                        !(status & STM32F4_I2C_SR2_BUSY),
->> +                                        10, 1000);
->> +       if (ret) {
->> +               dev_err(i2c_dev->dev, "bus not free\n");
->> +               ret = -EBUSY;
->> +       }
->> +
->> +       return ret;
->> +}
->> +
->> +/**
->> + * stm32f4_i2c_write_ byte() - Write a byte in the data register
->> + * @i2c_dev: Controller's private data
->> + * @byte: Data to write in the register
->> + */
->> +static void stm32f4_i2c_write_byte(struct stm32f4_i2c_dev *i2c_dev, u8 byte)
->> +{
->> +       writel_relaxed(byte, i2c_dev->base + STM32F4_I2C_DR);
->> +}
->> +
->> +/**
->> + * stm32f4_i2c_write_msg() - Fill the data register in write mode
->> + * @i2c_dev: Controller's private data
->> + *
->> + * This function fills the data register with I2C transfer buffer
->> + */
->> +static void stm32f4_i2c_write_msg(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
->> +
->> +       stm32f4_i2c_write_byte(i2c_dev, *c->buf++);
->> +       c->count--;
->> +}
->> +
->> +static void stm32f4_i2c_read_msg(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
->> +       u32 rbuf;
->> +
->> +       rbuf = readl_relaxed(i2c_dev->base + STM32F4_I2C_DR);
->> +       *c->buf++ = (u8)rbuf & 0xff;
->> +       c->count--;
->> +}
->> +
->> +static void stm32f4_i2c_terminate_xfer(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
->> +       void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
->> +
->> +       /* Disable all interrupts */
->> +       stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_IRQ_MASK);
->> +
->> +       /* Set STOP or REPSTART */
->> +       reg = i2c_dev->base + STM32F4_I2C_CR1;
->> +       if (c->stop)
->> +               stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_STOP);
->> +       else
->> +               stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_START);
->> +
->> +       complete(&i2c_dev->complete);
->> +}
->> +
->> +/**
->> + * stm32f4_i2c_handle_write() - Handle FIFO empty interrupt in case of write
->> + * @i2c_dev: Controller's private data
->> + */
->> +static void stm32f4_i2c_handle_write(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
->> +       void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
->> +
->> +       if (c->count) {
->> +               stm32f4_i2c_write_msg(i2c_dev);
->> +               if (!c->count) {
->> +                       /* Disable BUF interrupt */
->> +                       stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_ITBUFEN);
->> +               }
->> +       } else {
->> +               stm32f4_i2c_terminate_xfer(i2c_dev);
->> +       }
->> +}
->> +
->> +/**
->> + * stm32f4_i2c_handle_tx_btf() - Handle byte transfer finished interrupt
->> + * in case of write
->> + * @i2c_dev: Controller's private data
->> + */
->> +static void stm32f4_i2c_handle_tx_btf(struct stm32f4_i2c_dev *i2c_dev)
->> +{
->> +       struct stm32f4_i2c_client *c = &i2c_dev->client;
->> +
->> +       if (c->count)
->> +               stm32f4_i2c_write_msg(i2c_dev);
->> +       else
->> +               stm32f4_i2c_terminate_xfer(i2c_dev);
->> +}
-> The two functions above look very similar.
-> Isn't there a way to factorize?
-Good point. Thanks. I will do it in the V2.
->
->> +
->> +/**
->> + * stm32f4_i2c_handle_read() - Handle FIFO enmpty interrupt in case of read
-> s/enmpty/empty/
-OK
-
->
->
-> ...
->> +
->> +/**
->> + * stm32f4_i2c_xfer() - Transfer combined I2C message
->> + * @i2c_adap: Adapter pointer to the controller
->> + * @msgs: Pointer to data to be written.
->> + * @num: Number of messages to be executed
->> + */
->> +static int stm32f4_i2c_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msgs[],
->> +                           int num)
->> +{
->> +       struct stm32f4_i2c_dev *i2c_dev = i2c_get_adapdata(i2c_adap);
->> +       int ret, i;
->> +
->> +       i2c_dev->busy = true;
->> +
->> +       ret = clk_prepare_enable(i2c_dev->clk);
->> +       if (ret) {
->> +               dev_err(i2c_dev->dev, "Failed to prepare_enable clock\n");
->> +               return ret;
->> +       }
->> +
->> +       stm32f4_i2c_hw_config(i2c_dev);
-> Maybe you could call this only at probe and resume time?
-> You would save some register accesses.
-Yes of course, I have put this here for test purpose as I wanted to
-switch between Standard to Fast mode without compile a new DT and
-rebooting the board.
-But thanks to device tree overlay, I could easily do it and now I
-don't have any reason to set hw config for each transfer.
-I will fix it in V2.
-
->
->> +
->> +       for (i = 0; i < num && !ret; i++)
->> +               ret = stm32f4_i2c_xfer_msg(i2c_dev, &msgs[i], i == 0,
->> +                                          i == num - 1);
->> +
->> +       clk_disable_unprepare(i2c_dev->clk);
->> +
->> +       i2c_dev->busy = false;
->> +
->> +       return (ret < 0) ? ret : i;
->> +}
->> +
->
-> Thanks!
-> Maxime
-
- Thanks for your review
-Cedric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Maxime
