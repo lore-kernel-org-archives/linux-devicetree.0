@@ -1,95 +1,94 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] documentation: Add secure monitor binding
- documentation
-Date: Wed, 18 May 2016 18:35:18 -0500
-Message-ID: <20160518233518.GA11027@rob-hp-laptop>
-References: <1463583382-15614-1-git-send-email-carlo@caione.org>
- <1463583382-15614-5-git-send-email-carlo@caione.org>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH 8/8] ARM: dts: dra7: Move to operating-points-v2 table
+Date: Wed, 18 May 2016 18:36:33 -0500
+Message-ID: <20af92f75bf0f707458dd021719cce3a70d768d5.1463606963.git.d-gerlach@ti.com>
+References: <cover.1463606963.git.d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463583382-15614-5-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1463606963.git.d-gerlach@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Yegor Yefremov <yegorslists@googlemail.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 04:56:22PM +0200, Carlo Caione wrote:
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> 
-> Add the binding documentation for the Amlogic secure monitor driver.
-> 
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/soc/meson/meson_sm.txt     | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/meson/meson_sm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/meson/meson_sm.txt b/Documentation/devicetree/bindings/soc/meson/meson_sm.txt
-> new file mode 100644
-> index 0000000..f59c732
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/meson/meson_sm.txt
+Add an operating-points-v2 table with all OPPs available for all silicon
+revisions along with necessary data for use by ti-opp driver to selectively
+enable the appropriate OPPs at runtime and handle voltage transitions
 
-bindings/firmware/
+As we now need to define voltage ranges for each OPP, we define the
+minimum and maximum voltage to match the ranges possible for AVS class0
+voltage as defined by the DRA7/AM57 Data Manual, with the exception of
+using a range for OPP_OD based on historical data to ensure that SoCs
+from older lots still continue to boot, even though more optimal voltages
+are now the standard. Once an AVS Class0 driver is in place it will be
+possible for these OPP voltages to be adjusted to any voltage within the
+provided range.
 
-> @@ -0,0 +1,45 @@
-> +* Amlogic Secure Monitor
-> +
-> +In the Amlogic SoCs the Secure Monitor code is used to provide access to the
-> +NVMEM, enable JTAG, set USB boot, etc...
-> +
-> +Required properties for the secure monitor node:
-> +- compatible: Should be "amlogic,meson-sm"
-> +- amlogic,sm_cmd_input_base: SMC32 function identifier to read the physical
-> +                             address of the input buffer
-> +- amlogic,sm_cmd_output_base: SMC32 function identifier to read the physical
-> +                              address of the output buffer
+Information from SPRS953, Revised December 2015.
 
-Use '-' rather than '_'.
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+---
+ arch/arm/boot/dts/dra7.dtsi   | 26 +++++++++++++++++++++-----
+ arch/arm/boot/dts/dra74x.dtsi |  1 +
+ 2 files changed, 22 insertions(+), 5 deletions(-)
 
-> +
-> +Example:
-> +
-> +	#include <dt-bindings/soc/meson-gxbb-sm.h>
-> +
-> +	...
-> +
-> +	sm {
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 104b62657163..0d74f8a15937 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -82,11 +82,9 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <0>;
+ 
+-			operating-points = <
+-				/* kHz    uV */
+-				1000000	1060000
+-				1176000	1160000
+-				>;
++			operating-points-v2 = <&cpu0_opp_table>;
++			ti,syscon-efuse = <&scm_wkup 0x20c 0xf80000 19>;
++			ti,syscon-rev = <&scm_wkup 0x204>;
+ 
+ 			clocks = <&dpll_mpu_ck>;
+ 			clock-names = "cpu";
+@@ -100,6 +98,24 @@
+ 		};
+ 	};
+ 
++	cpu0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp_nom@1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			opp-microvolt = <1060000 850000 1150000>;
++			opp-supported-hw = <0xFF 0x01>;
++			opp-suspend;
++		};
++
++		opp_od@1176000000 {
++			opp-hz = /bits/ 64 <1176000000>;
++			opp-microvolt = <1160000 885000 1160000>;
++			opp-supported-hw = <0xFF 0x02>;
++		};
++	};
++
+ 	/*
+ 	 * The soc node represents the soc top level view. It is used for IPs
+ 	 * that are not memory mapped in the MPU view or for the MPU itself.
+diff --git a/arch/arm/boot/dts/dra74x.dtsi b/arch/arm/boot/dts/dra74x.dtsi
+index 0c31db3a8919..0a8a5eee5dd0 100644
+--- a/arch/arm/boot/dts/dra74x.dtsi
++++ b/arch/arm/boot/dts/dra74x.dtsi
+@@ -17,6 +17,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <1>;
++			operating-points-v2 = <&cpu0_opp_table>;
+ 		};
+ 	};
+ 
+-- 
+2.7.3
 
-Put this under a /firmware node.
-
-> +		compatible = "amlogic,meson-sm";
-> +		amlogic,sm_cmd_input_base = <SM_GET_SHARE_MEM_INPUT_BASE>;
-> +		amlogic,sm_cmd_output_base = <SM_GET_SHARE_MEM_OUTPUT_BASE>;
-> +	};
-> +
-> +Node of a device using the secure monitor must have a custom property to
-> +specify the SMC32 function the driver is going to use. The values of all the
-> +SMC function identifiers are listed in a SoC-specific header file:
-> +
-> +"include/dt-bindings/soc/meson-gxbb-sm.h" - for the Meson GXBB secure monitor.
-> +
-> +Example of the node using the secure monitor:
-> +
-> +	#include <dt-bindings/soc/meson-gxbb-sm.h>
-> +
-> +	...
-> +
-> +	efuse: efuse {
-> +		compatible = "amlogic,meson-gxbb-efuse";
-> +		amlogic,sm_cmd_read_efuse = <SM_EFUSE_READ>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		...
-> +	};
-> +
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
