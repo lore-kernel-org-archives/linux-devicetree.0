@@ -1,100 +1,83 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: PATH[1/3] ARM: axp20x_usb_power.c add device
- tree configuration options for REG 30H: VBUS-IPSOUT
-Date: Wed, 18 May 2016 09:21:03 +1000
-Message-ID: <CAGRGNgX7A3bx9Dam2j1ovdf4s8L9GTi3DM4zMeyu0x3b0wwCgA@mail.gmail.com>
-References: <0f58d2b3-f3d3-45a3-a307-e54df26c1ab1@googlegroups.com>
- <671c7471-b63a-40cc-989f-6b20f00571ee@googlegroups.com> <35a39bdc-1304-403d-b56a-a45bb8debf5e@googlegroups.com>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Simran Rai <simran.rai@broadcom.com>
+Subject: [PATCH v7 0/3] ASoC: cygnus: Add audio support for
+	Broadcom Cygnus SoC
+Date: Tue, 17 May 2016 17:01:06 -0700
+Message-ID: <1463529669-25022-1-git-send-email-simran.rai@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBB46O524QKGQETU3E5LI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <35a39bdc-1304-403d-b56a-a45bb8debf5e-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: ene.alexandru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dmitry Baryshkov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lori Hikichi <lhikichi@broadcom.com>, Simran Rai <simran.rai@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arunp@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ene,
+Hi,
 
-On Wed, May 18, 2016 at 3:50 AM, Ene Alexandru <ene.alexandru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> the documentation is updated to describe how to convert actual values to the
-> provided parameters
->
-> ---
-> diff -uprN -X linux-sunxi-original/Documentation/dontdiff
-> linux-sunxi-original/Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt
-> linux-sunxi/Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt
-> ---
-> linux-sunxi-original/Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt
-> 2016-05-09 16:48:46.000000000 +0200
-> +++
-> linux-sunxi/Documentation/devicetree/bindings/power_supply/axp20x_usb_power.txt
-> 2016-05-11 13:05:58.995873267 +0200
-> @@ -5,6 +5,26 @@ Required Properties:
->  This node is a subnode of the axp20x PMIC.
-> +The following 3 parameters are configurable from the device-tree:
-> +          - vhold-enable
-> +                      - bit 6 of register REG 30H: VBUS-IPSOUT Power Path
-> Management
+This patchset contains audio support for Broadcom's Cygnus SoC.
+It contains DT bindings and core audio driver. The audio driver supports
+both capture and playback of Audio PCM samples over I2S/TDM interface and
+provides playback support over SPDIF interface.
 
-I don't think it's necessary to go into this much detail here.
+This patchset is derived from a previously submitted patchset:
+http://lkml.iu.edu/hypermail/linux/kernel/1503.3/05434.html
 
-> +                      - available values are:
-> +                                  - 0x00 : VBUS VHOLD voltage limiting
-> control disabled
-> +                                  - 0x01 : VBUS VHOLD voltage limiting
-> control enabled
+This patchset has been tested on Cygnus wireless audio bcm958305K board.
+It is based on v4.6-rc1 and is available from github:
 
-If these are the only options available, why not make this property a boolean?
+repo: https://github.com/Broadcom/cygnus-linux/tree/cygnus-sound-v7
 
-> +          - vhold-set
-> +                      - bits <5-3> of register REG 30H: VBUS-IPSOUT Power
-> Path Management
-> +                      - available values are from 0x00 to 0x07
-> +                      - VHOLD = [4000000 + ( vhold-set & 0x07 ) * 100000]
-> in uV
+Changes from v6:
+- DT bindings acknowledged by Rob Herring
+Changes from v5:
+- Fix code style, e.g. change "if" statements to "switch" statements
+- Fix SPDIF output enable register field
+- Set BUFFER_PAIR_ENABLE for both mono, stereo and TDM modes
+- Reflect PCM bit formats for SPDIF, SSP and TDM as supported by
+hardware
+Changes from v4:
+- Fix power suspend function and add power resume function
+- Move clock initialization code from audio driver to clock framework
+Changes from v3:
+- Fix the subject lines to match the style for the subsystem
+Changes from v2:
+- Split patchset 2/2 from v2 into patchsets 2/3 and 3/3.
+- Remove SND_SOC_CYGNUS_DIAG. Diagnostics can be performed using
+standard kernel trace infrastructure.
+- Fix interrupt handler. Acknowledge only those interrupts that are
+handledby ISR.
+- Modify configure_vco() and the pll_macro_entry() struct to make it
+better readable. The functionality did not change.
+- Remove casts on macros
+- Remove surround sound channel grouping from the driver.
+Changes from v1:
+- Address code review comments. Fix print format of type size_t and
+pointer.
 
-What does this actually do? Is this the lower limit on the voltage? Is
-this the voltage it'll try to maintain?
+Simran Rai (3):
+  ASoC: cygnus: Add DT bindings for Broadcom Cygnus audio
+  ASoC: cygnus: Add Cygnus audio DAI driver
+  ASoC: cygnus: Add Cygnus audio DMA driver
 
-> +          - ibus-limit
-> +                      - bits <1-0> of register REG 30H: VBUS-IPSOUT Power
-> Path Management
-> +                      - available values are :
-> +                                  - 0x00 : 900000uA
-> +                                  - 0x01 : 500000uA
-> +                                  - 0x02 : 100000uA
-> +                                  - 0x03 : unlimited
-
-Again, what does this actually do? It looks like the current limit?
-
-> +
-> +
-
-Extra blank line.
-
-> Example:
->  axp209: pmic@34 {
-> @@ -30,5 +50,8 @@ axp209: pmic@34 {
->             usb-power-supply: usb-power-supply {
->                        compatible = "x-powers,axp202-usb-power-supply";
-> +                      vhold-enable = <0x01>;
-> +                      vhold-set = <0x04>;
-> +                      ibus-limit = <0x01>;
->            };
-> };
-
-Thanks,
+ .../bindings/sound/brcm,cygnus-audio.txt           |   67 +
+ sound/soc/bcm/Kconfig                              |    9 +
+ sound/soc/bcm/Makefile                             |    5 +
+ sound/soc/bcm/cygnus-pcm.c                         |  861 +++++++++++
+ sound/soc/bcm/cygnus-ssp.c                         | 1529 ++++++++++++++++++++
+ sound/soc/bcm/cygnus-ssp.h                         |  139 ++
+ 6 files changed, 2610 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
+ create mode 100644 sound/soc/bcm/cygnus-pcm.c
+ create mode 100644 sound/soc/bcm/cygnus-ssp.c
+ create mode 100644 sound/soc/bcm/cygnus-ssp.h
 
 -- 
-Julian Calaby
-
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+1.9.1
