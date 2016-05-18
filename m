@@ -1,40 +1,29 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/7] QE: Add uqe_serial document to bindings
-Date: Wed, 18 May 2016 11:47:16 -0500
-Message-ID: <20160518164716.GA32436@rob-hp-laptop>
-References: <1463452743-21462-1-git-send-email-qiang.zhao@nxp.com>
- <1463452743-21462-3-git-send-email-qiang.zhao@nxp.com>
+Subject: Re: [PATCH 06/11] dt/bindings: Correct clk binding example for PIC32
+ SDHCI
+Date: Wed, 18 May 2016 11:50:18 -0500
+Message-ID: <20160518165018.GA1666@rob-hp-laptop>
+References: <1463461560-9629-1-git-send-email-purna.mandal@microchip.com>
+ <1463461560-9629-6-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1463452743-21462-3-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1463461560-9629-6-git-send-email-purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org
+To: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Andrei Pistirica <andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 17, 2016 at 10:38:59AM +0800, Zhao Qiang wrote:
-> Add uqe_serial document to
-> Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+On Tue, May 17, 2016 at 10:35:55AM +0530, Purna Chandra Mandal wrote:
+> Update binding example based on new clock binding documentation.
+> [1] Documentation/devicetree/bindings/clock/microchip,pic32.txt
 > 
-> Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 > ---
-> Changes for v2
-> 	- modify tx/rx-clock-name specification
-> Changes for v3
-> 	- NA 
-> Changes for v4
-> 	- drop device_type
-> 	- modify to SoC specific compatible 
-> Changes for v5
-> 	- add fsl to compatible as prefix 
-> Changes for v6
-> 	- modify property to "fsl,<chip>-ucc-uart"
 > 
->  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt          | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+>  Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
