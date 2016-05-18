@@ -1,81 +1,43 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re:
-Date: Wed, 18 May 2016 13:02:00 -0500
-Message-ID: <CAL_Jsq+s3PjzKCaT03EaqNCoyuwDQ6dXHDF808+U=hjvvfRYdg@mail.gmail.com>
-References: <CANCZdfow154vh3kHqUNUM6CoBsC9Vu3_+SEjFG1dz=FOkc9vsg@mail.gmail.com>
+Subject: Re: drivers/of: crash on boot
+Date: Wed, 18 May 2016 14:36:31 -0500
+Message-ID: <CAL_JsqJsjh+Shk1nD5YQeQ=6B1MZOyEj5oX-q_xKH642toURdA@mail.gmail.com>
+References: <573C8B6C.6030900@oracle.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANCZdfow154vh3kHqUNUM6CoBsC9Vu3_+SEjFG1dz=FOkc9vsg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <573C8B6C.6030900-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+devicetree-spec which is the right list.
-
-On Wed, May 18, 2016 at 11:26 AM, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org> wrote:
-> Greetings,
+On Wed, May 18, 2016 at 10:34 AM, Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Rhyland,
 >
-> I was looking at the draft link posted here
-> https://github.com/devicetree-org/devicetree-specification-released/blob/master/prerelease/devicetree-specification-v0.1-pre1-20160429.pdf
-> a while ago. I hope this is the right place to ask about it.
+> I'm seeing a crash on boot that seems to have been caused by
+> "drivers/of: Fix depth when unflattening devicetree":
 >
-> It raised a bit of a question. There's nothing in it talking about the
-> current
-> practice of using CPP to pre-process the .dts/.dtsi files before passing
-> them
-> into dtc to compile them into dtb.
-
-Can't say I'm really a fan of it.
-
-> Normally, I see such things outside the scope of standardization. However,
-> many of the .dts files that are in the wild today use a number of #define
-> constants to make things more readable (having GPIO_ACTIVE_HIGH
-> instead of '0' makes the .dts files easier to read). However, there's a
-> small
-> issue that I've had. The files that contain those definitions are currently
-> in the Linux kernel and have a wide variety of licenses (including none
-> at all).
-
-Yes, this is a problem. In lieu of any explicit license, I'd say the
-license defaults to GPL. There is also the same issue with the
-Documentation as we plan to move some of the common bindings such as
-clocks, gpio, etc. into the spec which is Apache licensed.
-
-In both cases, we're going to need to get permission of the authors to
-re-license. For the headers, these should be patches to the kernel.
-For the docs, we just need to record the permission when committing
-the addition to the spec. Neither should be too hard as they should
-not be changing much and we have complete history in git.
-
-> So before even getting to the notion of licenses and such (which past
-> expereince suggests may be the worst place to start a discussion), I'm
-> wondering where that will be defined, and if these #defines will become
-> part of the standard for each of the bindings that are defined.
-
-Perhaps. We need to at least define the standard flag values if not
-the symbolic name. I don't think it makes sense to both document and
-maintain headers of the defines. We should ideally just have 1 source
-for all and generate what we need from it. There's been some related
-discussion around having machine parseable bindings as both the
-documentation source and binding validation source, but nothing
-concrete.
-
-> I'm also wondering where the larger issue of using cpp to process the dts
-> files will be discussed, since FreeBSD's BSDL dtc suffers interoperability
-> due to this issue. Having the formal spec will also be helpful for its care and
-> feeding since many fine points have had to be decided based on .dts
-> files in the wild rather than a clear spec.
+> [   61.145229] ==================================================================
 >
-> Thanks again for spear-heading the effort to get a new version out now
-> that ePAPR has fallen on hard times.
->
-> Warner
->
-> P.S. I'm mostly a FreeBSD guy, but just spent some time digging into this
-> issue for another of the BSDs that's considering adopting DTS files.
+> [   61.147588] BUG: KASAN: stack-out-of-bounds in unflatten_dt_nodes+0x11d2/0x1290 at addr ffff88005b30777c
 
-We certainly need and want the BSD folks involved in the spec.
+The following appears to fix it for me. Rhyland, please confirm.
 
-Rob
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 7f38241..888ec2a 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -409,7 +409,7 @@ static int unflatten_dt_nodes(const void *blob,
+        fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
+        nps[depth+1] = dad;
+        for (offset = 0;
+-            offset >= 0;
++            offset >= 0, depth >= 0;
+             offset = fdt_next_node(blob, offset, &depth)) {
+                if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
+                        continue;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
