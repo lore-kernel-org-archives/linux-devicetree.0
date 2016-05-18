@@ -1,27 +1,56 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] of: add vendor prefix for Holtek Semiconductor
-Date: Wed, 18 May 2016 18:17:15 -0500
-Message-ID: <20160518231715.GA3148@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 2/3] auxdisplay: ht16k33: Driver for LED controller
+Date: Wed, 18 May 2016 18:23:00 -0500
+Message-ID: <20160518232300.GA4243@rob-hp-laptop>
 References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
- <1463574199-21077-2-git-send-email-robin@protonic.nl>
+ <1463574199-21077-3-git-send-email-robin@protonic.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463574199-21077-2-git-send-email-robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1463574199-21077-3-git-send-email-robin@protonic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin van der Gracht <robin@protonic.nl>
+Cc: linux-kernel@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Thierry Reding <treding@nvidia.com>, Shawn Guo <shawnguo@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Matt Ranostay <mranostay@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Guenter Roeck <linux@roeck-us.net>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 02:23:17PM +0200, Robin van der Gracht wrote:
-> Signed-off-by: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+On Wed, May 18, 2016 at 02:23:18PM +0200, Robin van der Gracht wrote:
+> Added a driver for the Holtek HT16K33 LED controller with keyscan.
+> 
+> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Changes in v6:
+>     - Fixed minor typo in documentation 'KEY_F0' -> 'KEY_F10'
+> 
+>  .../devicetree/bindings/display/ht16k33.txt        |  42 ++
+>  drivers/auxdisplay/Kconfig                         |   9 +
+>  drivers/auxdisplay/Makefile                        |   1 +
+>  drivers/auxdisplay/ht16k33.c                       | 563 +++++++++++++++++++++
+>  4 files changed, 615 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ht16k33.txt
+>  create mode 100644 drivers/auxdisplay/ht16k33.c
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ht16k33.txt b/Documentation/devicetree/bindings/display/ht16k33.txt
+> new file mode 100644
+> index 0000000..5c11320
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ht16k33.txt
+> @@ -0,0 +1,42 @@
+> +Holtek ht16k33 RAM mapping 16*8 LED controller driver with keyscan
+> +-------------------------------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible:		"holtek,ht16k33"
+> +- reg:			I2C slave address of the chip.
+> +- interrupt-parent:	A phandle pointing to the interrupt controller
+> +			serving the interrupt for this chip.
+> +- interrupts:		Interrupt specification for the key pressed interrupt.
+> +- refresh-rate-hz:	Display update interval in HZ.
+> +- debounce-delay-ms:	Debouncing interval time in microseconds.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The units and description still don't match.
+
+I acked the last one. Please add acks when sending new versions (unless 
+of course you don't fix any trivial things noted).
+
+Rob
