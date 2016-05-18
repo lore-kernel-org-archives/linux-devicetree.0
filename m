@@ -1,88 +1,44 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: drivers/of: crash on boot
-Date: Wed, 18 May 2016 15:58:43 -0400
-Message-ID: <80967a3a-3b97-e131-97e5-f449f567b01c@nvidia.com>
-References: <573C8B6C.6030900@oracle.com>
- <CAL_JsqJsjh+Shk1nD5YQeQ=6B1MZOyEj5oX-q_xKH642toURdA@mail.gmail.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [RFC 2/3] drm/mediatek: add support for Mediatek SoC MT2701
+Date: Wed, 18 May 2016 21:26:04 +0100
+Message-ID: <CACvgo50-wnRYiYueRTqUT=PsUWu4NRm6bwZO8izaAZuf6-kMWQ@mail.gmail.com>
+References: <1463053795-55455-1-git-send-email-yt.shen@mediatek.com>
+ <1463053795-55455-3-git-send-email-yt.shen@mediatek.com>
+ <CACvgo52qc4E=MAGLoCaUH+GZuyvPexHchZnvuv-fF8P23e_1Uw@mail.gmail.com>
+ <1463560401.8576.15.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJsjh+Shk1nD5YQeQ=6B1MZOyEj5oX-q_xKH642toURdA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1463560401.8576.15.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YT Shen <yt.shen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, srv_heupstream@mediatek.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/18/2016 3:36 PM, Rob Herring wrote:
-> On Wed, May 18, 2016 at 10:34 AM, Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org=
-> wrote:
->> Hi Rhyland,
->>
->> I'm seeing a crash on boot that seems to have been caused by
->> "drivers/of: Fix depth when unflattening devicetree":
->>
->> [   61.145229] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>
->> [   61.147588] BUG: KASAN: stack-out-of-bounds in unflatten_dt_nodes=
-+0x11d2/0x1290 at addr ffff88005b30777c
->=20
-> The following appears to fix it for me. Rhyland, please confirm.
->=20
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 7f38241..888ec2a 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -409,7 +409,7 @@ static int unflatten_dt_nodes(const void *blob,
->         fpsizes[depth] =3D dad ? strlen(of_node_full_name(dad)) : 0;
->         nps[depth+1] =3D dad;
->         for (offset =3D 0;
-> -            offset >=3D 0;
-> +            offset >=3D 0, depth >=3D 0;
->              offset =3D fdt_next_node(blob, offset, &depth)) {
->                 if (WARN_ON_ONCE(depth >=3D FDT_MAX_DEPTH))
->                         continue;
->=20
-
-If I try that patch, i see this when compiling:
-
-In function =E2=80=98unflatten_dt_nodes=E2=80=99:
-warning: left-hand operand of comma expression has no effect
-[-Wunused-value]
-	offset >=3D 0, depth >=3D 0;
-
-And if I boot it, then I hit a NULL pointer dereference:
-
-[    0.000000] Unable to handle kernel NULL pointer dereference at
-virtual address 00000058
-[    0.000000] pgd =3D ffff000008cb4000
-[    0.000000] [00000058] *pgd=3D000000013fffe003, *pud=3D000000013fffd=
-003,
-*pmd=3D0000000000000000
-[    0.000000] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted
-4.6.0-next-20160518+ #26
-[    0.000000] Hardware name: Google Pixel C (DT)
-[    0.000000] task: ffff000008bdd880 ti: ffff000008bd0000 task.ti:
-ffff000008bd0000
-[    0.000000] PC is at unflatten_dt_nodes+0x430/0x598
-[    0.000000] LR is at unflatten_dt_nodes+0x41c/0x598
-[    0.000000] pc : [<ffff0000086633dc>] lr : [<ffff0000086633c8>]
-pstate: 800002c5
-
-If I run this on my board, I see unflatten_dt_nodes return from inside
-the loop after "populate_node" when called with depth =3D -1 (returning
-mem-base) rather than breaking out of the loop and continuing.
-
--rhyland
-
---=20
-nvpublic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTggTWF5IDIwMTYgYXQgMDk6MzMsIFlUIFNoZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPiB3
+cm90ZToKCj4+ID4gQEAgLTEwOCw2ICsxMDgsMTAgQEAgaW50IG10a19kcm1fZ2VtX2R1bWJfY3Jl
+YXRlKHN0cnVjdCBkcm1fZmlsZSAqZmlsZV9wcml2LCBzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+
+PiA+ICAgICAgICAgaW50IHJldDsKPj4gPgo+PiA+ICAgICAgICAgYXJncy0+cGl0Y2ggPSBESVZf
+Uk9VTkRfVVAoYXJncy0+d2lkdGggKiBhcmdzLT5icHAsIDgpOwo+PiA+ICsgICAgICAgLyoKPj4g
+PiArICAgICAgICogYWxpZ24gdG8gOCBieXRlcyBzaW5jZSBNYWxpIHJlcXVpcmVzIGl0Lgo+PiA+
+ICsgICAgICAgKi8KPj4gPiArICAgICAgIGFyZ3MtPnBpdGNoID0gQUxJR04oYXJncy0+cGl0Y2gs
+IDgpOwo+PiBBcmUgeW91IHN1cmUgd2UgbmVlZCB0aGlzLCBiYXNlZCBvbiB0aGUgbGluZSBqdXN0
+IGFib3ZlID8KPiBJIHRoaW5rIGJwcCBzdGFuZHMgZm9yIGJpdHMgcGVyIHBpeGVsLCBzbyB3aWR0
+aCAqIGJwcCAvIDggc2ltcGx5IHRyYW5zZmVyIGZyb20gYml0cyB0byBieXRlcywgd2hpY2gKPiBj
+YW5ub3QgZ3VhcmFudGVlIGFsaWduIHRvIDguCj4KWW91J3JlIGFic29sdXRlbHkgY29ycmVjdC4g
+UmVhZGluZyB0aGUgY29tbWVudCBtYWRlIG1lIGxvb3NlIG15IG1pbmQKYW5kIGNvbXBsZXRlbHkg
+bWlzaW50ZXJwcmV0IHRoZSBkaXZpc2lvbiBtYWNyby4KCj4gSSB3aWxsIHJlbW92ZSB0aGlzIGFs
+aWduIHBhcnQgZnJvbSB0aGUgcGF0Y2gsIHRoaXMgY29uc3RyYWludCBpcyBub3QgZnJvbSBkaXNw
+bGF5IGNvbnRyb2xsZXIuClRoYW5rIHlvdSAhCgpSZWdhcmRzCkVtaWwKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
