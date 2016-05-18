@@ -1,72 +1,45 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] doc/devicetree: Add Aspeed VIC bindings
-Date: Wed, 18 May 2016 23:20:31 +0930
-Message-ID: <CACPK8Xe6TDdV3dC=gizXLxLjUziDFhsupUbXSuYsn6bcrAxahQ@mail.gmail.com>
-References: <462797239-14765-1-git-send-email-joel@jms.id.au>
- <1462802317-27086-1-git-send-email-joel@jms.id.au> <1462802317-27086-2-git-send-email-joel@jms.id.au>
- <20160511143313.GA7426@rob-hp-laptop> <1463014882.20290.203.camel@kernel.crashing.org>
- <CAL_JsqJDGmvDxm1kN1w6NQZs0JLeA-V=X_BWi=VOaMTwftLn-w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: [PATCH 1/1] arm: dts: ls1021a: Fix dspi chip select amount
+Date: Wed, 18 May 2016 16:02:03 +0200
+Message-ID: <1463580123-16713-1-git-send-email-alexander.stein@systec-electronic.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJDGmvDxm1kN1w6NQZs0JLeA-V=X_BWi=VOaMTwftLn-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 13, 2016 at 2:50 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, May 11, 2016 at 8:01 PM, Benjamin Herrenschmidt
-> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->> On Wed, 2016-05-11 at 09:33 -0500, Rob Herring wrote:
->>> > +- interrupt-controller : Identifies the node as an interrupt controller
->>> > +- #interrupt-cells : Specifies the number of cells needed to encode an
->>> > +  interrupt source. The value shall be 1.
->>>
->>> No need for level vs. edge flags?
->>
->> That's an open question. Most interrupts are fixed. A handful of GPIOs
->> can be configured either way. For now I am relying on uboot setting up
->> the right config for them and I read it back at boot time, but we could
->> make it part of the binding I suppose.
->
-> It is almost standard to just use 2 cells here even if reserved for
-> future use. Especially since the IP block seems to have registers to
-> control that.
+The DSPI periphery has 6 chip selects.
 
-Yep, makes sense. I've added this to the bindings document.
+Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I was trying to use the second cell in our driver:
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 726372d..1406e98 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -245,7 +245,7 @@
+ 			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "dspi";
+ 			clocks = <&platform_clk 1>;
+-			spi-num-chipselects = <5>;
++			spi-num-chipselects = <6>;
+ 			big-endian;
+ 			status = "disabled";
+ 		};
+@@ -258,7 +258,7 @@
+ 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "dspi";
+ 			clocks = <&platform_clk 1>;
+-			spi-num-chipselects = <5>;
++			spi-num-chipselects = <6>;
+ 			big-endian;
+ 			status = "disabled";
+ 		};
+-- 
+2.7.3
 
-  static struct irq_domain_ops avic_dom_ops = {
-          .map = avic_map,
-         .xlate = irq_domain_xlate_twocell,
-  };
-
- So we have irq_domain_xlate_twocell to parse the device tree and
-grabs the type property from the second cell.
-
-In avic_map we set the irq handler:
-
-         if (vic->edge_sources[sidx] & sbit) {
-                 /* TODO: Check aginst type from dt and warn if not edge */
-                 irq_set_chip_and_handler(irq, &avic_chip, handle_edge_irq);
-         } else {
-                 /* TODO: Check aginst type from dt and warn if not level */
-                 irq_set_chip_and_handler(irq, &avic_chip, handle_level_irq);
-         }
-
-However, we don't have the type here, so we can't use it to check that
-we're setting the correct edge/level callback (or use it to set the
-register in the future if we want to use the device tree to override
-the bootloader settings).
-
-I had a look at some other drivers and they don't seem to use the dt
-property when mapping the irq. What am I missing here?
-
-Cheers,
-
-Joel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
