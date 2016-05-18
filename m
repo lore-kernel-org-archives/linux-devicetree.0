@@ -1,60 +1,49 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v8 5/7] devicetree: Add Trusted Computing
-	Group to vendor-prefix.txt
-Date: Thu, 19 May 2016 00:35:51 +0200
-Message-ID: <1463610953-2766-6-git-send-email-christophe-h.ricard@st.com>
-References: <1463610953-2766-1-git-send-email-christophe-h.ricard@st.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH INTERNAL v2 1/3] Documentation: dt: Add Broadcom iproc pwm
+ controller binding
+Date: Wed, 18 May 2016 16:04:32 -0700
+Message-ID: <573CF500.5070708@broadcom.com>
+References: <1463554441-47982-1-git-send-email-yendapally.reddy@broadcom.com>
+ <1463554441-47982-2-git-send-email-yendapally.reddy@broadcom.com>
+ <20160518221546.GA32596@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1463610953-2766-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-security-module-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20160518221546.GA32596@rob-hp-laptop>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Rob,
 
-Add missing vendor to vendor-prefix.txt.
+On 16-05-18 03:15 PM, Rob Herring wrote:
+> Am I supposed to ignore since this is "internal"?
+The "INTERNAL" was supposed to be removed after internal review before 
+sending out to the public mailing list.
 
-Trusted Computing Group design common specifications for
-TPM (Trusted Platform Module) vendors.
-TCG designates a TPM answering to a public specification.
+Also, Yendapally's git email config was not setup properly so some are 
+tagging the patchset as spam.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Other than that, everything is fine with the PATCH sent out to the open 
+source community :)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 6c3d970..717bae9 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -230,6 +230,7 @@ stericsson	ST-Ericsson
- synology	Synology, Inc.
- tbs	TBS Technologies
- tcl	Toby Churchill Ltd.
-+tcg	Trusted Computing Group
- technologic	Technologic Systems
- thine	THine Electronics, Inc.
- ti	Texas Instruments
--- 
-2.1.4
+I'm sure Yendapally will send out an updated version with those items 
+corrected (and can add your Acked-by now).
 
+Thanks,
+  Scott
 
-------------------------------------------------------------------------------
-Mobile security can be enabling, not merely restricting. Employees who
-bring their own devices (BYOD) to work are irked by the imposition of MDM
-restrictions. Mobile Device Manager Plus allows you to control only the
-apps on BYO-devices by containerizing them, leaving personal data untouched!
-https://ad.doubleclick.net/ddm/clk/304595813;131938128;j
+>
+> On Wed, May 18, 2016 at 02:53:59AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
+>> Add a binding for Broadcom iproc pwm controller
+>>
+>> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+>> ---
+>>   .../devicetree/bindings/pwm/brcm,iproc-pwm.txt      | 21 +++++++++++++++++++++
+>>   1 file changed, 21 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
