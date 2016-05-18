@@ -1,177 +1,209 @@
-From: Raashid Muhammed < raashidmuhammed@zilogic.com >
-Subject: [PATCH] ARM: at91: Add DT support for Olimex SAM9-L9260 board.
-Date: Wed, 18 May 2016 18:02:46 +0530
-Message-ID: <1463574766-15568-1-git-send-email-raashidmuhammed@zilogic.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
+Date: Wed, 18 May 2016 15:42:47 +0300
+Message-ID: <573C6347.6080705@ti.com>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
+ <1463133808-10630-14-git-send-email-rogerq@ti.com>
+ <20160516070249.GB24609@shlinux2.ap.freescale.net> <57398451.2060103@ti.com>
+ <20160516092323.GD24609@shlinux2.ap.freescale.net> <57399839.90706@ti.com>
+ <AM4PR04MB2130E149700361CBA3F6863389480@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573AD198.6030307@ti.com>
+ <AM4PR04MB2130EF68F7ADD64607C6CD4389480@AM4PR04MB2130.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, vijaykumar@bravegnu.org, raashidmuhammed@zilogic.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM4PR04MB2130EF68F7ADD64607C6CD4389480@AM4PR04MB2130.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jun Li <jun.li@nxp.com>, Peter Chen <hzpeterchen@gmail.com>
+Cc: "peter.chen@freescale.com" <peter.chen@freescale.com>, "balbi@kernel.org" <balbi@kernel.org>, "tony@atomide.com" <tony@atomide.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "jun.li@freescale.com" <jun.li@freescale.com>, "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>, "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>, "robh@kernel.org" <robh@kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "b-liu@ti.com" <b-liu@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vg>
 List-Id: devicetree@vger.kernel.org
 
-From: Raashid Muhammed <raashidmuhammed@zilogic.com>
+On 17/05/16 11:28, Jun Li wrote:
+> Hi Roger,
+> 
+>> -----Original Message-----
+>> From: Roger Quadros [mailto:rogerq@ti.com]
+>> Sent: Tuesday, May 17, 2016 4:09 PM
+>> To: Jun Li <jun.li@nxp.com>; Peter Chen <hzpeterchen@gmail.com>
+>> Cc: peter.chen@freescale.com; balbi@kernel.org; tony@atomide.com;
+>> gregkh@linuxfoundation.org; dan.j.williams@intel.com;
+>> mathias.nyman@linux.intel.com; Joao.Pinto@synopsys.com;
+>> sergei.shtylyov@cogentembedded.com; jun.li@freescale.com;
+>> grygorii.strashko@ti.com; yoshihiro.shimoda.uh@renesas.com;
+>> robh@kernel.org; nsekhar@ti.com; b-liu@ti.com; linux-usb@vger.kernel.org;
+>> linux-omap@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> devicetree@vger.kernel.org
+>> Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
+>>
+>> On 17/05/16 10:38, Jun Li wrote:
+>>> Hi
+>>>
+>>>> -----Original Message-----
+>>>> From: Roger Quadros [mailto:rogerq@ti.com]
+>>>> Sent: Monday, May 16, 2016 5:52 PM
+>>>> To: Peter Chen <hzpeterchen@gmail.com>
+>>>> Cc: peter.chen@freescale.com; balbi@kernel.org; tony@atomide.com;
+>>>> gregkh@linuxfoundation.org; dan.j.williams@intel.com;
+>>>> mathias.nyman@linux.intel.com; Joao.Pinto@synopsys.com;
+>>>> sergei.shtylyov@cogentembedded.com; jun.li@freescale.com;
+>>>> grygorii.strashko@ti.com; yoshihiro.shimoda.uh@renesas.com;
+>>>> robh@kernel.org; nsekhar@ti.com; b-liu@ti.com;
+>>>> linux-usb@vger.kernel.org; linux-omap@vger.kernel.org;
+>>>> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
+>>>> Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
+>>>>
+>>>> On 16/05/16 12:23, Peter Chen wrote:
+>>>>> On Mon, May 16, 2016 at 11:26:57AM +0300, Roger Quadros wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 16/05/16 10:02, Peter Chen wrote:
+>>>>>>> On Fri, May 13, 2016 at 01:03:27PM +0300, Roger Quadros wrote:
+>>>>>>>> +
+>>>>>>>> +static int usb_gadget_connect_control(struct usb_gadget *gadget,
+>>>>>>>> +bool connect) {
+>>>>>>>> +	struct usb_udc *udc;
+>>>>>>>> +
+>>>>>>>> +	mutex_lock(&udc_lock);
+>>>>>>>> +	udc = usb_gadget_to_udc(gadget);
+>>>>>>>> +	if (!udc) {
+>>>>>>>> +		dev_err(gadget->dev.parent, "%s: gadget not
+>>>> registered.\n",
+>>>>>>>> +			__func__);
+>>>>>>>> +		mutex_unlock(&udc_lock);
+>>>>>>>> +		return -EINVAL;
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	if (connect) {
+>>>>>>>> +		if (!gadget->connected)
+>>>>>>>> +			usb_gadget_connect(udc->gadget);
+>>>>>>>> +	} else {
+>>>>>>>> +		if (gadget->connected) {
+>>>>>>>> +			usb_gadget_disconnect(udc->gadget);
+>>>>>>>> +			udc->driver->disconnect(udc->gadget);
+>>>>>>>> +		}
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	mutex_unlock(&udc_lock);
+>>>>>>>> +
+>>>>>>>> +	return 0;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>
+>>>>>>> Since this is called for vbus interrupt, why not using
+>>>>>>> usb_udc_vbus_handler directly, and call udc->driver->disconnect at
+>>>>>>> usb_gadget_stop.
+>>>>>>
+>>>>>> We can't assume that this is always called for vbus interrupt so I
+>>>>>> decided not to call usb_udc_vbus_handler.
+>>>>>>
+>>>>>> udc->vbus is really pointless for us. We keep vbus states in our
+>>>>>> state machine and leave udc->vbus as ture always.
+>>>>>>
+>>>>>> Why do you want to move udc->driver->disconnect() to stop?
+>>>>>> If USB controller disconnected from bus then the gadget driver must
+>>>>>> be notified about the disconnect immediately. The controller may or
+>>>>>> may not be stopped by the core.
+>>>>>>
+>>>>>
+>>>>> Then, would you give some comments when this API will be used?
+>>>>> I was assumed it is only used for drd state machine.
+>>>>
+>>>> drd_state machine didn't even need this API in the first place :).
+>>>> You guys wanted me to separate out start/stop and connect/disconnect
+>>>> for full OTG case.
+>>>> Won't full OTG state machine want to use this API? If not what would
+>>>> it use?
+>>>
+>>> Instead create those new interfaces/symbol here and there just aim to
+>>> address build problems in diff configures, Could we only allow
+>>> meaningful combination of those 3 drivers configures?
+>>>
+>>> Hcd=y, gadget=y, otg=y or
+>>> Hcd=m, gadget=m, otg=m
+>>
+>> This is still a limitation.
+>>
+>> It is perfectly fine to have
+>> hcd=m, gadget=y
+>> or
+>> hcd=y, gadget=m
+> 
+> I agree it makes sense to have above configs in non-otg case, that is,
+> the 'y' driver can work without 'm' driver loaded.
+> 
+> But,
+> in otg enabled(y/m) case, the otherwise config of my list can't make
+> any sense from my point view. That is: some driver is built-in, but
+> it can't work at all if another 'm' driver is not loaded,
+> 
+> in another words, the otg driver has to be 'm' if its dependent driver
+> is 'm', correct?
 
-sam9-l9260 is a low cost board designed by Olimex.
+If both host and gadget are 'm' then otg can be 'm', but if either host or
+gadget is built in then we have no choice but to make otg as built-in.
 
-More infomation is available at:
-https://www.olimex.com/Products/ARM/Atmel/SAM9-L9260/
+I didn't want to have complex Kconfig so decided to have otg as built-in only.
+What do you want me to change in existing code? and why?
 
-Signed-off-by: Raashid Muhammed <raashidmuhammed@zilogic.com>
-Reviewed-by: Vijay Kumar B. <vijaykumar@bravegnu.org>
----
- .../devicetree/bindings/arm/olimex-at91.txt        |   6 ++
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/sam9-l9260.dts                   | 108 +++++++++++++++++++++
- 3 files changed, 115 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/olimex-at91.txt
- create mode 100644 arch/arm/boot/dts/sam9-l9260.dts
-
-diff --git a/Documentation/devicetree/bindings/arm/olimex-at91.txt b/Documentation/devicetree/bindings/arm/olimex-at91.txt
-new file mode 100644
-index 0000000..0587d63
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/olimex-at91.txt
-@@ -0,0 +1,6 @@
-+Olimex AT91 Device Tree Bindings
-+--------------------------------
-+
-+SAM9-L9260 Board
-+Required root node properties:
-+    - compatible = "olimex,sam9-l9260", "atmel,at91sam9260";
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95c1923..ae3b50f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -19,6 +19,7 @@ dtb-$(CONFIG_SOC_SAM_V4_V5) += \
-	usb_a9260.dtb \
-	at91sam9261ek.dtb \
-	at91sam9263ek.dtb \
-+	sam9-l9260.dtb \
-	tny_a9263.dtb \
-	usb_a9263.dtb \
-	at91-foxg20.dtb \
-diff --git a/arch/arm/boot/dts/sam9-l9260.dts b/arch/arm/boot/dts/sam9-l9260.dts
-new file mode 100644
-index 0000000..3ddf7af
---- /dev/null
-+++ b/arch/arm/boot/dts/sam9-l9260.dts
-@@ -0,0 +1,108 @@
-+/*
-+ * sam9-l9260.dts - Device Tree file for Olimex SAM9-L9260 board
-+ *
-+ *  Copyright (C) 2016 Raashid Muhammed <raashidmuhammed@zilogic.com>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+/dts-v1/;
-+#include "at91sam9260.dtsi"
-+
-+/ {
-+	model = "Olimex sam9-l9260";
-+	compatible = "olimex,sam9-l9260", "atmel,at91sam9260", "atmel,at91sam9";
-+
-+	chosen {
-+		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock5 rw rootfstype=ubifs";
-+	 };
-+
-+	 memory {
-+		reg = <0x20000000 0x4000000>;
-+	 };
-+
-+	 clocks {
-+		slow_xtal {
-+			clock-frequency = <32768>;
-+		};
-+
-+		main_xtal {
-+			clock-frequency = <18432000>;
-+		};
-+	 };
-+
-+	 ahb {
-+		apb {
-+			dbgu: serial@fffff200 {
-+				status = "okay";
-+			 };
-+
-+			macb0: ethernet@fffc4000 {
-+				phy-mode = "mii";
-+				status = "okay";
-+			 };
-+
-+			spi0: spi@fffc8000 {
-+				status = "okay";
-+				cs-gpios = <&pioC 11 0>, <0>, <0>, <0>;
-+				mtd_dataflash@0 {
-+					compatible = "atmel,at45", "atmel,dataflash";
-+					spi-max-frequency = <15000000>;
-+					reg = <0>;
-+				};
-+			};
-+
-+			mmc0: mmc@fffa8000 {
-+				pinctrl-0 = <
-+					&pinctrl_board_mmc0
-+					&pinctrl_mmc0_clk
-+					&pinctrl_mmc0_slot1_cmd_dat0
-+					&pinctrl_mmc0_slot1_dat1_3>;
-+				status = "okay";
-+				slot@1 {
-+					reg = <1>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioC 8 GPIO_ACTIVE_HIGH>;
-+					wp-gpios = <&pioC 4 GPIO_ACTIVE_HIGH>;
-+				};
-+			};
-+
-+			pinctrl@fffff400 {
-+				mmc0 {
-+					pinctrl_board_mmc0: mmc0-board {
-+						atmel,pins =
-+							<AT91_PIOC 8 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH	/* PC08 gpio CD pin pull up and deglitch */
-+							 AT91_PIOC 4 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;	/* PC04 gpio WP pin pull up */
-+					};
-+				};
-+			};
-+
-+
-+		 };
-+
-+		 usb0: ohci@00500000 {
-+		       status = "okay";
-+		 };
-+
-+		 nand0: nand@40000000 {
-+		       nand-bus-width = <8>;
-+		       nand-ecc-mode = "soft";
-+		       nand-on-flash-bbt = <1>;
-+		       status = "okay";
-+		 };
-+	 };
-+
-+	 i2c@0 {
-+		status = "okay";
-+	 };
-+
-+	 leds {
-+		compatible = "gpio-leds";
-+
-+		b0 {
-+			label = "b0";
-+			gpios = <&pioA 6 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+	};
-+};
---
-2.1.4
+cheers,
+-roger
+    
+> 
+> Li Jun
+> 
+>>
+>> cheers,
+>> -roger
+>>
+>>>
+>>> Li Jun
+>>>
+>>>>
+>>>> cheers,
+>>>> -roger
+>>>>
+>>>>>
+>>>>>>>
+>>>>>>>>  	return 0;
+>>>>>>>> @@ -660,9 +830,15 @@ static ssize_t usb_udc_softconn_store(struct
+>>>> device *dev,
+>>>>>>>>  		return -EOPNOTSUPP;
+>>>>>>>>  	}
+>>>>>>>>
+>>>>>>>> +	/* In OTG mode we don't support softconnect, but b_bus_req */
+>>>>>>>> +	if (udc->gadget->otg_dev) {
+>>>>>>>> +		dev_err(dev, "soft-connect not supported in OTG mode\n");
+>>>>>>>> +		return -EOPNOTSUPP;
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>
+>>>>>>> The soft-connect can be supported at dual-role mode currently, we
+>>>>>>> can use b_bus_req entry once it is implemented later.
+>>>>>>
+>>>>>> Soft-connect should be done via sysfs handling within the OTG core.
+>>>>>> This can be added later. I don't want anything outside the OTG core
+>>>>>> to handle soft-connect behaviour as it will be hard to keep things
+>>>>>> in sync.
+>>>>>>
+>>>>>> I can update the comment to something like this.
+>>>>>>
+>>>>>> /* In OTG/dual-role mode, soft-connect should be handled by OTG
+>>>>>> core */
+>>>>>
+>>>>> Ok, let's Felipe decide it.
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>>  	if (sysfs_streq(buf, "connect")) {
+>>>>>>>>  		usb_gadget_udc_start(udc);
+>>>>>>>> -		usb_gadget_connect(udc->gadget);
+>>>>>>>> +		usb_udc_connect_control(udc);
+>>>>>>>
+>>>>>>> This line seems to be not related with this patch.
+>>>>>>>
+>>>>>> Right. I'll remove it.
+>>>>>>
+>>>>>> cheers,
+>>>>>> -roger
+>>>>>
