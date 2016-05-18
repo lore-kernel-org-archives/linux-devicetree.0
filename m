@@ -1,43 +1,38 @@
-From: Grant Grundler <grundler@chromium.org>
-Subject: Re: [PATCH 1/2 V3] dt: add Atmel Captouch bindings
-Date: Wed, 18 May 2016 15:26:22 -0700
-Message-ID: <CANEJEGseHJ6n2ge-XNEi=jCJb-EVuupGkCnBz5s8OuVw6KKwkg@mail.gmail.com>
-References: <1463432094-146726-1-git-send-email-grundler@chromium.org>
- <20160518164404.GA31862@rob-hp-laptop> <20160518215914.GA4081@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160518215914.GA4081@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Grant Grundler <grundler@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Hung-yu Wu <hywu@google.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
+From: Christophe Ricard <christophe.ricard@gmail.com>
+Subject: [PATCH v8 4/7] devicetree: Add infineon to vendor-prefix.txt
+Date: Thu, 19 May 2016 00:35:50 +0200
+Message-ID: <1463610953-2766-5-git-send-email-christophe-h.ricard@st.com>
+References: <1463610953-2766-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <linux-security-module-owner@vger.kernel.org>
+In-Reply-To: <1463610953-2766-1-git-send-email-christophe-h.ricard@st.com>
+Sender: owner-linux-security-module@vger.kernel.org
+To: jarkko.sakkinen@linux.intel.com
+Cc: jgunthorpe@obsidianresearch.com, peterhuewe@gmx.de, ashley@ashleylai.com, tpmdd@selhorst.net, tpmdd-devel@lists.sourceforge.net, christophe-h.ricard@st.com, jean-luc.blanc@st.com, benoit.houyere@st.com, Alexander.Steffen@infineon.com, linux-security-module@vger.kernel.org, Christophe Ricard <christophe.ricard@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 2:59 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Wed, May 18, 2016 at 11:44:04AM -0500, Rob Herring wrote:
->> On Mon, May 16, 2016 at 01:54:53PM -0700, Grant Grundler wrote:
->> > From: Daniel Hung-yu Wu <hywu@google.com>
->> >
->> > Add binding for Atmel Capacitive Touch Button device.
->> >
->> > Signed-off-by: Daniel Hung-yu Wu <hywu@google.com>
->> > Signed-off-by: Grant Grundler <grundler@chromium.org>
->> > ---
->> >  .../devicetree/bindings/input/atmel,captouch.txt   | 36 ++++++++++++++++++++++
->> >  1 file changed, 34 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/input/atmel,captouch.txt
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->
-> Folded into the driver patch and applied.
->
-> Thanks.
+From: Christophe Ricard <christophe.ricard@gmail.com>
 
-Thanks Rob! Thanks Dmitry! :)
+Add missing vendor to vendor-prefix.txt
 
-grant
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> --
-> Dmitry
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 72e2c5a..6c3d970 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -113,6 +113,7 @@ ibm	International Business Machines (IBM)
+ idt	Integrated Device Technologies, Inc.
+ iom	Iomega Corporation
+ img	Imagination Technologies Ltd.
++infineon Infineon Technologies
+ ingenic	Ingenic Semiconductor
+ innolux	Innolux Corporation
+ intel	Intel Corporation
+-- 
+2.1.4
+
