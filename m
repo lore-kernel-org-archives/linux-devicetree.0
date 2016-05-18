@@ -1,58 +1,126 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] arm64: dts: rockchip: fixes the gic400 2nd region size for rk3368
-Date: Wed, 18 May 2016 22:41:50 +0800
-Message-ID: <1463582510-29156-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
+Date: Wed, 18 May 2016 14:46:50 +0000
+Message-ID: <AM4PR04MB2130926F9AE8EBFC0D19447689490@AM4PR04MB2130.eurprd04.prod.outlook.com>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
+ <1463133808-10630-14-git-send-email-rogerq@ti.com>
+ <20160516070249.GB24609@shlinux2.ap.freescale.net> <57398451.2060103@ti.com>
+ <20160516092323.GD24609@shlinux2.ap.freescale.net> <57399839.90706@ti.com>
+ <AM4PR04MB2130E149700361CBA3F6863389480@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573AD198.6030307@ti.com>
+ <AM4PR04MB2130EF68F7ADD64607C6CD4389480@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573C6347.6080705@ti.com>
+ <AM4PR04MB2130145869480748D06FE6E589490@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573C719F.5010107@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <573C719F.5010107@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Peter Chen <hzpeterchen@gmail.com>
+Cc: "peter.chen@freescale.com" <peter.chen@freescale.com>, "balbi@kernel.org" <balbi@kernel.org>, "tony@atomide.com" <tony@atomide.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "jun.li@freescale.com" <jun.li@freescale.com>, "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>, "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>, "robh@kernel.org" <robh@kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "b-liu@ti.com" <b-liu@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vg>
 List-Id: devicetree@vger.kernel.org
 
-The 2nd additional region is the GIC virtual cpu interface register
-base and size.
 
-As the gic400 of rk3368 says, the cpu interface register map as below
 
-:
+> >>
+> >> I didn't want to have complex Kconfig so decided to have otg as
+> >> built-in only.
+> >> What do you want me to change in existing code? and why?
+> >
+> > Remove those stuff which only for pass diff driver config Like every
+> > controller driver need a duplicated
+> >
+> > static struct otg_hcd_ops ci_hcd_ops = {
+> >     ...
+> > }
+> 
+> This is an exception only. Every controller driver doesn't need to
+> implement hcd_ops. It is implemented in the hcd core.
+> 
+> >
+> > And here is another example, for gadget connect, otg driver can
+> > directly call to usb_udc_vbus_handler() in drd state machine, but you
+> > create another interface:
+> >
+> > .connect_control = usb_gadget_connect_control,
+> >
+> > If the symbol is defined in one driver which is 'm', another driver
+> > reference it should be 'm' as well, then there is no this kind of
+> > problem as my understanding.
+> 
+> That is fine as long as all are 'm'. but how do you solve the case when
+> Gadget is built in and host is 'm'? OTG has to be built-in and you will
+> need an hcd to gadget interface.
 
--0x0000 GICC_CTRL
-.
-.
-.
--0x00fc GICC_IIDR
--0x1000 GICC_IDR
+Hcd to gadget interface? Or you want to say otg to host interface?
 
-Obviously, the region size should be greater than 0x1000.
-So we should make sure to include the GICC_IDR since the kernel will access
-it in some cases.
+I think hcd and gadget are independent each other, now
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Hcd --> otg; and gadget --> otg, (hcd and gadget use otg's symbol)
 
----
+If you directly call to usb_udc_vbus_handler() in drd state machine
 
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Then:
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index 8b4a7c9..080203e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -670,7 +670,7 @@
- 		#address-cells = <0>;
- 
- 		reg = <0x0 0xffb71000 0x0 0x1000>,
--		      <0x0 0xffb72000 0x0 0x1000>,
-+		      <0x0 0xffb72000 0x0 0x2000>,
- 		      <0x0 0xffb74000 0x0 0x2000>,
- 		      <0x0 0xffb76000 0x0 0x2000>;
- 		interrupts = <GIC_PPI 9
--- 
-2.7.4
+Hcd --> otg; and gadget <--> otg, (gadget and otg will refer to symbol of each other)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Li Jun
+
+> 
+> Do you have any ideas to solve that case?
+> 
+> cheers,
+> -roger
+> 
+> >>>>>>
+> >>>>>>>
+> >>>>>>>>>
+> >>>>>>>>>>  	return 0;
+> >>>>>>>>>> @@ -660,9 +830,15 @@ static ssize_t
+> >>>>>>>>>> usb_udc_softconn_store(struct
+> >>>>>> device *dev,
+> >>>>>>>>>>  		return -EOPNOTSUPP;
+> >>>>>>>>>>  	}
+> >>>>>>>>>>
+> >>>>>>>>>> +	/* In OTG mode we don't support softconnect, but
+> b_bus_req */
+> >>>>>>>>>> +	if (udc->gadget->otg_dev) {
+> >>>>>>>>>> +		dev_err(dev, "soft-connect not supported in OTG
+> mode\n");
+> >>>>>>>>>> +		return -EOPNOTSUPP;
+> >>>>>>>>>> +	}
+> >>>>>>>>>> +
+> >>>>>>>>>
+> >>>>>>>>> The soft-connect can be supported at dual-role mode currently,
+> >>>>>>>>> we can use b_bus_req entry once it is implemented later.
+> >>>>>>>>
+> >>>>>>>> Soft-connect should be done via sysfs handling within the OTG
+> core.
+> >>>>>>>> This can be added later. I don't want anything outside the OTG
+> >>>>>>>> core to handle soft-connect behaviour as it will be hard to
+> >>>>>>>> keep things in sync.
+> >>>>>>>>
+> >>>>>>>> I can update the comment to something like this.
+> >>>>>>>>
+> >>>>>>>> /* In OTG/dual-role mode, soft-connect should be handled by OTG
+> >>>>>>>> core */
+> >>>>>>>
+> >>>>>>> Ok, let's Felipe decide it.
+> >>>>>>>
+> >>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>>>  	if (sysfs_streq(buf, "connect")) {
+> >>>>>>>>>>  		usb_gadget_udc_start(udc);
+> >>>>>>>>>> -		usb_gadget_connect(udc->gadget);
+> >>>>>>>>>> +		usb_udc_connect_control(udc);
+> >>>>>>>>>
+> >>>>>>>>> This line seems to be not related with this patch.
+> >>>>>>>>>
+> >>>>>>>> Right. I'll remove it.
+> >>>>>>>>
+> >>>>>>>> cheers,
+> >>>>>>>> -roger
+> >>>>>>>
