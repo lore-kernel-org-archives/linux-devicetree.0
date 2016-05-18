@@ -1,54 +1,33 @@
-From: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Subject: (unknown)
-Date: Wed, 18 May 2016 10:26:32 -0600
-Message-ID: <CANCZdfow154vh3kHqUNUM6CoBsC9Vu3_+SEjFG1dz=FOkc9vsg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] ir-rx51: add DT support to driver
+Date: Wed, 18 May 2016 11:37:32 -0500
+Message-ID: <20160518163732.GA25142@rob-hp-laptop>
+References: <1463427254-7728-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1463427254-7728-5-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Subject: 
+Content-Disposition: inline
+In-Reply-To: <1463427254-7728-5-git-send-email-ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Greetings,
+On Mon, May 16, 2016 at 10:34:12PM +0300, Ivaylo Dimitrov wrote:
+> With the upcoming removal of legacy boot, lets add support to one of the
+> last N900 drivers remaining without it. As the driver still uses omap
+> dmtimer, add auxdata as well.
+> 
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/nokia,n900-ir          | 20 ++++++++++++++++++++
+>  arch/arm/mach-omap2/pdata-quirks.c                   |  6 +-----
+>  drivers/media/rc/ir-rx51.c                           | 11 ++++++++++-
+>  3 files changed, 31 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/nokia,n900-ir
 
-I was looking at the draft link posted here
-https://github.com/devicetree-org/devicetree-specification-released/blob/master/prerelease/devicetree-specification-v0.1-pre1-20160429.pdf
-a while ago. I hope this is the right place to ask about it.
-
-It raised a bit of a question. There's nothing in it talking about the
-current
-practice of using CPP to pre-process the .dts/.dtsi files before passing
-them
-into dtc to compile them into dtb.
-
-Normally, I see such things outside the scope of standardization. However,
-many of the .dts files that are in the wild today use a number of #define
-constants to make things more readable (having GPIO_ACTIVE_HIGH
-instead of '0' makes the .dts files easier to read). However, there's a
-small
-issue that I've had. The files that contain those definitions are currently
-in the Linux kernel and have a wide variety of licenses (including none
-at all).
-
-So before even getting to the notion of licenses and such (which past
-expereince suggests may be the worst place to start a discussion), I'm
-wondering where that will be defined, and if these #defines will become
-part of the standard for each of the bindings that are defined.
-
-I'm also wondering where the larger issue of using cpp to process the dts
-files will be discussed, since FreeBSD's BSDL dtc suffers interoperability
-due to this issue. Having the formal spec will also be helpful for its care and
-feeding since many fine points have had to be decided based on .dts
-files in the wild rather than a clear spec.
-
-Thanks again for spear-heading the effort to get a new version out now
-that ePAPR has fallen on hard times.
-
-Warner
-
-P.S. I'm mostly a FreeBSD guy, but just spent some time digging into this
-issue for another of the BSDs that's considering adopting DTS files.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
