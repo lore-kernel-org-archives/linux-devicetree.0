@@ -1,30 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 14/14] ASoC: omap-mcpdm: Add support for pdmclk clock
- handling
-Date: Wed, 18 May 2016 18:31:41 -0500
-Message-ID: <20160518233141.GA10395@rob-hp-laptop>
-References: <1463579196-5484-1-git-send-email-peter.ujfalusi@ti.com>
- <1463579196-5484-15-git-send-email-peter.ujfalusi@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] documentation: Add secure monitor binding
+ documentation
+Date: Wed, 18 May 2016 18:35:18 -0500
+Message-ID: <20160518233518.GA11027@rob-hp-laptop>
+References: <1463583382-15614-1-git-send-email-carlo@caione.org>
+ <1463583382-15614-5-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1463579196-5484-15-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, tony@atomide.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, t-kristo@ti.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
+In-Reply-To: <1463583382-15614-5-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 04:46:36PM +0300, Peter Ujfalusi wrote:
-> McPDM module receives it's functional clock from external source. This
-> clock is the pdmclk provided by the twl6040 audio IC. If the clock is not
-> available all register accesses to McPDM fails and the module is not
-> operational.
+On Wed, May 18, 2016 at 04:56:22PM +0200, Carlo Caione wrote:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Add the binding documentation for the Amlogic secure monitor driver.
+> 
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/sound/omap-mcpdm.txt | 10 ++++++++++
->  sound/soc/omap/omap-mcpdm.c                            | 17 +++++++++++++++++
->  2 files changed, 27 insertions(+)
+>  .../devicetree/bindings/soc/meson/meson_sm.txt     | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/meson/meson_sm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/meson/meson_sm.txt b/Documentation/devicetree/bindings/soc/meson/meson_sm.txt
+> new file mode 100644
+> index 0000000..f59c732
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/meson/meson_sm.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+bindings/firmware/
+
+> @@ -0,0 +1,45 @@
+> +* Amlogic Secure Monitor
+> +
+> +In the Amlogic SoCs the Secure Monitor code is used to provide access to the
+> +NVMEM, enable JTAG, set USB boot, etc...
+> +
+> +Required properties for the secure monitor node:
+> +- compatible: Should be "amlogic,meson-sm"
+> +- amlogic,sm_cmd_input_base: SMC32 function identifier to read the physical
+> +                             address of the input buffer
+> +- amlogic,sm_cmd_output_base: SMC32 function identifier to read the physical
+> +                              address of the output buffer
+
+Use '-' rather than '_'.
+
+> +
+> +Example:
+> +
+> +	#include <dt-bindings/soc/meson-gxbb-sm.h>
+> +
+> +	...
+> +
+> +	sm {
+
+Put this under a /firmware node.
+
+> +		compatible = "amlogic,meson-sm";
+> +		amlogic,sm_cmd_input_base = <SM_GET_SHARE_MEM_INPUT_BASE>;
+> +		amlogic,sm_cmd_output_base = <SM_GET_SHARE_MEM_OUTPUT_BASE>;
+> +	};
+> +
+> +Node of a device using the secure monitor must have a custom property to
+> +specify the SMC32 function the driver is going to use. The values of all the
+> +SMC function identifiers are listed in a SoC-specific header file:
+> +
+> +"include/dt-bindings/soc/meson-gxbb-sm.h" - for the Meson GXBB secure monitor.
+> +
+> +Example of the node using the secure monitor:
+> +
+> +	#include <dt-bindings/soc/meson-gxbb-sm.h>
+> +
+> +	...
+> +
+> +	efuse: efuse {
+> +		compatible = "amlogic,meson-gxbb-efuse";
+> +		amlogic,sm_cmd_read_efuse = <SM_EFUSE_READ>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		...
+> +	};
+> +
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
