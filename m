@@ -1,119 +1,80 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: drivers/of: crash on boot
-Date: Thu, 19 May 2016 07:48:18 -0500
-Message-ID: <CAL_JsqL_8cUmKxu3=BBkmFi3yO7rWeUW64TO6MRV60451V70+Q@mail.gmail.com>
-References: <573C8B6C.6030900@oracle.com> <CAL_JsqJsjh+Shk1nD5YQeQ=6B1MZOyEj5oX-q_xKH642toURdA@mail.gmail.com>
- <80967a3a-3b97-e131-97e5-f449f567b01c@nvidia.com> <d0e2564c-c8d4-2c4c-f194-60b43b0ab80e@nvidia.com>
- <CAL_JsqKn1BLCiW=CBch4G8s=YheXFVouhz+JVvB6j8-4W-UK6A@mail.gmail.com>
- <CAL_JsqLdpq6bePK2c6Dhub9cZvMV1JVqC=RH8pomCmpszYugYg@mail.gmail.com> <20160519111950.GA28855@gwshan>
+Subject: Re: [PATCH] ARM: at91: Add DT support for Olimex SAM9-L9260 board.
+Date: Thu, 19 May 2016 07:50:20 -0500
+Message-ID: <CAL_JsqLXaq7KKPKnSTcRBswnvdZiUS=1wb35oo+JrjY3_tPRJQ@mail.gmail.com>
+References: <1463574766-15568-1-git-send-email-raashidmuhammed@zilogic.com>
+ <20160518232925.GA6545@rob-hp-laptop> <573DB180.9030200@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160519111950.GA28855@gwshan>
+In-Reply-To: <573DB180.9030200-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 19, 2016 at 6:19 AM, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
-> On Wed, May 18, 2016 at 08:51:59PM -0500, Rob Herring wrote:
->>On Wed, May 18, 2016 at 7:23 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Wed, May 18, 2016 at 4:26 PM, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>> On 5/18/2016 3:58 PM, Rhyland Klein wrote:
->>>>> On 5/18/2016 3:36 PM, Rob Herring wrote:
->>>>>> On Wed, May 18, 2016 at 10:34 AM, Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
->>>>>>> Hi Rhyland,
->>>>>>>
->>>>>>> I'm seeing a crash on boot that seems to have been caused by
->>>>>>> "drivers/of: Fix depth when unflattening devicetree":
->>>>>>>
->>>>>>> [   61.145229] ==================================================================
->>>>>>>
->>>>>>> [   61.147588] BUG: KASAN: stack-out-of-bounds in unflatten_dt_nodes+0x11d2/0x1290 at addr ffff88005b30777c
->>
->>[...]
->>
->>>> This patch seems to work for me. I found a bug in my original patch.
->>>> Sasha/Rob, can you see if this works for you too:
->>>>
->>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->>>> index 0b5850027bb5..e7a8caac5b27 100644
->>>> --- a/drivers/of/fdt.c
->>>> +++ b/drivers/of/fdt.c
->>>> @@ -407,9 +407,9 @@ static int unflatten_dt_nodes(const void *blob,
->>>>
->>>>         root = dad;
->>>>         fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
->>>> -       nps[depth+1] = dad;
->>>> +       nps[depth] = dad;
->>>>         for (offset = 0;
->>>> -            offset >= 0;
->>>> +            offset >= 0 && depth >= 0;
->>>>              offset = fdt_next_node(blob, offset, &depth)) {
->>>>                 if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
->>>>                         continue;
+On Thu, May 19, 2016 at 7:28 AM, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org=
+> wrote:
+> Le 19/05/2016 01:29, Rob Herring a =C3=A9crit :
+>> On Wed, May 18, 2016 at 06:02:46PM +0530, Raashid Muhammed wrote:
+>>> From: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
 >>>
->>> This is not work for me. I'm booting x86 with the DT unit test and
->>> KASAN enabled. I suspect our differences are due to different data
->>> after the end of the dtb. Also, I think there may be a bug in
->>> fdt_next_node FDT_END handling. The "!depth" seems suspicious to me
->>> and I think it should be "!(*depth)".
+>>> sam9-l9260 is a low cost board designed by Olimex.
 >>>
->>> The DT overlay unit tests are also failing. Not sure if that's related.
+>>> More infomation is available at:
+>>> https://www.olimex.com/Products/ARM/Atmel/SAM9-L9260/
+>>>
+>>> Signed-off-by: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
+>>> Reviewed-by: Vijay Kumar B. <vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/arm/olimex-at91.txt        |   6 ++
+>>>  arch/arm/boot/dts/Makefile                         |   1 +
+>>>  arch/arm/boot/dts/sam9-l9260.dts                   | 108 +++++++++=
+++++++++++++
+>
+> For AT91-based boards, please use this prefix: "at91-" as stated in t=
+he
+> Atmel README file:
+> http://lxr.free-electrons.com/source/Documentation/arm/Atmel/README#L=
+127
+>
+> So I would recommend this name instead:
+> at91-sam9-l9260.dts
+>
+>
+>>>  3 files changed, 115 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/arm/olimex-at=
+91.txt
+>>>  create mode 100644 arch/arm/boot/dts/sam9-l9260.dts
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/olimex-at91.txt =
+b/Documentation/devicetree/bindings/arm/olimex-at91.txt
+>>> new file mode 100644
+>>> index 0000000..0587d63
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/arm/olimex-at91.txt
+>>> @@ -0,0 +1,6 @@
+>>> +Olimex AT91 Device Tree Bindings
+>>> +--------------------------------
 >>
->>Seems with the above patch and the fix to fdt_next_node, the problem
->>is fixed both for KASAN and the DT overlay tests. Trying it out now
->>with some other configurations.
+>> There's not an existing at91 or olimex file this would fit into? We
+>> don't need 1 file per board.
 >>
+>>> +
+>>> +SAM9-L9260 Board
+>>> +Required root node properties:
+>>> +    - compatible =3D "olimex,sam9-l9260", "atmel,at91sam9260";
 >
-> There're 5 patches I introduced to drivers/of/fdt.c (A). Rhyland had
-> one patch based on them (B). The code change in this thread is (C).
-> I tried several cases as below.
->
-> There is one failing case caused by something we don't know yet. I
-> will do some invetigation unless it's not a issue or a known issue
-> of unittest itself.
->
-> [1]. (A) excluded, (B) excluded, (C) excluded
-> =============================================
-> device-tree: Duplicate name in testcase-data, renamed to "duplicate-name#1"
-> ### dt-test ### start of unittest - you will see error messages
-> /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
-> /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
-> /testcase-data/phandle-tests/consumer-a: could not find phandle
-> /testcase-data/phandle-tests/consumer-a: could not find phandle
-> /testcase-data/phandle-tests/consumer-a: arguments longer than property
-> /testcase-data/phandle-tests/consumer-a: arguments longer than property
-> irq: XICS didn't like hwirq-0x1 to VIRQ32 mapping (rc=-22)
-> irq: XICS didn't like hwirq-0x1 to VIRQ32 mapping (rc=-22)
-> ### dt-test ### FAIL of_unittest_platform_populate():783 device deferred probe failed - 0
+> I don't think this file is needed at all actually. We have a lot of
+> board files and none of them have a dedicated or particular entry for=
+ them.
 
-Humm, I'm not seeing this one.
-
-> overlay_is_topmost: #5 clashes #6 @/testcase-data/overlay-node/test-bus/test-unittest8
-> overlay_removal_is_ok: overlay #5 is not topmost
-> of_overlay_destroy: removal check failed for overlay #5
-> ### dt-test ### end of unittest - 147 passed, 1 failed
->
-> [2]. (A) included, (B) exsluded, (C) excluded
-> =============================================
-> Same output as [1]
->
-> [3]. (A) included, (B) included, (C) excluded
-> =============================================
-> System fails to boot
->
-> [4]. (A) included, (B) included, (C) included
-> =============================================
-> Same output as [1] and [2].
-
-For C, this includes the fix to depth in fdt_next_node?
-
-While case 2 works for you, do you agree that there is an off by one
-error and initially fdt_next_node should be called with depth=0?
+Well, they should have one.
 
 Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
