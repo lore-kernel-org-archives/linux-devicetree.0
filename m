@@ -1,79 +1,47 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 3/6] ARM: dts: r8a7794: add MSTP10 clocks
-Date: Thu, 19 May 2016 21:36:27 +0300
-Message-ID: <ba23906d-afca-ed5c-511f-bd7531a277a8@cogentembedded.com>
-References: <2378837.cigT3tNQPe@wasted.cogentembedded.com>
- <3321354.LNTkVAhXvF@wasted.cogentembedded.com>
- <CAMuHMdVjrVFpEZPukWiLQK473R+7CTqVHc1jj8fktAD9RpH_sw@mail.gmail.com>
- <f0700315-af43-b208-cd91-8ca510bf5da9@cogentembedded.com>
- <CAMuHMdWSfx_Q9xopidpLCbwHhuPKwfokiUXYPpHxf3B2tC+-dw@mail.gmail.com>
+From: Jiri Slaby <jslaby@suse.cz>
+Subject: Re: get_maintainer.pl and MAINTAINERS file
+Date: Thu, 19 May 2016 21:53:25 +0200
+Message-ID: <573E19B5.1050800@suse.cz>
+References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
+ <20160518150924.GA3871@kroah.com> <20160519105418.5df3c8f7@erd979>
+ <871t4yfbmy.fsf_-_@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWSfx_Q9xopidpLCbwHhuPKwfokiUXYPpHxf3B2tC+-dw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <871t4yfbmy.fsf_-_@kamboji.qca.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kalle Valo <kvalo@codeaurora.org>, Robin van der Gracht <robin@protonic.nl>, Joe Perches <joe@perches.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, "David S . Miller" <davem@davemloft.net>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Matt Ranostay <mranostay@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <treding@nvidia.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Cc: joe
 
-On 05/19/2016 08:41 PM, Geert Uytterhoeven wrote:
-
->>>> --- renesas.orig/include/dt-bindings/clock/r8a7794-clock.h
->>>> +++ renesas/include/dt-bindings/clock/r8a7794-clock.h
->>>> @@ -109,6 +109,34 @@
->>>>  #define R8A7794_CLK_I2C1               30
->>>>  #define R8A7794_CLK_I2C0               31
->>>>
->>>> +/* MSTP10 */
->>>> +#define R8A7794_CLK_SSI_ALL            5
->>>> +#define R8A7794_CLK_SSI9               6
->>>> +#define R8A7794_CLK_SSI8               7
->>>> +#define R8A7794_CLK_SSI7               8
->>>> +#define R8A7794_CLK_SSI6               9
->>>> +#define R8A7794_CLK_SSI5               10
->>>> +#define R8A7794_CLK_SSI4               11
->>>> +#define R8A7794_CLK_SSI3               12
->>>> +#define R8A7794_CLK_SSI2               13
->>>> +#define R8A7794_CLK_SSI1               14
->>>> +#define R8A7794_CLK_SSI0               15
->>>> +#define R8A7794_CLK_SCU_ALL            17
->>>> +#define R8A7794_CLK_SCU_DVC1           18
->>>> +#define R8A7794_CLK_SCU_DVC0           19
->>>> +#define R8A7794_CLK_SCU_CTU1_MIX1      20
->>>> +#define R8A7794_CLK_SCU_CTU0_MIX0      21
->>>> +#define R8A7794_CLK_SCU_SRC9           22
->>>> +#define R8A7794_CLK_SCU_SRC8           23
->>>> +#define R8A7794_CLK_SCU_SRC7           24
->>>
->>>
->>> R-Car E2 does not have SRC7, SRC8, SRC9, ...
->>>
->>>> +#define R8A7794_CLK_SCU_SRC6           25
->>>> +#define R8A7794_CLK_SCU_SRC5           26
->>>> +#define R8A7794_CLK_SCU_SRC4           27
->>>> +#define R8A7794_CLK_SCU_SRC3           28
->>>> +#define R8A7794_CLK_SCU_SRC2           29
->>>> +#define R8A7794_CLK_SCU_SRC1           30
->>>> +#define R8A7794_CLK_SCU_SRC0           31
->>>
->>>
->>> ... and SRC0.
+On 05/19/2016, 02:57 PM, Kalle Valo wrote:
+> (Changed the subject from "Re: [PATCH v6 0/3] auxdisplay: Introduce ht16k33 driver")
+> 
+> Robin van der Gracht <robin@protonic.nl> writes:
+> 
+>>> And 4th, what is with the insane number of people on cc:?  Use
+>>> get_maintainer.pl correctly please, and don't just hit everyone you
+>>> can possibly think of with a cc: for no good reason.
 >>
->>
->>    Yet table 7A.12 in the rev1.02 manual lists them all. Your manual
->> doesn't?
->
-> I thought you were aware of this, cfr. your "[PATCH] rcar: src: skip
-> disabled-SRC nodes"?
+>> I did use the get_maintainer script. I solely passed the patch set as
+>> command line argument.
+> 
+> I think get_maintainer script should ignore MAINTAINERS file altogether.
+> After I did drivers/net/wireless reorganisation, and had to make
+> numerous changes to MAINTAINERS in the process, I have been CCed to all
+> sorts of patchsets to which I have nothing to do with (this one
+> included). I suspect get_maintainer.pl is to blame here.
 
-    I am, I was just pointing out that this patch was backed by the manual I 
-had...
+Last time I even tried to fix this up, but failed due to time
+limitations as the code is a bit complex.
 
-> Gr{oetje,eeting}s,
->
->                         Geert
+Joe, you seem to be the one who touched the script many times recently.
+May we ask you to fix this up?
 
-MBR, Sergei
+thanks,
+-- 
+js
+suse labs
