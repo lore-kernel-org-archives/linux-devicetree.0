@@ -1,30 +1,29 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 0/8] ARM: dts: Add operating-points-v2 tables for TI
- platforms
-Date: Thu, 19 May 2016 10:17:44 +0530
-Message-ID: <20160519044744.GE32001@vireshk-i7>
-References: <cover.1463606963.git.d-gerlach@ti.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH 0/2] AM335x ICE: Add support for PCA9536 GPIO expander
+Date: Thu, 19 May 2016 12:17:28 +0530
+Message-ID: <1463640450-16762-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1463606963.git.d-gerlach@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Yegor Yefremov <yegorslists@googlemail.com>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18-05-16, 18:36, Dave Gerlach wrote:
-> Hi,
-> This series adds operating-points-v2 tables for am335x, am437x, dra7xx,
-> and am57xx based platforms along with some support patches so that we
-> can enable more OPPs for the CPU on these platforms.
-> 
-> These patches rely on the ti-cpufreq series sent here [1] and provide
-> opp-supported-hw data for each OPP so that only the appropriate OPPs
-> for a specific piece of silicon get enabled.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+This patch series adds support for TI PCA9536 GPIO expander present on
+AM335x ICE board.
+
+Vignesh R (2):
+  gpio: pca953x: Add support for TI PCA9536
+  ARM: dts: am335x-icev2: Add DT node for TI PCA9536
+
+ Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
+ arch/arm/boot/dts/am335x-icev2.dts                      | 7 +++++++
+ drivers/gpio/gpio-pca953x.c                             | 1 +
+ 3 files changed, 9 insertions(+)
 
 -- 
-viresh
+2.8.2
+
