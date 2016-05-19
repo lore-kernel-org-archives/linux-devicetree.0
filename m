@@ -1,77 +1,49 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/5] genirq: Allow the affinity of a percpu interrupt to
- be set/retrieved
-Date: Thu, 19 May 2016 15:25:16 +0200
-Message-ID: <CAMuHMdULYSTqi_zTEKEB0LjHcSoxrxVsN9apY8aYa=h+a8JSXA@mail.gmail.com>
-References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
-	<1460365075-7316-3-git-send-email-marc.zyngier@arm.com>
-	<CAMuHMdW_QNM0c+u-pj3w8TOhr4s40B+OwxUAoQwqPxKeRrU4ZQ@mail.gmail.com>
-	<573DBBFA.8020903@arm.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
+Date: Thu, 19 May 2016 16:40:06 +0300
+Message-ID: <9d09a39b-de72-1148-4b5d-6cfaee8da604@cogentembedded.com>
+References: <3641492.klKRrvS8tr@wasted.cogentembedded.com>
+ <20160512184233.GJ30822@pengutronix.de> <5735995B.8030802@ti.com>
+ <b9bcc192-f97b-304e-77b2-894c4528ddb6@cogentembedded.com>
+ <20160513204436.GC7600@lunn.ch>
+ <1a44a737-2b81-625b-8edf-d1c3dfcdd619@cogentembedded.com>
+ <20160513234410.GE7600@lunn.ch>
+ <cc232c9e-ef25-482d-0978-cbdfe03bad22@cogentembedded.com>
+ <20160514195016.GC26220@lunn.ch>
+ <34922ff9-e566-4829-a631-54ce07cbb325@cogentembedded.com>
+ <20160515152339.GA9021@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <573DBBFA.8020903-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20160515152339.GA9021-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+Hello.
 
-On Thu, May 19, 2016 at 3:13 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 19/05/16 12:08, Geert Uytterhoeven wrote:
->> On Mon, Apr 11, 2016 at 10:57 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>> In order to prepare the genirq layer for the concept of partitionned
->>> percpu interrupts, let's allow an affinity to be associated with
->>> such an interrupt. We introduce:
->>>
->>> - irq_set_percpu_devid_partition: flag an interrupt as a percpu-devid
->>>   interrupt, and associate it with an affinity
->>> - irq_get_percpu_devid_partition: allow the affinity of that interrupt
->>>   to be retrieved.
->>>
->>> This will allow a driver to discover which CPUs the per-cpu interrupt
->>> can actually fire on.
->>>
->>> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+On 5/15/2016 6:23 PM, Andrew Lunn wrote:
+
+>>> I think there could be similar code one layer above to handle one gpio
+>>> line for multiple phys.
 >>
->>> --- a/include/linux/irqdesc.h
->>> +++ b/include/linux/irqdesc.h
->>> @@ -66,6 +66,7 @@ struct irq_desc {
->>>         int                     threads_handled_last;
->>>         raw_spinlock_t          lock;
->>>         struct cpumask          *percpu_enabled;
->>> +       const struct cpumask    *percpu_affinity;
->>
->> Adding this field showed up on my bloat-o-meter radar...
+>>    Ah, you want me to recognize some MAC/MDIO bound prop (e.g.
+>> "mdio-reset-gpios") in of_mdiobus_register()? I'll think about it
+>> now that my patch needs fixing anyway...
 >
-> By how much?
-
-By NR_IRQS * 4 bytes, which ranges from 32 to 1024 bytes on m68k,
-depending on the platform.
-
->> Does it make sense to move it (and percpu_enabled) inside the "#ifdef
->> CONFIG_SMP" below, and rework the code to not need it on UP?
->>
->>>  #ifdef CONFIG_SMP
->>>         const struct cpumask    *affinity_hint;
->>>         struct irq_affinity_notify *affinity_notify;
+> Hi Sergi
 >
-> I wonder if we couldn't actually unify affinity_hint and
-> percpu_affinity. I'll have a look.
+> It does not need to be you implementing this, your hardware does not
+> need it. However, if you do feel like doing it, great.
 
-Thanks!
+    It would cover my "single PHY" case anyway.
 
-Gr{oetje,eeting}s,
+>      Andrew
 
-                        Geert
+MBR, Sergei
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
