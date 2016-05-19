@@ -1,49 +1,49 @@
-From: Richard Weinberger <richard.weinberger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: get_maintainer.pl and MAINTAINERS file
-Date: Thu, 19 May 2016 16:25:45 +0200
-Message-ID: <CAFLxGvwU-2aE7_0Suht--DvWby3RT=mdkpRomHz25MgicRfC3w@mail.gmail.com>
-References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
-	<20160518150924.GA3871@kroah.com>
-	<20160519105418.5df3c8f7@erd979>
-	<871t4yfbmy.fsf_-_@kamboji.qca.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/3] spi/rockchip: add rk3036/rk3228/rk3368 socs for spi document
+Date: Thu, 19 May 2016 23:47:02 +0800
+Message-ID: <1463672824-15367-1-git-send-email-wxt@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <871t4yfbmy.fsf_-_-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 19, 2016 at 2:57 PM, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> (Changed the subject from "Re: [PATCH v6 0/3] auxdisplay: Introduce ht16k33 driver")
->
-> Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org> writes:
->
->>> And 4th, what is with the insane number of people on cc:?  Use
->>> get_maintainer.pl correctly please, and don't just hit everyone you
->>> can possibly think of with a cc: for no good reason.
->>
->> I did use the get_maintainer script. I solely passed the patch set as
->> command line argument.
->
-> I think get_maintainer script should ignore MAINTAINERS file altogether.
-> After I did drivers/net/wireless reorganisation, and had to make
-> numerous changes to MAINTAINERS in the process, I have been CCed to all
-> sorts of patchsets to which I have nothing to do with (this one
-> included). I suspect get_maintainer.pl is to blame here.
+We had supported the rk3036/rk3066/rk3188/rk3228/rk3288/rk3368/rk3399
+family SoCs in linux kernel.
 
-Are you sure it is because you are listed as maintainer for specific files?
-If you are maintain something you have to be CC'ed.
-It is rather because get_maintainer.pl tries to be smart and uses git to
-find people who have touched a file...
+Let's add the other SoCs, in order to a better understanding from the
+rockchip spi document.
 
-I guess instead you want something like:
-http://permalink.gmane.org/gmane.linux.kernel.commits.head/538561
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+---
 
+ Documentation/devicetree/bindings/spi/spi-rockchip.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+index 1b14d69..305b542 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+@@ -6,9 +6,12 @@ and display controllers using the SPI communication interface.
+ Required Properties:
+ 
+ - compatible: should be one of the following.
++    "rockchip,rk3036-spi" for rk3036.
+     "rockchip,rk3066-spi" for rk3066.
+     "rockchip,rk3188-spi", "rockchip,rk3066-spi" for rk3188.
++    "rockchip,rk3228-spi", "rockchip,rk3066-spi" for rk3228.
+     "rockchip,rk3288-spi", "rockchip,rk3066-spi" for rk3288.
++    "rockchip,rk3368-spi", "rockchip,rk3066-spi" for rk3368.
+     "rockchip,rk3399-spi", "rockchip,rk3066-spi" for rk3399.
+ - reg: physical base address of the controller and length of memory mapped
+        region.
 -- 
-Thanks,
-//richard
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
