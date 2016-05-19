@@ -1,80 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: Add DT support for Olimex SAM9-L9260 board.
-Date: Thu, 19 May 2016 07:50:20 -0500
-Message-ID: <CAL_JsqLXaq7KKPKnSTcRBswnvdZiUS=1wb35oo+JrjY3_tPRJQ@mail.gmail.com>
-References: <1463574766-15568-1-git-send-email-raashidmuhammed@zilogic.com>
- <20160518232925.GA6545@rob-hp-laptop> <573DB180.9030200@atmel.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: get_maintainer.pl and MAINTAINERS file
+Date: Thu, 19 May 2016 15:57:57 +0300
+Message-ID: <871t4yfbmy.fsf_-_@kamboji.qca.qualcomm.com>
+References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
+	<20160518150924.GA3871@kroah.com> <20160519105418.5df3c8f7@erd979>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <573DB180.9030200-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160519105418.5df3c8f7@erd979> (Robin van der Gracht's message
+	of "Thu, 19 May 2016 10:54:18 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 19, 2016 at 7:28 AM, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org=
-> wrote:
-> Le 19/05/2016 01:29, Rob Herring a =C3=A9crit :
->> On Wed, May 18, 2016 at 06:02:46PM +0530, Raashid Muhammed wrote:
->>> From: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
->>>
->>> sam9-l9260 is a low cost board designed by Olimex.
->>>
->>> More infomation is available at:
->>> https://www.olimex.com/Products/ARM/Atmel/SAM9-L9260/
->>>
->>> Signed-off-by: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
->>> Reviewed-by: Vijay Kumar B. <vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/arm/olimex-at91.txt        |   6 ++
->>>  arch/arm/boot/dts/Makefile                         |   1 +
->>>  arch/arm/boot/dts/sam9-l9260.dts                   | 108 +++++++++=
-++++++++++++
->
-> For AT91-based boards, please use this prefix: "at91-" as stated in t=
-he
-> Atmel README file:
-> http://lxr.free-electrons.com/source/Documentation/arm/Atmel/README#L=
-127
->
-> So I would recommend this name instead:
-> at91-sam9-l9260.dts
->
->
->>>  3 files changed, 115 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/arm/olimex-at=
-91.txt
->>>  create mode 100644 arch/arm/boot/dts/sam9-l9260.dts
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/olimex-at91.txt =
-b/Documentation/devicetree/bindings/arm/olimex-at91.txt
->>> new file mode 100644
->>> index 0000000..0587d63
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/olimex-at91.txt
->>> @@ -0,0 +1,6 @@
->>> +Olimex AT91 Device Tree Bindings
->>> +--------------------------------
->>
->> There's not an existing at91 or olimex file this would fit into? We
->> don't need 1 file per board.
->>
->>> +
->>> +SAM9-L9260 Board
->>> +Required root node properties:
->>> +    - compatible =3D "olimex,sam9-l9260", "atmel,at91sam9260";
->
-> I don't think this file is needed at all actually. We have a lot of
-> board files and none of them have a dedicated or particular entry for=
- them.
+(Changed the subject from "Re: [PATCH v6 0/3] auxdisplay: Introduce ht16k33 driver")
 
-Well, they should have one.
+Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org> writes:
 
-Rob
+>> And 4th, what is with the insane number of people on cc:?  Use
+>> get_maintainer.pl correctly please, and don't just hit everyone you
+>> can possibly think of with a cc: for no good reason.
+>
+> I did use the get_maintainer script. I solely passed the patch set as
+> command line argument.
+
+I think get_maintainer script should ignore MAINTAINERS file altogether.
+After I did drivers/net/wireless reorganisation, and had to make
+numerous changes to MAINTAINERS in the process, I have been CCed to all
+sorts of patchsets to which I have nothing to do with (this one
+included). I suspect get_maintainer.pl is to blame here.
+
+-- 
+Kalle Valo
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
