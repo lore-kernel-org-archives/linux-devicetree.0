@@ -1,41 +1,75 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 0/5] ata: add support for Marvell Armada 7K/8K AHCI
-Date: Thu, 19 May 2016 10:19:54 +0200
-Message-ID: <20160519101954.64c4291a@free-electrons.com>
-References: <1461335561-18363-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Jan Viktorin <viktorin-MQpMGdXoZmMqDJ6do+/SaQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] uio: introduce devicetree bindings for
+ uio_dmem_genirq
+Date: Thu, 19 May 2016 10:45:56 +0200
+Message-ID: <20160519104556.739c3f68@pcviktorin.fit.vutbr.cz>
+References: <1463476940-26791-1-git-send-email-viktorin@rehivetech.com>
+	<1463476940-26791-4-git-send-email-viktorin@rehivetech.com>
+	<20160518170105.GA4897@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1461335561-18363-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-ide@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160518170105.GA4897@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tejun,
+Hello Rob,
 
-On Fri, 22 Apr 2016 16:32:36 +0200, Thomas Petazzoni wrote:
+thank you for your opinion...
 
-> The following small series adds support for the Marvell Armada 7K/8K
-> AHCI controller. This controller is a standard AHCI controller, so not
-> much is needed, except that it uses a non-default port offset and
-> length. Due to this, some preparatory patches are used to make it
-> possible to override the default port offset/length used by the AHCI
-> core.
+On Wed, 18 May 2016 12:01:05 -0500
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-I recently learned that the non-standard port base/length is considered
-as an HW issue, and it will be fixed in upcoming revisions of the SoC.
-We are not interested in supporting the previous revisions that have
-this bug, so I'm withdrawing this patch series.
+> On Tue, May 17, 2016 at 11:22:19AM +0200, Jan Viktorin wrote:
+> > Signed-off-by: Jan Viktorin <viktorin-MQpMGdXoZmMqDJ6do+/SaQ@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/uio/uio_dmem_genirq.txt          | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/uio/uio_dmem_genirq.txt  
+> 
+> DT describes h/w. UIO is not a h/w block, so this does not belong in DT. 
+> A UIO vs. kernel driver is purely a kernel decision which shouldn't 
+> require a DT change.
 
-Sorry for the noise and time spent there, I was not aware of the fact
-that this issue would be fixed in HW.
+I mostly agree and I don't say this is the very best solution... however,
+it is quite a straightforward one.
 
-Best regards,
+> 
+> The properties should be part of match data for a compatible string that 
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+True. But in case of probing from DT, where can I obtain those match data
+from? I have to patch the kernel... and that is what I tried to avoid.
+
+With this patch set, you only modify your current device-tree (extend the
+appropriate devices by "uio,...") and reboot with this new one.
+
+> needs them set. Or if they can be defined in a way that is actually a 
+> property of the h/w, then it would be acceptible. You'd still need to 
+> define compatible strings that the properties apply to.
+
+If you look at uio_pdrv_genirq you can see that it has already been extended by
+the module param "of_id". I.e. it is possible to specify the compatible property
+it would match when doing insmod. So, it is possible to bind it to any platform
+device described by the device tree. And thus, there is no way how to define a
+list of compatible strings for it... (quite a long list, isn't it?)
+
+The same (of_id) can be done for uio_dmem_genirq, however, there is no way how to
+specify the amount of dynamic memory to be used for a specific device. For me, it
+makes sense to use DT to obtain those two properties saying "those devices would
+use this amount of memory and not more".
+
+Perhaps, another module param is a way to go here. Something like of_dmem_count=2,
+of_dmem_sizes=32k. Less flexible solution, however, if it is acceptable I'll rewrite
+the current one.
+
+Jan
+
+> 
+> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
