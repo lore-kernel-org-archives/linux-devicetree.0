@@ -1,38 +1,68 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: get_maintainer.pl and MAINTAINERS file
-Date: Thu, 19 May 2016 15:57:57 +0300
-Message-ID: <871t4yfbmy.fsf_-_@kamboji.qca.qualcomm.com>
-References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
-	<20160518150924.GA3871@kroah.com> <20160519105418.5df3c8f7@erd979>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/5] genirq: Allow the affinity of a percpu interrupt to
+ be set/retrieved
+Date: Thu, 19 May 2016 14:13:30 +0100
+Message-ID: <573DBBFA.8020903@arm.com>
+References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
+ <1460365075-7316-3-git-send-email-marc.zyngier@arm.com>
+ <CAMuHMdW_QNM0c+u-pj3w8TOhr4s40B+OwxUAoQwqPxKeRrU4ZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160519105418.5df3c8f7@erd979> (Robin van der Gracht's message
-	of "Thu, 19 May 2016 10:54:18 +0200")
+In-Reply-To: <CAMuHMdW_QNM0c+u-pj3w8TOhr4s40B+OwxUAoQwqPxKeRrU4ZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(Changed the subject from "Re: [PATCH v6 0/3] auxdisplay: Introduce ht16k33 driver")
+Hi Geert,
 
-Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org> writes:
+On 19/05/16 12:08, Geert Uytterhoeven wrote:
+> Hi Marc,
+> 
+> On Mon, Apr 11, 2016 at 10:57 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>> In order to prepare the genirq layer for the concept of partitionned
+>> percpu interrupts, let's allow an affinity to be associated with
+>> such an interrupt. We introduce:
+>>
+>> - irq_set_percpu_devid_partition: flag an interrupt as a percpu-devid
+>>   interrupt, and associate it with an affinity
+>> - irq_get_percpu_devid_partition: allow the affinity of that interrupt
+>>   to be retrieved.
+>>
+>> This will allow a driver to discover which CPUs the per-cpu interrupt
+>> can actually fire on.
+>>
+>> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> 
+>> --- a/include/linux/irqdesc.h
+>> +++ b/include/linux/irqdesc.h
+>> @@ -66,6 +66,7 @@ struct irq_desc {
+>>         int                     threads_handled_last;
+>>         raw_spinlock_t          lock;
+>>         struct cpumask          *percpu_enabled;
+>> +       const struct cpumask    *percpu_affinity;
+> 
+> Adding this field showed up on my bloat-o-meter radar...
 
->> And 4th, what is with the insane number of people on cc:?  Use
->> get_maintainer.pl correctly please, and don't just hit everyone you
->> can possibly think of with a cc: for no good reason.
->
-> I did use the get_maintainer script. I solely passed the patch set as
-> command line argument.
+By how much?
 
-I think get_maintainer script should ignore MAINTAINERS file altogether.
-After I did drivers/net/wireless reorganisation, and had to make
-numerous changes to MAINTAINERS in the process, I have been CCed to all
-sorts of patchsets to which I have nothing to do with (this one
-included). I suspect get_maintainer.pl is to blame here.
+> Does it make sense to move it (and percpu_enabled) inside the "#ifdef
+> CONFIG_SMP" below, and rework the code to not need it on UP?
+> 
+>>  #ifdef CONFIG_SMP
+>>         const struct cpumask    *affinity_hint;
+>>         struct irq_affinity_notify *affinity_notify;
 
+I wonder if we couldn't actually unify affinity_hint and
+percpu_affinity. I'll have a look.
+
+Thanks,
+
+	M.
 -- 
-Kalle Valo
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
