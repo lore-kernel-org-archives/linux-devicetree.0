@@ -1,131 +1,255 @@
-From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 5/5] ARM: dts: mt2701: add iommu/smi dtsi node for mt2701
-Date: Thu, 19 May 2016 19:49:18 +0800
-Message-ID: <1463658558-567-6-git-send-email-honghui.zhang@mediatek.com>
-References: <1463658558-567-1-git-send-email-honghui.zhang@mediatek.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: Add DT support for Olimex SAM9-L9260 board.
+Date: Thu, 19 May 2016 14:28:48 +0200
+Message-ID: <573DB180.9030200@atmel.com>
+References: <1463574766-15568-1-git-send-email-raashidmuhammed@zilogic.com>
+ <20160518232925.GA6545@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1463658558-567-1-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160518232925.GA6545@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Le 19/05/2016 01:29, Rob Herring a =E9crit :
+> On Wed, May 18, 2016 at 06:02:46PM +0530, Raashid Muhammed wrote:
+>> From: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
+>>
+>> sam9-l9260 is a low cost board designed by Olimex.
+>>
+>> More infomation is available at:
+>> https://www.olimex.com/Products/ARM/Atmel/SAM9-L9260/
+>>
+>> Signed-off-by: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
+>> Reviewed-by: Vijay Kumar B. <vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/arm/olimex-at91.txt        |   6 ++
+>>  arch/arm/boot/dts/Makefile                         |   1 +
+>>  arch/arm/boot/dts/sam9-l9260.dts                   | 108 ++++++++++=
++++++++++++
 
-Add the dtsi node of iommu and smi for mt2701.
+=46or AT91-based boards, please use this prefix: "at91-" as stated in t=
+he
+Atmel README file:
+http://lxr.free-electrons.com/source/Documentation/arm/Atmel/README#L12=
+7
 
-Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/mt2701.dtsi | 51 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+So I would recommend this name instead:
+at91-sam9-l9260.dts
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 42d5a37..363de0d 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -16,6 +16,7 @@
- #include <dt-bindings/power/mt2701-power.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/memory/mt2701-larb-port.h>
- #include "skeleton64.dtsi"
- #include "mt2701-pinfunc.h"
- 
-@@ -160,6 +161,16 @@
- 		clock-names = "system-clk", "rtc-clk";
- 	};
- 
-+	smi_common: smi@1000c000 {
-+		compatible = "mediatek,mt2701-smi-common";
-+		reg = <0 0x1000c000 0 0x1000>;
-+		clocks = <&infracfg CLK_INFRA_SMI>,
-+			 <&mmsys CLK_MM_SMI_COMMON>,
-+			 <&infracfg CLK_INFRA_SMI>;
-+		clock-names = "apb", "smi", "async";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-+	};
-+
- 	sysirq: interrupt-controller@10200100 {
- 		compatible = "mediatek,mt2701-sysirq",
- 			     "mediatek,mt6577-sysirq";
-@@ -169,6 +180,16 @@
- 		reg = <0 0x10200100 0 0x1c>;
- 	};
- 
-+	iommu: mmsys_iommu@10205000 {
-+		compatible = "mediatek,mt2701-m4u";
-+		reg = <0 0x10205000 0 0x1000>;
-+		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_M4U>;
-+		clock-names = "bclk";
-+		mediatek,larbs = <&larb0 &larb1 &larb2>;
-+		#iommu-cells = <1>;
-+	};
-+
- 	apmixedsys: syscon@10209000 {
- 		compatible = "mediatek,mt2701-apmixedsys", "syscon";
- 		reg = <0 0x10209000 0 0x1000>;
-@@ -234,6 +255,16 @@
- 		status = "disabled";
- 	};
- 
-+	larb0: larb@14010000 {
-+		compatible = "mediatek,mt2701-smi-larb";
-+		reg = <0 0x14010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		clocks = <&mmsys CLK_MM_SMI_LARB0>,
-+			 <&mmsys CLK_MM_SMI_LARB0>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-+	};
-+
- 	imgsys: syscon@15000000 {
- 		compatible = "mediatek,mt2701-imgsys", "syscon";
- 		reg = <0 0x15000000 0 0x1000>;
-@@ -241,6 +272,16 @@
- 		status = "disabled";
- 	};
- 
-+	larb2: larb@15001000 {
-+		compatible = "mediatek,mt2701-smi-larb";
-+		reg = <0 0x15001000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		clocks = <&imgsys CLK_IMG_SMI_COMM>,
-+			 <&imgsys CLK_IMG_SMI_COMM>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+	};
-+
- 	vdecsys: syscon@16000000 {
- 		compatible = "mediatek,mt2701-vdecsys", "syscon";
- 		reg = <0 0x16000000 0 0x1000>;
-@@ -248,6 +289,16 @@
- 		status = "disabled";
- 	};
- 
-+	larb1: larb@16010000 {
-+		compatible = "mediatek,mt2701-smi-larb";
-+		reg = <0 0x16010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		clocks = <&vdecsys CLK_VDEC_CKGEN>,
-+			 <&vdecsys CLK_VDEC_LARB>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
-+	};
-+
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt2701-hifsys", "syscon";
- 		reg = <0 0x1a000000 0 0x1000>;
--- 
-1.8.1.1.dirty
+
+>>  3 files changed, 115 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/olimex-at9=
+1.txt
+>>  create mode 100644 arch/arm/boot/dts/sam9-l9260.dts
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/olimex-at91.txt b=
+/Documentation/devicetree/bindings/arm/olimex-at91.txt
+>> new file mode 100644
+>> index 0000000..0587d63
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/olimex-at91.txt
+>> @@ -0,0 +1,6 @@
+>> +Olimex AT91 Device Tree Bindings
+>> +--------------------------------
+>=20
+> There's not an existing at91 or olimex file this would fit into? We=20
+> don't need 1 file per board.
+>=20
+>> +
+>> +SAM9-L9260 Board
+>> +Required root node properties:
+>> +    - compatible =3D "olimex,sam9-l9260", "atmel,at91sam9260";
+
+I don't think this file is needed at all actually. We have a lot of
+board files and none of them have a dedicated or particular entry for t=
+hem.
+
+
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 95c1923..ae3b50f 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -19,6 +19,7 @@ dtb-$(CONFIG_SOC_SAM_V4_V5) +=3D \
+>> 	usb_a9260.dtb \
+>> 	at91sam9261ek.dtb \
+>> 	at91sam9263ek.dtb \
+>> +	sam9-l9260.dtb \
+
+Ditto about the file name.
+
+>> 	tny_a9263.dtb \
+>> 	usb_a9263.dtb \
+>> 	at91-foxg20.dtb \
+>> diff --git a/arch/arm/boot/dts/sam9-l9260.dts b/arch/arm/boot/dts/sa=
+m9-l9260.dts
+>> new file mode 100644
+>> index 0000000..3ddf7af
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sam9-l9260.dts
+>> @@ -0,0 +1,108 @@
+>> +/*
+>> + * sam9-l9260.dts - Device Tree file for Olimex SAM9-L9260 board
+>> + *
+>> + *  Copyright (C) 2016 Raashid Muhammed <raashidmuhammed-1MQmoylvZ5WIwRZHo2/mJg@public.gmane.org=
+m>
+>> + *
+>> + * Licensed under GPLv2 or later.
+>> + */
+>> +/dts-v1/;
+>> +#include "at91sam9260.dtsi"
+>> +
+>> +/ {
+>> +	model =3D "Olimex sam9-l9260";
+>> +	compatible =3D "olimex,sam9-l9260", "atmel,at91sam9260", "atmel,at=
+91sam9";
+>> +
+>> +	chosen {
+>> +		bootargs =3D "mem=3D64M console=3DttyS0,115200 root=3D/dev/mtdblo=
+ck5 rw rootfstype=3Dubifs";
+>=20
+> use stdout-path instead of console on the command line. Actually, you=
+=20
+> should then drop the rest of the bootargs. They are all user specific=
+=2E
+
+example of stdout-path:
+http://lxr.free-electrons.com/source/arch/arm/boot/dts/at91-sama5d2_xpl=
+ained.dts#L55
+
+>> +	 };
+>> +
+>> +	 memory {
+>> +		reg =3D <0x20000000 0x4000000>;
+>> +	 };
+>> +
+>> +	 clocks {
+>> +		slow_xtal {
+>> +			clock-frequency =3D <32768>;
+>> +		};
+>> +
+>> +		main_xtal {
+>> +			clock-frequency =3D <18432000>;
+>> +		};
+>> +	 };
+>> +
+>> +	 ahb {
+>> +		apb {
+>> +			dbgu: serial@fffff200 {
+
+We like to sort node by their address: can you rearrange them like this=
+?
+
+>> +				status =3D "okay";
+>> +			 };
+>> +
+>> +			macb0: ethernet@fffc4000 {
+>> +				phy-mode =3D "mii";
+>> +				status =3D "okay";
+
+I advice you to add the phy address for any Ethernet interface like:
+
+  phy0: ethernet-phy@1 {
+        reg =3D <1>;
+  };
+
+for a phy address configured as 0x1.
+
+
+>> +			 };
+>> +
+>> +			spi0: spi@fffc8000 {
+>> +				status =3D "okay";
+
+Nitpicking: "status" property is usually the last one of the node
+(before the child nodes if they exist)
+
+>> +				cs-gpios =3D <&pioC 11 0>, <0>, <0>, <0>;
+>> +				mtd_dataflash@0 {
+>> +					compatible =3D "atmel,at45", "atmel,dataflash";
+>> +					spi-max-frequency =3D <15000000>;
+>> +					reg =3D <0>;
+>> +				};
+>> +			};
+>> +
+>> +			mmc0: mmc@fffa8000 {
+>> +				pinctrl-0 =3D <
+>> +					&pinctrl_board_mmc0
+>> +					&pinctrl_mmc0_clk
+>> +					&pinctrl_mmc0_slot1_cmd_dat0
+>> +					&pinctrl_mmc0_slot1_dat1_3>;
+>> +				status =3D "okay";
+>> +				slot@1 {
+>> +					reg =3D <1>;
+>> +					bus-width =3D <4>;
+>> +					cd-gpios =3D <&pioC 8 GPIO_ACTIVE_HIGH>;
+>> +					wp-gpios =3D <&pioC 4 GPIO_ACTIVE_HIGH>;
+>> +				};
+>> +			};
+>> +
+>> +			pinctrl@fffff400 {
+>> +				mmc0 {
+>> +					pinctrl_board_mmc0: mmc0-board {
+>> +						atmel,pins =3D
+>> +							<AT91_PIOC 8 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH	=
+/* PC08 gpio CD pin pull up and deglitch */
+
+Here, you can remove the duplicate information in the comments: just
+keep useful "CD" or "WP" information.
+
+>> +							 AT91_PIOC 4 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;	/* PC04=
+ gpio WP pin pull up */
+>> +					};
+>> +				};
+>> +			};
+>> +
+>> +
+>> +		 };
+>> +
+>> +		 usb0: ohci@00500000 {
+>=20
+> Drop the leading 0. You'll need to fixup the base dts.
+>=20
+>> +		       status =3D "okay";
+>> +		 };
+>> +
+>> +		 nand0: nand@40000000 {
+>> +		       nand-bus-width =3D <8>;
+>> +		       nand-ecc-mode =3D "soft";
+>> +		       nand-on-flash-bbt =3D <1>;
+>> +		       status =3D "okay";
+>> +		 };
+>> +	 };
+>> +
+>> +	 i2c@0 {
+>> +		status =3D "okay";
+>> +	 };
+>> +
+>> +	 leds {
+>> +		compatible =3D "gpio-leds";
+>> +
+>> +		b0 {
+>> +			label =3D "b0";
+>> +			gpios =3D <&pioA 6 GPIO_ACTIVE_HIGH>;
+>> +			linux,default-trigger =3D "heartbeat";
+>> +		};
+>> +
+>> +	};
+>> +};
+>> --
+>> 2.1.4
+
+Thanks a lot for this board .dts file. I'll be happy to add the support
+for this Olimex board!
+
+Bye,
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
