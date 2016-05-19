@@ -1,101 +1,41 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: Re: [PATCH v2 1/2] [media] media: i2c/ov5645: add the device tree
- binding document
-Date: Thu, 19 May 2016 11:14:57 +0300
-Message-ID: <573D7601.1090605@linaro.org>
-References: <1463572208-8826-1-git-send-email-todor.tomov@linaro.org>
- <1463572208-8826-2-git-send-email-todor.tomov@linaro.org>
- <20160518231637.GA31413@rob-hp-laptop>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 0/5] ata: add support for Marvell Armada 7K/8K AHCI
+Date: Thu, 19 May 2016 10:19:54 +0200
+Message-ID: <20160519101954.64c4291a@free-electrons.com>
+References: <1461335561-18363-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20160518231637.GA31413@rob-hp-laptop>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, mchehab@osg.samsung.com, hverkuil@xs4all.nl, geert@linux-m68k.org, matrandg@cisco.com, linux-media@vger.kernel.org, laurent.pinchart@ideasonboard.com
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1461335561-18363-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-ide@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Tejun,
 
-Thank you for your time to review. My responses are below:
+On Fri, 22 Apr 2016 16:32:36 +0200, Thomas Petazzoni wrote:
 
-On 05/19/2016 02:16 AM, Rob Herring wrote:
-> On Wed, May 18, 2016 at 02:50:07PM +0300, Todor Tomov wrote:
->> Add the document for ov5645 device tree binding.
->>
->> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
->> ---
->>  .../devicetree/bindings/media/i2c/ov5645.txt       | 56 ++++++++++++++++++++++
->>  1 file changed, 56 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
->> new file mode 100644
->> index 0000000..8799000
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
->> @@ -0,0 +1,56 @@
->> +* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
->> +
->> +The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
->> +an active array size of 2592H x 1944V. It is programmable through a serial SCCB
-> 
-> s/SCCB/I2C/ because that is the more common name.
-Ok.
+> The following small series adds support for the Marvell Armada 7K/8K
+> AHCI controller. This controller is a standard AHCI controller, so not
+> much is needed, except that it uses a non-default port offset and
+> length. Due to this, some preparatory patches are used to make it
+> possible to override the default port offset/length used by the AHCI
+> core.
 
-> 
->> +interface.
->> +
->> +Required Properties:
->> +- compatible: value should be "ovti,ov5645"
->> +- clocks: reference to the xclk clock
->> +- clock-names: should be "xclk"
->> +- assigned-clocks: reference to the xclk clock
-> 
-> This should be optional as it only makes sense if there is more than one 
-> option.
-I have only used assigned-clocks to specify for which clock the
-assigned-clock-rates property is. This is the way I understood it.
-Isn't this correct? (Also please see below.)
+I recently learned that the non-standard port base/length is considered
+as an HW issue, and it will be fixed in upcoming revisions of the SoC.
+We are not interested in supporting the previous revisions that have
+this bug, so I'm withdrawing this patch series.
 
-> 
->> +- assigned-clock-rates: should be "23880000"
-> 
-> Doesn't this depend on the board? Most parts take a range of 
-> frequencies. The driver should know what the range is and request a rate 
-> within this range.
-This is the sensor external clock. Actually the driver depends on this value - 
-the sensor mode settings which the driver configures are calculated based on
-this value. If you change this clock rate you need to change the sensor mode
-settings. However they usually come from the vendor of the sensor so they
-usually never change. So this clock rate for this driver is fixed to 23.88MHz
-and is not expected to change.
+Sorry for the noise and time spent there, I was not aware of the fact
+that this issue would be fixed in HW.
 
-> 
->> +
->> +Optional Properties:
->> +- reset-gpios: Chip reset GPIO
->> +- pwdn-gpios: Chip power down GPIO
-> 
-> Use enable-gpios as it is more common and would just be the inverse of 
-> this.
-pwdn is the notation which OV use for this gpio, so I'd personally prefer
-to keep the name. Do you think it is still better to change it?
-
-> 
-> Both need to specify the polarity.
-Ok, I'll add a note for the polarity.
-
-> 
->> +- dovdd-supply: Chip IO regulator
->> +- dvdd-supply: Chip core regulator
->> +- avdd-supply: Chip analog regulator
->> +
->> +The device node must contain one 'port' child node for its digital output
->> +video port, in accordance with the video interface bindings defined in
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-
--- 
 Best regards,
-Todor Tomov
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
