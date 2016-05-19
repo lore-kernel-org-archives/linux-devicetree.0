@@ -1,255 +1,119 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: Add DT support for Olimex SAM9-L9260 board.
-Date: Thu, 19 May 2016 14:28:48 +0200
-Message-ID: <573DB180.9030200@atmel.com>
-References: <1463574766-15568-1-git-send-email-raashidmuhammed@zilogic.com>
- <20160518232925.GA6545@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: drivers/of: crash on boot
+Date: Thu, 19 May 2016 07:48:18 -0500
+Message-ID: <CAL_JsqL_8cUmKxu3=BBkmFi3yO7rWeUW64TO6MRV60451V70+Q@mail.gmail.com>
+References: <573C8B6C.6030900@oracle.com> <CAL_JsqJsjh+Shk1nD5YQeQ=6B1MZOyEj5oX-q_xKH642toURdA@mail.gmail.com>
+ <80967a3a-3b97-e131-97e5-f449f567b01c@nvidia.com> <d0e2564c-c8d4-2c4c-f194-60b43b0ab80e@nvidia.com>
+ <CAL_JsqKn1BLCiW=CBch4G8s=YheXFVouhz+JVvB6j8-4W-UK6A@mail.gmail.com>
+ <CAL_JsqLdpq6bePK2c6Dhub9cZvMV1JVqC=RH8pomCmpszYugYg@mail.gmail.com> <20160519111950.GA28855@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160518232925.GA6545@rob-hp-laptop>
+In-Reply-To: <20160519111950.GA28855@gwshan>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 19/05/2016 01:29, Rob Herring a =E9crit :
-> On Wed, May 18, 2016 at 06:02:46PM +0530, Raashid Muhammed wrote:
->> From: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
+On Thu, May 19, 2016 at 6:19 AM, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
+> On Wed, May 18, 2016 at 08:51:59PM -0500, Rob Herring wrote:
+>>On Wed, May 18, 2016 at 7:23 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Wed, May 18, 2016 at 4:26 PM, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> On 5/18/2016 3:58 PM, Rhyland Klein wrote:
+>>>>> On 5/18/2016 3:36 PM, Rob Herring wrote:
+>>>>>> On Wed, May 18, 2016 at 10:34 AM, Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>>>> Hi Rhyland,
+>>>>>>>
+>>>>>>> I'm seeing a crash on boot that seems to have been caused by
+>>>>>>> "drivers/of: Fix depth when unflattening devicetree":
+>>>>>>>
+>>>>>>> [   61.145229] ==================================================================
+>>>>>>>
+>>>>>>> [   61.147588] BUG: KASAN: stack-out-of-bounds in unflatten_dt_nodes+0x11d2/0x1290 at addr ffff88005b30777c
 >>
->> sam9-l9260 is a low cost board designed by Olimex.
+>>[...]
 >>
->> More infomation is available at:
->> https://www.olimex.com/Products/ARM/Atmel/SAM9-L9260/
+>>>> This patch seems to work for me. I found a bug in my original patch.
+>>>> Sasha/Rob, can you see if this works for you too:
+>>>>
+>>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>>>> index 0b5850027bb5..e7a8caac5b27 100644
+>>>> --- a/drivers/of/fdt.c
+>>>> +++ b/drivers/of/fdt.c
+>>>> @@ -407,9 +407,9 @@ static int unflatten_dt_nodes(const void *blob,
+>>>>
+>>>>         root = dad;
+>>>>         fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
+>>>> -       nps[depth+1] = dad;
+>>>> +       nps[depth] = dad;
+>>>>         for (offset = 0;
+>>>> -            offset >= 0;
+>>>> +            offset >= 0 && depth >= 0;
+>>>>              offset = fdt_next_node(blob, offset, &depth)) {
+>>>>                 if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
+>>>>                         continue;
+>>>
+>>> This is not work for me. I'm booting x86 with the DT unit test and
+>>> KASAN enabled. I suspect our differences are due to different data
+>>> after the end of the dtb. Also, I think there may be a bug in
+>>> fdt_next_node FDT_END handling. The "!depth" seems suspicious to me
+>>> and I think it should be "!(*depth)".
+>>>
+>>> The DT overlay unit tests are also failing. Not sure if that's related.
 >>
->> Signed-off-by: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
->> Reviewed-by: Vijay Kumar B. <vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org>
->> ---
->>  .../devicetree/bindings/arm/olimex-at91.txt        |   6 ++
->>  arch/arm/boot/dts/Makefile                         |   1 +
->>  arch/arm/boot/dts/sam9-l9260.dts                   | 108 ++++++++++=
-+++++++++++
-
-=46or AT91-based boards, please use this prefix: "at91-" as stated in t=
-he
-Atmel README file:
-http://lxr.free-electrons.com/source/Documentation/arm/Atmel/README#L12=
-7
-
-So I would recommend this name instead:
-at91-sam9-l9260.dts
-
-
->>  3 files changed, 115 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/olimex-at9=
-1.txt
->>  create mode 100644 arch/arm/boot/dts/sam9-l9260.dts
+>>Seems with the above patch and the fix to fdt_next_node, the problem
+>>is fixed both for KASAN and the DT overlay tests. Trying it out now
+>>with some other configurations.
 >>
->> diff --git a/Documentation/devicetree/bindings/arm/olimex-at91.txt b=
-/Documentation/devicetree/bindings/arm/olimex-at91.txt
->> new file mode 100644
->> index 0000000..0587d63
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/olimex-at91.txt
->> @@ -0,0 +1,6 @@
->> +Olimex AT91 Device Tree Bindings
->> +--------------------------------
->=20
-> There's not an existing at91 or olimex file this would fit into? We=20
-> don't need 1 file per board.
->=20
->> +
->> +SAM9-L9260 Board
->> +Required root node properties:
->> +    - compatible =3D "olimex,sam9-l9260", "atmel,at91sam9260";
+>
+> There're 5 patches I introduced to drivers/of/fdt.c (A). Rhyland had
+> one patch based on them (B). The code change in this thread is (C).
+> I tried several cases as below.
+>
+> There is one failing case caused by something we don't know yet. I
+> will do some invetigation unless it's not a issue or a known issue
+> of unittest itself.
+>
+> [1]. (A) excluded, (B) excluded, (C) excluded
+> =============================================
+> device-tree: Duplicate name in testcase-data, renamed to "duplicate-name#1"
+> ### dt-test ### start of unittest - you will see error messages
+> /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
+> /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
+> /testcase-data/phandle-tests/consumer-a: could not find phandle
+> /testcase-data/phandle-tests/consumer-a: could not find phandle
+> /testcase-data/phandle-tests/consumer-a: arguments longer than property
+> /testcase-data/phandle-tests/consumer-a: arguments longer than property
+> irq: XICS didn't like hwirq-0x1 to VIRQ32 mapping (rc=-22)
+> irq: XICS didn't like hwirq-0x1 to VIRQ32 mapping (rc=-22)
+> ### dt-test ### FAIL of_unittest_platform_populate():783 device deferred probe failed - 0
 
-I don't think this file is needed at all actually. We have a lot of
-board files and none of them have a dedicated or particular entry for t=
-hem.
+Humm, I'm not seeing this one.
 
+> overlay_is_topmost: #5 clashes #6 @/testcase-data/overlay-node/test-bus/test-unittest8
+> overlay_removal_is_ok: overlay #5 is not topmost
+> of_overlay_destroy: removal check failed for overlay #5
+> ### dt-test ### end of unittest - 147 passed, 1 failed
+>
+> [2]. (A) included, (B) exsluded, (C) excluded
+> =============================================
+> Same output as [1]
+>
+> [3]. (A) included, (B) included, (C) excluded
+> =============================================
+> System fails to boot
+>
+> [4]. (A) included, (B) included, (C) included
+> =============================================
+> Same output as [1] and [2].
 
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 95c1923..ae3b50f 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -19,6 +19,7 @@ dtb-$(CONFIG_SOC_SAM_V4_V5) +=3D \
->> 	usb_a9260.dtb \
->> 	at91sam9261ek.dtb \
->> 	at91sam9263ek.dtb \
->> +	sam9-l9260.dtb \
+For C, this includes the fix to depth in fdt_next_node?
 
-Ditto about the file name.
+While case 2 works for you, do you agree that there is an off by one
+error and initially fdt_next_node should be called with depth=0?
 
->> 	tny_a9263.dtb \
->> 	usb_a9263.dtb \
->> 	at91-foxg20.dtb \
->> diff --git a/arch/arm/boot/dts/sam9-l9260.dts b/arch/arm/boot/dts/sa=
-m9-l9260.dts
->> new file mode 100644
->> index 0000000..3ddf7af
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sam9-l9260.dts
->> @@ -0,0 +1,108 @@
->> +/*
->> + * sam9-l9260.dts - Device Tree file for Olimex SAM9-L9260 board
->> + *
->> + *  Copyright (C) 2016 Raashid Muhammed <raashidmuhammed-1MQmoylvZ5WIwRZHo2/mJg@public.gmane.org=
-m>
->> + *
->> + * Licensed under GPLv2 or later.
->> + */
->> +/dts-v1/;
->> +#include "at91sam9260.dtsi"
->> +
->> +/ {
->> +	model =3D "Olimex sam9-l9260";
->> +	compatible =3D "olimex,sam9-l9260", "atmel,at91sam9260", "atmel,at=
-91sam9";
->> +
->> +	chosen {
->> +		bootargs =3D "mem=3D64M console=3DttyS0,115200 root=3D/dev/mtdblo=
-ck5 rw rootfstype=3Dubifs";
->=20
-> use stdout-path instead of console on the command line. Actually, you=
-=20
-> should then drop the rest of the bootargs. They are all user specific=
-=2E
-
-example of stdout-path:
-http://lxr.free-electrons.com/source/arch/arm/boot/dts/at91-sama5d2_xpl=
-ained.dts#L55
-
->> +	 };
->> +
->> +	 memory {
->> +		reg =3D <0x20000000 0x4000000>;
->> +	 };
->> +
->> +	 clocks {
->> +		slow_xtal {
->> +			clock-frequency =3D <32768>;
->> +		};
->> +
->> +		main_xtal {
->> +			clock-frequency =3D <18432000>;
->> +		};
->> +	 };
->> +
->> +	 ahb {
->> +		apb {
->> +			dbgu: serial@fffff200 {
-
-We like to sort node by their address: can you rearrange them like this=
-?
-
->> +				status =3D "okay";
->> +			 };
->> +
->> +			macb0: ethernet@fffc4000 {
->> +				phy-mode =3D "mii";
->> +				status =3D "okay";
-
-I advice you to add the phy address for any Ethernet interface like:
-
-  phy0: ethernet-phy@1 {
-        reg =3D <1>;
-  };
-
-for a phy address configured as 0x1.
-
-
->> +			 };
->> +
->> +			spi0: spi@fffc8000 {
->> +				status =3D "okay";
-
-Nitpicking: "status" property is usually the last one of the node
-(before the child nodes if they exist)
-
->> +				cs-gpios =3D <&pioC 11 0>, <0>, <0>, <0>;
->> +				mtd_dataflash@0 {
->> +					compatible =3D "atmel,at45", "atmel,dataflash";
->> +					spi-max-frequency =3D <15000000>;
->> +					reg =3D <0>;
->> +				};
->> +			};
->> +
->> +			mmc0: mmc@fffa8000 {
->> +				pinctrl-0 =3D <
->> +					&pinctrl_board_mmc0
->> +					&pinctrl_mmc0_clk
->> +					&pinctrl_mmc0_slot1_cmd_dat0
->> +					&pinctrl_mmc0_slot1_dat1_3>;
->> +				status =3D "okay";
->> +				slot@1 {
->> +					reg =3D <1>;
->> +					bus-width =3D <4>;
->> +					cd-gpios =3D <&pioC 8 GPIO_ACTIVE_HIGH>;
->> +					wp-gpios =3D <&pioC 4 GPIO_ACTIVE_HIGH>;
->> +				};
->> +			};
->> +
->> +			pinctrl@fffff400 {
->> +				mmc0 {
->> +					pinctrl_board_mmc0: mmc0-board {
->> +						atmel,pins =3D
->> +							<AT91_PIOC 8 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH	=
-/* PC08 gpio CD pin pull up and deglitch */
-
-Here, you can remove the duplicate information in the comments: just
-keep useful "CD" or "WP" information.
-
->> +							 AT91_PIOC 4 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;	/* PC04=
- gpio WP pin pull up */
->> +					};
->> +				};
->> +			};
->> +
->> +
->> +		 };
->> +
->> +		 usb0: ohci@00500000 {
->=20
-> Drop the leading 0. You'll need to fixup the base dts.
->=20
->> +		       status =3D "okay";
->> +		 };
->> +
->> +		 nand0: nand@40000000 {
->> +		       nand-bus-width =3D <8>;
->> +		       nand-ecc-mode =3D "soft";
->> +		       nand-on-flash-bbt =3D <1>;
->> +		       status =3D "okay";
->> +		 };
->> +	 };
->> +
->> +	 i2c@0 {
->> +		status =3D "okay";
->> +	 };
->> +
->> +	 leds {
->> +		compatible =3D "gpio-leds";
->> +
->> +		b0 {
->> +			label =3D "b0";
->> +			gpios =3D <&pioA 6 GPIO_ACTIVE_HIGH>;
->> +			linux,default-trigger =3D "heartbeat";
->> +		};
->> +
->> +	};
->> +};
->> --
->> 2.1.4
-
-Thanks a lot for this board .dts file. I'll be happy to add the support
-for this Olimex board!
-
-Bye,
---=20
-Nicolas Ferre
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
