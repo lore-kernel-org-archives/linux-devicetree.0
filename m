@@ -1,68 +1,120 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 1/3] spi/rockchip: add rk3036/rk3228/rk3368 socs for spi
- document
-Date: Fri, 20 May 2016 00:04:07 +0800
-Message-ID: <573DE3F7.6070300@rock-chips.com>
-References: <1463672824-15367-1-git-send-email-wxt@rock-chips.com>
- <3685935.dKdIbE8hXb@phil>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] spi/rockchip: add rk3036/rk3228/rk3368 socs for spi document
+Date: Thu, 19 May 2016 18:20:58 +0200
+Message-ID: <3828505.WBLtTjjB7h@phil>
+References: <1463672824-15367-1-git-send-email-wxt@rock-chips.com> <3685935.dKdIbE8hXb@phil> <573DE3F7.6070300@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <3685935.dKdIbE8hXb@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <573DE3F7.6070300-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgrlnKggMjAxNuW5tDA15pyIMTnml6UgMjM6NTEsIEhlaWtvIFN0dWVibmVyIOWGmemBkzoKPiBB
-bSBEb25uZXJzdGFnLCAxOS4gTWFpIDIwMTYsIDIzOjQ3OjAyIHNjaHJpZWIgQ2Flc2FyIFdhbmc6
-Cj4+IFdlIGhhZCBzdXBwb3J0ZWQgdGhlIHJrMzAzNi9yazMwNjYvcmszMTg4L3JrMzIyOC9yazMy
-ODgvcmszMzY4L3JrMzM5OQo+PiBmYW1pbHkgU29DcyBpbiBsaW51eCBrZXJuZWwuCj4+Cj4+IExl
-dCdzIGFkZCB0aGUgb3RoZXIgU29DcywgaW4gb3JkZXIgdG8gYSBiZXR0ZXIgdW5kZXJzdGFuZGlu
-ZyBmcm9tIHRoZQo+PiByb2NrY2hpcCBzcGkgZG9jdW1lbnQuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6
-IENhZXNhciBXYW5nIDx3eHRAcm9jay1jaGlwcy5jb20+Cj4+IENjOiBSb2IgSGVycmluZyA8cm9i
-aCtkdEBrZXJuZWwub3JnPgo+PiBDYzogTWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPgo+
-PiBDYzogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPj4gQ2M6IGxpbnV4LXJvY2tj
-aGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4gLS0tCj4+Cj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktcm9ja2NoaXAudHh0IHwgMyArKysKPj4gICAxIGZpbGUg
-Y2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1yb2NrY2hpcC50eHQKPj4gYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1yb2NrY2hpcC50eHQgaW5kZXgKPj4gMWIx
-NGQ2OS4uMzA1YjU0MiAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3NwaS9zcGktcm9ja2NoaXAudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9zcGkvc3BpLXJvY2tjaGlwLnR4dAo+PiBAQCAtNiw5ICs2LDEyIEBAIGFu
-ZCBkaXNwbGF5IGNvbnRyb2xsZXJzIHVzaW5nIHRoZSBTUEkgY29tbXVuaWNhdGlvbgo+PiBpbnRl
-cmZhY2UuIFJlcXVpcmVkIFByb3BlcnRpZXM6Cj4+Cj4+ICAgLSBjb21wYXRpYmxlOiBzaG91bGQg
-YmUgb25lIG9mIHRoZSBmb2xsb3dpbmcuCj4+ICsgICAgInJvY2tjaGlwLHJrMzAzNi1zcGkiIGZv
-ciByazMwMzYuCj4gc2hvdWxkbid0IHRoZSByazMwMzYgYWxzbyBnZXQgdGhlIHJrMzA2NiBmYWxs
-YmFjay4gTG9va2luZyBhdCB0aGUgZHJpdmVyCj4gcGFydCAocGF0Y2gyKSB0aGUgcmszMDM2IHN0
-aWxsIGlzIHRoZSBzYW1lIElQIGFzIGZvciBldmVyeSBvdGhlciBzb2MgaW4KPiBoZXJlLgoKWWVw
-LCB0aGUgc2FtZSBJUC4KCkRvIHlvdSB0aGluayB3ZSBzaG91bGQga2VlcCB0aGUgYmVsb3cgc3R5
-bGU/CgoxKQoicm9ja2NoaXAscmszMDM2LXNwaSIsICJyb2NrY2hpcCxyazMwNjYtc3BpIiBmb3Ig
-cmszMDM2LgogICJyb2NrY2hpcCxyazMwNjYtc3BpIiBmb3IgcmszMDY2LgogICJyb2NrY2hpcCxy
-azMxODgtc3BpIiwgInJvY2tjaGlwLHJrMzA2Ni1zcGkiIGZvciByazMxODguCi4uLgoKb3IKMikK
-ICAicm9ja2NoaXAscmszMDY2LXNwaSIgZm9yIHJrMzA2Ni4KInJvY2tjaGlwLHJrMzAzNi1zcGki
-LCAicm9ja2NoaXAscmszMDY2LXNwaSIgZm9yIHJrMzAzNi4KICAicm9ja2NoaXAscmszMTg4LXNw
-aSIsICJyb2NrY2hpcCxyazMwNjYtc3BpIiBmb3IgcmszMTg4Ci4uCgpvcgozKQoicm9ja2NoaXAs
-IHJvY2tjaGlwLXNwaSIgZm9yIHJrMzAzNiByazMwNjYuLi4uLi4uCgpUaGluayBhYm91dCB0aGUg
-MSkgd2lsbCBiZSBnb29nZCBzZWxlY3QuCgotQ2Flc2FyCgo+PiAgICAgICAicm9ja2NoaXAscmsz
-MDY2LXNwaSIgZm9yIHJrMzA2Ni4KPj4gICAgICAgInJvY2tjaGlwLHJrMzE4OC1zcGkiLCAicm9j
-a2NoaXAscmszMDY2LXNwaSIgZm9yIHJrMzE4OC4KPj4gKyAgICAicm9ja2NoaXAscmszMjI4LXNw
-aSIsICJyb2NrY2hpcCxyazMwNjYtc3BpIiBmb3IgcmszMjI4Lgo+PiAgICAgICAicm9ja2NoaXAs
-cmszMjg4LXNwaSIsICJyb2NrY2hpcCxyazMwNjYtc3BpIiBmb3IgcmszMjg4Lgo+PiArICAgICJy
-b2NrY2hpcCxyazMzNjgtc3BpIiwgInJvY2tjaGlwLHJrMzA2Ni1zcGkiIGZvciByazMzNjguCj4+
-ICAgICAgICJyb2NrY2hpcCxyazMzOTktc3BpIiwgInJvY2tjaGlwLHJrMzA2Ni1zcGkiIGZvciBy
-azMzOTkuCj4+ICAgLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgY29udHJvbGxl
-ciBhbmQgbGVuZ3RoIG9mIG1lbW9yeQo+PiBtYXBwZWQgcmVnaW9uLgo+Cj4KPgoKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBt
-YWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
+Am Freitag, 20. Mai 2016, 00:04:07 schrieb Caesar Wang:
+> =E5=9C=A8 2016=E5=B9=B405=E6=9C=8819=E6=97=A5 23:51, Heiko Stuebner =E5=
+=86=99=E9=81=93:
+> > Am Donnerstag, 19. Mai 2016, 23:47:02 schrieb Caesar Wang:
+> >> We had supported the rk3036/rk3066/rk3188/rk3228/rk3288/rk3368/rk3=
+399
+> >> family SoCs in linux kernel.
+> >>=20
+> >> Let's add the other SoCs, in order to a better understanding from =
+the
+> >> rockchip spi document.
+> >>=20
+> >> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> >> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> >> ---
+> >>=20
+> >>   Documentation/devicetree/bindings/spi/spi-rockchip.txt | 3 +++
+> >>   1 file changed, 3 insertions(+)
+> >>=20
+> >> diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.tx=
+t
+> >> b/Documentation/devicetree/bindings/spi/spi-rockchip.txt index
+> >> 1b14d69..305b542 100644
+> >> --- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> >> +++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> >> @@ -6,9 +6,12 @@ and display controllers using the SPI communicati=
+on
+> >>=20
+> >> interface. Required Properties:
+> >>   - compatible: should be one of the following.
+> >>=20
+> >> +    "rockchip,rk3036-spi" for rk3036.
+> >=20
+> > shouldn't the rk3036 also get the rk3066 fallback. Looking at the d=
+river
+> > part (patch2) the rk3036 still is the same IP as for every other so=
+c in
+> > here.
+>=20
+> Yep, the same IP.
+>=20
+> Do you think we should keep the below style?
+>=20
+> 1)
+> "rockchip,rk3036-spi", "rockchip,rk3066-spi" for rk3036.
+>   "rockchip,rk3066-spi" for rk3066.
+>   "rockchip,rk3188-spi", "rockchip,rk3066-spi" for rk3188.
+> ...
+>=20
+> or
+> 2)
+>   "rockchip,rk3066-spi" for rk3066.
+> "rockchip,rk3036-spi", "rockchip,rk3066-spi" for rk3036.
+>   "rockchip,rk3188-spi", "rockchip,rk3066-spi" for rk3188
+> ..
+>=20
+> or
+> 3)
+> "rockchip, rockchip-spi" for rk3036 rk3066.......
+>=20
+> Think about the 1) will be googd select.
+
+or
+(4) drop the fallbacks. We match against each compatible all the time=20
+anyway, so you could also simply do
+
+  "rockchip,rk3036-spi" for rk3036
+  "rockchip,rk3066-spi" for rk3066
+  "rockchip,rk3188-spi" for rk3188
+
+Maybe leave the fallbacks for existing socs, and just add the new ones=20
+without the fallbacks.
+
+rockchip,rockchip-spi is not future proof ... i.e. in some future soc=20
+somebody might want to exchange the IP block against a different one, s=
+o=20
+being specific saves us from hassle then :-)
+
+
+Heiko
+
+> >>       "rockchip,rk3066-spi" for rk3066.
+> >>       "rockchip,rk3188-spi", "rockchip,rk3066-spi" for rk3188.
+> >>=20
+> >> +    "rockchip,rk3228-spi", "rockchip,rk3066-spi" for rk3228.
+> >>=20
+> >>       "rockchip,rk3288-spi", "rockchip,rk3066-spi" for rk3288.
+> >>=20
+> >> +    "rockchip,rk3368-spi", "rockchip,rk3066-spi" for rk3368.
+> >>=20
+> >>       "rockchip,rk3399-spi", "rockchip,rk3066-spi" for rk3399.
+> >>  =20
+> >>   - reg: physical base address of the controller and length of mem=
+ory
+> >>=20
+> >> mapped region.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
