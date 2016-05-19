@@ -1,151 +1,60 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 3/6] ARM: dts: r8a7794: add MSTP10 clocks
-Date: Thu, 19 May 2016 18:44:19 +0200
-Message-ID: <CAMuHMdVjrVFpEZPukWiLQK473R+7CTqVHc1jj8fktAD9RpH_sw@mail.gmail.com>
-References: <2378837.cigT3tNQPe@wasted.cogentembedded.com>
-	<3321354.LNTkVAhXvF@wasted.cogentembedded.com>
+From: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: get_maintainer.pl and MAINTAINERS file
+Date: Thu, 19 May 2016 13:57:43 -0300
+Message-ID: <20160519135743.5fc661c4@recife.lan>
+References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
+	<20160518150924.GA3871@kroah.com>
+	<20160519105418.5df3c8f7@erd979>
+	<871t4yfbmy.fsf_-_@kamboji.qca.qualcomm.com>
+	<CAFLxGvwU-2aE7_0Suht--DvWby3RT=mdkpRomHz25MgicRfC3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <3321354.LNTkVAhXvF@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFLxGvwU-2aE7_0Suht--DvWby3RT=mdkpRomHz25MgicRfC3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Weinberger <richard.weinberger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 12, 2016 at 10:46 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add MSTP10 clocks to the R8A7794 device tree.
->
-> This patch is based on the commit ee9141522dcf ("ARM: shmobile: r8a7791:
-> add MSTP10 support on DTSI").
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
-> Changes in version 3:
-> - refreshed the patch.
->
-> Changes in version 2:
-> - fixed the SoC model in the change log;
-> - added "the" article to the change log.
->
->  arch/arm/boot/dts/r8a7794.dtsi            |   53 ++++++++++++++++++++++++++++++
->  include/dt-bindings/clock/r8a7794-clock.h |   28 +++++++++++++++
->  2 files changed, 81 insertions(+)
->
-> Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-> @@ -1235,6 +1235,59 @@
->                                 "gpio1", "gpio0", "rcan1", "rcan0", "qspi_mod",
->                                 "i2c5", "i2c4", "i2c3", "i2c2", "i2c1", "i2c0";
->                 };
-> +               mstp10_clks: mstp10_clks@e6150998 {
-> +                       compatible = "renesas,r8a7794-mstp-clocks",
-> +                                    "renesas,cpg-mstp-clocks";
-> +                       reg = <0 0xe6150998 0 4>, <0 0xe61509a8 0 4>;
-> +                       clocks = <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
-> +                                <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
-> +                                <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>,
-> +                                <&mstp10_clks R8A7794_CLK_SCU_ALL>;
-> +                       #clock-cells = <1>;
-> +                       clock-indices = <R8A7794_CLK_SSI_ALL
-> +                                        R8A7794_CLK_SSI9 R8A7794_CLK_SSI8
-> +                                        R8A7794_CLK_SSI7 R8A7794_CLK_SSI6
-> +                                        R8A7794_CLK_SSI5 R8A7794_CLK_SSI4
-> +                                        R8A7794_CLK_SSI3 R8A7794_CLK_SSI2
-> +                                        R8A7794_CLK_SSI1 R8A7794_CLK_SSI0
-> +                                        R8A7794_CLK_SCU_ALL
-> +                                        R8A7794_CLK_SCU_DVC1
-> +                                        R8A7794_CLK_SCU_DVC0
-> +                                        R8A7794_CLK_SCU_CTU1_MIX1
-> +                                        R8A7794_CLK_SCU_CTU0_MIX0
-> +                                        R8A7794_CLK_SCU_SRC9
-> +                                        R8A7794_CLK_SCU_SRC8
-> +                                        R8A7794_CLK_SCU_SRC7
-> +                                        R8A7794_CLK_SCU_SRC6
-> +                                        R8A7794_CLK_SCU_SRC5
-> +                                        R8A7794_CLK_SCU_SRC4
-> +                                        R8A7794_CLK_SCU_SRC3
-> +                                        R8A7794_CLK_SCU_SRC2
-> +                                        R8A7794_CLK_SCU_SRC1
-> +                                        R8A7794_CLK_SCU_SRC0>;
-> +                       clock-output-names = "ssi-all", "ssi9", "ssi8", "ssi7",
-> +                                            "ssi6", "ssi5", "ssi4", "ssi3",
-> +                                            "ssi2", "ssi1", "ssi0",
-> +                                            "scu-all", "scu-dvc1", "scu-dvc0",
-> +                                            "scu-ctu1-mix1", "scu-ctu0-mix0",
-> +                                            "scu-src9", "scu-src8", "scu-src7",
-> +                                            "scu-src6", "scu-src5", "scu-src4",
-> +                                            "scu-src3", "scu-src2", "scu-src1",
-> +                                            "scu-src0";
-> +               };
->                 mstp11_clks: mstp11_clks@e615099c {
->                         compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-clocks";
->                         reg = <0 0xe615099c 0 4>, <0 0xe61509ac 0 4>;
-> Index: renesas/include/dt-bindings/clock/r8a7794-clock.h
-> ===================================================================
-> --- renesas.orig/include/dt-bindings/clock/r8a7794-clock.h
-> +++ renesas/include/dt-bindings/clock/r8a7794-clock.h
-> @@ -109,6 +109,34 @@
->  #define R8A7794_CLK_I2C1               30
->  #define R8A7794_CLK_I2C0               31
->
-> +/* MSTP10 */
-> +#define R8A7794_CLK_SSI_ALL            5
-> +#define R8A7794_CLK_SSI9               6
-> +#define R8A7794_CLK_SSI8               7
-> +#define R8A7794_CLK_SSI7               8
-> +#define R8A7794_CLK_SSI6               9
-> +#define R8A7794_CLK_SSI5               10
-> +#define R8A7794_CLK_SSI4               11
-> +#define R8A7794_CLK_SSI3               12
-> +#define R8A7794_CLK_SSI2               13
-> +#define R8A7794_CLK_SSI1               14
-> +#define R8A7794_CLK_SSI0               15
-> +#define R8A7794_CLK_SCU_ALL            17
-> +#define R8A7794_CLK_SCU_DVC1           18
-> +#define R8A7794_CLK_SCU_DVC0           19
-> +#define R8A7794_CLK_SCU_CTU1_MIX1      20
-> +#define R8A7794_CLK_SCU_CTU0_MIX0      21
-> +#define R8A7794_CLK_SCU_SRC9           22
-> +#define R8A7794_CLK_SCU_SRC8           23
-> +#define R8A7794_CLK_SCU_SRC7           24
+Em Thu, 19 May 2016 16:25:45 +0200
+Richard Weinberger <richard.weinberger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> escreveu:
 
-R-Car E2 does not have SRC7, SRC8, SRC9, ...
+> On Thu, May 19, 2016 at 2:57 PM, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> > (Changed the subject from "Re: [PATCH v6 0/3] auxdisplay: Introduce ht16k33 driver")
+> >
+> > Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org> writes:
+> >  
+> >>> And 4th, what is with the insane number of people on cc:?  Use
+> >>> get_maintainer.pl correctly please, and don't just hit everyone you
+> >>> can possibly think of with a cc: for no good reason.  
+> >>
+> >> I did use the get_maintainer script. I solely passed the patch set as
+> >> command line argument.  
+> >
+> > I think get_maintainer script should ignore MAINTAINERS file altogether.
+> > After I did drivers/net/wireless reorganisation, and had to make
+> > numerous changes to MAINTAINERS in the process, I have been CCed to all
+> > sorts of patchsets to which I have nothing to do with (this one
+> > included). I suspect get_maintainer.pl is to blame here.  
+> 
+> Are you sure it is because you are listed as maintainer for specific files?
+> If you are maintain something you have to be CC'ed.
+> It is rather because get_maintainer.pl tries to be smart and uses git to
+> find people who have touched a file...
+> 
+> I guess instead you want something like:
+> http://permalink.gmane.org/gmane.linux.kernel.commits.head/538561
 
-> +#define R8A7794_CLK_SCU_SRC6           25
-> +#define R8A7794_CLK_SCU_SRC5           26
-> +#define R8A7794_CLK_SCU_SRC4           27
-> +#define R8A7794_CLK_SCU_SRC3           28
-> +#define R8A7794_CLK_SCU_SRC2           29
-> +#define R8A7794_CLK_SCU_SRC1           30
-> +#define R8A7794_CLK_SCU_SRC0           31
+I guess what Kalle said is that the get_maintainer.pl script should
+disable, by default, "--git-blame" behavior for some specific files that
+everyone touches like /MAINTAINERS, Documentation/kernel-parameters.txt,
+/CREDITS, etc,  as random people that touch on those files aren't really
+interested on being c/c to every change there.
 
-... and SRC0.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Regards,
+Mauro
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
