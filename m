@@ -1,69 +1,159 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: drivers/of: crash on boot
-Date: Wed, 18 May 2016 20:51:59 -0500
-Message-ID: <CAL_JsqLdpq6bePK2c6Dhub9cZvMV1JVqC=RH8pomCmpszYugYg@mail.gmail.com>
-References: <573C8B6C.6030900@oracle.com> <CAL_JsqJsjh+Shk1nD5YQeQ=6B1MZOyEj5oX-q_xKH642toURdA@mail.gmail.com>
- <80967a3a-3b97-e131-97e5-f449f567b01c@nvidia.com> <d0e2564c-c8d4-2c4c-f194-60b43b0ab80e@nvidia.com>
- <CAL_JsqKn1BLCiW=CBch4G8s=YheXFVouhz+JVvB6j8-4W-UK6A@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/2] Documentation: dt: add bindings for ti-cpufreq
+Date: Thu, 19 May 2016 08:45:59 +0530
+Message-ID: <20160519031559.GK24777@vireshk-i7>
+References: <cover.1463609497.git.d-gerlach@ti.com>
+ <f17fbc8acb1e903b9f175f49fe29563b83132faf.1463609497.git.d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKn1BLCiW=CBch4G8s=YheXFVouhz+JVvB6j8-4W-UK6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f17fbc8acb1e903b9f175f49fe29563b83132faf.1463609497.git.d-gerlach@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Yegor Yefremov <yegorslists@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 7:23 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, May 18, 2016 at 4:26 PM, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 5/18/2016 3:58 PM, Rhyland Klein wrote:
->>> On 5/18/2016 3:36 PM, Rob Herring wrote:
->>>> On Wed, May 18, 2016 at 10:34 AM, Sasha Levin <sasha.levin-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
->>>>> Hi Rhyland,
->>>>>
->>>>> I'm seeing a crash on boot that seems to have been caused by
->>>>> "drivers/of: Fix depth when unflattening devicetree":
->>>>>
->>>>> [   61.145229] ==================================================================
->>>>>
->>>>> [   61.147588] BUG: KASAN: stack-out-of-bounds in unflatten_dt_nodes+0x11d2/0x1290 at addr ffff88005b30777c
+On 18-05-16, 18:30, Dave Gerlach wrote:
+> Add the device tree bindings document for the TI CPUFreq/OPP driver
+> on AM33xx and AM43xx SoCs. The operating-points-v2 binding allows us
+> to provide an opp-supported-hw property for each OPP to define when
+> it is available. This driver is responsible for reading and parsing
+> registers to determine which OPPs can be selectively enabled based
+> on the specific SoC in use by matching against the opp-supported-hw
+> data.
 
-[...]
+Here and ...
 
->> This patch seems to work for me. I found a bug in my original patch.
->> Sasha/Rob, can you see if this works for you too:
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 0b5850027bb5..e7a8caac5b27 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -407,9 +407,9 @@ static int unflatten_dt_nodes(const void *blob,
->>
->>         root = dad;
->>         fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
->> -       nps[depth+1] = dad;
->> +       nps[depth] = dad;
->>         for (offset = 0;
->> -            offset >= 0;
->> +            offset >= 0 && depth >= 0;
->>              offset = fdt_next_node(blob, offset, &depth)) {
->>                 if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
->>                         continue;
->
-> This is not work for me. I'm booting x86 with the DT unit test and
-> KASAN enabled. I suspect our differences are due to different data
-> after the end of the dtb. Also, I think there may be a bug in
-> fdt_next_node FDT_END handling. The "!depth" seems suspicious to me
-> and I think it should be "!(*depth)".
->
-> The DT overlay unit tests are also failing. Not sure if that's related.
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> ---
+>  .../devicetree/bindings/cpufreq/ti-cpufreq.txt     | 89 ++++++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+> new file mode 100644
+> index 000000000000..f719b2df2a1f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+> @@ -0,0 +1,89 @@
+> +Bindings for TI's CPUFreq driver
+> +================================
+> +
+> +The ti-cpufreq driver works with the operating-points-v2 binding described
+> +at [../opp/opp.txt] to make sure the proper OPPs for a platform get enabled
+> +and then creates a "cpufreq-dt" platform device to leverage the cpufreq-dt
+> +driver described in [cpufreq-dt.txt].
+> +
+> +Certain TI SoCs, like those in the am335x, am437x, am57xx, and dra7xx
+> +families support different OPPs depending on the silicon variant in use.
+> +The ti-cpufreq driver uses the revision and an efuse value from the SoC to
+> +provide the OPP framework with supported hardware information. This is used
+> +to determine which OPPs from the operating-points-v2 table get enabled. In
+> +order to maintain backwards compatilibity if this information is not present
+> +the "cpufreq-dt" platform device is still created to attempt to find an
+> +operating-points (v1) table, otherwise no OPPs will be available because
+> +safe OPPs cannot be determined.
 
-Seems with the above patch and the fix to fdt_next_node, the problem
-is fixed both for KASAN and the DT overlay tests. Trying it out now
-with some other configurations.
+... here..
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We shouldn't be talking about the drivers are going to use it, etc.
+This is a binding document, which should be independent of Linux
+kernel. It can be used by other Operating systems as well and so the
+implementation details should be just dropped.
+
+> +
+> +Required properties:
+> +--------------------
+> +In 'cpus' nodes:
+> +- operating-points-v2: Phandle to the operating-points-v2 table to use
+> +- ti,syscon-efuse: Syscon phandle, offset to efuse register, efuse register
+> +		   mask, and efuse register shift to get the relevant bits
+> +		   that describe OPP availability
+> +- ti,syscon-rev: Syscon and offset used to look up revision value on SoC
+
+These are proper sentences and so maybe a full-stop (.) at the end of
+each line ?
+
+> +
+> +In 'operating-points-v2' table:
+> +- opp-supported-hw: Two bitfields indicating:
+> +	1. Which revision of the SoC the OPP is supported by
+> +	2. Which eFuse bits indicate this OPP is available
+> +
+> +	A bitwise and is performed against these values and if any bit
+
+                  AND or &
+
+> +	matches, the OPP gets enabled.
+> +
+> +NOTE: Without the above, platform-device for "cpufreq-dt" is still created
+> +      but no determination of which OPPs should be available is done, but this
+> +      allows for use of a v1 operating-points table.
+
+Again, these are implementation details.. should be dropped.
+
+> +
+> +Example:
+> +--------
+> +
+> +/* From arch/arm/boot/dts/am4372.dtsi */
+> +cpus {
+> +	cpu: cpu@0 {
+> +		...
+> +
+> +		operating-points-v2 = <&cpu0_opp_table>;
+> +
+> +		ti,syscon-efuse = <&scm_conf 0x610 0x3f 0>;
+> +		ti,syscon-rev = <&scm_conf 0x600>;
+
+@Rob: Can we add properties to the CPU node just like that ?
+
+> +
+> +		...
+> +	};
+> +};
+> +
+> +cpu0_opp_table: opp_table0 {
+> +	compatible = "operating-points-v2";
+
+Otherwise, you could have added above properties right here and added
+your own compatible string..
+
+> +	opp50@300000000 {
+> +		opp-hz = /bits/ 64 <300000000>;
+> +		opp-microvolt = <950000>;
+> +		opp-supported-hw = <0xFF 0x01>;
+> +		opp-suspend;
+> +	};
+> +
+> +	opp100@600000000 {
+> +		opp-hz = /bits/ 64 <600000000>;
+> +		opp-microvolt = <1100000>;
+> +		opp-supported-hw = <0xFF 0x04>;
+> +	};
+> +
+> +	opp120@720000000 {
+> +		opp-hz = /bits/ 64 <720000000>;
+> +		opp-microvolt = <1200000>;
+> +		opp-supported-hw = <0xFF 0x08>;
+> +	};
+> +
+> +	oppturbo@800000000 {
+> +		opp-hz = /bits/ 64 <800000000>;
+> +		opp-microvolt = <1260000>;
+> +		opp-supported-hw = <0xFF 0x10>;
+> +	};
+> +
+> +	oppnitro@1000000000 {
+> +		opp-hz = /bits/ 64 <1000000000>;
+> +		opp-microvolt = <1325000>;
+> +		opp-supported-hw = <0xFF 0x20>;
+
+so the first one is always FF ? Why have it then ?
+
+> +	};
+> +};
+
+-- 
+viresh
