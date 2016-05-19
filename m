@@ -1,77 +1,411 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 3/6] ARM: dts: r8a7794: add MSTP10 clocks
-Date: Thu, 19 May 2016 19:41:29 +0200
-Message-ID: <CAMuHMdWSfx_Q9xopidpLCbwHhuPKwfokiUXYPpHxf3B2tC+-dw@mail.gmail.com>
-References: <2378837.cigT3tNQPe@wasted.cogentembedded.com>
-	<3321354.LNTkVAhXvF@wasted.cogentembedded.com>
-	<CAMuHMdVjrVFpEZPukWiLQK473R+7CTqVHc1jj8fktAD9RpH_sw@mail.gmail.com>
-	<f0700315-af43-b208-cd91-8ca510bf5da9@cogentembedded.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH 2/2] cpufreq: ti: Add cpufreq driver to determine
+ available OPPs at runtime
+Date: Thu, 19 May 2016 13:33:40 -0500
+Message-ID: <573E0704.7010104@ti.com>
+References: <cover.1463609497.git.d-gerlach@ti.com>
+ <9b8c1ba22e07cbfa25f93b33422fcfd1a8d10655.1463609497.git.d-gerlach@ti.com>
+ <20160519043920.GC32001@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <f0700315-af43-b208-cd91-8ca510bf5da9@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160519043920.GC32001@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Yegor Yefremov <yegorslists@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 19, 2016 at 7:37 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
->>> --- renesas.orig/include/dt-bindings/clock/r8a7794-clock.h
->>> +++ renesas/include/dt-bindings/clock/r8a7794-clock.h
->>> @@ -109,6 +109,34 @@
->>>  #define R8A7794_CLK_I2C1               30
->>>  #define R8A7794_CLK_I2C0               31
->>>
->>> +/* MSTP10 */
->>> +#define R8A7794_CLK_SSI_ALL            5
->>> +#define R8A7794_CLK_SSI9               6
->>> +#define R8A7794_CLK_SSI8               7
->>> +#define R8A7794_CLK_SSI7               8
->>> +#define R8A7794_CLK_SSI6               9
->>> +#define R8A7794_CLK_SSI5               10
->>> +#define R8A7794_CLK_SSI4               11
->>> +#define R8A7794_CLK_SSI3               12
->>> +#define R8A7794_CLK_SSI2               13
->>> +#define R8A7794_CLK_SSI1               14
->>> +#define R8A7794_CLK_SSI0               15
->>> +#define R8A7794_CLK_SCU_ALL            17
->>> +#define R8A7794_CLK_SCU_DVC1           18
->>> +#define R8A7794_CLK_SCU_DVC0           19
->>> +#define R8A7794_CLK_SCU_CTU1_MIX1      20
->>> +#define R8A7794_CLK_SCU_CTU0_MIX0      21
->>> +#define R8A7794_CLK_SCU_SRC9           22
->>> +#define R8A7794_CLK_SCU_SRC8           23
->>> +#define R8A7794_CLK_SCU_SRC7           24
+On 05/18/2016 11:39 PM, Viresh Kumar wrote:
+> On 18-05-16, 18:30, Dave Gerlach wrote:
+>> Some TI SoCs, like those in the AM335x, AM437x, DRA7x, and AM57x families,
+>> have different OPPs available for the MPU depending on which specific
+>> variant of the SoC is in use. This can be determined through use of the
+>> revision and an eFuse register present in the silicon. Introduce a
+>> ti-cpufreq driver that can read the aformentioned values and provide
+>> them as version matching data to the opp framework. Through this the
+>> opp-supported-hw dt binding that is part of the operating-points-v2
+>> table can be used to indicate availability of OPPs for each device.
 >>
+>> This driver also creates the "cpufreq-dt" platform_device after passing
+>> the version matching data to the OPP framework so that the cpufreq-dt
+>> handles the actual cpufreq implementation. Even without the necessary
+>> data to pass the version matching data the driver will still create this
+>> device to maintain backwards compatibility with operating-points v1
+>> tables.
 >>
->> R-Car E2 does not have SRC7, SRC8, SRC9, ...
+>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>> ---
+>>   drivers/cpufreq/Kconfig.arm  |  11 ++
+>>   drivers/cpufreq/Makefile     |   1 +
+>>   drivers/cpufreq/ti-cpufreq.c | 254 +++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 266 insertions(+)
+>>   create mode 100644 drivers/cpufreq/ti-cpufreq.c
 >>
->>> +#define R8A7794_CLK_SCU_SRC6           25
->>> +#define R8A7794_CLK_SCU_SRC5           26
->>> +#define R8A7794_CLK_SCU_SRC4           27
->>> +#define R8A7794_CLK_SCU_SRC3           28
->>> +#define R8A7794_CLK_SCU_SRC2           29
->>> +#define R8A7794_CLK_SCU_SRC1           30
->>> +#define R8A7794_CLK_SCU_SRC0           31
+>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+>> index d89b8afe23b6..0dea6849ac3e 100644
+>> --- a/drivers/cpufreq/Kconfig.arm
+>> +++ b/drivers/cpufreq/Kconfig.arm
+>> @@ -234,6 +234,17 @@ config ARM_TEGRA124_CPUFREQ
+>>   	help
+>>   	  This adds the CPUFreq driver support for Tegra124 SOCs.
 >>
->>
->> ... and SRC0.
+>> +config ARM_TI_CPUFREQ
+>> +	tristate "Texas Instruments CPUFreq support"
 >
+> You sure you want to get it compiled as a module? And don't provide
+> module_exit() at all?
+
+I thought about this for a while, and I was going to make it bool but 
+decided to model it after what has already been accepted (sti-cpufreq). 
+Wasn't sure what preferred path is, but I will go ahead and switch this 
+to bool for this driver as I think that makes the most sense.
+
 >
->    Yet table 7A.12 in the rev1.02 manual lists them all. Your manual
-> doesn't?
+>> +	depends on ARCH_OMAP2PLUS
+>> +	help
+>> +	  This driver enables valid OPPs on the running platform based on
+>> +	  values contained within the SoC in use. Enable this in order to
+>> +	  use the cpufreq-dt driver on all Texas Instruments platforms that
+>> +	  provide dt based operating-points-v2 tables with opp-supported-hw
+>> +	  data provided. Required for cpufreq support on AM335x, AM437x,
+>> +	  DRA7x, and AM57x platforms.
+>> +
+>>   config ARM_PXA2xx_CPUFREQ
+>>   	tristate "Intel PXA2xx CPUfreq driver"
+>>   	depends on PXA27x || PXA25x
+>> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> index 0a9b6a093646..5b1b6ec0a9f0 100644
+>> --- a/drivers/cpufreq/Makefile
+>> +++ b/drivers/cpufreq/Makefile
+>> @@ -77,6 +77,7 @@ obj-$(CONFIG_ARM_SPEAR_CPUFREQ)		+= spear-cpufreq.o
+>>   obj-$(CONFIG_ARM_STI_CPUFREQ)		+= sti-cpufreq.o
+>>   obj-$(CONFIG_ARM_TEGRA20_CPUFREQ)	+= tegra20-cpufreq.o
+>>   obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>> +obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>>   obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+>>   obj-$(CONFIG_ACPI_CPPC_CPUFREQ) += cppc_cpufreq.o
+>>   obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
+>> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+>> new file mode 100644
+>> index 000000000000..e47b452aadd0
+>> --- /dev/null
+>> +++ b/drivers/cpufreq/ti-cpufreq.c
+>> @@ -0,0 +1,254 @@
+>> +/*
+>> + * TI CPUFreq/OPP hw-supported driver
+>> + *
+>> + * Copyright (C) 2016 Texas Instruments, Inc.
+>> + *	 Dave Gerlach <d-gerlach@ti.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License
+>> + * version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/cpu.h>
+>> +#include <linux/io.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/pm_opp.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#define REVISION_MASK				(0xF << 28)
+>
+> Use below shift-mask here ?
 
-I thought you were aware of this, cfr. your "[PATCH] rcar: src: skip
-disabled-SRC nodes"?
+Yes, but this will change due to later change where this will actually 
+be used.
 
-Gr{oetje,eeting}s,
+>
+>> +#define REVISION_SHIFT				28
+>> +
+>> +#define DRA7_EFUSE_HAS_OD_MPU_OPP		11
+>> +#define DRA7_EFUSE_HAS_HIGH_MPU_OPP		15
+>> +#define DRA7_EFUSE_HAS_ALL_MPU_OPP		23
+>> +
+>> +#define DRA7_EFUSE_NOM_MPU_OPP			BIT(0)
+>> +#define DRA7_EFUSE_OD_MPU_OPP			BIT(1)
+>> +#define DRA7_EFUSE_HIGH_MPU_OPP			BIT(2)
+>> +
+>> +#define VERSION_COUNT				2
+>> +
+>> +static struct ti_cpufreq_data {
+>> +	struct device *cpu;
+>> +	struct regmap *opp_efuse;
+>> +	struct regmap *revision;
+>> +} opp_data;
+>> +
+>> +static struct ti_cpufreq_soc_data {
+>> +	unsigned long (*efuse_xlate)(unsigned long efuse);
+>> +} *soc_data;
+>> +
+>> +static unsigned long amx3_efuse_xlate(unsigned long efuse)
+>> +{
+>> +	/* AM335x and AM437x use "OPP disable" bits, so invert */
+>> +	return ~efuse;
+>> +}
+>> +
+>> +static unsigned long dra7_efuse_xlate(unsigned long efuse)
+>> +{
+>> +	unsigned long calculated_efuse = DRA7_EFUSE_NOM_MPU_OPP;
+>> +
+>> +	/*
+>> +	 * The efuse on dra7 and am57 parts contains a specific
+>> +	 * value indicating the highest available OPP.
+>> +	 */
+>> +
+>> +	switch (efuse) {
+>> +	case DRA7_EFUSE_HAS_ALL_MPU_OPP:
+>> +	case DRA7_EFUSE_HAS_HIGH_MPU_OPP:
+>> +		calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
+>> +	case DRA7_EFUSE_HAS_OD_MPU_OPP:
+>> +		calculated_efuse |= DRA7_EFUSE_OD_MPU_OPP;
+>> +	}
+>> +
+>> +	return calculated_efuse;
+>> +}
+>> +
+>> +static struct ti_cpufreq_soc_data amx3_soc_data = {
+>> +	.efuse_xlate = amx3_efuse_xlate,
+>> +};
+>> +
+>> +static struct ti_cpufreq_soc_data dra7_soc_data = {
+>> +	.efuse_xlate = dra7_efuse_xlate,
+>> +};
+>> +
+>> +/**
+>> + * ti_cpufreq_get_efuse() - Parse and return efuse value present on SoC
+>> + * @efuse_value: Set to the value parsed from efuse
+>> + *
+>> + * Returns error code if efuse not read properly.
+>> + */
+>> +static int ti_cpufreq_get_efuse(u32 *efuse_value)
+>> +{
+>> +	struct device *dev = opp_data.cpu;
+>> +	struct device_node *np = dev->of_node;
+>> +	unsigned int efuse_offset;
+>> +	u32 efuse, efuse_mask, efuse_shift;
+>> +	int ret;
+>> +
+>> +	ret = of_property_read_u32_index(np, "ti,syscon-efuse",
+>> +					 1, &efuse_offset);
+>> +	if (ret) {
+>> +		dev_err(dev,
+>
+> Line break here isn't required.
 
-                        Geert
+Ok thanks for catching this.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+>> +			"No efuse offset provided %s: %d\n",
+>> +			np->full_name, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = of_property_read_u32_index(np, "ti,syscon-efuse", 2,
+>> +					 &efuse_mask);
+>> +	if (ret)
+>> +		efuse_mask = 0xffffffff;
+>> +
+>> +	ret = of_property_read_u32_index(np, "ti,syscon-efuse", 3,
+>> +					 &efuse_shift);
+>> +	if (ret)
+>> +		efuse_shift = 0;
+>
+> Why don't you read an array of 3 integers in one go?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To be honest, didn't know I could, will update to use 
+of_property_read_u32_array.
+
+>
+>> +
+>> +	ret = regmap_read(opp_data.opp_efuse, efuse_offset, &efuse);
+>> +	if (ret) {
+>> +		dev_err(dev,
+>> +			"Failed to read the efuse value from syscon: %d\n",
+>> +			ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	efuse = (efuse & efuse_mask) >> efuse_shift;
+>> +
+>> +	*efuse_value = soc_data->efuse_xlate(efuse);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/**
+>> + * ti_cpufreq_get_rev() - Parse and return rev value present on SoC
+>> + * @revision_value: Set to the value parsed from revision register
+>> + *
+>> + * Returns error code if revision not read properly.
+>> + */
+>> +static int ti_cpufreq_get_rev(u32 *revision_value)
+>> +{
+>> +	struct device *dev = opp_data.cpu;
+>> +	struct device_node *np = dev->of_node;
+>> +	unsigned int revision_offset;
+>> +	u32 revision;
+>> +	int ret;
+>> +
+>> +	ret = of_property_read_u32_index(np, "ti,syscon-rev",
+>> +					 1, &revision_offset);
+>> +	if (ret) {
+>> +		dev_err(dev,
+>> +			"No revision offset provided %s [%d]\n",
+>> +			np->full_name, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = regmap_read(opp_data.revision, revision_offset, &revision);
+>> +	if (ret) {
+>> +		dev_err(dev,
+>> +			"Failed to read the revision number from syscon: %d\n",
+>> +			ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	*revision_value = BIT((revision & REVISION_MASK) >> REVISION_SHIFT);
+>
+> That's an crazy operation.
+>
+> So you first shifted 0xF << 27, and then right shifted everything by 27 bits :)
+>
+> You should rather do:
+>
+> #define REVISION_MASK   0xF
+> (revision >> REVISION_SHIFT) & REVISION_MASK
+
+Yeah that's much cleaner I can update.
+
+>
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ti_cpufreq_setup_syscon_registers(void)
+>> +{
+>> +	struct device *dev = opp_data.cpu;
+>> +	struct device_node *np = dev->of_node;
+>> +
+>> +	opp_data.opp_efuse = syscon_regmap_lookup_by_phandle(np,
+>> +							"ti,syscon-efuse");
+>> +	if (IS_ERR(opp_data.opp_efuse)) {
+>> +		dev_dbg(dev,  "\"ti,syscon-efuse\" is missing, cannot use OPPv2 table.\n");
+>> +		return PTR_ERR(opp_data.opp_efuse);
+>> +	}
+>> +
+>> +	opp_data.revision = syscon_regmap_lookup_by_phandle(np,
+>> +							"ti,syscon-rev");
+>> +	if (IS_ERR(opp_data.revision)) {
+>> +		dev_dbg(dev,  "\"ti,syscon-rev\" is missing, cannot use OPPv2 table.\n");
+>
+> These messages are wrong as your code is going to use opp-v2 anyway.
+
+Yes you are right for the case when these properties aren't provided 
+isn't provided but opp-v2 table is, I was thinking more of when no 
+properties are provided but opp-v1 table has been provided, like on 
+legacy DT files. I will need to consider both for this message.
+
+>
+>> +		return PTR_ERR(opp_data.revision);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct ti_cpufreq_soc_data *ti_cpufreq_get_soc_data(void)
+>> +{
+>> +	if (of_machine_is_compatible("ti,am33xx") ||
+>> +	    of_machine_is_compatible("ti,am4372"))
+>> +		return &amx3_soc_data;
+>> +	else if (of_machine_is_compatible("ti,dra7"))
+>> +		return &dra7_soc_data;
+>> +	else
+>> +		return NULL;
+>> +}
+>> +
+>> +static int ti_cpufreq_init(void)
+>
+> __init ?
+
+Whoops, left that out.
+
+>
+>> +{
+>> +	int ret;
+>> +	u32 version[VERSION_COUNT];
+>> +
+>> +	soc_data = ti_cpufreq_get_soc_data();
+>> +	if (!soc_data)
+>> +		return -ENODEV;
+>
+> Why not use of_match_node() and an array of type struct of_device_id instead of
+> above function?
+
+Interesting idea, I like it and will do that.
+
+Thanks for your comments.
+
+Regards,
+Dave
+
+>
+>> +
+>> +	opp_data.cpu = get_cpu_device(0);
+>> +	if (!opp_data.cpu) {
+>> +		pr_err("%s: Failed to get device for CPU0\n", __func__);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	if (!of_get_property(opp_data.cpu->of_node, "operating-points-v2",
+>> +			     NULL)) {
+>> +		dev_info(opp_data.cpu, "OPP-v2 not supported, cpufreq-dt will attempt to use legacy tables.\n");
+>> +		goto register_cpufreq_dt;
+>> +	}
+>> +
+>> +	ret = ti_cpufreq_setup_syscon_registers();
+>> +	if (ret)
+>> +		goto register_cpufreq_dt;
+>> +
+>> +	/*
+>> +	 * OPPs determine whether or not they are supported based on
+>> +	 * two metrics:
+>> +	 *	0 - SoC Revision
+>> +	 *	1 - eFuse value
+>> +	 */
+>> +	ret = ti_cpufreq_get_rev(&version[0]);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = ti_cpufreq_get_efuse(&version[1]);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = dev_pm_opp_set_supported_hw(opp_data.cpu, version, VERSION_COUNT);
+>> +	if (ret) {
+>> +		dev_err(opp_data.cpu, "Failed to set supported hardware\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +register_cpufreq_dt:
+>> +	platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
+>> +
+>> +	return 0;
+>> +}
+>> +module_init(ti_cpufreq_init);
+>> +
+>> +MODULE_DESCRIPTION("TI CPUFreq/OPP hw-supported driver");
+>> +MODULE_AUTHOR("Dave Gerlach <d-gerlach@ti.com>");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> 2.7.3
+>
