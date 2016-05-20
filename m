@@ -1,86 +1,278 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Remove unneded always-on for regulators
- on Peach boards
-Date: Fri, 20 May 2016 11:13:41 -0400
-Message-ID: <66cd7fed-c281-0645-0a60-5e1300419642@osg.samsung.com>
-References: <1463694753-7259-1-git-send-email-javier@osg.samsung.com>
- <573EDEF2.8020903@samsung.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v2 2/2] media: Add a driver for the ov5645 camera sensor.
+Date: Fri, 20 May 2016 18:20:17 +0300
+Message-ID: <573F2B31.1070807@linaro.org>
+References: <1463572208-8826-1-git-send-email-todor.tomov@linaro.org>
+ <1463572208-8826-3-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <573EDEF2.8020903@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1463572208-8826-3-git-send-email-todor.tomov@linaro.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, mchehab@osg.samsung.com, hverkuil@xs4all.nl, geert@linux-m68k.org, matrandg@cisco.com, linux-media@vger.kernel.org
+Cc: laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Hi Todor,
 
-Thanks a lot for the feedback.
+Thanks for the patch, few comments below.
 
-On 05/20/2016 05:54 AM, Krzysztof Kozlowski wrote:
-> On 05/19/2016 11:52 PM, Javier Martinez Canillas wrote:
->> The regulator always-on property should only be used for regulators
->> that either can't be disabled or the drivers for the client devices
->> are not enabling the regulator and so being disabled due to unused.
->>
->> There are some max77802 regulators in the Peach Pit and Pi boards
->> that are always-on but shouldn't since they are enabled by drivers:
->>
->> BUCK5 is max77802 inl1 supply
->> BUCK7 is max77802 inl{2,10} supply
->> BUCK9 is max77802 inl{3,4,5,7} supply
->> BUCK10 is mmc1 vqmmc supply
->> LDO9 is adc vdd supply
->>
->> This patch removes the always-on property for these regulators.
->>
->> Some regulators should remain always-on even when they are used as
->> input supplies, because these regulators are also used by other
->> components that are not described in the DT, for example:
->>
->> LDO10 is hdmi vdd_osc supply but it's also used as input supply for
->> the Exynos5420 temperature sensor.
+On 05/18/2016 02:50 PM, Todor Tomov wrote:
+> The ov5645 sensor from Omnivision supports up to 2592x1944
+> and CSI2 interface.
 > 
-> I don't have the schematics, so just guessing: by temperature sensor do
-> you mean the tmu_cpu* node (supplying power to VDD_TS01/23/4)?
->
-
-Yes, I meant that the LDO10 regulator supplies 1v8 to VDD18_TS{01,23,4}.
- 
-> If yes then you can also change it, like on Odroid XU boards.
->
-
-Indeed, I think that should be a separate patch though. I'll do it
-next week since I don't have access to the machine today to test.
- 
->>
->> LDO8 is hdmi vdd and vdd_pll supply but it's also used as supply for
->> the Exynos5420 Display port.
->>
->> BUCK2 and BUCK6 are the vdd supplies for the EAGLE and KFC clusters.
->>
->> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->> ---
->>
->>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 5 -----
->>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 5 -----
->>  2 files changed, 10 deletions(-)
+> The driver adds support for the following modes:
+> - 1280x960
+> - 1920x1080
+> - 2592x1944
 > 
-> Anyway,
+> Output format is packed 8bit UYVY.
 > 
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> ---
+>  drivers/media/i2c/Kconfig  |   11 +
+>  drivers/media/i2c/Makefile |    1 +
+>  drivers/media/i2c/ov5645.c | 1425 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1437 insertions(+)
+>  create mode 100644 drivers/media/i2c/ov5645.c
+> 
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 521bbf1..aa17eba 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -490,6 +490,17 @@ config VIDEO_OV2659
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ov2659.
+>  
+> +config VIDEO_OV5645
+> +	tristate "OmniVision OV5645 sensor support"
+> +	depends on I2C && VIDEO_V4L2
+> +	depends on MEDIA_CAMERA_SUPPORT
 
-Thanks!
- 
-> Best regards,
-> Krzysztof
-> --
+depends on OF ?
 
-Best regards,
+<cut>
+
+> +
+> +struct ov5645 {
+> +	struct i2c_client *i2c_client;
+> +	struct device *dev;
+> +	struct v4l2_subdev sd;
+> +	struct media_pad pad;
+> +	struct v4l2_of_endpoint ep;
+> +	struct v4l2_mbus_framefmt fmt;
+> +	struct v4l2_rect crop;
+> +	struct clk *xclk;
+> +	u32 xclk_freq;
+
+this become unused?
+
+> +
+> +	struct regulator *io_regulator;
+> +	struct regulator *core_regulator;
+> +	struct regulator *analog_regulator;
+> +
+> +	enum ov5645_mode current_mode;
+> +
+> +	/* Cached control values */
+> +	struct v4l2_ctrl_handler ctrls;
+> +	struct v4l2_ctrl *saturation;
+> +	struct v4l2_ctrl *hflip;
+> +	struct v4l2_ctrl *vflip;
+> +	struct v4l2_ctrl *autogain;
+> +	struct v4l2_ctrl *autoexposure;
+> +	struct v4l2_ctrl *awb;
+> +	struct v4l2_ctrl *pattern;
+> +
+> +	struct mutex power_lock; /* lock to protect power state */
+> +	int power;
+> +
+> +	struct gpio_desc *pwdn_gpio;
+> +	struct gpio_desc *rst_gpio;
+> +};
+> +
+> +static inline struct ov5645 *to_ov5645(struct v4l2_subdev *sd)
+> +{
+> +	return container_of(sd, struct ov5645, sd);
+> +}
+
+<cut>
+
+> +static int ov5645_s_power(struct v4l2_subdev *sd, int on)
+> +{
+> +	struct ov5645 *ov5645 = to_ov5645(sd);
+> +	int ret = 0;
+> +
+> +	dev_dbg(ov5645->dev, "%s: on = %d\n", __func__, on);
+> +
+> +	mutex_lock(&ov5645->power_lock);
+> +
+> +	/* If the power count is modified from 0 to != 0 or from != 0 to 0,
+> +	 * update the power state.
+> +	 */
+> +	if (ov5645->power == !on) {
+> +		if (on) {
+> +			ret = ov5645_set_power_on(ov5645);
+> +			if (ret < 0) {
+> +				dev_err(ov5645->dev, "could not set power %s\n",
+> +					on ? "on" : "off");
+> +				goto exit;
+> +			}
+> +
+> +			ret = ov5645_init(ov5645);
+> +			if (ret < 0) {
+> +				dev_err(ov5645->dev,
+> +					"could not set init registers\n");
+> +				goto exit;
+> +			}
+> +
+> +			ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+> +					 OV5645_SYSTEM_CTRL0_STOP);
+
+please check the error code.
+
+> +		} else {
+> +			ov5645_set_power_off(ov5645);
+> +		}
+> +
+> +		/* Update the power count. */
+> +		ov5645->power += on ? 1 : -1;
+> +		WARN_ON(ov5645->power < 0);
+> +	}
+> +
+> +exit:
+> +	mutex_unlock(&ov5645->power_lock);
+> +
+> +	return ret;
+> +}
+> +
+
+<cut>
+
+> +
+> +static int ov5645_registered(struct v4l2_subdev *subdev)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(subdev);
+> +	struct ov5645 *ov5645 = to_ov5645(subdev);
+> +	u8 chip_id_high, chip_id_low;
+> +	int ret;
+> +
+> +	ov5645_s_power(&ov5645->sd, true);
+
+check for error here and on the other places where call s_power.
+
+> +
+> +	ret = ov5645_read_reg(ov5645, OV5645_CHIP_ID_HIGH_REG, &chip_id_high);
+> +	if (ret < 0 || chip_id_high != OV5645_CHIP_ID_HIGH) {
+> +		dev_err(ov5645->dev, "could not read ID high\n");
+> +		ret = -ENODEV;
+> +		goto reg_power_off;
+> +	}
+> +	ret = ov5645_read_reg(ov5645, OV5645_CHIP_ID_LOW_REG, &chip_id_low);
+> +	if (ret < 0 || chip_id_low != OV5645_CHIP_ID_LOW) {
+> +		dev_err(ov5645->dev, "could not read ID low\n");
+> +		ret = -ENODEV;
+> +		goto reg_power_off;
+> +	}
+> +
+> +	dev_info(&client->dev, "OV5645 detected at address 0x%02x\n",
+> +		 client->addr);
+> +
+> +	ov5645_s_power(&ov5645->sd, false);
+> +
+> +	return 0;
+> +
+> +reg_power_off:
+> +	ov5645_s_power(&ov5645->sd, false);
+> +	return ret;
+> +}
+> +
+> +static int ov5645_s_stream(struct v4l2_subdev *subdev, int enable)
+> +{
+> +	struct ov5645 *ov5645 = to_ov5645(subdev);
+> +	int ret;
+> +
+> +	dev_dbg(ov5645->dev, "%s: enable = %d\n", __func__, enable);
+> +
+> +	if (enable) {
+> +		ret = ov5645_change_mode(ov5645, ov5645->current_mode);
+> +		if (ret < 0) {
+> +			dev_err(ov5645->dev, "could not set mode %d\n",
+> +				ov5645->current_mode);
+> +			return ret;
+> +		}
+> +		ret = v4l2_ctrl_handler_setup(&ov5645->ctrls);
+> +		if (ret < 0) {
+> +			dev_err(ov5645->dev, "could not sync v4l2 controls\n");
+> +			return ret;
+> +		}
+> +		ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+> +				 OV5645_SYSTEM_CTRL0_START);
+
+Error code check here and below.
+
+> +	} else {
+> +		ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+> +				 OV5645_SYSTEM_CTRL0_STOP);
+> +	}
+> +
+> +	return 0;
+> +}
+
+<cut>
+
+> +static int ov5645_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct device_node *endpoint;
+> +	struct ov5645 *ov5645;
+> +	int ret = 0;
+
+no need to initialize
+
+<cut>
+
+> +
+> +	ov5645->io_regulator = devm_regulator_get(dev, "dovdd");
+> +	if (IS_ERR(ov5645->io_regulator)) {
+> +		switch(PTR_ERR(ov5645->io_regulator)) {
+> +		case -ENODEV:
+> +			/* Regulator is optional so this is ok - continue */
+
+if the regulator is optional then use devm_regulator_get_optional, thus
+you can avoid checking ov5645->io_regulator for NULL.
+
+and the error handling will be simply
+
+if (IS_ERR(ret_reg))
+	return PTR_ERR(ret_reg);
+
+<cut>
+
+> +
+> +	ov5645->pwdn_gpio = devm_gpiod_get(dev, "pwdn", GPIOD_OUT_LOW);
+> +	if (IS_ERR(ov5645->pwdn_gpio)) {
+> +		switch(PTR_ERR(ov5645->pwdn_gpio)) {
+> +		case -ENOENT:
+> +			/* GPIO is optional so this is ok - continue */
+
+you can use devm_gpiod_get_optional then.
+
+> +			ov5645->pwdn_gpio = NULL;
+> +			dev_dbg(dev, "power down gpio not present\n");
+> +			break;
+> +		case -EPROBE_DEFER:
+> +			dev_dbg(dev, "power down gpio probe defered\n");
+> +			return -EPROBE_DEFER;
+> +		default:
+> +			dev_err(dev, "cannot get power down gpio\n");
+> +			return PTR_ERR(ov5645->pwdn_gpio);
+> +		}
+> +	}
+
+
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+regards,
+Stan
