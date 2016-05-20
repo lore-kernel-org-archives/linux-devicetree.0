@@ -1,176 +1,287 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 08/14] usb: otg: add OTG/dual-role core
-Date: Fri, 20 May 2016 17:53:10 +0800
-Message-ID: <20160520095310.GA5467@shlinux2>
-References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
- <1463133808-10630-9-git-send-email-rogerq@ti.com>
- <57398C16.5050805@ti.com>
- <CAL411-qb0dHQrn+AarSApCq6L=toKPRerLKDcx_H+5WDWu_VDg@mail.gmail.com>
- <573C674A.7080302@ti.com>
- <573ECB74.8060502@ti.com>
- <573ED68B.60907@ti.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v4 3/5] mmc: core: implement enhanced strobe support
+Date: Fri, 20 May 2016 12:58:56 +0300
+Message-ID: <573EDFE0.6000600@intel.com>
+References: <1463733285-770-1-git-send-email-shawn.lin@rock-chips.com>
+ <1463733360-902-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <573ED68B.60907-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463733360-902-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 12:19:07PM +0300, Roger Quadros wrote:
-> On 20/05/16 11:31, Roger Quadros wrote:
-> > On 18/05/16 15:59, Roger Quadros wrote:
-> >> Hi Peter,
-> >>
-> >> On 18/05/16 10:45, Peter Chen wrote:
-> >>>
-> >>>
-> >>> On Mon, May 16, 2016 at 5:00 PM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org <mailto:rogerq-l0cyMroinI0@public.gmane.org>> wrote:
-> >>>
-> >>>     On 13/05/16 13:03, Roger Quadros wrote:
-> >>>     > It provides APIs for the following tasks
-> >>>     >
-> >>>     > - Registering an OTG/dual-role capable controller
-> >>>     > - Registering Host and Gadget controllers to OTG core
-> >>>     > - Providing inputs to and kicking the OTG state machine
-> >>>     >
-> >>>     > Provide a dual-role device (DRD) state machine.
-> >>>     > DRD mode is a reduced functionality OTG mode. In this mode
-> >>>     > we don't support SRP, HNP and dynamic role-swap.
-> >>>     >
-> >>>     > In DRD operation, the controller mode (Host or Peripheral)
-> >>>     > is decided based on the ID pin status. Once a cable plug (Type-A
-> >>>     > or Type-B) is attached the controller selects the state
-> >>>     > and doesn't change till the cable in unplugged and a different
-> >>>     > cable type is inserted.
-> >>>     >
-> >>>     > As we don't need most of the complex OTG states and OTG timers
-> >>>     > we implement a lean DRD state machine in usb-otg.c.
-> >>>     > The DRD state machine is only interested in 2 hardware inputs
-> >>>     > 'id' and 'b_sess_vld'.
-> >>>     >
-> >>>     > Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org <mailto:rogerq-l0cyMroinI0@public.gmane.org>>
-> >>>     > ---
-> >>>     >  drivers/usb/common/Makefile  |    2 +-
-> >>>     >  drivers/usb/common/usb-otg.c | 1042 ++++++++++++++++++++++++++++++++++++++++++
-> >>>     >  drivers/usb/core/Kconfig     |    4 +-
-> >>>     >  include/linux/usb/gadget.h   |    2 +
-> >>>     >  include/linux/usb/hcd.h      |    1 +
-> >>>     >  include/linux/usb/otg-fsm.h  |    7 +
-> >>>     >  include/linux/usb/otg.h      |  154 ++++++-
-> >>>     >  7 files changed, 1206 insertions(+), 6 deletions(-)
-> >>>     >  create mode 100644 drivers/usb/common/usb-otg.c
-> >>>
-> >>>
-> >>>     This patch causes the following build issues when CONFIG_USB_GADGET=m, CONFIG_USB=m,
-> >>>     CONFIG_USB_COMMON=m and CONFIG_USB_OTG=y
-> >>>
-> >>>     ERROR: "usb_otg_register_gadget" [drivers/usb/gadget/udc/udc-core.ko] undefined!
-> >>>     ERROR: "usb_otg_unregister_gadget" [drivers/usb/gadget/udc/udc-core.ko] undefined!
-> >>>     ERROR: "usb_otg_register_hcd" [drivers/usb/core/usbcore.ko] undefined!
-> >>>     ERROR: "usb_otg_unregister_hcd" [drivers/usb/core/usbcore.ko] undefined!
-> >>>     ERROR: "otg_statemachine" [drivers/usb/chipidea/ci_hdrc.ko] undefined!
-> >>>     scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-> >>>     make[1]: *** [__modpost] Error 1
-> >>>     Makefile:1141: recipe for target 'modules' failed
-> >>>     make: *** [modules] Error 2
-> >>>     make: *** Waiting for unfinished jobs....
-> >>>
-> >>>     drivers/built-in.o: In function `drd_set_state':
-> >>>     usb-otg.c:(.text+0x2b4242): undefined reference to `usb_otg_state_string'
-> >>>     drivers/built-in.o: In function `drd_statemachine':
-> >>>     (.text+0x2b4b4c): undefined reference to `usb_otg_state_string'
-> >>>     Makefile:937: recipe for target 'vmlinux' failed
-> >>>
-> >>>     I'll fix it up with the following diff.
-> >>>
-> >>>     diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
-> >>>     index dca7856..16a5b55 100644
-> >>>     --- a/drivers/usb/Makefile
-> >>>     +++ b/drivers/usb/Makefile
-> >>>     @@ -59,5 +59,6 @@ obj-$(CONFIG_USB_RENESAS_USBHS)       += renesas_usbhs/
-> >>>      obj-$(CONFIG_USB_GADGET)       += gadget/
-> >>>
-> >>>      obj-$(CONFIG_USB_COMMON)       += common/
-> >>>     +obj-$(CONFIG_USB_OTG)          += common/
-> >>>
-> >>>      obj-$(CONFIG_USBIP_CORE)       += usbip/
-> >>>     diff --git a/drivers/usb/common/usb-otg.c b/drivers/usb/common/usb-otg.c
-> >>>     index 77048aa..17e449e 100644
-> >>>     --- a/drivers/usb/common/usb-otg.c
-> >>>     +++ b/drivers/usb/common/usb-otg.c
-> >>>     @@ -56,6 +56,30 @@ static int usb_otg_hcd_is_primary_hcd(struct usb_hcd *hcd)
-> >>>             return hcd == hcd->primary_hcd;
-> >>>      }
-> >>>
-> >>>     +static const char *otg_state_string(enum usb_otg_state state)
-> >>>     +{
-> >>>     +       static const char *const names[] = {
-> >>>     +               [OTG_STATE_A_IDLE] = "a_idle",
-> >>>     +               [OTG_STATE_A_WAIT_VRISE] = "a_wait_vrise",
-> >>>     +               [OTG_STATE_A_WAIT_BCON] = "a_wait_bcon",
-> >>>     +               [OTG_STATE_A_HOST] = "a_host",
-> >>>     +               [OTG_STATE_A_SUSPEND] = "a_suspend",
-> >>>     +               [OTG_STATE_A_PERIPHERAL] = "a_peripheral",
-> >>>     +               [OTG_STATE_A_WAIT_VFALL] = "a_wait_vfall",
-> >>>     +               [OTG_STATE_A_VBUS_ERR] = "a_vbus_err",
-> >>>     +               [OTG_STATE_B_IDLE] = "b_idle",
-> >>>     +               [OTG_STATE_B_SRP_INIT] = "b_srp_init",
-> >>>     +               [OTG_STATE_B_PERIPHERAL] = "b_peripheral",
-> >>>     +               [OTG_STATE_B_WAIT_ACON] = "b_wait_acon",
-> >>>     +               [OTG_STATE_B_HOST] = "b_host",
-> >>>     +       };
-> >>>     +
-> >>>     +       if (state < 0 || state >= ARRAY_SIZE(names))
-> >>>     +               return "UNDEFINED";
-> >>>     +
-> >>>     +       return names[state];
-> >>>     +}
-> >>>     +
-> >>>
-> >>>
-> >>>
-> >>> From my point, make another copy for otg stuff is not a good way,
-> >>> could we make folder under usb/ named otg for dedicated otg stuffs,
-> >>> in that case, build otg stuffs can not depend on USB_COMMON.
-> >>
-> >> OK. I can try that. I'll delete otg_state_string from usb-common.c and
-> >> move it into usb/otg/usb-otg.c
-> >>
-> >> I'll also move usb-otg-fsm.c to usb/otg/.
-> > 
-> > But we can't delete usb_otg_state_string() from usb-common.c. That is used at a
-> > number of places whether OTG is enabled or not. 
-> > 
-> > One option is to make usb-common built in when otg is enabled. What do you say?
-> > 
+On 20/05/16 11:36, Shawn Lin wrote:
+> Controllers use data strobe line to latch data from devices
+> under hs400 mode, but not for cmd line. So since emmc 5.1, JEDEC
+> introduces enhanced strobe mode for latching cmd response from
+> emmc devices to host controllers. This new feature is optional,
+> so it depends both on device's cap and host's cap to decide
+> whether to use it or not.
 > 
-> This should also get solved if we make USB_OTG tristate so that it is same as
-> USB_COMMON.
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
 > 
-> However I haven't had success in making Kconfig behave like this.
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
 > 
-> USB_OTG = y if USB == y && GADGET = m
-> USB_OTG = y if USB == m && GADGET = y
+>  drivers/mmc/core/bus.c   |  3 +-
+>  drivers/mmc/core/core.c  |  8 +++++
+>  drivers/mmc/core/mmc.c   | 84 ++++++++++++++++++++++++++++++++++++++++++++++--
+>  include/linux/mmc/card.h |  1 +
+>  include/linux/mmc/host.h | 11 +++++++
+>  include/linux/mmc/mmc.h  |  3 ++
+>  6 files changed, 107 insertions(+), 3 deletions(-)
 > 
-> Is there any Kconfig trickery to get this behaviour?
-> 
+> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
+> index 4bc48f1..c64266f 100644
+> --- a/drivers/mmc/core/bus.c
+> +++ b/drivers/mmc/core/bus.c
+> @@ -332,12 +332,13 @@ int mmc_add_card(struct mmc_card *card)
+>  			mmc_card_ddr52(card) ? "DDR " : "",
+>  			type);
+>  	} else {
+> -		pr_info("%s: new %s%s%s%s%s card at address %04x\n",
+> +		pr_info("%s: new %s%s%s%s%s%s card at address %04x\n",
+>  			mmc_hostname(card->host),
+>  			mmc_card_uhs(card) ? "ultra high speed " :
+>  			(mmc_card_hs(card) ? "high speed " : ""),
+>  			mmc_card_hs400(card) ? "HS400 " :
+>  			(mmc_card_hs200(card) ? "HS200 " : ""),
+> +			mmc_card_hs400es(card) ? "Enhanced strobe " : "",
+>  			mmc_card_ddr52(card) ? "DDR " : "",
+>  			uhs_bus_speed_mode, type, card->rca);
+>  	}
+> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> index 99275e4..a559501 100644
+> --- a/drivers/mmc/core/core.c
+> +++ b/drivers/mmc/core/core.c
+> @@ -1127,6 +1127,14 @@ void mmc_set_initial_state(struct mmc_host *host)
+>  	host->ios.bus_width = MMC_BUS_WIDTH_1;
+>  	host->ios.timing = MMC_TIMING_LEGACY;
+>  	host->ios.drv_type = 0;
+> +	host->ios.enhanced_strobe = false;
+> +
+> +	/*
+> +	 * Make sure we are in non-enhanced strobe mode before we
+> +	 * actually enable it in ext_csd.
+> +	 */
+> +	if (host->ops->hs400_enhanced_strobe)
+> +		host->ops->hs400_enhanced_strobe(host, &host->ios);
 
-Unless let the USB_OTG works like USB_COMMON which is selected by GADGET
-or HCD. In fact, HCD and Gadget code uses USB OTG symbol directly in
-this framework, it seems like HCD and Gadget depends on OTG, but not
-otherwise.
+We probably shouldn't call hs400_enhanced_strobe() if the host controller
+driver hasn't set MMC_CAP2_HS400_ES.
 
-If we want OTG to depend on HCD && GADGET, we need not to use OTG symbol
-at HCD and GADGET, and the OTG can use HCD and GADGET symbol directly.
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  
+>  	mmc_set_ios(host);
+>  }
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index f99c47e..9dc91ba 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -235,6 +235,11 @@ static void mmc_select_card_type(struct mmc_card *card)
+>  		avail_type |= EXT_CSD_CARD_TYPE_HS400_1_2V;
+>  	}
+>  
+> +	if ((caps2 & MMC_CAP2_HS400_ES) &&
+> +	    card->ext_csd.strobe_support &&
+> +	    (avail_type & EXT_CSD_CARD_TYPE_HS400))
+> +		avail_type |= EXT_CSD_CARD_TYPE_HS400ES;
+> +
+>  	card->ext_csd.hs_max_dtr = hs_max_dtr;
+>  	card->ext_csd.hs200_max_dtr = hs200_max_dtr;
+>  	card->mmc_avail_type = avail_type;
+> @@ -383,6 +388,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+>  			mmc_card_set_blockaddr(card);
+>  	}
+>  
+> +	card->ext_csd.strobe_support = ext_csd[EXT_CSD_STROBE_SUPPORT];
+>  	card->ext_csd.raw_card_type = ext_csd[EXT_CSD_CARD_TYPE];
+>  	mmc_select_card_type(card);
+>  
+> @@ -1216,6 +1222,78 @@ out_err:
+>  	return err;
+>  }
+>  
+> +static int mmc_select_hs400es(struct mmc_card *card)
+> +{
+> +	struct mmc_host *host = card->host;
+> +	int err = 0;
+> +	u8 val;
+> +
+> +	if (!(host->caps & MMC_CAP_8_BIT_DATA)) {
+> +		err = -ENOTSUPP;
+> +		goto out_err;
+> +	}
+> +
+> +	err = mmc_select_bus_width(card);
+> +	if (IS_ERR_VALUE(err))
+> +		goto out_err;
+> +
+> +	/* Switch card to HS mode */
+> +	err = mmc_select_hs(card);
+> +	if (err) {
+> +		pr_err("%s: switch to high-speed failed, err:%d\n",
+> +			mmc_hostname(host), err);
+> +		goto out_err;
+> +	}
+> +
+> +	err = mmc_switch_status(card);
+> +	if (err)
+> +		goto out_err;
+> +
+> +	/* Switch card to DDR with strobe bit */
+> +	val = EXT_CSD_DDR_BUS_WIDTH_8 | EXT_CSD_BUS_WIDTH_STROBE;
+> +	err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+> +			 EXT_CSD_BUS_WIDTH,
+> +			 val,
+> +			 card->ext_csd.generic_cmd6_time);
+> +	if (err) {
+> +		pr_err("%s: switch to bus width for hs400es failed, err:%d\n",
+> +			mmc_hostname(host), err);
+> +		goto out_err;
+> +	}
+> +
+> +	/* Switch card to HS400 */
+> +	val = EXT_CSD_TIMING_HS400 |
+> +	      card->drive_strength << EXT_CSD_DRV_STR_SHIFT;
+> +	err = __mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+> +			   EXT_CSD_HS_TIMING, val,
+> +			   card->ext_csd.generic_cmd6_time,
+> +			   true, false, true);
+> +	if (err) {
+> +		pr_err("%s: switch to hs400es failed, err:%d\n",
+> +			mmc_hostname(host), err);
+> +		goto out_err;
+> +	}
+> +
+> +	/* Set host controller to HS400 timing and frequency */
+> +	mmc_set_timing(host, MMC_TIMING_MMC_HS400);
+> +
+> +	/* Controller enable enhanced strobe function */
+> +	host->ios.enhanced_strobe = true;
+> +	if (host->ops->hs400_enhanced_strobe)
+> +		host->ops->hs400_enhanced_strobe(host, &host->ios);
+> +
+> +	err = mmc_switch_status(card);
+> +	if (err)
+> +		goto out_err;
+> +
+> +	return 0;
+> +
+> +out_err:
+> +	pr_err("%s: %s failed, error %d\n", mmc_hostname(card->host),
+> +	       __func__, err);
+> +	return err;
+> +}
+> +
+>  static void mmc_select_driver_type(struct mmc_card *card)
+>  {
+>  	int card_drv_type, drive_strength, drv_type;
+> @@ -1297,7 +1375,7 @@ err:
+>  }
+>  
+>  /*
+> - * Activate High Speed or HS200 mode if supported.
+> + * Activate High Speed, HS200 or HS400ES mode if supported.
+>   */
+>  static int mmc_select_timing(struct mmc_card *card)
+>  {
+> @@ -1306,7 +1384,9 @@ static int mmc_select_timing(struct mmc_card *card)
+>  	if (!mmc_can_ext_csd(card))
+>  		goto bus_speed;
+>  
+> -	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200)
+> +	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400ES)
+> +		err = mmc_select_hs400es(card);
+> +	else if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200)
+>  		err = mmc_select_hs200(card);
+>  	else if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS)
+>  		err = mmc_select_hs(card);
+> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+> index eb0151b..22defc2 100644
+> --- a/include/linux/mmc/card.h
+> +++ b/include/linux/mmc/card.h
+> @@ -95,6 +95,7 @@ struct mmc_ext_csd {
+>  	u8			raw_partition_support;	/* 160 */
+>  	u8			raw_rpmb_size_mult;	/* 168 */
+>  	u8			raw_erased_mem_count;	/* 181 */
+> +	u8			strobe_support;		/* 184 */
+>  	u8			raw_ext_csd_structure;	/* 194 */
+>  	u8			raw_card_type;		/* 196 */
+>  	u8			raw_driver_strength;	/* 197 */
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 2a06fb0..0eabb72 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -19,6 +19,7 @@
+>  
+>  #include <linux/mmc/core.h>
+>  #include <linux/mmc/card.h>
+> +#include <linux/mmc/mmc.h>
+>  #include <linux/mmc/pm.h>
+>  
+>  struct mmc_ios {
+> @@ -77,6 +78,8 @@ struct mmc_ios {
+>  #define MMC_SET_DRIVER_TYPE_A	1
+>  #define MMC_SET_DRIVER_TYPE_C	2
+>  #define MMC_SET_DRIVER_TYPE_D	3
+> +
+> +	bool enhanced_strobe;			/* hs400es selection */
+>  };
+>  
+>  struct mmc_host_ops {
+> @@ -143,6 +146,9 @@ struct mmc_host_ops {
+>  
+>  	/* Prepare HS400 target operating frequency depending host driver */
+>  	int	(*prepare_hs400_tuning)(struct mmc_host *host, struct mmc_ios *ios);
+> +	/* Prepare enhanced strobe depending host driver */
+> +	void	(*hs400_enhanced_strobe)(struct mmc_host *host,
+> +					 struct mmc_ios *ios);
+>  	int	(*select_drive_strength)(struct mmc_card *card,
+>  					 unsigned int max_dtr, int host_drv,
+>  					 int card_drv, int *drv_type);
+> @@ -513,6 +519,11 @@ static inline bool mmc_card_hs400(struct mmc_card *card)
+>  	return card->host->ios.timing == MMC_TIMING_MMC_HS400;
+>  }
+>  
+> +static inline bool mmc_card_hs400es(struct mmc_card *card)
+> +{
+> +	return card->host->ios.enhanced_strobe;
+> +}
+> +
+>  void mmc_retune_timer_stop(struct mmc_host *host);
+>  
+>  static inline void mmc_retune_needed(struct mmc_host *host)
+> diff --git a/include/linux/mmc/mmc.h b/include/linux/mmc/mmc.h
+> index 15f2c4a..c376209 100644
+> --- a/include/linux/mmc/mmc.h
+> +++ b/include/linux/mmc/mmc.h
+> @@ -297,6 +297,7 @@ struct _mmc_csd {
+>  #define EXT_CSD_PART_CONFIG		179	/* R/W */
+>  #define EXT_CSD_ERASED_MEM_CONT		181	/* RO */
+>  #define EXT_CSD_BUS_WIDTH		183	/* R/W */
+> +#define EXT_CSD_STROBE_SUPPORT		184	/* RO */
+>  #define EXT_CSD_HS_TIMING		185	/* R/W */
+>  #define EXT_CSD_POWER_CLASS		187	/* R/W */
+>  #define EXT_CSD_REV			192	/* RO */
+> @@ -380,12 +381,14 @@ struct _mmc_csd {
+>  #define EXT_CSD_CARD_TYPE_HS400_1_2V	(1<<7)	/* Card can run at 200MHz DDR, 1.2V */
+>  #define EXT_CSD_CARD_TYPE_HS400		(EXT_CSD_CARD_TYPE_HS400_1_8V | \
+>  					 EXT_CSD_CARD_TYPE_HS400_1_2V)
+> +#define EXT_CSD_CARD_TYPE_HS400ES	(1<<8)	/* Card can run at HS400ES */
+>  
+>  #define EXT_CSD_BUS_WIDTH_1	0	/* Card is in 1 bit mode */
+>  #define EXT_CSD_BUS_WIDTH_4	1	/* Card is in 4 bit mode */
+>  #define EXT_CSD_BUS_WIDTH_8	2	/* Card is in 8 bit mode */
+>  #define EXT_CSD_DDR_BUS_WIDTH_4	5	/* Card is in 4 bit DDR mode */
+>  #define EXT_CSD_DDR_BUS_WIDTH_8	6	/* Card is in 8 bit DDR mode */
+> +#define EXT_CSD_BUS_WIDTH_STROBE BIT(7)	/* Enhanced strobe mode */
+>  
+>  #define EXT_CSD_TIMING_BC	0	/* Backwards compatility */
+>  #define EXT_CSD_TIMING_HS	1	/* High speed */
+> 
