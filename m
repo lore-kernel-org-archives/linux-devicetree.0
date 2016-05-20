@@ -1,49 +1,74 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 19/23] ARM: dts: marzen: Fix W=1 dtc warnings
-Date: Fri, 20 May 2016 09:10:10 +0200
-Message-ID: <1463728214-13838-20-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 17/23] ARM: dts: kzm9g: Fix W=1 dtc warnings
+Date: Fri, 20 May 2016 09:10:08 +0200
+Message-ID: <1463728214-13838-18-git-send-email-geert+renesas@glider.be>
 References: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463728214-13838-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
 Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
-Warning (unit_address_vs_reg): Node /fixedregulator@0 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /regulator@0 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /regulator@1 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /regulator@2 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /regulator@3 has a unit name, but no reg property
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
-  - Change regulator name from fixedregulator3v3 to regulator-3v3.
+  - No changes.
 ---
- arch/arm/boot/dts/r8a7779-marzen.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sh73a0-kzm9g.dts | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts b/arch/arm/boot/dts/r8a7779-marzen.dts
-index b795da6f5503d224..cec79a6347c036f7 100644
---- a/arch/arm/boot/dts/r8a7779-marzen.dts
-+++ b/arch/arm/boot/dts/r8a7779-marzen.dts
-@@ -28,12 +28,12 @@
- 		stdout-path = &scif2;
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g.dts b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+index 9881adf1734e2b0c..36567cbf2e1c32dd 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+@@ -43,12 +43,12 @@
+ 		stdout-path = &scifa4;
  	};
  
 -	memory {
-+	memory@60000000 {
++	memory@40000000 {
  		device_type = "memory";
- 		reg = <0x60000000 0x40000000>;
+ 		reg = <0x40000000 0x20000000>;
  	};
  
--	fixedregulator3v3: fixedregulator@0 {
-+	fixedregulator3v3: regulator-3v3 {
+-	reg_1p8v: regulator@0 {
++	reg_1p8v: regulator-1p8v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "fixed-1.8V";
+ 		regulator-min-microvolt = <1800000>;
+@@ -57,7 +57,7 @@
+ 		regulator-boot-on;
+ 	};
+ 
+-	reg_3p3v: regulator@1 {
++	reg_3p3v: regulator-3p3v {
  		compatible = "regulator-fixed";
  		regulator-name = "fixed-3.3V";
  		regulator-min-microvolt = <3300000>;
+@@ -66,7 +66,7 @@
+ 		regulator-boot-on;
+ 	};
+ 
+-	vmmc_sdhi0: regulator@2 {
++	vmmc_sdhi0: regulator-vmmc-sdhi0 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "SDHI0 Vcc";
+ 		regulator-min-microvolt = <3300000>;
+@@ -75,7 +75,7 @@
+ 		enable-active-high;
+ 	};
+ 
+-	vmmc_sdhi2: regulator@3 {
++	vmmc_sdhi2: regulator-vmmc-sdhi2 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "SDHI2 Vcc";
+ 		regulator-min-microvolt = <3300000>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
