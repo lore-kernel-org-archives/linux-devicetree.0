@@ -1,48 +1,91 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [alsa-devel] [RFC-PATCH 0/2] ASoC: simple_card: support for
- hw-params rules
-Date: Fri, 20 May 2016 21:16:09 +0200
-Message-ID: <573F6279.8040008@metafoo.de>
-References: <1463747445-14167-1-git-send-email-kernel@martin.sperl.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drivers: nvmem: atmel-secumod: New driver for Atmel
+ Secumod nvram
+Date: Fri, 20 May 2016 14:21:01 -0500
+Message-ID: <20160520192101.GA15615@rob-hp-laptop>
+References: <20160518164259.GA28954@rob-hp-laptop>
+ <1463605564-14397-1-git-send-email-davidm@egauge.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463747445-14167-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1463605564-14397-1-git-send-email-davidm@egauge.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Mosberger-Tang <davidm@egauge.net>
+Cc: srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/2016 02:30 PM, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On Wed, May 18, 2016 at 03:06:04PM -0600, David Mosberger-Tang wrote:
+> Signed-off-by: David Mosberger <davidm@egauge.net>
+> ---
+>  .../devicetree/bindings/nvmem/atmel-secumod.txt    |  47 +++++++
+>  drivers/nvmem/Kconfig                              |   7 +
+>  drivers/nvmem/Makefile                             |   2 +
+>  drivers/nvmem/atmel-secumod.c                      | 143 +++++++++++++++++++++
+>  4 files changed, 199 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
+>  create mode 100644 drivers/nvmem/atmel-secumod.c
 > 
-> Simple_card does require under some circumstances the ability
-> to configure certain hw_parameters based on clocks, bits, channels.
-> 
-> This patchset adds a generic way to configure these kind of things
-> via the device tree easily. This patchset implements this
-> for simple_card, but other drivers can just as easily make use of
-> this.
-> 
-> For now we have the following matchers and actions:
-> * matchers:
->   * match_sample_bits
->   * match_rate
->   * match_channels
-> * actions:
->   * set_fixed_bclk_size
-> 
-> As a note: the available matching rules and action rules right now
-> are hard-coded, but this could in principle get extended to be more
-> dynamic via kallsyms_lookup_name that would lookup the requested
-> symbol and assume it is a struct asoc_generic_hw_params_method,
-> on which it could apply several sanity-checks before using
-> the pointers for real.
+> diff --git a/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt b/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
+> new file mode 100644
+> index 0000000..d65cad5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
+> @@ -0,0 +1,47 @@
+> += Atmel Secumod device tree bindings =
+> +
+> +This binding is intended to represent Atmel's Secumod which is found
+> +in SAMA5D2 and perhaps others.
+> +
+> +Required properties:
+> +- compatible: should be "atmel,sama5d2-secumod"
+> +- reg: Should contain RAM location and length, followed
+> +       by register location and length of the Secumod controller.
+> +
+> += Data cells =
+> +Are child nodes of secumod, bindings of which as described in
+> +bindings/nvmem/nvmem.txt
+> +
+> +Example:
+> +
+> +    secumod@fc040000 {
 
-How about allowing to embed eBPF bytecode in the DT that can be installed as
-a constraint set? This would allow maximum for flexibility and also make the
-implementation a lot easier.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This unit-address should match the first reg address.
+
+> +            compatible = "atmel,sama5d2-secumod";
+> +            reg = <0xf8044000 0x1420>, <0xfc040000 0x4000>;
+> +            reg-names = "SECURAM", "SECUMOD";
+> +            status = "okay";
+> +
+> +            #address-cells = <1>;
+> +            #size-cells = <1>;
+> +            ranges;
+
+Sorry, to be clear, you need values here too.
+
+> +
+> +            secram-auto-erasable@0 {
+> +                    reg = <0x0000 0x1000>;
+
+The 0 here is address 0xf8044000, right? So ranges is what is used to 
+translate from child address of 0 to the parent address.
+
+> +            };
+> +            secram@1000 {
+> +                    reg = <0x1000 0x400>;
+> +            };
+> +            ram@1400 {
+> +                    reg = <0x1400 0x20>;
+> +            };
+> +    };
+> +
+> += Data consumers =
+> +Are device nodes which consume nvmem data cells.
+> +
+> +For example:
+> +
+> +	ram {
+> +		...
+> +		nvmem-cells = <&ram>;
+> +		nvmem-cell-names = "RAM";
+> +	};
