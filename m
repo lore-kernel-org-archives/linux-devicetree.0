@@ -1,235 +1,455 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] DeviceTree for 4.7
-Date: Fri, 20 May 2016 16:05:46 -0500
-Message-ID: <CAL_JsqL6JyLAK3ugFPeXv4nvLB_J-TYbw4Zryy+sOaQg9q4qgQ@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
+Date: Fri, 20 May 2016 23:13:14 +0200
+Message-ID: <3647622.McCjKUuZmz@phil>
+References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com> <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+Hi Shawn,
 
-Please pull DT updates for 4.7. There's a small merge conflict with
-the iommu tree. The correct resolution is in -next. There's also a one
-line conflict in nvidia,gk20a.txt with the same change made in both
-branches.
+I haven't had any contact with PCI yet, so my comments below will likely 
+address more generic findings only.
 
-Rob
+As you might've guessed from the binding comments, to me it looks like the 
+phy handling should be in a separate phy driver and looking below all phy 
+accesses seem very separate from the actual pci controller interactions - 
+they are even in port_init only as well.
 
-The following changes since commit f55532a0c0b8bb6148f4e07853b876ef73bc=
-69ca:
+While I already added some comments about that below, the driver seems full 
+of raw register bit handling (including wild shifts). Please abstract that 
+using contants, so that stuff stays readable for the future.
 
-  Linux 4.6-rc1 (2016-03-26 16:03:24 -0700)
 
-are available in the git repository at:
+Am Freitag, 20. Mai 2016, 18:29:16 schrieb Shawn Lin:
+> RK3399 has a PCIe controller which can be used as Root Complex.
+> This driver supports a PCIe controller as Root Complex mode.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-for-4.7
+[...]
 
-for you to fetch changes up to f2c27767af0a91cbdc3d832231f953110473e853=
-:
+> diff --git a/drivers/pci/host/pcie-rockchip.c
+> b/drivers/pci/host/pcie-rockchip.c new file mode 100644
+> index 0000000..4063fd3
+> --- /dev/null
+> +++ b/drivers/pci/host/pcie-rockchip.c
+> @@ -0,0 +1,1181 @@
+> +/*
+> + * Rockchip AXI PCIe host controller driver
+> + *
+> + * Copyright (c) 2016 Rockchip, Inc.
+> + *
+> + * Author: Shawn Lin <shawn.lin@rock-chips.com>
+> + *         Wenrui Li <wenrui.li@rock-chips.com>
+> + * Bits taken from Synopsys Designware Host controller driver and
+> + * ARM PCI Host generic driver.
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation, either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/msi.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +#include <linux/regmap.h>
+> +
+> +#define REF_CLK_100MHZ			(100 * 1000 * 1000)
 
-  devicetree: Add Creative Technology vendor id (2016-05-19 09:16:36 -0=
-500)
+seems unused
 
-----------------------------------------------------------------
-Devicetree for 4.7:
+> +#define PCIE_CLIENT_BASE		0x0
+> +#define PCIE_RC_CONFIG_BASE		0xa00000
+> +#define PCIE_CORE_CTRL_MGMT_BASE	0x900000
+> +#define PCIE_CORE_AXI_CONF_BASE		0xc00000
+> +#define PCIE_CORE_AXI_INBOUND_BASE	0xc00800
+> +
+> +#define PCIE_CLIENT_BASIC_STATUS0	0x44
+> +#define PCIE_CLIENT_BASIC_STATUS1	0x48
+> +#define PCIE_CLIENT_INT_MASK		0x4c
+> +#define PCIE_CLIENT_INT_STATUS		0x50
+> +#define PCIE_CORE_INT_MASK		0x900210
+> +#define PCIE_CORE_INT_STATUS		0x90020c
+> +
+> +/** Size of one AXI Region (not Region 0) */
+> +#define	AXI_REGION_SIZE			(0x1 << 20)
 
-- Rewrite of the unflattening code to avoid recursion and lessen the
-  stack usage.
+for those generic (1 << x) things please use BIT(x) instead
+Also constants intertwined with constants is hard to read,
+so ideally add a blank line above each comment and comment style for single 
+line comments only has one * in the beginning
+	/* foo */
 
-- Rewrite of the phandle args parsing code to get rid of the fixed args
-  size. This is needed for IOMMU code.
+> +/** Overall size of AXI area */
+> +#define	AXI_OVERALL_SIZE		(64 * (0x1 << 20))
+> +/** Size of Region 0, equal to sum of sizes of other regions */
+> +#define	AXI_REGION_0_SIZE		(32 * (0x1 << 20))
+> +#define OB_REG_SIZE_SHIFT		5
+> +#define IB_ROOT_PORT_REG_SIZE_SHIFT	3
+> +
+> +#define AXI_WRAPPER_IO_WRITE		0x6
+> +#define AXI_WRAPPER_MEM_WRITE		0x2
+> +#define MAX_AXI_IB_ROOTPORT_REGION_NUM	3
+> +#define	MIN_AXI_ADDR_BITS_PASSED	8
 
-- Sync to latest dtc which adds more dts style checking. These warnings
-  are enabled with "W=3D1" compiles.
+strange spacing after #define
 
-- Tegra documentation updates related to the above warnings.
+[...]
 
-- A bunch of spelling and other doc fixes.
+> +/**
+> + * rockchip_pcie_init_port - Initialize hardware
+> + * @port: PCIe port information
+> + */
+> +static int rockchip_pcie_init_port(struct rockchip_pcie_port *port)
+> +{
+> +	int err;
+> +	u32 status;
+> +	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
 
-- Various vendor prefix additions.
+this timeout only seems to be initialized once here but used for multiple 
+loops below resulting in all waitloops combined together being allowed to 
+take 1 second ... is this intended?
 
-----------------------------------------------------------------
-Andreas F=C3=A4rber (1):
-      Documentation: devicetree: Clean up gpio-keys example
+> +	gpiod_set_value(port->ep_gpio, 0);
+> +
+> +	/* Make sure PCIe relate block is in reset state */
+> +	err = reset_control_assert(port->phy_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "assert phy_rst err %d\n", err);
+> +		return err;
+> +	}
 
-Arnd Bergmann (1):
-      of: include errno.h in of_graph.h
+should move to phy driver probe or so
 
-Christian Lamparter (1):
-      gpio: dt-bindings: add ibm,ppc4xx-gpio binding
+> +	err = reset_control_assert(port->core_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "assert core_rst err %d\n", err);
+> +		return err;
+> +	}
 
-Dr. H. Nikolaus Schaller (1):
-      Documentation: bindings: fix palmas-rtc documentation
+blank line
 
-Eric Engestrom (15):
-      Documentation: dt: arm: fix spelling mistakes
-      Documentation: dt: clock: fix spelling mistakes
-      Documentation: dt: display: fix spelling mistake
-      Documentation: dt: dma: fix spelling mistake
-      Documentation: dt: input: fix spelling mistakes
-      Documentation: dt: interrupt-controller: fix spelling mistakes
-      Documentation: dt: media: fix spelling mistake
-      Documentation: dt: mfd: fix spelling mistakes
-      Documentation: dt: mmc: fix spelling mistake
-      Documentation: dt: mtd: fix spelling mistake
-      Documentation: dt: net: fix spelling mistakes
-      Documentation: dt: opp: fix spelling mistake
-      Documentation: dt: pinctrl: fix spelling mistake
-      Documentation: dt: power: fix spelling mistake
-      Documentation: dt: soc: fix spelling mistakes
+> +	err = reset_control_assert(port->mgmt_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "assert mgmt_rst err %d\n", err);
+> +		return err;
+> +	}
 
-Gavin Shan (7):
-      drivers/of: Split unflatten_dt_node()
-      drivers/of: Avoid recursively calling unflatten_dt_node()
-      drivers/of: Rename unflatten_dt_node()
-      drivers/of: Specify parent node in of_fdt_unflatten_tree()
-      drivers/of: Return allocated memory from of_fdt_unflatten_tree()
-      drivers/of: Export of_detach_node()
-      drivers/of: Fix build warning in populate_node()
+blank line
 
-Geert Uytterhoeven (4):
-      misc: sram: DT spelling s/#adress-cells/#address-cells/
-      PCI: hisi: DT spelling s/interrupts-*/interrupt-*/
-      phy: phy-stih41x-usb: DT spelling s/#phy-cell/#phy-cells/
-      serial: Move Marvell UART DT bindings to correct location
+> +	err = reset_control_assert(port->mgmt_sticky_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "assert mgmt_sticky_rst err %d\n", err);
+> +		return err;
+> +	}
 
-Javier Martinez Canillas (1):
-      of/unittest: Remove unnecessary module.h header inclusion
+blank line
 
-Joerg Roedel (6):
-      of: Introduce struct of_phandle_iterator
-      of: Move phandle walking to of_phandle_iterator_next()
-      of: Remove counting special case from __of_parse_phandle_with_arg=
-s()
-      of: Introduce of_for_each_phandle() helper macro
-      of: Introduce of_phandle_iterator_args()
-      iommu/arm-smmu: Make use of phandle iterators in device-tree pars=
-ing
+> +	err = reset_control_assert(port->pipe_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "assert pipe_rst err %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	pcie_write(port, (0xf << 20) | (0x1 << 16) | PCIE_CLIENT_GEN_SEL_2 |
+> +			  (0x1 << 19) | (0x1 << 3) |
+> +			  PCIE_CLIENT_MODE_RC |
+> +			  PCIE_CLIENT_CONF_LANE_NUM(port->lanes) |
+> +			  PCIE_CLIENT_CONF_ENABLE, PCIE_CLIENT_BASE);
+> +
 
-Jon Hunter (1):
-      dt-bindings: Correct path for ARM GIC documentation
+------ phy_enable begin ------
 
-Marek Vasut (1):
-      devicetree: Add Creative Technology vendor id
+As mentioned above, the whole phy handling seems pretty separate, so should 
+be easily being able to live in a real phy driver?
 
-Masahiro Yamada (1):
-      of: document refcount incrementation of of_get_cpu_node()
+This of course also needs to handle the phy clock in it.
 
-Max Uvarov (1):
-      fdt: fix extend of cmd line
+> +	err = reset_control_deassert(port->phy_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "deassert phy_rst err %d\n", err);
+> +		return err;
+> +	}
+> +	regmap_write(port->grf, port->pcie_conf,
+> +		     (0x3f << 17) | (0x10 << 1));
 
-Pantelis Antoniou (1):
-      of: dynamic: changeset prop-update revert fix
+the bits above should use some sort of constant / description. Also see 
+HIWORD_UPDATE in other drivers for the write-enable mask
 
-Rhyland Klein (1):
-      drivers/of: Fix depth when unflattening devicetree
+also add blank line here
 
-Rob Herring (2):
-      scripts/dtc: Update to upstream version 53bf130b1cdd
-      dtc: turn off dtc unit address warnings by default
+> +	err = -EINVAL;
+> +	while (time_before(jiffies, timeout)) {
+> +		regmap_read(port->grf, port->pcie_status, &status);
+> +		if ((status & (1 << 9))) {
 
-Schuyler Patton (1):
-      Documentation: devicetree: bindings: regulator: palmas-pmic.txt
+use a constant for the (1 << 9) [aka BIT(9)] please
 
-Sergio Prado (1):
-      of: Add vendor prefix for Shenzhen Embest Technology
+> +			dev_info(port->dev, "pll locked!\n");
 
-Srinivas Kandagatla (2):
-      of: Add Arrow Electronics to vendor prefix list
-      of: Add Inforce Computing to vendor prefix list
+dev_dbg instead?
 
-Stephen Boyd (1):
-      devicetree: bindings: designware-pcie: Fix unit address
+> +			err = 0;
+> +			break;
+> +		}
+> +	}
+> +	if (err) {
+> +		dev_err(port->dev, "pll lock timeout!\n");
+> +		return err;
+> +	}
+> +	pcie_pb_wr_cfg(port, 0x10, 0x8);
+> +	pcie_pb_wr_cfg(port, 0x12, 0x8);
+> +
+> +	err = -ETIMEDOUT;
+> +	while (time_before(jiffies, timeout)) {
+> +		regmap_read(port->grf, port->pcie_status, &status);
+> +		if (!(status & (1 << 10))) {
 
-Thierry Reding (2):
-      dt-bindings: tegra: Remove 0, prefix from unit-addresses
-      dt-bindings: tegra: Rename some bindings for consistency
+constant again
 
- Documentation/devicetree/bindings/arm/cci.txt      |   2 +-
- .../devicetree/bindings/arm/omap/crossbar.txt      |   3 +-
- .../devicetree/bindings/arm/spear-misc.txt         |   2 +-
- .../devicetree/bindings/arm/ux500/boards.txt       |   2 +-
- .../{tegra-sata.txt =3D> nvidia,tegra124-ahci.txt}   |   0
- .../bindings/clock/nvidia,tegra124-dfll.txt        |   2 +-
- .../bindings/clock/rockchip,rk3188-cru.txt         |   2 +-
- .../bindings/clock/rockchip,rk3288-cru.txt         |   2 +-
- .../devicetree/bindings/clock/st/st,clkgen.txt     |   2 +-
- ...124-cpufreq.txt =3D> nvidia,tegra124-cpufreq.txt} |   0
- .../bindings/display/exynos/exynos_dsim.txt        |   2 +-
- ...egra20-apbdma.txt =3D> nvidia,tegra20-apbdma.txt} |   0
- .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |   2 +-
- .../devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt   |  24 ++
- .../devicetree/bindings/gpu/nvidia,gk20a.txt       |   2 +-
- .../devicetree/bindings/input/ads7846.txt          |   2 +-
- .../devicetree/bindings/input/gpio-keys.txt        |  10 +-
- .../bindings/input/touchscreen/fsl-mx25-tcq.txt    |   2 +-
- .../interrupt-controller/mediatek,sysirq.txt       |   3 +-
- ...ia,tegra-ictlr.txt =3D> nvidia,tegra20-ictlr.txt} |   0
- .../interrupt-controller/ti,omap4-wugen-mpu        |   4 +-
- .../devicetree/bindings/media/xilinx/video.txt     |   2 +-
- .../{tegra-emc.txt =3D> nvidia,tegra124-emc.txt}     |   4 +-
- .../{nvidia,tegra-mc.txt =3D> nvidia,tegra30-mc.txt} |   6 +-
- Documentation/devicetree/bindings/mfd/qcom-rpm.txt |   4 +-
- .../devicetree/bindings/mmc/mmc-pwrseq-emmc.txt    |   2 +-
- .../devicetree/bindings/mtd/brcm,brcmnand.txt      |   2 +-
- .../devicetree/bindings/net/hisilicon-hns-nic.txt  |   2 +-
- Documentation/devicetree/bindings/net/stmmac.txt   |   4 +-
- .../devicetree/bindings/net/ti,dp83867.txt         |   2 +-
- Documentation/devicetree/bindings/opp/opp.txt      |   2 +-
- .../devicetree/bindings/pci/designware-pcie.txt    |   2 +-
- .../devicetree/bindings/pci/hisilicon-pcie.txt     |  12 +-
- .../devicetree/bindings/phy/phy-stih41x-usb.txt    |   2 +-
- .../pinctrl/nvidia,tegra124-xusb-padctl.txt        |   6 +-
- .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |   2 +-
- .../bindings/power/qcom,coincell-charger.txt       |   2 +-
- .../devicetree/bindings/regulator/palmas-pmic.txt  |   8 +
- .../devicetree/bindings/rtc/rtc-palmas.txt         |   6 +-
- .../bindings/{tty =3D> }/serial/mvebu-uart.txt       |   0
- .../bindings/soc/ti/keystone-navigator-qmss.txt    |   6 +-
- .../bindings/sound/nvidia,tegra30-hda.txt          |   2 +-
- Documentation/devicetree/bindings/sram/sram.txt    |   2 +-
- ...a-soctherm.txt =3D> nvidia,tegra124-soctherm.txt} |   2 +-
- .../devicetree/bindings/vendor-prefixes.txt        |   4 +
- drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c       |   2 +-
- drivers/iommu/arm-smmu.c                           |  38 +-
- drivers/of/base.c                                  | 209 +++++++----
- drivers/of/dynamic.c                               |   6 +
- drivers/of/fdt.c                                   | 382 +++++++++++++=
---------
- drivers/of/unittest.c                              |   3 +-
- include/linux/of.h                                 |  56 +++
- include/linux/of_fdt.h                             |   5 +-
- include/linux/of_graph.h                           |   1 +
- scripts/Makefile.lib                               |   5 +
- scripts/dtc/checks.c                               |  26 ++
- scripts/dtc/flattree.c                             |   4 +-
- scripts/dtc/libfdt/fdt_ro.c                        |   6 +-
- scripts/dtc/version_gen.h                          |   2 +-
- 59 files changed, 602 insertions(+), 297 deletions(-)
- rename Documentation/devicetree/bindings/ata/{tegra-sata.txt =3D>
-nvidia,tegra124-ahci.txt} (100%)
- rename Documentation/devicetree/bindings/cpufreq/{tegra124-cpufreq.txt
-=3D> nvidia,tegra124-cpufreq.txt} (100%)
- rename Documentation/devicetree/bindings/dma/{tegra20-apbdma.txt =3D>
-nvidia,tegra20-apbdma.txt} (100%)
- create mode 100644 Documentation/devicetree/bindings/gpio/ibm,ppc4xx-g=
-pio.txt
- rename Documentation/devicetree/bindings/interrupt-controller/{nvidia,=
-tegra-ictlr.txt
-=3D> nvidia,tegra20-ictlr.txt} (100%)
- rename Documentation/devicetree/bindings/memory-controllers/{tegra-emc=
-=2Etxt
-=3D> nvidia,tegra124-emc.txt} (99%)
- rename Documentation/devicetree/bindings/memory-controllers/{nvidia,te=
-gra-mc.txt
-=3D> nvidia,tegra30-mc.txt} (97%)
- rename Documentation/devicetree/bindings/{tty =3D> }/serial/mvebu-uart=
-=2Etxt (100%)
- rename Documentation/devicetree/bindings/thermal/{tegra-soctherm.txt
-=3D> nvidia,tegra124-soctherm.txt} (98%)
+> +			dev_info(port->dev, "pll output enable done!\n");
+
+dev_dbg or leave it out
+
+> +			err = 0;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (err) {
+> +		dev_err(port->dev, "pll output enable timeout!\n");
+> +		return err;
+> +	}
+> +
+> +	regmap_write(port->grf, port->pcie_conf,
+> +		     (0x3f << 17) | (0x10 << 1));
+> +	err = -EINVAL;
+> +	while (time_before(jiffies, timeout)) {
+> +		regmap_read(port->grf, port->pcie_status, &status);
+> +		if ((status & (1 << 9))) {
+> +			dev_info(port->dev, "pll relocked!\n");
+> +			err = 0;
+> +			break;
+> +		}
+> +	}
+> +	if (err) {
+> +		dev_err(port->dev, "pll relock timeout!\n");
+> +		return err;
+> +	}
+
+------ phy_enable end ------
+
+
+> +	err = reset_control_deassert(port->core_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "deassert core_rst err %d\n", err);
+> +		return err;
+> +	}
+> +	err = reset_control_deassert(port->mgmt_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "deassert mgmt_rst err %d\n", err);
+> +		return err;
+> +	}
+> +	err = reset_control_deassert(port->mgmt_sticky_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "deassert mgmt_sticky_rst err %d\n", err);
+> +		return err;
+> +	}
+> +	err = reset_control_deassert(port->pipe_rst);
+> +	if (err) {
+> +		dev_err(port->dev, "deassert pipe_rst err %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	pcie_write(port, 1 << 17 | 1 << 1, PCIE_CLIENT_BASE);
+> +
+> +	gpiod_set_value(port->ep_gpio, 1);
+> +	err = -ETIMEDOUT;
+> +	while (time_before(jiffies, timeout)) {
+> +		status = pcie_read(port, PCIE_CLIENT_BASIC_STATUS1);
+> +		if (((status >> 20) & 0x3) == 0x3) {
+> +			dev_info(port->dev, "pcie link training gen1 pass!\n");
+> +			err = 0;
+> +			break;
+> +		}
+> +	}
+> +	if (err) {
+> +		dev_err(port->dev, "pcie link training gen1 timeout!\n");
+> +		return err;
+> +	}
+> +
+> +	status = pcie_read(port, 0x9000d0);
+> +	status |= 0x20;
+> +	pcie_write(port, status, 0x9000d0);
+
+just to mention it again, bit handling as descriptive constant please and 
+also please give that register a name :-)
+
+[...]
+
+> +static int rockchip_pcie_parse_dt(struct rockchip_pcie_port *port)
+> +{
+
+[...]
+
+> +	port->lanes = 1;
+> +	err = of_property_read_u32(node, "num-lanes", &port->lanes);
+> +	if (!err && ((port->lanes == 0) ||
+> +		     (port->lanes == 3) ||
+> +		     (port->lanes > 4))) {
+> +		dev_info(dev, "invalid num-lanes, default use one lane\n");
+
+dev_warn might be more appropriate
+
+> +		port->lanes = 1;
+> +	}
+
+[...]
+
+> +static void rockchip_pcie_msi_enable(struct rockchip_pcie_port *pp)
+> +{
+> +	struct device_node *msi_node;
+> +
+> +	msi_node = of_parse_phandle(pp->dev->of_node,
+> +				    "msi-parent", 0);
+
+I would assume this should live in the general parse_dt function?
+Also is that MSI enablement really allow to fail silently without any affect 
+on the PCI functionality?
+
+> +	if (!msi_node)
+> +		return;
+> +
+> +	pp->msi = of_pci_find_msi_chip_by_node(msi_node);
+> +	of_node_put(msi_node);
+> +
+> +	if (pp->msi)
+> +		pp->msi->dev = pp->dev;
+> +}
+
+[...]
+
+> +static int rockchip_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct rockchip_pcie_port *port;
+> +	struct device *dev = &pdev->dev;
+> +	struct pci_bus *bus, *child;
+> +	struct resource_entry *win;
+> +	int reg_no;
+> +	int err = 0;
+> +	int irq;
+> +	LIST_HEAD(res);
+> +
+> +	if (!dev->of_node)
+> +		return -ENODEV;
+> +
+> +	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+> +	if (!port)
+> +		return -ENOMEM;
+> +
+> +	irq = platform_get_irq_byname(pdev, "pcie-sys");
+> +	if (irq < 0) {
+> +		dev_err(dev, "missing pcie_sys IRQ resource\n");
+> +		return -EINVAL;
+> +	}
+
+blank line
+
+> +	err = devm_request_irq(dev, irq, rockchip_pcie_subsys_irq_handler,
+> +			       IRQF_SHARED, "pcie-sys", port);
+> +	if (err) {
+> +		dev_err(dev, "failed to request pcie subsystem irq\n");
+> +		return err;
+> +	}
+> +
+> +	port->irq = platform_get_irq_byname(pdev, "pcie-legacy");
+> +	if (port->irq < 0) {
+> +		dev_err(dev, "missing pcie_legacy IRQ resource\n");
+> +		return -EINVAL;
+> +	}
+
+blank line
+
+> +	err = devm_request_irq(dev, port->irq,
+> +			       rockchip_pcie_legacy_int_handler,
+> +			       IRQF_SHARED,
+> +			       "pcie-legacy",
+> +			       port);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "failed to request pcie-legacy irq\n");
+> +		return err;
+> +	}
+> +
+> +	irq = platform_get_irq_byname(pdev, "pcie-client");
+> +	if (irq < 0) {
+> +		dev_err(dev, "missing pcie-client IRQ resource\n");
+> +		return -EINVAL;
+> +	}
+
+blank line
+
+> +	err = devm_request_irq(dev, irq, rockchip_pcie_client_irq_handler,
+> +			       IRQF_SHARED, "pcie-client", port);
+> +	if (err) {
+> +		dev_err(dev, "failed to request pcie client irq\n");
+> +		return err;
+> +	}
+> +
+> +	port->dev = dev;
+> +	err = rockchip_pcie_parse_dt(port);
+> +	if (err) {
+> +		dev_err(dev, "Parsing DT failed\n");
+> +		return err;
+> +	}
+
+rockchip_pcie_parse_dt already emits error messages that are a lot more 
+specific to the actual problem, so you don't need another error message here 
+and can just return the error code.
+
+
+> +	err = rockchip_pcie_init_port(port);
+> +	if (err)
+> +		return err;
+> +
+> +	platform_set_drvdata(pdev, port);
+> +
+> +	rockchip_pcie_enable_interrupts(port);
+> +	if (!IS_ENABLED(CONFIG_PCI_MSI)) {
+> +		err = rockchip_pcie_init_irq_domain(port);
+> +		if (err < 0)
+> +			return err;
+> +	}
+> +
+> +	err = of_pci_get_host_bridge_resources(dev->of_node, 0, 0xff,
+> +					       &res, &port->io_base);
+> +	if (err)
+> +		return err;
+
+add blank line
+
+
+Heiko
