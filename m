@@ -1,78 +1,66 @@
-From: Carlo Caione <carlo@caione.org>
-Subject: Re: [PATCH 2/3] dt-bindings: reset: Add bindings for the Meson GXBB
- Reset Controller
-Date: Fri, 20 May 2016 11:08:59 +0200
-Message-ID: <20160520090859.GB19888@mephisto>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM64: dts: amlogic: Enable Reset Controller on
+ GXBB-based platforms
+Date: Fri, 20 May 2016 11:10:50 +0200
+Message-ID: <20160520091050.GC19888@mephisto>
 References: <1463732875-23141-1-git-send-email-narmstrong@baylibre.com>
- <1463732875-23141-3-git-send-email-narmstrong@baylibre.com>
- <20160520084646.GB16732@mephisto>
- <573ED01C.2070800@baylibre.com>
+ <1463732875-23141-4-git-send-email-narmstrong@baylibre.com>
+ <20160520084748.GC16732@mephisto>
+ <573ED06F.9070909@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <573ED01C.2070800@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, xing.xu@amlogic.com, victor.wan@amlogic.com, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, jerry.cao@amlogic.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <573ED06F.9070909-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xing.xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/05/16 10:51, Neil Armstrong wrote:
-> On 05/20/2016 10:46 AM, Carlo Caione wrote:
+On 20/05/16 10:53, Neil Armstrong wrote:
+> On 05/20/2016 10:47 AM, Carlo Caione wrote:
 > > On 20/05/16 10:27, Neil Armstrong wrote:
-> >> Add DT bindings for the Meson GXBB SoC Reset Controller documentation and the
-> >> associated include file.
-> > 
-> > [...]
-> > 
-> >> +#define RESET_I2C_MASTER_2	142
-> >> +#define RESET_I2C_MASTER_1	143
-> >> +/*				144-159	*/
-> >> +/*	RESET5				*/
-> >> +/*				160-191	*/
-> >> +/*	RESET6				*/
-> >> +#define RESET_PERIPHS_GENERAL	192
-> >> +#define RESET_PERIPHS_SPICC	193
-> >> +#define RESET_PERIPHS_SMART_CARD	194
-> >> +#define RESET_PERIPHS_SAR_ADC	195
-> >> +#define RESET_PERIPHS_I2C_MASTER_0	196
-> >> +#define RESET_SANA		197
-> >> +/*				198	*/
-> >> +#define RESET_PERIPHS_STREAM_INTERFACE	199
-> >> +#define RESET_PERIPHS_SDIO	200
-> >> +#define RESET_PERIPHS_UART_0	201
-> >> +#define RESET_PERIPHS_UART_1_2	202
-> >> +#define RESET_PERIPHS_ASYNC_0	203
-> >> +#define RESET_PERIPHS_ASYNC_1	204
-> >> +#define RESET_PERIPHS_SPI_0	205
-> >> +#define RESET_PERIPHS_SDHC	206
-> >> +#define RESET_UART_SLIP		207
-> >> +/*				208-223	*/
-> >> +/*	RESET7				*/
-> >> +#define RESET_USB_DDR_0		224
-> >> +#define RESET_USB_DDR_1		225
-> >> +#define RESET_USB_DDR_2		226
-> >> +#define RESET_USB_DDR_3		227
-> >> +/*				228	*/
-> >> +#define RESET_DEVICE_MMC_ARB	229
-> >> +/*				230	*/
-> >> +#define RESET_VID_LOCK		231
-> >> +#define RESET_A9_DMC_PIPEL	232
-> >> +/*				233-255	*/
+> >> Update DTSI file to add the reset controller node.
+> >>
+> >> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> >> ---
+> >>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 6 ++++++
+> >>  1 file changed, 6 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> >> index 832815d..2463e04 100644
+> >> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> >> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> >> @@ -129,6 +129,12 @@
+> >>  			#size-cells = <2>;
+> >>  			ranges = <0x0 0x0 0x0 0xc1100000 0x0 0x100000>;
+> >>  
+> >> +			reset: reset-controller@4404 {
+> >> +				compatible = "amlogic,meson-gxbb-reset";
+> >> +				reg = <0x0 0x04404 0x0 0x20>;
+> >> +				#reset-cells = <1>;
+> >> +			};
 > >> +
-> >> +#endif
+> >>  			uart_A: serial@84c0 {
+> >>  				compatible = "amlogic,meson-uart";
+> >>  				reg = <0x0 0x084c0 0x0 0x14>;
 > > 
-> > Indentation looks really messy. Can you just shift the numbers to the
-> > right so that they are on the same column?
+> > Missing #include <dt-bindings/reset/amlogic,meson-gxbb-reset.h> ?
 > > 
-> Hi Carlo,
+> > Thanks,
+> > 
 > 
-> The patch format makes it very messy, not as in the original format :
-> https://github.com/superna9999/linux/blob/6163f8742454bb7ff962956b4e286d110ec0fb79/include/dt-bindings/reset/amlogic%2Cmeson-gxbb-reset.h
+> Shouldn't we wait until the reset bindings are actually used in the dtsi ?
+> I'm quite sure kevin will post it with the Ethernet nodes.
 
-https://raw.githubusercontent.com/superna9999/linux/6163f8742454bb7ff962956b4e286d110ec0fb79/include/dt-bindings/reset/amlogic%2Cmeson-gxbb-reset.h
+Why? The header file is related to the reset controller. Better add it
+now with this patchset.
 
-yes, but 192 -> 200 are not nicely indented to me :)
+Cheers,
 
 -- 
 Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
