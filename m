@@ -1,105 +1,86 @@
-From: <yt.shen@mediatek.com>
-Subject: [RFC v2 5/5] arm: dts: mt2701: Add display subsystem related nodes
- for MT2701
-Date: Fri, 20 May 2016 23:05:36 +0800
-Message-ID: <1463756736-46573-6-git-send-email-yt.shen@mediatek.com>
-References: <1463756736-46573-1-git-send-email-yt.shen@mediatek.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Remove unneded always-on for regulators
+ on Peach boards
+Date: Fri, 20 May 2016 11:13:41 -0400
+Message-ID: <66cd7fed-c281-0645-0a60-5e1300419642@osg.samsung.com>
+References: <1463694753-7259-1-git-send-email-javier@osg.samsung.com>
+ <573EDEF2.8020903@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1463756736-46573-1-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <573EDEF2.8020903@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogWVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+CgpUaGlzIHBhdGNoIGFkZHMgdGhl
-IGRldmljZSBub2RlcyBmb3IgdGhlIERJU1AgZnVuY3Rpb24gYmxvY2tzIGZvciBNVDI3MDEKClNp
-Z25lZC1vZmYtYnk6IFlUIFNoZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPgotLS0KIGFyY2gvYXJt
-L2Jvb3QvZHRzL210MjcwMS5kdHNpIHwgIDExNyArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDExNyBpbnNlcnRpb25zKCspCgpkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvbXQyNzAxLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9t
-dDI3MDEuZHRzaQppbmRleCAzNjNkZTBkLi4wYmVlZjJhIDEwMDY0NAotLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9tdDI3MDEuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9tdDI3MDEuZHRzaQpA
-QCAtMjQsNiArMjQsMTMgQEAKIAljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcwMSI7CiAJaW50
-ZXJydXB0LXBhcmVudCA9IDwmc3lzaXJxPjsKIAorCWFsaWFzZXMgeworCQlyZG1hMCA9ICZyZG1h
-MDsKKwkJcmRtYTEgPSAmcmRtYTE7CisJCWRwaTAgPSAmZHBpMDsKKwkJZHBpMSA9ICZkcGkxOwor
-CX07CisKIAljcHVzIHsKIAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CiAJCSNzaXplLWNlbGxzID0g
-PDA+OwpAQCAtMTcxLDYgKzE3OCwxNCBAQAogCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQy
-NzAxX1BPV0VSX0RPTUFJTl9ESVNQPjsKIAl9OwogCisJbWlwaV90eDA6IG1pcGktZHBoeUAxMDAx
-MDAwMCB7CisJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLW1pcGktdHgiOworCQlyZWcg
-PSA8MCAweDEwMDEwMDAwIDAgMHg5MD47CisJCWNsb2NrcyA9IDwmY2xrMjZtPjsKKwkJY2xvY2st
-b3V0cHV0LW5hbWVzID0gIm1pcGlfdHgwX3BsbCI7CisJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisJ
-fTsKKwogCXN5c2lycTogaW50ZXJydXB0LWNvbnRyb2xsZXJAMTAyMDAxMDAgewogCQljb21wYXRp
-YmxlID0gIm1lZGlhdGVrLG10MjcwMS1zeXNpcnEiLAogCQkJICAgICAibWVkaWF0ZWssbXQ2NTc3
-LXN5c2lycSI7CkBAIC0yNTUsNiArMjcwLDc5IEBACiAJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAJ
-fTsKIAorCW92bEAxNDAwNzAwMCB7CisJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRp
-c3Atb3ZsIjsKKwkJcmVnID0gPDAgMHgxNDAwNzAwMCAwIDB4MTAwMD47CisJCWludGVycnVwdHMg
-PSA8R0lDX1NQSSAxNTMgSVJRX1RZUEVfTEVWRUxfTE9XPjsKKwkJY2xvY2tzID0gPCZtbXN5cyBD
-TEtfTU1fRElTUF9PVkw+OworCQlpb21tdXMgPSA8JmlvbW11IE1UMjcwMV9NNFVfUE9SVF9ESVNQ
-X09WTF8wPjsKKwkJbWVkaWF0ZWssbGFyYiA9IDwmbGFyYjA+OworCX07CisKKwlyZG1hMDogcmRt
-YUAxNDAwODAwMCB7CisJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRpc3AtcmRtYSI7
-CisJCXJlZyA9IDwwIDB4MTQwMDgwMDAgMCAweDEwMDA+OworCQlpbnRlcnJ1cHRzID0gPEdJQ19T
-UEkgMTUyIElSUV9UWVBFX0xFVkVMX0xPVz47CisJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJ
-U1BfUkRNQT47CisJCWlvbW11cyA9IDwmaW9tbXUgTVQyNzAxX000VV9QT1JUX0RJU1BfUkRNQT47
-CisJCW1lZGlhdGVrLGxhcmIgPSA8JmxhcmIwPjsKKwl9OworCisJd2RtYUAxNDAwOTAwMCB7CisJ
-CWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRpc3Atd2RtYSI7CisJCXJlZyA9IDwwIDB4
-MTQwMDkwMDAgMCAweDEwMDA+OworCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTU0IElSUV9UWVBF
-X0xFVkVMX0xPVz47CisJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfV0RNQT47CisJCWlv
-bW11cyA9IDwmaW9tbXUgTVQyNzAxX000VV9QT1JUX0RJU1BfV0RNQT47CisJCW1lZGlhdGVrLGxh
-cmIgPSA8JmxhcmIwPjsKKwl9OworCisJYmxzQDE0MDBhMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJt
-ZWRpYXRlayxtdDI3MDEtZGlzcC1ibHMiOworCQlyZWcgPSA8MCAweDE0MDBhMDAwIDAgMHgxMDAw
-PjsKKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE1NSBJUlFfVFlQRV9MRVZFTF9MT1c+OworCQlj
-bG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX0JMUz47CisJfTsKKworCWNvbG9yQDE0MDBiMDAw
-IHsKKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZGlzcC1jb2xvciI7CisJCXJlZyA9
-IDwwIDB4MTQwMGIwMDAgMCAweDEwMDA+OworCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTU2IElS
-UV9UWVBFX0xFVkVMX0xPVz47CisJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfQ09MT1I+
-OworCX07CisKKwlkc2kwOiBkc2lAMTQwMGMwMDAgeworCQljb21wYXRpYmxlID0gIm1lZGlhdGVr
-LG10MjcwMS1kc2kiOworCQlyZWcgPSA8MCAweDE0MDBjMDAwIDAgMHgxMDAwPjsKKwkJaW50ZXJy
-dXB0cyA9IDxHSUNfU1BJIDE1NyBJUlFfVFlQRV9MRVZFTF9MT1c+OworCQljbG9ja3MgPSA8Jm1t
-c3lzIENMS19NTV9EU0lfRU5HSU5FPiwgPCZtbXN5cyBDTEtfTU1fRFNJX0RJRz4sCisJCQkgPCZt
-aXBpX3R4MD47CisJCWNsb2NrLW5hbWVzID0gImVuZ2luZSIsICJkaWdpdGFsIiwgImhzIjsKKwkJ
-cGh5cyA9IDwmbWlwaV90eDA+OworCQlwaHktbmFtZXMgPSAiZHBoeSI7CisJCSNhZGRyZXNzLWNl
-bGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwkJc3RhdHVzID0gImRpc2FibGVkIjsK
-Kwl9OworCisJZHBpMDogZHBpQDE0MDBkMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxt
-dDI3MDEtZHBpIjsKKwkJcmVnID0gPDAgMHgxNDAwZDAwMCAwIDB4MTAwMD47CisJCWludGVycnVw
-dHMgPSA8R0lDX1NQSSAxNTggSVJRX1RZUEVfTEVWRUxfTE9XPjsKKwkJY2xvY2tzID0gPCZtbXN5
-cyBDTEtfTU1fRFBJX0RJR0w+LAorCQkJIDwmbW1zeXMgQ0xLX01NX0RQSV9FTkdJTkU+OworCQlj
-bG9jay1uYW1lcyA9ICJjbGtfZHBpX2RpZ2wiLAorCQkJICAgICAgImNsa19kcGlfZW5naW5lIjsK
-KwkJc3RhdHVzID0gImRpc2FibGVkIjsKKwl9OworCisJbXV0ZXg6IG11dGV4QDE0MDBlMDAwIHsK
-KwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZGlzcC1tdXRleCI7CisJCXJlZyA9IDww
-IDB4MTQwMGUwMDAgMCAweDEwMDA+OworCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTYxIElSUV9U
-WVBFX0xFVkVMX0xPVz47CisJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX01VVEVYXzMySz47CisJ
-fTsKKwogCWxhcmIwOiBsYXJiQDE0MDEwMDAwIHsKIAkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxt
-dDI3MDEtc21pLWxhcmIiOwogCQlyZWcgPSA8MCAweDE0MDEwMDAwIDAgMHgxMDAwPjsKQEAgLTI2
-NSw2ICszNTMsMzUgQEAKIAkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UMjcwMV9QT1dFUl9E
-T01BSU5fRElTUD47CiAJfTsKIAorCXJkbWExOiByZG1hQDE0MDEyMDAwIHsKKwkJY29tcGF0aWJs
-ZSA9ICJtZWRpYXRlayxtdDI3MDEtZGlzcC1yZG1hIjsKKwkJcmVnID0gPDAgMHgxNDAxMjAwMCAw
-IDB4MTAwMD47CisJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxNjQgSVJRX1RZUEVfTEVWRUxfTE9X
-PjsKKwkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9SRE1BMT47CisJCWlvbW11cyA9IDwm
-aW9tbXUgTVQyNzAxX000VV9QT1JUX0RJU1BfUkRNQTE+OworCQltZWRpYXRlayxsYXJiID0gPCZs
-YXJiMD47CisJfTsKKworCXVmb2VAMTQwMTMwMDAgeworCQljb21wYXRpYmxlID0gIm1lZGlhdGVr
-LG10MjcwMS1kaXNwLXVmb2UiOworCQlyZWcgPSA8MCAweDE0MDEzMDAwIDAgMHgxMDAwPjsKKwkJ
-Y2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9VRk9FPjsKKwl9OworCisJZHBpMTogZHBpQDE0
-MDE0MDAwIHsKKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZHBpIjsKKwkJcmVnID0g
-PDAgMHgxNDAxNDAwMCAwIDB4MTAwMD47CisJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxOTQgSVJR
-X1RZUEVfTEVWRUxfTE9XPjsKKwkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRFBJMV9ESUdMPiwK
-KwkJCSA8Jm1tc3lzIENMS19NTV9EUEkxX0VOR0lORT4sCisJCQkgPCZ0b3Bja2dlbiBDTEtfVE9Q
-X0RQSTFfU0VMPiwKKwkJCSA8JnRvcGNrZ2VuIENMS19UT1BfVFZEUExMPiwKKwkJCSA8JnRvcGNr
-Z2VuIENMS19UT1BfVFZEUExMX0QyPiwKKwkJCSA8JnRvcGNrZ2VuIENMS19UT1BfVFZEUExMX0Q0
-PjsKKwkJY2xvY2stbmFtZXMgPSAicGl4ZWwiLCAiZW5naW5lIiwgInNlbCIsImRpdjEiLCJkaXYy
-IiwiZGl2NCI7CisJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisJfTsKKwogCWltZ3N5czogc3lzY29u
-QDE1MDAwMDAwIHsKIAkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtaW1nc3lzIiwgInN5
-c2NvbiI7CiAJCXJlZyA9IDwwIDB4MTUwMDAwMDAgMCAweDEwMDA+OwotLSAKMS43LjkuNQoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hello Krzysztof,
+
+Thanks a lot for the feedback.
+
+On 05/20/2016 05:54 AM, Krzysztof Kozlowski wrote:
+> On 05/19/2016 11:52 PM, Javier Martinez Canillas wrote:
+>> The regulator always-on property should only be used for regulators
+>> that either can't be disabled or the drivers for the client devices
+>> are not enabling the regulator and so being disabled due to unused.
+>>
+>> There are some max77802 regulators in the Peach Pit and Pi boards
+>> that are always-on but shouldn't since they are enabled by drivers:
+>>
+>> BUCK5 is max77802 inl1 supply
+>> BUCK7 is max77802 inl{2,10} supply
+>> BUCK9 is max77802 inl{3,4,5,7} supply
+>> BUCK10 is mmc1 vqmmc supply
+>> LDO9 is adc vdd supply
+>>
+>> This patch removes the always-on property for these regulators.
+>>
+>> Some regulators should remain always-on even when they are used as
+>> input supplies, because these regulators are also used by other
+>> components that are not described in the DT, for example:
+>>
+>> LDO10 is hdmi vdd_osc supply but it's also used as input supply for
+>> the Exynos5420 temperature sensor.
+> 
+> I don't have the schematics, so just guessing: by temperature sensor do
+> you mean the tmu_cpu* node (supplying power to VDD_TS01/23/4)?
+>
+
+Yes, I meant that the LDO10 regulator supplies 1v8 to VDD18_TS{01,23,4}.
+ 
+> If yes then you can also change it, like on Odroid XU boards.
+>
+
+Indeed, I think that should be a separate patch though. I'll do it
+next week since I don't have access to the machine today to test.
+ 
+>>
+>> LDO8 is hdmi vdd and vdd_pll supply but it's also used as supply for
+>> the Exynos5420 Display port.
+>>
+>> BUCK2 and BUCK6 are the vdd supplies for the EAGLE and KFC clusters.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>> ---
+>>
+>>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 5 -----
+>>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 5 -----
+>>  2 files changed, 10 deletions(-)
+> 
+> Anyway,
+> 
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>
+
+Thanks!
+ 
+> Best regards,
+> Krzysztof
+> --
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
