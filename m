@@ -1,103 +1,78 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 0/9] Add support for Tegra210 AGIC
-Date: Fri, 20 May 2016 10:07:40 +0100
-Message-ID: <573ED3DC.6010900@nvidia.com>
-References: <1463066372-13115-1-git-send-email-jonathanh@nvidia.com>
+From: Carlo Caione <carlo@caione.org>
+Subject: Re: [PATCH 2/3] dt-bindings: reset: Add bindings for the Meson GXBB
+ Reset Controller
+Date: Fri, 20 May 2016 11:08:59 +0200
+Message-ID: <20160520090859.GB19888@mephisto>
+References: <1463732875-23141-1-git-send-email-narmstrong@baylibre.com>
+ <1463732875-23141-3-git-send-email-narmstrong@baylibre.com>
+ <20160520084646.GB16732@mephisto>
+ <573ED01C.2070800@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463066372-13115-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <573ED01C.2070800@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, xing.xu@amlogic.com, victor.wan@amlogic.com, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, jerry.cao@amlogic.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+On 20/05/16 10:51, Neil Armstrong wrote:
+> On 05/20/2016 10:46 AM, Carlo Caione wrote:
+> > On 20/05/16 10:27, Neil Armstrong wrote:
+> >> Add DT bindings for the Meson GXBB SoC Reset Controller documentation and the
+> >> associated include file.
+> > 
+> > [...]
+> > 
+> >> +#define RESET_I2C_MASTER_2	142
+> >> +#define RESET_I2C_MASTER_1	143
+> >> +/*				144-159	*/
+> >> +/*	RESET5				*/
+> >> +/*				160-191	*/
+> >> +/*	RESET6				*/
+> >> +#define RESET_PERIPHS_GENERAL	192
+> >> +#define RESET_PERIPHS_SPICC	193
+> >> +#define RESET_PERIPHS_SMART_CARD	194
+> >> +#define RESET_PERIPHS_SAR_ADC	195
+> >> +#define RESET_PERIPHS_I2C_MASTER_0	196
+> >> +#define RESET_SANA		197
+> >> +/*				198	*/
+> >> +#define RESET_PERIPHS_STREAM_INTERFACE	199
+> >> +#define RESET_PERIPHS_SDIO	200
+> >> +#define RESET_PERIPHS_UART_0	201
+> >> +#define RESET_PERIPHS_UART_1_2	202
+> >> +#define RESET_PERIPHS_ASYNC_0	203
+> >> +#define RESET_PERIPHS_ASYNC_1	204
+> >> +#define RESET_PERIPHS_SPI_0	205
+> >> +#define RESET_PERIPHS_SDHC	206
+> >> +#define RESET_UART_SLIP		207
+> >> +/*				208-223	*/
+> >> +/*	RESET7				*/
+> >> +#define RESET_USB_DDR_0		224
+> >> +#define RESET_USB_DDR_1		225
+> >> +#define RESET_USB_DDR_2		226
+> >> +#define RESET_USB_DDR_3		227
+> >> +/*				228	*/
+> >> +#define RESET_DEVICE_MMC_ARB	229
+> >> +/*				230	*/
+> >> +#define RESET_VID_LOCK		231
+> >> +#define RESET_A9_DMC_PIPEL	232
+> >> +/*				233-255	*/
+> >> +
+> >> +#endif
+> > 
+> > Indentation looks really messy. Can you just shift the numbers to the
+> > right so that they are on the same column?
+> > 
+> Hi Carlo,
+> 
+> The patch format makes it very messy, not as in the original format :
+> https://github.com/superna9999/linux/blob/6163f8742454bb7ff962956b4e286d110ec0fb79/include/dt-bindings/reset/amlogic%2Cmeson-gxbb-reset.h
 
-Let me know if you have any thoughts on this.
+https://raw.githubusercontent.com/superna9999/linux/6163f8742454bb7ff962956b4e286d110ec0fb79/include/dt-bindings/reset/amlogic%2Cmeson-gxbb-reset.h
 
-Cheers
-Jon
-
-On 12/05/16 16:19, Jon Hunter wrote:
-> The Tegra210 has a 2nd level interrupt controller located in a separate
-> power domain to the main GIC interrupt controller and hence requires
-> runtime-pm support.
-> 
-> Add a platform driver for the GICs that require runtime-pm and make the
-> necessary changes to the genirq and irqdomain core to support IRQ chips
-> that require runtime-pm.
-> 
-> This series is based upon Marc Z's irq/irqchip-v4.7 branch [0].
-> 
-> Changes since V3:
-> - Split the series into two, placing the clean-up/fixes patches into
->   another series [1]. The remaining patches in this series are for
->   adding runtime-pm support for irqchips and adding a platform driver
->   of second level GICs.
-> - Dropped the patch to prevent early init of GICs if 'clocks' or
->   'power-domains' properties are present and re-added the patch to add
->   the compatibilty string for the Tegra210 AGIC.
-> 
-> Changes since V2:
-> - Corrected RPM support for irqchips in genirq core as pointed out by
->   Kevin Hilman.
-> - Corrected patch to save the irq type when mapping the interrupt.
-> - Dropped changes to DT binding documentation and added patch to prevent
->   early init of GICs if the 'clocks' and/or 'power-domains' DT
->   properties are present (as we have discussed).
-> - Moved platform driver code into it's own source file.
-> - Separate changes for preparing for the platform driver into 3 patches
->   in an attempt to make it more readable!
-> - Added fix for checking an interrupt descriptor is valid during IRQ
->   setup.
-> 
-> Changes since V1:
-> - Updated GIC to only WARN and not return an error if configuring a PPI
->   fails but will still return an error if an SPI fails (per discussion
->   with Marc).
-> - Dropped change to mask sense bits for GIC-v3 (as this is not
->   necessary)
-> - Split patch to avoid setting interrupt type when mapping the IRQ into
->   two patches per TGLX's feedback.
-> - Changed name of irqchip device structure to "parent_device"
-> - Moved call to irq_chip_pm_get() outside of chip_bus_lock().
-> - Dropped patch to remove clock names from GIC DT documentation and
->   added AGIC clock names.
-> - Update GIC platform driver to look-up clocks names from static list.
-> 
-> [0] http://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/irqchip-4.7
-> [1] http://marc.info/?l=linux-tegra&m=146289329915585&w=2
-> 
-> Jon Hunter (9):
->   irqdomain: Fix handling of type settings for existing mappings
->   genirq: Look-up trigger type if not specified by caller
->   irqdomain: Don't set type when mapping an IRQ
->   genirq: Add runtime power management support for IRQ chips
->   irqchip/gic: Isolate early GIC initialisation code
->   irqchip/gic: Add helper function for chip initialisation
->   irqchip/gic: Prepare for adding platform driver
->   dt-bindings: arm-gic: Add documentation for Tegra210 AGIC
->   irqchip/gic: Add platform driver for non-root GICs that require RPM
-> 
->  .../bindings/interrupt-controller/arm,gic.txt      |   3 +-
->  drivers/irqchip/Kconfig                            |   6 +
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-gic-common.c                   |   4 +-
->  drivers/irqchip/irq-gic-pm.c                       | 187 +++++++++++++++++++++
->  drivers/irqchip/irq-gic.c                          | 136 ++++++++++-----
->  drivers/irqchip/irq-gic.h                          |  30 ++++
->  include/linux/irq.h                                |   4 +
->  include/linux/irqdomain.h                          |   3 +
->  kernel/irq/chip.c                                  |  35 ++++
->  kernel/irq/internals.h                             |   1 +
->  kernel/irq/irqdomain.c                             |  58 ++++++-
->  kernel/irq/manage.c                                |  38 ++++-
->  13 files changed, 451 insertions(+), 55 deletions(-)
->  create mode 100644 drivers/irqchip/irq-gic-pm.c
->  create mode 100644 drivers/irqchip/irq-gic.h
-> 
+yes, but 192 -> 200 are not nicely indented to me :)
 
 -- 
-nvpublic
+Carlo Caione
