@@ -1,89 +1,66 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: rockchip: fixes the spi compatible for
- rk3036
-Date: Fri, 20 May 2016 21:09:55 +0800
-Message-ID: <3c1e174e-035b-78ae-b045-fe89990826da@rock-chips.com>
-References: <1463702182-5188-1-git-send-email-wxt@rock-chips.com>
- <1463702182-5188-3-git-send-email-wxt@rock-chips.com>
- <8f662b3b-e359-efdf-72e5-c4f862dd1cf6@kernel-upstream.org>
- <28155403.nCsUkeXQB1@phil>
+From: Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: get_maintainer.pl and MAINTAINERS file
+Date: Fri, 20 May 2016 16:14:19 +0300
+Message-ID: <87a8jkdg7o.fsf@kamboji.qca.qualcomm.com>
+References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
+	<20160518150924.GA3871@kroah.com> <20160519105418.5df3c8f7@erd979>
+	<871t4yfbmy.fsf_-_@kamboji.qca.qualcomm.com>
+	<CAFLxGvwU-2aE7_0Suht--DvWby3RT=mdkpRomHz25MgicRfC3w@mail.gmail.com>
+	<20160519135743.5fc661c4@recife.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <28155403.nCsUkeXQB1@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160519135743.5fc661c4@recife.lan> (Mauro Carvalho Chehab's
+	message of "Thu, 19 May 2016 13:57:43 -0300")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: Richard Weinberger <richard.weinberger@gmail.com>, Robin van der Gracht <robin@protonic.nl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Thierry Reding <treding@nvidia.com>, Shawn Guo <shawnguo@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Matt Ranostay <mranostay@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, "David S . Miller" <davem@davemloft.net>, Guenter Roeck <linux@roeck-us.net>, Jiri Slaby <jslaby@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/5/20 20:58, Heiko Stuebner wrote:
-> Am Freitag, 20. Mai 2016, 20:35:53 schrieb Shawn Lin:
->> =E5=9C=A8 2016/5/20 7:56, Caesar Wang =E5=86=99=E9=81=93:
->>> That's seem the incorrect string to match the spi driver.
->>
->> Will it break the backward compatibility for some dtb if not
->> falling back to "rockchip,rockchip-spi" ?
+Mauro Carvalho Chehab <mchehab@osg.samsung.com> writes:
+
+> Em Thu, 19 May 2016 16:25:45 +0200
+> Richard Weinberger <richard.weinberger@gmail.com> escreveu:
 >
-> in what dtb did you see "rockchip,rockchip-spi"?
+>> On Thu, May 19, 2016 at 2:57 PM, Kalle Valo <kvalo@codeaurora.org> wrote:
+>> > (Changed the subject from "Re: [PATCH v6 0/3] auxdisplay: Introduce ht16k33 driver")
+>> >
+>> > Robin van der Gracht <robin@protonic.nl> writes:
+>> >  
+>> >>> And 4th, what is with the insane number of people on cc:?  Use
+>> >>> get_maintainer.pl correctly please, and don't just hit everyone you
+>> >>> can possibly think of with a cc: for no good reason.  
+>> >>
+>> >> I did use the get_maintainer script. I solely passed the patch set as
+>> >> command line argument.  
+>> >
+>> > I think get_maintainer script should ignore MAINTAINERS file altogether.
+>> > After I did drivers/net/wireless reorganisation, and had to make
+>> > numerous changes to MAINTAINERS in the process, I have been CCed to all
+>> > sorts of patchsets to which I have nothing to do with (this one
+>> > included). I suspect get_maintainer.pl is to blame here.  
+>> 
+>> Are you sure it is because you are listed as maintainer for specific files?
+>> If you are maintain something you have to be CC'ed.
 
-I'm not 100% sure, but I remember we toke this name on local
-branch for rk3036 when we were developing this Soc.
+IIRC I have received patches about i2c and graphics stuff and I have no
+recollection of ever sending even a single patch to those subsystems,
+let alone maintaining them.
 
-> I.e. it isn't part of any current _mainline_ devicetree files.
+>> It is rather because get_maintainer.pl tries to be smart and uses git to
+>> find people who have touched a file...
+>> 
+>> I guess instead you want something like:
+>> http://permalink.gmane.org/gmane.linux.kernel.commits.head/538561
 >
+> I guess what Kalle said is that the get_maintainer.pl script should
+> disable, by default, "--git-blame" behavior for some specific files that
+> everyone touches like /MAINTAINERS, Documentation/kernel-parameters.txt,
+> /CREDITS, etc,  as random people that touch on those files aren't really
+> interested on being c/c to every change there.
 
-Caesar, Could you check our develop-3.10 branch to see if it does
-exist?
+Exactly my point, thank you. No need to pollute people's inboxes
+unnecessary.
 
-Anyway, "rockchip,rockchip-spi" isn't a part of mainline dt property.
-
-
->
-> Heiko
->
->>
->>> Fixes commit f629fcfab2cd
->>> ("ARM: dts: rockchip: support the spi for rk3036")
->>>
->>> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->>> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>>
->>> ---
->>>
->>> Changes in v2: None
->>>
->>>  arch/arm/boot/dts/rk3036.dtsi | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/boot/dts/rk3036.dtsi
->>> b/arch/arm/boot/dts/rk3036.dtsi index d0f4bb7..a30700a 100644
->>> --- a/arch/arm/boot/dts/rk3036.dtsi
->>> +++ b/arch/arm/boot/dts/rk3036.dtsi
->>> @@ -431,7 +431,7 @@
->>>
->>>  	};
->>>  =09
->>>  	spi: spi@20074000 {
->>>
->>> -		compatible =3D "rockchip,rockchip-spi";
->>> +		compatible =3D "rockchip,rk3036-spi";
->>>
->>>  		reg =3D <0x20074000 0x1000>;
->>>  		interrupts =3D <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
->>>  		clocks =3D<&cru PCLK_SPI>, <&cru SCLK_SPI>;
->
->
-
-
---=20
-Best Regards
-Shawn Lin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Kalle Valo
