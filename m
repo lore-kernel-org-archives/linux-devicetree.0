@@ -1,50 +1,47 @@
-From: Sanchayan Maity <maitysanchayan@gmail.com>
-Subject: [PATCH v3 2/4] ARM: dts: vfxxx: Add On-Chip ROM node for Vybrid
-Date: Fri, 20 May 2016 15:32:03 +0530
-Message-ID: <f81f11d720b0f3f871a7203bde5af4d4b6f2f4fa.1463737502.git.maitysanchayan@gmail.com>
-References: <cover.1463737502.git.maitysanchayan@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1463737502.git.maitysanchayan@gmail.com>
-In-Reply-To: <cover.1463737502.git.maitysanchayan@gmail.com>
-References: <cover.1463737502.git.maitysanchayan@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arnd@arndb.de, shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan@agner.ch, Sanchayan Maity <maitysanchayan@gmail.com>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 0/2] Add Rockchip PCIe RC controller support
+Date: Fri, 20 May 2016 18:28:25 +0800
+Message-ID: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a device tree node for the On-Chip ROM on Vybrid.
 
-Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
----
- arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Hi all,
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 0e34d44..6c5222e 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -91,6 +91,11 @@
- 		interrupt-parent = <&mscm_ir>;
- 		ranges;
- 
-+		ocrom: ocrom@00000000 {
-+			compatible = "fsl,vf610-ocrom", "syscon";
-+			reg = <0x00000000 0x18000>;
-+		};
-+
- 		aips0: aips-bus@40000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			#address-cells = <1>;
+This patchset gonna support Rockchip PCIe controller integrated
+in RK3399 Soc supporting Gen2 with max 4 lanes.
+
+Also it supports:
+(1) Support Single-root I/O virtualization(SR-IOV)
+(2) Support Legacy Interrupt
+(3) Support MSI and MSI-X interrupt
+(4) Support ECRC Generation and Checking
+(5) Support 8 Virtual Functions attached to Physical Function
+(6) Support Outbound and Inbound address translation
+(7) Support ASPM state L0s and L1
+(8) Support L1 Power Management Substate
+(9) Support PCI Function power states D0, D1 and D3, and the corresponding
+link power states L0, L1 and L2
+
+
+Please review, test and comment. Thanks.
+
+
+
+Shawn Lin (2):
+  Documentation: add binding description of Rockchip PCIe controller
+  pci: Add PCIe driver for Rockchip Soc
+
+ .../devicetree/bindings/pci/rockchip-pcie.txt      |   93 ++
+ drivers/pci/host/Kconfig                           |   12 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pcie-rockchip.c                   | 1181 ++++++++++++++++++++
+ 4 files changed, 1287 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-rockchip.c
+
 -- 
-2.8.2
+2.3.7
