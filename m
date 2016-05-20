@@ -1,63 +1,77 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v7 0/3] ASoC: cygnus: Add audio support for Broadcom
- Cygnus SoC
-Date: Fri, 20 May 2016 11:41:54 +0100
-Message-ID: <20160520104154.GI8206@sirena.org.uk>
-References: <1463514382-20930-1-git-send-email-simran.rai@broadcom.com>
- <573E23A2.4020907@broadcom.com>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH V5 0/7] iommu/msm: Add DT adaptation and generic bindings
+	support
+Date: Fri, 20 May 2016 16:24:47 +0530
+Message-ID: <1463741694-1735-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zgY/UHCnsaNnNXRx"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <573E23A2.4020907@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Simran Rai <simran.rai@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Lori Hikichi <lhikichi@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Arun Parameswaran <arunp@broadcom.com>, alsa-devel@alsa-project.org, Simran <ssimran@lbrmn-ssimran-lnxub64.ric.broadcom.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The msm_iommu.c driver currently works based on platform data.
+A single master device can be connected to more than one iommu and multiple
+contexts in each of the iommu. This association between master and iommus was
+represented from platform data using parent/child devices. The master drivers
+were responsible for attaching all of the iommus/context to a domain. Now the
+platform data support is removed and DT support is added. The master/iommus are
+added through generic iommu bindings.
 
---zgY/UHCnsaNnNXRx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is essentially rework of the patch posted earlier by
+Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>. This series folds the changes in to the
+existing driver with the addition of generic bindings.
 
-On Thu, May 19, 2016 at 01:35:46PM -0700, Scott Branden wrote:
-> Looks good Simran.
->=20
-> Mark, anything else for us to do before this driver can be accepted
-> upstream?
+        http://www.spinics.net/lists/linux-arm-msm/msg10077.html
 
-It's a new driver submitted in the first week of the merge window, I've
-not looked at it yet.
+Tested this series on ifc6410 board.
 
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
+[V5] Changed the compatible binding name as per comments, added comments
+     for usage of barriers in patch 6.
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-Sending content free pings just adds to the mail volume (if they are
-seen at all) and if something has gone wrong you'll have to resend the
-patches anyway.
+[V4] Addressed comments for making the iommu compatible binding more soc
+     specific and updated the documentation for the iommu clocks.
 
---zgY/UHCnsaNnNXRx
-Content-Type: application/pgp-signature; name="signature.asc"
+[V3] Addressed comments to correct the usage
+     of the #iommu-cells binding, improve the flush_iotlb_range function,
+     added a new patch to use writel_relaxed for register access and split
+     up the documentation patch.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+[V2] Adapted the driver to use generic ARMV7S short descriptor pagetable ops
+     and addressed comments.
 
-iQEcBAEBCAAGBQJXPunxAAoJECTWi3JdVIfQDEkH/jW9qLUgVW3yV8FIVQEHTldD
-xgh6lFEywiSCEKkH3ZbhxrV670jYRD4HE9nw+0wxOr+naQ0PJ9y7/6VuzUskwHtl
-1LWOYvavbjUMisNF4EEDVJCyMBoZgNoY+4xY1sfCEcyv0kc6DeScAB61j72/ozRA
-ihbINaKaOKn2pmriGmHxoTetDDVIe0y+ffZAFnHFqJL6iR7lUrBg99pc31kD60uh
-YK7NCY2fUJRP7vLoSbJ4eFzDFx5ibG+j+x3qrFvvdvvX2w8+8NQ5h3pzsuBVDZMc
-UuphmnHB+rFoADOf23dNPWyKPbjfAa69ubG9sCOIpZ/iJUOvgw7q34pmlsaCsRY=
-=ofj0
------END PGP SIGNATURE-----
+[V1]
+   https://lists.linuxfoundation.org/pipermail/iommu/2015-August/014074.html
 
---zgY/UHCnsaNnNXRx--
+Sricharan R (7):
+  iommu/msm: Add DT adaptation
+  documentation: iommu: Add bindings for msm,iommu-v0 ip
+  iommu/msm: Move the contents from msm_iommu_dev.c to msm_iommu.c
+  iommu/msm: Add support for generic master bindings
+  iommu/msm: use generic ARMV7S short descriptor pagetable ops
+  iommu/msm: Use writel_relaxed and add a barrier
+  iommu/msm: Remove driver BROKEN
+
+ .../devicetree/bindings/iommu/msm,iommu-v0.txt     |  64 ++
+ drivers/iommu/Kconfig                              |   2 +-
+ drivers/iommu/Makefile                             |   2 +-
+ drivers/iommu/msm_iommu.c                          | 885 +++++++++++----------
+ drivers/iommu/msm_iommu.h                          |  73 +-
+ drivers/iommu/msm_iommu_dev.c                      | 381 ---------
+ drivers/iommu/msm_iommu_hw-8xxx.h                  | 109 +--
+ 7 files changed, 636 insertions(+), 880 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
+ delete mode 100644 drivers/iommu/msm_iommu_dev.c
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
