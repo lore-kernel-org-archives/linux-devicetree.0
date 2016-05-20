@@ -1,143 +1,291 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: drivers/of: crash on boot
-Date: Fri, 20 May 2016 12:40:22 +1000
-Message-ID: <20160520024022.GA5621@gwshan>
-References: <573C8B6C.6030900@oracle.com>
- <CAL_JsqJsjh+Shk1nD5YQeQ=6B1MZOyEj5oX-q_xKH642toURdA@mail.gmail.com>
- <80967a3a-3b97-e131-97e5-f449f567b01c@nvidia.com>
- <d0e2564c-c8d4-2c4c-f194-60b43b0ab80e@nvidia.com>
- <CAL_JsqKn1BLCiW=CBch4G8s=YheXFVouhz+JVvB6j8-4W-UK6A@mail.gmail.com>
- <CAL_JsqLdpq6bePK2c6Dhub9cZvMV1JVqC=RH8pomCmpszYugYg@mail.gmail.com>
- <20160519111950.GA28855@gwshan>
- <CAL_JsqL_8cUmKxu3=BBkmFi3yO7rWeUW64TO6MRV60451V70+Q@mail.gmail.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v3 3/5] mmc: core: implement enhanced strobe support
+Date: Fri, 20 May 2016 11:45:59 +0900
+Message-ID: <573E7A67.6050508@samsung.com>
+References: <1462871343-32361-1-git-send-email-shawn.lin@rock-chips.com>
+ <1462871391-32484-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL_8cUmKxu3=BBkmFi3yO7rWeUW64TO6MRV60451V70+Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, Rhyland Klein <rklein@nvidia.com>, Sasha Levin <sasha.levin@oracle.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1462871391-32484-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 19, 2016 at 07:48:18AM -0500, Rob Herring wrote:
->On Thu, May 19, 2016 at 6:19 AM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
->> On Wed, May 18, 2016 at 08:51:59PM -0500, Rob Herring wrote:
->>>On Wed, May 18, 2016 at 7:23 PM, Rob Herring <robh@kernel.org> wrote:
->>>> On Wed, May 18, 2016 at 4:26 PM, Rhyland Klein <rklein@nvidia.com> wrote:
->>>>> On 5/18/2016 3:58 PM, Rhyland Klein wrote:
->>>>>> On 5/18/2016 3:36 PM, Rob Herring wrote:
->>>>>>> On Wed, May 18, 2016 at 10:34 AM, Sasha Levin <sasha.levin@oracle.com> wrote:
->>>>>>>> Hi Rhyland,
->>>>>>>>
->>>>>>>> I'm seeing a crash on boot that seems to have been caused by
->>>>>>>> "drivers/of: Fix depth when unflattening devicetree":
->>>>>>>>
->>>>>>>> [   61.145229] ==================================================================
->>>>>>>>
->>>>>>>> [   61.147588] BUG: KASAN: stack-out-of-bounds in unflatten_dt_nodes+0x11d2/0x1290 at addr ffff88005b30777c
->>>
->>>[...]
->>>
->>>>> This patch seems to work for me. I found a bug in my original patch.
->>>>> Sasha/Rob, can you see if this works for you too:
->>>>>
->>>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->>>>> index 0b5850027bb5..e7a8caac5b27 100644
->>>>> --- a/drivers/of/fdt.c
->>>>> +++ b/drivers/of/fdt.c
->>>>> @@ -407,9 +407,9 @@ static int unflatten_dt_nodes(const void *blob,
->>>>>
->>>>>         root = dad;
->>>>>         fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
->>>>> -       nps[depth+1] = dad;
->>>>> +       nps[depth] = dad;
->>>>>         for (offset = 0;
->>>>> -            offset >= 0;
->>>>> +            offset >= 0 && depth >= 0;
->>>>>              offset = fdt_next_node(blob, offset, &depth)) {
->>>>>                 if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
->>>>>                         continue;
->>>>
->>>> This is not work for me. I'm booting x86 with the DT unit test and
->>>> KASAN enabled. I suspect our differences are due to different data
->>>> after the end of the dtb. Also, I think there may be a bug in
->>>> fdt_next_node FDT_END handling. The "!depth" seems suspicious to me
->>>> and I think it should be "!(*depth)".
->>>>
->>>> The DT overlay unit tests are also failing. Not sure if that's related.
->>>
->>>Seems with the above patch and the fix to fdt_next_node, the problem
->>>is fixed both for KASAN and the DT overlay tests. Trying it out now
->>>with some other configurations.
->>>
->>
->> There're 5 patches I introduced to drivers/of/fdt.c (A). Rhyland had
->> one patch based on them (B). The code change in this thread is (C).
->> I tried several cases as below.
->>
->> There is one failing case caused by something we don't know yet. I
->> will do some invetigation unless it's not a issue or a known issue
->> of unittest itself.
->>
->> [1]. (A) excluded, (B) excluded, (C) excluded
->> =============================================
->> device-tree: Duplicate name in testcase-data, renamed to "duplicate-name#1"
->> ### dt-test ### start of unittest - you will see error messages
->> /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
->> /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
->> /testcase-data/phandle-tests/consumer-a: could not find phandle
->> /testcase-data/phandle-tests/consumer-a: could not find phandle
->> /testcase-data/phandle-tests/consumer-a: arguments longer than property
->> /testcase-data/phandle-tests/consumer-a: arguments longer than property
->> irq: XICS didn't like hwirq-0x1 to VIRQ32 mapping (rc=-22)
->> irq: XICS didn't like hwirq-0x1 to VIRQ32 mapping (rc=-22)
->> ### dt-test ### FAIL of_unittest_platform_populate():783 device deferred probe failed - 0
->
->Humm, I'm not seeing this one.
->
+On 05/10/2016 06:09 PM, Shawn Lin wrote:
+> Controllers use data strobe line to latch data from devices
+> under hs400 mode, but not for cmd line. So since emmc 5.1, JEDEC
+> introduces enhanced strobe mode for latching cmd response from
+> emmc devices to host controllers. This new feature is optional,
+> so it depends both on device's cap and host's cap to decide
+> whether to use it or not.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/mmc/core/bus.c   |  3 +-
+>  drivers/mmc/core/core.c  |  8 +++++
+>  drivers/mmc/core/mmc.c   | 79 ++++++++++++++++++++++++++++++++++++++++++++++--
+>  include/linux/mmc/card.h |  1 +
+>  include/linux/mmc/host.h | 11 +++++++
+>  include/linux/mmc/mmc.h  |  3 ++
+>  6 files changed, 102 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
+> index 4bc48f1..7e94b9d 100644
+> --- a/drivers/mmc/core/bus.c
+> +++ b/drivers/mmc/core/bus.c
+> @@ -332,12 +332,13 @@ int mmc_add_card(struct mmc_card *card)
+>  			mmc_card_ddr52(card) ? "DDR " : "",
+>  			type);
+>  	} else {
+> -		pr_info("%s: new %s%s%s%s%s card at address %04x\n",
+> +		pr_info("%s: new %s%s%s%s%s%s card at address %04x\n",
+>  			mmc_hostname(card->host),
+>  			mmc_card_uhs(card) ? "ultra high speed " :
+>  			(mmc_card_hs(card) ? "high speed " : ""),
+>  			mmc_card_hs400(card) ? "HS400 " :
+>  			(mmc_card_hs200(card) ? "HS200 " : ""),
+> +			mmc_card_hs400es(card) ? "Enhanced strobe" : "",
+>  			mmc_card_ddr52(card) ? "DDR " : "",
+>  			uhs_bus_speed_mode, type, card->rca);
+>  	}
+> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> index 99275e4..a559501 100644
+> --- a/drivers/mmc/core/core.c
+> +++ b/drivers/mmc/core/core.c
+> @@ -1127,6 +1127,14 @@ void mmc_set_initial_state(struct mmc_host *host)
+>  	host->ios.bus_width = MMC_BUS_WIDTH_1;
+>  	host->ios.timing = MMC_TIMING_LEGACY;
+>  	host->ios.drv_type = 0;
+> +	host->ios.enhanced_strobe = false;
+> +
+> +	/*
+> +	 * Make sure we are in non-enhanced strobe mode before we
+> +	 * actually enable it in ext_csd.
+> +	 */
+> +	if (host->ops->hs400_enhanced_strobe)
+> +		host->ops->hs400_enhanced_strobe(host, &host->ios);
+>  
+>  	mmc_set_ios(host);
+>  }
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index f99c47e..c2d1981 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -235,6 +235,11 @@ static void mmc_select_card_type(struct mmc_card *card)
+>  		avail_type |= EXT_CSD_CARD_TYPE_HS400_1_2V;
+>  	}
+>  
+> +	if ((caps2 & MMC_CAP2_HS400_ES) &&
+> +	    card->ext_csd.strobe_support &&
+> +	    (card_type & EXT_CSD_CARD_TYPE_HS400))
+> +		avail_type |= EXT_CSD_CARD_TYPE_HS400ES;
 
-Ok. Thanks for confirm. I will do some investigation later.
+Does it need to check whether support HS400_1.8V/1.2V or not?
+It should be more stable than now.
 
->> overlay_is_topmost: #5 clashes #6 @/testcase-data/overlay-node/test-bus/test-unittest8
->> overlay_removal_is_ok: overlay #5 is not topmost
->> of_overlay_destroy: removal check failed for overlay #5
->> ### dt-test ### end of unittest - 147 passed, 1 failed
->>
->> [2]. (A) included, (B) exsluded, (C) excluded
->> =============================================
->> Same output as [1]
->>
->> [3]. (A) included, (B) included, (C) excluded
->> =============================================
->> System fails to boot
->>
->> [4]. (A) included, (B) included, (C) included
->> =============================================
->> Same output as [1] and [2].
->
->For C, this includes the fix to depth in fdt_next_node?
->
+if (avail_type & (EXT_CSD_CARD_TYPE_HS400_1.8V | EXT_CSD_CARD_TYPE_HS400_1.2V)) {
+	if ((cap2 & MMC_CAP2_HS400_ES) && ...
+}
 
-Nope, (C) does not include the depth change in fdt_next_node().
-I don't see we have problem with it in fdt_next_node(). In case
-[4] - all code (except @depth fix in fdt_next_node()) included,
-the @depth changes properly in unflatten_dt_nodes() as I saw.
+how about this?
 
->While case 2 works for you, do you agree that there is an off by one
->error and initially fdt_next_node should be called with depth=0?
->
+Best Regards,
+Jaehoon Chung
 
-IRhyland's patch (plus his code he sent in this thread) should be
-included. The test result is [4] with Rhyland's fixes included.
-Otherwise, the check on @depth in fdt_next_node() needs adjustment.
-However, fdt_next_node() is used by unflatten_dt_nodes() and others.
-So I think the right option is to include Rhyland's fixes and not
-change @depth in fdt_next_node().
+> +
+>  	card->ext_csd.hs_max_dtr = hs_max_dtr;
+>  	card->ext_csd.hs200_max_dtr = hs200_max_dtr;
+>  	card->mmc_avail_type = avail_type;
+> @@ -383,6 +388,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+>  			mmc_card_set_blockaddr(card);
+>  	}
+>  
+> +	card->ext_csd.strobe_support = ext_csd[EXT_CSD_STROBE_SUPPORT];
+>  	card->ext_csd.raw_card_type = ext_csd[EXT_CSD_CARD_TYPE];
+>  	mmc_select_card_type(card);
+>  
+> @@ -1216,6 +1222,73 @@ out_err:
+>  	return err;
+>  }
+>  
+> +static int mmc_select_hs400es(struct mmc_card *card)
+> +{
+> +	struct mmc_host *host = card->host;
+> +	int err = 0;
+> +	u8 val;
+> +
+> +	err = mmc_select_bus_width(card);
+> +	if (IS_ERR_VALUE(err))
+> +		goto out_err;
+> +
+> +	/* Switch card to HS mode */
+> +	err = mmc_select_hs(card);
+> +	if (err) {
+> +		pr_err("%s: switch to high-speed failed, err:%d\n",
+> +			mmc_hostname(host), err);
+> +		goto out_err;
+> +	}
+> +
+> +	err = mmc_switch_status(card);
+> +	if (err)
+> +		goto out_err;
+> +
+> +	/* Switch card to DDR with strobe bit */
+> +	val = EXT_CSD_DDR_BUS_WIDTH_8 | EXT_CSD_BUS_WIDTH_STROBE;
+> +	err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+> +			 EXT_CSD_BUS_WIDTH,
+> +			 val,
+> +			 card->ext_csd.generic_cmd6_time);
+> +	if (err) {
+> +		pr_err("%s: switch to bus width for hs400es failed, err:%d\n",
+> +			mmc_hostname(host), err);
+> +		goto out_err;
+> +	}
+> +
+> +	/* Switch card to HS400 */
+> +	val = EXT_CSD_TIMING_HS400 |
+> +	      card->drive_strength << EXT_CSD_DRV_STR_SHIFT;
+> +	err = __mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+> +			   EXT_CSD_HS_TIMING, val,
+> +			   card->ext_csd.generic_cmd6_time,
+> +			   true, false, true);
+> +	if (err) {
+> +		pr_err("%s: switch to hs400es failed, err:%d\n",
+> +			mmc_hostname(host), err);
+> +		goto out_err;
+> +	}
+> +
+> +	/* Set host controller to HS400 timing and frequency */
+> +	mmc_set_timing(host, MMC_TIMING_MMC_HS400);
+> +
+> +	/* Controller enable enhanced strobe function */
+> +	host->ios.enhanced_strobe = true;
+> +	if (host->ops->hs400_enhanced_strobe)
+> +		host->ops->hs400_enhanced_strobe(host, &host->ios);
+> +
+> +	err = mmc_switch_status(card);
+> +	if (err)
+> +		goto out_err;
+> +
+> +	return 0;
+> +
+> +out_err:
+> +	pr_err("%s: %s failed, error %d\n", mmc_hostname(card->host),
+> +	       __func__, err);
+> +	return err;
+> +}
+> +
+>  static void mmc_select_driver_type(struct mmc_card *card)
+>  {
+>  	int card_drv_type, drive_strength, drv_type;
+> @@ -1297,7 +1370,7 @@ err:
+>  }
+>  
+>  /*
+> - * Activate High Speed or HS200 mode if supported.
+> + * Activate High Speed, HS200 or HS400ES mode if supported.
+>   */
+>  static int mmc_select_timing(struct mmc_card *card)
+>  {
+> @@ -1306,7 +1379,9 @@ static int mmc_select_timing(struct mmc_card *card)
+>  	if (!mmc_can_ext_csd(card))
+>  		goto bus_speed;
+>  
+> -	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200)
+> +	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400ES)
+> +		err = mmc_select_hs400es(card);
+> +	else if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200)
+>  		err = mmc_select_hs200(card);
+>  	else if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS)
+>  		err = mmc_select_hs(card);
+> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+> index eb0151b..22defc2 100644
+> --- a/include/linux/mmc/card.h
+> +++ b/include/linux/mmc/card.h
+> @@ -95,6 +95,7 @@ struct mmc_ext_csd {
+>  	u8			raw_partition_support;	/* 160 */
+>  	u8			raw_rpmb_size_mult;	/* 168 */
+>  	u8			raw_erased_mem_count;	/* 181 */
+> +	u8			strobe_support;		/* 184 */
+>  	u8			raw_ext_csd_structure;	/* 194 */
+>  	u8			raw_card_type;		/* 196 */
+>  	u8			raw_driver_strength;	/* 197 */
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 2a06fb0..f98bd0e 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -19,6 +19,7 @@
+>  
+>  #include <linux/mmc/core.h>
+>  #include <linux/mmc/card.h>
+> +#include <linux/mmc/mmc.h>
+>  #include <linux/mmc/pm.h>
+>  
+>  struct mmc_ios {
+> @@ -77,6 +78,8 @@ struct mmc_ios {
+>  #define MMC_SET_DRIVER_TYPE_A	1
+>  #define MMC_SET_DRIVER_TYPE_C	2
+>  #define MMC_SET_DRIVER_TYPE_D	3
+> +
+> +	bool enhanced_strobe;			/* hs400es selection */
+>  };
+>  
+>  struct mmc_host_ops {
+> @@ -143,6 +146,9 @@ struct mmc_host_ops {
+>  
+>  	/* Prepare HS400 target operating frequency depending host driver */
+>  	int	(*prepare_hs400_tuning)(struct mmc_host *host, struct mmc_ios *ios);
+> +	/* Prepare enhanced strobe depending host driver */
+> +	void	(*hs400_enhanced_strobe)(struct mmc_host *host,
+> +					 struct mmc_ios *ios);
+>  	int	(*select_drive_strength)(struct mmc_card *card,
+>  					 unsigned int max_dtr, int host_drv,
+>  					 int card_drv, int *drv_type);
+> @@ -513,6 +519,11 @@ static inline bool mmc_card_hs400(struct mmc_card *card)
+>  	return card->host->ios.timing == MMC_TIMING_MMC_HS400;
+>  }
+>  
+> +static inline bool mmc_card_hs400es(struct mmc_card *card)
+> +{
+> +	return card->host->ios.enhanced_strobe == true;
+> +}
+> +
+>  void mmc_retune_timer_stop(struct mmc_host *host);
+>  
+>  static inline void mmc_retune_needed(struct mmc_host *host)
+> diff --git a/include/linux/mmc/mmc.h b/include/linux/mmc/mmc.h
+> index 15f2c4a..c376209 100644
+> --- a/include/linux/mmc/mmc.h
+> +++ b/include/linux/mmc/mmc.h
+> @@ -297,6 +297,7 @@ struct _mmc_csd {
+>  #define EXT_CSD_PART_CONFIG		179	/* R/W */
+>  #define EXT_CSD_ERASED_MEM_CONT		181	/* RO */
+>  #define EXT_CSD_BUS_WIDTH		183	/* R/W */
+> +#define EXT_CSD_STROBE_SUPPORT		184	/* RO */
+>  #define EXT_CSD_HS_TIMING		185	/* R/W */
+>  #define EXT_CSD_POWER_CLASS		187	/* R/W */
+>  #define EXT_CSD_REV			192	/* RO */
+> @@ -380,12 +381,14 @@ struct _mmc_csd {
+>  #define EXT_CSD_CARD_TYPE_HS400_1_2V	(1<<7)	/* Card can run at 200MHz DDR, 1.2V */
+>  #define EXT_CSD_CARD_TYPE_HS400		(EXT_CSD_CARD_TYPE_HS400_1_8V | \
+>  					 EXT_CSD_CARD_TYPE_HS400_1_2V)
+> +#define EXT_CSD_CARD_TYPE_HS400ES	(1<<8)	/* Card can run at HS400ES */
+>  
+>  #define EXT_CSD_BUS_WIDTH_1	0	/* Card is in 1 bit mode */
+>  #define EXT_CSD_BUS_WIDTH_4	1	/* Card is in 4 bit mode */
+>  #define EXT_CSD_BUS_WIDTH_8	2	/* Card is in 8 bit mode */
+>  #define EXT_CSD_DDR_BUS_WIDTH_4	5	/* Card is in 4 bit DDR mode */
+>  #define EXT_CSD_DDR_BUS_WIDTH_8	6	/* Card is in 8 bit DDR mode */
+> +#define EXT_CSD_BUS_WIDTH_STROBE BIT(7)	/* Enhanced strobe mode */
+>  
+>  #define EXT_CSD_TIMING_BC	0	/* Backwards compatility */
+>  #define EXT_CSD_TIMING_HS	1	/* High speed */
+> 
 
-Thanks,
-Gavin 
-
->Rob
->
