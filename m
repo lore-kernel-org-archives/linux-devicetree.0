@@ -1,42 +1,79 @@
-From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] documentation: drivers/core/of: fix name of of_node symlink
-Date: Fri, 20 May 2016 14:23:38 +0200
-Message-ID: <20160520122338.17701.38409.stgit@localhost>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: fixes the gic400 2nd region size
+ for rk3368
+Date: Fri, 20 May 2016 20:55:56 +0800
+Message-ID: <61133267-f903-b580-7737-b77610392cde@rock-chips.com>
+References: <1463582510-29156-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=gbk;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463582510-29156-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Device Tree mailing list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-commit 5590f3196b29 ("drivers/core/of: Add symlink to device-tree from
-devices with an OF node") added a symlink called "of_node" to sysfs
-however the documentation describes it as "of_path".
+=D4=DA 2016/5/18 22:41, Caesar Wang =D0=B4=B5=C0:
+> The 2nd additional region is the GIC virtual cpu interface register
+> base and size.
+>
+> As the gic400 of rk3368 says, the cpu interface register map as below
+>
+> :
+>
+> -0x0000 GICC_CTRL
+> .
+> .
+> .
+> -0x00fc GICC_IIDR
+> -0x1000 GICC_IDR
+>
+> Obviously, the region size should be greater than 0x1000.
+> So we should make sure to include the GICC_IDR since the kernel will =
+access
+> it in some cases.
+>
 
-Fix the documentation to match what the code actually does.
+yes, address range for GICC_* should be from 0x2000 to 0x3fff according
+to gic400 memory map Table 3-1.
 
-Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
----
- Documentation/ABI/stable/sysfs-devices |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-diff --git a/Documentation/ABI/stable/sysfs-devices b/Documentation/ABI/stable/sysfs-devices
-index 43f78b88d..df449d7 100644
---- a/Documentation/ABI/stable/sysfs-devices
-+++ b/Documentation/ABI/stable/sysfs-devices
-@@ -1,7 +1,7 @@
- # Note: This documents additional properties of any device beyond what
- # is documented in Documentation/sysfs-rules.txt
- 
--What:		/sys/devices/*/of_path
-+What:		/sys/devices/*/of_node
- Date:		February 2015
- Contact:	Device Tree mailing list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
- Description:
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>
+> ---
+>
+>  arch/arm64/boot/dts/rockchip/rk3368.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/bo=
+ot/dts/rockchip/rk3368.dtsi
+> index 8b4a7c9..080203e 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> @@ -670,7 +670,7 @@
+>  		#address-cells =3D <0>;
+>
+>  		reg =3D <0x0 0xffb71000 0x0 0x1000>,
+> -		      <0x0 0xffb72000 0x0 0x1000>,
+> +		      <0x0 0xffb72000 0x0 0x2000>,
+>  		      <0x0 0xffb74000 0x0 0x2000>,
+>  		      <0x0 0xffb76000 0x0 0x2000>;
+>  		interrupts =3D <GIC_PPI 9
+>
+
+
+--=20
+Best Regards
+Shawn Lin
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
