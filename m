@@ -1,49 +1,92 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 5/5] mmc: sdhci-of-arasan: implement enhanced strobe callback
-Date: Thu, 19 May 2016 17:11:40 -0700
-Message-ID: <CAD=FV=VU7cY+jQ3Tys5vLY_=pP-w5-cKxNTs5JBRxkwr+nVjmQ@mail.gmail.com>
-References: <1462871343-32361-1-git-send-email-shawn.lin@rock-chips.com> <1462871407-32566-1-git-send-email-shawn.lin@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] [media] media: i2c/ov5645: add the device tree
+ binding document
+Date: Thu, 19 May 2016 19:16:40 -0500
+Message-ID: <CAL_JsqJX_t9WD0gq=5A1UFQiweKi8fwjBwTdpxbV=ECTsHWOvw@mail.gmail.com>
+References: <1463572208-8826-1-git-send-email-todor.tomov@linaro.org>
+ <1463572208-8826-2-git-send-email-todor.tomov@linaro.org> <20160518231637.GA31413@rob-hp-laptop>
+ <573D7601.1090605@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462871407-32566-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <573D7601.1090605@linaro.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Geert Uytterhoeven <geert@linux-m68k.org>, matrandg@cisco.com, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, May 10, 2016 at 2:10 AM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> Currently sdhci-arasan 5.1 can support enhanced strobe function,
-> and we now limit it just for "arasan,sdhci-5.1". Add
-> mmc-hs400-enhanced-strobe in DT to enable the function if we'r sure
-
-nit:s/we'r/we're/
-
-[ ... ]
-> @@ -79,6 +81,21 @@ static void sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int clock)
->         }
->  }
+On Thu, May 19, 2016 at 3:14 AM, Todor Tomov <todor.tomov@linaro.org> wrote:
+> Hi Rob,
 >
-> +static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
-> +                                       struct mmc_ios *ios)
-> +{
-> +       u32 vendor;
-> +       struct sdhci_host *host = mmc_priv(mmc);
-> +
-> +       vendor = readl(host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
-> +       if (ios->enhanced_strobe)
-> +               vendor |= VENDOR_ENHANCED_STROBE;
-> +       else
-> +               vendor &= (~VENDOR_ENHANCED_STROBE);
+> Thank you for your time to review. My responses are below:
+>
+> On 05/19/2016 02:16 AM, Rob Herring wrote:
+>> On Wed, May 18, 2016 at 02:50:07PM +0300, Todor Tomov wrote:
+>>> Add the document for ov5645 device tree binding.
+>>>
+>>> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+>>> ---
+>>>  .../devicetree/bindings/media/i2c/ov5645.txt       | 56 ++++++++++++++++++++++
+>>>  1 file changed, 56 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+>>> new file mode 100644
+>>> index 0000000..8799000
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+>>> @@ -0,0 +1,56 @@
+>>> +* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
+>>> +
+>>> +The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+>>> +an active array size of 2592H x 1944V. It is programmable through a serial SCCB
+>>
+>> s/SCCB/I2C/ because that is the more common name.
+> Ok.
+>
+>>
+>>> +interface.
+>>> +
+>>> +Required Properties:
+>>> +- compatible: value should be "ovti,ov5645"
+>>> +- clocks: reference to the xclk clock
+>>> +- clock-names: should be "xclk"
+>>> +- assigned-clocks: reference to the xclk clock
+>>
+>> This should be optional as it only makes sense if there is more than one
+>> option.
+> I have only used assigned-clocks to specify for which clock the
+> assigned-clock-rates property is. This is the way I understood it.
+> Isn't this correct? (Also please see below.)
 
-nit: no extra parentheses:
+AIUI, assigned-clocks is which parent you want to assign for the clock
+specified in "clocks". Whether you have a parent option or not is
+board/chip dependent.
 
-  vendor &= ~VENDOR_ENHANCED_STROBE;
+>>> +- assigned-clock-rates: should be "23880000"
+>>
+>> Doesn't this depend on the board? Most parts take a range of
+>> frequencies. The driver should know what the range is and request a rate
+>> within this range.
+> This is the sensor external clock. Actually the driver depends on this value -
+> the sensor mode settings which the driver configures are calculated based on
+> this value. If you change this clock rate you need to change the sensor mode
+> settings. However they usually come from the vendor of the sensor so they
+> usually never change. So this clock rate for this driver is fixed to 23.88MHz
+> and is not expected to change.
 
+If fixed in the driver, then it doesn't need to be in DT.
 
-Other than the nits this patch looks good to me.  Feel free to add my
-Reviewed-by when nits fixed.
+>>> +
+>>> +Optional Properties:
+>>> +- reset-gpios: Chip reset GPIO
+>>> +- pwdn-gpios: Chip power down GPIO
+>>
+>> Use enable-gpios as it is more common and would just be the inverse of
+>> this.
+> pwdn is the notation which OV use for this gpio, so I'd personally prefer
+> to keep the name. Do you think it is still better to change it?
 
--Doug
+Yes.
+
+Rob
