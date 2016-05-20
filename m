@@ -1,66 +1,64 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: get_maintainer.pl and MAINTAINERS file
-Date: Fri, 20 May 2016 16:14:19 +0300
-Message-ID: <87a8jkdg7o.fsf@kamboji.qca.qualcomm.com>
-References: <1463574199-21077-1-git-send-email-robin@protonic.nl>
-	<20160518150924.GA3871@kroah.com> <20160519105418.5df3c8f7@erd979>
-	<871t4yfbmy.fsf_-_@kamboji.qca.qualcomm.com>
-	<CAFLxGvwU-2aE7_0Suht--DvWby3RT=mdkpRomHz25MgicRfC3w@mail.gmail.com>
-	<20160519135743.5fc661c4@recife.lan>
+From: <yt.shen@mediatek.com>
+Subject: [RFC v2 0/5] MT2701 DRM support
+Date: Fri, 20 May 2016 23:05:31 +0800
+Message-ID: <1463756736-46573-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160519135743.5fc661c4@recife.lan> (Mauro Carvalho Chehab's
-	message of "Thu, 19 May 2016 13:57:43 -0300")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: Richard Weinberger <richard.weinberger@gmail.com>, Robin van der Gracht <robin@protonic.nl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Thierry Reding <treding@nvidia.com>, Shawn Guo <shawnguo@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Matt Ranostay <mranostay@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, "David S . Miller" <davem@davemloft.net>, Guenter Roeck <linux@roeck-us.net>, Jiri Slaby <jslaby@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Mauro Carvalho Chehab <mchehab@osg.samsung.com> writes:
-
-> Em Thu, 19 May 2016 16:25:45 +0200
-> Richard Weinberger <richard.weinberger@gmail.com> escreveu:
->
->> On Thu, May 19, 2016 at 2:57 PM, Kalle Valo <kvalo@codeaurora.org> wrote:
->> > (Changed the subject from "Re: [PATCH v6 0/3] auxdisplay: Introduce ht16k33 driver")
->> >
->> > Robin van der Gracht <robin@protonic.nl> writes:
->> >  
->> >>> And 4th, what is with the insane number of people on cc:?  Use
->> >>> get_maintainer.pl correctly please, and don't just hit everyone you
->> >>> can possibly think of with a cc: for no good reason.  
->> >>
->> >> I did use the get_maintainer script. I solely passed the patch set as
->> >> command line argument.  
->> >
->> > I think get_maintainer script should ignore MAINTAINERS file altogether.
->> > After I did drivers/net/wireless reorganisation, and had to make
->> > numerous changes to MAINTAINERS in the process, I have been CCed to all
->> > sorts of patchsets to which I have nothing to do with (this one
->> > included). I suspect get_maintainer.pl is to blame here.  
->> 
->> Are you sure it is because you are listed as maintainer for specific files?
->> If you are maintain something you have to be CC'ed.
-
-IIRC I have received patches about i2c and graphics stuff and I have no
-recollection of ever sending even a single patch to those subsystems,
-let alone maintaining them.
-
->> It is rather because get_maintainer.pl tries to be smart and uses git to
->> find people who have touched a file...
->> 
->> I guess instead you want something like:
->> http://permalink.gmane.org/gmane.linux.kernel.commits.head/538561
->
-> I guess what Kalle said is that the get_maintainer.pl script should
-> disable, by default, "--git-blame" behavior for some specific files that
-> everyone touches like /MAINTAINERS, Documentation/kernel-parameters.txt,
-> /CREDITS, etc,  as random people that touch on those files aren't really
-> interested on being c/c to every change there.
-
-Exactly my point, thank you. No need to pollute people's inboxes
-unnecessary.
-
--- 
-Kalle Valo
+RnJvbTogWVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+CgpUaGlzIGlzIE1UMjcwMSBEUk0g
+c3VwcG9ydCBSRkMsIGJhc2VkIG9uIE1UODE3MyBEUk0gcGF0Y2ggdjE2LgpNb3N0IGNvZGVzIGFy
+ZSB0aGUgc2FtZSwgZXhjZXB0IHNvbWUgcmVnaXN0ZXIgY2hhbmdlZC4KCkZvciBleGFtcGxlOgog
+LSBESVNQX09WTCBhZGRyZXNzIG9mZnNldCBjaGFuZ2VkLCBjb2xvciBmb3JtYXQgZGVmaW5pdGlv
+biBjaGFuZ2VkLgogLSBESVNQX1JETUEgZmlmbyBzaXplIGNoYW5nZWQuCiAtIERJU1BfQ09MT1Ig
+b2Zmc2V0IGNoYW5nZWQuCgpXZSBhZGQgYSBuZXcgY29tcG9uZW50IERJU1BfQkxTLCBhbmQgdGhl
+IGNvbm5lY3Rpb24gc2V0dGluZ3MgYXJlIHVwZGF0ZWQuCkFuZCB3ZSBoYXZlIHNoYWRvdyByZWdp
+c3RlciBzdXBwb3J0IGluIE1UMjcwMS4KCkNoYW5nZXMgc2luY2UgdjE6Ci0gUmVtb3ZlZCBCTFMg
+YmluZGluZ3MgYW5kIGNvZGVzLCB3aGljaCBiZWxvbmcgdG8gcHdtIGRyaXZlcgotIE1vdmVkIG10
+a19kaXNwX211dGV4X2FjcXVpcmUoKSBqdXN0IGJlZm9yZSBtdGtfY3J0Y19kZHBfY29uZmlnKCkK
+LSBTcGxpdCBwYXRjaCBpbnRvIHNtYWxsZXIgcGFydHMKLSBBZGRlZCBjb25zdCBrZXl3b3JkIHRv
+IGNvbnN0YW50IHN0cnVjdHVyZQotIFJlbW92ZWQgY29kZXMgZm9yIHNwZWNpYWwgbWVtb3J5IGFs
+aWduCgpUaGUgUkZDIGRlcGVuZHMgb24gTVQyNzAxIGlvbW11L3NtaSBkcml2ZXIuCmh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTA0MzQxMS8gKCJkdC1iaW5kaW5nczogbWVkaWF0
+ZWs6IGFkZCBkZXNjcmlwdGlvbnMgZm9yIG1lZGlhdGVrIG10MjcwMSBpb21tdSBhbmQgc21pIiks
+Cmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTA0MzM5MS8gKCJpb21tdS9tZWRp
+YXRlazogbW92ZSB0aGUgY29tbW9uIHN0cnVjdCBpbnRvIGhlYWRlciBmaWxlIiksCmh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTA0MzQyMS8gKCJtZW1vcnkvbWVkaWF0ZWs6IGFk
+ZCBzdXBwb3J0IGZvciBtdDI3MDEiKSwKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
+aC85MDQzNDUxLyAoImlvbW11L21lZGlhdGVrOiBhZGQgc3VwcG9ydCBmb3IgbXRrIGlvbW11IGdl
+bmVyYXRpb24gb25lIEhXIiksCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTA0
+MzQ3MS8gKCJBUk06IGR0czogbXQyNzAxOiBhZGQgaW9tbXUvc21pIGR0c2kgbm9kZSBmb3IgbXQy
+NzAxIiksCgpUaGFua3MsCnl0LnNoZW4KCllUIFNoZW4gKDUpOgogIGRybS9tZWRpYXRlazogcmVu
+YW1lIG1hY3JvcywgYWRkIGNoaXAgc3VmZml4CiAgZHJtL21lZGlhdGtlOiBhZGQgc3VwcG9ydCBm
+b3IgTWVkaWF0ZWsgU29DIE1UMjcwMQogIGRybS9tZWRpYXRlazogYWRkICpkcml2ZXJfZGF0YSBm
+b3IgZGlmZmVyZW50IGhhcmR3YXJlIHNldHRpbmdzCiAgZHJtL21lZGlhdGVrOiBhZGQgc2hhZG93
+IHJlZ2lzdGVyIHN1cHBvcnQKICBhcm06IGR0czogbXQyNzAxOiBBZGQgZGlzcGxheSBzdWJzeXN0
+ZW0gcmVsYXRlZCBub2RlcyBmb3IgTVQyNzAxCgogYXJjaC9hcm0vYm9vdC9kdHMvbXQyNzAxLmR0
+c2kgICAgICAgICAgICAgICB8ICAxMTcgKysrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMgICAgIHwgICA0OSArKysrKystLS0KIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgICAgfCAgIDM2ICsrKysrLS0KIGRy
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyAgICAgfCAgIDc1ICsrKysrKysr
+LS0tLS0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jICAgICAgfCAgMTUx
+ICsrKysrKysrKysrKysrKysrKysrLS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fZGRwLmggICAgICB8ICAgIDIgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZGRwX2NvbXAuYyB8ICAgNDIgKysrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcF9jb21wLmggfCAgIDE1ICsrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fZHJ2LmMgICAgICB8ICAgNzIgKysrKysrKysrKystLQogZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZHJ2LmggICAgICB8ICAgIDkgKysKIDEwIGZpbGVzIGNoYW5nZWQsIDQ2
+MiBpbnNlcnRpb25zKCspLCAxMDYgZGVsZXRpb25zKC0pCgotLSAKMS43LjkuNQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
