@@ -1,104 +1,259 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: Re: [PATCH v2 1/2] [media] media: i2c/ov5645: add the device tree
- binding document
-Date: Fri, 20 May 2016 11:20:59 +0300
-Message-ID: <573EC8EB.2010102@linaro.org>
-References: <1463572208-8826-1-git-send-email-todor.tomov@linaro.org>
- <1463572208-8826-2-git-send-email-todor.tomov@linaro.org>
- <20160518231637.GA31413@rob-hp-laptop> <573D7601.1090605@linaro.org>
- <CAL_JsqJX_t9WD0gq=5A1UFQiweKi8fwjBwTdpxbV=ECTsHWOvw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJX_t9WD0gq=5A1UFQiweKi8fwjBwTdpxbV=ECTsHWOvw@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Geert Uytterhoeven <geert@linux-m68k.org>, matrandg@cisco.com, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/3] dt-bindings: reset: Add bindings for the Meson GXBB Reset Controller
+Date: Fri, 20 May 2016 10:27:54 +0200
+Message-ID: <1463732875-23141-3-git-send-email-narmstrong@baylibre.com>
+References: <1463732875-23141-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463732875-23141-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, xing.xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/2016 03:16 AM, Rob Herring wrote:
-> On Thu, May 19, 2016 at 3:14 AM, Todor Tomov <todor.tomov@linaro.org> wrote:
->> Hi Rob,
->>
->> Thank you for your time to review. My responses are below:
->>
->> On 05/19/2016 02:16 AM, Rob Herring wrote:
->>> On Wed, May 18, 2016 at 02:50:07PM +0300, Todor Tomov wrote:
->>>> Add the document for ov5645 device tree binding.
->>>>
->>>> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
->>>> ---
->>>>  .../devicetree/bindings/media/i2c/ov5645.txt       | 56 ++++++++++++++++++++++
->>>>  1 file changed, 56 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
->>>> new file mode 100644
->>>> index 0000000..8799000
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
->>>> @@ -0,0 +1,56 @@
->>>> +* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
->>>> +
->>>> +The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
->>>> +an active array size of 2592H x 1944V. It is programmable through a serial SCCB
->>>
->>> s/SCCB/I2C/ because that is the more common name.
->> Ok.
->>
->>>
->>>> +interface.
->>>> +
->>>> +Required Properties:
->>>> +- compatible: value should be "ovti,ov5645"
->>>> +- clocks: reference to the xclk clock
->>>> +- clock-names: should be "xclk"
->>>> +- assigned-clocks: reference to the xclk clock
->>>
->>> This should be optional as it only makes sense if there is more than one
->>> option.
->> I have only used assigned-clocks to specify for which clock the
->> assigned-clock-rates property is. This is the way I understood it.
->> Isn't this correct? (Also please see below.)
-> 
-> AIUI, assigned-clocks is which parent you want to assign for the clock
-> specified in "clocks". Whether you have a parent option or not is
-> board/chip dependent.
-> 
->>>> +- assigned-clock-rates: should be "23880000"
->>>
->>> Doesn't this depend on the board? Most parts take a range of
->>> frequencies. The driver should know what the range is and request a rate
->>> within this range.
->> This is the sensor external clock. Actually the driver depends on this value -
->> the sensor mode settings which the driver configures are calculated based on
->> this value. If you change this clock rate you need to change the sensor mode
->> settings. However they usually come from the vendor of the sensor so they
->> usually never change. So this clock rate for this driver is fixed to 23.88MHz
->> and is not expected to change.
-> 
-> If fixed in the driver, then it doesn't need to be in DT.
-Ok, I'll remove these two and leave the external clock value in the driver.
+Add DT bindings for the Meson GXBB SoC Reset Controller documentation and the
+associated include file.
 
-> 
->>>> +
->>>> +Optional Properties:
->>>> +- reset-gpios: Chip reset GPIO
->>>> +- pwdn-gpios: Chip power down GPIO
->>>
->>> Use enable-gpios as it is more common and would just be the inverse of
->>> this.
->> pwdn is the notation which OV use for this gpio, so I'd personally prefer
->> to keep the name. Do you think it is still better to change it?
-> 
-> Yes.
-Ok, I'll change it to enable-gpios. Thanks.
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ .../bindings/reset/amlogic,meson-gxbb-reset.txt    |  18 ++
+ .../dt-bindings/reset/amlogic,meson-gxbb-reset.h   | 199 +++++++++++++++++++++
+ 2 files changed, 217 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-gxbb-reset.txt
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
 
-> 
-> Rob
-> 
-
+diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-gxbb-reset.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-gxbb-reset.txt
+new file mode 100644
+index 0000000..0758259
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/amlogic,meson-gxbb-reset.txt
+@@ -0,0 +1,18 @@
++Amlogic Meson GXBB SoC Reset Controller
++=======================================
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
++
++Required properties:
++- compatible: Should be "amlogic,meson-gxbb-reset"
++- reg: should contain the register address base
++- #reset-cells: 1, see below
++
++example:
++
++reset: reset-controller {
++	compatible = "amlogic,meson-gxbb-reset";
++	reg = <0x0 0x04404 0x0 0x20>;
++	#reset-cells = <1>;
++};
+diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+new file mode 100644
+index 0000000..ff4e804
+--- /dev/null
++++ b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+@@ -0,0 +1,199 @@
++/*
++ * Copyright (c) 2016 BayLibre, SAS.
++ * Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#ifndef _DT_BINDINGS_AMLOGIC_MESON_GXBB_RESET_H
++#define _DT_BINDINGS_AMLOGIC_MESON_GXBB_RESET_H
++
++/*	RESET0				*/
++#define RESET_HIU		0
++/*				1	*/
++#define RESET_DOS_RESET		2
++#define RESET_DDR_TOP		3
++#define RESET_DCU_RESET		4
++#define RESET_VIU		5
++#define RESET_AIU		6
++#define RESET_VID_PLL_DIV	7
++/*				8	*/
++#define RESET_PMUX		9
++#define RESET_VENC		10
++#define RESET_ASSIST		11
++#define RESET_AFIFO2		12
++#define RESET_VCBUS		13
++/*				14	*/
++/*				15	*/
++#define RESET_GIC		16
++#define RESET_CAPB3_DECODE	17
++#define RESET_NAND_CAPB3	18
++#define RESET_HDMITX_CAPB3	19
++#define RESET_MALI_CAPB3	20
++#define RESET_DOS_CAPB3		21
++#define RESET_SYS_CPU_CAPB3	22
++#define RESET_CBUS_CAPB3	23
++#define RESET_AHB_CNTL		24
++#define RESET_AHB_DATA		25
++#define RESET_VCBUS_CLK81	26
++#define RESET_MMC		27
++#define RESET_MIPI_0		28
++#define RESET_MIPI_1		29
++#define RESET_MIPI_2		30
++#define RESET_MIPI_3		31
++/*	RESET1				*/
++#define RESET_CPPM		32
++#define RESET_DEMUX		33
++#define RESET_USB_OTG		34
++#define RESET_DDR		35
++#define RESET_AO_RESET		36
++#define RESET_BT656		37
++#define RESET_AHB_SRAM		38
++/*				39	*/
++#define RESET_PARSER		40
++#define RESET_BLKMV		41
++#define RESET_ISA		42
++#define RESET_ETHERNET		43
++#define RESET_SD_EMMC_A		44
++#define RESET_SD_EMMC_B		45
++#define RESET_SD_EMMC_C		46
++#define RESET_ROM_BOOT		47
++#define RESET_SYS_CPU_0		48
++#define RESET_SYS_CPU_1		49
++#define RESET_SYS_CPU_2		50
++#define RESET_SYS_CPU_3		51
++#define RESET_SYS_CPU_CORE_0	52
++#define RESET_SYS_CPU_CORE_1	53
++#define RESET_SYS_CPU_CORE_2	54
++#define RESET_SYS_CPU_CORE_3	55
++#define RESET_SYS_PLL_DIV	56
++#define RESET_SYS_CPU_AXI	57
++#define RESET_SYS_CPU_L2	58
++#define RESET_SYS_CPU_P		59
++#define RESET_SYS_CPU_MBIST	60
++/*				61	*/
++/*				62	*/
++/*				63	*/
++/*	RESET2				*/
++#define RESET_VD_RMEM		64
++#define RESET_AUDIN		65
++#define RESET_HDMI_TX		66
++/*				67	*/
++/*				68	*/
++/*				69	*/
++#define RESET_GE2D		70
++#define RESET_PARSER_REG	71
++#define RESET_PARSER_FETCH	72
++#define RESET_PARSER_CTL	73
++#define RESET_PARSER_TOP	74
++/*				75	*/
++/*				76	*/
++#define RESET_AO_CPU_RESET	77
++#define RESET_MALI		78
++#define RESET_HDMI_SYSTEM_RESET	79
++/*				80-95	*/
++/*	RESET3				*/
++#define RESET_RING_OSCILLATOR	96
++#define RESET_SYS_CPU		97
++#define RESET_EFUSE		98
++#define RESET_SYS_CPU_BVCI	99
++#define RESET_AIFIFO		100
++#define RESET_TVFE		101
++#define RESET_AHB_BRIDGE_CNTL	102
++/*				103	*/
++#define RESET_AUDIO_DAC		104
++#define RESET_DEMUX_TOP		105
++#define RESET_DEMUX_DES		106
++#define RESET_DEMUX_S2P_0	107
++#define RESET_DEMUX_S2P_1	108
++#define RESET_DEMUX_RESET_0	109
++#define RESET_DEMUX_RESET_1	110
++#define RESET_DEMUX_RESET_2	111
++/*				112-127	*/
++/*	RESET4				*/
++/*				128	*/
++/*				129	*/
++/*				130	*/
++/*				131	*/
++#define RESET_DVIN_RESET	132
++#define RESET_RDMA		133
++#define RESET_VENCI		134
++#define RESET_VENCP		135
++/*				136	*/
++#define RESET_VDAC		137
++#define RESET_RTC		138
++/*				139	*/
++#define RESET_VDI6		140
++#define RESET_VENCL		141
++#define RESET_I2C_MASTER_2	142
++#define RESET_I2C_MASTER_1	143
++/*				144-159	*/
++/*	RESET5				*/
++/*				160-191	*/
++/*	RESET6				*/
++#define RESET_PERIPHS_GENERAL	192
++#define RESET_PERIPHS_SPICC	193
++#define RESET_PERIPHS_SMART_CARD	194
++#define RESET_PERIPHS_SAR_ADC	195
++#define RESET_PERIPHS_I2C_MASTER_0	196
++#define RESET_SANA		197
++/*				198	*/
++#define RESET_PERIPHS_STREAM_INTERFACE	199
++#define RESET_PERIPHS_SDIO	200
++#define RESET_PERIPHS_UART_0	201
++#define RESET_PERIPHS_UART_1_2	202
++#define RESET_PERIPHS_ASYNC_0	203
++#define RESET_PERIPHS_ASYNC_1	204
++#define RESET_PERIPHS_SPI_0	205
++#define RESET_PERIPHS_SDHC	206
++#define RESET_UART_SLIP		207
++/*				208-223	*/
++/*	RESET7				*/
++#define RESET_USB_DDR_0		224
++#define RESET_USB_DDR_1		225
++#define RESET_USB_DDR_2		226
++#define RESET_USB_DDR_3		227
++/*				228	*/
++#define RESET_DEVICE_MMC_ARB	229
++/*				230	*/
++#define RESET_VID_LOCK		231
++#define RESET_A9_DMC_PIPEL	232
++/*				233-255	*/
++
++#endif
 -- 
-Best regards,
-Todor Tomov
+2.7.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
