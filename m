@@ -1,125 +1,104 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 12/12] sh: add device tree source for J2 FPGA on Mimas
- v2 board
-Date: Fri, 20 May 2016 10:17:34 +0200
-Message-ID: <CAMuHMdVr-gZbfo9hG=w5bB3_x6v67sFd2yAPLLbPyWyg-jUmug@mail.gmail.com>
-References: <cover.1463708766.git.dalias@libc.org>
-	<9960d6526523727d1bee3d11c6704e09e600c6fe.1463708766.git.dalias@libc.org>
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: Re: [PATCH v2 1/2] [media] media: i2c/ov5645: add the device tree
+ binding document
+Date: Fri, 20 May 2016 11:20:59 +0300
+Message-ID: <573EC8EB.2010102@linaro.org>
+References: <1463572208-8826-1-git-send-email-todor.tomov@linaro.org>
+ <1463572208-8826-2-git-send-email-todor.tomov@linaro.org>
+ <20160518231637.GA31413@rob-hp-laptop> <573D7601.1090605@linaro.org>
+ <CAL_JsqJX_t9WD0gq=5A1UFQiweKi8fwjBwTdpxbV=ECTsHWOvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9960d6526523727d1bee3d11c6704e09e600c6fe.1463708766.git.dalias-8zAoT0mYgF4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJX_t9WD0gq=5A1UFQiweKi8fwjBwTdpxbV=ECTsHWOvw@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Geert Uytterhoeven <geert@linux-m68k.org>, matrandg@cisco.com, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 4:53 AM, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org> wrote:
-> --- /dev/null
-> +++ b/arch/sh/boot/dts/j2_mimas_v2.dts
-> @@ -0,0 +1,87 @@
-> +/dts-v1/;
-> +
-> +/ {
-> +       compatible = "jcore,j2-soc";
-> +       model = "J2 FPGA SoC on Mimas v2 board";
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +
-> +       interrupt-parent = <&aic>;
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       device_type = "cpu";
-> +                       compatible = "jcore,j2";
-> +                       reg = < 0 >;
-> +                       clock-frequency = < 50000000 >;
-> +               };
-> +       };
-> +
-> +       memory@10000000 {
-> +               device_type = "memory";
-> +               reg = < 0x10000000 0x4000000 >;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = "/soc@abcd0000/serial@100";
-> +       };
-> +
-> +       soc@abcd0000 {
-> +               compatible = "simple-bus";
-> +               ranges = <0 0xabcd0000 0x100000>;
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +
-> +               aic: interrupt-controller {
+On 05/20/2016 03:16 AM, Rob Herring wrote:
+> On Thu, May 19, 2016 at 3:14 AM, Todor Tomov <todor.tomov@linaro.org> wrote:
+>> Hi Rob,
+>>
+>> Thank you for your time to review. My responses are below:
+>>
+>> On 05/19/2016 02:16 AM, Rob Herring wrote:
+>>> On Wed, May 18, 2016 at 02:50:07PM +0300, Todor Tomov wrote:
+>>>> Add the document for ov5645 device tree binding.
+>>>>
+>>>> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+>>>> ---
+>>>>  .../devicetree/bindings/media/i2c/ov5645.txt       | 56 ++++++++++++++++++++++
+>>>>  1 file changed, 56 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+>>>> new file mode 100644
+>>>> index 0000000..8799000
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+>>>> @@ -0,0 +1,56 @@
+>>>> +* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
+>>>> +
+>>>> +The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+>>>> +an active array size of 2592H x 1944V. It is programmable through a serial SCCB
+>>>
+>>> s/SCCB/I2C/ because that is the more common name.
+>> Ok.
+>>
+>>>
+>>>> +interface.
+>>>> +
+>>>> +Required Properties:
+>>>> +- compatible: value should be "ovti,ov5645"
+>>>> +- clocks: reference to the xclk clock
+>>>> +- clock-names: should be "xclk"
+>>>> +- assigned-clocks: reference to the xclk clock
+>>>
+>>> This should be optional as it only makes sense if there is more than one
+>>> option.
+>> I have only used assigned-clocks to specify for which clock the
+>> assigned-clock-rates property is. This is the way I understood it.
+>> Isn't this correct? (Also please see below.)
+> 
+> AIUI, assigned-clocks is which parent you want to assign for the clock
+> specified in "clocks". Whether you have a parent option or not is
+> board/chip dependent.
+> 
+>>>> +- assigned-clock-rates: should be "23880000"
+>>>
+>>> Doesn't this depend on the board? Most parts take a range of
+>>> frequencies. The driver should know what the range is and request a rate
+>>> within this range.
+>> This is the sensor external clock. Actually the driver depends on this value -
+>> the sensor mode settings which the driver configures are calculated based on
+>> this value. If you change this clock rate you need to change the sensor mode
+>> settings. However they usually come from the vendor of the sensor so they
+>> usually never change. So this clock rate for this driver is fixed to 23.88MHz
+>> and is not expected to change.
+> 
+> If fixed in the driver, then it doesn't need to be in DT.
+Ok, I'll remove these two and leave the external clock value in the driver.
 
-aic: interrupt-controller@200 {
+> 
+>>>> +
+>>>> +Optional Properties:
+>>>> +- reset-gpios: Chip reset GPIO
+>>>> +- pwdn-gpios: Chip power down GPIO
+>>>
+>>> Use enable-gpios as it is more common and would just be the inverse of
+>>> this.
+>> pwdn is the notation which OV use for this gpio, so I'd personally prefer
+>> to keep the name. Do you think it is still better to change it?
+> 
+> Yes.
+Ok, I'll change it to enable-gpios. Thanks.
 
-> +                       compatible = "jcore,aic1";
-> +                       reg = < 0x200 0x10 >;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +               };
-> +
-> +               cache-controller {
+> 
+> Rob
+> 
 
-@c0
-
-> +                       compatible = "jcore,cache";
-> +                       reg = < 0xc0 4 >;
-> +               };
-> +
-> +               timer {
-
-@200
-
-> +                       compatible = "jcore,pit";
-> +                       reg = < 0x200 0x30 >;
-> +                       interrupts = < 0x48 >;
-> +               };
-> +
-> +               spi {
-
-@40
-
-> +                       compatible = "jcore,spi2";
-> +
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       spi-max-frequency = <12500000>;
-> +
-> +                       reg = < 0x40 0x8 >;
-> +
-> +                       sdcard@1 {
-
-@0, to match reg below?
-
-> +                               compatible = "mmc-spi-slot";
-> +                               reg = <0>;
-> +                               spi-max-frequency = <12500000>;
-> +                               voltage-ranges = <3200 3400>;
-> +                               mode = <0>;
-> +                       };
-> +               };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best regards,
+Todor Tomov
