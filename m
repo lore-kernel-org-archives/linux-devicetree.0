@@ -1,35 +1,125 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 05/12] of: add J-Core SPI master bindings
-Date: Fri, 20 May 2016 10:05:02 +0200
-Message-ID: <CAMuHMdV2FRhvRoP67WJNF5STyiQg5cvAEwTQBxsODjjhWwddLg@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 12/12] sh: add device tree source for J2 FPGA on Mimas
+ v2 board
+Date: Fri, 20 May 2016 10:17:34 +0200
+Message-ID: <CAMuHMdVr-gZbfo9hG=w5bB3_x6v67sFd2yAPLLbPyWyg-jUmug@mail.gmail.com>
 References: <cover.1463708766.git.dalias@libc.org>
-	<32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
+	<9960d6526523727d1bee3d11c6704e09e600c6fe.1463708766.git.dalias@libc.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9960d6526523727d1bee3d11c6704e09e600c6fe.1463708766.git.dalias-8zAoT0mYgF4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 4:53 AM, Rich Felker <dalias@libc.org> wrote:
+On Fri, May 20, 2016 at 4:53 AM, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org> wrote:
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-> @@ -0,0 +1,23 @@
-> +Example:
+> +++ b/arch/sh/boot/dts/j2_mimas_v2.dts
+> @@ -0,0 +1,87 @@
+> +/dts-v1/;
 > +
-> +spi {
-
-spi@40
-
-> +       compatible = "jcore,spi2";
+> +/ {
+> +       compatible = "jcore,j2-soc";
+> +       model = "J2 FPGA SoC on Mimas v2 board";
+> +
 > +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +       reg = < 0x40 0x8 >;
-> +       spi-max-frequency = <12500000>;
-> +}
+> +       #size-cells = <1>;
+> +
+> +       interrupt-parent = <&aic>;
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "jcore,j2";
+> +                       reg = < 0 >;
+> +                       clock-frequency = < 50000000 >;
+> +               };
+> +       };
+> +
+> +       memory@10000000 {
+> +               device_type = "memory";
+> +               reg = < 0x10000000 0x4000000 >;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "/soc@abcd0000/serial@100";
+> +       };
+> +
+> +       soc@abcd0000 {
+> +               compatible = "simple-bus";
+> +               ranges = <0 0xabcd0000 0x100000>;
+> +
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +
+> +               aic: interrupt-controller {
+
+aic: interrupt-controller@200 {
+
+> +                       compatible = "jcore,aic1";
+> +                       reg = < 0x200 0x10 >;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <1>;
+> +               };
+> +
+> +               cache-controller {
+
+@c0
+
+> +                       compatible = "jcore,cache";
+> +                       reg = < 0xc0 4 >;
+> +               };
+> +
+> +               timer {
+
+@200
+
+> +                       compatible = "jcore,pit";
+> +                       reg = < 0x200 0x30 >;
+> +                       interrupts = < 0x48 >;
+> +               };
+> +
+> +               spi {
+
+@40
+
+> +                       compatible = "jcore,spi2";
+> +
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       spi-max-frequency = <12500000>;
+> +
+> +                       reg = < 0x40 0x8 >;
+> +
+> +                       sdcard@1 {
+
+@0, to match reg below?
+
+> +                               compatible = "mmc-spi-slot";
+> +                               reg = <0>;
+> +                               spi-max-frequency = <12500000>;
+> +                               voltage-ranges = <3200 3400>;
+> +                               mode = <0>;
+> +                       };
+> +               };
 
 Gr{oetje,eeting}s,
 
                         Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
