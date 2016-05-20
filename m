@@ -1,58 +1,78 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 11/23] ARM: dts: armadillo800eva: Fix W=1 dtc warnings
-Date: Fri, 20 May 2016 18:38:49 +0300
-Message-ID: <e0a1fbc1-ac95-2c79-65ed-d0328679bb8a@cogentembedded.com>
-References: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
- <1463728214-13838-12-git-send-email-geert+renesas@glider.be>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ASoC: wm8985: add device tree binding for WM8985
+Date: Fri, 20 May 2016 17:14:42 +0100
+Message-ID: <20160520161442.GR1646@localhost.localdomain>
+References: <1463489389-17719-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463728214-13838-12-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463489389-17719-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, plamen-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 05/20/2016 10:10 AM, Geert Uytterhoeven wrote:
-
-> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
-> Warning (unit_address_vs_reg): Node /regulator@0 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /regulator@1 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /regulator@2 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /regulator@3 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /i2c@2 has a unit name, but no reg property
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+On Tue, May 17, 2016 at 02:49:48PM +0200, Petr Kulhavy wrote:
+> Add device tree binding for the WM8985 codec driver.
+> 
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
-> v2:
->   - No changes.
-> ---
->  arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-> index 2c82dab2b6f45f9c..b3f0ac4b99bd5a3d 100644
-> --- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-[...]
-> @@ -127,7 +127,7 @@
->  		};
->  	};
->
-> -	i2c2: i2c@2 {
-> +	i2c2: i2c2 {
+> v1: initial
+> v2: no change
+> 
+>  Documentation/devicetree/bindings/sound/wm8985.txt | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/wm8985.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/wm8985.txt b/Documentation/devicetree/bindings/sound/wm8985.txt
+> new file mode 100644
+> index 000000000000..788d64766257
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/wm8985.txt
+> @@ -0,0 +1,36 @@
+> +Wolfson Microelectronics WM8985 and WM8758 audio codecs
+> +
+> +These devices support both I2C and SPI (configured with pin strapping
+> +on the board).
+> +
+> +Required properties:
+> +
+> +  - compatible : "wlf,wm8985" or "wlf,wm8758"
+> +
+> +  - reg : the I2C address of the device for I2C, the chip select
+> +          number for SPI.
+> +
+> +Pins on the device for linking into audio routes:
+> +
+> +  * LIN      : left microphone pre-amp negative input
+> +  * LIP      : left microphone pre-amp positive input
+> +  * RIN      : right microphone pre-amp negative input
+> +  * RIP      : right microphone pre-amp positive input
+> +  * L2       : left line input / secondary pre-amp positive input
+> +  * R2       : right line input / secondary pre-amp positive input
+> +  * AUXL     : left auxiliary input (WM8985 only)
+> +  * AUXR     : right auxiliary input (WM8985 only)
+> +
+> +  * HPL      : left headphone / line output (the LOUT1 pin)
+> +  * HPR      : right headphone / line output (the ROUT1 pin)
+> +  * SPKL     : left headphone / line output (the LOUT2 pin)
+> +  * SPKR     : right headphone / line output (the ROUT2 pin)
+> +  * Mic Bias : microphone bias
+> +
+> +
+> +Example:
+> +
+> +wm8758: audio-codec@1a {
+> +	compatible = "wlf,wm8758";
+> +	reg = <0x1a>;
+> +};
 
-    Not "i2c-2" as in the other patches?
+You should probably mention the regulators as well.
 
->  		#address-cells = <1>;
->  		#size-cells = <0>;
->  		compatible = "i2c-gpio";
-
-MBR, Sergei
-
+Thanks,
+Charles
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
