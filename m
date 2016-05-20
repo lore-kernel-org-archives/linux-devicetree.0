@@ -1,118 +1,54 @@
-From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: [PATCH v2 12/12] sh: add device tree source for J2 FPGA on Mimas v2  board
+From: Rich Felker <dalias@libc.org>
+Subject: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
 Date: Fri, 20 May 2016 02:53:04 +0000
-Message-ID: <9960d6526523727d1bee3d11c6704e09e600c6fe.1463708766.git.dalias@libc.org>
+Message-ID: <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
 References: <cover.1463708766.git.dalias@libc.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1463708766.git.dalias-8zAoT0mYgF4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1463708766.git.dalias@libc.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Signed-off-by: Rich Felker <dalias@libc.org>
 ---
- arch/sh/boot/dts/j2_mimas_v2.dts | 87 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100755 arch/sh/boot/dts/j2_mimas_v2.dts
+ .../bindings/interrupt-controller/jcore,aic.txt    | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
 
-diff --git a/arch/sh/boot/dts/j2_mimas_v2.dts b/arch/sh/boot/dts/j2_mimas_v2.dts
-new file mode 100755
-index 0000000..f47fb2f
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+new file mode 100644
+index 0000000..dc9fde8
 --- /dev/null
-+++ b/arch/sh/boot/dts/j2_mimas_v2.dts
-@@ -0,0 +1,87 @@
-+/dts-v1/;
++++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+@@ -0,0 +1,28 @@
++J-Core Advanced Interrupt Controller
 +
-+/ {
-+	compatible = "jcore,j2-soc";
-+	model = "J2 FPGA SoC on Mimas v2 board";
++Required properties:
 +
-+	#address-cells = <1>;
-+	#size-cells = <1>;
++- compatible : Should be "jcore,aic1" for the (obsolete) first-generation aic
++  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
++  the "aic2" core with 64 interrupts.
 +
-+	interrupt-parent = <&aic>;
++- interrupt-controller : Identifies the node as an interrupt controller
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
 +
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "jcore,j2";
-+			reg = < 0 >;
-+			clock-frequency = < 50000000 >;
-+		};
-+	};
++Additional properties required for aic1:
 +
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = < 0x10000000 0x4000000 >;
-+	};
++- reg : Memory region for configuration.
 +
-+	chosen {
-+		stdout-path = "/soc@abcd0000/serial@100";
-+	};
++- cpu-offset : For SMP, the offset to the per-cpu memory region for
++  configuration, to be scaled by the cpu number.
 +
-+	soc@abcd0000 {
-+		compatible = "simple-bus";
-+		ranges = <0 0xabcd0000 0x100000>;
 +
-+		#address-cells = <1>;
-+		#size-cells = <1>;
++Example:
 +
-+		aic: interrupt-controller {
-+			compatible = "jcore,aic1";
-+			reg = < 0x200 0x10 >;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		cache-controller {
-+			compatible = "jcore,cache";
-+			reg = < 0xc0 4 >;
-+		};
-+
-+		timer {
-+			compatible = "jcore,pit";
-+			reg = < 0x200 0x30 >;
-+			interrupts = < 0x48 >;
-+		};
-+
-+		spi {
-+			compatible = "jcore,spi2";
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			spi-max-frequency = <12500000>;
-+
-+			reg = < 0x40 0x8 >;
-+
-+			sdcard@1 {
-+				compatible = "mmc-spi-slot";
-+				reg = <0>;
-+				spi-max-frequency = <12500000>;
-+				voltage-ranges = <3200 3400>;
-+				mode = <0>;
-+			};
-+		};
-+
-+		serial@100 {
-+			clock-frequency = <125000000>;
-+			compatible = "xlnx,xps-uartlite-1.00.a";
-+			current-speed = <19200>;
-+			device_type = "serial";
-+			interrupts = < 0x12 >;
-+			port-number = <0>;
-+			reg = < 0x100 0x10 >;
-+		};
-+	};
++aic: interrupt-controller {
++	compatible = "jcore,aic2";
++	interrupt-controller;
++	#interrupt-cells = <1>;
 +};
 -- 
 2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
