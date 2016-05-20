@@ -1,7 +1,7 @@
 From: Rich Felker <dalias@libc.org>
-Subject: [PATCH v2 04/12] of: add J-Core timer bindings
+Subject: [PATCH v2 05/12] of: add J-Core SPI master bindings
 Date: Fri, 20 May 2016 02:53:04 +0000
-Message-ID: <3460e061e18c6355407b585a8394b8da8cbd9fc8.1463708766.git.dalias@libc.org>
+Message-ID: <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
 References: <cover.1463708766.git.dalias@libc.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1463708766.git.dalias@libc.org>
@@ -12,43 +12,38 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Rich Felker <dalias@libc.org>
 ---
- .../devicetree/bindings/timer/jcore,pit.txt        | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+ .../devicetree/bindings/spi/jcore,spi.txt          | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
+diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
 new file mode 100644
-index 0000000..d53759a
+index 0000000..9055e7d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-@@ -0,0 +1,28 @@
-+J-Core Programmable Interval Timer and Realtime Clock
++++ b/Documentation/devicetree/bindings/spi/jcore,spi.txt
+@@ -0,0 +1,23 @@
++J-Core SPI master
 +
 +Required properties:
 +
-+- compatible: Must be "jcore,pit".
++- compatible: Must be "jcore,spi2".
 +
-+- reg: Memory region for timer/rtc registers.
++- reg: Memory region for registers.
 +
-+- interrupts: An interrupt to assign for the timer. The actual pit
-+  core is integrated with the aic and allows the timer interrupt
-+  assignment to be programmed by software, but this property is
-+  required in order to reserve an interrupt number that doesn't
-+  conflict with other devices.
++- #address-cells: Must be 1.
 +
-+Optional properties:
++- #size-cells: Must be 0.
 +
-+- cpu-offset: For SMP, the per-cpu offset to the local timer
-+  programming memory range.
-+
++See spi-bus.txt for additional properties not specific to this device.
 +
 +Example:
 +
-+timer {
-+	compatible = "jcore,pit";
-+	reg = < 0x200 0x30 >;
-+	cpu-offset = < 0x300 >;
-+	interrupts = < 0x48 >;
-+};
++spi {
++	compatible = "jcore,spi2";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = < 0x40 0x8 >;
++	spi-max-frequency = <12500000>;
++}
 -- 
 2.8.1
