@@ -1,73 +1,118 @@
-From: Rich Felker <dalias@libc.org>
-Subject: [PATCH v2 00/12] J-core J2 cpu and SoC peripherals support
-Date: Fri, 20 May 2016 02:53:03 +0000
-Message-ID: <cover.1463708766.git.dalias@libc.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: [PATCH v2 12/12] sh: add device tree source for J2 FPGA on Mimas v2  board
+Date: Fri, 20 May 2016 02:53:04 +0000
+Message-ID: <9960d6526523727d1bee3d11c6704e09e600c6fe.1463708766.git.dalias@libc.org>
+References: <cover.1463708766.git.dalias@libc.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1463708766.git.dalias-8zAoT0mYgF4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The following patchset adds support for the J-core J2, an open-source
-VHDL reimplementation of the SH-2 ISA, and drivers for the associated
-SoC devices (interrupt controller, clocksource, and SPI).
-
-As arch/sh co-maintainer my intent is to have this merged for 4.7, but
-I realized my previous post of the patch series omitted device tree
-bindings and omitted Cc'ing of subsystem maintainers for the necessary
-clocksource, irqchip, and spi drivers.
-
-Rich Felker (12):
-  of: add vendor prefix for J-Core
-  of: add J-Core cpu bindings
-  of: add J-Core interrupt controller bindings
-  of: add J-Core timer bindings
-  of: add J-Core SPI master bindings
-  sh: add support for J-Core J2 processor
-  sh: add AT_HWCAP flag for J-Core cas.l instruction
-  irqchip: add J-Core AIC driver
-  clocksource: add J-Core PIT/RTC driver
-  spi: add driver for J-Core SPI controller
-  sh: add defconfig for J-Core J2
-  sh: add device tree source for J2 FPGA on Mimas v2 board
-
- .../bindings/interrupt-controller/jcore,aic.txt    |  28 +++
- Documentation/devicetree/bindings/jcore/cpus.txt   |  91 +++++++
- .../devicetree/bindings/spi/jcore,spi.txt          |  23 ++
- .../devicetree/bindings/timer/jcore,pit.txt        |  28 +++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/sh/Kconfig                                    |   8 +
- arch/sh/Makefile                                   |   1 +
- arch/sh/boot/dts/j2_mimas_v2.dts                   |  87 +++++++
- arch/sh/configs/j2_defconfig                       |  38 +++
- arch/sh/include/asm/processor.h                    |   2 +-
- arch/sh/include/uapi/asm/cpu-features.h            |   1 +
- arch/sh/kernel/cpu/init.c                          |   2 +-
- arch/sh/kernel/cpu/proc.c                          |   1 +
- arch/sh/kernel/cpu/sh2/entry.S                     |   5 +
- arch/sh/kernel/cpu/sh2/probe.c                     |  36 ++-
- arch/sh/mm/Makefile                                |   3 +-
- arch/sh/mm/cache-j2.c                              |  58 +++++
- arch/sh/mm/cache.c                                 |   6 +-
- drivers/clocksource/Kconfig                        |   9 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/jcore-pit.c                    | 176 ++++++++++++++
- drivers/irqchip/Kconfig                            |   6 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-jcore-aic.c                    |  95 ++++++++
- drivers/spi/Kconfig                                |   4 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-jcore.c                            | 266 +++++++++++++++++++++
- 27 files changed, 973 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
- create mode 100644 Documentation/devicetree/bindings/jcore/cpus.txt
- create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
- create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+---
+ arch/sh/boot/dts/j2_mimas_v2.dts | 87 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
  create mode 100755 arch/sh/boot/dts/j2_mimas_v2.dts
- create mode 100644 arch/sh/configs/j2_defconfig
- create mode 100644 arch/sh/mm/cache-j2.c
- create mode 100644 drivers/clocksource/jcore-pit.c
- create mode 100644 drivers/irqchip/irq-jcore-aic.c
- create mode 100644 drivers/spi/spi-jcore.c
 
+diff --git a/arch/sh/boot/dts/j2_mimas_v2.dts b/arch/sh/boot/dts/j2_mimas_v2.dts
+new file mode 100755
+index 0000000..f47fb2f
+--- /dev/null
++++ b/arch/sh/boot/dts/j2_mimas_v2.dts
+@@ -0,0 +1,87 @@
++/dts-v1/;
++
++/ {
++	compatible = "jcore,j2-soc";
++	model = "J2 FPGA SoC on Mimas v2 board";
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	interrupt-parent = <&aic>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "jcore,j2";
++			reg = < 0 >;
++			clock-frequency = < 50000000 >;
++		};
++	};
++
++	memory@10000000 {
++		device_type = "memory";
++		reg = < 0x10000000 0x4000000 >;
++	};
++
++	chosen {
++		stdout-path = "/soc@abcd0000/serial@100";
++	};
++
++	soc@abcd0000 {
++		compatible = "simple-bus";
++		ranges = <0 0xabcd0000 0x100000>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		aic: interrupt-controller {
++			compatible = "jcore,aic1";
++			reg = < 0x200 0x10 >;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++		};
++
++		cache-controller {
++			compatible = "jcore,cache";
++			reg = < 0xc0 4 >;
++		};
++
++		timer {
++			compatible = "jcore,pit";
++			reg = < 0x200 0x30 >;
++			interrupts = < 0x48 >;
++		};
++
++		spi {
++			compatible = "jcore,spi2";
++
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			spi-max-frequency = <12500000>;
++
++			reg = < 0x40 0x8 >;
++
++			sdcard@1 {
++				compatible = "mmc-spi-slot";
++				reg = <0>;
++				spi-max-frequency = <12500000>;
++				voltage-ranges = <3200 3400>;
++				mode = <0>;
++			};
++		};
++
++		serial@100 {
++			clock-frequency = <125000000>;
++			compatible = "xlnx,xps-uartlite-1.00.a";
++			current-speed = <19200>;
++			device_type = "serial";
++			interrupts = < 0x12 >;
++			port-number = <0>;
++			reg = < 0x100 0x10 >;
++		};
++	};
++};
 -- 
 2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
