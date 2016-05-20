@@ -1,41 +1,47 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-V2 1/6] dt: bindings: add bcm2835-memory-controller
- documentation
-Date: Fri, 20 May 2016 14:16:45 -0500
-Message-ID: <20160520191645.GA14779@rob-hp-laptop>
-References: <1463586030-2778-1-git-send-email-kernel@martin.sperl.org>
- <1463586030-2778-2-git-send-email-kernel@martin.sperl.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [RFC-PATCH 0/2] ASoC: simple_card: support for
+ hw-params rules
+Date: Fri, 20 May 2016 21:16:09 +0200
+Message-ID: <573F6279.8040008@metafoo.de>
+References: <1463747445-14167-1-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463586030-2778-2-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+In-Reply-To: <1463747445-14167-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 03:40:25PM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+On 05/20/2016 02:30 PM, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
 > From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 > 
-> Add memory controller dt-binding documentation for the
-> bcm2835 soc.
+> Simple_card does require under some circumstances the ability
+> to configure certain hw_parameters based on clocks, bits, channels.
 > 
-> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> This patchset adds a generic way to configure these kind of things
+> via the device tree easily. This patchset implements this
+> for simple_card, but other drivers can just as easily make use of
+> this.
 > 
-> Changelog:
->   V2 -> V3: added additional clock
-> 	      (for the Controller internal PLL)
-> 	    added clock-names
-> 	    added additional register ranges for the
-> 	      SDRAM Adress and Data PHY
-> 	    added reg-names
-> ---
->  .../memory-controllers/brcm,bcm2835-sdram.txt      | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/brcm,bcm2835-sdram.txt
+> For now we have the following matchers and actions:
+> * matchers:
+>   * match_sample_bits
+>   * match_rate
+>   * match_channels
+> * actions:
+>   * set_fixed_bclk_size
+> 
+> As a note: the available matching rules and action rules right now
+> are hard-coded, but this could in principle get extended to be more
+> dynamic via kallsyms_lookup_name that would lookup the requested
+> symbol and assume it is a struct asoc_generic_hw_params_method,
+> on which it could apply several sanity-checks before using
+> the pointers for real.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+How about allowing to embed eBPF bytecode in the DT that can be installed as
+a constraint set? This would allow maximum for flexibility and also make the
+implementation a lot easier.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
