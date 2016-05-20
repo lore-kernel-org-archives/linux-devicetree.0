@@ -1,44 +1,95 @@
 From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 3/4] ARM: dts: vfxxx: Add device tree node required by Vybrid SoC driver
-Date: Fri, 20 May 2016 15:32:04 +0530
-Message-ID: <94eb84f49274732dce3390a217e4f37a81e50373.1463737502.git.maitysanchayan@gmail.com>
-References: <cover.1463737502.git.maitysanchayan@gmail.com>
+Subject: [PATCH v3 0/4] Implement SoC driver for Vybrid
+Date: Fri, 20 May 2016 15:32:01 +0530
+Message-ID: <cover.1463737502.git.maitysanchayan@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1463737502.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1463737502.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1463737502.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: arnd-r2nGTMty4D4@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: stefan-XLVq0VzYD2Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a device tree node which will be used to bind the Vybrid
-SoC driver and provide information adhering to the following:
+Hello,
+
+This third patch series is rebased on top of shawn's for-next branch
+and tested on Colibri Vybrid VF50 and VF61 modules.
+
+This patchset implements SoC bus support for Freescale Vybrid platform,
+implementing the following
 https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-devices-soc
 
-Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/vfxxx.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This a reworked version of an older patchset series posted in June 2015
+which was at v5 then [1]. Since the NVMEM framework was then getting
+introduced, we decided that first a NVMEM driver for OCOTP peripheral
+being in place would be better.
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 6c5222e..24979d6 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -770,5 +770,13 @@
- 			compatible = "iio-hwmon";
- 			io-channels = <&adc0 16>, <&adc1 16>;
- 		};
-+
-+		vf610-soc {
-+			compatible = "fsl,vf610-soc";
-+			rom-revision = <&ocrom>;
-+			mscm = <&mscm_cpucfg>;
-+			nvmem-cells = <&ocotp_cfg0>, <&ocotp_cfg1>;
-+			nvmem-cell-names = "cfg0", "cfg1";
-+		};
- 	};
- };
+Compared to the older revisions, this driver now relies on NVMEM
+consumer API using the NVMEM based vf610_ocotp driver which has
+already been in mainline for a while now.
+
+One point on which we were not sure here is whether we really should
+introduce a new Kconfig symbol as being introduced here. While we
+could just enable it when SOC_VF610 is selected, this however would
+introduce circular dependencies.
+
+Feedback is most welcome.
+
+@Rob Herring
+Does this patchset address the concerns you had?
+
+Changes since v2:
+1. Remove syscon_regmap_read_from_offset function and use the
+available syscon functions
+2. Remove fsl,vf610-soc-bus and related bindings at SoC node
+level and introduce a fsl,vf610-soc node which is used by the
+driver to bind and has all the required phandles plus the NVMEM
+consumer handles.
+3. Fix memory leak. of_node_put was not called for returned node
+of of_parse_phandle and memory allocated by nvmem_cell_read was
+not freed explicitly in return error paths.
+
+Changes since v1:
+Add device tree binding documentation.
+
+2016: v2 patchset
+https://lkml.org/lkml/2016/5/2/69
+
+2016: v1 patchset
+https://lkml.org/lkml/2016/3/11/132
+
+[1] Older v5:
+http://lkml.iu.edu/hypermail/linux/kernel/1506.0/03787.html
+Even earlier versions:
+Version 4 of the patchset can be found here
+https://lkml.org/lkml/2015/5/26/199
+Version 3 of the patchset can be found here
+http://www.spinics.net/lists/arm-kernel/msg420847.html
+Version 2 of the patchset can be found here
+http://www.spinics.net/lists/devicetree/msg80654.html
+Version 1 of the patchset can be found here
+http://www.spinics.net/lists/devicetree/msg80257.html
+The RFC version can be found here
+https://lkml.org/lkml/2015/5/11/13
+
+Regards,
+Sanchayan.
+
+Sanchayan Maity (4):
+  ARM: dts: vfxxx: Add device tree node for OCOTP
+  ARM: dts: vfxxx: Add On-Chip ROM node for Vybrid
+  ARM: dts: vfxxx: Add device tree node required by Vybrid SoC driver
+  soc: Add SoC driver for Freescale Vybrid platform
+
+ .../bindings/arm/freescale/fsl,vf610-soc.txt       |  20 +++
+ arch/arm/boot/dts/vfxxx.dtsi                       |  29 +++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/fsl/Kconfig                            |  10 ++
+ drivers/soc/fsl/Makefile                           |   1 +
+ drivers/soc/fsl/soc-vf610.c                        | 198 +++++++++++++++++++++
+ 6 files changed, 259 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+ create mode 100644 drivers/soc/fsl/Kconfig
+ create mode 100644 drivers/soc/fsl/soc-vf610.c
+
 -- 
 2.8.2
 
