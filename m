@@ -1,116 +1,80 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 00/23] ARM/arm64: dts: renesas: Fix W=1 dtc warnings
-Date: Fri, 20 May 2016 09:09:51 +0200
-Message-ID: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 02/23] ARM: dts: r8a73a4: Fix W=1 dtc warnings
+Date: Fri, 20 May 2016 09:09:53 +0200
+Message-ID: <1463728214-13838-3-git-send-email-geert+renesas@glider.be>
+References: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus, Morimoto-san, Rob,
+Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /cache-controller@1 has a unit name, but no reg property
 
-This patch series fixes the new warnings related to Renesas arm32/arm64
-DTSes that can be seen in -next using "make W=1 dtbs", courtesy of
-commit b993734718c01064 ("scripts/dtc: Update to upstream version
-53bf130b1cdd") in Rob herring's for-next branch. For testing, you can just
-cherry-pick that commit (showing the warning for W=1 only was a separate
-commit).
+Move the cache-controller nodes under the cpus node, and make their
+unit names and reg properties match the MPIDR values.
 
-All warnings were of the form:
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Add missing 0x-prefix to cache-controller reg property.
+---
+ arch/arm/boot/dts/r8a73a4.dtsi | 34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-    Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit name, but no reg property
-    Warning (unit_address_vs_reg): Node /cache-controller has a reg or ranges property, but no unit name
-    Warning (unit_address_vs_reg): Node /clocks@e0110000/iic0_sclkdiv has a reg or ranges property, but no unit name
-    Warning (unit_address_vs_reg): Node /i2c@2 has a unit name, but no reg property
-    Warning (unit_address_vs_reg): Node /keyboard/button@1 has a unit name, but no reg property
-    Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
-    Warning (unit_address_vs_reg): Node /pfc@e0140200/serial@e1030000 has a unit name, but no reg property
-    Warning (unit_address_vs_reg): Node /regulator@0 has a unit name, but no reg property
-    Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@0 has a unit name, but no reg property
-    Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,dvc/dvc@0 has a unit name, but no reg property
-    Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,mix/mix@0 has a unit name, but no reg property
-    Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@0 has a unit name, but no reg property
-    Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@0 has a unit name, but no reg property
-
-Fixes:
-  - For cache-controllers of Cortex A7, A15, A53, and A57, I moved them
-    inside the /cpus node, and made their unit names and reg properties
-    match the MPIDR values,
-  - For clocks, I added the missing unit names,
-  - For regulators, i2c-gpios buses, and sound nodes, I (more-or-less)
-    replaced the '@' by a dash,
-  - For buttons, I changed the node name to match the key events,
-  - For pinctrl, I changed the node name to the device name.
-
-Note that to get rid of all warnings for the /memory node,
-arch/arm/boot/dts/skeleton.dtsi should be fixed, too.
-
-Changes compared to v1:
-  - Add missing 0x-prefix to non-zero cache-controller reg properties,
-  - Change regulator names from fixedregulator3v3 to regulator-3v3.
-
-Morimoto-san: If this is accepted, the examples in
-Documentation/devicetree/bindings/sound/renesas,rsnd.txt should be
-updated, too.
-
-Boot-tested on r8a73a4/ape6evm, r8a7740/armadillo, r8a7791/koelsch,
-sh73a0/kzm9g, r8a7795/salvator-x. I didn't test sound, but the kernel
-log didn't show any failures.
-
-The patches are against renesas-devel-20160509-v4.6-rc7.
-
-Thanks for your comments!
-
-Geert Uytterhoeven (23):
-  ARM: dts: emev2: Fix W=1 dtc warnings
-  ARM: dts: r8a73a4: Fix W=1 dtc warnings
-  ARM: dts: r8a7740: Fix W=1 dtc warnings
-  ARM: dts: r8a7778: Fix W=1 dtc warnings
-  ARM: dts: r8a7790: Fix W=1 dtc warnings
-  ARM: dts: r8a7791: Fix W=1 dtc warnings
-  ARM: dts: r8a7793: Fix W=1 dtc warnings
-  ARM: dts: r8a7794: Fix W=1 dtc warnings
-  ARM: dts: sh73a0: Fix W=1 dtc warnings
-  ARM: dts: ape6evm: Fix W=1 dtc warnings
-  ARM: dts: armadillo800eva: Fix W=1 dtc warnings
-  ARM: dts: bockw: Fix W=1 dtc warnings
-  ARM: dts: genmai: Fix W=1 dtc warnings
-  ARM: dts: gose: Fix W=1 dtc warnings
-  ARM: dts: koelsch: Fix W=1 dtc warnings
-  ARM: dts: kzm9d: Fix W=1 dtc warnings
-  ARM: dts: kzm9g: Fix W=1 dtc warnings
-  ARM: dts: lager: Fix W=1 dtc warnings
-  ARM: dts: marzen: Fix W=1 dtc warnings
-  ARM: dts: porter: Fix W=1 dtc warnings
-  ARM: dts: silk: Fix W=1 dtc warnings
-  arm64: dts: r8a7795: Fix W=1 dtc warnings
-  arm64: dts: salvator-x: Fix W=1 dtc warnings
-
- arch/arm/boot/dts/emev2-kzm9d.dts                  | 16 ++--
- arch/arm/boot/dts/emev2.dtsi                       | 26 +++---
- arch/arm/boot/dts/r7s72100-genmai.dts              |  2 +-
- arch/arm/boot/dts/r8a73a4-ape6evm.dts              |  8 +-
- arch/arm/boot/dts/r8a73a4.dtsi                     | 34 ++++----
- arch/arm/boot/dts/r8a7740-armadillo800eva.dts      | 12 +--
- arch/arm/boot/dts/r8a7740.dtsi                     |  2 +-
- arch/arm/boot/dts/r8a7778-bockw.dts                |  4 +-
- arch/arm/boot/dts/r8a7778.dtsi                     | 28 +++----
- arch/arm/boot/dts/r8a7779-marzen.dts               |  4 +-
- arch/arm/boot/dts/r8a7790-lager.dts                | 20 ++---
- arch/arm/boot/dts/r8a7790.dtsi                     | 94 +++++++++++-----------
- arch/arm/boot/dts/r8a7791-koelsch.dts              | 12 +--
- arch/arm/boot/dts/r8a7791-porter.dts               |  8 +-
- arch/arm/boot/dts/r8a7791.dtsi                     | 79 +++++++++---------
- arch/arm/boot/dts/r8a7793-gose.dts                 | 12 +--
- arch/arm/boot/dts/r8a7793.dtsi                     | 59 +++++++-------
- arch/arm/boot/dts/r8a7794-silk.dts                 |  6 +-
- arch/arm/boot/dts/r8a7794.dtsi                     | 13 +--
- arch/arm/boot/dts/sh73a0-kzm9g.dts                 | 10 +--
- arch/arm/boot/dts/sh73a0.dtsi                      |  2 +-
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |  8 +-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 70 ++++++++--------
- 23 files changed, 269 insertions(+), 260 deletions(-)
-
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 6954912a37537939..ca8672778fe067e1 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -31,6 +31,24 @@
+ 			power-domains = <&pd_a2sl>;
+ 			next-level-cache = <&L2_CA15>;
+ 		};
++
++		L2_CA15: cache-controller@0 {
++			compatible = "cache";
++			reg = <0>;
++			clocks = <&cpg_clocks R8A73A4_CLK_Z>;
++			power-domains = <&pd_a3sm>;
++			cache-unified;
++			cache-level = <2>;
++		};
++
++		L2_CA7: cache-controller@100 {
++			compatible = "cache";
++			reg = <0x100>;
++			clocks = <&cpg_clocks R8A73A4_CLK_Z2>;
++			power-domains = <&pd_a3km>;
++			cache-unified;
++			cache-level = <2>;
++		};
+ 	};
+ 
+ 	ptm {
+@@ -46,22 +64,6 @@
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
+ 
+-	L2_CA15: cache-controller@0 {
+-		compatible = "cache";
+-		clocks = <&cpg_clocks R8A73A4_CLK_Z>;
+-		power-domains = <&pd_a3sm>;
+-		cache-unified;
+-		cache-level = <2>;
+-	};
+-
+-	L2_CA7: cache-controller@1 {
+-		compatible = "cache";
+-		clocks = <&cpg_clocks R8A73A4_CLK_Z2>;
+-		power-domains = <&pd_a3km>;
+-		cache-unified;
+-		cache-level = <2>;
+-	};
+-
+ 	dbsc1: memory-controller@e6790000 {
+ 		compatible = "renesas,dbsc-r8a73a4";
+ 		reg = <0 0xe6790000 0 0x10000>;
 -- 
 1.9.1
