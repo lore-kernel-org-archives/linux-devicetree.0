@@ -1,49 +1,73 @@
 From: Rich Felker <dalias@libc.org>
-Subject: [PATCH v2 05/12] of: add J-Core SPI master bindings
-Date: Fri, 20 May 2016 02:53:04 +0000
-Message-ID: <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
-References: <cover.1463708766.git.dalias@libc.org>
+Subject: [PATCH v2 00/12] J-core J2 cpu and SoC peripherals support
+Date: Fri, 20 May 2016 02:53:03 +0000
+Message-ID: <cover.1463708766.git.dalias@libc.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1463708766.git.dalias@libc.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rich Felker <dalias@libc.org>
----
- .../devicetree/bindings/spi/jcore,spi.txt          | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
+The following patchset adds support for the J-core J2, an open-source
+VHDL reimplementation of the SH-2 ISA, and drivers for the associated
+SoC devices (interrupt controller, clocksource, and SPI).
 
-diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-new file mode 100644
-index 0000000..9055e7d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-@@ -0,0 +1,23 @@
-+J-Core SPI master
-+
-+Required properties:
-+
-+- compatible: Must be "jcore,spi2".
-+
-+- reg: Memory region for registers.
-+
-+- #address-cells: Must be 1.
-+
-+- #size-cells: Must be 0.
-+
-+See spi-bus.txt for additional properties not specific to this device.
-+
-+Example:
-+
-+spi {
-+	compatible = "jcore,spi2";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = < 0x40 0x8 >;
-+	spi-max-frequency = <12500000>;
-+}
+As arch/sh co-maintainer my intent is to have this merged for 4.7, but
+I realized my previous post of the patch series omitted device tree
+bindings and omitted Cc'ing of subsystem maintainers for the necessary
+clocksource, irqchip, and spi drivers.
+
+Rich Felker (12):
+  of: add vendor prefix for J-Core
+  of: add J-Core cpu bindings
+  of: add J-Core interrupt controller bindings
+  of: add J-Core timer bindings
+  of: add J-Core SPI master bindings
+  sh: add support for J-Core J2 processor
+  sh: add AT_HWCAP flag for J-Core cas.l instruction
+  irqchip: add J-Core AIC driver
+  clocksource: add J-Core PIT/RTC driver
+  spi: add driver for J-Core SPI controller
+  sh: add defconfig for J-Core J2
+  sh: add device tree source for J2 FPGA on Mimas v2 board
+
+ .../bindings/interrupt-controller/jcore,aic.txt    |  28 +++
+ Documentation/devicetree/bindings/jcore/cpus.txt   |  91 +++++++
+ .../devicetree/bindings/spi/jcore,spi.txt          |  23 ++
+ .../devicetree/bindings/timer/jcore,pit.txt        |  28 +++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/sh/Kconfig                                    |   8 +
+ arch/sh/Makefile                                   |   1 +
+ arch/sh/boot/dts/j2_mimas_v2.dts                   |  87 +++++++
+ arch/sh/configs/j2_defconfig                       |  38 +++
+ arch/sh/include/asm/processor.h                    |   2 +-
+ arch/sh/include/uapi/asm/cpu-features.h            |   1 +
+ arch/sh/kernel/cpu/init.c                          |   2 +-
+ arch/sh/kernel/cpu/proc.c                          |   1 +
+ arch/sh/kernel/cpu/sh2/entry.S                     |   5 +
+ arch/sh/kernel/cpu/sh2/probe.c                     |  36 ++-
+ arch/sh/mm/Makefile                                |   3 +-
+ arch/sh/mm/cache-j2.c                              |  58 +++++
+ arch/sh/mm/cache.c                                 |   6 +-
+ drivers/clocksource/Kconfig                        |   9 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/jcore-pit.c                    | 176 ++++++++++++++
+ drivers/irqchip/Kconfig                            |   6 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-jcore-aic.c                    |  95 ++++++++
+ drivers/spi/Kconfig                                |   4 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-jcore.c                            | 266 +++++++++++++++++++++
+ 27 files changed, 973 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+ create mode 100644 Documentation/devicetree/bindings/jcore/cpus.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+ create mode 100755 arch/sh/boot/dts/j2_mimas_v2.dts
+ create mode 100644 arch/sh/configs/j2_defconfig
+ create mode 100644 arch/sh/mm/cache-j2.c
+ create mode 100644 drivers/clocksource/jcore-pit.c
+ create mode 100644 drivers/irqchip/irq-jcore-aic.c
+ create mode 100644 drivers/spi/spi-jcore.c
+
 -- 
 2.8.1
