@@ -1,57 +1,59 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2 V3] dt: add Atmel Captouch bindings
-Date: Fri, 20 May 2016 09:16:03 -0700
-Message-ID: <20160520161603.GA14951@dtor-ws>
-References: <1463432094-146726-1-git-send-email-grundler@chromium.org>
- <20160518164404.GA31862@rob-hp-laptop>
- <20160518215914.GA4081@dtor-ws>
- <CAL_Jsq+zBQ-Z3eEouQHxSiH9jxbTMYuGUurnXwiAoXijgC3MfA@mail.gmail.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ASoC: wm8985: add device-tree support
+Date: Fri, 20 May 2016 17:21:28 +0100
+Message-ID: <20160520162128.GS1646@localhost.localdomain>
+References: <1463489389-17719-1-git-send-email-petr@barix.com>
+ <1463489389-17719-2-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+zBQ-Z3eEouQHxSiH9jxbTMYuGUurnXwiAoXijgC3MfA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Grant Grundler <grundler@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Hung-yu Wu <hywu@google.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
+In-Reply-To: <1463489389-17719-2-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, plamen-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 07:56:51AM -0500, Rob Herring wrote:
-> On Wed, May 18, 2016 at 4:59 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> > On Wed, May 18, 2016 at 11:44:04AM -0500, Rob Herring wrote:
-> >> On Mon, May 16, 2016 at 01:54:53PM -0700, Grant Grundler wrote:
-> >> > From: Daniel Hung-yu Wu <hywu@google.com>
-> >> >
-> >> > Add binding for Atmel Capacitive Touch Button device.
-> >> >
-> >> > Signed-off-by: Daniel Hung-yu Wu <hywu@google.com>
-> >> > Signed-off-by: Grant Grundler <grundler@chromium.org>
-> >> > ---
-> >> >  .../devicetree/bindings/input/atmel,captouch.txt   | 36 ++++++++++++++++++++++
-> >> >  1 file changed, 34 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/input/atmel,captouch.txt
-> >>
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> >
-> > Folded into the driver patch and applied.
+On Tue, May 17, 2016 at 02:49:49PM +0200, Petr Kulhavy wrote:
+> Add device-tree support to the WM8985 driver.
 > 
-> Folded why? Please don't do that. You should be committing what is
-> posted as is for the most part. We specifically ask that binding
-> changes are kept separate commits. It also messes up the ability to
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> ---
+> v1: initial
+> v2: add missing of_match_ptr()
+>     use chip type enum instead of chip structure
+> 
+>  sound/soc/codecs/wm8985.c | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/wm8985.c b/sound/soc/codecs/wm8985.c
+> index 436c7e2c5a0b..0b2dd2bc6fff 100644
+> --- a/sound/soc/codecs/wm8985.c
+> +++ b/sound/soc/codecs/wm8985.c
+> @@ -32,6 +32,7 @@
+>  #include <sound/soc.h>
+>  #include <sound/initval.h>
+>  #include <sound/tlv.h>
+> +#include <linux/of_device.h>
+>  
+>  #include "wm8985.h"
+>  
+> @@ -1174,10 +1175,21 @@ static const struct regmap_config wm8985_regmap = {
+>  	.num_reg_defaults = ARRAY_SIZE(wm8985_reg_defaults),
+>  };
+>  
+> +static enum wm8985_type wm8985_data = WM8985;
+> +static enum wm8985_type wm8758_data = WM8758;
+> +
+> +static const struct of_device_id wm8985_of_match[] = {
+> +	{ .compatible = "wlf,wm8985", .data = &wm8985_data},
+> +	{ .compatible = "wlf,wm8758", .data = &wm8758_data},
 
-I know that you ask for binding docs to be posted separately (I guess
-so that devicetree list is not overrun with driver code mails), but
-logically driver patch and binding doc patch are a single change and
-should be committed together, so that when I am researching the history
-I can easily see what was introduced and when. You do not require header
-changes to be submitted separately form .c files, do you?
+You can probably just use (void *)WM8985 instead here.
 
-> correlate git commits to patchworks or mail searches.
-
-The fact that it was applied can be found in mail archives.
-
-Thanks.
-
--- 
-Dmitry
+Thanks,
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
