@@ -1,54 +1,40 @@
-From: Rich Felker <dalias@libc.org>
-Subject: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
-Date: Fri, 20 May 2016 02:53:04 +0000
-Message-ID: <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: [PATCH v2 01/12] of: add vendor prefix for J-Core
+Date: Fri, 20 May 2016 02:53:03 +0000
+Message-ID: <b6d33800300bde8f1d9a7b88a715d741548fad4a.1463708766.git.dalias@libc.org>
 References: <cover.1463708766.git.dalias@libc.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1463708766.git.dalias@libc.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1463708766.git.dalias-8zAoT0mYgF4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rich Felker <dalias@libc.org>
----
- .../bindings/interrupt-controller/jcore,aic.txt    | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+The J-Core project (j-core.org) produces open source cpu and SoC
+peripheral cores synthesizable as FPGA bitstreams or ASICs.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-new file mode 100644
-index 0000000..dc9fde8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-@@ -0,0 +1,28 @@
-+J-Core Advanced Interrupt Controller
-+
-+Required properties:
-+
-+- compatible : Should be "jcore,aic1" for the (obsolete) first-generation aic
-+  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
-+  the "aic2" core with 64 interrupts.
-+
-+- interrupt-controller : Identifies the node as an interrupt controller
-+
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 1.
-+
-+Additional properties required for aic1:
-+
-+- reg : Memory region for configuration.
-+
-+- cpu-offset : For SMP, the offset to the per-cpu memory region for
-+  configuration, to be scaled by the cpu number.
-+
-+
-+Example:
-+
-+aic: interrupt-controller {
-+	compatible = "jcore,aic2";
-+	interrupt-controller;
-+	#interrupt-cells = <1>;
-+};
+Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 86740d4..9c070b8 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -126,6 +126,7 @@ invensense	InvenSense Inc.
+ isee	ISEE 2007 S.L.
+ isil	Intersil
+ issi	Integrated Silicon Solutions Inc.
++jcore	J-Core.org
+ jedec	JEDEC Solid State Technology Association
+ karo	Ka-Ro electronics GmbH
+ keymile	Keymile GmbH
 -- 
 2.8.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
