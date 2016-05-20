@@ -1,48 +1,49 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: rockchip: fixes the spi compatible for rk3036
-Date: Fri, 20 May 2016 07:56:22 +0800
-Message-ID: <1463702182-5188-3-git-send-email-wxt@rock-chips.com>
-References: <1463702182-5188-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463702182-5188-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 5/5] mmc: sdhci-of-arasan: implement enhanced strobe callback
+Date: Thu, 19 May 2016 17:11:40 -0700
+Message-ID: <CAD=FV=VU7cY+jQ3Tys5vLY_=pP-w5-cKxNTs5JBRxkwr+nVjmQ@mail.gmail.com>
+References: <1462871343-32361-1-git-send-email-shawn.lin@rock-chips.com> <1462871407-32566-1-git-send-email-shawn.lin@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462871407-32566-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-That's seem the incorrect string to match the spi driver.
+Hi,
 
-Fixes commit f629fcfab2cd
-("ARM: dts: rockchip: support the spi for rk3036")
+On Tue, May 10, 2016 at 2:10 AM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+> Currently sdhci-arasan 5.1 can support enhanced strobe function,
+> and we now limit it just for "arasan,sdhci-5.1". Add
+> mmc-hs400-enhanced-strobe in DT to enable the function if we'r sure
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+nit:s/we'r/we're/
 
----
+[ ... ]
+> @@ -79,6 +81,21 @@ static void sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int clock)
+>         }
+>  }
+>
+> +static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
+> +                                       struct mmc_ios *ios)
+> +{
+> +       u32 vendor;
+> +       struct sdhci_host *host = mmc_priv(mmc);
+> +
+> +       vendor = readl(host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
+> +       if (ios->enhanced_strobe)
+> +               vendor |= VENDOR_ENHANCED_STROBE;
+> +       else
+> +               vendor &= (~VENDOR_ENHANCED_STROBE);
 
-Changes in v2: None
+nit: no extra parentheses:
 
- arch/arm/boot/dts/rk3036.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  vendor &= ~VENDOR_ENHANCED_STROBE;
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index d0f4bb7..a30700a 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -431,7 +431,7 @@
- 	};
- 
- 	spi: spi@20074000 {
--		compatible = "rockchip,rockchip-spi";
-+		compatible = "rockchip,rk3036-spi";
- 		reg = <0x20074000 0x1000>;
- 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =<&cru PCLK_SPI>, <&cru SCLK_SPI>;
--- 
-2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Other than the nits this patch looks good to me.  Feel free to add my
+Reviewed-by when nits fixed.
+
+-Doug
