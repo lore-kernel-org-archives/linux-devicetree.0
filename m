@@ -1,219 +1,85 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V5 6/7] iommu/msm: Use writel_relaxed and add a barrier
-Date: Fri, 20 May 2016 13:44:10 +0200
-Message-ID: <3164695.VzCnHHyi7r@wuerfel>
-References: <1463741694-1735-1-git-send-email-sricharan@codeaurora.org> <1463741694-1735-7-git-send-email-sricharan@codeaurora.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v4 5/5] mmc: sdhci-of-arasan: implement enhanced strobe
+ callback
+Date: Fri, 20 May 2016 14:44:34 +0300
+Message-ID: <573EF8A2.5070305@intel.com>
+References: <1463733285-770-1-git-send-email-shawn.lin@rock-chips.com>
+ <1463733377-986-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463741694-1735-7-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1463733377-986-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 May 2016 16:24:53 Sricharan R wrote:
-> While using the generic pagetable ops the tlb maintenance
-> operation gets completed in the sync callback. So use writel_relaxed
-> for all register access and add a mb() at appropriate places.
+On 20/05/16 11:36, Shawn Lin wrote:
+> Currently sdhci-arasan 5.1 can support enhanced strobe function,
+> and we now limit it just for "arasan,sdhci-5.1". Add
+> mmc-hs400-enhanced-strobe in DT to enable the function if we're
+> sure our controller can support it.
 > 
-> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
->  drivers/iommu/msm_iommu.c         |  24 +++++++--
->  drivers/iommu/msm_iommu_hw-8xxx.h | 109 ++++++++++++++++++++------------------
->  2 files changed, 79 insertions(+), 54 deletions(-)
 > 
-> diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
-> index 0299a37..dfcaeef 100644
-> --- a/drivers/iommu/msm_iommu.c
-> +++ b/drivers/iommu/msm_iommu.c
-> @@ -124,6 +124,9 @@ static void msm_iommu_reset(void __iomem *base, int ncb)
->  		SET_TLBLKCR(base, ctx, 0);
->  		SET_CONTEXTIDR(base, ctx, 0);
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/mmc/host/sdhci-of-arasan.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index b6f4c1d..533e2bc 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -25,7 +25,9 @@
+>  #include "sdhci-pltfm.h"
+>  
+>  #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
+> +#define SDHCI_ARASAN_VENDOR_REGISTER	0x78
+>  
+> +#define VENDOR_ENHANCED_STROBE		BIT(0)
+>  #define CLK_CTRL_TIMEOUT_SHIFT		16
+>  #define CLK_CTRL_TIMEOUT_MASK		(0xf << CLK_CTRL_TIMEOUT_SHIFT)
+>  #define CLK_CTRL_TIMEOUT_MIN_EXP	13
+> @@ -79,6 +81,21 @@ static void sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int clock)
 >  	}
-> +
-> +	/* Ensure completion of relaxed writes from the above SET macros */
-> +	mb();
 >  }
-
-Why do the above use the relaxed writes? Do you have any performance
-numbers showing that skipping the sync for the reset makes a measurable
-difference?
-
-How did you prove that skipping the sync before the write is safe?
-
-How about resetting the iommu less often instead?
-
->  static void __flush_iotlb(void *cookie)
-> @@ -141,6 +144,9 @@ static void __flush_iotlb(void *cookie)
->  		list_for_each_entry(master, &iommu->ctx_list, list)
->  			SET_CTX_TLBIALL(iommu->base, master->num, 0);
 >  
-> +		/* To ensure completion of TLBIALL above */
-> +		mb();
+> +static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
+> +					struct mmc_ios *ios)
+> +{
+> +	u32 vendor;
+> +	struct sdhci_host *host = mmc_priv(mmc);
 > +
->  		__disable_clocks(iommu);
+> +	vendor = readl(host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
+> +	if (ios->enhanced_strobe)
+> +		vendor |= VENDOR_ENHANCED_STROBE;
+> +	else
+> +		vendor &= ~VENDOR_ENHANCED_STROBE;
+> +
+> +	writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
+> +}
+> +
+>  static struct sdhci_ops sdhci_arasan_ops = {
+>  	.set_clock = sdhci_arasan_set_clock,
+>  	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
+> @@ -245,6 +262,9 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>  			dev_err(&pdev->dev, "phy_power_on err.\n");
+>  			goto err_phy_power;
+>  		}
+> +
+> +		host->mmc_host_ops.hs400_enhanced_strobe =
+> +					sdhci_arasan_hs400_enhanced_strobe;
 >  	}
->  fail:
-
-__disable_clocks() takes spinlocks and accesses the hardware, which
-in turn will also involve multiple syncs, so this seems like
-a premature optimization. 
-
-Have you tried just leaving the clocks enabled? I'd suspect you could
-gain more performance that way.
-
-> @@ -181,7 +187,8 @@ fail:
 >  
->  static void __flush_iotlb_sync(void *cookie)
->  {
-> -	/* To avoid a null function pointer */
-> +	/* To ensure completion of the TLBIVA in __flush_iotlb_range */
-> +	mb();
->  }
+>  	ret = sdhci_add_host(host);
+> 
 
-I don't understand the specific race from the comment.
-
-What operation comes after this that relies on __flush_iotlb_range
-having completed, and how does an mb() guarantee this?
-
-This seems to be a bug fix that is unrelated to the change to
-use writel_relaxed(), so better split it out into a separate
-patch, with a longer changeset description. Did you spot this
-race by running into incorrect data, or by inspection?
-
->  static const struct iommu_gather_ops msm_iommu_gather_ops = {
-> @@ -235,6 +242,9 @@ static void config_mids(struct msm_iommu_dev *iommu,
->  		/* Set security bit override to be Non-secure */
->  		SET_NSCFG(iommu->base, mid, 3);
->  	}
-> +
-> +	/* Ensure completion of relaxed writes from the above SET macros */
-> +	mb();
->  }
->  
-
-This looks similar to the msm_iommu_reset() case. Maybe put those
-two into one patch, or find a way to run config_mids() less often so
-it doesn't show up in the profiles any more.
-
-If you hit this often enough that it causes performance problems,
-it's more likely that there is a bug in your code than that changing
-to relaxed accessors is a good idea.
-
->  static void __reset_context(void __iomem *base, int ctx)
-> @@ -257,6 +267,9 @@ static void __reset_context(void __iomem *base, int ctx)
->  	SET_TLBFLPTER(base, ctx, 0);
->  	SET_TLBSLPTER(base, ctx, 0);
->  	SET_TLBLKCR(base, ctx, 0);
-> +
-> +	/* Ensure completion of relaxed writes from the above SET macros */
-> +	mb();
->  }
->
->  static void __program_context(void __iomem *base, int ctx,
-> @@ -305,6 +318,9 @@ static void __program_context(void __iomem *base, int ctx,
->  
->  	/* Enable the MMU */
->  	SET_M(base, ctx, 1);
-> +
-> +	/* Ensure completion of relaxed writes from the above SET macros */
-> +	mb();
->  }
->  
->  static struct iommu_domain *msm_iommu_domain_alloc(unsigned type)
-
-Maybe one more patch for these? I can see that
-__reset_context/__program_context would be run often enough to make
-a difference, though maybe not as much as the flushes.
-
-Also, split this in two patches: one that adds a comment describing
-how you proved that you don't need barriers before the writes, and
-another one adding the barrier afterwards, with a description of
-the failure scenario.
-
-> @@ -500,7 +516,8 @@ static phys_addr_t msm_iommu_iova_to_phys(struct iommu_domain *domain,
->  	/* Invalidate context TLB */
->  	SET_CTX_TLBIALL(iommu->base, master->num, 0);
->  	SET_V2PPR(iommu->base, master->num, va & V2Pxx_VA);
-> -
-> +	/* Ensure completion of relaxed writes from the above SET macros */
-> +	mb();
->  	par = GET_PAR(iommu->base, master->num);
->  
->  	/* We are dealing with a supersection */
-
-In this case, I'd say it's better to rewrite the function to avoid the
-read: iova_to_phys() should be fast, and not require hardware access.
-Getting rid of the hardware access by using an in-memory cache for
-this should gain more than just removing the barriers, as an MMIO read
-is always slow.
-
-> @@ -714,7 +731,8 @@ static int msm_iommu_probe(struct platform_device *pdev)
->  	par = GET_PAR(iommu->base, 0);
->  	SET_V2PCFG(iommu->base, 0, 0);
->  	SET_M(iommu->base, 0, 0);
-> -
-> +	/* Ensure completion of relaxed writes from the above SET macros */
-> +	mb();
->  	if (!par) {
-
-Probe() clearly isn't performance sensitive, so please back this out
-and use the non-relaxed accessors.
-
-> diff --git a/drivers/iommu/msm_iommu_hw-8xxx.h b/drivers/iommu/msm_iommu_hw-8xxx.h
-> index fc16010..fe2c5ca 100644
-> --- a/drivers/iommu/msm_iommu_hw-8xxx.h
-> +++ b/drivers/iommu/msm_iommu_hw-8xxx.h
-> @@ -24,13 +24,19 @@
->  #define GET_CTX_REG(reg, base, ctx) \
->  				(readl((base) + (reg) + ((ctx) << CTX_SHIFT)))
->  
-> -#define SET_GLOBAL_REG(reg, base, val)	writel((val), ((base) + (reg)))
-> +/*
-> + * The writes to the global/context registers needs to be synced only after
-> + * all the configuration writes are done. So use relaxed accessors and
-> + * a barrier at the end.
-> + */
-> +#define SET_GLOBAL_REG_RELAXED(reg, base, val) \
-> +			       writel_relaxed((val), ((base) + (reg)))
->  
-> -#define SET_CTX_REG(reg, base, ctx, val) \
-> -			writel((val), ((base) + (reg) + ((ctx) << CTX_SHIFT)))
-> +#define SET_CTX_REG_RELAXED(reg, base, ctx, val) \
-> +		writel_relaxed((val), ((base) + (reg) + ((ctx) << CTX_SHIFT)))
-
-Please add the relaxed accessors first in a separate patch, and then
-change over one user at a time before you remove the non-relaxed ones.
-
-It's hard to believe that all users are actually performance critical,
-so start with the ones that gain the most performance. As commented above,
-some of the conversions seem particularly fishy and it's likely that
-a slow reset() function should not be fixed by making reset() faster
-but by calling it less often.
-
->  /* Context register setters/getters */
-> -#define SET_SCTLR(b, c, v)	 SET_CTX_REG(SCTLR, (b), (c), (v))
-> -#define SET_ACTLR(b, c, v)	 SET_CTX_REG(ACTLR, (b), (c), (v))
-> -#define SET_CONTEXTIDR(b, c, v)	 SET_CTX_REG(CONTEXTIDR, (b), (c), (v))
-> -#define SET_TTBR0(b, c, v)	 SET_CTX_REG(TTBR0, (b), (c), (v))
-> -#define SET_TTBR1(b, c, v)	 SET_CTX_REG(TTBR1, (b), (c), (v))
-> +#define SET_SCTLR(b, c, v)	 SET_CTX_REG_RELAXED(SCTLR, (b), (c), (v))
-> +#define SET_ACTLR(b, c, v)	 SET_CTX_REG_RELAXED(ACTLR, (b), (c), (v))
-> +#define SET_CONTEXTIDR(b, c, v)	 SET_CTX_REG_RELAXED(CONTEXTIDR, (b), (c), (v))
-> +#define SET_TTBR0(b, c, v)	 SET_CTX_REG_RELAXED(TTBR0, (b), (c), (v))
-> +#define SET_TTBR1(b, c, v)	 SET_CTX_REG_RELAXED(TTBR1, (b), (c), (v))
-> +#define SET_TTBCR(b, c, v)	 SET_CTX_REG_RELAXED(TTBCR, (b), (c), (v))
-> +#define SET_PAR(b, c, v)	 SET_CTX_REG_RELAXED(PAR, (b), (c), (v))
-
-Can you just remove those macros, and open-code the function calls?
-
-This is an unnecessary obfuscation that now also hides the fact that you
-are using relaxed accessors.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
