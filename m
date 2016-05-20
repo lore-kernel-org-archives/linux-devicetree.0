@@ -1,40 +1,28 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: [PATCH v2 3/3] ARM: dts: NSP: Add PWM Support to DT
-Date: Fri, 20 May 2016 14:05:52 -0400
-Message-ID: <1463767552-30670-4-git-send-email-yendapally.reddy@broadcom.com>
-References: <1463767552-30670-1-git-send-email-yendapally.reddy@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463767552-30670-1-git-send-email-yendapally.reddy@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: NS2: Add CCI-400 PMU support
+Date: Fri, 20 May 2016 11:45:39 -0700
+Message-ID: <573F5B53.2090304@gmail.com>
+References: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
+ <1463007369-13071-2-git-send-email-jonmason@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463007369-13071-2-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add PWM support to the device tree for the Broadcom Northstar Plus SoC.
+On 05/11/2016 03:56 PM, Jon Mason wrote:
+> Add support to the Northstar 2 Device tree file for the ARM CCI-400 PMU.
+> 
+> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index def9e78..f9c8341 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -206,6 +206,14 @@
- 			brcm,nand-has-wp;
- 		};
- 
-+		pwm: pwm@31000 {
-+			compatible = "brcm,iproc-pwm";
-+			reg = <0x31000 0x28>;
-+			clocks = <&osc>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
- 		ccbtimer0: timer@34000 {
- 			compatible = "arm,sp804";
- 			reg = <0x34000 0x1000>;
+Also applied to devicetree-arm64/next, thanks Jon!
 -- 
-2.1.0
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
