@@ -1,134 +1,143 @@
-From: Matt Ranostay <mranostay@gmail.com>
-Subject: Re: [PATCH v2 2/7] iio: inv_mpu6050: Initial regcache support
-Date: Thu, 19 May 2016 19:34:10 -0700
-Message-ID: <CAKzfze8dDENOvaDf_VH8MRy-HEmCu3q_aGEzD+GYR7B1Ob2rBw@mail.gmail.com>
-References: <cover.1463582011.git.leonard.crestez@intel.com> <e29974565e941e37684fcd883330915cfaf2cf47.1463582011.git.leonard.crestez@intel.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: drivers/of: crash on boot
+Date: Fri, 20 May 2016 12:40:22 +1000
+Message-ID: <20160520024022.GA5621@gwshan>
+References: <573C8B6C.6030900@oracle.com>
+ <CAL_JsqJsjh+Shk1nD5YQeQ=6B1MZOyEj5oX-q_xKH642toURdA@mail.gmail.com>
+ <80967a3a-3b97-e131-97e5-f449f567b01c@nvidia.com>
+ <d0e2564c-c8d4-2c4c-f194-60b43b0ab80e@nvidia.com>
+ <CAL_JsqKn1BLCiW=CBch4G8s=YheXFVouhz+JVvB6j8-4W-UK6A@mail.gmail.com>
+ <CAL_JsqLdpq6bePK2c6Dhub9cZvMV1JVqC=RH8pomCmpszYugYg@mail.gmail.com>
+ <20160519111950.GA28855@gwshan>
+ <CAL_JsqL_8cUmKxu3=BBkmFi3yO7rWeUW64TO6MRV60451V70+Q@mail.gmail.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <e29974565e941e37684fcd883330915cfaf2cf47.1463582011.git.leonard.crestez@intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Crestez Dan Leonard <leonard.crestez@intel.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, Ge Gao <ggao@invensense.com>, Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL_8cUmKxu3=BBkmFi3yO7rWeUW64TO6MRV60451V70+Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, Rhyland Klein <rklein@nvidia.com>, Sasha Levin <sasha.levin@oracle.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 8:00 AM, Crestez Dan Leonard
-<leonard.crestez@intel.com> wrote:
-> Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
-> ---
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 47 ++++++++++++++++++++++++++++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  |  5 ----
->  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  1 +
->  drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c  |  5 ----
->  4 files changed, 48 insertions(+), 10 deletions(-)
+On Thu, May 19, 2016 at 07:48:18AM -0500, Rob Herring wrote:
+>On Thu, May 19, 2016 at 6:19 AM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>> On Wed, May 18, 2016 at 08:51:59PM -0500, Rob Herring wrote:
+>>>On Wed, May 18, 2016 at 7:23 PM, Rob Herring <robh@kernel.org> wrote:
+>>>> On Wed, May 18, 2016 at 4:26 PM, Rhyland Klein <rklein@nvidia.com> wrote:
+>>>>> On 5/18/2016 3:58 PM, Rhyland Klein wrote:
+>>>>>> On 5/18/2016 3:36 PM, Rob Herring wrote:
+>>>>>>> On Wed, May 18, 2016 at 10:34 AM, Sasha Levin <sasha.levin@oracle.com> wrote:
+>>>>>>>> Hi Rhyland,
+>>>>>>>>
+>>>>>>>> I'm seeing a crash on boot that seems to have been caused by
+>>>>>>>> "drivers/of: Fix depth when unflattening devicetree":
+>>>>>>>>
+>>>>>>>> [   61.145229] ==================================================================
+>>>>>>>>
+>>>>>>>> [   61.147588] BUG: KASAN: stack-out-of-bounds in unflatten_dt_nodes+0x11d2/0x1290 at addr ffff88005b30777c
+>>>
+>>>[...]
+>>>
+>>>>> This patch seems to work for me. I found a bug in my original patch.
+>>>>> Sasha/Rob, can you see if this works for you too:
+>>>>>
+>>>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>>>>> index 0b5850027bb5..e7a8caac5b27 100644
+>>>>> --- a/drivers/of/fdt.c
+>>>>> +++ b/drivers/of/fdt.c
+>>>>> @@ -407,9 +407,9 @@ static int unflatten_dt_nodes(const void *blob,
+>>>>>
+>>>>>         root = dad;
+>>>>>         fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
+>>>>> -       nps[depth+1] = dad;
+>>>>> +       nps[depth] = dad;
+>>>>>         for (offset = 0;
+>>>>> -            offset >= 0;
+>>>>> +            offset >= 0 && depth >= 0;
+>>>>>              offset = fdt_next_node(blob, offset, &depth)) {
+>>>>>                 if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
+>>>>>                         continue;
+>>>>
+>>>> This is not work for me. I'm booting x86 with the DT unit test and
+>>>> KASAN enabled. I suspect our differences are due to different data
+>>>> after the end of the dtb. Also, I think there may be a bug in
+>>>> fdt_next_node FDT_END handling. The "!depth" seems suspicious to me
+>>>> and I think it should be "!(*depth)".
+>>>>
+>>>> The DT overlay unit tests are also failing. Not sure if that's related.
+>>>
+>>>Seems with the above patch and the fix to fdt_next_node, the problem
+>>>is fixed both for KASAN and the DT overlay tests. Trying it out now
+>>>with some other configurations.
+>>>
+>>
+>> There're 5 patches I introduced to drivers/of/fdt.c (A). Rhyland had
+>> one patch based on them (B). The code change in this thread is (C).
+>> I tried several cases as below.
+>>
+>> There is one failing case caused by something we don't know yet. I
+>> will do some invetigation unless it's not a issue or a known issue
+>> of unittest itself.
+>>
+>> [1]. (A) excluded, (B) excluded, (C) excluded
+>> =============================================
+>> device-tree: Duplicate name in testcase-data, renamed to "duplicate-name#1"
+>> ### dt-test ### start of unittest - you will see error messages
+>> /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
+>> /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
+>> /testcase-data/phandle-tests/consumer-a: could not find phandle
+>> /testcase-data/phandle-tests/consumer-a: could not find phandle
+>> /testcase-data/phandle-tests/consumer-a: arguments longer than property
+>> /testcase-data/phandle-tests/consumer-a: arguments longer than property
+>> irq: XICS didn't like hwirq-0x1 to VIRQ32 mapping (rc=-22)
+>> irq: XICS didn't like hwirq-0x1 to VIRQ32 mapping (rc=-22)
+>> ### dt-test ### FAIL of_unittest_platform_populate():783 device deferred probe failed - 0
 >
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> index b269b37..5918c23 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> @@ -116,6 +116,53 @@ static const struct inv_mpu6050_hw hw_info[] = {
->         },
->  };
+>Humm, I'm not seeing this one.
 >
-> +static bool inv_mpu6050_volatile_reg(struct device *dev, unsigned int reg)
-> +{
-> +       if (reg >= INV_MPU6050_REG_RAW_ACCEL && reg < INV_MPU6050_REG_RAW_ACCEL + 6)
-> +               return true;
-> +       if (reg >= INV_MPU6050_REG_RAW_GYRO && reg < INV_MPU6050_REG_RAW_GYRO + 6)
-> +               return true;
 
-I think you want to put parenthesis around the addition operations...
-the condition check probably don't evaluate to what you are expecting.
+Ok. Thanks for confirm. I will do some investigation later.
 
-> +       switch (reg) {
-> +       case INV_MPU6050_REG_TEMPERATURE:
-> +       case INV_MPU6050_REG_TEMPERATURE + 1:
-> +       case INV_MPU6050_REG_USER_CTRL:
-> +       case INV_MPU6050_REG_PWR_MGMT_1:
-> +       case INV_MPU6050_REG_FIFO_COUNT_H:
-> +       case INV_MPU6050_REG_FIFO_COUNT_H + 1:
-> +       case INV_MPU6050_REG_FIFO_R_W:
-> +               return true;
-> +       default:
-> +               return false;
-> +       }
-> +}
-> +
-> +static bool inv_mpu6050_precious_reg(struct device *dev, unsigned int reg)
-> +{
-> +       switch (reg) {
-> +       case INV_MPU6050_REG_FIFO_R_W:
-> +               return true;
-> +       default:
-> +               return false;
-> +       }
-> +}
-> +
-> +/*
-> + * Common regmap config for inv_mpu devices
-> + *
-> + * The current volatile/precious registers are common among supported devices.
-> + * When that changes the volatile/precious callbacks should go through the
-> + * inv_mpu6050_reg_map structs.
-> + */
-> +const struct regmap_config inv_mpu_regmap_config = {
-> +       .reg_bits = 8,
-> +       .val_bits = 8,
-> +
-> +       .cache_type = REGCACHE_RBTREE,
-> +       .volatile_reg = inv_mpu6050_volatile_reg,
-> +       .precious_reg = inv_mpu6050_precious_reg,
-> +};
-> +EXPORT_SYMBOL_GPL(inv_mpu_regmap_config);
-> +
->  int inv_mpu6050_switch_engine(struct inv_mpu6050_state *st, bool en, u32 mask)
->  {
->         unsigned int d, mgmt_1;
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> index 1a424a6..1a8d1a5 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> @@ -20,11 +20,6 @@
->  #include <linux/module.h>
->  #include "inv_mpu_iio.h"
+>> overlay_is_topmost: #5 clashes #6 @/testcase-data/overlay-node/test-bus/test-unittest8
+>> overlay_removal_is_ok: overlay #5 is not topmost
+>> of_overlay_destroy: removal check failed for overlay #5
+>> ### dt-test ### end of unittest - 147 passed, 1 failed
+>>
+>> [2]. (A) included, (B) exsluded, (C) excluded
+>> =============================================
+>> Same output as [1]
+>>
+>> [3]. (A) included, (B) included, (C) excluded
+>> =============================================
+>> System fails to boot
+>>
+>> [4]. (A) included, (B) included, (C) included
+>> =============================================
+>> Same output as [1] and [2].
 >
-> -static const struct regmap_config inv_mpu_regmap_config = {
-> -       .reg_bits = 8,
-> -       .val_bits = 8,
-> -};
-> -
->  /*
->   * The i2c read/write needs to happen in unlocked mode. As the parent
->   * adapter is common. If we use locked versions, it will fail as
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> index 47ca25b..297b0ef 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> @@ -291,3 +291,4 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
->  int inv_mpu_core_remove(struct device *dev);
->  int inv_mpu6050_set_power_itg(struct inv_mpu6050_state *st, bool power_on);
->  extern const struct dev_pm_ops inv_mpu_pmops;
-> +extern const struct regmap_config inv_mpu_regmap_config;
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-> index 190a4a5..b3bd977 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-> @@ -17,11 +17,6 @@
->  #include <linux/iio/iio.h>
->  #include "inv_mpu_iio.h"
+>For C, this includes the fix to depth in fdt_next_node?
 >
-> -static const struct regmap_config inv_mpu_regmap_config = {
-> -       .reg_bits = 8,
-> -       .val_bits = 8,
-> -};
-> -
->  static int inv_mpu_i2c_disable(struct iio_dev *indio_dev)
->  {
->         struct inv_mpu6050_state *st = iio_priv(indio_dev);
-> --
-> 2.5.5
+
+Nope, (C) does not include the depth change in fdt_next_node().
+I don't see we have problem with it in fdt_next_node(). In case
+[4] - all code (except @depth fix in fdt_next_node()) included,
+the @depth changes properly in unflatten_dt_nodes() as I saw.
+
+>While case 2 works for you, do you agree that there is an off by one
+>error and initially fdt_next_node should be called with depth=0?
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+IRhyland's patch (plus his code he sent in this thread) should be
+included. The test result is [4] with Rhyland's fixes included.
+Otherwise, the check on @depth in fdt_next_node() needs adjustment.
+However, fdt_next_node() is used by unflatten_dt_nodes() and others.
+So I think the right option is to include Rhyland's fixes and not
+change @depth in fdt_next_node().
+
+Thanks,
+Gavin 
+
+>Rob
+>
