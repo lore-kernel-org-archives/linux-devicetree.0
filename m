@@ -1,155 +1,41 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
-Date: Fri, 20 May 2016 10:26:03 +0300
-Message-ID: <573EBC0B.7030204@ti.com>
-References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
- <1463133808-10630-14-git-send-email-rogerq@ti.com>
- <20160516070249.GB24609@shlinux2.ap.freescale.net> <57398451.2060103@ti.com>
- <20160516092323.GD24609@shlinux2.ap.freescale.net> <57399839.90706@ti.com>
- <20160518031829.GA4244@shlinux2.ap.freescale.net> <573C63D7.9050200@ti.com>
- <20160520013931.GA10896@shlinux2>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 04/12] of: add J-Core timer bindings
+Date: Fri, 20 May 2016 10:03:16 +0200
+Message-ID: <CAMuHMdUDy7A6On1emuuu5vndJWBRECBspZNiY_-xfgn+AO+_nw@mail.gmail.com>
+References: <cover.1463708766.git.dalias@libc.org>
+	<3460e061e18c6355407b585a8394b8da8cbd9fc8.1463708766.git.dalias@libc.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160520013931.GA10896@shlinux2>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <3460e061e18c6355407b585a8394b8da8cbd9fc8.1463708766.git.dalias@libc.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Peter,
+On Fri, May 20, 2016 at 4:53 AM, Rich Felker <dalias@libc.org> wrote:
+> +++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
+> @@ -0,0 +1,28 @@
 
-On 20/05/16 04:39, Peter Chen wrote:
-> On Wed, May 18, 2016 at 03:45:11PM +0300, Roger Quadros wrote:
->> On 18/05/16 06:18, Peter Chen wrote:
->>> On Mon, May 16, 2016 at 12:51:53PM +0300, Roger Quadros wrote:
->>>> On 16/05/16 12:23, Peter Chen wrote:
->>>>> On Mon, May 16, 2016 at 11:26:57AM +0300, Roger Quadros wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 16/05/16 10:02, Peter Chen wrote:
->>>>>>> On Fri, May 13, 2016 at 01:03:27PM +0300, Roger Quadros wrote:
->>>>>>>> +
->>>>>>>> +static int usb_gadget_connect_control(struct usb_gadget *gadget, bool connect)
->>>>>>>> +{
->>>>>>>> +	struct usb_udc *udc;
->>>>>>>> +
->>>>>>>> +	mutex_lock(&udc_lock);
->>>>>>>> +	udc = usb_gadget_to_udc(gadget);
->>>>>>>> +	if (!udc) {
->>>>>>>> +		dev_err(gadget->dev.parent, "%s: gadget not registered.\n",
->>>>>>>> +			__func__);
->>>>>>>> +		mutex_unlock(&udc_lock);
->>>>>>>> +		return -EINVAL;
->>>>>>>> +	}
->>>>>>>> +
->>>>>>>> +	if (connect) {
->>>>>>>> +		if (!gadget->connected)
->>>>>>>> +			usb_gadget_connect(udc->gadget);
->>>>>>>> +	} else {
->>>>>>>> +		if (gadget->connected) {
->>>>>>>> +			usb_gadget_disconnect(udc->gadget);
->>>>>>>> +			udc->driver->disconnect(udc->gadget);
->>>>>>>> +		}
->>>>>>>> +	}
->>>>>>>> +
->>>>>>>> +	mutex_unlock(&udc_lock);
->>>>>>>> +
->>>>>>>> +	return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>
->>>>>>> Since this is called for vbus interrupt, why not using
->>>>>>> usb_udc_vbus_handler directly, and call udc->driver->disconnect
->>>>>>> at usb_gadget_stop.
->>>>>>
->>>>>> We can't assume that this is always called for vbus interrupt so
->>>>>> I decided not to call usb_udc_vbus_handler.
->>>>>>
->>>>>> udc->vbus is really pointless for us. We keep vbus states in our
->>>>>> state machine and leave udc->vbus as ture always.
->>>>>>
->>>>>> Why do you want to move udc->driver->disconnect() to stop?
->>>>>> If USB controller disconnected from bus then the gadget driver
->>>>>> must be notified about the disconnect immediately. The controller
->>>>>> may or may not be stopped by the core.
->>>>>>
->>>>>
->>>>> Then, would you give some comments when this API will be used?
->>>>> I was assumed it is only used for drd state machine.
->>>>
->>>> drd_state machine didn't even need this API in the first place :).
->>>> You guys wanted me to separate out start/stop and connect/disconnect for full OTG case.
->>>> Won't full OTG state machine want to use this API? If not what would it use?
->>>>
->>>
->>> Oh, I meant only drd and fully otg state machine needs it. I am
->>> wondering if we need have a new API to do it. Two questions:
->>
->> OK.
->>>
->>> - Except for vbus interrupt, any chances this API will be used at
->>> current logic?
->>
->> I don't think so. But we can't assume caller behaviour for any API.
->>
->>> - When this API is called but without a coming gadget->stop?
->>>
->> Never for DRD case. But we want to catch wrong users.
->>
-> 
-> In future, otg_start_gadget will be used for both DRD and fully OTG FSM.
-> There is no otg_loc_conn at current DRD FSM, but there is
-> otg_loc_conn at current OTG FSM, see below.
-> 
-> DRD FSM:
-> 	case OTG_STATE_B_IDLE:
-> 		drd_set_protocol(fsm, PROTO_UNDEF);
-> 		otg_drv_vbus(otg, 0);
-> 		break;
-> 	case OTG_STATE_B_PERIPHERAL:
-> 		drd_set_protocol(fsm, PROTO_GADGET);
-> 		otg_drv_vbus(otg, 0);
-> 		break;
-> 
-> OTG FSM:
-> 	case OTG_STATE_B_IDLE:
-> 		otg_drv_vbus(otg, 0);
-> 		otg_chrg_vbus(otg, 0);
-> 		otg_loc_conn(otg, 0);
-> 		otg_loc_sof(otg, 0);
-> 		/*
-> 		 * Driver is responsible for starting ADP probing
-> 		 * if ADP sensing times out.
-> 		 */
-> 		otg_start_adp_sns(otg);
-> 		otg_set_protocol(fsm, PROTO_UNDEF);
-> 		otg_add_timer(otg, B_SE0_SRP);
-> 		break;
-> 	case OTG_STATE_B_PERIPHERAL:
-> 		otg_chrg_vbus(otg, 0);
-> 		otg_loc_sof(otg, 0);
-> 		otg_set_protocol(fsm, PROTO_GADGET);
-> 		otg_loc_conn(otg, 1);
-> 		break;
-> 
-> My original suggestion is to have an API to do pull dp and this API
-> will be used at both DRD and OTG FSM, and called at otg_loc_conn.
+> +Example:
+> +
+> +timer {
 
-The API is usb_gadget_connect_control();
+timer@200
 
-> The (de)initialize is the same for both two FSMs, it both includes
-> init peripheral mode and pull up dp, and can be done by drd_set_protocol(fsm, PROTO_GADGET)
-> otg_loc_conn(otg, 1);
-> 
-> What do you think?
-> 
+> +       compatible = "jcore,pit";
+> +       reg = < 0x200 0x30 >;
+> +       cpu-offset = < 0x300 >;
+> +       interrupts = < 0x48 >;
+> +};
 
-I think loc_conn is a bit confusing to drd users. Another issue I see is that 
-DRD controller drivers will need to explicitly pass .loc_conn ops via the otg_fsm_ops.
-This is an additional step and totally unnecessary as it can be automatically done
-via direct DRD -> UDC-core call.
+Gr{oetje,eeting}s,
 
-cheers,
--roger
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
