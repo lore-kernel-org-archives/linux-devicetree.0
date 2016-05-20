@@ -1,124 +1,140 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 18/23] ARM: dts: lager: Fix W=1 dtc warnings
-Date: Fri, 20 May 2016 09:10:09 +0200
-Message-ID: <1463728214-13838-19-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 01/23] ARM: dts: emev2: Fix W=1 dtc warnings
+Date: Fri, 20 May 2016 09:09:52 +0200
+Message-ID: <1463728214-13838-2-git-send-email-geert+renesas@glider.be>
 References: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463728214-13838-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Warning (unit_address_vs_reg): Node /keyboard/button@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /keyboard/button@2 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /keyboard/button@3 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /keyboard/button@4 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /fixedregulator@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /regulator@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /regulator@2 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /regulator@3 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /regulator@4 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /i2c@8 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /clocks@e0110000/iic0_sclkdiv has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/iic0_sclk has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/iic1_sclkdiv has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/iic1_sclk has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/usia_u0_sclkdiv has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/usib_u1_sclkdiv has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/usib_u2_sclkdiv has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/usib_u3_sclkdiv has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/usia_u0_sclk has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/usib_u1_sclk has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/usib_u2_sclk has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/usib_u3_sclk has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /clocks@e0110000/sti_sclk has a reg or ranges property, but no unit name
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
 v2:
-  - Change regulator name from fixedregulator3v3 to regulator-3v3.
+  - No changes.
 ---
- arch/arm/boot/dts/r8a7790-lager.dts | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/emev2.dtsi | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 749ba02b6a53a9de..9d20ace33b01d935 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -76,28 +76,28 @@
- 	keyboard {
- 		compatible = "gpio-keys";
- 
--		button@1 {
-+		one {
- 			linux,code = <KEY_1>;
- 			label = "SW2-1";
- 			wakeup-source;
- 			debounce-interval = <20>;
- 			gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/emev2.dtsi b/arch/arm/boot/dts/emev2.dtsi
+index bcce6f50c93d9d25..cd119400f440bb5a 100644
+--- a/arch/arm/boot/dts/emev2.dtsi
++++ b/arch/arm/boot/dts/emev2.dtsi
+@@ -69,25 +69,25 @@
+ 			clock-frequency = <32768>;
+ 			#clock-cells = <0>;
  		};
--		button@2 {
-+		two {
- 			linux,code = <KEY_2>;
- 			label = "SW2-2";
- 			wakeup-source;
- 			debounce-interval = <20>;
- 			gpios = <&gpio1 24 GPIO_ACTIVE_LOW>;
+-		iic0_sclkdiv: iic0_sclkdiv {
++		iic0_sclkdiv: iic0_sclkdiv@624,0 {
+ 			compatible = "renesas,emev2-smu-clkdiv";
+ 			reg = <0x624 0>;
+ 			clocks = <&pll3_fo>;
+ 			#clock-cells = <0>;
  		};
--		button@3 {
-+		three {
- 			linux,code = <KEY_3>;
- 			label = "SW2-3";
- 			wakeup-source;
- 			debounce-interval = <20>;
- 			gpios = <&gpio1 26 GPIO_ACTIVE_LOW>;
+-		iic0_sclk: iic0_sclk {
++		iic0_sclk: iic0_sclk@48c,1 {
+ 			compatible = "renesas,emev2-smu-gclk";
+ 			reg = <0x48c 1>;
+ 			clocks = <&iic0_sclkdiv>;
+ 			#clock-cells = <0>;
  		};
--		button@4 {
-+		four {
- 			linux,code = <KEY_4>;
- 			label = "SW2-4";
- 			wakeup-source;
-@@ -119,7 +119,7 @@
+-		iic1_sclkdiv: iic1_sclkdiv {
++		iic1_sclkdiv: iic1_sclkdiv@624,16 {
+ 			compatible = "renesas,emev2-smu-clkdiv";
+ 			reg = <0x624 16>;
+ 			clocks = <&pll3_fo>;
+ 			#clock-cells = <0>;
  		};
- 	};
- 
--	fixedregulator3v3: fixedregulator@0 {
-+	fixedregulator3v3: regulator-3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-3.3V";
- 		regulator-min-microvolt = <3300000>;
-@@ -128,7 +128,7 @@
- 		regulator-always-on;
- 	};
- 
--	vcc_sdhi0: regulator@1 {
-+	vcc_sdhi0: regulator-vcc-sdhi0 {
- 		compatible = "regulator-fixed";
- 
- 		regulator-name = "SDHI0 Vcc";
-@@ -139,7 +139,7 @@
- 		enable-active-high;
- 	};
- 
--	vccq_sdhi0: regulator@2 {
-+	vccq_sdhi0: regulator-vccq-sdhi0 {
- 		compatible = "regulator-gpio";
- 
- 		regulator-name = "SDHI0 VccQ";
-@@ -152,7 +152,7 @@
- 			  1800000 0>;
- 	};
- 
--	vcc_sdhi2: regulator@3 {
-+	vcc_sdhi2: regulator-vcc-sdhi2 {
- 		compatible = "regulator-fixed";
- 
- 		regulator-name = "SDHI2 Vcc";
-@@ -163,7 +163,7 @@
- 		enable-active-high;
- 	};
- 
--	vccq_sdhi2: regulator@4 {
-+	vccq_sdhi2: regulator-vccq-sdhi2 {
- 		compatible = "regulator-gpio";
- 
- 		regulator-name = "SDHI2 VccQ";
-@@ -263,7 +263,7 @@
- 	 * instantiate the slave device at runtime according to the documentation.
- 	 * You can then communicate with the slave via IIC3.
- 	 */
--	i2cexio: i2c@8 {
-+	i2cexio: i2c-8 {
- 		compatible = "i2c-demux-pinctrl";
- 		i2c-parent = <&iic0>, <&i2c0>;
- 		i2c-bus-name = "i2c-exio";
+-		iic1_sclk: iic1_sclk {
++		iic1_sclk: iic1_sclk@490,1 {
+ 			compatible = "renesas,emev2-smu-gclk";
+ 			reg = <0x490 1>;
+ 			clocks = <&iic1_sclkdiv>;
+@@ -100,55 +100,55 @@
+ 			clock-mult = <7000>;
+ 			#clock-cells = <0>;
+ 		};
+-		usia_u0_sclkdiv: usia_u0_sclkdiv {
++		usia_u0_sclkdiv: usia_u0_sclkdiv@610,0 {
+ 			compatible = "renesas,emev2-smu-clkdiv";
+ 			reg = <0x610 0>;
+ 			clocks = <&pll3_fo>;
+ 			#clock-cells = <0>;
+ 		};
+-		usib_u1_sclkdiv: usib_u1_sclkdiv {
++		usib_u1_sclkdiv: usib_u1_sclkdiv@65c,0 {
+ 			compatible = "renesas,emev2-smu-clkdiv";
+ 			reg = <0x65c 0>;
+ 			clocks = <&pll3_fo>;
+ 			#clock-cells = <0>;
+ 		};
+-		usib_u2_sclkdiv: usib_u2_sclkdiv {
++		usib_u2_sclkdiv: usib_u2_sclkdiv@65c,16 {
+ 			compatible = "renesas,emev2-smu-clkdiv";
+ 			reg = <0x65c 16>;
+ 			clocks = <&pll3_fo>;
+ 			#clock-cells = <0>;
+ 		};
+-		usib_u3_sclkdiv: usib_u3_sclkdiv {
++		usib_u3_sclkdiv: usib_u3_sclkdiv@660,0 {
+ 			compatible = "renesas,emev2-smu-clkdiv";
+ 			reg = <0x660 0>;
+ 			clocks = <&pll3_fo>;
+ 			#clock-cells = <0>;
+ 		};
+-		usia_u0_sclk: usia_u0_sclk {
++		usia_u0_sclk: usia_u0_sclk@4a0,1 {
+ 			compatible = "renesas,emev2-smu-gclk";
+ 			reg = <0x4a0 1>;
+ 			clocks = <&usia_u0_sclkdiv>;
+ 			#clock-cells = <0>;
+ 		};
+-		usib_u1_sclk: usib_u1_sclk {
++		usib_u1_sclk: usib_u1_sclk@4b8,1 {
+ 			compatible = "renesas,emev2-smu-gclk";
+ 			reg = <0x4b8 1>;
+ 			clocks = <&usib_u1_sclkdiv>;
+ 			#clock-cells = <0>;
+ 		};
+-		usib_u2_sclk: usib_u2_sclk {
++		usib_u2_sclk: usib_u2_sclk@4bc,1 {
+ 			compatible = "renesas,emev2-smu-gclk";
+ 			reg = <0x4bc 1>;
+ 			clocks = <&usib_u2_sclkdiv>;
+ 			#clock-cells = <0>;
+ 		};
+-		usib_u3_sclk: usib_u3_sclk {
++		usib_u3_sclk: usib_u3_sclk@4c0,1 {
+ 			compatible = "renesas,emev2-smu-gclk";
+ 			reg = <0x4c0 1>;
+ 			clocks = <&usib_u3_sclkdiv>;
+ 			#clock-cells = <0>;
+ 		};
+-		sti_sclk: sti_sclk {
++		sti_sclk: sti_sclk@528,1 {
+ 			compatible = "renesas,emev2-smu-gclk";
+ 			reg = <0x528 1>;
+ 			clocks = <&c32ki>;
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
