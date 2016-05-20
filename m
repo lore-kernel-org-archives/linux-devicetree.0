@@ -1,91 +1,54 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH 2/2] ASoC: simple_card: add support for hw_params_rules
-Date: Fri, 20 May 2016 12:30:45 +0000
-Message-ID: <1463747445-14167-3-git-send-email-kernel@martin.sperl.org>
-References: <1463747445-14167-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463747445-14167-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+From: Shawn Lin <shawn.lin@kernel-upstream.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: rockchip: fixes the spi compatible for
+ rk3036
+Date: Fri, 20 May 2016 20:35:53 +0800
+Message-ID: <8f662b3b-e359-efdf-72e5-c4f862dd1cf6@kernel-upstream.org>
+References: <1463702182-5188-1-git-send-email-wxt@rock-chips.com>
+ <1463702182-5188-3-git-send-email-wxt@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463702182-5188-3-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Mark Brown <broonie@kernel.org>
+Cc: shawn.lin@rock-chips.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+=E5=9C=A8 2016/5/20 7:56, Caesar Wang =E5=86=99=E9=81=93:
+> That's seem the incorrect string to match the spi driver.
+>
 
-Add support for hw_params_rules to simple_card.
+Will it break the backward compatibility for some dtb if not
+falling back to "rockchip,rockchip-spi" ?
 
-Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/simple-card.txt |  1 +
- sound/soc/generic/simple-card.c                         | 11 ++++++++---
- 2 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index cf3979e..2cfed39 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -31,6 +31,7 @@ Optional subnodes:
- 					  omitted when the card has only one
- 					  DAI link. See the examples and the
- 					  section bellow.
-+- hw-params-rules			: Please refer to hw-params-rules.txt.
- 
- Dai-link subnode properties and subnodes:
- 
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index 2389ab4..6b95ea1 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -8,6 +8,7 @@
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-  */
-+#include "hw-params-rules.h"
- #include <linux/clk.h>
- #include <linux/device.h>
- #include <linux/gpio.h>
-@@ -33,6 +34,7 @@ struct simple_card_data {
- 	int gpio_hp_det_invert;
- 	int gpio_mic_det;
- 	int gpio_mic_det_invert;
-+	struct list_head hw_params_rules;
- 	struct snd_soc_dai_link dai_link[];	/* dynamically allocated */
- };
- 
-@@ -51,7 +53,7 @@ static int asoc_simple_card_startup(struct snd_pcm_substream *substream)
- 	ret = clk_prepare_enable(dai_props->cpu_dai.clk);
- 	if (ret)
- 		return ret;
--	
-+
- 	ret = clk_prepare_enable(dai_props->codec_dai.clk);
- 	if (ret)
- 		clk_disable_unprepare(dai_props->cpu_dai.clk);
-@@ -99,7 +101,9 @@ static int asoc_simple_card_hw_params(struct snd_pcm_substream *substream,
- 		if (ret && ret != -ENOTSUPP)
- 			goto err;
- 	}
--	return 0;
-+
-+	return asoc_generic_hw_params_process_rules(
-+		&priv->hw_params_rules, substream, params);
- err:
- 	return ret;
- }
-@@ -509,7 +513,8 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 	if (!priv->snd_card.name)
- 		priv->snd_card.name = priv->snd_card.dai_link->name;
- 
--	return 0;
-+	return asoc_generic_hw_params_rules_parse_of(
-+		dev, node, &priv->hw_params_rules);
- }
- 
- /* Decrease the reference count of the device nodes */
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Fixes commit f629fcfab2cd
+> ("ARM: dts: rockchip: support the spi for rk3036")
+>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: linux-rockchip@lists.infradead.org
+>
+> ---
+>
+> Changes in v2: None
+>
+>  arch/arm/boot/dts/rk3036.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036=
+=2Edtsi
+> index d0f4bb7..a30700a 100644
+> --- a/arch/arm/boot/dts/rk3036.dtsi
+> +++ b/arch/arm/boot/dts/rk3036.dtsi
+> @@ -431,7 +431,7 @@
+>  	};
+>
+>  	spi: spi@20074000 {
+> -		compatible =3D "rockchip,rockchip-spi";
+> +		compatible =3D "rockchip,rk3036-spi";
+>  		reg =3D <0x20074000 0x1000>;
+>  		interrupts =3D <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+>  		clocks =3D<&cru PCLK_SPI>, <&cru SCLK_SPI>;
+>
