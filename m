@@ -1,44 +1,155 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 12/23] ARM: dts: bockw: Fix W=1 dtc warnings
-Date: Fri, 20 May 2016 09:10:03 +0200
-Message-ID: <1463728214-13838-13-git-send-email-geert+renesas@glider.be>
-References: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
+Date: Fri, 20 May 2016 10:26:03 +0300
+Message-ID: <573EBC0B.7030204@ti.com>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
+ <1463133808-10630-14-git-send-email-rogerq@ti.com>
+ <20160516070249.GB24609@shlinux2.ap.freescale.net> <57398451.2060103@ti.com>
+ <20160516092323.GD24609@shlinux2.ap.freescale.net> <57399839.90706@ti.com>
+ <20160518031829.GA4244@shlinux2.ap.freescale.net> <573C63D7.9050200@ti.com>
+ <20160520013931.GA10896@shlinux2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160520013931.GA10896@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
-Warning (unit_address_vs_reg): Node /fixedregulator@0 has a unit name, but no reg property
+Peter,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Change regulator name from fixedregulator3v3 to regulator-3v3.
----
- arch/arm/boot/dts/r8a7778-bockw.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 20/05/16 04:39, Peter Chen wrote:
+> On Wed, May 18, 2016 at 03:45:11PM +0300, Roger Quadros wrote:
+>> On 18/05/16 06:18, Peter Chen wrote:
+>>> On Mon, May 16, 2016 at 12:51:53PM +0300, Roger Quadros wrote:
+>>>> On 16/05/16 12:23, Peter Chen wrote:
+>>>>> On Mon, May 16, 2016 at 11:26:57AM +0300, Roger Quadros wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 16/05/16 10:02, Peter Chen wrote:
+>>>>>>> On Fri, May 13, 2016 at 01:03:27PM +0300, Roger Quadros wrote:
+>>>>>>>> +
+>>>>>>>> +static int usb_gadget_connect_control(struct usb_gadget *gadget, bool connect)
+>>>>>>>> +{
+>>>>>>>> +	struct usb_udc *udc;
+>>>>>>>> +
+>>>>>>>> +	mutex_lock(&udc_lock);
+>>>>>>>> +	udc = usb_gadget_to_udc(gadget);
+>>>>>>>> +	if (!udc) {
+>>>>>>>> +		dev_err(gadget->dev.parent, "%s: gadget not registered.\n",
+>>>>>>>> +			__func__);
+>>>>>>>> +		mutex_unlock(&udc_lock);
+>>>>>>>> +		return -EINVAL;
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	if (connect) {
+>>>>>>>> +		if (!gadget->connected)
+>>>>>>>> +			usb_gadget_connect(udc->gadget);
+>>>>>>>> +	} else {
+>>>>>>>> +		if (gadget->connected) {
+>>>>>>>> +			usb_gadget_disconnect(udc->gadget);
+>>>>>>>> +			udc->driver->disconnect(udc->gadget);
+>>>>>>>> +		}
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	mutex_unlock(&udc_lock);
+>>>>>>>> +
+>>>>>>>> +	return 0;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>
+>>>>>>> Since this is called for vbus interrupt, why not using
+>>>>>>> usb_udc_vbus_handler directly, and call udc->driver->disconnect
+>>>>>>> at usb_gadget_stop.
+>>>>>>
+>>>>>> We can't assume that this is always called for vbus interrupt so
+>>>>>> I decided not to call usb_udc_vbus_handler.
+>>>>>>
+>>>>>> udc->vbus is really pointless for us. We keep vbus states in our
+>>>>>> state machine and leave udc->vbus as ture always.
+>>>>>>
+>>>>>> Why do you want to move udc->driver->disconnect() to stop?
+>>>>>> If USB controller disconnected from bus then the gadget driver
+>>>>>> must be notified about the disconnect immediately. The controller
+>>>>>> may or may not be stopped by the core.
+>>>>>>
+>>>>>
+>>>>> Then, would you give some comments when this API will be used?
+>>>>> I was assumed it is only used for drd state machine.
+>>>>
+>>>> drd_state machine didn't even need this API in the first place :).
+>>>> You guys wanted me to separate out start/stop and connect/disconnect for full OTG case.
+>>>> Won't full OTG state machine want to use this API? If not what would it use?
+>>>>
+>>>
+>>> Oh, I meant only drd and fully otg state machine needs it. I am
+>>> wondering if we need have a new API to do it. Two questions:
+>>
+>> OK.
+>>>
+>>> - Except for vbus interrupt, any chances this API will be used at
+>>> current logic?
+>>
+>> I don't think so. But we can't assume caller behaviour for any API.
+>>
+>>> - When this API is called but without a coming gadget->stop?
+>>>
+>> Never for DRD case. But we want to catch wrong users.
+>>
+> 
+> In future, otg_start_gadget will be used for both DRD and fully OTG FSM.
+> There is no otg_loc_conn at current DRD FSM, but there is
+> otg_loc_conn at current OTG FSM, see below.
+> 
+> DRD FSM:
+> 	case OTG_STATE_B_IDLE:
+> 		drd_set_protocol(fsm, PROTO_UNDEF);
+> 		otg_drv_vbus(otg, 0);
+> 		break;
+> 	case OTG_STATE_B_PERIPHERAL:
+> 		drd_set_protocol(fsm, PROTO_GADGET);
+> 		otg_drv_vbus(otg, 0);
+> 		break;
+> 
+> OTG FSM:
+> 	case OTG_STATE_B_IDLE:
+> 		otg_drv_vbus(otg, 0);
+> 		otg_chrg_vbus(otg, 0);
+> 		otg_loc_conn(otg, 0);
+> 		otg_loc_sof(otg, 0);
+> 		/*
+> 		 * Driver is responsible for starting ADP probing
+> 		 * if ADP sensing times out.
+> 		 */
+> 		otg_start_adp_sns(otg);
+> 		otg_set_protocol(fsm, PROTO_UNDEF);
+> 		otg_add_timer(otg, B_SE0_SRP);
+> 		break;
+> 	case OTG_STATE_B_PERIPHERAL:
+> 		otg_chrg_vbus(otg, 0);
+> 		otg_loc_sof(otg, 0);
+> 		otg_set_protocol(fsm, PROTO_GADGET);
+> 		otg_loc_conn(otg, 1);
+> 		break;
+> 
+> My original suggestion is to have an API to do pull dp and this API
+> will be used at both DRD and OTG FSM, and called at otg_loc_conn.
 
-diff --git a/arch/arm/boot/dts/r8a7778-bockw.dts b/arch/arm/boot/dts/r8a7778-bockw.dts
-index 982a237ea6222a59..0a0bd3b6bb401ce2 100644
---- a/arch/arm/boot/dts/r8a7778-bockw.dts
-+++ b/arch/arm/boot/dts/r8a7778-bockw.dts
-@@ -32,12 +32,12 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@60000000 {
- 		device_type = "memory";
- 		reg = <0x60000000 0x10000000>;
- 	};
- 
--	fixedregulator3v3: fixedregulator@0 {
-+	fixedregulator3v3: regulator-3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-3.3V";
- 		regulator-min-microvolt = <3300000>;
--- 
-1.9.1
+The API is usb_gadget_connect_control();
+
+> The (de)initialize is the same for both two FSMs, it both includes
+> init peripheral mode and pull up dp, and can be done by drd_set_protocol(fsm, PROTO_GADGET)
+> otg_loc_conn(otg, 1);
+> 
+> What do you think?
+> 
+
+I think loc_conn is a bit confusing to drd users. Another issue I see is that 
+DRD controller drivers will need to explicitly pass .loc_conn ops via the otg_fsm_ops.
+This is an additional step and totally unnecessary as it can be automatically done
+via direct DRD -> UDC-core call.
+
+cheers,
+-roger
