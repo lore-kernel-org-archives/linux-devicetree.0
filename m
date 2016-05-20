@@ -1,65 +1,66 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 3/3] ARM64: dts: amlogic: Enable Reset Controller on
- GXBB-based platforms
-Date: Fri, 20 May 2016 14:19:25 +0200
-Message-ID: <573F00CD.8070504@baylibre.com>
-References: <1463732875-23141-1-git-send-email-narmstrong@baylibre.com>
- <1463732875-23141-4-git-send-email-narmstrong@baylibre.com>
- <20160520084748.GC16732@mephisto> <573ED06F.9070909@baylibre.com>
- <20160520091050.GC19888@mephisto>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 6/7] iommu/msm: Use writel_relaxed and add a barrier
+Date: Fri, 20 May 2016 14:20:52 +0200
+Message-ID: <2864715.kytdDZX8IX@wuerfel>
+References: <1463741694-1735-1-git-send-email-sricharan@codeaurora.org>
+ <1463741694-1735-7-git-send-email-sricharan@codeaurora.org>
+ <3164695.VzCnHHyi7r@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160520091050.GC19888@mephisto>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Carlo Caione <carlo@caione.org>
-Cc: devicetree@vger.kernel.org, xing.xu@amlogic.com, victor.wan@amlogic.com, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, jerry.cao@amlogic.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3164695.VzCnHHyi7r@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, robdclark@gmail.com, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, treding@nvidia.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, stepanm@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/2016 11:10 AM, Carlo Caione wrote:
-> On 20/05/16 10:53, Neil Armstrong wrote:
->> On 05/20/2016 10:47 AM, Carlo Caione wrote:
->>> On 20/05/16 10:27, Neil Armstrong wrote:
->>>> Update DTSI file to add the reset controller node.
->>>>
->>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>>> ---
->>>>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 6 ++++++
->>>>  1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->>>> index 832815d..2463e04 100644
->>>> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->>>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->>>> @@ -129,6 +129,12 @@
->>>>  			#size-cells = <2>;
->>>>  			ranges = <0x0 0x0 0x0 0xc1100000 0x0 0x100000>;
->>>>  
->>>> +			reset: reset-controller@4404 {
->>>> +				compatible = "amlogic,meson-gxbb-reset";
->>>> +				reg = <0x0 0x04404 0x0 0x20>;
->>>> +				#reset-cells = <1>;
->>>> +			};
->>>> +
->>>>  			uart_A: serial@84c0 {
->>>>  				compatible = "amlogic,meson-uart";
->>>>  				reg = <0x0 0x084c0 0x0 0x14>;
->>>
->>> Missing #include <dt-bindings/reset/amlogic,meson-gxbb-reset.h> ?
->>>
->>> Thanks,
->>>
->>
->> Shouldn't we wait until the reset bindings are actually used in the dtsi ?
->> I'm quite sure kevin will post it with the Ethernet nodes.
+On Friday 20 May 2016 13:44:10 Arnd Bergmann wrote:
+> >  #define GET_CTX_REG(reg, base, ctx) \
+> >                               (readl((base) + (reg) + ((ctx) << CTX_SHIFT)))
+> >  
+> > -#define SET_GLOBAL_REG(reg, base, val)       writel((val), ((base) + (reg)))
+> > +/*
+> > + * The writes to the global/context registers needs to be synced only after
+> > + * all the configuration writes are done. So use relaxed accessors and
+> > + * a barrier at the end.
+> > + */
+> > +#define SET_GLOBAL_REG_RELAXED(reg, base, val) \
+> > +                            writel_relaxed((val), ((base) + (reg)))
+> >  
+> > -#define SET_CTX_REG(reg, base, ctx, val) \
+> > -                     writel((val), ((base) + (reg) + ((ctx) << CTX_SHIFT)))
+> > +#define SET_CTX_REG_RELAXED(reg, base, ctx, val) \
+> > +             writel_relaxed((val), ((base) + (reg) + ((ctx) << CTX_SHIFT)))
 > 
-> Why? The header file is related to the reset controller. Better add it
-> now with this patchset.
+> Please add the relaxed accessors first in a separate patch, and then
+> change over one user at a time before you remove the non-relaxed ones.
 > 
-> Cheers,
-> 
+> It's hard to believe that all users are actually performance critical,
+> so start with the ones that gain the most performance. As commented above,
+> some of the conversions seem particularly fishy and it's likely that
+> a slow reset() function should not be fixed by making reset() faster
+> but by calling it less often.
 
-OK, I will add it in gxbb and meson8b dtsi files.
+One more thing, please also convert them into inline functions when you modify
+them, and use normal names such as
 
-Neil
+static inline void msm_iommu_write(struct msm_iommu_dev *iommu, unsigned int reg, u32 val)
+{
+	writel(val, iommu->base + reg);
+}
+
+static inline void msm_iommu_context_write(struct msm_iommu_ctx_dev *ctx, unsigned int reg, u32 val)
+{
+	writel(val, ctx->iommu->base + ctx << CTX_SHIFT + reg, val);
+}
+
+	Arnd
