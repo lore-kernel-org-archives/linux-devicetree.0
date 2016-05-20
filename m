@@ -1,38 +1,112 @@
-From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: Re: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
-Date: Fri, 20 May 2016 18:34:57 -0400
-Message-ID: <20160520223456.GV21636@brightrain.aerifal.cx>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v2 12/12] sh: add device tree source for J2 FPGA on Mimas
+ v2 board
+Date: Fri, 20 May 2016 18:42:05 -0400
+Message-ID: <20160520224205.GW21636@brightrain.aerifal.cx>
 References: <cover.1463708766.git.dalias@libc.org>
- <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
- <CAMuHMdVs9=8BGwmCBuYch2abJBnCLKoEx7i3EMghW3UUjXc7dA@mail.gmail.com>
+ <9960d6526523727d1bee3d11c6704e09e600c6fe.1463708766.git.dalias@libc.org>
+ <CAMuHMdVr-gZbfo9hG=w5bB3_x6v67sFd2yAPLLbPyWyg-jUmug@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVs9=8BGwmCBuYch2abJBnCLKoEx7i3EMghW3UUjXc7dA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+In-Reply-To: <CAMuHMdVr-gZbfo9hG=w5bB3_x6v67sFd2yAPLLbPyWyg-jUmug@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 10:04:26AM +0200, Geert Uytterhoeven wrote:
-> On Fri, May 20, 2016 at 4:53 AM, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org> wrote:
-> > +Additional properties required for aic1:
+On Fri, May 20, 2016 at 10:17:34AM +0200, Geert Uytterhoeven wrote:
+> On Fri, May 20, 2016 at 4:53 AM, Rich Felker <dalias@libc.org> wrote:
+> > --- /dev/null
+> > +++ b/arch/sh/boot/dts/j2_mimas_v2.dts
+> > @@ -0,0 +1,87 @@
+> > +/dts-v1/;
 > > +
-> > +- reg : Memory region for configuration.
+> > +/ {
+> > +       compatible = "jcore,j2-soc";
+> > +       model = "J2 FPGA SoC on Mimas v2 board";
 > > +
-> > +- cpu-offset : For SMP, the offset to the per-cpu memory region for
-> > +  configuration, to be scaled by the cpu number.
+> > +       #address-cells = <1>;
+> > +       #size-cells = <1>;
+> > +
+> > +       interrupt-parent = <&aic>;
+> > +
+> > +       cpus {
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +
+> > +               cpu@0 {
+> > +                       device_type = "cpu";
+> > +                       compatible = "jcore,j2";
+> > +                       reg = < 0 >;
+> > +                       clock-frequency = < 50000000 >;
+> > +               };
+> > +       };
+> > +
+> > +       memory@10000000 {
+> > +               device_type = "memory";
+> > +               reg = < 0x10000000 0x4000000 >;
+> > +       };
+> > +
+> > +       chosen {
+> > +               stdout-path = "/soc@abcd0000/serial@100";
+> > +       };
+> > +
+> > +       soc@abcd0000 {
+> > +               compatible = "simple-bus";
+> > +               ranges = <0 0xabcd0000 0x100000>;
+> > +
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +
+> > +               aic: interrupt-controller {
 > 
-> Does cpu-offset apply to aic1 only?
+> aic: interrupt-controller@200 {
+> 
+> > +                       compatible = "jcore,aic1";
+> > +                       reg = < 0x200 0x10 >;
+> > +                       interrupt-controller;
+> > +                       #interrupt-cells = <1>;
+> > +               };
+> > +
+> > +               cache-controller {
+> 
+> @c0
+> 
+> > +                       compatible = "jcore,cache";
+> > +                       reg = < 0xc0 4 >;
+> > +               };
+> > +
+> > +               timer {
+> 
+> @200
+> 
+> > +                       compatible = "jcore,pit";
+> > +                       reg = < 0x200 0x30 >;
+> > +                       interrupts = < 0x48 >;
+> > +               };
+> > +
+> > +               spi {
+> 
+> @40
+> 
+> > +                       compatible = "jcore,spi2";
+> > +
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +
+> > +                       spi-max-frequency = <12500000>;
+> > +
+> > +                       reg = < 0x40 0x8 >;
+> > +
+> > +                       sdcard@1 {
+> 
+> @0, to match reg below?
 
-The current kernel driver doesn't have any reason to _need_ cpu-offset
-for aic2, but since there are registers there that a driver (even a
-non-Linux one) may want to use, I think it makes sense that it should
-be present in the bindings.
+Yes; thanks for catching that. The chipselect logic was wrong a long
+time ago and the wrong setting to compensate for that was fixed in the
+actual reg cell but not in the name when the driver was fixed. I'm
+applying all these changes.
 
 Rich
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
