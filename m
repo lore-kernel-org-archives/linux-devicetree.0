@@ -1,183 +1,158 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
-Date: Sat, 21 May 2016 11:18:15 -0700
-Message-ID: <20160521181815.GA26789@dtor-ws>
-References: <20160513041852.GA8932@dtor-ws>
- <1463501223-20723-1-git-send-email-jeffrey.lin@rad-ic.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v8 2/4] power: reset: add reboot mode driver
+Date: Sat, 21 May 2016 11:27:53 -0700
+Message-ID: <CAOCOHw7-YEH7aNhA57OscdJQC7aftDx0+MfHgAJR6SPRGNCNpw@mail.gmail.com>
+References: <1461567051-21734-1-git-send-email-andy.yan@rock-chips.com>
+	<1461567336-21834-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463501223-20723-1-git-send-email-jeffrey.lin-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "jeffrey.lin" <yajohn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jeesw-iQTvn4YitUrQT0dZR+AlfA@public.gmane.org, bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jeffrey.lin-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org, roger.yang-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org, KP.li-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org, albert.shieh-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1461567336-21834-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>, heiko@sntech.de, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, sre@kernel.org, John Stultz <john.stultz@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, dbaryshkov@gmail.com, David Woodhouse <dwmw2@infradead.org>, alexandre.belloni@free-electrons.com, moritz.fischer@ettus.com, Florian Fainelli <f.fainelli@gmail.com>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 12:07:02AM +0800, jeffrey.lin wrote:
-> Hi Dmitry:
-> > >static int raydium_i2c_read_message(struct i2c_client *client,
-> > >				    u32 addr, void *data, size_t len)
-> > >{
-> > >	__be32 be_addr;
-> > >	size_t xfer_len;
-> > >	int error;
-> > >	while (len) {
-> > >		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
-> > >
-> > >		be_addr = cpu_to_be32(addr);
-> > >
-> > >		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
-> > >					 &be_addr, sizeof(be_addr));
-> > >		if (!error)
-> > >			error = raydium_i2c_read(client, addr & 0xff,
-> > >						 data, xfer_len);
-> > Change as:
-> > 		if (!error)
-> > 			error = raydium_i2c_read(client, (be_addr >> 24) & 0xff,
-> > 						 data, xfer_len);
-> 
-> >I think it is the same on LE, and I suspect it will not work correctly
-> >on BE... You want to have the 8 least significant bits of the bank to be
-> >used as the address, right?
+On Sun, Apr 24, 2016 at 11:55 PM, Andy Yan <andy.yan@rock-chips.com> wrote:
+[..]
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
 
-> This function work correctly with the kernel 3.18 of chromebook in my
-> hand. Raydium touch direct access mode can recieve the BE address
+[..]
 
-That is because it is a little-endian device.
+> +config SYSCON_REBOOT_MODE
+> +       bool "Generic SYSCON regmap reboot mode driver"
+> +       depends on OF
 
+As this isn't really useful without syscon (but still compiles), I
+would suggest adding:
+
+depends on SYSCON || COMPILE_TEST
+
+> +       select REBOOT_MODE
+> +       help
+> +         Say y here will enable reboot mode driver. This will
+> +         get reboot mode arguments and store it in SYSCON mapped
+> +         register, then the bootloader can read it to take different
+> +         action according to the mode.
+> +
+>  endif
 >
-> after bank switch command 0xaa. For example, if we'll read 10 bytes
-> data begin on 0x12345678. We need send the command sequences as 0xaa->
-> 0x12->0x34->0x56-> 0x78 and then recive 10 bytes from 0x78.
-> 
 
-Right. So the thing is - on any architecture, be it little- or
-big-endian, expression "value & 0xff" will extract the 8 least
-significant bits from the value, while "(value >> 24) & 0xff" will
-extract the most significant bits (assuming that the value is 32 bits). So with your example if you do
-cpu_to_be32() on LE architecture it will actually reshuffle the bytes so
-that former LSB will become MSB and then you will extract that MSB and
-use it. On BE arches cpu_to_be32() is a noop, so addr and be_addr will
-have the same value, and your expression will produce 0x12 and not 0x78
-as you expect. On the other hand, doing "addr & 0xff" will produce 0x78
-regardless of endianness.
+[..]
 
-> > static int raydium_i2c_fw_write_page(struct i2c_client *client,
-> > 				     u16 page_idx, const void *data, size_t len)
-> > {
-> > 	u8 buf[RM_BL_WRT_LEN];
-> > 	u8 pkg_idx = 1;
-> > 	u8 div_cnt;
-> > 	size_t xfer_len;
-> > 	int error;
-> > 	int i;
-> > 
-> > 	div_cnt = len % RM_BL_WRT_PKG_SIZE ?
-> > 		len / RM_BL_WRT_PKG_SIZE + 1:len / RM_BL_WRT_PKG_SIZE;
-> >
-> >Drop this. BTW, if you ever need it we have DIV_ROUND_UP macro.
-> 
-> > 
-> > 	for (i = 0; i < div_cnt; i++) {
-> >
-> >	while (len) {
-> >
-> > 		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
-> > 		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
-> > 		/*FIXME,Touch MCU need zero index as start page*/
-> > 		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
-> > 		buf[BL_PKG_IDX] = pkg_idx++;
-> > 
-> > 		memcpy(&buf[BL_DATA_STR], data, xfer_len);
-> >
-> >		/* we need to pad to full page size */
-> >		if (len < RM_BL_WRT_PKG_SIZE)
-> >			memset(&buf[BL_DATA_STR] + len, 0xff,
-> >				RM_BL_WRT_PKG_SIZE - len);
-> > 
-> > 		if (len == 0)
-> > 			memset(buf + BL_DATA_STR, 0xff, RM_BL_WRT_PKG_SIZE);
-> > 		else if (len < RM_BL_WRT_PKG_SIZE)
-> > 			memset(buf + BL_DATA_STR + xfer_len, 0xff,
-> > 			RM_BL_WRT_PKG_SIZE - xfer_len);
-> > 
-> > 		error = raydium_i2c_write_object(client, buf, RM_BL_WRT_LEN,
-> > 						 RAYDIUM_WAIT_READY);
-> > 		if (error) {
-> > 			dev_err(&client->dev,
-> > 				"page write command failed for page %d, chunk %d: %d\n",
-> > 				page_idx, pkg_idx, error);
-> > 			return error;
-> > 		}
-> > 		data += RM_BL_WRT_PKG_SIZE;
-> > 		len -= RM_BL_WRT_PKG_SIZE;
-> > 	}
-> > 
-> > 	return error;
-> > }
-> Modify as below.
-> 
-> static int raydium_i2c_fw_write_page(struct i2c_client *client,
-> 				     u16 page_idx, const void *data, size_t len)
-> {
-> 	u8 buf[RM_BL_WRT_LEN];
-> 	u8 pkg_idx = 1;
-> 	size_t xfer_len;
-> 	int error;
-> 
-> 	while (len) {
-> 		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
-> 		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
-> 		/*FIXME,Touch MCU need zero index as start page*/
-> 		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
-> 		buf[BL_PKG_IDX] = pkg_idx++;
-> 
-> 		memcpy(&buf[BL_DATA_STR], data, xfer_len);
-> 
-> 		if (len < RM_BL_WRT_PKG_SIZE) {
-> 			buf[BL_PKG_IDX] = 4;
+> diff --git a/drivers/power/reset/reboot-mode.c b/drivers/power/reset/reboot-mode.c
 
-Why 4???
+[..]
 
-> 			memset(buf + BL_DATA_STR + xfer_len, 0xff,
-> 				RM_BL_WRT_PKG_SIZE - xfer_len);
-> 		}
-> 
-> 		error = raydium_i2c_write_object(client, buf, RM_BL_WRT_LEN,
-> 						 RAYDIUM_WAIT_READY);
-> 		if (error) {
-> 			dev_err(&client->dev,
-> 				"page write command failed for page %d, chunk %d: %d\n",
-> 				page_idx, pkg_idx, error);
-> 			return error;
-> 		}
-> 		data += xfer_len;
-> 		len -= xfer_len;
-> 	}
-> 
-> 	return error;
-> > 
-> > >static void raydium_mt_event(struct raydium_data *ts)
-> > >{
-> > >	int i;
-> > >	int error;
-> > memory allocate
-> > 	ts->report_data = kmalloc(ts->report_size, GFP_KERNEL);
-> > 	if (!ts->report_data)
-> > 		return;
-> >
-> >I thought I was allocating it after I queried the touchscreen
-> >parameters... If not it was oversight. I do not think we should be
-> >doing this on every interrupt, so please do the allocation in ->probe()
-> >code.
-> Move memory allocate to raydium_i2c_probe(). 
+> +
+> +#define PREFIX "mode-"
+> +
+> +struct mode_info {
+> +       const char *mode;
+> +       unsigned int magic;
 
-Thanks.
+If you're using of_property_read_u32() to populate this directly you
+should have this as u32.
 
--- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +       struct list_head list;
+> +};
+> +
+> +static int get_reboot_mode_magic(struct reboot_mode_driver *reboot,
+> +                                const char *cmd)
+
+Magic comes from an unsigned property and is passed as unsigned to the
+regmap api. Please make it unsigned int throughout the implementation.
+
+> +{
+> +       const char *normal = "normal";
+> +       int magic = 0;
+> +       struct mode_info *info;
+> +
+> +       if (!cmd)
+> +               cmd = normal;
+> +
+> +       list_for_each_entry(info, &reboot->head, list) {
+> +               if (!strcmp(info->mode, cmd)) {
+> +                       magic = info->magic;
+> +                       break;
+> +               }
+> +       }
+> +
+
+[..]
+
+> +int reboot_mode_register(struct reboot_mode_driver *reboot)
+> +{
+> +       struct mode_info *info;
+> +       struct property *prop;
+> +       struct device_node *np = reboot->dev->of_node;
+> +       size_t len = strlen(PREFIX);
+> +       int ret;
+> +
+> +       INIT_LIST_HEAD(&reboot->head);
+> +
+> +       for_each_property_of_node(np, prop) {
+> +               if (len > strlen(prop->name) || strncmp(prop->name, PREFIX, len))
+
+There's no reason to iterate over the string twice here, strncmp will
+exit with -1 if you hit a '\0' before strlen(PREFIX). So you can drop
+the first check without any difference in functionality.
+
+What passes this checkout though is if the property equals PREFIX, but
+this is probably better to handle as an error, rather than skip over.
+So do that below
+
+> +                       continue;
+> +
+> +               info = devm_kzalloc(reboot->dev, sizeof(*info), GFP_KERNEL);
+> +               if (!info) {
+> +                       ret = -ENOMEM;
+> +                       goto error;
+> +               }
+> +
+> +               info->mode = kstrdup_const(prop->name + len, GFP_KERNEL);
+
+You need something like this here:
+
+if (!info->mode) {
+    ret = -ENOMEM;
+    goto error;
+} else if (info->mode[0] == '\0')
+    dev_err("mode too short");
+    ret = -EINVAL;
+    goto error;
+}
+
+
+If you do the kernel a favor and submit a patch to
+drivers/base/devres.c adding devm_kstrdup_const() you don't have to do
+the goto dance at all.
+
+> +               if (of_property_read_u32(np, prop->name, &info->magic)) {
+> +                       dev_err(reboot->dev, "reboot mode %s without magic number\n",
+> +                               info->mode);
+> +                       devm_kfree(reboot->dev, info);
+> +                       continue;
+> +               }
+> +               list_add_tail(&info->list, &reboot->head);
+> +       }
+> +
+> +       reboot->reboot_notifier.notifier_call = reboot_mode_notify;
+> +       ret = register_reboot_notifier(&reboot->reboot_notifier);
+> +       if (ret)
+> +               dev_err(reboot->dev, "can't register reboot notifier\n");
+
+You're returning an error but haven't freed your info->modes.
+
+> +
+> +       return ret;
+> +
+> +error:
+> +       list_for_each_entry(info, &reboot->head, list)
+> +               kfree_const(info->mode);
+> +
+> +       return ret;
+> +}
+
+Regards,
+Bjorn
