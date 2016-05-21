@@ -1,29 +1,46 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 1/6] power: Introduce Broadcom kona reset driver
-Date: Sat, 21 May 2016 10:09:07 -0700
-Message-ID: <57409633.8060605@gmail.com>
-References: <1463002582-6875-1-git-send-email-chris.brand@broadcom.com>
- <1463002582-6875-2-git-send-email-chris.brand@broadcom.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
+Date: Sat, 21 May 2016 20:07:54 +0200
+Message-ID: <CAMuHMdUxQQt7E_mFscKh3t5ewTs=gKkV3OjZnK+Xq6AkbGZGyQ@mail.gmail.com>
+References: <cover.1463708766.git.dalias@libc.org>
+	<2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
+	<CAMuHMdVs9=8BGwmCBuYch2abJBnCLKoEx7i3EMghW3UUjXc7dA@mail.gmail.com>
+	<20160520223456.GV21636@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463002582-6875-2-git-send-email-chris.brand@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Brand <chris.brand@broadcom.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20160520223456.GV21636@brightrain.aerifal.cx>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Le 11/05/2016 14:36, Chris Brand a =C3=A9crit :
-> This driver supports reset on both BCM21664 and BCM23550.
-> Code is being moved from arch/arm/mach-bcm/board_bcm21664.c
->=20
-> Signed-off-by: Chris Brand <chris.brand@broadcom.com>
+On Sat, May 21, 2016 at 12:34 AM, Rich Felker <dalias@libc.org> wrote:
+> On Fri, May 20, 2016 at 10:04:26AM +0200, Geert Uytterhoeven wrote:
+>> On Fri, May 20, 2016 at 4:53 AM, Rich Felker <dalias@libc.org> wrote:
+>> > +Additional properties required for aic1:
+>> > +
+>> > +- reg : Memory region for configuration.
+>> > +
+>> > +- cpu-offset : For SMP, the offset to the per-cpu memory region for
+>> > +  configuration, to be scaled by the cpu number.
+>>
+>> Does cpu-offset apply to aic1 only?
+>
+> The current kernel driver doesn't have any reason to _need_ cpu-offset
+> for aic2, but since there are registers there that a driver (even a
+> non-Linux one) may want to use, I think it makes sense that it should
+> be present in the bindings.
 
-Sebastian, Dmitry, I know we are in the merge window, let me know if yo=
-u
-would want me to take this patch and the 5 others in the next arm-soc
-pull request, or if you prefer to take this one in your own tree.
+Hence the "for aic1" should be dropped?
 
-Thanks!
---=20
-=46lorian
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
