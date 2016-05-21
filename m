@@ -1,32 +1,30 @@
-From: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
-Subject: [PATCH 0014/1529] Fix typo
-Date: Sat, 21 May 2016 13:37:16 +0200
-Message-ID: <20160521113716.31995-1-andrea.gelmini@gelma.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org
-Cc: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andrea Gelmini <andrea.gelmini@gelma.net>
+Subject: [PATCH 0015/1529] Fix typo
+Date: Sat, 21 May 2016 13:37:22 +0200
+Message-ID: <20160521113722.32053-1-andrea.gelmini@gelma.net>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: andrea.gelmini@gelma.net
+Cc: trivial@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@hellion.org.uk, galak@codeaurora.org, kgene@kernel.org, k.kozlowski@samsung.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
+Signed-off-by: Andrea Gelmini <andrea.gelmini@gelma.net>
 ---
- Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt | 2 +-
+ Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt b/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
-index 52b457c..9291e79 100644
---- a/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
-+++ b/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
-@@ -1,4 +1,4 @@
--Device Tree Clock bindins for CPU DVFS of Mediatek MT8173 SoC
-+Device Tree Clock bindings for CPU DVFS of Mediatek MT8173 SoC
+diff --git a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
+index 3e36c1d..616428a 100644
+--- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
++++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
+@@ -8,7 +8,7 @@ use to analyze system performance, to make behaviors visible and to count
+ usages of each IP (DMC, CPU, RIGHTBUS, LEFTBUS, CAM interface, LCD, G3D, MFC).
+ The Exynos PPMU driver uses the devfreq-event class to provide event data
+ to various devfreq devices. The devfreq devices would use the event data when
+-derterming the current state of each IP.
++determing the current state of each IP.
  
  Required properties:
- - clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock names.
+ - compatible: Should be "samsung,exynos-ppmu" or "samsung,exynos-ppmu-v2.
 -- 
 2.8.2.534.g1f66975
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
