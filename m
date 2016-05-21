@@ -1,35 +1,30 @@
 From: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
-Subject: [PATCH 0026/1529] Fix typo
-Date: Sat, 21 May 2016 13:38:53 +0200
-Message-ID: <20160521113853.32623-1-andrea.gelmini@gelma.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 0027/1529] Fix typo
+Date: Sat, 21 May 2016 13:39:03 +0200
+Message-ID: <20160521113903.32705-1-andrea.gelmini@gelma.net>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org
-Cc: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mtd/fsmc-nand.txt | 2 +-
+ Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/fsmc-nand.txt b/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-index 32636eb..3fb682f 100644
---- a/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-@@ -13,7 +13,7 @@ Optional properties:
- - timings: array of 6 bytes for NAND timings. The meanings of these bytes
-   are:
-   byte 0 TCLR  : CLE to RE delay in number of AHB clock cycles, only 4 bits
--                 are valid. Zero means one clockcycle, 15 means 16 clock
-+                 are valid. Zero means one clock cycle, 15 means 16 clock
-                  cycles.
-   byte 1 TAR   : ALE to RE delay, 4 bits are valid. Same format as TCLR.
-   byte 2 THIZ  : number of HCLK clock cycles during which the data bus is
+diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
+index a9aa79f..3298af3 100644
+--- a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
+@@ -39,7 +39,7 @@ Required PHY timing params for utmi phy, for all chips:
+   - nvidia,elastic-limit : Variable FIFO Depth of elastic input store
+   - nvidia,idle-wait-delay : Number of 480 Mhz clock cycles of idle to wait
+     before declare IDLE.
+-  - nvidia,term-range-adj : Range adjusment on terminations
++  - nvidia,term-range-adj : Range adjustment on terminations
+   - Either one of the following for HS driver output control:
+     - nvidia,xcvr-setup : integer, uses the provided value.
+     - nvidia,xcvr-setup-use-fuses : boolean, indicates that the value is read
 -- 
 2.8.2.534.g1f66975
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
