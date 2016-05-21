@@ -1,52 +1,35 @@
-From: <hongkun.cao@mediatek.com>
-Subject: [PATCH] pinctrl: mediatek: fix dual-edge code defect
-Date: Sat, 21 May 2016 15:23:39 +0800
-Message-ID: <1463815419-11719-1-git-send-email-hongkun.cao@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, matthias.bgg@gmail.com, linus.walleij@linaro.org, erin.lo@mediatek.com
-Cc: devicetree@vger.kernel.org, "hongkun.cao" <hongkun.cao@mediatek.com>, srv_heupstream@mediatek.com, hongzhou.yang@mediatek.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, yingjoe.chen@mediatek.com, inux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
+Subject: [PATCH 0011/1529] Fix typo
+Date: Sat, 21 May 2016 13:36:48 +0200
+Message-ID: <20160521113648.31841-1-andrea.gelmini@gelma.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org
+Cc: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "hongkun.cao" <hongkun.cao@mediatek.com>
-
-When a dual-edge irq is triggered, an incorrect irq will be reported on
-condition that the external signal is not stable and this incorrect irq
-has been registered.
-Correct the register offset.
-
-Signed-off-by: hongkun.cao <hongkun.cao@mediatek.com>
+Signed-off-by: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
 ---
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/coresight.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index 2bbe6f7..92ae49f 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -1255,9 +1255,10 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
- 	const struct mtk_desc_pin *pin;
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index 93147c0c..a846d4b 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -6,7 +6,7 @@ SoCs tracing needs. These trace components can generally be classified as
+ sinks, links and sources. Trace data produced by one or more sources flows
+ through the intermediate links connecting the source to the currently selected
+ sink. Each CoreSight component device should use these properties to describe
+-its hardware characteristcs.
++its hardware characteristics.
  
- 	chained_irq_enter(chip, desc);
--	for (eint_num = 0; eint_num < pctl->devdata->ap_num; eint_num += 32) {
-+	for (eint_num = 0;
-+	     eint_num < pctl->devdata->ap_num;
-+	     eint_num += 32, reg += 4) {
- 		status = readl(reg);
--		reg += 4;
- 		while (status) {
- 			offset = __ffs(status);
- 			index = eint_num + offset;
+ * Required properties for all components *except* non-configurable replicators:
+ 
 -- 
-1.7.9.5
+2.8.2.534.g1f66975
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
