@@ -1,32 +1,52 @@
-From: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 0020/1529] Fix typo
-Date: Sat, 21 May 2016 12:25:22 +0000
-Message-ID: <20160521122522.GB6289@li61-168.members.linode.com>
-References: <20160521113800.32313-1-andrea.gelmini@gelma.net>
- <20160521125430.7372e13c@arm.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 0018/1529] Fix typo
+Date: Sat, 21 May 2016 16:07:42 +0200
+Message-ID: <20160521140742.GA1619@katana>
+References: <20160521113747.32214-1-andrea.gelmini@gelma.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160521125430.7372e13c-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160521113747.32214-1-andrea.gelmini@gelma.net>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andrea Gelmini <andrea.gelmini@gelma.net>
+Cc: trivial@kernel.org, dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@hellion.org.uk, galak@codeaurora.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 21, 2016 at 12:54:30PM +0100, Marc Zyngier wrote:
-> > -  this controller is cacaded from
-> > +  this controller is cached from
-> 
-> No. The word you're looking for is "cascaded"...
 
-You are right.
-I don't submit a new fix. I don't care to appear in "git log".
-You can fix it.
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Bye,
-Andrea
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Sat, May 21, 2016 at 01:37:47PM +0200, Andrea Gelmini wrote:
+> Signed-off-by: Andrea Gelmini <andrea.gelmini@gelma.net>
+
+Subject is too spartanic. Please have a look at other patches how to do
+it. And while I haven't seen the rest of the series, the number 1529
+heavily leads to the assumption that quite some of them could be
+squashed together.
+
+
+--envbJBWh7q8WU6mo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXQGuuAAoJEBQN5MwUoCm2qA4QAKTxplFlXTarVdp1fm6d/pwb
+hkbQgnILmhw7CTex8KaLk9ng6oYdTOU5ZU3McuJGdICPGGbrD8qJB42hhgO210e+
+jo1S0SEFgorI9b76orYW7vG/Stc0vGwJvBvehwrwcaHWkx5ZPZkfNTEXwLGpG/ac
+85Kh2caYV1QsuqsxHciTDjNOICdipd+HbsbVbBA1im0LNyjH/Ez1FMnsLufOudZZ
+Y8Ov0WCk3t5XV3TS5qcNeqmV/8dnva702104K81yDqM11jyH6Z8U1zSFNahFi9vf
+IXRjMvU2dMYl8kAdDp5USVNUGiJAXWrUiBuDbi7ciBtsRT3SIuRLoxrBlL15xJ/w
+fsz8b1gxheJjXdyIL689cpCMb73wJmDJYQK4C4GPVoY3SqhySkl1VN5L2jnE4mNQ
+XXiPU8U/tdqlYMaDjFJPANfeA8kaHj2kKypHNVmUpkQqYAyD6l2b1a7NPCtOHG9x
+NYfDWquXttfkSPIlJSPcL649SJOEplX9XtooUAAPqaBOAmPmy/pJA71tO5zi0UgB
+r6wo5kiXEmEL+hnfckpinv/BC4Ka0kTGT/JP1f+vp8DCF6vN/nD5ubxCvf9NYYjB
+1gqq+7beSOuWFPxhsRiZ+LuZJfvfYA9JahH0vw88fyymu5UiKbuEoKf1rIJ+Scew
+i22fk01VtHr3YW9YqzUR
+=OZM8
+-----END PGP SIGNATURE-----
+
+--envbJBWh7q8WU6mo--
