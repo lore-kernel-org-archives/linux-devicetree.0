@@ -1,60 +1,90 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH 39/54] MAINTAINERS: Add file patterns for rtc
- device tree bindings
-Date: Sun, 22 May 2016 11:06:16 +0200
-Message-ID: <1463907991-7916-40-git-send-email-geert@linux-m68k.org>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 00/54] MAINTAINERS: Add file patterns for device tree bindings
+Date: Sun, 22 May 2016 11:05:37 +0200
+Message-ID: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCQJP74GSUDRBJXNQW5AKGQETZ3ZQ3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1463907991-7916-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Submitters of device tree binding documentation may forget to CC
-the subsystem maintainer if this is missing.
+	Hi all,
 
-Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
----
-Please apply this patch directly if you want to be involved in device
-tree binding documentation for your subsystem.
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Submitters of device tree binding documentation regularly forget to CC
+the subsystem maintainer due to missing entries in MAINTAINERS for
+Documentation/devicetree/bindings/. This patch series is an attempt to
+add (most) missing entries.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e204132911b63624..1942e29d55320f01 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9580,6 +9580,7 @@ L:	rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
- Q:	http://patchwork.ozlabs.org/project/rtc-linux/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git
- S:	Maintained
-+F:	Documentation/devicetree/bindings/rtc/
- F:	Documentation/rtc.txt
- F:	drivers/rtc/
- F:	include/linux/rtc.h
+Maintainers: Please apply the appropriate patch(es) directly if you want
+to be involved in device tree binding documentation for your subsystem.
+
+Thanks!
+
+Geert Uytterhoeven (54):
+  MAINTAINERS: Add file patterns for ion device tree bindings
+  MAINTAINERS: Add file patterns for dove device tree bindings
+  MAINTAINERS: Add file patterns for mediatek device tree bindings
+  MAINTAINERS: Add file patterns for qcom device tree bindings
+  MAINTAINERS: Add file patterns for rockchip device tree bindings
+  MAINTAINERS: Add file patterns for backlight device tree bindings
+  MAINTAINERS: Add file patterns for bcm2835 device tree bindings
+  MAINTAINERS: Add file patterns for mips brcm device tree bindings
+  MAINTAINERS: Add file patterns for can device tree bindings
+  MAINTAINERS: Add file patterns for clocksource device tree bindings
+  MAINTAINERS: Add file patterns for clock device tree bindings
+  MAINTAINERS: Add file patterns for cpufreq device tree bindings
+  MAINTAINERS: Add file patterns for cris device tree bindings
+  MAINTAINERS: Add file patterns for crypto device tree bindings
+  MAINTAINERS: Add file patterns for dma device tree bindings
+  MAINTAINERS: Add file patterns for drm device tree bindings
+  MAINTAINERS: Add file patterns for fpga device tree bindings
+  MAINTAINERS: Add file patterns for h8300 device tree bindings
+  MAINTAINERS: Add file patterns for rng device tree bindings
+  MAINTAINERS: Add file patterns for iio device tree bindings
+  MAINTAINERS: Add file patterns for serio device tree bindings
+  MAINTAINERS: Add file patterns for iommu device tree bindings
+  MAINTAINERS: Add file patterns for led device tree bindings
+  MAINTAINERS: Add file patterns for ata device tree bindings
+  MAINTAINERS: Add file patterns for powerpc device tree bindings
+  MAINTAINERS: Add file patterns for mailbox device tree bindings
+  MAINTAINERS: Add file patterns for dsa device tree bindings
+  MAINTAINERS: Add file patterns for media device tree bindings
+  MAINTAINERS: Add file patterns for mtd device tree bindings
+  MAINTAINERS: Add file patterns for mips device tree bindings
+  MAINTAINERS: Add file patterns for mmc device tree bindings
+  MAINTAINERS: Add file patterns for net device tree bindings
+  MAINTAINERS: Add file patterns for wireless device tree bindings
+  MAINTAINERS: Add file patterns for nios2 device tree bindings
+  MAINTAINERS: Add file patterns for pci device tree bindings
+  MAINTAINERS: Add file patterns for pinctrl device tree bindings
+  MAINTAINERS: Add file patterns for power supply device tree bindings
+  MAINTAINERS: Add file patterns for pps device tree bindings
+  MAINTAINERS: Add file patterns for rtc device tree bindings
+  MAINTAINERS: Add file patterns for regmap device tree bindings
+  MAINTAINERS: Add file patterns for remoteproc device tree bindings
+  MAINTAINERS: Add file patterns for scsi device tree bindings
+  MAINTAINERS: Add file patterns for sound device tree bindings
+  MAINTAINERS: Add file patterns for spi device tree bindings
+  MAINTAINERS: Add file patterns for staging iio device tree bindings
+  MAINTAINERS: Add file patterns for ti device tree bindings
+  MAINTAINERS: Add file patterns for tpm device tree bindings
+  MAINTAINERS: Add file patterns for serial device tree bindings
+  MAINTAINERS: Add file patterns for usb device tree bindings
+  MAINTAINERS: Add file patterns for virtio device tree bindings
+  MAINTAINERS: Add file patterns for w1 device tree bindings
+  MAINTAINERS: Add file patterns for watchdog device tree bindings
+  MAINTAINERS: Add file patterns for x86 device tree bindings
+  MAINTAINERS: Add file patterns for xillybus device tree bindings
+
+ MAINTAINERS | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 1 deletion(-)
+
 -- 
 1.9.1
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Gr{oetje,eeting}s,
+
+						Geert
