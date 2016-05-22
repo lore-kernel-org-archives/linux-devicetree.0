@@ -1,43 +1,40 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 41/54] MAINTAINERS: Add file patterns for remoteproc device tree bindings
-Date: Sun, 22 May 2016 11:06:18 +0200
-Message-ID: <1463907991-7916-42-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH 19/54] MAINTAINERS: Add file patterns for rng device tree bindings
+Date: Sun, 22 May 2016 11:05:56 +0200
+Message-ID: <1463907991-7916-20-git-send-email-geert@linux-m68k.org>
 References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 In-Reply-To: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-crypto-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-remoteproc@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Submitters of device tree binding documentation may forget to CC
 the subsystem maintainer if this is missing.
 
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: linux-remoteproc@vger.kernel.org
+Cc: Matt Mackall <mpm@selenic.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org
 ---
 Please apply this patch directly if you want to be involved in device
 tree binding documentation for your subsystem.
 ---
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d419cdbe35cbacab..327e1d5a501340ac 100644
+index bfeeb85bc41ae5f5..cd7793520e2cccfc 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -9613,8 +9613,9 @@ M:	Bjorn Andersson <bjorn.andersson@linaro.org>
- L:	linux-remoteproc@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ohad/remoteproc.git
- S:	Maintained
--F:	drivers/remoteproc/
-+F:	Documentation/devicetree/bindings/remoteproc/
- F:	Documentation/remoteproc.txt
-+F:	drivers/remoteproc/
- F:	include/linux/remoteproc.h
- 
- REMOTE PROCESSOR MESSAGING (RPMSG) SUBSYSTEM
+@@ -5277,6 +5277,7 @@ M:	Matt Mackall <mpm@selenic.com>
+ M:	Herbert Xu <herbert@gondor.apana.org.au>
+ L:	linux-crypto@vger.kernel.org
+ S:	Odd fixes
++F:	Documentation/devicetree/bindings/rng/
+ F:	Documentation/hw_random.txt
+ F:	drivers/char/hw_random/
+ F:	include/linux/hw_random.h
 -- 
 1.9.1
