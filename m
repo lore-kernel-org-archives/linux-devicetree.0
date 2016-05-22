@@ -1,43 +1,60 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
-Date: Sat, 21 May 2016 15:17:39 -0400
-Message-ID: <20160521191739.GB21636@brightrain.aerifal.cx>
-References: <cover.1463708766.git.dalias@libc.org>
- <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
- <CAMuHMdVs9=8BGwmCBuYch2abJBnCLKoEx7i3EMghW3UUjXc7dA@mail.gmail.com>
- <20160520223456.GV21636@brightrain.aerifal.cx>
- <CAMuHMdUxQQt7E_mFscKh3t5ewTs=gKkV3OjZnK+Xq6AkbGZGyQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: [PATCH 39/54] MAINTAINERS: Add file patterns for rtc
+ device tree bindings
+Date: Sun, 22 May 2016 11:06:16 +0200
+Message-ID: <1463907991-7916-40-git-send-email-geert@linux-m68k.org>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUxQQt7E_mFscKh3t5ewTs=gKkV3OjZnK+Xq6AkbGZGyQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCQJP74GSUDRBJXNQW5AKGQETZ3ZQ3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1463907991-7916-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 21, 2016 at 08:07:54PM +0200, Geert Uytterhoeven wrote:
-> On Sat, May 21, 2016 at 12:34 AM, Rich Felker <dalias@libc.org> wrote:
-> > On Fri, May 20, 2016 at 10:04:26AM +0200, Geert Uytterhoeven wrote:
-> >> On Fri, May 20, 2016 at 4:53 AM, Rich Felker <dalias@libc.org> wrote:
-> >> > +Additional properties required for aic1:
-> >> > +
-> >> > +- reg : Memory region for configuration.
-> >> > +
-> >> > +- cpu-offset : For SMP, the offset to the per-cpu memory region for
-> >> > +  configuration, to be scaled by the cpu number.
-> >>
-> >> Does cpu-offset apply to aic1 only?
-> >
-> > The current kernel driver doesn't have any reason to _need_ cpu-offset
-> > for aic2, but since there are registers there that a driver (even a
-> > non-Linux one) may want to use, I think it makes sense that it should
-> > be present in the bindings.
-> 
-> Hence the "for aic1" should be dropped?
+Submitters of device tree binding documentation may forget to CC
+the subsystem maintainer if this is missing.
 
-Yes, I've fixed that locally. Moved reg to required and cpu-offset
-to optional but needed for smp.
+Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+---
+Please apply this patch directly if you want to be involved in device
+tree binding documentation for your subsystem.
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Rich
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e204132911b63624..1942e29d55320f01 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9580,6 +9580,7 @@ L:	rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+ Q:	http://patchwork.ozlabs.org/project/rtc-linux/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git
+ S:	Maintained
++F:	Documentation/devicetree/bindings/rtc/
+ F:	Documentation/rtc.txt
+ F:	drivers/rtc/
+ F:	include/linux/rtc.h
+-- 
+1.9.1
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
