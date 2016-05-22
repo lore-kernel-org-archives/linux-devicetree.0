@@ -1,21 +1,22 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH 18/54] MAINTAINERS: Add file patterns for h8300 device tree bindings
-Date: Sun, 22 May 2016 11:05:55 +0200
-Message-ID: <1463907991-7916-19-git-send-email-geert@linux-m68k.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 42/54] MAINTAINERS: Add file patterns for scsi device tree bindings
+Date: Sun, 22 May 2016 11:06:19 +0200
+Message-ID: <1463907991-7916-43-git-send-email-geert@linux-m68k.org>
 References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463907991-7916-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Submitters of device tree binding documentation may forget to CC
 the subsystem maintainer if this is missing.
 
-Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Cc: uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: James E.J. Bottomley <jejb@linux.vnet.ibm.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
 ---
 Please apply this patch directly if you want to be involved in device
 tree binding documentation for your subsystem.
@@ -24,21 +25,16 @@ tree binding documentation for your subsystem.
  1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index ef8a33c07ddceb3b..bfeeb85bc41ae5f5 100644
+index 327e1d5a501340ac..139824579fa97c2c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -5217,6 +5217,7 @@ L:	uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org (moderated for non-subscribers)
- W:	http://uclinux-h8.sourceforge.jp
- T:	git git://git.sourceforge.jp/gitroot/uclinux-h8/linux.git
+@@ -10141,6 +10141,7 @@ M:	"Martin K. Petersen" <martin.petersen@oracle.com>
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git
+ L:	linux-scsi@vger.kernel.org
  S:	Maintained
-+F:	Documentation/devicetree/bindings/h8300/
- F:	arch/h8300/
- F:	drivers/clocksource/h8300_*.c
- F:	drivers/clk/h8300/
++F:	Documentation/devicetree/bindings/scsi/
+ F:	drivers/scsi/
+ F:	include/scsi/
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
