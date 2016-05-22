@@ -1,21 +1,24 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH 33/54] MAINTAINERS: Add file patterns for wireless device tree bindings
-Date: Sun, 22 May 2016 11:06:10 +0200
-Message-ID: <1463907991-7916-34-git-send-email-geert@linux-m68k.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 47/54] MAINTAINERS: Add file patterns for tpm device tree bindings
+Date: Sun, 22 May 2016 11:06:24 +0200
+Message-ID: <1463907991-7916-48-git-send-email-geert@linux-m68k.org>
 References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463907991-7916-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Peter Huewe <peterhuewe@gmx.de>, Marcel Selhorst <tpmdd@selhorst.net>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, tpmdd-devel@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
 Submitters of device tree binding documentation may forget to CC
 the subsystem maintainer if this is missing.
 
-Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Peter Huewe <peterhuewe@gmx.de>
+Cc: Marcel Selhorst <tpmdd@selhorst.net>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: tpmdd-devel@lists.sourceforge.net
 ---
 Please apply this patch directly if you want to be involved in device
 tree binding documentation for your subsystem.
@@ -24,21 +27,16 @@ tree binding documentation for your subsystem.
  1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 7a9f1138131afcf1..604d5d4230406094 100644
+index 01a6ed1d8fc2d81f..54dcdef6efc4a936 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -8023,6 +8023,7 @@ Q:	http://patchwork.kernel.org/project/linux-wireless/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next.git
+@@ -11600,6 +11600,7 @@ L:	tpmdd-devel@lists.sourceforge.net (moderated for non-subscribers)
+ Q:	https://patchwork.kernel.org/project/tpmdd-devel/list/
+ T:	git git://git.infradead.org/users/jjs/linux-tpmdd.git
  S:	Maintained
-+F:	Documentation/devicetree/bindings/net/wireless/
- F:	drivers/net/wireless/
++F:	Documentation/devicetree/bindings/security/tpm/
+ F:	drivers/char/tpm/
  
- NETXEN (1/10) GbE SUPPORT
+ TPM IBM_VTPM DEVICE DRIVER
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
