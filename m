@@ -1,31 +1,30 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 20/54] MAINTAINERS: Add file patterns for iio device tree
- bindings
-Date: Sun, 22 May 2016 20:41:23 +0100
-Message-ID: <f80bdfd1-fdb7-1fb7-3be4-2c76a0c04ea7@kernel.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 45/54] MAINTAINERS: Add file patterns for staging iio
+ device tree bindings
+Date: Sun, 22 May 2016 20:42:08 +0100
+Message-ID: <9b7f6db5-2acb-5093-d30f-2eebee796abc@kernel.org>
 References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
- <1463907991-7916-21-git-send-email-geert@linux-m68k.org>
+ <1463907991-7916-46-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463907991-7916-21-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463907991-7916-46-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/05/16 10:05, Geert Uytterhoeven wrote:
+On 22/05/16 10:06, Geert Uytterhoeven wrote:
 > Submitters of device tree binding documentation may forget to CC
 > the subsystem maintainer if this is missing.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-> Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Applied. Thanks.
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: linux-iio@vger.kernel.org
+Applied - thanks.
+
+Jonathan
 > ---
 > Please apply this patch directly if you want to be involved in device
 > tree binding documentation for your subsystem.
@@ -34,15 +33,15 @@ Applied. Thanks.
 >  1 file changed, 1 insertion(+)
 > 
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index cd7793520e2cccfc..5cf50bf461c4255e 100644
+> index f11355314880838b..5c96827ea93d5d7c 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -5786,6 +5786,7 @@ R:	Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
->  R:	Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
->  L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  S:	Maintained
-> +F:	Documentation/devicetree/bindings/iio/
->  F:	drivers/iio/
+> @@ -10867,6 +10867,7 @@ STAGING - INDUSTRIAL IO
+>  M:	Jonathan Cameron <jic23@kernel.org>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Odd Fixes
+> +F:	Documentation/devicetree/bindings/staging/iio/
 >  F:	drivers/staging/iio/
->  F:	include/linux/iio/
+>  
+>  STAGING - LIRC (LINUX INFRARED REMOTE CONTROL) DRIVERS
 > 
