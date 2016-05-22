@@ -1,21 +1,22 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 44/54] MAINTAINERS: Add file patterns for spi device tree bindings
-Date: Sun, 22 May 2016 11:06:21 +0200
-Message-ID: <1463907991-7916-45-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH 52/54] MAINTAINERS: Add file patterns for watchdog device tree bindings
+Date: Sun, 22 May 2016 11:06:29 +0200
+Message-ID: <1463907991-7916-53-git-send-email-geert@linux-m68k.org>
 References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Submitters of device tree binding documentation may forget to CC
 the subsystem maintainer if this is missing.
 
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org
+Cc: Wim Van Sebroeck <wim@iguana.be>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-watchdog@vger.kernel.org
 ---
 Please apply this patch directly if you want to be involved in device
 tree binding documentation for your subsystem.
@@ -24,16 +25,16 @@ tree binding documentation for your subsystem.
  1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 9d81eff6577ff886..f11355314880838b 100644
+index 9f54762f002e16de..7202b6565dd98d50 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -10804,6 +10804,7 @@ L:	linux-spi@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
- Q:	http://patchwork.kernel.org/project/spi-devel-general/list/
+@@ -12400,6 +12400,7 @@ L:	linux-watchdog@vger.kernel.org
+ W:	http://www.linux-watchdog.org/
+ T:	git git://www.linux-watchdog.org/linux-watchdog.git
  S:	Maintained
-+F:	Documentation/devicetree/bindings/spi/
- F:	Documentation/spi/
- F:	drivers/spi/
- F:	include/linux/spi/
++F:	Documentation/devicetree/bindings/watchdog/
+ F:	Documentation/watchdog/
+ F:	drivers/watchdog/
+ F:	include/linux/watchdog.h
 -- 
 1.9.1
