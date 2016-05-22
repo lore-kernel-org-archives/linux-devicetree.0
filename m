@@ -1,54 +1,96 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 05/54] MAINTAINERS: Add file patterns for rockchip device tree bindings
-Date: Sun, 22 May 2016 11:27:34 +0200
-Message-ID: <1575416.jfSztnP7S8@phil>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org> <1463907991-7916-6-git-send-email-geert@linux-m68k.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463907991-7916-6-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+From: "jeffrey.lin" <yajohn@gmail.com>
+Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
+Date: Sun, 22 May 2016 17:32:59 +0800
+Message-ID: <1463909579-316-1-git-send-email-jeffrey.lin@rad-ic.com>
+References: <20160513041852.GA8932@dtor-ws>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160513041852.GA8932@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org
+Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi Dmitry:
 
-Am Sonntag, 22. Mai 2016, 11:05:42 schrieb Geert Uytterhoeven:
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
++static int raydium_i2c_read_message(struct i2c_client *client,
++				    u32 addr, void *data, size_t len)
++{
++	__be32 be_addr;
++	size_t xfer_len;
++	int error;
++
++	while (len) {
++		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
++
++		be_addr = cpu_to_be32(addr);
++
++		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
++					 &be_addr, sizeof(be_addr));
++		if (!error)
++			error = raydium_i2c_read(client, (be_addr >> 24) & 0xff,
++						 data, xfer_len);
++		if (error)
++			return error;
++
++		len -= xfer_len;
++		data += xfer_len;
++		addr += xfer_len;
++	}
++
++	return 0;
++}
+I change access address method of touch MCU direct mode so that I can change raydium i2c driver as below.
 
-The "N:	rockchip" line at the bottom of the block catches this nicely 
-already (also just verified with a get_maintainer.pl -f call), so I don't 
-think this new more explicit line is really necessary?
+static int raydium_i2c_read_message(struct i2c_client *client,
+				    u32 addr, void *data, size_t len)
+{
+	__le32 le_addr;
+	size_t xfer_len;
+	u32 shift_addr;
+	int error;
 
+	while (len) {
+		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
 
-Thanks
-Heiko
+		le_addr = cpu_to_le32(addr);
 
+		shift_addr = le_addr >> 8;/*send the first 3rd byte addr.*/
+		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
+					 &shift_addr, sizeof(le_addr));
+		if (!error)/*read from last byte addr.*/
+			error = raydium_i2c_read(client, le_addr & 0xff,
+						 data, xfer_len);
+		if (error)
+			return error;
 
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-rockchip@lists.infradead.org
-> ---
-> Please apply this patch directly if you want to be involved in device
-> tree binding documentation for your subsystem.
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ea4e25a2f188aca1..e6b84eba4d574d13 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1577,6 +1577,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated
-> for non-subscribers) L:	linux-rockchip@lists.infradead.org
->  T:	git
-> git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
-> S:	Maintained
-> +F:	Documentation/devicetree/bindings/soc/rockchip/
->  F:	arch/arm/boot/dts/rk3*
->  F:	arch/arm/mach-rockchip/
->  F:	drivers/clk/rockchip/
+		len -= xfer_len;
+		data += xfer_len;
+		addr += xfer_len;
+	}
+
+	return 0;
+}
+Is this okay? If okay, I will use this form update one new patch.
+
+>> static int raydium_i2c_fw_write_page(struct i2c_client *client,
+>> 				     u16 page_idx, const void *data, size_t len)
+>> {
+>> 	u8 buf[RM_BL_WRT_LEN];
+>> 	u8 pkg_idx = 1;
+>> 	size_t xfer_len;
+>> 	int error;
+>> 
+>> 	while (len) {
+>> 		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
+>> 		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
+>> 		/*FIXME,Touch MCU need zero index as start page*/
+>> 		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
+>> 		buf[BL_PKG_IDX] = pkg_idx++;
+>> 
+>> 		memcpy(&buf[BL_DATA_STR], data, xfer_len);
+>> 
+>> 		if (len < RM_BL_WRT_PKG_SIZE) {
+>> 			buf[BL_PKG_IDX] = 4;
+
+>Why 4???
+4 is trigger index for write flash. Our page write size is 128 bytes, but in order to meet maximum I2C bus read/write byte limite and need fill full all pages of 128 bytes. So that I split 128 bytes to "4" section, and start burning flash if touch MCU get index "4". 
