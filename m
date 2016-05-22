@@ -1,51 +1,43 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 50/54] MAINTAINERS: Add file patterns for virtio device tree
-	bindings
-Date: Sun, 22 May 2016 11:06:27 +0200
-Message-ID: <1463907991-7916-51-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH 16/54] MAINTAINERS: Add file patterns for drm device tree
+ bindings
+Date: Sun, 22 May 2016 11:05:53 +0200
+Message-ID: <1463907991-7916-17-git-send-email-geert@linux-m68k.org>
 References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: virtualization@lists.linux-foundation.org, Geert Uytterhoeven <geert@linux-m68k.org>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Submitters of device tree binding documentation may forget to CC
-the subsystem maintainer if this is missing.
-
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: virtualization@lists.linux-foundation.org
----
-Please apply this patch directly if you want to be involved in device
-tree binding documentation for your subsystem.
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d79cedf604642ee4..28829bfa140c47b2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12168,6 +12168,7 @@ VIRTIO CORE, NET AND BLOCK DRIVERS
- M:	"Michael S. Tsirkin" <mst@redhat.com>
- L:	virtualization@lists.linux-foundation.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/virtio/
- F:	drivers/virtio/
- F:	tools/virtio/
- F:	drivers/net/virtio_net.c
--- 
-1.9.1
+U3VibWl0dGVycyBvZiBkZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gbWF5IGZvcmdl
+dCB0byBDQwp0aGUgc3Vic3lzdGVtIG1haW50YWluZXIgaWYgdGhpcyBpcyBtaXNzaW5nLgoKU2ln
+bmVkLW9mZi1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4KQ2M6
+IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKLS0tClBsZWFzZSBhcHBseSB0aGlzIHBhdGNoIGRpcmVjdGx5IGlmIHlvdSB3
+YW50IHRvIGJlIGludm9sdmVkIGluIGRldmljZQp0cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBm
+b3IgeW91ciBzdWJzeXN0ZW0uCi0tLQogTUFJTlRBSU5FUlMgfCAzICsrKwogMSBmaWxlIGNoYW5n
+ZWQsIDMgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5F
+UlMKaW5kZXggYzc5Yjk5ZGQzYTBiZjIyZC4uNzUxMzhjMDlkZDYwMzA5MyAxMDA2NDQKLS0tIGEv
+TUFJTlRBSU5FUlMKKysrIGIvTUFJTlRBSU5FUlMKQEAgLTM4NjgsNiArMzg2OCw5IEBAIFQ6CWdp
+dCBnaXQ6Ly9wZW9wbGUuZnJlZWRlc2t0b3Aub3JnL35haXJsaWVkL2xpbnV4CiBTOglNYWludGFp
+bmVkCiBGOglkcml2ZXJzL2dwdS9kcm0vCiBGOglkcml2ZXJzL2dwdS92Z2EvCitGOglEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS8KK0Y6CURvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ncHUvCitGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdmlkZW8vCiBGOglEb2N1bWVudGF0aW9uL0RvY0Jvb2svZ3B1LioKIEY6CWluY2x1ZGUvZHJt
+LwogRjoJaW5jbHVkZS91YXBpL2RybS8KLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
