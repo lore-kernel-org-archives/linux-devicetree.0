@@ -1,39 +1,54 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 45/54] MAINTAINERS: Add file patterns for staging iio device tree bindings
-Date: Sun, 22 May 2016 11:06:22 +0200
-Message-ID: <1463907991-7916-46-git-send-email-geert@linux-m68k.org>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 05/54] MAINTAINERS: Add file patterns for rockchip device tree bindings
+Date: Sun, 22 May 2016 11:27:34 +0200
+Message-ID: <1575416.jfSztnP7S8@phil>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org> <1463907991-7916-6-git-send-email-geert@linux-m68k.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+In-Reply-To: <1463907991-7916-6-git-send-email-geert@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Submitters of device tree binding documentation may forget to CC
-the subsystem maintainer if this is missing.
+Hi Geert,
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-iio@vger.kernel.org
----
-Please apply this patch directly if you want to be involved in device
-tree binding documentation for your subsystem.
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Am Sonntag, 22. Mai 2016, 11:05:42 schrieb Geert Uytterhoeven:
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f11355314880838b..5c96827ea93d5d7c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10867,6 +10867,7 @@ STAGING - INDUSTRIAL IO
- M:	Jonathan Cameron <jic23@kernel.org>
- L:	linux-iio@vger.kernel.org
- S:	Odd Fixes
-+F:	Documentation/devicetree/bindings/staging/iio/
- F:	drivers/staging/iio/
- 
- STAGING - LIRC (LINUX INFRARED REMOTE CONTROL) DRIVERS
--- 
-1.9.1
+The "N:	rockchip" line at the bottom of the block catches this nicely 
+already (also just verified with a get_maintainer.pl -f call), so I don't 
+think this new more explicit line is really necessary?
+
+
+Thanks
+Heiko
+
+
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rockchip@lists.infradead.org
+> ---
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ea4e25a2f188aca1..e6b84eba4d574d13 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1577,6 +1577,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated
+> for non-subscribers) L:	linux-rockchip@lists.infradead.org
+>  T:	git
+> git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
+> S:	Maintained
+> +F:	Documentation/devicetree/bindings/soc/rockchip/
+>  F:	arch/arm/boot/dts/rk3*
+>  F:	arch/arm/mach-rockchip/
+>  F:	drivers/clk/rockchip/
