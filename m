@@ -1,22 +1,20 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 12/54] MAINTAINERS: Add file patterns for cpufreq device tree bindings
-Date: Sun, 22 May 2016 11:05:49 +0200
-Message-ID: <1463907991-7916-13-git-send-email-geert@linux-m68k.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: [PATCH 26/54] MAINTAINERS: Add file patterns for mailbox device tree bindings
+Date: Sun, 22 May 2016 11:06:03 +0200
+Message-ID: <1463907991-7916-27-git-send-email-geert@linux-m68k.org>
 References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463907991-7916-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Submitters of device tree binding documentation may forget to CC
 the subsystem maintainer if this is missing.
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org
+Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
 Please apply this patch directly if you want to be involved in device
 tree binding documentation for your subsystem.
@@ -25,16 +23,21 @@ tree binding documentation for your subsystem.
  1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 4c9f31233670e9dd..b241c14d9ab57e2a 100644
+index 899abfeba25eedba..c87d146377ffc22c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3213,6 +3213,7 @@ L:	linux-pm@vger.kernel.org
+@@ -7155,6 +7155,7 @@ MAILBOX API
+ M:	Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ L:	linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
  S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
- T:	git git://git.linaro.org/people/vireshk/linux.git (For ARM Updates)
-+F:	Documentation/devicetree/bindings/cpufreq/
- F:	drivers/cpufreq/
- F:	include/linux/cpufreq.h
- 
++F:	Documentation/devicetree/bindings/mailbox/
+ F:	drivers/mailbox/
+ F:	include/linux/mailbox_client.h
+ F:	include/linux/mailbox_controller.h
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
