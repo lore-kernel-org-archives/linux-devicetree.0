@@ -1,22 +1,21 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 42/54] MAINTAINERS: Add file patterns for scsi device tree bindings
-Date: Sun, 22 May 2016 11:06:19 +0200
-Message-ID: <1463907991-7916-43-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH 38/54] MAINTAINERS: Add file patterns for pps device tree bindings
+Date: Sun, 22 May 2016 11:06:15 +0200
+Message-ID: <1463907991-7916-39-git-send-email-geert@linux-m68k.org>
 References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rodolfo Giometti <giometti@enneenne.com>, linuxpps@ml.enneenne.com
 List-Id: devicetree@vger.kernel.org
 
 Submitters of device tree binding documentation may forget to CC
 the subsystem maintainer if this is missing.
 
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: James E.J. Bottomley <jejb@linux.vnet.ibm.com>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
+Cc: Rodolfo Giometti <giometti@enneenne.com>
+Cc: linuxpps@ml.enneenne.com
 ---
 Please apply this patch directly if you want to be involved in device
 tree binding documentation for your subsystem.
@@ -25,16 +24,16 @@ tree binding documentation for your subsystem.
  1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 327e1d5a501340ac..139824579fa97c2c 100644
+index 768d802dfac589d6..e204132911b63624 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -10141,6 +10141,7 @@ M:	"Martin K. Petersen" <martin.petersen@oracle.com>
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git
- L:	linux-scsi@vger.kernel.org
+@@ -9135,6 +9135,7 @@ M:	Rodolfo Giometti <giometti@enneenne.com>
+ W:	http://wiki.enneenne.com/index.php/LinuxPPS_support
+ L:	linuxpps@ml.enneenne.com (subscribers-only)
  S:	Maintained
-+F:	Documentation/devicetree/bindings/scsi/
- F:	drivers/scsi/
- F:	include/scsi/
- 
++F:	Documentation/devicetree/bindings/pps/
+ F:	Documentation/pps/
+ F:	drivers/pps/
+ F:	include/linux/pps*.h
 -- 
 1.9.1
