@@ -1,118 +1,205 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
-Date: Sun, 22 May 2016 15:37:29 -0700
-Message-ID: <9B72127B-A7F3-4FDD-968E-600C2D55CF9D@gmail.com>
-References: <20160513041852.GA8932@dtor-ws> <1463909579-316-1-git-send-email-jeffrey.lin@rad-ic.com>
+From: <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: imx6q: extend support for the cm-fx6
+Date: Mon, 23 May 2016 00:47:37 +0200
+Message-ID: <709d6b3d522f4fcb8112830e0426dbb3@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1463909579-316-1-git-send-email-jeffrey.lin@rad-ic.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "jeffrey.lin" <yajohn@gmail.com>, bleung@chromium.org
-Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On May 22, 2016 2:32:59 AM PDT, "jeffrey.lin" <yajohn@gmail.com> wrote:
->Hi Dmitry:
->
->+static int raydium_i2c_read_message(struct i2c_client *client,
->+				    u32 addr, void *data, size_t len)
->+{
->+	__be32 be_addr;
->+	size_t xfer_len;
->+	int error;
->+
->+	while (len) {
->+		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
->+
->+		be_addr = cpu_to_be32(addr);
->+
->+		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
->+					 &be_addr, sizeof(be_addr));
->+		if (!error)
->+			error = raydium_i2c_read(client, (be_addr >> 24) & 0xff,
->+						 data, xfer_len);
->+		if (error)
->+			return error;
->+
->+		len -= xfer_len;
->+		data += xfer_len;
->+		addr += xfer_len;
->+	}
->+
->+	return 0;
->+}
->I change access address method of touch MCU direct mode so that I can
->change raydium i2c driver as below.
->
->static int raydium_i2c_read_message(struct i2c_client *client,
->				    u32 addr, void *data, size_t len)
->{
->	__le32 le_addr;
->	size_t xfer_len;
->	u32 shift_addr;
->	int error;
->
->	while (len) {
->		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
->
->		le_addr = cpu_to_le32(addr);
->
->		shift_addr = le_addr >> 8;/*send the first 3rd byte addr.*/
->		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
->					 &shift_addr, sizeof(le_addr));
->		if (!error)/*read from last byte addr.*/
->			error = raydium_i2c_read(client, le_addr & 0xff,
->						 data, xfer_len);
->		if (error)
->			return error;
->
->		len -= xfer_len;
->		data += xfer_len;
->		addr += xfer_len;
->	}
->
->	return 0;
->}
->Is this okay? If okay, I will use this form update one new patch.
+From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 
-Why? It has the same problem - you can not do calculations on a variable in fixed endianness, because you do not know if your code will run on big or little endian CPU.
+The cm-fx6 module has an on-board spi-flash chip for its firmware, an
+eeprom (containing e.g. the mac address of the on-board Ethernet),
+a sata port, a pcie controller, an USB hub, and an USB otg port.
+Enable support for them. In addition, enable syscon poweroff support.
 
-Doesn't my version of the code work?
+Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-cm-fx6.dts | 136 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
 
->
->>> static int raydium_i2c_fw_write_page(struct i2c_client *client,
->>> 				     u16 page_idx, const void *data, size_t len)
->>> {
->>> 	u8 buf[RM_BL_WRT_LEN];
->>> 	u8 pkg_idx = 1;
->>> 	size_t xfer_len;
->>> 	int error;
->>> 
->>> 	while (len) {
->>> 		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
->>> 		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
->>> 		/*FIXME,Touch MCU need zero index as start page*/
->>> 		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
->>> 		buf[BL_PKG_IDX] = pkg_idx++;
->>> 
->>> 		memcpy(&buf[BL_DATA_STR], data, xfer_len);
->>> 
->>> 		if (len < RM_BL_WRT_PKG_SIZE) {
->>> 			buf[BL_PKG_IDX] = 4;
->
->>Why 4???
->4 is trigger index for write flash. Our page write size is 128 bytes,
->but in order to meet maximum I2C bus read/write byte limite and need
->fill full all pages of 128 bytes. So that I split 128 bytes to "4"
->section, and start burning flash if touch MCU get index "4". 
-
-That is not the best way of handling this. What if you get 2 blocks of RM_BL_WRT_PKG_SIZE data worth? You will never get to index 4. You should be tracking number of bytes received and do flash when you get full page.
-
-Hi Jeffrey,
-Thanks.
-
+diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+index 99b46f8..f4fc22e 100644
+--- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
++++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+@@ -31,6 +31,61 @@
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_usb_otg_vbus: usb_otg_vbus {
++			compatible = "regulator-fixed";
++			regulator-name = "usb_otg_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&gpio3 22 0>;
++			enable-active-high;
++		};
++
++		reg_usb_h1_vbus: usb_h1_vbus {
++			compatible = "regulator-fixed";
++			regulator-name = "usb_h1_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&gpio7 8 0>;
++			enable-active-high;
++		};
++	};
++};
++
++&ecspi1 {
++	fsl,spi-num-chipselects = <2>;
++	cs-gpios = <&gpio2 30 0>, <&gpio3 19 0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	status = "okay";
++
++	flash: m25p80@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "st,m25p", "jedec,spi-nor";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++
++		partition@0 {
++			label = "uboot";
++			reg = <0x0 0xc0000>;
++		};
++
++		partition@c0000 {
++			label = "uboot environment";
++			reg = <0xc0000 0x40000>;
++		};
++
++		partition@100000 {
++			label = "reserved";
++			reg = <0x100000 0x100000>;
++		};
++	};
+ };
+ 
+ &fec {
+@@ -46,8 +101,31 @@
+ 	status = "okay";
+ };
+ 
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++	clock-frequency = <100000>;
++
++	eeprom@50 {
++		compatible = "at24,24c02";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++};
++
+ &iomuxc {
+ 	imx6q-cm-fx6 {
++		pinctrl_ecspi1: ecspi1grp {
++			fsl,pins = <
++				MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		 0x100b1
++				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		 0x100b1
++				MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		 0x100b1
++				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x100b1
++				MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x100b1
++			>;
++		};
++
+ 		pinctrl_enet: enetgrp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
+@@ -91,17 +169,75 @@
+ 			>;
+ 		};
+ 
++		pinctrl_i2c3: i2c3grp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_3__I2C3_SCL 0x4001b8b1
++				MX6QDL_PAD_GPIO_6__I2C3_SDA 0x4001b8b1
++			>;
++		};
++
++		pinctrl_pcie: pciegrp {
++			fsl,pins = <
++				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26 0x80000000
++				MX6QDL_PAD_EIM_CS1__GPIO2_IO24 0x80000000
++			>;
++		};
++
+ 		pinctrl_uart4: uart4grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
+ 				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
+ 			>;
+ 		};
++
++		pinctrl_usbh1: usbh1grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_RST__GPIO7_IO08 0x80000000
++			>;
++		};
++
++		pinctrl_usbotg: usbotggrp {
++			fsl,pins = <
++				MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
++				MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x80000000
++			>;
++		};
+ 	};
+ };
+ 
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie>;
++	reset-gpio = <&gpio1 26 0>;
++	power-on-gpio = <&gpio2 24 0>;
++	status = "okay";
++};
++
++&sata {
++	status = "okay";
++};
++
++&snvs_poweroff {
++	status = "okay";
++};
++
+ &uart4 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart4>;
+ 	status = "okay";
+ };
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbh1>;
++	status = "okay";
++};
 -- 
-Dmitry
+2.8.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
