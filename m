@@ -1,59 +1,152 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 2/2] ASoC: wm8985: add device-tree
-	support
-Date: Mon, 23 May 2016 09:31:40 +0100
-Message-ID: <20160523083140.GB20422@localhost.localdomain>
-References: <1463489389-17719-1-git-send-email-petr@barix.com>
- <1463489389-17719-2-git-send-email-petr@barix.com>
- <20160520162128.GS1646@localhost.localdomain>
- <CAEP=dzB2527G27ym5pP2C1AxMKKeU7HMiYZ8_=48VBZdv6jxbw@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] drivers: nvmem: atmel-secumod: New driver for Atmel
+ Secumod nvram
+Date: Mon, 23 May 2016 09:50:56 +0100
+Message-ID: <5742C470.9080708@linaro.org>
+References: <20160518164259.GA28954@rob-hp-laptop>
+ <1463605564-14397-1-git-send-email-davidm@egauge.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <CAEP=dzB2527G27ym5pP2C1AxMKKeU7HMiYZ8_=48VBZdv6jxbw@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Petr Kulhavy <petr@barix.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, patches@opensource.wolfsonmicro.com, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Plamen Prodanov <plamen@barix.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463605564-14397-1-git-send-email-davidm@egauge.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Mosberger-Tang <davidm@egauge.net>, maxime.ripard@free-electrons.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 23, 2016 at 09:23:05AM +0200, Petr Kulhavy wrote:
-> On 20 May 2016 at 18:21, Charles Keepax
-> <ckeepax@opensource.wolfsonmicro.com> wrote:
-> > On Tue, May 17, 2016 at 02:49:49PM +0200, Petr Kulhavy wrote:
-> >> +static enum wm8985_type wm8985_data = WM8985;
-> >> +static enum wm8985_type wm8758_data = WM8758;
-> >> +
-> >> +static const struct of_device_id wm8985_of_match[] = {
-> >> +     { .compatible = "wlf,wm8985", .data = &wm8985_data},
-> >> +     { .compatible = "wlf,wm8758", .data = &wm8758_data},
-> >
-> > You can probably just use (void *)WM8985 instead here.
-> 
-> I know this pretty safe with integers but can you do this with enums?
-> Doesn't it lead to undefined behaviour?
+Thanks for the patch,
+Few minors comments below.
 
-Hmm... its not uncommon that it is done in the kernel, but
-that is rarely an indicator of if something is actually
-technically valid or not. Casting from an integer to a pointer
-is technically implementation defined, but we clearly rely on
-gcc's implementation in the kernel. However, without actually
-reading the spec in more detail I am unclear on if an enum counts
-as an integer here, my suspicion is that it would since it
-generally always implicitly casts to an int.
+On 18/05/16 22:06, David Mosberger-Tang wrote:
+> Signed-off-by: David Mosberger <davidm@egauge.net>
+> ---
+>   .../devicetree/bindings/nvmem/atmel-secumod.txt    |  47 +++++++
+>   drivers/nvmem/Kconfig                              |   7 +
+>   drivers/nvmem/Makefile                             |   2 +
+>   drivers/nvmem/atmel-secumod.c                      | 143 +++++++++++++++++++++
+>   4 files changed, 199 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
+>   create mode 100644 drivers/nvmem/atmel-secumod.c
+>
+> diff --git a/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt b/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
+> new file mode 100644
+> index 0000000..d65cad5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
+> @@ -0,0 +1,47 @@
+> += Atmel Secumod device tree bindings =
+> +
 
-I guess the correct fix is that .data should probably be a
-kernel_ulong_t in of_device_id. But if no one else objects I am
-happy for you to leave your current code as is.
+Can you split the dt-bindings into separate patch.
 
-Thanks,
-Charles
+> +This binding is intended to represent Atmel's Secumod which is found
+> +in SAMA5D2 and perhaps others.
+> +
+> +Required properties:
+> +- compatible: should be "atmel,sama5d2-secumod"
+> +- reg: Should contain RAM location and length, followed
+> +       by register location and length of the Secumod controller.
+> +
+> += Data cells =
+> +Are child nodes of secumod, bindings of which as described in
+> +bindings/nvmem/nvmem.txt
+> +
+> +Example:
+> +
+> +    secumod@fc040000 {
+> +            compatible = "atmel,sama5d2-secumod";
+> +            reg = <0xf8044000 0x1420>, <0xfc040000 0x4000>;
+> +            reg-names = "SECURAM", "SECUMOD";
+> +            status = "okay";
+> +
+> +            #address-cells = <1>;
+> +            #size-cells = <1>;
+> +            ranges;
+> +
+> +            secram-auto-erasable@0 {
+> +                    reg = <0x0000 0x1000>;
+> +            };
+> +            secram@1000 {
+> +                    reg = <0x1000 0x400>;
+> +            };
+> +            ram@1400 {
+> +                    reg = <0x1400 0x20>;
+> +            };
+> +    };
+> +
+> += Data consumers =
+> +Are device nodes which consume nvmem data cells.
+> +
+> +For example:
+> +
+> +	ram {
+> +		...
+> +		nvmem-cells = <&ram>;
+> +		nvmem-cell-names = "RAM";
+> +	};
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 3041d48..88b21e3 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -101,4 +101,11 @@ config NVMEM_VF610_OCOTP
+>   	  This driver can also be build as a module. If so, the module will
+>   	  be called nvmem-vf610-ocotp.
+>
+> +config NVMEM_ATMEL_SECUMOD
+> +       tristate "Atmel Secure Module driver"
+> +       depends on ARCH_AT91
+
+COMPILE_TEST ?
+Also please add
+depends on HAS_IOMEM
+
+> +       help
+> +         Select this to get support for the secure module (SECUMOD) built
+> +	 into the SAMA5D2 chips.
+> +
+>   endif
+...
+
+> index 0000000..fc5a96b
+> --- /dev/null
+> +++ b/drivers/nvmem/atmel-secumod.c
+
+...
+> +
+> +/*
+> + * Security-module register definitions:
+> + */
+> +#define SECUMOD_RAMRDY	0x0014
+> +
+> +/*
+> + * Since the secure module may need to automatically erase some of the
+> + * RAM, it may take a while for it to be ready.  As far as I know,
+> + * it's not documented how long this might take in the worst-case.
+> + */
+> +static void
+> +secumod_wait_ready (void *regs)
+> +{
+> +	unsigned long start, stop;
+> +
+> +	start = jiffies;
+> +	while (!(readl(regs + SECUMOD_RAMRDY) & 1))
+> +		msleep_interruptible(1);
+
+Worst case would be the system loop here forever, Can we add worst case 
+timeout for this, and get out of this loop.
+
+> +	stop = jiffies;
+> +	if (stop != start)
+> +		pr_info("nvmem-atmel-secumod: it took %u msec for SECUMOD "
+> +			"to become ready...\n", jiffies_to_msecs(stop - start));
+> +	else
+> +		pr_info("nvmem-atmel-secumod: ready\n");
+I dont see any use of this prints, We should probably remove these and 
+add just a one dev_dbg.
+
+> +}
+> +
+...
+thanks,
+srini
