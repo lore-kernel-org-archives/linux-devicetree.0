@@ -1,52 +1,36 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 16/54] MAINTAINERS: Add file patterns for drm device tree
- bindings
-Date: Mon, 23 May 2016 09:20:23 +0200
-Message-ID: <20160523072023.GU27098@phenom.ffwll.local>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
- <1463907991-7916-17-git-send-email-geert@linux-m68k.org>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ASoC: wm8985: add device-tree support
+Date: Mon, 23 May 2016 09:23:05 +0200
+Message-ID: <CAEP=dzB2527G27ym5pP2C1AxMKKeU7HMiYZ8_=48VBZdv6jxbw@mail.gmail.com>
+References: <1463489389-17719-1-git-send-email-petr@barix.com>
+ <1463489389-17719-2-git-send-email-petr@barix.com> <20160520162128.GS1646@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1463907991-7916-17-git-send-email-geert@linux-m68k.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160520162128.GS1646-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ALSA Development Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Plamen Prodanov <plamen-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBNYXkgMjIsIDIwMTYgYXQgMTE6MDU6NTNBTSArMDIwMCwgR2VlcnQgVXl0dGVyaG9l
-dmVuIHdyb3RlOgo+IFN1Ym1pdHRlcnMgb2YgZGV2aWNlIHRyZWUgYmluZGluZyBkb2N1bWVudGF0
-aW9uIG1heSBmb3JnZXQgdG8gQ0MKPiB0aGUgc3Vic3lzdGVtIG1haW50YWluZXIgaWYgdGhpcyBp
-cyBtaXNzaW5nLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnRA
-bGludXgtbTY4ay5vcmc+Cj4gQ2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KPiBD
-YzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IC0tLQo+IFBsZWFzZSBhcHBseSB0
-aGlzIHBhdGNoIGRpcmVjdGx5IGlmIHlvdSB3YW50IHRvIGJlIGludm9sdmVkIGluIGRldmljZQo+
-IHRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB5b3VyIHN1YnN5c3RlbS4KCkFwcGxpZWQg
-dG8gZHJtLW1pc2MsIHRoYW5rcy4KLURhbmllbAoKPiAtLS0KPiAgTUFJTlRBSU5FUlMgfCAzICsr
-Kwo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL01B
-SU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKPiBpbmRleCBjNzliOTlkZDNhMGJmMjJkLi43NTEzOGMw
-OWRkNjAzMDkzIDEwMDY0NAo+IC0tLSBhL01BSU5UQUlORVJTCj4gKysrIGIvTUFJTlRBSU5FUlMK
-PiBAQCAtMzg2OCw2ICszODY4LDkgQEAgVDoJZ2l0IGdpdDovL3Blb3BsZS5mcmVlZGVza3RvcC5v
-cmcvfmFpcmxpZWQvbGludXgKPiAgUzoJTWFpbnRhaW5lZAo+ICBGOglkcml2ZXJzL2dwdS9kcm0v
-Cj4gIEY6CWRyaXZlcnMvZ3B1L3ZnYS8KPiArRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvCj4gK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
-cHUvCj4gK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby8KPiAgRjoJ
-RG9jdW1lbnRhdGlvbi9Eb2NCb29rL2dwdS4qCj4gIEY6CWluY2x1ZGUvZHJtLwo+ICBGOglpbmNs
-dWRlL3VhcGkvZHJtLwo+IC0tIAo+IDEuOS4xCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBF
-bmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 20 May 2016 at 18:21, Charles Keepax
+<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On Tue, May 17, 2016 at 02:49:49PM +0200, Petr Kulhavy wrote:
+>> +static enum wm8985_type wm8985_data = WM8985;
+>> +static enum wm8985_type wm8758_data = WM8758;
+>> +
+>> +static const struct of_device_id wm8985_of_match[] = {
+>> +     { .compatible = "wlf,wm8985", .data = &wm8985_data},
+>> +     { .compatible = "wlf,wm8758", .data = &wm8758_data},
+>
+> You can probably just use (void *)WM8985 instead here.
+
+I know this pretty safe with integers but can you do this with enums?
+Doesn't it lead to undefined behaviour?
+
+Regards
+Petr
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
