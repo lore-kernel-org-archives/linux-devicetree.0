@@ -1,50 +1,56 @@
-From: Laura Abbott <labbott@redhat.com>
-Subject: Re: [PATCH 01/54] MAINTAINERS: Add file patterns for ion device tree
- bindings
-Date: Mon, 23 May 2016 15:48:42 -0700
-Message-ID: <8c5ca549-c341-4174-3d91-c546b9802274@redhat.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 21/54] MAINTAINERS: Add file patterns for serio device
+ tree bindings
+Date: Mon, 23 May 2016 15:52:12 -0700
+Message-ID: <20160523225212.GE20465@dtor-ws>
 References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
- <1463907991-7916-2-git-send-email-geert@linux-m68k.org>
+ <1463907991-7916-22-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463907991-7916-2-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, devel@driverdev.osuosl.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463907991-7916-22-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2016 02:05 AM, Geert Uytterhoeven wrote:
+On Sun, May 22, 2016 at 11:05:58AM +0200, Geert Uytterhoeven wrote:
 > Submitters of device tree binding documentation may forget to CC
 > the subsystem maintainer if this is missing.
->
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: devel@driverdev.osuosl.org
+> 
+> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+Acked-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
 > ---
 > Please apply this patch directly if you want to be involved in device
 > tree binding documentation for your subsystem.
 > ---
 >  MAINTAINERS | 1 +
 >  1 file changed, 1 insertion(+)
->
+> 
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index 283f35b6be6907f5..6b4b2447589f36fa 100644
+> index 5cf50bf461c4255e..528c5ecd59d50ab5 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -781,6 +781,7 @@ M:	Laura Abbott <labbott@redhat.com>
->  M:	Sumit Semwal <sumit.semwal@linaro.org>
->  L:	devel@driverdev.osuosl.org
->  S:	Supported
-> +F:	Documentation/devicetree/bindings/staging/ion/
->  F:	drivers/staging/android/ion
->  F:	drivers/staging/android/uapi/ion.h
->  F:	drivers/staging/android/uapi/ion_test.h
->
+> @@ -5885,6 +5885,7 @@ F:	include/linux/input.h
+>  F:	include/uapi/linux/input.h
+>  F:	include/linux/input/
+>  F:	Documentation/devicetree/bindings/input/
+> +F:	Documentation/devicetree/bindings/serio/
+>  
+>  INPUT MULTITOUCH (MT) PROTOCOL
+>  M:	Henrik Rydberg <rydberg-FFUHeuDi6mxAfugRpC6u6w@public.gmane.org>
+> -- 
+> 1.9.1
+> 
 
-This is kind of in flux but I'd rather be cc'ed if anyone tries to add
-new items so
-
-Acked-by: Laura Abbott <labbott@redhat.com>
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
