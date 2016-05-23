@@ -1,39 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 05/12] of: add J-Core SPI master bindings
-Date: Mon, 23 May 2016 16:00:20 -0500
-Message-ID: <20160523210020.GA23118@rob-hp-laptop>
-References: <cover.1463708766.git.dalias@libc.org>
- <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 5/5] mmc: sdhci-of-arasan: implement enhanced strobe callback
+Date: Mon, 23 May 2016 14:00:57 -0700
+Message-ID: <CAD=FV=X5os7fsCrOh7pDLAt7CSyRw3Q76sFgh-NJhDni02sXdA@mail.gmail.com>
+References: <1463976789-29618-1-git-send-email-shawn.lin@rock-chips.com> <1463976853-29862-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463976853-29862-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
-> Signed-off-by: Rich Felker <dalias@libc.org>
+Shawn,
+
+On Sun, May 22, 2016 at 9:14 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Currently sdhci-arasan 5.1 can support enhanced strobe function,
+> and we now limit it just for "arasan,sdhci-5.1". Add
+> mmc-hs400-enhanced-strobe in DT to enable the function if we're
+> sure our controller can support it.
+>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Acked-by: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
->  .../devicetree/bindings/spi/jcore,spi.txt          | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-> new file mode 100644
-> index 0000000..9055e7d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-> @@ -0,0 +1,23 @@
-> +J-Core SPI master
-> +
-> +Required properties:
-> +
-> +- compatible: Must be "jcore,spi2".
+>
+> Changes in v5: None
+> Changes in v4: None
 
-In general, these all seem a bit generic. You should be able to 
-correlate IP versions to compatible strings.
+Again, minor, but you did have changes...
 
-Rob
+> Changes in v3: None
+> Changes in v2: None
+>
+>  drivers/mmc/host/sdhci-of-arasan.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+
+I've tested this patch and it appears to work (not that I've hooked a
+scope up, but since it's not doing tuning I think it would be pretty
+obvious if it didn't work).
+
+Tested-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
