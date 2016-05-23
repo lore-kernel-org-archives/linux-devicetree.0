@@ -1,45 +1,56 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 0015/1529] Fix typo
-Date: Mon, 23 May 2016 09:03:01 +0200
-Message-ID: <20160523090301.3cdbd523@ipc1.ka-ro>
-References: <20160521113722.32053-1-andrea.gelmini@gelma.net>
+From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 52/54] MAINTAINERS: Add file patterns for watchdog device tree bindings
+Date: Mon, 23 May 2016 09:07:20 +0200
+Message-ID: <20160523070720.GA17439@spo001.leaseweb.nl>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org> <1463907991-7916-53-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160521113722.32053-1-andrea.gelmini@gelma.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrea Gelmini <andrea.gelmini@gelma.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, trivial@kernel.org, pawel.moll@arm.com, linux-pm@vger.kernel.org, devicetree@hellion.org.uk, cw00.choi@samsung.com, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, galak@codeaurora.org, dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463907991-7916-53-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBTYXQsIDIxIE1heSAyMDE2IDEzOjM3OjIyICswMjAwIEFuZHJlYSBHZWxtaW5pIHdy
-b3RlOgo+IFNpZ25lZC1vZmYtYnk6IEFuZHJlYSBHZWxtaW5pIDxhbmRyZWEuZ2VsbWluaUBnZWxt
-YS5uZXQ+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kZXZmcmVx
-L2V2ZW50L2V4eW5vcy1wcG11LnR4dCB8IDIgKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
-aW9uKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kZXZmcmVxL2V2ZW50L2V4eW5vcy1wcG11LnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kZXZmcmVxL2V2ZW50L2V4eW5vcy1wcG11LnR4dAo+
-IGluZGV4IDNlMzZjMWQuLjYxNjQyOGEgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2RldmZyZXEvZXZlbnQvZXh5bm9zLXBwbXUudHh0Cj4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RldmZyZXEvZXZlbnQvZXh5bm9zLXBwbXUu
-dHh0Cj4gQEAgLTgsNyArOCw3IEBAIHVzZSB0byBhbmFseXplIHN5c3RlbSBwZXJmb3JtYW5jZSwg
-dG8gbWFrZSBiZWhhdmlvcnMgdmlzaWJsZSBhbmQgdG8gY291bnQKPiAgdXNhZ2VzIG9mIGVhY2gg
-SVAgKERNQywgQ1BVLCBSSUdIVEJVUywgTEVGVEJVUywgQ0FNIGludGVyZmFjZSwgTENELCBHM0Qs
-IE1GQykuCj4gIFRoZSBFeHlub3MgUFBNVSBkcml2ZXIgdXNlcyB0aGUgZGV2ZnJlcS1ldmVudCBj
-bGFzcyB0byBwcm92aWRlIGV2ZW50IGRhdGEKPiAgdG8gdmFyaW91cyBkZXZmcmVxIGRldmljZXMu
-IFRoZSBkZXZmcmVxIGRldmljZXMgd291bGQgdXNlIHRoZSBldmVudCBkYXRhIHdoZW4KPiAtZGVy
-dGVybWluZyB0aGUgY3VycmVudCBzdGF0ZSBvZiBlYWNoIElQLgo+ICtkZXRlcm1pbmcgdGhlIGN1
-cnJlbnQgc3RhdGUgb2YgZWFjaCBJUC4KPiAgCnMvZGV0ZXJtaW5nL2RldGVybWluZS8KCgpMb3Ro
-YXIgV2HDn21hbm4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+Hi Geert,
+
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9f54762f002e16de..7202b6565dd98d50 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12400,6 +12400,7 @@ L:	linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>  W:	http://www.linux-watchdog.org/
+>  T:	git git://www.linux-watchdog.org/linux-watchdog.git
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/watchdog/
+>  F:	Documentation/watchdog/
+>  F:	drivers/watchdog/
+>  F:	include/linux/watchdog.h
+> -- 
+> 1.9.1
+> 
+
+Patch added to linux-watchdog-next.
+
+Kind regards,
+Wim.
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
