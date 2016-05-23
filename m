@@ -1,52 +1,136 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] ARM64: Kconfig: Select the Amlogic Meson pin
- controller driver
-Date: Mon, 23 May 2016 15:49:16 +0200
-Message-ID: <CACRpkdY9jLeUzixZQ4_RoOJqpT7iHOHZi55K6htUeKQFjO2FgA@mail.gmail.com>
-References: <1462176138-29433-1-git-send-email-carlo@caione.org>
-	<1462176138-29433-4-git-send-email-carlo@caione.org>
-	<CACRpkdbTr7YUrzSQQci929ugBhTkJKWvpjdf5Wo3HkfVKFhGLw@mail.gmail.com>
-	<3200982.vJgYKNLqaA@wuerfel>
-	<CAOQ7t2aLORBKiuZEp1BZ1+O-Yr5xvM9bjkFnfA9Yn9oZZefSnw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOQ7t2aLORBKiuZEp1BZ1+O-Yr5xvM9bjkFnfA9Yn9oZZefSnw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: "jeffrey.lin" <yajohn@gmail.com>
+Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
+Date: Mon, 23 May 2016 22:43:53 +0800
+Message-ID: <1464014633-20829-1-git-send-email-jeffrey.lin@rad-ic.com>
+References: <20160513041852.GA8932@dtor-ws>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160513041852.GA8932@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org
+Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 8:41 PM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, May 11, 2016 at 12:56 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> On Wednesday 11 May 2016 10:53:35 Linus Walleij wrote:
->>> On Mon, May 2, 2016 at 10:02 AM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
->>>
->>> > From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->>> >
->>> > Select the Meson pin controller driver also for the AArch64 Meson
->>> > platform.
->>> >
->>> > Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->>>
->>> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>
->>> I guess this should get merged through the ARM SoC tree.
->>>
->>
->> I'd keep it together with the other changes for clarity and
->> merge it through your tree.
+Hi Dmitry:
+
+>static int raydium_i2c_read_message(struct i2c_client *client,
+>				    u32 addr, void *data, size_t len)
+>{
+>	__le32 le_addr;
+>	size_t xfer_len;
+>	u32 shift_addr;
+>	int error;
 >
-> Linus,
-> did you take it? otherwise I can merge it through my repo.
+>	while (len) {
+>		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
+>
+>		le_addr = cpu_to_le32(addr);
+>
+>		shift_addr = le_addr >> 8;/*send the first 3rd byte addr.*/
+Drop this. Change touch MCU setting to solve this issue
+>		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
+>					 &shift_addr, sizeof(le_addr));
+>		if (!error)/*read from last byte addr.*/
+>			error = raydium_i2c_read(client, le_addr & 0xff,
+>						 data, xfer_len);
+>		if (error)
+>			return error;
+>
+>		len -= xfer_len;
+>		data += xfer_len;
+>		addr += xfer_len;
+>	}
+>
+>	return 0;
+>}
+modify as below.
 
-Nope didn't pick this one. I prefer to not take such patches
-since they tend to generate collissions. Please take this
-through ARM SoC.
+static int raydium_i2c_read_message(struct i2c_client *client,
+				    u32 addr, void *data, size_t len)
+{
+	__le32 le_addr;
+	size_t xfer_len;
+	int error;
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	while (len) {
+		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
+
+		le_addr = cpu_to_le32(addr);
+
+		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
+					 &le_addr, sizeof(le_addr));
+		if (!error)/*read from last byte addr.*/
+			error = raydium_i2c_read(client, le_addr & 0xff,
+						 data, xfer_len);
+		if (error)
+			return error;
+
+		len -= xfer_len;
+		data += xfer_len;
+		addr += xfer_len;
+	}
+
+	return 0;
+}
+
+>
+>>> static int raydium_i2c_fw_write_page(struct i2c_client *client,
+>>> 				     u16 page_idx, const void *data, size_t len)
+>>> {
+>>> 	u8 buf[RM_BL_WRT_LEN];
+>>> 	u8 pkg_idx = 1;
+>>> 	size_t xfer_len;
+>>> 	int error;
+>>> 
+>>> 	while (len) {
+>>> 		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
+>>> 		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
+>>> 		/*FIXME,Touch MCU need zero index as start page*/
+>>> 		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
+>>> 		buf[BL_PKG_IDX] = pkg_idx++;
+>>> 
+>>> 		memcpy(&buf[BL_DATA_STR], data, xfer_len);
+>>> 
+>>> 		if (len < RM_BL_WRT_PKG_SIZE) {
+>>> 			buf[BL_PKG_IDX] = 4;
+Drop this one. Modfy boot loader firmware to meet this issue. So final function as below.
+static int raydium_i2c_fw_write_page(struct i2c_client *client,
+				     u16 page_idx, const void *data, size_t len)
+{
+	u8 buf[RM_BL_WRT_LEN];
+	u8 pkg_idx = 1;
+	size_t xfer_len;
+	int error;
+
+	while (len) {
+		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
+		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
+		/*FIXME,Touch MCU need zero index as start page*/
+		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
+		buf[BL_PKG_IDX] = pkg_idx++;
+
+		memcpy(&buf[BL_DATA_STR], data, xfer_len);
+
+		if (len < RM_BL_WRT_PKG_SIZE) {
+			memset(buf + BL_DATA_STR + xfer_len, 0xff,
+				RM_BL_WRT_PKG_SIZE - xfer_len);
+		}
+
+		error = raydium_i2c_write_object(client, buf, RM_BL_WRT_LEN,
+						 RAYDIUM_WAIT_READY);
+		if (error) {
+			dev_err(&client->dev,
+				"page write command failed for page %d, chunk %d: %d\n",
+				page_idx, pkg_idx, error);
+			return error;
+		}
+		data += xfer_len;
+		len -= xfer_len;
+	}
+
+	return error;
+}
+Otherwise, Do you have any concern about my patch? If not, I'll send new patch soon.
+
+Thanks.
+
+Jeffrey
