@@ -1,54 +1,76 @@
-From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: Re: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
-Date: Mon, 23 May 2016 17:13:42 -0400
-Message-ID: <20160523211342.GG21636@brightrain.aerifal.cx>
-References: <cover.1463708766.git.dalias@libc.org>
- <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
- <20160523205320.GA21655@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
+Date: Mon, 23 May 2016 16:18:13 -0500
+Message-ID: <20160523211813.GA30237@rob-hp-laptop>
+References: <cover.1463737502.git.maitysanchayan@gmail.com>
+ <ffef165d05f71a1b19437171d8fdb4bc78f6b1e3.1463737502.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160523205320.GA21655@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+In-Reply-To: <ffef165d05f71a1b19437171d8fdb4bc78f6b1e3.1463737502.git.maitysanchayan@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: arnd@arndb.de, shawnguo@kernel.org, stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 23, 2016 at 03:53:20PM -0500, Rob Herring wrote:
-> On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
-> > Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-> > ---
-> >  .../bindings/interrupt-controller/jcore,aic.txt    | 28 ++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-> > new file mode 100644
-> > index 0000000..dc9fde8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-> > @@ -0,0 +1,28 @@
-> > +J-Core Advanced Interrupt Controller
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : Should be "jcore,aic1" for the (obsolete) first-generation aic
-> > +  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
-> > +  the "aic2" core with 64 interrupts.
-> > +
-> > +- interrupt-controller : Identifies the node as an interrupt controller
-> > +
-> > +- #interrupt-cells : Specifies the number of cells needed to encode an
-> > +  interrupt source. The value shall be 1.
+On Fri, May 20, 2016 at 03:32:05PM +0530, Sanchayan Maity wrote:
+> This adds a SoC driver to be used by Freescale Vybrid SoC's.
+> Driver utilises syscon and nvmem consumer API's to get the
+> various register values needed and expose the SoC specific
+> properties via sysfs.
 > 
-> No level/edge support? Need 2 cells if so.
+> A sample output from Colibri Vybrid VF61 is below:
+> 
+> root@colibri-vf:~# cd /sys/bus/soc/devices/soc0
+> root@colibri-vf:/sys/bus/soc/devices/soc0# ls
+> family     machine    power      revision   soc_id     subsystem  uevent
+> root@colibri-vf:/sys/bus/soc/devices/soc0# cat family
+> Freescale Vybrid VF610
+> root@colibri-vf:/sys/bus/soc/devices/soc0# cat machine
+> Freescale Vybrid
+> root@colibri-vf:/sys/bus/soc/devices/soc0# cat revision
+> 00000013
+> root@colibri-vf:/sys/bus/soc/devices/soc0# cat soc_id
+> df6472a6130f29d4
+> 
+> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> ---
+>  .../bindings/arm/freescale/fsl,vf610-soc.txt       |  20 +++
+>  drivers/soc/Kconfig                                |   1 +
+>  drivers/soc/fsl/Kconfig                            |  10 ++
+>  drivers/soc/fsl/Makefile                           |   1 +
+>  drivers/soc/fsl/soc-vf610.c                        | 198 +++++++++++++++++++++
+>  5 files changed, 230 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+>  create mode 100644 drivers/soc/fsl/Kconfig
+>  create mode 100644 drivers/soc/fsl/soc-vf610.c
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+> new file mode 100644
+> index 0000000..338905d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+> @@ -0,0 +1,20 @@
+> +Vybrid System-on-Chip
+> +---------------------
+> +
+> +Required properties:
+> +
+> +- compatible: "fsl,vf610-soc"
+> +- rom-revision: phandle to the on-chip ROM node
+> +- mscm: phandle to the MSCM CPU configuration node
+> +- nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
+> +- nvmem-cell-names: should contain string names "cfg0" and "cfg1"
 
-No, all the logic is in hardware. From the software side you just need
-handle_simple_irq or equivalent.
+I still have similar concerns as the discussion on the last version. 
+This version only proves that you aren't describing h/w, but rather just 
+a collection of data that some driver wants.
 
-Rich
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+A driver can just as easily look-up all the nodes directly that these 
+phandles point to.
+
+And as long as we have inconsistent use of soc_device, I don't want to 
+see any compatible strings related to it.
+
+Rob
