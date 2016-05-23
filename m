@@ -1,66 +1,62 @@
-From: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/3] regulator: of: Add support for parsing operation mode
-Date: Mon, 23 May 2016 15:13:30 +0800
-Message-ID: <1463987611-32139-3-git-send-email-henryc.chen@mediatek.com>
+From: Henry Chen <henryc.chen@mediatek.com>
+Subject: [PATCH v2 1/3] regulator: DT: Add DT property for operation mode configuration
+Date: Mon, 23 May 2016 15:13:29 +0800
+Message-ID: <1463987611-32139-2-git-send-email-henryc.chen@mediatek.com>
 References: <1463987611-32139-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463987611-32139-1-git-send-email-henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463987611-32139-1-git-send-email-henryc.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Henry Chen <henryc.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 Some regulators support their operating mode to be changed by consumers for
-module specific purpose.
+module specific purpose. Add a DT property to support this.
 
-This patch adds support to parse those properties and fill the regulator
-constraints so the regulator core can call the regualtor_set_mode to change
-the modes.
-
-Signed-off-by: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
 ---
- drivers/regulator/of_regulator.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/regulator/regulator.txt |  5 +++++
+ include/dt-bindings/regulator/regulator.h                 | 14 ++++++++++++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 include/dt-bindings/regulator/regulator.h
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 6b0aa80..7f8d82e 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -31,7 +31,7 @@ static void of_get_regulation_constraints(struct device_node *np,
- 	struct regulation_constraints *constraints = &(*init_data)->constraints;
- 	struct regulator_state *suspend_state;
- 	struct device_node *suspend_np;
--	int ret, i;
-+	int ret, i, cnt;
- 	u32 pval;
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index ecfc593..e505d0b 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -49,6 +49,11 @@ Optional properties:
+ 	0: Disable active discharge.
+ 	1: Enable active discharge.
+ 	Absence of this property will leave configuration to default.
++- regulator-supported-modes: Regulators can run in a variety of different
++  operating modes depending on output load. This allows further system power
++  savings by selecting the best (and most efficient) regulator mode for a
++  desired load. The definition for each of these operation is defined at
++  include/dt-bindings/regulator/regulator.h
  
- 	constraints->name = of_get_property(np, "regulator-name", NULL);
-@@ -167,6 +167,19 @@ static void of_get_regulation_constraints(struct device_node *np,
- 		suspend_state = NULL;
- 		suspend_np = NULL;
- 	}
-+	cnt = of_property_count_elems_of_size(np,
-+					      "regulator-supported-modes",
-+					      sizeof(u32));
-+	if (cnt > 0)
-+		constraints->valid_ops_mask |= REGULATOR_CHANGE_MODE;
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
+diff --git a/include/dt-bindings/regulator/regulator.h b/include/dt-bindings/regulator/regulator.h
+new file mode 100644
+index 0000000..2ed1dfd
+--- /dev/null
++++ b/include/dt-bindings/regulator/regulator.h
+@@ -0,0 +1,14 @@
++/*
++ * This header provides constants for binding regulator.
++ */
 +
-+	for (i = 0; i < cnt; i++) {
-+		u32 mode;
++#ifndef _DT_BINDINGS_REGULATOR_REGULATOR_H
++#define _DT_BINDINGS_REGULATOR_REGULATOR_H
 +
-+		of_property_read_u32_index(np, "regulator-supported-modes",
-+					   i, &mode);
-+		constraints->valid_modes_mask |= (1 << mode);
-+	}
- }
- 
- /**
++/* Regulator operating modes */
++#define REGULATOR_OPERATION_MODE_FAST			0x0
++#define REGULATOR_OPERATION_MODE_NORMAL			0x1
++#define REGULATOR_OPERATION_MODE_IDLE			0x2
++#define REGULATOR_OPERATION_MODE_STANDBY		0x3
++
++#endif
 -- 
 1.8.1.1.dirty
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
