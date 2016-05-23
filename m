@@ -1,539 +1,109 @@
 From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
-Date: Mon, 23 May 2016 11:27:57 +0800
-Message-ID: <ba4bc10c-a757-81ff-713d-5aa85012c64f@rock-chips.com>
-References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
- <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
- <3647622.McCjKUuZmz@phil>
- <d0d2648a-a2d7-b57c-a434-490aab8d7958@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v5 0/5] Add enhanced strobe support for emmc version 5.1 or later
+Date: Mon, 23 May 2016 12:13:09 +0800
+Message-ID: <1463976789-29618-1-git-send-email-shawn.lin@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d0d2648a-a2d7-b57c-a434-490aab8d7958@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/5/23 8:48, Shawn Lin wrote:
-> On 2016/5/21 5:13, Heiko Stuebner wrote:
->> Hi Shawn,
->>
->> I haven't had any contact with PCI yet, so my comments below will likely
->> address more generic findings only.
->>
->> As you might've guessed from the binding comments, to me it looks like
->> the
->> phy handling should be in a separate phy driver and looking below all phy
->> accesses seem very separate from the actual pci controller interactions -
->> they are even in port_init only as well.
->>
->
-> yes, the main reason for not to seperate a new pcie-phy driver for this
-> prototype design is that I just wonder whether it's worth to create a
-> new driver for just a small piece of code. And a bit more forward is
-> that I think phy api is no so scalable for just init/power_on in
-> case of too much interactions between controller and phy from which I
-> suffer a bit for emmc.
->
-> Should I really need to seperate the phy part into pcie-phy? ;)
 
-Currently, We still need some more interactions between phy and 
-controller here, not just what you point out in the comments. so if we
-need a seperate phy driver, could it allows me to export some functions
-for pcie driver?
+Hello all,
+
+This patch is going to support enhanced strobe function
+for emmc version 5.1+ introduced by JEDEC recently.
+
+Enchanced strobe is a optional function, so we add a new cap* for drivers to
+decide whether to use it.
+
+When introduing hs400 mode, JEDEC asks controllers to use data strobe line
+to latch the data from emmc devives. But for cmd-reponse, not mentioned yet.
+Since emmc version 5.1 published, JEDEC adds enhanced strobe function to deal
+with cmd-response the same way as data-read. This feature is optional.
+
+>From the spec(section 6.6.2.3), the standard scenario to select HS400 enhanced
+strobe mode illustrated like this:
+(1) set HS_TIMIMG (Highspeed)
+(2) Host change freq to <= 52Mhz
+(3) set the bus width to Enhanced strobe and DDR8Bit(CMD6), EXT_CSD[183] = 0x86
+instead of 0x80
+(4) set HS_TIMING to 0x3 (HS400)
+(5) Host change freq to <= 200Mhz
+(6) Host select HS400 enhanced strobe complete
+
+I can't find a upstreamed controller claimed to support it, as well as the
+mmc stack. But my "arasan,sdhci-5.1" actually supports this function. So I decide
+to work for this part.
+
+By looking into the SDHCI spec, I find there isn't any registers to enable the
+enhanced strobe function. But from my "arasan,sdhci-5.1" databook, it describes a
+register called VENDOR_REGISTER(0x78) to trigger this mode. So I guess other sdhci
+variant drivers may also need s vendor specific register to deal with it.
+
+If we are sure that our controller supports enhanced strobe mode, just add
+mmc-hs400-enhanced-strobe in DT. Once emmc devices claims to support this mode,
+we enable it automatically. Of course, other sdhci*/non-sdhci drivers should
+implement/overwrite the prepare_enhanced_strobe by themselves. I believe all of the
+platforms which need to support this mode should do some basic preparation for their
+controllers. Currently I just limit the callback within ths scope of arasan,sdhci-5.1,
+but I prone to believe arasan will use VENDOR_REGISTER to tirgger this mode from now on
+because I do believe vendor will consider the registers' compatibility.
+
+With this patchset applied, we can successfully run in HS400 enhanced strobe mode on
+RK3399 platform with Samsung eMMC KLMBG2JENB-B041(v5.1, 16GB).
+
+mmc1: new HS400 Enhanced strobe MMC card at address 0001
+mmcblk0: mmc1:0001 AJNB4R 14.6 GiB
+mmcblk0boot0: mmc1:0001 AJNB4R partition 1 4.00 MiB
+mmcblk0boot1: mmc1:0001 AJNB4R partition 2 4.00 MiB
+mmcblk0rpmb: mmc1:0001 AJNB4R partition 3 4.00 MiB
+
+Also I check this patchset with removing some caps to make sure
+all the init sequences for hs400/hs200/DDR52/HighSpeed is correct.
 
 
->
->> While I already added some comments about that below, the driver seems
->> full
->> of raw register bit handling (including wild shifts). Please abstract
->> that
->> using contants, so that stuff stays readable for the future.
->
-> okay, let me migrate these magic number and raw reg bit handling into a
-> new header file.
->
->>
->>
->> Am Freitag, 20. Mai 2016, 18:29:16 schrieb Shawn Lin:
->>> RK3399 has a PCIe controller which can be used as Root Complex.
->>> This driver supports a PCIe controller as Root Complex mode.
->>>
->>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>> ---
->>
->> [...]
->>
->>> diff --git a/drivers/pci/host/pcie-rockchip.c
->>> b/drivers/pci/host/pcie-rockchip.c new file mode 100644
->>> index 0000000..4063fd3
->>> --- /dev/null
->>> +++ b/drivers/pci/host/pcie-rockchip.c
->>> @@ -0,0 +1,1181 @@
->>> +/*
->>> + * Rockchip AXI PCIe host controller driver
->>> + *
->>> + * Copyright (c) 2016 Rockchip, Inc.
->>> + *
->>> + * Author: Shawn Lin <shawn.lin@rock-chips.com>
->>> + *         Wenrui Li <wenrui.li@rock-chips.com>
->>> + * Bits taken from Synopsys Designware Host controller driver and
->>> + * ARM PCI Host generic driver.
->>> + *
->>> + * This program is free software: you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License as published by
->>> + * the Free Software Foundation, either version 2 of the License, or
->>> + * (at your option) any later version.
->>> + */
->>> +#include <linux/clk.h>
->>> +#include <linux/delay.h>
->>> +#include <linux/gpio/consumer.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/irq.h>
->>> +#include <linux/irqdomain.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/mfd/syscon.h>
->>> +#include <linux/module.h>
->>> +#include <linux/msi.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/of_pci.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/of_irq.h>
->>> +#include <linux/pci.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/reset.h>
->>> +#include <linux/regmap.h>
->>> +
->>> +#define REF_CLK_100MHZ            (100 * 1000 * 1000)
->>
->> seems unused
->
-> will be removed.
->
->>
->>> +#define PCIE_CLIENT_BASE        0x0
->>> +#define PCIE_RC_CONFIG_BASE        0xa00000
->>> +#define PCIE_CORE_CTRL_MGMT_BASE    0x900000
->>> +#define PCIE_CORE_AXI_CONF_BASE        0xc00000
->>> +#define PCIE_CORE_AXI_INBOUND_BASE    0xc00800
->>> +
->>> +#define PCIE_CLIENT_BASIC_STATUS0    0x44
->>> +#define PCIE_CLIENT_BASIC_STATUS1    0x48
->>> +#define PCIE_CLIENT_INT_MASK        0x4c
->>> +#define PCIE_CLIENT_INT_STATUS        0x50
->>> +#define PCIE_CORE_INT_MASK        0x900210
->>> +#define PCIE_CORE_INT_STATUS        0x90020c
->>> +
->>> +/** Size of one AXI Region (not Region 0) */
->>> +#define    AXI_REGION_SIZE            (0x1 << 20)
->>
->> for those generic (1 << x) things please use BIT(x) instead
->> Also constants intertwined with constants is hard to read,
->> so ideally add a blank line above each comment and comment style for
->> single
->> line comments only has one * in the beginning
->
-> Ahh yep.
->
->>     /* foo */
->>
->>> +/** Overall size of AXI area */
->>> +#define    AXI_OVERALL_SIZE        (64 * (0x1 << 20))
->>> +/** Size of Region 0, equal to sum of sizes of other regions */
->>> +#define    AXI_REGION_0_SIZE        (32 * (0x1 << 20))
->>> +#define OB_REG_SIZE_SHIFT        5
->>> +#define IB_ROOT_PORT_REG_SIZE_SHIFT    3
->>> +
->>> +#define AXI_WRAPPER_IO_WRITE        0x6
->>> +#define AXI_WRAPPER_MEM_WRITE        0x2
->>> +#define MAX_AXI_IB_ROOTPORT_REGION_NUM    3
->>> +#define    MIN_AXI_ADDR_BITS_PASSED    8
->>
->> strange spacing after #define
->
-> Generally I use one space after #define, but I donnot somehow...
-> I will check it twice.
->
->>
->> [...]
->>
->>> +/**
->>> + * rockchip_pcie_init_port - Initialize hardware
->>> + * @port: PCIe port information
->>> + */
->>> +static int rockchip_pcie_init_port(struct rockchip_pcie_port *port)
->>> +{
->>> +    int err;
->>> +    u32 status;
->>> +    unsigned long timeout = jiffies + msecs_to_jiffies(1000);
->>
->> this timeout only seems to be initialized once here but used for multiple
->> loops below resulting in all waitloops combined together being allowed to
->> take 1 second ... is this intended?
->
-> a big timeout value to make sure we leave enough margin. No any data
-> is provided about how long should we wait for pll lock/re-lock/tainning
-> finish stuff. As it also related to the Socs/devices. Currently I
-> test pci-ethernet/wifi/SATA-bridge/USB-bridge, and it seems can be
-> reduced. But as you know, I cannot guarantee not to augment it once we
-> find some SSD/GPU in the failure state of trainning in the future.
-> Anyway I think here we use loop-break method, so it should be not
-> harmful?
->
->>
->>> +    gpiod_set_value(port->ep_gpio, 0);
->>> +
->>> +    /* Make sure PCIe relate block is in reset state */
->>> +    err = reset_control_assert(port->phy_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "assert phy_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>
->> should move to phy driver probe or so
->>
->>> +    err = reset_control_assert(port->core_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "assert core_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>
->> blank line
->>
->>> +    err = reset_control_assert(port->mgmt_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "assert mgmt_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>
->> blank line
->>
->>> +    err = reset_control_assert(port->mgmt_sticky_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "assert mgmt_sticky_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>
->> blank line
->>
->>> +    err = reset_control_assert(port->pipe_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "assert pipe_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>> +
->>> +    pcie_write(port, (0xf << 20) | (0x1 << 16) |
->>> PCIE_CLIENT_GEN_SEL_2 |
->>> +              (0x1 << 19) | (0x1 << 3) |
->>> +              PCIE_CLIENT_MODE_RC |
->>> +              PCIE_CLIENT_CONF_LANE_NUM(port->lanes) |
->>> +              PCIE_CLIENT_CONF_ENABLE, PCIE_CLIENT_BASE);
->>> +
->>
->> ------ phy_enable begin ------
->>
->> As mentioned above, the whole phy handling seems pretty separate, so
->> should
->> be easily being able to live in a real phy driver?
->>
->> This of course also needs to handle the phy clock in it.
->>
->>> +    err = reset_control_deassert(port->phy_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "deassert phy_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>> +    regmap_write(port->grf, port->pcie_conf,
->>> +             (0x3f << 17) | (0x10 << 1));
->>
->> the bits above should use some sort of constant / description. Also see
->> HIWORD_UPDATE in other drivers for the write-enable mask
->>
->> also add blank line here
->>
->>> +    err = -EINVAL;
->>> +    while (time_before(jiffies, timeout)) {
->>> +        regmap_read(port->grf, port->pcie_status, &status);
->>> +        if ((status & (1 << 9))) {
->>
->> use a constant for the (1 << 9) [aka BIT(9)] please
->>
->>> +            dev_info(port->dev, "pll locked!\n");
->>
->> dev_dbg instead?
->
-> yep
->
->>
->>> +            err = 0;
->>> +            break;
->>> +        }
->>> +    }
->>> +    if (err) {
->>> +        dev_err(port->dev, "pll lock timeout!\n");
->>> +        return err;
->>> +    }
->>> +    pcie_pb_wr_cfg(port, 0x10, 0x8);
->>> +    pcie_pb_wr_cfg(port, 0x12, 0x8);
->>> +
->>> +    err = -ETIMEDOUT;
->>> +    while (time_before(jiffies, timeout)) {
->>> +        regmap_read(port->grf, port->pcie_status, &status);
->>> +        if (!(status & (1 << 10))) {
->>
->> constant again
->>
->>> +            dev_info(port->dev, "pll output enable done!\n");
->>
->> dev_dbg or leave it out
->
-> dev_dbg should be fine.
->
->>
->>> +            err = 0;
->>> +            break;
->>> +        }
->>> +    }
->>> +
->>> +    if (err) {
->>> +        dev_err(port->dev, "pll output enable timeout!\n");
->>> +        return err;
->>> +    }
->>> +
->>> +    regmap_write(port->grf, port->pcie_conf,
->>> +             (0x3f << 17) | (0x10 << 1));
->>> +    err = -EINVAL;
->>> +    while (time_before(jiffies, timeout)) {
->>> +        regmap_read(port->grf, port->pcie_status, &status);
->>> +        if ((status & (1 << 9))) {
->>> +            dev_info(port->dev, "pll relocked!\n");
->>> +            err = 0;
->>> +            break;
->>> +        }
->>> +    }
->>> +    if (err) {
->>> +        dev_err(port->dev, "pll relock timeout!\n");
->>> +        return err;
->>> +    }
->>
->> ------ phy_enable end ------
->>
->>
->>> +    err = reset_control_deassert(port->core_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "deassert core_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>> +    err = reset_control_deassert(port->mgmt_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "deassert mgmt_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>> +    err = reset_control_deassert(port->mgmt_sticky_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "deassert mgmt_sticky_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>> +    err = reset_control_deassert(port->pipe_rst);
->>> +    if (err) {
->>> +        dev_err(port->dev, "deassert pipe_rst err %d\n", err);
->>> +        return err;
->>> +    }
->>> +
->>> +    pcie_write(port, 1 << 17 | 1 << 1, PCIE_CLIENT_BASE);
->>> +
->>> +    gpiod_set_value(port->ep_gpio, 1);
->>> +    err = -ETIMEDOUT;
->>> +    while (time_before(jiffies, timeout)) {
->>> +        status = pcie_read(port, PCIE_CLIENT_BASIC_STATUS1);
->>> +        if (((status >> 20) & 0x3) == 0x3) {
->>> +            dev_info(port->dev, "pcie link training gen1 pass!\n");
->>> +            err = 0;
->>> +            break;
->>> +        }
->>> +    }
->>> +    if (err) {
->>> +        dev_err(port->dev, "pcie link training gen1 timeout!\n");
->>> +        return err;
->>> +    }
->>> +
->>> +    status = pcie_read(port, 0x9000d0);
->>> +    status |= 0x20;
->>> +    pcie_write(port, status, 0x9000d0);
->>
->> just to mention it again, bit handling as descriptive constant please and
->> also please give that register a name :-)
->
-> will address this magic number all above using a new header file :)
->
->>
->> [...]
->>
->>> +static int rockchip_pcie_parse_dt(struct rockchip_pcie_port *port)
->>> +{
->>
->> [...]
->>
->>> +    port->lanes = 1;
->>> +    err = of_property_read_u32(node, "num-lanes", &port->lanes);
->>> +    if (!err && ((port->lanes == 0) ||
->>> +             (port->lanes == 3) ||
->>> +             (port->lanes > 4))) {
->>> +        dev_info(dev, "invalid num-lanes, default use one lane\n");
->>
->> dev_warn might be more appropriate
->
-> sure.
->
->>
->>> +        port->lanes = 1;
->>> +    }
->>
->> [...]
->>
->>> +static void rockchip_pcie_msi_enable(struct rockchip_pcie_port *pp)
->>> +{
->>> +    struct device_node *msi_node;
->>> +
->>> +    msi_node = of_parse_phandle(pp->dev->of_node,
->>> +                    "msi-parent", 0);
->>
->> I would assume this should live in the general parse_dt function?
->> Also is that MSI enablement really allow to fail silently without any
->> affect
->> on the PCI functionality?
->
-> yes, we should check this as well as CONFIG_PCI_MSI.
-> Will fix it.
->
->
->>
->>> +    if (!msi_node)
->>> +        return;
->>> +
->>> +    pp->msi = of_pci_find_msi_chip_by_node(msi_node);
->>> +    of_node_put(msi_node);
->>> +
->>> +    if (pp->msi)
->>> +        pp->msi->dev = pp->dev;
->>> +}
->>
->> [...]
->>
->>> +static int rockchip_pcie_probe(struct platform_device *pdev)
->>> +{
->>> +    struct rockchip_pcie_port *port;
->>> +    struct device *dev = &pdev->dev;
->>> +    struct pci_bus *bus, *child;
->>> +    struct resource_entry *win;
->>> +    int reg_no;
->>> +    int err = 0;
->>> +    int irq;
->>> +    LIST_HEAD(res);
->>> +
->>> +    if (!dev->of_node)
->>> +        return -ENODEV;
->>> +
->>> +    port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
->>> +    if (!port)
->>> +        return -ENOMEM;
->>> +
->>> +    irq = platform_get_irq_byname(pdev, "pcie-sys");
->>> +    if (irq < 0) {
->>> +        dev_err(dev, "missing pcie_sys IRQ resource\n");
->>> +        return -EINVAL;
->>> +    }
->>
->> blank line
->>
->>> +    err = devm_request_irq(dev, irq, rockchip_pcie_subsys_irq_handler,
->>> +                   IRQF_SHARED, "pcie-sys", port);
->>> +    if (err) {
->>> +        dev_err(dev, "failed to request pcie subsystem irq\n");
->>> +        return err;
->>> +    }
->>> +
->>> +    port->irq = platform_get_irq_byname(pdev, "pcie-legacy");
->>> +    if (port->irq < 0) {
->>> +        dev_err(dev, "missing pcie_legacy IRQ resource\n");
->>> +        return -EINVAL;
->>> +    }
->>
->> blank line
->>
->>> +    err = devm_request_irq(dev, port->irq,
->>> +                   rockchip_pcie_legacy_int_handler,
->>> +                   IRQF_SHARED,
->>> +                   "pcie-legacy",
->>> +                   port);
->>> +    if (err) {
->>> +        dev_err(&pdev->dev, "failed to request pcie-legacy irq\n");
->>> +        return err;
->>> +    }
->>> +
->>> +    irq = platform_get_irq_byname(pdev, "pcie-client");
->>> +    if (irq < 0) {
->>> +        dev_err(dev, "missing pcie-client IRQ resource\n");
->>> +        return -EINVAL;
->>> +    }
->>
->> blank line
->>
->>> +    err = devm_request_irq(dev, irq, rockchip_pcie_client_irq_handler,
->>> +                   IRQF_SHARED, "pcie-client", port);
->>> +    if (err) {
->>> +        dev_err(dev, "failed to request pcie client irq\n");
->>> +        return err;
->>> +    }
->>> +
->>> +    port->dev = dev;
->>> +    err = rockchip_pcie_parse_dt(port);
->>> +    if (err) {
->>> +        dev_err(dev, "Parsing DT failed\n");
->>> +        return err;
->>> +    }
->>
->> rockchip_pcie_parse_dt already emits error messages that are a lot more
->> specific to the actual problem, so you don't need another error
->> message here
->> and can just return the error code.
->>
->
-> okay.
->
->>
->>> +    err = rockchip_pcie_init_port(port);
->>> +    if (err)
->>> +        return err;
->>> +
->>> +    platform_set_drvdata(pdev, port);
->>> +
->>> +    rockchip_pcie_enable_interrupts(port);
->>> +    if (!IS_ENABLED(CONFIG_PCI_MSI)) {
->>> +        err = rockchip_pcie_init_irq_domain(port);
->>> +        if (err < 0)
->>> +            return err;
->>> +    }
->>> +
->>> +    err = of_pci_get_host_bridge_resources(dev->of_node, 0, 0xff,
->>> +                           &res, &port->io_base);
->>> +    if (err)
->>> +        return err;
->>
->> add blank line
->>
->>
->> Heiko
->>
->>
->>
->
->
+Changes in v5:
+- avoid to call hs400_enhanced+_strobe in mmc_set_initial_state
+  if no setting MMC_CAP2_HS400_ES.
+- add Adrian's ack for patch[5/5]
 
+Changes in v4:
+- check avail_type with EXT_CSD_CARD_TYPE_HS400 instead of
+  card_type
+- check if host support 8-bit when selecting hs400es
+- some minor fix suggested by Douglas and add his review tag
+
+Changes in v3:
+- remove helper function and shorten cap2 to MMC_CAP2_HS400_ES
+- rename callback to hs400_enhanced_strobe and make it return void
+- add enhanced_strobe in mmc_ios and pass it to hs400_enhanced_strobe
+- disable host's enhanced strobe in mmc_set_initial_state
+- remove bus checking after switching hs400es
+- add new function for hs400es timing selection
+- fix wrong judgement of mmc_card_hs400es
+
+Changes in v2:
+- switch to HS400ES from Highspeed mode directly
+
+Shawn Lin (5):
+  Documentation: mmc: add mmc-hs400-enhanced-strobe
+  mmc: core: add mmc-hs400-enhanced-strobe support
+  mmc: core: implement enhanced strobe support
+  mmc: debugfs: add HS400 enhanced strobe description
+  mmc: sdhci-of-arasan: implement enhanced strobe callback
+
+ Documentation/devicetree/bindings/mmc/mmc.txt |  1 +
+ drivers/mmc/core/bus.c                        |  3 +-
+ drivers/mmc/core/core.c                       |  9 +++
+ drivers/mmc/core/debugfs.c                    |  4 +-
+ drivers/mmc/core/host.c                       |  2 +
+ drivers/mmc/core/mmc.c                        | 84 ++++++++++++++++++++++++++-
+ drivers/mmc/host/sdhci-of-arasan.c            | 20 +++++++
+ include/linux/mmc/card.h                      |  1 +
+ include/linux/mmc/host.h                      | 12 ++++
+ include/linux/mmc/mmc.h                       |  3 +
+ 10 files changed, 135 insertions(+), 4 deletions(-)
 
 -- 
-Best Regards
-Shawn Lin
+2.3.7
