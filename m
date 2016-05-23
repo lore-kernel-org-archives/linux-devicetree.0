@@ -1,72 +1,50 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 11/23] ARM: dts: armadillo800eva: Fix W=1 dtc warnings
-Date: Mon, 23 May 2016 14:52:20 +0200
-Message-ID: <CAMuHMdXPhMToHhZggdKo=i65nS_mQT1o44YBd_Lz-B2Td3Jm9Q@mail.gmail.com>
-References: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
-	<1463728214-13838-12-git-send-email-geert+renesas@glider.be>
-	<e0a1fbc1-ac95-2c79-65ed-d0328679bb8a@cogentembedded.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH 1/4] drm/panel: simple: Add support for LG LP097QX1-SPA1
+ 2048x1536 panel
+Date: Mon, 23 May 2016 20:54:18 +0800
+Message-ID: <1464008058-29243-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e0a1fbc1-ac95-2c79-65ed-d0328679bb8a-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 5:38 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> On 05/20/2016 10:10 AM, Geert Uytterhoeven wrote:
->> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
->> Warning (unit_address_vs_reg): Node /regulator@0 has a unit name, but no reg property
->> Warning (unit_address_vs_reg): Node /regulator@1 has a unit name, but no reg property
->> Warning (unit_address_vs_reg): Node /regulator@2 has a unit name, but no reg property
->> Warning (unit_address_vs_reg): Node /regulator@3 has a unit name, but no reg property
->> Warning (unit_address_vs_reg): Node /i2c@2 has a unit name, but no reg property
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> ---
->> v2:
->>   - No changes.
->> ---
->>  arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 12 ++++++------
->>  1 file changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
->> b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
->> index 2c82dab2b6f45f9c..b3f0ac4b99bd5a3d 100644
->> --- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
->> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
->
-> [...]
->>
->> @@ -127,7 +127,7 @@
->>                 };
->>         };
->>
->> -       i2c2: i2c@2 {
->> +       i2c2: i2c2 {
->
->    Not "i2c-2" as in the other patches?
-
-Oops... Thanks for noticing!
-
-Simon: Do you want me to repost the whole series once again, or
-can you fix this up while applying?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIExHIExQMDk3UVgxLVNQQTEgaXMgYW4gOS43IiwgMjA0OHgxNTM2IChRWEdBKSBURlQtTENE
+IHBhbmVsCmNvbm5lY3RlZCB1c2luZyBlRFAgaW50ZXJmYWNlcy4KClNpZ25lZC1vZmYtYnk6IFlh
+a2lyIFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwv
+cGFuZWwtc2ltcGxlLmMgfCAyNSArKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hh
+bmdlZCwgMjUgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5l
+bC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpp
+bmRleCAzYTdiZGYxLi40MTAyMGUxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwv
+cGFuZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
+CkBAIC0xMDQwLDYgKzEwNDAsMjggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGxn
+X2xwMTIwdXAxID0gewogCX0sCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5
+X21vZGUgbGdfbHAwOTdxeDFfc3BhMV9tb2RlID0geworCS5jbG9jayA9IDIwNTIxMCwKKwkuaGRp
+c3BsYXkgPSAyMDQ4LAorCS5oc3luY19zdGFydCA9IDIwNDggKyAxNTAsCisJLmhzeW5jX2VuZCA9
+IDIwNDggKyAxNTAgKyA1LAorCS5odG90YWwgPSAyMDQ4ICsgMTUwICsgNSArIDUsCisJLnZkaXNw
+bGF5ID0gMTUzNiwKKwkudnN5bmNfc3RhcnQgPSAxNTM2ICsgMywKKwkudnN5bmNfZW5kID0gMTUz
+NiArIDMgKyAxLAorCS52dG90YWwgPSAxNTM2ICsgMyArIDEgKyA5LAorCS52cmVmcmVzaCA9IDYw
+LAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGxnX2xwMDk3cXgxX3NwYTEg
+PSB7CisJLm1vZGVzID0gJmxnX2xwMDk3cXgxX3NwYTFfbW9kZSwKKwkubnVtX21vZGVzID0gMSwK
+Kwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMjA0OCwKKwkJLmhlaWdodCA9IDE1MzYsCisJfSwKK307
+CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBsZ19scDEyOXFlX21vZGUg
+PSB7CiAJLmNsb2NrID0gMjg1MjUwLAogCS5oZGlzcGxheSA9IDI1NjAsCkBAIC0xNDYwLDYgKzE0
+ODIsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRj
+aFtdID0gewogCQkuY29tcGF0aWJsZSA9ICJsZyxscDEyMHVwMSIsCiAJCS5kYXRhID0gJmxnX2xw
+MTIwdXAxLAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAibGcsbHAwOTdxeDEtc3BhMSIsCisJCS5k
+YXRhID0gJmxnX2xwMDk3cXgxX3NwYTEsCisJfSwgewogCQkuY29tcGF0aWJsZSA9ICJsZyxscDEy
+OXFlIiwKIAkJLmRhdGEgPSAmbGdfbHAxMjlxZSwKIAl9LCB7Ci0tIAoxLjkuMQoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
