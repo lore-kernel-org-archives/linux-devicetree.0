@@ -1,56 +1,89 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC-PATCH 0/2] ASoC: simple_card: support for hw-params rules
-Date: Mon, 23 May 2016 18:18:54 +0100
-Message-ID: <20160523171854.GJ4976@leverpostej>
-References: <1463747445-14167-1-git-send-email-kernel@martin.sperl.org>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
+Date: Mon, 23 May 2016 14:49:12 -0300
+Message-ID: <CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
+References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
+	<c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463747445-14167-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+In-Reply-To: <c4ab0387041f42ada68296141befe332-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 12:30:43PM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> 
-> Simple_card does require under some circumstances the ability
-> to configure certain hw_parameters based on clocks, bits, channels.
-> 
-> This patchset adds a generic way to configure these kind of things
-> via the device tree easily. This patchset implements this
-> for simple_card, but other drivers can just as easily make use of
-> this.
+On Sun, May 22, 2016 at 7:47 PM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
 
-I'm not familiar with the class of hardware here.
+> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+> new file mode 100644
+> index 0000000..bcd8e0d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+> @@ -0,0 +1,128 @@
+> +/*
+> + * Copyright 2016 Christopher Spinrath
+> + * Copyright 2013 CompuLab Ltd.
+> + *
+> + * Based on the GPLv2 licensed devicetree distributed with the vendor
+> + * kernel for the Utilite Pro:
+> + *     Copyright 2013 CompuLab Ltd.
+> + *     Author: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
 
-What exactly needs to be configured, under which situations?
+Can you make this dual GPL/X11 license?
 
-How varied is this in practice?
+For reference take a look at:
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/imx6sl-warp.dts?id=refs/tags/v4.6
 
-Why does this make more sense than having individual drivers?
 
-> For now we have the following matchers and actions:
-> * matchers:
->   * match_sample_bits
->   * match_rate
->   * match_channels
-> * actions:
->   * set_fixed_bclk_size
-> 
-> As a note: the available matching rules and action rules right now
-> are hard-coded, but this could in principle get extended to be more
-> dynamic via kallsyms_lookup_name that would lookup the requested
-> symbol and assume it is a struct asoc_generic_hw_params_method,
-> on which it could apply several sanity-checks before using
-> the pointers for real.
+> +       gpio-keys {
+> +               compatible = "gpio-keys";
+> +               power {
+> +                       label = "Power Button";
+> +                       gpios = <&gpio1 29 1>;
 
-I'm hoping that's a joke. ;)
+Better to use a label like:
+gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
 
-Thanks,
-Mark.
+> +&iomuxc {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_hog>;
+> +
+> +       hog {
+> +               pinctrl_hog: hoggrp {
+> +                       fsl,pins = <
+> +                               /* power button */
+> +                               MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000
+
+Better to avoid 0x80000000. Replace it with the real iomux value
+instead so that you don't need to rely on the bootloader
+configuration.
+
+> +
+> +       imx6q-utilite-pro {
+> +               pinctrl_i2c1: i2c1grp {
+> +                       fsl,pins = <
+> +                               MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
+> +                               MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
+> +                       >;
+> +               };
+
+You should better remove one level of indentation. Check this commit
+for reference:
+https://git.kernel.org/cgit/linux/kernel/git/shawnguo/linux.git/commit/arch/arm/boot/dts/imx6q-tbs2910.dts?h=for-next&id=aa7871b53bc3c36b4adefe67f728143e2deeec93
+
+> +&uart2 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_uart2>;
+> +       fsl,uart-has-rtscts;
+> +       dma-names = "rx", "tx";
+> +       dmas = <&sdma 27 4 0>, <&sdma 28 4 0>;
+
+No need to add the dma nodes as they are already present in imx6qdl.dtsi.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
