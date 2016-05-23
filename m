@@ -1,42 +1,57 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: mediatek: add descriptions for
-	mediatek mt2701 iommu and smi
-Date: Mon, 23 May 2016 10:41:38 -0500
-Message-ID: <20160523154138.GA31426@rob-hp-laptop>
-References: <1463658558-567-1-git-send-email-honghui.zhang@mediatek.com>
-	<1463658558-567-2-git-send-email-honghui.zhang@mediatek.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] MIPS: devicetree: fix cpu interrupt controller node-names
+Date: Mon, 23 May 2016 10:47:16 -0500
+Message-ID: <CAL_Jsq+CC3p0hPTtPB=RsL9O7sqX1ZXKkoFk0dOj0gvvKifAkw@mail.gmail.com>
+References: <1464003540-13009-1-git-send-email-antonynpavlov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463658558-567-2-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464003540-13009-1-git-send-email-antonynpavlov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antony Pavlov <antonynpavlov@gmail.com>
+Cc: Linux-MIPS <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 19, 2016 at 07:49:14PM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> This patch defines the local arbitor port IDs for mediatek SoC MT2701 and
-> add descriptions of binding for mediatek generation one iommu and smi.
-> 
-> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/iommu/mediatek,iommu.txt   | 13 +++-
->  .../memory-controllers/mediatek,smi-common.txt     | 21 +++++-
->  .../memory-controllers/mediatek,smi-larb.txt       |  4 +-
->  include/dt-bindings/memory/mt2701-larb-port.h      | 85 ++++++++++++++++++++++
->  4 files changed, 115 insertions(+), 8 deletions(-)
->  create mode 100644 include/dt-bindings/memory/mt2701-larb-port.h
+On Mon, May 23, 2016 at 6:39 AM, Antony Pavlov <antonynpavlov@gmail.com=
+> wrote:
+> Here is the quote from [1]:
+>
+>     The unit-address must match the first address specified
+>     in the reg property of the node. If the node has no reg property,
+>     the @ and unit-address must be omitted and the node-name alone
+>     differentiates the node from other nodes at the same level
+>
+> This patch adjusts MIPS dts-files and devicetree binding
+> documentation in accordance with [1].
+>
+>     [1] Power.org(tm) Standard for Embedded Power Architecture(tm)
+>         Platform Requirements (ePAPR). Version 1.1 =E2=80=93 08 April=
+ 2011.
+>         Chapter 2.2.1.1 Node Name Requirements
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+=46YI, you can reference "the Devicetree Spec" now: devicetree.org
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@imgtec.com>
+> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: linux-mips@linux-mips.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/mips/cpu_irq.txt | 2 +-
+>  arch/mips/boot/dts/ingenic/jz4740.dtsi             | 2 +-
+>  arch/mips/boot/dts/ralink/mt7620a.dtsi             | 2 +-
+>  arch/mips/boot/dts/ralink/rt2880.dtsi              | 2 +-
+>  arch/mips/boot/dts/ralink/rt3050.dtsi              | 2 +-
+>  arch/mips/boot/dts/ralink/rt3883.dtsi              | 2 +-
+>  arch/mips/boot/dts/xilfpga/nexys4ddr.dts           | 2 +-
+>  7 files changed, 7 insertions(+), 7 deletions(-)
