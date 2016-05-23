@@ -1,40 +1,48 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0014/1529] Fix typo
-Date: Mon, 23 May 2016 07:57:50 +0530
-Message-ID: <20160523022750.GB2850@vireshk-i7>
-References: <20160521113716.31995-1-andrea.gelmini@gelma.net>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 12/54] MAINTAINERS: Add file patterns for cpufreq device
+ tree bindings
+Date: Mon, 23 May 2016 08:02:27 +0530
+Message-ID: <20160523023227.GD2850@vireshk-i7>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+ <1463907991-7916-13-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160521113716.31995-1-andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
-Cc: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1463907991-7916-13-git-send-email-geert@linux-m68k.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21-05-16, 13:37, Andrea Gelmini wrote:
-> Signed-off-by: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 22-05-16, 11:05, Geert Uytterhoeven wrote:
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt b/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
-> index 52b457c..9291e79 100644
-> --- a/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
-> +++ b/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
-> @@ -1,4 +1,4 @@
-> -Device Tree Clock bindins for CPU DVFS of Mediatek MT8173 SoC
-> +Device Tree Clock bindings for CPU DVFS of Mediatek MT8173 SoC
->  
->  Required properties:
->  - clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock names.
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: linux-pm@vger.kernel.org
+> ---
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4c9f31233670e9dd..b241c14d9ab57e2a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3213,6 +3213,7 @@ L:	linux-pm@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
+>  T:	git git://git.linaro.org/people/vireshk/linux.git (For ARM Updates)
+> +F:	Documentation/devicetree/bindings/cpufreq/
+>  F:	drivers/cpufreq/
+>  F:	include/linux/cpufreq.h
 
-Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
 viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
