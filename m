@@ -1,424 +1,147 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH] ASoC: rockchip: Add machine driver for MAX98357A/RT5514/DA7219
-Date: Mon, 23 May 2016 11:11:48 +0800
-Message-ID: <1463973108-8699-1-git-send-email-zhengxing@rock-chips.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
+Date: Mon, 23 May 2016 11:21:49 +0800
+Message-ID: <20160523032149.GA20438@shlinux2>
+References: <57399839.90706@ti.com>
+ <AM4PR04MB2130E149700361CBA3F6863389480@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573AD198.6030307@ti.com>
+ <AM4PR04MB2130EF68F7ADD64607C6CD4389480@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573C6347.6080705@ti.com>
+ <AM4PR04MB2130145869480748D06FE6E589490@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573C719F.5010107@ti.com>
+ <AM4PR04MB2130926F9AE8EBFC0D19447689490@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573D6C1C.4090600@ti.com>
+ <20160521022940.GA15088@shlinux2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160521022940.GA15088@shlinux2>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: dianders@chromium.org, heiko@sntech.de, Xing Zheng <zhengxing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Jun Li <jun.li@nxp.com>, "peter.chen@freescale.com" <peter.chen@freescale.com>, "balbi@kernel.org" <balbi@kernel.org>, "tony@atomide.com" <tony@atomide.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "jun.li@freescale.com" <jun.li@freescale.com>, "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>, "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>, "robh@kernel.org" <robh@kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "b-liu@ti.com" <b-liu@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-kernel@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-There are multi codec devices on the RK3399 platform, we can use
-this patch support and control these codecs.
+On Sat, May 21, 2016 at 10:29:40AM +0800, Peter Chen wrote:
+> On Thu, May 19, 2016 at 10:32:44AM +0300, Roger Quadros wrote:
+> > On 18/05/16 17:46, Jun Li wrote:
+> > > 
+> > > 
+> > >>>>
+> > >>>> I didn't want to have complex Kconfig so decided to have otg as
+> > >>>> built-in only.
+> > >>>> What do you want me to change in existing code? and why?
+> > >>>
+> > >>> Remove those stuff which only for pass diff driver config Like every
+> > >>> controller driver need a duplicated
+> > >>>
+> > >>> static struct otg_hcd_ops ci_hcd_ops = {
+> > >>>     ...
+> > >>> }
+> > >>
+> > >> This is an exception only. Every controller driver doesn't need to
+> > >> implement hcd_ops. It is implemented in the hcd core.
+> > >>
+> > >>>
+> > >>> And here is another example, for gadget connect, otg driver can
+> > >>> directly call to usb_udc_vbus_handler() in drd state machine, but you
+> > >>> create another interface:
+> > >>>
+> > >>> .connect_control = usb_gadget_connect_control,
+> > >>>
+> > >>> If the symbol is defined in one driver which is 'm', another driver
+> > >>> reference it should be 'm' as well, then there is no this kind of
+> > >>> problem as my understanding.
+> > >>
+> > >> That is fine as long as all are 'm'. but how do you solve the case when
+> > >> Gadget is built in and host is 'm'? OTG has to be built-in and you will
+> > >> need an hcd to gadget interface.
+> > > 
+> > > Hcd to gadget interface? Or you want to say otg to host interface?
+> > 
+> > Sorry, I meant to say host to otg interface.
+> > 
+> > > 
+> > > I think hcd and gadget are independent each other, now
+> > > 
+> > > Hcd --> otg; and gadget --> otg, (hcd and gadget use otg's symbol)
+> > 
+> > It is actually a circular dependency for both.
+> >  hcd <--> otg and gadget <--> otg
+> > 
+> > hcd -> otg for usb_otg_register/unregister_hcd
+> > otg -> hcd for usb_add/remove_hcd, usb_bus_start_enum, usb_control_msg, usb_hub_find_child
+> > 
+> > gadget -> otg for usb_otg_register/unregister_gadget
+> > otg -> gadget for usb_gadget_start/stop, usb_udc_vbus_handler
+> > 
+> > Now consider what will happen if I get rid of the otg_hcd and otg_gadget interfaces.
+> > 'y' means built-in, 'm' means module.
+> > 
+> > 1) hcd 'y', gadget 'y'
+> > otg has to be 'y' for proper build.
+> > 
+> > 2) hcd 'm', gadget 'm'
+> > otg has to be 'm' for proper build.
+> > 
+> > 3) hcd 'y', gadget 'm'
+> > Build will fail always.
+> > If otg is 'y', otg build will fail due to dependency on gadget.
+> > If otg is 'm', hcd build will fail due to dependency on otg.
+> > 
+> > 4) hcd 'm', gadget 'y'
+> > Build will fail always.
+> > If otg is 'y', otg build will fail due to dependency on hcd.
+> > If otg is 'm', gadget build will fails due to dependency on otg.
+> > 
+> > So I solve this problem by adding the otg_hcd_ops and otg_gadget_ops
+> > to remove otg->hcd and otg->gadget dependency.
+> > 
+> > Now we can address 3) and 4) like so
+> > 
+> > 3) hcd 'y', gadget 'm'
+> > otg has to be 'y' for proper build.
+> > 
+> > 4) hcd 'm', gadget 'y'
+> > otg has to be 'y' for proper build.
+> > 
+> 
+> How about this:
+> Moving usb_otg_register/unregister_hcd to host driver to remove
+> dependency hcd->otg. And moving usb_otg_get_data to common.c.
+> 
+> Delete the wait queue at usb-otg.c, and if calling usb_otg_get_data
+> returns NULL, the host/device driver's probe return -EPROBE_DEFER.
+> When the otg driver is probed successfully, the host/device will be
+> re-probed again, and usb_otg_register_hcd will be called again.
+> 
+> And let OTG depends on HCD && GADGET, and delete otg_hcd_ops and
+> otg_gadget_ops. Below build dependency issues can be fixed.
+> What do you think?
+> 
+> > 1) hcd 'y', gadget 'y'
+> > otg has to be 'y' for proper build.
+> > 
+> > 2) hcd 'm', gadget 'm'
+> > otg has to be 'm' for proper build.
+> > 
+> > 3) hcd 'y', gadget 'm'
+> > Build will fail always.
+> > If otg is 'y', otg build will fail due to dependency on gadget.
+> > If otg is 'm', hcd build will fail due to dependency on otg.
+> > 
+> > 4) hcd 'm', gadget 'y'
+> > Build will fail always.
+> > If otg is 'y', otg build will fail due to dependency on hcd.
+> > If otg is 'm', gadget build will fails due to dependency on otg.
+> -- 
+> 
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
----
+After thinking more, my suggestion can't work. How about moving
+CONFIG_USB_OTG out of CONFIG_USB, in that case, CONFIG_USB_OTG
+can only be built in.
 
- .../sound/rockchip-max98357a-rt5514-da7219.txt     |   15 +
- sound/soc/rockchip/Kconfig                         |   11 +
- sound/soc/rockchip/Makefile                        |    2 +
- .../rockchip/rockchip_max98357a_rt5514_da7219.c    |  339 ++++++++++++++++++++
- 4 files changed, 367 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip-max98357a-rt5514-da7219.txt
- create mode 100644 sound/soc/rockchip/rockchip_max98357a_rt5514_da7219.c
-
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-max98357a-rt5514-da7219.txt b/Documentation/devicetree/bindings/sound/rockchip-max98357a-rt5514-da7219.txt
-new file mode 100644
-index 0000000..5928384
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip-max98357a-rt5514-da7219.txt
-@@ -0,0 +1,15 @@
-+ROCKCHIP with MAX98357A/RT5514/DA7219 codecs
-+
-+Required properties:
-+- compatible: "rockchip,rockchip-sound"
-+- rockchip,cpu: The phandle of the Rockchip I2S controller that's
-+  connected to the codecs
-+- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-+
-+Example:
-+
-+sound {
-+	compatible = "rockchip,rockchip-sound";
-+	rockchip,cpu = <&i2s0 &i2s0 &i2s1>;
-+	rockchip,codec = <&max98357a &headsetcodec &codec>;
-+};
-diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
-index f1e0c70..d02aa94 100644
---- a/sound/soc/rockchip/Kconfig
-+++ b/sound/soc/rockchip/Kconfig
-@@ -41,3 +41,14 @@ config SND_SOC_ROCKCHIP_RT5645
- 	help
- 	  Say Y or M here if you want to add support for SoC audio on Rockchip
- 	  boards using the RT5645/RT5650 codec, such as Veyron.
-+
-+config SND_SOC_ROCKCHIP_MAX98357A_RT5514_DA7219
-+	tristate "ASoC support for Rockchip boards using the MAX98357A/RT5514/DA7219"
-+	depends on SND_SOC_ROCKCHIP && GPIOLIB
-+	select SND_SOC_ROCKCHIP_I2S
-+	select SND_SOC_MAX98357A
-+	select SND_SOC_RT5514
-+	select SND_SOC_DA7219
-+	help
-+	  Say Y or M here if you want to add support for SoC audio on Rockchip
-+	  boards using the MAX98357A/RT5514/DA7219.
-diff --git a/sound/soc/rockchip/Makefile b/sound/soc/rockchip/Makefile
-index c0bf560..ca97489 100644
---- a/sound/soc/rockchip/Makefile
-+++ b/sound/soc/rockchip/Makefile
-@@ -7,6 +7,8 @@ obj-$(CONFIG_SND_SOC_ROCKCHIP_SPDIF) += snd-soc-rockchip-spdif.o
- 
- snd-soc-rockchip-max98090-objs := rockchip_max98090.o
- snd-soc-rockchip-rt5645-objs := rockchip_rt5645.o
-+snd-soc-rockchip-max98357a-rt5514-da7219-objs := rockchip_max98357a_rt5514_da7219.o
- 
- obj-$(CONFIG_SND_SOC_ROCKCHIP_MAX98090) += snd-soc-rockchip-max98090.o
- obj-$(CONFIG_SND_SOC_ROCKCHIP_RT5645) += snd-soc-rockchip-rt5645.o
-+obj-$(CONFIG_SND_SOC_ROCKCHIP_MAX98357A_RT5514_DA7219) += snd-soc-rockchip-max98357a-rt5514-da7219.o
-diff --git a/sound/soc/rockchip/rockchip_max98357a_rt5514_da7219.c b/sound/soc/rockchip/rockchip_max98357a_rt5514_da7219.c
-new file mode 100644
-index 0000000..50c0d35
---- /dev/null
-+++ b/sound/soc/rockchip/rockchip_max98357a_rt5514_da7219.c
-@@ -0,0 +1,339 @@
-+/*
-+ * Rockchip machine ASoC driver for boards using MAX98357A/RT5514/DA7219
-+ *
-+ * Copyright (c) 2016, ROCKCHIP CORPORATION.  All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/delay.h>
-+#include <linux/spi/spi.h>
-+#include <sound/core.h>
-+#include <sound/jack.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include "rockchip_i2s.h"
-+#include "../codecs/da7219.h"
-+#include "../codecs/da7219-aad.h"
-+#include "../codecs/rt5514.h"
-+
-+#define DRV_NAME "rockchip-sound"
-+
-+static struct snd_soc_jack rockchip_sound_jack;
-+
-+static const struct snd_soc_dapm_widget rockchip_dapm_widgets[] = {
-+	SND_SOC_DAPM_HP("Headphones", NULL),
-+	SND_SOC_DAPM_SPK("Speakers", NULL),
-+	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-+	SND_SOC_DAPM_MIC("Int Mic", NULL),
-+};
-+
-+static const struct snd_soc_dapm_route rockchip_dapm_routes[] = {
-+	/* Input Lines */
-+	{"MIC", NULL, "Headset Mic"},
-+	{"DMIC1L", NULL, "Int Mic"},
-+	{"DMIC1R", NULL, "Int Mic"},
-+
-+	/* Output Lines */
-+	{"Headphones", NULL, "HPL"},
-+	{"Headphones", NULL, "HPR"},
-+	{"Speakers", NULL, "Speakers"},
-+};
-+
-+static const struct snd_kcontrol_new rockchip_controls[] = {
-+	SOC_DAPM_PIN_SWITCH("Headphones"),
-+	SOC_DAPM_PIN_SWITCH("Speakers"),
-+	SOC_DAPM_PIN_SWITCH("Headset Mic"),
-+	SOC_DAPM_PIN_SWITCH("Int Mic"),
-+};
-+
-+static int rockchip_sound_max98357a_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dapm_context *dapm = &rtd->card->dapm;
-+	unsigned int mclk;
-+	int ret;
-+
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+	case 48000:
-+	case 96000:
-+		mclk = 12288000;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(rtd->cpu_dai, 0, mclk, 0);
-+	if (ret) {
-+		dev_err(rtd->card->dev, "%s() error setting sysclk to %u: %d\n",
-+				__func__, mclk, ret);
-+		return ret;
-+	}
-+
-+	snd_soc_dapm_disable_pin(dapm, "Headphones");
-+	snd_soc_dapm_enable_pin(dapm, "Speakers");
-+	snd_soc_dapm_sync(dapm);
-+
-+	return 0;
-+}
-+
-+static int rockchip_sound_rt5514_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	unsigned int mclk;
-+	int ret;
-+
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+	case 32000:
-+	case 48000:
-+	case 96000:
-+		mclk = 12288000;
-+		break;
-+	case 11025:
-+	case 22050:
-+	case 44100:
-+		mclk = 11289600;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
-+				     SND_SOC_CLOCK_OUT);
-+	if (ret < 0) {
-+		dev_err(rtd->card->dev, "Can't set cpu clock out %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(codec_dai, RT5514_SCLK_S_MCLK,
-+				     mclk, SND_SOC_CLOCK_IN);
-+	if (ret) {
-+		dev_err(rtd->card->dev, "%s() error setting sysclk to %u: %d\n",
-+				__func__, params_rate(params) * 512, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_sound_da7219_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	struct snd_soc_dapm_context *dapm = &rtd->card->dapm;
-+	int mclk, ret;
-+
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+	case 32000:
-+	case 48000:
-+	case 96000:
-+		mclk = 12288000;
-+		break;
-+	case 11025:
-+	case 22050:
-+	case 44100:
-+		mclk = 11289600;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
-+				     SND_SOC_CLOCK_OUT);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Can't set cpu clock out %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
-+				     SND_SOC_CLOCK_IN);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Can't set codec clock in %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_pll(codec_dai, 0, DA7219_SYSCLK_MCLK, 0, 0);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Can't set pll sysclk mclk %d\n", ret);
-+		return ret;
-+	}
-+
-+	snd_soc_dapm_disable_pin(dapm, "Speakers");
-+	snd_soc_dapm_enable_pin(dapm, "Headphones");
-+	snd_soc_dapm_sync(dapm);
-+
-+	return 0;
-+}
-+
-+static int rockchip_sound_da7219_init(struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct snd_soc_codec *codec = rtd->codec_dais[0]->codec;
-+	int ret;
-+
-+	/* Enable Headset and 4 Buttons Jack detection */
-+	ret = snd_soc_card_jack_new(rtd->card, "Headset Jack",
-+				    SND_JACK_HEADSET |
-+				    SND_JACK_BTN_0 | SND_JACK_BTN_1 |
-+				    SND_JACK_BTN_2 | SND_JACK_BTN_3,
-+				    &rockchip_sound_jack, NULL, 0);
-+
-+	if (ret) {
-+		dev_err(rtd->card->dev, "New Headset Jack failed! (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	da7219_aad_jack_det(codec, &rockchip_sound_jack);
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_ops rockchip_sound_max98357a_ops = {
-+	.hw_params = rockchip_sound_max98357a_hw_params,
-+};
-+
-+static struct snd_soc_ops rockchip_sound_rt5514_ops = {
-+	.hw_params = rockchip_sound_rt5514_hw_params,
-+};
-+
-+static struct snd_soc_ops rockchip_sound_da7219_ops = {
-+	.hw_params = rockchip_sound_da7219_hw_params,
-+};
-+
-+enum {
-+	DAILINK_MAX98357A,
-+	DAILINK_RT5514,
-+	DAILINK_DA7219,
-+};
-+
-+static struct snd_soc_dai_link rockchip_dailinks[] = {
-+	[DAILINK_MAX98357A] = {
-+		.name = "MAX98357A",
-+		.stream_name = "MAX98357A PCM",
-+		.codec_dai_name = "HiFi",
-+		.ops = &rockchip_sound_max98357a_ops,
-+		/* set max98357a as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
-+	[DAILINK_RT5514] = {
-+		.name = "RT5514",
-+		.stream_name = "RT5514 PCM",
-+		.codec_dai_name = "rt5514-aif1",
-+		.ops = &rockchip_sound_rt5514_ops,
-+		/* set rt5514 as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
-+	[DAILINK_DA7219] = {
-+		.name = "DA7219",
-+		.stream_name = "DA7219 PCM",
-+		.codec_dai_name = "da7219-hifi",
-+		.init = rockchip_sound_da7219_init,
-+		.ops = &rockchip_sound_da7219_ops,
-+		/* set da7219 as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
-+};
-+
-+static struct snd_soc_card rockchip_sound_card = {
-+	.name = "rockchip-sound",
-+	.owner = THIS_MODULE,
-+	.dai_link = rockchip_dailinks,
-+	.num_links =  ARRAY_SIZE(rockchip_dailinks),
-+	.dapm_widgets = rockchip_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(rockchip_dapm_widgets),
-+	.dapm_routes = rockchip_dapm_routes,
-+	.num_dapm_routes = ARRAY_SIZE(rockchip_dapm_routes),
-+	.controls = rockchip_controls,
-+	.num_controls = ARRAY_SIZE(rockchip_controls),
-+};
-+
-+static int rockchip_sound_probe(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = &rockchip_sound_card;
-+	struct device_node *cpu_node;
-+	int i, ret;
-+
-+	for (i = 0; i < card->num_links; i++) {
-+		cpu_node = of_parse_phandle(pdev->dev.of_node,
-+					 "rockchip,cpu", i);
-+		if (!cpu_node) {
-+			dev_err(&pdev->dev, "Property[%d] 'rockchip,cpu' missing or invalid\n", i);
-+			return -EINVAL;
-+		}
-+
-+		rockchip_dailinks[i].platform_of_node = cpu_node;
-+		rockchip_dailinks[i].cpu_of_node = cpu_node;
-+
-+		rockchip_dailinks[i].codec_of_node =
-+			of_parse_phandle(pdev->dev.of_node, "rockchip,codec", i);
-+		if (!rockchip_dailinks[i].codec_of_node) {
-+			dev_err(&pdev->dev,
-+				"Property[%d] 'rockchip,codec' missing or invalid\n", i);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	card->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, card);
-+
-+	ret = devm_snd_soc_register_card(&pdev->dev, card);
-+	if (ret)
-+		dev_err(&pdev->dev, "%s snd_soc_register_card fail %d\n",
-+			__func__, ret);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id rockchip_sound_of_match[] = {
-+	{ .compatible = "rockchip,rockchip-sound", },
-+	{},
-+};
-+
-+static struct platform_driver rockchip_sound_driver = {
-+	.probe = rockchip_sound_probe,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = rockchip_sound_of_match,
-+#ifdef CONFIG_PM
-+		.pm = &snd_soc_pm_ops,
-+#endif
-+	},
-+};
-+
-+module_platform_driver(rockchip_sound_driver);
-+
-+MODULE_AUTHOR("Xing Zheng <zhengxing@rock-chips.com>");
-+MODULE_DESCRIPTION("Rockchip ASoC Machine Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_DEVICE_TABLE(of, rockchip_sound_of_match);
 -- 
-1.7.9.5
+
+Best Regards,
+Peter Chen
