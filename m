@@ -1,49 +1,69 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 33/54] MAINTAINERS: Add file patterns for wireless device tree bindings
-Date: Mon, 23 May 2016 14:25:43 +0300
-Message-ID: <87k2il9ft4.fsf@kamboji.qca.qualcomm.com>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-	<1463907991-7916-34-git-send-email-geert@linux-m68k.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/3] regulator: DT: Add DT property for operation mode
+ configuration
+Date: Mon, 23 May 2016 12:28:56 +0100
+Message-ID: <20160523112856.GR8206@sirena.org.uk>
+References: <1463987611-32139-1-git-send-email-henryc.chen@mediatek.com>
+ <1463987611-32139-2-git-send-email-henryc.chen@mediatek.com>
+ <20160523104703.GB26992@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xSu31lw3TgkWXnjh"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463907991-7916-34-git-send-email-geert@linux-m68k.org> (Geert
-	Uytterhoeven's message of "Sun, 22 May 2016 11:06:10 +0200")
+Content-Disposition: inline
+In-Reply-To: <20160523104703.GB26992@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Henry Chen <henryc.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Geert Uytterhoeven <geert@linux-m68k.org> writes:
 
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
->
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: linux-wireless@vger.kernel.org
-> ---
-> Please apply this patch directly if you want to be involved in device
-> tree binding documentation for your subsystem.
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7a9f1138131afcf1..604d5d4230406094 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8023,6 +8023,7 @@ Q:	http://patchwork.kernel.org/project/linux-wireless/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next.git
->  S:	Maintained
-> +F:	Documentation/devicetree/bindings/net/wireless/
->  F:	drivers/net/wireless/
->  
->  NETXEN (1/10) GbE SUPPORT
+--xSu31lw3TgkWXnjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-A good idea, thanks. I'll apply this once I open wireless-drivers-next,
-sometime after the merge window closes.
+On Mon, May 23, 2016 at 11:47:04AM +0100, Mark Rutland wrote:
 
--- 
-Kalle Valo
+> > +/* Regulator operating modes */
+> > +#define REGULATOR_OPERATION_MODE_FAST			0x0
+> > +#define REGULATOR_OPERATION_MODE_NORMAL			0x1
+> > +#define REGULATOR_OPERATION_MODE_IDLE			0x2
+> > +#define REGULATOR_OPERATION_MODE_STANDBY		0x3
+
+> These sound like they're tied to linux internal details (e.g. the
+> implementation of idle and/or suspend).
+
+> What do each of these actually mean?
+
+They are not really at all general and I'm fairly sure I've provided the
+same feedback repeatedly on earlier versions of the patch set.  They are
+not entirely based on Linux internal details (or at least the Linux
+internal details tend to flow from the hardware) - broadly fast is
+forced PWM, normal is default, idle is LDO mode and standby is a lower
+quality LDO mode - but how this translates into anything that a consumer
+could actually use is unclear since the supported output loads and
+quality of regulation can vary wildy.  It's also somewhat implementation
+dependent what a given regulator does (and it's always possible that
+some regulators may have more modes to control or differing definitions
+in the hardware).
+
+Henry, *please* look at how the existing mode support in the bindings is
+done and consider how a consumer would use this given that it doesn't
+know anything about the regulator...
+
+--xSu31lw3TgkWXnjh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXQul2AAoJECTWi3JdVIfQ/0MH/273M2+b80bCdidd2WPB/FtZ
+CaP8OEzs3OodFyNFyTXPLlq5wMwmpeuPK/nUeoi7lqMPbFLCJkgiaYaFIrLvRMhe
+upwWWxVmewhobVuSkep33qJU71PKcrzVMv4rmfcrgIthOhvVE+7rMtZIv04po1sf
+uLP/xdBWRte93SIiGtl5naqZR1MmoBlzXLdJleJwv2w8Vo9+KBtAIFiR03O39m9H
+lZwLIu04fevGZ2I8COlBklycdfTspt9hmqXSZdtWypIS8zPLLtGZardFTXUSqdfZ
+bALfVUZAePGEUL2Ypr8zqFxjfpaIt/YE9ncEJGYVKyDP9T0kR3vgRdEGX1gwWn8=
+=Od5Q
+-----END PGP SIGNATURE-----
+
+--xSu31lw3TgkWXnjh--
