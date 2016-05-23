@@ -1,17 +1,17 @@
 Return-Path: <weiqing.kong@mediatek.com>
-From: Weiqing Kong <weiqing.kong@mediatek.com>
+From: <weiqing.kong@mediatek.com>
 Subject: [PATCH 0/3] Support Mediatek Soc MT2701 disp pwm
-Date: Mon, 23 May 2016 19:23:49 +0800
-Message-ID: <1464002632-411-1-git-send-email-weiqing.kong@mediatek.com>
+Date: Mon, 23 May 2016 14:23:41 +0800
+Message-ID: <1463984624-20355-1-git-send-email-weiqing.kong@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_007_1666331913.549391703"
+	boundary="__=_Part_Boundary_001_25000531.895384788"
 To: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, weiqing.kong@mediatek.com
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
 List-ID: <devicetree@vger.kernel.org>
 
 This is MIME multipart 7.
---__=_Part_Boundary_007_1666331913.549391703
+--__=_Part_Boundary_001_25000531.895384788
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -27,7 +27,7 @@ IHwgIDkgKysrDQogZHJpdmVycy9wd20vcHdtLW10ay1kaXNwLmMgICAgICAgICAgICAgICAgICAg
 ICAgICAgfCA4OSArKysrKysrKysrKysrKysrKy0tLS0tDQogNCBmaWxlcyBjaGFuZ2VkLCAxMTMg
 aW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRpb25zKC0pDQoNCi0tIA0KMS45LjENCg==
 
---__=_Part_Boundary_007_1666331913.549391703
+--__=_Part_Boundary_001_25000531.895384788
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -59,4 +59,4 @@ CnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVt
 LCBhbmQgZG8gbm90CmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBv
 dGhlciBwZXJzb24uIFRoYW5rIHlvdSE8L3ByZT48IS0tfS0tPg==
 
---__=_Part_Boundary_007_1666331913.549391703--
+--__=_Part_Boundary_001_25000531.895384788--
