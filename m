@@ -1,29 +1,105 @@
 From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH 0/3] Add the eDP/VOP device node for rk3399
-Date: Mon, 23 May 2016 21:33:20 +0800
-Message-ID: <1464010400-10903-1-git-send-email-ykk@rock-chips.com>
+Subject: [PATCH 2/3] arm64: dts: rockchip: add eDP device node for rk3399
+Date: Mon, 23 May 2016 21:33:38 +0800
+Message-ID: <1464010418-11014-1-git-send-email-ykk@rock-chips.com>
+References: <1464010400-10903-1-git-send-email-ykk@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464010400-10903-1-git-send-email-ykk@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Jianqun Xu <jay.xu@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>
 Cc: mark.yao@rock-chips.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This thread is rely on Mark's VOP thread[1] and Yakir's eDP thread[2].
+Add rk3399 eDP device node, and connect to VOP device node with
+remote endpoint.
 
-[1]: https://lkml.org/lkml/2016/4/20/36
-[2]: https://patchwork.freedesktop.org/patch/83406/
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 52 ++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-
-Mark Yao (1):
-  arm64: dts: rockchip: add VOP and VOP iommu node for rk3399
-
-Yakir Yang (2):
-  arm64: dts: rockchip: add eDP device node for rk3399
-  arm64: dts: rockchip: add backlight support for rk3399 evb board
-
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts |  40 ++++++++++
- arch/arm64/boot/dts/rockchip/rk3399.dtsi    | 110 ++++++++++++++++++++++++++++
- 2 files changed, 150 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 54e5c25..be322db 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -557,6 +557,11 @@
+ 		vopl_out: port {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++
++			vopl_out_edp: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&edp_in_vopl>;
++			};
+ 		};
+ 	};
+ 
+@@ -583,6 +588,11 @@
+ 		vopb_out: port {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++
++			vopb_out_edp: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&edp_in_vopb>;
++			};
+ 		};
+ 	};
+ 
+@@ -595,6 +605,41 @@
+ 		status = "disabled";
+ 	};
+ 
++	edp: edp@ff970000 {
++		compatible = "rockchip,rk3399-edp";
++		reg = <0x0 0xff970000 0x0 0x8000>;
++		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru PCLK_EDP>, <&cru PCLK_EDP_CTRL>;
++		clock-names = "dp", "pclk";
++		resets = <&cru SRST_P_EDP_CTRL>;
++		reset-names = "dp";
++		rockchip,grf = <&grf>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&edp_hpd>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			edp_in: port@0 {
++				reg = <0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				edp_in_vopb: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vopb_out_edp>;
++				};
++
++				edp_in_vopl: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&vopl_out_edp>;
++				};
++			};
++		};
++	};
++
+ 	display_subsystem: display-subsystem {
+ 		compatible = "rockchip,display-subsystem";
+ 		ports = <&vopl_out>, <&vopb_out>;
+@@ -1067,5 +1112,12 @@
+ 					<1 14 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 		};
++
++		edp {
++			edp_hpd: edp-hpd {
++				rockchip,pins =
++					<4 23 RK_FUNC_2 &pcfg_pull_none>;
++			};
++		};
+ 	};
+ };
 -- 
 1.9.1
