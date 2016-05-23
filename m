@@ -1,78 +1,81 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v5 5/5] mmc: sdhci-of-arasan: implement enhanced strobe callback
-Date: Mon, 23 May 2016 12:14:13 +0800
-Message-ID: <1463976853-29862-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1463976789-29618-1-git-send-email-shawn.lin@rock-chips.com>
+From: raashidmuhammed <raashidmuhammed@zilogic.com>
+Subject: Re: [PATCH] ARM: at91: Add DT support for Olimex SAM9-L9260 board.
+Date: Mon, 23 May 2016 10:47:36 +0530
+Message-ID: <57429270.8060401@zilogic.com>
+References: <1463574766-15568-1-git-send-email-raashidmuhammed@zilogic.com> <20160518232925.GA6545@rob-hp-laptop> <573DB180.9030200@atmel.com> <CAL_JsqLXaq7KKPKnSTcRBswnvdZiUS=1wb35oo+JrjY3_tPRJQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463976789-29618-1-git-send-email-shawn.lin@rock-chips.com>
+In-Reply-To: <CAL_JsqLXaq7KKPKnSTcRBswnvdZiUS=1wb35oo+JrjY3_tPRJQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+To: Rob Herring <robh@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk, vijaykumar@bravegnu.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently sdhci-arasan 5.1 can support enhanced strobe function,
-and we now limit it just for "arasan,sdhci-5.1". Add
-mmc-hs400-enhanced-strobe in DT to enable the function if we're
-sure our controller can support it.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
----
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+On 05/19/2016 06:20 PM, Rob Herring wrote:
+> On Thu, May 19, 2016 at 7:28 AM, Nicolas Ferre <nicolas.ferre@atmel.c=
+om> wrote:
+>> Le 19/05/2016 01:29, Rob Herring a =C3=A9crit :
+>>> On Wed, May 18, 2016 at 06:02:46PM +0530, Raashid Muhammed wrote:
+>>>> From: Raashid Muhammed <raashidmuhammed@zilogic.com>
+>>>>
+>>>> sam9-l9260 is a low cost board designed by Olimex.
+>>>>
+>>>> More infomation is available at:
+>>>> https://www.olimex.com/Products/ARM/Atmel/SAM9-L9260/
+>>>>
+>>>> Signed-off-by: Raashid Muhammed <raashidmuhammed@zilogic.com>
+>>>> Reviewed-by: Vijay Kumar B. <vijaykumar@bravegnu.org>
+>>>> ---
+>>>>   .../devicetree/bindings/arm/olimex-at91.txt        |   6 ++
+>>>>   arch/arm/boot/dts/Makefile                         |   1 +
+>>>>   arch/arm/boot/dts/sam9-l9260.dts                   | 108 +++++++=
+++++++++++++++
+>> For AT91-based boards, please use this prefix: "at91-" as stated in =
+the
+>> Atmel README file:
+>> http://lxr.free-electrons.com/source/Documentation/arm/Atmel/README#=
+L127
+>>
+>> So I would recommend this name instead:
+>> at91-sam9-l9260.dts
+>>
+>>
+>>>>   3 files changed, 115 insertions(+)
+>>>>   create mode 100644 Documentation/devicetree/bindings/arm/olimex-=
+at91.txt
+>>>>   create mode 100644 arch/arm/boot/dts/sam9-l9260.dts
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/olimex-at91.txt=
+ b/Documentation/devicetree/bindings/arm/olimex-at91.txt
+>>>> new file mode 100644
+>>>> index 0000000..0587d63
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/arm/olimex-at91.txt
+>>>> @@ -0,0 +1,6 @@
+>>>> +Olimex AT91 Device Tree Bindings
+>>>> +--------------------------------
+>>> There's not an existing at91 or olimex file this would fit into? We
+>>> don't need 1 file per board.
+>>>
+>>>> +
+>>>> +SAM9-L9260 Board
+>>>> +Required root node properties:
+>>>> +    - compatible =3D "olimex,sam9-l9260", "atmel,at91sam9260";
+>> I don't think this file is needed at all actually. We have a lot of
+>> board files and none of them have a dedicated or particular entry fo=
+r them.
+> Well, they should have one.
+>
+> Rob
 
- drivers/mmc/host/sdhci-of-arasan.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Thanks everyone for your valuable comments. I'll incorporate the change=
+s=20
+and resend the patch.
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index b6f4c1d..533e2bc 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -25,7 +25,9 @@
- #include "sdhci-pltfm.h"
- 
- #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
-+#define SDHCI_ARASAN_VENDOR_REGISTER	0x78
- 
-+#define VENDOR_ENHANCED_STROBE		BIT(0)
- #define CLK_CTRL_TIMEOUT_SHIFT		16
- #define CLK_CTRL_TIMEOUT_MASK		(0xf << CLK_CTRL_TIMEOUT_SHIFT)
- #define CLK_CTRL_TIMEOUT_MIN_EXP	13
-@@ -79,6 +81,21 @@ static void sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int clock)
- 	}
- }
- 
-+static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
-+					struct mmc_ios *ios)
-+{
-+	u32 vendor;
-+	struct sdhci_host *host = mmc_priv(mmc);
-+
-+	vendor = readl(host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
-+	if (ios->enhanced_strobe)
-+		vendor |= VENDOR_ENHANCED_STROBE;
-+	else
-+		vendor &= ~VENDOR_ENHANCED_STROBE;
-+
-+	writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
-+}
-+
- static struct sdhci_ops sdhci_arasan_ops = {
- 	.set_clock = sdhci_arasan_set_clock,
- 	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
-@@ -245,6 +262,9 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
- 			dev_err(&pdev->dev, "phy_power_on err.\n");
- 			goto err_phy_power;
- 		}
-+
-+		host->mmc_host_ops.hs400_enhanced_strobe =
-+					sdhci_arasan_hs400_enhanced_strobe;
- 	}
- 
- 	ret = sdhci_add_host(host);
--- 
-2.3.7
+Regards,
+Raashid
