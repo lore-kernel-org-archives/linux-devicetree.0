@@ -1,76 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
-Date: Mon, 23 May 2016 16:18:13 -0500
-Message-ID: <20160523211813.GA30237@rob-hp-laptop>
-References: <cover.1463737502.git.maitysanchayan@gmail.com>
- <ffef165d05f71a1b19437171d8fdb4bc78f6b1e3.1463737502.git.maitysanchayan@gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v8 4/7] devicetree: Add infineon to vendor-prefix.txt
+Date: Tue, 24 May 2016 00:21:40 +0300
+Message-ID: <20160523212140.GB30456@intel.com>
+References: <1463610953-2766-1-git-send-email-christophe-h.ricard@st.com>
+ <1463610953-2766-5-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-security-module-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ffef165d05f71a1b19437171d8fdb4bc78f6b1e3.1463737502.git.maitysanchayan@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sanchayan Maity <maitysanchayan@gmail.com>
-Cc: arnd@arndb.de, shawnguo@kernel.org, stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1463610953-2766-5-git-send-email-christophe-h.ricard@st.com>
+Sender: owner-linux-security-module@vger.kernel.org
+To: Christophe Ricard <christophe.ricard@gmail.com>
+Cc: jgunthorpe@obsidianresearch.com, peterhuewe@gmx.de, ashley@ashleylai.com, tpmdd@selhorst.net, tpmdd-devel@lists.sourceforge.net, christophe-h.ricard@st.com, jean-luc.blanc@st.com, benoit.houyere@st.com, Alexander.Steffen@infineon.com, linux-security-module@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 03:32:05PM +0530, Sanchayan Maity wrote:
-> This adds a SoC driver to be used by Freescale Vybrid SoC's.
-> Driver utilises syscon and nvmem consumer API's to get the
-> various register values needed and expose the SoC specific
-> properties via sysfs.
+On Thu, May 19, 2016 at 12:35:50AM +0200, Christophe Ricard wrote:
+> From: Christophe Ricard <christophe.ricard@gmail.com>
 > 
-> A sample output from Colibri Vybrid VF61 is below:
+> Add missing vendor to vendor-prefix.txt
 > 
-> root@colibri-vf:~# cd /sys/bus/soc/devices/soc0
-> root@colibri-vf:/sys/bus/soc/devices/soc0# ls
-> family     machine    power      revision   soc_id     subsystem  uevent
-> root@colibri-vf:/sys/bus/soc/devices/soc0# cat family
-> Freescale Vybrid VF610
-> root@colibri-vf:/sys/bus/soc/devices/soc0# cat machine
-> Freescale Vybrid
-> root@colibri-vf:/sys/bus/soc/devices/soc0# cat revision
-> 00000013
-> root@colibri-vf:/sys/bus/soc/devices/soc0# cat soc_id
-> df6472a6130f29d4
-> 
-> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+
+/Jarkko
+
 > ---
->  .../bindings/arm/freescale/fsl,vf610-soc.txt       |  20 +++
->  drivers/soc/Kconfig                                |   1 +
->  drivers/soc/fsl/Kconfig                            |  10 ++
->  drivers/soc/fsl/Makefile                           |   1 +
->  drivers/soc/fsl/soc-vf610.c                        | 198 +++++++++++++++++++++
->  5 files changed, 230 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->  create mode 100644 drivers/soc/fsl/Kconfig
->  create mode 100644 drivers/soc/fsl/soc-vf610.c
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
-> new file mode 100644
-> index 0000000..338905d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
-> @@ -0,0 +1,20 @@
-> +Vybrid System-on-Chip
-> +---------------------
-> +
-> +Required properties:
-> +
-> +- compatible: "fsl,vf610-soc"
-> +- rom-revision: phandle to the on-chip ROM node
-> +- mscm: phandle to the MSCM CPU configuration node
-> +- nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
-> +- nvmem-cell-names: should contain string names "cfg0" and "cfg1"
-
-I still have similar concerns as the discussion on the last version. 
-This version only proves that you aren't describing h/w, but rather just 
-a collection of data that some driver wants.
-
-A driver can just as easily look-up all the nodes directly that these 
-phandles point to.
-
-And as long as we have inconsistent use of soc_device, I don't want to 
-see any compatible strings related to it.
-
-Rob
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 72e2c5a..6c3d970 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -113,6 +113,7 @@ ibm	International Business Machines (IBM)
+>  idt	Integrated Device Technologies, Inc.
+>  iom	Iomega Corporation
+>  img	Imagination Technologies Ltd.
+> +infineon Infineon Technologies
+>  ingenic	Ingenic Semiconductor
+>  innolux	Innolux Corporation
+>  intel	Intel Corporation
+> -- 
+> 2.1.4
+> 
