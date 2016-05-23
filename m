@@ -1,126 +1,50 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
-Date: Tue, 24 May 2016 01:15:07 +0200
-Message-ID: <2d1541bdd75c48a593f0e180c411cd4b@rwthex-s1-b.rwth-ad.de>
-References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
- <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
- <9b24c4b30f424407902589fcc4598ec5@rwthex-w2-a.rwth-ad.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 05/12] of: add J-Core SPI master bindings
+Date: Mon, 23 May 2016 18:16:04 -0500
+Message-ID: <CAL_JsqL9+jUeEoaWg=r-4EPUhtXOE7g5FMw=4XsyPF_jmS3aoQ@mail.gmail.com>
+References: <cover.1463708766.git.dalias@libc.org> <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
+ <20160523210020.GA23118@rob-hp-laptop> <20160523210618.GF21636@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9b24c4b30f424407902589fcc4598ec5-cBaz+nnMw1+1MzRH+ruthl5UTUQ924AY@public.gmane.org>
+In-Reply-To: <20160523210618.GF21636-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On Mon, May 23, 2016 at 4:06 PM, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org> wrote:
+> On Mon, May 23, 2016 at 04:00:20PM -0500, Rob Herring wrote:
+>> On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
+>> > Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+>> > ---
+>> >  .../devicetree/bindings/spi/jcore,spi.txt          | 23 ++++++++++++++++++++++
+>> >  1 file changed, 23 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
+>> > new file mode 100644
+>> > index 0000000..9055e7d
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/spi/jcore,spi.txt
+>> > @@ -0,0 +1,23 @@
+>> > +J-Core SPI master
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible: Must be "jcore,spi2".
+>>
+>> In general, these all seem a bit generic. You should be able to
+>> correlate IP versions to compatible strings.
+>
+> "spi2" is the name of the "IP core" in the J-Core source tree. The WIP
+> that adds DMA support and makes some changes is called "spi3" there;
+> I'll submit a patch adding "jcore,spi3" to the binding file once the
+> vhdl for it has been released.
 
-On 05/23/2016 10:56 PM, Stefan Wahren wrote:
-> Hi Christopher,
-> 
->> christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org hat am 23. Mai 2016 um 00:47 geschrieben:
->>
->>
->> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
->>
->> The CompuLab Utilite Pro is a miniature fanless desktop pc based on
->> the i.MX6 Quad powered cm-fx6 module. It features two serial ports,
->> USB OTG, 4x USB, analog audio and S/PDIF, 2x Gb Ethernet, HDMI and
->> DVI ports, an on-board 32GB SSD, a mmc slot, and on-board wifi/bt.
->>
->> Add initial support for it including USB, Ethernet (both ports), sata
->> and HDMI support.
->>
->> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile              |   1 +
->>  arch/arm/boot/dts/imx6q-utilite-pro.dts | 128
->> ++++++++++++++++++++++++++++++++
->>  2 files changed, 129 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/imx6q-utilite-pro.dts
->>
->> ...
->> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts
->> b/arch/arm/boot/dts/imx6q-utilite-pro.dts
->> new file mode 100644
->> index 0000000..bcd8e0d
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
->> @@ -0,0 +1,128 @@
->> +/*
->> + * Copyright 2016 Christopher Spinrath
->> + * Copyright 2013 CompuLab Ltd.
->> + *
->> + * Based on the GPLv2 licensed devicetree distributed with the vendor
->> + * kernel for the Utilite Pro:
->> + *	Copyright 2013 CompuLab Ltd.
->> + *	Author: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->> + *
->> + * The code contained herein is licensed under the GNU General Public
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
->> +
->> ...
->> +
->> +		pinctrl_uart2: uart2grp {
->> +			fsl,pins = <
->> +				MX6QDL_PAD_GPIO_7__UART2_TX_DATA 0x1b0b1
->> +				MX6QDL_PAD_GPIO_8__UART2_RX_DATA 0x1b0b1
->> +				MX6QDL_PAD_SD4_DAT5__UART2_RTS_B 0x1b0b1
->> +				MX6QDL_PAD_SD4_DAT6__UART2_CTS_B 0x1b0b1
->> +			>;
->> +		};
->> +	};
->> +};
->> +
->> +&pcie {
->> +	pcie@0,0 {
->> +		reg = <0x000000 0 0 0 0>;
->> +		#address-cells = <3>;
->> +		#size-cells = <2>;
->> +
->> +		/* non-removable i211 ethernet card */
->> +		eth1: intel,i211@pcie0,0 {
->> +			reg = <0x010000 0 0 0 0>;
->> +		};
->> +	};
->> +};
->> +
->> +&uart2 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_uart2>;
->> +	fsl,uart-has-rtscts;
-> 
-> this property is deprecated so please use the generic one:
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=1006ed7e1b258dac3e85c9fafe9d38b6020c917f
-> 
+Okay.
 
-Thanks for pointing that out. I will switch to the generic property.
-
-Cheers,
-Christopher
-
-> Stefan
-> 
->> +	dma-names = "rx", "tx";
->> +	dmas = <&sdma 27 4 0>, <&sdma 28 4 0>;
->> +	status = "okay";
->> +};
->> -- 
->> 2.8.2
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
