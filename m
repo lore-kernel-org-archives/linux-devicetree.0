@@ -1,150 +1,148 @@
-From: Antony Pavlov <antonynpavlov@gmail.com>
-Subject: [PATCH] MIPS: devicetree: fix cpu interrupt controller node-names
-Date: Mon, 23 May 2016 14:39:00 +0300
-Message-ID: <1464003540-13009-1-git-send-email-antonynpavlov@gmail.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] soc: Amlogic: Add secure monitor driver
+Date: Mon, 23 May 2016 13:43:58 +0200
+Message-ID: <20160523114358.GC17269@mephisto>
+References: <1463583382-15614-1-git-send-email-carlo@caione.org>
+ <1463583382-15614-2-git-send-email-carlo@caione.org>
+ <5742EBC4.3050704@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5742EBC4.3050704-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Here is the quote from [1]:
+On 23/05/16 13:38, Matthias Brugger wrote:
+> 
 
-    The unit-address must match the first address specified
-    in the reg property of the node. If the node has no reg property,
-    the @ and unit-address must be omitted and the node-name alone
-    differentiates the node from other nodes at the same level
+[...]
+> >+#include <stdarg.h>
+> >+#include <asm/cacheflush.h>
+> >+#include <asm/compiler.h>
+> >+#include <linux/arm-smccc.h>
+> >+#include <linux/io.h>
+> >+#include <linux/ioport.h>
+> >+#include <linux/module.h>
+> >+#include <linux/platform_device.h>
+> >+#include <linux/of.h>
+> >+#include <linux/smp.h>
+> >+
+> >+#include <linux/soc/meson/meson_sm.h>
+> >+
+> >+#define SM_MEM_SIZE	0x1000
+> >+
+> >+/*
+> >+ * To read from / write to the secure monitor we use two bounce buffers. The
+> >+ * physical addresses of the two buffers are obtained by querying the secure
+> >+ * monitor itself.
+> >+ */
+> >+
+> >+static u32 sm_phy_in_base;
+> >+static u32 sm_phy_out_base;
+> 
+> You can put this two variable in meson_sm_probe, right?
 
-This patch adjusts MIPS dts-files and devicetree binding
-documentation in accordance with [1].
+Yeah, actually no need to be there.
 
-    [1] Power.org(tm) Standard for Embedded Power Architecture(tm)
-        Platform Requirements (ePAPR). Version 1.1 =E2=80=93 08 April 2=
-011.
-        Chapter 2.2.1.1 Node Name Requirements
+> >+
+> >+static void __iomem *sm_sharemem_in_base;
+> >+static void __iomem *sm_sharemem_out_base;
+> >+
+> >+struct meson_sm_data {
+> >+	u32 cmd;
+> >+	u32 arg0;
+> >+	u32 arg1;
+> >+	u32 arg2;
+> >+	u32 arg3;
+> >+	u32 arg4;
+> >+	u32 ret;
+> >+};
+> >+
+> >+static void __meson_sm_call(void *info)
+> >+{
+> >+	struct meson_sm_data *data = info;
+> >+	struct arm_smccc_res res;
+> >+
+> >+	arm_smccc_smc(data->cmd,
+> >+		      data->arg0, data->arg1, data->arg2,
+> >+		      data->arg3, data->arg4, 0, 0, &res);
+> >+	data->ret = res.a0;
+> >+}
+> >+
+> >+u32 meson_sm_call(u32 cmd, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+> 
+> Can the function be static or will it be called from another driver?
 
-Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@imgtec.com>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- Documentation/devicetree/bindings/mips/cpu_irq.txt | 2 +-
- arch/mips/boot/dts/ingenic/jz4740.dtsi             | 2 +-
- arch/mips/boot/dts/ralink/mt7620a.dtsi             | 2 +-
- arch/mips/boot/dts/ralink/rt2880.dtsi              | 2 +-
- arch/mips/boot/dts/ralink/rt3050.dtsi              | 2 +-
- arch/mips/boot/dts/ralink/rt3883.dtsi              | 2 +-
- arch/mips/boot/dts/xilfpga/nexys4ddr.dts           | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+It _can_ be called from another driver. It depends on the SMC used, so
+better making it available.
 
-diff --git a/Documentation/devicetree/bindings/mips/cpu_irq.txt b/Docum=
-entation/devicetree/bindings/mips/cpu_irq.txt
-index fc149f3..f080f06 100644
---- a/Documentation/devicetree/bindings/mips/cpu_irq.txt
-+++ b/Documentation/devicetree/bindings/mips/cpu_irq.txt
-@@ -13,7 +13,7 @@ Required properties:
- - compatible : Should be "mti,cpu-interrupt-controller"
-=20
- Example devicetree:
--	cpu-irq: cpu-irq@0 {
-+	cpu-irq: cpu-irq {
- 		#address-cells =3D <0>;
-=20
- 		interrupt-controller;
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dt=
-s/ingenic/jz4740.dtsi
-index 4a9c8f2..f6ae6ed 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -5,7 +5,7 @@
- 	#size-cells =3D <1>;
- 	compatible =3D "ingenic,jz4740";
-=20
--	cpuintc: interrupt-controller@0 {
-+	cpuintc: interrupt-controller {
- 		#address-cells =3D <0>;
- 		#interrupt-cells =3D <1>;
- 		interrupt-controller;
-diff --git a/arch/mips/boot/dts/ralink/mt7620a.dtsi b/arch/mips/boot/dt=
-s/ralink/mt7620a.dtsi
-index 08bf24f..793c0c7 100644
---- a/arch/mips/boot/dts/ralink/mt7620a.dtsi
-+++ b/arch/mips/boot/dts/ralink/mt7620a.dtsi
-@@ -9,7 +9,7 @@
- 		};
- 	};
-=20
--	cpuintc: cpuintc@0 {
-+	cpuintc: cpuintc {
- 		#address-cells =3D <0>;
- 		#interrupt-cells =3D <1>;
- 		interrupt-controller;
-diff --git a/arch/mips/boot/dts/ralink/rt2880.dtsi b/arch/mips/boot/dts=
-/ralink/rt2880.dtsi
-index 182afde..fb2faef 100644
---- a/arch/mips/boot/dts/ralink/rt2880.dtsi
-+++ b/arch/mips/boot/dts/ralink/rt2880.dtsi
-@@ -9,7 +9,7 @@
- 		};
- 	};
-=20
--	cpuintc: cpuintc@0 {
-+	cpuintc: cpuintc {
- 		#address-cells =3D <0>;
- 		#interrupt-cells =3D <1>;
- 		interrupt-controller;
-diff --git a/arch/mips/boot/dts/ralink/rt3050.dtsi b/arch/mips/boot/dts=
-/ralink/rt3050.dtsi
-index e3203d4..d3cb57f 100644
---- a/arch/mips/boot/dts/ralink/rt3050.dtsi
-+++ b/arch/mips/boot/dts/ralink/rt3050.dtsi
-@@ -9,7 +9,7 @@
- 		};
- 	};
-=20
--	cpuintc: cpuintc@0 {
-+	cpuintc: cpuintc {
- 		#address-cells =3D <0>;
- 		#interrupt-cells =3D <1>;
- 		interrupt-controller;
-diff --git a/arch/mips/boot/dts/ralink/rt3883.dtsi b/arch/mips/boot/dts=
-/ralink/rt3883.dtsi
-index 3b131dd..3d6fc9a 100644
---- a/arch/mips/boot/dts/ralink/rt3883.dtsi
-+++ b/arch/mips/boot/dts/ralink/rt3883.dtsi
-@@ -9,7 +9,7 @@
- 		};
- 	};
-=20
--	cpuintc: cpuintc@0 {
-+	cpuintc: cpuintc {
- 		#address-cells =3D <0>;
- 		#interrupt-cells =3D <1>;
- 		interrupt-controller;
-diff --git a/arch/mips/boot/dts/xilfpga/nexys4ddr.dts b/arch/mips/boot/=
-dts/xilfpga/nexys4ddr.dts
-index 686ebd1..48d2112 100644
---- a/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
-+++ b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
-@@ -10,7 +10,7 @@
- 		reg =3D <0x0 0x08000000>;
- 	};
-=20
--	cpuintc: interrupt-controller@0 {
-+	cpuintc: interrupt-controller {
- 		#address-cells =3D <0>;
- 		#interrupt-cells =3D <1>;
- 		interrupt-controller;
---=20
-2.7.0
+> 
+> >+{
+> >+	struct meson_sm_data data;
+> >+
+> >+	data.cmd = cmd;
+> >+	data.arg0 = arg0;
+> >+	data.arg1 = arg1;
+> >+	data.arg2 = arg2;
+> >+	data.arg3 = arg3;
+> >+	data.arg4 = arg4;
+> >+	data.ret = 0;
+> >+
+> >+	__meson_sm_call(&data);
+> >+
+> >+	return data.ret;
+> >+}
+> >+
+> >+u32 meson_sm_call_read(void *buffer, u32 cmd, u32 arg0, u32 arg1,
+> >+		       u32 arg2, u32 arg3, u32 arg4)
+> >+{
+> >+	u32 size;
+> >+
+> >+	size = meson_sm_call(cmd, arg0, arg1, arg2, arg3, arg4);
+> >+
+> >+	if (!size || size > SM_MEM_SIZE)
+> >+		return -EINVAL;
+> >+
+> >+	memcpy(buffer, sm_sharemem_out_base, size);
+> >+	return size;
+> >+}
+> 
+> This function will be needed to be exported to be callable from modules.
+
+Fix in v3.
+
+> >+
+> >+u32 meson_sm_call_write(void *buffer, unsigned int b_size, u32 cmd, u32 arg0,
+> >+			u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+> >+{
+> >+	u32 size;
+> >+
+> >+	if (b_size > SM_MEM_SIZE)
+> >+		return -EINVAL;
+> >+
+> >+	memcpy(sm_sharemem_in_base, buffer, b_size);
+> >+
+> >+	size = meson_sm_call(cmd, arg0, arg1, arg2, arg3, arg4);
+> >+
+> >+	if (!size)
+> >+		return -EINVAL;
+> >+
+> >+	return size;
+> >+}
+> >+
+> 
+> Same here.
+
+Thanks.
+
+Cheers,
+
+-- 
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
