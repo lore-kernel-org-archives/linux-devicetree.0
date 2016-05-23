@@ -1,294 +1,150 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] soc: Amlogic: Add secure monitor driver
-Date: Mon, 23 May 2016 13:38:44 +0200
-Message-ID: <5742EBC4.3050704@gmail.com>
-References: <1463583382-15614-1-git-send-email-carlo@caione.org>
- <1463583382-15614-2-git-send-email-carlo@caione.org>
+From: Antony Pavlov <antonynpavlov@gmail.com>
+Subject: [PATCH] MIPS: devicetree: fix cpu interrupt controller node-names
+Date: Mon, 23 May 2016 14:39:00 +0300
+Message-ID: <1464003540-13009-1-git-send-email-antonynpavlov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463583382-15614-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=utf8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Here is the quote from [1]:
 
+    The unit-address must match the first address specified
+    in the reg property of the node. If the node has no reg property,
+    the @ and unit-address must be omitted and the node-name alone
+    differentiates the node from other nodes at the same level
 
-On 18/05/16 16:56, Carlo Caione wrote:
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->
-> Introduce a driver to provide calls into secure monitor mode.
->
-> In the Amlogic SoCs these calls are used for multiple reasons: access to
-> NVMEM, set USB boot, enable JTAG, etc...
->
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> ---
->   drivers/soc/Kconfig                |   1 +
->   drivers/soc/Makefile               |   1 +
->   drivers/soc/meson/Kconfig          |   8 ++
->   drivers/soc/meson/Makefile         |   1 +
->   drivers/soc/meson/meson_sm.c       | 155 +++++++++++++++++++++++++++++++++++++
->   include/linux/soc/meson/meson_sm.h |  22 ++++++
->   6 files changed, 188 insertions(+)
->   create mode 100644 drivers/soc/meson/Kconfig
->   create mode 100644 drivers/soc/meson/Makefile
->   create mode 100644 drivers/soc/meson/meson_sm.c
->   create mode 100644 include/linux/soc/meson/meson_sm.h
->
-> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-> index cb58ef0..7e70b52 100644
-> --- a/drivers/soc/Kconfig
-> +++ b/drivers/soc/Kconfig
-> @@ -4,6 +4,7 @@ source "drivers/soc/bcm/Kconfig"
->   source "drivers/soc/brcmstb/Kconfig"
->   source "drivers/soc/fsl/qe/Kconfig"
->   source "drivers/soc/mediatek/Kconfig"
-> +source "drivers/soc/meson/Kconfig"
->   source "drivers/soc/qcom/Kconfig"
->   source "drivers/soc/rockchip/Kconfig"
->   source "drivers/soc/samsung/Kconfig"
-> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> index 5ade713..9024d2b 100644
-> --- a/drivers/soc/Makefile
-> +++ b/drivers/soc/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_DOVE)		+= dove/
->   obj-$(CONFIG_MACH_DOVE)		+= dove/
->   obj-y				+= fsl/
->   obj-$(CONFIG_ARCH_MEDIATEK)	+= mediatek/
-> +obj-$(CONFIG_ARCH_MESON)	+= meson/
->   obj-$(CONFIG_ARCH_QCOM)		+= qcom/
->   obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
->   obj-$(CONFIG_SOC_SAMSUNG)	+= samsung/
-> diff --git a/drivers/soc/meson/Kconfig b/drivers/soc/meson/Kconfig
-> new file mode 100644
-> index 0000000..fff11a3
-> --- /dev/null
-> +++ b/drivers/soc/meson/Kconfig
-> @@ -0,0 +1,8 @@
-> +#
-> +# Amlogic Secure Monitor driver
-> +#
-> +config MESON_SM
-> +	bool
-> +	default ARCH_MESON
-> +	help
-> +	  Say y here to enable the Amlogic secure monitor driver
-> diff --git a/drivers/soc/meson/Makefile b/drivers/soc/meson/Makefile
-> new file mode 100644
-> index 0000000..9ab3884
-> --- /dev/null
-> +++ b/drivers/soc/meson/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_MESON_SM) +=	meson_sm.o
-> diff --git a/drivers/soc/meson/meson_sm.c b/drivers/soc/meson/meson_sm.c
-> new file mode 100644
-> index 0000000..16f7e32
-> --- /dev/null
-> +++ b/drivers/soc/meson/meson_sm.c
-> @@ -0,0 +1,155 @@
-> +/*
-> + * Amlogic Secure Monitor driver
-> + *
-> + * Copyright (C) 2016 Endless Mobile, Inc.
-> + * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <stdarg.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/compiler.h>
-> +#include <linux/arm-smccc.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/smp.h>
-> +
-> +#include <linux/soc/meson/meson_sm.h>
-> +
-> +#define SM_MEM_SIZE	0x1000
-> +
-> +/*
-> + * To read from / write to the secure monitor we use two bounce buffers. The
-> + * physical addresses of the two buffers are obtained by querying the secure
-> + * monitor itself.
-> + */
-> +
-> +static u32 sm_phy_in_base;
-> +static u32 sm_phy_out_base;
+This patch adjusts MIPS dts-files and devicetree binding
+documentation in accordance with [1].
 
-You can put this two variable in meson_sm_probe, right?
+    [1] Power.org(tm) Standard for Embedded Power Architecture(tm)
+        Platform Requirements (ePAPR). Version 1.1 =E2=80=93 08 April 2=
+011.
+        Chapter 2.2.1.1 Node Name Requirements
 
-> +
-> +static void __iomem *sm_sharemem_in_base;
-> +static void __iomem *sm_sharemem_out_base;
-> +
-> +struct meson_sm_data {
-> +	u32 cmd;
-> +	u32 arg0;
-> +	u32 arg1;
-> +	u32 arg2;
-> +	u32 arg3;
-> +	u32 arg4;
-> +	u32 ret;
-> +};
-> +
-> +static void __meson_sm_call(void *info)
-> +{
-> +	struct meson_sm_data *data = info;
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(data->cmd,
-> +		      data->arg0, data->arg1, data->arg2,
-> +		      data->arg3, data->arg4, 0, 0, &res);
-> +	data->ret = res.a0;
-> +}
-> +
-> +u32 meson_sm_call(u32 cmd, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@imgtec.com>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: linux-mips@linux-mips.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ Documentation/devicetree/bindings/mips/cpu_irq.txt | 2 +-
+ arch/mips/boot/dts/ingenic/jz4740.dtsi             | 2 +-
+ arch/mips/boot/dts/ralink/mt7620a.dtsi             | 2 +-
+ arch/mips/boot/dts/ralink/rt2880.dtsi              | 2 +-
+ arch/mips/boot/dts/ralink/rt3050.dtsi              | 2 +-
+ arch/mips/boot/dts/ralink/rt3883.dtsi              | 2 +-
+ arch/mips/boot/dts/xilfpga/nexys4ddr.dts           | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-Can the function be static or will it be called from another driver?
-
-> +{
-> +	struct meson_sm_data data;
-> +
-> +	data.cmd = cmd;
-> +	data.arg0 = arg0;
-> +	data.arg1 = arg1;
-> +	data.arg2 = arg2;
-> +	data.arg3 = arg3;
-> +	data.arg4 = arg4;
-> +	data.ret = 0;
-> +
-> +	__meson_sm_call(&data);
-> +
-> +	return data.ret;
-> +}
-> +
-> +u32 meson_sm_call_read(void *buffer, u32 cmd, u32 arg0, u32 arg1,
-> +		       u32 arg2, u32 arg3, u32 arg4)
-> +{
-> +	u32 size;
-> +
-> +	size = meson_sm_call(cmd, arg0, arg1, arg2, arg3, arg4);
-> +
-> +	if (!size || size > SM_MEM_SIZE)
-> +		return -EINVAL;
-> +
-> +	memcpy(buffer, sm_sharemem_out_base, size);
-> +	return size;
-> +}
-
-This function will be needed to be exported to be callable from modules.
-
-> +
-> +u32 meson_sm_call_write(void *buffer, unsigned int b_size, u32 cmd, u32 arg0,
-> +			u32 arg1, u32 arg2, u32 arg3, u32 arg4)
-> +{
-> +	u32 size;
-> +
-> +	if (b_size > SM_MEM_SIZE)
-> +		return -EINVAL;
-> +
-> +	memcpy(sm_sharemem_in_base, buffer, b_size);
-> +
-> +	size = meson_sm_call(cmd, arg0, arg1, arg2, arg3, arg4);
-> +
-> +	if (!size)
-> +		return -EINVAL;
-> +
-> +	return size;
-> +}
-> +
-
-Same here.
-
-Regards,
-Matthias
-
-> +static int meson_sm_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	int cmd_in, cmd_out;
-> +
-> +	if (of_property_read_u32(np, "amlogic,sm_cmd_input_base", &cmd_in))
-> +		return -EINVAL;
-> +
-> +	if (of_property_read_u32(np, "amlogic,sm_cmd_output_base", &cmd_out))
-> +		return -EINVAL;
-> +
-> +	sm_phy_in_base = meson_sm_call(cmd_in, 0, 0, 0, 0, 0);
-> +	sm_sharemem_in_base = ioremap_cache(sm_phy_in_base, SM_MEM_SIZE);
-> +	if (!sm_sharemem_in_base)
-> +		return -EINVAL;
-> +
-> +	sm_phy_out_base = meson_sm_call(cmd_out, 0, 0, 0, 0, 0);
-> +	sm_sharemem_out_base = ioremap_cache(sm_phy_out_base, SM_MEM_SIZE);
-> +	if (!sm_sharemem_out_base) {
-> +		iounmap(sm_sharemem_in_base);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id meson_sm_ids[] = {
-> +	{ .compatible = "amlogic,meson-sm" },
-> +	{ /* sentinel */},
-> +};
-> +MODULE_DEVICE_TABLE(of, meson_sm_ids);
-> +
-> +static struct platform_driver meson_sm_platform_driver = {
-> +	.probe	= meson_sm_probe,
-> +	.driver	= {
-> +		.name		= "secmon",
-> +		.of_match_table	= meson_sm_ids,
-> +	},
-> +};
-> +module_platform_driver(meson_sm_platform_driver);
-> +
-> +MODULE_AUTHOR("Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>");
-> +MODULE_DESCRIPTION("Amlogic secure monitor driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/soc/meson/meson_sm.h b/include/linux/soc/meson/meson_sm.h
-> new file mode 100644
-> index 0000000..6ff8317
-> --- /dev/null
-> +++ b/include/linux/soc/meson/meson_sm.h
-> @@ -0,0 +1,22 @@
-> +/*
-> + * Copyright (C) 2016 Endless Mobile, Inc.
-> + * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef _MESON_SM_H_
-> +#define _MESON_SM_H_
-> +
-> +u32 meson_sm_call(u32 cmd, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
-> +u32 meson_sm_call_read(void *buffer, u32 cmd, u32 arg0, u32 arg1, u32 arg2,
-> +		       u32 arg3, u32 arg4);
-> +u32 meson_sm_call_write(void *buffer, unsigned int b_size, u32 cmd, u32 arg0,
-> +			u32 arg1, u32 arg2, u32 arg3, u32 arg4);
-> +
-> +#endif /* _MESON_SM_H_ */
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mips/cpu_irq.txt b/Docum=
+entation/devicetree/bindings/mips/cpu_irq.txt
+index fc149f3..f080f06 100644
+--- a/Documentation/devicetree/bindings/mips/cpu_irq.txt
++++ b/Documentation/devicetree/bindings/mips/cpu_irq.txt
+@@ -13,7 +13,7 @@ Required properties:
+ - compatible : Should be "mti,cpu-interrupt-controller"
+=20
+ Example devicetree:
+-	cpu-irq: cpu-irq@0 {
++	cpu-irq: cpu-irq {
+ 		#address-cells =3D <0>;
+=20
+ 		interrupt-controller;
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dt=
+s/ingenic/jz4740.dtsi
+index 4a9c8f2..f6ae6ed 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -5,7 +5,7 @@
+ 	#size-cells =3D <1>;
+ 	compatible =3D "ingenic,jz4740";
+=20
+-	cpuintc: interrupt-controller@0 {
++	cpuintc: interrupt-controller {
+ 		#address-cells =3D <0>;
+ 		#interrupt-cells =3D <1>;
+ 		interrupt-controller;
+diff --git a/arch/mips/boot/dts/ralink/mt7620a.dtsi b/arch/mips/boot/dt=
+s/ralink/mt7620a.dtsi
+index 08bf24f..793c0c7 100644
+--- a/arch/mips/boot/dts/ralink/mt7620a.dtsi
++++ b/arch/mips/boot/dts/ralink/mt7620a.dtsi
+@@ -9,7 +9,7 @@
+ 		};
+ 	};
+=20
+-	cpuintc: cpuintc@0 {
++	cpuintc: cpuintc {
+ 		#address-cells =3D <0>;
+ 		#interrupt-cells =3D <1>;
+ 		interrupt-controller;
+diff --git a/arch/mips/boot/dts/ralink/rt2880.dtsi b/arch/mips/boot/dts=
+/ralink/rt2880.dtsi
+index 182afde..fb2faef 100644
+--- a/arch/mips/boot/dts/ralink/rt2880.dtsi
++++ b/arch/mips/boot/dts/ralink/rt2880.dtsi
+@@ -9,7 +9,7 @@
+ 		};
+ 	};
+=20
+-	cpuintc: cpuintc@0 {
++	cpuintc: cpuintc {
+ 		#address-cells =3D <0>;
+ 		#interrupt-cells =3D <1>;
+ 		interrupt-controller;
+diff --git a/arch/mips/boot/dts/ralink/rt3050.dtsi b/arch/mips/boot/dts=
+/ralink/rt3050.dtsi
+index e3203d4..d3cb57f 100644
+--- a/arch/mips/boot/dts/ralink/rt3050.dtsi
++++ b/arch/mips/boot/dts/ralink/rt3050.dtsi
+@@ -9,7 +9,7 @@
+ 		};
+ 	};
+=20
+-	cpuintc: cpuintc@0 {
++	cpuintc: cpuintc {
+ 		#address-cells =3D <0>;
+ 		#interrupt-cells =3D <1>;
+ 		interrupt-controller;
+diff --git a/arch/mips/boot/dts/ralink/rt3883.dtsi b/arch/mips/boot/dts=
+/ralink/rt3883.dtsi
+index 3b131dd..3d6fc9a 100644
+--- a/arch/mips/boot/dts/ralink/rt3883.dtsi
++++ b/arch/mips/boot/dts/ralink/rt3883.dtsi
+@@ -9,7 +9,7 @@
+ 		};
+ 	};
+=20
+-	cpuintc: cpuintc@0 {
++	cpuintc: cpuintc {
+ 		#address-cells =3D <0>;
+ 		#interrupt-cells =3D <1>;
+ 		interrupt-controller;
+diff --git a/arch/mips/boot/dts/xilfpga/nexys4ddr.dts b/arch/mips/boot/=
+dts/xilfpga/nexys4ddr.dts
+index 686ebd1..48d2112 100644
+--- a/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
++++ b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
+@@ -10,7 +10,7 @@
+ 		reg =3D <0x0 0x08000000>;
+ 	};
+=20
+-	cpuintc: interrupt-controller@0 {
++	cpuintc: interrupt-controller {
+ 		#address-cells =3D <0>;
+ 		#interrupt-cells =3D <1>;
+ 		interrupt-controller;
+--=20
+2.7.0
