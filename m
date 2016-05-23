@@ -1,50 +1,187 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
-Date: Mon, 23 May 2016 20:20:35 -0300
-Message-ID: <CAOMZO5CMjaxxR-_i9O1U_r_LxW0L61Rg8uySaThVPD2w2xgafg@mail.gmail.com>
-References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
- <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
- <20abc2f6769b4369ba87ec27274a090e@rwthex-s2-a.rwth-ad.de>
- <644530ff6bb04b5898dc33604dc7a93a@rwthex-s1-b.rwth-ad.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 02/12] of: add J-Core cpu bindings
+Date: Mon, 23 May 2016 18:29:48 -0500
+Message-ID: <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
+References: <cover.1463708766.git.dalias@libc.org> <f3c89e4834665790ff13478c571cc9aaa9de5559.1463708766.git.dalias@libc.org>
+ <20160523204846.GA16081@rob-hp-laptop> <20160523210328.GE21636@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <644530ff6bb04b5898dc33604dc7a93a@rwthex-s1-b.rwth-ad.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20160523210328.GE21636@brightrain.aerifal.cx>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christopher,
+On Mon, May 23, 2016 at 4:03 PM, Rich Felker <dalias@libc.org> wrote:
+> On Mon, May 23, 2016 at 03:48:46PM -0500, Rob Herring wrote:
+>> On Fri, May 20, 2016 at 02:53:03AM +0000, Rich Felker wrote:
+>> > Signed-off-by: Rich Felker <dalias@libc.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/jcore/cpus.txt | 91 ++++++++++++++++++++++++
+>> >  1 file changed, 91 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/jcore/cpus.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/jcore/cpus.txt b/Documentation/devicetree/bindings/jcore/cpus.txt
+>> > new file mode 100644
+>> > index 0000000..00ef112
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/jcore/cpus.txt
+>> > @@ -0,0 +1,91 @@
+>> > +===================
+>> > +J-Core cpu bindings
+>> > +===================
+>> > +
+>> > +The J-Core processors are open source CPU cores that can be built as FPGA
+>> > +soft cores or ASICs. The device tree is also responsible for describing the
+>> > +cache controls and, for SMP configurations, all details of the SMP method,
+>> > +as documented below.
+>> > +
+>> > +
+>> > +---------------------
+>> > +Top-level "cpus" node
+>> > +---------------------
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- #address-cells: Must be 1.
+>> > +
+>> > +- #size-cells: Must be 0.
+>> > +
+>> > +Optional properties:
+>> > +
+>> > +- enable-method: Required only for SMP systems. If present, must be
+>> > +  "jcore,spin-table".
+>> > +
+>> > +
+>> > +--------------------
+>> > +Individual cpu nodes
+>> > +--------------------
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- device_type: Must be "cpu".
+>> > +
+>> > +- compatible: Must be "jcore,j2".
+>>
+>> Okay to have this, but you should have compatible strings for specific
+>> core implementations. AIUI, J2 is just the ISA.
+>
+> There was some past discussion you probably missed on the linux-sh
+> list, starting here:
+>
+> http://www.spinics.net/lists/linux-sh/msg50028.html
+>
+> Basically it's really hard to identify what "the specific core
+> implementation" even means with a soft core. If you have some ideas
+> I'd be happy to hear them, but I think there should always be a
+> "jcore,j2" fallback compatible tag in any case.
 
-On Mon, May 23, 2016 at 8:08 PM, Christopher Spinrath
-<christopher.spinrath@rwth-aachen.de> wrote:
+Presumably you do some sort of versioning on the VHDL source that you
+can correlate to.
 
-> I would like to but I'm not sure if I'm allowed to. As I stated in the
-> license header some nodes are copied (and cleaned up) from the vendor
-> kernel/devicetree. They are licensed GPL-v2 only. So I don't know, can I
-> add the X11 license?
+If you have sufficient s/w accessible version registers that are
+always going to be updated on IP changes then, you don't really need
+more specific compatible strings.
 
-Maybe you could contact the original author anc check?
+> FYI the way we're trying to use DT is to avoid hard-coding any
+> properties about the SoC (like mmio register addresses, cache
+> properties, etc.) in the cpu compatible tag, and instead breaking
+> things down into as many device nodes as possible, to allow variations
+> to be represented without having to encode them in the kernel/driver
+> sources.
 
->> Better to avoid 0x80000000. Replace it with the real iomux value
->> instead so that you don't need to rely on the bootloader
->> configuration.
-> hmm, I don't know how to determine this value. The device documentation
-> I have does not say anything about it and the vendor kernel uses
-> 0x80000000...
+Yes, that is the purpose of DT.
 
-The default value of register IOMUXC_SW_PAD_CTL_PAD_ENET_TX_DATA1 is
-0x1b0b0, so you can use this value.
+>> > +- reg: Must be 0 on uniprocessor systems, or the sequential, zero-based
+>> > +  hardware cpu id on SMP systems.
+>> > +
+>> > +Optional properties:
+>> > +
+>> > +- clock-frequency: Clock frequency of the cpu in Hz.
+>> > +
+>> > +- cpu-release-addr: Necessary only for secondary processors on SMP systems
+>> > +  using the "jcore,spin-table" enable method. If present, must consist of
+>> > +  two cells containing physical addresses. The first cell contains an
+>> > +  address which, when written, unblocks the secondary cpu. The second cell
+>> > +  contains an address from which the cpu will read its initial program
+>> > +  counter when unblocked.
+>> > +
+>> > +
+>> > +---------------------
+>> > +Cache controller node
+>> > +---------------------
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible: Must be "jcore,cache".
+>>
+>> That's pretty generic...
+>
+> Most of the DT compatible tags were derived from the component
+> directory/source-file names in the J-Core source. In the case of
+> cache, it's actually called "icache" in the source for historical
+> reasons despite also including dcache, so I just used "cache" in the
+> DT.
+>
+>> > +
+>> > +- reg: A memory range for the cache controller registers.
+>>
+>> And standard cache properties? Are size, sets, ways, line size, etc.
+>> discoverable?
+>
+> I want to do the cache properties in a way that's generic for all of
+> arch/sh rather than specific to J2, but that's going to be part of the
+> DT conversion project. That's why I just have properties hard-coded
+> for now in the kernel source. They're not really used anyway except
+> for presenting them in /proc/cpuinfo.
 
-Another thing I forgot to comment: instead of putting this pin inside
-the hog group you could put it inside the gpio-keys node.
+The DT spec (devicetree.org, formerly ePAPR) already defines arch
+independent cache properties.
+
+>> > +--------
+>> > +IPI node
+>> > +--------
+>> > +
+>> > +Device trees for SMP systems must have an IPI node representing the mechanism
+>> > +used for inter-processor interrupt generation.
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible: Must be "jcore,ipi-controller".
+>>
+>> Again, seems pretty generic.
+>
+> I'm open to different ideas for naming schemes, but in the big scheme
+> of things it doesn't really matter. When there's a new incompatible
+> one, it can have a new compatible tag.
+
+It should make sense according to how you version the VHDL sources.
+The Xilinx folks have X.Y version numbers for example. We generally
+don't accept those, but for soft IP that is an exception.
+
+Better yet, since you can change "the hardware", make it more
+discoverable with registers for version numbering and feature bits.
+The failure here is having a process where that can be forgotten...
+
+>> > +----------
+>> > +CPUID node
+>> > +----------
+>> > +
+>> > +Device trees for SMP systems must have a CPUID node representing the mechanism
+>> > +used to identify the current processor on which execution is taking place.
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible: Must be "jcore,cpuid-mmio".
+>> > +
+>> > +- reg: A memory range containing a single 32-bit mmio register which produces
+>> > +  the current cpu id when read.
+>>
+>> This id matches the reg value in cpu node, right? If not, it should.
+>
+> Yes. Should I document that here?
+
+Yes.
+
+Rob
