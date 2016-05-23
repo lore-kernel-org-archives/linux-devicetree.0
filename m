@@ -1,57 +1,43 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] MIPS: devicetree: fix cpu interrupt controller node-names
-Date: Mon, 23 May 2016 10:47:16 -0500
-Message-ID: <CAL_Jsq+CC3p0hPTtPB=RsL9O7sqX1ZXKkoFk0dOj0gvvKifAkw@mail.gmail.com>
-References: <1464003540-13009-1-git-send-email-antonynpavlov@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Subject: [PATCH 0/4] hw rng support for NSP SoC
+Date: Mon, 23 May 2016 12:20:47 -0400
+Message-ID: <1464020451-16520-1-git-send-email-yendapally.reddy@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464003540-13009-1-git-send-email-antonynpavlov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: Linux-MIPS <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, noltari@gmail.com, Joshua Henderson <joshua.henderson@microchip.com>
+Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 23, 2016 at 6:39 AM, Antony Pavlov <antonynpavlov@gmail.com=
-> wrote:
-> Here is the quote from [1]:
->
->     The unit-address must match the first address specified
->     in the reg property of the node. If the node has no reg property,
->     the @ and unit-address must be omitted and the node-name alone
->     differentiates the node from other nodes at the same level
->
-> This patch adjusts MIPS dts-files and devicetree binding
-> documentation in accordance with [1].
->
->     [1] Power.org(tm) Standard for Embedded Power Architecture(tm)
->         Platform Requirements (ePAPR). Version 1.1 =E2=80=93 08 April=
- 2011.
->         Chapter 2.2.1.1 Node Name Requirements
+This patchset contains the hw random number generator support for the
+Broadcom's NSP SoC. The block is similar to the block available in
+bcm2835 with different default interrupt mask value. Due to lack of
+documentation, I cannot confirm the interrupt mask register details
+in bcm2835. In an effort to not break the existing functionality of
+bcm2835, I used a different compatible string to mask the interrupt
+for NSP SoC. Please let me know. Also supported providing requested
+number of random numbers instead of static size of four bytes.
 
-=46YI, you can reference "the Devicetree Spec" now: devicetree.org
+The first patch contains the documentation changes and the second patch
+contains the support for rng available in NSP SoC. The third patch
+contains the device tree changes for NSP SoC. The fourth patch contains
+the support for reading requested number of random numbers.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This patch set has been tested on NSP bcm958625HR board.
+This patch set is based on v4.6.0-rc1 and is available from github
+repo: https://github.com/Broadcom/cygnus-linux.git
+branch: nsp-rng-v1
 
-> Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paul.burton@imgtec.com>
-> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: linux-mips@linux-mips.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/mips/cpu_irq.txt | 2 +-
->  arch/mips/boot/dts/ingenic/jz4740.dtsi             | 2 +-
->  arch/mips/boot/dts/ralink/mt7620a.dtsi             | 2 +-
->  arch/mips/boot/dts/ralink/rt2880.dtsi              | 2 +-
->  arch/mips/boot/dts/ralink/rt3050.dtsi              | 2 +-
->  arch/mips/boot/dts/ralink/rt3883.dtsi              | 2 +-
->  arch/mips/boot/dts/xilfpga/nexys4ddr.dts           | 2 +-
->  7 files changed, 7 insertions(+), 7 deletions(-)
+Yendapally Reddy Dhananjaya Reddy (4):
+  dt-bindings: rng: Northstar Plus SoC rng bindings
+  hwrng: bcm2835: Support Broadcom NSP SoC rng
+  ARM: dts: nsp: Add rng device tree entry
+  hwrng: bcm2835: Read as much data as available
+
+ .../devicetree/bindings/rng/brcm,bcm2835.txt       |  7 +++-
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  5 +++
+ drivers/char/hw_random/Kconfig                     |  2 +-
+ drivers/char/hw_random/bcm2835-rng.c               | 46 +++++++++++++++++++---
+ 4 files changed, 52 insertions(+), 8 deletions(-)
+
+-- 
+2.1.0
