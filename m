@@ -1,34 +1,64 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v5 1/5] Documentation: mmc: add mmc-hs400-enhanced-strobe
-Date: Mon, 23 May 2016 13:53:20 -0700
-Message-ID: <CAD=FV=XzP_r1BAz_EXieXSuVY3h5uSYkQhrEo+Ro9sX5aYrw4w@mail.gmail.com>
-References: <1463976789-29618-1-git-send-email-shawn.lin@rock-chips.com> <1463976812-29698-1-git-send-email-shawn.lin@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
+Date: Mon, 23 May 2016 15:53:20 -0500
+Message-ID: <20160523205320.GA21655@rob-hp-laptop>
+References: <cover.1463708766.git.dalias@libc.org>
+ <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463976812-29698-1-git-send-email-shawn.lin@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rich Felker <dalias@libc.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Kumar Gala <galak@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Shawn,
-
-On Sun, May 22, 2016 at 9:13 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> mmc-hs400-enhanced-strobe is used to claim that the
-> host can support hs400 mode with enhanced strobe
-> introduced by emmc 5.1 spec.
->
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
+> Signed-off-by: Rich Felker <dalias@libc.org>
 > ---
->
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
->
->  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/interrupt-controller/jcore,aic.txt    | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+> new file mode 100644
+> index 0000000..dc9fde8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+> @@ -0,0 +1,28 @@
+> +J-Core Advanced Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible : Should be "jcore,aic1" for the (obsolete) first-generation aic
+> +  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
+> +  the "aic2" core with 64 interrupts.
+> +
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source. The value shall be 1.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+No level/edge support? Need 2 cells if so.
+
+> +
+> +Additional properties required for aic1:
+> +
+> +- reg : Memory region for configuration.
+> +
+> +- cpu-offset : For SMP, the offset to the per-cpu memory region for
+> +  configuration, to be scaled by the cpu number.
+> +
+> +
+> +Example:
+> +
+> +aic: interrupt-controller {
+> +	compatible = "jcore,aic2";
+> +	interrupt-controller;
+> +	#interrupt-cells = <1>;
+> +};
+> -- 
+> 2.8.1
+> 
+> 
