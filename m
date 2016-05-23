@@ -1,96 +1,57 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] Documentation: add binding description of Rockchip PCIe controller
-Date: Mon, 23 May 2016 21:53:06 +0200
-Message-ID: <35714508.Tep5CcJBvk@phil>
-References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com> <3930626.4a3xBnzHhK@phil> <766c3fc9-7e92-6235-76d5-803cc116845a@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] Documentation: dtb: xgene: Add hwmon dts binding
+ documentation
+Date: Mon, 23 May 2016 15:30:44 -0500
+Message-ID: <20160523203044.GA17450@rob-hp-laptop>
+References: <1463415447-29903-1-git-send-email-hotran@apm.com>
+ <1463415447-29903-2-git-send-email-hotran@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <766c3fc9-7e92-6235-76d5-803cc116845a@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1463415447-29903-2-git-send-email-hotran@apm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Hoan Tran <hotran@apm.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, lho@apm.com, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 21. Mai 2016, 11:55:35 schrieb Shawn Lin:
-> On 2016/5/20 19:20, Heiko Stuebner wrote:
-> > Hi Shawn,
-> >=20
-> > Am Freitag, 20. Mai 2016, 18:29:06 schrieb Shawn Lin:
-> >> This patch add some required and optional properties for Rockchip
-> >> PCIe controller. Also we add a example for how to use it.
-> >>=20
-> >> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> >>=20
-> >> ---
+On Mon, May 16, 2016 at 09:17:25AM -0700, Hoan Tran wrote:
+> This patch adds the APM X-Gene hwmon device tree node documentation.
+> 
+> Signed-off-by: Hoan Tran <hotran@apm.com>
+> ---
+>  .../devicetree/bindings/hwmon/apm-xgene-hwmon.txt          | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
+> new file mode 100644
+> index 0000000..49a482e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
+> @@ -0,0 +1,14 @@
+> +APM X-Gene hwmon driver
+> +
+> +Hwmon driver accesses sensors over the "SLIMpro" mailbox.
 
-[...]
+DT bindings describe h/w, not driver data. I'm not sure this belongs in 
+DT and perhaps the devices for the mailbox should be created by the 
+mailbox driver.
 
-> >> +- msi-parent: Link to the hardware entity that serves as the Mess=
-age
-> >> +- pinctrl-names : The pin control state names
-> >> +- pinctrl-0: The "default" pinctrl state
-> >=20
-> > I'm not sure if pinctrl-properties need to be described when you do=
-n't
-> > need special handling in the form of additional pin states. The pci=
-e
-> > part does not do any pin-handling of its own.
->=20
-> We need it in prevention of any firmwares change the default state
-> of #CLKREQ which is useful for ASPM. Also we have a backup pin for
-> clkreqn called clkreqnb, which should be taken more consideration sin=
-ce
-> when refering to any one of these two, pinctrl should configure the
-> bit[14] of GRF_SOC_CON7 automatically. But it is unfortunately beyoun=
-d
-> the implementation of pinctrl-rk3399.
->=20
-> BTW, I don't know if we wanna support this action inside the pinctrl
-> code?
+> +
+> +Required properties :
+> + - compatible : should be "apm,xgene-slimpro-hwmon"
+> + - mboxes : use the label reference for the mailbox as the first parameter.
+> +	    The second parameter is the channel number.
 
-The TRM says for me for that bit only "pcie_clkreq_sel port control" an=
-d=20
-that naming really suggests that it is a property of the pcie controlle=
-r,=20
-not the generic pinctrl. So if this needs to be touched the pcie contro=
-ller=20
-needs to do it.
+When do you expect this to be different mailbox numbers? 
 
-
-> >> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> >> +- interrupt-controller: identifies the node as an interrupt contr=
-oller
-> >> +
-> >> +Optional Property:
-> >> +- ep-gpios: contain the entry for pre-reset gpio
-> >> +- num-lanes: number of lanes to use
-> >> +- assigned-clocks, assigned-clock-parents and assigned-clock-rate=
-s:
-> >> standard +		   clock bindings. See ../clock/clock-bindings.txt
-> >=20
-> > Again that (assigned-clocks handling) is not actual part of the pci=
--
-> > controllers actions, but other parts and also described already
-> > elsewhere.
-> Basically it does. But this is an alternative choice for pcie-phy to
-> generate the ref_clk. When we want 100MHz src clk for PLL inside the
-> pcie-phy=EF=BC=8Cwe should add them, otherwise it's taken from xin 24=
-MHz.
->=20
-> This is useful for SI testing or some others special cases. So should=
- we
-> add it as an option and leave a sample here?
-
-What I meant was that while clock handling is important when looking at=
- the=20
-whole system, the pcie controller itself does only care that it gets a=20
-clock, but not that much where you get it from.
-
-So while assigned-clocks has its place in the real devicetree, I don't =
-think=20
-it is an element of the actual pcie-controller binding.
-
-
-Heiko
+> +
+> +Example :
+> +	hwmonslimpro {
+> +		compatible = "apm,xgene-slimpro-hwmon";
+> +		mboxes = <&mailbox 7>;
+> +	};
+> -- 
+> 1.9.1
+> 
