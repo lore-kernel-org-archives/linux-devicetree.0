@@ -1,67 +1,62 @@
+Return-Path: <weiqing.kong@mediatek.com>
+From: Weiqing Kong <weiqing.kong@mediatek.com>
+Subject: [PATCH 0/3] Support Mediatek Soc MT2701 disp pwm
+Date: Mon, 23 May 2016 19:23:49 +0800
+Message-ID: <1464002632-411-1-git-send-email-weiqing.kong@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <1464176133-10742-2-git-send-email-vreddytalla@nvidia.com>
-References: <1464176133-10742-1-git-send-email-vreddytalla@nvidia.com>
-	<1464176133-10742-2-git-send-email-vreddytalla@nvidia.com>
-Date: Wed, 25 May 2016 07:33:25 -0500
-Message-ID: <CAL_JsqKOF9=k6P5bPzkk-fFeGkwTU=KmvABTFCj4ZdSOYnFUCQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] extcon: gpio: add DT binding doc for extcon-gpio
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Venkat Reddy Talla <vreddytalla@nvidia.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_007_1666331913.549391703"
+To: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, weiqing.kong@mediatek.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, May 25, 2016 at 6:35 AM, Venkat Reddy Talla <vreddytalla@nvidia.com> wrote:
-> Adding DT binding doc for extcon gpio device
-> properties.
->
-> Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
->
-> ---
-> changes in v2:
-> - added description for extcon-gpio
-> - using gpio flag cell to handle gpio active state
-> - change dts property name gpio to gpios
-> - removed prefix for debounce
-> - added description for extcon-gpio,cable-names
-> ---
-> ---
->  .../devicetree/bindings/extcon/extcon-gpio.txt     | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
->
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> new file mode 100644
-> index 0000000..2302960
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> @@ -0,0 +1,22 @@
-> +EXTCON FOR GPIO
-> +
-> +extcon-gpio responsible to detect external cable state when
-> +attached or detached.
-> +
-> +Required Properties:
-> + - compatible : Should be "extcon-gpio";
+This is MIME multipart 7.
+--__=_Part_Boundary_007_1666331913.549391703
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
+VGhlc2Ugc2VyaWVzIHBhdGNoZXMgbW9kaWZ5IHB3bS1tdGstZGlzcC5jDQphbmQgZHRzL2R0c2kg
+Y29uZmlnIHRvIHN1cHBvcnQgTVQyNzAxIGRpc3AgcHdtLg0KDQpXZWlxaW5nIEtvbmcgKDMpOg0K
+ICBkdC1iaW5kaW5nczogcHdtOiBBZGQgTWVkaWFUZWsgZGlzcGxheSBQV00gYmluZGluZ3MNCiAg
+cHdtOiBBZGQgTWVkaWFUZWsgTVQyNzAxIGRpc3BsYXkgUFdNIGRyaXZlciBzdXBwb3J0DQogIGR0
+czogQWRkIGRpc3AgYmxzIGRzdGkgYW5kIGR0cyBjb25maWcgZm9yIE1UMjcwMQ0KDQogLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcHdtL3B3bS1tdGstZGlzcC50eHQgICAgICAgfCAgNSArLQ0KIGFy
+Y2gvYXJtL2Jvb3QvZHRzL210MjcwMS1ldmIuZHRzICAgICAgICAgICAgICAgICAgIHwgMjkgKysr
+KysrKw0KIGFyY2gvYXJtL2Jvb3QvZHRzL210MjcwMS5kdHNpICAgICAgICAgICAgICAgICAgICAg
+IHwgIDkgKysrDQogZHJpdmVycy9wd20vcHdtLW10ay1kaXNwLmMgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCA4OSArKysrKysrKysrKysrKysrKy0tLS0tDQogNCBmaWxlcyBjaGFuZ2VkLCAxMTMg
+aW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRpb25zKC0pDQoNCi0tIA0KMS45LjENCg==
 
-> +
-> +Optional Properties:
-> + - extcon-gpio,name: Name of extcon device.
-> + - gpios: gpio number.
-> + - extcon-gpio,irq-flags: IRQ flags for gpio.
+--__=_Part_Boundary_007_1666331913.549391703
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
+PHByZT4NClRoZXNlIHNlcmllcyBwYXRjaGVzIG1vZGlmeSBwd20tbXRrLWRpc3AuYw0KYW5kIGR0
+cy9kdHNpIGNvbmZpZyB0byBzdXBwb3J0IE1UMjcwMSBkaXNwIHB3bS4NCg0KV2VpcWluZyBLb25n
+ICgzKToNCiAgZHQtYmluZGluZ3M6IHB3bTogQWRkIE1lZGlhVGVrIGRpc3BsYXkgUFdNIGJpbmRp
+bmdzDQogIHB3bTogQWRkIE1lZGlhVGVrIE1UMjcwMSBkaXNwbGF5IFBXTSBkcml2ZXIgc3VwcG9y
+dA0KICBkdHM6IEFkZCBkaXNwIGJscyBkc3RpIGFuZCBkdHMgY29uZmlnIGZvciBNVDI3MDENCg0K
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20tbXRrLWRpc3AudHh0ICAgICAgIHwgIDUg
+Ky0NCiBhcmNoL2FybS9ib290L2R0cy9tdDI3MDEtZXZiLmR0cyAgICAgICAgICAgICAgICAgICB8
+IDI5ICsrKysrKysNCiBhcmNoL2FybS9ib290L2R0cy9tdDI3MDEuZHRzaSAgICAgICAgICAgICAg
+ICAgICAgICB8ICA5ICsrKw0KIGRyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgODkgKysrKysrKysrKysrKysrKystLS0tLQ0KIDQgZmlsZXMgY2hhbmdl
+ZCwgMTEzIGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KDQotLSANCjEuOS4xDQoNCjwv
+cHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25m
+aWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioqKioqKioqKioqKioqClRoZSBpbmZvcm1hdGlvbiBj
+b250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSAKYXR0YWNobWVu
+dHMpIG1heSBiZSBjb25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhl
+cndpc2UKZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlz
+IGludGVuZGVkIHRvIGJlIApjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVu
+dChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJl
+dGFpbmluZyBvciBjb3B5aW5nIG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIAphdHRhY2ht
+ZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBh
+bmQgbWF5IApiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50
+IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlIAp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMg
+ZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgCmltbWVkaWF0ZWx5IChi
+eSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2Yg
+CnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVt
+LCBhbmQgZG8gbm90CmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBv
+dGhlciBwZXJzb24uIFRoYW5rIHlvdSE8L3ByZT48IS0tfS0tPg==
 
-> + - debounce-ms: Debounce time in ms.
-> + - extcon-gpio,cable-names: The unique id of specific external connector
-> +       defined in include/linux/extcon.h
-> +
-> +extcon-gpio {
-> +       compatible = "extcon-gpio";
-> +        extcon-gpio,name = "VBUS";
-> +       gpios = <&gpio 20 0>;
-> +       extcon-gpio,cable-names = <EXTCON_USB EXTCON_NONE>;
-> +};
-> --
-> 2.1.4
->
+--__=_Part_Boundary_007_1666331913.549391703--
