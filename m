@@ -1,46 +1,39 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v2 05/12] of: add J-Core SPI master bindings
-Date: Mon, 23 May 2016 17:06:18 -0400
-Message-ID: <20160523210618.GF21636@brightrain.aerifal.cx>
-References: <cover.1463708766.git.dalias@libc.org>
- <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
- <20160523210020.GA23118@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 09/14] usb: of: add an API to get OTG device from USB
+ controller node
+Date: Mon, 23 May 2016 16:06:25 -0500
+Message-ID: <20160523210625.GA28986@rob-hp-laptop>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
+ <1463133808-10630-10-git-send-email-rogerq@ti.com>
+ <573ED917.6090803@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160523210020.GA23118@rob-hp-laptop>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+In-Reply-To: <573ED917.6090803@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 23, 2016 at 04:00:20PM -0500, Rob Herring wrote:
-> On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
-> > Signed-off-by: Rich Felker <dalias@libc.org>
-> > ---
-> >  .../devicetree/bindings/spi/jcore,spi.txt          | 23 ++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-> > new file mode 100644
-> > index 0000000..9055e7d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-> > @@ -0,0 +1,23 @@
-> > +J-Core SPI master
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: Must be "jcore,spi2".
+On Fri, May 20, 2016 at 12:29:59PM +0300, Roger Quadros wrote:
+> The OTG controller and the USB controller can be linked via the
+> 'otg-controller' property in the USB controller's device node.
 > 
-> In general, these all seem a bit generic. You should be able to 
-> correlate IP versions to compatible strings.
+> of_usb_get_otg() can be used to get the OTG controller device
+> from the USB controller's device node.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Acked-by: Peter Chen <peter.chen@nxp.com>
+> ---
+> v9:
+> Clearly indicate which properties are for OTG controller and which ones
+> are for host/device controllers
+> 
+>  Documentation/devicetree/bindings/usb/generic.txt |  7 ++++++
 
-"spi2" is the name of the "IP core" in the J-Core source tree. The WIP
-that adds DMA support and makes some changes is called "spi3" there;
-I'll submit a patch adding "jcore,spi3" to the binding file once the
-vhdl for it has been released.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Rich
+>  drivers/usb/common/common.c                       | 27 +++++++++++++++++++++++
+>  include/linux/usb/of.h                            |  9 ++++++++
+>  3 files changed, 43 insertions(+)
