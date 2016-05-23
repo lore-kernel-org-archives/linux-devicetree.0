@@ -1,186 +1,66 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 1/2] Revert "mtd: atmel_nand: Support variable RB_EDGE
- interrupts"
-Date: Mon, 23 May 2016 09:55:57 +0200
-Message-ID: <20160523095557.1efea63d@bbrezillon>
-References: <1462776680-5284-1-git-send-email-wenyou.yang@atmel.com>
-	<1462776680-5284-2-git-send-email-wenyou.yang@atmel.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 0/7] iommu/msm: Add DT adaptation and generic bindings
+	support
+Date: Mon, 23 May 2016 09:10:40 +0100
+Message-ID: <5742BB00.3040504@linaro.org>
+References: <1463741694-1735-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462776680-5284-2-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Josh Wu <rainyfeeling@outlook.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-mtd@lists.infradead.org, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1463741694-1735-1-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 9 May 2016 14:51:18 +0800
-Wenyou Yang <wenyou.yang@atmel.com> wrote:
+Hi Sricharan,
 
-> This reverts commit 5ddc7bd43ccc ("mtd: atmel_nand: Support variable
-> RB_EDGE interrupts")
-> 
-> Because for current SoCs, the RB_EDGE3(i.e. bit 27) of HSMC_SR
-> register does not exist, the RB_EDGE0 (i.e. bit 24) is the ready/busy
-> line edge status bit. It is a datasheet bug.
-> 
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+Thanks for the patchset,
 
-Wenyou, I know you sent it before v4.6 was released, but now we should
-probably add
-
-Cc: <stable@vger.kernel.org>
-
-Brian, can you apply this patch directly in your tree (as previously
-discussed, I'm not sure creating a nand/fixes branch is really useful)?
-
-Thanks,
-
-Boris
-
-> ---
-> 
->  .../devicetree/bindings/mtd/atmel-nand.txt         |  2 +-
->  drivers/mtd/nand/atmel_nand.c                      | 35 +++++-----------------
->  drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
->  3 files changed, 10 insertions(+), 30 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> index d53aba9..3e7ee99 100644
-> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> @@ -39,7 +39,7 @@ Optional properties:
->  
->  Nand Flash Controller(NFC) is an optional sub-node
->  Required properties:
-> -- compatible : "atmel,sama5d3-nfc" or "atmel,sama5d4-nfc".
-> +- compatible : "atmel,sama5d3-nfc".
->  - reg : should specify the address and size used for NFC command registers,
->          NFC registers and NFC SRAM. NFC SRAM address and size can be absent
->          if don't want to use it.
-> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-> index efc8ea2..68b9160 100644
-> --- a/drivers/mtd/nand/atmel_nand.c
-> +++ b/drivers/mtd/nand/atmel_nand.c
-> @@ -67,10 +67,6 @@ struct atmel_nand_caps {
->  	uint8_t pmecc_max_correction;
->  };
->  
-> -struct atmel_nand_nfc_caps {
-> -	uint32_t rb_mask;
-> -};
-> -
->  /*
->   * oob layout for large page size
->   * bad block info is on bytes 0 and 1
-> @@ -129,7 +125,6 @@ struct atmel_nfc {
->  	/* Point to the sram bank which include readed data via NFC */
->  	void			*data_in_sram;
->  	bool			will_write_sram;
-> -	const struct atmel_nand_nfc_caps *caps;
->  };
->  static struct atmel_nfc	nand_nfc;
->  
-> @@ -1715,9 +1710,9 @@ static irqreturn_t hsmc_interrupt(int irq, void *dev_id)
->  		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_XFR_DONE);
->  		ret = IRQ_HANDLED;
->  	}
-> -	if (pending & host->nfc->caps->rb_mask) {
-> +	if (pending & NFC_SR_RB_EDGE) {
->  		complete(&host->nfc->comp_ready);
-> -		nfc_writel(host->nfc->hsmc_regs, IDR, host->nfc->caps->rb_mask);
-> +		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_RB_EDGE);
->  		ret = IRQ_HANDLED;
->  	}
->  	if (pending & NFC_SR_CMD_DONE) {
-> @@ -1735,7 +1730,7 @@ static void nfc_prepare_interrupt(struct atmel_nand_host *host, u32 flag)
->  	if (flag & NFC_SR_XFR_DONE)
->  		init_completion(&host->nfc->comp_xfer_done);
->  
-> -	if (flag & host->nfc->caps->rb_mask)
-> +	if (flag & NFC_SR_RB_EDGE)
->  		init_completion(&host->nfc->comp_ready);
->  
->  	if (flag & NFC_SR_CMD_DONE)
-> @@ -1753,7 +1748,7 @@ static int nfc_wait_interrupt(struct atmel_nand_host *host, u32 flag)
->  	if (flag & NFC_SR_XFR_DONE)
->  		comp[index++] = &host->nfc->comp_xfer_done;
->  
-> -	if (flag & host->nfc->caps->rb_mask)
-> +	if (flag & NFC_SR_RB_EDGE)
->  		comp[index++] = &host->nfc->comp_ready;
->  
->  	if (flag & NFC_SR_CMD_DONE)
-> @@ -1821,7 +1816,7 @@ static int nfc_device_ready(struct mtd_info *mtd)
->  		dev_err(host->dev, "Lost the interrupt flags: 0x%08x\n",
->  				mask & status);
->  
-> -	return status & host->nfc->caps->rb_mask;
-> +	return status & NFC_SR_RB_EDGE;
->  }
->  
->  static void nfc_select_chip(struct mtd_info *mtd, int chip)
-> @@ -1994,8 +1989,8 @@ static void nfc_nand_command(struct mtd_info *mtd, unsigned int command,
->  		}
->  		/* fall through */
->  	default:
-> -		nfc_prepare_interrupt(host, host->nfc->caps->rb_mask);
-> -		nfc_wait_interrupt(host, host->nfc->caps->rb_mask);
-> +		nfc_prepare_interrupt(host, NFC_SR_RB_EDGE);
-> +		nfc_wait_interrupt(host, NFC_SR_RB_EDGE);
->  	}
->  }
->  
-> @@ -2426,11 +2421,6 @@ static int atmel_nand_nfc_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> -	nfc->caps = (const struct atmel_nand_nfc_caps *)
-> -		of_device_get_match_data(&pdev->dev);
-> -	if (!nfc->caps)
-> -		return -ENODEV;
-> -
->  	nfc_writel(nfc->hsmc_regs, IDR, 0xffffffff);
->  	nfc_readl(nfc->hsmc_regs, SR);	/* clear the NFC_SR */
->  
-> @@ -2459,17 +2449,8 @@ static int atmel_nand_nfc_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct atmel_nand_nfc_caps sama5d3_nfc_caps = {
-> -	.rb_mask = NFC_SR_RB_EDGE0,
-> -};
-> -
-> -static const struct atmel_nand_nfc_caps sama5d4_nfc_caps = {
-> -	.rb_mask = NFC_SR_RB_EDGE3,
-> -};
-> -
->  static const struct of_device_id atmel_nand_nfc_match[] = {
-> -	{ .compatible = "atmel,sama5d3-nfc", .data = &sama5d3_nfc_caps },
-> -	{ .compatible = "atmel,sama5d4-nfc", .data = &sama5d4_nfc_caps },
-> +	{ .compatible = "atmel,sama5d3-nfc" },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, atmel_nand_nfc_match);
-> diff --git a/drivers/mtd/nand/atmel_nand_nfc.h b/drivers/mtd/nand/atmel_nand_nfc.h
-> index 0bbc1fa..4d5d262 100644
-> --- a/drivers/mtd/nand/atmel_nand_nfc.h
-> +++ b/drivers/mtd/nand/atmel_nand_nfc.h
-> @@ -42,8 +42,7 @@
->  #define		NFC_SR_UNDEF		(1 << 21)
->  #define		NFC_SR_AWB		(1 << 22)
->  #define		NFC_SR_ASE		(1 << 23)
-> -#define		NFC_SR_RB_EDGE0		(1 << 24)
-> -#define		NFC_SR_RB_EDGE3		(1 << 27)
-> +#define		NFC_SR_RB_EDGE		(1 << 24)
->  
->  #define ATMEL_HSMC_NFC_IER	0x0c
->  #define ATMEL_HSMC_NFC_IDR	0x10
+On 20/05/16 11:54, Sricharan R wrote:
+> The msm_iommu.c driver currently works based on platform data.
+> A single master device can be connected to more than one iommu and multiple
+> contexts in each of the iommu. This association between master and iommus was
+> represented from platform data using parent/child devices. The master drivers
+> were responsible for attaching all of the iommus/context to a domain. Now the
+> platform data support is removed and DT support is added. The master/iommus are
+> added through generic iommu bindings.
+...
+> [V1]
+>     https://lists.linuxfoundation.org/pipermail/iommu/2015-August/014074.html
+>
+> Sricharan R (7):
+>    iommu/msm: Add DT adaptation
+>    documentation: iommu: Add bindings for msm,iommu-v0 ip
+>    iommu/msm: Move the contents from msm_iommu_dev.c to msm_iommu.c
+>    iommu/msm: Add support for generic master bindings
+>    iommu/msm: use generic ARMV7S short descriptor pagetable ops
+>    iommu/msm: Use writel_relaxed and add a barrier
+>    iommu/msm: Remove driver BROKEN
+>
+>   .../devicetree/bindings/iommu/msm,iommu-v0.txt     |  64 ++
+>   drivers/iommu/Kconfig                              |   2 +-
+>   drivers/iommu/Makefile                             |   2 +-
+>   drivers/iommu/msm_iommu.c                          | 885 +++++++++++----------
+>   drivers/iommu/msm_iommu.h                          |  73 +-
+>   drivers/iommu/msm_iommu_dev.c                      | 381 ---------
+>   drivers/iommu/msm_iommu_hw-8xxx.h                  | 109 +--
+>   7 files changed, 636 insertions(+), 880 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
+>   delete mode 100644 drivers/iommu/msm_iommu_dev.c
 
 
+Tested It on IFC6410 and DB600c.
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+
+--srini
