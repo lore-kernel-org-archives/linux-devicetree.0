@@ -1,22 +1,22 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: Add file patterns for sound device tree bindings" to the asoc tree
-Date: Mon, 23 May 2016 18:50:32 +0100
-Message-ID: <E1b4tzs-0006dt-0l@debutante>
-References: <1463907991-7916-44-git-send-email-geert@linux-m68k.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463907991-7916-44-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.orgMark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regmap: Add file patterns for regmap device tree bindings" to the regmap tree
+Date: Mon, 23 May 2016 18:50:39 +0100
+Message-ID: <E1b4tzz-0006fK-IS@debutante>
+References: <1463907991-7916-41-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463907991-7916-41-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: Add file patterns for sound device tree bindings
+   regmap: Add file patterns for regmap device tree bindings
 
-has been applied to the asoc tree at
+has been applied to the regmap tree at
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,36 +37,31 @@ to this mail.
 Thanks,
 Mark
 
->From afc9fb456dd0bc16633757c62e9857de588fdf57 Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Date: Sun, 22 May 2016 11:06:20 +0200
-Subject: [PATCH] ASoC: Add file patterns for sound device tree bindings
+>From 9398a639c8b175460828ee7c45e6b7a4c3f586b9 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Sun, 22 May 2016 11:06:17 +0200
+Subject: [PATCH] regmap: Add file patterns for regmap device tree bindings
 
 Submitters of device tree binding documentation may forget to CC
 the subsystem maintainer if this is missing.
 
-Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
  MAINTAINERS | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 09a9cf1e0a8a..9d8795ed25c2 100644
+index a727d9959ecd..94a9af5d7f7d 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -10435,6 +10435,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
- L:	alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org (moderated for non-subscribers)
- W:	http://alsa-project.org/main/index.php/ASoC
+@@ -9318,6 +9318,7 @@ M:	Mark Brown <broonie@kernel.org>
+ L:	linux-kernel@vger.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git
  S:	Supported
-+F:	Documentation/devicetree/bindings/sound/
- F:	Documentation/sound/alsa/soc/
- F:	sound/soc/
- F:	include/sound/soc*
++F:	Documentation/devicetree/bindings/regmap/
+ F:	drivers/base/regmap/
+ F:	include/linux/regmap.h
+ 
 -- 
 2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
