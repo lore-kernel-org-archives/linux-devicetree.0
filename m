@@ -1,48 +1,47 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 43/54] MAINTAINERS: Add file patterns for sound device
- tree bindings
-Date: Mon, 23 May 2016 12:09:34 +0100
-Message-ID: <20160523110934.GO8206@sirena.org.uk>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
- <1463907991-7916-44-git-send-email-geert@linux-m68k.org>
+Subject: Re: [PATCH 0032/1529] Fix typo
+Date: Mon, 23 May 2016 12:12:34 +0100
+Message-ID: <20160523111234.GP8206@sirena.org.uk>
+References: <20160521113954.566-1-andrea.gelmini@gelma.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5PFZVUeDPxlnBcQp"
+	protocol="application/pgp-signature"; boundary="X78YbkCBd9ye7Cvs"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1463907991-7916-44-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+In-Reply-To: <20160521113954.566-1-andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
+Cc: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, eu-NLnRV5p3vwDxYxTyqlRmvgC/G2K4zDHf@public.gmane.org, nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---5PFZVUeDPxlnBcQp
+--X78YbkCBd9ye7Cvs
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, May 22, 2016 at 11:06:20AM +0200, Geert Uytterhoeven wrote:
+On Sat, May 21, 2016 at 01:39:54PM +0200, Andrea Gelmini wrote:
+> Signed-off-by: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
 
-> +F:	Documentation/devicetree/bindings/sound/
+Please submit patches using subject lines reflecting the style for the
+subsystem.  This makes it easier for people to identify relevant
+patches.  Please also make some effort to write sensible changelogs.
 
-Note that this isn't specifically ASoC, though most things there are.
-
---5PFZVUeDPxlnBcQp
+--X78YbkCBd9ye7Cvs
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXQuTsAAoJECTWi3JdVIfQTXMH/3Js5VZHmPdffyLZRvAwV6pu
-v9IM4WSfj73gT4MTgUIMvuTrQ6ekH+zeEktR8K7oiPWsOI2DTL0Vf78sJfUT9oj3
-n8SwgDBRmUhpVqow6PK5aKE/Z6vIzEDk5qYX3qSaxvMuV7SbOaak2VhYgVwPqeJy
-xeG9a1UcXbigaLPjYcJAY7+El8xtuv3pVuXL54HNhXx+5GrOw6LKhL8RCE/Y5AhH
-h4NYLVU6M+oQR2JEV0oU9tYFImRdoCJV/2sgu/wkvqQmXcf4YI+3LKp8Ve5TTkl/
-/ZcPBYyllnGX3efyqWFvAafp1iXnBs7nZBeiHVIckOA3StC6aBuDnKtYdeqBuqg=
-=4psW
+iQEcBAEBCAAGBQJXQuWhAAoJECTWi3JdVIfQrOYH/j9hgkJ3w4BgnryXH+4cbg3U
+q7yqpVbQHnpKTMLUbyY0qpkC8GHJjFijlxHL0z7k0deflNRuDCEaHNlSNvKGe+M5
+iah56dHDp8b378BH4oeBcxR9Nl1g5yC7MEMqDiWKfhBfRkwVmexS7gbzIMvr35OJ
+rtp+5jcR2nWdFXYEcsL6g+gUrwdSAwRpZ4i9DJ5zG+BwNGPoxsDHW+/R3IbFWCgh
+Yu9VZ2sp7VYN4S3S6XVz5KWhnNAwIlteu4nQBHjsxVhVgzG/8lmb4ONEBaigwnvZ
+oLCp7ouXC9Nd1h2OXBeYi87+8wV4wX6/z2vF91NPRE3WvG4DY+tA1wKDhotPuHs=
+=HhNJ
 -----END PGP SIGNATURE-----
 
---5PFZVUeDPxlnBcQp--
+--X78YbkCBd9ye7Cvs--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
