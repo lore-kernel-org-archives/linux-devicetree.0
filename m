@@ -1,37 +1,38 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 07/54] MAINTAINERS: Add file patterns for bcm2835 device
- tree bindings
-Date: Mon, 23 May 2016 09:07:14 -0600
-Message-ID: <57431CA2.3020102@wwwdotorg.org>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
- <1463907991-7916-8-git-send-email-geert@linux-m68k.org>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v5 0/5] da8xx USB PHY platform devices and clocks (was
+ "da8xx UBS clocks")
+Date: Mon, 23 May 2016 10:14:59 -0500
+Message-ID: <57431E73.5030304@lechnology.com>
+References: <1462837612-7803-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463907991-7916-8-git-send-email-geert@linux-m68k.org>
+In-Reply-To: <1462837612-7803-1-git-send-email-david@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: nsekhar@ti.com, khilman@kernel.org
+Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2016 03:05 AM, Geert Uytterhoeven wrote:
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
+On 05/09/2016 06:46 PM, David Lechner wrote:
+> v5 changes: renamed "usbphy" to "usb_phy" or "usb-phy" as appropriate
+>
+> David Lechner (5):
+>    ARM: davinci: da8xx: add usb phy clocks
+>    ARM: davinci: da8xx: Add CFGCHIP syscon platform declaration.
+>    ARM: davinci: da8xx: Add USB PHY platform declaration
+>    ARM: DTS: da850: Add cfgchip syscon node
+>    ARM: DTS: da850: Add usb phy node
+>
+>   arch/arm/boot/dts/da850.dtsi                |   9 ++
+>   arch/arm/mach-davinci/board-da830-evm.c     |  52 +++----
+>   arch/arm/mach-davinci/board-da850-evm.c     |   4 +
+>   arch/arm/mach-davinci/board-mityomapl138.c  |   4 +
+>   arch/arm/mach-davinci/board-omapl138-hawk.c |  23 ++-
+>   arch/arm/mach-davinci/devices-da8xx.c       |  28 ++++
+>   arch/arm/mach-davinci/include/mach/da8xx.h  |   6 +
+>   arch/arm/mach-davinci/usb-da8xx.c           | 230 +++++++++++++++++++++++++++-
+>   8 files changed, 314 insertions(+), 42 deletions(-)
+>
 
-
-> @@ -2505,6 +2505,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rpi/linux-rpi.git
->  S:	Maintained
->  N:	bcm2835
-> +F:	Documentation/devicetree/bindings/soc/bcm/
-
-This looks wrong; the kernel supports more Broadcom chips than just the 
-bcm283[567]. I'd suggest using a regex to make sure it only matches the 
-appropriate chips. Perhaps:
-
-N: bcm283[567]
-
-? That also has the advantage of matching all the bindings in other 
-directories in Documentation/devicetree/bindings, and indeed all the 
-drivers and DT files too.
+What should I be doing to keep this moving along?
