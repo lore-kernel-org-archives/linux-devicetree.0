@@ -1,59 +1,39 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] firmware: Amlogic: Add secure monitor driver
-Date: Mon, 23 May 2016 13:58:05 -0700
-Message-ID: <m2posco5k2.fsf@baylibre.com>
-References: <1464021024-29380-1-git-send-email-carlo@caione.org>
-	<1464021024-29380-2-git-send-email-carlo@caione.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 05/12] of: add J-Core SPI master bindings
+Date: Mon, 23 May 2016 16:00:20 -0500
+Message-ID: <20160523210020.GA23118@rob-hp-laptop>
+References: <cover.1463708766.git.dalias@libc.org>
+ <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464021024-29380-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> (Carlo
-	Caione's message of "Mon, 23 May 2016 18:30:21 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> writes:
-
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->
-> Introduce a driver to provide calls into secure monitor mode.
->
-> In the Amlogic SoCs these calls are used for multiple reasons: access to
-> NVMEM, set USB boot, enable JTAG, etc...
->
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-
-[...]
-
-> +static int meson_sm_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct meson_sm_firmware *fw;
-> +	u32 sm_phy_in_base, sm_phy_out_base;
-> +	int cmd_in, cmd_out;
+On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
+> Signed-off-by: Rich Felker <dalias@libc.org>
+> ---
+>  .../devicetree/bindings/spi/jcore,spi.txt          | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
+> new file mode 100644
+> index 0000000..9055e7d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/jcore,spi.txt
+> @@ -0,0 +1,23 @@
+> +J-Core SPI master
 > +
-> +	fw = devm_kzalloc(&pdev->dev, sizeof(*fw), GFP_KERNEL);
-> +	if (!fw)
-> +		return -ENOMEM;
+> +Required properties:
 > +
-> +	fw->dev = &pdev->dev;
-> +
-> +	if (of_property_read_u32(np, "amlogic,sm-cmd-input-base", &cmd_in))
-> +		return -EINVAL;
-> +
-> +	if (of_property_read_u32(np, "amlogic,sm-cmd-output-base", &cmd_out))
-> +		return -EINVAL;
-> +
-> +	sm_phy_in_base = meson_sm_call(cmd_in, 0, 0, 0, 0, 0);
+> +- compatible: Must be "jcore,spi2".
 
-Should there be any error checking here?  Do we have any info on the
-return values here in case of error, or in case of missing firmware,
-etc.
+In general, these all seem a bit generic. You should be able to 
+correlate IP versions to compatible strings.
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
