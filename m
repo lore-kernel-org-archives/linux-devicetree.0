@@ -1,109 +1,87 @@
-From: =?UTF-8?Q?Emmanuel_Fust=c3=a9?= <emmanuel.fuste-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 1/2] ASoC: pcm5102a: Add support for PCM5102A
- codec
-Date: Mon, 23 May 2016 22:37:18 +0200
-Message-ID: <312f8476-a437-04d9-3d16-38d7c7c233ad@laposte.net>
-References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org>
- <1463130853-25096-2-git-send-email-kernel@martin.sperl.org>
- <34ab107e-10dc-fbd3-28d1-203c6411851c@laposte.net>
- <20160523170853.GB8206@sirena.org.uk>
-Reply-To: emmanuel.fuste-QFKgK+z4sOrR7s880joybQ@public.gmane.org
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/3] soc: rockchip: add driver handling grf setup
+Date: Mon, 23 May 2016 13:46:00 -0700
+Message-ID: <CAD=FV=VbrhpyQ8Y+5qnYHmkSvq12im2tZtpgnryGeEdc7mci9g@mail.gmail.com>
+References: <1464015539-19521-1-git-send-email-heiko@sntech.de> <1464015539-19521-3-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160523170853.GB8206-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1464015539-19521-3-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 23/05/2016 =E0 19:08, Mark Brown a =E9crit :
-> On Sun, May 22, 2016 at 11:29:55PM +0200, Emmanuel Fust=E9 wrote:
->
->> There is nothing PCM5102A specific here, and it is pretty generic.
->> Wouldn't it be better to write instead a simple-i2s-codec for all th=
-e
->> classics I2S "hifi" DACs which will get the I2S/DAI parameters from =
-DT ?
->> PCM510x, PCM5122 in HW mode, ES9023, a bunch of ES90xx implementatio=
-ns
->> etc... will use exactly the same code with only format and rate vari=
-ation.
->> And for the rate, it is implementation dependent, even in the case o=
-f
->> pcm5102a.
->
-> If we do that then we have no idea what the hardware actually is and
-> we're creating more effort on the DT side, the DT has to specify all
-> the parameters for the device rather than just the name.  Given how
-> trivial the code is it's not clear that this is a win.
->
-All the parameters are only rate and format.
-And even rate is implementation dependent. Knowing the name of the=20
-hardware give nothing. You still have to look at the schematic or look=20
-at the board to know valid rates.
-Actually is anything but a PCM5102A codec driver. It is a driver for an=
-=20
-I2S device accepting PCM rate from 8khz to 192khz with bck rate of 48fs=
-=20
-or 64fs (32fs is normally supported too by the hw mode used in hifiberr=
-y).
+Heiko,
 
-Yes this push more effort on the DT side, but I think this is better to=
-=20
-describe in DT the actual "I2S only" hardware capabilities of the=20
-implementation of the device guided by wiring or design choice.
-Doing code cut&paste and two static assignment adjustment to create a=20
-"new" driver is completely overkill and nonflexible.
+On Mon, May 23, 2016 at 7:58 AM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> +struct rockchip_grf_info {
+> +       const struct rockchip_grf_value *values;
+> +       int num_values;
+> +};
+> +
+> +#define RK3036_GRF_SOC_CON0            0x140
+> +
+> +static const struct rockchip_grf_value rk3036_defaults[] = {
 
-instead of the proposed dt, we could have :
-
-/* pcm5102a in HW mode with external SCK (4wire mode)
-  * at 128fs, 192fs or 256fs
-  */
-	pcm5102a-4w: pcm5102a {
-		compatible =3D "simple-i2s-codec";
-		rate =3D <SNDRV_PCM_RATE_8000_192000>;
-		format =3D < SNDRV_PCM_FMTBIT_S16_LE
-			|SNDRV_PCM_FMTBIT_S24_LE
-			|SNDRV_PCM_FMTBIT_S32_LE>;
-	};
-or
-/* pcm5102a in HW mode with PLL on BCK (3wire mode)
-  * 16to384khz but only with bck rate of 64fs
-  */
-	pcm5102a-4w: pcm5102a {
-		compatible =3D "simple-i2s-codec";
-		rate =3D <SNDRV_PCM_RATE_8000_192000
-			^ SNDRV_PCM_RATE_8000>;
-		format =3D <SNDRV_PCM_FMTBIT_S32_LE>;
-	};
-Or
-/* ES9023 in asynchronous mode mclk > 37Mhz
-  * I did not try bck rate <64fs as the sabre family did not generally
-  * support it.
-  */
-	es9023: es9023 {
-		compatible =3D "simple-i2s-codec";
-		rate =3D <SNDRV_PCM_RATE_8000_192000>;
-		format =3D <SNDRV_PCM_FMTBIT_S32_LE>;
-	};
-
-We could use I2S friendly property instead of "format" :
-		bckrates =3D <48, 64>;
+Worth saving the little bit of space by marking several of these
+structures as __initconst ?
 
 
-With two or tree more property (gpio for mute, de-emphasis and filter=20
-selection), you could cover 98% of I2S DAC with hardware only=20
-interfaces. It cover too startup mode of most hifi I2C or SPI=20
-controllable DAC. Which is a good starting point for chip for which a=20
-driver is not already written.
+> +#define RK3399_GRF_SOC_CON7            0xe21c
+> +
+> +static const struct rockchip_grf_value rk3399_defaults[] = {
+> +       { "jtag switching", RK3399_GRF_SOC_CON7, HIWORD_UPDATE(0, 1, 12) },
+> +
+> +};
 
-Emmanuel.
+nit: extra blank line in rk3399_defaults?
+
+
+> +static int rockchip_grf_probe(struct platform_device *pdev)
+> +{
+> +       const struct rockchip_grf_info *grf_info;
+> +       const struct of_device_id *match;
+> +       struct device *dev = &pdev->dev;
+> +       struct regmap *grf;
+> +       int i;
+> +
+> +       if (!dev->of_node)
+> +               return -ENODEV;
+> +
+> +       match = of_match_device(rockchip_grf_dt_match, dev);
+> +       if (!match || !match->data) {
+> +               dev_err(dev, "missing grf data\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       grf_info = match->data;
+> +
+> +       grf = syscon_node_to_regmap(dev->of_node);
+> +       if (IS_ERR(grf)) {
+> +               dev_err(dev, "rockchip: could not get grf syscon\n");
+> +               return PTR_ERR(grf);
+> +       }
+> +
+> +       for (i = 0; i < grf_info->num_values; i++) {
+> +               const struct rockchip_grf_value *val = &grf_info->values[i];
+> +
+> +               dev_dbg(dev, "adjusting %s in 0x%x to 0x%x\n",
+
+optional-nitty-nit saves a character: s/0x%x/%#x/
+
+...or even force to 4 hex digits: %#6x
+
+> +                       val->desc, val->reg, val->val);
+> +               regmap_write(grf, val->reg, val->val);
+
+Dunno if we care, but regmap_write() does return an error.  Presumably
+it might return an error here if you somehow specified an offset that
+was outside of the range for the GRF?
+
+
+-Doug
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
