@@ -1,112 +1,236 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 1/2] ASoC: pcm5102a: Add support for
- PCM5102A codec
-Date: Mon, 23 May 2016 23:29:05 +0100
-Message-ID: <20160523222905.GG8206@sirena.org.uk>
-References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org>
- <1463130853-25096-2-git-send-email-kernel@martin.sperl.org>
- <34ab107e-10dc-fbd3-28d1-203c6411851c@laposte.net>
- <20160523170853.GB8206@sirena.org.uk>
- <312f8476-a437-04d9-3d16-38d7c7c233ad@laposte.net>
+From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6q: extend support for the cm-fx6
+Date: Tue, 24 May 2016 00:37:28 +0200
+Message-ID: <b8378072-b645-ebf1-c4c5-26bed85a97ae@rwth-aachen.de>
+References: <709d6b3d522f4fcb8112830e0426dbb3@rwthex-s1-b.rwth-ad.de>
+ <1c18d1b1f80b47cab2d06b1167407ae8@rwthex-s2-a.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="IRIOLc8eTv1AOxGv"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <312f8476-a437-04d9-3d16-38d7c7c233ad-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+In-Reply-To: <1c18d1b1f80b47cab2d06b1167407ae8-gtPewvpZjL+1MzRH+ruthl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emmanuel =?iso-8859-1?Q?Fust=E9?= <emmanuel.fuste-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
-Cc: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Lucas,
 
---IRIOLc8eTv1AOxGv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your review!
 
-On Mon, May 23, 2016 at 10:37:18PM +0200, Emmanuel Fust=E9 wrote:
+On 05/23/2016 11:03 AM, Lucas Stach wrote:
+> Am Montag, den 23.05.2016, 00:47 +0200 schrieb
+> christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org:
+>> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+>>
+>> The cm-fx6 module has an on-board spi-flash chip for its firmware, an
+>> eeprom (containing e.g. the mac address of the on-board Ethernet),
+>> a sata port, a pcie controller, an USB hub, and an USB otg port.
+>> Enable support for them. In addition, enable syscon poweroff support.
+>>
+>> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/imx6q-cm-fx6.dts | 136 +++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 136 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+>> index 99b46f8..f4fc22e 100644
+>> --- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
+>> +++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+>> @@ -31,6 +31,61 @@
+>>  			linux,default-trigger = "heartbeat";
+>>  		};
+>>  	};
+>> +
+>> +	regulators {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+> 
+> Please remove this regulator pseudo-bus. It doesn't exist in hardware.
+> The regulators are direct children of the module.
+> 
 
-> All the parameters are only rate and format.
+OK, I will remove it. I added it because it seems to be common (e.g.
+sabrelite and wandboard use it).
 
-Off the top of my head clocking constraints are another thing we could
-know...
+>> +		reg_usb_otg_vbus: usb_otg_vbus {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "usb_otg_vbus";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			gpio = <&gpio3 22 0>;
+>> +			enable-active-high;
+>> +		};
+>> +
+>> +		reg_usb_h1_vbus: usb_h1_vbus {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "usb_h1_vbus";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			gpio = <&gpio7 8 0>;
+>> +			enable-active-high;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&ecspi1 {
+>> +	fsl,spi-num-chipselects = <2>;
+>> +	cs-gpios = <&gpio2 30 0>, <&gpio3 19 0>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_ecspi1>;
+>> +	status = "okay";
+>> +
+>> +	flash: m25p80@0 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		compatible = "st,m25p", "jedec,spi-nor";
+>> +		spi-max-frequency = <20000000>;
+>> +		reg = <0>;
+>> +
+>> +		partition@0 {
+>> +			label = "uboot";
+>> +			reg = <0x0 0xc0000>;
+>> +		};
+>> +
+>> +		partition@c0000 {
+>> +			label = "uboot environment";
+>> +			reg = <0xc0000 0x40000>;
+>> +		};
+>> +
+>> +		partition@100000 {
+>> +			label = "reserved";
+>> +			reg = <0x100000 0x100000>;
+>> +		};
+> 
+> Partition layouts don't belong in the upstream DT, as it a device
+> configuration thing. Please kep them in the bootloader/firmware and make
+> this one pass the partition layout to the kernel.
+> 
+OK, removed (although I do not like to patch the firmware/uboot).
 
-> And even rate is implementation dependent. Knowing the name of the hardwa=
-re
-> give nothing. You still have to look at the schematic or look at the board
-> to know valid rates.
+>> +	};
+>>  };
+>>  
+>>  &fec {
+>> @@ -46,8 +101,31 @@
+>>  	status = "okay";
+>>  };
+>>  
+>> +&i2c3 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_i2c3>;
+>> +	status = "okay";
+>> +	clock-frequency = <100000>;
+>> +
+>> +	eeprom@50 {
+>> +		compatible = "at24,24c02";
+>> +		reg = <0x50>;
+>> +		pagesize = <16>;
+>> +	};
+>> +};
+>> +
+>>  &iomuxc {
+>>  	imx6q-cm-fx6 {
+>> +		pinctrl_ecspi1: ecspi1grp {
+>> +			fsl,pins = <
+>> +				MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		 0x100b1
+>> +				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		 0x100b1
+>> +				MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		 0x100b1
+>> +				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x100b1
+>> +				MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x100b1
+>> +			>;
+>> +		};
+>> +
+>>  		pinctrl_enet: enetgrp {
+>>  			fsl,pins = <
+>>  				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
+>> @@ -91,17 +169,75 @@
+>>  			>;
+>>  		};
+>>  
+>> +		pinctrl_i2c3: i2c3grp {
+>> +			fsl,pins = <
+>> +				MX6QDL_PAD_GPIO_3__I2C3_SCL 0x4001b8b1
+>> +				MX6QDL_PAD_GPIO_6__I2C3_SDA 0x4001b8b1
+>> +			>;
+>> +		};
+>> +
+>> +		pinctrl_pcie: pciegrp {
+>> +			fsl,pins = <
+>> +				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26 0x80000000
+>> +				MX6QDL_PAD_EIM_CS1__GPIO2_IO24 0x80000000
+>> +			>;
+>> +		};
+>> +
+>>  		pinctrl_uart4: uart4grp {
+>>  			fsl,pins = <
+>>  				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
+>>  				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
+>>  			>;
+>>  		};
+>> +
+>> +		pinctrl_usbh1: usbh1grp {
+>> +			fsl,pins = <
+>> +				MX6QDL_PAD_SD3_RST__GPIO7_IO08 0x80000000
+>> +			>;
+>> +		};
+>> +
+>> +		pinctrl_usbotg: usbotggrp {
+>> +			fsl,pins = <
+>> +				MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
+>> +				MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x80000000
+>> +			>;
+>> +		};
+>>  	};
+>>  };
+>>  
+>> +&pcie {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_pcie>;
+>> +	reset-gpio = <&gpio1 26 0>;
+>> +	power-on-gpio = <&gpio2 24 0>;
+> 
+> There is no power-on-gpio in the upstream binding.
+> 
 
-Fortunately we have mechanisms for constraining things between multiple
-devices, it's not like this is a property unique to registerless CODECs.
+uh, this one slipped through my clean up. Removed.
 
-> Yes this push more effort on the DT side, but I think this is better to
-> describe in DT the actual "I2S only" hardware capabilities of the
-> implementation of the device guided by wiring or design choice.
-> Doing code cut&paste and two static assignment adjustment to create a "ne=
-w"
-> driver is completely overkill and nonflexible.
+>> +	status = "okay";
+>> +};
+>> +
+>> +&sata {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&snvs_poweroff {
+>> +	status = "okay";
+>> +};
+>> +
+>>  &uart4 {
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&pinctrl_uart4>;
+>>  	status = "okay";
+>>  };
+>> +
+>> +&usbotg {
+>> +	vbus-supply = <&reg_usb_otg_vbus>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_usbotg>;
+>> +	dr_mode = "otg";
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usbh1 {
+>> +	vbus-supply = <&reg_usb_h1_vbus>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_usbh1>;
+>> +	status = "okay";
+>> +};
 
-If someone was so motivated they could also make one big driver with a
-table of per device constraints in it, it doesn't *have* to be separate
-files.
-
-> /* pcm5102a in HW mode with external SCK (4wire mode)
->  * at 128fs, 192fs or 256fs
->  */
-> 	pcm5102a-4w: pcm5102a {
-> 		compatible =3D "simple-i2s-codec";
-> 		rate =3D <SNDRV_PCM_RATE_8000_192000>;
-> 		format =3D < SNDRV_PCM_FMTBIT_S16_LE
-> 			|SNDRV_PCM_FMTBIT_S24_LE
-> 			|SNDRV_PCM_FMTBIT_S32_LE>;
-> 	};
-
-Those defines look awfully Linux specific...
-
-> /* pcm5102a in HW mode with PLL on BCK (3wire mode)
->  * 16to384khz but only with bck rate of 64fs
->  */
-> 	pcm5102a-4w: pcm5102a {
-> 		compatible =3D "simple-i2s-codec";
-> 		rate =3D <SNDRV_PCM_RATE_8000_192000
-> 			^ SNDRV_PCM_RATE_8000>;
-> 		format =3D <SNDRV_PCM_FMTBIT_S32_LE>;
-> 	};
-
-=2E..and another way of doing the multiple options would be to have the
-binding be per device and use the clock binding to describe where the
-master clock comes from which then allows us to start and stop that
-clock on demand and possibly (as our clock API integration improves)
-constrain based on that.  It may be that in future or perhaps even just
-for other users of the same board the set of constraints is different
-(perhaps they choose some other clock rate for something in the system
-due to other constraints which lets the master clock vary more for
-example). =20
-
-It's also just more work for the second person to come across the
-device, at best they have to go and type in the same data over again.
-
-A brief look at the datasheet suggests that there's also a few GPIO
-controls we might have wired up where we can expose them and of course
-regulators we may want to control in some systems.
-
---IRIOLc8eTv1AOxGv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXQ4QvAAoJECTWi3JdVIfQ3XIH/0nd6+u7w7RAeUeoUOEnOdDR
-Ah0GmpGSnqPpHr4Wf10hfV4Xs8POua+kVZLxuUZDfEqnCSkQ7pcmLoNtGdj71pUb
-T1DOKVBPT8nEMf02JJeKhrPQxCC3+Bwtzh8ueu2xrlFUzH/LUFNnJjtlqTFsM/Cr
-c31i0tbsjgAyB6wc2DGNifE3qJTPyzV7HdntjPqMBJB6MUW6YD0oxJiQx/6eci4x
-3VW/dapWEE/LCNxkR+jxIe36KD+JgQUCCO03DKuR2lmNbZ92F8rmuXKL/0kc6UV3
-yEz2ZkAqb3lTAbm7UcqUO6q7hWjg/qz2F1XGUKUXklS7NHhrB0kFZpRfw8lxT2Y=
-=F/Fq
------END PGP SIGNATURE-----
-
---IRIOLc8eTv1AOxGv--
+Cheers,
+Christopher
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
