@@ -1,26 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 01/12] of: add vendor prefix for J-Core
-Date: Mon, 23 May 2016 15:49:23 -0500
-Message-ID: <20160523204923.GA20778@rob-hp-laptop>
-References: <cover.1463708766.git.dalias@libc.org>
- <b6d33800300bde8f1d9a7b88a715d741548fad4a.1463708766.git.dalias@libc.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 1/5] Documentation: mmc: add mmc-hs400-enhanced-strobe
+Date: Mon, 23 May 2016 13:53:20 -0700
+Message-ID: <CAD=FV=XzP_r1BAz_EXieXSuVY3h5uSYkQhrEo+Ro9sX5aYrw4w@mail.gmail.com>
+References: <1463976789-29618-1-git-send-email-shawn.lin@rock-chips.com> <1463976812-29698-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b6d33800300bde8f1d9a7b88a715d741548fad4a.1463708766.git.dalias@libc.org>
+In-Reply-To: <1463976812-29698-1-git-send-email-shawn.lin@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 20, 2016 at 02:53:03AM +0000, Rich Felker wrote:
-> The J-Core project (j-core.org) produces open source cpu and SoC
-> peripheral cores synthesizable as FPGA bitstreams or ASICs.
-> 
-> Signed-off-by: Rich Felker <dalias@libc.org>
+Shawn,
+
+On Sun, May 22, 2016 at 9:13 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+> mmc-hs400-enhanced-strobe is used to claim that the
+> host can support hs400 mode with enhanced strobe
+> introduced by emmc 5.1 spec.
+>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+>
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
 >  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
