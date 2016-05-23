@@ -1,49 +1,52 @@
-From: "R, Vignesh" <vigneshr@ti.com>
-Subject: Re: [RFC PATCH 1/2] Input: rotary-encoder- Add support for absolute
- encoder
-Date: Mon, 23 May 2016 14:48:59 +0530
-Message-ID: <5742CB03.8010805@ti.com>
-References: <1463648641-6931-1-git-send-email-vigneshr@ti.com>
- <1463648641-6931-2-git-send-email-vigneshr@ti.com>
- <20160520163404.GC14951@dtor-ws>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH 16/54] MAINTAINERS: Add file patterns for drm device tree
+ bindings
+Date: Mon, 23 May 2016 10:33:17 +0100
+Message-ID: <CACvgo53Hpsbi91=d+jxBF85zXG8_ddSZTDxpG_ntf2wRmreU9Q@mail.gmail.com>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+ <1463907991-7916-17-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160520163404.GC14951@dtor-ws>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jonathan Corbet <corbet@lwn.net>, Johan Hovold <johan@kernel.org>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Masanari Iida <standby24x7@gmail.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, S Twiss <stwiss.opensource@diasemi.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Moritz Fischer <moritz.fischer@ettus.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Timo Teras <timo.teras@iki.fi>, Guido Martinez <guido@vanguardiasur.com.ar>, Clifton Barnes <clifton.a.barnes@gmail.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kern>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1463907991-7916-17-git-send-email-geert@linux-m68k.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree <devicetree@vger.kernel.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 5/20/2016 10:04 PM, Dmitry Torokhov wrote:
-> On Thu, May 19, 2016 at 02:34:00PM +0530, Vignesh R wrote:
->> There are rotary-encoders where GPIO lines reflect the actual position
->> of the rotary encoder dial. For example, if dial points to 9, then four
->> GPIO lines connected to the rotary encoder will read HLLH(1001b = 9).
->> Add support for such rotary-encoder.
->> The driver relies on rotary-encoder,absolute-encoder DT property to
->> detect such encoders.
->> Since, GPIO IRQs are not necessary to work with
->> such encoders, optional polling mode support is added using
->> input_poll_dev skeleton. This is can be used by enabling
->> CONFIG_INPUT_GPIO_ROTARY_ENCODER_POLL_MODE_SUPPORT.
-> 
-> Does this really belong to a rotary encoder and not a new driver that
-> simply translates gpio-encoded value into ABS* event?
-> 
-
-Currently rotary encoder driver only supports incremental/step counting
-rotary devices. However, the device that is there on am335x-ice is an
-absolute encoder but, IMO, nevertheless a kind of rotary encoder. The
-only difference is that there is no need to count steps and the absolute
-position value is always available as binary encoded state of connected
-GPIOs.
-The hardware on am335x-ice is a mechanical rotary encoder switch
-connected over 4 GPIOs. It is same as binary encoder described at [1]
-(except there are 4 GPIO lines), so this lead me to add support in
-rotary-encoder.
-
-[1]https://en.wikipedia.org/wiki/Rotary_encoder#Standard_binary_encoding
+T24gMjIgTWF5IDIwMTYgYXQgMTA6MDUsIEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgt
+bTY4ay5vcmc+IHdyb3RlOgo+IFN1Ym1pdHRlcnMgb2YgZGV2aWNlIHRyZWUgYmluZGluZyBkb2N1
+bWVudGF0aW9uIG1heSBmb3JnZXQgdG8gQ0MKPiB0aGUgc3Vic3lzdGVtIG1haW50YWluZXIgaWYg
+dGhpcyBpcyBtaXNzaW5nLgo+Cj4gU2lnbmVkLW9mZi1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxn
+ZWVydEBsaW51eC1tNjhrLm9yZz4KPiBDYzogRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4Lmll
+Pgo+IENjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gLS0tCj4gUGxlYXNlIGFw
+cGx5IHRoaXMgcGF0Y2ggZGlyZWN0bHkgaWYgeW91IHdhbnQgdG8gYmUgaW52b2x2ZWQgaW4gZGV2
+aWNlCj4gdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHlvdXIgc3Vic3lzdGVtLgo+IC0t
+LQo+ICBNQUlOVEFJTkVSUyB8IDMgKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMo
+KykKPgo+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCj4gaW5kZXggYzc5
+Yjk5ZGQzYTBiZjIyZC4uNzUxMzhjMDlkZDYwMzA5MyAxMDA2NDQKPiAtLS0gYS9NQUlOVEFJTkVS
+Uwo+ICsrKyBiL01BSU5UQUlORVJTCj4gQEAgLTM4NjgsNiArMzg2OCw5IEBAIFQ6ICAgICAgICBn
+aXQgZ2l0Oi8vcGVvcGxlLmZyZWVkZXNrdG9wLm9yZy9+YWlybGllZC9saW51eAo+ICBTOiAgICAg
+TWFpbnRhaW5lZAo+ICBGOiAgICAgZHJpdmVycy9ncHUvZHJtLwo+ICBGOiAgICAgZHJpdmVycy9n
+cHUvdmdhLwo+ICtGOiAgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvCkNvbnRhaW5zIGEgbWl4ZWQgYmFnIG9mIGZiIChkcml2ZXJzL3ZpZGVvKSBhbmQgZHJtIG9u
+ZXMuIFBlcmhhcHMgb25lCmNvdWxkL3Nob3VsZCBtb3ZlIHRoZSBmb3JtZXIgdG8gYSBmYi9sZWdh
+Y3kvb3RoZXIgc3ViZm9sZGVyID8KCj4gK0Y6ICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZ3B1LwpudmlkaWEsZ2syMGEudHh0CnNhbXN1bmctZzJkLnR4dApzYW1zdW5nLXJv
+dGF0b3IudHh0CgpUaGVzZSB0aHJlZSBzaG91bGQgYmUgbGlzdGVkIGFsb25nc2lkZSB0aGUgcmVz
+cGVjdGl2ZSBkcml2ZXJzIGFuZC9vcgptb3ZlZCB0byBkaXNwbGF5L3t0ZWdyYSxleHlub3N9ID8K
+Cj4gK0Y6ICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vCmJyaWRn
+ZS9hbng3ODE0LnR4dCBtb3ZlIHRoaXMgdG8gZGlzcGxheSA/CgpKdXN0IHNvbWUgaWRlYXMsIGZl
+ZWwgZnJlZSB0byBwcm9jZWVkIGFzIHlvdSB0aGluayBpdCdzIGJldHRlci4KLUVtaWwKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
