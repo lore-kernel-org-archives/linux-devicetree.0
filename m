@@ -1,107 +1,48 @@
-From: Kanta Vekaria <kanta.vekaria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] Add build instructions for Mac OS X
-Date: Mon, 23 May 2016 12:08:42 +0100
-Message-ID: <1464001722-12840-1-git-send-email-kanta.vekaria@linaro.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 43/54] MAINTAINERS: Add file patterns for sound device
+ tree bindings
+Date: Mon, 23 May 2016 12:09:34 +0100
+Message-ID: <20160523110934.GO8206@sirena.org.uk>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+ <1463907991-7916-44-git-send-email-geert@linux-m68k.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5PFZVUeDPxlnBcQp"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463907991-7916-44-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, kanta.vekaria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-- Provides build instructions for Mac users
-  who either use macports or brew
-- Also provides commands to install Sphinx
-- Update formatting to accomodate the above
-  and tidy layout
-- Fixed spelling to python-sphinx
 
-Signed-off-by: Kanta Vekaria <kanta.vekaria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- README.md | 68 +++++++++++++++++++++++++++++++++++++++++++--------------------
- 1 file changed, 47 insertions(+), 21 deletions(-)
+--5PFZVUeDPxlnBcQp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/README.md b/README.md
-index 60415c0..882abf9 100644
---- a/README.md
-+++ b/README.md
-@@ -18,27 +18,53 @@ Requirements:
- 
- On Ubuntu:
- 
--```
--# apt-get install python-sphinx latexdiff texlive texlive-latex-extra \
--                  texlive-humanities texlive-generic-recommended graphviz
--```
--
--If the version of python-spinx installed is too old, then an additional
--new version can be installed with the Python package installer:
--
--```
--$ apt-get install python-pip
--$ pip install --user --upgrade Sphinx
--$ export SPHINXBUILD=~/.local/bin/sphinx-build
--```
--
--Export SPHINXBUILD (see above) if Sphinx was installed with pip --user, then:
--
--```
--$ make latexpdf # For generating pdf
--$ make html # For generating a hierarchy of html pages
--$ make singlehtml # For generating a single html page
--```
-+>```
-+># apt-get install python-sphinx latexdiff texlive texlive-latex-extra \
-+>                  texlive-humanities texlive-generic-recommended graphviz
-+>```
-+>
-+>If the version of python-sphinx installed is too old, then an additional
-+>new version can be installed with the Python package installer:
-+>
-+>```
-+>$ apt-get install python-pip
-+>$ pip install --user --upgrade Sphinx
-+>$ export SPHINXBUILD=~/.local/bin/sphinx-build
-+>```
-+>
-+>Export SPHINXBUILD (see above) if Sphinx was installed with pip --user, then follow Make commands below
-+
-+On Mac OS X:
-+
-+> Install [MacTeX](http://tug.org/mactex/)
-+>
-+> Install pip if you don't have it:
-+>```
-+>$ sudo easy_install pip
-+>```
-+>Install Sphinx
-+>```
-+>pip install --user --upgrade Sphinx
-+>Or
-+>sudo pip install --upgrade Sphinx
-+>```
-+>
-+>If your are using [brew](http://brew.sh) then you can install graphviz like this:
-+>```
-+brew install graphviz
-+>```
-+>If you are using [macports](https://www.macports.org/) then you can install graphviz like this:
-+>```
-+>$ sudo port install graphviz
-+>```
-+
-+Make commands:
-+
-+>```
-+>$ make latexpdf # For generating pdf
-+>$ make html # For generating a hierarchy of html pages
-+>$ make singlehtml # For generating a single html page
-+>```
- 
- Output goes in ./build subdirectory.
- 
--- 
-2.7.4 (Apple Git-66)
+On Sun, May 22, 2016 at 11:06:20AM +0200, Geert Uytterhoeven wrote:
 
+> +F:	Documentation/devicetree/bindings/sound/
+
+Note that this isn't specifically ASoC, though most things there are.
+
+--5PFZVUeDPxlnBcQp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXQuTsAAoJECTWi3JdVIfQTXMH/3Js5VZHmPdffyLZRvAwV6pu
+v9IM4WSfj73gT4MTgUIMvuTrQ6ekH+zeEktR8K7oiPWsOI2DTL0Vf78sJfUT9oj3
+n8SwgDBRmUhpVqow6PK5aKE/Z6vIzEDk5qYX3qSaxvMuV7SbOaak2VhYgVwPqeJy
+xeG9a1UcXbigaLPjYcJAY7+El8xtuv3pVuXL54HNhXx+5GrOw6LKhL8RCE/Y5AhH
+h4NYLVU6M+oQR2JEV0oU9tYFImRdoCJV/2sgu/wkvqQmXcf4YI+3LKp8Ve5TTkl/
+/ZcPBYyllnGX3efyqWFvAafp1iXnBs7nZBeiHVIckOA3StC6aBuDnKtYdeqBuqg=
+=4psW
+-----END PGP SIGNATURE-----
+
+--5PFZVUeDPxlnBcQp--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
