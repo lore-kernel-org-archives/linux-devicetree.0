@@ -1,74 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/4 v7] ASoC: dwc: Do not use
- devm_clk_get() if using platform data
-Date: Mon, 23 May 2016 17:57:13 +0100
-Message-ID: <20160523165713.GX8206@sirena.org.uk>
-References: <cover.1463996627.git.joabreu@synopsys.com>
- <d288d87fc0f1c07f4d301dc08d32b1bf9915446c.1463996627.git.joabreu@synopsys.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] documentation: Add secure monitor binding
+ documentation
+Date: Mon, 23 May 2016 18:59:31 +0200
+Message-ID: <20160523165931.GA31299@mephisto>
+References: <1464021024-29380-1-git-send-email-carlo@caione.org>
+ <1464021024-29380-5-git-send-email-carlo@caione.org>
+ <20160523163815.GE4976@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1919943140707011726=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <d288d87fc0f1c07f4d301dc08d32b1bf9915446c.1463996627.git.joabreu@synopsys.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, linux-snps-arc@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160523163815.GE4976@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 23/05/16 17:38, Mark Rutland wrote:
+> Hi,
+> 
+> Minor nit, but please put the binding earlier in the series than the
+> code implementing it, as per
+> Documentation/devicetree/bindings/submitting-patches.txt
+> 
+> This makes it possible to review a series in a linear fashion.
 
---===============1919943140707011726==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4PR/+zdSfVlxyWed"
-Content-Disposition: inline
+I'll do. Thanks for the pointer.
 
+[...]
+> > +
+> > +Required properties for the secure monitor node:
+> > +- compatible: Should be "amlogic,meson-sm"
+> > +- amlogic,sm-cmd-input-base: SMC32 function identifier to read the physical
+> > +                             address of the input buffer
+> > +- amlogic,sm-cmd-output-base: SMC32 function identifier to read the physical
+> > +                              address of the output buffer
+> 
+> Do the IDs for these actually differ per board?
 
---4PR/+zdSfVlxyWed
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I expect these to differ per SoC (GXBB in this case), not per board. The
+driver is generic enough to be (hopefully) used for several SoCs just
+changing the related header file that defines the SCM commands.
 
-On Mon, May 23, 2016 at 11:02:23AM +0100, Jose Abreu wrote:
+> Are some functions simply not implemented on some boards?
 
-> When using platform data the devm_clk_get() function is
-> called causing a probe failure if the clock is not
-> declared. As we can pass the clock handler by platform
-> data call only devm_clk_get() when platform data is not
-> used.
+I don't think this is possible.
 
-No, this is broken - if the device needs a clock the device needs a
-clock and clock names should be static rather than passed in via
-platform data (indeed NULL is a perfectly valid clock name).  The system
-integation should map in a clock as needed, if it's just a fixed crystal
-or something then just register a fixed clock and connect it up.
+[...]
+> > +
+> > +Example of the node using the secure monitor:
+> > +
+> > +	#include <dt-bindings/firmware/meson-gxbb-sm.h>
+> > +
+> > +	...
+> > +
+> > +	efuse: efuse {
+> > +		compatible = "amlogic,meson-gxbb-efuse";
+> > +		secure-monitor = <&sm>;
+> > +		amlogic,sm-cmd-read-efuse = <SM_EFUSE_READ>;
+> > +		amlogic,sm-cmd-max-efuse = <SM_EFUSE_USER_MAX>;
+> 
+> Likewise for these?
 
---4PR/+zdSfVlxyWed
-Content-Type: application/pgp-signature; name="signature.asc"
+AFAIK the secure monitor code and related commands are SoC specific.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Thanks,
 
-iQEcBAEBCAAGBQJXQzZoAAoJECTWi3JdVIfQR8kH/06w5PKPgXydQmaUoZe827Zr
-TZxCfzV3r2AffBSDGIK5rXscDBzd6obkbc8+FHgC7MqZpEjtHBLRCiy+ukFdrsZ2
-Ue+c5dLvVpx46OfXqmBfRMhOxBqSY5JfE9rYBkrZo5M3Q+cwe4BLJU9ErubfU34s
-vG6JlFXH9vQmsUahC4F6kL+Sffhazmzt4dBsWzasgcohBbuyQ4dGCLNdwG8BTobz
-qkRVx2K1YaaKz0zoKK0X3MrW6ETvtnUuuNeVz5vdhGahOG/eZHvFqv4GaLycTvVd
-9mDQV8pZzvConI0GWOBvNjzF2hQgXBgM1Gj10P9xeBAH7fpY1aJOCoZGlj9diX4=
-=1xV8
------END PGP SIGNATURE-----
-
---4PR/+zdSfVlxyWed--
-
---===============1919943140707011726==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1919943140707011726==--
+-- 
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
