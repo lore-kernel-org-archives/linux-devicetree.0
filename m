@@ -1,47 +1,39 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 5/5] mmc: sdhci-of-arasan: implement enhanced strobe callback
-Date: Mon, 23 May 2016 14:00:57 -0700
-Message-ID: <CAD=FV=X5os7fsCrOh7pDLAt7CSyRw3Q76sFgh-NJhDni02sXdA@mail.gmail.com>
-References: <1463976789-29618-1-git-send-email-shawn.lin@rock-chips.com> <1463976853-29862-1-git-send-email-shawn.lin@rock-chips.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [Patch v5 5/8] firmware: qcom: scm: Convert to streaming DMA APIS
+Date: Mon, 23 May 2016 16:02:06 -0500
+Message-ID: <CAPBZ5Qc0oZ+k_5OiUGU6c9jFfcmAfsK3Uy-s=ONGCSGzCDyYNw@mail.gmail.com>
+References: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
+	<1463111221-6963-6-git-send-email-andy.gross@linaro.org>
+	<CAOi56cVB1Z-gO6Dx0KOSr9wiRF3Y9ahDHe0=qT9WW4MdFMhjng@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463976853-29862-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOi56cVB1Z-gO6Dx0KOSr9wiRF3Y9ahDHe0=qT9WW4MdFMhjng@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Shawn,
-
-On Sun, May 22, 2016 at 9:14 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Currently sdhci-arasan 5.1 can support enhanced strobe function,
-> and we now limit it just for "arasan,sdhci-5.1". Add
-> mmc-hs400-enhanced-strobe in DT to enable the function if we're
-> sure our controller can support it.
+On 23 May 2016 at 14:26, Kevin Hilman <khilman@kernel.org> wrote:
+> Hi Andy,
 >
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Acked-by: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
+> On Thu, May 12, 2016 at 8:46 PM, Andy Gross <andy.gross@linaro.org> wrote:
+>> This patch converts the Qualcomm SCM driver to use the streaming DMA APIs
+>> for communication buffers.
+>>
+>> Signed-off-by: Andy Gross <andy.gross@linaro.org>
 >
-> Changes in v5: None
-> Changes in v4: None
-
-Again, minor, but you did have changes...
-
-> Changes in v3: None
-> Changes in v2: None
+> This patch has landed in linux-next in the form of commit a551c3dbd689
+> (firmware: qcom: scm: Convert to streaming DMA APIS), and kernelci.org
+> found some boot breakage in next-20160523 on apq8064[1] which was
+> bisected down to this commit.
 >
->  drivers/mmc/host/sdhci-of-arasan.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> I reverted this commit on top of next-20160523 and it no longer
+> builds, so I didn't validate if things boot again with this patch
+> reverted.
 
-I've tested this patch and it appears to work (not that I've hooked a
-scope up, but since it's not doing tuning I think it would be pretty
-obvious if it didn't work).
+Ouch I missed this failure.  I'll investigate and get it fixed.
 
-Tested-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+
+Andy
