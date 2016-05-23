@@ -1,54 +1,95 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [RFC v2 3/5] drm/mediatek: add *driver_data for different
- hardware settings
-Date: Mon, 23 May 2016 17:43:02 +0800
-Message-ID: <1463996582.30093.5.camel@mtksdaap41>
-References: <1463756736-46573-1-git-send-email-yt.shen@mediatek.com>
- <1463756736-46573-4-git-send-email-yt.shen@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1463756736-46573-4-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yt.shen@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mao Huang <littlecvr@chromium.org>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4 v7] Add I2S audio support for ARC AXS10x boards
+Date: Mon, 23 May 2016 11:02:21 +0100
+Message-ID: <cover.1463996627.git.joabreu@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlUOgoKT25lIGNvbW1lbnQgYmVsb3cuCgpPbiBGcmksIDIwMTYtMDUtMjAgYXQgMjM6MDUg
-KzA4MDAsIHl0LnNoZW5AbWVkaWF0ZWsuY29tIHdyb3RlOgo+IEZyb206IFlUIFNoZW4gPHl0LnNo
-ZW5AbWVkaWF0ZWsuY29tPgo+IAo+IFRoZXJlIGFyZSBzb21lIGhhcmR3YXJlIHNldHRpbmdzIGNo
-YW5nZWQsIGJldHdlZW4gTVQ4MTczICYgTVQyNzAxOgo+IERJU1BfT1ZMIGFkZHJlc3Mgb2Zmc2V0
-IGNoYW5nZWQsIGNvbG9yIGZvcm1hdCBkZWZpbml0aW9uIGNoYW5nZWQuCj4gRElTUF9SRE1BIGZp
-Zm8gc2l6ZSBjaGFuZ2VkLgo+IERJU1BfQ09MT1Igb2Zmc2V0IGNoYW5nZWQuCj4gCj4gU2lnbmVk
-LW9mZi1ieTogWVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+Cj4gLS0tCj4gKwo+ICtzdGF0
-aWMgaW5saW5lIHN0cnVjdCBtdGtfZGRwX2NvbXBfZHJpdmVyX2RhdGEgKm10a19vdmxfZ2V0X2Ry
-aXZlcl9kYXRhKAo+ICsJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiArewo+ICsJY29u
-c3Qgc3RydWN0IG9mX2RldmljZV9pZCAqb2ZfaWQgPQo+ICsJCW9mX21hdGNoX2RldmljZShtdGtf
-ZGlzcF9vdmxfZHJpdmVyX2R0X21hdGNoLCAmcGRldi0+ZGV2KTsKPiArCj4gKwlyZXR1cm4gKHN0
-cnVjdCBtdGtfZGRwX2NvbXBfZHJpdmVyX2RhdGEgKilvZl9pZC0+ZGF0YTsKPiArfQo+ICsKPiAr
-c3RhdGljIGlubGluZSBzdHJ1Y3QgbXRrX2RkcF9jb21wX2RyaXZlcl9kYXRhICptdGtfcmRtYV9n
-ZXRfZHJpdmVyX2RhdGEoCj4gKwlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICt7Cj4g
-Kwljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICpvZl9pZCA9Cj4gKwkJb2ZfbWF0Y2hfZGV2aWNl
-KG10a19kaXNwX3JkbWFfZHJpdmVyX2R0X21hdGNoLCAmcGRldi0+ZGV2KTsKPiArCj4gKwlyZXR1
-cm4gKHN0cnVjdCBtdGtfZGRwX2NvbXBfZHJpdmVyX2RhdGEgKilvZl9pZC0+ZGF0YTsKPiArfQo+
-ICsKPiArc3RhdGljIGlubGluZSBzdHJ1Y3QgbXRrX2RkcF9jb21wX2RyaXZlcl9kYXRhICptdGtf
-Y29sb3JfZ2V0X2RyaXZlcl9kYXRhKAo+ICsJc3RydWN0IGRldmljZV9ub2RlICpub2RlKQo+ICt7
-Cj4gKwljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICpvZl9pZCA9Cj4gKwkJb2ZfbWF0Y2hfbm9k
-ZShtdGtfZGlzcF9jb2xvcl9kcml2ZXJfZHRfbWF0Y2gsIG5vZGUpOwo+ICsKPiArCXJldHVybiAo
-c3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSAqKW9mX2lkLT5kYXRhOwo+ICt9Cj4gKyAK
-ClRoZXNlIHRocmVlIGZ1bmN0aW9ucyBsb29rcyB0aGUgc2FtZSB3aXRoIGRpZmZlcmVudCBwYXJh
-bWV0ZXI6Cm10a19kaXNwX292bF9kcml2ZXJfZHRfbWF0Y2gsIG10a19kaXNwX3JkbWFfZHJpdmVy
-X2R0X21hdGNoLCBhbmQKbXRrX2Rpc3BfY29sb3JfZHJpdmVyX2R0X21hdGNoLiBTbyBtZXJnZSB0
-aGVtIHRvIHByZXZlbnQgZHVwbGljYXRlZApjb2RlLgoKUmVnYXJkcywKQ0sKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+ARC AXS10x platforms consist of a mainboard with several peripherals.
+One of those peripherals is an HDMI output port controlled by the ADV7511
+transmitter.
+
+This patch set adds I2S audio for the AXS10x platform.
+
+NOTE:
+Although the mainline I2S driver uses ALSA DMA engine, this controller
+can be built without DMA support so it was necessary to add this
+custom platform driver so that HDMI audio works in AXS boards.
+
+Changes v6 -> v7:
+* Discard the use of memcpy
+* Report IRQ_HANDLED only when there is an IRQ
+* Use interrupts to check if PIO mode is in use
+* Unmask interrupts only when in PIO mode
+* Remove empty functions
+
+Changes v5 -> v6:
+* Use SNDRV_DMA_TYPE_CONTINUOUS
+
+Changes v4 -> v5:
+* Resolve undefined references when compiling as module
+* Dropped adv7511 audio patches
+* Use DMA properties in I2S to check which mode to use: PIO or DMA (as suggested by Lars-Peter Clausen)
+
+Changes v3 -> v4:
+* Reintroduced custom PCM driver (see note below)
+* Use DT boolean to switch between ALSA DMA engine PCM or custom PCM
+* Use fifo depth to program I2S FCR
+* Update I2S documentation
+
+Changes v2 -> v3:
+* Removed pll_config functions (as suggested by Alexey Brodkin)
+* Removed HDMI start at adv7511_core (as suggested by Archit Taneja)
+* Use NOP functions for adv7511_audio (as suggested by Archit Taneja)
+* Added adv7511_audio_exit() function (as suggested by Archit Taneja)
+* Moved adv7511 to its own folder (as suggested by Archit Taneja)
+* Separated file rename of adv7511_core (as suggested by Emil Velikov)
+* Compile adv7511 as module if ALSA SoC is compiled as module
+* Load adv7511 audio only if declared in device tree (as suggested by Laurent Pinchart)
+* Dropped custom platform driver, using now ALSA DMA engine
+* Dropped IRQ handler for I2S
+
+Changes v1 -> v2:
+* DT bindings moved to separate patch (as suggested by Alexey Brodkin)
+* Removed defconfigs entries (as suggested by Alexey Brodkin)
+
+
+Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>
+Cc: Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+Jose Abreu (4):
+  ASoC: dwc: Add helper functions to disable/enable irqs
+  ASoC: dwc: Do not use devm_clk_get() if using platform data
+  ASoC: dwc: Add PIO PCM extension
+  ASoC: dwc: Add irq parameter to DOCUMENTATION
+
+ .../devicetree/bindings/sound/designware-i2s.txt   |   4 +
+ sound/soc/dwc/Kconfig                              |   9 +
+ sound/soc/dwc/Makefile                             |   5 +-
+ sound/soc/dwc/designware_i2s.c                     | 229 ++++++++++-----------
+ sound/soc/dwc/designware_pcm.c                     | 220 ++++++++++++++++++++
+ sound/soc/dwc/local.h                              | 122 +++++++++++
+ 6 files changed, 467 insertions(+), 122 deletions(-)
+ create mode 100644 sound/soc/dwc/designware_pcm.c
+ create mode 100644 sound/soc/dwc/local.h
+
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
