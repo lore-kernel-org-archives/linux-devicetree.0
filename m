@@ -1,10 +1,8 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 3/4] ARM64: dts: amlogic: gxbb: Enable secure monitor
-Date: Mon, 23 May 2016 18:30:23 +0200
-Message-ID: <1464021024-29380-4-git-send-email-carlo@caione.org>
-References: <1464021024-29380-1-git-send-email-carlo@caione.org>
+Subject: [PATCH v3 0/4] Add Amlogic secure monitor driver
+Date: Mon, 23 May 2016 18:30:20 +0200
+Message-ID: <1464021024-29380-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464021024-29380-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
@@ -12,43 +10,57 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Add the secure monitor node in the Amlogic Meson GXBB DTSI file to
-enable it.
+In the Amlogic SoCs the secure monitor calls are used for a lot of reasons:
+interact with the NVMEM (efuses), check the reboot reason, set USB boot, ...
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+This driver defines a generic interface towards the secure monitor that can be
+used by more specialized drivers to interact with the secure monitor itself
+without worrying about bounce buffers managing.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 76b3b6d..aeff919 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -44,6 +44,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/gpio/meson-gxbb-gpio.h>
-+#include <dt-bindings/firmware/meson-gxbb-sm.h>
- 
- / {
- 	compatible = "amlogic,meson-gxbb";
-@@ -98,6 +99,16 @@
- 		method = "smc";
- 	};
- 
-+	firmware {
-+		compatible = "simple-bus";
-+
-+		sm: secure-monitor {
-+			compatible = "amlogic,meson-sm";
-+			amlogic,sm-cmd-input-base = <SM_GET_SHARE_MEM_INPUT_BASE>;
-+			amlogic,sm-cmd-output-base = <SM_GET_SHARE_MEM_OUTPUT_BASE>;
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
+Changelog:
+
+v3:
+  * Moved driver to drivers/firmware
+  * Added EXPORT_SYMBOL macros
+  * Changed '_' in '-'
+  * Introduced 'struct meson_sm_firmware' and 'meson_sm_get_fw()' to be used by
+    drivers using the secure-monitor to enforce probe ordering
+
+v2:
+  * All the SMC function identifiers are now in a SoC-specific header file to
+    be included by the DTS files so the SMC commands are now defined in the DT
+    instead to be hardcoded into the driver
+  * Patchset is no longer an RFC
+  * Better error management and boundary checking
+  * s/unsigned int/u32/
+  * SMC call not only on CPU 0
+  * Fix memory leaking
+  * s/amlogic/meson/ in the directory names
+
+
+Carlo Caione (4):
+  firmware: Amlogic: Add secure monitor driver
+  firmware: dt-bindings: Add secure monitor header file for GXBB
+  ARM64: dts: amlogic: gxbb: Enable secure monitor
+  documentation: Add secure monitor binding documentation
+
+ .../bindings/firmware/meson/meson_sm.txt           |  51 ++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  11 ++
+ drivers/firmware/Kconfig                           |   1 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/meson/Kconfig                     |   8 +
+ drivers/firmware/meson/Makefile                    |   1 +
+ drivers/firmware/meson/meson_sm.c                  | 179 +++++++++++++++++++++
+ include/dt-bindings/firmware/meson-gxbb-sm.h       |  44 +++++
+ include/linux/firmware/meson/meson_sm.h            |  38 +++++
+ 9 files changed, 334 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+ create mode 100644 drivers/firmware/meson/Kconfig
+ create mode 100644 drivers/firmware/meson/Makefile
+ create mode 100644 drivers/firmware/meson/meson_sm.c
+ create mode 100644 include/dt-bindings/firmware/meson-gxbb-sm.h
+ create mode 100644 include/linux/firmware/meson/meson_sm.h
+
 -- 
 2.7.4
 
