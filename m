@@ -1,115 +1,74 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] documentation: Add secure monitor binding
- documentation
-Date: Mon, 23 May 2016 17:38:15 +0100
-Message-ID: <20160523163815.GE4976@leverpostej>
-References: <1464021024-29380-1-git-send-email-carlo@caione.org>
- <1464021024-29380-5-git-send-email-carlo@caione.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/4 v7] ASoC: dwc: Do not use
+ devm_clk_get() if using platform data
+Date: Mon, 23 May 2016 17:57:13 +0100
+Message-ID: <20160523165713.GX8206@sirena.org.uk>
+References: <cover.1463996627.git.joabreu@synopsys.com>
+ <d288d87fc0f1c07f4d301dc08d32b1bf9915446c.1463996627.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1464021024-29380-5-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1919943140707011726=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <d288d87fc0f1c07f4d301dc08d32b1bf9915446c.1463996627.git.joabreu@synopsys.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Minor nit, but please put the binding earlier in the series than the
-code implementing it, as per
-Documentation/devicetree/bindings/submitting-patches.txt
+--===============1919943140707011726==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4PR/+zdSfVlxyWed"
+Content-Disposition: inline
 
-This makes it possible to review a series in a linear fashion.
 
-On Mon, May 23, 2016 at 06:30:24PM +0200, Carlo Caione wrote:
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> 
-> Add the binding documentation for the Amlogic secure monitor driver.
-> 
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> ---
->  .../bindings/firmware/meson/meson_sm.txt           | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
-> new file mode 100644
-> index 0000000..2b71716
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
-> @@ -0,0 +1,51 @@
-> +* Amlogic Secure Monitor
-> +
-> +In the Amlogic SoCs the Secure Monitor code is used to provide access to the
-> +NVMEM, enable JTAG, set USB boot, etc...
-> +
-> +Required properties for the secure monitor node:
-> +- compatible: Should be "amlogic,meson-sm"
-> +- amlogic,sm-cmd-input-base: SMC32 function identifier to read the physical
-> +                             address of the input buffer
-> +- amlogic,sm-cmd-output-base: SMC32 function identifier to read the physical
-> +                              address of the output buffer
+--4PR/+zdSfVlxyWed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Do the IDs for these actually differ per board?
+On Mon, May 23, 2016 at 11:02:23AM +0100, Jose Abreu wrote:
 
-Are some functions simply not implemented on some boards?
+> When using platform data the devm_clk_get() function is
+> called causing a probe failure if the clock is not
+> declared. As we can pass the clock handler by platform
+> data call only devm_clk_get() when platform data is not
+> used.
 
-> +
-> +Example:
-> +
-> +	#include <dt-bindings/firmware/meson-gxbb-sm.h>
-> +
-> +	...
-> +
-> +	firmware {
-> +		compatible = "simple-bus";
-> +
-> +		sm: secure-monitor {
-> +			compatible = "amlogic,meson-sm";
-> +			amlogic,sm-cmd-input-base = <SM_GET_SHARE_MEM_INPUT_BASE>;
-> +			amlogic,sm-cmd-output-base = <SM_GET_SHARE_MEM_OUTPUT_BASE>;
-> +		};
-> +	};
-> +
-> +Node of a device using the secure monitor must have a custom property to
-> +specify the SMC32 function the driver is going to use. The values of all the
-> +SMC function identifiers are listed in a SoC-specific header file:
-> +
-> +"include/dt-bindings/firmware/meson-gxbb-sm.h" - for the Meson GXBB secure monitor.
-> +
-> +Example of the node using the secure monitor:
-> +
-> +	#include <dt-bindings/firmware/meson-gxbb-sm.h>
-> +
-> +	...
-> +
-> +	efuse: efuse {
-> +		compatible = "amlogic,meson-gxbb-efuse";
-> +		secure-monitor = <&sm>;
-> +		amlogic,sm-cmd-read-efuse = <SM_EFUSE_READ>;
-> +		amlogic,sm-cmd-max-efuse = <SM_EFUSE_USER_MAX>;
+No, this is broken - if the device needs a clock the device needs a
+clock and clock names should be static rather than passed in via
+platform data (indeed NULL is a perfectly valid clock name).  The system
+integation should map in a clock as needed, if it's just a fixed crystal
+or something then just register a fixed clock and connect it up.
 
-Likewise for these?
+--4PR/+zdSfVlxyWed
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Mark.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		...
-> +	};
-> +
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQEcBAEBCAAGBQJXQzZoAAoJECTWi3JdVIfQR8kH/06w5PKPgXydQmaUoZe827Zr
+TZxCfzV3r2AffBSDGIK5rXscDBzd6obkbc8+FHgC7MqZpEjtHBLRCiy+ukFdrsZ2
+Ue+c5dLvVpx46OfXqmBfRMhOxBqSY5JfE9rYBkrZo5M3Q+cwe4BLJU9ErubfU34s
+vG6JlFXH9vQmsUahC4F6kL+Sffhazmzt4dBsWzasgcohBbuyQ4dGCLNdwG8BTobz
+qkRVx2K1YaaKz0zoKK0X3MrW6ETvtnUuuNeVz5vdhGahOG/eZHvFqv4GaLycTvVd
+9mDQV8pZzvConI0GWOBvNjzF2hQgXBgM1Gj10P9xeBAH7fpY1aJOCoZGlj9diX4=
+=1xV8
+-----END PGP SIGNATURE-----
+
+--4PR/+zdSfVlxyWed--
+
+--===============1919943140707011726==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1919943140707011726==--
