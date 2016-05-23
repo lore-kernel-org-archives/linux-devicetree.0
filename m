@@ -1,51 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 05/12] of: add J-Core SPI master bindings
-Date: Mon, 23 May 2016 18:16:04 -0500
-Message-ID: <CAL_JsqL9+jUeEoaWg=r-4EPUhtXOE7g5FMw=4XsyPF_jmS3aoQ@mail.gmail.com>
-References: <cover.1463708766.git.dalias@libc.org> <32585cfb27d31e9d5cb399ecc4d8b89f4ec5e2cb.1463708766.git.dalias@libc.org>
- <20160523210020.GA23118@rob-hp-laptop> <20160523210618.GF21636@brightrain.aerifal.cx>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
+Date: Mon, 23 May 2016 20:20:35 -0300
+Message-ID: <CAOMZO5CMjaxxR-_i9O1U_r_LxW0L61Rg8uySaThVPD2w2xgafg@mail.gmail.com>
+References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
+ <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
+ <20abc2f6769b4369ba87ec27274a090e@rwthex-s2-a.rwth-ad.de>
+ <644530ff6bb04b5898dc33604dc7a93a@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160523210618.GF21636-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <644530ff6bb04b5898dc33604dc7a93a@rwthex-s1-b.rwth-ad.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 23, 2016 at 4:06 PM, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org> wrote:
-> On Mon, May 23, 2016 at 04:00:20PM -0500, Rob Herring wrote:
->> On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
->> > Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
->> > ---
->> >  .../devicetree/bindings/spi/jcore,spi.txt          | 23 ++++++++++++++++++++++
->> >  1 file changed, 23 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
->> > new file mode 100644
->> > index 0000000..9055e7d
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/spi/jcore,spi.txt
->> > @@ -0,0 +1,23 @@
->> > +J-Core SPI master
->> > +
->> > +Required properties:
->> > +
->> > +- compatible: Must be "jcore,spi2".
->>
->> In general, these all seem a bit generic. You should be able to
->> correlate IP versions to compatible strings.
->
-> "spi2" is the name of the "IP core" in the J-Core source tree. The WIP
-> that adds DMA support and makes some changes is called "spi3" there;
-> I'll submit a patch adding "jcore,spi3" to the binding file once the
-> vhdl for it has been released.
+Hi Christopher,
 
-Okay.
+On Mon, May 23, 2016 at 8:08 PM, Christopher Spinrath
+<christopher.spinrath@rwth-aachen.de> wrote:
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I would like to but I'm not sure if I'm allowed to. As I stated in the
+> license header some nodes are copied (and cleaned up) from the vendor
+> kernel/devicetree. They are licensed GPL-v2 only. So I don't know, can I
+> add the X11 license?
+
+Maybe you could contact the original author anc check?
+
+>> Better to avoid 0x80000000. Replace it with the real iomux value
+>> instead so that you don't need to rely on the bootloader
+>> configuration.
+> hmm, I don't know how to determine this value. The device documentation
+> I have does not say anything about it and the vendor kernel uses
+> 0x80000000...
+
+The default value of register IOMUXC_SW_PAD_CTL_PAD_ENET_TX_DATA1 is
+0x1b0b0, so you can use this value.
+
+Another thing I forgot to comment: instead of putting this pin inside
+the hog group you could put it inside the gpio-keys node.
