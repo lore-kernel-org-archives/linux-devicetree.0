@@ -1,52 +1,34 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: [PATCH] arm64: tegra: Fix CPU compatible string for Tegra132
-Date: Mon, 23 May 2016 15:42:21 +0800
-Message-ID: <20160523074221.7135-1-josephl@nvidia.com>
+From: Jesper Nilsson <jesper.nilsson@axis.com>
+Subject: Re: [PATCH 13/54] MAINTAINERS: Add file patterns for cris device
+ tree bindings
+Date: Mon, 23 May 2016 09:43:23 +0200
+Message-ID: <20160523074322.GU19575@axis.com>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+ <1463907991-7916-14-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Joseph Lo <josephl@nvidia.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1463907991-7916-14-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mikael Starvik <starvik@axis.com>, Jesper Nilsson <jespern@axis.com>, linux-cris-kernel@axis.com
 List-Id: devicetree@vger.kernel.org
 
-As per commit f634da375fc96 ("Documentation: DT bindings: add nvidia,
-tegra132-denver compatible string"), fixing the CPU compatible string for
-Tegra132 to match the binding document currently.
+On Sun, May 22, 2016 at 11:05:50AM +0200, Geert Uytterhoeven wrote:
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Mikael Starvik <starvik@axis.com>
 
-Signed-off-by: Joseph Lo <josephl@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra132.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-index 2013f8916084..7b1cdc029de3 100644
---- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-@@ -964,13 +964,13 @@
- 
- 		cpu@0 {
- 			device_type = "cpu";
--			compatible = "nvidia,denver", "arm,armv8";
-+			compatible = "nvidia,tegra132-denver", "arm,armv8";
- 			reg = <0>;
- 		};
- 
- 		cpu@1 {
- 			device_type = "cpu";
--			compatible = "nvidia,denver", "arm,armv8";
-+			compatible = "nvidia,tegra132-denver", "arm,armv8";
- 			reg = <1>;
- 		};
- 	};
+> Cc: linux-cris-kernel@axis.com
+> ---
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
+
+/^JN - Jesper Nilsson
 -- 
-2.8.3
+               Jesper Nilsson -- jesper.nilsson@axis.com
