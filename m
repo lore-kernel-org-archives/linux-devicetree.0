@@ -1,27 +1,36 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 0/3] ARM: keystone-k2l: Enable pinctrl support
-Date: Mon, 23 May 2016 17:59:04 +0530
-Message-ID: <1464006547-19569-1-git-send-email-j-keerthy@ti.com>
+Subject: [PATCH 3/3] ARM: configs: keystone: Enable PINCTRL_SINGLE Config
+Date: Mon, 23 May 2016 17:59:07 +0530
+Message-ID: <1464006547-19569-4-git-send-email-j-keerthy@ti.com>
+References: <1464006547-19569-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464006547-19569-1-git-send-email-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ssantosh@kernel.org
 Cc: nm@ti.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, robh+dt@kernel.org, m-karicheri2@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The series enables pinctrl support for k2l devices.
-Tested on keystone-k2l-evm board.
+keystone-k2l devices use pinmux and are compliant with PINCTRL_SINGLE.
+Hence enable the config option.
 
-Keerthy (3):
-  ARM: dts: keystone-k2l: Add pinctrl node
-  arm: mach-keystone: Enable PINCTRL config
-  ARM: configs: keystone: Enable PINCTRL_SINGLE Config
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ arch/arm/configs/keystone_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
- arch/arm/boot/dts/keystone-k2l.dtsi | 149 ++++++++++++++++++++++++++++++++++++
- arch/arm/configs/keystone_defconfig |   1 +
- arch/arm/mach-keystone/Kconfig      |   1 +
- 3 files changed, 151 insertions(+)
-
+diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+index faba04d..71b42e6 100644
+--- a/arch/arm/configs/keystone_defconfig
++++ b/arch/arm/configs/keystone_defconfig
+@@ -144,6 +144,7 @@ CONFIG_I2C_DAVINCI=y
+ CONFIG_SPI=y
+ CONFIG_SPI_DAVINCI=y
+ CONFIG_SPI_SPIDEV=y
++CONFIG_PINCTRL_SINGLE=y
+ CONFIG_GPIOLIB=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_DAVINCI=y
 -- 
 1.9.1
