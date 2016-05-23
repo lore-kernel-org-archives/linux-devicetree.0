@@ -1,80 +1,48 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/3] regulator: DT: Add DT property for operation mode
- configuration
-Date: Mon, 23 May 2016 11:47:04 +0100
-Message-ID: <20160523104703.GB26992@leverpostej>
-References: <1463987611-32139-1-git-send-email-henryc.chen@mediatek.com>
- <1463987611-32139-2-git-send-email-henryc.chen@mediatek.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 40/54] MAINTAINERS: Add file patterns for regmap device
+ tree bindings
+Date: Mon, 23 May 2016 12:07:31 +0100
+Message-ID: <20160523110731.GN8206@sirena.org.uk>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+ <1463907991-7916-41-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="R92lf0Oi2sxyK3LA"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463987611-32139-2-git-send-email-henryc.chen@mediatek.com>
+In-Reply-To: <1463907991-7916-41-git-send-email-geert@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henry Chen <henryc.chen@mediatek.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 23, 2016 at 03:13:29PM +0800, Henry Chen wrote:
-> Some regulators support their operating mode to be changed by consumers for
-> module specific purpose. Add a DT property to support this.
-> 
-> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/regulator/regulator.txt |  5 +++++
->  include/dt-bindings/regulator/regulator.h                 | 14 ++++++++++++++
->  2 files changed, 19 insertions(+)
->  create mode 100644 include/dt-bindings/regulator/regulator.h
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-> index ecfc593..e505d0b 100644
-> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-> @@ -49,6 +49,11 @@ Optional properties:
->  	0: Disable active discharge.
->  	1: Enable active discharge.
->  	Absence of this property will leave configuration to default.
-> +- regulator-supported-modes: Regulators can run in a variety of different
-> +  operating modes depending on output load. This allows further system power
-> +  savings by selecting the best (and most efficient) regulator mode for a
-> +  desired load. The definition for each of these operation is defined at
-> +  include/dt-bindings/regulator/regulator.h
 
-This doesen't tell me for the property is formatted.
+--R92lf0Oi2sxyK3LA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Is it a list? A mask?
+On Sun, May 22, 2016 at 11:06:17AM +0200, Geert Uytterhoeven wrote:
 
->  
->  Deprecated properties:
->  - regulator-compatible: If a regulator chip contains multiple
-> diff --git a/include/dt-bindings/regulator/regulator.h b/include/dt-bindings/regulator/regulator.h
-> new file mode 100644
-> index 0000000..2ed1dfd
-> --- /dev/null
-> +++ b/include/dt-bindings/regulator/regulator.h
-> @@ -0,0 +1,14 @@
-> +/*
-> + * This header provides constants for binding regulator.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_REGULATOR_REGULATOR_H
-> +#define _DT_BINDINGS_REGULATOR_REGULATOR_H
-> +
-> +/* Regulator operating modes */
-> +#define REGULATOR_OPERATION_MODE_FAST			0x0
-> +#define REGULATOR_OPERATION_MODE_NORMAL			0x1
-> +#define REGULATOR_OPERATION_MODE_IDLE			0x2
-> +#define REGULATOR_OPERATION_MODE_STANDBY		0x3
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
 
-These sound like they're tied to linux internal details (e.g. the
-implementation of idle and/or suspend).
+Please use subject lines matching the style of the subsystem and/or
+include people in the cover letter so it's obvious that it's not just
+misdirected scatter.
 
-What do each of these actually mean?
+--R92lf0Oi2sxyK3LA
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Mark.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> +
-> +#endif
-> -- 
-> 1.8.1.1.dirty
-> 
+iQEcBAEBCAAGBQJXQuRyAAoJECTWi3JdVIfQek8H/iG4cVmWCpiIG9iytjHf9ckc
+vNua1CUXJVWf7izCVHSMAYbqDWO7gN0mL+aTqg3T7E3J5uz2Hzez13d5Q/US/jga
+qnTqf9L0s+k3ThXV1lSUKghwnLnEwD8WHR5QVwPNvIpeoDDBCq1HedmBkyMccNfG
+oJ8hk3YivYig61GjJRFYPThfnxk5JUEahK07g+gFga0OPI81Wecwx7iAGQGw8arj
+UUhG4RazjL2rMhTBtTn9p3GkUnyG/CRZl2IQ4A7jM4v81Vjs/+pYm8XVPv71MgrK
+AAwCSPoz3pl7bauXbyAidLHL0OS2x1KfUT4QJnwu3rT5eKeMnRLEenDQyaku+ZY=
+=iSFf
+-----END PGP SIGNATURE-----
+
+--R92lf0Oi2sxyK3LA--
