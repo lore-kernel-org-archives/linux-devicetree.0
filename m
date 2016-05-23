@@ -1,51 +1,78 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [RFC-PATCH 0/2] ASoC: simple_card: support for
- hw-params rules
-Date: Mon, 23 May 2016 17:59:31 +0100
-Message-ID: <20160523165931.GY8206@sirena.org.uk>
-References: <1463747445-14167-1-git-send-email-kernel@martin.sperl.org>
- <573F6279.8040008@metafoo.de>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] Add Amlogic secure monitor driver
+Date: Mon, 23 May 2016 19:04:14 +0200
+Message-ID: <5743380E.9010402@gmail.com>
+References: <1464021024-29380-1-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ELMKpCVvjiB+uwRu"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <573F6279.8040008-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+In-Reply-To: <1464021024-29380-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ELMKpCVvjiB+uwRu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, May 20, 2016 at 09:16:09PM +0200, Lars-Peter Clausen wrote:
+On 23/05/16 18:30, Carlo Caione wrote:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>
+> In the Amlogic SoCs the secure monitor calls are used for a lot of reasons:
+> interact with the NVMEM (efuses), check the reboot reason, set USB boot, ...
+>
+> This driver defines a generic interface towards the secure monitor that can be
+> used by more specialized drivers to interact with the secure monitor itself
+> without worrying about bounce buffers managing.
+>
 
-> How about allowing to embed eBPF bytecode in the DT that can be installed as
-> a constraint set? This would allow maximum for flexibility and also make the
-> implementation a lot easier.
+For the whole series:
+Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-That seems somewhat Linux specific, I'd like to see some DT maintainer
-buy in on that one as well as Takashi's thoughts.
-
---ELMKpCVvjiB+uwRu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXQzbyAAoJECTWi3JdVIfQs88H/3IgsBaXk7YLTH2r/SkMnmVO
-9Fs9+x0HMcyGkL0RRVJUOqI4sISa1d7cnmGvzgv0CnONGST/7I8tfQSVGZ6JKrMK
-CACCMxw9QfyGzpCD/3w+xtsxnkNr4cEvGCmHeA2JdxEIShIlACVcym5e4uH+Sh9t
-ApTvXuuihoqmmJG+qovkuW8wJBDJNnnegjUP5r2V47xd3n5t4lBOcK0Br3XCYsru
-SMAIYxdaGwUI3qRVNhd8e3l2dq4m1ko9aUGdiw/8J83gZu5QqdWh6yjdIm3AHKMt
-er3mfVDfOq7ywqePYMVSjKMfUYRFenhTicctcmlmIFvjkWvcEkJ7IDbTUuaRFGY=
-=NCt9
------END PGP SIGNATURE-----
-
---ELMKpCVvjiB+uwRu--
+> Changelog:
+>
+> v3:
+>    * Moved driver to drivers/firmware
+>    * Added EXPORT_SYMBOL macros
+>    * Changed '_' in '-'
+>    * Introduced 'struct meson_sm_firmware' and 'meson_sm_get_fw()' to be used by
+>      drivers using the secure-monitor to enforce probe ordering
+>
+> v2:
+>    * All the SMC function identifiers are now in a SoC-specific header file to
+>      be included by the DTS files so the SMC commands are now defined in the DT
+>      instead to be hardcoded into the driver
+>    * Patchset is no longer an RFC
+>    * Better error management and boundary checking
+>    * s/unsigned int/u32/
+>    * SMC call not only on CPU 0
+>    * Fix memory leaking
+>    * s/amlogic/meson/ in the directory names
+>
+>
+> Carlo Caione (4):
+>    firmware: Amlogic: Add secure monitor driver
+>    firmware: dt-bindings: Add secure monitor header file for GXBB
+>    ARM64: dts: amlogic: gxbb: Enable secure monitor
+>    documentation: Add secure monitor binding documentation
+>
+>   .../bindings/firmware/meson/meson_sm.txt           |  51 ++++++
+>   arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  11 ++
+>   drivers/firmware/Kconfig                           |   1 +
+>   drivers/firmware/Makefile                          |   1 +
+>   drivers/firmware/meson/Kconfig                     |   8 +
+>   drivers/firmware/meson/Makefile                    |   1 +
+>   drivers/firmware/meson/meson_sm.c                  | 179 +++++++++++++++++++++
+>   include/dt-bindings/firmware/meson-gxbb-sm.h       |  44 +++++
+>   include/linux/firmware/meson/meson_sm.h            |  38 +++++
+>   9 files changed, 334 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+>   create mode 100644 drivers/firmware/meson/Kconfig
+>   create mode 100644 drivers/firmware/meson/Makefile
+>   create mode 100644 drivers/firmware/meson/meson_sm.c
+>   create mode 100644 include/dt-bindings/firmware/meson-gxbb-sm.h
+>   create mode 100644 include/linux/firmware/meson/meson_sm.h
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
