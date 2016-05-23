@@ -1,90 +1,191 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
-Date: Mon, 23 May 2016 14:49:12 -0300
-Message-ID: <CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
-References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
-	<c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c4ab0387041f42ada68296141befe332-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: dwc: Add helper functions to disable/enable irqs" to the asoc tree
+Date: Mon, 23 May 2016 18:50:17 +0100
+Message-ID: <E1b4tzd-0006ZX-EN@debutante>
+References: <fb4a046bc20f0e0839082527b39e7737de128367.1463996627.git.joabreu@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fb4a046bc20f0e0839082527b39e7737de128367.1463996627.git.joabreu@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Jose Abreu <joabreu@synopsys.com>, Carlos Palminha <palminha@synopsys.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, Alexey Brodkin <abrodkin@synopsys.com>, linux-snps-arc@lists.infradead.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>alsa-devel@alsa-project.orgRob Herring <robh@kernel.org>Liam Girdwood <lgirdwood@gmail.com>linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>Takashi Iwai <tiwai@suse.com>devicetree@vger.kernel.orgMark Brown <broonie@kernel.org>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 22, 2016 at 7:47 PM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
+The patch
 
-> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
-> new file mode 100644
-> index 0000000..bcd8e0d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
-> @@ -0,0 +1,128 @@
-> +/*
-> + * Copyright 2016 Christopher Spinrath
-> + * Copyright 2013 CompuLab Ltd.
-> + *
-> + * Based on the GPLv2 licensed devicetree distributed with the vendor
-> + * kernel for the Utilite Pro:
-> + *     Copyright 2013 CompuLab Ltd.
-> + *     Author: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
+   ASoC: dwc: Add helper functions to disable/enable irqs
 
-Can you make this dual GPL/X11 license?
+has been applied to the asoc tree at
 
-For reference take a look at:
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/imx6sl-warp.dts?id=refs/tags/v4.6
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> +       gpio-keys {
-> +               compatible = "gpio-keys";
-> +               power {
-> +                       label = "Power Button";
-> +                       gpios = <&gpio1 29 1>;
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Better to use a label like:
-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> +&iomuxc {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_hog>;
-> +
-> +       hog {
-> +               pinctrl_hog: hoggrp {
-> +                       fsl,pins = <
-> +                               /* power button */
-> +                               MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Better to avoid 0x80000000. Replace it with the real iomux value
-instead so that you don't need to rely on the bootloader
-configuration.
+Thanks,
+Mark
 
-> +
-> +       imx6q-utilite-pro {
-> +               pinctrl_i2c1: i2c1grp {
-> +                       fsl,pins = <
-> +                               MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
-> +                               MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
-> +                       >;
-> +               };
+>From df4e7be1832a1ca9fccfb2ed8771a17da6f7fa57 Mon Sep 17 00:00:00 2001
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Mon, 23 May 2016 11:02:22 +0100
+Subject: [PATCH] ASoC: dwc: Add helper functions to disable/enable irqs
 
-You should better remove one level of indentation. Check this commit
-for reference:
-https://git.kernel.org/cgit/linux/kernel/git/shawnguo/linux.git/commit/arch/arm/boot/dts/imx6q-tbs2910.dts?h=for-next&id=aa7871b53bc3c36b4adefe67f728143e2deeec93
+Helper functions to disable and enable the I2S interrupts were
+added. Only the interrupts of the used channels are enabled.
 
-> +&uart2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_uart2>;
-> +       fsl,uart-has-rtscts;
-> +       dma-names = "rx", "tx";
-> +       dmas = <&sdma 27 4 0>, <&sdma 28 4 0>;
+Also, there is no need to enable irqs at dw_i2s_config(), they
+are already enabled at startup.
 
-No need to add the dma nodes as they are already present in imx6qdl.dtsi.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Carlos Palminha <palminha@synopsys.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/dwc/designware_i2s.c | 68 +++++++++++++++++++++++++-----------------
+ 1 file changed, 41 insertions(+), 27 deletions(-)
+
+diff --git a/sound/soc/dwc/designware_i2s.c b/sound/soc/dwc/designware_i2s.c
+index 0db69b7e9617..4c4f0dc24f10 100644
+--- a/sound/soc/dwc/designware_i2s.c
++++ b/sound/soc/dwc/designware_i2s.c
+@@ -145,26 +145,54 @@ static inline void i2s_clear_irqs(struct dw_i2s_dev *dev, u32 stream)
+ 	}
+ }
+ 
+-static void i2s_start(struct dw_i2s_dev *dev,
+-		      struct snd_pcm_substream *substream)
++static inline void i2s_disable_irqs(struct dw_i2s_dev *dev, u32 stream,
++				    int chan_nr)
+ {
+-	struct i2s_clk_config_data *config = &dev->config;
+ 	u32 i, irq;
+-	i2s_write_reg(dev->i2s_base, IER, 1);
+ 
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+-		for (i = 0; i < (config->chan_nr / 2); i++) {
++	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		for (i = 0; i < (chan_nr / 2); i++) {
++			irq = i2s_read_reg(dev->i2s_base, IMR(i));
++			i2s_write_reg(dev->i2s_base, IMR(i), irq | 0x30);
++		}
++	} else {
++		for (i = 0; i < (chan_nr / 2); i++) {
++			irq = i2s_read_reg(dev->i2s_base, IMR(i));
++			i2s_write_reg(dev->i2s_base, IMR(i), irq | 0x03);
++		}
++	}
++}
++
++static inline void i2s_enable_irqs(struct dw_i2s_dev *dev, u32 stream,
++				   int chan_nr)
++{
++	u32 i, irq;
++
++	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		for (i = 0; i < (chan_nr / 2); i++) {
+ 			irq = i2s_read_reg(dev->i2s_base, IMR(i));
+ 			i2s_write_reg(dev->i2s_base, IMR(i), irq & ~0x30);
+ 		}
+-		i2s_write_reg(dev->i2s_base, ITER, 1);
+ 	} else {
+-		for (i = 0; i < (config->chan_nr / 2); i++) {
++		for (i = 0; i < (chan_nr / 2); i++) {
+ 			irq = i2s_read_reg(dev->i2s_base, IMR(i));
+ 			i2s_write_reg(dev->i2s_base, IMR(i), irq & ~0x03);
+ 		}
+-		i2s_write_reg(dev->i2s_base, IRER, 1);
+ 	}
++}
++
++static void i2s_start(struct dw_i2s_dev *dev,
++		      struct snd_pcm_substream *substream)
++{
++	struct i2s_clk_config_data *config = &dev->config;
++
++	i2s_write_reg(dev->i2s_base, IER, 1);
++	i2s_enable_irqs(dev, substream->stream, config->chan_nr);
++
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++		i2s_write_reg(dev->i2s_base, ITER, 1);
++	else
++		i2s_write_reg(dev->i2s_base, IRER, 1);
+ 
+ 	i2s_write_reg(dev->i2s_base, CER, 1);
+ }
+@@ -172,24 +200,14 @@ static void i2s_start(struct dw_i2s_dev *dev,
+ static void i2s_stop(struct dw_i2s_dev *dev,
+ 		struct snd_pcm_substream *substream)
+ {
+-	u32 i = 0, irq;
+ 
+ 	i2s_clear_irqs(dev, substream->stream);
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+ 		i2s_write_reg(dev->i2s_base, ITER, 0);
+-
+-		for (i = 0; i < 4; i++) {
+-			irq = i2s_read_reg(dev->i2s_base, IMR(i));
+-			i2s_write_reg(dev->i2s_base, IMR(i), irq | 0x30);
+-		}
+-	} else {
++	else
+ 		i2s_write_reg(dev->i2s_base, IRER, 0);
+ 
+-		for (i = 0; i < 4; i++) {
+-			irq = i2s_read_reg(dev->i2s_base, IMR(i));
+-			i2s_write_reg(dev->i2s_base, IMR(i), irq | 0x03);
+-		}
+-	}
++	i2s_disable_irqs(dev, substream->stream, 8);
+ 
+ 	if (!dev->active) {
+ 		i2s_write_reg(dev->i2s_base, CER, 0);
+@@ -223,7 +241,7 @@ static int dw_i2s_startup(struct snd_pcm_substream *substream,
+ 
+ static void dw_i2s_config(struct dw_i2s_dev *dev, int stream)
+ {
+-	u32 ch_reg, irq;
++	u32 ch_reg;
+ 	struct i2s_clk_config_data *config = &dev->config;
+ 
+ 
+@@ -235,16 +253,12 @@ static void dw_i2s_config(struct dw_i2s_dev *dev, int stream)
+ 				      dev->xfer_resolution);
+ 			i2s_write_reg(dev->i2s_base, TFCR(ch_reg),
+ 				      dev->fifo_th - 1);
+-			irq = i2s_read_reg(dev->i2s_base, IMR(ch_reg));
+-			i2s_write_reg(dev->i2s_base, IMR(ch_reg), irq & ~0x30);
+ 			i2s_write_reg(dev->i2s_base, TER(ch_reg), 1);
+ 		} else {
+ 			i2s_write_reg(dev->i2s_base, RCR(ch_reg),
+ 				      dev->xfer_resolution);
+ 			i2s_write_reg(dev->i2s_base, RFCR(ch_reg),
+ 				      dev->fifo_th - 1);
+-			irq = i2s_read_reg(dev->i2s_base, IMR(ch_reg));
+-			i2s_write_reg(dev->i2s_base, IMR(ch_reg), irq & ~0x03);
+ 			i2s_write_reg(dev->i2s_base, RER(ch_reg), 1);
+ 		}
+ 
+-- 
+2.8.1
