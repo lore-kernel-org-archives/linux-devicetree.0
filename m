@@ -1,57 +1,52 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: Re: is there any value in unreferenced <linux,phandle>
- assignments?
-Date: Tue, 24 May 2016 07:08:23 -0400 (EDT)
-Message-ID: <alpine.LFD.2.20.1605240707160.32028@localhost.localdomain>
-References: <alpine.LFD.2.20.1605240643210.31752@localhost.localdomain> <20160524105731.GA25374@leverpostej>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V12 2/2] gpio: max77620: add gpio driver for MAX77620/MAX20024
+Date: Tue, 24 May 2016 13:15:19 +0200
+Message-ID: <CACRpkdbbij7Vj+5EDdb2E4neoGUr7Bk28jhKfFWvETTvyfYu7g@mail.gmail.com>
+References: <1463116755-30469-1-git-send-email-ldewangan@nvidia.com>
+	<1463116755-30469-3-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160524105731.GA25374@leverpostej>
+In-Reply-To: <1463116755-30469-3-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 May 2016, Mark Rutland wrote:
+On Fri, May 13, 2016 at 7:19 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 
-> On Tue, May 24, 2016 at 06:49:40AM -0400, Robert P. J. Day wrote:
-> >
-> >   apologies for what i'm sure is a trivial question, but is there
-> > any point in a .dts file having "linux,phandle" assignments that
-> > are unreferenced from anywhere in the final source file?
-> >
-> >   i ask only because i've been handed a .dts file that admittedly
-> > works just fine, but it contains a number of lines of the form:
-> >
-> >   linux,phandle = <some-number>;
-> >
-> > where none of those numeric phandles are referenced from anywhere
-> > else in the source file (even after processing any .dtsi files).
-> >
-> >   one possibility is that those are leftovers before someone
-> > started adding labels to nodes, and referring to them like that,
-> > but in my case, the nodes defining those phandles don't even have
-> > labels, so that seems fairly pointless.
-> >
-> >   is there any other explanation for them? thanks.
+> MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO
+> pins. It also supports interrupts from these pins.
 >
-> It sounds like the dts file has been decompiled from a DTB, ...
+> Add GPIO driver for these pins to control via GPIO APIs.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-  ah, suddenly it makes perfect sense, thanks.
+PS, please add these optional features:
 
-rday
+> +       mgpio->gpio_chip.direction_input = max77620_gpio_dir_input;
+> +       mgpio->gpio_chip.direction_output = max77620_gpio_dir_output;
 
--- 
+Any chance you could send a patch to add a .get_direction() callback?
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
+This is really useful for debugfs and the userspace ABI and I started
+to add it to drivers all over the place.
 
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+Also you have this:
 
+#define MAX77620_CNFG_GPIO_DRV_MASK             BIT(0)
+#define MAX77620_CNFG_GPIO_DRV_PUSHPULL         BIT(0)
+#define MAX77620_CNFG_GPIO_DRV_OPENDRAIN        0
+
+So it seems possible to add .set_single_ended() to this driver
+as well so it supports native open drain. Please consider this!
+
+I am possibly adding .get_single_ended() to the API this next
+kernel cycle as well, but that is for later.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
