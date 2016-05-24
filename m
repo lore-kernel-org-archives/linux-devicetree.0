@@ -1,45 +1,44 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0011/1529] Fix typo
-Date: Tue, 24 May 2016 09:51:22 -0600
-Message-ID: <CANLsYkxtvYmHRsisjO2DyW85yF3EQ+Jy6Gx4AZ+pkzt7cZM8-Q@mail.gmail.com>
-References: <20160521113648.31841-1-andrea.gelmini@gelma.net>
+From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH 3/3] ARM: configs: keystone: Enable PINCTRL_SINGLE Config
+Date: Tue, 24 May 2016 09:29:29 -0700
+Message-ID: <6325832e-24d2-43c7-09b4-a73b6549ee2c@oracle.com>
+References: <1464006547-19569-1-git-send-email-j-keerthy@ti.com>
+ <1464006547-19569-4-git-send-email-j-keerthy@ti.com>
+ <5743CC80.4070404@ti.com> <5743D0FD.5070804@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160521113648.31841-1-andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
-Cc: Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5743D0FD.5070804@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <a0393675@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org
+Cc: nm@ti.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, m-karicheri2@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 May 2016 at 05:36, Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org> wrote:
-> Signed-off-by: Andrea Gelmini <andrea.gelmini-PT7Us6ch6G9eoWH0uzbU5w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index 93147c0c..a846d4b 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -6,7 +6,7 @@ SoCs tracing needs. These trace components can generally be classified as
->  sinks, links and sources. Trace data produced by one or more sources flows
->  through the intermediate links connecting the source to the currently selected
->  sink. Each CoreSight component device should use these properties to describe
-> -its hardware characteristcs.
-> +its hardware characteristics.
+Hi Keerthy,
 
-Thank you for that.
+On 5/23/2016 8:56 PM, Keerthy wrote:
+>
+>
+> On Tuesday 24 May 2016 09:07 AM, Lokesh Vutla wrote:
+>>
+>>
+>> On Monday 23 May 2016 05:59 PM, Keerthy wrote:
+>>> keystone-k2l devices use pinmux and are compliant with PINCTRL_SINGLE.
+>>> Hence enable the config option.
+>>>
+>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>
+>> A similar patch[1] is already posted.
+>>
+>> [1]https://patchwork.kernel.org/patch/8958091/
+>
+> Ah I had not seen them. If they are already reviewed and closer to be
+> merged then Patch 2 and Patch 3 of this series can be dropped.
+>
+Once the 4.7-rc2 is out, please rebase these floating patches
+against it and post a consolidated patches. I will line them
+up for 4.8
 
-Acked-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
->
->  * Required properties for all components *except* non-configurable replicators:
->
-> --
-> 2.8.2.534.g1f66975
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Santosh
