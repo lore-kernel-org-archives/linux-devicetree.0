@@ -1,109 +1,108 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: [PATCH] ARM: Correct misspelling, "emda3" -> "edma3".
-Date: Tue, 24 May 2016 17:20:28 -0400 (EDT)
-Message-ID: <alpine.LFD.2.20.1605241716520.14369@Device-040570>
+From: Rob Landley <rob@landley.net>
+Subject: Re: [PATCH v2 02/12] of: add J-Core cpu bindings
+Date: Tue, 24 May 2016 16:30:54 -0500
+Message-ID: <5744C80E.6070501@landley.net>
+References: <cover.1463708766.git.dalias@libc.org>
+ <f3c89e4834665790ff13478c571cc9aaa9de5559.1463708766.git.dalias@libc.org>
+ <20160523204846.GA16081@rob-hp-laptop>
+ <20160523210328.GE21636@brightrain.aerifal.cx>
+ <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Rich Felker <dalias@libc.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
-Reported-by: Adam J Allison <adamj.allison-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
 
----
+On 05/23/2016 06:29 PM, Rob Herring wrote:
+> On Mon, May 23, 2016 at 4:03 PM, Rich Felker <dalias@libc.org> wrote:
+>> On Mon, May 23, 2016 at 03:48:46PM -0500, Rob Herring wrote:
+>>> On Fri, May 20, 2016 at 02:53:03AM +0000, Rich Felker wrote:
+>>>> Signed-off-by: Rich Felker <dalias@libc.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/jcore/cpus.txt | 91 ++++++++++++++++++++++++
+>>>>  1 file changed, 91 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/jcore/cpus.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/jcore/cpus.txt b/Documentation/devicetree/bindings/jcore/cpus.txt
+>>>> new file mode 100644
+>>>> index 0000000..00ef112
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/jcore/cpus.txt
+>>>> @@ -0,0 +1,91 @@
+>>>> +===================
+>>>> +J-Core cpu bindings
+>>>> +===================
+>>>> +
+>>>> +The J-Core processors are open source CPU cores that can be built as FPGA
+>>>> +soft cores or ASICs. The device tree is also responsible for describing the
+>>>> +cache controls and, for SMP configurations, all details of the SMP method,
+>>>> +as documented below.
+>>>> +
+>>>> +
+>>>> +---------------------
+>>>> +Top-level "cpus" node
+>>>> +---------------------
+>>>> +
+>>>> +Required properties:
+>>>> +
+>>>> +- #address-cells: Must be 1.
+>>>> +
+>>>> +- #size-cells: Must be 0.
+>>>> +
+>>>> +Optional properties:
+>>>> +
+>>>> +- enable-method: Required only for SMP systems. If present, must be
+>>>> +  "jcore,spin-table".
+>>>> +
+>>>> +
+>>>> +--------------------
+>>>> +Individual cpu nodes
+>>>> +--------------------
+>>>> +
+>>>> +Required properties:
+>>>> +
+>>>> +- device_type: Must be "cpu".
+>>>> +
+>>>> +- compatible: Must be "jcore,j2".
+>>>
+>>> Okay to have this, but you should have compatible strings for specific
+>>> core implementations. AIUI, J2 is just the ISA.
+>>
+>> There was some past discussion you probably missed on the linux-sh
+>> list, starting here:
+>>
+>> http://www.spinics.net/lists/linux-sh/msg50028.html
+>>
+>> Basically it's really hard to identify what "the specific core
+>> implementation" even means with a soft core. If you have some ideas
+>> I'd be happy to hear them, but I think there should always be a
+>> "jcore,j2" fallback compatible tag in any case.
+> 
+> Presumably you do some sort of versioning on the VHDL source that you
+> can correlate to.
+> 
+> If you have sufficient s/w accessible version registers that are
+> always going to be updated on IP changes then, you don't really need
+> more specific compatible strings.
 
-diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-index 079b42a..18090e7 100644
---- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-@@ -15,7 +15,7 @@ Required properties:
- - reg:		Memory map of eDMA CC
- - reg-names:	"edma3_cc"
- - interrupts:	Interrupt lines for CCINT, MPERR and CCERRINT.
--- interrupt-names: "edma3_ccint", "emda3_mperr" and "edma3_ccerrint"
-+- interrupt-names: "edma3_ccint", "edma3_mperr" and "edma3_ccerrint"
- - ti,tptcs:	List of TPTCs associated with the eDMA in the following form:
- 		<&tptc_phandle TC_priority_number>. The highest priority is 0.
+There are no version registers: the boot ROM can be output as part of
+the build, and the dtb can be provided by the boot ROM. So you don't
+need boot registers, you literally put any version info you need in the
+dtb in the boot rom.
 
-@@ -48,7 +48,7 @@ edma: edma@49000000 {
- 	reg =	<0x49000000 0x10000>;
- 	reg-names = "edma3_cc";
- 	interrupts = <12 13 14>;
--	interrupt-names = "edma3_ccint", "emda3_mperr", "edma3_ccerrint";
-+	interrupt-names = "edma3_ccint", "edma3_mperr", "edma3_ccerrint";
- 	dma-requests = <64>;
- 	#dma-cells = <2>;
+> Better yet, since you can change "the hardware", make it more
+> discoverable with registers for version numbering and feature bits.
+> The failure here is having a process where that can be forgotten...
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 52be48b..03521ea 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -187,7 +187,7 @@
- 			reg =	<0x49000000 0x10000>;
- 			reg-names = "edma3_cc";
- 			interrupts = <12 13 14>;
--			interrupt-names = "edma3_ccint", "emda3_mperr",
-+			interrupt-names = "edma3_ccint", "edma3_mperr",
- 					  "edma3_ccerrint";
- 			dma-requests = <64>;
- 			#dma-cells = <2>;
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 12fcde4..27557b0 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -199,7 +199,7 @@
- 			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "edma3_ccint", "emda3_mperr",
-+			interrupt-names = "edma3_ccint", "edma3_mperr",
- 					  "edma3_ccerrint";
- 			dma-requests = <64>;
- 			#dma-cells = <2>;
-diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
-index d4537dc..a6e0aebc 100644
---- a/arch/arm/boot/dts/dm814x.dtsi
-+++ b/arch/arm/boot/dts/dm814x.dtsi
-@@ -448,7 +448,7 @@
- 			reg =	<0x49000000 0x10000>;
- 			reg-names = "edma3_cc";
- 			interrupts = <12 13 14>;
--			interrupt-names = "edma3_ccint", "emda3_mperr",
-+			interrupt-names = "edma3_ccint", "edma3_mperr",
- 					  "edma3_ccerrint";
- 			dma-requests = <64>;
- 			#dma-cells = <2>;
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index e007401..95c8424 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -341,7 +341,7 @@
- 			interrupts = <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "edma3_ccint", "emda3_mperr",
-+			interrupt-names = "edma3_ccint", "edma3_mperr",
- 					  "edma3_ccerrint";
- 			dma-requests = <64>;
- 			#dma-cells = <2>;
+Why would you add hardware version registers when the hardware's
+attached boot rom is providing a dtb?
 
-rday
+What's the point?
 
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
