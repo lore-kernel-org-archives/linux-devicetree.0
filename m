@@ -1,161 +1,69 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
-Date: Tue, 24 May 2016 15:03:13 +0200
-Message-ID: <9836736.6VjP1ug4kE@wuerfel>
-References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
- <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] soc: rockchip: add driver handling grf setup
+Date: Tue, 24 May 2016 15:07:52 +0200
+Message-ID: <7631878.OiMWPcBrqd@phil>
+References: <1464015539-19521-1-git-send-email-heiko@sntech.de> <1464015539-19521-3-git-send-email-heiko@sntech.de> <6a6e87ee-688d-90a3-2407-22847bd80971@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1463740156-7148-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6a6e87ee-688d-90a3-2407-22847bd80971-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, May 20, 2016 6:29:16 PM CEST Shawn Lin wrote:
+Am Dienstag, 24. Mai 2016, 10:22:09 schrieb Shawn Lin:
+> Hi Heiko,
+> 
+> On 2016/5/23 22:58, Heiko Stuebner wrote:
+> > The General Register Files are an area of registers containing a lot
+> > of single-bit settings for numerous components as well full components
+> > like usbphy control. Therefore all used components are accessed
+> > via the syscon provided by the grf nodes or from the sub-devices
+> > created through the simple-mfd created from the grf node.
+> > 
+> > Some settings are not used by anything but will need to be set up
+> > according to expectations on the kernel side.
+> > 
+> > Best example is the force_jtag setting, which defaults to on and
+> > results in the soc switching the pin-outputs between jtag and sdmmc
+> > automatically depending on the card-detect status. This conflicts
+> > heavily with how the dw_mmc driver expects to do its work and also
+> > with the clock-controller, which has most likely deactivated the
+> > jtag clock due to it being unused.
+> 
+> I agree we should disable force_jtag for real product. But on my local
+> branch we add a callback to parse a tag from cmdline. Sometime it's
+> useful for debugging in case of we need to setup JTAG for reproducing
+> and comfirming serious issue in which state the CPU cannot reponse to
+> any console input or FIQ-debug triggering.
+>
+> Should we need it for upstream as you move all related code in this
+> new driver?  I'm not sure.
 
-> +static int rockchip_pcie_wr_own_conf(struct rockchip_pcie_port *pp,
-> +				     int where, int size, u32 val)
-> +{
-> +	u32 tmp;
-> +	int offset;
-> +
-> +	offset = (where & (~0x3));
-> +	tmp = readl(pp->apb_base + PCIE_RC_CONFIG_BASE + offset);
-> +	if (size == 4) {
-> +		writel(val, pp->apb_base + PCIE_RC_CONFIG_BASE + where);
-> +	} else if (size == 2) {
-> +		if (where & 0x2)
-> +			tmp = ((tmp & 0xffff) | (val << 16));
-> +		else
-> +			tmp = ((tmp & 0xffff0000) | val);
-> +
-> +		writel(tmp, pp->apb_base + PCIE_RC_CONFIG_BASE + offset);
-> +	} else if (size == 1) {
-> +		if ((where & 0x3) == 0)
-> +			tmp = ((tmp & (~0xff)) | val);
-> +		else if ((where & 0x3) == 1)
-> +			tmp = ((tmp & (~0xff00)) | (val << 8));
-> +		else if ((where & 0x3) == 2)
-> +			tmp = ((tmp & (~0xff0000)) | (val << 16));
-> +		else if ((where & 0x3) == 3)
-> +			tmp = ((tmp & (~0xff000000)) | (val << 24));
-> +
-> +		writel(tmp, pp->apb_base + PCIE_RC_CONFIG_BASE + offset);
-> +	} else {
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +	}
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
+This driver really _should not_ become a catchall for settings stuff.
+I.e. the jtag/sdmmc switch handles the automatic switching done inside the 
+soc based on the card-detect state. Which confuses the dw_mmc driver.
 
-Why can't you access the individual sub-word registers here?
+If I'm reading that correctly in the TRM, jtag on Rockchip SoCs is part of 
+the coresight infrastructure - in the DAP block.
+There are generic drivers + devicetree bindings for (I think most) coresight 
+blocks existing now, but I haven't found anything related to the DAP itself.
 
-> +
-> +static int rockchip_pcie_rd_other_conf(struct rockchip_pcie_port *pp,
-> +				       struct pci_bus *bus, u32 devfn,
-> +				       int where, int size, u32 *val)
-> +{
-> +	u32 busdev;
-> +
-> +	busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
-> +				PCI_FUNC(devfn), where);
-> +
-> +	if (busdev & (size - 1)) {
-> +		*val = 0;
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +	}
-> +
-> +	if (size == 4) {
-> +		*val = readl(pp->reg_base + busdev);
-> +	} else if (size == 2) {
-> +		*val = readw(pp->reg_base + busdev);
-> +	} else if (size == 1) {
-> +		*val = readb(pp->reg_base + busdev);
-> +	} else {
-> +		*val = 0;
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +	}
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-> +
+In theory I'd think real handling of jtag pins/clocks should be done 
+somewhere in that area and and if jtag is to be used,it could then be set up 
+using in-kernel mechanics, like disabling sdmmc that claims the shared pins 
+and enabling the jtag pinctrl and clocks.
 
-This looks like the normal ECAM operations, you could just call those.
-
-> +	while (time_before(jiffies, timeout)) {
-> +		regmap_read(port->grf, port->pcie_status, &status);
-> +		if ((status & (1 << 9))) {
-> +			dev_info(port->dev, "pll locked!\n");
-> +			err = 0;
-> +			break;
-> +		}
-> +	}
-
-Maybe add an msleep(1) here to avoid busy-looping?
+This could even be doable at runtime via devicetree overlays.
 
 
-> +	for (reg_no = 0; reg_no < (port->mem_size >> 20); reg_no++) {
-> +		err = rockchip_pcie_prog_ob_atu(port, reg_no + 1,
-> +						AXI_WRAPPER_MEM_WRITE,
-> +						20 - 1,
-> +						port->mem_bus_addr +
-> +							(reg_no << 20),
-> +						0);
-> +		if (err) {
-> +			dev_err(dev, "Program RC outbound atu failed\n");
-> +			return err;
-> +		}
-> +	}
+Most likely way out of scope for now, but that is where I would imagine this 
+stuff to be.
 
-What if there is more than one outbound memory window, e.g. prefetchable
-and non-prefetchable?
-
-Where do you set the I/O window?
-
-> +	err = rockchip_pcie_prog_ib_atu(port, 2, 32 - 1, 0x0, 0);
-> +	if (err) {
-> +		dev_err(dev, "Program RC inbound atu failed\n");
-> +		return err;
-> +	}
-
-And this doesn't seem to reflect the DMA ranges.
-
-> +
-> +	port->root_bus_nr = port->busn->start;
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		bus = pci_scan_root_bus_msi(port->dev, port->root_bus_nr,
-> +					    &rockchip_pcie_ops, port, &res,
-> +					    port->msi);
-> +	} else {
-> +		bus = pci_scan_root_bus(&pdev->dev, 0,
-> +					&rockchip_pcie_ops, port, &res);
-
-
-PCI_MSI is selected unconditionally from Kconfig for this driver, so no
-need for the compile-time check here.
-
-> +
-> +static int rockchip_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct rockchip_pcie_port *port = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(port->hclk_pcie);
-> +	clk_disable_unprepare(port->aclk_perf_pcie);
-> +	clk_disable_unprepare(port->aclk_pcie);
-> +	clk_disable_unprepare(port->clk_pciephy_ref);
-> +
-> +	return 0;
-> +}
-
-You don't seem to remove the child devices here. Have you tried unloading the module?
-
-	Arnd
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
