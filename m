@@ -1,82 +1,77 @@
-From: Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 1/2] ASoC: pcm5102a: Add support for PCM5102A
- codec
-Date: Tue, 24 May 2016 16:44:20 +0200
-Message-ID: <alpine.DEB.2.02.1605241640250.19416@lnxricardw1.se.axis.com>
-References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org> <1463130853-25096-2-git-send-email-kernel@martin.sperl.org> <34ab107e-10dc-fbd3-28d1-203c6411851c@laposte.net> <20160523170853.GB8206@sirena.org.uk>
- <312f8476-a437-04d9-3d16-38d7c7c233ad@laposte.net>
+From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 16/54] MAINTAINERS: Add file patterns for drm device tree bindings
+Date: Tue, 24 May 2016 16:22:14 +0100
+Message-ID: <CACvgo50saNmS0F2fu=tg=xR_iFYkJ+W5LQRHkjWde4b=X4xQiQ@mail.gmail.com>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+	<1463907991-7916-17-git-send-email-geert@linux-m68k.org>
+	<CACvgo53Hpsbi91=d+jxBF85zXG8_ddSZTDxpG_ntf2wRmreU9Q@mail.gmail.com>
+	<CAL_Jsq+OJnTJNm9POLzSmAAko1EB171mvbNzw0ALgRMxaXTgzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <312f8476-a437-04d9-3d16-38d7c7c233ad-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+In-Reply-To: <CAL_Jsq+OJnTJNm9POLzSmAAko1EB171mvbNzw0ALgRMxaXTgzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-15?Q?Emmanuel_Fust=E9?= <emmanuel.fuste-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 23 May 2016 at 13:35, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, May 23, 2016 at 4:33 AM, Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 22 May 2016 at 10:05, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>>> Submitters of device tree binding documentation may forget to CC
+>>> the subsystem maintainer if this is missing.
+>>>
+>>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>>> Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+>>> Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+>>> ---
+>>> Please apply this patch directly if you want to be involved in device
+>>> tree binding documentation for your subsystem.
+>>> ---
+>>>  MAINTAINERS | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index c79b99dd3a0bf22d..75138c09dd603093 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -3868,6 +3868,9 @@ T:        git git://people.freedesktop.org/~airlied/linux
+>>>  S:     Maintained
+>>>  F:     drivers/gpu/drm/
+>>>  F:     drivers/gpu/vga/
+>>> +F:     Documentation/devicetree/bindings/display/
+>> Contains a mixed bag of fb (drivers/video) and drm ones. Perhaps one
+>> could/should move the former to a fb/legacy/other subfolder ?
+>
+> Yes, there are some poorly designed bindings that reflect the
+> subsystem needs rather than the h/w. They were separate, I moved them
+> all together to hopefully discourage further separate bindings.
+>
+I'm slightly concerned that someone will pick one of these and
+consider it good, basing their design on it. That's why I was thinking
+that moving them to a subfolder (called nasty/bad-design/legacy and/or
+alike) might be a good idea.
 
-On Mon, 23 May 2016, Emmanuel Fust=E9 wrote:
 
-> /* pcm5102a in HW mode with external SCK (4wire mode)
->  * at 128fs, 192fs or 256fs
->  */
-> 	pcm5102a-4w: pcm5102a {
-> 		compatible =3D "simple-i2s-codec";
-> 		rate =3D <SNDRV_PCM_RATE_8000_192000>;
-> 		format =3D < SNDRV_PCM_FMTBIT_S16_LE
-> 			|SNDRV_PCM_FMTBIT_S24_LE
-> 			|SNDRV_PCM_FMTBIT_S32_LE>;
-> 	};
-> or
-> /* pcm5102a in HW mode with PLL on BCK (3wire mode)
->  * 16to384khz but only with bck rate of 64fs
->  */
-> 	pcm5102a-4w: pcm5102a {
-> 		compatible =3D "simple-i2s-codec";
-> 		rate =3D <SNDRV_PCM_RATE_8000_192000
-> 			^ SNDRV_PCM_RATE_8000>;
-> 		format =3D <SNDRV_PCM_FMTBIT_S32_LE>;
-> 	};
-> Or
-> /* ES9023 in asynchronous mode mclk > 37Mhz
->  * I did not try bck rate <64fs as the sabre family did not generally
->  * support it.
->  */
-> 	es9023: es9023 {
-> 		compatible =3D "simple-i2s-codec";
-> 		rate =3D <SNDRV_PCM_RATE_8000_192000>;
-> 		format =3D <SNDRV_PCM_FMTBIT_S32_LE>;
-> 	};
->=20
-> We could use I2S friendly property instead of "format" :
-> 		bckrates =3D <48, 64>;
->=20
->=20
-> With two or tree more property (gpio for mute, de-emphasis and filter
-> selection), you could cover 98% of I2S DAC with hardware only interfa=
-ces. It
-> cover too startup mode of most hifi I2C or SPI controllable DAC. Whic=
-h is a
-> good starting point for chip for which a driver is not already writte=
-n.
+>>> +F:     Documentation/devicetree/bindings/gpu/
+>> nvidia,gk20a.txt
+>> samsung-g2d.txt
+>> samsung-rotator.txt
+>>
+>> These three should be listed alongside the respective drivers and/or
+>> moved to display/{tegra,exynos} ?
+>
+> Possibly, but these bindings pretty much stand on their own.
+>
+Having a gpu only in different places does feel odd - nvidia,gk20a (in
+gpu) vs etnaviv (in display). If we consider 'rotator' a GPU perhaps
+so are exynos' mixer, mic...
 
-It seems to me that this only covers the cases where the is codec runni=
-ng=20
-in slave mode with MCLK derived from the BCLK, but not cases where the=20
-codec is master and needs to have its MCLK configured appropriately (in=
-=20
-terms of device-specifc clock source and PLL settings), or am I missing=
-=20
-something?
+Not saying that one has to do one or the other... just that it's not
+that bad of an idea ;-)
 
-/Ricard
---=20
-Ricard Wolf Wanderl=F6f                           ricardw(at)axis.com
-Axis Communications AB, Lund, Sweden            www.axis.com
-Phone +46 46 272 2016                           Fax +46 46 13 61 30
+Emil
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
