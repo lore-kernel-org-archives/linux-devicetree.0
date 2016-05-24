@@ -1,108 +1,176 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v3 7/7] dt-bindings: drm/bridge: Update bindings for
- ADV7533
-Date: Tue, 24 May 2016 10:45:34 +0530
-Message-ID: <5743E376.7070708@codeaurora.org>
-References: <1441625800-1858-1-git-send-email-architt@codeaurora.org>
- <1992414.kkmfQUJ8oO@avalon> <5719B942.8070907@codeaurora.org>
- <1987165.vo5BTWVL5e@avalon> <573A935D.7010301@codeaurora.org>
- <CAGd==06i9ojb-C=LRxPkvh-CrkEFjZ8tiEkkVzYfaqODndfqaQ@mail.gmail.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+Date: Tue, 24 May 2016 10:51:08 +0530
+Message-ID: <1464067268-35299-1-git-send-email-navam@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGd==06i9ojb-C=LRxPkvh-CrkEFjZ8tiEkkVzYfaqODndfqaQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Xinliang Liu <xinliang.liu@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, treding@nvidia.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, balbi@ti.com, gregkh@linuxfoundation.org, hyun.kwon@xilinx.com, navam@xilinx.com, radhey.shyam.pandey@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNS8xNy8yMDE2IDA5OjQ4IEFNLCBYaW5saWFuZyBMaXUgd3JvdGU6Cj4gT24gMTcgTWF5
-IDIwMTYgYXQgMTE6NDMsIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+IHdy
-b3RlOgo+Pgo+Pgo+PiBPbiAwNS8xNi8yMDE2IDA1OjMxIFBNLCBMYXVyZW50IFBpbmNoYXJ0IHdy
-b3RlOgo+Pj4KPj4+IEhpIEFyY2hpdCwKPj4+Cj4+PiBPbiBGcmlkYXkgMjIgQXByIDIwMTYgMTE6
-MTA6MTggQXJjaGl0IFRhbmVqYSB3cm90ZToKPj4+Pgo+Pj4+IE9uIDA0LzIyLzIwMTYgMDQ6MDIg
-QU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+Pj4+Cj4+Pj4+IE9uIFdlZG5lc2RheSAwOSBN
-YXIgMjAxNiAxNjoyNzoxOCBBcmNoaXQgVGFuZWphIHdyb3RlOgo+Pj4+Pj4KPj4+Pj4+IEFkZCBk
-ZXNjcmlwdGlvbiBvZiBBRFY3NTMzLiBBZGQgdGhlIHJlcXVpcmVkIGFuZCBvcHRpb25hbCBwcm9w
-ZXJ0aWVzCj4+Pj4+PiB0aGF0Cj4+Pj4+PiBhcmUgc3BlY2lmaWMgdG8gaXQuCj4+Pj4+Pgo+Pj4+
-Pj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+Pj4+PiBDYzogUm9iIEhlcnJpbmcg
-PHJvYmhAa2VybmVsLm9yZz4KPj4+Pj4+Cj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFu
-ZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+Pj4+Pj4gLS0tCj4+Pj4+Pgo+Pj4+Pj4gLi4u
-L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTExLnR4dCAgICAgICAgfCAyNQo+Pj4+
-Pj4gKysrKysrKysrKysrLS0tLS0KPj4+Pj4+IDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25z
-KCspLCA1IGRlbGV0aW9ucygtKQo+Pj4+Pj4KPj4+Pj4+IGRpZmYgLS1naXQKPj4+Pj4+IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTEx
-LnR4dAo+Pj4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvYWRpLGFkdjc1MTEudHh0Cj4+Pj4+PiBpbmRleAo+Pj4+Pj4gOTZjMjVlZS4uNDIwZGE1
-YSAxMDA2NDQKPj4+Pj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQKPj4+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQKPj4+Cj4+
-Pgo+Pj4gW3NuaXBdCj4+Pgo+Pj4+Pj4gKy0gYWRpLGRpc2FibGUtdGltaW5nLWdlbmVyYXRvcjog
-T25seSBmb3IgQURWNzUzMy4gRGlzYWJsZXMgdGhlCj4+Pj4+PiBpbnRlcm5hbAo+Pj4+Pj4gdGlt
-aW5nCj4+Pj4+PiArICBnZW5lcmF0b3IuIFRoZSBjaGlwIHdpbGwgcmVseSBvbiB0aGUgc3luYyBz
-aWduYWxzIGluIHRoZSBEU0kgZGF0YQo+Pj4+Pj4gbGFuZXMsCj4+Pj4+PiArICByYXRoZXIgdGhh
-biBnZW5lcmF0ZSBpdHMgb3duIHRpbWluZ3MgZm9yIEhETUkgb3V0cHV0Lgo+Pj4+Pgo+Pj4+Pgo+
-Pj4+PiBJc24ndCB0aGF0IHNvbWV0aGluZyB0aGF0IHNob3VsZCBiZSBzZWxlY3RhYmxlIGF0IHJ1
-bnRpbWUgPwo+Pj4+Cj4+Pj4KPj4+PiBUaGUgdGltaW5nIGdlbmVyYXRvciBjYW4gYmUgZW5hYmxl
-ZC9kaXNhYmxlZCBhdCBydW50aW1lLiBBbHRob3VnaCwgd2UKPj4+PiBkb24ndCBoYXZlIGEgd2F5
-IHRvIHRlbGwgdGhlIGRyaXZlciB3aGV0aGVyIHdlIHdhbnQgdG8ga2VlcCBpdCBlbmFibGVkCj4+
-Pj4gb3Igbm90Lgo+Pj4+Cj4+Pj4gSXQncyBhIGhhcmR3YXJlIGZlYXR1cmUgdGhhdCB3b3JrcyB3
-ZWxsIG9uIG1vc3QgcGxhdGZvcm1zLCBidXQgbm90IG9uCj4+Pj4gYWxsLiBJbiBwYXJ0aWN1bGFy
-LCBpdCB3b3JrcyB3ZWxsIG9uIERCNDEwYywgYnV0IGNhdXNlcyBpc3N1ZXMgd2l0aAo+Pj4+IHRo
-ZSBIaWtleSA5NiBib2FyZC4gVGhlIERTSSBob3N0IG9uIEhpa2V5IGhhcyBkaWZmZXJlbnQgY2xv
-Y2sgc291cmNlcwo+Pj4+IHRoYXQgZ2VuZXJhdGUgdGhlIGRpc3BsYXkgY29udHJvbGxlcidzIHBp
-eGVsIGNsb2NrIGFuZCBEU0kgYnl0ZSBjbG9jaywKPj4+PiB3aGVyZWFzIHRoZSBRdWFsY29tbSBT
-b0MgdXNlcyB0aGUgc2FtZSBzb3VyY2UuIE15IGd1ZXNzIGlzIHRoYXQgdGhlCj4+Pj4gQURWNzUz
-MydzIHRpbWluZyBnZW5lcmF0b3IgZG9lc24ndCBsaWtlIGl0IHdoZW4gdGhlIHBpeGVsIGRhdGEg
-YW5kCj4+Pj4gY2xvY2sgYXJlIG91dCBvZiBwaGFzZSBvciBzb21ldGhpbmcuCj4+Pj4KPj4+PiBT
-aW5jZSBpdCBpcyBhIGhhcmR3YXJlIGZlYXR1cmUgd2hpY2ggbmVlZHMgdHdlYWtpbmcsIEkgdGhv
-dWdodCBpdAo+Pj4+IHF1YWxpZmllZCBhcyBhIERUIHByb3BlcnR5Lgo+Pj4KPj4+Cj4+PiBUaGUg
-ZmFjdCB0aGF0IGEgaGFyZHdhcmUgZ2VuZXJhdG9yIGlzIHByZXNlbnQgaXMgY2VydGFpbmx5IGRl
-c2NyaWJlcyB0aGUKPj4+IGhhcmR3YXJlLCBidXQgSSdtIG5vdCBzdXJlIHdoZXRoZXIgdG8gZW5h
-YmxlIGl0IG9yIG5vdCBhbHNvIHF1YWxpZmllcyBhcyBhCj4+PiBoYXJkd2FyZSBmZWF0dXJlLgo+
-Pj4KPj4+IEFyZSB0aGVyZSB1c2UgY2FzZXMgZm9yIHVzaW5nIHRoZSB0aW1pbmcgZ2VuZXJhdG9y
-IGNvbmRpdGlvbmFsbHkgb24gYQo+Pj4gZ2l2ZW4KPj4+IGJvYXJkID8gQXMgeW91IGltcGxlbWVu
-dCBzdXBwb3J0IGZvciBkaXNhYmxpbmcgaXQsIEkgYXNzdW1lIGl0J3Mgbm90Cj4+PiBtYW5kYXRv
-cnkuIFdoYXQgZmVhdHVyZShzKSBkbyB3ZSBsb3NlIGlmIHdlIGtlZXAgaXQgZGlzYWJsZWQgPwo+
-Pj4KPj4KPj4gVGhlIHNwZWMgc2F5cyBpdCdzIHJlY29tbWVuZGVkIHRvIHVzZSB0aGUgaW50ZXJu
-YWwgdGltaW5nIGdlbmVyYXRvci4gSW4KPj4gdGhlIGNhc2Ugb2YgZGI0MTBjLCBJIG9ic2VydmUg
-YW4gdW5zdGFibGUgb3V0cHV0L2ZsaWNrZXIgZm9yIGNlcnRhaW4KPj4gbW9kZXMgaWYgSSBkb24n
-dCBlbmFibGUgaXQuCj4+Cj4+IEluIHRoZSBjYXNlIG9mIGhpa2V5IHBsYXRmb3JtLCBpdCdzIHRo
-ZSBvdGhlciB3YXkgcm91bmQuCj4+Cj4+IFhpbmxpYW5nLCBjb3VsZCB5b3UgZGVzY3JpYmUgdGhl
-IHByb2JsZW1zIHlvdSBmYWNlIHdoZW4gdGhlIHRpbWluZwo+PiBnZW5lcmF0b3IgaXMgZW5hYmxl
-ZD8KPgo+IFllcywgIG9wZW5pbmcgdGhlIHRpbWluZyBnZW5lcmF0b3Igb2YgQURWNzUzMyBjYW4g
-YmVuZWZpdCB0aGUgSERNSQo+IG91dHB1dCBzaWduYWwuCj4gQnV0LCBmb3Igc29tZSBjaXJjdW1z
-dGFuY2VzLCB3ZSBuZWVkIHRvIGRpc2FibGUgdGltaW5nIGdlbmVyYXRvcjoKPiBUbyBtYWtlIG1v
-ZGVzIHdvcmssIHRoZSB0aW1pbmcgcGFyYW1ldGVycyAoaGZwLCBoYnAsIGV0Yy4pIHVzZWQgYnkK
-PiBBRFY3NTMzIHRpbWluZyBnZW5lcmF0b3Igc2hvdWxkIG1hdGNoIHRoZSBvbmVzIHVzZWQgaW4g
-RFNJLgo+IElmIHRoZSB0aW1pbmcgcGFyYW1ldGVycyBjaGFuZ2VkIGluIERTSSBhbmQgdGhlc2Ug
-Y2hhbmdpbmcgIHRpbWluZwo+IHBhcmFtZXRlcnMgY2FuJ3QgcGFzcyB0byBBRFY3NTMzLCB0aGVu
-IGl0IG5lZWQgdG8gZGlzYWJsZSB0aGUgdGltaW5nCj4gZ2VuZXJhdG9yIG9mIEFEVjc1MzMgdG8g
-bWFrZSBtb2RlIHdvcmsuCj4gU29tZSBtb2RlcyBpbiBIaUtleSBpcyBpbiB0aGlzIGNhc2UuCgoK
-VGhlIEFEVjc1MzMgY2hpcCdzIERTSSByZWNlaXZlciBzdXBwb3J0cyB0aGUgRFNJIFZpZGVvIG1v
-ZGUKc3ViLW1vZGU6ICJOb24tYnVyc3QgTW9kZSB3aXRoIHN5bmMgcHVsc2VzIi4gSWRlYWxseSwg
-YSBEU0kKcmVjZWl2ZXIgc3VwcG9ydGluZyB0aGlzIG1vZGUgc2hvdWxkIGJlIGFibGUgdG8gcmVj
-b25zdHJ1Y3QKdGhlIHRpbWluZ3MgdXNpbmcgcGFja2V0cyBlbWJlZGRlZCBpbiB0aGUgY29udHJv
-bGxlci4KCldpdGggREI0MTBjLCBpdCBzZWVtcyB0byBzdHJ1Z2dsZSB3aXRob3V0IGl0LCBhbmQg
-d2l0aApIaWtleSwgd2UgbmVlZCB0byBleHBsaWNpdGx5IGRpc2FibGUgaXQgYmVjYXVzZSwgYXMg
-SSB1bmRlcnN0YW5kLAp0aGUgRFNJIGNvbnRyb2xsZXIgdGhlcmUgdHdlYWtzIHNvbWUgb2YgdGhl
-IHRpbWluZ3MgcGFyYW1ldGVycwppbiB0aGUgbW9kZSBpdCB3YW50cyB0byBzZXQuCgpJdCB3b3Vs
-ZCBoYXZlIGJlZW4gaWRlYWwgdG8gbm90IGV4cG9zZSB0aGlzIGtub2IgaW4gRFQsIGJ1dAp3ZSBu
-ZWVkIGl0IGZvciBBRFY3NTMzIHRvIHdvcmsgYWNyb3NzIG11bHRpcGxlIHBsYXRmb3Jtcy4KCkxh
-dXJlbnQsIGRvIHlvdSBoYXZlIGFueSBtb3JlIHRob3VnaHRzIG9uIHRoaXM/IEknZCBwb3N0ZWQK
-b3V0IGEgdjQgb2YgdGhpcyBwYXRjaCBzZXQuIFBsZWFzZSBoYXZlIGEgbG9vayB3aGVuIHlvdSBn
-ZXQKdGhlIGNoYW5jZS4KClRoYW5rcywKQXJjaGl0CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRp
-b24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhv
-c3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+This patch updates the driver to support 64-bit DMA addressing.
+
+Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+---
+Changes for v3:
+                -Added new compatable string for 5.00 IP version as suggested by
+                 Arnd Bergmann.
+                -Used write_fn() insted of lo_hi_writeq() as suggested by
+                 Arnd Bergmann.
+
+Changes for v2:
+                -Added dma-ranges property in device tree as suggested by Arnd Bergmann.
+                -Modified the driver code based on the xlnx,addrwidth.
+
+ .../devicetree/bindings/usb/udc-xilinx.txt         | 21 +++++----
+ drivers/usb/gadget/udc/udc-xilinx.c                | 53 ++++++++++++++++++++--
+ 2 files changed, 63 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+index 47b4e39..09df757 100644
+--- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
++++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+@@ -1,18 +1,23 @@
+ Xilinx USB2 device controller
+ 
+ Required properties:
+-- compatible		: Should be "xlnx,usb2-device-4.00.a"
++- compatible		: Should be "xlnx,usb2-device-4.00.a" or
++			  "xlnx,usb2-device-5.00"
+ - reg			: Physical base address and size of the USB2
+ 			  device registers map.
+ - interrupts		: Should contain single irq line of USB2 device
+ 			  controller
+ - xlnx,has-builtin-dma	: if DMA is included
++- dma-ranges		: Should be as the following
++			  <child-bus-address, parent-bus-address, length>
++- xlnx,addrwidth	: Should be the dma addressing size in bits(ex: 64 bits)
+ 
+ Example:
+- 		axi-usb2-device@42e00000 {
+-                        compatible = "xlnx,usb2-device-4.00.a";
+-                        interrupts = <0x0 0x39 0x1>;
+-                        reg = <0x42e00000 0x10000>;
+-                        xlnx,has-builtin-dma;
+-                };
+-
++		axi-usb2-device@42e00000 {
++			compatible = "xlnx,usb2-device-4.00.a";
++			interrupts = <0x0 0x39 0x1>;
++			reg = <0x42e00000 0x10000>;
++			dma-ranges = <0x00000000 0x00000000 0x40000000>;
++			xlnx,has-builtin-dma;
++			xlnx,addrwidth = <0x40>;
++		};
+diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
+index 1cbb0ac..112a6f3 100644
+--- a/drivers/usb/gadget/udc/udc-xilinx.c
++++ b/drivers/usb/gadget/udc/udc-xilinx.c
+@@ -47,6 +47,15 @@
+ #define XUSB_DMA_LENGTH_OFFSET		0x0210	/* DMA Length Register */
+ #define XUSB_DMA_STATUS_OFFSET		0x0214	/* DMA Status Register */
+ 
++/* DMA source Address Reg for LSB */
++#define XUSB_DMA_DSAR_ADDR_OFFSET_LSB   0x0308
++/* DMA source Address Reg for MSB */
++#define XUSB_DMA_DSAR_ADDR_OFFSET_MSB   0x030C
++/* DMA destination Addr Reg LSB */
++#define XUSB_DMA_DDAR_ADDR_OFFSET_LSB   0x0310
++/* DMA destination Addr Reg MSB */
++#define XUSB_DMA_DDAR_ADDR_OFFSET_MSB   0x0314
++
+ /* Endpoint Configuration Space offsets */
+ #define XUSB_EP_CFGSTATUS_OFFSET	0x00	/* Endpoint Config Status  */
+ #define XUSB_EP_BUF0COUNT_OFFSET	0x08	/* Buffer 0 Count */
+@@ -193,7 +202,7 @@ struct xusb_udc {
+ 	void __iomem *addr;
+ 	spinlock_t lock;
+ 	bool dma_enabled;
+-
++	u32 dma_addrwidth;
+ 	unsigned int (*read_fn)(void __iomem *);
+ 	void (*write_fn)(void __iomem *, u32, u32);
+ };
+@@ -214,6 +223,20 @@ static const struct usb_endpoint_descriptor config_bulk_out_desc = {
+ 	.wMaxPacketSize		= cpu_to_le16(EP0_MAX_PACKET),
+ };
+ 
++/**
++ * xudc_write64 - write 64bit value to device registers
++ * @addr: base addr of device registers
++ * @offset: register offset
++ * @val: data to be written
++ **/
++static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val)
++{
++	struct xusb_udc *udc = ep->udc;
++
++	udc->write_fn(udc->addr, offset, lower_32_bits(val));
++	udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val));
++}
++
+ /**
+  * xudc_write32 - little endian write to device registers
+  * @addr: base addr of device registers
+@@ -330,8 +353,13 @@ static int xudc_start_dma(struct xusb_ep *ep, dma_addr_t src,
+ 	 * destination registers and then set the length
+ 	 * into the DMA length register.
+ 	 */
+-	udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
+-	udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
++	if (udc->dma_addrwidth > 32) {
++		xudc_write64(ep, XUSB_DMA_DSAR_ADDR_OFFSET_LSB, src);
++		xudc_write64(ep, XUSB_DMA_DDAR_ADDR_OFFSET_LSB, dst);
++	} else {
++		udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
++		udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
++	}
+ 	udc->write_fn(udc->addr, XUSB_DMA_LENGTH_OFFSET, length);
+ 
+ 	/*
+@@ -2097,6 +2125,24 @@ static int xudc_probe(struct platform_device *pdev)
+ 
+ 	udc->dma_enabled = of_property_read_bool(np, "xlnx,has-builtin-dma");
+ 
++	if (of_device_is_compatible(np, "xlnx,usb2-device-5.00")) {
++		ret = of_property_read_u32(np, "xlnx,addrwidth",
++						&udc->dma_addrwidth);
++		if (ret < 0)
++			dev_warn(&pdev->dev,
++				"missing xlnx,addrwidth property\n");
++	} else {
++		udc->dma_addrwidth = 32;
++	}
++
++	/* Set the dma mask bits */
++	ret = dma_set_mask_and_coherent(&pdev->dev,
++					DMA_BIT_MASK(udc->dma_addrwidth));
++	if (ret < 0) {
++		dev_dbg(&pdev->dev, "no usable DMA configuration");
++		goto fail;
++	}
++
+ 	/* Setup gadget structure */
+ 	udc->gadget.ops = &xusb_udc_ops;
+ 	udc->gadget.max_speed = USB_SPEED_HIGH;
+@@ -2168,6 +2214,7 @@ static int xudc_remove(struct platform_device *pdev)
+ /* Match table for of_platform binding */
+ static const struct of_device_id usb_of_match[] = {
+ 	{ .compatible = "xlnx,usb2-device-4.00.a", },
++	{ .compatible = "xlnx,usb2-device-5.00", },
+ 	{ /* end of list */ },
+ };
+ MODULE_DEVICE_TABLE(of, usb_of_match);
+-- 
+2.8.3.394.g3916adf
