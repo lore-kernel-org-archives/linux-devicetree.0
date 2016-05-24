@@ -1,27 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Add Oxford Semiconductor OXNAS
- pinctrl and gpio bindings
-Date: Tue, 24 May 2016 11:29:37 +0200
-Message-ID: <CACRpkdZi5t3onQvXJeWcTfnVV7zn1Z=F_NPTzht0E5CAOsDh6A@mail.gmail.com>
-References: <1462952062-5316-1-git-send-email-narmstrong@baylibre.com>
-	<1462952062-5316-3-git-send-email-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1462952062-5316-3-git-send-email-narmstrong@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: "jeffrey.lin" <yajohn@gmail.com>
+Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
+Date: Tue, 24 May 2016 17:31:41 +0800
+Message-ID: <1464082301-11539-1-git-send-email-jeffrey.lin@rad-ic.com>
+References: <20160513041852.GA8932@dtor-ws>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160513041852.GA8932@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org
+Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 9:34 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
-
-> Add pinctrl and gpio DT bindings for Oxford Semiconductor OXNAS SoC Family.
-> This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
+Hi Dmitry:
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>	BUILD_BUG_ON((RM_FW_PAGE_SIZE % RM_BL_WRT_PKG_SIZE) != 0);
+>
+>	for (i = 0; i < RM_FW_PAGE_SIZE / RM_BL_WRT_PKG_SIZE; i++) {
+>		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
+>		buf[BL_PAGE_STR] = i ? 0xff : 0;
+Change to buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
+>		buf[BL_PKG_IDX] = i;
+>
+>		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
+>		memcpy(&buf[BL_DATA_STR], data, xfer_len);
+>		if (len < RM_BL_WRT_PKG_SIZE)
+>			memset(&buf[BL_DATA_STR + xfer_len], 0xff,
+>				RM_BL_WRT_PKG_SIZE - xfer_len);
+>
+>		error = raydium_i2c_write_object(client, buf, RM_BL_WRT_LEN,
+>						 RAYDIUM_WAIT_READY);
+>		if (error) {
+>			dev_err(&client->dev,
+>				"page write command failed for page %d, chunk %d: %d\n",
+>				page_idx, pkg_idx, error);
+>			return error;
+>		}
+>
+>		data += xfer_len;
+>		len -= xfer_len;
+>	}
+This work on my hand chromebook.
 
-Patch applied with Rob's ACK.
+> static int raydium_i2c_read_message(struct i2c_client *client,
+> 				    u32 addr, void *data, size_t len)
+> {
+> 	__le32 le_addr;
+> 	size_t xfer_len;
+> 	int error;
+> 
+> 	while (len) {
+> 		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
+> 
+> 		le_addr = cpu_to_le32(addr);
+> 
+> 		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
+> 					 &le_addr, sizeof(le_addr));
+> 		if (!error)/*read from last byte addr.*/
+> 			error = raydium_i2c_read(client, le_addr & 0xff,
+> 						 data, xfer_len)
+Change as
+			error = raydium_i2c_read(client, addr & 0xff,
+						 data, xfer_len);
 
-Yours,
-Linus Walleij
+I've fixed this issues and submit new patch to upstream. Please help check that.
+
+Thanks.
+
+Jeffrey
