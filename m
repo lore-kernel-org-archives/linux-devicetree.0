@@ -1,40 +1,59 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] firmware: Amlogic: Add secure monitor driver
-Date: Tue, 24 May 2016 10:08:03 +0200
-Message-ID: <20160524080803.GB18935@mephisto>
-References: <1464021024-29380-1-git-send-email-carlo@caione.org>
- <1464021024-29380-2-git-send-email-carlo@caione.org>
- <m2posco5k2.fsf@baylibre.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
+Date: Tue, 24 May 2016 09:09:41 +0100
+Message-ID: <57440C45.5040105@arm.com>
+References: <cover.1463708766.git.dalias@libc.org>
+ <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
+ <20160523205320.GA21655@rob-hp-laptop>
+ <20160523211342.GG21636@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <m2posco5k2.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20160523211342.GG21636-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/05/16 13:58, Kevin Hilman wrote:
-
-[...]
-> > +	if (of_property_read_u32(np, "amlogic,sm-cmd-input-base", &cmd_in))
-> > +		return -EINVAL;
-> > +
-> > +	if (of_property_read_u32(np, "amlogic,sm-cmd-output-base", &cmd_out))
-> > +		return -EINVAL;
-> > +
-> > +	sm_phy_in_base = meson_sm_call(cmd_in, 0, 0, 0, 0, 0);
+On 23/05/16 22:13, Rich Felker wrote:
+> On Mon, May 23, 2016 at 03:53:20PM -0500, Rob Herring wrote:
+>> On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
+>>> Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+>>> ---
+>>>  .../bindings/interrupt-controller/jcore,aic.txt    | 28 ++++++++++++++++++++++
+>>>  1 file changed, 28 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+>>> new file mode 100644
+>>> index 0000000..dc9fde8
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+>>> @@ -0,0 +1,28 @@
+>>> +J-Core Advanced Interrupt Controller
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible : Should be "jcore,aic1" for the (obsolete) first-generation aic
+>>> +  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
+>>> +  the "aic2" core with 64 interrupts.
+>>> +
+>>> +- interrupt-controller : Identifies the node as an interrupt controller
+>>> +
+>>> +- #interrupt-cells : Specifies the number of cells needed to encode an
+>>> +  interrupt source. The value shall be 1.
+>>
+>> No level/edge support? Need 2 cells if so.
 > 
-> Should there be any error checking here?  Do we have any info on the
-> return values here in case of error, or in case of missing firmware,
-> etc.
+> No, all the logic is in hardware. From the software side you just need
+> handle_simple_irq or equivalent.
 
-We do not have any info on that but I can assume 0 is considered an
-error as for other SMC calls. Fix in v4.
+Not even an EOI?
 
+	M.
 -- 
-Carlo Caione
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
