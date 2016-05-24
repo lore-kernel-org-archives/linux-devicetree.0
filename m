@@ -1,73 +1,34 @@
-From: Misael Lopez Cruz <misael.lopez-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: dra72-evm: Rename 3.3V regulator tag
-Date: Tue, 24 May 2016 15:00:40 -0500
-Message-ID: <1464120040-28776-1-git-send-email-misael.lopez@ti.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: is this the right list for moderately simple questions about
+ kernel DT processing?
+Date: Tue, 24 May 2016 13:06:59 -0700
+Message-ID: <5744B463.2080109@gmail.com>
+References: <alpine.LFD.2.20.1605231428310.20205@Device-040570>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.20.1605231428310.20205@Device-040570>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Misael Lopez Cruz <misael.lopez-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rename the tag of the 3.3 V regulator used in the DRA72 EVM in
-order to have a consistent tag name with the DRA7 EVM.  This
-is useful when the regulator needs to be referenced in common
-dtsi files (i.e. for common companion boards like JAMR3 [1]).
+On 5/23/2016 11:30 AM, Robert P. J. Day wrote:
+> 
+>   i'm currently perusing the kernel code under drivers/of to see the
+> details of how the kernel parses a FDT, and if i have questions, is
+> this the right place to ask them? chances are, they won't be
+> awesomely deep, but if there's a better place, let me know.
+> 
+> rday
 
-[1] http://www.ti.com.cn/cn/lit/ug/sprui52/sprui52.pdf
+Yes, this is the right place.
 
-Signed-off-by: Misael Lopez Cruz <misael.lopez-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra72-evm-common.dtsi |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+You might also want to look at http://elinux.org/Device_Tree
 
-diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
-index 093538e..9d3cf50 100644
---- a/arch/arm/boot/dts/dra72-evm-common.dtsi
-+++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
-@@ -18,7 +18,7 @@
- 		display0 = &hdmi0;
- 	};
- 
--	evm_3v3: fixedregulator-evm_3v3 {
-+	evm_3v3_sw: fixedregulator-evm_3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "evm_3v3";
- 		regulator-min-microvolt = <3300000>;
-@@ -29,7 +29,7 @@
- 		/* TPS77018DBVT */
- 		compatible = "regulator-fixed";
- 		regulator-name = "aic_dvdd";
--		vin-supply = <&evm_3v3>;
-+		vin-supply = <&evm_3v3_sw>;
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 	};
-@@ -414,9 +414,9 @@
- 		status = "okay";
- 
- 		/* Regulators */
--		AVDD-supply = <&evm_3v3>;
--		IOVDD-supply = <&evm_3v3>;
--		DRVDD-supply = <&evm_3v3>;
-+		AVDD-supply = <&evm_3v3_sw>;
-+		IOVDD-supply = <&evm_3v3_sw>;
-+		DRVDD-supply = <&evm_3v3_sw>;
- 		DVDD-supply = <&aic_dvdd>;
- 	};
- };
-@@ -597,7 +597,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins_default>;
- 
--	vmmc-supply = <&evm_3v3>;
-+	vmmc-supply = <&evm_3v3_sw>;
- 	bus-width = <8>;
- 	ti,non-removable;
- 	max-frequency = <192000000>;
--- 
-1.7.9.5
+-Frank
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
