@@ -1,63 +1,66 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
- number.
-Date: Tue, 24 May 2016 18:41:41 +0100
-Message-ID: <20160524174140.GE11605@leverpostej>
-References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH 2/2] ARM: dts: Add async-bridge clock to MFC power domain for Exynos5420
+Date: Tue, 24 May 2016 13:41:02 -0400
+Message-ID: <1464111662-15336-3-git-send-email-javier@osg.samsung.com>
+References: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+In-Reply-To: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christer Weinigel <christer@weinigel.se>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Shuah Khan <shuahkh@osg.samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 24, 2016 at 06:39:20PM +0200, Christer Weinigel wrote:
-> Document how to use devicetree aliases to assign a stable
-> bus number to a spi bus.
-> 
-> Signed-off-by: Christer Weinigel <christer@weinigel.se>
-> 
-> ---
-> 
-> Trivial documentation change.
-> 
-> Not having used devicetree that much it was surprisingly hard to
-> figure out how to assign a stable bus number to a spi bus.  Add a
-> simple example that shows how to do that.
-> 
-> Mark Cced as the SPI maintainer.  Or should trivial documentation
-> fixes like this be addressed to someone else?
-> 
->   /Christer
-> 
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index 42d5954..c35c4c2 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -94,3 +94,13 @@ SPI example for an MPC5200 SPI bus:
->  			reg = <1>;
->  		};
->  	};
-> +
-> +Normally SPI buses are assigned dynamic bus numbers starting at 32766
-> +and counting downwards.  It is possible to assign the bus number
-> +statically using devicetee aliases.  For example, on the MPC5200 the
-> +"spi@f00" device above is connected to the "soc" bus.  To set its
-> +bus_num to 1 add an aliases entry like this:
+The MFC IP is also inter-connected by an Async-Bridge so the CLK_ACLK333
+has to be ungated during a power domain switch. Trying to do it when the
+clock is gated will fail and lead to an imprecise external abort error
+when the driver tries to access the MFC registers with the PD disabled.
 
-As Mark Brown pointed out, this is very Linux-specific (at least in the
-wording of the above).
+For example, if the s5p-mfc module is removed and the MFC PD turned off:
 
-Generally, aliases are there to match _physical_ identifiers (e.g. to
-match physical labels for UART0, UART1, and on).
+[  186.835606] Power domain power-domain@10044060 disable failed
+[  186.835671] s5p-mfc 11000000.codec: Removing 11000000.codec
+[  186.837670] Power domain power-domain@10044060 disable failed
 
-I'm not sure whether that applies here.
+And when the module is inserted again:
 
-Thanks,
-Mark.
+[ 2395.176956] s5p_mfc_wait_for_done_dev:34: Interrupt (dev->int_type:0, command:12) timed out
+[ 2395.177031] s5p_mfc_init_hw:272: Failed to load firmware
+[ 2395.177384] Unhandled fault: imprecise external abort (0x1406) at 0x00000000
+[ 2395.177441] pgd = ec3b4000
+[ 2395.177467] [00000000] *pgd=00000000
+[ 2395.177507] Internal error: : 1406 [#1] PREEMPT SMP ARM
+[ 2395.177550] Modules linked in: s5p_mfc mwifiex_sdio mwifiex uvcvideo s5p_jpeg v4l2_mem2mem videobuf2_vmalloc videobuf2_dma_contig videobuf2_memops videobuf2_v4l2 videobuf2_core v4l2_common videodev media [last unloaded: s5p_mfc]
+[ 2395.177774] CPU: 1 PID: 2382 Comm: v4l_id Tainted: G        W       4.6.0-rc6-next-20160502-00010-g7730dc64d2c1-dirty #179
+[ 2395.177857] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+[ 2395.177906] task: ed275500 ti: e6c8c000 task.ti: e6c8c000
+[ 2395.177996] PC is at s5p_mfc_reset+0x1c4/0x284 [s5p_mfc]
+[ 2395.178057] LR is at s5p_mfc_reset+0x1a4/0x284 [s5p_mfc]
+
+This patch fixes this issue by adding the CLK_ACLK333 as an Async-Bridge
+clock for the MFC power domain, so the PD configuration works properly.
+
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+---
+
+ arch/arm/boot/dts/exynos5420.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 4c8523471c65..f3e9d873633e 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -313,8 +313,9 @@
+ 	mfc_pd: power-domain@10044060 {
+ 		compatible = "samsung,exynos4210-pd";
+ 		reg = <0x10044060 0x20>;
+-		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>;
+-		clock-names = "oscclk", "clk0";
++		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>,
++			 <&clock CLK_ACLK333>;
++		clock-names = "oscclk", "clk0","asb0";
+ 		#power-domain-cells = <0>;
+ 	};
+ 
+-- 
+2.5.5
