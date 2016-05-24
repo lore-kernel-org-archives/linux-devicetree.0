@@ -1,69 +1,125 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] soc: rockchip: add driver handling grf setup
-Date: Tue, 24 May 2016 15:07:52 +0200
-Message-ID: <7631878.OiMWPcBrqd@phil>
-References: <1464015539-19521-1-git-send-email-heiko@sntech.de> <1464015539-19521-3-git-send-email-heiko@sntech.de> <6a6e87ee-688d-90a3-2407-22847bd80971@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6a6e87ee-688d-90a3-2407-22847bd80971-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v4 0/7] Exynos: MFC driver: reserved memory cleanup and IOMMU
+ support
+Date: Tue, 24 May 2016 15:31:23 +0200
+Message-ID: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 24. Mai 2016, 10:22:09 schrieb Shawn Lin:
-> Hi Heiko,
-> 
-> On 2016/5/23 22:58, Heiko Stuebner wrote:
-> > The General Register Files are an area of registers containing a lot
-> > of single-bit settings for numerous components as well full components
-> > like usbphy control. Therefore all used components are accessed
-> > via the syscon provided by the grf nodes or from the sub-devices
-> > created through the simple-mfd created from the grf node.
-> > 
-> > Some settings are not used by anything but will need to be set up
-> > according to expectations on the kernel side.
-> > 
-> > Best example is the force_jtag setting, which defaults to on and
-> > results in the soc switching the pin-outputs between jtag and sdmmc
-> > automatically depending on the card-detect status. This conflicts
-> > heavily with how the dw_mmc driver expects to do its work and also
-> > with the clock-controller, which has most likely deactivated the
-> > jtag clock due to it being unused.
-> 
-> I agree we should disable force_jtag for real product. But on my local
-> branch we add a callback to parse a tag from cmdline. Sometime it's
-> useful for debugging in case of we need to setup JTAG for reproducing
-> and comfirming serious issue in which state the CPU cannot reponse to
-> any console input or FIQ-debug triggering.
->
-> Should we need it for upstream as you move all related code in this
-> new driver?  I'm not sure.
+Hello,
 
-This driver really _should not_ become a catchall for settings stuff.
-I.e. the jtag/sdmmc switch handles the automatic switching done inside the 
-soc based on the card-detect state. Which confuses the dw_mmc driver.
+This is another version of the patchset, which performs cleanup of
+custom code for reserved memory handling in s5p-mfc codec driver. The
+first part is removal of custom, driver specific code for intializing
+and handling of reserved memory. Instead, a generic code for reserved
+memory regions is used. Then, the driver is extended with IOMMU support.
+The additional code is needed because of specific requirements of MFC
+device firmware (see patch 3 for more details). When no IOMMU is
+available, the code fallbacks to use generic reserved memory regions.
 
-If I'm reading that correctly in the TRM, jtag on Rockchip SoCs is part of 
-the coresight infrastructure - in the DAP block.
-There are generic drivers + devicetree bindings for (I think most) coresight 
-blocks existing now, but I haven't found anything related to the DAP itself.
+After applying this patchset, MFC device works correctly either when
+IOMMU is either enabled or disabled (assuming that board provides
+required reserved memory regions).
 
-In theory I'd think real handling of jtag pins/clocks should be done 
-somewhere in that area and and if jtag is to be used,it could then be set up 
-using in-kernel mechanics, like disabling sdmmc that claims the shared pins 
-and enabling the jtag pinctrl and clocks.
+Patches have been tested on top of linux-next from 20160524 with some
+additional patches:
+- "[PATCH 0/3] [media] s5p-mfc: Fixes for issues when module is removed":
+  https://lkml.org/lkml/2016/5/3/782
+- "[PATCH v5 0/2] vb2-dma-contig: configure DMA max segment size properly":
+  https://www.mail-archive.com/linux-media@vger.kernel.org/msg97625.html
 
-This could even be doable at runtime via devicetree overlays.
+I've prepared a git branch with all needed patches:
+https://git.linaro.org/people/marek.szyprowski/linux-srpol.git v4.6-next20160524-mfc
+
+I would prefer to merge patches 1-4 via media tree and patches 5-7 via
+Samsung SoC tree (there are no compile-time dependencies between those
+two sets). Patches have been tested on Odroid U3 (Exynos 4412 based) and
+Odroid XU3 (Exynos 5422 based) boards.
+
+Best regards
+Marek Szyprowski
+Samsung R&D Institute Poland
 
 
-Most likely way out of scope for now, but that is where I would imagine this 
-stuff to be.
+Changelog:
+v4:
+- moved videobuf2-dma-contig/dma max segment size patches to separate thread:
+  https://www.mail-archive.com/linux-media@vger.kernel.org/msg97625.html
+- removed 'named' support for reserved memory regions, now regions are selected
+ by index (requested by Rob Herring in v3)
+- splitted 'ARM: Exynos: convert MFC device to generic reserved memory bindings'
+  patch into 3 separate changes (bindings, dts, code removal), rewrote commit
+  messages to better describe the changes
+- rebased onto latest linux-next kernel tree
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v3: http://comments.gmane.org/gmane.linux.drivers.video-input-infrastructure/97316
+- fixed issues pointed by Laurent Pinchart:
+  - added documentation to memory-region-names property,
+  - changed devm_kzalloc to kzalloc in vb2_dma_contig_set_max_seg_size() to
+    avoid access to freed memory after reloading driver module
+- unified odroid mfc reserved memory configuration with other Exynos4 boards
+
+v2: http://thread.gmane.org/gmane.linux.drivers.video-input-infrastructure/97025
+- reworked of_reserved_mem_init* functions on request from Rob Herring,
+  added separate index and name based selection of reserved region
+- adapted for of_reserved_mem_init* related changes
+
+v1: https://www.mail-archive.com/linux-media@vger.kernel.org/msg94100.html
+- initial version of another approach for this problem, rewrote driver code
+  for new reserved memory bindings, which finally have been merged some
+  time ago
+
+v0: http://lists.infradead.org/pipermail/linux-arm-kernel/2013-August/189259.html
+- old patchset solving the same problem, abandoned due to other tasks
+  and long time of merging reserved memory bindings and support code for
+  it
+
+Patch summary:
+
+
+Marek Szyprowski (7):
+  of: reserved_mem: add support for using more than one region for given
+    device
+  media: s5p-mfc: use generic reserved memory bindings
+  media: s5p-mfc: replace custom reserved memory handling code with
+    generic one
+  media: s5p-mfc: add iommu support
+  ARM: Exynos: remove code for MFC custom reserved memory handling
+  ARM: dts: exynos: convert MFC device to generic reserved memory
+    bindings
+  ARM: dts: exynos4412-odroid*: enable MFC device
+
+ .../devicetree/bindings/media/s5p-mfc.txt          |  39 +++--
+ arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi  |  27 ++++
+ arch/arm/boot/dts/exynos4210-origen.dts            |   4 +-
+ arch/arm/boot/dts/exynos4210-smdkv310.dts          |   4 +-
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi    |   6 +
+ arch/arm/boot/dts/exynos4412-origen.dts            |   4 +-
+ arch/arm/boot/dts/exynos4412-smdk4412.dts          |   4 +-
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   4 +-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   4 +-
+ arch/arm/boot/dts/exynos5250-spring.dts            |   4 +-
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   4 +-
+ arch/arm/boot/dts/exynos5420-peach-pit.dts         |   4 +-
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |   4 +-
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |   4 +-
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          |   4 +-
+ arch/arm/mach-exynos/Makefile                      |   2 -
+ arch/arm/mach-exynos/exynos.c                      |  19 ---
+ arch/arm/mach-exynos/mfc.h                         |  16 ---
+ arch/arm/mach-exynos/s5p-dev-mfc.c                 |  93 ------------
+ drivers/media/platform/s5p-mfc/s5p_mfc.c           | 158 +++++++++++----------
+ drivers/media/platform/s5p-mfc/s5p_mfc_iommu.h     |  79 +++++++++++
+ drivers/of/of_reserved_mem.c                       |  85 ++++++++---
+ include/linux/of_reserved_mem.h                    |  25 +++-
+ 23 files changed, 338 insertions(+), 259 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
+ delete mode 100644 arch/arm/mach-exynos/mfc.h
+ delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
+ create mode 100644 drivers/media/platform/s5p-mfc/s5p_mfc_iommu.h
+
+-- 
+1.9.2
