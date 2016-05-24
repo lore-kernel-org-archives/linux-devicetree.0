@@ -1,72 +1,99 @@
-From: Hoan Tran <hotran@apm.com>
-Subject: Re: [PATCH 1/3] Documentation: dtb: xgene: Add hwmon dts binding documentation
-Date: Mon, 23 May 2016 18:01:14 -0700
-Message-ID: <CAFHUOYyYt8pE6sggezCR=TFcsimcjakbYmcWFtpLyQ3Et_gZaA@mail.gmail.com>
-References: <1463415447-29903-1-git-send-email-hotran@apm.com>
-	<1463415447-29903-2-git-send-email-hotran@apm.com>
-	<20160523203044.GA17450@rob-hp-laptop>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
+Date: Tue, 24 May 2016 09:28:55 +0800
+Message-ID: <0f470ba9-78ac-4822-2cd0-6f028123271d@rock-chips.com>
+References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
+ <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
+ <8520D5D51A55D047800579B094147198258ACE47@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20160523203044.GA17450@rob-hp-laptop>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Loc Ho <lho@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8520D5D51A55D047800579B094147198258ACE47@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: shawn.lin@rock-chips.com, Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Bharat,
 
-Thanks for your review !
+On 2016/5/23 23:15, Bharat Kumar Gogada wrote:
+>> +
+>> +	irq = platform_get_irq_byname(pdev, "pcie-sys");
+>> +	if (irq < 0) {
+>> +		dev_err(dev, "missing pcie_sys IRQ resource\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	err = devm_request_irq(dev, irq, rockchip_pcie_subsys_irq_handler,
+>> +			       IRQF_SHARED, "pcie-sys", port);
+>> +	if (err) {
+>> +		dev_err(dev, "failed to request pcie subsystem irq\n");
+>> +		return err;
+>> +	}
+>> +
+>> +	port->irq = platform_get_irq_byname(pdev, "pcie-legacy");
+>> +	if (port->irq < 0) {
+>> +		dev_err(dev, "missing pcie_legacy IRQ resource\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	err = devm_request_irq(dev, port->irq,
+>> +			       rockchip_pcie_legacy_int_handler,
+>> +			       IRQF_SHARED,
+>> +			       "pcie-legacy",
+>> +			       port);
+>> +	if (err) {
+>> +		dev_err(&pdev->dev, "failed to request pcie-legacy irq\n");
+>> +		return err;
+>> +	}
+>> +
+>> +	irq = platform_get_irq_byname(pdev, "pcie-client");
+>> +	if (irq < 0) {
+>> +		dev_err(dev, "missing pcie-client IRQ resource\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	err = devm_request_irq(dev, irq, rockchip_pcie_client_irq_handler,
+>> +			       IRQF_SHARED, "pcie-client", port);
+>> +	if (err) {
+>> +		dev_err(dev, "failed to request pcie client irq\n");
+>> +		return err;
+>> +	}
+>> +
+>
+> All of the above interrupt number details are being obtained from device tree, why not move above API's to rockchip_pcie_parse_dt.
 
-On Mon, May 23, 2016 at 1:30 PM, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, May 16, 2016 at 09:17:25AM -0700, Hoan Tran wrote:
-> > This patch adds the APM X-Gene hwmon device tree node documentation.
-> >
-> > Signed-off-by: Hoan Tran <hotran@apm.com>
-> > ---
-> >  .../devicetree/bindings/hwmon/apm-xgene-hwmon.txt          | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
-> > new file mode 100644
-> > index 0000000..49a482e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
-> > @@ -0,0 +1,14 @@
-> > +APM X-Gene hwmon driver
-> > +
-> > +Hwmon driver accesses sensors over the "SLIMpro" mailbox.
->
-> DT bindings describe h/w, not driver data.
-How about this description: "APM X-Gene SOC sensors are accessed over
-the "SLIMpro" mailbox" ?
-> I'm not sure this belongs in
-> DT and perhaps the devices for the mailbox should be created by the
-> mailbox driver.
-I don't think the current mailbox supports it.
->
-> > +
-> > +Required properties :
-> > + - compatible : should be "apm,xgene-slimpro-hwmon"
-> > + - mboxes : use the label reference for the mailbox as the first parameter.
-> > +         The second parameter is the channel number.
->
-> When do you expect this to be different mailbox numbers?
-No, this number is not changed. This "mboxes" property is used and
-required by mailbox.c when hwmon driver requests a mailbox channel
+Ok, I will move these above into parse_dt function.
 
-Thanks and Regards
-Hoan
+>
+>> +	port->dev = dev;
+>> +	err = rockchip_pcie_parse_dt(port);
+>> +	if (err) {
+>> +		dev_err(dev, "Parsing DT failed\n");
+>> +		return err;
+>> +	}
+>> +
+>> +	pcie_write(port, 0x6040000, PCIE_RC_CONFIG_BASE + 0x8);
+>> +	pcie_write(port, 0x0, PCIE_CORE_CTRL_MGMT_BASE + 0x300);
+>> +
+>> +	pcie_write(port, (RC_REGION_0_ADDR_TRANS_L +
+>> RC_REGION_0_PASS_BITS),
+>> +		   PCIE_CORE_AXI_CONF_BASE);
+>> +	pcie_write(port, RC_REGION_0_ADDR_TRANS_H,
+>> +		   PCIE_CORE_AXI_CONF_BASE + 0x4);
+>> +	pcie_write(port, 0x0080000a, PCIE_CORE_AXI_CONF_BASE + 0x8);
+>> +	pcie_write(port, 0x00000000, PCIE_CORE_AXI_CONF_BASE + 0xc);
+>
+> Why not move the above steps to rockchip_pcie_init_port function ?
+> Please use macros instead of using values.
+
+okay, will improve them.
+
+Thanks for comment.
+
 >
 >
-> > +
-> > +Example :
-> > +     hwmonslimpro {
-> > +             compatible = "apm,xgene-slimpro-hwmon";
-> > +             mboxes = <&mailbox 7>;
-> > +     };
-> > --
-> > 1.9.1
-> >
+>
+
+
+-- 
+Best Regards
+Shawn Lin
