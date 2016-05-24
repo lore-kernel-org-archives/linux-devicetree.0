@@ -1,66 +1,136 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] plugin: Transparently support old style syntax
-Date: Tue, 24 May 2016 20:53:55 +1000
-Message-ID: <20160524105355.GE17226@voom.fritz.box>
-References: <1462477724-8092-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1462477724-8092-4-git-send-email-pantelis.antoniou@konsulko.com>
- <CAL_JsqJkJyMi4_RoxLAiVD3GXst8CX_8ekounavztXZKxdMKtg@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: a few simple questions about device tree content in the kernel
+Date: Tue, 24 May 2016 12:04:40 +0100
+Message-ID: <20160524110439.GB25374@leverpostej>
+References: <alpine.LFD.2.20.1605240344210.28949@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3XA6nns4nE4KvaS/"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJkJyMi4_RoxLAiVD3GXst8CX_8ekounavztXZKxdMKtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.20.1605240344210.28949-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 24, 2016 at 04:09:58AM -0400, Robert P. J. Day wrote:
+> 
+>   first, a question about some code in drivers/of/base.c:
+> 
+>   void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+>   {
+>         struct property *pp;
+> 
+>         of_aliases = of_find_node_by_path("/aliases");
+>         of_chosen = of_find_node_by_path("/chosen");
+>         if (of_chosen == NULL)
+>                 of_chosen = of_find_node_by_path("/chosen@0");
+> 
+>         if (of_chosen) {
+>                 /* linux,stdout-path and /aliases/stdout are for legacy compatibility */
+>                 const char *name = of_get_property(of_chosen, "stdout-path", NULL);
+>                 if (!name)
+>                         name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+>                 if (IS_ENABLED(CONFIG_PPC) && !name)
+>                         name = of_get_property(of_aliases, "stdout", NULL);
+>                 if (name)
+>                         of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
+>         }
+> 	... snip ...
+> 
+>   i can see up there that, first, "/chosen@0" is clearly an equivalent
+> name (for backward compatibility?) for the "chosen" node, but if i
+> scan the current kernel source tree, it seems absolutely no one is
+> using it:
+> 
+> $ grep -r "chosen@0" *
+> arch/powerpc/boot/oflib.c:		chosen = of_finddevice("/chosen@0");
+> arch/microblaze/kernel/prom.c:				strcmp(uname, "chosen@0") == 0)) {
+> drivers/of/base.c:		of_chosen = of_find_node_by_path("/chosen@0");
+> drivers/of/fdt.c:		offset = fdt_path_offset(fdt, "/chosen@0");
+> drivers/of/fdt.c:	    (strcmp(uname, "chosen") != 0 && strcmp(uname, "chosen@0") != 0))
+> $
+> 
+> if this is a deprecated name for that node, now would seem to be a
+> good time to toss it before someone gets a chance to resurrect it.
 
---3XA6nns4nE4KvaS/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There are existing DTBs which are not in the kernel source tree (e.g.
+where provided by FW on PPC platforms), which we support.
 
-On Thu, May 05, 2016 at 07:58:28PM -0500, Rob Herring wrote:
-> On Thu, May 5, 2016 at 2:48 PM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> > The old style syntax for plugins is still out in the wild.
->=20
-> In the wild where?
->=20
-> IMO, too bad. That's the danger of deploying prototype code. Perhaps a
-> tool to convert them would be better.
+Just because a construct does not exist in an in-tree dts does not mean
+we can remove support for it.
 
-I tend to agree.  If converting to the new format was fiddly, I'd see
-the point of including compatibility.  But AFAICT it's literally a
-matter of removing a single semicolon.
+>   next (and in the same vein), the kernel code in
+> drivers/cpufreq/cpufreq-dt.c accepts the older style property name
+> "cpu0-supply":
+> 
+>   /* Try "cpu0" for older DTs */
+>   if (!cpu) {
+>           pp = of_find_property(np, "cpu0-supply", NULL);
+>           if (pp) {
+>                   name = "cpu0";
+>                   goto node_put;
+>           }
+>   }
+> 
+>   pp = of_find_property(np, "cpu-supply", NULL);
+>   if (pp) {
+>           name = "cpu";
+>           goto node_put;
+>   }
+> 
+> strangely(?), the *only* architecture that still uses the older name
+> in .dts and .dtsi files is ARM, where that property name is used quite
+> extensively. is there something about ARM that seems to want to hang
+> onto that older property name? just curious.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+I suspect it was developeed on ARM platforms first, and no-one has
+modified the dts files. As above, even if we did we would have to retain
+the support code.
 
---3XA6nns4nE4KvaS/
-Content-Type: application/pgp-signature; name="signature.asc"
+>   finally (for now), is there any reason to use numeric phandles
+> rather than labels? i ask since someone responsible for putting
+> together DTS files for a group of us handed us perfectly working
+> iles, but they make use of numeric phandles:
+> 
+>                 i2c@3000 {
+>                         device_type = "i2c";
+>                         compatible = "fsl-i2c";
+>                         reg = <0x3000 0x100>;
+>                         interrupts = <0xe 0x8>;
+>                         interrupt-parent = <700>;
+>                         dfsrr;
+>                 };
+> 
+>                 ... snip ...
+> 
+>                 pic@700 {
+>                         linux,phandle = <700>;
+> 
+> is there any reason to use (in this case) the phandle of "700", rather
+> than just adding a label to the pic@700 node and using that label?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+There is no reason to if writing a dts file. Note that there are caveats
+for _decompiled_ DTBs below!
 
-iQIcBAEBAgAGBQJXRDLDAAoJEGw4ysog2bOSoREQAIjzEP+OEKZVRTkllj3oIKy9
-zZvVDNFahufATu+qicy7Ly9gcd9Qe325qluMOZakMoT1BdJGLCkAnAxRb/HlCzCP
-Y8lbmj9kiU27xrqWyqlDkMOgbry7BavZvrw1+nfdsYR/k2wgH8YMN4y/TeQiIhmF
-8QMZlEmpYLA8fIZ3PIXtUAwXo4reAUNLDywSvdnBmKn4a3MMxNYatnc4hEZupnQa
-lzNf058F+8RH3Fcs0jLMK078IxfLGFDB7GbGg5QAze6vjcj7YAlb0mny8+Wu/biY
-MbJ6L0gOD/6UK4phDpM6+gUYGaHbRaR4yb0lKUYeEwg60uqNDQuigah+2DOUwdow
-c2ZT63zAb5DE9oN/ONqRdTMAwvpXZkzx+Q5vIGOnZOzSYlumgwUDrfqDZYfJ4wW5
-X7hwz/XG6sfS/ZgLfr+7BxmeDRwQGZUqYINjsifubeF2iXnf93pQswQm9aPMCmdG
-7O4UaKI+P+oL2MzMWEv0HejxSt0n8poaKIp3UT7jpX84raLtdSg73225aHZOklwx
-DaZYOxQ4H7L3At6zdMYpuOpyy5T17N1utgkxweaCGTM9Xe7cZ/J034W5KVd0UGli
-NZASz5+3QeQdPAByIRFpPlKbV/n3QQaWm7mqVd1jbwd9QYuT+O29akwhnf1a2xUv
-zhHGYTzq86SrNY/ilEie
-=yzT0
------END PGP SIGNATURE-----
+> i'm not sure why someone would *prefer* to use numeric phandles.
 
---3XA6nns4nE4KvaS/--
+I would guess that these dts files have simply been decompiled at some
+stage.
+
+Compiling dts to dtb results in each label being allocated a phandle,
+and all references to that label being replaced with that phandle. Note
+that this is a lossy process: the label text is lost, and there is no
+metadata associated with wach phandle reference.
+
+When decompiling from dtb to dts, we do not have sufficient information
+to identify all phandle references (as they are just cells without any
+special metadata), so must retain the specific phandle values such that
+when re-compiling we don't break things.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
