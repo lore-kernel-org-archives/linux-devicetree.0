@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 1/4] arm64: dts: r8a7795: Add HSUSB device node
-Date: Tue, 24 May 2016 19:34:15 +0900
-Message-ID: <1464086058-1276-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 2/4] arm64: dts: salvator-x: enable usb2_phy of channel 0
+Date: Tue, 24 May 2016 19:34:16 +0900
+Message-ID: <1464086058-1276-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1464086058-1276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,38 +12,62 @@ To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@ar
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch also adds a regulator node for USB2.0 to handle VBUS on/off
+by the phy-rcar-gen3-usb2 driver.
+
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 26df300..a4f9170 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -1339,6 +1339,23 @@
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+index c09ead3..684f5e3 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+@@ -112,6 +112,17 @@
+ 			  1800000 0>;
+ 	};
+ 
++	vbus0_usb2: regulator-vbus0-usb2 {
++		compatible = "regulator-fixed";
 +
-+		hsusb: usb@e6590000 {
-+			compatible = "renesas,usbhs-r8a7795",
-+				     "renesas,rcar-gen3-usbhs";
-+			reg = <0 0xe6590000 0 0x100>;
-+			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
-+			       <&usb_dmac1 0>, <&usb_dmac1 1>;
-+			dma-names = "ch0", "ch1", "ch2", "ch3";
-+			renesas,buswait = <11>;
-+			phys = <&usb2_phy0>;
-+			phy-names = "usb";
-+			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
++		regulator-name = "USB20_VBUS0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
 +
- 		pciec0: pcie@fe000000 {
- 			compatible = "renesas,pcie-r8a7795";
- 			reg = <0 0xfe000000 0 0x80000>;
++		gpio = <&gpio6 16 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	audio_clkout: audio_clkout {
+ 		/*
+ 		 * This is same as <&rcar_sound 0>
+@@ -349,6 +360,11 @@
+ 		function = "audio_clk";
+ 	};
+ 
++	usb0_pins: usb0 {
++		groups = "usb0";
++		function = "usb0";
++	};
++
+ 	usb1_pins: usb1 {
+ 		groups = "usb1";
+ 		function = "usb1";
+@@ -541,6 +557,14 @@
+ 	status = "okay";
+ };
+ 
++&usb2_phy0 {
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++
++	vbus-supply = <&vbus0_usb2>;
++	status = "okay";
++};
++
+ &usb2_phy1 {
+ 	pinctrl-0 = <&usb1_pins>;
+ 	pinctrl-names = "default";
 -- 
 1.9.1
