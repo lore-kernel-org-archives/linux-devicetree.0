@@ -1,144 +1,186 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v2 02/12] of: add J-Core cpu bindings
-Date: Mon, 23 May 2016 22:39:39 -0400
-Message-ID: <20160524023939.GJ21636@brightrain.aerifal.cx>
-References: <cover.1463708766.git.dalias@libc.org>
- <f3c89e4834665790ff13478c571cc9aaa9de5559.1463708766.git.dalias@libc.org>
- <20160523204846.GA16081@rob-hp-laptop>
- <20160523210328.GE21636@brightrain.aerifal.cx>
- <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
+Date: Tue, 24 May 2016 10:53:56 +0800
+Message-ID: <20160524025356.GA6675@shlinux2>
+References: <573C6347.6080705@ti.com>
+ <AM4PR04MB2130145869480748D06FE6E589490@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573C719F.5010107@ti.com>
+ <AM4PR04MB2130926F9AE8EBFC0D19447689490@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <573D6C1C.4090600@ti.com>
+ <20160521022940.GA15088@shlinux2>
+ <20160523032149.GA20438@shlinux2>
+ <5742D764.2010507@ti.com>
+ <AM4PR04MB21305E8225B0DB669E13E0A2894E0@AM4PR04MB2130.eurprd04.prod.outlook.com>
+ <5742DD43.6060703@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+In-Reply-To: <5742DD43.6060703@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Jun Li <jun.li@nxp.com>, "peter.chen@freescale.com" <peter.chen@freescale.com>, "balbi@kernel.org" <balbi@kernel.org>, "tony@atomide.com" <tony@atomide.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "jun.li@freescale.com" <jun.li@freescale.com>, "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>, "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>, "robh@kernel.org" <robh@kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "b-liu@ti.com" <b-liu@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-kernel@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 23, 2016 at 06:29:48PM -0500, Rob Herring wrote:
-> >> > +- compatible: Must be "jcore,j2".
+On Mon, May 23, 2016 at 01:36:51PM +0300, Roger Quadros wrote:
+> On 23/05/16 13:34, Jun Li wrote:
+> > Hi
+> > 
+> >> -----Original Message-----
+> >> From: Roger Quadros [mailto:rogerq@ti.com]
+> >> Sent: Monday, May 23, 2016 6:12 PM
+> >> To: Peter Chen <hzpeterchen@gmail.com>
+> >> Cc: Jun Li <jun.li@nxp.com>; peter.chen@freescale.com; balbi@kernel.org;
+> >> tony@atomide.com; gregkh@linuxfoundation.org; dan.j.williams@intel.com;
+> >> mathias.nyman@linux.intel.com; Joao.Pinto@synopsys.com;
+> >> sergei.shtylyov@cogentembedded.com; jun.li@freescale.com;
+> >> grygorii.strashko@ti.com; yoshihiro.shimoda.uh@renesas.com;
+> >> robh@kernel.org; nsekhar@ti.com; b-liu@ti.com; linux-usb@vger.kernel.org;
+> >> linux-omap@vger.kernel.org; linux-kernel@vger.kernel.org;
+> >> devicetree@vger.kernel.org
+> >> Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
 > >>
-> >> Okay to have this, but you should have compatible strings for specific
-> >> core implementations. AIUI, J2 is just the ISA.
-> >
-> > There was some past discussion you probably missed on the linux-sh
-> > list, starting here:
-> >
-> > http://www.spinics.net/lists/linux-sh/msg50028.html
-> >
-> > Basically it's really hard to identify what "the specific core
-> > implementation" even means with a soft core. If you have some ideas
-> > I'd be happy to hear them, but I think there should always be a
-> > "jcore,j2" fallback compatible tag in any case.
+> >> On 23/05/16 06:21, Peter Chen wrote:
+> >>> On Sat, May 21, 2016 at 10:29:40AM +0800, Peter Chen wrote:
+> >>>> On Thu, May 19, 2016 at 10:32:44AM +0300, Roger Quadros wrote:
+> >>>>> On 18/05/16 17:46, Jun Li wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>>>>>
+> >>>>>>>>> I didn't want to have complex Kconfig so decided to have otg as
+> >>>>>>>>> built-in only.
+> >>>>>>>>> What do you want me to change in existing code? and why?
+> >>>>>>>>
+> >>>>>>>> Remove those stuff which only for pass diff driver config Like
+> >>>>>>>> every controller driver need a duplicated
+> >>>>>>>>
+> >>>>>>>> static struct otg_hcd_ops ci_hcd_ops = {
+> >>>>>>>>     ...
+> >>>>>>>> }
+> >>>>>>>
+> >>>>>>> This is an exception only. Every controller driver doesn't need to
+> >>>>>>> implement hcd_ops. It is implemented in the hcd core.
+> >>>>>>>
+> >>>>>>>>
+> >>>>>>>> And here is another example, for gadget connect, otg driver can
+> >>>>>>>> directly call to usb_udc_vbus_handler() in drd state machine, but
+> >>>>>>>> you create another interface:
+> >>>>>>>>
+> >>>>>>>> .connect_control = usb_gadget_connect_control,
+> >>>>>>>>
+> >>>>>>>> If the symbol is defined in one driver which is 'm', another
+> >>>>>>>> driver reference it should be 'm' as well, then there is no this
+> >>>>>>>> kind of problem as my understanding.
+> >>>>>>>
+> >>>>>>> That is fine as long as all are 'm'. but how do you solve the case
+> >>>>>>> when Gadget is built in and host is 'm'? OTG has to be built-in
+> >>>>>>> and you will need an hcd to gadget interface.
+> >>>>>>
+> >>>>>> Hcd to gadget interface? Or you want to say otg to host interface?
+> >>>>>
+> >>>>> Sorry, I meant to say host to otg interface.
+> >>>>>
+> >>>>>>
+> >>>>>> I think hcd and gadget are independent each other, now
+> >>>>>>
+> >>>>>> Hcd --> otg; and gadget --> otg, (hcd and gadget use otg's symbol)
+> >>>>>
+> >>>>> It is actually a circular dependency for both.
+> >>>>>  hcd <--> otg and gadget <--> otg
+> >>>>>
+> >>>>> hcd -> otg for usb_otg_register/unregister_hcd otg -> hcd for
+> >>>>> usb_add/remove_hcd, usb_bus_start_enum, usb_control_msg,
+> >>>>> usb_hub_find_child
+> >>>>>
+> >>>>> gadget -> otg for usb_otg_register/unregister_gadget
+> >>>>> otg -> gadget for usb_gadget_start/stop, usb_udc_vbus_handler
+> >>>>>
+> >>>>> Now consider what will happen if I get rid of the otg_hcd and
+> >> otg_gadget interfaces.
+> >>>>> 'y' means built-in, 'm' means module.
+> >>>>>
+> >>>>> 1) hcd 'y', gadget 'y'
+> >>>>> otg has to be 'y' for proper build.
+> >>>>>
+> >>>>> 2) hcd 'm', gadget 'm'
+> >>>>> otg has to be 'm' for proper build.
+> >>>>>
+> >>>>> 3) hcd 'y', gadget 'm'
+> >>>>> Build will fail always.
+> >>>>> If otg is 'y', otg build will fail due to dependency on gadget.
+> >>>>> If otg is 'm', hcd build will fail due to dependency on otg.
+> >>>>>
+> >>>>> 4) hcd 'm', gadget 'y'
+> >>>>> Build will fail always.
+> >>>>> If otg is 'y', otg build will fail due to dependency on hcd.
+> >>>>> If otg is 'm', gadget build will fails due to dependency on otg.
+> >>>>>
+> >>>>> So I solve this problem by adding the otg_hcd_ops and otg_gadget_ops
+> >>>>> to remove otg->hcd and otg->gadget dependency.
+> >>>>>
+> >>>>> Now we can address 3) and 4) like so
+> >>>>>
+> >>>>> 3) hcd 'y', gadget 'm'
+> >>>>> otg has to be 'y' for proper build.
+> >>>>>
+> >>>>> 4) hcd 'm', gadget 'y'
+> >>>>> otg has to be 'y' for proper build.
+> >>>>>
+> >>>>
+> >>>> How about this:
+> >>>> Moving usb_otg_register/unregister_hcd to host driver to remove
+> >>>> dependency hcd->otg. And moving usb_otg_get_data to common.c.
+> >>>>
+> >>>> Delete the wait queue at usb-otg.c, and if calling usb_otg_get_data
+> >>>> returns NULL, the host/device driver's probe return -EPROBE_DEFER.
+> >>>> When the otg driver is probed successfully, the host/device will be
+> >>>> re-probed again, and usb_otg_register_hcd will be called again.
+> >>>>
+> >>>> And let OTG depends on HCD && GADGET, and delete otg_hcd_ops and
+> >>>> otg_gadget_ops. Below build dependency issues can be fixed.
+> >>>> What do you think?
+> >>>>
+> >>>>> 1) hcd 'y', gadget 'y'
+> >>>>> otg has to be 'y' for proper build.
+> >>>>>
+> >>>>> 2) hcd 'm', gadget 'm'
+> >>>>> otg has to be 'm' for proper build.
+> >>>>>
+> >>>>> 3) hcd 'y', gadget 'm'
+> >>>>> Build will fail always.
+> >>>>> If otg is 'y', otg build will fail due to dependency on gadget.
+> >>>>> If otg is 'm', hcd build will fail due to dependency on otg.
+> >>>>>
+> >>>>> 4) hcd 'm', gadget 'y'
+> >>>>> Build will fail always.
+> >>>>> If otg is 'y', otg build will fail due to dependency on hcd.
+> >>>>> If otg is 'm', gadget build will fails due to dependency on otg.
+> >>>> --
+> >>>>
+> >>>
+> >>> After thinking more, my suggestion can't work. How about moving
+> >>> CONFIG_USB_OTG out of CONFIG_USB, in that case, CONFIG_USB_OTG can
+> >>> only be built in.
+> >>>
+> >> I tried this but it still doesn't resolve 3 and 4. I.e.
+> >> it can't be automatically set to 'y' when either of hcd/gadget is 'y'
+> >> and the other is 'm'.
+> > 
+> > USB_OTG only can be selected by *user*, can't be automatically set to
+> > 'y' like you said, no matter what's hcd/gadget config, USB_OTG can be
+> > disabled in any cases.
 > 
-> Presumably you do some sort of versioning on the VHDL source that you
-> can correlate to.
-
-Yes, but I'm not convinced that helps with anything. Presumably the
-point of having a fine-grained version in the compatible tag would be
-to work around bugs. But if those bugs could come from build options,
-specific version of the FPGA tools used, specific board targets, etc.
-then a version really isn't sufficient to help you work around bugs.
-On the other hand, as long as it's soft core, if there is a bug you
-just fix the bitstream rather than putting workaround hacks in the
-kernel or other software.
-
-It does make sense to have some identifier for particular builds and
-production runs once we have ASICs, of course, but that's a topic to
-discuss when we get there.
-
-I think most of this was already discussed in the thread I linked
-above.
-
-> >> > +- reg: A memory range for the cache controller registers.
-> >>
-> >> And standard cache properties? Are size, sets, ways, line size, etc.
-> >> discoverable?
-> >
-> > I want to do the cache properties in a way that's generic for all of
-> > arch/sh rather than specific to J2, but that's going to be part of the
-> > DT conversion project. That's why I just have properties hard-coded
-> > for now in the kernel source. They're not really used anyway except
-> > for presenting them in /proc/cpuinfo.
+> Yes. I am on the same page with that.
+> > 
+> > I think Peter's intention is to make USB_OTG to be 'bool', either disabled;
+> > or built-in(if enabled), something like your original idea?
 > 
-> The DT spec (devicetree.org, formerly ePAPR) already defines arch
-> independent cache properties.
-
-Indeed, but they don't seem to be comprehensive. In particular they
-don't seem to represent the properties needed to compute aliasing for
-VIPT cache architectures, or to represent whether the cache is
-virtually or physically indexed or tagged.
-
-> >> > +--------
-> >> > +IPI node
-> >> > +--------
-> >> > +
-> >> > +Device trees for SMP systems must have an IPI node representing the mechanism
-> >> > +used for inter-processor interrupt generation.
-> >> > +
-> >> > +Required properties:
-> >> > +
-> >> > +- compatible: Must be "jcore,ipi-controller".
-> >>
-> >> Again, seems pretty generic.
-> >
-> > I'm open to different ideas for naming schemes, but in the big scheme
-> > of things it doesn't really matter. When there's a new incompatible
-> > one, it can have a new compatible tag.
+> I'm fine with my original idea if you guys can confirm :).
 > 
-> It should make sense according to how you version the VHDL sources.
-> The Xilinx folks have X.Y version numbers for example. We generally
-> don't accept those, but for soft IP that is an exception.
-> 
-> Better yet, since you can change "the hardware", make it more
-> discoverable with registers for version numbering and feature bits.
-> The failure here is having a process where that can be forgotten...
 
-I suspect that takes more space on the FPGA/ASIC than adding a few
-bytes to the DTB in the boot rom would, so it's probably a worse
-solution.
+Please do it.
 
-We could potentially allow compatible tags of the form "foo-v*" for
-each "foo" documented now, where the version is from the jcore source
-repo, and recommend (for example):
+-- 
 
-compatible = "jcore,foo-v1.23", "jcore,foo";
-
-This would be separate from the numbers that are already present in
-things like "spi2" and "spi3" (functionally distinct spi master
-devices) or "aic1" and "aic2" (functionally distinct interrupt
-controllers).
-
-How would you want this to be documented, if we go that route?
-Certainly all possible values cannot be specified in the binding docs
-then.
-
-> >> > +----------
-> >> > +CPUID node
-> >> > +----------
-> >> > +
-> >> > +Device trees for SMP systems must have a CPUID node representing the mechanism
-> >> > +used to identify the current processor on which execution is taking place.
-> >> > +
-> >> > +Required properties:
-> >> > +
-> >> > +- compatible: Must be "jcore,cpuid-mmio".
-> >> > +
-> >> > +- reg: A memory range containing a single 32-bit mmio register which produces
-> >> > +  the current cpu id when read.
-> >>
-> >> This id matches the reg value in cpu node, right? If not, it should.
-> >
-> > Yes. Should I document that here?
-> 
-> Yes.
-
-OK, adding it to read:
-
-- reg: A memory range containing a single 32-bit mmio register which produces
-  the current cpu id (matching the "reg" property of the cpu performing the
-  read) when read.
-
-Rich
+Best Regards,
+Peter Chen
