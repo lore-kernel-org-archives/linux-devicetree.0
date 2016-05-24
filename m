@@ -1,246 +1,144 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/3] soc: rockchip: add driver handling grf setup
-Date: Tue, 24 May 2016 10:22:09 +0800
-Message-ID: <6a6e87ee-688d-90a3-2407-22847bd80971@rock-chips.com>
-References: <1464015539-19521-1-git-send-email-heiko@sntech.de>
- <1464015539-19521-3-git-send-email-heiko@sntech.de>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v2 02/12] of: add J-Core cpu bindings
+Date: Mon, 23 May 2016 22:39:39 -0400
+Message-ID: <20160524023939.GJ21636@brightrain.aerifal.cx>
+References: <cover.1463708766.git.dalias@libc.org>
+ <f3c89e4834665790ff13478c571cc9aaa9de5559.1463708766.git.dalias@libc.org>
+ <20160523204846.GA16081@rob-hp-laptop>
+ <20160523210328.GE21636@brightrain.aerifal.cx>
+ <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464015539-19521-3-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Mon, May 23, 2016 at 06:29:48PM -0500, Rob Herring wrote:
+> >> > +- compatible: Must be "jcore,j2".
+> >>
+> >> Okay to have this, but you should have compatible strings for specific
+> >> core implementations. AIUI, J2 is just the ISA.
+> >
+> > There was some past discussion you probably missed on the linux-sh
+> > list, starting here:
+> >
+> > http://www.spinics.net/lists/linux-sh/msg50028.html
+> >
+> > Basically it's really hard to identify what "the specific core
+> > implementation" even means with a soft core. If you have some ideas
+> > I'd be happy to hear them, but I think there should always be a
+> > "jcore,j2" fallback compatible tag in any case.
+> 
+> Presumably you do some sort of versioning on the VHDL source that you
+> can correlate to.
 
-On 2016/5/23 22:58, Heiko Stuebner wrote:
-> The General Register Files are an area of registers containing a lot
-> of single-bit settings for numerous components as well full components
-> like usbphy control. Therefore all used components are accessed
-> via the syscon provided by the grf nodes or from the sub-devices
-> created through the simple-mfd created from the grf node.
->
-> Some settings are not used by anything but will need to be set up
-> according to expectations on the kernel side.
->
-> Best example is the force_jtag setting, which defaults to on and
-> results in the soc switching the pin-outputs between jtag and sdmmc
-> automatically depending on the card-detect status. This conflicts
-> heavily with how the dw_mmc driver expects to do its work and also
-> with the clock-controller, which has most likely deactivated the
-> jtag clock due to it being unused.
+Yes, but I'm not convinced that helps with anything. Presumably the
+point of having a fine-grained version in the compatible tag would be
+to work around bugs. But if those bugs could come from build options,
+specific version of the FPGA tools used, specific board targets, etc.
+then a version really isn't sufficient to help you work around bugs.
+On the other hand, as long as it's soft core, if there is a bug you
+just fix the bitstream rather than putting workaround hacks in the
+kernel or other software.
 
-I agree we should disable force_jtag for real product. But on my local
-branch we add a callback to parse a tag from cmdline. Sometime it's
-useful for debugging in case of we need to setup JTAG for reproducing
-and comfirming serious issue in which state the CPU cannot reponse to
-any console input or FIQ-debug triggering.
+It does make sense to have some identifier for particular builds and
+production runs once we have ASICs, of course, but that's a topic to
+discuss when we get there.
 
-Should we need it for upstream as you move all related code in this
-new driver?  I'm not sure.
+I think most of this was already discussed in the thread I linked
+above.
 
->
-> So far the handling of this setting was living in the mach-rockchip
-> code for the arm32-based rk3288 but that of course doesn't work
-> for arm64 socs and would also look ugly for further arm32 socs.
->
-> So introduce a top-level driver for the grf that handles these
-> settings that need to be a certain way but nobody cares about.
->
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  drivers/soc/rockchip/Kconfig  |  10 +++
->  drivers/soc/rockchip/Makefile |   1 +
->  drivers/soc/rockchip/grf.c    | 138 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 149 insertions(+)
->  create mode 100644 drivers/soc/rockchip/grf.c
->
-> diff --git a/drivers/soc/rockchip/Kconfig b/drivers/soc/rockchip/Kconfig
-> index 7140ff8..20da55d 100644
-> --- a/drivers/soc/rockchip/Kconfig
-> +++ b/drivers/soc/rockchip/Kconfig
-> @@ -3,6 +3,16 @@ if ARCH_ROCKCHIP || COMPILE_TEST
->  #
->  # Rockchip Soc drivers
->  #
-> +
-> +config ROCKCHIP_GRF
-> +	bool
-> +	default y
-> +	help
-> +	  The General Register Files are a central component providing
-> +	  special additional settings registers for a lot of soc-components.
-> +	  In a lot of cases there also need to be default settings initialized
-> +	  to make some of them conform to expectations of the kernel.
-> +
->  config ROCKCHIP_PM_DOMAINS
->          bool "Rockchip generic power domain"
->          depends on PM
-> diff --git a/drivers/soc/rockchip/Makefile b/drivers/soc/rockchip/Makefile
-> index 3d73d06..c851fa0 100644
-> --- a/drivers/soc/rockchip/Makefile
-> +++ b/drivers/soc/rockchip/Makefile
-> @@ -1,4 +1,5 @@
->  #
->  # Rockchip Soc drivers
->  #
-> +obj-$(CONFIG_ROCKCHIP_GRF) += grf.o
->  obj-$(CONFIG_ROCKCHIP_PM_DOMAINS) += pm_domains.o
-> diff --git a/drivers/soc/rockchip/grf.c b/drivers/soc/rockchip/grf.c
-> new file mode 100644
-> index 0000000..25a1fd3
-> --- /dev/null
-> +++ b/drivers/soc/rockchip/grf.c
-> @@ -0,0 +1,138 @@
-> +/*
-> + * Rockchip Generic Register Files setup
-> + *
-> + * Copyright (c) 2016 Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define HIWORD_UPDATE(val, mask, shift) \
-> +		((val) << (shift) | (mask) << ((shift) + 16))
-> +
-> +struct rockchip_grf_value {
-> +	const char *desc;
-> +	u32 reg;
-> +	u32 val;
-> +};
-> +
-> +struct rockchip_grf_info {
-> +	const struct rockchip_grf_value *values;
-> +	int num_values;
-> +};
-> +
-> +#define RK3036_GRF_SOC_CON0		0x140
-> +
-> +static const struct rockchip_grf_value rk3036_defaults[] = {
-> +	/*
-> +	 * Disable auto jtag/sdmmc switching that causes issues with the
-> +	 * clock-framework and the mmc controllers making them unreliable.
-> +	 */
-> +	{ "jtag switching", RK3036_GRF_SOC_CON0, HIWORD_UPDATE(0, 1, 11) },
-> +};
-> +
-> +static const struct rockchip_grf_info rk3036_grf = {
-> +	.values = rk3036_defaults,
-> +	.num_values = ARRAY_SIZE(rk3036_defaults),
-> +};
-> +
-> +#define RK3288_GRF_SOC_CON0		0x244
-> +
-> +static const struct rockchip_grf_value rk3288_defaults[] = {
-> +	{ "jtag switching", RK3288_GRF_SOC_CON0, HIWORD_UPDATE(0, 1, 12) },
-> +};
-> +
-> +static const struct rockchip_grf_info rk3288_grf = {
-> +	.values = rk3288_defaults,
-> +	.num_values = ARRAY_SIZE(rk3288_defaults),
-> +};
-> +
-> +#define RK3399_GRF_SOC_CON7		0xe21c
-> +
-> +static const struct rockchip_grf_value rk3399_defaults[] = {
-> +	{ "jtag switching", RK3399_GRF_SOC_CON7, HIWORD_UPDATE(0, 1, 12) },
-> +
-> +};
-> +
-> +static const struct rockchip_grf_info rk3399_grf = {
-> +	.values = rk3399_defaults,
-> +	.num_values = ARRAY_SIZE(rk3399_defaults),
-> +};
-> +
-> +static const struct of_device_id rockchip_grf_dt_match[] = {
-> +	{
-> +		.compatible = "rockchip,rk3036-grf",
-> +		.data = (void *)&rk3036_grf,
-> +	}, {
-> +		.compatible = "rockchip,rk3288-grf",
-> +		.data = (void *)&rk3288_grf,
-> +	}, {
-> +		.compatible = "rockchip,rk3399-grf",
-> +		.data = (void *)&rk3399_grf,
-> +	},
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static int rockchip_grf_probe(struct platform_device *pdev)
-> +{
-> +	const struct rockchip_grf_info *grf_info;
-> +	const struct of_device_id *match;
-> +	struct device *dev = &pdev->dev;
-> +	struct regmap *grf;
-> +	int i;
-> +
-> +	if (!dev->of_node)
-> +		return -ENODEV;
-> +
-> +	match = of_match_device(rockchip_grf_dt_match, dev);
-> +	if (!match || !match->data) {
-> +		dev_err(dev, "missing grf data\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	grf_info = match->data;
-> +
-> +	grf = syscon_node_to_regmap(dev->of_node);
-> +	if (IS_ERR(grf)) {
-> +		dev_err(dev, "rockchip: could not get grf syscon\n");
-> +		return PTR_ERR(grf);
-> +	}
-> +
-> +	for (i = 0; i < grf_info->num_values; i++) {
-> +		const struct rockchip_grf_value *val = &grf_info->values[i];
-> +
-> +		dev_dbg(dev, "adjusting %s in 0x%x to 0x%x\n",
-> +			val->desc, val->reg, val->val);
-> +		regmap_write(grf, val->reg, val->val);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver rockchip_grf_driver = {
-> +	.probe = rockchip_grf_probe,
-> +	.driver = {
-> +		.name   = "rockchip-grf",
-> +		.of_match_table = rockchip_grf_dt_match,
-> +		/*
-> +		 * The General Register Files are a central component
-> +		 * accessed by numerous ip blocks and we're setting
-> +		 * defaults which should only happen once.
-> +		 */
-> +		.suppress_bind_attrs = true,
-> +	},
-> +};
-> +
-> +static int __init rockchip_grf_drv_register(void)
-> +{
-> +	return platform_driver_register(&rockchip_grf_driver);
-> +}
-> +postcore_initcall(rockchip_grf_drv_register);
->
+> >> > +- reg: A memory range for the cache controller registers.
+> >>
+> >> And standard cache properties? Are size, sets, ways, line size, etc.
+> >> discoverable?
+> >
+> > I want to do the cache properties in a way that's generic for all of
+> > arch/sh rather than specific to J2, but that's going to be part of the
+> > DT conversion project. That's why I just have properties hard-coded
+> > for now in the kernel source. They're not really used anyway except
+> > for presenting them in /proc/cpuinfo.
+> 
+> The DT spec (devicetree.org, formerly ePAPR) already defines arch
+> independent cache properties.
 
+Indeed, but they don't seem to be comprehensive. In particular they
+don't seem to represent the properties needed to compute aliasing for
+VIPT cache architectures, or to represent whether the cache is
+virtually or physically indexed or tagged.
 
--- 
-Best Regards
-Shawn Lin
+> >> > +--------
+> >> > +IPI node
+> >> > +--------
+> >> > +
+> >> > +Device trees for SMP systems must have an IPI node representing the mechanism
+> >> > +used for inter-processor interrupt generation.
+> >> > +
+> >> > +Required properties:
+> >> > +
+> >> > +- compatible: Must be "jcore,ipi-controller".
+> >>
+> >> Again, seems pretty generic.
+> >
+> > I'm open to different ideas for naming schemes, but in the big scheme
+> > of things it doesn't really matter. When there's a new incompatible
+> > one, it can have a new compatible tag.
+> 
+> It should make sense according to how you version the VHDL sources.
+> The Xilinx folks have X.Y version numbers for example. We generally
+> don't accept those, but for soft IP that is an exception.
+> 
+> Better yet, since you can change "the hardware", make it more
+> discoverable with registers for version numbering and feature bits.
+> The failure here is having a process where that can be forgotten...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I suspect that takes more space on the FPGA/ASIC than adding a few
+bytes to the DTB in the boot rom would, so it's probably a worse
+solution.
+
+We could potentially allow compatible tags of the form "foo-v*" for
+each "foo" documented now, where the version is from the jcore source
+repo, and recommend (for example):
+
+compatible = "jcore,foo-v1.23", "jcore,foo";
+
+This would be separate from the numbers that are already present in
+things like "spi2" and "spi3" (functionally distinct spi master
+devices) or "aic1" and "aic2" (functionally distinct interrupt
+controllers).
+
+How would you want this to be documented, if we go that route?
+Certainly all possible values cannot be specified in the binding docs
+then.
+
+> >> > +----------
+> >> > +CPUID node
+> >> > +----------
+> >> > +
+> >> > +Device trees for SMP systems must have a CPUID node representing the mechanism
+> >> > +used to identify the current processor on which execution is taking place.
+> >> > +
+> >> > +Required properties:
+> >> > +
+> >> > +- compatible: Must be "jcore,cpuid-mmio".
+> >> > +
+> >> > +- reg: A memory range containing a single 32-bit mmio register which produces
+> >> > +  the current cpu id when read.
+> >>
+> >> This id matches the reg value in cpu node, right? If not, it should.
+> >
+> > Yes. Should I document that here?
+> 
+> Yes.
+
+OK, adding it to read:
+
+- reg: A memory range containing a single 32-bit mmio register which produces
+  the current cpu id (matching the "reg" property of the cpu performing the
+  read) when read.
+
+Rich
