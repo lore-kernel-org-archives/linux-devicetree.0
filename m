@@ -1,54 +1,72 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] mmc: core: implement enhanced strobe support
-Date: Mon, 23 May 2016 17:39:32 -0700
-Message-ID: <CAD=FV=WYB4Pg7HcXHVVN-rWAfrV8bGY+MhNFJ+DRJRbhcbXNpQ@mail.gmail.com>
-References: <1463976789-29618-1-git-send-email-shawn.lin@rock-chips.com> <1463976835-29780-1-git-send-email-shawn.lin@rock-chips.com>
+From: Hoan Tran <hotran@apm.com>
+Subject: Re: [PATCH 1/3] Documentation: dtb: xgene: Add hwmon dts binding documentation
+Date: Mon, 23 May 2016 18:01:14 -0700
+Message-ID: <CAFHUOYyYt8pE6sggezCR=TFcsimcjakbYmcWFtpLyQ3Et_gZaA@mail.gmail.com>
+References: <1463415447-29903-1-git-send-email-hotran@apm.com>
+	<1463415447-29903-2-git-send-email-hotran@apm.com>
+	<20160523203044.GA17450@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463976835-29780-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20160523203044.GA17450@rob-hp-laptop>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Loc Ho <lho@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn,
+Hi Rob,
 
-On Sun, May 22, 2016 at 9:13 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Controllers use data strobe line to latch data from devices
-> under hs400 mode, but not for cmd line. So since emmc 5.1, JEDEC
-> introduces enhanced strobe mode for latching cmd response from
-> emmc devices to host controllers. This new feature is optional,
-> so it depends both on device's cap and host's cap to decide
-> whether to use it or not.
+Thanks for your review !
+
+On Mon, May 23, 2016 at 1:30 PM, Rob Herring <robh@kernel.org> wrote:
 >
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
+> On Mon, May 16, 2016 at 09:17:25AM -0700, Hoan Tran wrote:
+> > This patch adds the APM X-Gene hwmon device tree node documentation.
+> >
+> > Signed-off-by: Hoan Tran <hotran@apm.com>
+> > ---
+> >  .../devicetree/bindings/hwmon/apm-xgene-hwmon.txt          | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
+> > new file mode 100644
+> > index 0000000..49a482e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
+> > @@ -0,0 +1,14 @@
+> > +APM X-Gene hwmon driver
+> > +
+> > +Hwmon driver accesses sensors over the "SLIMpro" mailbox.
 >
-> Changes in v5: None
-> Changes in v4: None
-
-Not terribly important, but things certainly did change in this patch
-since previous versions.
-
-> Changes in v3: None
-> Changes in v2: None
+> DT bindings describe h/w, not driver data.
+How about this description: "APM X-Gene SOC sensors are accessed over
+the "SLIMpro" mailbox" ?
+> I'm not sure this belongs in
+> DT and perhaps the devices for the mailbox should be created by the
+> mailbox driver.
+I don't think the current mailbox supports it.
 >
->  drivers/mmc/core/bus.c   |  3 +-
->  drivers/mmc/core/core.c  |  9 ++++++
->  drivers/mmc/core/mmc.c   | 84 ++++++++++++++++++++++++++++++++++++++++++++++--
->  include/linux/mmc/card.h |  1 +
->  include/linux/mmc/host.h | 11 +++++++
->  include/linux/mmc/mmc.h  |  3 ++
->  6 files changed, 108 insertions(+), 3 deletions(-)
+> > +
+> > +Required properties :
+> > + - compatible : should be "apm,xgene-slimpro-hwmon"
+> > + - mboxes : use the label reference for the mailbox as the first parameter.
+> > +         The second parameter is the channel number.
+>
+> When do you expect this to be different mailbox numbers?
+No, this number is not changed. This "mboxes" property is used and
+required by mailbox.c when hwmon driver requests a mailbox channel
 
-I don't see anything obviously bad about this patch, but I haven't
-gone deep into all the details of mmc_select_hs400es(), so I'm not
-sure I can really provide a full Reviewed tag.  At least I have tested
-this, so:
-
-Tested-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks and Regards
+Hoan
+>
+>
+> > +
+> > +Example :
+> > +     hwmonslimpro {
+> > +             compatible = "apm,xgene-slimpro-hwmon";
+> > +             mboxes = <&mailbox 7>;
+> > +     };
+> > --
+> > 1.9.1
+> >
