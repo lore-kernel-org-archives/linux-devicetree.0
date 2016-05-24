@@ -1,46 +1,49 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/4] arm64: dts: salvator-x: enable usb2_phy of channel 0
-Date: Tue, 24 May 2016 09:13:21 +0200
-Message-ID: <CAMuHMdV+G5-kRkC+hx8aS4X8qkj_PaHK4F-mexvkSG=oRmcY9Q@mail.gmail.com>
-References: <1464065860-3948-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1464065860-3948-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v2 11/23] ARM: dts: armadillo800eva: Fix W=1 dtc warnings
+Date: Tue, 24 May 2016 09:37:04 +0200
+Message-ID: <CAMuHMdW8a3jOibXmMxv34RF+cZ7aE5x_fRzAQW4qVb_RB=6sCw@mail.gmail.com>
+References: <1463728214-13838-1-git-send-email-geert+renesas@glider.be>
+ <1463728214-13838-12-git-send-email-geert+renesas@glider.be>
+ <e0a1fbc1-ac95-2c79-65ed-d0328679bb8a@cogentembedded.com>
+ <CAMuHMdXPhMToHhZggdKo=i65nS_mQT1o44YBd_Lz-B2Td3Jm9Q@mail.gmail.com>
+ <20160524001309.GA2477@verge.net.au>
+ <20160524003356.GB2477@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1464065860-3948-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160524003356.GB2477@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Hi Simon,
 
-On Tue, May 24, 2016 at 6:57 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> This patch also adds a regulator node for USB2.0 to handle VBUS on/off
-> by the phy-rcar-gen3-usb2 driver.
+On Tue, May 24, 2016 at 2:33 AM, Simon Horman <horms@verge.net.au> wrote:
+>> > >> --- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+>> > >> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+
+> I have queued this up with the above hunk changed to the following.
+> Please check the resulting patch and let me know if I've messed things up
+> somehow.
 >
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-> index c09ead3..21e7e09 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-> @@ -112,6 +112,17 @@
->                           1800000 0>;
+> @@ -127,7 +127,7 @@
+>                 };
 >         };
 >
-> +       vbus0_usb2_phy0: regulator@5 {
+> -       i2c2: i2c@2 {
+> +       i2c2: i2c-2 {
 
-"make dtbs W=1":
-
-Warning (unit_address_vs_reg): Node /regulator@5 has a unit name, but
-no reg property
-
-regulator-vbus0-usb2-phy0? (oops, what a long name)
+Thanks, looks fine.
 
 Gr{oetje,eeting}s,
 
