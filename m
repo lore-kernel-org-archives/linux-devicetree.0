@@ -1,66 +1,88 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 2/2] ARM: dts: Add async-bridge clock to MFC power domain for Exynos5420
-Date: Tue, 24 May 2016 13:41:02 -0400
-Message-ID: <1464111662-15336-3-git-send-email-javier@osg.samsung.com>
-References: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Shuah Khan <shuahkh@osg.samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>, Javier Martinez Canillas <javier@osg.samsung.com>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 0/5] dtc: Dynamic DT support
+Date: Tue, 24 May 2016 20:50:34 +0300
+Message-ID: <1464112239-29856-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The MFC IP is also inter-connected by an Async-Bridge so the CLK_ACLK333
-has to be ungated during a power domain switch. Trying to do it when the
-clock is gated will fail and lead to an imprecise external abort error
-when the driver tries to access the MFC registers with the PD disabled.
+The first patch introduces a xasprintf utility function.
 
-For example, if the s5p-mfc module is removed and the MFC PD turned off:
+The second introduces a new magic number and new output/input
+format options marking dynamic objects.
 
-[  186.835606] Power domain power-domain@10044060 disable failed
-[  186.835671] s5p-mfc 11000000.codec: Removing 11000000.codec
-[  186.837670] Power domain power-domain@10044060 disable failed
+The next two patches enables generation of symbol & fixup
+information for use with dynamic DT loading, along with the
+documentation about the internal operation.
 
-And when the module is inserted again:
+The final patch enables backward compatibility with already
+present overlays out in the wild.
 
-[ 2395.176956] s5p_mfc_wait_for_done_dev:34: Interrupt (dev->int_type:0, command:12) timed out
-[ 2395.177031] s5p_mfc_init_hw:272: Failed to load firmware
-[ 2395.177384] Unhandled fault: imprecise external abort (0x1406) at 0x00000000
-[ 2395.177441] pgd = ec3b4000
-[ 2395.177467] [00000000] *pgd=00000000
-[ 2395.177507] Internal error: : 1406 [#1] PREEMPT SMP ARM
-[ 2395.177550] Modules linked in: s5p_mfc mwifiex_sdio mwifiex uvcvideo s5p_jpeg v4l2_mem2mem videobuf2_vmalloc videobuf2_dma_contig videobuf2_memops videobuf2_v4l2 videobuf2_core v4l2_common videodev media [last unloaded: s5p_mfc]
-[ 2395.177774] CPU: 1 PID: 2382 Comm: v4l_id Tainted: G        W       4.6.0-rc6-next-20160502-00010-g7730dc64d2c1-dirty #179
-[ 2395.177857] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[ 2395.177906] task: ed275500 ti: e6c8c000 task.ti: e6c8c000
-[ 2395.177996] PC is at s5p_mfc_reset+0x1c4/0x284 [s5p_mfc]
-[ 2395.178057] LR is at s5p_mfc_reset+0x1a4/0x284 [s5p_mfc]
+Only the first two patches are required; the last two are
+optional.
 
-This patch fixes this issue by adding the CLK_ACLK333 as an Async-Bridge
-clock for the MFC power domain, so the PD configuration works properly.
+Changes since v6:
+* Introduced xasprintf
+* Added append_to_property and used it
+* Changed some die()'s to assert
+* Reordered node generation to respect sort
+* Addressed remaining maintainer changes from v6
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Changes since v5:
+* Rebase to latest dtc version.
+* Addressed all the maintainer requested changes from v5
+* Added new magic value for dynamic objects and new format
 
----
+Changes since v4:
+* Rebase to latest dtc version.
+* Completely redesigned the generation of resolution data.
+Now instead of being generated as part of blob generation
+they are created in the live tree.
+* Consequently the patchset is much smaller.
+* Added -A auto-label alias generation option.
+* Addressed maintainer comments.
+* Added syntactic sugar for overlays in the form of .dtsi
+* Added /dts-v1/ /plugin/ preferred plugin form and deprecate
+the previous form (although still works for backward compatibility)
 
- arch/arm/boot/dts/exynos5420.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Changes since v3:
+* Rebase to latest dtc version.
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 4c8523471c65..f3e9d873633e 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -313,8 +313,9 @@
- 	mfc_pd: power-domain@10044060 {
- 		compatible = "samsung,exynos4210-pd";
- 		reg = <0x10044060 0x20>;
--		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>;
--		clock-names = "oscclk", "clk0";
-+		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>,
-+			 <&clock CLK_ACLK333>;
-+		clock-names = "oscclk", "clk0","asb0";
- 		#power-domain-cells = <0>;
- 	};
- 
+Changes since v2:
+* Split single patch to a patchset.
+* Updated to dtc mainline.
+* Changed __local_fixups__ format
+* Clean up for better legibility.
+
+
+Pantelis Antoniou (5):
+  util: Add xasprintf portable asprintf variant
+  DTBO magic and dtbo format options
+  dtc: Document the dynamic plugin internals
+  dtc: Plugin and fixup support
+  plugin: Transparently support old style syntax
+
+ Documentation/dt-object-internal.txt | 318 +++++++++++++++++++++++++++++++++++
+ Documentation/manual.txt             |  23 +++
+ checks.c                             |   8 +-
+ dtc-lexer.l                          |   5 +
+ dtc-parser.y                         |  60 ++++++-
+ dtc.c                                |  37 +++-
+ dtc.h                                |  33 +++-
+ fdtdump.c                            |   2 +-
+ flattree.c                           |  13 +-
+ fstree.c                             |   2 +-
+ libfdt/fdt.c                         |   2 +-
+ libfdt/fdt.h                         |   3 +-
+ livetree.c                           | 209 ++++++++++++++++++++++-
+ tests/mangle-layout.c                |   7 +-
+ treesource.c                         |   1 +
+ util.c                               |  30 ++++
+ util.h                               |   1 +
+ 17 files changed, 724 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/dt-object-internal.txt
+
 -- 
-2.5.5
+1.7.12
