@@ -1,32 +1,123 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: dt-bindings: add ibm,ppc4xx-gpio binding
-Date: Tue, 24 May 2016 13:43:29 +0200
-Message-ID: <CACRpkdb2o3b3jN2de7qMmaPmtYK2QArQeHuhQrQgGb8p284T=Q@mail.gmail.com>
-References: <c7b118c342c161954126e2e82cf1a0a6a127b4c2.1463002267.git.chunkeey@googlemail.com>
-	<20160516152746.GA13649@rob-hp-laptop>
-	<20160516165618.GA29776@rob-hp-laptop>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: RE: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+Date: Tue, 24 May 2016 11:47:31 +0000
+Message-ID: <C89496FEAE474D468F30D558A9468D9F26CED772@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1464067268-35299-1-git-send-email-navam@xilinx.com>
+ <14123451.MsNvJvqaJX@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160516165618.GA29776@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Christian Lamparter <chunkeey@googlemail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Alistair Popple <alistair@popple.id.au>, Matt Porter <mporter@kernel.crashing.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <14123451.MsNvJvqaJX@wuerfel>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 16, 2016 at 6:56 PM, Rob Herring <robh@kernel.org> wrote:
-> On Mon, May 16, 2016 at 10:27:46AM -0500, Rob Herring wrote:
->> On Thu, May 12, 2016 at 12:07:48AM +0200, Christian Lamparter wrote:
 
->> > This patch adds binding information for IBM/AMCC/APM GPIO
->> > Controllers of the PowerPC 4XX series and compatible SoCs.
-(...)
->> Acked-by: Rob Herring <robh@kernel.org>
->
-> As this is just a binding doc, I've applied it.
 
-OK less work on my part :)
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Tuesday, May 24, 2016 2:21 PM
+> To: Nava kishore Manne <navam@xilinx.com>
+> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+> balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
+> <hyunk@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Radhey
+> Shyam Pandey <radheys@xilinx.com>; devicetree@vger.kernel.org; linux-
+> arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+> 
+> On Tuesday, May 24, 2016 10:51:08 AM CEST Nava kishore Manne wrote:
+> > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > index 47b4e39..09df757 100644
+> > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > @@ -1,18 +1,23 @@
+> >  Xilinx USB2 device controller
+> >
+> >  Required properties:
+> > -- compatible		: Should be "xlnx,usb2-device-4.00.a"
+> > +- compatible		: Should be "xlnx,usb2-device-4.00.a" or
+> > +			  "xlnx,usb2-device-5.00"
+> >  - reg			: Physical base address and size of the USB2
+> >  			  device registers map.
+> >  - interrupts		: Should contain single irq line of USB2 device
+> >  			  controller
+> >  - xlnx,has-builtin-dma	: if DMA is included
+> > +- dma-ranges		: Should be as the following
+> > +			  <child-bus-address, parent-bus-address, length>
+> 
+> A USB host should not have any children that are DMA capable, I think, so
+> this property doesn't make sense here. It should be part of the parent bus.
+> 
+Will send next version (v4) by removing this property from the DT.
 
-Yours,
-Linus Walleij
+> > +- xlnx,addrwidth	: Should be the dma addressing size in bits(ex: 64
+> bits)
+> 
+> I'm still unconvinced about the property definition here. What are the
+> possible options for the IP block? I don't think I ever saw a reply from you to
+> my earlier questions.
+> 
+
+Sorry Let me clearly explain
+
+>From the IP version 5.0 onwards The IP support both 32-bit and 64-bit addressing.
+But the older version of the IP's supports only 32-bit addressing.
+
+This addrwidth property differentiates the address width for the new IP (I mean 5.0 version on wards)
+For older IP it will be always 32-bit.
+
+Please let me know if you are still not clear.
+
+Regards,
+Navakishore.
+
+
+> > @@ -214,6 +223,20 @@ static const struct usb_endpoint_descriptor
+> config_bulk_out_desc = {
+> >  	.wMaxPacketSize		= cpu_to_le16(EP0_MAX_PACKET),
+> >  };
+> >
+> > +/**
+> > + * xudc_write64 - write 64bit value to device registers
+> > + * @addr: base addr of device registers
+> > + * @offset: register offset
+> > + * @val: data to be written
+> > + **/
+> > +static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val) {
+> > +	struct xusb_udc *udc = ep->udc;
+> > +
+> > +	udc->write_fn(udc->addr, offset, lower_32_bits(val));
+> > +	udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val)); }
+> > +
+> >  /**
+> >   * xudc_write32 - little endian write to device registers
+> >   * @addr: base addr of device registers @@ -330,8 +353,13 @@ static
+> > int xudc_start_dma(struct xusb_ep *ep, dma_addr_t src,
+> >  	 * destination registers and then set the length
+> >  	 * into the DMA length register.
+> >  	 */
+> > -	udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
+> > -	udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
+> > +	if (udc->dma_addrwidth > 32) {
+> > +		xudc_write64(ep, XUSB_DMA_DSAR_ADDR_OFFSET_LSB,
+> src);
+> > +		xudc_write64(ep, XUSB_DMA_DDAR_ADDR_OFFSET_LSB,
+> dst);
+> > +	} else {
+> > +		udc->write_fn(udc->addr,
+> XUSB_DMA_DSAR_ADDR_OFFSET, src);
+> > +		udc->write_fn(udc->addr,
+> XUSB_DMA_DDAR_ADDR_OFFSET, dst);
+> > +	}
+> >  	udc->write_fn(udc->addr, XUSB_DMA_LENGTH_OFFSET, length);
+> >
+> 
+> This looks good.
+> 
+> 	Arnd
