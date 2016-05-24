@@ -1,130 +1,449 @@
-From: =?UTF-8?Q?Emmanuel_Fust=c3=a9?= <emmanuel.fuste@laposte.net>
-Subject: Re: [PATCH 1/2] ASoC: pcm5102a: Add support for
- PCM5102A codec
-Date: Wed, 25 May 2016 00:33:00 +0200
-Message-ID: <059ee86a-2768-f5db-38ac-c6e3c9a45e4f@laposte.net>
-References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org>
- <1463130853-25096-2-git-send-email-kernel@martin.sperl.org>
- <34ab107e-10dc-fbd3-28d1-203c6411851c@laposte.net>
- <20160523170853.GB8206@sirena.org.uk>
- <312f8476-a437-04d9-3d16-38d7c7c233ad@laposte.net>
- <alpine.DEB.2.02.1605241640250.19416@lnxricardw1.se.axis.com>
-Reply-To: emmanuel.fuste@laposte.net
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH V3 RESEND] phy: bcm-ns-usb3: new driver for USB 3.0 PHY on
+ Northstar
+Date: Tue, 24 May 2016 16:26:18 -0700
+Message-ID: <5744E31A.2020004@broadcom.com>
+References: <1460630983-19565-1-git-send-email-zajec5@gmail.com>
+ <1463954940-13434-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <alpine.DEB.2.02.1605241640250.19416@lnxricardw1.se.axis.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Ricard Wanderlof <ricard.wanderlof@axis.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel <alsa-devel@alsa-project.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Matthias Reichl <hias@horus.com>, Rob Herring <robh+dt@kernel.org>, Florian Meier <florian.meier@koalo.de>, linux-rpi-kernel@lists.infradead.org, kernel@martin.sperl.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463954940-13434-1-git-send-email-zajec5@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, Felix Fietkau <nbd@openwrt.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jon.mason@broadcom.com>, linux-usb@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 24/05/2016 =E0 16:44, Ricard Wanderlof a =E9crit :
->
-> On Mon, 23 May 2016, Emmanuel Fust=E9 wrote:
->
->> /* pcm5102a in HW mode with external SCK (4wire mode)
->>  * at 128fs, 192fs or 256fs
->>  */
->> 	pcm5102a-4w: pcm5102a {
->> 		compatible =3D "simple-i2s-codec";
->> 		rate =3D <SNDRV_PCM_RATE_8000_192000>;
->> 		format =3D < SNDRV_PCM_FMTBIT_S16_LE
->> 			|SNDRV_PCM_FMTBIT_S24_LE
->> 			|SNDRV_PCM_FMTBIT_S32_LE>;
->> 	};
->> or
->> /* pcm5102a in HW mode with PLL on BCK (3wire mode)
->>  * 16to384khz but only with bck rate of 64fs
->>  */
->> 	pcm5102a-4w: pcm5102a {
->> 		compatible =3D "simple-i2s-codec";
->> 		rate =3D <SNDRV_PCM_RATE_8000_192000
->> 			^ SNDRV_PCM_RATE_8000>;
->> 		format =3D <SNDRV_PCM_FMTBIT_S32_LE>;
->> 	};
->> Or
->> /* ES9023 in asynchronous mode mclk > 37Mhz
->>  * I did not try bck rate <64fs as the sabre family did not generally
->>  * support it.
->>  */
->> 	es9023: es9023 {
->> 		compatible =3D "simple-i2s-codec";
->> 		rate =3D <SNDRV_PCM_RATE_8000_192000>;
->> 		format =3D <SNDRV_PCM_FMTBIT_S32_LE>;
->> 	};
->>
->> We could use I2S friendly property instead of "format" :
->> 		bckrates =3D <48, 64>;
->>
->>
->> With two or tree more property (gpio for mute, de-emphasis and filter
->> selection), you could cover 98% of I2S DAC with hardware only interfaces=
-. It
->> cover too startup mode of most hifi I2C or SPI controllable DAC. Which i=
-s a
->> good starting point for chip for which a driver is not already written.
->
-> It seems to me that this only covers the cases where the is codec running
-> in slave mode with MCLK derived from the BCLK, but not cases where the
-> codec is master and needs to have its MCLK configured appropriately (in
-> terms of device-specifc clock source and PLL settings), or am I missing
-> something?
->
-> /Ricard
->
+Hi Rafal,
 
-It not a codec but a simple I2S DAC.
-No I2S master mode.
-Like most DAC before the CODEC era and all the big mess around them.
-In the ES9023 case, the MCLK could either have no frequency an no phase =
+some comments in line.
 
-relationship with the I2S clocks.
-In this case, the MCLK is surely derived from a clock of the Rpi SOC so =
+On 16-05-22 03:09 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
+ > Northstar is a family of SoCs used in home routers. They have USB 2.=
+0
+ > and 3.0 controllers with PHYs that need to be properly initialized.
+ > This driver provides PHY init support in a generic way and can be bo=
+und
+ > with XHCI controller driver.
+ > This patch adds 2 defines in bcma header that will be reused in bcma
+ > driver. Using common header will allow avoiding code duplication.
+ >
+ > Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
+ > ---
+ > V2: Redesign the driver to don't depend on bcma. This will allow=20
+reusing it on
+ >      Northstar+ which doesn't use bcma. This requires providing two=20
+different
+ >      registers ranges in DT which was documented in bindings info.
+ > V3: Use readl and writel
+ >      Fix MODULE_LICENSE to match header (v2)
+ >      Mention C0 series in Documentation
+ > RESEND: I can see that my PHY driver for USB 2.0:
+ >     [PATCH V4] phy: bcm-ns-usb2: new driver for USB 2.0 PHY on North=
+star
+ >     sent on 14 Apr 2016 was accepted, however:
+ >     [PATCH V3] phy: bcm-ns-usb3: new driver for USB 3.0 PHY on North=
+star
+ >     sent the very same day wasn't.
+ >     I'm sending a simply rebased version hoping it can be accepted o=
+r
+ >     commented somehow (e.g. what needs to be changed).
+ > ---
+ >   .../devicetree/bindings/phy/bcm-ns-usb3-phy.txt    |  23 ++
+ >   drivers/phy/Kconfig                                |   9 +
+ >   drivers/phy/Makefile                               |   1 +
+ >   drivers/phy/phy-bcm-ns-usb3.c                      | 267=20
++++++++++++++++++++++
+ >   include/linux/bcma/bcma_driver_chipcommon.h        |   3 +
+ >   5 files changed, 303 insertions(+)
+ >   create mode 100644=20
+Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
+ >   create mode 100644 drivers/phy/phy-bcm-ns-usb3.c
+ >
+ > diff --git=20
+a/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt=20
+b/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
+ > new file mode 100644
+ > index 0000000..09aeba9
+ > --- /dev/null
+ > +++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
+ > @@ -0,0 +1,23 @@
+ > +Driver for Broadcom Northstar USB 3.0 PHY
+ > +
+ > +Required properties:
+ > +
+ > +- compatible: one of: "brcm,ns-ax-usb3-phy", "brcm,ns-bx-usb3-phy".
+ > +- reg: register mappings for DMP (Device Management Plugin) and=20
+ChipCommon B
+ > +       MMI.
+ > +- reg-names: "dmp" and "ccb-mii"
+ > +
+ > +Initialization of USB 3.0 PHY depends on Northstar version. There=20
+are currently
+ > +three known series: Ax, Bx and Cx.
+ > +Known A0: BCM4707 rev 0
+ > +Known B0: BCM4707 rev 4, BCM53573 rev 2
+ > +Known B1: BCM4707 rev 6
+ > +Known C0: BCM47094 rev 0
+ > +
+ > +Example:
+ > +    usb3-phy {
+ > +        compatible =3D "brcm,ns-ax-usb3-phy";
+ > +        reg =3D <0x18105000 0x1000>, <0x18003000 0x1000>;
+ > +        reg-names =3D "dmp", "ccb-mii";
+ > +        #phy-cells =3D <0>;
+ > +    };
+ > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+ > index f2b458f..6967398 100644
+ > --- a/drivers/phy/Kconfig
+ > +++ b/drivers/phy/Kconfig
+ > @@ -24,6 +24,15 @@ config PHY_BCM_NS_USB2
+ >         Enable this to support Broadcom USB 2.0 PHY connected to the=
+ USB
+ >         controller on Northstar family.
+ >
+ > +config PHY_BCM_NS_USB3
+ > +    tristate "Broadcom Northstar USB 3.0 PHY Driver"
+ > +    depends on ARCH_BCM_IPROC || COMPILE_TEST
+ > +    depends on HAS_IOMEM && OF
+ > +    select GENERIC_PHY
+ > +    help
+ > +      Enable this to support Broadcom USB 3.0 PHY connected to the =
+USB
+ > +      controller on Northstar family.
+ > +
+ >   config PHY_BERLIN_USB
+ >       tristate "Marvell Berlin USB PHY Driver"
+ >       depends on ARCH_BERLIN && RESET_CONTROLLER && HAS_IOMEM && OF
+ > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+ > index 0de09e1..fa17ae3 100644
+ > --- a/drivers/phy/Makefile
+ > +++ b/drivers/phy/Makefile
+ > @@ -4,6 +4,7 @@
+ >
+ >   obj-$(CONFIG_GENERIC_PHY)        +=3D phy-core.o
+ >   obj-$(CONFIG_PHY_BCM_NS_USB2)        +=3D phy-bcm-ns-usb2.o
+ > +obj-$(CONFIG_PHY_BCM_NS_USB3)        +=3D phy-bcm-ns-usb3.o
+ >   obj-$(CONFIG_PHY_BERLIN_USB)        +=3D phy-berlin-usb.o
+ >   obj-$(CONFIG_PHY_BERLIN_SATA)        +=3D phy-berlin-sata.o
+ >   obj-$(CONFIG_PHY_DM816X_USB)        +=3D phy-dm816x-usb.o
+ > diff --git a/drivers/phy/phy-bcm-ns-usb3.c=20
+b/drivers/phy/phy-bcm-ns-usb3.c
+ > new file mode 100644
+ > index 0000000..869bc20
+ > --- /dev/null
+ > +++ b/drivers/phy/phy-bcm-ns-usb3.c
+ > @@ -0,0 +1,267 @@
+ > +/*
+ > + * Broadcom Northstar USB 3.0 PHY Driver
+ > + *
+ > + * Copyright (C) 2016 Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
+My thought is this code must have originated from Broadcom source code.=
+=20
+  Where is the copyright notice/license from the original code?
+ > + *
+ > + * This program is free software; you can redistribute it and/or mo=
+dify
+ > + * it under the terms of the GNU General Public License version 2 a=
+s
+ > + * published by the Free Software Foundation.
+ > + *
+ > + */
+ > +
+ > +#include <linux/bcma/bcma.h>
+ > +#include <linux/delay.h>
+ > +#include <linux/err.h>
+ > +#include <linux/module.h>
+ > +#include <linux/of_platform.h>
+ > +#include <linux/platform_device.h>
+ > +#include <linux/phy/phy.h>
+ > +#include <linux/slab.h>
+ > +
+ > +#define BCM_NS_USB3_MII_MNG_TIMEOUT_US    1000    /* usecs */
+ > +
+ > +enum bcm_ns_family {
+ > +    BCM_NS_UNKNOWN,
+ > +    BCM_NS_AX,
+ > +    BCM_NS_BX,
+ > +};
+ > +
+ > +struct bcm_ns_usb3 {
+ > +    struct device *dev;
+ > +    enum bcm_ns_family family;
+ > +    void __iomem *dmp;
+ > +    void __iomem *ccb_mii;
+ > +    struct phy *phy;
+ > +};
+ > +
+ > +static const struct of_device_id bcm_ns_usb3_id_table[] =3D {
+ > +    {
+ > +        .compatible =3D "brcm,ns-ax-usb3-phy",
+ > +        .data =3D (int *)BCM_NS_AX,
+ > +    },
+ > +    {
+ > +        .compatible =3D "brcm,ns-bx-usb3-phy",
+ > +        .data =3D (int *)BCM_NS_BX,
+ > +    },
+ > +    {},
+ > +};
+ > +MODULE_DEVICE_TABLE(of, bcm_ns_usb3_id_table);
+ > +
+ > +static int bcm_ns_usb3_wait_reg(struct bcm_ns_usb3 *usb3, void=20
+__iomem *addr,
+ > +                u32 mask, u32 value, unsigned long timeout)
+ > +{
+ > +    unsigned long deadline =3D jiffies + timeout;
+ > +    u32 val;
+ > +
+ > +    do {
+ > +        val =3D readl(addr);
+ > +        if ((val & mask) =3D=3D value)
+ > +            return 0;
+ > +        cpu_relax();
+ > +        udelay(10);
+ > +    } while (!time_after_eq(jiffies, deadline));
+ > +
+ > +    dev_err(usb3->dev, "Timeout waiting for register %p\n", addr);
+ > +
+ > +    return -EBUSY;
+ > +}
+ > +
+ > +static inline int bcm_ns_usb3_mii_mng_wait_idle(struct bcm_ns_usb3=20
+*usb3)
+ > +{
+ > +    return bcm_ns_usb3_wait_reg(usb3, usb3->ccb_mii +=20
+BCMA_CCB_MII_MNG_CTL,
+ > +                    0x0100, 0x0000,
+ > +                    usecs_to_jiffies(BCM_NS_USB3_MII_MNG_TIMEOUT_US=
+));
+ > +}
+ > +
+ > +static int bcm_ns_usb3_mii_mng_write32(struct bcm_ns_usb3 *usb3, u3=
+2=20
+value)
+ > +{
+ > +    int err;
+ > +
+ > +    err =3D bcm_ns_usb3_mii_mng_wait_idle(usb3);
+ > +    if (err < 0) {
+ > +        dev_err(usb3->dev, "Couldn't write 0x%08x value\n", value);
+ > +        return err;
+ > +    }
+ > +
+ > +    writel(value, usb3->ccb_mii + BCMA_CCB_MII_MNG_CMD_DATA);
+ > +
+ > +    return 0;
+ > +}
+ > +
+ > +static int bcm_ns_usb3_phy_init_ns_bx(struct bcm_ns_usb3 *usb3)
+ > +{
+ > +    int err;
+ > +
+ > +    /* Enable MDIO. Setting MDCDIV as 26  */
+ > +    writel(0x0000009a, usb3->ccb_mii + BCMA_CCB_MII_MNG_CTL);
+ > +    udelay(2);
+why a value of 2 ?
 
-you are right, and the whole HifiBerry driver should be rewritten with =
+ > +
+ > +    /* USB3 PLL Block */
+ > +    err =3D bcm_ns_usb3_mii_mng_write32(usb3, 0x587e8000);
+These hard coded numbers should be replaced with appropriate defines.
 
-proper abstraction like Mark suggested : Clock binding etc ...
-But now as Mark say too, clock api integration is a goal, but not there.
-The proposed hw param rules is a start to not have to write specific =
+ > +    if (err < 0)
+ > +        return err;
+ > +
+ > +    /* Assert Ana_Pllseq start */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x58061000);
+ > +
+ > +    /* Assert CML Divider ratio to 26 */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x582a6400);
+ > +
+ > +    /* Asserting PLL Reset */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x582ec000);
+ > +
+ > +    /* Deaaserting PLL Reset */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x582e8000);
+ > +
+ > +    /* Waiting MII Mgt interface idle */
+ > +    bcm_ns_usb3_mii_mng_wait_idle(usb3);
+ > +
+ > +    /* Deasserting USB3 system reset */
+ > +    writel(0, usb3->dmp + BCMA_RESET_CTL);
+ > +
+ > +    /* PLL frequency monitor enable */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x58069000);
+ > +
+ > +    /* PIPE Block */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x587e8060);
+ > +
+ > +    /* CMPMAX & CMPMINTH setting */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x580af30d);
+ > +
+ > +    /* DEGLITCH MIN & MAX setting */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x580e6302);
+ > +
+ > +    /* TXPMD block */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x587e8040);
+ > +
+ > +    /* Enabling SSC */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x58061003);
+ > +
+ > +    /* Waiting MII Mgt interface idle */
+ > +    bcm_ns_usb3_mii_mng_wait_idle(usb3);
+ > +
+ > +    return 0;
+ > +}
+ > +
+ > +static int bcm_ns_usb3_phy_init_ns_ax(struct bcm_ns_usb3 *usb3)
+ > +{
+ > +    int err;
+ > +
+ > +    /* Enable MDIO. Setting MDCDIV as 26  */
+ > +    writel(0x0000009a, usb3->ccb_mii + BCMA_CCB_MII_MNG_CTL);
+ > +    udelay(2);
+ > +
+ > +    /* PLL30 block */
+ > +    err =3D bcm_ns_usb3_mii_mng_write32(usb3, 0x587e8000);
+ > +    if (err < 0)
+ > +        return err;
+ > +
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x582a6400);
+ > +
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x587e80e0);
+ > +
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x580a009c);
+ > +
+ > +    /* Enable SSC */
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x587e8040);
+ > +
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x580a21d3);
+ > +
+ > +    bcm_ns_usb3_mii_mng_write32(usb3, 0x58061003);
+ > +
+ > +    /* Waiting MII Mgt interface idle */
+ > +    bcm_ns_usb3_mii_mng_wait_idle(usb3);
+ > +
+ > +    /* Deasserting USB3 system reset */
+ > +    writel(0, usb3->dmp + BCMA_RESET_CTL);
+ > +
+ > +    return 0;
+ > +}
+ > +
+ > +static int bcm_ns_usb3_phy_init(struct phy *phy)
+ > +{
+ > +    struct bcm_ns_usb3 *usb3 =3D phy_get_drvdata(phy);
+ > +    int err;
+ > +
+ > +    /* Perform USB3 system soft reset */
+ > +    writel(BCMA_RESET_CTL_RESET, usb3->dmp + BCMA_RESET_CTL);
+ > +
+ > +    switch (usb3->family) {
+ > +    case BCM_NS_AX:
+ > +        err =3D bcm_ns_usb3_phy_init_ns_ax(usb3);
+ > +        break;
+ > +    case BCM_NS_BX:
+ > +        err =3D bcm_ns_usb3_phy_init_ns_bx(usb3);
+ > +        break;
+ > +    default:
+ > +        WARN_ON(1);
+ > +        err =3D -ENOTSUPP;
+ > +    }
+ > +
+ > +    return err;
+ > +}
+ > +
+ > +static const struct phy_ops ops =3D {
+ > +    .init        =3D bcm_ns_usb3_phy_init,
+ > +    .owner        =3D THIS_MODULE,
+I don't think .owner is needed.
+ > +};
+ > +
+ > +static int bcm_ns_usb3_probe(struct platform_device *pdev)
+ > +{
+ > +    struct device *dev =3D &pdev->dev;
+ > +    const struct of_device_id *of_id;
+ > +    struct bcm_ns_usb3 *usb3;
+ > +    struct resource *res;
+ > +    struct phy_provider *phy_provider;
+ > +
+ > +    usb3 =3D devm_kzalloc(dev, sizeof(*usb3), GFP_KERNEL);
+ > +    if (!usb3)
+ > +        return -ENOMEM;
+ > +
+ > +    usb3->dev =3D dev;
+ > +
+ > +    of_id =3D of_match_device(bcm_ns_usb3_id_table, dev);
+ > +    if (!of_id)
+ > +        return -EINVAL;
+ > +    usb3->family =3D (enum bcm_ns_family)of_id->data;
+ > +
+ > +    res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dmp=
+");
+ > +    usb3->dmp =3D devm_ioremap_resource(dev, res);
+ > +    if (IS_ERR(usb3->dmp)) {
+ > +        dev_err(dev, "Failed to map DMP regs\n");
+ > +        return PTR_ERR(usb3->dmp);
+ > +    }
+ > +
+ > +    res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "ccb=
+-mii");
+ > +    usb3->ccb_mii =3D devm_ioremap_resource(dev, res);
+ > +    if (IS_ERR(usb3->ccb_mii)) {
+ > +        dev_err(dev, "Failed to map ChipCommon B MII regs\n");
+ > +        return PTR_ERR(usb3->ccb_mii);
+ > +    }
+ > +
+ > +    usb3->phy =3D devm_phy_create(dev, NULL, &ops);
+ > +    if (IS_ERR(usb3->phy)) {
+ > +        dev_err(dev, "Failed to create PHY\n");
+ > +        return PTR_ERR(usb3->phy);
+ > +    }
+ > +
+ > +    phy_set_drvdata(usb3->phy, usb3);
+ > +    platform_set_drvdata(pdev, usb3);
+ > +
+ > +    phy_provider =3D devm_of_phy_provider_register(dev,=20
+of_phy_simple_xlate);
+ > +    if (!IS_ERR(phy_provider))
+ > +        dev_info(dev, "Registered Broadcom Northstar USB 3.0 PHY=20
+driver\n");
+ > +
+ > +    return PTR_ERR_OR_ZERO(phy_provider);
+ > +}
+ > +
+ > +static struct platform_driver bcm_ns_usb3_driver =3D {
+ > +    .probe        =3D bcm_ns_usb3_probe,
+ > +    .driver =3D {
+ > +        .name =3D "bcm_ns_usb3",
+ > +        .of_match_table =3D bcm_ns_usb3_id_table,
+ > +    },
+ > +};
+ > +module_platform_driver(bcm_ns_usb3_driver);
+ > +
+ > +MODULE_LICENSE("GPL v2");
+ > diff --git a/include/linux/bcma/bcma_driver_chipcommon.h=20
+b/include/linux/bcma/bcma_driver_chipcommon.h
+ > index 846513c..3a86e48 100644
+ > --- a/include/linux/bcma/bcma_driver_chipcommon.h
+ > +++ b/include/linux/bcma/bcma_driver_chipcommon.h
+ > @@ -504,6 +504,9 @@
+ >   #define BCMA_CC_PMU1_PLL0_PC2_NDIV_INT_MASK    0x1ff00000
+ >   #define BCMA_CC_PMU1_PLL0_PC2_NDIV_INT_SHIFT    20
+ >
+ > +#define BCMA_CCB_MII_MNG_CTL        0x0000
+ > +#define BCMA_CCB_MII_MNG_CMD_DATA    0x0004
+These defines should not be tied to a bcma header file.  They need to b=
+e=20
+placed in a new header that is not bcma specific.
+ > +
+ >   /* BCM4331 ChipControl numbers. */
+ >   #define BCMA_CHIPCTL_4331_BT_COEXIST        BIT(0)    /* 0 disable=
+ */
+ >   #define BCMA_CHIPCTL_4331_SECI            BIT(1)    /* 0 SECI is=20
+disabled (JATG functional) */
+ >
 
-machine driver because of clocking constraints.
-It is the second time I am scratching my head because of clocking =
-
-constraints and because I want to do something better than writing =
-
-another trivial machine driver.
-In my case (BBB or other Ti soc using mcasp) I will have to had =
-
-mux/clk_set_parent switching action and/or clk_set_rate action. But I am =
-
-not persuaded that is it the way to go.
-
-That why, by the time we get proper clock api integration with proper =
-
-constraint and constraint description mechanism, a simple DT =
-
-configurable codec driver in which we push the resulting constraint =
-
-(DAC+SOC+design choice) was appealing.
-
-But you are all right. This is not the long term proper way. And the =
-
-actual ultra simple PCM510xA driver could evolve to support all GPIO and =
-
-later properly express all his clock constraints independently of the =
-
-implementation choices.
-
-Thank your for your patience.
-
-Emmanuel.
+Regards,
+Scott
