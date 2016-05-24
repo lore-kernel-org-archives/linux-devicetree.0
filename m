@@ -1,37 +1,63 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 1/2] clk: exynos5420: Set ID for aclk333 gate clock
-Date: Tue, 24 May 2016 13:41:01 -0400
-Message-ID: <1464111662-15336-2-git-send-email-javier@osg.samsung.com>
-References: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Tue, 24 May 2016 18:41:41 +0100
+Message-ID: <20160524174140.GE11605@leverpostej>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
+Content-Disposition: inline
+In-Reply-To: <1464107960-10775-1-git-send-email-christer@weinigel.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Shuah Khan <shuahkh@osg.samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>, Javier Martinez Canillas <javier@osg.samsung.com>
+To: Christer Weinigel <christer@weinigel.se>
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The aclk333 clock needs to be ungated during the MFC power domain switch,
-so set the clock ID to allow the Exynos power domain logic to lookup this
-clock if is defined in the MFC PD device tree node.
+On Tue, May 24, 2016 at 06:39:20PM +0200, Christer Weinigel wrote:
+> Document how to use devicetree aliases to assign a stable
+> bus number to a spi bus.
+> 
+> Signed-off-by: Christer Weinigel <christer@weinigel.se>
+> 
+> ---
+> 
+> Trivial documentation change.
+> 
+> Not having used devicetree that much it was surprisingly hard to
+> figure out how to assign a stable bus number to a spi bus.  Add a
+> simple example that shows how to do that.
+> 
+> Mark Cced as the SPI maintainer.  Or should trivial documentation
+> fixes like this be addressed to someone else?
+> 
+>   /Christer
+> 
+>  Documentation/devicetree/bindings/spi/spi-bus.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index 42d5954..c35c4c2 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -94,3 +94,13 @@ SPI example for an MPC5200 SPI bus:
+>  			reg = <1>;
+>  		};
+>  	};
+> +
+> +Normally SPI buses are assigned dynamic bus numbers starting at 32766
+> +and counting downwards.  It is possible to assign the bus number
+> +statically using devicetee aliases.  For example, on the MPC5200 the
+> +"spi@f00" device above is connected to the "soc" bus.  To set its
+> +bus_num to 1 add an aliases entry like this:
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
----
+As Mark Brown pointed out, this is very Linux-specific (at least in the
+wording of the above).
 
- drivers/clk/samsung/clk-exynos5420.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Generally, aliases are there to match _physical_ identifiers (e.g. to
+match physical labels for UART0, UART1, and on).
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 92382cef9f90..469bcae5de3a 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -946,7 +946,7 @@ static struct samsung_gate_clock exynos5x_gate_clks[] __initdata = {
- 			GATE_BUS_TOP, 13, 0, 0),
- 	GATE(0, "aclk166", "mout_user_aclk166",
- 			GATE_BUS_TOP, 14, CLK_IGNORE_UNUSED, 0),
--	GATE(0, "aclk333", "mout_user_aclk333",
-+	GATE(CLK_ACLK333, "aclk333", "mout_user_aclk333",
- 			GATE_BUS_TOP, 15, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk400_isp", "mout_user_aclk400_isp",
- 			GATE_BUS_TOP, 16, 0, 0),
--- 
-2.5.5
+I'm not sure whether that applies here.
+
+Thanks,
+Mark.
