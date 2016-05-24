@@ -1,102 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/4 v7] ASoC: dwc: Add PIO PCM extension
-Date: Tue, 24 May 2016 18:51:44 +0100
-Message-ID: <20160524175144.GO8206@sirena.org.uk>
-References: <cover.1463996627.git.joabreu@synopsys.com>
- <d81055d826825874c9d76922d2275688b2586fa6.1463996627.git.joabreu@synopsys.com>
- <20160524164151.GM8206@sirena.org.uk>
- <57448A42.9050606@synopsys.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8540459773616940714=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <57448A42.9050606@synopsys.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, linux-snps-arc@lists.infradead.org
+From: Rob Rice <rob.rice@broadcom.com>
+Subject: [PATCH 0/3] Add Broadcom PDC mailbox driver
+Date: Tue, 24 May 2016 14:07:27 -0400
+Message-ID: <1464113250-15629-1-git-send-email-rob.rice@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Anup Patel <anup.patel@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Rice <rrice@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Rob Rice <rrice@broadcom.com>
 
---===============8540459773616940714==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="e4annfiqlsPm5rKd"
-Content-Disposition: inline
+The Broadcom PDC mailbox driver is a ring manager for the Broadcom
+Secure Processing Unit (SPU) kernel driver and other mailbox clients.
+The PDC driver registers with the Linux mailbox framework a mailbox
+controller, once for each PDC instance. Ring 0 for each PDC is registered as
+a mailbox channel. The PDC driver uses interrupts to determine when ring
+transfers to and from an offload engine are complete. The PDC driver uses
+threaded IRQs so that response messages are handled outside of interrupt
+context.
 
+Rob Rice (3):
+  dt-bindings: add bindings documentation for PDC driver.
+  mailbox: Add Broadcom PDC mailbox driver
+  arm64: dts: Add Broadcom Northstar2 device tree entries for PDC
+    driver.
 
---e4annfiqlsPm5rKd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ .../bindings/mailbox/brcm,iproc-pdc-mbox.txt       |   23 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |   36 +
+ drivers/mailbox/Kconfig                            |    9 +
+ drivers/mailbox/Makefile                           |    2 +
+ drivers/mailbox/mailbox-pdc/Makefile               |    8 +
+ drivers/mailbox/mailbox-pdc/pdc.c                  | 1181 ++++++++++++++++++++
+ drivers/mailbox/mailbox-pdc/pdc.h                  |  303 +++++
+ drivers/mailbox/mailbox-pdc/pdc_debug.c            |  101 ++
+ drivers/mailbox/mailbox-pdc/pdc_debug.h            |   24 +
+ include/linux/mailbox/brcm-message.h               |   56 +
+ 10 files changed, 1743 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
+ create mode 100644 drivers/mailbox/mailbox-pdc/Makefile
+ create mode 100644 drivers/mailbox/mailbox-pdc/pdc.c
+ create mode 100644 drivers/mailbox/mailbox-pdc/pdc.h
+ create mode 100644 drivers/mailbox/mailbox-pdc/pdc_debug.c
+ create mode 100644 drivers/mailbox/mailbox-pdc/pdc_debug.h
+ create mode 100644 include/linux/mailbox/brcm-message.h
 
-On Tue, May 24, 2016 at 06:07:14PM +0100, Jose Abreu wrote:
-> On 24-05-2016 17:41, Mark Brown wrote:
-
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
-
-> >>  	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> >>  		i2s_write_reg(dev->i2s_base, ITER, 1);
-
-> > That seems wrong, or at least something that should be separate?
-> > Previously we needed interrupts for DMA operation but now we enable
-> > interrupts only if we don't use DMA.  It feels like we want to make the
-> > change for DMA separately if only to make it clear for bisection, are we
-> > 100% sure that masking the interrupt won't also mask the DMA request
-> > signals?
-
-> Indeed I thought about this and the interrupts must also be enabled when in DMA
-> mode. Although there is no interrupt handler in the original driver (without
-> this patches) in some setups the interrupt line may be connected to the DMA
-> controller. I will drop this change and always enable interrupts. Please note
-> that I don't have a setup with DMA support so I can only test using the PIO mode.
-
-Presumably you can talk to your hardware colleagues and get them to make
-you a FPGA with a DMA IP available?
-
-> > This also seems wrong.  We're forcing PIO if an interrupt is provided
-> > rather than based on DMA being configured which means that if the
-> > interrupt is wired up and happens to be described in DT we'll get worse
-
-> How should I then determine which mode to use?
->     - Check if DMA parameters are declared in DT, or
->     - Check if snd_dmaengine_pcm_register() fails, or
->     - Assume PIO mode will be used when compiling with PIO PCM, or
->     - Something else ?
-
-You could either unconditionally register the PIO driver and only
-actually start using it if the driver is instantiated or you could check
-to see if the registration function works (handling deferred probe - if
-the DMA driver just didn't load yet you should wait for it).
-
---e4annfiqlsPm5rKd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXRJSuAAoJECTWi3JdVIfQpvcH+gN1sSN56xpO+uJP/BdBnT9b
-5fBAce+i5r4N7oxJVemTw9LG2sBTtgcXGd28xlPWCSqASSMLxBHaz7lRz5wOeiZV
-HClxoM7BuSZOYMiMivzq7CTxrp8Nnbikkq5D/OCeKVH14aK8/0fuPBMZDc4MMxkJ
-9TKCIifQcsYl92i2G2T7CKL5dUZPGuXmZUwYomEs9S4+ZGnwMBhRUkSb1hE0fqyj
-jYssUuZFiFMu7v7UcuhFy4Gi63eMxdgPW6CGx5NGYlWb497elU0e69rofhG7EkP2
-+s1NhOI4QLJFlBel5GXfQYf0OF/mfi9O9jCtY0m6h/VNMPpcrQJzr+H1XAovUT0=
-=jw38
------END PGP SIGNATURE-----
-
---e4annfiqlsPm5rKd--
-
---===============8540459773616940714==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8540459773616940714==--
+-- 
+2.1.0
