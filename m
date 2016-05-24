@@ -1,123 +1,63 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
-Date: Tue, 24 May 2016 12:09:41 -0500
-Message-ID: <CAL_JsqKCwy=aXveTfnaQuZ5b3Ld9nzABgPfdPm1JX3CBuvzG+Q@mail.gmail.com>
-References: <cover.1463737502.git.maitysanchayan@gmail.com>
- <ffef165d05f71a1b19437171d8fdb4bc78f6b1e3.1463737502.git.maitysanchayan@gmail.com>
- <20160523211813.GA30237@rob-hp-laptop> <20160524041447.GA2884@Sanchayan-Arch.localdomain>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Tue, 24 May 2016 18:20:45 +0100
+Message-ID: <20160524172045.GN8206@sirena.org.uk>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160524041447.GA2884-2b/appYahYDPUjlVagVGR1Kr0EmMEXJSn9A1Ff6Mc9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="S4drRqups3dkeHIl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christer Weinigel <christer@weinigel.se>
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 23, 2016 at 11:14 PM,  <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hello Rob,
->
-> On 16-05-23 16:18:13, Rob Herring wrote:
->> On Fri, May 20, 2016 at 03:32:05PM +0530, Sanchayan Maity wrote:
->> > This adds a SoC driver to be used by Freescale Vybrid SoC's.
->> > Driver utilises syscon and nvmem consumer API's to get the
->> > various register values needed and expose the SoC specific
->> > properties via sysfs.
->> >
->> > A sample output from Colibri Vybrid VF61 is below:
->> >
->> > root@colibri-vf:~# cd /sys/bus/soc/devices/soc0
->> > root@colibri-vf:/sys/bus/soc/devices/soc0# ls
->> > family     machine    power      revision   soc_id     subsystem  uevent
->> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat family
->> > Freescale Vybrid VF610
->> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat machine
->> > Freescale Vybrid
->> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat revision
->> > 00000013
->> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat soc_id
->> > df6472a6130f29d4
->> >
->> > Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > ---
->> >  .../bindings/arm/freescale/fsl,vf610-soc.txt       |  20 +++
->> >  drivers/soc/Kconfig                                |   1 +
->> >  drivers/soc/fsl/Kconfig                            |  10 ++
->> >  drivers/soc/fsl/Makefile                           |   1 +
->> >  drivers/soc/fsl/soc-vf610.c                        | 198 +++++++++++++++++++++
->> >  5 files changed, 230 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->> >  create mode 100644 drivers/soc/fsl/Kconfig
->> >  create mode 100644 drivers/soc/fsl/soc-vf610.c
->> >
->> > diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->> > new file mode 100644
->> > index 0000000..338905d
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->> > @@ -0,0 +1,20 @@
->> > +Vybrid System-on-Chip
->> > +---------------------
->> > +
->> > +Required properties:
->> > +
->> > +- compatible: "fsl,vf610-soc"
->> > +- rom-revision: phandle to the on-chip ROM node
->> > +- mscm: phandle to the MSCM CPU configuration node
->> > +- nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
->> > +- nvmem-cell-names: should contain string names "cfg0" and "cfg1"
->>
->> I still have similar concerns as the discussion on the last version.
->> This version only proves that you aren't describing h/w, but rather just
->> a collection of data that some driver wants.
->>
->> A driver can just as easily look-up all the nodes directly that these
->> phandles point to.
->
-> Agreed, that we can look up all the nodes directly that these phandles
-> refer to but I would still need a DT entry to bind to. While I could
-> bind to existing nodes like mscm cpucfg but that doesn't seem right.
->
-> The very first approach that we had taken was to integrate this functionality
-> in mach-vf610.c code under mach-imx
-> http://www.spinics.net/lists/devicetree/msg80654.html
 
-Yes, everyone wants to move all platform devices in the kernel to a
-corresponding DT node. The result is often making up nodes to do this.
-It's the same thing with cpufreq.
+--S4drRqups3dkeHIl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> and then it was recommended to migrate this to drivers/soc where we did use
-> phandles or direct look up via compatible strings
+On Tue, May 24, 2016 at 06:39:20PM +0200, Christer Weinigel wrote:
+> Document how to use devicetree aliases to assign a stable
+> bus number to a spi bus.
 
-The location in the tree is an orthogonal issue. You could move it and
-use of_machine_is_compatible without any DT change.
+Please submit patches using subject lines reflecting the style for the
+subsystem.  This makes it easier for people to identify relevant
+patches.
 
-The primary issue I have here is how do we bind soc_bus to DT in a
-consistent way. Sorry, but vybrid specific patches alone are never
-going to solve that issue.
+> Not having used devicetree that much it was surprisingly hard to
+> figure out how to assign a stable bus number to a spi bus.  Add a
+> simple example that shows how to do that.
 
-> http://www.spinics.net/lists/arm-kernel/msg420847.html
->
-> and
->
-> http://lkml.iu.edu/hypermail/linux/kernel/1506.0/03787.html
->
-> There hasn't been a consensus since v1.
+I'm not sure this is something we want to support at all, I can't
+immediately see anything that does this deliberately in the SPI code and
+obviously the "bus number" is something of a Linux specific concept
+which would need some explanation if we were going to document it.  It's
+something I'm struggling a bit to see a robust use case for that isn't
+better served by parsing sysfs, what's the goal here?
 
-I actually prefer your previous version binding soc_bus to the root
-bus node to this version. I think that is closer to the right
-direction. After all, pretty much everything is an SOC and every SOC
-has an SOC bus. Pretty much every SOC and board have revisions and may
-need to expose that revision info as well. We have to do this
-consistently which means having a default implementation for
-simple-bus that is not opt-in.
+> Mark Cced as the SPI maintainer.  Or should trivial documentation
+> fixes like this be addressed to someone else?
 
-Alternatively, we should just deprecate soc_bus and come up a
-different solution. Either way, I think we have a half implemented
-solution currently.
+This is definitely *not* trivial but yes, in general you should CC
+maintainers on things.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--S4drRqups3dkeHIl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXRI1sAAoJECTWi3JdVIfQJBEH/2azAjvdKjETWf7yGqvbp40P
+ivEbqP236nOhIhBj8BvDOU9x68kIvL6evIHXk9tGvq6HYrwBd+7bZQrS/1XeAg6d
+OFfE7Ia4mr9X4U2uVIE6fJggr8LQ/gGsdQsTg1ej2N3FfqC95l6Z9qB3BOptpxuj
+1C7YixX3EiKjpzjCa/7jZo3BDQjtdkwphXnFPCgn/PNHfoGxZzPPpK4RU/ZZZ4yP
+p6Tp43iqYgSowA2QbSjEbUU+TVPqmg1vXq3ylOS0aSnqPSS1ism+3hHm9xKUtSJe
+krGuZBgjArKUGc+lugMLxGXs+E7xrMFPITN68E5DxEYihkPZSflutUtVeknU2Ws=
+=dy/g
+-----END PGP SIGNATURE-----
+
+--S4drRqups3dkeHIl--
