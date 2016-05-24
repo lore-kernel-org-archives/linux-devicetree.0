@@ -1,108 +1,130 @@
-From: Rob Landley <rob@landley.net>
-Subject: Re: [PATCH v2 02/12] of: add J-Core cpu bindings
-Date: Tue, 24 May 2016 16:30:54 -0500
-Message-ID: <5744C80E.6070501@landley.net>
-References: <cover.1463708766.git.dalias@libc.org>
- <f3c89e4834665790ff13478c571cc9aaa9de5559.1463708766.git.dalias@libc.org>
- <20160523204846.GA16081@rob-hp-laptop>
- <20160523210328.GE21636@brightrain.aerifal.cx>
- <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
+From: =?UTF-8?Q?Emmanuel_Fust=c3=a9?= <emmanuel.fuste@laposte.net>
+Subject: Re: [PATCH 1/2] ASoC: pcm5102a: Add support for
+ PCM5102A codec
+Date: Wed, 25 May 2016 00:33:00 +0200
+Message-ID: <059ee86a-2768-f5db-38ac-c6e3c9a45e4f@laposte.net>
+References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org>
+ <1463130853-25096-2-git-send-email-kernel@martin.sperl.org>
+ <34ab107e-10dc-fbd3-28d1-203c6411851c@laposte.net>
+ <20160523170853.GB8206@sirena.org.uk>
+ <312f8476-a437-04d9-3d16-38d7c7c233ad@laposte.net>
+ <alpine.DEB.2.02.1605241640250.19416@lnxricardw1.se.axis.com>
+Reply-To: emmanuel.fuste@laposte.net
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Rich Felker <dalias@libc.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <alpine.DEB.2.02.1605241640250.19416@lnxricardw1.se.axis.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Ricard Wanderlof <ricard.wanderlof@axis.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel <alsa-devel@alsa-project.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Matthias Reichl <hias@horus.com>, Rob Herring <robh+dt@kernel.org>, Florian Meier <florian.meier@koalo.de>, linux-rpi-kernel@lists.infradead.org, kernel@martin.sperl.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/23/2016 06:29 PM, Rob Herring wrote:
-> On Mon, May 23, 2016 at 4:03 PM, Rich Felker <dalias@libc.org> wrote:
->> On Mon, May 23, 2016 at 03:48:46PM -0500, Rob Herring wrote:
->>> On Fri, May 20, 2016 at 02:53:03AM +0000, Rich Felker wrote:
->>>> Signed-off-by: Rich Felker <dalias@libc.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/jcore/cpus.txt | 91 ++++++++++++++++++++++++
->>>>  1 file changed, 91 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/jcore/cpus.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/jcore/cpus.txt b/Documentation/devicetree/bindings/jcore/cpus.txt
->>>> new file mode 100644
->>>> index 0000000..00ef112
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/jcore/cpus.txt
->>>> @@ -0,0 +1,91 @@
->>>> +===================
->>>> +J-Core cpu bindings
->>>> +===================
->>>> +
->>>> +The J-Core processors are open source CPU cores that can be built as FPGA
->>>> +soft cores or ASICs. The device tree is also responsible for describing the
->>>> +cache controls and, for SMP configurations, all details of the SMP method,
->>>> +as documented below.
->>>> +
->>>> +
->>>> +---------------------
->>>> +Top-level "cpus" node
->>>> +---------------------
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- #address-cells: Must be 1.
->>>> +
->>>> +- #size-cells: Must be 0.
->>>> +
->>>> +Optional properties:
->>>> +
->>>> +- enable-method: Required only for SMP systems. If present, must be
->>>> +  "jcore,spin-table".
->>>> +
->>>> +
->>>> +--------------------
->>>> +Individual cpu nodes
->>>> +--------------------
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- device_type: Must be "cpu".
->>>> +
->>>> +- compatible: Must be "jcore,j2".
->>>
->>> Okay to have this, but you should have compatible strings for specific
->>> core implementations. AIUI, J2 is just the ISA.
+Le 24/05/2016 =E0 16:44, Ricard Wanderlof a =E9crit :
+>
+> On Mon, 23 May 2016, Emmanuel Fust=E9 wrote:
+>
+>> /* pcm5102a in HW mode with external SCK (4wire mode)
+>>  * at 128fs, 192fs or 256fs
+>>  */
+>> 	pcm5102a-4w: pcm5102a {
+>> 		compatible =3D "simple-i2s-codec";
+>> 		rate =3D <SNDRV_PCM_RATE_8000_192000>;
+>> 		format =3D < SNDRV_PCM_FMTBIT_S16_LE
+>> 			|SNDRV_PCM_FMTBIT_S24_LE
+>> 			|SNDRV_PCM_FMTBIT_S32_LE>;
+>> 	};
+>> or
+>> /* pcm5102a in HW mode with PLL on BCK (3wire mode)
+>>  * 16to384khz but only with bck rate of 64fs
+>>  */
+>> 	pcm5102a-4w: pcm5102a {
+>> 		compatible =3D "simple-i2s-codec";
+>> 		rate =3D <SNDRV_PCM_RATE_8000_192000
+>> 			^ SNDRV_PCM_RATE_8000>;
+>> 		format =3D <SNDRV_PCM_FMTBIT_S32_LE>;
+>> 	};
+>> Or
+>> /* ES9023 in asynchronous mode mclk > 37Mhz
+>>  * I did not try bck rate <64fs as the sabre family did not generally
+>>  * support it.
+>>  */
+>> 	es9023: es9023 {
+>> 		compatible =3D "simple-i2s-codec";
+>> 		rate =3D <SNDRV_PCM_RATE_8000_192000>;
+>> 		format =3D <SNDRV_PCM_FMTBIT_S32_LE>;
+>> 	};
 >>
->> There was some past discussion you probably missed on the linux-sh
->> list, starting here:
+>> We could use I2S friendly property instead of "format" :
+>> 		bckrates =3D <48, 64>;
 >>
->> http://www.spinics.net/lists/linux-sh/msg50028.html
 >>
->> Basically it's really hard to identify what "the specific core
->> implementation" even means with a soft core. If you have some ideas
->> I'd be happy to hear them, but I think there should always be a
->> "jcore,j2" fallback compatible tag in any case.
-> 
-> Presumably you do some sort of versioning on the VHDL source that you
-> can correlate to.
-> 
-> If you have sufficient s/w accessible version registers that are
-> always going to be updated on IP changes then, you don't really need
-> more specific compatible strings.
+>> With two or tree more property (gpio for mute, de-emphasis and filter
+>> selection), you could cover 98% of I2S DAC with hardware only interfaces=
+. It
+>> cover too startup mode of most hifi I2C or SPI controllable DAC. Which i=
+s a
+>> good starting point for chip for which a driver is not already written.
+>
+> It seems to me that this only covers the cases where the is codec running
+> in slave mode with MCLK derived from the BCLK, but not cases where the
+> codec is master and needs to have its MCLK configured appropriately (in
+> terms of device-specifc clock source and PLL settings), or am I missing
+> something?
+>
+> /Ricard
+>
 
-There are no version registers: the boot ROM can be output as part of
-the build, and the dtb can be provided by the boot ROM. So you don't
-need boot registers, you literally put any version info you need in the
-dtb in the boot rom.
+It not a codec but a simple I2S DAC.
+No I2S master mode.
+Like most DAC before the CODEC era and all the big mess around them.
+In the ES9023 case, the MCLK could either have no frequency an no phase =
 
-> Better yet, since you can change "the hardware", make it more
-> discoverable with registers for version numbering and feature bits.
-> The failure here is having a process where that can be forgotten...
+relationship with the I2S clocks.
+In this case, the MCLK is surely derived from a clock of the Rpi SOC so =
 
-Why would you add hardware version registers when the hardware's
-attached boot rom is providing a dtb?
+you are right, and the whole HifiBerry driver should be rewritten with =
 
-What's the point?
+proper abstraction like Mark suggested : Clock binding etc ...
+But now as Mark say too, clock api integration is a goal, but not there.
+The proposed hw param rules is a start to not have to write specific =
 
-Rob
+machine driver because of clocking constraints.
+It is the second time I am scratching my head because of clocking =
+
+constraints and because I want to do something better than writing =
+
+another trivial machine driver.
+In my case (BBB or other Ti soc using mcasp) I will have to had =
+
+mux/clk_set_parent switching action and/or clk_set_rate action. But I am =
+
+not persuaded that is it the way to go.
+
+That why, by the time we get proper clock api integration with proper =
+
+constraint and constraint description mechanism, a simple DT =
+
+configurable codec driver in which we push the resulting constraint =
+
+(DAC+SOC+design choice) was appealing.
+
+But you are all right. This is not the long term proper way. And the =
+
+actual ultra simple PCM510xA driver could evolve to support all GPIO and =
+
+later properly express all his clock constraints independently of the =
+
+implementation choices.
+
+Thank your for your patience.
+
+Emmanuel.
