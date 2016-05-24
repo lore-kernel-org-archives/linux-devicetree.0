@@ -1,60 +1,87 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V12 2/2] pinctrl: max77620: add pincontrol driver for
- MAX77620/MAX20024
-Date: Tue, 24 May 2016 16:48:15 +0530
-Message-ID: <57443877.4010106@nvidia.com>
-References: <1463116755-30469-1-git-send-email-ldewangan@nvidia.com>	<1463116755-30469-4-git-send-email-ldewangan@nvidia.com> <CACRpkdZNDEL855=Mruwm4U7eFz-QiuvXuDP83QPOupkpj2Jpkg@mail.gmail.com>
+From: Antony Pavlov <antonynpavlov@gmail.com>
+Subject: Re: [PATCH] MIPS: devicetree: fix cpu interrupt controller
+ node-names
+Date: Tue, 24 May 2016 14:43:17 +0300
+Message-ID: <20160524144317.53614ee26334019774c3ea99@gmail.com>
+References: <1464003540-13009-1-git-send-email-antonynpavlov@gmail.com>
+	<CAL_Jsq+CC3p0hPTtPB=RsL9O7sqX1ZXKkoFk0dOj0gvvKifAkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZNDEL855=Mruwm4U7eFz-QiuvXuDP83QPOupkpj2Jpkg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+CC3p0hPTtPB=RsL9O7sqX1ZXKkoFk0dOj0gvvKifAkw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Linux-MIPS <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 23 May 2016 10:47:16 -0500
+Rob Herring <robh+dt@kernel.org> wrote:
 
-On Tuesday 24 May 2016 04:51 PM, Linus Walleij wrote:
-> On Fri, May 13, 2016 at 7:19 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
->
->> MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO pins
->> which also act as the special function in alternate mode. Also
->> there is configuration like push-pull, open drain, FPS timing
->> etc for these pins.
->>
->> Add pin control driver to configure these parameters through
->> pin control APIs.
->>
->> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Patch applied for the next kernel cycle.
-Thank you very much.
+> On Mon, May 23, 2016 at 6:39 AM, Antony Pavlov <antonynpavlov@gmail.c=
+om> wrote:
+> > Here is the quote from [1]:
+> >
+> >     The unit-address must match the first address specified
+> >     in the reg property of the node. If the node has no reg propert=
+y,
+> >     the @ and unit-address must be omitted and the node-name alone
+> >     differentiates the node from other nodes at the same level
+> >
+> > This patch adjusts MIPS dts-files and devicetree binding
+> > documentation in accordance with [1].
+> >
+> >     [1] Power.org(tm) Standard for Embedded Power Architecture(tm)
+> >         Platform Requirements (ePAPR). Version 1.1 =E2=80=93 08 Apr=
+il 2011.
+> >         Chapter 2.2.1.1 Node Name Requirements
+>=20
+> FYI, you can reference "the Devicetree Spec" now: devicetree.org
 
->
->> +       switch (param) {
->> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
->> +               if (mpci->pin_info[pin].drv_type == MAX77620_PIN_OD_DRV)
->> +                       arg = 1;
->> +               break;
-> Hmmmm OK is this one of those cases we discussed where
-> you need to be able to tell the pin config back-end to do the
-> open draining (etc) from the GPIO driver?
+Thanks for your note! Last time I visited devicetree.org in Jan 2015.
+Now I see that the devicetree.org site has changed dramaticaly,
+e.g. it does not use Mediawiki anymore.
 
-The back end request was for tegra-gpio, not for this. On Tegra GPIO the 
-open drain configurations are in different register space i.e. pin 
-control register space instead of gpio controller.
+Alas some important links from the http://www.devicetree.org/specificat=
+ions/ page are broken:
 
-In this driver, it is configuration via pinctrl. Here pincontrol and 
-gpio driver share same registers.
-Now, as we have the method to configure the open drain bit from the GPIO 
-interface, we really dont need to do this from pinctrl framework.
+   * http://www.devicetree.org/specifications-pdf
+   * https://github.com/devicetree-org/devicetree-specification-release=
+d
 
-For doing from GPIO framework, the client need to aware that gpio is 
-open drain type.
+Anyway I have got a prerelease specification version from github:
 
-Can we make something that open drain of pins can be provided via some 
-common interface like DT of controller based on platforms configuration  
-and client need not to worry about this? For client, it will be simple 
-gpio calls.
+    https://raw.githubusercontent.com/devicetree-org/devicetree-specifi=
+cation-released/master/prerelease/devicetree-specification-v0.1-pre1-20=
+160429.pdf
 
+
+> Acked-by: Rob Herring <robh@kernel.org>
+>=20
+> > Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Paul Burton <paul.burton@imgtec.com>
+> > Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Pawel Moll <pawel.moll@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> > Cc: Kumar Gala <galak@codeaurora.org>
+> > Cc: linux-mips@linux-mips.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  Documentation/devicetree/bindings/mips/cpu_irq.txt | 2 +-
+> >  arch/mips/boot/dts/ingenic/jz4740.dtsi             | 2 +-
+> >  arch/mips/boot/dts/ralink/mt7620a.dtsi             | 2 +-
+> >  arch/mips/boot/dts/ralink/rt2880.dtsi              | 2 +-
+> >  arch/mips/boot/dts/ralink/rt3050.dtsi              | 2 +-
+> >  arch/mips/boot/dts/ralink/rt3883.dtsi              | 2 +-
+> >  arch/mips/boot/dts/xilfpga/nexys4ddr.dts           | 2 +-
+> >  7 files changed, 7 insertions(+), 7 deletions(-)
+
+
+--=20
+--=C2=A0
+Best regards,
+=C2=A0 Antony Pavlov
