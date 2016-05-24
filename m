@@ -1,102 +1,26 @@
-From: maitysanchayan@gmail.com
-Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
-Date: Tue, 24 May 2016 09:44:47 +0530
-Message-ID: <20160524041447.GA2884@Sanchayan-Arch.localdomain>
-References: <cover.1463737502.git.maitysanchayan@gmail.com>
- <ffef165d05f71a1b19437171d8fdb4bc78f6b1e3.1463737502.git.maitysanchayan@gmail.com>
- <20160523211813.GA30237@rob-hp-laptop>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/4] arm64: dts: r8a7795: Add HSUSB device node and enable channel 0 of USB2.0
+Date: Tue, 24 May 2016 13:57:36 +0900
+Message-ID: <1464065860-3948-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160523211813.GA30237@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: arnd@arndb.de, shawnguo@kernel.org, stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+This patch is based on the renesas-drivers / renesas-drivers-2016-05-17-v4.6 tag.
 
-On 16-05-23 16:18:13, Rob Herring wrote:
-> On Fri, May 20, 2016 at 03:32:05PM +0530, Sanchayan Maity wrote:
-> > This adds a SoC driver to be used by Freescale Vybrid SoC's.
-> > Driver utilises syscon and nvmem consumer API's to get the
-> > various register values needed and expose the SoC specific
-> > properties via sysfs.
-> > 
-> > A sample output from Colibri Vybrid VF61 is below:
-> > 
-> > root@colibri-vf:~# cd /sys/bus/soc/devices/soc0
-> > root@colibri-vf:/sys/bus/soc/devices/soc0# ls
-> > family     machine    power      revision   soc_id     subsystem  uevent
-> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat family
-> > Freescale Vybrid VF610
-> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat machine
-> > Freescale Vybrid
-> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat revision
-> > 00000013
-> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat soc_id
-> > df6472a6130f29d4
-> > 
-> > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
-> > ---
-> >  .../bindings/arm/freescale/fsl,vf610-soc.txt       |  20 +++
-> >  drivers/soc/Kconfig                                |   1 +
-> >  drivers/soc/fsl/Kconfig                            |  10 ++
-> >  drivers/soc/fsl/Makefile                           |   1 +
-> >  drivers/soc/fsl/soc-vf610.c                        | 198 +++++++++++++++++++++
-> >  5 files changed, 230 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
-> >  create mode 100644 drivers/soc/fsl/Kconfig
-> >  create mode 100644 drivers/soc/fsl/soc-vf610.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
-> > new file mode 100644
-> > index 0000000..338905d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
-> > @@ -0,0 +1,20 @@
-> > +Vybrid System-on-Chip
-> > +---------------------
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: "fsl,vf610-soc"
-> > +- rom-revision: phandle to the on-chip ROM node
-> > +- mscm: phandle to the MSCM CPU configuration node
-> > +- nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
-> > +- nvmem-cell-names: should contain string names "cfg0" and "cfg1"
-> 
-> I still have similar concerns as the discussion on the last version. 
-> This version only proves that you aren't describing h/w, but rather just 
-> a collection of data that some driver wants.
-> 
-> A driver can just as easily look-up all the nodes directly that these 
-> phandles point to.
+Yoshihiro Shimoda (4):
+  arm64: dts: r8a7795: Add HSUSB device node
+  arm64: dts: salvator-x: enable usb2_phy of channel 0
+  arm64: dts: salvator-x: enable USB 2.0 Host channel 0
+  arm64: dts: salvator-x: enable HSUSB
 
-Agreed, that we can look up all the nodes directly that these phandles
-refer to but I would still need a DT entry to bind to. While I could
-bind to existing nodes like mscm cpucfg but that doesn't seem right.
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 36 ++++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 17 ++++++++++
+ 2 files changed, 53 insertions(+)
 
-The very first approach that we had taken was to integrate this functionality
-in mach-vf610.c code under mach-imx
-http://www.spinics.net/lists/devicetree/msg80654.html
-
-and then it was recommended to migrate this to drivers/soc where we did use
-phandles or direct look up via compatible strings
-
-http://www.spinics.net/lists/arm-kernel/msg420847.html
-
-and
-
-http://lkml.iu.edu/hypermail/linux/kernel/1506.0/03787.html
-
-There hasn't been a consensus since v1.
-
-> 
-> And as long as we have inconsistent use of soc_device, I don't want to 
-> see any compatible strings related to it.
-> 
-
-Regards,
-Sanchayan.
+-- 
+1.9.1
