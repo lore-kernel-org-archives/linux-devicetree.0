@@ -1,59 +1,117 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
-Date: Tue, 24 May 2016 09:09:41 +0100
-Message-ID: <57440C45.5040105@arm.com>
-References: <cover.1463708766.git.dalias@libc.org>
- <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
- <20160523205320.GA21655@rob-hp-laptop>
- <20160523211342.GG21636@brightrain.aerifal.cx>
+From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Subject: a few simple questions about device tree content in the kernel
+Date: Tue, 24 May 2016 04:09:58 -0400 (EDT)
+Message-ID: <alpine.LFD.2.20.1605240344210.28949@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160523211342.GG21636-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/05/16 22:13, Rich Felker wrote:
-> On Mon, May 23, 2016 at 03:53:20PM -0500, Rob Herring wrote:
->> On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
->>> Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
->>> ---
->>>  .../bindings/interrupt-controller/jcore,aic.txt    | 28 ++++++++++++++++++++++
->>>  1 file changed, 28 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
->>> new file mode 100644
->>> index 0000000..dc9fde8
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
->>> @@ -0,0 +1,28 @@
->>> +J-Core Advanced Interrupt Controller
->>> +
->>> +Required properties:
->>> +
->>> +- compatible : Should be "jcore,aic1" for the (obsolete) first-generation aic
->>> +  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
->>> +  the "aic2" core with 64 interrupts.
->>> +
->>> +- interrupt-controller : Identifies the node as an interrupt controller
->>> +
->>> +- #interrupt-cells : Specifies the number of cells needed to encode an
->>> +  interrupt source. The value shall be 1.
->>
->> No level/edge support? Need 2 cells if so.
-> 
-> No, all the logic is in hardware. From the software side you just need
-> handle_simple_irq or equivalent.
 
-Not even an EOI?
+  first, a question about some code in drivers/of/base.c:
 
-	M.
+  void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+  {
+        struct property *pp;
+
+        of_aliases = of_find_node_by_path("/aliases");
+        of_chosen = of_find_node_by_path("/chosen");
+        if (of_chosen == NULL)
+                of_chosen = of_find_node_by_path("/chosen@0");
+
+        if (of_chosen) {
+                /* linux,stdout-path and /aliases/stdout are for legacy compatibility */
+                const char *name = of_get_property(of_chosen, "stdout-path", NULL);
+                if (!name)
+                        name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+                if (IS_ENABLED(CONFIG_PPC) && !name)
+                        name = of_get_property(of_aliases, "stdout", NULL);
+                if (name)
+                        of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
+        }
+	... snip ...
+
+  i can see up there that, first, "/chosen@0" is clearly an equivalent
+name (for backward compatibility?) for the "chosen" node, but if i
+scan the current kernel source tree, it seems absolutely no one is
+using it:
+
+$ grep -r "chosen@0" *
+arch/powerpc/boot/oflib.c:		chosen = of_finddevice("/chosen@0");
+arch/microblaze/kernel/prom.c:				strcmp(uname, "chosen@0") == 0)) {
+drivers/of/base.c:		of_chosen = of_find_node_by_path("/chosen@0");
+drivers/of/fdt.c:		offset = fdt_path_offset(fdt, "/chosen@0");
+drivers/of/fdt.c:	    (strcmp(uname, "chosen") != 0 && strcmp(uname, "chosen@0") != 0))
+$
+
+if this is a deprecated name for that node, now would seem to be a
+good time to toss it before someone gets a chance to resurrect it.
+
+  next (and in the same vein), the kernel code in
+drivers/cpufreq/cpufreq-dt.c accepts the older style property name
+"cpu0-supply":
+
+  /* Try "cpu0" for older DTs */
+  if (!cpu) {
+          pp = of_find_property(np, "cpu0-supply", NULL);
+          if (pp) {
+                  name = "cpu0";
+                  goto node_put;
+          }
+  }
+
+  pp = of_find_property(np, "cpu-supply", NULL);
+  if (pp) {
+          name = "cpu";
+          goto node_put;
+  }
+
+strangely(?), the *only* architecture that still uses the older name
+in .dts and .dtsi files is ARM, where that property name is used quite
+extensively. is there something about ARM that seems to want to hang
+onto that older property name? just curious.
+
+  finally (for now), is there any reason to use numeric phandles
+rather than labels? i ask since someone responsible for putting
+together DTS files for a group of us handed us perfectly working
+iles, but they make use of numeric phandles:
+
+                i2c@3000 {
+                        device_type = "i2c";
+                        compatible = "fsl-i2c";
+                        reg = <0x3000 0x100>;
+                        interrupts = <0xe 0x8>;
+                        interrupt-parent = <700>;
+                        dfsrr;
+                };
+
+                ... snip ...
+
+                pic@700 {
+                        linux,phandle = <700>;
+
+is there any reason to use (in this case) the phandle of "700", rather
+than just adding a label to the pic@700 node and using that label? i'm
+not sure why someone would *prefer* to use numeric phandles.
+
+  that's it for now, thanks.
+
+rday
+
 -- 
-Jazz is not dead. It just smells funny...
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
