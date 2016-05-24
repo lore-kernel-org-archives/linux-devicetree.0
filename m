@@ -1,80 +1,58 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: rockchip: drop rk3288 jtag/mmc switch handling
-Date: Tue, 24 May 2016 10:09:41 +0800
-Message-ID: <feee590b-e9a9-7c36-cf99-9dd1cb229eb7@rock-chips.com>
-References: <1464015539-19521-1-git-send-email-heiko@sntech.de>
- <1464015539-19521-4-git-send-email-heiko@sntech.de>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 2/4] hwrng: bcm2835: Support Broadcom NSP SoC rng
+Date: Mon, 23 May 2016 19:14:09 -0700
+Message-ID: <87oa7w2oem.fsf@eliezer.anholt.net>
+References: <1464020451-16520-1-git-send-email-yendapally.reddy@broadcom.com> <1464020451-16520-3-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464015539-19521-4-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1464020451-16520-3-git-send-email-yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kieran Bingham <kieranbingham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=D4=DA 2016/5/23 22:58, Heiko Stuebner =D0=B4=B5=C0:
-> We moved that functionality to a more generic place where it can also
-> be used for other socs, so drop it from architecture code.
->
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+--=-=-=
+Content-Type: text/plain
 
-It looks good to drop this Soc related setting from
-architecture code.
+Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+writes:
 
-Reviewed-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> This supports the random number generator available in NSP SoC.
+> Masks the rng interrupt for NSP.
 
-> ---
->  arch/arm/mach-rockchip/rockchip.c | 12 ------------
->  1 file changed, 12 deletions(-)
->
-> diff --git a/arch/arm/mach-rockchip/rockchip.c b/arch/arm/mach-rockch=
-ip/rockchip.c
-> index beb71da..e7b2aa7 100644
-> --- a/arch/arm/mach-rockchip/rockchip.c
-> +++ b/arch/arm/mach-rockchip/rockchip.c
-> @@ -29,13 +29,11 @@
->  #include "core.h"
->  #include "pm.h"
->
-> -#define RK3288_GRF_SOC_CON0 0x244
->  #define RK3288_TIMER6_7_PHYS 0xff810000
->
->  static void __init rockchip_timer_init(void)
->  {
->  	if (of_machine_is_compatible("rockchip,rk3288")) {
-> -		struct regmap *grf;
->  		void __iomem *reg_base;
->
->  		/*
-> @@ -54,16 +52,6 @@ static void __init rockchip_timer_init(void)
->  		} else {
->  			pr_err("rockchip: could not map timer7 registers\n");
->  		}
-> -
-> -		/*
-> -		 * Disable auto jtag/sdmmc switching that causes issues
-> -		 * with the mmc controllers making them unreliable
-> -		 */
-> -		grf =3D syscon_regmap_lookup_by_compatible("rockchip,rk3288-grf");
-> -		if (!IS_ERR(grf))
-> -			regmap_write(grf, RK3288_GRF_SOC_CON0, 0x10000000);
-> -		else
-> -			pr_err("rockchip: could not get grf syscon\n");
->  	}
->
->  	of_clk_init(NULL);
->
+The interrupt reg is also present on the 2835.  I would prefer for
+simplicity if you also initialized the register to the same value on the
+Pi, even though the firmware has presumably been setting it for us
+already.
 
+However, this patch is still correct and I'm fine with it, so it's:
 
---=20
-Best Regards
-Shawn Lin
+Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXQ7jxAAoJELXWKTbR/J7o18gP/3kYayocI6eOHIEdG++/KOHi
+jjBG6Z6q6ttcGLegMhugNdjcznwLrTT6dR/RSf62pdi8on+2cXZaFttwAlhiamO/
+DHIMYBFE/qpMtom20SMffy/CwAKzL0SMMVpcnbZ4b5lnBjAw97rNC495wrly+tDa
+Uxw9S0VZQcsrx35CcuMXOUe4Har2u/GL++4nZ3nR4H1LS8ryrOn/ydrQ77UI2UZ9
+VJjnDOmbVehj1xfiOQLgwHRqhfKY9xKemaeA2bmT44qHd/+zMPPzSR9q9fsrytA7
+yjOQa6SxHGySj/JpoXxYw/kK6EPo7/Kw9EuPu2FtYahtAKOBUVQ5p9yr4mb1yzfx
+9yZH160yKbeqz4R24o/zUMn2jWci9W0dJ2TCxvvXq6jykTi2fxLpu2Dyx5nHJr8E
+lqXSt4UnRz+zjn4zjK2+CIcXRmzUTavrRKBsxofP77op9qAhESFtLox0J9oGt1Oi
+445SY+uaf0Z7JquW23GD/2A1yn4F8hD9bpEuVpLz8CTixF/+jr0ej1E4uA3yCJ3N
+8Ql+13UsxDGdnitzTRTZ+zkr5ST7T3TNAeAr4le2m8omiHwRqDKSKzXvkqWqq853
+frfgvUIIe3tQ9oU5L/3nF6zkKS97VX1b502lL9xfOdqTCL9dgfmp6d0CUq8SfBBC
+J6YgCA54aq3EpSlS0ylI
+=KoxT
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
