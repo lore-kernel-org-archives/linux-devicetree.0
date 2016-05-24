@@ -1,135 +1,108 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [RFC PATCH 1/2] Input: rotary-encoder- Add support for absolute
- encoder
-Date: Tue, 24 May 2016 10:39:26 +0530
-Message-ID: <5743E206.2050602@ti.com>
-References: <1463648641-6931-1-git-send-email-vigneshr@ti.com>
- <1463648641-6931-2-git-send-email-vigneshr@ti.com>
- <20160522102606.GB23704@pengutronix.de> <5742E710.9@ti.com>
- <20160523131808.GN23704@pengutronix.de>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v3 7/7] dt-bindings: drm/bridge: Update bindings for
+ ADV7533
+Date: Tue, 24 May 2016 10:45:34 +0530
+Message-ID: <5743E376.7070708@codeaurora.org>
+References: <1441625800-1858-1-git-send-email-architt@codeaurora.org>
+ <1992414.kkmfQUJ8oO@avalon> <5719B942.8070907@codeaurora.org>
+ <1987165.vo5BTWVL5e@avalon> <573A935D.7010301@codeaurora.org>
+ <CAGd==06i9ojb-C=LRxPkvh-CrkEFjZ8tiEkkVzYfaqODndfqaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160523131808.GN23704@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jonathan Corbet <corbet@lwn.net>, Johan Hovold <johan@kernel.org>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Masanari Iida <standby24x7@gmail.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, S Twiss <stwiss.opensource@diasemi.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Moritz Fischer <moritz.fischer@ettus.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Timo Teras <timo.teras@iki.fi>, Clifton Barnes <clifton.a.barnes@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAGd==06i9ojb-C=LRxPkvh-CrkEFjZ8tiEkkVzYfaqODndfqaQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Xinliang Liu <xinliang.liu@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, treding@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 05/23/2016 06:48 PM, Uwe Kleine-K=F6nig wrote:
-> Hello,
->=20
-> On Mon, May 23, 2016 at 04:48:40PM +0530, R, Vignesh wrote:
->> On 5/22/2016 3:56 PM, Uwe Kleine-K=F6nig wrote:
->>> Hello,
->>>
->>> On Thu, May 19, 2016 at 02:34:00PM +0530, Vignesh R wrote:
->>>> There are rotary-encoders where GPIO lines reflect the actual posi=
-tion
->>>> of the rotary encoder dial. For example, if dial points to 9, then=
- four
->>>> GPIO lines connected to the rotary encoder will read HLLH(1001b =3D=
- 9).
->>>> Add support for such rotary-encoder.
->>>> The driver relies on rotary-encoder,absolute-encoder DT property t=
-o
->>>> detect such encoders.
->>>> Since, GPIO IRQs are not necessary to work with
->>>> such encoders, optional polling mode support is added using
->>>
->>> I don't understand this. It's necessary in the same way as with the
->>> already supported devices. I.e. you want to trigger an irq when the
->>> encoder is moved and then check for it's position in the handler.
->>>
->>
->> Unlike already supported device, there is no need to count steps or
->> determine the direction of rotation. Hence, IRQ is not a requirement=
-,
->> periodically polling the gpio lines is more than sufficient. With
->> absolute encoder, you are able to determine the current position at =
-any
->> time just by looking at the gpio inputs.
->=20
-> The timing might not be that critical, but there is no reason to oper=
-ate
-> this device without irqs, is there?
-
-No, I am not against the use of IRQs. In fact, my patches add support
-for both IRQ based(default) and polling based operation(optional). If
-rotary-encoder does not have interrupt capable gpio lines connected to
-it (like am335x-ice) then one can make use of the polling mode support.
-
->=20
->> Suppose we poll device at t=3D0ms and see gpio values are LLLH(1), i=
-f we
->> again poll device at t=3D500ms(which is what input_poll_dev helps to=
- do)
->> and see that gpio values is LLHH(3), then we know that rotary encode=
-r
->> has changed to 3. This can be done w/o IRQ for absolute encoders.
->>
->>>> diff --git a/Documentation/devicetree/bindings/input/rotary-encode=
-r.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
->>>> index 6c9f0c8a846c..9c928dbd1500 100644
->>>> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
->>>> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
->>>> @@ -12,6 +12,10 @@ Optional properties:
->>>>  - rotary-encoder,relative-axis: register a relative axis rather t=
-han an
->>>>    absolute one. Relative axis will only generate +1/-1 events on =
-the input
->>>>    device, hence no steps need to be passed.
->>>> +- rotary-encoder,absolute-encoder: support encoders where GPIO li=
-nes
->>>> +  reflect the actual position of the rotary encoder dial. For exa=
-mple,
->>>> +  if dial points to 9, then four GPIO lines read HLLH(1001b =3D 9=
-).
->>>> +  In this case, rotary-encoder,steps-per-period needed not be def=
-ined.
->>>
->>> IMHO this is wrong, I'd formalize this device as:
->>>
->>> 	{
->>> 		compatible =3D "rotary-encoder";
->>> 		gpios =3D <&gpio 19 1>, <&gpio 20 0>, <...>, <...>;
->>> 		rotary-encoder,encoding =3D "binary";
->>> 		rotary-encoder,steps =3D <16>;
->>> 		rotary-encoder,steps-per-period =3D <16>;
->>
->> The above bindings essential means quarter_period device. I would no=
-t
->> like to bother with all the logic in rotary_encoder_quarter_period_i=
-rq()
->> when we can know encoder->pos by directly reading state of gpio line=
-s.
->=20
-> OK, we have code that is more complex than it needs to be for your
-> device. But your device is a special case of the supported devices, s=
-o
-> I'd say don't bother that there is more logic in the driver than you
-> need and be lucky.
->=20
-
-More complexity is just a overhead. Since, encoder can be turned at a
-rate faster than handling of IRQs (rotary_encoder_quarter_period_irq()
-is threaded IRQ hence, priority is not close to real time), some states
-can be missed. rotary_encoder_quarter_period_irq() is not robust in thi=
-s
-case, reading gpios directly is more suitable option. I see similar
-views expressed in previously[1]
-
-[1]http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/=
-391196.html
-
---=20
-Regards
-Vignesh
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiAwNS8xNy8yMDE2IDA5OjQ4IEFNLCBYaW5saWFuZyBMaXUgd3JvdGU6Cj4gT24gMTcgTWF5
+IDIwMTYgYXQgMTE6NDMsIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+IHdy
+b3RlOgo+Pgo+Pgo+PiBPbiAwNS8xNi8yMDE2IDA1OjMxIFBNLCBMYXVyZW50IFBpbmNoYXJ0IHdy
+b3RlOgo+Pj4KPj4+IEhpIEFyY2hpdCwKPj4+Cj4+PiBPbiBGcmlkYXkgMjIgQXByIDIwMTYgMTE6
+MTA6MTggQXJjaGl0IFRhbmVqYSB3cm90ZToKPj4+Pgo+Pj4+IE9uIDA0LzIyLzIwMTYgMDQ6MDIg
+QU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+Pj4+Cj4+Pj4+IE9uIFdlZG5lc2RheSAwOSBN
+YXIgMjAxNiAxNjoyNzoxOCBBcmNoaXQgVGFuZWphIHdyb3RlOgo+Pj4+Pj4KPj4+Pj4+IEFkZCBk
+ZXNjcmlwdGlvbiBvZiBBRFY3NTMzLiBBZGQgdGhlIHJlcXVpcmVkIGFuZCBvcHRpb25hbCBwcm9w
+ZXJ0aWVzCj4+Pj4+PiB0aGF0Cj4+Pj4+PiBhcmUgc3BlY2lmaWMgdG8gaXQuCj4+Pj4+Pgo+Pj4+
+Pj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+Pj4+PiBDYzogUm9iIEhlcnJpbmcg
+PHJvYmhAa2VybmVsLm9yZz4KPj4+Pj4+Cj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFu
+ZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+Pj4+Pj4gLS0tCj4+Pj4+Pgo+Pj4+Pj4gLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTExLnR4dCAgICAgICAgfCAyNQo+Pj4+
+Pj4gKysrKysrKysrKysrLS0tLS0KPj4+Pj4+IDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25z
+KCspLCA1IGRlbGV0aW9ucygtKQo+Pj4+Pj4KPj4+Pj4+IGRpZmYgLS1naXQKPj4+Pj4+IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTEx
+LnR4dAo+Pj4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvYWRpLGFkdjc1MTEudHh0Cj4+Pj4+PiBpbmRleAo+Pj4+Pj4gOTZjMjVlZS4uNDIwZGE1
+YSAxMDA2NDQKPj4+Pj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQKPj4+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQKPj4+Cj4+
+Pgo+Pj4gW3NuaXBdCj4+Pgo+Pj4+Pj4gKy0gYWRpLGRpc2FibGUtdGltaW5nLWdlbmVyYXRvcjog
+T25seSBmb3IgQURWNzUzMy4gRGlzYWJsZXMgdGhlCj4+Pj4+PiBpbnRlcm5hbAo+Pj4+Pj4gdGlt
+aW5nCj4+Pj4+PiArICBnZW5lcmF0b3IuIFRoZSBjaGlwIHdpbGwgcmVseSBvbiB0aGUgc3luYyBz
+aWduYWxzIGluIHRoZSBEU0kgZGF0YQo+Pj4+Pj4gbGFuZXMsCj4+Pj4+PiArICByYXRoZXIgdGhh
+biBnZW5lcmF0ZSBpdHMgb3duIHRpbWluZ3MgZm9yIEhETUkgb3V0cHV0Lgo+Pj4+Pgo+Pj4+Pgo+
+Pj4+PiBJc24ndCB0aGF0IHNvbWV0aGluZyB0aGF0IHNob3VsZCBiZSBzZWxlY3RhYmxlIGF0IHJ1
+bnRpbWUgPwo+Pj4+Cj4+Pj4KPj4+PiBUaGUgdGltaW5nIGdlbmVyYXRvciBjYW4gYmUgZW5hYmxl
+ZC9kaXNhYmxlZCBhdCBydW50aW1lLiBBbHRob3VnaCwgd2UKPj4+PiBkb24ndCBoYXZlIGEgd2F5
+IHRvIHRlbGwgdGhlIGRyaXZlciB3aGV0aGVyIHdlIHdhbnQgdG8ga2VlcCBpdCBlbmFibGVkCj4+
+Pj4gb3Igbm90Lgo+Pj4+Cj4+Pj4gSXQncyBhIGhhcmR3YXJlIGZlYXR1cmUgdGhhdCB3b3JrcyB3
+ZWxsIG9uIG1vc3QgcGxhdGZvcm1zLCBidXQgbm90IG9uCj4+Pj4gYWxsLiBJbiBwYXJ0aWN1bGFy
+LCBpdCB3b3JrcyB3ZWxsIG9uIERCNDEwYywgYnV0IGNhdXNlcyBpc3N1ZXMgd2l0aAo+Pj4+IHRo
+ZSBIaWtleSA5NiBib2FyZC4gVGhlIERTSSBob3N0IG9uIEhpa2V5IGhhcyBkaWZmZXJlbnQgY2xv
+Y2sgc291cmNlcwo+Pj4+IHRoYXQgZ2VuZXJhdGUgdGhlIGRpc3BsYXkgY29udHJvbGxlcidzIHBp
+eGVsIGNsb2NrIGFuZCBEU0kgYnl0ZSBjbG9jaywKPj4+PiB3aGVyZWFzIHRoZSBRdWFsY29tbSBT
+b0MgdXNlcyB0aGUgc2FtZSBzb3VyY2UuIE15IGd1ZXNzIGlzIHRoYXQgdGhlCj4+Pj4gQURWNzUz
+MydzIHRpbWluZyBnZW5lcmF0b3IgZG9lc24ndCBsaWtlIGl0IHdoZW4gdGhlIHBpeGVsIGRhdGEg
+YW5kCj4+Pj4gY2xvY2sgYXJlIG91dCBvZiBwaGFzZSBvciBzb21ldGhpbmcuCj4+Pj4KPj4+PiBT
+aW5jZSBpdCBpcyBhIGhhcmR3YXJlIGZlYXR1cmUgd2hpY2ggbmVlZHMgdHdlYWtpbmcsIEkgdGhv
+dWdodCBpdAo+Pj4+IHF1YWxpZmllZCBhcyBhIERUIHByb3BlcnR5Lgo+Pj4KPj4+Cj4+PiBUaGUg
+ZmFjdCB0aGF0IGEgaGFyZHdhcmUgZ2VuZXJhdG9yIGlzIHByZXNlbnQgaXMgY2VydGFpbmx5IGRl
+c2NyaWJlcyB0aGUKPj4+IGhhcmR3YXJlLCBidXQgSSdtIG5vdCBzdXJlIHdoZXRoZXIgdG8gZW5h
+YmxlIGl0IG9yIG5vdCBhbHNvIHF1YWxpZmllcyBhcyBhCj4+PiBoYXJkd2FyZSBmZWF0dXJlLgo+
+Pj4KPj4+IEFyZSB0aGVyZSB1c2UgY2FzZXMgZm9yIHVzaW5nIHRoZSB0aW1pbmcgZ2VuZXJhdG9y
+IGNvbmRpdGlvbmFsbHkgb24gYQo+Pj4gZ2l2ZW4KPj4+IGJvYXJkID8gQXMgeW91IGltcGxlbWVu
+dCBzdXBwb3J0IGZvciBkaXNhYmxpbmcgaXQsIEkgYXNzdW1lIGl0J3Mgbm90Cj4+PiBtYW5kYXRv
+cnkuIFdoYXQgZmVhdHVyZShzKSBkbyB3ZSBsb3NlIGlmIHdlIGtlZXAgaXQgZGlzYWJsZWQgPwo+
+Pj4KPj4KPj4gVGhlIHNwZWMgc2F5cyBpdCdzIHJlY29tbWVuZGVkIHRvIHVzZSB0aGUgaW50ZXJu
+YWwgdGltaW5nIGdlbmVyYXRvci4gSW4KPj4gdGhlIGNhc2Ugb2YgZGI0MTBjLCBJIG9ic2VydmUg
+YW4gdW5zdGFibGUgb3V0cHV0L2ZsaWNrZXIgZm9yIGNlcnRhaW4KPj4gbW9kZXMgaWYgSSBkb24n
+dCBlbmFibGUgaXQuCj4+Cj4+IEluIHRoZSBjYXNlIG9mIGhpa2V5IHBsYXRmb3JtLCBpdCdzIHRo
+ZSBvdGhlciB3YXkgcm91bmQuCj4+Cj4+IFhpbmxpYW5nLCBjb3VsZCB5b3UgZGVzY3JpYmUgdGhl
+IHByb2JsZW1zIHlvdSBmYWNlIHdoZW4gdGhlIHRpbWluZwo+PiBnZW5lcmF0b3IgaXMgZW5hYmxl
+ZD8KPgo+IFllcywgIG9wZW5pbmcgdGhlIHRpbWluZyBnZW5lcmF0b3Igb2YgQURWNzUzMyBjYW4g
+YmVuZWZpdCB0aGUgSERNSQo+IG91dHB1dCBzaWduYWwuCj4gQnV0LCBmb3Igc29tZSBjaXJjdW1z
+dGFuY2VzLCB3ZSBuZWVkIHRvIGRpc2FibGUgdGltaW5nIGdlbmVyYXRvcjoKPiBUbyBtYWtlIG1v
+ZGVzIHdvcmssIHRoZSB0aW1pbmcgcGFyYW1ldGVycyAoaGZwLCBoYnAsIGV0Yy4pIHVzZWQgYnkK
+PiBBRFY3NTMzIHRpbWluZyBnZW5lcmF0b3Igc2hvdWxkIG1hdGNoIHRoZSBvbmVzIHVzZWQgaW4g
+RFNJLgo+IElmIHRoZSB0aW1pbmcgcGFyYW1ldGVycyBjaGFuZ2VkIGluIERTSSBhbmQgdGhlc2Ug
+Y2hhbmdpbmcgIHRpbWluZwo+IHBhcmFtZXRlcnMgY2FuJ3QgcGFzcyB0byBBRFY3NTMzLCB0aGVu
+IGl0IG5lZWQgdG8gZGlzYWJsZSB0aGUgdGltaW5nCj4gZ2VuZXJhdG9yIG9mIEFEVjc1MzMgdG8g
+bWFrZSBtb2RlIHdvcmsuCj4gU29tZSBtb2RlcyBpbiBIaUtleSBpcyBpbiB0aGlzIGNhc2UuCgoK
+VGhlIEFEVjc1MzMgY2hpcCdzIERTSSByZWNlaXZlciBzdXBwb3J0cyB0aGUgRFNJIFZpZGVvIG1v
+ZGUKc3ViLW1vZGU6ICJOb24tYnVyc3QgTW9kZSB3aXRoIHN5bmMgcHVsc2VzIi4gSWRlYWxseSwg
+YSBEU0kKcmVjZWl2ZXIgc3VwcG9ydGluZyB0aGlzIG1vZGUgc2hvdWxkIGJlIGFibGUgdG8gcmVj
+b25zdHJ1Y3QKdGhlIHRpbWluZ3MgdXNpbmcgcGFja2V0cyBlbWJlZGRlZCBpbiB0aGUgY29udHJv
+bGxlci4KCldpdGggREI0MTBjLCBpdCBzZWVtcyB0byBzdHJ1Z2dsZSB3aXRob3V0IGl0LCBhbmQg
+d2l0aApIaWtleSwgd2UgbmVlZCB0byBleHBsaWNpdGx5IGRpc2FibGUgaXQgYmVjYXVzZSwgYXMg
+SSB1bmRlcnN0YW5kLAp0aGUgRFNJIGNvbnRyb2xsZXIgdGhlcmUgdHdlYWtzIHNvbWUgb2YgdGhl
+IHRpbWluZ3MgcGFyYW1ldGVycwppbiB0aGUgbW9kZSBpdCB3YW50cyB0byBzZXQuCgpJdCB3b3Vs
+ZCBoYXZlIGJlZW4gaWRlYWwgdG8gbm90IGV4cG9zZSB0aGlzIGtub2IgaW4gRFQsIGJ1dAp3ZSBu
+ZWVkIGl0IGZvciBBRFY3NTMzIHRvIHdvcmsgYWNyb3NzIG11bHRpcGxlIHBsYXRmb3Jtcy4KCkxh
+dXJlbnQsIGRvIHlvdSBoYXZlIGFueSBtb3JlIHRob3VnaHRzIG9uIHRoaXM/IEknZCBwb3N0ZWQK
+b3V0IGEgdjQgb2YgdGhpcyBwYXRjaCBzZXQuIFBsZWFzZSBoYXZlIGEgbG9vayB3aGVuIHlvdSBn
+ZXQKdGhlIGNoYW5jZS4KClRoYW5rcywKQXJjaGl0CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRp
+b24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhv
+c3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
