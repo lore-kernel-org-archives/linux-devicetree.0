@@ -1,77 +1,66 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus number.
-Date: Tue, 24 May 2016 13:41:26 -0700
-Message-ID: <5744BC76.9090403@gmail.com>
-References: <1464107960-10775-1-git-send-email-christer@weinigel.se> <20160524174140.GE11605@leverpostej>
-Reply-To: frowand.list@gmail.com
+From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Subject: Re: Straight up new person
+Date: Tue, 24 May 2016 16:40:42 -0400 (EDT)
+Message-ID: <alpine.LFD.2.20.1605241638360.11009@Device-040570>
+References: <CANF=RFTPy+V2qzFiihEYNxRhn52uoL=RXZBAcGXcRi72DniLbw@mail.gmail.com> <5744B67E.6040209@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160524174140.GE11605@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Christer Weinigel <christer@weinigel.se>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5744B67E.6040209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Adam J Allison <adamj.allison-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/24/2016 10:41 AM, Mark Rutland wrote:
-> On Tue, May 24, 2016 at 06:39:20PM +0200, Christer Weinigel wrote:
->> Document how to use devicetree aliases to assign a stable
->> bus number to a spi bus.
->>
->> Signed-off-by: Christer Weinigel <christer@weinigel.se>
->>
->> ---
->>
->> Trivial documentation change.
->>
->> Not having used devicetree that much it was surprisingly hard to
->> figure out how to assign a stable bus number to a spi bus.  Add a
->> simple example that shows how to do that.
->>
->> Mark Cced as the SPI maintainer.  Or should trivial documentation
->> fixes like this be addressed to someone else?
->>
->>   /Christer
->>
->>  Documentation/devicetree/bindings/spi/spi-bus.txt | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
->> index 42d5954..c35c4c2 100644
->> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
->> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
->> @@ -94,3 +94,13 @@ SPI example for an MPC5200 SPI bus:
->>  			reg = <1>;
->>  		};
->>  	};
->> +
->> +Normally SPI buses are assigned dynamic bus numbers starting at 32766
->> +and counting downwards.  It is possible to assign the bus number
->> +statically using devicetee aliases.  For example, on the MPC5200 the
->> +"spi@f00" device above is connected to the "soc" bus.  To set its
->> +bus_num to 1 add an aliases entry like this:
-> 
-> As Mark Brown pointed out, this is very Linux-specific (at least in the
-> wording of the above).
+On Tue, 24 May 2016, Frank Rowand wrote:
 
-Yes, Linux-specific.  So the Linux documentation of bindings is the
-correct place for it.
+> On 5/23/2016 3:40 PM, Adam J Allison wrote:
+> > I'm a noob to this, and I've just got a simple typo.
+> > I don't want to bother you, but I can't find out who to email to get it fixed.
+> > I've read the documentation a few times, but still couldn't figure it out.
+> >
+> >
+> > tl dr
+> > am33xx.dtsi: line 190 emda3_mperr should probably be edma3_mperr
+> >
+> >
+> > Thank you for your understanding,
+> > Adam
+>
+> The documentation can be a little hard to navigate.
+>
+> Does this file help?
+>
+>    Documentation/devicetree/bindings/submitting-patches.txt
+>
+> If not, let me know and I'll try to make the documentation
+> better.
 
-> 
-> Generally, aliases are there to match _physical_ identifiers (e.g. to
-> match physical labels for UART0, UART1, and on).
-> 
-> I'm not sure whether that applies here.
+  also, when you spot a typo like that, ***immediately*** assume there
+are more of them:
 
-The code and behavior is in the Linux kernel.  It should be visible in
-the documentation instead of being a big mystery of how it works.
+$ grep emda *
+am33xx.dtsi:			interrupt-names = "edma3_ccint", "emda3_mperr",
+am4372.dtsi:			interrupt-names = "edma3_ccint", "emda3_mperr",
+dm814x.dtsi:			interrupt-names = "edma3_ccint", "emda3_mperr",
+dra7.dtsi:			interrupt-names = "edma3_ccint", "emda3_mperr",
+$
 
-> 
-> Thanks,
-> Mark.
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+because there always are.
+
+rday
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
