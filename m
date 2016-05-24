@@ -1,123 +1,51 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: RE: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
-Date: Tue, 24 May 2016 11:47:31 +0000
-Message-ID: <C89496FEAE474D468F30D558A9468D9F26CED772@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1464067268-35299-1-git-send-email-navam@xilinx.com>
- <14123451.MsNvJvqaJX@wuerfel>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V12 2/2] pinctrl: max77620: add pincontrol driver for MAX77620/MAX20024
+Date: Tue, 24 May 2016 13:53:36 +0200
+Message-ID: <CACRpkdagHFegb0HHyshqOZyJLrdpZwMnQvBtsGeZhOB1p9Lgfg@mail.gmail.com>
+References: <1463116755-30469-1-git-send-email-ldewangan@nvidia.com>
+	<1463116755-30469-4-git-send-email-ldewangan@nvidia.com>
+	<CACRpkdZNDEL855=Mruwm4U7eFz-QiuvXuDP83QPOupkpj2Jpkg@mail.gmail.com>
+	<57443877.4010106@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <14123451.MsNvJvqaJX@wuerfel>
-Content-Language: en-US
+In-Reply-To: <57443877.4010106@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 24, 2016 at 1:18 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
+> In this driver, it is configuration via pinctrl. Here pincontrol and gpio
+> driver share same registers.
+> Now, as we have the method to configure the open drain bit from the GPIO
+> interface, we really dont need to do this from pinctrl framework.
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: Tuesday, May 24, 2016 2:21 PM
-> To: Nava kishore Manne <navam@xilinx.com>
-> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
-> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
-> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
-> balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
-> <hyunk@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Radhey
-> Shyam Pandey <radheys@xilinx.com>; devicetree@vger.kernel.org; linux-
-> arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
-> 
-> On Tuesday, May 24, 2016 10:51:08 AM CEST Nava kishore Manne wrote:
-> > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > index 47b4e39..09df757 100644
-> > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > @@ -1,18 +1,23 @@
-> >  Xilinx USB2 device controller
-> >
-> >  Required properties:
-> > -- compatible		: Should be "xlnx,usb2-device-4.00.a"
-> > +- compatible		: Should be "xlnx,usb2-device-4.00.a" or
-> > +			  "xlnx,usb2-device-5.00"
-> >  - reg			: Physical base address and size of the USB2
-> >  			  device registers map.
-> >  - interrupts		: Should contain single irq line of USB2 device
-> >  			  controller
-> >  - xlnx,has-builtin-dma	: if DMA is included
-> > +- dma-ranges		: Should be as the following
-> > +			  <child-bus-address, parent-bus-address, length>
-> 
-> A USB host should not have any children that are DMA capable, I think, so
-> this property doesn't make sense here. It should be part of the parent bus.
-> 
-Will send next version (v4) by removing this property from the DT.
+OK good that works too...
 
-> > +- xlnx,addrwidth	: Should be the dma addressing size in bits(ex: 64
-> bits)
-> 
-> I'm still unconvinced about the property definition here. What are the
-> possible options for the IP block? I don't think I ever saw a reply from you to
-> my earlier questions.
-> 
+> For doing from GPIO framework, the client need to aware that gpio is open
+> drain type.
+>
+> Can we make something that open drain of pins can be provided via some
+> common interface like DT of controller based on platforms configuration  and
+> client need not to worry about this? For client, it will be simple gpio
+> calls.
 
-Sorry Let me clearly explain
+We have GPIO_OPEN_DRAIN in
+include/dt-bindings/gpio/gpio.h
+that can be added on the consumer side of the GPIO line
+in the DT, it should work (just like GPIO_ACTIVE_LOW for example).
 
->From the IP version 5.0 onwards The IP support both 32-bit and 64-bit addressing.
-But the older version of the IP's supports only 32-bit addressing.
+For descriptor tables
+include/linux/gpio/machine.h
+provides the same mechanism with the flag GPIO_OPEN_DRAIN
 
-This addrwidth property differentiates the address width for the new IP (I mean 5.0 version on wards)
-For older IP it will be always 32-bit.
+Notice that in both cases it is the consumer that specifies that it
+needs the line to be set up as open drain, not the controller,
+as it is a resource, the consumer needs to request what it needs.
 
-Please let me know if you are still not clear.
+So this can be done already today. Unless there is some bug.
 
-Regards,
-Navakishore.
-
-
-> > @@ -214,6 +223,20 @@ static const struct usb_endpoint_descriptor
-> config_bulk_out_desc = {
-> >  	.wMaxPacketSize		= cpu_to_le16(EP0_MAX_PACKET),
-> >  };
-> >
-> > +/**
-> > + * xudc_write64 - write 64bit value to device registers
-> > + * @addr: base addr of device registers
-> > + * @offset: register offset
-> > + * @val: data to be written
-> > + **/
-> > +static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val) {
-> > +	struct xusb_udc *udc = ep->udc;
-> > +
-> > +	udc->write_fn(udc->addr, offset, lower_32_bits(val));
-> > +	udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val)); }
-> > +
-> >  /**
-> >   * xudc_write32 - little endian write to device registers
-> >   * @addr: base addr of device registers @@ -330,8 +353,13 @@ static
-> > int xudc_start_dma(struct xusb_ep *ep, dma_addr_t src,
-> >  	 * destination registers and then set the length
-> >  	 * into the DMA length register.
-> >  	 */
-> > -	udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
-> > -	udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
-> > +	if (udc->dma_addrwidth > 32) {
-> > +		xudc_write64(ep, XUSB_DMA_DSAR_ADDR_OFFSET_LSB,
-> src);
-> > +		xudc_write64(ep, XUSB_DMA_DDAR_ADDR_OFFSET_LSB,
-> dst);
-> > +	} else {
-> > +		udc->write_fn(udc->addr,
-> XUSB_DMA_DSAR_ADDR_OFFSET, src);
-> > +		udc->write_fn(udc->addr,
-> XUSB_DMA_DDAR_ADDR_OFFSET, dst);
-> > +	}
-> >  	udc->write_fn(udc->addr, XUSB_DMA_LENGTH_OFFSET, length);
-> >
-> 
-> This looks good.
-> 
-> 	Arnd
+Yours,
+Linus Walleij
