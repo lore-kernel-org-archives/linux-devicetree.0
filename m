@@ -1,50 +1,60 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 2/4] arm64: dts: salvator-x: enable usb2_phy of channel 0
-Date: Tue, 24 May 2016 07:45:38 +0000
-Message-ID: <SG2PR06MB0919CB987D25213B9AC9CF55D84F0@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1464065860-3948-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1464065860-3948-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdV+G5-kRkC+hx8aS4X8qkj_PaHK4F-mexvkSG=oRmcY9Q@mail.gmail.com>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ASoC: wm8985: add device-tree support
+Date: Tue, 24 May 2016 10:00:52 +0200
+Message-ID: <CAEP=dzDm3a+NZoxD-qi_U5q=HxUvv8LDK5KJDXqgj_jMqCpn-w@mail.gmail.com>
+References: <1463489389-17719-1-git-send-email-petr@barix.com>
+ <1463489389-17719-2-git-send-email-petr@barix.com> <20160520162128.GS1646@localhost.localdomain>
+ <CAEP=dzB2527G27ym5pP2C1AxMKKeU7HMiYZ8_=48VBZdv6jxbw@mail.gmail.com> <20160523083140.GB20422@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV+G5-kRkC+hx8aS4X8qkj_PaHK4F-mexvkSG=oRmcY9Q@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160523083140.GB20422-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ALSA Development Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Plamen Prodanov <plamen-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IGxpbnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2Vy
-bmVsLm9yZyBbbWFpbHRvOmxpbnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVsLm9yZ10g
-T24gQmVoYWxmIE9mIEdlZXJ0DQo+IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBUdWVzZGF5LCBNYXkg
-MjQsIDIwMTYgNDoxMyBQTQ0KPiANCj4gSGkgU2hpbW9kYS1zYW4sDQo+IA0KPiBPbiBUdWUsIE1h
-eSAyNCwgMjAxNiBhdCA2OjU3IEFNLCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGloaXJvLnNo
-aW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWxzbyBhZGRzIGEg
-cmVndWxhdG9yIG5vZGUgZm9yIFVTQjIuMCB0byBoYW5kbGUgVkJVUyBvbi9vZmYNCj4gPiBieSB0
-aGUgcGh5LXJjYXItZ2VuMy11c2IyIGRyaXZlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlv
-c2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPiAt
-LS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTUtc2FsdmF0b3IteC5k
-dHMgfCAyNCArKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNCBp
-bnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9y
-ZW5lc2FzL3I4YTc3OTUtc2FsdmF0b3IteC5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVz
-YXMvcjhhNzc5NS1zYWx2YXRvci14LmR0cw0KPiA+IGluZGV4IGMwOWVhZDMuLjIxZTdlMDkgMTAw
-NjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTUtc2FsdmF0
-b3IteC5kdHMNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NS1z
-YWx2YXRvci14LmR0cw0KPiA+IEBAIC0xMTIsNiArMTEyLDE3IEBADQo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAxODAwMDAwIDA+Ow0KPiA+ICAgICAgICAgfTsNCj4gPg0KPiA+ICsgICAg
-ICAgdmJ1czBfdXNiMl9waHkwOiByZWd1bGF0b3JANSB7DQo+IA0KPiAibWFrZSBkdGJzIFc9MSI6
-DQo+IA0KPiBXYXJuaW5nICh1bml0X2FkZHJlc3NfdnNfcmVnKTogTm9kZSAvcmVndWxhdG9yQDUg
-aGFzIGEgdW5pdCBuYW1lLCBidXQNCj4gbm8gcmVnIHByb3BlcnR5DQoNClRoYW5rIHlvdSBmb3Ig
-dGhlIHJldmlldyENCkkgbWlzc2VkIHlvdXIgcmVsYXRlZCBwYXRjaC4uLg0KDQo+IHJlZ3VsYXRv
-ci12YnVzMC11c2IyLXBoeTA/IChvb3BzLCB3aGF0IGEgbG9uZyBuYW1lKQ0KDQpIbW0sIEkgdGhp
-bmsgdGhlICItcGh5MCIgaXMgbm90IG5lZWRlZC4NClNvLCBJIHdpbGwgZml4IHRoZSBuYW1lIGFz
-ICJyZWd1bGF0b3ItdmJ1czAtdXNiMiIuDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGlt
-b2RhDQoNCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAg
-ICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBv
-ZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVy
-c29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYg
-YSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBz
-YXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
+On 23 May 2016 at 10:31, Charles Keepax
+<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On Mon, May 23, 2016 at 09:23:05AM +0200, Petr Kulhavy wrote:
+>> On 20 May 2016 at 18:21, Charles Keepax
+>> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+>> > On Tue, May 17, 2016 at 02:49:49PM +0200, Petr Kulhavy wrote:
+>> >> +static enum wm8985_type wm8985_data = WM8985;
+>> >> +static enum wm8985_type wm8758_data = WM8758;
+>> >> +
+>> >> +static const struct of_device_id wm8985_of_match[] = {
+>> >> +     { .compatible = "wlf,wm8985", .data = &wm8985_data},
+>> >> +     { .compatible = "wlf,wm8758", .data = &wm8758_data},
+>> >
+>> > You can probably just use (void *)WM8985 instead here.
+>>
+>> I know this pretty safe with integers but can you do this with enums?
+>> Doesn't it lead to undefined behaviour?
+>
+> Hmm... its not uncommon that it is done in the kernel, but
+> that is rarely an indicator of if something is actually
+> technically valid or not. Casting from an integer to a pointer
+> is technically implementation defined, but we clearly rely on
+> gcc's implementation in the kernel. However, without actually
+> reading the spec in more detail I am unclear on if an enum counts
+> as an integer here, my suspicion is that it would since it
+> generally always implicitly casts to an int.
+>
+> I guess the correct fix is that .data should probably be a
+> kernel_ulong_t in of_device_id. But if no one else objects I am
+> happy for you to leave your current code as is.
+
+If I understand this Stack Overflow answer right:
+http://stackoverflow.com/a/2331327
+The enum should be casted to an integer of size <= size of a pointer
+for the architecture.
+So this should be more or less ok?
+.data = (void*)(int)WM8985
+
+Thanks
+Petr
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
