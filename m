@@ -1,47 +1,31 @@
-From: Christer Weinigel <christer@weinigel.se>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
- number.
-Date: Tue, 24 May 2016 20:03:48 +0200
-Message-ID: <57449784.4070108@weinigel.se>
-References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
- <20160524172045.GN8206@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160524172045.GN8206@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+From: roliveir <Ramiro.Oliveira@synopsys.com>
+Subject: [RFC 0/2] Add support for OV5647 sensor
+Date: Tue, 24 May 2016 19:16:46 +0100
+Message-ID: <cover.1464112779.git.roliveir@synopsys.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: mchehab@osg.samsung.com, robh+dt@kernel.org, Ramiro.Oliveira@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-On 05/24/2016 07:20 PM, Mark Brown wrote:
->> Not having used devicetree that much it was surprisingly hard to 
->> figure out how to assign a stable bus number to a spi bus.  Add
->> a simple example that shows how to do that.
-> 
-> I'm not sure this is something we want to support at all, I can't 
-> immediately see anything that does this deliberately in the SPI
-> code and obviously the "bus number" is something of a Linux
-> specific concept which would need some explanation if we were going
-> to document it.  It's something I'm struggling a bit to see a
-> robust use case for that isn't better served by parsing sysfs,
-> what's the goal here?
+This RFC patch adds support for the Omnivision OV5647 sensor.
 
-Well, that's how it works right now:
+At the moment it only supports 640x480 in Raw 8.
 
-commit bb29785e0d6d150181704be2efcc3141044625e2
-Author: Grant Likely <grant.likely@secretlab.ca>
-Date:   Fri Dec 21 19:32:09 2012 +0000
+Ramiro Oliveira (2):
+  Add OV5647 device tree documentation
+  Add support for Omnivision OV5647
 
-    spi/of: Use DT aliases for assigning bus number
+ .../devicetree/bindings/media/i2c/ov5647.txt       |  29 +
+ MAINTAINERS                                        |   7 +
+ drivers/media/i2c/Kconfig                          |  11 +
+ drivers/media/i2c/Makefile                         |   1 +
+ drivers/media/i2c/ov5647.c                         | 891 +++++++++++++++++++++
+ 5 files changed, 939 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+ create mode 100644 drivers/media/i2c/ov5647.c
 
-> + if ((master->bus_num < 0) && master->dev.of_node) +
-> master->bus_num = of_alias_get_id(master->dev.of_node, "spi");
-
-If this isn't something that should be in the Documentation/devicetree
- because it's not generig enough, where should Linux-specific
-interpretations such as this be documented?
-
-  /Christer
+-- 
+2.8.1
