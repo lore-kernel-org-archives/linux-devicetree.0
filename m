@@ -1,94 +1,123 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH 3/4 v7] ASoC: dwc: Add PIO PCM extension
-Date: Tue, 24 May 2016 18:07:14 +0100
-Message-ID: <57448A42.9050606@synopsys.com>
-References: <cover.1463996627.git.joabreu@synopsys.com>
- <d81055d826825874c9d76922d2275688b2586fa6.1463996627.git.joabreu@synopsys.com>
- <20160524164151.GM8206@sirena.org.uk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
+Date: Tue, 24 May 2016 12:09:41 -0500
+Message-ID: <CAL_JsqKCwy=aXveTfnaQuZ5b3Ld9nzABgPfdPm1JX3CBuvzG+Q@mail.gmail.com>
+References: <cover.1463737502.git.maitysanchayan@gmail.com>
+ <ffef165d05f71a1b19437171d8fdb4bc78f6b1e3.1463737502.git.maitysanchayan@gmail.com>
+ <20160523211813.GA30237@rob-hp-laptop> <20160524041447.GA2884@Sanchayan-Arch.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160524164151.GM8206@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: alsa-devel@alsa-project.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160524041447.GA2884-2b/appYahYDPUjlVagVGR1Kr0EmMEXJSn9A1Ff6Mc9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-Thanks for your comments.
-
-On 24-05-2016 17:41, Mark Brown wrote:
-> On Mon, May 23, 2016 at 11:02:24AM +0100, Jose Abreu wrote:
+On Mon, May 23, 2016 at 11:14 PM,  <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hello Rob,
 >
->> +config SND_DESIGNWARE_PCM
->> +	bool "PCM PIO extension for I2S driver"
-> Why can't this be built as a module?
-
-I can change but my intention was to make this PCM a kind of extension to the
-driver instead of adding a new module to the system.
-
+> On 16-05-23 16:18:13, Rob Herring wrote:
+>> On Fri, May 20, 2016 at 03:32:05PM +0530, Sanchayan Maity wrote:
+>> > This adds a SoC driver to be used by Freescale Vybrid SoC's.
+>> > Driver utilises syscon and nvmem consumer API's to get the
+>> > various register values needed and expose the SoC specific
+>> > properties via sysfs.
+>> >
+>> > A sample output from Colibri Vybrid VF61 is below:
+>> >
+>> > root@colibri-vf:~# cd /sys/bus/soc/devices/soc0
+>> > root@colibri-vf:/sys/bus/soc/devices/soc0# ls
+>> > family     machine    power      revision   soc_id     subsystem  uevent
+>> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat family
+>> > Freescale Vybrid VF610
+>> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat machine
+>> > Freescale Vybrid
+>> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat revision
+>> > 00000013
+>> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat soc_id
+>> > df6472a6130f29d4
+>> >
+>> > Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > ---
+>> >  .../bindings/arm/freescale/fsl,vf610-soc.txt       |  20 +++
+>> >  drivers/soc/Kconfig                                |   1 +
+>> >  drivers/soc/fsl/Kconfig                            |  10 ++
+>> >  drivers/soc/fsl/Makefile                           |   1 +
+>> >  drivers/soc/fsl/soc-vf610.c                        | 198 +++++++++++++++++++++
+>> >  5 files changed, 230 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+>> >  create mode 100644 drivers/soc/fsl/Kconfig
+>> >  create mode 100644 drivers/soc/fsl/soc-vf610.c
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+>> > new file mode 100644
+>> > index 0000000..338905d
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+>> > @@ -0,0 +1,20 @@
+>> > +Vybrid System-on-Chip
+>> > +---------------------
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible: "fsl,vf610-soc"
+>> > +- rom-revision: phandle to the on-chip ROM node
+>> > +- mscm: phandle to the MSCM CPU configuration node
+>> > +- nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
+>> > +- nvmem-cell-names: should contain string names "cfg0" and "cfg1"
+>>
+>> I still have similar concerns as the discussion on the last version.
+>> This version only proves that you aren't describing h/w, but rather just
+>> a collection of data that some driver wants.
+>>
+>> A driver can just as easily look-up all the nodes directly that these
+>> phandles point to.
 >
->> +
->> +	return irq_valid ? IRQ_HANDLED : IRQ_NONE;
-> Please write a normal if statement, the ternery operator doesn't help
-> legibility.
-
-Ok.
-
+> Agreed, that we can look up all the nodes directly that these phandles
+> refer to but I would still need a DT entry to bind to. While I could
+> bind to existing nodes like mscm cpucfg but that doesn't seem right.
 >
->>  static void i2s_start(struct dw_i2s_dev *dev,
->>  		      struct snd_pcm_substream *substream)
->>  {
->>  	struct i2s_clk_config_data *config = &dev->config;
->>  
->>  	i2s_write_reg(dev->i2s_base, IER, 1);
->> -	i2s_enable_irqs(dev, substream->stream, config->chan_nr);
->> +
->> +	if (dev->use_pio)
->> +		i2s_enable_irqs(dev, substream->stream, config->chan_nr);
->>  
->>  	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
->>  		i2s_write_reg(dev->i2s_base, ITER, 1);
-> That seems wrong, or at least something that should be separate?
-> Previously we needed interrupts for DMA operation but now we enable
-> interrupts only if we don't use DMA.  It feels like we want to make the
-> change for DMA separately if only to make it clear for bisection, are we
-> 100% sure that masking the interrupt won't also mask the DMA request
-> signals?
+> The very first approach that we had taken was to integrate this functionality
+> in mach-vf610.c code under mach-imx
+> http://www.spinics.net/lists/devicetree/msg80654.html
 
-Indeed I thought about this and the interrupts must also be enabled when in DMA
-mode. Although there is no interrupt handler in the original driver (without
-this patches) in some setups the interrupt line may be connected to the DMA
-controller. I will drop this change and always enable interrupts. Please note
-that I don't have a setup with DMA support so I can only test using the PIO mode.
+Yes, everyone wants to move all platform devices in the kernel to a
+corresponding DT node. The result is often making up nodes to do this.
+It's the same thing with cpufreq.
 
->> +	irq = platform_get_irq(pdev, 0);
->> +	if (irq >= 0) {
->> +		dev_dbg(&pdev->dev, "using PIO mode\n");
->> +		dev->use_pio = true;
->> +
->> +		ret = devm_request_irq(&pdev->dev, irq, i2s_irq_handler, 0,
->> +				pdev->name, dev);
->> +		if (ret < 0) {
->> +			dev_err(&pdev->dev, "failed to request irq\n");
->> +			return ret;
->> +		}
->> +	}
-> This also seems wrong.  We're forcing PIO if an interrupt is provided
-> rather than based on DMA being configured which means that if the
-> interrupt is wired up and happens to be described in DT we'll get worse
-> performance.  People should be able to just describe the system without
-> worrying about this, and we might find some other use for the interrupts
-> in future.  Indeed right now it would probably be reasonable to use the
-> error interrupts all the time if they're available.
+> and then it was recommended to migrate this to drivers/soc where we did use
+> phandles or direct look up via compatible strings
 
-How should I then determine which mode to use?
-    - Check if DMA parameters are declared in DT, or
-    - Check if snd_dmaengine_pcm_register() fails, or
-    - Assume PIO mode will be used when compiling with PIO PCM, or
-    - Something else ?
+The location in the tree is an orthogonal issue. You could move it and
+use of_machine_is_compatible without any DT change.
 
-Best regards,
-Jose Miguel Abreu
+The primary issue I have here is how do we bind soc_bus to DT in a
+consistent way. Sorry, but vybrid specific patches alone are never
+going to solve that issue.
+
+> http://www.spinics.net/lists/arm-kernel/msg420847.html
+>
+> and
+>
+> http://lkml.iu.edu/hypermail/linux/kernel/1506.0/03787.html
+>
+> There hasn't been a consensus since v1.
+
+I actually prefer your previous version binding soc_bus to the root
+bus node to this version. I think that is closer to the right
+direction. After all, pretty much everything is an SOC and every SOC
+has an SOC bus. Pretty much every SOC and board have revisions and may
+need to expose that revision info as well. We have to do this
+consistently which means having a default implementation for
+simple-bus that is not opt-in.
+
+Alternatively, we should just deprecate soc_bus and come up a
+different solution. Either way, I think we have a half implemented
+solution currently.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
