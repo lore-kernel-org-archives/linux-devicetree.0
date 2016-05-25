@@ -1,59 +1,61 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus number.
-Date: Wed, 25 May 2016 11:06:46 -0700
-Message-ID: <5745E9B6.5090204@gmail.com>
-References: <1464107960-10775-1-git-send-email-christer@weinigel.se> <20160524172045.GN8206@sirena.org.uk> <57449784.4070108@weinigel.se> <20160524183256.GP8206@sirena.org.uk> <5744E51A.1040506@gmail.com> <20160525174932.GA10753@rob-hp-laptop>
-Reply-To: frowand.list@gmail.com
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6] ASoC: cs53l30: Add codec driver support for Cirrus
+ CS53L30
+Date: Wed, 25 May 2016 19:16:03 +0100
+Message-ID: <20160525181603.GD8206@sirena.org.uk>
+References: <1464045237-4074-1-git-send-email-nicoleotsuka@gmail.com>
+ <20160525172800.GB3056@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="1iEpPD5yDbvq0asf"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160525174932.GA10753@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20160525172800.GB3056@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Christer Weinigel <christer@weinigel.se>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>, brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, Tim.Howe@cirrus.com, somduttar@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/25/2016 10:49 AM, Rob Herring wrote:
-> On Tue, May 24, 2016 at 04:34:50PM -0700, Frank Rowand wrote:
->> On 5/24/2016 11:32 AM, Mark Brown wrote:
->>> On Tue, May 24, 2016 at 08:03:48PM +0200, Christer Weinigel wrote:
->>>> On 05/24/2016 07:20 PM, Mark Brown wrote:
->>>
->>>>> I'm not sure this is something we want to support at all, I can't 
->>>>> immediately see anything that does this deliberately in the SPI
->>>>> code and obviously the "bus number" is something of a Linux
->>>>> specific concept which would need some explanation if we were going
->>>>> to document it.  It's something I'm struggling a bit to see a
->>>>> robust use case for that isn't better served by parsing sysfs,
->>>>> what's the goal here?
->>>
->>>> If this isn't something that should be in the Documentation/devicetree
->>>>  because it's not generig enough, where should Linux-specific
->>>> interpretations such as this be documented?
->>>
->>> I'm not clear that we want to document this at all since I am not clear
->>> that there is a sensible use case for doing it.  I did ask for one but
->>> you've not articulated one in this reply.  I am much less gung ho than
->>> Grant on this one, even as a Linux specific interface it seems very
->>> legacy.
-> 
-> No, we don't.
-> 
->>>
->>
->> The time for the use case was when the patch was accepted.
-> 
-> Ideally, yes, but things getting missed in review or later deciding 
-> things were a bad idea can always be debated again.
-> 
->> It is in the kernel, it is appropriate to document it.
-> 
-> Things get undocumented all the time when we deprecate them.
 
-If it is deprecated then it should be documented as deprecated so
-people do not attempt to use it.
+--1iEpPD5yDbvq0asf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Rob
-> 
+On Wed, May 25, 2016 at 12:28:00PM -0500, Rob Herring wrote:
+> On Mon, May 23, 2016 at 04:13:57PM -0700, Nicolin Chen wrote:
+
+> > +  - VA-supply, VP-supply : power supplies for the device,
+> > +    as covered in Documentation/devicetree/bindings/regulator/regulato=
+r.txt.
+
+> Also, these are missing from the example yet are required. I'd argue=20
+> they should be optional as you could have designs with no regulator=20
+> control.
+
+The general rule is that regulators should only be omitted if they are
+physically absent, we can describe simple fixed supplies with no control
+so we should do so (though in practice Linux is much more forgiving and
+will provide one if the supply is just plain missing from the DT).  This
+is a simpler rule for people to follow than making them officially
+optional and is more robust in the face of things like implementation
+changes that allow supplies to become controlable or drivers that
+suddenly form a desire to look at their supply voltages, as well as
+allowing other OSs to have simpler implementations if it's followed.
+
+--1iEpPD5yDbvq0asf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXRevhAAoJECTWi3JdVIfQMSMIAIGqGM0uxZ6U4J4rOgEChwTI
+HdwfDIMSCWxaM15j4HAAaW9G1H3VINciYveHSBe8NU+skRwW1M0CGu5A593yZ1cZ
+E2NW+8QeYCs9dPOISLmjWyIxrAV6TBu3x4v2zjiRpkLd0WcNS6HOcSActrb7Ky2C
+WFfuXrfj/SCOBMexcBmesg7E65gsjdDkB4UVtv69glWsvcb2nf5KeTGNPEVki9qW
+WVj9/blu3y8K0pW5vXSNjbS31dJe0iKCa7qGL665Vj4AgqXyOX7+ksZ6B4OPdjD7
+1vi+OMQjmD3x9jf4CgJ3UoKZOjtzZ6zAPlP/NIpxvwc11FxqVb3r6ar7utn8SXI=
+=PpaN
+-----END PGP SIGNATURE-----
+
+--1iEpPD5yDbvq0asf--
