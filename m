@@ -1,175 +1,59 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH] ARM64: dts: rockchip: add thermal zone node for rk3399 SoCs
-Date: Wed, 25 May 2016 12:27:04 +0800
-Message-ID: <1464150424-27809-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: edubezval@gmail.com, dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jianqun Xu <jay.xu@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v7 1/5] util: Add xasprintf portable asprintf variant
+Date: Wed, 25 May 2016 15:16:07 +1000
+Message-ID: <20160525051607.GK17226@voom.fritz.box>
+References: <1464112239-29856-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1464112239-29856-2-git-send-email-pantelis.antoniou@konsulko.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="x+RZeZVNR8VILNfK"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1464112239-29856-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds thermal zone node to rk3399 dtsi, rk3399 thermal data is
-including the cpu and gpu sensor zone node.
-At the moment, remove the rk3368 thermal data from rk399 dtsi.
 
-The thermal zone node is the node containing all the required info
-for describing a thermal zone, including its cooling device bindings.
-The thermal zone node must contain, apart from its own properties, one
-sub-node containing trip nodes and one sub-node containing all the zone
-cooling maps.
+--x+RZeZVNR8VILNfK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The following is the parameter is introduced:
-* polling-delay:
-The maximum number of milliseconds to wait between polls
+On Tue, May 24, 2016 at 08:50:35PM +0300, Pantelis Antoniou wrote:
+> Include a portable asprintf variant that works on any C99
+> conforming platform.
+>=20
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
-* polling-delay-passive:
-The maximum number of milliseconds to wait between polls when performing
-passive cooling.
+Applied, thanks.
 
-* trips:
-A sub-node which is a container of only trip point nodes required to
-describe the thermal zone.
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-* cooling-maps:
-A sub-node which is a container of only cooling device map nodes, used to
-describe the relation between trips and cooling devices.
+--x+RZeZVNR8VILNfK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-* cooling-device:
-A phandle of a cooling device with its specifier, referring to which
-cooling device is used in this cooling specifier binding. In the cooling
-specifier, the first cell is the minimum cooling state and the second cell
-is the maximum cooling state used in this map.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
----
+iQIcBAEBAgAGBQJXRTUXAAoJEGw4ysog2bOSgeUP/2CcwFkgv3FzSC/XQdZpuSs7
+NZoTLv0+tl+vbMemNTeAw7T+/PTdtNayfF1a2mn59kLsqEmQme3N6Z65iqhXB23b
+eV2NTH6/d/1eIy0TFiFggf4Vmmv905Cx6HRb66IffYAsCSj3JMnp9oQfxuHD0pDA
+NVdb9GE9Y2P0a7zYJFHizWfAOCDOlfcvq+tHPmaATIPhnsRhk7glF6sRfaICvkPV
+xNBUTSIuTRSZ2eF/gT5rjxXR0iB3cJUH5RsZrHsMWdyMO9KHisdE31Lze3GIvRBN
+KwrGl/UIcvtWmSGiLRxNefTjFNl7MzRf9A/hELeL4zFfdVRD6VrGz9pI47GI/fav
+6QFgAwzmujIY5WY+919wBAcS1GJS2vHZdLUcclwcWUa9TUgotKkve2KEehETsXhw
+e1WE+5UHqT0nWKChgVFb0aVkOf/3e/GROEcUT2fXXxXp+TR9CJb+k2XqCaYVpae4
+NY9Ujf4dvzOOsPftSuggs0FxtGtlKM6p1vi82eFhcF3QDtQdx6saCBi41M2C1qh/
+T9VxcWzhT3x3XsJJiqeKhCL7uqydH2rZgGFQzkyj4NqkbvWB0LYiBxzLik9kLpWG
+Nnc8MpoLsc9Ed6bkYxlMeirsU1roO8ZUGEdCmVjb8dxjQ6zDk4ohzmddZJOHk5OW
++EhuT/6y1mUDeCvsutqo
+=jIuF
+-----END PGP SIGNATURE-----
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 100 +++++++++++++++++++++++++++++++
- 1 file changed, 100 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 46f325a..cc4ca2a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -45,6 +45,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	compatible = "rockchip,rk3399";
-@@ -389,6 +390,95 @@
- 		status = "disabled";
- 	};
- 
-+	thermal-zones {
-+		cpu-thermal: cpu {
-+			polling-delay-passive = <100>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+
-+			thermal-sensors = <&tsadc 0>;
-+
-+			trips {
-+				cpu_alert0: cpu_alert0 {
-+					temperature = <70000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "passive";
-+				};
-+				cpu_alert1: cpu_alert1 {
-+					temperature = <75000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "passive";
-+				};
-+				cpu_crit: cpu_crit {
-+					temperature = <95000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert0>;
-+					cooling-device =
-+						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu_alert1>;
-+					cooling-device =
-+						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		gpu-thermal: gpu {
-+			polling-delay-passive = <100>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+
-+			thermal-sensors = <&tsadc 1>;
-+
-+			trips {
-+				gpu_alert0: gpu_alert0 {
-+					temperature = <75000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "passive";
-+				};
-+				gpu_crit: gpu_crit {
-+					temperature = <95000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&gpu_alert0>;
-+					cooling-device =
-+						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+	};
-+
-+	tsadc: tsadc@ff260000 {
-+		compatible = "rockchip,rk3399-tsadc";
-+		reg = <0x0 0xff260000 0x0 0x100>;
-+		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
-+		clock-names = "tsadc", "apb_pclk";
-+		assigned-clocks = <&cru SCLK_TSADC>;
-+		assigned-clock-rates = <750000>;
-+		resets = <&cru SRST_TSADC>;
-+		reset-names = "tsadc-apb";
-+		pinctrl-names = "init", "default", "sleep";
-+		pinctrl-0 = <&otp_gpio>;
-+		pinctrl-1 = <&otp_out>;
-+		pinctrl-2 = <&otp_gpio>;
-+		#thermal-sensor-cells = <1>;
-+		rockchip,hw-tshut-temp = <95000>;
-+		status = "disabled";
-+	};
-+
- 	pmugrf: syscon@ff320000 {
- 		compatible = "rockchip,rk3399-pmugrf", "syscon";
- 		reg = <0x0 0xff320000 0x0 0x1000>;
-@@ -881,6 +971,16 @@
- 			};
- 		};
- 
-+		tsadc {
-+			otp_gpio: otp-gpio {
-+				rockchip,pins = <1 6 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+
-+			otp_out: otp-out {
-+				rockchip,pins = <1 6 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		uart0 {
- 			uart0_xfer: uart0-xfer {
- 				rockchip,pins =
--- 
-1.9.1
+--x+RZeZVNR8VILNfK--
