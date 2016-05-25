@@ -1,30 +1,44 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 4/6] ARM: dts: sun5i: q8-common: Enable USB power supply
-Date: Wed, 25 May 2016 14:41:59 +0200
-Message-ID: <20160525124159.GH9232@lukather>
+Subject: Re: [PATCH 5/6] ARM: dts: sun5i: q8-common: Enable audio codec
+Date: Wed, 25 May 2016 14:43:36 +0200
+Message-ID: <20160525124336.GI9232@lukather>
 References: <1463500571-28970-1-git-send-email-wens@csie.org>
- <1463500571-28970-5-git-send-email-wens@csie.org>
+ <1463500571-28970-6-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zhtSGe8h3+lMyY1M"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1463500571-28970-5-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0896573495=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1463500571-28970-6-git-send-email-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Chen-Yu Tsai <wens@csie.org>
-Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---zhtSGe8h3+lMyY1M
+--===============0896573495==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="e5GLnnZ8mDMEwH4V"
+Content-Disposition: inline
+
+
+--e5GLnnZ8mDMEwH4V
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 17, 2016 at 11:56:09PM +0800, Chen-Yu Tsai wrote:
-> On the A13 Q8 tablets, the PMIC's USB power supply (VBUS) is connected
-> to the external OTG port. This can be used to provide power and OTG VBUS
-> sensing.
+On Tue, May 17, 2016 at 11:56:10PM +0800, Chen-Yu Tsai wrote:
+> The Q8 tablets use the audio codec to provide audio output via a
+> headphone jack or a small mono speaker. A GPIO output is used to
+> control speaker amp.
+>=20
+> The tablets may or may not have an internal microphone.
 >=20
 > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
@@ -36,25 +50,37 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---zhtSGe8h3+lMyY1M
+--e5GLnnZ8mDMEwH4V
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXRZ2XAAoJEBx+YmzsjxAg89cQAIldwp7xeWxmzdfPS1NX4xfR
-eQzYo4ARUkRBAT/RM27W+9fm69iF1IhFgtFFXFe+vcRkPbekVFqDPlQOcSKTSwFc
-vbYaM/9cxSYnwxkIrVCJqNxx837mLlZwxzcKHtXyL6j9Qg7cm+eJuD/X1OJwoPAZ
-iaod3ETjsR5O76HYMih2rtmeFr//G3D+ajQDG312zCEdmA5TEytERmzRScdzip+c
-Ua/ud5b6jB5NlrVPsTJYKhkA6VIIISw2jsLV3bYh9u5X86fe9/CSLD6XjLTek8d2
-YD5urqajGjGT6zLk4Prrv08SDNGu1IeLOasaeGin7EWDfZYt2gI+rHxUT7hgrQn2
-2sjOOJDT35ebanZtREr62fk7ai62jNJFo3OAl64Bk2+DV2k5l1GsNWOgZMQHeHx1
-HhwB2QgpFJW+a5GVJOcD2msPeypBReNmdf1+Ft6C77pXCr1uL1HwI3dl15RbanRT
-RPSb/BPsQ3uKhyfz5gLgQOkVRkDqRaG88GA6pax6HnQHXGw3l7YxaNHsA+kgLiUK
-nXnbMckePVdTk8SqaMP1z+MPzDPND767tRdR2Q47ucmP/gLFbdm9iqk+gGs3Txkp
-ay5gFqoBA8tZp51Ht6z7ZrvpOaaevzL4UZPspZhLsChK23l3LwaSW9D0zaWQ2Zcz
-zk2x9ROVQvVJk529CcZu
-=NUXC
+iQIcBAEBAgAGBQJXRZ34AAoJEBx+YmzsjxAggvoP/15C//FSWKL2OO6TfOIaFXXi
+IOqg2fC/BYhiDOPDCao+zmoi/Hy3d1+7P8J3vNCBJtAAsMOLNfc9OIhPidwsLQM4
+O6zN3gKYRRj+uBNyph3BXdQAS5OPRR5qbM5sEAq+WuXM+cm1TNK5aiAPnLO4qjQG
+fyPHPQI3ucK8D9+vbLmRbqpkz0e40ccb4qXvF61oxwcVo+EjWtTdxtr1a9J8pgr4
+IL4Jy84acMyK+haqCvxkI3i1WJ7Vi8NPDN6lrvObq1V1wJc01xTzswhoXRM0hX0W
+UVVi3LUnG3lTBzabMJTk70nDIrK6PV0otHGoosnN3SsLkhFTwFRvWANr/81x9eEs
+JWLADImzTjurFIZld6Mtm2/Mrt4IRisGV+IMfSKxrxVl96K5IWQ7+n+m5mUfWRa9
+UL2S1aCjnr22ryezbms9WNE9FKv7YHpkZtLjrWfpYsMokNALOdLUHklJeeedCUqO
+4hq+aDtKHOFWUrfc8jB/JFG/a785UFRFI0AkZriReCqOVC750pHyO+YgQJPNTrNe
+MiJJQVmuLvGx3CDLLEGDdn5A8XQrSxtGf5CdS2/YSqn4CryKbjzTjZru7wEO9fXJ
+uD2P8P1Vm9L9ouxRMqqX9LbBf9jMqI6XDy/AlNdsYT6zV/z8JKuHXzXXJvlbSsoC
+De6aVXN6NyfPPXoH2j6Y
+=1aBa
 -----END PGP SIGNATURE-----
 
---zhtSGe8h3+lMyY1M--
+--e5GLnnZ8mDMEwH4V--
+
+--===============0896573495==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0896573495==--
