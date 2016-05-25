@@ -1,39 +1,60 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v4 11/18] ARM: multi_v7_defconfig: Enable STi and simple-card drivers.
-Date: Wed, 25 May 2016 17:06:45 +0100
-Message-ID: <1464192412-16386-13-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v4 17/18] ARM: STi: DT: STiH407: Add uniperif reader dt nodes
+Date: Wed, 25 May 2016 17:06:51 +0100
+Message-ID: <1464192412-16386-19-git-send-email-peter.griffin@linaro.org>
 References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, arnaud.pouliquen@st.com, broonie@kernel.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the STi ALSA drivers found on STi platforms
-as well as the simple-card driver which is a dependency to have
-working sound.
+This patch adds the DT node for the uniperif reader
+IP block found on STiH407 family silicon.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: arnaud.pouliquen@st.com
-Cc: broonie@kernel.org
 ---
- arch/arm/configs/multi_v7_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 5eee45b..0ced665 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -589,6 +589,9 @@ CONFIG_SND_SOC_AK4642=m
- CONFIG_SND_SOC_SGTL5000=m
- CONFIG_SND_SOC_SPDIF=m
- CONFIG_SND_SOC_WM8978=m
-+CONFIG_SND_SOC_STI=m
-+CONFIG_SND_SOC_STI_SAS=m
-+CONFIG_SND_SIMPLE_CARD=m
- CONFIG_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_MVEBU=y
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 7ca149b..fb6363e1 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -831,5 +831,33 @@
+ 			st,version = <5>;
+ 			st,mode = "SPDIF";
+ 		};
++
++		sti_uni_reader0: sti-uni-reader@0 {
++			compatible = "st,sti-uni-reader";
++			status = "disabled";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			reg = <0x8D83000 0x158>;
++			interrupts = <GIC_SPI 87 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 5 0 1>;
++			dma-names = "rx";
++			dai-name = "Uni Reader #0 (PCM IN)";
++			st,version = <3>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2s_8ch_in>;
++		};
++
++		sti_uni_reader1: sti-uni-reader@1 {
++			compatible = "st,sti-uni-reader";
++			status = "disabled";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			reg = <0x8D84000 0x158>;
++			interrupts = <GIC_SPI 88 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 6 0 1>;
++			dma-names = "rx";
++			dai-name = "Uni Reader #1 (HDMI RX)";
++			st,version = <3>;
++		};
+ 	};
+ };
 -- 
 1.9.1
