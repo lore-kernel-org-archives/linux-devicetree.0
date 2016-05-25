@@ -1,51 +1,91 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V5 6/7] iommu/msm: Use writel_relaxed and add a barrier
-Date: Wed, 25 May 2016 14:18:12 +0200
-Message-ID: <14302911.qQPb4UMJ8d@wuerfel>
-References: <1463741694-1735-1-git-send-email-sricharan@codeaurora.org> <7555154.mU2oTAdECP@wuerfel> <000a01d1b672$93d54690$bb7fd3b0$@codeaurora.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Wed, 25 May 2016 13:19:24 +0100
+Message-ID: <20160525121923.GK1337@leverpostej>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+ <20160524172045.GN8206@sirena.org.uk>
+ <57449784.4070108@weinigel.se>
+ <20160524183256.GP8206@sirena.org.uk>
+ <5744A402.8050409@weinigel.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <000a01d1b672$93d54690$bb7fd3b0$@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sricharan <sricharan@codeaurora.org>
-Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, robdclark@gmail.com, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, treding@nvidia.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, stepanm@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5744A402.8050409-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, May 25, 2016 4:15:31 PM CEST Sricharan wrote:
-> >
-> >Any operation that could trigger a DMA from a device is required
-> >to have a barrier preceding it (usually wmb() one implied by writel()),
-> >so this is clearly not about a driver that installs a DMA mapping
-> >before starting a DMA, but I don't see what else it would be.
-> >
+On Tue, May 24, 2016 at 08:57:06PM +0200, Christer Weinigel wrote:
+> On 05/24/2016 08:32 PM, Mark Brown wrote:
+> > On Tue, May 24, 2016 at 08:03:48PM +0200, Christer Weinigel wrote:
+> >> On 05/24/2016 07:20 PM, Mark Brown wrote:
+> > 
+> >>> I'm not sure this is something we want to support at all, I
+> >>> can't immediately see anything that does this deliberately in
+> >>> the SPI code and obviously the "bus number" is something of a
+> >>> Linux specific concept which would need some explanation if we
+> >>> were going to document it.  It's something I'm struggling a bit
+> >>> to see a robust use case for that isn't better served by
+> >>> parsing sysfs, what's the goal here?
+> > 
+> >> If this isn't something that should be in the
+> >> Documentation/devicetree because it's not generig enough, where
+> >> should Linux-specific interpretations such as this be
+> >> documented?
+> > 
+> > I'm not clear that we want to document this at all since I am not
+> > clear that there is a sensible use case for doing it.  I did ask
+> > for one but you've not articulated one in this reply.  I am much
+> > less gung ho than Grant on this one, even as a Linux specific
+> > interface it seems very legacy.
 > 
-> Ok, so i was doing this from the idea that, other iommu drivers
->  where polling on a status bit in their sync call to ensure completion
-> of pending TLB invalidations. But in this case, there is no status bit.
->  So added a barrier to have no ordering issues before the client
-> triggers the dma operation. But as you say above that it is implicit that
-> the device would have a barrier before starting the trigger, then the
-> barrier here becomes redundant.
+> It's bloody convenient.  I'm working with a Zync board right now where
+> we have multiple SPI ports.  Being able to label the ports on the
+> board spi1, spi2 and spi3 and having spidev devices show up as
+> /dev/spidev1.0 instead of dynamic assignment makes things much easier.
 
-Ok. There are two more things to note here:
+Do these numbers match anything, or have you assigned them artificially?
 
-* On other platforms, polling the register is likely required because
-  an MMIO write is "posted", meaning that a sync after writel() will
-  only ensure that it has left the CPU write queue, but it may still be
-  on the bus fabric and whatever side-effects are triggered by the
-  write are normally not guaranteed to be completed even after the
-  'sync'. You need to check the datasheet for your IOMMU to find out
-  whether the 'dsb' instruction actually has any effect on the IOMMU.
-  If not, then neither the barrier that you add here nor the barrier
-  in the following writel() is sufficient.
+i.e. are the labels for those well defined for the board? Are they in a
+manul, or printed on the board itself?
 
-* The one barrier that is normally required in an IOMMU is between
-  updating the in-memory page tables and the following MMIO store
-  that triggers the TLB flush for that entry. This barrier is
-  implied by writel() but not writel_relaxed(). If you don't have
-  a hardware page table walker in your IOMMU, you don't need to worry
-  about this.
+If these are well-defined and the ports are accessible to, and under the
+control of, the end-user, then this would be largely similar to what we
+do for serial ports and other user-accessible physical connectors.
 
-	Arnd
+>  Especially when doing driver development where unloading and
+> reloading the spi driver module will give it a new dynamic number
+> every time.
+> 
+> Yes, it's possible to iterate through all files /sys/class/spi_master
+> and then have a table to map those names to device names and create
+> symlinks to them, it's just painful.  It's much easier to do be able
+> to do "cat data >/dev/spidev1.0" from busybox and not have to set up
+> all that infrastructure.  And yes, this is on an embedded system using
+> busybox without udev.
+> 
+> In addition, right now I have a couple of different variants of the
+> boards that I work on, and with different SPI ports at different
+> addresses.   It's rather nice to be able to reuse the same kernel +
+> ramdisk on multiple variants and only have to update the devicetree to
+> get sensible devices names on all variants.
+
+If those ports are physically organised and labelled the same, then
+using aliases could make sense, to describe the well-defined physical
+labels. If you've assigned the numbers artificially, or if the physical
+organisation differs across boards, then aliases are not the right tool
+for the job.
+
+In the latter cases we're altering the hardware description to suit an
+application, rather than providing the necessary abstraction, which is
+the kind of (ab)use of aliases which we want to avoid.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
