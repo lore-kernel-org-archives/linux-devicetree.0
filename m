@@ -1,57 +1,138 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4 v7] ASoC: dwc: Add PIO PCM extension
-Date: Wed, 25 May 2016 14:41:04 +0100
-Message-ID: <20160525134104.GZ8206@sirena.org.uk>
-References: <cover.1463996627.git.joabreu@synopsys.com>
- <d81055d826825874c9d76922d2275688b2586fa6.1463996627.git.joabreu@synopsys.com>
- <20160524164151.GM8206@sirena.org.uk>
- <57448A42.9050606@synopsys.com>
- <20160524175144.GO8206@sirena.org.uk>
- <57457A63.5060702@synopsys.com>
- <20160525101801.GT8206@sirena.org.uk>
- <57458328.8080900@synopsys.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="q3mG+ZLxscYP/cqM"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57458328.8080900-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: tamizhchelvam@codeaurora.org
+Subject: [PATCH v3] qcom: ipq4019: add wifi nodes to ipq4019 SoC device tree
+Date: Wed, 25 May 2016 19:40:22 +0530
+Message-ID: <1464185422-10760-1-git-send-email-tamizhchelvam@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: agross@codeaurora.org, devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org, c_traja@qti.qualcomm.com, linux-soc@vger.kernel.org, Raja Mani <rmani@codeaurora.org>, Tamizh chelvam <tamizhchelvam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Raja Mani <rmani@codeaurora.org>
 
---q3mG+ZLxscYP/cqM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Include dts support for two wifi block present on ipq4019 SoC.
+Corresponding dt binding documentation has been added in ath.git as below
+commit id a47aaa69 and the commit message is
+"dt: bindings: add new dt entry for pre calibration in qcom, ath10k.txt".
 
-On Wed, May 25, 2016 at 11:49:12AM +0100, Jose Abreu wrote:
+Signed-off-by: Raja Mani <rmani@codeaurora.org>
+Signed-off-by: Tamizh chelvam <tamizhchelvam@codeaurora.org>
+---
+v3:
 
-> Ok, will do that. I noticed the last I2S patch that you merged
-> ("ASoC: dwc: Add helper functions to disable/enable irqs") is not
-> in for-next yet. Should I base my work on 'topic/dwc' branch?
+ - Removed msi properties(qcom,msi_addr, qcom,msi_base)
 
-We are in the merge window.  No new non-bugfix patches will be merged
-until the merge window ends, most likely sometime this weekend.
+v2:
 
---q3mG+ZLxscYP/cqM
-Content-Type: application/pgp-signature; name="signature.asc"
+ - Fixed Commit log
+ - Added new Signed off
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ arch/arm/boot/dts/qcom-ipq4019.dtsi |   94 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
 
-iQEcBAEBCAAGBQJXRasvAAoJECTWi3JdVIfQ28gH/R9gg9hUr17m4k4gZTcCYtog
-ydy9ZwYE1XnT1EyS4+2QlFAiyovHdcBkyrHs9z3+e/deaElvH6myhGsCMACR/6N8
-F4uw6mA4+5vfGrzSYYMzititjYHaSZeuXgDp5Vzk2jtr89MUaGWkKu1BW2ijT/B3
-quVdbU75l/4h+hn8diVj0xY34xpDugK6tqEhbtBWHFFHUf+4Y32pMl2Y4q3gho7P
-B+D1hHiO9yJ4nIEa7kssMUDkMPlCOrjTk31nlsvxIfZqPAnZZ+PdaUVgGuYhxjqc
-L+hy3h5Z+CJrb7k0U5bW9agFko+U4tF4TeXNAF+c9v647v1254gJxlZ4tnf30fE=
-=Qnqs
------END PGP SIGNATURE-----
-
---q3mG+ZLxscYP/cqM--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index bfc0b57..ea7a787 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -393,5 +393,99 @@
+ 			clock-names = "core", "iface";
+ 			status = "disabled";
+ 		};
++
++		wifi0: wifi@a000000 {
++			compatible = "qcom,ipq4019-wifi";
++			reg = <0xa000000 0x200000>;
++			resets = <&gcc WIFI0_CPU_INIT_RESET>,
++				 <&gcc WIFI0_RADIO_SRIF_RESET>,
++				 <&gcc WIFI0_RADIO_WARM_RESET>,
++				 <&gcc WIFI0_RADIO_COLD_RESET>,
++				 <&gcc WIFI0_CORE_WARM_RESET>,
++				 <&gcc WIFI0_CORE_COLD_RESET>;
++			reset-names = "wifi_cpu_init",
++				      "wifi_radio_srif",
++				      "wifi_radio_warm",
++				      "wifi_radio_cold",
++				      "wifi_core_warm",
++				      "wifi_core_cold";
++			clocks = <&gcc GCC_WCSS2G_CLK>,
++				 <&gcc GCC_WCSS2G_REF_CLK>,
++				 <&gcc GCC_WCSS2G_RTC_CLK>;
++			clock-names = "wifi_wcss_cmd",
++				      "wifi_wcss_ref",
++				      "wifi_wcss_rtc";
++			interrupts = <0 0x20 0x1>,
++				     <0 0x21 0x1>,
++				     <0 0x22 0x1>,
++				     <0 0x23 0x1>,
++				     <0 0x24 0x1>,
++				     <0 0x25 0x1>,
++				     <0 0x26 0x1>,
++				     <0 0x27 0x1>,
++				     <0 0x28 0x1>,
++				     <0 0x29 0x1>,
++				     <0 0x2a 0x1>,
++				     <0 0x2b 0x1>,
++				     <0 0x2c 0x1>,
++				     <0 0x2d 0x1>,
++				     <0 0x2e 0x1>,
++				     <0 0x2f 0x1>,
++				     <0 0xa8 0x0>;
++			interrupt-names = "msi0",  "msi1",  "msi2",  "msi3",
++					  "msi4",  "msi5",  "msi6",  "msi7",
++					  "msi8",  "msi9",  "msi10", "msi11",
++					  "msi12", "msi13", "msi14", "msi15",
++					  "legacy";
++			status = "disabled";
++			qcom,ath10k-pre-calibration-data = [00];
++		};
++
++		wifi1: wifi@a800000 {
++			compatible = "qcom,ipq4019-wifi";
++			reg = <0xa800000 0x200000>;
++			resets = <&gcc WIFI1_CPU_INIT_RESET>,
++				 <&gcc WIFI1_RADIO_SRIF_RESET>,
++				 <&gcc WIFI1_RADIO_WARM_RESET>,
++				 <&gcc WIFI1_RADIO_COLD_RESET>,
++				 <&gcc WIFI1_CORE_WARM_RESET>,
++				 <&gcc WIFI1_CORE_COLD_RESET>;
++			reset-names = "wifi_cpu_init",
++				      "wifi_radio_srif",
++				      "wifi_radio_warm",
++				      "wifi_radio_cold",
++				      "wifi_core_warm",
++				      "wifi_core_cold";
++			clocks = <&gcc GCC_WCSS5G_CLK>,
++				 <&gcc GCC_WCSS5G_REF_CLK>,
++				 <&gcc GCC_WCSS5G_RTC_CLK>;
++			clock-names = "wifi_wcss_cmd",
++				      "wifi_wcss_ref",
++				      "wifi_wcss_rtc";
++			interrupts = <0 0x30 0x1>,
++				     <0 0x31 0x1>,
++				     <0 0x32 0x1>,
++				     <0 0x33 0x1>,
++				     <0 0x34 0x1>,
++				     <0 0x35 0x1>,
++				     <0 0x36 0x1>,
++				     <0 0x37 0x1>,
++				     <0 0x38 0x1>,
++				     <0 0x39 0x1>,
++				     <0 0x3a 0x1>,
++				     <0 0x3b 0x1>,
++				     <0 0x3c 0x1>,
++				     <0 0x3d 0x1>,
++				     <0 0x3e 0x1>,
++				     <0 0x3f 0x1>,
++				     <0 0xa9 0x1>;
++			interrupt-names = "msi0",  "msi1",  "msi2",  "msi3",
++					  "msi4",  "msi5",  "msi6",  "msi7",
++					  "msi8",  "msi9",  "msi10", "msi11",
++					  "msi12", "msi13", "msi14", "msi15",
++					  "legacy";
++			status = "disabled";
++			qcom,ath10k-pre-calibration-data = [00];
++		};
+ 	};
+ };
+-- 
+1.7.9.5
