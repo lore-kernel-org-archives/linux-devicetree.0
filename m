@@ -1,96 +1,49 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v4 10/18] ASoC: sti: Update DT example to match the driver code
-Date: Wed, 25 May 2016 17:06:44 +0100
-Message-ID: <1464192412-16386-12-git-send-email-peter.griffin@linaro.org>
-References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 0/2] arm: dra7: Add i2c6 instance hwmod and dt entries
+Date: Wed, 25 May 2016 11:09:50 -0500
+Message-ID: <5745CE4E.3020903@ti.com>
+References: <20160525125341.10044-1-rk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, arnaud.pouliquen@st.com, linux-remoteproc@vger.kernel.org, peter.griffin@linaro.org, broonie@kernel.org, dmaengine@vger.kernel.org, lee.jones@linaro.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160525125341.10044-1-rk@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ravikumar Kattekola <rk@ti.com>, paul@pwsan.com, tony@atomide.com, linux@armlinux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Felipe Balbi <balbi@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-uniperiph-id, version and mode are ST specific bindings and
-need the 'st,' prefix. Update the examples, as otherwise copying
-them yields a runtime error parsing the DT node.
+On 05/25/2016 07:53 AM, Ravikumar Kattekola wrote:
+> DRA72x devices have a sixth i2c ocntroller instance.
+> Following patches add the required hwmod structure and
+> device tree nodes.
+> 
+> Reference doc: DRA72x TRM [ SPRUHP2Q ]
+> 
+> Tested on :
+> DRA72x Rev B EVM
+> 
+> Ravikumar Kattekola (2):
+>   arm: dra7: Add hwmod entry for i2c6
+>   dts: dra7: Add device tree node for i2c6
+> 
+>  arch/arm/boot/dts/dra7.dtsi               | 11 +++++++++++
+>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 23 +++++++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+> 
+NAK. reasoning:
+a) i2c6 is a custom IP integration with completely non-standard
+dependencies with cross device dependencies for pretty much a specific
+usecase -> usage is pretty much limited for generic support - the
+decision is NOT to support this instance in Linux kernel - internal
+discussion forwarded to developer.
+b) the patches themselves are wrong -> it applies to DRA72x not
+generic DRA7x platform
+c) patches themselves are in the wrong format (wrong subject line etc).
+d) patches don't handle the SoC internal device dependencies either ->
+in short will not function in a generic solution for all variations of
+platforms.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: arnaud.pouliquen@st.com
-Cc: broonie@kernel.org
----
- .../devicetree/bindings/sound/st,sti-asoc-card.txt   | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-index 028fa1c..fe1b72c 100644
---- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-+++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-@@ -33,7 +33,7 @@ Required properties:
- 	"tx" for "st,sti-uni-player" compatibility
- 	"rx" for "st,sti-uni-reader" compatibility
- 
--  - version: IP version integrated in SOC.
-+  - st,version: IP version integrated in SOC.
- 
-   - dai-name: DAI name that describes the IP.
- 
-@@ -41,9 +41,9 @@ Required properties ("st,sti-uni-player" compatibility only):
-   - clocks: CPU_DAI IP clock source, listed in the same order than the
- 	    CPU_DAI properties.
- 
--  - uniperiph-id: internal SOC IP instance ID.
-+  - st,uniperiph-id: internal SOC IP instance ID.
- 
--  - IP mode: IP working mode depending on associated codec.
-+  - st,mode: IP working mode depending on associated codec.
- 	"HDMI" connected to HDMI codec IP and IEC HDMI formats.
- 	"SPDIF"connected to SPDIF codec and support SPDIF formats.
- 	"PCM"  PCM standard mode for I2S or TDM bus.
-@@ -67,9 +67,9 @@ Example:
- 		dmas = <&fdma0 4 0 1>;
- 		dai-name = "Uni Player #1 (DAC)";
- 		dma-names = "tx";
--		uniperiph-id = <2>;
--		version = <5>;
--		mode = "PCM";
-+		st,uniperiph-id = <2>;
-+		st,version = <5>;
-+		st,mode = "PCM";
- 	};
- 
- 	sti_uni_player3: sti-uni-player@3 {
-@@ -83,9 +83,9 @@ Example:
- 		dmas = <&fdma0 7 0 1>;
- 		dma-names = "tx";
- 		dai-name = "Uni Player #1 (PIO)";
--		uniperiph-id = <3>;
--		version = <5>;
--		mode = "SPDIF";
-+		st,uniperiph-id = <3>;
-+		st,version = <5>;
-+		st,mode = "SPDIF";
- 	};
- 
- 	sti_uni_reader1: sti-uni-reader@1 {
-@@ -98,7 +98,7 @@ Example:
- 		dmas = <&fdma0 6 0 1>;
- 		dma-names = "rx";
- 		dai-name = "Uni Reader #1 (HDMI RX)";
--		version = <3>;
-+		st,version = <3>;
- 	};
- 
- 2) sti-sas-codec: internal audio codec IPs driver
 -- 
-1.9.1
+Regards,
+Nishanth Menon
