@@ -1,56 +1,167 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [PATCH V5 6/7] iommu/msm: Use writel_relaxed and add a barrier
-Date: Wed, 25 May 2016 18:49:18 +0530
-Message-ID: <004c01d1b688$0f6379c0$2e2a6d40$@codeaurora.org>
-References: <1463741694-1735-1-git-send-email-sricharan@codeaurora.org> <7555154.mU2oTAdECP@wuerfel> <000a01d1b672$93d54690$bb7fd3b0$@codeaurora.org> <14302911.qQPb4UMJ8d@wuerfel>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH v3 2/2] mmc: dw_mmc: add resets support to dw_mmc
+Date: Wed, 25 May 2016 21:33:55 +0800
+Message-ID: <CAFGCpxz+mAwnkoiXPW263SZQExg+ai=bEWpGWBVzMaPXhVXEwA@mail.gmail.com>
+References: <1459322696-29919-1-git-send-email-guodong.xu@linaro.org>
+	<5552254.5pm4SI4ary@phil>
+	<CAFGCpxzUBUvMLWHUmd1WYDM7Do0J=QvaNbVQYMi_cQEhbV9-1Q@mail.gmail.com>
+	<5864557.bXRX6hBm9o@phil>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <14302911.qQPb4UMJ8d@wuerfel>
-Content-Language: en-us
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: 'Arnd Bergmann' <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, robdclark@gmail.com, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, treding@nvidia.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, stepanm@codeaurora.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5864557.bXRX6hBm9o@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 2 April 2016 at 22:03, Heiko Stuebner <heiko@sntech.de> wrote:
+> Am Samstag, 2. April 2016, 21:39:11 schrieb Guodong Xu:
+>> On 2 April 2016 at 02:42, Heiko Stuebner <heiko@sntech.de> wrote:
+>> > Am Mittwoch, 30. M=C3=A4rz 2016, 15:24:56 schrieb Guodong Xu:
+>> >
+>> > [...]
+>> >
+>> > > @@ -2949,7 +2956,9 @@ int dw_mci_probe(struct dw_mci *host)
+>> > >
+>> > >       if (!host->pdata) {
+>> > >
+>> > >               host->pdata =3D dw_mci_parse_dt(host);
+>> > >
+>> > > -             if (IS_ERR(host->pdata)) {
+>> > > +             if (PTR_ERR(host->pdata) =3D=3D -EPROBE_DEFER) {
+>> > > +                     return -EPROBE_DEFER;
+>> > > +             } else if (IS_ERR(host->pdata)) {
+>> >
+>> > how is this related to adding the reset handling?
+>>
+>> I added this into dw_mci_parse_dt(host), and that's the first time i=
+t may
+>> return -EPROBE_DEFER
+>>
+>>   /* find reset controller when exist */
+>>   pdata->rstc =3D devm_reset_control_get_optional(dev, NULL);
+>>
+>> So, I added processing to this error in this patch.
+>
+> ah, you're right of course
+>
+>
+>> > Making the driver handle probe deferral better should be a separat=
+e
+>> > patch.>
+>> > >                       dev_err(host->dev, "platform data not
+>> >
+>> > available\n");
+>> >
+>> > >                       return -EINVAL;
+>> > >
+>> > >               }
+>> > >
+>> > > @@ -3012,6 +3021,9 @@ int dw_mci_probe(struct dw_mci *host)
+>> > >
+>> > >               }
+>> > >
+>> > >       }
+>> > >
+>> > > +     if (!IS_ERR(host->pdata->rstc))
+>> > > +             reset_control_deassert(host->pdata->rstc);
+>> > > +
+>> >
+>> > Wouldn't reset_control_reset be better? The way it is now it would
+>> > expect
+>> > the reset to be asserted somewhere else before dw_mmc probes?
+>>
+>> It relates to how the SoC's reset logic is like. One bit set can cle=
+ar all
+>> dw_mmc host controller registers. It doesn't need do assert then
+>> deassert.
+>>
+>> That's what I saw in hi6220 (it integrates three dw_mmc host control=
+ler),
+>> drivers/reset/hisilicon/hi6220_reset.c
+>> , which I wrote this patch for.
+>
+> I just realized again that reset_control_reset is a completely separa=
+te
+> operation (not related to assert / deassert).
+>
+> What I was originally getting at is that I don't see any assert-count=
+erpart.
+> So if the reset-control is already deasserted, nothing will happen on=
+ some
+> designs.
+>
+> For example on Rockchip SoCs the reset controller needs the signal to=
+ be
+> high to assert the reset and the dw_mmc part of the manual explicitly=
+ says
+> that the "reset_n should be asserted(active-low) for at least two clo=
+cks of
+> clk or cclk_in".
+>
+> So I would expect something like
+>
+>         reset_control_assert(reset);
+>         usleep_range(x, y);
+>         reset_control_deassert(reset);
+>
+> instead of only trying to deassert the reset.
+>
 
->> Ok, so i was doing this from the idea that, other iommu drivers
->>  where polling on a status bit in their sync call to ensure completion
->> of pending TLB invalidations. But in this case, there is no status bit.
->>  So added a barrier to have no ordering issues before the client
->> triggers the dma operation. But as you say above that it is implicit that
->> the device would have a barrier before starting the trigger, then the
->> barrier here becomes redundant.
->
->Ok. There are two more things to note here:
->
->* On other platforms, polling the register is likely required because
->  an MMIO write is "posted", meaning that a sync after writel() will
->  only ensure that it has left the CPU write queue, but it may still be
->  on the bus fabric and whatever side-effects are triggered by the
->  write are normally not guaranteed to be completed even after the
->  'sync'. You need to check the datasheet for your IOMMU to find out
->  whether the 'dsb' instruction actually has any effect on the IOMMU.
->  If not, then neither the barrier that you add here nor the barrier
->  in the following writel() is sufficient.
->
-   Thanks for the detailed explanation.
-i will check this. So with this, i think that if the iommu does not
- support polling for its status, then it should listen to 'dsb' otherwise
- there will no be no way of make it coherent ?
+After confirmation with SoC hardware engineer, yeah, a correct _assert
+action is expected. I will modify it as the above. Regarding
+usleep_range(x, y) values, here is suggestion:
 
->* The one barrier that is normally required in an IOMMU is between
->  updating the in-memory page tables and the following MMIO store
->  that triggers the TLB flush for that entry. This barrier is
->  implied by writel() but not writel_relaxed(). If you don't have
->  a hardware page table walker in your IOMMU, you don't need to worry
->  about this.
->
-  To get my understanding correct here, is the barrier required here because
-   of speculative fetch ?
++               usleep_range(10, 50); /* 1/400kHz =3D 2.5us */
 
-Regards,
- Sricharan
+400kHz is the minimal bus speed for MMC. It stands for 2.5us per cycle.
+10us is 4 cycles, and 50us is 20 cycles.
+
+Does this setting make sense to you?
+
+>
+>> > >       setup_timer(&host->cmd11_timer,
+>> > >
+>> > >                   dw_mci_cmd11_timer, (unsigned long)host);
+>> >
+>> > [...]
+>> >
+>> > > diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_m=
+mc.h
+>> > > index 7b41c6d..b95cd84 100644
+>> > > --- a/include/linux/mmc/dw_mmc.h
+>> > > +++ b/include/linux/mmc/dw_mmc.h
+>> > > @@ -14,9 +14,10 @@
+>> > >
+>> > >  #ifndef LINUX_MMC_DW_MMC_H
+>> > >  #define LINUX_MMC_DW_MMC_H
+>> > >
+>> > > -#include <linux/scatterlist.h>
+>> > > -#include <linux/mmc/core.h>
+>> > >
+>> > >  #include <linux/dmaengine.h>
+>> > >
+>> > > +#include <linux/mmc/core.h>
+>> > > +#include <linux/reset.h>
+>> > > +#include <linux/scatterlist.h>
+>> >
+>> > unrelated changed regarding the reordering of includes.
+>>
+>> Making them in the order of alphabetic. If you dislike, I will not a=
+dd.
+>
+> It's Jaehoon's call and that change above is pretty small, but genera=
+lly
+> introducing things unrelated to the change you actually want to make =
+is not
+> that nice - that's what separate patches are for :-) .
+
+Got your point. I will remove this. Make it simple.
+
+-Guodong
+
+>
+>
+> Heiko
