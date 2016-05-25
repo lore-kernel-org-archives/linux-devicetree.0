@@ -1,67 +1,41 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: ARM: dts: exynos: Add MFC memory banks for Peach boards
-Date: Wed, 25 May 2016 11:02:04 -0400
-Message-ID: <d045b880-4a44-acd8-f7f6-e521caf374aa@osg.samsung.com>
-References: <1461871311-18344-1-git-send-email-javier@osg.samsung.com>
- <57456344.7020708@samsung.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
+Date: Wed, 25 May 2016 12:07:56 -0300
+Message-ID: <CAOMZO5DpTrxE+=d6saCowkncR=xpDY060_uTV_WGYxoN7dKUpA@mail.gmail.com>
+References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
+	<c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
+	<20abc2f6769b4369ba87ec27274a090e@rwthex-s2-a.rwth-ad.de>
+	<644530ff6bb04b5898dc33604dc7a93a@rwthex-s1-b.rwth-ad.de>
+	<9b905766c6cc4680be4b33f79a179d5a@rwthex-w1-b.rwth-ad.de>
+	<0cf90ebe86e0461f82cb22b2a6b6ea83@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57456344.7020708@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "pankaj.dubey" <pankaj.dubey@samsung.com>, linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0cf90ebe86e0461f82cb22b2a6b6ea83-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Pankaj,
+On Wed, May 25, 2016 at 11:05 AM, Christopher Spinrath
+<christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
 
-On 05/25/2016 04:33 AM, pankaj.dubey wrote:
-> Hi Javier,
-> 
-> On Friday 29 April 2016 12:51 AM, Javier Martinez Canillas wrote:
->> The MFC nodes with the memory regions reserved for memory allocations
->> are missing in the Exynos5420 Peach Pit and Exynos5800 Peach Pi DTS.
->>
->> This causes the s5p-mfc driver probe to fail with the following error:
->>
->> [    4.140647] s5p_mfc_alloc_memdevs:1072: Failed to declare coherent memory for MFC device
->> [    4.216163] s5p-mfc: probe of 11000000.codec failed with error -12
->>
->> Add the missing nodes so the driver probes and the {en,de}coder video
->> nodes are registered correctly:
->>
->> [    4.096277] s5p-mfc 11000000.codec: decoder registered as /dev/video4
->> [    4.102282] s5p-mfc 11000000.codec: encoder registered as /dev/video5
->>
->> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> 
-> Just noticed that, current krzk/for-next failed to boot on Exynos5880
-> based Chromebook device. Git bisect is showing culprit as this patch.
+> OK, done. Can I always use the default value in this case? If yes, can
+> you point me to a proper documentation of these?
 
-Strange, krzk/for-next boots correctly on my Exynos5800 Peach Pi:
+You can look at
+"36.4.316 Pad Control Register
+(IOMUXC_SW_PAD_CTL_PAD_ENET_TX_DATA1)" in the mx6quad reference manual.
 
-$ git log --pretty=oneline --abbrev-commit HEAD
-35e691cf5165 Merge branch 'fixes-v4.7' into for-next
+For GPIO functionality the default power-on-reset value should work fine.
 
-$ uname -r
-4.6.0-00073-g35e691cf5165
+You can confirm this by reading address 0x20E0500 in the bootloader:
+mw.l 0x20E0500 1
 
-> When I reverted this patch, its able to boot normally.
-> Is there any missing patches that we need to take on krzk/for-next to
-> boot on Chromebook.
->
-
-No that I'm aware of. I wonder why it boots for me but fails for
-you. Can you please share your complete boot log to see if there
-are any hints there?
- 
-> Thanks,
-> Pankaj Dubey
-> 
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+and then use this value on the dts. This way the kernel will always
+have a sane value instead of relying in the value passed from the
+bootloader.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
