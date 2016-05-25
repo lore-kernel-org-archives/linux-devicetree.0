@@ -1,73 +1,239 @@
 From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v3 00/12] J-core J2 cpu and SoC peripherals support
-Date: Wed, 25 May 2016 18:24:41 -0400
-Message-ID: <20160525222441.GS21636@brightrain.aerifal.cx>
+Subject: Re: [PATCH v3 02/12] of: add J-Core cpu bindings
+Date: Wed, 25 May 2016 19:04:08 -0400
+Message-ID: <20160525230407.GT21636@brightrain.aerifal.cx>
 References: <cover.1464148904.git.dalias@libc.org>
- <20160525095444.GR8206@sirena.org.uk>
+ <39ad5c69533ef537e6ab0426efc057f9064ee581.1464148904.git.dalias@libc.org>
+ <20160525102214.GF1337@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160525095444.GR8206@sirena.org.uk>
+In-Reply-To: <20160525102214.GF1337@leverpostej>
 Sender: linux-sh-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 10:54:44AM +0100, Mark Brown wrote:
-> On Wed, May 25, 2016 at 05:43:02AM +0000, Rich Felker wrote:
+On Wed, May 25, 2016 at 11:22:15AM +0100, Mark Rutland wrote:
+> > +Optional properties:
+> > +
+> > +- enable-method: Required only for SMP systems. If present, must be
+> > +  "jcore,spin-table".
+> > +
+> > +
+> > +--------------------
+> > +Individual cpu nodes
+> > +--------------------
+> > +
+> > +Required properties:
+> > +
+> > +- device_type: Must be "cpu".
+> > +
+> > +- compatible: Must be "jcore,j2".
+> > +
+> > +- reg: Must be 0 on uniprocessor systems, or the sequential, zero-based
+> > +  hardware cpu id on SMP systems.
+> > +
+> > +Optional properties:
+> > +
+> > +- clock-frequency: Clock frequency of the cpu in Hz.
+> > +
+> > +- cpu-release-addr: Necessary only for secondary processors on SMP systems
+> > +  using the "jcore,spin-table" enable method. If present, must consist of
+> > +  two cells containing physical addresses. The first cell contains an
+> > +  address which, when written, unblocks the secondary cpu. The second cell
+> > +  contains an address from which the cpu will read its initial program
+> > +  counter when unblocked.
 > 
-> > As arch/sh co-maintainer my intent is to include as much as possible
-> > in my pull request for the linux-sh tree. If there are parts outside
-> > of arch/sh that can be included in this, please let me know. I'm not
+> I take it this follows the example of the arm64 spin-table rather than
+> the ePAPR spin-table, given the lack of an ePAPR reference or struct
+> definition.
+
+Indeed, I wasn't aware of the ePAPR spec for it. Would you prefer that
+we use a different name or something?
+
+> From my experience with the arm64 spin-table, I would *strongly*
+> recommend that you tighten this up, and define things more thoroughly,
+> before a variety of FW/bootloader implementations appear. e.g.
 > 
-> Do *not* include the SPI driver, you shouldn't be including any drivers
-> unless it's been explicitly discussed with the subsystem maintainers.
+> * What initial/invalid value should the location contain? Is zero a
+>   valid address that you might want to jump a secondary CPU to?
 
-See the "please let me know". I thought this was plenty clear that I
-was asking for permission for including things outside of arch/sh, and
-that short of getting an ack, the default permission is no. You also
-snipped the part of my message that mentioned the specific subsystems
-I was asking about (which were non-SPI because you already made quite
-a point about not taking the SPI driver):
+I believe the hardware is implemented such that just the appearance of
+the address for write on the bus unblocks the secondary cpu waiting on
+it. As for the address to jump to, this is provided by the kernel and,
+for Linux purposes, is always _stext. As I understand the mechanism,
+the actual initial PC for secondary cpus is in rom, and the code there
+is responsible for loading the application-desired (i.e.
+kernel-desired) initial PC and jumping to it.
 
-> > clear yet on what the right path to upstream is for the clocksource
-> > and irq drivers that are currently only useful/interesting for one
-> > arch, or for the DT binding patches. Even if some drivers are delayed
-> > [...]
+> * How must the value be written?
+>   - Which endianness?
 
-> Quite aside from the fact that like Geert says drivers are expected to
-> go through the subsystem trees to repeat what I said last time it wasn't
-> posted until after the merge window and we're now a few days before the
-> end of the merge window and a new version is being posted.  The
-> turnaround times you are demanding on review are unreasonable - people
-> get busy, have holidays and so on - and you really need to pay attention
-> to what people are telling you about the process or you're just going to
-> annoy people.
+CPU native.
 
-If you can't review and ack the code on short notice, that's fine;
-just say so. There's no need to be overerly hostile about it. I've
-gotten arch/sh patches during the merge window before and I try to be
-polite with the contributor and ask if there's something seriously
-broken that would be improved by my making an effort to check it at
-the last minute, or it if can happily wait until next time.
+>   - With a single store? Or is there a more involved sequence to prevent
+>     the secondary CPU from seeing a torn value?
 
-Being that the driver in question here is for a new platform that was
-not previously supported upstream and has zero chance of breaking
-anything else, and that its inclusion would be a big plus for users of
-the platform, I don't see any reason for you making such a big deal
-out of it unless enforcing policy for its own sake makes you feel
-good, but I have better things to do than argue about it.
+The start address is just a physical ram address (internal sram) and
+how it's written does not matter, because it's only read once the
+release write occurs.
 
-> > arch, or for the DT binding patches. Even if some drivers are delayed
-> > going upstream, I would really like to get DT bindings acked and
-> > ideally merged, because we want to go ahead with moving the DTB into
-> > J2 boot rom where it belongs, and that should only happen with stable
+> * Must CPUs have a unique cpu-release-addr? I would *strongly* recommend
+>   that they do.
+
+There is currently no spec or implementation with more than one
+secondary cpu.
+
+>   - Is any minimal padding required around cpu-release-addrs? e.g. can
+>     FW or bootlaoder put data in the same cacheline-aligned region and
+>     exepct the OS not to corrupt this?
+
+The word-sized memory (for J2, 32-bit) at the address is what's being
+addressed. There is no implicit license for the kernel to clobber
+other nearby data.
+
+> * How should the OS map the region (i.e. which MMU/cache attributes)?
+
+For J2, there is no mmu. All these specs need extension for future
+models with mmu, because the properties of the mmu should be described
+in the DT.
+
+>   - Is the address permitted to be a device register?
+
+I don't see a strong reason to disallow it. Do you?
+
+> * Where can this memory live?
+>   - Should it be abesnt from any memory node? To which padding?
+>   - Should the memory be described with a memreserve? If so, what are
+>     your architecture-specific memreserve semantics (i.e. which
+>     MMU/cache attributes are permitted for a memreserve'd region)?
+
+If it's in the memory regions exposed by the DT to the kernel, it
+should be reserved, I think. In practice it's not.
+
+> * What state should the CPU be in when it branches to the provided
+>   address?
+>   - Must the MMU be off?
+
+Current models are nommu.
+
+>   - What state must any cache be in?
+>     Should FW perform any implementation defined coherency and cache
+>     management prior to branching?
+
+The current dcache implementation is fully coherent, but we want to
+relax that If this changes the hw/fw should ensure that the secondary
+cpu being started does not see stale dcache. The icache requires
+explicit flush so secondary should start with it off (as it does now)
+or ensure that it's flushed before jumping to kernel-provided start
+address.
+
+>   - Must the CPU be in a particular endianness?
+
+There are not any switchable-endian J-Core cpus. If such a thing is
+added it would make sense to describe this.
+
+>   - Which exceptions must be masked?
+
+In practice I think it's the same as how cpu0 starts. I suspect that's
+with everything masked, but I'm not sure right off.
+
+>   - Are interrupts permitted to be pending?
+
+In practice they won't be for current implementations, but I don't
+have an answer that can forsee the future.
+
+>   - Should debug logic (e.g. breakpoint and watchpoints) be placed into
+>     a quiescent state?
+
+This depends on having a model that has these features.
+
+>   - Should any registers be programmed with specific values?
+
+No, beyond perhaps things like control registers (IMASK).
+
+> At some point, you are likely to want CPU hotplug and/or cpuidle. We
+> didn't provision the arm64 spin-table for either of these and never
+> extended it, but you may want to put in place some discoverability now
+> to allow future OSs to use that new support while allowing current OSs
+> to retain functional (e.g. not requiring a new enable-method string).
 > 
-> If you want people to review DT bindings you're going to need to submit
-> them.
+> > +---------------------
+> > +Cache controller node
+> > +---------------------
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: Must be "jcore,cache".
+> > +
+> > +- reg: A memory range for the cache controller registers.
+> 
+> There is a well-defined memory map for the cache controller?
+> 
+> If so, please refer to documentation for it here (either in this
+> section, or the top of this document if common with other elements
+> described herein).
 
-I have, twice now, and I Cc'd the the linux-spi list too on v3 for the
-spi binding. Rob Herring acked it.
+The current version "jcore,cache" has a single 32-bit control register
+per cpu that can be used to enable/disable/flush icache and/or dcache.
+There is no finer-grained control. If/when we do larger caches in the
+future where it makes sense, there will be a new binding for it. (For
+example it may make sense to do one that matches the original SH
+memory-mapped cache interface.)
+
+> > +--------
+> > +IPI node
+> > +--------
+> > +
+> > +Device trees for SMP systems must have an IPI node representing the mechanism
+> > +used for inter-processor interrupt generation.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: Must be "jcore,ipi-controller".
+> > +
+> > +- reg: A memory range used to IPI generation.
+> > +
+> > +- interrupts: An irq on which IPI will be received.
+> 
+> Likewise.
+
+It's the same (actually even the same memory range, though I didn't
+see a sense in requiring that; there's also an IPI-generate bit).
+
+> > +----------
+> > +CPUID node
+> > +----------
+> > +
+> > +Device trees for SMP systems must have a CPUID node representing the mechanism
+> > +used to identify the current processor on which execution is taking place.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: Must be "jcore,cpuid-mmio".
+> > +
+> > +- reg: A memory range containing a single 32-bit mmio register which produces
+> > +  the current cpu id (matching the "reg" property of the cpu performing the
+> > +  read) when read.
+> 
+> Likewise.
+
+One general question I have about all of your comments -- is the DT
+binding file really supposed to amount to a hardware programming
+manual, fully specifying all of the programming interfaces? I don't
+see that in other binding files, and it feels like what you're asking
+for is beyond the scope of just specifying the bindings. 
+
+If you really do want a lot more detail for SMP-related bindings, I
+could consider submitting a version with SMP omitted for now (since
+the kernel patches submitted at this point don't include SMP) and do
+the addition of SMP as a separate patch later. But with the launch of
+open-hardware boards capable of running SMP J2 systems (see
+https://twitter.com/jcoreeng/status/730330848306700288) near, I'd like
+to be getting bindings we can use stabilized so that we're properly
+including DTB in the boot rom and not relying on external DTB files or
+linking DTB in kernel.
 
 Rich
