@@ -1,58 +1,73 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: interrupts properties and API usage with GPIO controllers/Device Tree
-Date: Wed, 25 May 2016 14:45:00 -0700
-Message-ID: <57461CDC.603@gmail.com>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v3 00/12] J-core J2 cpu and SoC peripherals support
+Date: Wed, 25 May 2016 18:24:41 -0400
+Message-ID: <20160525222441.GS21636@brightrain.aerifal.cx>
+References: <cover.1464148904.git.dalias@libc.org>
+ <20160525095444.GR8206@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gregory.0xf0@gmail.com
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160525095444.GR8206@sirena.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus, Gregory,
+On Wed, May 25, 2016 at 10:54:44AM +0100, Mark Brown wrote:
+> On Wed, May 25, 2016 at 05:43:02AM +0000, Rich Felker wrote:
+> 
+> > As arch/sh co-maintainer my intent is to include as much as possible
+> > in my pull request for the linux-sh tree. If there are parts outside
+> > of arch/sh that can be included in this, please let me know. I'm not
+> 
+> Do *not* include the SPI driver, you shouldn't be including any drivers
+> unless it's been explicitly discussed with the subsystem maintainers.
 
-Recently came across an use case that looks like the following:
+See the "please let me know". I thought this was plenty clear that I
+was asking for permission for including things outside of arch/sh, and
+that short of getting an ack, the default permission is no. You also
+snipped the part of my message that mentioned the specific subsystems
+I was asking about (which were non-SPI because you already made quite
+a point about not taking the SPI driver):
 
-gpio0: gpio@deadbeef {
-	compatible = "brcm,brcmstb-gpio";
-	#interrrupt-cells = <2>;
-	#gpio-cells = <2>;
-	gpio-controller;
-	interrupt-controller;
-	...
-};
+> > clear yet on what the right path to upstream is for the clocksource
+> > and irq drivers that are currently only useful/interesting for one
+> > arch, or for the DT binding patches. Even if some drivers are delayed
+> > [...]
 
-test@cafeb00b {
-	interrupt-parent = <&gpio0>;
-	interrupts = <99 3>;
-};
+> Quite aside from the fact that like Geert says drivers are expected to
+> go through the subsystem trees to repeat what I said last time it wasn't
+> posted until after the merge window and we're now a few days before the
+> end of the merge window and a new version is being posted.  The
+> turnaround times you are demanding on review are unreasonable - people
+> get busy, have holidays and so on - and you really need to pay attention
+> to what people are telling you about the process or you're just going to
+> annoy people.
 
-The driver consuming the test node's interrupts property tries to get
-the interrupt by using platform_get_irq() or of_irq_parse_and_map() and
-in the case of the gpio-brcmstb.c, this fails because the interrupt is
-out of range  as flagged by kernel/irq/irqdomain.c::irq_domain_associate.
+If you can't review and ack the code on short notice, that's fine;
+just say so. There's no need to be overerly hostile about it. I've
+gotten arch/sh patches during the merge window before and I try to be
+polite with the contributor and ask if there's something seriously
+broken that would be improved by my making an effort to check it at
+the last minute, or it if can happily wait until next time.
 
-Unlike other GPIO provider drivers gpio-brcmstb.c, this driver registers
-one gpiolib irqchip per each of its banks, and still uses the generic
-map/unmap functions for its irq_domain_ops, so there is no way we can
-provide a valid mapping outside of the gpio_to_irq() function
-unfortunately since gpiochip_irq_map() does
+Being that the driver in question here is for a new platform that was
+not previously supported upstream and has zero chance of breaking
+anything else, and that its inclusion would be a big plus for users of
+the platform, I don't see any reason for you making such a big deal
+out of it unless enforcing policy for its own sake makes you feel
+good, but I have better things to do than argue about it.
 
-So here are a few questions for either of you:
+> > arch, or for the DT binding patches. Even if some drivers are delayed
+> > going upstream, I would really like to get DT bindings acked and
+> > ideally merged, because we want to go ahead with moving the DTB into
+> > J2 boot rom where it belongs, and that should only happen with stable
+> 
+> If you want people to review DT bindings you're going to need to submit
+> them.
 
-- is this a valid API and Device Tree use case: call
-of_irq_parse_and_map on an "interrupts" property which has not been
-acquired using the GPIO API and then gpio_to_irq? While gpio_to_irq()
-works, are not we losing the second specifier in the interrupt cells
-about what kind of interrupt type this is?
+I have, twice now, and I Cc'd the the linux-spi list too on v3 for the
+spi binding. Rob Herring acked it.
 
-- would it be acceptable to export gpiochip_irq_map and
-gpiochip_irq_export to make them accessible as helpers so we could just
-wrap things a bit around or should I just open code the same things and
-allow gpiochip_irqchip_add to be passed custom irq_domain_ops for instance?
-
-Thanks!
--- 
-Florian
+Rich
