@@ -1,101 +1,162 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 2/2] ARM: dts: Add async-bridge clock to MFC power domain
- for Exynos5420
-Date: Wed, 25 May 2016 10:01:52 +0200
-Message-ID: <57455BF0.8080609@samsung.com>
-References: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
- <1464111662-15336-3-git-send-email-javier@osg.samsung.com>
- <574558DF.1090000@samsung.com>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH v2 5/5] usb: dwc3: rockchip: add devicetree bindings documentation
+Date: Wed, 25 May 2016 11:04:12 +0300
+Message-ID: <871t4qsgw3.fsf@linux.intel.com>
+References: <1463133155-20047-1-git-send-email-william.wu@rock-chips.com> <87a8jfu7h4.fsf@linux.intel.com> <57455A81.5080101@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <574558DF.1090000@samsung.com>
+In-Reply-To: <57455A81.5080101@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Shuah Khan <shuahkh@osg.samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: William Wu <william.wu@rock-chips.com>, gregkh@linuxfoundation.org, heiko@sntech.de, Rob Herring <robh+dt@kernel.org>
+Cc: linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/25/2016 09:48 AM, Krzysztof Kozlowski wrote:
-> On 05/24/2016 07:41 PM, Javier Martinez Canillas wrote:
->> The MFC IP is also inter-connected by an Async-Bridge so the CLK_ACLK333
->> has to be ungated during a power domain switch. Trying to do it when the
->> clock is gated will fail and lead to an imprecise external abort error
->> when the driver tries to access the MFC registers with the PD disabled.
->>
->> For example, if the s5p-mfc module is removed and the MFC PD turned off:
->>
->> [  186.835606] Power domain power-domain@10044060 disable failed
->> [  186.835671] s5p-mfc 11000000.codec: Removing 11000000.codec
->> [  186.837670] Power domain power-domain@10044060 disable failed
->>
->> And when the module is inserted again:
->>
->> [ 2395.176956] s5p_mfc_wait_for_done_dev:34: Interrupt (dev->int_type:0, command:12) timed out
->> [ 2395.177031] s5p_mfc_init_hw:272: Failed to load firmware
->> [ 2395.177384] Unhandled fault: imprecise external abort (0x1406) at 0x00000000
->> [ 2395.177441] pgd = ec3b4000
->> [ 2395.177467] [00000000] *pgd=00000000
->> [ 2395.177507] Internal error: : 1406 [#1] PREEMPT SMP ARM
->> [ 2395.177550] Modules linked in: s5p_mfc mwifiex_sdio mwifiex uvcvideo s5p_jpeg v4l2_mem2mem videobuf2_vmalloc videobuf2_dma_contig videobuf2_memops videobuf2_v4l2 videobuf2_core v4l2_common videodev media [last unloaded: s5p_mfc]
->> [ 2395.177774] CPU: 1 PID: 2382 Comm: v4l_id Tainted: G        W       4.6.0-rc6-next-20160502-00010-g7730dc64d2c1-dirty #179
->> [ 2395.177857] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
->> [ 2395.177906] task: ed275500 ti: e6c8c000 task.ti: e6c8c000
->> [ 2395.177996] PC is at s5p_mfc_reset+0x1c4/0x284 [s5p_mfc]
->> [ 2395.178057] LR is at s5p_mfc_reset+0x1a4/0x284 [s5p_mfc]
->>
->> This patch fixes this issue by adding the CLK_ACLK333 as an Async-Bridge
->> clock for the MFC power domain, so the PD configuration works properly.
->>
->> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>
->> ---
->>
->>  arch/arm/boot/dts/exynos5420.dtsi | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> Indeed patch #1 is not a hard dependency here because there are no other
-> asb clocks. It is entirely obvious but works fine.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Damn, I wanted to write:
-"It is not entirely obvious but works fine."
-(in Exynos pm_domains driver the clk_get() returns -ENOENT and the loop
-is escaped early)
 
-BR,
-Krzysztof
+Hi,
 
-> 
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> 
-> Unless all other patches are meant to current fixes cycle (and/or
-> cc-stable), I do not plan to apply it now. I'll take it for v4.8, because:
-> 1. Your previous patches are needed. Without them bind/unbind won't work.
-> 2. This is not reproducible in a regular driver operation.
-> 3. It needs clock change to actually be useful.
-> 
-> Is it okay?
-> 
-> Best regards,
-> Krzysztof
-> 
+William Wu <william.wu@rock-chips.com> writes:
+> Hi Felipe,
+>
+> On 05/24/2016 05:32 PM, Felipe Balbi wrote:
+>> Hi,
 >>
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> index 4c8523471c65..f3e9d873633e 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -313,8 +313,9 @@
->>  	mfc_pd: power-domain@10044060 {
->>  		compatible = "samsung,exynos4210-pd";
->>  		reg = <0x10044060 0x20>;
->> -		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>;
->> -		clock-names = "oscclk", "clk0";
->> +		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>,
->> +			 <&clock CLK_ACLK333>;
->> +		clock-names = "oscclk", "clk0","asb0";
->>  		#power-domain-cells = <0>;
->>  	};
->>  
+>> William Wu <william.wu@rock-chips.com> writes:
+>>> This patch documents the device tree documentation required for
+>>> Rockchip USB3.0 core wrapper consist of USB3.0 IP from Synopsys.
+>>>
+>>> It could operate in device mode (SS, HS, FS) and host
+>>> mode (SS, HS, FS, LS).
+>>>
+>>> Signed-off-by: William Wu <william.wu@rock-chips.com>
+>>> ---
+>>> Changes in v2:
+>>> - add rockchip,dwc3.txt to Documentation/devicetree/bindings/ (Felipe, =
+Brian)
+>>>
+>>>   .../devicetree/bindings/usb/rockchip,dwc3.txt      | 45 +++++++++++++=
++++++++++
+>>>   1 file changed, 45 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc=
+3.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt b/=
+Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+>>> new file mode 100644
+>>> index 0000000..10303d9
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+>>> @@ -0,0 +1,45 @@
+>>> +Rockchip SuperSpeed DWC3 USB SoC controller
+>>> +
+>>> +Required properties:
+>>> +- compatible:	should contain "rockchip,dwc3"
+>>> +- clocks:		A list of phandle + clock-specifier pairs for the
+>>> +				clocks listed in clock-names
+>>> +- clock-names:	Should contain the following:
+>>> +  "clk_usb3otg0_ref"	Controller reference clk
+>>> +  "clk_usb3otg0_suspend"Controller suspend clk, can use 24 MHz or 32 K=
+Hz
+>>> +  "aclk_usb3"		Master/Core clock, have to be >=3D 62.5 MHz for SS oper=
+ation
+>>> +
+>>> +
+>>> +Optional clocks:
+>>> +  "aclk_usb3otg0"	Aclk for specific usb controller clock.
+>>> +  "aclk_usb3_rksoc_axi_perf"  USB AXI perf clock.  Not present on all =
+platforms.
+>>> +  "aclk_usb3_grf"	USB grf clock.  Not present on all platforms.
+>>> +
+>>> +Required child node:
+>>> +A child node must exist to represent the core DWC3 IP block. The name =
+of
+>>> +the node is not important. The content of the node is defined in dwc3.=
+txt.
+>>> +
+>>> +Phy documentation is provided in the following places:
+>>> +
+>>> +Example device nodes:
+>>> +
+>>> +	usbdrd3_0: usb@fe800000 {
+>>> +
+>> no reg property?
+> For now, we don't need reg property here. Because we only need to do
+> enable some clocks and populate its children in=20
+> drivers/usb/dwc3/dwc3-of-simple.c.
+> And it's similar to arch/arm/boot/dts/exynos5420.dtsi usbdrd3_0 node.
+>> 		compatible =3D "rockchip,dwc3";
+>>> +		clocks =3D <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
+>>> +			 <&cru ACLK_USB3>, <&cru ACLK_USB3OTG0>,
+>>> +			 <&cru ACLK_USB3_RKSOC_AXI_PERF>, <&cru ACLK_USB3_GRF>;
+>>> +		clock-names =3D "clk_usb3otg0_ref", "clk_usb3otg0_suspend",
+>>> +			      "aclk_usb3", "aclk_usb3otg0",
+>>> +			      "aclk_usb3_rksoc_axi_perf", "aclk_usb3_grf";
+>>> +		#address-cells =3D <2>;
+>>> +		#size-cells =3D <2>;
+>>> +		ranges;
+>>> +		status =3D "disabled";
+>>> +		usbdrd_dwc3_0: dwc3 {
+>> no address here?
+> I think here don't  necessarily need address. The child node dwc3 can=20
+> inherit address from the parent node.
+> And with this dtsi patch, the dev path show as follows:
+> /sys/devices/platform/usb@fe800000/fe800000.dwc3
+>
+> Is it need for coding style or other reason?
+
+I don't think your arguments match what devicetree folks want to see in
+DT. Let's ask them. Rob, care to look at this one?
+
+>
 >>
-> 
-> 
+>>> +			compatible =3D "snps,dwc3";
+>>> +			reg =3D <0x0 0xfe800000 0x0 0x100000>;
+>>> +			interrupts =3D <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+>>> +			dr_mode =3D "otg";
+>>> +			status =3D "disabled";
+>>> +		};
+>>> +	};
+>>> --=20
+>>> 1.9.1
+>>>
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXRVx8AAoJEIaOsuA1yqREN9wP/0awYr61ZnqctAEzuByZTJMg
+uKywFlgAH7dANbe+UwVyId38cSs2i813k/hT5BujWpElMqtISD1xKWYXWlfK/vhD
+vQSHJwt6ksexqiqBzD4JLAlBchXZCc5eAtbcOGW8C91YDNjbte+U2/5eCkgo+yWB
+VZx1MpHHmG7dkH+2fTiPKiitoNHvZUBBjIG4+yetixysuh/UTtjhrZsQIBPhVoSr
+Flx//vrzCJQUqmiZRZ2+un6J+BjdzbbRXwfHbcL175deuScMztHRDdC/OuH9RjSx
+tn2X+azIS7pDQqcceAjDJJRIm2q47UFa5kV5fpibKcQv9auq7NYQCVOL+5YrBx2Z
+8jPa3q7C7OkcSTYVD73qPI4DB9Hhy6RRXBzEgLAIzfAAa6VvMk/QQvQ+9kqs0xgA
+V/OhwmLIiLLGsPkga0J1fOPIkhLxYUTtqN+2kjMWARzKe3hDnRvmy5PD3CmI6FVq
+JcLdsSKmPfDN2KVIUC9TCxUCHnuoMiG2LT60SPZldmcVC64yCdEqe+6BYnJPabeA
+IBvjEZ5e5HEkj1zEC0uFFE0zXAnmsofltOYkIMl/VgmOqmAh2TT5RCHwN1WOWBek
+/jTSoEUzuavxHmVjt/4S/8mD9osEWHDH6FQE/qlQV0i41i6R21Cl+J48o9RC4psv
+wajHn2rbmpJ2W5XmJCW5
+=k6Iq
+-----END PGP SIGNATURE-----
+--=-=-=--
