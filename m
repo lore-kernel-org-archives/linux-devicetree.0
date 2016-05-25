@@ -1,73 +1,113 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v4 18/18] ARM: DT: STi: stihxxx-b2120: Add DT nodes for STi audio card
-Date: Wed, 25 May 2016 17:06:52 +0100
-Message-ID: <1464192412-16386-20-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 16/18] ARM: STi: DT: STiH407: Add uniperif player dt nodes
+Date: Wed, 25 May 2016 17:06:50 +0100
+Message-ID: <1464192412-16386-18-git-send-email-peter.griffin@linaro.org>
 References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464192412-16386-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the uniperif players 2 & 3 for b2120 boards
-and also adds the "simple-audio-card" device node to interconnect
-the SoC sound device and the codec.
+This patch adds the DT nodes for the uniperif player
+IP blocks found on STiH407 family silicon.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/stihxxx-b2120.dtsi | 40 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 76 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 722c63f..5297f21 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -131,5 +131,45 @@
- 				dvb-card	= <STV0367_TDA18212_NIMA_1>;
- 			};
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 60f95b6..7ca149b 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -755,5 +755,81 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_spdif_out >;
  		};
 +
++		sti_uni_player0: sti-uni-player@0 {
++			compatible = "st,sti-uni-player";
++			status = "disabled";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			clocks = <&clk_s_d0_flexgen CLK_PCM_0>;
++			assigned-clocks = <&clk_s_d0_flexgen CLK_PCM_0>;
++			assigned-clock-parents = <&clk_s_d0_quadfs 0>;
++			assigned-clock-rates = <50000000>;
++			reg = <0x8D80000 0x158>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 2 0 1>;
++			dai-name = "Uni Player #0 (HDMI)";
++			dma-names = "tx";
++			st,uniperiph-id = <0>;
++			st,version = <5>;
++			st,mode = "HDMI";
++		};
++
++		sti_uni_player1: sti-uni-player@1 {
++			compatible = "st,sti-uni-player";
++			status = "disabled";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			clocks = <&clk_s_d0_flexgen CLK_PCM_1>;
++			assigned-clocks = <&clk_s_d0_flexgen CLK_PCM_1>;
++			assigned-clock-parents = <&clk_s_d0_quadfs 1>;
++			assigned-clock-rates = <50000000>;
++			reg = <0x8D81000 0x158>;
++			interrupts = <GIC_SPI 85 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 3 0 1>;
++			dai-name = "Uni Player #1 (PIO)";
++			dma-names = "tx";
++			st,uniperiph-id = <1>;
++			st,version = <5>;
++			st,mode = "PCM";
++		};
++
 +		sti_uni_player2: sti-uni-player@2 {
-+			status = "okay";
++			compatible = "st,sti-uni-player";
++			status = "disabled";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			clocks = <&clk_s_d0_flexgen CLK_PCM_2>;
++			assigned-clocks = <&clk_s_d0_flexgen CLK_PCM_2>;
++			assigned-clock-parents = <&clk_s_d0_quadfs 2>;
++			assigned-clock-rates = <50000000>;
++			reg = <0x8D82000 0x158>;
++			interrupts = <GIC_SPI 86 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 4 0 1>;
++			dai-name = "Uni Player #1 (DAC)";
++			dma-names = "tx";
++			st,uniperiph-id = <2>;
++			st,version = <5>;
++			st,mode = "PCM";
 +		};
 +
 +		sti_uni_player3: sti-uni-player@3 {
-+			status = "okay";
-+		};
-+
-+		sound {
-+			compatible = "simple-audio-card";
-+			simple-audio-card,name = "sti audio card";
-+			status = "okay";
-+
-+			simple-audio-card,dai-link@0 {
-+				/* DAC */
-+				format = "i2s";
-+				dai-tdm-slot-width = <32>;
-+				mclk-fs = <256>;
-+				cpu {
-+					sound-dai = <&sti_uni_player2>;
-+				};
-+
-+				codec {
-+					sound-dai = <&sti_sasg_codec 1>;
-+				};
-+			};
-+			simple-audio-card,dai-link@1 {
-+				/* SPDIF */
-+				format = "left_j";
-+				mclk-fs = <128>;
-+				cpu {
-+					sound-dai = <&sti_uni_player3>;
-+				};
-+
-+				codec {
-+					sound-dai = <&sti_sasg_codec 0>;
-+				};
-+			};
++			compatible = "st,sti-uni-player";
++			status = "disabled";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			clocks = <&clk_s_d0_flexgen CLK_SPDIFF>;
++			assigned-clocks = <&clk_s_d0_flexgen CLK_SPDIFF>;
++			assigned-clock-parents = <&clk_s_d0_quadfs 3>;
++			assigned-clock-rates = <50000000>;
++			reg = <0x8D85000 0x158>;
++			interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 7 0 1>;
++			dma-names = "tx";
++			dai-name = "Uni Player #1 (PIO)";
++			st,uniperiph-id = <3>;
++			st,version = <5>;
++			st,mode = "SPDIF";
 +		};
  	};
  };
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
