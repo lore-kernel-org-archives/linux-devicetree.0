@@ -1,73 +1,59 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v4 1/7] ARM: OMAP3: hwmod data: Fix McBSP2/3 sidetone data
-Date: Wed, 25 May 2016 17:15:50 +0300
-Message-ID: <1464185756-28401-2-git-send-email-peter.ujfalusi@ti.com>
-References: <1464185756-28401-1-git-send-email-peter.ujfalusi@ti.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: Fix imprecise external abort error when
+ accessing Exynos MFC
+Date: Wed, 25 May 2016 10:17:52 -0400
+Message-ID: <d90b6245-1ed4-32c6-c98d-cc5f12601205@osg.samsung.com>
+References: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
+ <6479e0c0-97fb-ca3b-1337-6ed11410d94f@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464185756-28401-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, jarkko.nikula@bitmer.com, paul@pwsan.com, lgirdwood@gmail.com, broonie@kernel.org
-Cc: t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6479e0c0-97fb-ca3b-1337-6ed11410d94f-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The McBSPLP's sidetone main clock is the McBSPLP's ICLK, not FCLK as the
-sidetone only receives the ICLK from the main McBSP module.
-Since the McBSP and sidetone is using the very same clock from PRCM level
-the sidetone must not have the prcm section to check the clock status since
-the sidetone is only used when McBSP is already configured.
-If two separate hwmods looking at the same bit and they would use
-pm_runtime in nested way (as it must happen with McBSP and it's ST module)
-the hwmod would warn, because the idlest will not match what it is expected
-after enable/disable of the clocks.
+Hello Marek,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/mach-omap2/omap_hwmod_3xxx_data.c | 24 ++++--------------------
- 1 file changed, 4 insertions(+), 20 deletions(-)
+On 05/25/2016 02:51 AM, Marek Szyprowski wrote:
+> Hello,
+> 
+> 
+> On 2016-05-24 19:41, Javier Martinez Canillas wrote:
+>> This series fixes an imprecise external abort error when accessing the
+>> Exynos MFC registers due the power domain configuration requiring the
+>> aclk333 clock to be enabled during a domain switch.
+>>
+>> There isn't a dependency between the clock and Linux Samsung SoC trees
+>> because the CLK_ACLK333 clock ID is already defined so the patches can
+>> be picked indepedently by the relevant subsystem maintainers.
+> 
+> Tested-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> I'm really curious what kind of async-bridge is there, but this patch
+> really fixes the problem with mfc power domain.
+>
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-index 9869a75c5d96..d72ee6185d5e 100644
---- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-@@ -1322,16 +1322,8 @@ static struct omap_hwmod omap3xxx_mcbsp2_sidetone_hwmod = {
- 	.name		= "mcbsp2_sidetone",
- 	.class		= &omap3xxx_mcbsp_sidetone_hwmod_class,
- 	.mpu_irqs	= omap3xxx_mcbsp2_sidetone_irqs,
--	.main_clk	= "mcbsp2_fck",
--	.prcm		= {
--		.omap2 = {
--			.prcm_reg_id = 1,
--			 .module_bit = OMAP3430_EN_MCBSP2_SHIFT,
--			.module_offs = OMAP3430_PER_MOD,
--			.idlest_reg_id = 1,
--			.idlest_idle_bit = OMAP3430_ST_MCBSP2_SHIFT,
--		},
--	},
-+	.main_clk	= "mcbsp2_ick",
-+	.flags		= HWMOD_NO_IDLEST,
- };
- 
- /* mcbsp3_sidetone */
-@@ -1344,16 +1336,8 @@ static struct omap_hwmod omap3xxx_mcbsp3_sidetone_hwmod = {
- 	.name		= "mcbsp3_sidetone",
- 	.class		= &omap3xxx_mcbsp_sidetone_hwmod_class,
- 	.mpu_irqs	= omap3xxx_mcbsp3_sidetone_irqs,
--	.main_clk	= "mcbsp3_fck",
--	.prcm		= {
--		.omap2 = {
--			.prcm_reg_id = 1,
--			.module_bit = OMAP3430_EN_MCBSP3_SHIFT,
--			.module_offs = OMAP3430_PER_MOD,
--			.idlest_reg_id = 1,
--			.idlest_idle_bit = OMAP3430_ST_MCBSP3_SHIFT,
--		},
--	},
-+	.main_clk	= "mcbsp3_ick",
-+	.flags		= HWMOD_NO_IDLEST,
- };
- 
- /* SR common */
+Yes, the Exynos manual is not that clear about what clocks have to remain
+enabled during a power domain switch for an IP block so maybe I got wrong.
+
+I see that the MFC block has an async-bridge in "Figure 15-1" at section 
+"15.2.1 NoC Probes in 5420 Bus". And I thought that since the IP block
+has an async-bridge, the clock needs to remain ungated when the PMU turn
+it on and off on a power domain switch.
+
+I chose that clock because "Figure 7-10 MFC Clock Diagram" at section
+"7.4.7 MFC Clock Diagram" shows that ACLK_333 is associated with the
+MFC internal buses, or at least that's my understanding.
+
+Best regards,
 -- 
-2.8.2
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
