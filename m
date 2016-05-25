@@ -1,61 +1,84 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v6] ASoC: cs53l30: Add codec driver support for Cirrus
- CS53L30
-Date: Wed, 25 May 2016 19:16:03 +0100
-Message-ID: <20160525181603.GD8206@sirena.org.uk>
-References: <1464045237-4074-1-git-send-email-nicoleotsuka@gmail.com>
- <20160525172800.GB3056@rob-hp-laptop>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+Date: Wed, 25 May 2016 20:29:40 +0200
+Message-ID: <5392766.vCAWrASuOA@wuerfel>
+References: <1464067268-35299-1-git-send-email-navam@xilinx.com> <C89496FEAE474D468F30D558A9468D9F26CED772@XAP-PVEXMBX01.xlnx.xilinx.com> <20160525173419.GA7510@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1iEpPD5yDbvq0asf"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160525172800.GB3056@rob-hp-laptop>
+In-Reply-To: <20160525173419.GA7510@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>, brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, Tim.Howe@cirrus.com, somduttar@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: Nava kishore Manne <nava.manne@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday, May 25, 2016 12:34:19 PM CEST Rob Herring wrote:
+> On Tue, May 24, 2016 at 11:47:31AM +0000, Nava kishore Manne wrote:
+> > 
+> > 
+> > > -----Original Message-----
+> > > From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > > Sent: Tuesday, May 24, 2016 2:21 PM
+> > > To: Nava kishore Manne <navam@xilinx.com>
+> > > Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> > > ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+> > > <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+> > > balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
+> > > <hyunk@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Radhey
+> > > Shyam Pandey <radheys@xilinx.com>; devicetree@vger.kernel.org; linux-
+> > > arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > > Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+> > > 
+> > > On Tuesday, May 24, 2016 10:51:08 AM CEST Nava kishore Manne wrote:
+> > > > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > > > b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > > > index 47b4e39..09df757 100644
+> > > > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > > > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > > > @@ -1,18 +1,23 @@
+> > > >  Xilinx USB2 device controller
+> > > >
+> > > >  Required properties:
+> > > > -- compatible             : Should be "xlnx,usb2-device-4.00.a"
+> > > > +- compatible             : Should be "xlnx,usb2-device-4.00.a" or
+> > > > +                   "xlnx,usb2-device-5.00"
+> > > >  - reg                    : Physical base address and size of the USB2
+> > > >                     device registers map.
+> > > >  - interrupts             : Should contain single irq line of USB2 device
+> > > >                     controller
+> > > >  - xlnx,has-builtin-dma   : if DMA is included
+> > > > +- dma-ranges             : Should be as the following
+> > > > +                   <child-bus-address, parent-bus-address, length>
+> > > 
+> > > A USB host should not have any children that are DMA capable, I think, so
+> > > this property doesn't make sense here. It should be part of the parent bus.
+> > > 
+> > Will send next version (v4) by removing this property from the DT.
+> > 
+> > > > +- xlnx,addrwidth : Should be the dma addressing size in bits(ex: 64
+> > > bits)
+> > > 
+> > > I'm still unconvinced about the property definition here. What are the
+> > > possible options for the IP block? I don't think I ever saw a reply from you to
+> > > my earlier questions.
+> > > 
+> > 
+> > Sorry Let me clearly explain
+> > 
+> > From the IP version 5.0 onwards The IP support both 32-bit and 64-bit addressing.
+> > But the older version of the IP's supports only 32-bit addressing.
+> > 
+> > This addrwidth property differentiates the address width for the new IP (I mean 5.0 version on wards)
+> > For older IP it will be always 32-bit.
+> 
+> Then I think you should have a simple boolean property for 64-bit 
+> configuration.
 
---1iEpPD5yDbvq0asf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think matching on the version number is slightly better, as we have the version
+already and it identifies whether the register exists.
 
-On Wed, May 25, 2016 at 12:28:00PM -0500, Rob Herring wrote:
-> On Mon, May 23, 2016 at 04:13:57PM -0700, Nicolin Chen wrote:
+Having a boolean property of course works as well, it just duplicates that
+information.
 
-> > +  - VA-supply, VP-supply : power supplies for the device,
-> > +    as covered in Documentation/devicetree/bindings/regulator/regulato=
-r.txt.
-
-> Also, these are missing from the example yet are required. I'd argue=20
-> they should be optional as you could have designs with no regulator=20
-> control.
-
-The general rule is that regulators should only be omitted if they are
-physically absent, we can describe simple fixed supplies with no control
-so we should do so (though in practice Linux is much more forgiving and
-will provide one if the supply is just plain missing from the DT).  This
-is a simpler rule for people to follow than making them officially
-optional and is more robust in the face of things like implementation
-changes that allow supplies to become controlable or drivers that
-suddenly form a desire to look at their supply voltages, as well as
-allowing other OSs to have simpler implementations if it's followed.
-
---1iEpPD5yDbvq0asf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXRevhAAoJECTWi3JdVIfQMSMIAIGqGM0uxZ6U4J4rOgEChwTI
-HdwfDIMSCWxaM15j4HAAaW9G1H3VINciYveHSBe8NU+skRwW1M0CGu5A593yZ1cZ
-E2NW+8QeYCs9dPOISLmjWyIxrAV6TBu3x4v2zjiRpkLd0WcNS6HOcSActrb7Ky2C
-WFfuXrfj/SCOBMexcBmesg7E65gsjdDkB4UVtv69glWsvcb2nf5KeTGNPEVki9qW
-WVj9/blu3y8K0pW5vXSNjbS31dJe0iKCa7qGL665Vj4AgqXyOX7+ksZ6B4OPdjD7
-1vi+OMQjmD3x9jf4CgJ3UoKZOjtzZ6zAPlP/NIpxvwc11FxqVb3r6ar7utn8SXI=
-=PpaN
------END PGP SIGNATURE-----
-
---1iEpPD5yDbvq0asf--
+	Arnd
