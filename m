@@ -1,102 +1,59 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 12/20] drm/sun4i: Add bridge support
-Date: Wed, 25 May 2016 18:29:45 +0200
-Message-ID: <20160525162945.GK9232@lukather>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
- <1463402840-17062-13-git-send-email-maxime.ripard@free-electrons.com>
- <CAKMK7uG-uq7XSqyesVnPtx0Ajx-FQjVKm_QzjEZgWJQDn8EkPA@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus number.
+Date: Wed, 25 May 2016 09:31:25 -0700
+Message-ID: <5745D35D.5090405@gmail.com>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se> <20160524174140.GE11605@leverpostej> <5745C3F8.4020909@gmail.com> <20160525160633.GC30956@leverpostej>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1247977398=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKMK7uG-uq7XSqyesVnPtx0Ajx-FQjVKm_QzjEZgWJQDn8EkPA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160525160633.GC30956@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Christer Weinigel <christer@weinigel.se>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 5/25/2016 9:06 AM, Mark Rutland wrote:
+> On Wed, May 25, 2016 at 08:25:44AM -0700, Frank Rowand wrote:
+>> On 5/24/2016 10:41 AM, Mark Rutland wrote:
+>>> On Tue, May 24, 2016 at 06:39:20PM +0200, Christer Weinigel wrote:
+>>>> +Normally SPI buses are assigned dynamic bus numbers starting at 32766
+>>>> +and counting downwards.  It is possible to assign the bus number
+>>>> +statically using devicetee aliases.  For example, on the MPC5200 the
+>>>> +"spi@f00" device above is connected to the "soc" bus.  To set its
+>>>> +bus_num to 1 add an aliases entry like this:
+>>>
+>>> As Mark Brown pointed out, this is very Linux-specific (at least in the
+>>> wording of the above).
+>>>
+>>> Generally, aliases are there to match _physical_ identifiers (e.g. to
+>>> match physical labels for UART0, UART1, and on).
+>>
+>> Can you point to anything in the specification or any other place that
+>> states that aliases are for matching physical identifiers?
+>>
+>> Can you point to anything in the specification or any other place that
+>> states that aliases are not to be used for anything else?
+> 
+> You have me there; I cannot find any wording to that effect, and I am
+> evidently going by my understanding alone.
 
---===============1247977398==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="opg8F0UgoHELSI+9"
-Content-Disposition: inline
+There seems to be a fair amount of things about devicetree that are tribal
+knowledge.  I try to take note of these things as I see them and would
+like to convert them from tribal knowledge to knowledge that is
+explicitly stated in our documentation.  The documented knowledge may end
+up being the same as the tribal lore, or we may find that it needs to be
+modified as we document it.
 
 
---opg8F0UgoHELSI+9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Daniel,
-
-On Mon, May 16, 2016 at 03:12:15PM +0200, Daniel Vetter wrote:
-> On Mon, May 16, 2016 at 2:47 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > Our RGB bus can be either connected to a bridge or a panel. While the p=
-anel
-> > support was already there, the bridge was not.
-> >
-> > Fix that.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->=20
-> For bridge support the only thing you need is to set
-> drm_encoder->bridge. Why do you need to hand-roll your own bridge
-> support? That pretty muchmeans you'll do it slightly differently (e.g.
-> you don't bother with a lot of the calls), which will make sharing
-> bridge drivers ever so harder. And also reviewing code, since using
-> shared code but slightly differently is really confusing.
-
-Because I overlooked it :)
-
-I'll change that.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---opg8F0UgoHELSI+9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXRdL5AAoJEBx+YmzsjxAgmQwQAMB4NgJLyyr0/cLzGvYDoSBW
-LmIllM/WFiU1xGySjTtymYKL44qSihgDPBtg/8VZuGI7BaME5IBguZXklUtkdSKp
-kGRoue6D5Nu3Ra3fxoyjxgj74DrD82j6XheCUe05kQtsaAcLFG/UpwS0XU/ZlaXk
-jUXABZmQyxaZXMjJP3akntWvOUUOPAGSn1HpeMYJz2mggNn1rgHnpfWwX4mv8NBd
-sF97fTz2trm+7VJECO9N1CtQUqzW5TYPg7N0KBAkE2bsR2B2VZLJGRItQhzOp/k7
-wlM1a7dirqHfsmuOAgimgjuaaIwPX7JWtJU7Odznp+eT1873c6IQ8ysbuSPzjSkm
-vl1VyUfqr/a8IbQK0WqFywY2YPBm1DBdRu8Vify06RV5xGICY71yJPQiB1tNsXe3
-6mq1UgCp/+lMsLoOTSA+7RWUBaGTh1ZyC6qOCGv1cWNZVHE64SS1a4RHuTO6libx
-+m1+04E2ldAKN4RGFMldhYBs0GicY4dQEw5blgfnQnPPXMYDjTciepoOqKMxyPrr
-h9NdaSXSNzmMvkWNp7DQFj5JPYAXHnc/d5Sfg5o0uencXRf/fyuJUWNChWnW4BXG
-WDDIwgw79ev/9e0VfLPu/Gbkp5Ir2wBtuLLKz4gz4uFU04Csy+OL4BdiqKYkKe3b
-kUNOw44KXVAJ97mX/Jze
-=1f8a
------END PGP SIGNATURE-----
-
---opg8F0UgoHELSI+9--
-
---===============1247977398==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1247977398==--
+> IEEE 1275 simply states that there may be predefined aliases for a
+> machine, or that users can create and use them dynamically. ePAPR (and
+> the devicetree specification) only states that aliases exist, and that a
+> client program might use them (through some means which is never
+> described).
+> 
+> Thanks,
+> Mark.
+> .
+> 
