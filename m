@@ -1,142 +1,175 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v2 02/12] of: add J-Core cpu bindings
-Date: Tue, 24 May 2016 22:33:30 -0400
-Message-ID: <20160525023330.GP21636@brightrain.aerifal.cx>
-References: <cover.1463708766.git.dalias@libc.org>
- <f3c89e4834665790ff13478c571cc9aaa9de5559.1463708766.git.dalias@libc.org>
- <20160523204846.GA16081@rob-hp-laptop>
- <20160523210328.GE21636@brightrain.aerifal.cx>
- <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com>
- <5744C80E.6070501@landley.net>
- <CAL_JsqJXzBLX4LwPezfm0UE9d8E0zzy8FJ=CUYuruMNbo=d4eA@mail.gmail.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v8 08/14] usb: otg: add OTG/dual-role core
+Date: Wed, 25 May 2016 10:44:27 +0800
+Message-ID: <20160525024427.GA31142@shlinux2>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
+ <1463133808-10630-9-git-send-email-rogerq@ti.com>
+ <574422CA.8080002@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJXzBLX4LwPezfm0UE9d8E0zzy8FJ=CUYuruMNbo=d4eA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+In-Reply-To: <574422CA.8080002@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 24, 2016 at 08:13:14PM -0500, Rob Herring wrote:
-> On Tue, May 24, 2016 at 4:30 PM, Rob Landley <rob@landley.net> wrote:
-> >
-> >
-> > On 05/23/2016 06:29 PM, Rob Herring wrote:
-> >> On Mon, May 23, 2016 at 4:03 PM, Rich Felker <dalias@libc.org> wrote:
-> >>> On Mon, May 23, 2016 at 03:48:46PM -0500, Rob Herring wrote:
-> >>>> On Fri, May 20, 2016 at 02:53:03AM +0000, Rich Felker wrote:
-> >>>>> Signed-off-by: Rich Felker <dalias@libc.org>
-> >>>>> ---
-> >>>>>  Documentation/devicetree/bindings/jcore/cpus.txt | 91 ++++++++++++++++++++++++
-> >>>>>  1 file changed, 91 insertions(+)
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/jcore/cpus.txt
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/jcore/cpus.txt b/Documentation/devicetree/bindings/jcore/cpus.txt
-> >>>>> new file mode 100644
-> >>>>> index 0000000..00ef112
-> >>>>> --- /dev/null
-> >>>>> +++ b/Documentation/devicetree/bindings/jcore/cpus.txt
-> >>>>> @@ -0,0 +1,91 @@
-> >>>>> +===================
-> >>>>> +J-Core cpu bindings
-> >>>>> +===================
-> >>>>> +
-> >>>>> +The J-Core processors are open source CPU cores that can be built as FPGA
-> >>>>> +soft cores or ASICs. The device tree is also responsible for describing the
-> >>>>> +cache controls and, for SMP configurations, all details of the SMP method,
-> >>>>> +as documented below.
-> >>>>> +
-> >>>>> +
-> >>>>> +---------------------
-> >>>>> +Top-level "cpus" node
-> >>>>> +---------------------
-> >>>>> +
-> >>>>> +Required properties:
-> >>>>> +
-> >>>>> +- #address-cells: Must be 1.
-> >>>>> +
-> >>>>> +- #size-cells: Must be 0.
-> >>>>> +
-> >>>>> +Optional properties:
-> >>>>> +
-> >>>>> +- enable-method: Required only for SMP systems. If present, must be
-> >>>>> +  "jcore,spin-table".
-> >>>>> +
-> >>>>> +
-> >>>>> +--------------------
-> >>>>> +Individual cpu nodes
-> >>>>> +--------------------
-> >>>>> +
-> >>>>> +Required properties:
-> >>>>> +
-> >>>>> +- device_type: Must be "cpu".
-> >>>>> +
-> >>>>> +- compatible: Must be "jcore,j2".
-> >>>>
-> >>>> Okay to have this, but you should have compatible strings for specific
-> >>>> core implementations. AIUI, J2 is just the ISA.
-> >>>
-> >>> There was some past discussion you probably missed on the linux-sh
-> >>> list, starting here:
-> >>>
-> >>> http://www.spinics.net/lists/linux-sh/msg50028.html
-> >>>
-> >>> Basically it's really hard to identify what "the specific core
-> >>> implementation" even means with a soft core. If you have some ideas
-> >>> I'd be happy to hear them, but I think there should always be a
-> >>> "jcore,j2" fallback compatible tag in any case.
-> >>
-> >> Presumably you do some sort of versioning on the VHDL source that you
-> >> can correlate to.
-> >>
-> >> If you have sufficient s/w accessible version registers that are
-> >> always going to be updated on IP changes then, you don't really need
-> >> more specific compatible strings.
-> >
-> > There are no version registers: the boot ROM can be output as part of
-> > the build, and the dtb can be provided by the boot ROM. So you don't
-> > need boot registers, you literally put any version info you need in the
-> > dtb in the boot rom.
+On Tue, May 24, 2016 at 12:45:46PM +0300, Roger Quadros wrote:
+> Hi Peter,
 > 
-> You can, but you are not doing that from the looks of it. Maybe you're
-> not to that point to need versioning and that's fine, but it doesn't
-> sound like you all have thought about it.
-
-It's been thought about and discussed both on the linux-sh list and
-internally in the J-Core development process, but it's certainly a
-topic that could use more discussion. I don't think it should be a
-blocking issue for registering current bindings, though.
-
-> >> Better yet, since you can change "the hardware", make it more
-> >> discoverable with registers for version numbering and feature bits.
-> >> The failure here is having a process where that can be forgotten...
-> >
-> > Why would you add hardware version registers when the hardware's
-> > attached boot rom is providing a dtb?
-> >
-> > What's the point?
+> I have one question here. Please see below.
 > 
-> You are missing who is reading and caring about what the version is.
-> It's all the software that cares what's in either version registers or
-> dtb to know what are the specific features of the h/w. At some point
-> you will have a single driver that needs to support multiple versions
-> and/or configurations of hardware/IP.
+> On 13/05/16 13:03, Roger Quadros wrote:
+> > It provides APIs for the following tasks
+> > 
+> > - Registering an OTG/dual-role capable controller
+> > - Registering Host and Gadget controllers to OTG core
+> > - Providing inputs to and kicking the OTG state machine
+> > 
+> > Provide a dual-role device (DRD) state machine.
+> > DRD mode is a reduced functionality OTG mode. In this mode
+> > we don't support SRP, HNP and dynamic role-swap.
+> > 
+> > In DRD operation, the controller mode (Host or Peripheral)
+> > is decided based on the ID pin status. Once a cable plug (Type-A
+> > or Type-B) is attached the controller selects the state
+> > and doesn't change till the cable in unplugged and a different
+> > cable type is inserted.
+> > 
+> > As we don't need most of the complex OTG states and OTG timers
+> > we implement a lean DRD state machine in usb-otg.c.
+> > The DRD state machine is only interested in 2 hardware inputs
+> > 'id' and 'b_sess_vld'.
+> > 
+> > Signed-off-by: Roger Quadros <rogerq@ti.com>
+> > ---
+> >  drivers/usb/common/Makefile  |    2 +-
+> >  drivers/usb/common/usb-otg.c | 1042 ++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/usb/core/Kconfig     |    4 +-
+> >  include/linux/usb/gadget.h   |    2 +
+> >  include/linux/usb/hcd.h      |    1 +
+> >  include/linux/usb/otg-fsm.h  |    7 +
+> >  include/linux/usb/otg.h      |  154 ++++++-
+> >  7 files changed, 1206 insertions(+), 6 deletions(-)
+> >  create mode 100644 drivers/usb/common/usb-otg.c
+> > 
+> 
+> <snip>
+> 
+> > +
+> > +/**
+> > + * usb_otg_register() - Register the OTG/dual-role device to OTG core
+> > + * @dev: OTG/dual-role controller device.
+> > + * @config: OTG configuration.
+> > + *
+> > + * Registers the OTG/dual-role controller device with the USB OTG core.
+> > + *
+> > + * Return: struct usb_otg * if success, ERR_PTR() if error.
+> > + */
+> > +struct usb_otg *usb_otg_register(struct device *dev,
+> > +				 struct usb_otg_config *config)
+> > +{
+> > +	struct usb_otg *otg;
+> > +	struct otg_wait_data *wait;
+> > +	int ret = 0;
+> > +
+> > +	if (!dev || !config || !config->fsm_ops)
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	/* already in list? */
+> > +	mutex_lock(&otg_list_mutex);
+> > +	if (usb_otg_get_data(dev)) {
+> > +		dev_err(dev, "otg: %s: device already in otg list\n",
+> > +			__func__);
+> > +		ret = -EINVAL;
+> > +		goto unlock;
+> > +	}
+> > +
+> > +	/* allocate and add to list */
+> > +	otg = kzalloc(sizeof(*otg), GFP_KERNEL);
+> > +	if (!otg) {
+> > +		ret = -ENOMEM;
+> > +		goto unlock;
+> > +	}
+> > +
+> > +	otg->dev = dev;
+> > +	otg->caps = config->otg_caps;
+> 
+> Here, we should be checking if user needs to disable any OTG features. So,
+> 
+> 	if (dev->of_node)
+> 		of_usb_update_otg_caps(dev->of_node, &otg->caps);
+> 
+> Do you agree?
+> This means we need to change otg->caps from 'struct usb_otg_caps *caps;'
+> to 'struct usb_otg_caps caps;' so that we can modify the local copy instead
+> of the one passed by the OTG controller.
 
-This is why we have both "jcore,aic1" and "jcore,aic2" now, and why
-we'll soon have a "jcore,spi3" binding for the new SPI master with DMA
-support. The intent is that stable hardware interfaces are maintained
-at the hardware source level, and the binding names correspond to
-component names in the hardware source.
+Why can't modify the one from OTG controller directly?
 
-If there are good reasons for more fine-grained version information,
-we can add binding specifications for such, but the only reason I've
-seen so far is bug workarounds, and it really doesn't make sense to be
-putting bug workarounds in the kernel rather than just fixing the
-source and flashing the FPGA configuration. Once we get to ASICs of
-course it might make sense.
+> 
+> We can also move of_usb_update_otg_caps() to otg.h.
+> 
+> We will also need to modify the udc-core code so that it sets gadget->otg_caps
+> to the modified otg_caps from the OTG core. This will ensure that the right
+> OTG descriptors are sent.
+> 
+> So we will have to introduce an API.
+> 
+> struct usb_otg_caps *usb_otg_get_otg_caps(struct device *otg_dev)
+> 
+> And in udc-core.c,
+> 
+> static int udc_bind_to_driver(struct usb_udc *udc, struct usb_gadget_driver *driver)
+> {
+> ..
+>         ret = driver->bind(udc->gadget, driver);
+>         if (ret)
+>                 goto err1;
+> 
+>         /* If OTG, the otg core starts the UDC when needed */
+>         if (udc->gadget->otg_dev) {
+> +		udc->gadget->is_otg = true;
 
-Do you have other compelling reasons for fine-grained versioning?
+gadget->is_otg is only set to true if fully OTG is supported and it
+needs to send OTG descriptors at this case. DRD devices should not send OTG
+descriptors.
 
-Rich
+> +		udc->gadget->otg_caps = usb_otg_get_otg_caps(udc->gadget->otg_dev);
+
+Getting otg capabilities should be prior to driver->bind since
+usb_otg_descriptor_init is called at that. Besides, Gadget driver
+may be probed before otg driver is registered
+
+I am wonder if we can implement defer probe for gadget/udc/host driver
+if otg driver is not probed, in that case, some designs can be simpler
+like wait list in otg driver.
+
+>                 mutex_unlock(&udc_lock);
+>                 usb_otg_register_gadget(udc->gadget, &otg_gadget_intf);
+>                 mutex_lock(&udc_lock);
+>         } else {
+>                 ret = usb_gadget_udc_start(udc);
+>                 if (ret) {
+>                         driver->unbind(udc->gadget);
+>                         goto err1;
+>                 }
+>                 usb_udc_connect_control(udc);
+>         }
+> ..
+> }
+> 
+> What do you say?
+> 
+> regards,
+> -roger
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+
+Best Regards,
+Peter Chen
