@@ -1,64 +1,51 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] arm64: tegra: Fix CPU compatible string for Tegra132
-Date: Wed, 25 May 2016 09:42:28 -0600
-Message-ID: <5745C7E4.2050908@wwwdotorg.org>
-References: <20160523074221.7135-1-josephl@nvidia.com>
- <574509E7.4030208@nvidia.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v4 3/7] media: s5p-mfc: replace custom reserved memory
+ handling code with generic one
+Date: Wed, 25 May 2016 11:42:34 -0400
+Message-ID: <458196c1-806c-4cd6-abf1-f01dd23bff2a@osg.samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-4-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <574509E7.4030208-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1464096690-23605-4-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/24/2016 08:11 PM, Joseph Lo wrote:
-> On 05/23/2016 03:42 PM, Joseph Lo wrote:
->> As per commit f634da375fc96 ("Documentation: DT bindings: add nvidia,
->> tegra132-denver compatible string"), fixing the CPU compatible string for
->> Tegra132 to match the binding document currently.
->>
->> Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>   arch/arm64/boot/dts/nvidia/tegra132.dtsi | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
->> b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
->> index 2013f8916084..7b1cdc029de3 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
->> @@ -964,13 +964,13 @@
->>
->>           cpu@0 {
->>               device_type = "cpu";
->> -            compatible = "nvidia,denver", "arm,armv8";
->> +            compatible = "nvidia,tegra132-denver", "arm,armv8";
->
-> Hi Stephen, Thierry,
->
-> Should we fix this or fix the compatible string in the binding document
-> as just "nvidia,denver" to represent all the Devner CPU revisions just
-> like some other CPUs did? e.g. arm,cortex-a57, which represents all the
-> A57 revisions.
+Hello Marek,
 
-I would expect compatible to be:
+On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
+> This patch removes custom code for initialization and handling of
+> reserved memory regions in s5p-mfc driver and replaces it with generic
+> reserved memory regions api.
+> 
+> s5p-mfc driver now handles two reserved memory regions defined by
+> generic reserved memory bindings. Support for non-dt platform has been
+> removed, because all supported platforms have been already converted to
+> device tree.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
 
-compatible = "nvidia,tegra132-denver", "nvidia,denver", "arm,armv8";
+Similar question than for patch #2, shouldn't we include the in-kernel DTS
+changes with this patch to keep bisectability? Otherwise the mfc-{l,r} mem
+allocation will fail after this patch.
 
-The "nvidia,denver" entry is already present, and hence probably 
-shouldn't be removed. It can represent "Denver 1.0". We should add the 
-T132 entry to indicate the specific implementation. Admittedly right now 
-there's a 1:1 relation between SoC and Denver version. Either/both of 
-those could in theory be required to trigger specific bug-fixes/WARs.
+The patch looks good to me though:
 
-For later chips which have a different Denver version, I'd expect to see 
-something like:
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-compatible = "nvidia,tegraNNN-denver", "nvidia,denverMMM", "arm,armv8";
+I couldn't test this exact patch because my Odroid XU4 died but I've tested
+the previous version and the only difference is that the memory reserve is
+made by index now instead of name, so I think you can add:
 
-... where NNN is the SoC version/name and MMM is the Denver version. 
-There could be extra entries in the property if the new versions are 
-backwards-compatible with old versions.
+Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
