@@ -1,56 +1,58 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 3/3] ARM64: dts: amlogic: gxbb: Enable secure monitor
-Date: Wed, 25 May 2016 22:18:31 +0200
-Message-ID: <1464207511-11786-4-git-send-email-carlo@caione.org>
-References: <1464207511-11786-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464207511-11786-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [Patch v5 5/8] firmware: qcom: scm: Convert to streaming DMA APIS
+Date: Wed, 25 May 2016 13:50:58 -0700
+Message-ID: <7hbn3tg8ul.fsf@baylibre.com>
+References: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
+	<1463111221-6963-6-git-send-email-andy.gross@linaro.org>
+	<CAOi56cVB1Z-gO6Dx0KOSr9wiRF3Y9ahDHe0=qT9WW4MdFMhjng@mail.gmail.com>
+	<CAPBZ5Qc0oZ+k_5OiUGU6c9jFfcmAfsK3Uy-s=ONGCSGzCDyYNw@mail.gmail.com>
+	<20160525033731.GA30220@hector.attlocal.net>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160525033731.GA30220@hector.attlocal.net> (Andy Gross's
+	message of "Tue, 24 May 2016 22:37:31 -0500")
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Andy Gross <andy.gross@linaro.org> writes:
 
-Add the secure monitor node in the Amlogic Meson GXBB DTSI file to
-enable it.
+> On Mon, May 23, 2016 at 04:02:06PM -0500, Andy Gross wrote:
+>> On 23 May 2016 at 14:26, Kevin Hilman <khilman@kernel.org> wrote:
+>> > Hi Andy,
+>> >
+>> > On Thu, May 12, 2016 at 8:46 PM, Andy Gross <andy.gross@linaro.org> wrote:
+>> >> This patch converts the Qualcomm SCM driver to use the streaming DMA APIs
+>> >> for communication buffers.
+>> >>
+>> >> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+>> >
+>> > This patch has landed in linux-next in the form of commit a551c3dbd689
+>> > (firmware: qcom: scm: Convert to streaming DMA APIS), and kernelci.org
+>> > found some boot breakage in next-20160523 on apq8064[1] which was
+>> > bisected down to this commit.
+>> >
+>> > I reverted this commit on top of next-20160523 and it no longer
+>> > builds, so I didn't validate if things boot again with this patch
+>> > reverted.
+>> 
+>> Ouch I missed this failure.  I'll investigate and get it fixed.
+>
+> So the root cause was the fact that the DFAB clock required by the SCM is an RPM
+> clock.  That support isn't present yet in the kernel, so SCM probe fails.
+>
+> The core clock is really only accessed so that we can bump the clock on it up to
+> the max for performance.  As such, I'll make it optional in the platform code.
+>
+> This does bring up the issue of probe defer causing issues with the spm driver,
+> as it calls set_warm_boot_addr.  That may have to be addressed, but is probably
+> a problem best fixed in the spm.
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Nice, thanks for the explanation.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 76b3b6d..735a751 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -44,6 +44,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/gpio/meson-gxbb-gpio.h>
-+#include <dt-bindings/firmware/meson-sm.h>
- 
- / {
- 	compatible = "amlogic,meson-gxbb";
-@@ -98,6 +99,14 @@
- 		method = "smc";
- 	};
- 
-+	firmware {
-+		compatible = "simple-bus";
-+
-+		sm: secure-monitor {
-+			compatible = "amlogic,meson-gxbb-sm";
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--- 
-2.7.4
+Is there a patch somewhere you'd like me to test? or were you able to
+dust off an 8064 platform for testing?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
