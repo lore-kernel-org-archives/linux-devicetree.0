@@ -1,36 +1,56 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: dts: axp209: Disable ldo5 by default
-Date: Wed, 25 May 2016 14:39:24 +0200
-Message-ID: <20160525123924.GF9232@lukather>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 0/6] ARM: dts: sun5i: q8-common: Enable various
+ peripherals
+Date: Wed, 25 May 2016 14:40:53 +0200
+Message-ID: <20160525124053.GG9232@lukather>
 References: <1463500571-28970-1-git-send-email-wens@csie.org>
- <1463500571-28970-3-git-send-email-wens@csie.org>
+ <abbb9686-bbc7-cfad-ec1d-e5f099ac124b@redhat.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xaMk4Io5JJdpkLEb"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="xjyYRNSh/RebjC6o"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463500571-28970-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <abbb9686-bbc7-cfad-ec1d-e5f099ac124b@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---xaMk4Io5JJdpkLEb
+--xjyYRNSh/RebjC6o
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 17, 2016 at 11:56:07PM +0800, Chen-Yu Tsai wrote:
-> The output pin of LDO is also a GPIO pin, and the on/off settings of the
-> regulator are actually pinmux settings.
->=20
-> Disable it by default so it doesn't conflict with GPIO usage.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Hi Hans,
 
-Applied, thanks!
+On Wed, May 18, 2016 at 10:13:52AM +0200, Hans de Goede wrote:
+> Hi Chen-Yu,
+>=20
+> On 17-05-16 17:56, Chen-Yu Tsai wrote:
+> >Hi everyone,
+> >
+> >This series enables more peripherals for Allwinner A13-based Q8 devices.
+> >The peripherals include the WiFi, the PMIC's micro-usb power supply
+> >(driver), audio codec (headphone and speaker), and full display support
+> >with the new DRM KMS driver. The series is based on parts of Maxime's
+> >"drm: Add Support for Passive RGB to VGA bridges" series, specifically
+> >the clk and drm fixes, and common DTS bits.
+> >
+> >Hans, since you have a collection of q8 tablets, I'm hoping you could
+> >test these bits and provide some feedback.
+>=20
+> I've not run any tests, just looked at the patches, the stuff in
+> patch 3 is already present in arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
+> I put it there because I saw some .fex files which don't use ldo3 for wifi
+> I'm fine with moving it to -common though, I believe that you're right
+> that it makes more sense there, having it in 2 places is not really
+> useful though.
 
+I'm not quite sure what you mean, do you want Chen-Yu to send a second
+version, or are you ok with this patch?
+
+Thanks,
 Maxime
 
 --=20
@@ -38,29 +58,25 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---xaMk4Io5JJdpkLEb
+--xjyYRNSh/RebjC6o
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXRZz8AAoJEBx+YmzsjxAg0WEP/1flH+yf6LvgsJxeVmgXswbx
-E3+zT00B4abqx+U5I7D0NUeS2q7e58Fq7NAisuL6C5d1xsifoga5T2D3ghPTykFc
-2cvhEg2X97A8wRzhduFCRv4ZLTsMoPgoi2zT4HMSffXdy7onWGEDDX4Diwe+X+Iz
-NGNADbmT/b7dJyB0Qlq5nBp9zfgZcQ4sqndlrMmz4S/wRJ21Q/ZKgZihKQv+4OlF
-McrsiXa3imLg2ESPGwzxgv78O+wJ1xdwti/4bZRBK8OGq4vA63yScSABejCC70cm
-Ad9FUKo92C+HiuHph8Y/MLGq7t+MKJKFsmzpbmDDTWxt6a7iKMXVEMnDGapG+t7p
-gFqD/8yWDlny3h7pnrOT9ns6pIqe6RKaNiP2BZw0x1FrIOh7b1kSA2Hok9fPeamX
-5XQS9UcB9Fk01aO3e2Ad8I1LR1Cqdf2gAaX/TpD5FOwG53Fu6Nia9gSoyEDSSekS
-V18HUAIAjoBXfLLbPupp4jVOJV65y05DV5xW+37yTTjH6V4B1om9z9BT5wFdjulc
-YlwY0sy+Ai06IZYv7n5HQMxnIGEtjg2Ce38dF2Mli1bE2ruvYcGi4EI/RVSwo8kP
-KPDyMBkdZ2PoGV2ahh279/zpIpourESR1QTydvLNHPU42D7sApKOMY3c/YpoB2Fz
-j6X0rcGPHGXpMXnmFGz/
-=OIpC
+iQIcBAEBAgAGBQJXRZ1VAAoJEBx+YmzsjxAggxUP/iQX9Gu7QkEz8vTDpRowFyfX
+9ha5IdYwizhURHZ30d3dkLE/DjAoLOrnLu8vhCPG/5OV/WqApSw3rbeOT1prbsgT
+/696EN6KxXn3QQMQ9Em5saZ8wmuNHaWUwtWY/oT558PWmchcYQ37ciKIa+NI3Bm7
+uaEgieAK816R9NfVPw7dMk67TPSZqxNboT36l/on4KWojLGMLq67WEHgeMDy4Ga5
+K0Lbtv7+dAYv6FJDdUurgGF4oOtyON/Z6SjNqeRHt7VL2f/lqiIjrdp762LIQPLq
+rCyQJr910aQmQW7WZhzsmttuOuf47VZD+/FJ2VtvxLmW/x6lzXczwPtjATtzlTvJ
+V70rI3CQyMB8MahAFFlSDPZ64qXZ5eX9QmapkQWjydPfcnrNe5M0vtt/lG9XWXp/
+fSdZ0OfSLZbQerrsvT4yXbB449K/j5OlbVVd6lEdyNImZ7pcFIMKtS5RRQx39AEH
+T5It6jG4AY6rbC8J1lC27rTpJeFk1zRE0fWqNN+oAYAU1CE0nRQKEl86CKfHk/7c
+cu5CM0F4wz5htJ7bTvXVG77YmMDXipMTgKRNXyFtsi/aeQd3fifqINPDm+ta4BiG
+Vt/5YBH7ukiwb/k36x1dq+syJ8g6e6UrEQZDoKTfgUphQU5TzzSRO+veix9XPE7u
+5Os/bNkcuczcSHcN4TME
+=JBRh
 -----END PGP SIGNATURE-----
 
---xaMk4Io5JJdpkLEb--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--xjyYRNSh/RebjC6o--
