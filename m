@@ -1,28 +1,92 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 2/5] DTBO magic and dtbo format options
-Date: Wed, 25 May 2016 11:51:26 -0700
-Message-ID: <5745F42E.9080100@gmail.com>
-References: <1464112239-29856-1-git-send-email-pantelis.antoniou@konsulko.com> <1464112239-29856-3-git-send-email-pantelis.antoniou@konsulko.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+Date: Wed, 25 May 2016 13:53:32 -0500
+Message-ID: <CAL_Jsq+VL6jjo5QLwnsC8rEfgP4KN5hCSB7QicWWN-uvZU0GHw@mail.gmail.com>
+References: <1464067268-35299-1-git-send-email-navam@xilinx.com>
+ <C89496FEAE474D468F30D558A9468D9F26CED772@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160525173419.GA7510@rob-hp-laptop> <5392766.vCAWrASuOA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464112239-29856-3-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5392766.vCAWrASuOA@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Nava kishore Manne <nava.manne@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/24/2016 10:50 AM, Pantelis Antoniou wrote:
-> Introduce a new magic number for dynamic plugin objects,
-> which is enabled by selecting dtbo/input output options.
+On Wed, May 25, 2016 at 1:29 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday, May 25, 2016 12:34:19 PM CEST Rob Herring wrote:
+>> On Tue, May 24, 2016 at 11:47:31AM +0000, Nava kishore Manne wrote:
+>> >
+>> >
+>> > > -----Original Message-----
+>> > > From: Arnd Bergmann [mailto:arnd@arndb.de]
+>> > > Sent: Tuesday, May 24, 2016 2:21 PM
+>> > > To: Nava kishore Manne <navam@xilinx.com>
+>> > > Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+>> > > ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+>> > > <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+>> > > balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
+>> > > <hyunk@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Radhey
+>> > > Shyam Pandey <radheys@xilinx.com>; devicetree@vger.kernel.org; linux-
+>> > > arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+>> > > Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+>> > >
+>> > > On Tuesday, May 24, 2016 10:51:08 AM CEST Nava kishore Manne wrote:
+>> > > > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+>> > > > b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+>> > > > index 47b4e39..09df757 100644
+>> > > > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+>> > > > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+>> > > > @@ -1,18 +1,23 @@
+>> > > >  Xilinx USB2 device controller
+>> > > >
+>> > > >  Required properties:
+>> > > > -- compatible             : Should be "xlnx,usb2-device-4.00.a"
+>> > > > +- compatible             : Should be "xlnx,usb2-device-4.00.a" or
+>> > > > +                   "xlnx,usb2-device-5.00"
+>> > > >  - reg                    : Physical base address and size of the USB2
+>> > > >                     device registers map.
+>> > > >  - interrupts             : Should contain single irq line of USB2 device
+>> > > >                     controller
+>> > > >  - xlnx,has-builtin-dma   : if DMA is included
+>> > > > +- dma-ranges             : Should be as the following
+>> > > > +                   <child-bus-address, parent-bus-address, length>
+>> > >
+>> > > A USB host should not have any children that are DMA capable, I think, so
+>> > > this property doesn't make sense here. It should be part of the parent bus.
+>> > >
+>> > Will send next version (v4) by removing this property from the DT.
+>> >
+>> > > > +- xlnx,addrwidth : Should be the dma addressing size in bits(ex: 64
+>> > > bits)
+>> > >
+>> > > I'm still unconvinced about the property definition here. What are the
+>> > > possible options for the IP block? I don't think I ever saw a reply from you to
+>> > > my earlier questions.
+>> > >
+>> >
+>> > Sorry Let me clearly explain
+>> >
+>> > From the IP version 5.0 onwards The IP support both 32-bit and 64-bit addressing.
+>> > But the older version of the IP's supports only 32-bit addressing.
+>> >
+>> > This addrwidth property differentiates the address width for the new IP (I mean 5.0 version on wards)
+>> > For older IP it will be always 32-bit.
+>>
+>> Then I think you should have a simple boolean property for 64-bit
+>> configuration.
+>
+> I think matching on the version number is slightly better, as we have the version
+> already and it identifies whether the register exists.
+>
+> Having a boolean property of course works as well, it just duplicates that
+> information.
 
-Why is a new magic number needed for .dtbo?  Isn't it the
-same format as the existing .dtb, just with some added
-nodes?
+It doesn't because v5.0 h/w can be configured for either 32 or 64-bit
+mode. Normally, we would encode configuration into the compatible
+strings, but I view FPGA based blocks to be an exception. Of course,
+since they can just "fix the h/w" we could just require h/w version
+and feature registers. ;)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
