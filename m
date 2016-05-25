@@ -1,50 +1,74 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 0/5] da8xx USB PHY platform devices and clocks (was
- "da8xx UBS clocks")
-Date: Wed, 25 May 2016 16:48:34 +0530
-Message-ID: <57458A0A.5010100@ti.com>
-References: <1462837612-7803-1-git-send-email-david@lechnology.com>
- <57431E73.5030304@lechnology.com>
+From: Christer Weinigel <christer@weinigel.se>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Wed, 25 May 2016 13:20:04 +0200
+Message-ID: <57458A64.2090901@weinigel.se>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+ <20160524174140.GE11605@leverpostej> <5744BC76.9090403@gmail.com>
+ <20160525092034.GE1337@leverpostej> <20160525103810.GU8206@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57431E73.5030304@lechnology.com>
+In-Reply-To: <20160525103810.GU8206@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, khilman@kernel.org
-Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 May 2016 08:44 PM, David Lechner wrote:
-> On 05/09/2016 06:46 PM, David Lechner wrote:
->> v5 changes: renamed "usbphy" to "usb_phy" or "usb-phy" as appropriate
->>
->> David Lechner (5):
->>    ARM: davinci: da8xx: add usb phy clocks
->>    ARM: davinci: da8xx: Add CFGCHIP syscon platform declaration.
->>    ARM: davinci: da8xx: Add USB PHY platform declaration
->>    ARM: DTS: da850: Add cfgchip syscon node
->>    ARM: DTS: da850: Add usb phy node
->>
->>   arch/arm/boot/dts/da850.dtsi                |   9 ++
->>   arch/arm/mach-davinci/board-da830-evm.c     |  52 +++----
->>   arch/arm/mach-davinci/board-da850-evm.c     |   4 +
->>   arch/arm/mach-davinci/board-mityomapl138.c  |   4 +
->>   arch/arm/mach-davinci/board-omapl138-hawk.c |  23 ++-
->>   arch/arm/mach-davinci/devices-da8xx.c       |  28 ++++
->>   arch/arm/mach-davinci/include/mach/da8xx.h  |   6 +
->>   arch/arm/mach-davinci/usb-da8xx.c           | 230
->> +++++++++++++++++++++++++++-
->>   8 files changed, 314 insertions(+), 42 deletions(-)
->>
+On 05/25/2016 12:38 PM, Mark Brown wrote:
+> On Wed, May 25, 2016 at 10:20:34AM +0100, Mark Rutland wrote:
+>> On Tue, May 24, 2016 at 01:41:26PM -0700, Frank Rowand wrote:
 > 
-> What should I be doing to keep this moving along?
+>>> The code and behavior is in the Linux kernel. It should be
+>>> visible in the documentation instead of being a big mystery of
+>>> how it works.
+> 
+>> As above, I don't entirely agree. Mindlessly documenting existing
+>> Linux behaviour can have the unfortuante effect of moving people
+>> towards the wrong tool for the job.
+> 
+> Yes, this is exactly my concern - the articulated use case (which
+> didn't suprise me at all) is for using spidev which is itself not
+> just Linux specific but this particular version of Linux right now
+> specific.  There are lots of things that happen to work but are in
+> fact terrible ideas that leave messes for our future selves.  We
+> need to distinguish between things that are real, meaningful system
+> descriptions and things that are implementation details resulting
+> from the rush to force everyone on to DT.
 
-We need the related driver changes to be applied first. I could then use
-an immutable branch to push the platform changes against.
+Oh, for *beep* *beep* sake.
 
-I did take a look at the patches and they look good to me. Except the
-one comment from Sergei which I just now indicated that I agree with.
+It used to be very easy to use SPI devices on Linux with stable device
+names.  Add a platform device entry and set bus_num.  Add spidev
+entries specifying the chip select, mode, speed and other specifics
+for the devices on the bus.  Then just use
+/dev/spi$bus_num.$chip_select to talk to them.  Very simple to use and
+understand.
 
-Thanks,
-Sekhar
+Doing the same with devicetree ought to be just as simple, and since
+Grant added that patch it actually is.  The behaviour is already in
+the Linux kernel.  Nobody is going to rip out the of_alias_get_id
+usage from the spi driver sice that will break existing userspace.
+Nobody is going to rip out the spidev framework from the Linux kernel.
+ The aliases mechanism which is specifically intended to provide
+easy-to use names for userspace.  From "A Symphony of Flavours: Using
+the device tree to describe embedded hardware" by Grant Likely and
+Josh Boyer:
+
+    In order to ease device lookup in client operating systems, it is
+    often desirable to define an aliases node.  This allows one to
+    provide a shorthand method for identifying a device without having
+    to specify the full path on lookup.
+
+What is so horrible about documenting the actual behaviour of the
+Linux kernel?  How is documenting that serial0 = /amba@0/blah@blah"
+which is ok, so markedly different from documenting spi0 =
+"/amba@0/blah/blah"?
+Does everything have to be so damn difficult?
+
+Ignore the patch if you want to, I give up.  I just hope that someone
+else that needs to do the same thing will find my patch with this
+(ought to be) trivial documentation.
+
+    /Christer (tired of bikeshedding)
