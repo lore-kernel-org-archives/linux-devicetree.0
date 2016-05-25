@@ -1,74 +1,180 @@
-From: Christer Weinigel <christer@weinigel.se>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
- number.
-Date: Wed, 25 May 2016 13:20:04 +0200
-Message-ID: <57458A64.2090901@weinigel.se>
-References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
- <20160524174140.GE11605@leverpostej> <5744BC76.9090403@gmail.com>
- <20160525092034.GE1337@leverpostej> <20160525103810.GU8206@sirena.org.uk>
+From: Venkat Reddy Talla <vreddytalla@nvidia.com>
+Subject: [PATCH v2 1/2] extcon: gpio: add device tree support for extcon-gpio
+Date: Wed, 25 May 2016 17:05:32 +0530
+Message-ID: <1464176133-10742-1-git-send-email-vreddytalla@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160525103810.GU8206@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, Venkat Reddy Talla <vreddytalla@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/25/2016 12:38 PM, Mark Brown wrote:
-> On Wed, May 25, 2016 at 10:20:34AM +0100, Mark Rutland wrote:
->> On Tue, May 24, 2016 at 01:41:26PM -0700, Frank Rowand wrote:
-> 
->>> The code and behavior is in the Linux kernel. It should be
->>> visible in the documentation instead of being a big mystery of
->>> how it works.
-> 
->> As above, I don't entirely agree. Mindlessly documenting existing
->> Linux behaviour can have the unfortuante effect of moving people
->> towards the wrong tool for the job.
-> 
-> Yes, this is exactly my concern - the articulated use case (which
-> didn't suprise me at all) is for using spidev which is itself not
-> just Linux specific but this particular version of Linux right now
-> specific.  There are lots of things that happen to work but are in
-> fact terrible ideas that leave messes for our future selves.  We
-> need to distinguish between things that are real, meaningful system
-> descriptions and things that are implementation details resulting
-> from the rush to force everyone on to DT.
+Adding device tree support for extcon-gpio driver.
 
-Oh, for *beep* *beep* sake.
+Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
 
-It used to be very easy to use SPI devices on Linux with stable device
-names.  Add a platform device entry and set bus_num.  Add spidev
-entries specifying the chip select, mode, speed and other specifics
-for the devices on the bus.  Then just use
-/dev/spi$bus_num.$chip_select to talk to them.  Very simple to use and
-understand.
+---
+changes in v2:
+- using gpio flag cell to handle gpio active state
+- change dts property name gpio to gpios
+- removed prefix for debounce
+---
+---
+ drivers/extcon/extcon-gpio.c       | 80 +++++++++++++++++++++++++++++++++++---
+ include/linux/extcon/extcon-gpio.h |  4 +-
+ 2 files changed, 77 insertions(+), 7 deletions(-)
 
-Doing the same with devicetree ought to be just as simple, and since
-Grant added that patch it actually is.  The behaviour is already in
-the Linux kernel.  Nobody is going to rip out the of_alias_get_id
-usage from the spi driver sice that will break existing userspace.
-Nobody is going to rip out the spidev framework from the Linux kernel.
- The aliases mechanism which is specifically intended to provide
-easy-to use names for userspace.  From "A Symphony of Flavours: Using
-the device tree to describe embedded hardware" by Grant Likely and
-Josh Boyer:
-
-    In order to ease device lookup in client operating systems, it is
-    often desirable to define an aliases node.  This allows one to
-    provide a shorthand method for identifying a device without having
-    to specify the full path on lookup.
-
-What is so horrible about documenting the actual behaviour of the
-Linux kernel?  How is documenting that serial0 = /amba@0/blah@blah"
-which is ok, so markedly different from documenting spi0 =
-"/amba@0/blah/blah"?
-Does everything have to be so damn difficult?
-
-Ignore the patch if you want to, I give up.  I just hope that someone
-else that needs to do the same thing will find my patch with this
-(ought to be) trivial documentation.
-
-    /Christer (tired of bikeshedding)
+diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+index d023789..f29032c 100644
+--- a/drivers/extcon/extcon-gpio.c
++++ b/drivers/extcon/extcon-gpio.c
+@@ -28,6 +28,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ 
+ struct gpio_extcon_data {
+ 	struct extcon_dev *edev;
+@@ -90,21 +92,80 @@ static int gpio_extcon_init(struct device *dev, struct gpio_extcon_data *data)
+ 	return 0;
+ }
+ 
++static struct gpio_extcon_pdata *gpio_extcon_of_pdata(
++		struct platform_device *pdev)
++{
++	struct gpio_extcon_pdata *pdata;
++	struct device_node *np = pdev->dev.of_node;
++	enum of_gpio_flags flags;
++	int gpio;
++	u32 pval;
++	int ret;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	gpio = of_get_named_gpio_flags(np, "gpios", 0, &flags);
++	if (gpio < 0)
++		return ERR_PTR(gpio);
++
++	pdata->gpio = gpio;
++
++	if (flags & OF_GPIO_ACTIVE_LOW)
++		pdata->gpio_active_low = 1;
++
++	ret = of_property_read_u32(np, "extcon-gpio,irq-flags", &pval);
++	if (!ret)
++		pdata->irq_flags = pval;
++	else
++		pdata->irq_flags = IRQF_TRIGGER_RISING |
++					IRQF_TRIGGER_FALLING;
++
++	ret = of_property_read_u32(np, "debounce-ms", &pval);
++	if (!ret)
++		pdata->debounce = pval;
++
++	pdata->extcon_cable_cnt = of_property_count_u32_elems(np,
++					"extcon-gpio,cable-names");
++	if (pdata->extcon_cable_cnt <= 0) {
++		dev_err(&pdev->dev, "not found out cable names\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	pdata->extcon_id = devm_kzalloc(&pdev->dev,
++			(pdata->extcon_cable_cnt) *
++			sizeof(*pdata->extcon_id), GFP_KERNEL);
++	if (!pdata->extcon_id)
++		return ERR_PTR(-ENOMEM);
++
++	ret = of_property_read_u32_array(np, "extcon-gpio,cable-names",
++			pdata->extcon_id, pdata->extcon_cable_cnt);
++	if (ret)
++		return ERR_PTR(-EINVAL);
++
++	return pdata;
++}
++
+ static int gpio_extcon_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_extcon_pdata *pdata = dev_get_platdata(&pdev->dev);
+ 	struct gpio_extcon_data *data;
+ 	int ret;
+ 
+-	if (!pdata)
+-		return -EBUSY;
+-	if (!pdata->irq_flags || pdata->extcon_id > EXTCON_NONE)
+-		return -EINVAL;
+-
+ 	data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
+ 				   GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
++
++	if (!pdata && pdev->dev.of_node)
++		pdata = gpio_extcon_of_pdata(pdev);
++
++	if (IS_ERR(pdata))
++		return PTR_ERR(pdata);
++	if (!pdata->irq_flags || !pdata->extcon_id)
++		return -EINVAL;
++
+ 	data->pdata = pdata;
+ 
+ 	/* Initialize the gpio */
+@@ -113,7 +174,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	/* Allocate the memory of extcon devie and register extcon device */
+-	data->edev = devm_extcon_dev_allocate(&pdev->dev, &pdata->extcon_id);
++	data->edev = devm_extcon_dev_allocate(&pdev->dev, pdata->extcon_id);
+ 	if (IS_ERR(data->edev)) {
+ 		dev_err(&pdev->dev, "failed to allocate extcon device\n");
+ 		return -ENOMEM;
+@@ -167,12 +228,19 @@ static int gpio_extcon_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
+ 
++static const struct of_device_id of_extcon_gpio_tbl[] = {
++	{ .compatible = "extcon-gpio", },
++	{ /* end */ }
++};
++MODULE_DEVICE_TABLE(of, of_extcon_gpio_tbl);
++
+ static struct platform_driver gpio_extcon_driver = {
+ 	.probe		= gpio_extcon_probe,
+ 	.remove		= gpio_extcon_remove,
+ 	.driver		= {
+ 		.name	= "extcon-gpio",
+ 		.pm	= &gpio_extcon_pm_ops,
++		.of_match_table = of_extcon_gpio_tbl,
+ 	},
+ };
+ 
+diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extcon/extcon-gpio.h
+index 7cacafb..1914894 100644
+--- a/include/linux/extcon/extcon-gpio.h
++++ b/include/linux/extcon/extcon-gpio.h
+@@ -31,15 +31,17 @@
+  *			If false, high state of gpio means active.
+  * @debounce:		Debounce time for GPIO IRQ in ms.
+  * @irq_flags:		IRQ Flags (e.g., IRQF_TRIGGER_LOW).
++ * extcon_cable_cnt:    External cable count.
+  * @check_on_resume:	Boolean describing whether to check the state of gpio
+  *			while resuming from sleep.
+  */
+ struct gpio_extcon_pdata {
+-	unsigned int extcon_id;
++	unsigned int *extcon_id;
+ 	unsigned gpio;
+ 	bool gpio_active_low;
+ 	unsigned long debounce;
+ 	unsigned long irq_flags;
++	int extcon_cable_cnt;
+ 
+ 	bool check_on_resume;
+ };
+-- 
+2.1.4
