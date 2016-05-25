@@ -1,55 +1,52 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH 3/3] ARM: configs: keystone: Enable PINCTRL_SINGLE Config
-Date: Wed, 25 May 2016 08:51:26 +0530
-Message-ID: <57451A36.8050809@ti.com>
-References: <1464006547-19569-1-git-send-email-j-keerthy@ti.com>
- <1464006547-19569-4-git-send-email-j-keerthy@ti.com>
- <5743CC80.4070404@ti.com> <5743D0FD.5070804@ti.com>
- <6325832e-24d2-43c7-09b4-a73b6549ee2c@oracle.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [Patch v5 5/8] firmware: qcom: scm: Convert to streaming DMA APIS
+Date: Tue, 24 May 2016 22:37:31 -0500
+Message-ID: <20160525033731.GA30220@hector.attlocal.net>
+References: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
+ <1463111221-6963-6-git-send-email-andy.gross@linaro.org>
+ <CAOi56cVB1Z-gO6Dx0KOSr9wiRF3Y9ahDHe0=qT9WW4MdFMhjng@mail.gmail.com>
+ <CAPBZ5Qc0oZ+k_5OiUGU6c9jFfcmAfsK3Uy-s=ONGCSGzCDyYNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6325832e-24d2-43c7-09b4-a73b6549ee2c@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org
-Cc: nm@ti.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, m-karicheri2@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPBZ5Qc0oZ+k_5OiUGU6c9jFfcmAfsK3Uy-s=ONGCSGzCDyYNw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Santosh,
+On Mon, May 23, 2016 at 04:02:06PM -0500, Andy Gross wrote:
+> On 23 May 2016 at 14:26, Kevin Hilman <khilman@kernel.org> wrote:
+> > Hi Andy,
+> >
+> > On Thu, May 12, 2016 at 8:46 PM, Andy Gross <andy.gross@linaro.org> wrote:
+> >> This patch converts the Qualcomm SCM driver to use the streaming DMA APIs
+> >> for communication buffers.
+> >>
+> >> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+> >
+> > This patch has landed in linux-next in the form of commit a551c3dbd689
+> > (firmware: qcom: scm: Convert to streaming DMA APIS), and kernelci.org
+> > found some boot breakage in next-20160523 on apq8064[1] which was
+> > bisected down to this commit.
+> >
+> > I reverted this commit on top of next-20160523 and it no longer
+> > builds, so I didn't validate if things boot again with this patch
+> > reverted.
+> 
+> Ouch I missed this failure.  I'll investigate and get it fixed.
 
-On Tuesday 24 May 2016 09:59 PM, Santosh Shilimkar wrote:
-> Hi Keerthy,
->
-> On 5/23/2016 8:56 PM, Keerthy wrote:
->>
->>
->> On Tuesday 24 May 2016 09:07 AM, Lokesh Vutla wrote:
->>>
->>>
->>> On Monday 23 May 2016 05:59 PM, Keerthy wrote:
->>>> keystone-k2l devices use pinmux and are compliant with PINCTRL_SINGLE.
->>>> Hence enable the config option.
->>>>
->>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
->>>
->>> A similar patch[1] is already posted.
->>>
->>> [1]https://patchwork.kernel.org/patch/8958091/
->>
->> Ah I had not seen them. If they are already reviewed and closer to be
->> merged then Patch 2 and Patch 3 of this series can be dropped.
->>
-> Once the 4.7-rc2 is out, please rebase these floating patches
-> against it and post a consolidated patches. I will line them
-> up for 4.8
+So the root cause was the fact that the DFAB clock required by the SCM is an RPM
+clock.  That support isn't present yet in the kernel, so SCM probe fails.
 
-Thanks for the quick response. I will wait for 4.7-rc2 and send the 
-re-based series.
+The core clock is really only accessed so that we can bump the clock on it up to
+the max for performance.  As such, I'll make it optional in the platform code.
+
+This does bring up the issue of probe defer causing issues with the spm driver,
+as it calls set_warm_boot_addr.  That may have to be addressed, but is probably
+a problem best fixed in the spm.
 
 Regards,
-Keerthy
 
->
-> Regards,
-> Santosh
+Andy
