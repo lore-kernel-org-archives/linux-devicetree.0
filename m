@@ -1,46 +1,48 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 4/4] ARM: dts: amlogic: Enable Reset Controller on Meson8b platforms
-Date: Wed, 25 May 2016 11:49:18 +0200
-Message-ID: <1464169758-26975-5-git-send-email-narmstrong@baylibre.com>
-References: <1464169758-26975-1-git-send-email-narmstrong@baylibre.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 0/5] clocksource: rockchip/timer: Support rktimer for rk3399
+Date: Wed, 25 May 2016 17:49:57 +0800
+Message-ID: <1464169802-6033-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464169758-26975-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, xing.xu@amlogic.com, victor.wan@amlogic.com, jerry.cao@amlogic.com, devicetree@vger.kernel.org
+To: daniel.lezcano@linaro.org, Heiko Stuebner <heiko@sntech.de>
+Cc: dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, cf@rock-chips.com, huangtao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Update DTSI file to add the reset controller node.
+This series patches had been tested on rockchip inside kernel.
+In order to support the rk3399 SoC timer and turn off interrupts and IPIs to
+save power in idle.
+Okay, it still works bootup on rk3288/other SoCs, even though many socs hasn't used
+the broadcast timer.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm/boot/dts/meson8b.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Easy to test for my borad.
+localhost / # cat /proc/interrupts
+CPU0       CPU1       CPU2       CPU3       CPU4       CPU5
+1:          0          0          0          0          0          0     GICv3  29 Edge      arch_timer
+...
+5:          0          0          0          0          0          0     GICv3 113 Level     rk_timer
+..
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 2bfe401..fc4080d 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -46,6 +46,7 @@
- 
- #include <dt-bindings/clock/meson8b-clkc.h>
- #include <dt-bindings/gpio/meson8b-gpio.h>
-+#include <dt-bindings/reset/amlogic,meson8b-reset.h>
- #include "skeleton.dtsi"
- 
- / {
-@@ -105,6 +106,12 @@
- 			#interrupt-cells = <3>;
- 		};
- 
-+		reset: reset-controller@c1104404 {
-+			compatible = "amlogic,meson8b-reset";
-+			reg = <0xc1104404 0x20>;
-+			#reset-cells = <1>;
-+		};
-+
- 		wdt: watchdog@c1109900 {
- 			compatible = "amlogic,meson8b-wdt";
- 			reg = <0xc1109900 0x8>;
+localhost / # cat /proc/timer_list | grep event_handler
+get "event_handler:  hrtimer_interrupt"
+event_handler:  tick_handle_oneshot_broadcast
+event_handler:  hrtimer_interrupt
+
+That should work for my board.
+
+
+
+Huang Tao (5):
+  dt-bindings: document rk3399 rk-timer bindings
+  clocksource: rockchip: remove unnecessary clear irq before request_irq
+  clocksource: rockchip: add dynamic irq flag to the timer
+  clocksource: rockchip: add support for rk3399 SoC
+  ARM64: dts: rockchip: add rktimer device node for rk3399
+
+ ...chip,rk3288-timer.txt => rockchip,rk-timer.txt} |   6 +-
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   8 ++
+ drivers/clocksource/rockchip_timer.c               | 120 ++++++++++++++++-----
+ 3 files changed, 106 insertions(+), 28 deletions(-)
+ rename Documentation/devicetree/bindings/timer/{rockchip,rk3288-timer.txt => rockchip,rk-timer.txt} (75%)
+
 -- 
-2.7.0
+1.9.1
