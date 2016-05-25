@@ -1,49 +1,67 @@
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v8 08/14] usb: otg: add OTG/dual-role core
-Date: Wed, 25 May 2016 14:44:32 +0000
-Message-ID: <AM4PR04MB213028144706EC69A066EAEE89400@AM4PR04MB2130.eurprd04.prod.outlook.com>
-References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
- <1463133808-10630-9-git-send-email-rogerq@ti.com> <574422CA.8080002@ti.com>
- <20160525024427.GA31142@shlinux2> <574598D3.5090405@ti.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: ARM: dts: exynos: Add MFC memory banks for Peach boards
+Date: Wed, 25 May 2016 11:02:04 -0400
+Message-ID: <d045b880-4a44-acd8-f7f6-e521caf374aa@osg.samsung.com>
+References: <1461871311-18344-1-git-send-email-javier@osg.samsung.com>
+ <57456344.7020708@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <574598D3.5090405@ti.com>
-Content-Language: en-US
+In-Reply-To: <57456344.7020708@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Peter Chen <hzpeterchen@gmail.com>
-Cc: "peter.chen@freescale.com" <peter.chen@freescale.com>, "balbi@kernel.org" <balbi@kernel.org>, "tony@atomide.com" <tony@atomide.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "jun.li@freescale.com" <jun.li@freescale.com>, "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>, "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>, "robh@kernel.org" <robh@kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "b-liu@ti.com" <b-liu@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vg>
+To: "pankaj.dubey" <pankaj.dubey@samsung.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger
+Hello Pankaj,
 
-> >>
-> >> Here, we should be checking if user needs to disable any OTG
-> >> features. So,
-> >>
-> >> 	if (dev->of_node)
-> >> 		of_usb_update_otg_caps(dev->of_node, &otg->caps);
-> >>
-> >> Do you agree?
-> >> This means we need to change otg->caps from 'struct usb_otg_caps
-> *caps;'
-> >> to 'struct usb_otg_caps caps;' so that we can modify the local copy
-> >> instead of the one passed by the OTG controller.
-> >
-> > Why can't modify the one from OTG controller directly?
-> >
+On 05/25/2016 04:33 AM, pankaj.dubey wrote:
+> Hi Javier,
 > 
-> There are 2 things.
-> 1) OTG features supported by hardware. This is the controller's config-
-> >otg_caps
-> 2) OTG features needed by system designer. This can be a subset of (1).
+> On Friday 29 April 2016 12:51 AM, Javier Martinez Canillas wrote:
+>> The MFC nodes with the memory regions reserved for memory allocations
+>> are missing in the Exynos5420 Peach Pit and Exynos5800 Peach Pi DTS.
+>>
+>> This causes the s5p-mfc driver probe to fail with the following error:
+>>
+>> [    4.140647] s5p_mfc_alloc_memdevs:1072: Failed to declare coherent memory for MFC device
+>> [    4.216163] s5p-mfc: probe of 11000000.codec failed with error -12
+>>
+>> Add the missing nodes so the driver probes and the {en,de}coder video
+>> nodes are registered correctly:
+>>
+>> [    4.096277] s5p-mfc 11000000.codec: decoder registered as /dev/video4
+>> [    4.102282] s5p-mfc 11000000.codec: encoder registered as /dev/video5
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> 
+> Just noticed that, current krzk/for-next failed to boot on Exynos5880
+> based Chromebook device. Git bisect is showing culprit as this patch.
 
-Let's make things simple, we only need this subnet, which can be set
-by controller driver in config->otg_caps before pass (its address)
-to OTG core.
+Strange, krzk/for-next boots correctly on my Exynos5800 Peach Pi:
 
-So controller driver should get the capability of HW(+SW) and user config
-by whatever approach, then set its config->otg_caps.
+$ git log --pretty=oneline --abbrev-commit HEAD
+35e691cf5165 Merge branch 'fixes-v4.7' into for-next
 
-Li Jun
+$ uname -r
+4.6.0-00073-g35e691cf5165
+
+> When I reverted this patch, its able to boot normally.
+> Is there any missing patches that we need to take on krzk/for-next to
+> boot on Chromebook.
+>
+
+No that I'm aware of. I wonder why it boots for me but fails for
+you. Can you please share your complete boot log to see if there
+are any hints there?
+ 
+> Thanks,
+> Pankaj Dubey
+> 
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
