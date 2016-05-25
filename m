@@ -1,60 +1,74 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
-Date: Wed, 25 May 2016 16:05:13 +0200
-Message-ID: <0cf90ebe86e0461f82cb22b2a6b6ea83@rwthex-s1-b.rwth-ad.de>
-References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
- <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
- <20abc2f6769b4369ba87ec27274a090e@rwthex-s2-a.rwth-ad.de>
- <644530ff6bb04b5898dc33604dc7a93a@rwthex-s1-b.rwth-ad.de>
- <9b905766c6cc4680be4b33f79a179d5a@rwthex-w1-b.rwth-ad.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 6/7] iommu/msm: Use writel_relaxed and add a barrier
+Date: Wed, 25 May 2016 16:15:33 +0200
+Message-ID: <7715835.BXgVNoY5UO@wuerfel>
+References: <1463741694-1735-1-git-send-email-sricharan@codeaurora.org> <14302911.qQPb4UMJ8d@wuerfel> <004c01d1b688$0f6379c0$2e2a6d40$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9b905766c6cc4680be4b33f79a179d5a-cBaz+nnMw18umhiu9RXYRl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <004c01d1b688$0f6379c0$2e2a6d40$@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sricharan <sricharan@codeaurora.org>
+Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, robdclark@gmail.com, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, treding@nvidia.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, stepanm@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+On Wednesday, May 25, 2016 6:49:18 PM CEST Sricharan wrote:
+> Hi Arnd,
+> 
+> >> Ok, so i was doing this from the idea that, other iommu drivers
+> >>  where polling on a status bit in their sync call to ensure completion
+> >> of pending TLB invalidations. But in this case, there is no status bit.
+> >>  So added a barrier to have no ordering issues before the client
+> >> triggers the dma operation. But as you say above that it is implicit that
+> >> the device would have a barrier before starting the trigger, then the
+> >> barrier here becomes redundant.
+> >
+> >Ok. There are two more things to note here:
+> >
+> >* On other platforms, polling the register is likely required because
+> >  an MMIO write is "posted", meaning that a sync after writel() will
+> >  only ensure that it has left the CPU write queue, but it may still be
+> >  on the bus fabric and whatever side-effects are triggered by the
+> >  write are normally not guaranteed to be completed even after the
+> >  'sync'. You need to check the datasheet for your IOMMU to find out
+> >  whether the 'dsb' instruction actually has any effect on the IOMMU.
+> >  If not, then neither the barrier that you add here nor the barrier
+> >  in the following writel() is sufficient.
+> >
+>    Thanks for the detailed explanation.
+> i will check this. So with this, i think that if the iommu does not
+>  support polling for its status, then it should listen to 'dsb' otherwise
+>  there will no be no way of make it coherent ?
 
-On 05/24/2016 01:20 AM, Fabio Estevam wrote:
-> Hi Christopher,
-> 
-> On Mon, May 23, 2016 at 8:08 PM, Christopher Spinrath
-> <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
-> 
->> I would like to but I'm not sure if I'm allowed to. As I stated in the
->> license header some nodes are copied (and cleaned up) from the vendor
->> kernel/devicetree. They are licensed GPL-v2 only. So I don't know, can I
->> add the X11 license?
-> 
-> Maybe you could contact the original author anc check?
-> 
-I have sent an email to the author and will wait about a week for a
-reply before I send v2.
+It's more likely that you have to do a readl() after the writel() to
+any address inside of the device in order to ensure the writel()
+has completed, but that is something that the hardware manual for
+the iommu should describe.
 
->>> Better to avoid 0x80000000. Replace it with the real iomux value
->>> instead so that you don't need to rely on the bootloader
->>> configuration.
->> hmm, I don't know how to determine this value. The device documentation
->> I have does not say anything about it and the vendor kernel uses
->> 0x80000000...
-> 
-> The default value of register IOMUXC_SW_PAD_CTL_PAD_ENET_TX_DATA1 is
-> 0x1b0b0, so you can use this value.
->
-> Another thing I forgot to comment: instead of putting this pin inside
-> the hog group you could put it inside the gpio-keys node.
-> 
+> >* The one barrier that is normally required in an IOMMU is between
+> >  updating the in-memory page tables and the following MMIO store
+> >  that triggers the TLB flush for that entry. This barrier is
+> >  implied by writel() but not writel_relaxed(). If you don't have
+> >  a hardware page table walker in your IOMMU, you don't need to worry
+> >  about this.
+> >
+>   To get my understanding correct here, is the barrier required here because
+>    of speculative fetch ?
 
-OK, done. Can I always use the default value in this case? If yes, can
-you point me to a proper documentation of these?
+It doesn't have to be a speculative fetch, it could also be a normal
+fetch triggered by a DMA. The point is that the CPU is free to reorder
+the store to (io page table) memory relative to the store to the
+IOMMU flush register, and when you directly follow up with a store to
+the DMA master that triggers a transfer, this transfer can hit the
+IOMMU and cause the stale page table entry to be read.
 
-Thanks,
-Christopher
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess in practice the barrier that comes before the MMIO write to the
+DMA master would ensure ordering of the DMA after both the IOPTE
+update and the MMIO flush (unless there was the speculative fetch you
+mentioned), but this is where I'm no longer confident enough in my
+pwn understanding of th ordering rules to rely on that. Having the
+barrier between the IOPTE update and the flush certainly leaves
+no room for ambiguity.
+
+	Arnd
