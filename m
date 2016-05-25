@@ -1,51 +1,58 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: Re: is this the right list for moderately simple questions about
- kernel DT processing?
-Date: Wed, 25 May 2016 06:52:49 -0400 (EDT)
-Message-ID: <alpine.LFD.2.20.1605250649120.21993@localhost.localdomain>
-References: <alpine.LFD.2.20.1605231428310.20205@Device-040570> <5744B463.2080109@gmail.com> <alpine.LFD.2.20.1605241612580.9659@Device-040570> <5744BD36.3050408@gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 6/7] ARM: dts: exynos: convert MFC device to generic
+ reserved memory bindings
+Date: Wed, 25 May 2016 13:13:44 +0200
+Message-ID: <574588E8.8050708@samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-7-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5744BD36.3050408-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1464096690-23605-7-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 May 2016, Frank Rowand wrote:
+On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
+> This patch replaces custom properties for defining reserved memory
+> regions with generic reserved memory bindings for MFC video codec
+> device.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi  | 27 ++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos4210-origen.dts            |  4 ++--
+>  arch/arm/boot/dts/exynos4210-smdkv310.dts          |  4 ++--
+>  arch/arm/boot/dts/exynos4412-origen.dts            |  4 ++--
+>  arch/arm/boot/dts/exynos4412-smdk4412.dts          |  4 ++--
+>  arch/arm/boot/dts/exynos5250-arndale.dts           |  4 ++--
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |  4 ++--
+>  arch/arm/boot/dts/exynos5250-spring.dts            |  4 ++--
+>  arch/arm/boot/dts/exynos5420-arndale-octa.dts      |  4 ++--
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts         |  4 ++--
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |  4 ++--
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  4 ++--
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts          |  4 ++--
+>  13 files changed, 51 insertions(+), 24 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi b/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
+> new file mode 100644
+> index 0000000..e7445c9
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
+> @@ -0,0 +1,27 @@
+> +/*
+> + * Samsung's Exynos SoC MFC (Video Codec) reserved memory common definition.
 
-... snip ...
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-> Indeed it is!  It is slowly being improved and expanded as a result
-> of my frustration with poor and/or lacking documenation.  Any high
-> level suggestions to me about how and where to improve it are very
-> welcome.
+One nit - our copyright would be welcomed:
+	Copyright (c) 2016 Samsung Electronics Co., Ltd
 
-  i'm already working on some intro-level DT docs for some of my
-courses because i'm not entirely happy with any of the stuff that's
-out there. when i'm done, it will all be online.
+However if there are no objections I will add it when applying.
 
-  my biggest obsession is to show examples. lots and lots of examples,
-straight out of the .dts and .dtsi files. i find students really don't
-need long winded theoretical explanations if two or three actual
-examples explain what they need to know.
-
-  anyway, back to work ...
-
-rday
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
