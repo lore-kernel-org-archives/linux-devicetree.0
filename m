@@ -1,74 +1,73 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V5 6/7] iommu/msm: Use writel_relaxed and add a barrier
-Date: Wed, 25 May 2016 16:15:33 +0200
-Message-ID: <7715835.BXgVNoY5UO@wuerfel>
-References: <1463741694-1735-1-git-send-email-sricharan@codeaurora.org> <14302911.qQPb4UMJ8d@wuerfel> <004c01d1b688$0f6379c0$2e2a6d40$@codeaurora.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v4 1/7] ARM: OMAP3: hwmod data: Fix McBSP2/3 sidetone data
+Date: Wed, 25 May 2016 17:15:50 +0300
+Message-ID: <1464185756-28401-2-git-send-email-peter.ujfalusi@ti.com>
+References: <1464185756-28401-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <004c01d1b688$0f6379c0$2e2a6d40$@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sricharan <sricharan@codeaurora.org>
-Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, robdclark@gmail.com, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, treding@nvidia.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, stepanm@codeaurora.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464185756-28401-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, jarkko.nikula@bitmer.com, paul@pwsan.com, lgirdwood@gmail.com, broonie@kernel.org
+Cc: t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, May 25, 2016 6:49:18 PM CEST Sricharan wrote:
-> Hi Arnd,
-> 
-> >> Ok, so i was doing this from the idea that, other iommu drivers
-> >>  where polling on a status bit in their sync call to ensure completion
-> >> of pending TLB invalidations. But in this case, there is no status bit.
-> >>  So added a barrier to have no ordering issues before the client
-> >> triggers the dma operation. But as you say above that it is implicit that
-> >> the device would have a barrier before starting the trigger, then the
-> >> barrier here becomes redundant.
-> >
-> >Ok. There are two more things to note here:
-> >
-> >* On other platforms, polling the register is likely required because
-> >  an MMIO write is "posted", meaning that a sync after writel() will
-> >  only ensure that it has left the CPU write queue, but it may still be
-> >  on the bus fabric and whatever side-effects are triggered by the
-> >  write are normally not guaranteed to be completed even after the
-> >  'sync'. You need to check the datasheet for your IOMMU to find out
-> >  whether the 'dsb' instruction actually has any effect on the IOMMU.
-> >  If not, then neither the barrier that you add here nor the barrier
-> >  in the following writel() is sufficient.
-> >
->    Thanks for the detailed explanation.
-> i will check this. So with this, i think that if the iommu does not
->  support polling for its status, then it should listen to 'dsb' otherwise
->  there will no be no way of make it coherent ?
+The McBSPLP's sidetone main clock is the McBSPLP's ICLK, not FCLK as the
+sidetone only receives the ICLK from the main McBSP module.
+Since the McBSP and sidetone is using the very same clock from PRCM level
+the sidetone must not have the prcm section to check the clock status since
+the sidetone is only used when McBSP is already configured.
+If two separate hwmods looking at the same bit and they would use
+pm_runtime in nested way (as it must happen with McBSP and it's ST module)
+the hwmod would warn, because the idlest will not match what it is expected
+after enable/disable of the clocks.
 
-It's more likely that you have to do a readl() after the writel() to
-any address inside of the device in order to ensure the writel()
-has completed, but that is something that the hardware manual for
-the iommu should describe.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/mach-omap2/omap_hwmod_3xxx_data.c | 24 ++++--------------------
+ 1 file changed, 4 insertions(+), 20 deletions(-)
 
-> >* The one barrier that is normally required in an IOMMU is between
-> >  updating the in-memory page tables and the following MMIO store
-> >  that triggers the TLB flush for that entry. This barrier is
-> >  implied by writel() but not writel_relaxed(). If you don't have
-> >  a hardware page table walker in your IOMMU, you don't need to worry
-> >  about this.
-> >
->   To get my understanding correct here, is the barrier required here because
->    of speculative fetch ?
-
-It doesn't have to be a speculative fetch, it could also be a normal
-fetch triggered by a DMA. The point is that the CPU is free to reorder
-the store to (io page table) memory relative to the store to the
-IOMMU flush register, and when you directly follow up with a store to
-the DMA master that triggers a transfer, this transfer can hit the
-IOMMU and cause the stale page table entry to be read.
-
-I guess in practice the barrier that comes before the MMIO write to the
-DMA master would ensure ordering of the DMA after both the IOPTE
-update and the MMIO flush (unless there was the speculative fetch you
-mentioned), but this is where I'm no longer confident enough in my
-pwn understanding of th ordering rules to rely on that. Having the
-barrier between the IOPTE update and the flush certainly leaves
-no room for ambiguity.
-
-	Arnd
+diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+index 9869a75c5d96..d72ee6185d5e 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+@@ -1322,16 +1322,8 @@ static struct omap_hwmod omap3xxx_mcbsp2_sidetone_hwmod = {
+ 	.name		= "mcbsp2_sidetone",
+ 	.class		= &omap3xxx_mcbsp_sidetone_hwmod_class,
+ 	.mpu_irqs	= omap3xxx_mcbsp2_sidetone_irqs,
+-	.main_clk	= "mcbsp2_fck",
+-	.prcm		= {
+-		.omap2 = {
+-			.prcm_reg_id = 1,
+-			 .module_bit = OMAP3430_EN_MCBSP2_SHIFT,
+-			.module_offs = OMAP3430_PER_MOD,
+-			.idlest_reg_id = 1,
+-			.idlest_idle_bit = OMAP3430_ST_MCBSP2_SHIFT,
+-		},
+-	},
++	.main_clk	= "mcbsp2_ick",
++	.flags		= HWMOD_NO_IDLEST,
+ };
+ 
+ /* mcbsp3_sidetone */
+@@ -1344,16 +1336,8 @@ static struct omap_hwmod omap3xxx_mcbsp3_sidetone_hwmod = {
+ 	.name		= "mcbsp3_sidetone",
+ 	.class		= &omap3xxx_mcbsp_sidetone_hwmod_class,
+ 	.mpu_irqs	= omap3xxx_mcbsp3_sidetone_irqs,
+-	.main_clk	= "mcbsp3_fck",
+-	.prcm		= {
+-		.omap2 = {
+-			.prcm_reg_id = 1,
+-			.module_bit = OMAP3430_EN_MCBSP3_SHIFT,
+-			.module_offs = OMAP3430_PER_MOD,
+-			.idlest_reg_id = 1,
+-			.idlest_idle_bit = OMAP3430_ST_MCBSP3_SHIFT,
+-		},
+-	},
++	.main_clk	= "mcbsp3_ick",
++	.flags		= HWMOD_NO_IDLEST,
+ };
+ 
+ /* SR common */
+-- 
+2.8.2
