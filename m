@@ -1,47 +1,100 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/11] drivers: clk: st: Add clock propagation for audio
- clocks
-Date: Wed, 25 May 2016 12:24:09 -0500
-Message-ID: <20160525172409.GA27913@rob-hp-laptop>
-References: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
- <1463560892-7209-3-git-send-email-gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v6] ASoC: cs53l30: Add codec driver support for Cirrus
+ CS53L30
+Date: Wed, 25 May 2016 12:26:05 -0500
+Message-ID: <20160525172605.GA3056@rob-hp-laptop>
+References: <1464045237-4074-1-git-send-email-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463560892-7209-3-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+In-Reply-To: <1464045237-4074-1-git-send-email-nicoleotsuka@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: broonie@kernel.org, brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, Tim.Howe@cirrus.com, somduttar@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 18, 2016 at 10:41:23AM +0200, Gabriel Fernandez wrote:
-> This patch allows fine tuning of the quads FS for audio clocks
-> accuracy.
+On Mon, May 23, 2016 at 04:13:57PM -0700, Nicolin Chen wrote:
+> CS53L30 is a Quad-Channel ADC from Cirrus Logic with an I2S/TDM DAI.
+> So this patch adds support for CS53L30 that supports 24-bit recording
+> feature.
 > 
-> Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 > ---
->  .../devicetree/bindings/clock/st/st,flexgen.txt    |  1 +
->  drivers/clk/st/clk-flexgen.c                       | 24 ++++++++++++++++++++++
->  2 files changed, 25 insertions(+)
+> Changelog:
+> v5->v6
+>  * Added clock controls
+>  * Reconstructed bitfield macros and improved coding style
+>  * Fixed some misuses of regmap_update_bits()
+>  * Added TLV volume controls to replace enums for preamplifier
+>  * Added micbias level in DT instead of exposing to user-space
+>  * Simplified SDOUTx controls by removing cs53l30_asp_sdout_event()
+>    (Still be able to use set_tristate() instead)
+>  * Removed useless header files and sort the rest alphabetically
+>  * Registered runtime pm functions to the driver
+>  * Added regulator controls (VA and VP)
+>  * Added writeable register function for regmap
+>  * Merged two ASP dais
+>  * Added TDM support
+>  * Added a simple introduction in commit log
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-> index b7ee5c7..15b33c7 100644
-> --- a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-> +++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-> @@ -60,6 +60,7 @@ This binding uses the common clock binding[2].
->  Required properties:
->  - compatible : shall be:
->    "st,flexgen"
-> +  "st,stih407-clkgend0", "st,flexgen" (enable clock propagation on parent)
+>  .../devicetree/bindings/sound/cs53l30.txt          |   38 +
+>  sound/soc/codecs/Kconfig                           |    6 +
+>  sound/soc/codecs/Makefile                          |    2 +
+>  sound/soc/codecs/cs53l30.c                         | 1097 ++++++++++++++++++++
+>  sound/soc/codecs/cs53l30.h                         |  458 ++++++++
+>  5 files changed, 1601 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/cs53l30.txt
+>  create mode 100644 sound/soc/codecs/cs53l30.c
+>  create mode 100644 sound/soc/codecs/cs53l30.h
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/cs53l30.txt b/Documentation/devicetree/bindings/sound/cs53l30.txt
+> new file mode 100644
+> index 0000000..ace7ffe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/cs53l30.txt
+> @@ -0,0 +1,38 @@
+> +CS53L30 audio CODEC
+> +
+> +Required properties:
+> +
+> +  - compatible : "cirrus,cs53l30"
+> +
+> +  - reg : the I2C address of the device
+> +
+> +  - VA-supply, VP-supply : power supplies for the device,
+> +    as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
+> +
+> +Optional properties:
+> +
+> +  - reset-gpios : a GPIO spec for the reset pin.
+> +
+> +  - micbias-lvl : Set the output voltage level on the MICBIAS Pin.
+> +		  0 = Hi-Z
+> +		  1 = 1.80 V
+> +		  2 = 2.75 V
 
-What do "d0" and "d2" refer to?
+Needs a vendor prefix.
 
-This seems to indicate you have too much clock detail in the DT (with 
-individual clocks described) or not enough with genericish compatible 
-strings. What happens for the mext clock you need to adjust the flags 
-on? You should be able to make these adjustments without DT updates. 
-Perhaps you need a wider fixing of clock compatible strings.
+> +
+> +  - use-sdout2 : This is a boolean property. If present, it indicates
 
-Rob
+Needs a vendor prefix.
+
+> +		 the hardware design connects both SDOUT1 and SDOUT2
+> +		 pins to output data. Otherwise, it indicates that
+> +		 only SDOUT1 is connected for data output.
+> +		 * CS53l30 supports 4-channel data output in the same
+> +		 * frame using two different ways:
+> +		 * 1) Normal I2S mode on two data pins -- each SDOUT
+> +		 *    carries 2-channel data in the same time.
+> +		 * 2) TDM mode on one signle data pin -- SDOUT1 carries
+> +		 *    4-channel data per frame.
+> +
+> +Example:
+> +
+> +codec: cs53l30@48 {
+> +        compatible = "cirrus,cs53l30";
+> +        reg = <0x48>;
+> +        reset-gpios = <&gpio 54 0>;
+> +};
