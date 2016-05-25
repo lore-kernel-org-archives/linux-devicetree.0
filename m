@@ -1,92 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
-Date: Wed, 25 May 2016 13:53:32 -0500
-Message-ID: <CAL_Jsq+VL6jjo5QLwnsC8rEfgP4KN5hCSB7QicWWN-uvZU0GHw@mail.gmail.com>
-References: <1464067268-35299-1-git-send-email-navam@xilinx.com>
- <C89496FEAE474D468F30D558A9468D9F26CED772@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160525173419.GA7510@rob-hp-laptop> <5392766.vCAWrASuOA@wuerfel>
+Subject: Re: [RFC 1/2] Add OV5647 device tree documentation
+Date: Wed, 25 May 2016 13:59:08 -0500
+Message-ID: <20160525185908.GA12900@rob-hp-laptop>
+References: <cover.1464112779.git.roliveir@synopsys.com>
+ <c98fab2075cefbe155c99b99f7b09cdad67514a8.1464112779.git.roliveir@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5392766.vCAWrASuOA@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Nava kishore Manne <nava.manne@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c98fab2075cefbe155c99b99f7b09cdad67514a8.1464112779.git.roliveir@synopsys.com>
+Sender: linux-media-owner@vger.kernel.org
+To: roliveir <Ramiro.Oliveira@synopsys.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, mchehab@osg.samsung.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 1:29 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday, May 25, 2016 12:34:19 PM CEST Rob Herring wrote:
->> On Tue, May 24, 2016 at 11:47:31AM +0000, Nava kishore Manne wrote:
->> >
->> >
->> > > -----Original Message-----
->> > > From: Arnd Bergmann [mailto:arnd@arndb.de]
->> > > Sent: Tuesday, May 24, 2016 2:21 PM
->> > > To: Nava kishore Manne <navam@xilinx.com>
->> > > Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
->> > > ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
->> > > <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
->> > > balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
->> > > <hyunk@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Radhey
->> > > Shyam Pandey <radheys@xilinx.com>; devicetree@vger.kernel.org; linux-
->> > > arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
->> > > Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
->> > >
->> > > On Tuesday, May 24, 2016 10:51:08 AM CEST Nava kishore Manne wrote:
->> > > > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
->> > > > b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
->> > > > index 47b4e39..09df757 100644
->> > > > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
->> > > > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
->> > > > @@ -1,18 +1,23 @@
->> > > >  Xilinx USB2 device controller
->> > > >
->> > > >  Required properties:
->> > > > -- compatible             : Should be "xlnx,usb2-device-4.00.a"
->> > > > +- compatible             : Should be "xlnx,usb2-device-4.00.a" or
->> > > > +                   "xlnx,usb2-device-5.00"
->> > > >  - reg                    : Physical base address and size of the USB2
->> > > >                     device registers map.
->> > > >  - interrupts             : Should contain single irq line of USB2 device
->> > > >                     controller
->> > > >  - xlnx,has-builtin-dma   : if DMA is included
->> > > > +- dma-ranges             : Should be as the following
->> > > > +                   <child-bus-address, parent-bus-address, length>
->> > >
->> > > A USB host should not have any children that are DMA capable, I think, so
->> > > this property doesn't make sense here. It should be part of the parent bus.
->> > >
->> > Will send next version (v4) by removing this property from the DT.
->> >
->> > > > +- xlnx,addrwidth : Should be the dma addressing size in bits(ex: 64
->> > > bits)
->> > >
->> > > I'm still unconvinced about the property definition here. What are the
->> > > possible options for the IP block? I don't think I ever saw a reply from you to
->> > > my earlier questions.
->> > >
->> >
->> > Sorry Let me clearly explain
->> >
->> > From the IP version 5.0 onwards The IP support both 32-bit and 64-bit addressing.
->> > But the older version of the IP's supports only 32-bit addressing.
->> >
->> > This addrwidth property differentiates the address width for the new IP (I mean 5.0 version on wards)
->> > For older IP it will be always 32-bit.
->>
->> Then I think you should have a simple boolean property for 64-bit
->> configuration.
->
-> I think matching on the version number is slightly better, as we have the version
-> already and it identifies whether the register exists.
->
-> Having a boolean property of course works as well, it just duplicates that
-> information.
+On Tue, May 24, 2016 at 07:16:47PM +0100, roliveir wrote:
+> Signed-off-by: roliveir <roliveir@synopsys.com>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5647.txt       | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> new file mode 100644
+> index 0000000..fa6b09c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> @@ -0,0 +1,29 @@
+> +Omnivision OV5657 raw image sensor
 
-It doesn't because v5.0 h/w can be configured for either 32 or 64-bit
-mode. Normally, we would encode configuration into the compatible
-strings, but I view FPGA based blocks to be an exception. Of course,
-since they can just "fix the h/w" we could just require h/w version
-and feature registers. ;)
+5657?
 
-Rob
+> +---------------------------------
+> +
+> +OV5657 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+> +and CCI (I2C compatible) control bus.
+> +
+> +Required properties:
+> +
+> +- compatible	: "ov5647";
+> +- reg		: I2C slave address of the sensor;
+> +- clocks	: should contain list of phandle and clock specifier pairs
+> +		  according to common clock bindings for the clocks described
+> +		  in the clock-names property;
+
+Need to state how many clocks and the order.
+
+> +- clock-names	: should contain "extclk" entry for the sensor's EXTCLK clock;
+> +
+> +Optional properties:
+> +
+> +- clock-frequency : the frequency at which the "extclk" clock should be
+> +		    configured to operate, in Hz; if this property is not
+> +		    specified default 27 MHz value will be used.
+> +
+> +The common video interfaces bindings (see video-interfaces.txt) should be
+> +used to specify link to the image data receiver. The OV5657 device
+> +node should contain one 'port' child node with an 'endpoint' subnode.
+> +
+> +Following properties are valid for the endpoint node:
+> +
+> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
+> +  video-interfaces.txt.  The sensor supports only two data lanes.
+> -- 
+> 2.8.1
+> 
+> 
