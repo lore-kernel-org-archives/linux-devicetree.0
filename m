@@ -1,59 +1,70 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: dts: Fix imprecise external abort error when
- accessing Exynos MFC
-Date: Wed, 25 May 2016 10:17:52 -0400
-Message-ID: <d90b6245-1ed4-32c6-c98d-cc5f12601205@osg.samsung.com>
-References: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
- <6479e0c0-97fb-ca3b-1337-6ed11410d94f@samsung.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v4 0/7] ARM/ASoC: OMAP3: Fix McBSP2/3 sidetone support
+Date: Wed, 25 May 2016 17:15:49 +0300
+Message-ID: <1464185756-28401-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6479e0c0-97fb-ca3b-1337-6ed11410d94f-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com, jarkko.nikula@bitmer.com, paul@pwsan.com, lgirdwood@gmail.com, broonie@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Marek,
+Hi,
 
-On 05/25/2016 02:51 AM, Marek Szyprowski wrote:
-> Hello,
-> 
-> 
-> On 2016-05-24 19:41, Javier Martinez Canillas wrote:
->> This series fixes an imprecise external abort error when accessing the
->> Exynos MFC registers due the power domain configuration requiring the
->> aclk333 clock to be enabled during a domain switch.
->>
->> There isn't a dependency between the clock and Linux Samsung SoC trees
->> because the CLK_ACLK333 clock ID is already defined so the patches can
->> be picked indepedently by the relevant subsystem maintainers.
-> 
-> Tested-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> 
-> I'm really curious what kind of async-bridge is there, but this patch
-> really fixes the problem with mfc power domain.
->
+Changes since v3:
+- Rebased on next-20160525 [1] to apply cleanly
+- Fixed subject line for patch5
+- Added Mark's acked-by to the ASoC patches
 
-Yes, the Exynos manual is not that clear about what clocks have to remain
-enabled during a power domain switch for an IP block so maybe I got wrong.
+[1] "ASoC: omap-mcbsp: Enable/disable sidetone block auto clock
+gating for omap3" is gone missing from linux-next - it was in next-20160517 and
+I'm not sure when it got dropped.
 
-I see that the MFC block has an async-bridge in "Figure 15-1" at section 
-"15.2.1 NoC Probes in 5420 Bus". And I thought that since the IP block
-has an async-bridge, the clock needs to remain ungated when the PMU turn
-it on and off on a power domain switch.
+Tony: since Paul did not replied to the series, I'm sending the v4 now, I hope
+he will have time to look at this.
 
-I chose that clock because "Figure 7-10 MFC Clock Diagram" at section
-"7.4.7 MFC Clock Diagram" shows that ACLK_333 is associated with the
-MFC internal buses, or at least that's my understanding.
+Commit message from v3:
 
-Best regards,
+Based on the ongoing discussion on v2 (ARM: OMAP3: Fix McBSP2/3 hwmod setup for
+sidetone) I have dropped the removal of the sidetone hwmod and only corrected
+it. The series now includes all related changes needed to have correct sidetone
+support whenever we boot in legacy or in DT mode.
+
+This time the ASoC part have dependency on earlier patches so they can not be
+applied separately.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (7):
+  ARM: OMAP3: hwmod data: Fix McBSP2/3 sidetone data
+  ARM: dts: omap3: Add clocks to McBSP nodes
+  ARM: OMAP3: McBSP: New callback for McBSP2/3 ICLK idle configuration
+  ARM: OMAP3: pdata-quirks: Add support for McBSP2/3 sidetone handling
+  ASoC: omap-mcbsp: Rename omap_mcbsp_sysfs_remove() to
+    omap_mcbsp_cleanup()
+  ASoC: omap-mcbsp: sidetone: Use the new callback for iclk handling
+  ARM: OMAP2+: McBSP: Remove the old iclk allow/deny idle code
+
+ arch/arm/boot/dts/omap3.dtsi                | 10 ++++++++++
+ arch/arm/mach-omap2/mcbsp.c                 | 31 ++++++++++++++++-------------
+ arch/arm/mach-omap2/omap_hwmod_3xxx_data.c  | 24 ++++------------------
+ arch/arm/mach-omap2/pdata-quirks.c          | 18 +++++++++++++++++
+ include/linux/platform_data/asoc-ti-mcbsp.h |  4 +++-
+ sound/soc/omap/mcbsp.c                      | 21 +++++++++++++------
+ sound/soc/omap/mcbsp.h                      |  3 ++-
+ sound/soc/omap/omap-mcbsp.c                 |  5 ++++-
+ 8 files changed, 73 insertions(+), 43 deletions(-)
+
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.8.2
