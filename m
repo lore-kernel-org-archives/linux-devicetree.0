@@ -1,36 +1,47 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v4 7/7] ARM: dts: exynos4412-odroid*: enable MFC device
-Date: Wed, 25 May 2016 13:13:15 -0400
-Message-ID: <378fd7ab-e9cc-98b4-6fc9-13fe09469472@osg.samsung.com>
-References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
- <1464096690-23605-8-git-send-email-m.szyprowski@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 02/11] drivers: clk: st: Add clock propagation for audio
+ clocks
+Date: Wed, 25 May 2016 12:24:09 -0500
+Message-ID: <20160525172409.GA27913@rob-hp-laptop>
+References: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1463560892-7209-3-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464096690-23605-8-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Uli Middelberg <uli-3Mif0c9/FFI3ibs+7tISlw@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1463560892-7209-3-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Marek,
-
-On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
-> Enable support for Multimedia Codec (MFC) device for all Exynos4412-based
-> Odroid boards.
+On Wed, May 18, 2016 at 10:41:23AM +0200, Gabriel Fernandez wrote:
+> This patch allows fine tuning of the quads FS for audio clocks
+> accuracy.
 > 
-> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 > ---
+>  .../devicetree/bindings/clock/st/st,flexgen.txt    |  1 +
+>  drivers/clk/st/clk-flexgen.c                       | 24 ++++++++++++++++++++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+> index b7ee5c7..15b33c7 100644
+> --- a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+> +++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+> @@ -60,6 +60,7 @@ This binding uses the common clock binding[2].
+>  Required properties:
+>  - compatible : shall be:
+>    "st,flexgen"
+> +  "st,stih407-clkgend0", "st,flexgen" (enable clock propagation on parent)
 
-Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+What do "d0" and "d2" refer to?
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This seems to indicate you have too much clock detail in the DT (with 
+individual clocks described) or not enough with genericish compatible 
+strings. What happens for the mext clock you need to adjust the flags 
+on? You should be able to make these adjustments without DT updates. 
+Perhaps you need a wider fixing of clock compatible strings.
+
+Rob
