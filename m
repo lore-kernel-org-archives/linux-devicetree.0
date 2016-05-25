@@ -1,105 +1,42 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: Re: [RFC-PATCH 0/2] ASoC: simple_card: support for hw-params rules
-Date: Wed, 25 May 2016 17:44:25 +0200
-Message-ID: <6F927660-767F-4675-9D61-553B8C6CDD94@martin.sperl.org>
-References: <1463747445-14167-1-git-send-email-kernel@martin.sperl.org> <20160523171854.GJ4976@leverpostej>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v4 4/7] media: s5p-mfc: add iommu support
+Date: Wed, 25 May 2016 11:55:18 -0400
+Message-ID: <c73d0646-0b15-81a7-a2d9-e84da0920167@osg.samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-5-git-send-email-m.szyprowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160523171854.GJ4976@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1464096690-23605-5-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello Marek,
 
-> On 23.05.2016, at 19:18, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
+> This patch adds support for IOMMU to s5p-mfc device driver. MFC firmware
+> is limited and it cannot use the default configuration. If IOMMU is
+> available, the patch disables the default DMA address space
+> configuration and creates a new address space of size limited to 256M
+> and base address set to 0x20000000.
 > 
-> On Fri, May 20, 2016 at 12:30:43PM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
->> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->> 
->> Simple_card does require under some circumstances the ability
->> to configure certain hw_parameters based on clocks, bits, channels.
->> 
->> This patchset adds a generic way to configure these kind of things
->> via the device tree easily. This patchset implements this
->> for simple_card, but other drivers can just as easily make use of
->> this.
+> For now the same address space is shared by both 'left' and 'right'
+> memory channels, because the DMA/IOMMU frameworks do not support
+> configuring them separately. This is not optimal, but besides limiting
+> total address space available has no other drawbacks (MFC firmware
+> supports 256M of address space per each channel).
 > 
-> I'm not familiar with the class of hardware here.
-> 
-> What exactly needs to be configured, under which situations?
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
 
-Well one example - here specifically is to set up bclk rates that
-the I2S hw itself is transferring for specific combinations.
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-Some of these rules depend on:
-* the i2s driver hw itself - the i2s bcm2835 can only handle 32 bit
-  transfers - so the block size needs to be set as a multiple of 2.
-  in this case: sample-bits * channels.
-* HW limits - e.g 24 bit/sample need to get transferred as 32 bit
-  for the rpi-pcm5102a combination
-* Clock selection dependent - the choice of the block size
-  may be also 40 or 80 bit so that a integer divider clock
-  can get selected as a preference.
-  E.g 32 bit/sample * 2 channels * 48kHz gives a divider of 25/4
-  using the main oscillator at 19.2MHz, which introduces some
-  (possibly) audible  noise due to jitter.
-  while 40bit/sample * 2 channels * 48kHz gives an integer divider
-  of 20.
-
-So controlling those helps using the hw setup properly.
-
-> 
-> How varied is this in practice?
-I heard about some other devices besides the HifiBerry DAC that
-also would like to control the blockrate the same way.
-
-I remember having seen some other possible things we want to
-control on the driver side during hw-params invocation, but
-I can not remember what these were on top of my head (GPIO,
-external clock selection if I remember correctly)
-
-> 
-> Why does this make more sense than having individual drivers?
-Because then the driver would have to know a lot more
-about the combination of board and codec.
-
-Also the idea proposed by Mark was to use simple-card
-instead of a dedicated driver which does not allow for
-these kind of controls.
-
-The idea was also to make it generic enough that it could
-get even become part of the framework.
-
-> 
->> For now we have the following matchers and actions:
->> * matchers:
->>  * match_sample_bits
->>  * match_rate
->>  * match_channels
->> * actions:
->>  * set_fixed_bclk_size
->> 
->> As a note: the available matching rules and action rules right now
->> are hard-coded, but this could in principle get extended to be more
->> dynamic via kallsyms_lookup_name that would lookup the requested
->> symbol and assume it is a struct asoc_generic_hw_params_method,
->> on which it could apply several sanity-checks before using
->> the pointers for real.
-> 
-> I'm hoping that's a joke. ;)
-Just food for thought, because otherwise there would be dependencies
-on compiled codecs (or a long #ifdef list)
-
-As an alternative we could also add a method tables to the codec
-structure, so that codecs could expose additional methods, that could
-then get used.
-
-Martin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
