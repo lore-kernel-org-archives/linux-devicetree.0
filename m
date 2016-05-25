@@ -1,84 +1,100 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 14/20] ARM: sun5i: a13: Add LCD pins
-Date: Wed, 25 May 2016 14:33:04 +0200
-Message-ID: <20160525123304.GD9232@lukather>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
- <1463402840-17062-15-git-send-email-maxime.ripard@free-electrons.com>
- <CAGb2v66g_xZEyOf8ky_TKpT70D_EQwirVKNMQbubT5U2cD8rnw@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Wed, 25 May 2016 13:33:37 +0100
+Message-ID: <20160525123337.GW8206@sirena.org.uk>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+ <20160524172045.GN8206@sirena.org.uk>
+ <57449784.4070108@weinigel.se>
+ <20160524183256.GP8206@sirena.org.uk>
+ <5744A402.8050409@weinigel.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/3yNEOqWowh/8j+e"
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="H/DU/KGSZaQxued3"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v66g_xZEyOf8ky_TKpT70D_EQwirVKNMQbubT5U2cD8rnw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+In-Reply-To: <5744A402.8050409-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---/3yNEOqWowh/8j+e
+--H/DU/KGSZaQxued3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 17, 2016 at 01:13:01AM +0800, Chen-Yu Tsai wrote:
-> >  arch/arm/boot/dts/sun5i-a13.dtsi | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i=
--a13.dtsi
-> > index 263d46dbc7e6..79b5d513c142 100644
-> > --- a/arch/arm/boot/dts/sun5i-a13.dtsi
-> > +++ b/arch/arm/boot/dts/sun5i-a13.dtsi
-> > @@ -237,6 +237,16 @@
-> >  &pio {
-> >         compatible =3D "allwinner,sun5i-a13-pinctrl";
-> >
-> > +       lcd_rgb666_pins: lcd_rgb666@0 {
-> > +               allwinner,pins =3D "PD2", "PD3", "PD4", "PD5", "PD6", "=
-PD7",
-> > +                                "PD10", "PD11", "PD12", "PD13", "PD14"=
-, "PD15",
-> > +                                "PD18", "PD19", "PD20", "PD21", "PD22"=
-, "PD23",
-> > +                                "PD24", "PD25", "PD26", "PD27";
-> > +               allwinner,function =3D "lcd0";
-> > +               allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
->=20
-> Just a thought: would we ever need to increase the drive strength for ver=
-y high
-> resolutions?
+On Tue, May 24, 2016 at 08:57:06PM +0200, Christer Weinigel wrote:
+> On 05/24/2016 08:32 PM, Mark Brown wrote:
 
-I don't think we need to, but we can always change that later.
+> > I'm not clear that we want to document this at all since I am not
+> > clear that there is a sensible use case for doing it.  I did ask
+> > for one but you've not articulated one in this reply.  I am much
+> > less gung ho than Grant on this one, even as a Linux specific
+> > interface it seems very legacy.
 
-Applied, thanks!
-Maxime
+> It's bloody convenient.  I'm working with a Zync board right now where
+> we have multiple SPI ports.  Being able to label the ports on the
+> board spi1, spi2 and spi3 and having spidev devices show up as
+> /dev/spidev1.0 instead of dynamic assignment makes things much easier.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+So you're using it with spidev, probably directly at a guess rather than
+with an explicitly enumerated device in there?  This is also something
+we don't support in DT unless you've added an explicit compatible string
+for the device you've got attached for it to bind to - it will print an
+enormous warning if you try to instantiate it directly from DT since
+unfortunately implementation details of how we match compatible strings
+mean that any Linux device will match.
 
---/3yNEOqWowh/8j+e
+The DT should describe the hardware in the system, not the
+implementation details of how a particular software release should
+control that hardware.  If your software release is intending to expose
+a SPI interface connected to nothing it's not clear that this is useful
+hardware to describe and that we can't just optimise this by not doing
+anything with the hardware at all but whatever happens we should be
+explicitly exposing that, not doing global level hacks for it.  We're
+talking about very limited test usage in a new system here as far as I
+can tell.
+
+> Yes, it's possible to iterate through all files /sys/class/spi_master
+> and then have a table to map those names to device names and create
+> symlinks to them, it's just painful.  It's much easier to do be able
+> to do "cat data >/dev/spidev1.0" from busybox and not have to set up
+> all that infrastructure.  And yes, this is on an embedded system using
+> busybox without udev.
+
+You're way off in the implementation detail weeds here.  What you're
+looking for here is something very much specific to how spidev device
+files happen to be named with the particular userspace you're using,
+with the choice to use spidev to control the devices (if there are any)
+itself being something that's not at all general.  It doesn't follow
+=66rom this that assigning numbers to SPI buses is a good idea, it's
+something that only has meaning in this very specific context, and there
+is no guarantee that the chip select numbers will end up being stable
+for that matter.
+
+If this is something it makes sense to have in device trees at all it's
+something that should be being done as part of describing the specific
+thing you are trying to describe.
+
+--H/DU/KGSZaQxued3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJXRZuAAAoJEBx+YmzsjxAgh34P/A8mjRbercJZ5kw43eJi2NIu
-mhZQQdNAoMvgHe3RNOpycMHC+kMhCE9UG8/bbp2A+We/SDYMBgWrse/CNGEo5nCN
-L4EdnEb6ZUI5ry6oBfef+CvUaRX0A0RwNqRSj0zLPpV3URAoutuFmJzavN+am8wp
-u/ptWFhOzKn9W1NN2POH6bXMHTNzD1DslACwf91uceRc77Clzfz3mxYMLv36X5Fq
-ocDH5JUTtdUyIliocENV3D3xrvS8x6zmYop9umMULmgrkmfSrAVirH97w69Z3eP1
-UdiDWV1RNyboaRKgN4TCEXvcmImWBnvcRK8p1HYDHIjXGxzWi1oUmk+MnlGo1R3g
-7fj5MDP5mrTglBa5LVFqt7CZ2ky97NQZVQItlxyAzVwKAGb09GLXj6dVoSrQKuPJ
-pH7odyhe1KFyohtePn8oW2eKnBO9q6qYpq5EsAeNgD4Bsr8fz0mnQZ1Ca+6MWdXy
-eEhY1x5Ob/3wSqjrXraOmHhU66gIc8IiSYbQ6K8Wedkif7ZbluumOywlx0onbU2l
-S3GRqc2XqcpyQv3MKxowQ81i4Yrk5+caX9Gklk6CrhYE45T1CxjOEQXRr+RgXGKM
-oWuGWC7lrlMh6QYykZChRMd4Cn38DhLaTh+DKIE+9CPZMQNzZiQODec+Ecq0nZtG
-n9Bwx+BnsARHgDMCVlaw
-=9ODZ
+iQEcBAEBCAAGBQJXRZugAAoJECTWi3JdVIfQYTEH/RQLu7EVscjJGRrf51P/tmfs
+WuJJAN8G2Hp4CCkrQ0R6Lj+JkRCp6owX5sSGBvNauS50WkENryKmvSRJ1sHc+KfR
+v4hkZLZ+9TmBQJHGB9rIzTKr2nOba0vdHXkVgQi/06KnmWM1J9eoHlaqrTqp8SZZ
+n6G6ho2COzsLlf4ngVdS1LV1x1iX9ESZXNDkVmNJIWQbOx0YXuUlGzL6y6SnXySv
+NYpCV+6F+fFaVzwcvkTS+WSHNwEooV44BGrJS64lbaKg+HVbkBAc7NGKRdujDEBw
+xzfxkajwoK4j75g/frrrGAMh0cwYwY0bKnqxU7DEPj2SOvlC53K6sUZhg4w96QA=
+=+K4x
 -----END PGP SIGNATURE-----
 
---/3yNEOqWowh/8j+e--
+--H/DU/KGSZaQxued3--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
