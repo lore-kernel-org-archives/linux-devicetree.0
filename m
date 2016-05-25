@@ -1,52 +1,58 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 1/5] dt-bindings: document rk3399 rk-timer bindings
-Date: Wed, 25 May 2016 17:49:58 +0800
-Message-ID: <1464169802-6033-2-git-send-email-wxt@rock-chips.com>
-References: <1464169802-6033-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464169802-6033-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, Heiko Stuebner <heiko@sntech.de>
-Cc: dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, cf@rock-chips.com, huangtao@rock-chips.com, Rob Herring <robh+dt@kernel.org>, Caesar Wang <wxt@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 3/4] ARM64: dts: amlogic: Enable Reset Controller on
+ GXBB-based platforms
+Date: Wed, 25 May 2016 11:49:17 +0200
+Message-ID: <1464169758-26975-4-git-send-email-narmstrong@baylibre.com>
+References: <1464169758-26975-1-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1464169758-26975-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Cc: jerry.cao@amlogic.com, devicetree@vger.kernel.org, xing.xu@amlogic.com, victor.wan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Huang Tao <huangtao@rock-chips.com>
+Update DTSI file to add the reset controller node.
 
-Add compatible string for rk3399 because which timer is a little
-different from older SoCs. So rename the file name from
-rockchip,rk3288-timer.txt to rockchip,rk-timer.txt.
-Clarify rockchip,rk3288-timer supported SoCs.
-
-Signed-off-by: Huang Tao <huangtao@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- .../timer/{rockchip,rk3288-timer.txt => rockchip,rk-timer.txt}      | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/timer/{rockchip,rk3288-timer.txt => rockchip,rk-timer.txt} (75%)
-
-diff --git a/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-similarity index 75%
-rename from Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
-rename to Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-index 87f0b00..a41b184 100644
---- a/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-@@ -1,7 +1,9 @@
--Rockchip rk3288 timer
-+Rockchip rk timer
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 832815d..45e9c55 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -43,6 +43,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset/amlogic,meson-gxbb-reset.h>
  
- Required properties:
--- compatible: shall be "rockchip,rk3288-timer"
-+- compatible: shall be one of:
-+  "rockchip,rk3288-timer" - for rk3066, rk3036, rk3188, rk322x, rk3288, rk3368
-+  "rockchip,rk3399-timer" - for rk3399
- - reg: base address of the timer register starting with TIMERS CONTROL register
- - interrupts: should contain the interrupts for Timer0
- - clocks : must contain an entry for each entry in clock-names
+ / {
+ 	compatible = "amlogic,meson-gxbb";
+@@ -129,6 +130,12 @@
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xc1100000 0x0 0x100000>;
+ 
++			reset: reset-controller@4404 {
++				compatible = "amlogic,meson-gxbb-reset";
++				reg = <0x0 0x04404 0x0 0x20>;
++				#reset-cells = <1>;
++			};
++
+ 			uart_A: serial@84c0 {
+ 				compatible = "amlogic,meson-uart";
+ 				reg = <0x0 0x084c0 0x0 0x14>;
 -- 
-1.9.1
+2.7.0
