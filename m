@@ -1,34 +1,107 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: mtd: drop "soft_bch" from example
-Date: Wed, 25 May 2016 14:02:31 -0500
-Message-ID: <20160525190231.GA20560@rob-hp-laptop>
-References: <a206ce4cabf9ba8d376241fc23e9973f6db2443b.1464147910.git.baruch@tkos.co.il>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] ARM: at91: Add DT support for Olimex SAM9-L9260
+ board.
+Date: Wed, 25 May 2016 14:08:29 -0500
+Message-ID: <20160525190828.GA22435@rob-hp-laptop>
+References: <1464164106-28359-1-git-send-email-raashidmuhammed@zilogic.com>
+ <1464164106-28359-2-git-send-email-raashidmuhammed@zilogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a206ce4cabf9ba8d376241fc23e9973f6db2443b.1464147910.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1464164106-28359-2-git-send-email-raashidmuhammed@zilogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Raashid Muhammed <raashidmuhammed@zilogic.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, plagnioj@jcrosoft.com, vijaykumar@bravegnu.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 06:45:10AM +0300, Baruch Siach wrote:
-> Commit 32698aafc9f0 (Documentation: devicetree: deprecate "soft_bch"
-> nand-ecc-mode value, 2016-04-22) deprecated "soft_bch". Update the ex=
-ample to
-> match.
->=20
-> Cc: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+On Wed, May 25, 2016 at 01:45:06PM +0530, Raashid Muhammed wrote:
+> From: Raashid Muhammed <raashidmuhammed@zilogic.com>
+> 
+> sam9-l9260 is a low cost board designed by Olimex.
+> 
+> More information is available at:
+> https://www.olimex.com/Products/ARM/Atmel/SAM9-L9260/
+> 
+> Signed-off-by: Raashid Muhammed <raashidmuhammed@zilogic.com>
+> Reviewed-by: Vijay Kumar B. <vijaykumar@bravegnu.org>
 > ---
->  Documentation/devicetree/bindings/mtd/nand.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/arm/olimex.txt |   8 +-
+>  arch/arm/boot/dts/Makefile                       |   1 +
+>  arch/arm/boot/dts/at91-sam9_l9260.dts            | 115 +++++++++++++++++++++++
+>  3 files changed, 122 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/at91-sam9_l9260.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/olimex.txt b/Documentation/devicetree/bindings/arm/olimex.txt
+> index 007fb5c..d726aec 100644
+> --- a/Documentation/devicetree/bindings/arm/olimex.txt
+> +++ b/Documentation/devicetree/bindings/arm/olimex.txt
+> @@ -1,5 +1,9 @@
+> -Olimex i.MX Platforms Device Tree Bindings
+> -------------------------------------------
+> +Olimex Device Tree Bindings
+> +---------------------------
+> +
+> +SAM9-L9260 Board
+> +Required root node properties:
+> +    - compatible = "olimex,sam9-l9260", "atmel,at91sam9260";
+>  
+>  i.MX23 Olinuxino Low Cost Board
+>  Required root node properties:
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 0f89d87..d27f09d 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -19,6 +19,7 @@ dtb-$(CONFIG_SOC_SAM_V4_V5) += \
+>  	usb_a9260.dtb \
+>  	at91sam9261ek.dtb \
+>  	at91sam9263ek.dtb \
+> +	at91-sam9_l9260.dtb \
+>  	tny_a9263.dtb \
+>  	usb_a9263.dtb \
+>  	at91-foxg20.dtb \
+> diff --git a/arch/arm/boot/dts/at91-sam9_l9260.dts b/arch/arm/boot/dts/at91-sam9_l9260.dts
+> new file mode 100644
+> index 0000000..e2da9b906
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-sam9_l9260.dts
+> @@ -0,0 +1,115 @@
+> +/*
+> + * at91-sam9_l9260.dts - Device Tree file for Olimex SAM9-L9260 board
+> + *
+> + *  Copyright (C) 2016 Raashid Muhammed <raashidmuhammed@zilogic.com>
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +/dts-v1/;
+> +#include "at91sam9260.dtsi"
+> +
+> +/ {
+> +	model = "Olimex sam9-l9260";
+> +	compatible = "olimex,sam9-l9260", "atmel,at91sam9260", "atmel,at91sam9";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	 };
+> +
+> +	 memory {
+> +		reg = <0x20000000 0x4000000>;
+> +	 };
+> +
+> +	 clocks {
+> +		slow_xtal {
+> +			clock-frequency = <32768>;
+> +		};
+> +
+> +		main_xtal {
+> +			clock-frequency = <18432000>;
+> +		};
+> +	 };
+> +
+> +	 ahb {
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The whitespace is off here and throughout. You've got a <tab><space>...
+
+Otherwise,
+
+Acked-by: Rob Herring <robh@kernel.org>
