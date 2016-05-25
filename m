@@ -1,67 +1,77 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v2] ASoC: rockchip: Add machine driver for
- MAX98357A/RT5514/DA7219
-Date: Wed, 25 May 2016 12:32:46 -0500
-Message-ID: <20160525173246.GA5125@rob-hp-laptop>
-References: <1464053774-15914-1-git-send-email-zhengxing@rock-chips.com>
+Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+Date: Wed, 25 May 2016 12:34:19 -0500
+Message-ID: <20160525173419.GA7510@rob-hp-laptop>
+References: <1464067268-35299-1-git-send-email-navam@xilinx.com>
+ <14123451.MsNvJvqaJX@wuerfel>
+ <C89496FEAE474D468F30D558A9468D9F26CED772@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464053774-15914-1-git-send-email-zhengxing@rock-chips.com>
+In-Reply-To: <C89496FEAE474D468F30D558A9468D9F26CED772@XAP-PVEXMBX01.xlnx.xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xing Zheng <zhengxing@rock-chips.com>
-Cc: linux-rockchip@lists.infradead.org, dianders@chromium.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 24, 2016 at 09:36:14AM +0800, Xing Zheng wrote:
-> There are multi codec devices on the RK3399 platform, we can use
-> this patch support and control these codecs.
+On Tue, May 24, 2016 at 11:47:31AM +0000, Nava kishore Manne wrote:
 > 
-> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-> ---
 > 
-> Changes in v2:
-> - use the FS 256 to set mclks of the max98357a and rt5514 danamically
-> - add more sample rate for da7219
+> > -----Original Message-----
+> > From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > Sent: Tuesday, May 24, 2016 2:21 PM
+> > To: Nava kishore Manne <navam@xilinx.com>
+> > Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> > ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+> > <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+> > balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
+> > <hyunk@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Radhey
+> > Shyam Pandey <radheys@xilinx.com>; devicetree@vger.kernel.org; linux-
+> > arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+> > 
+> > On Tuesday, May 24, 2016 10:51:08 AM CEST Nava kishore Manne wrote:
+> > > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > > b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > > index 47b4e39..09df757 100644
+> > > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > > @@ -1,18 +1,23 @@
+> > >  Xilinx USB2 device controller
+> > >
+> > >  Required properties:
+> > > -- compatible		: Should be "xlnx,usb2-device-4.00.a"
+> > > +- compatible		: Should be "xlnx,usb2-device-4.00.a" or
+> > > +			  "xlnx,usb2-device-5.00"
+> > >  - reg			: Physical base address and size of the USB2
+> > >  			  device registers map.
+> > >  - interrupts		: Should contain single irq line of USB2 device
+> > >  			  controller
+> > >  - xlnx,has-builtin-dma	: if DMA is included
+> > > +- dma-ranges		: Should be as the following
+> > > +			  <child-bus-address, parent-bus-address, length>
+> > 
+> > A USB host should not have any children that are DMA capable, I think, so
+> > this property doesn't make sense here. It should be part of the parent bus.
+> > 
+> Will send next version (v4) by removing this property from the DT.
 > 
->  .../sound/rockchip-max98357a-rt5514-da7219.txt     |   15 +
->  sound/soc/rockchip/Kconfig                         |   11 +
->  sound/soc/rockchip/Makefile                        |    2 +
->  .../rockchip/rockchip_max98357a_rt5514_da7219.c    |  333 ++++++++++++++++++++
->  4 files changed, 361 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/rockchip-max98357a-rt5514-da7219.txt
->  create mode 100644 sound/soc/rockchip/rockchip_max98357a_rt5514_da7219.c
+> > > +- xlnx,addrwidth	: Should be the dma addressing size in bits(ex: 64
+> > bits)
+> > 
+> > I'm still unconvinced about the property definition here. What are the
+> > possible options for the IP block? I don't think I ever saw a reply from you to
+> > my earlier questions.
+> > 
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/rockchip-max98357a-rt5514-da7219.txt b/Documentation/devicetree/bindings/sound/rockchip-max98357a-rt5514-da7219.txt
-> new file mode 100644
-> index 0000000..5928384
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/rockchip-max98357a-rt5514-da7219.txt
-> @@ -0,0 +1,15 @@
-> +ROCKCHIP with MAX98357A/RT5514/DA7219 codecs
-> +
-> +Required properties:
-> +- compatible: "rockchip,rockchip-sound"
+> Sorry Let me clearly explain
+> 
+> From the IP version 5.0 onwards The IP support both 32-bit and 64-bit addressing.
+> But the older version of the IP's supports only 32-bit addressing.
+> 
+> This addrwidth property differentiates the address width for the new IP (I mean 5.0 version on wards)
+> For older IP it will be always 32-bit.
 
-This is generic, but the binding seems to be very specific to only 3 
-specific codecs. Listing all 3 codecs seems a bit strange. Perhaps a 
-name related to the board name would be better.
-
-> +- rockchip,cpu: The phandle of the Rockchip I2S controller that's
-> +  connected to the codecs
-
-What's the size? always 3?
-
-> +- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-
-Please make the size and ordering clear.
-
-> +
-> +Example:
-> +
-> +sound {
-> +	compatible = "rockchip,rockchip-sound";
-> +	rockchip,cpu = <&i2s0 &i2s0 &i2s1>;
-> +	rockchip,codec = <&max98357a &headsetcodec &codec>;
-> +};
+Then I think you should have a simple boolean property for 64-bit 
+configuration.
