@@ -1,41 +1,72 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
-Date: Wed, 25 May 2016 12:07:56 -0300
-Message-ID: <CAOMZO5DpTrxE+=d6saCowkncR=xpDY060_uTV_WGYxoN7dKUpA@mail.gmail.com>
-References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
-	<c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
-	<20abc2f6769b4369ba87ec27274a090e@rwthex-s2-a.rwth-ad.de>
-	<644530ff6bb04b5898dc33604dc7a93a@rwthex-s1-b.rwth-ad.de>
-	<9b905766c6cc4680be4b33f79a179d5a@rwthex-w1-b.rwth-ad.de>
-	<0cf90ebe86e0461f82cb22b2a6b6ea83@rwthex-s1-b.rwth-ad.de>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v4 2/7] media: s5p-mfc: use generic reserved memory
+ bindings
+Date: Wed, 25 May 2016 11:18:59 -0400
+Message-ID: <a14c4f45-64c9-f72d-532b-ad1ff53fa9eb@osg.samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-3-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0cf90ebe86e0461f82cb22b2a6b6ea83-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1464096690-23605-3-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 11:05 AM, Christopher Spinrath
-<christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
+Hello Marek,
 
-> OK, done. Can I always use the default value in this case? If yes, can
-> you point me to a proper documentation of these?
+On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
+> Use generic reserved memory bindings and mark old, custom properties
+> as obsoleted.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  .../devicetree/bindings/media/s5p-mfc.txt          | 39 +++++++++++++++++-----
+>  1 file changed, 31 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> index 2d5787e..92c94f5 100644
+> --- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> @@ -21,15 +21,18 @@ Required properties:
+>    - clock-names : from common clock binding: must contain "mfc",
+>  		  corresponding to entry in the clocks property.
+>  
+> -  - samsung,mfc-r : Base address of the first memory bank used by MFC
+> -		    for DMA contiguous memory allocation and its size.
+> -
+> -  - samsung,mfc-l : Base address of the second memory bank used by MFC
+> -		    for DMA contiguous memory allocation and its size.
+> -
+>  Optional properties:
+>    - power-domains : power-domain property defined with a phandle
+>  			   to respective power domain.
+> +  - memory-region : from reserved memory binding: phandles to two reserved
+> +	memory regions, first is for "left" mfc memory bus interfaces,
+> +	second if for the "right" mfc memory bus, used when no SYSMMU
+> +	support is available
+> +
+> +Obsolete properties:
+> +  - samsung,mfc-r, samsung,mfc-l : support removed, please use memory-region
+> +	property instead
+> +
+> 
 
-You can look at
-"36.4.316 Pad Control Register
-(IOMUXC_SW_PAD_CTL_PAD_ENET_TX_DATA1)" in the mx6quad reference manual.
+I wonder if we should maintain backward compatibility for this driver
+since s5p-mfc memory allocation won't work with an old FDT if support
+for the old properties are removed.
 
-For GPIO functionality the default power-on-reset value should work fine.
+Although I'm not a big fan of keeping backward compatibility just to
+add dead code that will never be used and I don't know of any Exynos
+machine where the DTB and kernel are not updated together so I agree
+with this patch:
 
-You can confirm this by reading address 0x20E0500 in the bootloader:
-mw.l 0x20E0500 1
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-and then use this value on the dts. This way the kernel will always
-have a sane value instead of relying in the value passed from the
-bootloader.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
