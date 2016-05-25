@@ -1,71 +1,130 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [RFC PATCH 1/2] Input: rotary-encoder- Add support for absolute
- encoder
-Date: Wed, 25 May 2016 14:14:29 +0530
-Message-ID: <574565ED.3060205@ti.com>
-References: <1463648641-6931-1-git-send-email-vigneshr@ti.com>
- <1463648641-6931-2-git-send-email-vigneshr@ti.com>
- <20160520163404.GC14951@dtor-ws> <5742CB03.8010805@ti.com>
+From: William Wu <william.wu@rock-chips.com>
+Subject: Re: [PATCH v2 5/5] usb: dwc3: rockchip: add devicetree bindings documentation
+Date: Wed, 25 May 2016 16:58:38 +0800
+Message-ID: <5745693E.9000309@rock-chips.com>
+References: <1463133155-20047-1-git-send-email-william.wu@rock-chips.com> <87a8jfu7h4.fsf@linux.intel.com> <57455A81.5080101@rock-chips.com> <871t4qsgw3.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5742CB03.8010805@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Guido Martinez <guido@vanguardiasur.com.ar>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Masanari Iida <standby24x7@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Timo Teras <timo.teras@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Moritz Fischer <moritz.fischer@ettus.com>linu
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <871t4qsgw3.fsf@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>, gregkh@linuxfoundation.org, heiko@sntech.de, Rob Herring <robh+dt@kernel.org>
+Cc: linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
-
-On 05/23/2016 02:48 PM, R, Vignesh wrote:
-> 
-> 
-> On 5/20/2016 10:04 PM, Dmitry Torokhov wrote:
->> On Thu, May 19, 2016 at 02:34:00PM +0530, Vignesh R wrote:
->>> There are rotary-encoders where GPIO lines reflect the actual position
->>> of the rotary encoder dial. For example, if dial points to 9, then four
->>> GPIO lines connected to the rotary encoder will read HLLH(1001b = 9).
->>> Add support for such rotary-encoder.
->>> The driver relies on rotary-encoder,absolute-encoder DT property to
->>> detect such encoders.
->>> Since, GPIO IRQs are not necessary to work with
->>> such encoders, optional polling mode support is added using
->>> input_poll_dev skeleton. This is can be used by enabling
->>> CONFIG_INPUT_GPIO_ROTARY_ENCODER_POLL_MODE_SUPPORT.
+Hi Felipe & Rob,
+On 05/25/2016 04:04 PM, Felipe Balbi wrote:
+> Hi,
+>
+> William Wu <william.wu@rock-chips.com> writes:
+>> Hi Felipe,
 >>
->> Does this really belong to a rotary encoder and not a new driver that
->> simply translates gpio-encoded value into ABS* event?
+>> On 05/24/2016 05:32 PM, Felipe Balbi wrote:
+>>> Hi,
+>>>
+>>> William Wu <william.wu@rock-chips.com> writes:
+>>>> This patch documents the device tree documentation required for
+>>>> Rockchip USB3.0 core wrapper consist of USB3.0 IP from Synopsys.
+>>>>
+>>>> It could operate in device mode (SS, HS, FS) and host
+>>>> mode (SS, HS, FS, LS).
+>>>>
+>>>> Signed-off-by: William Wu <william.wu@rock-chips.com>
+>>>> ---
+>>>> Changes in v2:
+>>>> - add rockchip,dwc3.txt to Documentation/devicetree/bindings/ (Felipe, Brian)
+>>>>
+>>>>    .../devicetree/bindings/usb/rockchip,dwc3.txt      | 45 ++++++++++++++++++++++
+>>>>    1 file changed, 45 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+>>>> new file mode 100644
+>>>> index 0000000..10303d9
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+>>>> @@ -0,0 +1,45 @@
+>>>> +Rockchip SuperSpeed DWC3 USB SoC controller
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:	should contain "rockchip,dwc3"
+>>>> +- clocks:		A list of phandle + clock-specifier pairs for the
+>>>> +				clocks listed in clock-names
+>>>> +- clock-names:	Should contain the following:
+>>>> +  "clk_usb3otg0_ref"	Controller reference clk
+>>>> +  "clk_usb3otg0_suspend"Controller suspend clk, can use 24 MHz or 32 KHz
+>>>> +  "aclk_usb3"		Master/Core clock, have to be >= 62.5 MHz for SS operation
+>>>> +
+>>>> +
+>>>> +Optional clocks:
+>>>> +  "aclk_usb3otg0"	Aclk for specific usb controller clock.
+>>>> +  "aclk_usb3_rksoc_axi_perf"  USB AXI perf clock.  Not present on all platforms.
+>>>> +  "aclk_usb3_grf"	USB grf clock.  Not present on all platforms.
+>>>> +
+>>>> +Required child node:
+>>>> +A child node must exist to represent the core DWC3 IP block. The name of
+>>>> +the node is not important. The content of the node is defined in dwc3.txt.
+>>>> +
+>>>> +Phy documentation is provided in the following places:
+>>>> +
+>>>> +Example device nodes:
+>>>> +
+>>>> +	usbdrd3_0: usb@fe800000 {
+>>>> +
+>>> no reg property?
+>> For now, we don't need reg property here. Because we only need to do
+>> enable some clocks and populate its children in
+>> drivers/usb/dwc3/dwc3-of-simple.c.
+>> And it's similar to arch/arm/boot/dts/exynos5420.dtsi usbdrd3_0 node.
+>>> 		compatible = "rockchip,dwc3";
+>>>> +		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
+>>>> +			 <&cru ACLK_USB3>, <&cru ACLK_USB3OTG0>,
+>>>> +			 <&cru ACLK_USB3_RKSOC_AXI_PERF>, <&cru ACLK_USB3_GRF>;
+>>>> +		clock-names = "clk_usb3otg0_ref", "clk_usb3otg0_suspend",
+>>>> +			      "aclk_usb3", "aclk_usb3otg0",
+>>>> +			      "aclk_usb3_rksoc_axi_perf", "aclk_usb3_grf";
+>>>> +		#address-cells = <2>;
+>>>> +		#size-cells = <2>;
+>>>> +		ranges;
+>>>> +		status = "disabled";
+>>>> +		usbdrd_dwc3_0: dwc3 {
+>>> no address here?
+>> I think here don't  necessarily need address. The child node dwc3 can
+>> inherit address from the parent node.
+>> And with this dtsi patch, the dev path show as follows:
+>> /sys/devices/platform/usb@fe800000/fe800000.dwc3
 >>
-> 
-> Currently rotary encoder driver only supports incremental/step counting
-> rotary devices. However, the device that is there on am335x-ice is an
-> absolute encoder but, IMO, nevertheless a kind of rotary encoder. The
-> only difference is that there is no need to count steps and the absolute
-> position value is always available as binary encoded state of connected
-> GPIOs.
-> The hardware on am335x-ice is a mechanical rotary encoder switch
-> connected over 4 GPIOs. It is same as binary encoder described at [1]
-> (except there are 4 GPIO lines), so this lead me to add support in
-> rotary-encoder.
-> 
-> [1]https://en.wikipedia.org/wiki/Rotary_encoder#Standard_binary_encoding
-> 
-
-Could you please comment on how would you like to support above
-described encoder: As a new driver or with existing driver with new
-compatible/mode setting via DT or as suggest by Uwe in another reply?
-IMHO, supporting using existing driver with new mode/compatible string
-looks a better option as the hardware is a kind of rotary-encoder.
-
--- 
-Regards
-Vignesh
+>> Is it need for coding style or other reason?
+> I don't think your arguments match what devicetree folks want to see in
+> DT. Let's ask them. Rob, care to look at this one?
+Sorry, I need to correct myself. I have done some test, and the result 
+shows that
+the  child node dwc3 don't inherit address from the parent node, but get 
+address
+from its reg property. And It seems that whether I add address here or 
+not, the
+dwc3 node always get address from reg property.
+However, I don't know much about the DT. But I think it's better to add 
+address here than no.
+>
+>>>> +			compatible = "snps,dwc3";
+>>>> +			reg = <0x0 0xfe800000 0x0 0x100000>;
+>>>> +			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +			dr_mode = "otg";
+>>>> +			status = "disabled";
+>>>> +		};
+>>>> +	};
+>>>> -- 
+>>>> 1.9.1
+>>>>
+>>>>
+>>>> --
+>>>> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+>>>> the body of a message to majordomo@vger.kernel.org
+>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
