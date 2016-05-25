@@ -1,130 +1,95 @@
-From: William Wu <william.wu@rock-chips.com>
-Subject: Re: [PATCH v2 5/5] usb: dwc3: rockchip: add devicetree bindings documentation
-Date: Wed, 25 May 2016 16:58:38 +0800
-Message-ID: <5745693E.9000309@rock-chips.com>
-References: <1463133155-20047-1-git-send-email-william.wu@rock-chips.com> <87a8jfu7h4.fsf@linux.intel.com> <57455A81.5080101@rock-chips.com> <871t4qsgw3.fsf@linux.intel.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Wed, 25 May 2016 10:20:34 +0100
+Message-ID: <20160525092034.GE1337@leverpostej>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+ <20160524174140.GE11605@leverpostej>
+ <5744BC76.9090403@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <871t4qsgw3.fsf@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, gregkh@linuxfoundation.org, heiko@sntech.de, Rob Herring <robh+dt@kernel.org>
-Cc: linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5744BC76.9090403-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe & Rob,
-On 05/25/2016 04:04 PM, Felipe Balbi wrote:
-> Hi,
->
-> William Wu <william.wu@rock-chips.com> writes:
->> Hi Felipe,
->>
->> On 05/24/2016 05:32 PM, Felipe Balbi wrote:
->>> Hi,
->>>
->>> William Wu <william.wu@rock-chips.com> writes:
->>>> This patch documents the device tree documentation required for
->>>> Rockchip USB3.0 core wrapper consist of USB3.0 IP from Synopsys.
->>>>
->>>> It could operate in device mode (SS, HS, FS) and host
->>>> mode (SS, HS, FS, LS).
->>>>
->>>> Signed-off-by: William Wu <william.wu@rock-chips.com>
->>>> ---
->>>> Changes in v2:
->>>> - add rockchip,dwc3.txt to Documentation/devicetree/bindings/ (Felipe, Brian)
->>>>
->>>>    .../devicetree/bindings/usb/rockchip,dwc3.txt      | 45 ++++++++++++++++++++++
->>>>    1 file changed, 45 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
->>>> new file mode 100644
->>>> index 0000000..10303d9
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
->>>> @@ -0,0 +1,45 @@
->>>> +Rockchip SuperSpeed DWC3 USB SoC controller
->>>> +
->>>> +Required properties:
->>>> +- compatible:	should contain "rockchip,dwc3"
->>>> +- clocks:		A list of phandle + clock-specifier pairs for the
->>>> +				clocks listed in clock-names
->>>> +- clock-names:	Should contain the following:
->>>> +  "clk_usb3otg0_ref"	Controller reference clk
->>>> +  "clk_usb3otg0_suspend"Controller suspend clk, can use 24 MHz or 32 KHz
->>>> +  "aclk_usb3"		Master/Core clock, have to be >= 62.5 MHz for SS operation
->>>> +
->>>> +
->>>> +Optional clocks:
->>>> +  "aclk_usb3otg0"	Aclk for specific usb controller clock.
->>>> +  "aclk_usb3_rksoc_axi_perf"  USB AXI perf clock.  Not present on all platforms.
->>>> +  "aclk_usb3_grf"	USB grf clock.  Not present on all platforms.
->>>> +
->>>> +Required child node:
->>>> +A child node must exist to represent the core DWC3 IP block. The name of
->>>> +the node is not important. The content of the node is defined in dwc3.txt.
->>>> +
->>>> +Phy documentation is provided in the following places:
->>>> +
->>>> +Example device nodes:
->>>> +
->>>> +	usbdrd3_0: usb@fe800000 {
->>>> +
->>> no reg property?
->> For now, we don't need reg property here. Because we only need to do
->> enable some clocks and populate its children in
->> drivers/usb/dwc3/dwc3-of-simple.c.
->> And it's similar to arch/arm/boot/dts/exynos5420.dtsi usbdrd3_0 node.
->>> 		compatible = "rockchip,dwc3";
->>>> +		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
->>>> +			 <&cru ACLK_USB3>, <&cru ACLK_USB3OTG0>,
->>>> +			 <&cru ACLK_USB3_RKSOC_AXI_PERF>, <&cru ACLK_USB3_GRF>;
->>>> +		clock-names = "clk_usb3otg0_ref", "clk_usb3otg0_suspend",
->>>> +			      "aclk_usb3", "aclk_usb3otg0",
->>>> +			      "aclk_usb3_rksoc_axi_perf", "aclk_usb3_grf";
->>>> +		#address-cells = <2>;
->>>> +		#size-cells = <2>;
->>>> +		ranges;
->>>> +		status = "disabled";
->>>> +		usbdrd_dwc3_0: dwc3 {
->>> no address here?
->> I think here don't  necessarily need address. The child node dwc3 can
->> inherit address from the parent node.
->> And with this dtsi patch, the dev path show as follows:
->> /sys/devices/platform/usb@fe800000/fe800000.dwc3
->>
->> Is it need for coding style or other reason?
-> I don't think your arguments match what devicetree folks want to see in
-> DT. Let's ask them. Rob, care to look at this one?
-Sorry, I need to correct myself. I have done some test, and the result 
-shows that
-the  child node dwc3 don't inherit address from the parent node, but get 
-address
-from its reg property. And It seems that whether I add address here or 
-not, the
-dwc3 node always get address from reg property.
-However, I don't know much about the DT. But I think it's better to add 
-address here than no.
->
->>>> +			compatible = "snps,dwc3";
->>>> +			reg = <0x0 0xfe800000 0x0 0x100000>;
->>>> +			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
->>>> +			dr_mode = "otg";
->>>> +			status = "disabled";
->>>> +		};
->>>> +	};
->>>> -- 
->>>> 1.9.1
->>>>
->>>>
->>>> --
->>>> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
->>>> the body of a message to majordomo@vger.kernel.org
->>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, May 24, 2016 at 01:41:26PM -0700, Frank Rowand wrote:
+> On 5/24/2016 10:41 AM, Mark Rutland wrote:
+> > On Tue, May 24, 2016 at 06:39:20PM +0200, Christer Weinigel wrote:
+> >> Document how to use devicetree aliases to assign a stable
+> >> bus number to a spi bus.
+> >>
+> >> Signed-off-by: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
+> >>
+> >> ---
+> >>
+> >> Trivial documentation change.
+> >>
+> >> Not having used devicetree that much it was surprisingly hard to
+> >> figure out how to assign a stable bus number to a spi bus.  Add a
+> >> simple example that shows how to do that.
+> >>
+> >> Mark Cced as the SPI maintainer.  Or should trivial documentation
+> >> fixes like this be addressed to someone else?
+> >>
+> >>   /Christer
+> >>
+> >>  Documentation/devicetree/bindings/spi/spi-bus.txt | 10 ++++++++++
+> >>  1 file changed, 10 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> >> index 42d5954..c35c4c2 100644
+> >> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> >> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> >> @@ -94,3 +94,13 @@ SPI example for an MPC5200 SPI bus:
+> >>  			reg = <1>;
+> >>  		};
+> >>  	};
+> >> +
+> >> +Normally SPI buses are assigned dynamic bus numbers starting at 32766
+> >> +and counting downwards.  It is possible to assign the bus number
+> >> +statically using devicetee aliases.  For example, on the MPC5200 the
+> >> +"spi@f00" device above is connected to the "soc" bus.  To set its
+> >> +bus_num to 1 add an aliases entry like this:
+> > 
+> > As Mark Brown pointed out, this is very Linux-specific (at least in the
+> > wording of the above).
+> 
+> Yes, Linux-specific.  So the Linux documentation of bindings is the
+> correct place for it.
+
+I don't entirely agree. Which is not to say that I disagree as such, but
+rather that this is not a black-and-white affair.
+
+While bindings do happen to live in the kernel tree, we try to keep them
+separate from Linux internals or Linux API details that are outside of
+the scope of the HW/kernel interface. There are certainly reasons to
+describe Linux-specific bindings (e.g. things under /chosen).
+
+Mark Brown's comments imply that there is a better mechanism which does
+not rely on this binding, so even if we must retain support for it in
+Linux for legacy reasons, documenting it as a binding is not necessarily
+in anyone's best interest. If we want to document it, we may want to
+mark it as deprecated, with a pointer to better alternatives.
+
+> > Generally, aliases are there to match _physical_ identifiers (e.g. to
+> > match physical labels for UART0, UART1, and on).
+> > 
+> > I'm not sure whether that applies here.
+> 
+> The code and behavior is in the Linux kernel. It should be visible in
+> the documentation instead of being a big mystery of how it works.
+
+As above, I don't entirely agree. Mindlessly documenting existing Linux
+behaviour can have the unfortuante effect of moving people towards the
+wrong tool for the job.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
