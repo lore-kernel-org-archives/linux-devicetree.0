@@ -1,194 +1,222 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v8 08/14] usb: otg: add OTG/dual-role core
-Date: Wed, 25 May 2016 15:26:12 +0300
-Message-ID: <574599E4.3090302@ti.com>
-References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
- <1463133808-10630-9-git-send-email-rogerq@ti.com> <574422CA.8080002@ti.com>
- <20160525024427.GA31142@shlinux2>
- <AM4PR04MB21300F71EFFD3BF73871A85389400@AM4PR04MB2130.eurprd04.prod.outlook.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 1/2] extcon: gpio: add device tree support for
+ extcon-gpio
+Date: Wed, 25 May 2016 21:32:01 +0900
+Message-ID: <57459B41.3060507@samsung.com>
+References: <CGME20160525113554epcas1p1d75cdfe7b480576e34b222fe6e8339e5@epcas1p1.samsung.com>
+ <1464176133-10742-1-git-send-email-vreddytalla@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM4PR04MB21300F71EFFD3BF73871A85389400@AM4PR04MB2130.eurprd04.prod.outlook.com>
+In-reply-to: <1464176133-10742-1-git-send-email-vreddytalla@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jun Li <jun.li@nxp.com>, Peter Chen <hzpeterchen@gmail.com>
-Cc: "peter.chen@freescale.com" <peter.chen@freescale.com>, "balbi@kernel.org" <balbi@kernel.org>, "tony@atomide.com" <tony@atomide.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "jun.li@freescale.com" <jun.li@freescale.com>, "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>, "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>, "robh@kernel.org" <robh@kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "b-liu@ti.com" <b-liu@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vg>
+To: Venkat Reddy Talla <vreddytalla@nvidia.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25/05/16 06:19, Jun Li wrote:
-> 
-> 
->> -----Original Message-----
->> From: Peter Chen [mailto:hzpeterchen@gmail.com]
->> Sent: Wednesday, May 25, 2016 10:44 AM
->> To: Roger Quadros <rogerq@ti.com>
->> Cc: peter.chen@freescale.com; balbi@kernel.org; tony@atomide.com;
->> gregkh@linuxfoundation.org; dan.j.williams@intel.com;
->> mathias.nyman@linux.intel.com; Joao.Pinto@synopsys.com;
->> sergei.shtylyov@cogentembedded.com; jun.li@freescale.com;
->> grygorii.strashko@ti.com; yoshihiro.shimoda.uh@renesas.com;
->> robh@kernel.org; nsekhar@ti.com; b-liu@ti.com; linux-usb@vger.kernel.org;
->> linux-omap@vger.kernel.org; linux-kernel@vger.kernel.org;
->> devicetree@vger.kernel.org
->> Subject: Re: [PATCH v8 08/14] usb: otg: add OTG/dual-role core
->>
->> On Tue, May 24, 2016 at 12:45:46PM +0300, Roger Quadros wrote:
->>> Hi Peter,
->>>
->>> I have one question here. Please see below.
->>>
->>> On 13/05/16 13:03, Roger Quadros wrote:
->>>> It provides APIs for the following tasks
->>>>
->>>> - Registering an OTG/dual-role capable controller
->>>> - Registering Host and Gadget controllers to OTG core
->>>> - Providing inputs to and kicking the OTG state machine
->>>>
->>>> Provide a dual-role device (DRD) state machine.
->>>> DRD mode is a reduced functionality OTG mode. In this mode we don't
->>>> support SRP, HNP and dynamic role-swap.
->>>>
->>>> In DRD operation, the controller mode (Host or Peripheral) is
->>>> decided based on the ID pin status. Once a cable plug (Type-A or
->>>> Type-B) is attached the controller selects the state and doesn't
->>>> change till the cable in unplugged and a different cable type is
->>>> inserted.
->>>>
->>>> As we don't need most of the complex OTG states and OTG timers we
->>>> implement a lean DRD state machine in usb-otg.c.
->>>> The DRD state machine is only interested in 2 hardware inputs 'id'
->>>> and 'b_sess_vld'.
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>>  drivers/usb/common/Makefile  |    2 +-
->>>>  drivers/usb/common/usb-otg.c | 1042
->> ++++++++++++++++++++++++++++++++++++++++++
->>>>  drivers/usb/core/Kconfig     |    4 +-
->>>>  include/linux/usb/gadget.h   |    2 +
->>>>  include/linux/usb/hcd.h      |    1 +
->>>>  include/linux/usb/otg-fsm.h  |    7 +
->>>>  include/linux/usb/otg.h      |  154 ++++++-
->>>>  7 files changed, 1206 insertions(+), 6 deletions(-)  create mode
->>>> 100644 drivers/usb/common/usb-otg.c
->>>>
->>>
->>> <snip>
->>>
->>>> +
->>>> +/**
->>>> + * usb_otg_register() - Register the OTG/dual-role device to OTG
->>>> +core
->>>> + * @dev: OTG/dual-role controller device.
->>>> + * @config: OTG configuration.
->>>> + *
->>>> + * Registers the OTG/dual-role controller device with the USB OTG
->> core.
->>>> + *
->>>> + * Return: struct usb_otg * if success, ERR_PTR() if error.
->>>> + */
->>>> +struct usb_otg *usb_otg_register(struct device *dev,
->>>> +				 struct usb_otg_config *config) {
->>>> +	struct usb_otg *otg;
->>>> +	struct otg_wait_data *wait;
->>>> +	int ret = 0;
->>>> +
->>>> +	if (!dev || !config || !config->fsm_ops)
->>>> +		return ERR_PTR(-EINVAL);
->>>> +
->>>> +	/* already in list? */
->>>> +	mutex_lock(&otg_list_mutex);
->>>> +	if (usb_otg_get_data(dev)) {
->>>> +		dev_err(dev, "otg: %s: device already in otg list\n",
->>>> +			__func__);
->>>> +		ret = -EINVAL;
->>>> +		goto unlock;
->>>> +	}
->>>> +
->>>> +	/* allocate and add to list */
->>>> +	otg = kzalloc(sizeof(*otg), GFP_KERNEL);
->>>> +	if (!otg) {
->>>> +		ret = -ENOMEM;
->>>> +		goto unlock;
->>>> +	}
->>>> +
->>>> +	otg->dev = dev;
->>>> +	otg->caps = config->otg_caps;
->>>
->>> Here, we should be checking if user needs to disable any OTG features.
->>> So,
->>>
->>> 	if (dev->of_node)
->>> 		of_usb_update_otg_caps(dev->of_node, &otg->caps);
->>>
->>> Do you agree?
->>> This means we need to change otg->caps from 'struct usb_otg_caps *caps;'
->>> to 'struct usb_otg_caps caps;' so that we can modify the local copy
->>> instead of the one passed by the OTG controller.
->>
->> Why can't modify the one from OTG controller directly?
-> 
-> Yes, if user wants to disable any OTG features, this should have been
-> done in 'config->otg_caps', if not, 'config->otg_caps' from controller
-> driver is invalid and making no sense.
+Hi Venkat,
 
-I've tried to why to Peter's mail.
+I'm already working the support the device-tree for extcon-gpio [1].
+[1] https://lkml.org/lkml/2015/10/21/8
+- [PATCH v3] extcon: gpio: Add the support for Device tree bindings
 
-> 
->>
->>>
->>> We can also move of_usb_update_otg_caps() to otg.h.
->>>
->>> We will also need to modify the udc-core code so that it sets
->>> gadget->otg_caps to the modified otg_caps from the OTG core. This will
->>> ensure that the right OTG descriptors are sent.
->>>
->>> So we will have to introduce an API.
->>>
->>> struct usb_otg_caps *usb_otg_get_otg_caps(struct device *otg_dev)
->>>
->>> And in udc-core.c,
->>>
->>> static int udc_bind_to_driver(struct usb_udc *udc, struct
->>> usb_gadget_driver *driver) { ..
->>>         ret = driver->bind(udc->gadget, driver);
->>>         if (ret)
->>>                 goto err1;
->>>
->>>         /* If OTG, the otg core starts the UDC when needed */
->>>         if (udc->gadget->otg_dev) {
->>> +		udc->gadget->is_otg = true;
->>
->> gadget->is_otg is only set to true if fully OTG is supported and it
->> needs to send OTG descriptors at this case. DRD devices should not send
->> OTG descriptors.
->>
->>> +		udc->gadget->otg_caps = usb_otg_get_otg_caps(udc->gadget-
->>> otg_dev);
->>
->> Getting otg capabilities should be prior to driver->bind since
->> usb_otg_descriptor_init is called at that. Besides, Gadget driver may be
->> probed before otg driver is registered
->>
->> I am wonder if we can implement defer probe for gadget/udc/host driver if
->> otg driver is not probed, in that case, some designs can be simpler like
->> wait list in otg driver.
-> 
-> I even don't see much benefit of this kind of random order of OTG/HCD/GADGET
-> registration, anyway OTG register can be done firstly.
+So, I just apply this patch the temporay extcon-test[2] branch on extco=
+n.git.
+[2] https://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/com=
+mit/?h=3Dextcon-test&id=3D294d13e8d79fb0997e1bb146892cd75ec02221c0
 
-You cannot control the order in systems where all 3 are implemented by separate
-hardware modules. We have to consider that they can be registered
-in any order and make sure it works.
+But, Rob Herring gave me the some comment[2].=20
+[3] https://lkml.org/lkml/2015/10/21/906
+[4] https://lkml.org/lkml/2015/10/26/80
 
-returning -EPROBE_DEFER in usb_otg_add_gadget_udc()/usb_otg_add_hcd() if OTG
-controller driver is not yet probed makes perfect sense and is the way to solve
-this dependency issue.
+So, if you possible, do you improve the extcon-gpio.c for device-tree u=
+sing by my patch[1]?
+I think that you could improve the extcon-gpio.c driver as comment of R=
+ob Herring.
 
-> HCD and GADGET are both separated drivers, but OTG is newly added
-> and what we need is just a registration in controller driver.
+I'm sorry for late reply.
 
-How do you solve the problem when host registers before OTG? I tried to solve it
-using the wait_list in usb-otg.c. The other alternative is -EPROBE_DEFER during
-usb_otg_add_hcd/udc().
+Thanks,
+Chanwoo Choi
+
+On 2016=EB=85=84 05=EC=9B=94 25=EC=9D=BC 20:35, Venkat Reddy Talla wrot=
+e:
+> Adding device tree support for extcon-gpio driver.
+>=20
+> Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
+>=20
+> ---
+> changes in v2:
+> - using gpio flag cell to handle gpio active state
+> - change dts property name gpio to gpios
+> - removed prefix for debounce
+> ---
+> ---
+>  drivers/extcon/extcon-gpio.c       | 80 ++++++++++++++++++++++++++++=
++++++++---
+>  include/linux/extcon/extcon-gpio.h |  4 +-
+>  2 files changed, 77 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpi=
+o.c
+> index d023789..f29032c 100644
+> --- a/drivers/extcon/extcon-gpio.c
+> +++ b/drivers/extcon/extcon-gpio.c
+> @@ -28,6 +28,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/workqueue.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> =20
+>  struct gpio_extcon_data {
+>  	struct extcon_dev *edev;
+> @@ -90,21 +92,80 @@ static int gpio_extcon_init(struct device *dev, s=
+truct gpio_extcon_data *data)
+>  	return 0;
+>  }
+> =20
+> +static struct gpio_extcon_pdata *gpio_extcon_of_pdata(
+> +		struct platform_device *pdev)
+> +{
+> +	struct gpio_extcon_pdata *pdata;
+> +	struct device_node *np =3D pdev->dev.of_node;
+> +	enum of_gpio_flags flags;
+> +	int gpio;
+> +	u32 pval;
+> +	int ret;
+> +
+> +	pdata =3D devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	gpio =3D of_get_named_gpio_flags(np, "gpios", 0, &flags);
+> +	if (gpio < 0)
+> +		return ERR_PTR(gpio);
+> +
+> +	pdata->gpio =3D gpio;
+> +
+> +	if (flags & OF_GPIO_ACTIVE_LOW)
+> +		pdata->gpio_active_low =3D 1;
+> +
+> +	ret =3D of_property_read_u32(np, "extcon-gpio,irq-flags", &pval);
+> +	if (!ret)
+> +		pdata->irq_flags =3D pval;
+> +	else
+> +		pdata->irq_flags =3D IRQF_TRIGGER_RISING |
+> +					IRQF_TRIGGER_FALLING;
+> +
+> +	ret =3D of_property_read_u32(np, "debounce-ms", &pval);
+> +	if (!ret)
+> +		pdata->debounce =3D pval;
+> +
+> +	pdata->extcon_cable_cnt =3D of_property_count_u32_elems(np,
+> +					"extcon-gpio,cable-names");
+> +	if (pdata->extcon_cable_cnt <=3D 0) {
+> +		dev_err(&pdev->dev, "not found out cable names\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	pdata->extcon_id =3D devm_kzalloc(&pdev->dev,
+> +			(pdata->extcon_cable_cnt) *
+> +			sizeof(*pdata->extcon_id), GFP_KERNEL);
+> +	if (!pdata->extcon_id)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ret =3D of_property_read_u32_array(np, "extcon-gpio,cable-names",
+> +			pdata->extcon_id, pdata->extcon_cable_cnt);
+> +	if (ret)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	return pdata;
+> +}
+> +
+>  static int gpio_extcon_probe(struct platform_device *pdev)
+>  {
+>  	struct gpio_extcon_pdata *pdata =3D dev_get_platdata(&pdev->dev);
+>  	struct gpio_extcon_data *data;
+>  	int ret;
+> =20
+> -	if (!pdata)
+> -		return -EBUSY;
+> -	if (!pdata->irq_flags || pdata->extcon_id > EXTCON_NONE)
+> -		return -EINVAL;
+> -
+>  	data =3D devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
+>  				   GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+> +
+> +	if (!pdata && pdev->dev.of_node)
+> +		pdata =3D gpio_extcon_of_pdata(pdev);
+> +
+> +	if (IS_ERR(pdata))
+> +		return PTR_ERR(pdata);
+> +	if (!pdata->irq_flags || !pdata->extcon_id)
+> +		return -EINVAL;
+> +
+>  	data->pdata =3D pdata;
+> =20
+>  	/* Initialize the gpio */
+> @@ -113,7 +174,7 @@ static int gpio_extcon_probe(struct platform_devi=
+ce *pdev)
+>  		return ret;
+> =20
+>  	/* Allocate the memory of extcon devie and register extcon device *=
+/
+> -	data->edev =3D devm_extcon_dev_allocate(&pdev->dev, &pdata->extcon_=
+id);
+> +	data->edev =3D devm_extcon_dev_allocate(&pdev->dev, pdata->extcon_i=
+d);
+>  	if (IS_ERR(data->edev)) {
+>  		dev_err(&pdev->dev, "failed to allocate extcon device\n");
+>  		return -ENOMEM;
+> @@ -167,12 +228,19 @@ static int gpio_extcon_resume(struct device *de=
+v)
+> =20
+>  static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resum=
+e);
+> =20
+> +static const struct of_device_id of_extcon_gpio_tbl[] =3D {
+> +	{ .compatible =3D "extcon-gpio", },
+> +	{ /* end */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, of_extcon_gpio_tbl);
+> +
+>  static struct platform_driver gpio_extcon_driver =3D {
+>  	.probe		=3D gpio_extcon_probe,
+>  	.remove		=3D gpio_extcon_remove,
+>  	.driver		=3D {
+>  		.name	=3D "extcon-gpio",
+>  		.pm	=3D &gpio_extcon_pm_ops,
+> +		.of_match_table =3D of_extcon_gpio_tbl,
+>  	},
+>  };
+> =20
+> diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extco=
+n/extcon-gpio.h
+> index 7cacafb..1914894 100644
+> --- a/include/linux/extcon/extcon-gpio.h
+> +++ b/include/linux/extcon/extcon-gpio.h
+> @@ -31,15 +31,17 @@
+>   *			If false, high state of gpio means active.
+>   * @debounce:		Debounce time for GPIO IRQ in ms.
+>   * @irq_flags:		IRQ Flags (e.g., IRQF_TRIGGER_LOW).
+> + * extcon_cable_cnt:    External cable count.
+>   * @check_on_resume:	Boolean describing whether to check the state o=
+f gpio
+>   *			while resuming from sleep.
+>   */
+>  struct gpio_extcon_pdata {
+> -	unsigned int extcon_id;
+> +	unsigned int *extcon_id;
+>  	unsigned gpio;
+>  	bool gpio_active_low;
+>  	unsigned long debounce;
+>  	unsigned long irq_flags;
+> +	int extcon_cable_cnt;
+> =20
+>  	bool check_on_resume;
+>  };
+>=20
