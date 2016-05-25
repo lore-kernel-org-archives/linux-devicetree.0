@@ -1,42 +1,51 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH 3/4 v7] ASoC: dwc: Add PIO PCM extension
-Date: Wed, 25 May 2016 11:49:12 +0100
-Message-ID: <57458328.8080900@synopsys.com>
-References: <cover.1463996627.git.joabreu@synopsys.com>
- <d81055d826825874c9d76922d2275688b2586fa6.1463996627.git.joabreu@synopsys.com>
- <20160524164151.GM8206@sirena.org.uk> <57448A42.9050606@synopsys.com>
- <20160524175144.GO8206@sirena.org.uk> <57457A63.5060702@synopsys.com>
- <20160525101801.GT8206@sirena.org.uk>
+From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Subject: Re: is this the right list for moderately simple questions about
+ kernel DT processing?
+Date: Wed, 25 May 2016 06:52:49 -0400 (EDT)
+Message-ID: <alpine.LFD.2.20.1605250649120.21993@localhost.localdomain>
+References: <alpine.LFD.2.20.1605231428310.20205@Device-040570> <5744B463.2080109@gmail.com> <alpine.LFD.2.20.1605241612580.9659@Device-040570> <5744BD36.3050408@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160525101801.GT8206@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: alsa-devel@alsa-project.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5744BD36.3050408-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Tue, 24 May 2016, Frank Rowand wrote:
 
+... snip ...
 
-On 25-05-2016 11:18, Mark Brown wrote:
-> On Wed, May 25, 2016 at 11:11:47AM +0100, Jose Abreu wrote:
->
->> I think I will take the second option. Something like this:
->> "
->>     ret = snd_dmaengine_pcm_register(...)
->>     if (ret == -EPROBE_DEFER)
->>         return ret;
->>     else
->>         pio_register(...);
->> "?
-> Sure.  You should print a diagnostic if you fail to get the DMA, for any
-> real system it's going to be a bug.
+> Indeed it is!  It is slowly being improved and expanded as a result
+> of my frustration with poor and/or lacking documenation.  Any high
+> level suggestions to me about how and where to improve it are very
+> welcome.
 
-Ok, will do that. I noticed the last I2S patch that you merged
-("ASoC: dwc: Add helper functions to disable/enable irqs") is not
-in for-next yet. Should I base my work on 'topic/dwc' branch?
+  i'm already working on some intro-level DT docs for some of my
+courses because i'm not entirely happy with any of the stuff that's
+out there. when i'm done, it will all be online.
 
-Best regards,
-Jose Miguel Abreu
+  my biggest obsession is to show examples. lots and lots of examples,
+straight out of the .dts and .dtsi files. i find students really don't
+need long winded theoretical explanations if two or three actual
+examples explain what they need to know.
+
+  anyway, back to work ...
+
+rday
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
