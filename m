@@ -1,123 +1,78 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: Correct misspelling, "emda3" -> "edma3".
-Date: Wed, 25 May 2016 22:38:54 +0300
-Message-ID: <5031f60b-d586-dcbd-75fe-4ce12ec4b7d2@ti.com>
-References: <alpine.LFD.2.20.1605241716520.14369@Device-040570>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 0/3] Add Amlogic secure monitor driver
+Date: Wed, 25 May 2016 22:18:28 +0200
+Message-ID: <1464207511-11786-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.20.1605241716520.14369@Device-040570>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/25/2016 12:20 AM, Robert P. J. Day wrote:
-
-Thanks! It shows that in the Linux driver we are not using the mperr in=
-terrupt
-at all...
-
-Thank you agian for spotting it,
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-
->=20
-> Reported-by: Adam J Allison <adamj.allison-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
->=20
-> ---
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Docu=
-mentation/devicetree/bindings/dma/ti-edma.txt
-> index 079b42a..18090e7 100644
-> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> @@ -15,7 +15,7 @@ Required properties:
->  - reg:		Memory map of eDMA CC
->  - reg-names:	"edma3_cc"
->  - interrupts:	Interrupt lines for CCINT, MPERR and CCERRINT.
-> -- interrupt-names: "edma3_ccint", "emda3_mperr" and "edma3_ccerrint"
-> +- interrupt-names: "edma3_ccint", "edma3_mperr" and "edma3_ccerrint"
->  - ti,tptcs:	List of TPTCs associated with the eDMA in the following =
-form:
->  		<&tptc_phandle TC_priority_number>. The highest priority is 0.
->=20
-> @@ -48,7 +48,7 @@ edma: edma@49000000 {
->  	reg =3D	<0x49000000 0x10000>;
->  	reg-names =3D "edma3_cc";
->  	interrupts =3D <12 13 14>;
-> -	interrupt-names =3D "edma3_ccint", "emda3_mperr", "edma3_ccerrint";
-> +	interrupt-names =3D "edma3_ccint", "edma3_mperr", "edma3_ccerrint";
->  	dma-requests =3D <64>;
->  	#dma-cells =3D <2>;
->=20
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx=
-=2Edtsi
-> index 52be48b..03521ea 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -187,7 +187,7 @@
->  			reg =3D	<0x49000000 0x10000>;
->  			reg-names =3D "edma3_cc";
->  			interrupts =3D <12 13 14>;
-> -			interrupt-names =3D "edma3_ccint", "emda3_mperr",
-> +			interrupt-names =3D "edma3_ccint", "edma3_mperr",
->  					  "edma3_ccerrint";
->  			dma-requests =3D <64>;
->  			#dma-cells =3D <2>;
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372=
-=2Edtsi
-> index 12fcde4..27557b0 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -199,7 +199,7 @@
->  			interrupts =3D <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupt-names =3D "edma3_ccint", "emda3_mperr",
-> +			interrupt-names =3D "edma3_ccint", "edma3_mperr",
->  					  "edma3_ccerrint";
->  			dma-requests =3D <64>;
->  			#dma-cells =3D <2>;
-> diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x=
-=2Edtsi
-> index d4537dc..a6e0aebc 100644
-> --- a/arch/arm/boot/dts/dm814x.dtsi
-> +++ b/arch/arm/boot/dts/dm814x.dtsi
-> @@ -448,7 +448,7 @@
->  			reg =3D	<0x49000000 0x10000>;
->  			reg-names =3D "edma3_cc";
->  			interrupts =3D <12 13 14>;
-> -			interrupt-names =3D "edma3_ccint", "emda3_mperr",
-> +			interrupt-names =3D "edma3_ccint", "edma3_mperr",
->  					  "edma3_ccerrint";
->  			dma-requests =3D <64>;
->  			#dma-cells =3D <2>;
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dts=
-i
-> index e007401..95c8424 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -341,7 +341,7 @@
->  			interrupts =3D <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupt-names =3D "edma3_ccint", "emda3_mperr",
-> +			interrupt-names =3D "edma3_ccint", "edma3_mperr",
->  					  "edma3_ccerrint";
->  			dma-requests =3D <64>;
->  			#dma-cells =3D <2>;
->=20
-> rday
->=20
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
 
---=20
-P=E9ter
+In the Amlogic SoCs the secure monitor calls are used for a lot of reasons:
+interact with the NVMEM (efuses), check the reboot reason, set USB boot, ...
+
+This driver defines a generic interface towards the secure monitor that can be
+used by more specialized drivers to interact with the secure monitor itself
+without worrying about bounce buffers managing.
+
+Changelog:
+
+v4:
+  * Changed patches order
+  * Removed now useless PATCH 2/4
+  * Changed compatible to be SoC-specific
+  * In the DT now we use SoC-agnostic IDs for the SMC functions. These IDs are
+    traslated into SoC specific function IDs inside the driver
+  * Added error checking on meson_sm_call() to retrieve the base address
+  * Improved printing on errors
+
+v3:
+  * Moved driver to drivers/firmware
+  * Added EXPORT_SYMBOL macros
+  * Changed '_' in '-'
+  * Introduced 'struct meson_sm_firmware' and 'meson_sm_get_fw()' to be used by
+    drivers using the secure-monitor to enforce probe ordering
+
+v2:
+  * All the SMC function identifiers are now in a SoC-specific header file to
+    be included by the DTS files so the SMC commands are now defined in the DT
+    instead to be hardcoded into the driver
+  * Patchset is no longer an RFC
+  * Better error management and boundary checking
+  * s/unsigned int/u32/
+  * SMC call not only on CPU 0
+  * Fix memory leaking
+  * s/amlogic/meson/ in the directory names
+
+Carlo Caione (3):
+  firmware: Amlogic: Add secure monitor driver
+  documentation: Add secure monitor binding documentation
+  ARM64: dts: amlogic: gxbb: Enable secure monitor
+
+ .../bindings/firmware/meson/meson_sm.txt           |  42 +++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   9 +
+ drivers/firmware/Kconfig                           |   1 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/meson/Kconfig                     |   8 +
+ drivers/firmware/meson/Makefile                    |   1 +
+ drivers/firmware/meson/meson_sm.c                  | 193 +++++++++++++++++++++
+ include/dt-bindings/firmware/meson-sm.h            |  20 +++
+ include/linux/firmware/meson/meson-sm.h            |  49 ++++++
+ 9 files changed, 324 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+ create mode 100644 drivers/firmware/meson/Kconfig
+ create mode 100644 drivers/firmware/meson/Makefile
+ create mode 100644 drivers/firmware/meson/meson_sm.c
+ create mode 100644 include/dt-bindings/firmware/meson-sm.h
+ create mode 100644 include/linux/firmware/meson/meson-sm.h
+
+-- 
+2.7.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
