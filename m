@@ -1,56 +1,116 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus number.
-Date: Tue, 24 May 2016 17:18:38 -0700
-Message-ID: <5744EF5E.5070607@gmail.com>
-References: <1464107960-10775-1-git-send-email-christer@weinigel.se> <20160524172045.GN8206@sirena.org.uk> <57449784.4070108@weinigel.se> <20160524183256.GP8206@sirena.org.uk> <5744E51A.1040506@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 02/12] of: add J-Core cpu bindings
+Date: Tue, 24 May 2016 20:13:14 -0500
+Message-ID: <CAL_JsqJXzBLX4LwPezfm0UE9d8E0zzy8FJ=CUYuruMNbo=d4eA@mail.gmail.com>
+References: <cover.1463708766.git.dalias@libc.org> <f3c89e4834665790ff13478c571cc9aaa9de5559.1463708766.git.dalias@libc.org>
+ <20160523204846.GA16081@rob-hp-laptop> <20160523210328.GE21636@brightrain.aerifal.cx>
+ <CAL_JsqK0O2RY5PO9vHuOPjimRb34n8RwXMa7c8xmbY7Oh7D2Xg@mail.gmail.com> <5744C80E.6070501@landley.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5744E51A.1040506-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5744C80E.6070501@landley.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>
+Cc: Rich Felker <dalias@libc.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5/24/2016 4:34 PM, Frank Rowand wrote:
-> On 5/24/2016 11:32 AM, Mark Brown wrote:
->> On Tue, May 24, 2016 at 08:03:48PM +0200, Christer Weinigel wrote:
->>> On 05/24/2016 07:20 PM, Mark Brown wrote:
+On Tue, May 24, 2016 at 4:30 PM, Rob Landley <rob@landley.net> wrote:
+>
+>
+> On 05/23/2016 06:29 PM, Rob Herring wrote:
+>> On Mon, May 23, 2016 at 4:03 PM, Rich Felker <dalias@libc.org> wrote:
+>>> On Mon, May 23, 2016 at 03:48:46PM -0500, Rob Herring wrote:
+>>>> On Fri, May 20, 2016 at 02:53:03AM +0000, Rich Felker wrote:
+>>>>> Signed-off-by: Rich Felker <dalias@libc.org>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/jcore/cpus.txt | 91 ++++++++++++++++++++++++
+>>>>>  1 file changed, 91 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/jcore/cpus.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/jcore/cpus.txt b/Documentation/devicetree/bindings/jcore/cpus.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..00ef112
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/jcore/cpus.txt
+>>>>> @@ -0,0 +1,91 @@
+>>>>> +===================
+>>>>> +J-Core cpu bindings
+>>>>> +===================
+>>>>> +
+>>>>> +The J-Core processors are open source CPU cores that can be built as FPGA
+>>>>> +soft cores or ASICs. The device tree is also responsible for describing the
+>>>>> +cache controls and, for SMP configurations, all details of the SMP method,
+>>>>> +as documented below.
+>>>>> +
+>>>>> +
+>>>>> +---------------------
+>>>>> +Top-level "cpus" node
+>>>>> +---------------------
+>>>>> +
+>>>>> +Required properties:
+>>>>> +
+>>>>> +- #address-cells: Must be 1.
+>>>>> +
+>>>>> +- #size-cells: Must be 0.
+>>>>> +
+>>>>> +Optional properties:
+>>>>> +
+>>>>> +- enable-method: Required only for SMP systems. If present, must be
+>>>>> +  "jcore,spin-table".
+>>>>> +
+>>>>> +
+>>>>> +--------------------
+>>>>> +Individual cpu nodes
+>>>>> +--------------------
+>>>>> +
+>>>>> +Required properties:
+>>>>> +
+>>>>> +- device_type: Must be "cpu".
+>>>>> +
+>>>>> +- compatible: Must be "jcore,j2".
+>>>>
+>>>> Okay to have this, but you should have compatible strings for specific
+>>>> core implementations. AIUI, J2 is just the ISA.
+>>>
+>>> There was some past discussion you probably missed on the linux-sh
+>>> list, starting here:
+>>>
+>>> http://www.spinics.net/lists/linux-sh/msg50028.html
+>>>
+>>> Basically it's really hard to identify what "the specific core
+>>> implementation" even means with a soft core. If you have some ideas
+>>> I'd be happy to hear them, but I think there should always be a
+>>> "jcore,j2" fallback compatible tag in any case.
 >>
->>>> I'm not sure this is something we want to support at all, I can't 
->>>> immediately see anything that does this deliberately in the SPI
->>>> code and obviously the "bus number" is something of a Linux
->>>> specific concept which would need some explanation if we were going
->>>> to document it.  It's something I'm struggling a bit to see a
->>>> robust use case for that isn't better served by parsing sysfs,
->>>> what's the goal here?
+>> Presumably you do some sort of versioning on the VHDL source that you
+>> can correlate to.
 >>
->>> If this isn't something that should be in the Documentation/devicetree
->>>  because it's not generig enough, where should Linux-specific
->>> interpretations such as this be documented?
->>
->> I'm not clear that we want to document this at all since I am not clear
->> that there is a sensible use case for doing it.  I did ask for one but
->> you've not articulated one in this reply.  I am much less gung ho than
->> Grant on this one, even as a Linux specific interface it seems very
->> legacy.
->>
-> 
-> The time for the use case was when the patch was accepted.
+>> If you have sufficient s/w accessible version registers that are
+>> always going to be updated on IP changes then, you don't really need
+>> more specific compatible strings.
+>
+> There are no version registers: the boot ROM can be output as part of
+> the build, and the dtb can be provided by the boot ROM. So you don't
+> need boot registers, you literally put any version info you need in the
+> dtb in the boot rom.
 
-I phrased that sentence poorly.  A more clear wording is:
-The time for the use case was when the source code patch
-was accepted (commit bb29785e0d6d150181704be2efcc3141044625e2).
+You can, but you are not doing that from the looks of it. Maybe you're
+not to that point to need versioning and that's fine, but it doesn't
+sound like you all have thought about it.
 
-> 
-> It is in the kernel, it is appropriate to document it.
-> 
-> -Frank
-> 
+>> Better yet, since you can change "the hardware", make it more
+>> discoverable with registers for version numbering and feature bits.
+>> The failure here is having a process where that can be forgotten...
+>
+> Why would you add hardware version registers when the hardware's
+> attached boot rom is providing a dtb?
+>
+> What's the point?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You are missing who is reading and caring about what the version is.
+It's all the software that cares what's in either version registers or
+dtb to know what are the specific features of the h/w. At some point
+you will have a single driver that needs to support multiple versions
+and/or configurations of hardware/IP.
+
+Rob
