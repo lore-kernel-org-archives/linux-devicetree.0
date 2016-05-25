@@ -1,85 +1,46 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH] ARM: dts: keystone-k2*: Increase SPI Flash partition size for U-Boot
-Date: Wed, 25 May 2016 15:16:50 +0530
-Message-ID: <20160525094650.6169-1-vigneshr@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 4/4] ARM: dts: amlogic: Enable Reset Controller on Meson8b platforms
+Date: Wed, 25 May 2016 11:49:18 +0200
+Message-ID: <1464169758-26975-5-git-send-email-narmstrong@baylibre.com>
+References: <1464169758-26975-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464169758-26975-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, xing.xu@amlogic.com, victor.wan@amlogic.com, jerry.cao@amlogic.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-U-Boot SPI Boot image is now more than 512KB for Keystone2 devices and
-cannot fit into existing partition. So, increase the SPI Flash partition
-for U-Boot to 1MB for all Keystone2 devices.
+Update DTSI file to add the reset controller node.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/keystone-k2e-evm.dts  | 4 ++--
- arch/arm/boot/dts/keystone-k2hk-evm.dts | 4 ++--
- arch/arm/boot/dts/keystone-k2l-evm.dts  | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/meson8b.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
-index 4c32ebc1425a..39c91185e112 100644
---- a/arch/arm/boot/dts/keystone-k2e-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
-@@ -129,13 +129,13 @@
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 2bfe401..fc4080d 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -46,6 +46,7 @@
  
- 		partition@0 {
- 			label = "u-boot-spl";
--			reg = <0x0 0x80000>;
-+			reg = <0x0 0x100000>;
- 			read-only;
+ #include <dt-bindings/clock/meson8b-clkc.h>
+ #include <dt-bindings/gpio/meson8b-gpio.h>
++#include <dt-bindings/reset/amlogic,meson8b-reset.h>
+ #include "skeleton.dtsi"
+ 
+ / {
+@@ -105,6 +106,12 @@
+ 			#interrupt-cells = <3>;
  		};
  
- 		partition@1 {
- 			label = "misc";
--			reg = <0x80000 0xf80000>;
-+			reg = <0x100000 0xf00000>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-index b38b3441818b..afc70d0481d4 100644
---- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-@@ -157,13 +157,13 @@
- 
- 		partition@0 {
- 			label = "u-boot-spl";
--			reg = <0x0 0x80000>;
-+			reg = <0x0 0x100000>;
- 			read-only;
- 		};
- 
- 		partition@1 {
- 			label = "misc";
--			reg = <0x80000 0xf80000>;
-+			reg = <0x100000 0xf00000>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
-index 7f9c2e94d605..cabbdf69ddf5 100644
---- a/arch/arm/boot/dts/keystone-k2l-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
-@@ -106,13 +106,13 @@
- 
- 		partition@0 {
- 			label = "u-boot-spl";
--			reg = <0x0 0x80000>;
-+			reg = <0x0 0x100000>;
- 			read-only;
- 		};
- 
- 		partition@1 {
- 			label = "misc";
--			reg = <0x80000 0xf80000>;
-+			reg = <0x100000 0xf00000>;
- 		};
- 	};
- };
++		reset: reset-controller@c1104404 {
++			compatible = "amlogic,meson8b-reset";
++			reg = <0xc1104404 0x20>;
++			#reset-cells = <1>;
++		};
++
+ 		wdt: watchdog@c1109900 {
+ 			compatible = "amlogic,meson8b-wdt";
+ 			reg = <0xc1109900 0x8>;
 -- 
-2.8.3
+2.7.0
