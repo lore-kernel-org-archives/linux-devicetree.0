@@ -1,91 +1,171 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
- number.
-Date: Wed, 25 May 2016 13:19:24 +0100
-Message-ID: <20160525121923.GK1337@leverpostej>
-References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
- <20160524172045.GN8206@sirena.org.uk>
- <57449784.4070108@weinigel.se>
- <20160524183256.GP8206@sirena.org.uk>
- <5744A402.8050409@weinigel.se>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v8 08/14] usb: otg: add OTG/dual-role core
+Date: Wed, 25 May 2016 15:21:39 +0300
+Message-ID: <574598D3.5090405@ti.com>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
+ <1463133808-10630-9-git-send-email-rogerq@ti.com> <574422CA.8080002@ti.com>
+ <20160525024427.GA31142@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5744A402.8050409-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160525024427.GA31142@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 24, 2016 at 08:57:06PM +0200, Christer Weinigel wrote:
-> On 05/24/2016 08:32 PM, Mark Brown wrote:
-> > On Tue, May 24, 2016 at 08:03:48PM +0200, Christer Weinigel wrote:
-> >> On 05/24/2016 07:20 PM, Mark Brown wrote:
-> > 
-> >>> I'm not sure this is something we want to support at all, I
-> >>> can't immediately see anything that does this deliberately in
-> >>> the SPI code and obviously the "bus number" is something of a
-> >>> Linux specific concept which would need some explanation if we
-> >>> were going to document it.  It's something I'm struggling a bit
-> >>> to see a robust use case for that isn't better served by
-> >>> parsing sysfs, what's the goal here?
-> > 
-> >> If this isn't something that should be in the
-> >> Documentation/devicetree because it's not generig enough, where
-> >> should Linux-specific interpretations such as this be
-> >> documented?
-> > 
-> > I'm not clear that we want to document this at all since I am not
-> > clear that there is a sensible use case for doing it.  I did ask
-> > for one but you've not articulated one in this reply.  I am much
-> > less gung ho than Grant on this one, even as a Linux specific
-> > interface it seems very legacy.
+On 25/05/16 05:44, Peter Chen wrote:
+> On Tue, May 24, 2016 at 12:45:46PM +0300, Roger Quadros wrote:
+>> Hi Peter,
+>>
+>> I have one question here. Please see below.
+>>
+>> On 13/05/16 13:03, Roger Quadros wrote:
+>>> It provides APIs for the following tasks
+>>>
+>>> - Registering an OTG/dual-role capable controller
+>>> - Registering Host and Gadget controllers to OTG core
+>>> - Providing inputs to and kicking the OTG state machine
+>>>
+>>> Provide a dual-role device (DRD) state machine.
+>>> DRD mode is a reduced functionality OTG mode. In this mode
+>>> we don't support SRP, HNP and dynamic role-swap.
+>>>
+>>> In DRD operation, the controller mode (Host or Peripheral)
+>>> is decided based on the ID pin status. Once a cable plug (Type-A
+>>> or Type-B) is attached the controller selects the state
+>>> and doesn't change till the cable in unplugged and a different
+>>> cable type is inserted.
+>>>
+>>> As we don't need most of the complex OTG states and OTG timers
+>>> we implement a lean DRD state machine in usb-otg.c.
+>>> The DRD state machine is only interested in 2 hardware inputs
+>>> 'id' and 'b_sess_vld'.
+>>>
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>> ---
+>>>  drivers/usb/common/Makefile  |    2 +-
+>>>  drivers/usb/common/usb-otg.c | 1042 ++++++++++++++++++++++++++++++++++++++++++
+>>>  drivers/usb/core/Kconfig     |    4 +-
+>>>  include/linux/usb/gadget.h   |    2 +
+>>>  include/linux/usb/hcd.h      |    1 +
+>>>  include/linux/usb/otg-fsm.h  |    7 +
+>>>  include/linux/usb/otg.h      |  154 ++++++-
+>>>  7 files changed, 1206 insertions(+), 6 deletions(-)
+>>>  create mode 100644 drivers/usb/common/usb-otg.c
+>>>
+>>
+>> <snip>
+>>
+>>> +
+>>> +/**
+>>> + * usb_otg_register() - Register the OTG/dual-role device to OTG core
+>>> + * @dev: OTG/dual-role controller device.
+>>> + * @config: OTG configuration.
+>>> + *
+>>> + * Registers the OTG/dual-role controller device with the USB OTG core.
+>>> + *
+>>> + * Return: struct usb_otg * if success, ERR_PTR() if error.
+>>> + */
+>>> +struct usb_otg *usb_otg_register(struct device *dev,
+>>> +				 struct usb_otg_config *config)
+>>> +{
+>>> +	struct usb_otg *otg;
+>>> +	struct otg_wait_data *wait;
+>>> +	int ret = 0;
+>>> +
+>>> +	if (!dev || !config || !config->fsm_ops)
+>>> +		return ERR_PTR(-EINVAL);
+>>> +
+>>> +	/* already in list? */
+>>> +	mutex_lock(&otg_list_mutex);
+>>> +	if (usb_otg_get_data(dev)) {
+>>> +		dev_err(dev, "otg: %s: device already in otg list\n",
+>>> +			__func__);
+>>> +		ret = -EINVAL;
+>>> +		goto unlock;
+>>> +	}
+>>> +
+>>> +	/* allocate and add to list */
+>>> +	otg = kzalloc(sizeof(*otg), GFP_KERNEL);
+>>> +	if (!otg) {
+>>> +		ret = -ENOMEM;
+>>> +		goto unlock;
+>>> +	}
+>>> +
+>>> +	otg->dev = dev;
+>>> +	otg->caps = config->otg_caps;
+>>
+>> Here, we should be checking if user needs to disable any OTG features. So,
+>>
+>> 	if (dev->of_node)
+>> 		of_usb_update_otg_caps(dev->of_node, &otg->caps);
+>>
+>> Do you agree?
+>> This means we need to change otg->caps from 'struct usb_otg_caps *caps;'
+>> to 'struct usb_otg_caps caps;' so that we can modify the local copy instead
+>> of the one passed by the OTG controller.
 > 
-> It's bloody convenient.  I'm working with a Zync board right now where
-> we have multiple SPI ports.  Being able to label the ports on the
-> board spi1, spi2 and spi3 and having spidev devices show up as
-> /dev/spidev1.0 instead of dynamic assignment makes things much easier.
-
-Do these numbers match anything, or have you assigned them artificially?
-
-i.e. are the labels for those well defined for the board? Are they in a
-manul, or printed on the board itself?
-
-If these are well-defined and the ports are accessible to, and under the
-control of, the end-user, then this would be largely similar to what we
-do for serial ports and other user-accessible physical connectors.
-
->  Especially when doing driver development where unloading and
-> reloading the spi driver module will give it a new dynamic number
-> every time.
+> Why can't modify the one from OTG controller directly?
 > 
-> Yes, it's possible to iterate through all files /sys/class/spi_master
-> and then have a table to map those names to device names and create
-> symlinks to them, it's just painful.  It's much easier to do be able
-> to do "cat data >/dev/spidev1.0" from busybox and not have to set up
-> all that infrastructure.  And yes, this is on an embedded system using
-> busybox without udev.
+
+There are 2 things.
+1) OTG features supported by hardware. This is the controller's config->otg_caps
+2) OTG features needed by system designer. This can be a subset of (1).
+This needs to be maintained in the OTG core, based on config->otg_caps and
+device tree disable flags.
+
+So we can't use OTG controller config->otg_caps directly.
+
+>>
+>> We can also move of_usb_update_otg_caps() to otg.h.
+>>
+>> We will also need to modify the udc-core code so that it sets gadget->otg_caps
+>> to the modified otg_caps from the OTG core. This will ensure that the right
+>> OTG descriptors are sent.
+>>
+>> So we will have to introduce an API.
+>>
+>> struct usb_otg_caps *usb_otg_get_otg_caps(struct device *otg_dev)
+>>
+>> And in udc-core.c,
+>>
+>> static int udc_bind_to_driver(struct usb_udc *udc, struct usb_gadget_driver *driver)
+>> {
+>> ..
+>>         ret = driver->bind(udc->gadget, driver);
+>>         if (ret)
+>>                 goto err1;
+>>
+>>         /* If OTG, the otg core starts the UDC when needed */
+>>         if (udc->gadget->otg_dev) {
+>> +		udc->gadget->is_otg = true;
 > 
-> In addition, right now I have a couple of different variants of the
-> boards that I work on, and with different SPI ports at different
-> addresses.   It's rather nice to be able to reuse the same kernel +
-> ramdisk on multiple variants and only have to update the devicetree to
-> get sensible devices names on all variants.
+> gadget->is_otg is only set to true if fully OTG is supported and it
+> needs to send OTG descriptors at this case. DRD devices should not send OTG
+> descriptors.
 
-If those ports are physically organised and labelled the same, then
-using aliases could make sense, to describe the well-defined physical
-labels. If you've assigned the numbers artificially, or if the physical
-organisation differs across boards, then aliases are not the right tool
-for the job.
+Agreed.
 
-In the latter cases we're altering the hardware description to suit an
-application, rather than providing the necessary abstraction, which is
-the kind of (ab)use of aliases which we want to avoid.
+> 
+>> +		udc->gadget->otg_caps = usb_otg_get_otg_caps(udc->gadget->otg_dev);
+> 
+> Getting otg capabilities should be prior to driver->bind since
+> usb_otg_descriptor_init is called at that. Besides, Gadget driver
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Correct.
+
+> may be probed before otg driver is registered
+
+udc_bind_to_driver gets called only when both, udc driver and function driver
+are available. Defer probing will have to be done in usb_add_gadget_udc_release().
+
+> 
+> I am wonder if we can implement defer probe for gadget/udc/host driver
+> if otg driver is not probed, in that case, some designs can be simpler
+> like wait list in otg driver.
+
+Agree with you on that. Should I work on implementing -EPROBE_DEFER for
+hcd.c and udc-core.c if hcd/udc is meant for otg and OTG controller is not
+yet probed?
