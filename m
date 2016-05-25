@@ -1,57 +1,67 @@
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] arm64: tegra: Fix CPU compatible string for Tegra132
-Date: Wed, 25 May 2016 10:11:51 +0800
-Message-ID: <574509E7.4030208@nvidia.com>
-References: <20160523074221.7135-1-josephl@nvidia.com>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH v2 03/12] of: add J-Core interrupt controller bindings
+Date: Tue, 24 May 2016 22:25:33 -0400
+Message-ID: <20160525022533.GO21636@brightrain.aerifal.cx>
+References: <cover.1463708766.git.dalias@libc.org>
+ <2bdca4260d5bb2b3820e4309e2ba445c4c7bfbf6.1463708766.git.dalias@libc.org>
+ <20160523205320.GA21655@rob-hp-laptop>
+ <20160523211342.GG21636@brightrain.aerifal.cx>
+ <57440C45.5040105@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160523074221.7135-1-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57440C45.5040105-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/2016 03:42 PM, Joseph Lo wrote:
-> As per commit f634da375fc96 ("Documentation: DT bindings: add nvidia,
-> tegra132-denver compatible string"), fixing the CPU compatible string for
-> Tegra132 to match the binding document currently.
->
-> Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->   arch/arm64/boot/dts/nvidia/tegra132.dtsi | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-> index 2013f8916084..7b1cdc029de3 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-> @@ -964,13 +964,13 @@
->
->   		cpu@0 {
->   			device_type = "cpu";
-> -			compatible = "nvidia,denver", "arm,armv8";
-> +			compatible = "nvidia,tegra132-denver", "arm,armv8";
+On Tue, May 24, 2016 at 09:09:41AM +0100, Marc Zyngier wrote:
+> On 23/05/16 22:13, Rich Felker wrote:
+> > On Mon, May 23, 2016 at 03:53:20PM -0500, Rob Herring wrote:
+> >> On Fri, May 20, 2016 at 02:53:04AM +0000, Rich Felker wrote:
+> >>> Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+> >>> ---
+> >>>  .../bindings/interrupt-controller/jcore,aic.txt    | 28 ++++++++++++++++++++++
+> >>>  1 file changed, 28 insertions(+)
+> >>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+> >>> new file mode 100644
+> >>> index 0000000..dc9fde8
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+> >>> @@ -0,0 +1,28 @@
+> >>> +J-Core Advanced Interrupt Controller
+> >>> +
+> >>> +Required properties:
+> >>> +
+> >>> +- compatible : Should be "jcore,aic1" for the (obsolete) first-generation aic
+> >>> +  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
+> >>> +  the "aic2" core with 64 interrupts.
+> >>> +
+> >>> +- interrupt-controller : Identifies the node as an interrupt controller
+> >>> +
+> >>> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> >>> +  interrupt source. The value shall be 1.
+> >>
+> >> No level/edge support? Need 2 cells if so.
+> > 
+> > No, all the logic is in hardware. From the software side you just need
+> > handle_simple_irq or equivalent.
+> 
+> Not even an EOI?
 
-Hi Stephen, Thierry,
+What I mean is that there is no ack/eoi interface. While I haven't
+worked directly on the relevant vhdl, my understanding is that the aic
+clears the pending status of an interrupt atomically with acceptance
+of the interrupt by the cpu.
 
-Should we fix this or fix the compatible string in the binding document 
-as just "nvidia,denver" to represent all the Devner CPU revisions just 
-like some other CPUs did? e.g. arm,cortex-a57, which represents all the 
-A57 revisions.
+Do you have any more specific questions I can try to answer?
 
-Thanks,
--Joseph
-
->   			reg = <0>;
->   		};
->
->   		cpu@1 {
->   			device_type = "cpu";
-> -			compatible = "nvidia,denver", "arm,armv8";
-> +			compatible = "nvidia,tegra132-denver", "arm,armv8";
->   			reg = <1>;
->   		};
->   	};
->
+Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
