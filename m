@@ -1,118 +1,50 @@
-From: Rich Felker <dalias@libc.org>
-Subject: [PATCH v3 02/12] of: add J-Core cpu bindings
-Date: Wed, 25 May 2016 05:43:03 +0000
-Message-ID: <39ad5c69533ef537e6ab0426efc057f9064ee581.1464148904.git.dalias@libc.org>
-References: <cover.1464148904.git.dalias@libc.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1464148904.git.dalias@libc.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 0/2] ARM: dts: Fix imprecise external abort error when
+ accessing Exynos MFC
+Date: Wed, 25 May 2016 08:51:05 +0200
+Message-ID: <6479e0c0-97fb-ca3b-1337-6ed11410d94f@samsung.com>
+References: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Shuah Khan <shuahkh@osg.samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rich Felker <dalias@libc.org>
----
- Documentation/devicetree/bindings/jcore/cpus.txt | 92 ++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/jcore/cpus.txt
+Hello,
 
-diff --git a/Documentation/devicetree/bindings/jcore/cpus.txt b/Documentation/devicetree/bindings/jcore/cpus.txt
-new file mode 100644
-index 0000000..9d77ec1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/jcore/cpus.txt
-@@ -0,0 +1,92 @@
-+===================
-+J-Core cpu bindings
-+===================
-+
-+The J-Core processors are open source CPU cores that can be built as FPGA
-+soft cores or ASICs. The device tree is also responsible for describing the
-+cache controls and, for SMP configurations, all details of the SMP method,
-+as documented below.
-+
-+
-+---------------------
-+Top-level "cpus" node
-+---------------------
-+
-+Required properties:
-+
-+- #address-cells: Must be 1.
-+
-+- #size-cells: Must be 0.
-+
-+Optional properties:
-+
-+- enable-method: Required only for SMP systems. If present, must be
-+  "jcore,spin-table".
-+
-+
-+--------------------
-+Individual cpu nodes
-+--------------------
-+
-+Required properties:
-+
-+- device_type: Must be "cpu".
-+
-+- compatible: Must be "jcore,j2".
-+
-+- reg: Must be 0 on uniprocessor systems, or the sequential, zero-based
-+  hardware cpu id on SMP systems.
-+
-+Optional properties:
-+
-+- clock-frequency: Clock frequency of the cpu in Hz.
-+
-+- cpu-release-addr: Necessary only for secondary processors on SMP systems
-+  using the "jcore,spin-table" enable method. If present, must consist of
-+  two cells containing physical addresses. The first cell contains an
-+  address which, when written, unblocks the secondary cpu. The second cell
-+  contains an address from which the cpu will read its initial program
-+  counter when unblocked.
-+
-+
-+---------------------
-+Cache controller node
-+---------------------
-+
-+Required properties:
-+
-+- compatible: Must be "jcore,cache".
-+
-+- reg: A memory range for the cache controller registers.
-+
-+
-+--------
-+IPI node
-+--------
-+
-+Device trees for SMP systems must have an IPI node representing the mechanism
-+used for inter-processor interrupt generation.
-+
-+Required properties:
-+
-+- compatible: Must be "jcore,ipi-controller".
-+
-+- reg: A memory range used to IPI generation.
-+
-+- interrupts: An irq on which IPI will be received.
-+
-+
-+----------
-+CPUID node
-+----------
-+
-+Device trees for SMP systems must have a CPUID node representing the mechanism
-+used to identify the current processor on which execution is taking place.
-+
-+Required properties:
-+
-+- compatible: Must be "jcore,cpuid-mmio".
-+
-+- reg: A memory range containing a single 32-bit mmio register which produces
-+  the current cpu id (matching the "reg" property of the cpu performing the
-+  read) when read.
+
+On 2016-05-24 19:41, Javier Martinez Canillas wrote:
+> This series fixes an imprecise external abort error when accessing the
+> Exynos MFC registers due the power domain configuration requiring the
+> aclk333 clock to be enabled during a domain switch.
+>
+> There isn't a dependency between the clock and Linux Samsung SoC trees
+> because the CLK_ACLK333 clock ID is already defined so the patches can
+> be picked indepedently by the relevant subsystem maintainers.
+
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+I'm really curious what kind of async-bridge is there, but this patch
+really fixes the problem with mfc power domain.
+
+> Best regards,
+> Javier
+>
+>
+> Javier Martinez Canillas (2):
+>    clk: exynos5420: Set ID for aclk333 gate clock
+>    ARM: dts: Add async-bridge clock to MFC power domain for Exynos5420
+>
+>   arch/arm/boot/dts/exynos5420.dtsi    | 5 +++--
+>   drivers/clk/samsung/clk-exynos5420.c | 2 +-
+>   2 files changed, 4 insertions(+), 3 deletions(-)
+>
+
+Best regards
 -- 
-2.8.1
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
