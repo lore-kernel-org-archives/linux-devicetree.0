@@ -1,66 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/7] media: s5p-mfc: use generic reserved memory
- bindings
-Date: Wed, 25 May 2016 12:36:14 -0500
-Message-ID: <20160525173614.GA8309@rob-hp-laptop>
-References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
- <1464096690-23605-3-git-send-email-m.szyprowski@samsung.com>
- <a14c4f45-64c9-f72d-532b-ad1ff53fa9eb@osg.samsung.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v6] ASoC: cs53l30: Add codec driver support for Cirrus
+ CS53L30
+Date: Wed, 25 May 2016 10:37:24 -0700
+Message-ID: <20160525173724.GA20293@Asurada-Nvidia>
+References: <1464045237-4074-1-git-send-email-nicoleotsuka@gmail.com>
+ <20160525172800.GB3056@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a14c4f45-64c9-f72d-532b-ad1ff53fa9eb@osg.samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <20160525172800.GB3056@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: broonie@kernel.org, brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, Tim.Howe@cirrus.com, somduttar@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 11:18:59AM -0400, Javier Martinez Canillas wrote:
-> Hello Marek,
-> 
-> On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
-> > Use generic reserved memory bindings and mark old, custom properties
-> > as obsoleted.
-> > 
-> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > ---
-> >  .../devicetree/bindings/media/s5p-mfc.txt          | 39 +++++++++++++++++-----
-> >  1 file changed, 31 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> > index 2d5787e..92c94f5 100644
-> > --- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> > +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> > @@ -21,15 +21,18 @@ Required properties:
-> >    - clock-names : from common clock binding: must contain "mfc",
-> >  		  corresponding to entry in the clocks property.
-> >  
-> > -  - samsung,mfc-r : Base address of the first memory bank used by MFC
-> > -		    for DMA contiguous memory allocation and its size.
-> > -
-> > -  - samsung,mfc-l : Base address of the second memory bank used by MFC
-> > -		    for DMA contiguous memory allocation and its size.
-> > -
-> >  Optional properties:
-> >    - power-domains : power-domain property defined with a phandle
-> >  			   to respective power domain.
-> > +  - memory-region : from reserved memory binding: phandles to two reserved
-> > +	memory regions, first is for "left" mfc memory bus interfaces,
-> > +	second if for the "right" mfc memory bus, used when no SYSMMU
-> > +	support is available
-> > +
-> > +Obsolete properties:
-> > +  - samsung,mfc-r, samsung,mfc-l : support removed, please use memory-region
-> > +	property instead
-> > +
-> > 
-> 
-> I wonder if we should maintain backward compatibility for this driver
-> since s5p-mfc memory allocation won't work with an old FDT if support
-> for the old properties are removed.
+On Wed, May 25, 2016 at 12:28:00PM -0500, Rob Herring wrote:
 
-Well, minimally the commit log should indicate that compatibility is 
-being broken.
+> > diff --git a/Documentation/devicetree/bindings/sound/cs53l30.txt b/Documentation/devicetree/bindings/sound/cs53l30.txt
+> > new file mode 100644
+> > index 0000000..ace7ffe
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/cs53l30.txt
+> > @@ -0,0 +1,38 @@
+> > +CS53L30 audio CODEC
+> > +
+> > +Required properties:
+> > +
+> > +  - compatible : "cirrus,cs53l30"
+> > +
+> > +  - reg : the I2C address of the device
+> > +
+> > +  - VA-supply, VP-supply : power supplies for the device,
+> > +    as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
 
-Rob
+> Also, these are missing from the example yet are required. I'd argue 
+> they should be optional as you could have designs with no regulator 
+> control.
+
+Will refine both in next ver. Thanks
