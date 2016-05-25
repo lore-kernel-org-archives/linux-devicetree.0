@@ -1,84 +1,78 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
-Date: Wed, 25 May 2016 20:29:40 +0200
-Message-ID: <5392766.vCAWrASuOA@wuerfel>
-References: <1464067268-35299-1-git-send-email-navam@xilinx.com> <C89496FEAE474D468F30D558A9468D9F26CED772@XAP-PVEXMBX01.xlnx.xilinx.com> <20160525173419.GA7510@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Wed, 25 May 2016 13:44:21 -0500
+Message-ID: <20160525184421.GB10753@rob-hp-laptop>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+ <20160524174140.GE11605@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160525173419.GA7510@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Nava kishore Manne <nava.manne@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160524174140.GE11605@leverpostej>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, May 25, 2016 12:34:19 PM CEST Rob Herring wrote:
-> On Tue, May 24, 2016 at 11:47:31AM +0000, Nava kishore Manne wrote:
+On Tue, May 24, 2016 at 06:41:41PM +0100, Mark Rutland wrote:
+> On Tue, May 24, 2016 at 06:39:20PM +0200, Christer Weinigel wrote:
+> > Document how to use devicetree aliases to assign a stable
+> > bus number to a spi bus.
 > > 
+> > Signed-off-by: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
 > > 
-> > > -----Original Message-----
-> > > From: Arnd Bergmann [mailto:arnd@arndb.de]
-> > > Sent: Tuesday, May 24, 2016 2:21 PM
-> > > To: Nava kishore Manne <navam@xilinx.com>
-> > > Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
-> > > ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
-> > > <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
-> > > balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
-> > > <hyunk@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Radhey
-> > > Shyam Pandey <radheys@xilinx.com>; devicetree@vger.kernel.org; linux-
-> > > arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
-> > > 
-> > > On Tuesday, May 24, 2016 10:51:08 AM CEST Nava kishore Manne wrote:
-> > > > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > > > b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > > > index 47b4e39..09df757 100644
-> > > > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > > > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > > > @@ -1,18 +1,23 @@
-> > > >  Xilinx USB2 device controller
-> > > >
-> > > >  Required properties:
-> > > > -- compatible             : Should be "xlnx,usb2-device-4.00.a"
-> > > > +- compatible             : Should be "xlnx,usb2-device-4.00.a" or
-> > > > +                   "xlnx,usb2-device-5.00"
-> > > >  - reg                    : Physical base address and size of the USB2
-> > > >                     device registers map.
-> > > >  - interrupts             : Should contain single irq line of USB2 device
-> > > >                     controller
-> > > >  - xlnx,has-builtin-dma   : if DMA is included
-> > > > +- dma-ranges             : Should be as the following
-> > > > +                   <child-bus-address, parent-bus-address, length>
-> > > 
-> > > A USB host should not have any children that are DMA capable, I think, so
-> > > this property doesn't make sense here. It should be part of the parent bus.
-> > > 
-> > Will send next version (v4) by removing this property from the DT.
+> > ---
 > > 
-> > > > +- xlnx,addrwidth : Should be the dma addressing size in bits(ex: 64
-> > > bits)
-> > > 
-> > > I'm still unconvinced about the property definition here. What are the
-> > > possible options for the IP block? I don't think I ever saw a reply from you to
-> > > my earlier questions.
-> > > 
+> > Trivial documentation change.
 > > 
-> > Sorry Let me clearly explain
+> > Not having used devicetree that much it was surprisingly hard to
+> > figure out how to assign a stable bus number to a spi bus.  Add a
+> > simple example that shows how to do that.
 > > 
-> > From the IP version 5.0 onwards The IP support both 32-bit and 64-bit addressing.
-> > But the older version of the IP's supports only 32-bit addressing.
+> > Mark Cced as the SPI maintainer.  Or should trivial documentation
+> > fixes like this be addressed to someone else?
 > > 
-> > This addrwidth property differentiates the address width for the new IP (I mean 5.0 version on wards)
-> > For older IP it will be always 32-bit.
+> >   /Christer
+> > 
+> >  Documentation/devicetree/bindings/spi/spi-bus.txt | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > index 42d5954..c35c4c2 100644
+> > --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > @@ -94,3 +94,13 @@ SPI example for an MPC5200 SPI bus:
+> >  			reg = <1>;
+> >  		};
+> >  	};
+> > +
+> > +Normally SPI buses are assigned dynamic bus numbers starting at 32766
+> > +and counting downwards.  It is possible to assign the bus number
+> > +statically using devicetee aliases.  For example, on the MPC5200 the
+> > +"spi@f00" device above is connected to the "soc" bus.  To set its
+> > +bus_num to 1 add an aliases entry like this:
 > 
-> Then I think you should have a simple boolean property for 64-bit 
-> configuration.
+> As Mark Brown pointed out, this is very Linux-specific (at least in the
+> wording of the above).
+> 
+> Generally, aliases are there to match _physical_ identifiers (e.g. to
+> match physical labels for UART0, UART1, and on).
 
-I think matching on the version number is slightly better, as we have the version
-already and it identifies whether the register exists.
+While there may be some correlation to physical identifiers, the reality 
+is aliases are used for mapping to Linux numbering. Their primary use 
+has been to avoid breaking existing userspace and kernel command lines 
+when converting to DT. The reality is that matters on very few platforms 
+and can be solved in other ways for new platforms. For serial port 
+console, that means using stdout-path for example. 
 
-Having a boolean property of course works as well, it just duplicates that
-information.
+For SPI, I think we should use "label" which reflects a name that is 
+defined by the h/w design and is meaningful to the user. Then perhaps 
+the device becomes "/dev/spi/by-name/<label>/spidev.0" or simply 
+"/dev/spidev-<label>.0".
 
-	Arnd
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
