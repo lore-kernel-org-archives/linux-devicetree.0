@@ -1,72 +1,137 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v4 2/7] media: s5p-mfc: use generic reserved memory
- bindings
-Date: Wed, 25 May 2016 11:18:59 -0400
-Message-ID: <a14c4f45-64c9-f72d-532b-ad1ff53fa9eb@osg.samsung.com>
-References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
- <1464096690-23605-3-git-send-email-m.szyprowski@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
+Date: Wed, 25 May 2016 17:18:22 +0200
+Message-ID: <5922111.afqro67xTI@wuerfel>
+References: <cover.1463737502.git.maitysanchayan@gmail.com> <20160524041447.GA2884@Sanchayan-Arch.localdomain> <CAL_JsqKCwy=aXveTfnaQuZ5b3Ld9nzABgPfdPm1JX3CBuvzG+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1464096690-23605-3-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKCwy=aXveTfnaQuZ5b3Ld9nzABgPfdPm1JX3CBuvzG+Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sanchayan Maity <maitysanchayan@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Marek,
-
-On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
-> Use generic reserved memory bindings and mark old, custom properties
-> as obsoleted.
+On Tuesday, May 24, 2016 12:09:41 PM CEST Rob Herring wrote:
+> On Mon, May 23, 2016 at 11:14 PM,  <maitysanchayan@gmail.com> wrote:
+> > Hello Rob,
+> >
+> > On 16-05-23 16:18:13, Rob Herring wrote:
+> >> On Fri, May 20, 2016 at 03:32:05PM +0530, Sanchayan Maity wrote:
+> >> > This adds a SoC driver to be used by Freescale Vybrid SoC's.
+> >> > Driver utilises syscon and nvmem consumer API's to get the
+> >> > various register values needed and expose the SoC specific
+> >> > properties via sysfs.
+> >> >
+> >> > A sample output from Colibri Vybrid VF61 is below:
+> >> >
+> >> > root@colibri-vf:~# cd /sys/bus/soc/devices/soc0
+> >> > root@colibri-vf:/sys/bus/soc/devices/soc0# ls
+> >> > family     machine    power      revision   soc_id     subsystem  uevent
+> >> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat family
+> >> > Freescale Vybrid VF610
+> >> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat machine
+> >> > Freescale Vybrid
+> >> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat revision
+> >> > 00000013
+> >> > root@colibri-vf:/sys/bus/soc/devices/soc0# cat soc_id
+> >> > df6472a6130f29d4
+> >> >
+> >> > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> >> > ---
+> >> >  .../bindings/arm/freescale/fsl,vf610-soc.txt       |  20 +++
+> >> >  drivers/soc/Kconfig                                |   1 +
+> >> >  drivers/soc/fsl/Kconfig                            |  10 ++
+> >> >  drivers/soc/fsl/Makefile                           |   1 +
+> >> >  drivers/soc/fsl/soc-vf610.c                        | 198 +++++++++++++++++++++
+> >> >  5 files changed, 230 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+> >> >  create mode 100644 drivers/soc/fsl/Kconfig
+> >> >  create mode 100644 drivers/soc/fsl/soc-vf610.c
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+> >> > new file mode 100644
+> >> > index 0000000..338905d
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+> >> > @@ -0,0 +1,20 @@
+> >> > +Vybrid System-on-Chip
+> >> > +---------------------
+> >> > +
+> >> > +Required properties:
+> >> > +
+> >> > +- compatible: "fsl,vf610-soc"
+> >> > +- rom-revision: phandle to the on-chip ROM node
+> >> > +- mscm: phandle to the MSCM CPU configuration node
+> >> > +- nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
+> >> > +- nvmem-cell-names: should contain string names "cfg0" and "cfg1"
+> >>
+> >> I still have similar concerns as the discussion on the last version.
+> >> This version only proves that you aren't describing h/w, but rather just
+> >> a collection of data that some driver wants.
+> >>
+> >> A driver can just as easily look-up all the nodes directly that these
+> >> phandles point to.
+> >
+> > Agreed, that we can look up all the nodes directly that these phandles
+> > refer to but I would still need a DT entry to bind to. While I could
+> > bind to existing nodes like mscm cpucfg but that doesn't seem right.
+> >
+> > The very first approach that we had taken was to integrate this functionality
+> > in mach-vf610.c code under mach-imx
+> > http://www.spinics.net/lists/devicetree/msg80654.html
 > 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  .../devicetree/bindings/media/s5p-mfc.txt          | 39 +++++++++++++++++-----
->  1 file changed, 31 insertions(+), 8 deletions(-)
+> Yes, everyone wants to move all platform devices in the kernel to a
+> corresponding DT node. The result is often making up nodes to do this.
+> It's the same thing with cpufreq.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> index 2d5787e..92c94f5 100644
-> --- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> @@ -21,15 +21,18 @@ Required properties:
->    - clock-names : from common clock binding: must contain "mfc",
->  		  corresponding to entry in the clocks property.
->  
-> -  - samsung,mfc-r : Base address of the first memory bank used by MFC
-> -		    for DMA contiguous memory allocation and its size.
-> -
-> -  - samsung,mfc-l : Base address of the second memory bank used by MFC
-> -		    for DMA contiguous memory allocation and its size.
-> -
->  Optional properties:
->    - power-domains : power-domain property defined with a phandle
->  			   to respective power domain.
-> +  - memory-region : from reserved memory binding: phandles to two reserved
-> +	memory regions, first is for "left" mfc memory bus interfaces,
-> +	second if for the "right" mfc memory bus, used when no SYSMMU
-> +	support is available
-> +
-> +Obsolete properties:
-> +  - samsung,mfc-r, samsung,mfc-l : support removed, please use memory-region
-> +	property instead
-> +
+> > and then it was recommended to migrate this to drivers/soc where we did use
+> > phandles or direct look up via compatible strings
 > 
+> The location in the tree is an orthogonal issue. You could move it and
+> use of_machine_is_compatible without any DT change.
+> 
+> The primary issue I have here is how do we bind soc_bus to DT in a
+> consistent way. Sorry, but vybrid specific patches alone are never
+> going to solve that issue.
 
-I wonder if we should maintain backward compatibility for this driver
-since s5p-mfc memory allocation won't work with an old FDT if support
-for the old properties are removed.
+On a lot of chips, there is actually one device that holds the soc
+identification registers, and that can easily be used for this purpose.
 
-Although I'm not a big fan of keeping backward compatibility just to
-add dead code that will never be used and I don't know of any Exynos
-machine where the DTB and kernel are not updated together so I agree
-with this patch:
+Originally, the soc_device was meant to be the parent device for all
+other on-chip devices and be bound to the DT node that holds that
+bus (unlike things like external clocks that are not part of the SoC).
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+However, that model has never really caught on, and we have stopped
+doing this for new chips. Instead, the soc_device now somewhat
+stands for itself.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+> > http://www.spinics.net/lists/arm-kernel/msg420847.html
+> >
+> > and
+> >
+> > http://lkml.iu.edu/hypermail/linux/kernel/1506.0/03787.html
+> >
+> > There hasn't been a consensus since v1.
+> 
+> I actually prefer your previous version binding soc_bus to the root
+> bus node to this version. I think that is closer to the right
+> direction. After all, pretty much everything is an SOC and every SOC
+> has an SOC bus. Pretty much every SOC and board have revisions and may
+> need to expose that revision info as well. We have to do this
+> consistently which means having a default implementation for
+> simple-bus that is not opt-in.
+> 
+> Alternatively, we should just deprecate soc_bus and come up a
+> different solution. Either way, I think we have a half implemented
+> solution currently.
+
+We have had several drivers in the past that needed to figure out
+whether they were running on a particular version of a SoC, and that
+could not get this information from the DT. My suggested solution
+for this is to provide an API from soc_bus that compares a
+glob string to the available soc_device instance(s) in order to
+figure out whether we are running on a particular kind of system.
+
+	Arnd
