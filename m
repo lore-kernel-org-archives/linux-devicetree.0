@@ -1,96 +1,58 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: [RFC/PATCH 1/2] doc: bindings: Add bindings documentation for mtd otp nvmem
-Date: Wed, 25 May 2016 14:26:46 -0700
-Message-ID: <1464211607-8843-2-git-send-email-moritz.fischer@ettus.com>
-References: <1464211607-8843-1-git-send-email-moritz.fischer@ettus.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464211607-8843-1-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: interrupts properties and API usage with GPIO controllers/Device Tree
+Date: Wed, 25 May 2016 14:45:00 -0700
+Message-ID: <57461CDC.603@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, gregory.0xf0@gmail.com
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds documentation describing the bindings for
-exposing mtd flash otp regions as nvmem providers via devicetree.
+Hi Linus, Gregory,
 
-Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/mtd/otp-nvmem.txt          | 62 ++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/otp-nvmem.txt
+Recently came across an use case that looks like the following:
 
-diff --git a/Documentation/devicetree/bindings/mtd/otp-nvmem.txt b/Documentation/devicetree/bindings/mtd/otp-nvmem.txt
-new file mode 100644
-index 0000000..a83a7da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/otp-nvmem.txt
-@@ -0,0 +1,62 @@
-+Representing OTP regions in devicetree
-+
-+OTP regions can be represented by sub-nodes of an mtd device.
-+
-+The partition table should be a subnode of the mtd node and should be names
-+'otp-partitions'. This node should have the following property:
-+
-+- compatible: (required) must be 'fixed-partitions'
-+
-+OTP regions are then defined in subnodes of the partitions node.
-+
-+Required properties for OTP regions:
-+- reg: The region's offset and size within the mtd device
-+
-+Optional properties:
-+- label: The label / name for this region. If ommited, the label is taken
-+  from the node name (excluding the unit address).
-+
-+Example:
-+
-+flash@0 {
-+	partitions {
-+		compatible = "fixed-partitions";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "uboot-spl";
-+			reg = <0x0 0xe0000>;
-+		};
-+		partition@1 {
-+			label = "uboot-env";
-+			reg = <0xe0000 0x20000>;
-+		};
-+		partition@2 {
-+			label = "uboot";
-+			reg = <0x100000 0x100000>;
-+		};
-+	};
-+
-+	otp-partitions {
-+		compatible = "fixed-partitions";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		region@0 {
-+			label = "factory-data";
-+			reg = <0x0 0x40>;
-+
-+			#address-cells = <0x1>;
-+			#size-cells = <0x1>;
-+
-+			product: nvmem@0 {
-+				reg = <0x0 0x2>;
-+			};
-+
-+			revision: nvmem@3 {
-+				reg = <0x3 0x2>;
-+			};
-+		};
-+	};
-+}
+gpio0: gpio@deadbeef {
+	compatible = "brcm,brcmstb-gpio";
+	#interrrupt-cells = <2>;
+	#gpio-cells = <2>;
+	gpio-controller;
+	interrupt-controller;
+	...
+};
+
+test@cafeb00b {
+	interrupt-parent = <&gpio0>;
+	interrupts = <99 3>;
+};
+
+The driver consuming the test node's interrupts property tries to get
+the interrupt by using platform_get_irq() or of_irq_parse_and_map() and
+in the case of the gpio-brcmstb.c, this fails because the interrupt is
+out of range  as flagged by kernel/irq/irqdomain.c::irq_domain_associate.
+
+Unlike other GPIO provider drivers gpio-brcmstb.c, this driver registers
+one gpiolib irqchip per each of its banks, and still uses the generic
+map/unmap functions for its irq_domain_ops, so there is no way we can
+provide a valid mapping outside of the gpio_to_irq() function
+unfortunately since gpiochip_irq_map() does
+
+So here are a few questions for either of you:
+
+- is this a valid API and Device Tree use case: call
+of_irq_parse_and_map on an "interrupts" property which has not been
+acquired using the GPIO API and then gpio_to_irq? While gpio_to_irq()
+works, are not we losing the second specifier in the interrupt cells
+about what kind of interrupt type this is?
+
+- would it be acceptable to export gpiochip_irq_map and
+gpiochip_irq_export to make them accessible as helpers so we could just
+wrap things a bit around or should I just open code the same things and
+allow gpiochip_irqchip_add to be passed custom irq_domain_ops for instance?
+
+Thanks!
 -- 
-2.5.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
