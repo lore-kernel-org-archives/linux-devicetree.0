@@ -1,575 +1,810 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] dtc: Document the dynamic plugin internals
-Date: Wed, 25 May 2016 13:41:04 +1000
-Message-ID: <20160525034104.GI17226@voom.fritz.box>
+Subject: Re: [PATCH v6 2/4] dtc: Plugin and fixup support
+Date: Wed, 25 May 2016 13:55:25 +1000
+Message-ID: <20160525035525.GJ17226@voom.fritz.box>
 References: <1462477724-8092-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1462477724-8092-2-git-send-email-pantelis.antoniou@konsulko.com>
- <20160524045840.GC29005@voom.fritz.box>
- <53E9201A-5D63-4A8E-8179-F96980F76BED@konsulko.com>
- <20160524105002.GD17226@voom.fritz.box>
- <45A08C18-0368-48B2-B6E3-BC352E345125@konsulko.com>
+ <1462477724-8092-3-git-send-email-pantelis.antoniou@konsulko.com>
+ <20160524103907.GB17226@voom.fritz.box>
+ <33D5A973-4123-4B51-84D0-D0A5A70DA1A2@konsulko.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nO3oAMapP4dBpMZi"
+	protocol="application/pgp-signature"; boundary="BEa57a89OpeoUzGD"
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <45A08C18-0368-48B2-B6E3-BC352E345125-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <33D5A973-4123-4B51-84D0-D0A5A70DA1A2-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---nO3oAMapP4dBpMZi
+--BEa57a89OpeoUzGD
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 24, 2016 at 03:53:07PM +0300, Pantelis Antoniou wrote:
+On Tue, May 24, 2016 at 05:04:18PM +0300, Pantelis Antoniou wrote:
 > Hi David,
 >=20
-> > On May 24, 2016, at 13:50 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
+> > On May 24, 2016, at 13:39 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
 wrote:
 > >=20
-> > On Tue, May 24, 2016 at 10:43:29AM +0300, Pantelis Antoniou wrote:
-> >> Hi David,
+> > On Thu, May 05, 2016 at 10:48:42PM +0300, Pantelis Antoniou wrote:
+> >> This patch enable the generation of symbols & local fixup information
+> >> for trees compiled with the -@ (--symbols) option.
 > >>=20
-> >>> On May 24, 2016, at 07:58 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org=
-> wrote:
-> >>>=20
-> >>> One small nit in the document itself.
-> >>>=20
-> >>> I have other comments, but they're about the overlay format itself,
-> >>> rather than this patch as such.
-> >>>=20
+> >> Using this patch labels in the tree and their users emit information
+> >> in __symbols__ and __local_fixups__ nodes.
 > >>=20
-> >> OK.
+> >> The __fixups__ node make possible the dynamic resolution of phandle
+> >> references which are present in the plugin tree but lie in the
+> >> tree that are applying the overlay against.
 > >>=20
-> >>> On Thu, May 05, 2016 at 10:48:41PM +0300, Pantelis Antoniou wrote:
-> >>>> Provides the document explaining the internal mechanics of
-> >>>> plugins and options.
-> >>>>=20
-> >>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> >>>> ---
-> >>>> Documentation/dt-object-internal.txt | 318 +++++++++++++++++++++++++=
-++++++++++
-> >>>> 1 file changed, 318 insertions(+)
-> >>>> create mode 100644 Documentation/dt-object-internal.txt
-> >>>>=20
-> >>>> diff --git a/Documentation/dt-object-internal.txt b/Documentation/dt=
--object-internal.txt
-> >>>> new file mode 100644
-> >>>> index 0000000..734f447
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/dt-object-internal.txt
-> >>>> @@ -0,0 +1,318 @@
-> >>>> +Device Tree Dynamic Object format internals
-> >>>> +-------------------------------------------
-> >>>> +
-> >>>> +The Device Tree for most platforms is a static representation of
-> >>>> +the hardware capabilities. This is insufficient for many platforms
-> >>>> +that need to dynamically insert device tree fragments to the
-> >>>> +running kernel's live tree.
-> >>>> +
-> >>>> +This document explains the the device tree object format and the
-> >>>> +modifications made to the device tree compiler, which make it possi=
-ble.
-> >>>> +
-> >>>> +1. Simplified Problem Definition
-> >>>> +--------------------------------
-> >>>> +
-> >>>> +Assume we have a platform which boots using following simplified de=
-vice tree.
-> >>>> +
-> >>>> +---- foo.dts ------------------------------------------------------=
------------
-> >>>> +	/* FOO platform */
-> >>>> +	/ {
-> >>>> +		compatible =3D "corp,foo";
-> >>>> +
-> >>>> +		/* shared resources */
-> >>>> +		res: res {
-> >>>> +		};
-> >>>> +
-> >>>> +		/* On chip peripherals */
-> >>>> +		ocp: ocp {
-> >>>> +			/* peripherals that are always instantiated */
-> >>>> +			peripheral1 { ... };
-> >>>> +		};
-> >>>> +	};
-> >>>> +---- foo.dts ------------------------------------------------------=
------------
-> >>>> +
-> >>>> +We have a number of peripherals that after probing (using some unde=
-fined method)
-> >>>> +should result in different device tree configuration.
-> >>>> +
-> >>>> +We cannot boot with this static tree because due to the configurati=
-on of the
-> >>>> +foo platform there exist multiple conficting peripherals DT fragmen=
-ts.
-> >>>> +
-> >>>> +So for the bar peripheral we would have this:
-> >>>> +
-> >>>> +---- foo+bar.dts --------------------------------------------------=
------------
-> >>>> +	/* FOO platform + bar peripheral */
-> >>>> +	/ {
-> >>>> +		compatible =3D "corp,foo";
-> >>>> +
-> >>>> +		/* shared resources */
-> >>>> +		res: res {
-> >>>> +		};
-> >>>> +
-> >>>> +		/* On chip peripherals */
-> >>>> +		ocp: ocp {
-> >>>> +			/* peripherals that are always instantiated */
-> >>>> +			peripheral1 { ... };
-> >>>> +
-> >>>> +			/* bar peripheral */
-> >>>> +			bar {
-> >>>> +				compatible =3D "corp,bar";
-> >>>> +				... /* various properties and child nodes */
-> >>>> +			};
-> >>>> +		};
-> >>>> +	};
-> >>>> +---- foo+bar.dts --------------------------------------------------=
------------
-> >>>> +
-> >>>> +While for the baz peripheral we would have this:
-> >>>> +
-> >>>> +---- foo+baz.dts --------------------------------------------------=
------------
-> >>>> +	/* FOO platform + baz peripheral */
-> >>>> +	/ {
-> >>>> +		compatible =3D "corp,foo";
-> >>>> +
-> >>>> +		/* shared resources */
-> >>>> +		res: res {
-> >>>> +			/* baz resources */
-> >>>> +			baz_res: res_baz { ... };
-> >>>> +		};
-> >>>> +
-> >>>> +		/* On chip peripherals */
-> >>>> +		ocp: ocp {
-> >>>> +			/* peripherals that are always instantiated */
-> >>>> +			peripheral1 { ... };
-> >>>> +
-> >>>> +			/* baz peripheral */
-> >>>> +			baz {
-> >>>> +				compatible =3D "corp,baz";
-> >>>> +				/* reference to another point in the tree */
-> >>>> +				ref-to-res =3D <&baz_res>;
-> >>>> +				... /* various properties and child nodes */
-> >>>> +			};
-> >>>> +		};
-> >>>> +	};
-> >>>> +---- foo+baz.dts --------------------------------------------------=
------------
-> >>>> +
-> >>>> +We note that the baz case is more complicated, since the baz periph=
-eral needs to
-> >>>> +reference another node in the DT tree.
-> >>>> +
-> >>>> +2. Device Tree Object Format Requirements
-> >>>> +-----------------------------------------
-> >>>> +
-> >>>> +Since the device tree is used for booting a number of very differen=
-t hardware
-> >>>> +platforms it is imperative that we tread very carefully.
-> >>>> +
-> >>>> +2.a) No changes to the Device Tree binary format for the base tree.=
- We cannot
-> >>>> +modify the tree format at all and all the information we require sh=
-ould be
-> >>>> +encoded using device tree itself. We can add nodes that can be safe=
-ly ignored
-> >>>> +by both bootloaders and the kernel. The plugin dtb's are optionally=
- tagged
-> >>>> +with a different magic number in the header but otherwise they too =
-are simple
-> >>>> +blobs.
-> >>>> +
-> >>>> +2.b) Changes to the DTS source format should be absolutely minimal,=
- and should
-> >>>> +only be needed for the DT fragment definitions, and not the base bo=
-ot DT.
-> >>>> +
-> >>>> +2.c) An explicit option should be used to instruct DTC to generate =
-the required
-> >>>> +information needed for object resolution. Platforms that don't use =
-the
-> >>>> +dynamic object format can safely ignore it.
-> >>>> +
-> >>>> +2.d) Finally, DT syntax changes should be kept to a minimum. It sho=
-uld be
-> >>>> +possible to express everything using the existing DT syntax.
-> >>>> +
-> >>>> +3. Implementation
-> >>>> +-----------------
-> >>>> +
-> >>>> +The basic unit of addressing in Device Tree is the phandle. Turns o=
-ut it's
-> >>>> +relatively simple to extend the way phandles are generated and refe=
-renced
-> >>>> +so that it's possible to dynamically convert symbolic references (l=
-abels)
-> >>>> +to phandle values. This is a valid assumption as long as the author=
- uses
-> >>>> +reference syntax and does not assign phandle values manually (which=
- might
-> >>>> +be a problem with decompiled source files).
-> >>>> +
-> >>>> +We can roughly divide the operation into two steps.
-> >>>> +
-> >>>> +3.a) Compilation of the base board DTS file using the '-@' option
-> >>>> +generates a valid DT blob with an added __symbols__ node at the roo=
-t node,
-> >>>> +containing a list of all nodes that are marked with a label.
-> >>>> +
-> >>>> +Using the foo.dts file above the following node will be generated;
-> >>>> +
-> >>>> +$ dtc -@ -O dtb -o foo.dtb -b 0 foo.dts
-> >>>> +$ fdtdump foo.dtb
-> >>>> +...
-> >>>> +/ {
-> >>>> +	...
-> >>>> +	res {
-> >>>> +		...
-> >>>> +		phandle =3D <0x00000001>;
-> >>>> +		...
-> >>>> +	};
-> >>>> +	ocp {
-> >>>> +		...
-> >>>> +		phandle =3D <0x00000002>;
-> >>>> +		...
-> >>>> +	};
-> >>>> +	__symbols__ {
-> >>>> +		res=3D"/res";
-> >>>> +		ocp=3D"/ocp";
-> >>>> +	};
-> >>>> +};
-> >>>> +
-> >>>> +Notice that all the nodes that had a reference have been recorded, =
-and that
-> >>>=20
-> >>> s/reference/label/
-> >>>=20
+> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> >> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> ---
+> >> Documentation/manual.txt |  16 ++++
+> >> checks.c                 |   8 +-
+> >> dtc-lexer.l              |   5 ++
+> >> dtc-parser.y             |  42 +++++++--
+> >> dtc.c                    |  23 ++++-
+> >> dtc.h                    |  28 +++++-
+> >> flattree.c               |   2 +-
+> >> fstree.c                 |   2 +-
+> >> livetree.c               | 217 +++++++++++++++++++++++++++++++++++++++=
++++++++-
+> >> 9 files changed, 329 insertions(+), 14 deletions(-)
 > >>=20
-> >> OK
+> >> diff --git a/Documentation/manual.txt b/Documentation/manual.txt
+> >> index 398de32..3e16c24 100644
+> >> --- a/Documentation/manual.txt
+> >> +++ b/Documentation/manual.txt
+> >> @@ -119,6 +119,20 @@ Options:
+> >> 	Make space for <number> reserve map entries
+> >> 	Relevant for dtb and asm output only.
 > >>=20
-> >>>> +phandles have been generated for them.
-> >>>=20
-> >>>=20
-> >>>> +This blob can be used to boot the board normally, the __symbols__ n=
-ode will
-> >>>> +be safely ignored both by the bootloader and the kernel (the only l=
-oss will
-> >>>> +be a few bytes of memory and disk space).
-> >>>> +
-> >>>> +3.b) The Device Tree fragments must be compiled with the same optio=
-n but they
-> >>>> +must also have a tag (/plugin/) that allows undefined references to=
- nodes
-> >>>> +that are not present at compilation time to be recorded so that the=
- runtime
-> >>>> +loader can fix them.
-> >>>> +
-> >>>> +So the bar peripheral's DTS format would be of the form:
-> >>>> +
-> >>>> +/dts-v1/ /plugin/;	/* allow undefined references and record them */
-> >>>> +/ {
-> >>>> +	....	/* various properties for loader use; i.e. part id etc. */
-> >>>> +	fragment@0 {
-> >>>> +		target =3D <&ocp>;
-> >>>> +		__overlay__ {
-> >>>> +			/* bar peripheral */
-> >>>> +			bar {
-> >>>> +				compatible =3D "corp,bar";
-> >>>> +				... /* various properties and child nodes */
-> >>>> +			}
-> >>>> +		};
-> >>>> +	};
-> >>>> +};
-> >>>> +
-> >>>> +Note that there's a target property that specifies the location whe=
-re the
-> >>>> +contents of the overlay node will be placed, and it references the =
-node
-> >>>> +in the foo.dts file.
-> >>>=20
-> >>> Ugh.. I really don't like the target stuff appearing in the dts like
-> >>> this.  I thought we were changing this so these appeared in the blob,
-> >>> but in the source we just used the existing overlay syntax, so for the
-> >>> above, something like:
-> >>>=20
-> >>> &ocp {
-> >>> 	...
-> >>> };
-> >>>=20
+> >> +    -@
+> >> +	Generates a __symbols__ node at the root node of the resulting blob
+> >> +	for any node labels used, and for any local references using phandles
+> >> +	it also generates a __local_fixups__ node that tracks them.
+> >> +
+> >> +	When using the /plugin/ tag all unresolved label references to
+> >> +	be tracked in the __fixups__ node, making dynamic resolution possibl=
+e.
+> >> +
+> >> +    -A
+> >> +	Generate automatically aliases for all node labels. This is similar =
+to
+> >> +	the -@ option (the __symbols__ node contain identical information) b=
+ut
+> >> +	the semantics are slightly different since no phandles are automatic=
+ally
+> >> +	generated for labeled nodes.
+> >> +
+> >>     -S <bytes>
+> >> 	Ensure the blob at least <bytes> long, adding additional
+> >> 	space if needed.
+> >> @@ -153,6 +167,8 @@ Here is a very rough overview of the layout of a D=
+TS source file:
 > >>=20
-> >> This works, but it=E2=80=99s just syntactic sugar.
+> >>     devicetree:   '/' nodedef
+> >>=20
+> >> +    plugindecl:   '/' 'plugin' '/' ';'
 > >=20
-> > Hmmm....  The target=3D property and fragment@ nodes are part of the
-> > internal overlay glue, rather than actual DT content.  So, I *really*
-> > dislike including it inline in the dts file.  Come to that, I dislike
-> > including it in the dtb, but I can see the rationale and we're kind of
-> > stuck with it anyway.  The dts, not so much.
+> > You added the new non-terminal definitiom, but didn't use it anywhere.
 > >=20
 >=20
-> There are more target variants to come, but they don=E2=80=99t require any
-> dtc changes.
->=20
-> The &label { }; transforms to fragment@0 { target =3D <&label>; __overlay=
-__ { }; };
->=20
-> >> It does not cover the cases where the target is a path, or a different
-> >> kind of target.
-> >=20
-> > Huh?  It certainly covers the case of a path
-> > 	&{/some/path} { ... }
-> > What other sort of target did you have in mind?
-> >=20
->=20
-> That is just not supported right now. There is no phandle to resolve.
->=20
-> I=E2=80=99ll take a stab at it, but it will transform to the target-path =
-variant.
+> plugindecl is used by the referenced in versioninfo so it=E2=80=99s used =
+implicitly.
 
-Right, but my point is there's an obvious dts syntex for
-path-targetted fragments.  My inclination is to create syntax for any
-new fragment types, rather than expose the encoding of the overlay
-metadata as if it were in-band information.
+In the actual bison, yes, but not here in the manual - plugindecl is
+never referenced.  Of course, neither is the version tag, so it's
+already a bit wrong.
 
-> >> Besides the sugary part, a target is something that doesn=E2=80=99t ha=
-ve anything to
-> >> do with the plugin format.
+> >>     nodedef:      '{' list_of_property list_of_subnode '}' ';'
 > >>=20
-> >>> Or have I gotten confused by the history of things.
-> >>>=20
+> >>     property:     label PROPNAME '=3D' propdata ';'
+> >> diff --git a/checks.c b/checks.c
+> >> index 386f956..3d4c3c6 100644
+> >> --- a/checks.c
+> >> +++ b/checks.c
+> >> @@ -490,8 +490,12 @@ static void fixup_phandle_references(struct check=
+ *c, struct node *dt,
 > >>=20
-> >> It=E2=80=99s got a long history for sure :)
+> >> 		refnode =3D get_node_by_ref(dt, m->ref);
+> >> 		if (! refnode) {
+> >> -			FAIL(c, "Reference to non-existent node or label \"%s\"\n",
+> >> -			     m->ref);
+> >> +			if (!(tree_get_versionflags(dt) & VF_PLUGIN))
+> >> +				FAIL(c, "Reference to non-existent node or "
+> >> +						"label \"%s\"\n", m->ref);
+> >> +			else /* mark the entry as unresolved */
+> >> +				*((cell_t *)(prop->val.val + m->offset)) =3D
+> >> +					cpu_to_fdt32(0xffffffff);
+> >> 			continue;
+> >> 		}
 > >>=20
-> >>>> +$ dtc -@ -O dtb -o bar.dtbo -b 0 bar.dts
-> >>>> +$ fdtdump bar.dtbo
-> >>>> +...
-> >>>> +/ {
-> >>>> +	... /* properties */
-> >>>> +	fragment@0 {
-> >>>> +		target =3D <0xffffffff>;
-> >>>> +		__overlay__ {
-> >>>> +			bar {
-> >>>> +				compatible =3D "corp,bar";
-> >>>> +				... /* various properties and child nodes */
-> >>>> +			}
-> >>>> +		};
-> >>>> +	};
-> >>>> +	__fixups__ {
-> >>>> +	    ocp =3D "/fragment@0:target:0";
-> >>>=20
-> >>> I still hate this parse-requiring string, but I guess we're stuck with
-> >>> it.
-> >>>=20
-> >>>> +	};
-> >>>> +};
-> >>>> +
-> >>>> +No __symbols__ has been generated (no label in bar.dts).
-> >>>> +Note that the target's ocp label is undefined, so the phandle handle
-> >>>> +value is filled with the illegal value '0xffffffff', while a __fixu=
-ps__
-> >>>> +node has been generated, which marks the location in the tree where
-> >>>> +the label lookup should store the runtime phandle value of the ocp =
-node.
-> >>>> +
-> >>>> +The format of the __fixups__ node entry is
-> >>>> +
-> >>>> +	<label> =3D "<local-full-path>:<property-name>:<offset>";
-> >>>> +
-> >>>> +<label> 		Is the label we're referring
-> >>>> +<local-full-path>	Is the full path of the node the reference is
-> >>>> +<property-name>		Is the name of the property containing the
-> >>>> +			reference
-> >>>> +<offset>		The offset (in bytes) of where the property's
-> >>>> +			phandle value is located.
-> >>>> +
-> >>>> +Doing the same with the baz peripheral's DTS format is a little bit=
- more
-> >>>> +involved, since baz contains references to local labels which requi=
-re
-> >>>> +local fixups.
-> >>>> +
-> >>>> +/dts-v1/ /plugin/;	/* allow undefined label references and record t=
-hem */
-> >>>> +/ {
-> >>>> +	....	/* various properties for loader use; i.e. part id etc. */
-> >>>> +	fragment@0 {
-> >>>> +		target =3D <&res>;
-> >>>> +		__overlay__ {
-> >>>> +			/* baz resources */
-> >>>> +			baz_res: res_baz { ... };
-> >>>> +		};
-> >>>> +	};
-> >>>> +	fragment@1 {
-> >>>> +		target =3D <&ocp>;
-> >>>> +		__overlay__ {
-> >>>> +			/* baz peripheral */
-> >>>> +			baz {
-> >>>> +				compatible =3D "corp,baz";
-> >>>> +				/* reference to another point in the tree */
-> >>>> +				ref-to-res =3D <&baz_res>;
-> >>>> +				... /* various properties and child nodes */
-> >>>> +			}
-> >>>> +		};
-> >>>> +	};
-> >>>> +};
-> >>>> +
-> >>>> +Note that &bar_res reference.
-> >>>> +
-> >>>> +$ dtc -@ -O dtb -o baz.dtbo -b 0 baz.dts
-> >>>> +$ fdtdump baz.dtbo
-> >>>> +...
-> >>>> +/ {
-> >>>> +	... /* properties */
-> >>>> +	fragment@0 {
-> >>>> +		target =3D <0xffffffff>;
-> >>>> +		__overlay__ {
-> >>>> +			res_baz {
-> >>>> +				....
-> >>>> +				phandle =3D <0x00000001>;
-> >>>> +			};
-> >>>> +		};
-> >>>> +	};
-> >>>> +	fragment@1 {
-> >>>> +		target =3D <0xffffffff>;
-> >>>> +		__overlay__ {
-> >>>> +			baz {
-> >>>> +				compatible =3D "corp,baz";
-> >>>> +				... /* various properties and child nodes */
-> >>>> +				ref-to-res =3D <0x00000001>;
-> >>>> +			}
-> >>>> +		};
-> >>>> +	};
-> >>>> +	__fixups__ {
-> >>>> +		res =3D "/fragment@0:target:0";
-> >>>> +		ocp =3D "/fragment@1:target:0";
-> >>>> +	};
-> >>>> +	__local_fixups__ {
-> >>>> +		fragment@1 {
-> >>>> +			__overlay__ {
-> >>>> +				baz {
-> >>>> +					ref-to-res =3D <0>;
-> >>>> +				};
-> >>>> +			};
-> >>>> +		};
-> >>>> +	};
-> >>>> +};
-> >>>> +
-> >>>> +This is similar to the bar case, but the reference of a local label=
- by the
-> >>>> +baz node generates a __local_fixups__ entry that records the place =
-that the
-> >>>> +local reference is being made. No matter how phandles are allocated=
- from dtc
-> >>>> +the run time loader must apply an offset to each phandle in every d=
-ynamic
-> >>>> +DT object loaded. The __local_fixups__ node records the place of ev=
-ery
-> >>>> +local reference so that the loader can apply the offset.
-> >>>=20
-> >>> I'm still utterly baffled why the __local_fixups__ encoding is totally
-> >>> different from the __fixups__ encoding.  But, again, stuck with it, I
-> >>> guess.
-> >>>=20
-> >>> I'd really like to see a simplified, consolidated format defined and
-> >>> deprecate this one, though.
-> >>>=20
+> >> diff --git a/dtc-lexer.l b/dtc-lexer.l
+> >> index 790fbf6..40bbc87 100644
+> >> --- a/dtc-lexer.l
+> >> +++ b/dtc-lexer.l
+> >> @@ -121,6 +121,11 @@ static void lexical_error(const char *fmt, ...);
+> >> 			return DT_V1;
+> >> 		}
 > >>=20
-> >> I did explain it before, so here it goes again.
+> >> +<*>"/plugin/"	{
+> >> +			DPRINT("Keyword: /plugin/\n");
+> >> +			return DT_PLUGIN;
+> >> +		}
+> >> +
+> >> <*>"/memreserve/"	{
+> >> 			DPRINT("Keyword: /memreserve/\n");
+> >> 			BEGIN_DEFAULT();
+> >> diff --git a/dtc-parser.y b/dtc-parser.y
+> >> index 000873f..2d3399e 100644
+> >> --- a/dtc-parser.y
+> >> +++ b/dtc-parser.y
+> >> @@ -19,6 +19,7 @@
+> >>  */
+> >> %{
+> >> #include <stdio.h>
+> >> +#include <inttypes.h>
 > >>=20
-> >> Although the names are similar (fixups vs local fixups) the operation
-> >> performed on them is completely different.
+> >> #include "dtc.h"
+> >> #include "srcpos.h"
+> >> @@ -52,9 +53,11 @@ extern bool treesource_error;
+> >> 	struct node *nodelist;
+> >> 	struct reserve_info *re;
+> >> 	uint64_t integer;
+> >> +	unsigned int flags;
+> >> }
 > >>=20
-> >> The fixups are there so that we can resolve symbolic names to phandles=
-, while
-> >> the local fixups are there to track where local phandles exist in orde=
-r to
-> >> adjust them to be valid when the overlay is applied.
+> >> %token DT_V1
+> >> +%token DT_PLUGIN
+> >> %token DT_MEMRESERVE
+> >> %token DT_LSHIFT DT_RSHIFT DT_LE DT_GE DT_EQ DT_NE DT_AND DT_OR
+> >> %token DT_BITS
+> >> @@ -71,6 +74,8 @@ extern bool treesource_error;
 > >>=20
-> >> So:
+> >> %type <data> propdata
+> >> %type <data> propdataprefix
+> >> +%type <flags> versioninfo
+> >> +%type <flags> plugindecl
+> >> %type <re> memreserve
+> >> %type <re> memreserves
+> >> %type <array> arrayprefix
+> >> @@ -101,13 +106,31 @@ extern bool treesource_error;
+> >> %%
 > >>=20
-> >> fixups -> symbolic name to phandle
-> >> local fixups -> local phandle locations to be adjusted on resolution
+> >> sourcefile:
+> >> -	  DT_V1 ';' memreserves devicetree
+> >> +	  versioninfo ';' memreserves devicetree
+> >> 		{
+> >> -			the_boot_info =3D build_boot_info($3, $4,
+> >> +			the_boot_info =3D build_boot_info($1, $3, $4,
+> >> 							guess_boot_cpuid($4));
+> >> 		}
+> >> 	;
+> >>=20
+> >> +versioninfo:
+> >> +	DT_V1 plugindecl
+> >> +		{
+> >> +			$$ =3D VF_DT_V1 | $2;
+> >> +		}
+> >> +	;
+> >> +
+> >> +plugindecl:
+> >> +	DT_PLUGIN
+> >> +		{
+> >> +			$$ =3D VF_PLUGIN;
+> >> +		}
+> >> +	| /* empty */
+> >> +		{
+> >> +			$$ =3D 0;
+> >> +		}
+> >> +	;
+> >> +
+> >> memreserves:
+> >> 	  /* empty */
+> >> 		{
+> >> @@ -156,10 +179,14 @@ devicetree:
+> >> 		{
+> >> 			struct node *target =3D get_node_by_ref($1, $2);
+> >>=20
+> >> -			if (target)
+> >> +			if (target) {
+> >> 				merge_nodes(target, $3);
+> >> -			else
+> >> -				ERROR(&@2, "Label or path %s not found", $2);
+> >> +			} else {
+> >> +				if (symbol_fixup_support)
 > >=20
-> > I get that distinction, but that's not the point.  While the method of
-> > adjusting the phandle value is different, both types are a correction
-> > to a single phandle value at a specific offset in a specific property.
-> >=20
-> > In both cases you need to convey the location of a specific phandle
-> > value, but that's encoded in a completely different way in each case.
-> > That's what bothers me.
+> > Surely this should depend on the /plugin/ tag, rather than the -@ optio=
+n..?
 > >=20
 >=20
-> It might be possible for the format to change but it=E2=80=99s just not g=
-oing to be the same.
+> the_boot_info is not yet initialized at this point. The only way to acces=
+s it would
+> be to have version flags as a global. Is that OK?
 
-Not identical, no, but it could be much more similar than it is.  For
-example:
+Hmm.  So using a global isn't necessarily bad, since the awkward
+old-school yacc interface already makes it necessary in some places.
+But.. relying on the order in which different yacc semantic actions
+are executed (without an explicit data dependency) makes me nervous.
 
-/{
-	fragment@0 {
-		target =3D <&somewhere>;
-		__overlay__ =3D {
-			dev0: dev@0 {
-				link =3D <&devx>;
-			};
-			dev@1 {
-				link =3D <&dev0>;
-			};
-		};
-	};
-	__fixups__ =3D {
-		somewhere =3D "/fragment@0:target:0";
-		devx =3D "/fragment@0/__overlay__/dev@0:link:0";
-		local,phandles =3D "/fragment@0/__overlay__/dev@1:link:0";
-	};
-};
+I think the really correct solution is to move the processing of
+overlays - for both the dts only and dynamic plugin cases - to a later
+pass after parsing.  In the non-plugin case it would merge the
+subtrees then, for the plugin case it would construct the "meta-tree"
+with the fragment/target info.
 
-(',' is not a valid character for labels, so this is unambiguous).
+But, I can see why you wouldn't want to do that right now.
 
-> There=E2=80=99s no place to put the label reference in the fixup form so =
-no code-reuse is
-> going to happen.
+So, in the short term, I think use a global, with a FIXME comment.
 
-I don't follow what you mean by this.
-
-> >>>> +There is an alternative syntax to the expanded form for overlays wi=
-th phandle
-> >>>> +targets which makes the format similar to the one using in .dtsi in=
-clude files.
-> >>>> +
-> >>>> +So for the &ocp target example above one can simply write:
-> >>>> +
-> >>>> +/dts-v1/ /plugin/;
-> >>>> +&ocp {
-> >>>> +	/* bar peripheral */
-> >>>> +	bar {
-> >>>> +		compatible =3D "corp,bar";
-> >>>> +		... /* various properties and child nodes */
-> >>>> +	}
-> >>>> +};
-> >>>> +
-> >>>> +The resulting dtb object is identical.
-> >>>=20
+> >> +					add_orphan_node($1, $3, $2);
+> >> +				else
+> >> +					ERROR(&@2, "Label or path %s not found", $2);
+> >> +			}
+> >> 			$$ =3D $1;
+> >> 		}
+> >> 	| devicetree DT_DEL_NODE DT_REF ';'
+> >> @@ -174,6 +201,11 @@ devicetree:
 > >>=20
-> >> Regards
+> >> 			$$ =3D $1;
+> >> 		}
+> >> +	| /* empty */
+> >> +		{
+> >> +			/* build empty node */
+> >> +			$$ =3D name_node(build_node(NULL, NULL), "");
+> >> +		}
+> >> 	;
 > >>=20
-> >> =E2=80=94 Pantelis
+> >> nodedef:
+> >> diff --git a/dtc.c b/dtc.c
+> >> index 5fa23c4..f8277fb 100644
+> >> --- a/dtc.c
+> >> +++ b/dtc.c
+> >> @@ -31,6 +31,8 @@ int reservenum;		/* Number of memory reservation slo=
+ts */
+> >> int minsize;		/* Minimum blob size */
+> >> int padsize;		/* Additional padding to blob */
+> >> int phandle_format =3D PHANDLE_BOTH;	/* Use linux,phandle or phandle p=
+roperties */
+> >> +int symbol_fixup_support;
+> >> +int auto_label_aliases;
 > >>=20
+> >> static void fill_fullpaths(struct node *tree, const char *prefix)
+> >> {
+> >> @@ -53,7 +55,7 @@ static void fill_fullpaths(struct node *tree, const =
+char *prefix)
+> >> #define FDT_VERSION(version)	_FDT_VERSION(version)
+> >> #define _FDT_VERSION(version)	#version
+> >> static const char usage_synopsis[] =3D "dtc [options] <input file>";
+> >> -static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:fb:i:H:sW:=
+E:hv";
+> >> +static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:fb:i:H:sW:=
+E:@Ahv";
+> >> static struct option const usage_long_opts[] =3D {
+> >> 	{"quiet",            no_argument, NULL, 'q'},
+> >> 	{"in-format",         a_argument, NULL, 'I'},
+> >> @@ -71,6 +73,8 @@ static struct option const usage_long_opts[] =3D {
+> >> 	{"phandle",           a_argument, NULL, 'H'},
+> >> 	{"warning",           a_argument, NULL, 'W'},
+> >> 	{"error",             a_argument, NULL, 'E'},
+> >> +	{"symbols",	     no_argument, NULL, '@'},
+> >> +	{"auto-alias",       no_argument, NULL, 'A'},
+> >> 	{"help",             no_argument, NULL, 'h'},
+> >> 	{"version",          no_argument, NULL, 'v'},
+> >> 	{NULL,               no_argument, NULL, 0x0},
+> >> @@ -101,6 +105,8 @@ static const char * const usage_opts_help[] =3D {
+> >> 	 "\t\tboth   - Both \"linux,phandle\" and \"phandle\" properties",
+> >> 	"\n\tEnable/disable warnings (prefix with \"no-\")",
+> >> 	"\n\tEnable/disable errors (prefix with \"no-\")",
+> >> +	"\n\tEnable symbols/fixup support",
+> >> +	"\n\tEnable auto-alias of labels",
+> >> 	"\n\tPrint this help and exit",
+> >> 	"\n\tPrint version and exit",
+> >> 	NULL,
+> >> @@ -233,7 +239,12 @@ int main(int argc, char *argv[])
+> >> 		case 'E':
+> >> 			parse_checks_option(false, true, optarg);
+> >> 			break;
+> >> -
+> >> +		case '@':
+> >> +			symbol_fixup_support =3D 1;
+> >> +			break;
+> >> +		case 'A':
+> >> +			auto_label_aliases =3D 1;
+> >> +			break;
+> >> 		case 'h':
+> >> 			usage(NULL);
+> >> 		default:
+> >> @@ -294,6 +305,14 @@ int main(int argc, char *argv[])
+> >> 	if (sort)
+> >> 		sort_tree(bi);
+> >>=20
+> >> +	if (auto_label_aliases)
+> >> +		generate_label_tree(bi->dt, "aliases", false);
+> >> +
+> >> +	if (symbol_fixup_support) {
+> >> +		generate_label_tree(bi->dt, "__symbols__", true);
+> >> +		generate_fixups_tree(bi->dt);
+> >> +	}
+> >> +
+> >=20
+> > These should go before the sort_tree() - since they add nodes, they
+> > could result in something that *isn't* sorted when that was requested.
 > >=20
 >=20
-> Regards
+> OK
 >=20
-> =E2=80=94 Pantelis
+> >> 	if (streq(outname, "-")) {
+> >> 		outf =3D stdout;
+> >> 	} else {
+> >> diff --git a/dtc.h b/dtc.h
+> >> index 56212c8..68cb109 100644
+> >> --- a/dtc.h
+> >> +++ b/dtc.h
+> >> @@ -20,7 +20,6 @@
+> >>  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-13=
+07
+> >>  *                                                                   U=
+SA
+> >>  */
+> >> -
+> >=20
+> > Unrelated whitespace change.
+> >=20
+>=20
+> OK
+>=20
+> >> #include <stdio.h>
+> >> #include <string.h>
+> >> #include <stdlib.h>
+> >> @@ -54,6 +53,12 @@ extern int reservenum;		/* Number of memory reserva=
+tion slots */
+> >> extern int minsize;		/* Minimum blob size */
+> >> extern int padsize;		/* Additional padding to blob */
+> >> extern int phandle_format;	/* Use linux,phandle or phandle properties =
+*/
+> >> +extern int symbol_fixup_support;/* enable symbols & fixup support */
+> >> +extern int auto_label_aliases;	/* auto generate labels -> aliases */
+> >> +
+> >> +/*
+> >> + * Tree source globals
+> >> + */
+> >>=20
+> >> #define PHANDLE_LEGACY	0x1
+> >> #define PHANDLE_EPAPR	0x2
+> >> @@ -158,6 +163,9 @@ struct node {
+> >> 	int addr_cells, size_cells;
+> >>=20
+> >> 	struct label *labels;
+> >> +
+> >> +	/* only for the root (parent =3D=3D NULL) */
+> >> +	struct boot_info *bi;
+> >=20
+> > Ugh.. I hate creating circular references unless we really can't avoid
+> > them.
+> >=20
+>=20
+> Either it=E2=80=99s here, or we pass boot_info to every method.
+> Need access to the version flags.
+
+I think passing boot_info down instead of the root node is probably
+the right approach here.
+
+>=20
+> >> };
+> >>=20
+> >> #define for_each_label_withdel(l0, l) \
+> >> @@ -194,6 +202,7 @@ struct node *build_node_delete(void);
+> >> struct node *name_node(struct node *node, char *name);
+> >> struct node *chain_node(struct node *first, struct node *list);
+> >> struct node *merge_nodes(struct node *old_node, struct node *new_node);
+> >> +void add_orphan_node(struct node *old_node, struct node *new_node, ch=
+ar *ref);
+> >>=20
+> >> void add_property(struct node *node, struct property *prop);
+> >> void delete_property_by_name(struct node *node, char *name);
+> >> @@ -236,14 +245,29 @@ struct reserve_info *add_reserve_entry(struct re=
+serve_info *list,
+> >>=20
+> >>=20
+> >> struct boot_info {
+> >> +	unsigned int versionflags;
+> >> 	struct reserve_info *reservelist;
+> >> 	struct node *dt;		/* the device tree */
+> >> 	uint32_t boot_cpuid_phys;
+> >> };
+> >>=20
+> >> -struct boot_info *build_boot_info(struct reserve_info *reservelist,
+> >> +/* version flags definitions */
+> >> +#define VF_DT_V1	0x0001	/* /dts-v1/ */
+> >=20
+> > Is there any point to this, since dtc doesn't support v0 dts files any
+> > more anyway?
+> >=20
+>=20
+> Completeness. I can take it out.
+
+Please do.
+
+> >> +#define VF_PLUGIN	0x0002	/* /plugin/ */
+> >> +
+> >> +static inline unsigned int tree_get_versionflags(struct node *dt)
+> >> +{
+> >> +	if (!dt || !dt->bi)
+> >> +		return 0;
+> >> +	return dt->bi->versionflags;
+> >> +}
+> >> +
+> >> +struct boot_info *build_boot_info(unsigned int versionflags,
+> >> +				  struct reserve_info *reservelist,
+> >> 				  struct node *tree, uint32_t boot_cpuid_phys);
+> >> void sort_tree(struct boot_info *bi);
+> >> +void generate_label_tree(struct node *dt, char *gen_node_name, bool a=
+llocph);
+> >> +void generate_fixups_tree(struct node *dt);
+> >>=20
+> >> /* Checks */
+> >>=20
+> >> diff --git a/flattree.c b/flattree.c
+> >> index ec14954..5dde832 100644
+> >> --- a/flattree.c
+> >> +++ b/flattree.c
+> >> @@ -929,5 +929,5 @@ struct boot_info *dt_from_blob(const char *fname)
+> >>=20
+> >> 	fclose(f);
+> >>=20
+> >> -	return build_boot_info(reservelist, tree, boot_cpuid_phys);
+> >> +	return build_boot_info(VF_DT_V1, reservelist, tree, boot_cpuid_phys);
+> >> }
+> >> diff --git a/fstree.c b/fstree.c
+> >> index 6d1beec..54f520b 100644
+> >> --- a/fstree.c
+> >> +++ b/fstree.c
+> >> @@ -86,6 +86,6 @@ struct boot_info *dt_from_fs(const char *dirname)
+> >> 	tree =3D read_fstree(dirname);
+> >> 	tree =3D name_node(tree, "");
+> >>=20
+> >> -	return build_boot_info(NULL, tree, guess_boot_cpuid(tree));
+> >> +	return build_boot_info(VF_DT_V1, NULL, tree, guess_boot_cpuid(tree));
+> >> }
+> >>=20
+> >> diff --git a/livetree.c b/livetree.c
+> >> index e229b84..e7d0fe5 100644
+> >> --- a/livetree.c
+> >> +++ b/livetree.c
+> >> @@ -18,6 +18,7 @@
+> >>  *                                                                   U=
+SA
+> >>  */
+> >>=20
+> >> +#define _GNU_SOURCE
+> >=20
+> > Ugh.  I mean, I know the work I did to get dtc working on BSD has
+> > bitrotted already, but can we avoid gratuitously introducing
+> > non-portability.
+> >=20
+>=20
+> It was your suggestion last time, remember? :)
+
+Apparently not :/
+
+> >> #include "dtc.h"
+> >>=20
+> >> /*
+> >> @@ -216,6 +217,34 @@ struct node *merge_nodes(struct node *old_node, s=
+truct node *new_node)
+> >> 	return old_node;
+> >> }
+> >>=20
+> >> +void add_orphan_node(struct node *dt, struct node *new_node, char *re=
+f)
+> >> +{
+> >> +	static unsigned int next_orphan_fragment =3D 0;
+> >> +	struct node *node =3D xmalloc(sizeof(*node));
+> >> +	struct property *p;
+> >> +	struct data d =3D empty_data;
+> >> +	char *name;
+> >> +	int ret;
+> >> +
+> >> +	memset(node, 0, sizeof(*node));
+> >> +
+> >> +	d =3D data_add_marker(d, REF_PHANDLE, ref);
+> >> +	d =3D data_append_integer(d, 0xffffffff, 32);
+> >> +
+> >> +	p =3D build_property("target", d);
+> >> +	add_property(node, p);
+> >> +
+> >> +	ret =3D asprintf(&name, "fragment@%u",
+> >> +			next_orphan_fragment++);
+> >> +	if (ret =3D=3D -1)
+> >> +		die("asprintf() failed\n");
+> >> +	name_node(node, name);
+> >> +	name_node(new_node, "__overlay__");
+> >> +
+> >> +	add_child(dt, node);
+> >> +	add_child(node, new_node);
+> >> +}
+> >=20
+> >=20
+> >=20
+> >=20
+> >> struct node *chain_node(struct node *first, struct node *list)
+> >> {
+> >> 	assert(first->next_sibling =3D=3D NULL);
+> >> @@ -335,15 +364,19 @@ struct reserve_info *add_reserve_entry(struct re=
+serve_info *list,
+> >> 	return list;
+> >> }
+> >>=20
+> >> -struct boot_info *build_boot_info(struct reserve_info *reservelist,
+> >> +struct boot_info *build_boot_info(unsigned int versionflags,
+> >> +				  struct reserve_info *reservelist,
+> >> 				  struct node *tree, uint32_t boot_cpuid_phys)
+> >> {
+> >> 	struct boot_info *bi;
+> >>=20
+> >> 	bi =3D xmalloc(sizeof(*bi));
+> >> +	bi->versionflags =3D versionflags;
+> >> 	bi->reservelist =3D reservelist;
+> >> 	bi->dt =3D tree;
+> >> 	bi->boot_cpuid_phys =3D boot_cpuid_phys;
+> >> +	/* link back */
+> >> +	tree->bi =3D bi;
+> >>=20
+> >> 	return bi;
+> >> }
+> >> @@ -709,3 +742,185 @@ void sort_tree(struct boot_info *bi)
+> >> 	sort_reserve_entries(bi);
+> >> 	sort_node(bi->dt);
+> >> }
+> >> +
+> >> +/* utility helper to avoid code duplication */
+> >> +static struct node *build_and_name_child_node(struct node *parent, ch=
+ar *name)
+> >> +{
+> >> +	struct node *node;
+> >> +
+> >> +	node =3D build_node(NULL, NULL);
+> >> +	name_node(node, xstrdup(name));
+> >> +	add_child(parent, node);
+> >> +
+> >> +	return node;
+> >> +}
+> >> +
+> >> +static void generate_label_tree_internal(struct node *dt, struct node=
+ *node,
+> >> +					 char *gen_node_name, bool allocph)
+> >> +{
+> >> +	struct node *c, *an;
+> >> +	struct property *p;
+> >> +	struct label *l;
+> >> +
+> >> +	/* if if there are labels */
+> >> +	if (node->labels) {
+> >> +		/* an is the aliases/__symbols__ node */
+> >> +		an =3D get_subnode(dt, gen_node_name);
+> >=20
+> > You can factor this out to the caller and just pass 'an' in.
+> >=20
+>=20
+> OK
+>=20
+> >> +		/* if no node exists, create it */
+> >=20
+> > Comment does not match the code
+> >=20
+>=20
+> Ugh.
+>=20
+> >> +		if (!an)
+> >> +			die("Could not get label node\n");
+> >> +
+> >> +		/* now add the label in the node */
+> >> +		for_each_label(node->labels, l) {
+> >> +			/* check whether the label already exists */
+> >> +			p =3D get_property(an, l->label);
+> >> +			if (p) {
+> >> +				fprintf(stderr, "WARNING: label %s already"
+> >> +					" exists in /%s", l->label,
+> >> +					gen_node_name);
+> >> +				continue;
+> >> +			}
+> >> +
+> >> +			/* insert it */
+> >> +			p =3D build_property(l->label,
+> >> +				data_copy_escape_string(node->fullpath,
+> >> +						strlen(node->fullpath)));
+> >> +			add_property(an, p);
+> >> +		}
+> >> +
+> >> +		/* force allocation of a phandle for this node */
+> >> +		if (allocph)
+> >> +			(void)get_node_phandle(dt, node);
+> >> +	}
+> >> +
+> >> +	for_each_child(node, c)
+> >> +		generate_label_tree_internal(dt, c, gen_node_name, allocph);
+> >> +}
+> >> +
+> >> +void generate_label_tree(struct node *dt, char *gen_node_name, bool a=
+llocph)
+> >> +{
+> >> +	build_and_name_child_node(dt, gen_node_name);
+> >> +	generate_label_tree_internal(dt, dt, gen_node_name, allocph);
+> >> +}
+> >> +
+> >> +static char *fixups_name =3D "__fixups__";
+> >> +static char *local_fixups_name =3D "__local_fixups__";
+> >> +
+> >> +static void add_fixup_entry(struct node *dt, struct node *node,
+> >> +		struct property *prop, struct marker *m)
+> >> +{
+> >> +	struct node *fn;	/* local fixup node */
+> >=20
+> > Comment is misleading since this is __fixups__ rather than
+> > __local_fixups__.
+> >=20
+>=20
+> OK
+>=20
+> >> +	struct property *p;
+> >> +	struct data d;
+> >> +	char *entry;
+> >> +	int ret;
+> >> +
+> >> +	/* m->ref can only be a REF_PHANDLE, but check anyway */
+> >> +	if (m->type !=3D REF_PHANDLE)
+> >> +		die("Fixup entry can only be a ref to a phandle\n");
+> >=20
+> > If it's not a REF_PHANDLE, that indicates a bug elsewhere, yes?  In
+> > which case assert() would be more appropriate.
+> >=20
+>=20
+> OK
+>=20
+> >> +	/* fn is the node we're putting entries in */
+> >> +	fn =3D get_subnode(dt, fixups_name);
+> >> +	if (!fn)
+> >> +		die("Can't get fixups node\n");
+> >=20
+> > Again, assert() would be better.
+> >=20
+>=20
+> OK
+>=20
+> >> +	/* there shouldn't be any ':' in the arguments */
+> >> +	if (strchr(node->fullpath, ':') || strchr(prop->name, ':'))
+> >> +		die("arguments should not contain ':'\n");
+> >> +
+> >> +	ret =3D asprintf(&entry, "%s:%s:%u",
+> >> +			node->fullpath, prop->name, m->offset);
+> >> +	if (ret =3D=3D -1)
+> >> +		die("asprintf() failed\n");
+> >=20
+> > Looks like we really should put in an xasprintf() utility function,
+> > both to address the BSD portability, and avoid clunky checks for
+> > allocation failures.
+> >=20
+>=20
+> No worries, I=E2=80=99ll add it in a separate patch.
+>=20
+> >> +	p =3D get_property(fn, m->ref);
+> >> +	if (p) {
+> >> +		d =3D data_append_data(p->val, entry, strlen(entry) + 1);
+> >> +		p->val =3D d;
+> >> +	} else {
+> >> +		d =3D data_append_data(empty_data, entry, strlen(entry) + 1);
+> >> +		add_property(fn, build_property(m->ref, d));
+> >> +	}
+> >> +}
+> >> +
+> >> +static void add_local_fixup_entry(struct node *dt, struct node *node,
+> >> +		struct property *prop, struct marker *m,
+> >> +		struct node *refnode)
+> >> +{
+> >> +	struct node *lfn, *wn, *nwn;	/* local fixup node, walk node, new */
+> >> +	struct property *p;
+> >> +	struct data d;
+> >> +	char *s, *e, *comp;
+> >> +	int len;
+> >> +
+> >> +	/* fn is the node we're putting entries in */
+> >> +	lfn =3D get_subnode(dt, local_fixups_name);
+> >> +	if (!lfn)
+> >> +		die("Can't get local fixups node\n");
+> >=20
+> > Again, assert().
+> >=20
+> >> +	/* walk the path components creating nodes if they don't exist */
+> >> +	comp =3D xmalloc(strlen(node->fullpath) + 1);
+> >> +	/* start skipping the first / */
+> >> +	s =3D node->fullpath + 1;
+> >> +	wn =3D lfn;
+> >> +	while (*s) {
+> >=20
+> > Given the break; below is the loop condition redundant?
+> >=20
+>=20
+> Sanity check if fullpath is empty. Could assert instead.
+
+I think assert() makes more sense.  The loop condition still won't
+actually make this code do anything useful in that case.
+
+> >> +		/* retrieve path component */
+> >> +		e =3D strchr(s, '/');
+> >> +		if (e =3D=3D NULL)
+> >> +			e =3D s + strlen(s);
+> >> +		len =3D e - s;
+> >> +		memcpy(comp, s, len);
+> >> +		comp[len] =3D '\0';
+> >> +
+> >> +		/* if no node exists, create it */
+> >> +		nwn =3D get_subnode(wn, comp);
+> >> +		if (!nwn)
+> >> +			nwn =3D build_and_name_child_node(wn, comp);
+> >> +		wn =3D nwn;
+> >> +
+> >> +		/* last path component */
+> >> +		if (!*e)
+> >> +			break;
+> >> +
+> >> +		/* next path component */
+> >> +		s =3D e + 1;
+> >> +	}
+> >> +	free(comp);
+> >> +
+> >> +	p =3D get_property(wn, prop->name);
+> >> +	d =3D data_append_cell(p ? p->val : empty_data, (cell_t)m->offset);
+> >> +	if (!p)
+> >> +		add_property(wn, build_property(prop->name, d));
+> >> +	else
+> >> +		p->val =3D d;
+> >=20
+> > Hmm.. am append_to_property helper would simplify both this and the
+> > other fixup function.
+> >=20
+>=20
+> OK
+>=20
+> >> +}
+> >> +
+> >> +static void generate_fixups_tree_internal(struct node *dt, struct nod=
+e *node)
+> >> +{
+> >> +	struct node *c;
+> >> +	struct property *prop;
+> >> +	struct marker *m;
+> >> +	struct node *refnode;
+> >> +
+> >> +	for_each_property(node, prop) {
+> >> +		m =3D prop->val.markers;
+> >> +		for_each_marker_of_type(m, REF_PHANDLE) {
+> >> +			refnode =3D get_node_by_ref(dt, m->ref);
+> >> +			if (!refnode)
+> >> +				add_fixup_entry(dt, node, prop, m);
+> >> +			else
+> >> +				add_local_fixup_entry(dt, node, prop, m,
+> >> +						refnode);
+> >> +		}
+> >> +	}
+> >> +
+> >> +	for_each_child(node, c)
+> >> +		generate_fixups_tree_internal(dt, c);
+> >> +}
+> >> +
+> >> +void generate_fixups_tree(struct node *dt)
+> >> +{
+> >> +	build_and_name_child_node(dt, fixups_name);
+> >> +	build_and_name_child_node(dt, local_fixups_name);
+> >> +	generate_fixups_tree_internal(dt, dt);
+> >> +}
+> >=20
 >=20
 
 --=20
@@ -578,25 +813,25 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---nO3oAMapP4dBpMZi
+--BEa57a89OpeoUzGD
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXRR7QAAoJEGw4ysog2bOSQjEP/iu5YWDfFqtS+Id7NxU//yQB
-H8bsXwUYGmKCD1/YH0BC1R3eXqe4jxVD6iGsGPpVHE3M/ewnB2A+S5V9pG2/e7xH
-epkIKJOMASmDakgI1XTJpDItpYhXcXoMB2tCfFljL+Gxbimk2RacW1otuvpxVbNv
-WeH5ACElTPyOHslgec/so/mnIqkwj2ShMa0Yhm+w7ahp71gC5nIRSfkrAGzg/J/T
-P88Hk0HSH58sR8FlqwdtN1e46rVRnXSvd07zDXse4vM0QQ993K3Eq75VKUYrtZkP
-JVjLd0kCH/a3bhMH39m+8ssTcI/os/s1pwRSAlN+tBWJkJlDk59KHAv1LlaI+zSv
-197qtF+5c1g20bULonCfHaqwWRQ4LZw1uf+a302Y38JTFPNgU/lCWS1yonin/eqg
-5sfeoHZp9423hLdS48Y0x0kcNhgwKpyw9KDGe/l8xXUqEuTT2cmk4vh6v2nCIVc6
-FL9x3UI77oznzggUUpdLo5oTFug2VzefNYg7kUam//es/ARAkOF5RrWh+t3kjWDf
-XQt66oo1M4H9Ku/zKq1XWcfchGa7B8dkhyoffag9oyDYxso3/vnJGxyW1OQ6jqsK
-qH+5frR2RIlfPgshK+/fQ1g2binHtidt3uj88zO9HeGNFh/gnPO485ZZ7LcfdMpk
-v47iMXr4E7kIZdVDK3uG
-=rJFN
+iQIcBAEBAgAGBQJXRSItAAoJEGw4ysog2bOSk5MQAIqdOJcWD2obn8EZv12EvoRx
+RQu2JPkGI2V4lz2eB74drZTk45JTDC9wFd+KnqjjnIKPa7EGxgTUCHPieWOdQelw
+wHtuPm3g4ey7iVNt+4DhpjjN+tF7ASzhTfpzTSd1K5x/+LVUoSdCaEMUmHNVnN9f
+0VzX2pZNAUQQhnac8+7l4jQun38Ip8FfKjSe+3xN0I4nJ1o+YgiR97qCnimboOYF
+U53tYNJJx1oHWHrhlY4suzb+8IwHby+I0IDSTuwsKVmqtL6MJ9nsTjFl1EJi6Rat
+SRd5pfV87IzWsTNpTHJ5f5YGHenIXWaDcnI4JoBBufutc1KcQqfEd9qO7Ln+q1Q7
+8bt81MGGw4nlmPf1Njor/i0wy89xaTlwjlMqM3Wx8vR4idTA+ZEwn2JQHfRZSh25
+H15BCEnFqWWl/2DhATb9lgd5btdeDFGT5R4dbTAWVQ2AT33IJhb79ocbxrhm6oWG
+Juk/VQYRUjnpGLxtYk16of/C0A23poJ4Y3WikSR5GJyZAdvxsPlyUEgqvzvkGfHz
+fbbib+Djyq979+j9rriYaFrgc72idAetUlwtXaQAIX6kqBzMA3AGfu40PV5Xp8wS
+rkKrCyZsS8YZkgdSwUwIo68eT57ewCrhiEKvkI1k+vh5jnAy0UztLUgiqRlEvPlo
+I4jdqqkEfP184gKFTbSu
+=J8w/
 -----END PGP SIGNATURE-----
 
---nO3oAMapP4dBpMZi--
+--BEa57a89OpeoUzGD--
