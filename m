@@ -1,88 +1,208 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v3 12/12] sh: add device tree source for J2 FPGA on Mimas
- v2  board
-Date: Wed, 25 May 2016 19:15:25 -0400
-Message-ID: <20160525231525.GV21636@brightrain.aerifal.cx>
-References: <cover.1464148904.git.dalias@libc.org>
- <3d6f6fd6d674942a6446b0a14d9877017c53eb2f.1464148904.git.dalias@libc.org>
- <20160525103349.GH1337@leverpostej>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH V10 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller.
+Date: Thu, 26 May 2016 01:02:39 +0200
+Message-ID: <57462F0F.1050907@denx.de>
+References: <1452486886-8049-1-git-send-email-marex@denx.de>	 <1452486886-8049-2-git-send-email-marex@denx.de> <1463097635.9103.301.camel@rtred1test09.kymeta.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160525103349.GH1337@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463097635.9103.301.camel-dVGoCQn2UwS33l2LyG1otL1RWLrjA2wiZkel5v8DVj8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Trent Piepho <tpiepho-KTxT7QYAYfgCx7yrEBmKXg@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 11:33:50AM +0100, Mark Rutland wrote:
-> On Wed, May 25, 2016 at 05:43:03AM +0000, Rich Felker wrote:
-> > Signed-off-by: Rich Felker <dalias@libc.org>
-> > ---
-> >  arch/sh/boot/dts/j2_mimas_v2.dts | 87 ++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 87 insertions(+)
-> >  create mode 100755 arch/sh/boot/dts/j2_mimas_v2.dts
-> > 
-> > diff --git a/arch/sh/boot/dts/j2_mimas_v2.dts b/arch/sh/boot/dts/j2_mimas_v2.dts
-> > new file mode 100755
-> > index 0000000..4a66cda
-> > --- /dev/null
-> > +++ b/arch/sh/boot/dts/j2_mimas_v2.dts
-> > @@ -0,0 +1,87 @@
-> > +/dts-v1/;
-> > +
-> > +/ {
-> > +	compatible = "jcore,j2-soc";
-> > +	model = "J2 FPGA SoC on Mimas v2 board";
-> > +
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +
-> > +	interrupt-parent = <&aic>;
-> > +
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu@0 {
-> > +			device_type = "cpu";
-> > +			compatible = "jcore,j2";
-> > +			reg = < 0 >;
-> > +			clock-frequency = < 50000000 >;
+On 05/13/2016 02:00 AM, Trent Piepho wrote:
+> On Mon, 2016-01-11 at 05:34 +0100, Marek Vasut wrote:
+>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org>
+>>
+>> Add support for the Cadence QSPI controller. This controller is
+>> present in the Altera SoCFPGA SoCs and this driver has been tested
+>> on the Cyclone V SoC.
 > 
-> Nit: please remove the spacing around the '<' and '>' here. If nothing
-> else, it's inconsistent with the rest of this file.
+> I'm trying to use this driver the Alaric Devkit for Altera's Arria10
+> SoC.  It's not working so far.  In the course of trying to debug it,
+> I've found a few things with the driver in the socfpga-4.1-ltsi branch.
+> However most of them are in code that's not present in this driver,
+> which is the newest post of the code I could find to reply to.
 > 
-> > +		};
-> > +	};
-> > +
-> > +	memory@10000000 {
-> > +		device_type = "memory";
-> > +		reg = < 0x10000000 0x4000000 >;
-> > +	};
+>> +					 CQSPI_REG_IRQ_WATERMARK	| \
+>> +					 CQSPI_REG_IRQ_UNDERFLOW)
+>> +
+>> +#define CQSPI_IRQ_STATUS_MASK		0x1FFFF
+>> +
 > 
-> Likewise.
-
-OK, I'll change both of these.
-
-> > +
-> > +	chosen {
-> > +		stdout-path = "/soc@abcd0000/serial@100";
-> > +	};
+> Perhaps a comment.
+> /* waits for all bits set in mask to be zero (clear==false) or one
+> (clear==true) */
 > 
-> Please use a label for the serial node, have an alias, and describe the
-> pre-configured rate per the stdout-path binding, e.g.
+>> +static int cqspi_wait_for_bit(void __iomem *reg, const u32 mask, bool clear)
+>> +{
+>> +	unsigned long end = jiffies + msecs_to_jiffies(CQSPI_TIMEOUT_MS);
+>> +	u32 val;
+>> +
+>> +	while (1) {
+>> +		val = readl(reg);
+>> +		if (clear)
+>> +			val = ~val;
+>> +		val &= mask;
+>> +
+>> +		if (val == mask)
+>> +			return 0;
+> 
+> Somewhat simpler.
+> 
+> if ((readl(reg) & mask) == (clear ? 0 : mask))
+>         return 0;
 
-Per Documentation/devicetree/bindings/xilinx.txt, current-speed is a
-required property for "xlnx,xps-uartlite-1.00.a". Note that uartlite
-does not actually have a programmable baud rate; the property is
-instead being used to describe the hardware-provided rate.
+This looks far more cryptic though, so I will skip this one.
 
-BTW our uartlite is not actually derived from Xilinx's IP core, just
-interface-compatible with it, so I'd actually like to add a
-"jcore,uartlite" binding too in order to express this, with
-"xlnx,xps-uartlite-1.00.a" as the fallback compatible-tag. I'll
-propose that as a separate patch later.
+>> +
+>> +		if (time_after(jiffies, end))
+>> +			return -ETIMEDOUT;
+> 
+> Note that there is a hypervisor/vm/long hardirq etc. bug that can happen
+> without timeouts like this.  What happens is after the check of the bits
+> fails, there is a very long delay before this task runs again.  This can
+> be easy if one is running under virtualization.  The the time_after call
+> reports the timeout expired.  But the last time it the bit was checked,
+> before the long delay, was well before the timeout expired.  The way to
+> avoid this is to always be sure to check the condition once after the
+> timeout expired.  This is sure to give the full timeout.
 
-Rich
+The CQSPI timeout is 500 mS, which is pretty generous considering the
+completion will happen in the first 10 mS tops. Do you think this is
+of concern here and it's worth complicating the code further ?
+
+>> +	}
+>> +}
+>> +
+> 
+>> +
+>> +static unsigned int calculate_ticks_for_ns(const unsigned int ref_clk_hz,
+>> +					   const unsigned int ns_val)
+>> +{
+>> +	unsigned int ticks;
+>> +
+>> +	ticks = ref_clk_hz / 1000;	/* kHz */
+> This division doesn't round up.
+> 
+>> +	ticks = DIV_ROUND_UP(ticks * ns_val, 1000000);
+> But this one does.
+> 
+>> +
+>> +	return ticks;
+>> +}
+>> +
+>> +static void cqspi_delay(struct spi_nor *nor, const unsigned int sclk_hz)
+>> +{
+>> +	struct cqspi_flash_pdata *f_pdata = nor->priv;
+>> +	struct cqspi_st *cqspi = f_pdata->cqspi;
+> 
+> Isn't the sclk_hz parameter of this function already available here as
+> cqspi->sclk?
+
+It is , good catch, thanks.
+
+>> +	void __iomem *iobase = cqspi->iobase;
+>> +	const unsigned int ref_clk_hz = cqspi->master_ref_clk_hz;
+>> +	unsigned int tshsl, tchsh, tslch, tsd2d;
+>> +	unsigned int reg;
+>> +	unsigned int tsclk;
+>> +
+>> +	/* calculate the number of ref ticks for one sclk tick */
+>> +	tsclk = (ref_clk_hz + sclk_hz - 1) / sclk_hz;
+> 
+> DIV_ROUND_UP(ref_clk_hz, sclk_hz);
+
+OK
+
+>> +
+>> +	tshsl = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tshsl_ns);
+>> +	/* this particular value must be at least one sclk */
+>> +	if (tshsl < tsclk)
+>> +		tshsl = tsclk;
+>> +
+>> +	tchsh = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tchsh_ns);
+>> +	tslch = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tslch_ns);
+>> +	tsd2d = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tsd2d_ns);
+>> +
+>> +	reg = (tshsl & CQSPI_REG_DELAY_TSHSL_MASK)
+>> +	       << CQSPI_REG_DELAY_TSHSL_LSB;
+>> +	reg |= (tchsh & CQSPI_REG_DELAY_TCHSH_MASK)
+>> +		<< CQSPI_REG_DELAY_TCHSH_LSB;
+>> +	reg |= (tslch & CQSPI_REG_DELAY_TSLCH_MASK)
+>> +		<< CQSPI_REG_DELAY_TSLCH_LSB;
+>> +	reg |= (tsd2d & CQSPI_REG_DELAY_TSD2D_MASK)
+>> +		<< CQSPI_REG_DELAY_TSD2D_LSB;
+>> +	writel(reg, iobase + CQSPI_REG_DELAY);
+>> +}
+>> +
+>> +static void cqspi_config_baudrate_div(struct cqspi_st *cqspi,
+>> +				      const unsigned int sclk_hz)
+>> +{
+> 
+> sclk_hz is available as cqspi->sclk.
+
+OK
+
+>> +	const unsigned int ref_clk_hz = cqspi->master_ref_clk_hz;
+>> +	void __iomem *reg_base = cqspi->iobase;
+>> +	unsigned int reg;
+>> +	unsigned int div;
+>> +
+>> +	reg = readl(reg_base + CQSPI_REG_CONFIG);
+>> +	reg &= ~(CQSPI_REG_CONFIG_BAUD_MASK << CQSPI_REG_CONFIG_BAUD_LSB);
+>> +
+>> +	div = ref_clk_hz / sclk_hz;
+> 
+> Should this round up too?
+> 
+>> +
+>> +	/* Recalculate the baudrate divisor based on QSPI specification. */
+>> +	if (div > 32)
+>> +		div = 32;
+>> +
+>> +	/* Check if even number. */
+>> +	if (div & 1)
+>> +		div = (div / 2);
+>> +	else
+>> +		div = (div / 2) - 1;
+> 
+> Wouldn't this be the same as div = DIV_ROUND_UP(div, 2) - 1;
+> 
+> The entire div calculation could be done with:
+> 
+>    /* Register programmed with divider minus 1 */
+>    div = DIV_ROUND_UP(ref_clk_hz, s_clk_hz * 2) - 1;
+
+Good point, thanks.
+
+>    if (div > 15)
+>         div = 15;
+
+You can even drop this, CQSPI_REG_CONFIG_BAUD_MASK is 0xf.
+
+> 
+>> +
+>> +	div = (div & CQSPI_REG_CONFIG_BAUD_MASK) << CQSPI_REG_CONFIG_BAUD_LSB;
+>> +	reg |= div;
+>> +	writel(reg, reg_base + CQSPI_REG_CONFIG);
+>> +}
+>> +
+> 
+
+I pushed V12 btw:
+
+http://git.kernel.org/cgit/linux/kernel/git/marex/linux-2.6.git/log/?h=korg/next/cadence-qspi-v12
+
+
+-- 
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
