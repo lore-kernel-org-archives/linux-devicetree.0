@@ -1,39 +1,47 @@
-From: Christer Weinigel <christer@weinigel.se>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
- number.
-Date: Thu, 26 May 2016 03:56:11 +0200
-Message-ID: <574657BB.6070300@weinigel.se>
-References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
- <20160524172045.GN8206@sirena.org.uk> <57449784.4070108@weinigel.se>
- <20160524183256.GP8206@sirena.org.uk> <5744E51A.1040506@gmail.com>
- <20160525174932.GA10753@rob-hp-laptop> <5745E9B6.5090204@gmail.com>
- <20160525184442.GE8206@sirena.org.uk> <57464D0A.1030706@weinigel.se>
- <CAL_JsqJwQvPGtscheZjoJyhF1UPxDSqbS-QB9qm3M4HbpOicVA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH v6 1/5] Documentation: mmc: add mmc-hs400-enhanced-strobe
+Date: Thu, 26 May 2016 09:56:02 +0800
+Message-ID: <1464227762-30661-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1464227707-30616-1-git-send-email-shawn.lin@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJwQvPGtscheZjoJyhF1UPxDSqbS-QB9qm3M4HbpOicVA@mail.gmail.com>
+In-Reply-To: <1464227707-30616-1-git-send-email-shawn.lin@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/26/2016 03:44 AM, Rob Herring wrote:
-> Lovely. "Here's something that's simple and useful for users. Let's 
-> break it". What part of "we do not break userspace" do you not 
-> understand? Because that would be a user visible change.
-> The other saying is "if it is not upstream, it doesn't exist." That
-> said, I don't think we should remove it. Maybe some time later, but
-> first we need a suitable alternative.
-Huh?  Commit bb29785e0d6d, which added support for assigning spi bus 
-numbers via devicetree aliases, has been in the upstream Linux kernel 
-since v3.9 which was released over three years ago.
+mmc-hs400-enhanced-strobe is used to claim that the
+host can support hs400 mode with enhanced strobe
+introduced by emmc 5.1 spec.
 
-   /Christer
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+---
+
+Changes in v6:
+- add Doug's review-tag
+
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
+
+ Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index ed23b9b..ecc007a 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -46,6 +46,7 @@ Optional properties:
+ - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
+ - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
+ - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
++- mmc-hs400-enhanced-strobe: eMMC HS400 enhanced strobe mode is supported
+ - dsr: Value the card's (optional) Driver Stage Register (DSR) should be
+   programmed with. Valid range: [0 .. 0xffff].
+ 
 -- 
-Have laptop, will travel.  I'm a consultant looking for interesting
-jobs anywhere in the world.  I'm an experienced software engineer with
-a solid understanding of hardware.  Specialities: Linux, device
-drivers and embedded systems in general.  Find me at www.weinigel.se.
+2.3.7
