@@ -1,163 +1,110 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: DT description of SRAM with power manageable banks
-Date: Thu, 26 May 2016 22:48:01 +0300
-Message-ID: <574752F1.6010408@mleia.com>
-References: <57473709.1020108@mleia.com>
- <CAL_Jsq+R8E7UwAW+aUcmHPhgMS0D39C77kxgqwLK0_kTWHkWFw@mail.gmail.com>
+From: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Thu, 26 May 2016 23:04:18 +0200
+Message-ID: <574764D2.5060709@weinigel.se>
+References: <20160524183256.GP8206@sirena.org.uk> <5744E51A.1040506@gmail.com>
+ <20160525174932.GA10753@rob-hp-laptop> <5745E9B6.5090204@gmail.com>
+ <20160525184442.GE8206@sirena.org.uk> <57464D0A.1030706@weinigel.se>
+ <CAL_JsqJwQvPGtscheZjoJyhF1UPxDSqbS-QB9qm3M4HbpOicVA@mail.gmail.com>
+ <574657BB.6070300@weinigel.se> <20160526100753.GB16172@sirena.org.uk>
+ <5746D6CE.5020605@weinigel.se> <20160526184746.GF16172@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+R8E7UwAW+aUcmHPhgMS0D39C77kxgqwLK0_kTWHkWFw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160526184746.GF16172-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 26.05.2016 21:30, Rob Herring wrote:
-> On Thu, May 26, 2016 at 12:48 PM, Vladimir Zapolskiy <vz@mleia.com> wrote:
->> Hi DT team,
->>
->> let me ask you for advice how to extend a common "mmio-sram" compatible
->> binding description with information about power manageable banks,
->> which are specific to some SRAM. My main interest is to give a better
->> support of NXP LPC32xx SRAM, but as far as I know it concerns other
->> controllers from the LPC series, and maybe some other ones.
->>
->> Taking a simple visual example let's consider NXP LPC3250 SRAM, which
->> has four banks, three of them has independent power controls:
->>
->>         0x00000 - 0x0ffff (64KiB), always on-power bank,
->>         0x10000 - 0x1ffff (64KiB), power manageable bank
->>         0x20000 - 0x2ffff (64KiB), power manageable bank
->>         0x30000 - 0x3ffff (64KiB), power manageable bank
->>
->> All banks together form a single continuous address space, and it seems
->> important to have just one SRAM device and not 4, since e.g. in normal
->> runtime operation continuous 100KiB from the whole SRAM area are reserved
->> for storing MAC RX/TX buffers, it won't fit into one bank, however in
->> sleep mode (or when there is no users of some SRAM banks in runtime)
->> it is desirable to turn off unused banks, thus there should be a connection
->> between each power manageable bank and some power domain like this:
->>
->>         sram_pd: power-controller@110 {
->>                 compatible = "nxp,lpc3220-pos";
->>                 reg = <0x110 0x8>;
->>                 #power-domain-cells = <1>;
->>         };
->>
->> ...
->>
->>         sram-bank@08010000 {
->>                 reg = <0x08010000 0x10000>;
->>                 power-domains = <&sram_pd 0>;
->>         };
->>
->> ...
->>
->> The ordinary SRAM device node looks like
->>
->>         sram@08000000 {
->>                 compatible = "mmio-sram";
->>                 reg = <0x08000000 0x40000>;
->>         };
->>
->> and I would happy to have it just like that, and actually it works
->> perfectly, if the problem with delicate power management is ignored.
->> At least it demonstrates that a generic wide compatible "mmio-sram"
->> suits well here.
->>
->> The problem I face is in setting a proper layout of "sram@" and three
->> "sram-bank@" device nodes (remember 1 of 4 banks has no power control).
->> Unfortunately "sram-bank@" device nodes can not be children of "sram@",
->> because children of "mmio-sram" compatible device node play a role
->> of reserved areas ("partitions"), and that's not what I want. Moreover
->> reserved areas and power manageable banks are orthogonal, for instance
->> one reserved area may overlap with two power manageable banks or
->> vice versa.
->>
->> Questions I have concerning this case:
->>
->> 1) would it be correct to add the second compatible like this?
->>
->>         sram@08000000 {
->>                 compatible = "mmio-sram", "nxp,lpc3220-sram";
+On 05/26/2016 08:47 PM, Mark Brown wrote:
+> On Thu, May 26, 2016 at 12:58:22PM +0200, Christer Weinigel wrote:
 > 
-> Yes, but reverse the order. Most specific first.
+>> One of the main drivers behind devicetree was that Linus got fed 
+>> up with the churn for all platform device changes in arch/arm.
+>> I faintly recall him writing that he would be rather unhappy if 
+>> that just got replaced with churn for devicetree dts files.
 > 
+> Since device trees are hardware descriptions they really shouldn't 
+> be churning at all - if they are that's an indication that we're 
+> failing at device tree.
 
-Ok, thank you for correction.
+I meant churn from the sheer number of platforms.  According to
+gsmarena.com there were over 600 new Android devices released last
+year.  Each and every one of them is a Linux platform.  I've
+personally worked on *counts on fingers* 8 different custom Linux
+platforms during the last year.  That's a lot of new device tree files
+if all of them were to end up in the mainline kernel.
 
->>                 reg = <0x08000000 0x40000>;
+My point is that I don't think it would be doable to get every
+devicetree file out there into the mainline kernel; it's not even
+desirable.  devicetree files for custom platforms are a lot like
+userspace applications, the devicetree implementation is an ABI, and
+devicetrees for a lot of different platforms are built for that ABI.
+
+Using "the dts file is not in mainline" or "there is no user of that
+devicetree feature in mainline" as an argument for breaking existing
+dts files is in my opinion not a good argument.  That will be a change
+that is visible to userspace (because device names will change).
+
+>> For platforms based on a FPGA such as the Xilinx Zync it's even 
+>> more pointless to submit dts files to mainline.  When you have 
+>> "hardware" that can be reconfigured the device tree files can't 
+>> be set in stone. If I use Xilinx tools [1] to add one more UART
+>> I have just added new hardware this needs to be reflected in the 
+>> devicetree for the devices to be usable in Linux.  And something 
+>> like aliases which provides a stable device name can be very 
+>> useful here.
 > 
-> You can just add a single property like this:
-> 
-> power-domains = <&sram_pd 0>, <&sram_pd 1>, <&sram_pd 2>;
-> 
+> Right, but it doesn't follow that aliases are what we should be 
+> doing here - both Rob and myself have mentioned providing a way to 
+> label the actual SPI devices themselves, this seems like a more 
+> robust way of doing things.
 
-Two notes regarding this.
+That would be good.  It would probably be clearer to have
+"i2c-sensors" than "i2c3".  But it won't solve all of the issues that
+were flagged as bad with aliases.  For example, someone mentioned that
+even if aliases worked with devicetree fragments there could be
+collisions in the numbering f aliases.  As long as user assigned names
+are used there are going to be mistakes and collisions are going to
+happen.  Some nut like me will come along and build lots of
+temperature sensors and have multiple buses to talk to them, and then
+you end up with half a dozen "i2c-sensors" busses :-)
 
-1) either due to a bug/misfeature in Linux or intentionally power-domains
-property handling doesn't accept multiple values, nor there are examples
-of power-domains set to an array.
+http://zoo.weinigel.se/misc/temp-chain.jpg
 
-Of course it is quite trivial to extend, but here I want to get a
-formal confirmation from DT and/or PM guys, that power-domains of one
-device can contain links to several power domains.
+These are actually dallas one-wire sensors, but you get the point.
 
-2) in general usage of array of values assumes a presence of *-names
-property, which might be better to avoid. As an artificial example
-by some reason on a board someone would like to control power of
-a subset of banks (or whatever device in general):
+The only way to guarantee uniqueness would be to use uuids or
+something inherently unique like bus addresses (where collisions would
+break other things anyway) , but then we're back to things not being
+that user friendly again.
 
-  power-domains = <&pd 0>, <&pd 2>;
+> Just numbering the buses provides a partial solution for some 
+> systems with usability drawbacks (you need to know the number to 
+> name mapping somehow), naming devices is both more direct and more 
+> general.
 
-Without power-domains-names or similar property it might be difficult
-to describe this case, and I feel reluctant to introduce or anticipate
-introduction of power-domains-names property, especially because
-so far everyone is happy with just one power domain per device.
+Except that being able to assign static bus numbers devicetree is
+something that works _now_ and at least for me it is good enough.
+Being able to assign bus numbers makes life for me and the colleagues
+I have to support a lot easier.  The whole reason I started looking at
+assigning bus numbers to spi ports was a very frustrated colleague
+complaining about the seemingly random bus number assignment. To be
+able to put stickers on the pin headers on a board saying "spi1",
+"spi2" and "spi3" and being able to refer to those numbers in in an
+email makes things a lot easier.
 
-> The knowledge of what range each PD controls is encoded in the fact
-> that the node is a "nxp,lpc3220-sram" and the information would stay
-> in your driver.
-> 
-> Of course, if there's a lot of variation in sizes and domains, we may
-> want to fully describe things in the DT.
-> 
->>         };
->>
->> Or should I add the new compatible to device nodes of each of the power
->> manageable banks?
->>
->> 2) I assume that "sram-bank@" device nodes still should be descendants
->> of "sram@" node, but because children with "reg" property of "mmio-sram"
->> compatible device node can not be used to describe power manageable banks,
->> what name for an umbrella device node would you suggest? Would "banks" be
->> good enough? Should it have its own compatible?
-> 
-> I don't think you need all this, but in general you want to have
-> compatible strings in each node (though there are many exceptions).
-> 
+It would probably be better if some future devicetree extension would
+allow abitrary user-friendly naming of devices, but in the absence of
+that I'd take numbers every time.  If I'd have to wait for a perfect
+solution before doing something I'd never get anything done.  A dumb
+and ok solution is often "better" than a complex one.
 
-If power-domains accepts only one value intentionally, then probably
-every bank should have its own compatible, again not sure if it is
-done by design, but in Linux PM domain consumers are devices only,
-device implies own compatible, and, I don't know, in that case (one PM domain
-per device) should I convert MMIO SRAM to a simple bus then?
-
->> 3) Do you think that reserved areas nodes should be placed under their
->> own device node with probably own compatible? So, something like it
->> was done recently with MTD partitions (compatible = "fixed-partitions").
-> 
-> If we did go down the path of have 2 sets of ranges, then yes.
-> 
-
-Please feel free to invite anyone to the discussion, who can advise/ack/nack
-a soft conversion change of the currently accepted scheme for reserved
-partitions to a potentially new one.
-
+  /Christer
 --
-With best wishes,
-Vladimir
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
