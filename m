@@ -1,214 +1,200 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] dtc: Document the dynamic plugin internals
-Date: Thu, 26 May 2016 20:09:20 +0300
-Message-ID: <EAD64177-3519-4CD2-AFB6-5EB765CC7459@konsulko.com>
-References: <1464112239-29856-1-git-send-email-pantelis.antoniou@konsulko.com> <1464112239-29856-4-git-send-email-pantelis.antoniou@konsulko.com> <5745F95F.6000600@gmail.com> <1151E0EF-B811-4C0B-858A-00810BE9BA42@konsulko.com> <20160526062848.GG17226@voom.fritz.box> <8CAE1792-841B-4048-B6B1-1F0F973E2E34@konsulko.com> <20160526063334.GH17226@voom.fritz.box> <BE239F34-7B36-4A78-BE21-AA48CB8349E4@konsulko.com> <20160526071243.GI17226@voom.fritz.box> <C43C3B01-5DF5-49DF-848D-0BEA48E3DB6E@konsulko.com> <CAL_JsqLTrSP577ViKRjoqyagWw4+dZuQQsTMMXdoU3n9HZSYZA@mail.gmail.com> <57472A9A.1060903@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57472A9A.1060903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH 3/3] arm64/numa: fix type info
+Date: Thu, 26 May 2016 10:12:44 -0700
+Message-ID: <57472E8C.1050607@gmail.com>
+References: <1464230639-9852-1-git-send-email-thunder.leizhen@huawei.com> <1464230639-9852-3-git-send-email-thunder.leizhen@huawei.com> <CAFpQJXWih2V9Ki-vkL+cDni=VoWL0nA-fx5B5XtfNxFsoUso-g@mail.gmail.com> <1464280503.16344.40.camel@perches.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464280503.16344.40.camel@perches.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>, Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Ganapatrao Kulkarni <gpkulkarni@gmail.com>, devicetree <devicetree@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, David Daney <david.daney@cavium.com>, Catalin Marinas <catalin.marinas@arm.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Rob Herring <robh+dt@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+The current patch to correct this problem is here:
 
-> On May 26, 2016, at 19:55 , Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
->=20
-> Hi Pantelis,
->=20
-> On 5/26/2016 6:49 AM, Rob Herring wrote:
->> On Thu, May 26, 2016 at 2:16 AM, Pantelis Antoniou
->> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>> Hi David,
->>>=20
->>>> On May 26, 2016, at 10:12 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6ryscVyMRj84@public.gmane.org=
-=2Eau> wrote:
->>>>=20
->>>> On Thu, May 26, 2016 at 09:36:02AM +0300, Pantelis Antoniou wrote:
->>>>> Hi David,
->>>>>=20
->>>>>> On May 26, 2016, at 09:33 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6g@public.gmane.org=
-id.au> wrote:
->>>>>>=20
->>>>>> On Thu, May 26, 2016 at 09:31:20AM +0300, Pantelis Antoniou wrot=
-e:
->>>>>>> Hi David,
->>>>>>>=20
->>>>>>>> On May 26, 2016, at 09:28 , David Gibson <david-xT8FGy+AXnSZP5U4TJ/6Hg@public.gmane.org=
-r.id.au> wrote:
->>>>>>>>=20
->>>>>>>> On Thu, May 26, 2016 at 09:14:49AM +0300, Pantelis Antoniou wr=
-ote:
->>>>>>>>> Hi Frank,
->>>>>>>>>=20
->>>>>>>>>> On May 25, 2016, at 22:13 , Frank Rowand <frowand.list@gmail=
-=2Ecom> wrote:
->>>>>>>>>>=20
->>>>>>>>>> On 5/24/2016 10:50 AM, Pantelis Antoniou wrote:
->>>>>>>>>>> Provides the document explaining the internal mechanics of
->>>>>>>>>>> plugins and options.
->>>>>>>>>>>=20
->>>>>>>>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulk=
-o.com>
->>>>>>>>>>> ---
->>>>>>>>>>> Documentation/dt-object-internal.txt | 318 ++++++++++++++++=
-+++++++++++++++++++
->=20
-> < snip >
->=20
->>>>>>>>>>> +So the bar peripheral's DTS format would be of the form:
->>>>>>>>>>> +
->>>>>>>>>>> +/dts-v1/ /plugin/;    /* allow undefined references and re=
-cord them */
->>>>>>>>>>> +/ {
->>>>>>>>>>> +      ....    /* various properties for loader use; i.e. p=
-art id etc. */
->>>>>>>>>>> +      fragment@0 {
->>>>>>>>>>> +              target =3D <&ocp>;
->>>>>>>>>>> +              __overlay__ {
->>>>>>>>>>> +                      /* bar peripheral */
->>>>>>>>>>> +                      bar {
->>>>>>>>>>> +                              compatible =3D "corp,bar";
->>>>>>>>>>> +                              ... /* various properties an=
-d child nodes */
->>>>>>>>>>> +                      }
->>>>>>>>>>=20
->>>>>>>>>>                    };
->>>>>>>>>>=20
->>>>>>>>>>> +              };
->>>>>>>>>>> +      };
->>>>>>>>>>> +};
->>>>>>>>>>=20
->>>>>>>>>> Other than the fact that the above syntax is already in the =
-Linux
->>>>>>>>>> kernel overlay implementation, is there a need for the targe=
-t
->>>>>>>>>> property and the __overlay__ node?  I haven't figured out wh=
-at
->>>>>>>>>> extra value they provide.
->>>>>>>>>>=20
->>>>>>>>>> Without those added, the overlay dts becomes simpler (though=
- for a
->>>>>>>>>> multi-node target path example this would be more complex un=
-less a label
->>>>>>>>>> was used for the target node):
->>>>>>>>>>=20
->>>>>>>>>> +/dts-v1/ /plugin/;     /* allow undefined references and re=
-cord them */
->>>>>>>>>> +/ {
->>>>>>>>>> +       ....    /* various properties for loader use; i.e. p=
-art id etc. */
->>>>>>>>>> +       ocp {
->>>>>>>>>> +                       /* bar peripheral */
->>>>>>>>>> +                       bar {
->>>>>>>>>> +                               compatible =3D "corp,bar";
->>>>>>>>>> +                               ... /* various properties an=
-d child nodes */
->>>>>>>>>> +                       };
->>>>>>>>>> +       };
->>>>>>>>>> +};
->>>>>>>>>>=20
->>>>>>>>>=20
->>>>>>>>> No.
->>>>>>>>>=20
->>>>>>>>> That only works if the overlay is applied in a single platfor=
-m.
->>>>>>>>>=20
->>>>>>>>> I have working cases where the same overlay is applied on a p=
-pc and a x86
->>>>>>>>> platform.
->>>>>>>>=20
->>>>>>>> Huh?  How so..
->>>>>>>>=20
->>>>>>>=20
->>>>>>> Yes, it does work. Yes it=E2=80=99s being used right now. It is=
- a very valid use case.
->>>>>>>=20
->>>>>>> Think carrier boards on enterprise routers, plugging to a main =
-board
->>>>>>> that=E2=80=99s either ppc or x86 (or anything else for that mat=
-ter).
->>>>>>=20
->>>>>> Sorry, I wasn't clear.  I have no problem believing overlays can=
- be
->>>>>> applied on multiple platforms.
->>>>>>=20
->>>>>> What I can't see is how Frank's format breaks that.  AFAICT it
->>>>>> contains exactly the same information in a simpler encoding.
->>>>>>=20
->>>>>=20
->>>>> It breaks it because it=E2=80=99s missing the target property.
->>>>>=20
->>>>> The layout of the base tree is not going to be the same in differ=
-ent
->>>>> platforms, so in the above example =E2=80=98ocp=E2=80=99 would no=
-t exist in x86 for
->>>>> instance.
->>>>=20
->>>> I think you're misinterpreting Frank's suggestion.  As I understan=
-d it
->>>> the node names of the top level nodes in his format aren't treated=
- as
->>>> literal node names, but instead treated as label names which are
->>>> resolved similarly to the phandle external fixups.
->>>>=20
->>>> Actually.. that is one serious problem with Frank's format, it doe=
-sn't
->>>> (easily) allow multiple fragments to be applied to the same target=
-=2E
->>>>=20
->>>=20
->>> Ugh, yeah I misinterpreted that. Still, it is not going to work wit=
-h the patches
->>> I queued with multiple target support.
->=20
-> OK, so you are talking about the "[RFC] of: Portable Device Tree conn=
-ector"
-> email from 4/27 (just to provide an easy link for everyone).  I'm sti=
-ll
-> trying to figure that out.
->=20
-> So other than that, am I missing something else about what extra
-> functionality the extra layers of nodes provides?
->=20
+https://lkml.org/lkml/2016/5/24/679
 
-No, I=E2=80=99m talking about the new target options patchset.
+Since v7 of the ACPI/NUMA patches are likely going to be added to 
+linux-next as soon as the current merge window ends, further 
+simplifications of the informational prints should probably be rebased 
+on top of it.
 
-"of: overlays: New target methods=E2=80=9D & in particular
+David Daney
 
-"of: overlay: Implement target index support"
-
->=20
->> Queued implies accepted which they are not. The multiple ways of
->> expressing targets bothers me. Upstream still has no external
->> interface to overlays, so I think there is still room to change thin=
-gs
->> if we decide it is worthwhile. Better now than stuck with something
->> forever.
->>=20
->> I too was wondering about the current syntax before this thread
->> started. We have 2 levels of nodes before we get to any useful
->> information with the current syntax.
->>=20
-
-That=E2=80=99s on purpose. The first level is to contain load manager s=
-pecific details,
-i.e. part-numbers and other platform specific properties.
-
-The second level contains the per fragment properties (at the moment ta=
-rgets).
-
->> Rob
->>=20
-
-Regards
-
-=E2=80=94 Pantelis--
-To unsubscribe from this list: send the line "unsubscribe devicetree-co=
-mpiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 05/26/2016 09:35 AM, Joe Perches wrote:
+> On Thu, 2016-05-26 at 09:22 -0700, Ganapatrao Kulkarni wrote:
+>> On Wed, May 25, 2016 at 7:43 PM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
+>>> numa_init(of_numa_init) may returned error because of numa configuration
+>>> error. So "No NUMA configuration found" is inaccurate. In fact, specific
+>>> configuration error information can be immediately printed by the
+>>> testing branch. So "No NUMA..." only needs to be printed when numa_off.
+> []
+>>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> []
+>>> @@ -362,7 +362,8 @@ static int __init dummy_numa_init(void)
+>>>          int ret;
+>>>          struct memblock_region *mblk;
+>>>
+>>> -       pr_info("%s\n", "No NUMA configuration found");
+>>> +       if (numa_off)
+>> IIRC, it should be
+>> if (!numa_off)
+>> we want to print this message when we failed to find proper numa configuration.
+>> when numa_off is set, we will not look for any numa configuration.
+>>
+>>>
+>>> +               pr_info("%s\n", "No NUMA configuration found");
+>
+> trivia:
+>
+> Using printk("%s\n", "string") just makes the object code larger
+> for no particular benefit.
+>
+> 	pr_info("No NUMA configuration found\n");
+>
+> would be smaller, faster and more intelligible for humans too.
+>
+> Maybe something like this:
+> ---
+>   arch/arm64/mm/numa.c | 41 ++++++++++++++++++++---------------------
+>   1 file changed, 20 insertions(+), 21 deletions(-)
+>
+> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> index 98dc104..2042452 100644
+> --- a/arch/arm64/mm/numa.c
+> +++ b/arch/arm64/mm/numa.c
+> @@ -17,6 +17,8 @@
+>    * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>    */
+>
+> +#define pr_fmt(fmt) "NUMA: " fmt
+> +
+>   #include <linux/bootmem.h>
+>   #include <linux/memblock.h>
+>   #include <linux/module.h>
+> @@ -36,7 +38,7 @@ static __init int numa_parse_early_param(char *opt)
+>   	if (!opt)
+>   		return -EINVAL;
+>   	if (!strncmp(opt, "off", 3)) {
+> -		pr_info("%s\n", "NUMA turned off");
+> +		pr_info("NUMA turned off\n");
+>   		numa_off = 1;
+>   	}
+>   	return 0;
+> @@ -107,7 +109,7 @@ static void __init setup_node_to_cpumask_map(void)
+>   		set_cpu_numa_node(cpu, NUMA_NO_NODE);
+>
+>   	/* cpumask_of_node() will now work */
+> -	pr_debug("NUMA: Node to cpumask map for %d nodes\n", nr_node_ids);
+> +	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
+>   }
+>
+>   /*
+> @@ -142,14 +144,14 @@ int __init numa_add_memblk(int nid, u64 start, u64 size)
+>
+>   	ret = memblock_set_node(start, size, &memblock.memory, nid);
+>   	if (ret < 0) {
+> -		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
+> -			start, (start + size - 1), nid);
+> +		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
+> +		       start, (start + size - 1), nid);
+>   		return ret;
+>   	}
+>
+>   	node_set(nid, numa_nodes_parsed);
+> -	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
+> -			start, (start + size - 1), nid);
+> +	pr_info("Adding memblock [0x%llx - 0x%llx] on node %d\n",
+> +		start, (start + size - 1), nid);
+>   	return ret;
+>   }
+>
+> @@ -163,19 +165,18 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>   	void *nd;
+>   	int tnid;
+>
+> -	pr_info("NUMA: Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+> -			nid, start_pfn << PAGE_SHIFT,
+> -			(end_pfn << PAGE_SHIFT) - 1);
+> +	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+> +		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
+>
+>   	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+>   	nd = __va(nd_pa);
+>
+>   	/* report and initialize */
+> -	pr_info("NUMA: NODE_DATA [mem %#010Lx-%#010Lx]\n",
+> +	pr_info("NODE_DATA [mem %#010Lx-%#010Lx]\n",
+>   		nd_pa, nd_pa + nd_size - 1);
+>   	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
+>   	if (tnid != nid)
+> -		pr_info("NUMA: NODE_DATA(%d) on node %d\n", nid, tnid);
+> +		pr_info("NODE_DATA(%d) on node %d\n", nid, tnid);
+>
+>   	node_data[nid] = nd;
+>   	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+> @@ -232,8 +233,7 @@ static int __init numa_alloc_distance(void)
+>   			numa_distance[i * numa_distance_cnt + j] = i == j ?
+>   				LOCAL_DISTANCE : REMOTE_DISTANCE;
+>
+> -	pr_debug("NUMA: Initialized distance table, cnt=%d\n",
+> -			numa_distance_cnt);
+> +	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
+>
+>   	return 0;
+>   }
+> @@ -254,20 +254,20 @@ static int __init numa_alloc_distance(void)
+>   void __init numa_set_distance(int from, int to, int distance)
+>   {
+>   	if (!numa_distance) {
+> -		pr_warn_once("NUMA: Warning: distance table not allocated yet\n");
+> +		pr_warn_once("Warning: distance table not allocated yet\n");
+>   		return;
+>   	}
+>
+>   	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
+>   			from < 0 || to < 0) {
+> -		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
+> -			    from, to, distance);
+> +		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
+> +			     from, to, distance);
+>   		return;
+>   	}
+>
+>   	if ((u8)distance != distance ||
+>   	    (from == to && distance != LOCAL_DISTANCE)) {
+> -		pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
+> +		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
+>   			     from, to, distance);
+>   		return;
+>   	}
+> @@ -294,7 +294,7 @@ static int __init numa_register_nodes(void)
+>   	/* Check that valid nid is set to memblks */
+>   	for_each_memblock(memory, mblk)
+>   		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
+> -			pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+> +			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+>   				mblk->nid, mblk->base,
+>   				mblk->base + mblk->size - 1);
+>   			return -EINVAL;
+> @@ -362,9 +362,8 @@ static int __init dummy_numa_init(void)
+>   	int ret;
+>   	struct memblock_region *mblk;
+>
+> -	pr_info("%s\n", "No NUMA configuration found");
+> -	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+> -	       0LLU, PFN_PHYS(max_pfn) - 1);
+> +	pr_info("No NUMA configuration found - faking a node at [mem %#018Lx-%#018Lx]\n",
+> +		0LLU, PFN_PHYS(max_pfn) - 1);
+>
+>   	for_each_memblock(memory, mblk) {
+>   		ret = numa_add_memblk(0, mblk->base, mblk->size);
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
