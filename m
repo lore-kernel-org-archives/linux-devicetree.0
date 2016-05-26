@@ -1,65 +1,57 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
-Date: Thu, 26 May 2016 16:26:00 +0200
-Message-ID: <9d7793850de942cfb578b0aeb2728f41@rwthex-s1-b.rwth-ad.de>
-References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
- <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
- <CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
- <a6cc6b85d2fa4994b3cb7e2b047f800d@rwthex-w2-b.rwth-ad.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v16 0/4] MT8173 HDMI support
+Date: Thu, 26 May 2016 17:15:10 +0200
+Message-ID: <1464275714-23257-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a6cc6b85d2fa4994b3cb7e2b047f800d-cBaz+nnMw1+krInni0qv/15UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Igor,
-
-On 05/26/2016 10:28 AM, Igor Grinberg wrote:
-> Hi Fabio,
-> 
-> On 05/23/2016 08:49 PM, Fabio Estevam wrote:
->> On Sun, May 22, 2016 at 7:47 PM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
->>
->>> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
->>> new file mode 100644
->>> index 0000000..bcd8e0d
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
->>> @@ -0,0 +1,128 @@
->>> +/*
->>> + * Copyright 2016 Christopher Spinrath
->>> + * Copyright 2013 CompuLab Ltd.
->>> + *
->>> + * Based on the GPLv2 licensed devicetree distributed with the vendor
->>> + * kernel for the Utilite Pro:
->>> + *     Copyright 2013 CompuLab Ltd.
->>> + *     Author: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->>> + *
->>> + * The code contained herein is licensed under the GNU General Public
->>> + * License. You may obtain a copy of the GNU General Public License
->>> + * Version 2 or later at the following locations:
->>
->> Can you make this dual GPL/X11 license?
->>
->> For reference take a look at:
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/imx6sl-warp.dts?id=refs/tags/v4.6
-> 
-> Please excuse me my ignorance, what is the rationale for this change?
-> 
-
-Thanks for joining this discussion. I *guess* the rationale is to share
-the same device tree with projects that are incompatible with the GPL
-(e.g. *BSD). Even if there is no support for a particular device/board
-having all (or most) files dual licensed makes it easier to just pull
-them all in.
-
-Cheers,
-Christopher
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBzZXJpZXMgY29udGFpbnMgdGhlIE1UODE3MyBIRE1JIGVuY29kZXIsIFBIWSwgYW5kIERE
+QyBkcml2ZXJzLgoKQ2hhbmdlcyBzaW5jZSB2MTU6CiAtIEZpeCBEREMgaWRsZSBwb2xsaW5nLCB0
+aGUgU0lGTV9UUkkgYml0IGlzIHNldCB3aGVuIHRoZSBkZGMgY29udHJvbGxlciBpcwogICBidXN5
+LgogLSBEb24ndCByZWdpc3RlciB0aGUgSERNSSBjb25uZWN0b3IsIG10a19kcm1fZHJ2IHdpbGwg
+ZG8gaXQgdXNpbmcKICAgZHJtX2Nvbm5lY3Rvcl9yZWdpc3Rlcl9hbGwoKS4KIC0gRHJvcCBkZXZp
+Y2UgdHJlZSBwYXRjaGVzLCB0aGVzZSB3aWxsIGJlIHN1Ym1pdHRlZCBzZXBhcmF0ZWx5LgoKcmVn
+YXJkcwpQaGlsaXBwCgpKaWUgUWl1ICgyKToKICBkcm0vbWVkaWF0ZWs6IEFkZCBIRE1JIHN1cHBv
+cnQKICBkcm0vbWVkaWF0ZWs6IGVuYWJsZSBoZG1pIG91dHB1dCBjb250cm9sIGJpdAoKUGhpbGlw
+cCBaYWJlbCAoMik6CiAgZHQtYmluZGluZ3M6IGRybS9tZWRpYXRlazogQWRkIE1lZGlhdGVrIEhE
+TUkgZHRzIGJpbmRpbmcKICBkdC1iaW5kaW5nczogaGRtaS1jb25uZWN0b3I6IGFkZCBEREMgSTJD
+IGJ1cyBwaGFuZGxlIGRvY3VtZW50YXRpb24KCiAuLi4vYmluZGluZ3MvZGlzcGxheS9jb25uZWN0
+b3IvaGRtaS1jb25uZWN0b3IudHh0ICB8ICAgIDEgKwogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVk
+aWF0ZWsvbWVkaWF0ZWssaGRtaS50eHQgICAgfCAgMTQ4ICsrCiBkcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvS2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgIDggKwogZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICA3ICsKIGRyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfY2VjLmMgICAgICAgICAgICAgICAgIHwgIDI2NSArKysKIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfY2VjLmggICAgICAgICAgICAgICAgIHwgICAyNiArCiBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYyAgICAgICAgICAgICAgICB8IDE4Mjgg
+KysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaS5o
+ICAgICAgICAgICAgICAgIHwgICAyMyArCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hk
+bWlfZGRjLmMgICAgICAgICAgICB8ICAzNTggKysrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19oZG1pX3JlZ3MuaCAgICAgICAgICAgfCAgMjM4ICsrKwogZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19tdDgxNzNfaGRtaV9waHkuYyAgICAgfCAgNTE1ICsrKysrKwogMTEgZmlsZXMg
+Y2hhbmdlZCwgMzQxNyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssaGRtaS50
+eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2NlYy5j
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19jZWMuaAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaS5jCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pLmgKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWlfZGRjLmMK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWlfcmVn
+cy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19tdDgx
+NzNfaGRtaV9waHkuYwoKLS0gCjIuOC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
