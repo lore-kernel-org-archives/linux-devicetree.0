@@ -1,225 +1,161 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] dtc: Document the dynamic plugin internals
-Date: Thu, 26 May 2016 14:31:19 -0700
-Message-ID: <57476B27.9070008@gmail.com>
-References: <1464112239-29856-1-git-send-email-pantelis.antoniou@konsulko.com> <1464112239-29856-4-git-send-email-pantelis.antoniou@konsulko.com> <5745F95F.6000600@gmail.com> <1151E0EF-B811-4C0B-858A-00810BE9BA42@konsulko.com> <20160526062848.GG17226@voom.fritz.box> <8CAE1792-841B-4048-B6B1-1F0F973E2E34@konsulko.com> <20160526063334.GH17226@voom.fritz.box> <BE239F34-7B36-4A78-BE21-AA48CB8349E4@konsulko.com> <20160526071243.GI17226@voom.fritz.box> <C43C3B01-5DF5-49DF-848D-0BEA48E3DB6E@konsulko.com> <CAL_JsqLTrSP577ViKRjoqyagWw4+dZuQQsTMMXdoU3n9HZSYZA@mail.gmail.com> <57472A9A.1060903@gmail.com> <EAD64177-3519-4CD2-AFB6-5EB765CC7459@konsulko.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rob Landley <rob@landley.net>
+Subject: Re: [PATCH v3 02/12] of: add J-Core cpu bindings
+Date: Thu, 26 May 2016 16:44:02 -0500
+Message-ID: <57476E22.6010000@landley.net>
+References: <cover.1464148904.git.dalias@libc.org>
+ <39ad5c69533ef537e6ab0426efc057f9064ee581.1464148904.git.dalias@libc.org>
+ <20160525102214.GF1337@leverpostej>
+ <20160525230407.GT21636@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <EAD64177-3519-4CD2-AFB6-5EB765CC7459-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160525230407.GT21636@brightrain.aerifal.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/26/2016 10:09 AM, Pantelis Antoniou wrote:
-> Hi Frank,
->=20
->> On May 26, 2016, at 19:55 , Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
->>
->> Hi Pantelis,
->>
->> On 5/26/2016 6:49 AM, Rob Herring wrote:
->>> On Thu, May 26, 2016 at 2:16 AM, Pantelis Antoniou
->>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>> Hi David,
->>>>
->>>>> On May 26, 2016, at 10:12 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6vUpdFzICT1y@public.gmane.org=
-d.au> wrote:
->>>>>
->>>>> On Thu, May 26, 2016 at 09:36:02AM +0300, Pantelis Antoniou wrote=
-:
->>>>>> Hi David,
->>>>>>
->>>>>>> On May 26, 2016, at 09:33 , David Gibson <david-xT8FGy+AXnQMXKaNCjofrA@public.gmane.org=
-=2Eid.au> wrote:
->>>>>>>
->>>>>>> On Thu, May 26, 2016 at 09:31:20AM +0300, Pantelis Antoniou wro=
-te:
->>>>>>>> Hi David,
->>>>>>>>
->>>>>>>>> On May 26, 2016, at 09:28 , David Gibson <david-xT8FGy+AXnSXP4QZYUMu1g@public.gmane.org=
-ar.id.au> wrote:
->>>>>>>>>
->>>>>>>>> On Thu, May 26, 2016 at 09:14:49AM +0300, Pantelis Antoniou w=
-rote:
->>>>>>>>>> Hi Frank,
->>>>>>>>>>
->>>>>>>>>>> On May 25, 2016, at 22:13 , Frank Rowand <frowand.list@gmai=
-l.com> wrote:
->>>>>>>>>>>
->>>>>>>>>>> On 5/24/2016 10:50 AM, Pantelis Antoniou wrote:
->>>>>>>>>>>> Provides the document explaining the internal mechanics of
->>>>>>>>>>>> plugins and options.
->>>>>>>>>>>>
->>>>>>>>>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsul=
-ko.com>
->>>>>>>>>>>> ---
->>>>>>>>>>>> Documentation/dt-object-internal.txt | 318 +++++++++++++++=
-++++++++++++++++++++
->>
->> < snip >
->>
->>>>>>>>>>>> +So the bar peripheral's DTS format would be of the form:
->>>>>>>>>>>> +
->>>>>>>>>>>> +/dts-v1/ /plugin/;    /* allow undefined references and r=
-ecord them */
->>>>>>>>>>>> +/ {
->>>>>>>>>>>> +      ....    /* various properties for loader use; i.e. =
-part id etc. */
->>>>>>>>>>>> +      fragment@0 {
->>>>>>>>>>>> +              target =3D <&ocp>;
->>>>>>>>>>>> +              __overlay__ {
->>>>>>>>>>>> +                      /* bar peripheral */
->>>>>>>>>>>> +                      bar {
->>>>>>>>>>>> +                              compatible =3D "corp,bar";
->>>>>>>>>>>> +                              ... /* various properties a=
-nd child nodes */
->>>>>>>>>>>> +                      }
->>>>>>>>>>>
->>>>>>>>>>>                    };
->>>>>>>>>>>
->>>>>>>>>>>> +              };
->>>>>>>>>>>> +      };
->>>>>>>>>>>> +};
->>>>>>>>>>>
->>>>>>>>>>> Other than the fact that the above syntax is already in the=
- Linux
->>>>>>>>>>> kernel overlay implementation, is there a need for the targ=
-et
->>>>>>>>>>> property and the __overlay__ node?  I haven't figured out w=
-hat
->>>>>>>>>>> extra value they provide.
->>>>>>>>>>>
->>>>>>>>>>> Without those added, the overlay dts becomes simpler (thoug=
-h for a
->>>>>>>>>>> multi-node target path example this would be more complex u=
-nless a label
->>>>>>>>>>> was used for the target node):
->>>>>>>>>>>
->>>>>>>>>>> +/dts-v1/ /plugin/;     /* allow undefined references and r=
-ecord them */
->>>>>>>>>>> +/ {
->>>>>>>>>>> +       ....    /* various properties for loader use; i.e. =
-part id etc. */
->>>>>>>>>>> +       ocp {
->>>>>>>>>>> +                       /* bar peripheral */
->>>>>>>>>>> +                       bar {
->>>>>>>>>>> +                               compatible =3D "corp,bar";
->>>>>>>>>>> +                               ... /* various properties a=
-nd child nodes */
->>>>>>>>>>> +                       };
->>>>>>>>>>> +       };
->>>>>>>>>>> +};
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> No.
->>>>>>>>>>
->>>>>>>>>> That only works if the overlay is applied in a single platfo=
-rm.
->>>>>>>>>>
->>>>>>>>>> I have working cases where the same overlay is applied on a =
-ppc and a x86
->>>>>>>>>> platform.
->>>>>>>>>
->>>>>>>>> Huh?  How so..
->>>>>>>>>
->>>>>>>>
->>>>>>>> Yes, it does work. Yes it=E2=80=99s being used right now. It i=
-s a very valid use case.
->>>>>>>>
->>>>>>>> Think carrier boards on enterprise routers, plugging to a main=
- board
->>>>>>>> that=E2=80=99s either ppc or x86 (or anything else for that ma=
-tter).
->>>>>>>
->>>>>>> Sorry, I wasn't clear.  I have no problem believing overlays ca=
-n be
->>>>>>> applied on multiple platforms.
->>>>>>>
->>>>>>> What I can't see is how Frank's format breaks that.  AFAICT it
->>>>>>> contains exactly the same information in a simpler encoding.
->>>>>>>
->>>>>>
->>>>>> It breaks it because it=E2=80=99s missing the target property.
->>>>>>
->>>>>> The layout of the base tree is not going to be the same in diffe=
-rent
->>>>>> platforms, so in the above example =E2=80=98ocp=E2=80=99 would n=
-ot exist in x86 for
->>>>>> instance.
->>>>>
->>>>> I think you're misinterpreting Frank's suggestion.  As I understa=
-nd it
->>>>> the node names of the top level nodes in his format aren't treate=
-d as
->>>>> literal node names, but instead treated as label names which are
->>>>> resolved similarly to the phandle external fixups.
->>>>>
->>>>> Actually.. that is one serious problem with Frank's format, it do=
-esn't
->>>>> (easily) allow multiple fragments to be applied to the same targe=
-t.
->>>>>
->>>>
->>>> Ugh, yeah I misinterpreted that. Still, it is not going to work wi=
-th the patches
->>>> I queued with multiple target support.
->>
->> OK, so you are talking about the "[RFC] of: Portable Device Tree con=
-nector"
->> email from 4/27 (just to provide an easy link for everyone).  I'm st=
-ill
->> trying to figure that out.
->>
->> So other than that, am I missing something else about what extra
->> functionality the extra layers of nodes provides?
->>
->=20
-> No, I=E2=80=99m talking about the new target options patchset.
->=20
-> "of: overlays: New target methods=E2=80=9D & in particular
->=20
-> "of: overlay: Implement target index support"
 
-Thanks for the pointer.  I don't think the target options approach
-is the way to handle the issue (see my reply a couple of minutes
-ago in that thread).
 
->=20
+On 05/25/2016 06:04 PM, Rich Felker wrote:
+> On Wed, May 25, 2016 at 11:22:15AM +0100, Mark Rutland wrote:
+>> * What state should the CPU be in when it branches to the provided
+>>   address?
+>>   - Must the MMU be off?
+> 
+> Current models are nommu.
+
+As far as I know, we're the first nommu SMP implementation in Linux.
+
+>> At some point, you are likely to want CPU hotplug and/or cpuidle.
+
+There are hundreds of todo items. At the moment we're just trying to get
+basic board support in for more or less the design we demoed a year ago
+at https://lwn.net/Articles/647636/
+
+The roadmap page we've posted is a summary of a summary, it doesn't even
+mention the DSP designs (plural) we've talked about at some length
+internally. There's a DMA engine we're not using yet. We've got various
+other things like ethernet support that the cheap $50 introductory board
+we're targeting as an entry point hasn't got connectors for. And we
+didn't do anything for the vga or sound connectors on that board because
+"boot to a shell prompt on serial prompt" was our first target. (It runs
+out of initramfs, but since you need the sdcard to load linux from, and
+thus the bootloader had to have an sdcard driver, it seemed a shame NOT
+to have an sdcard driver in linux too.)
+
+Other than that? Intentionally minimalist first pass.
+
+>> We
+>> didn't provision the arm64 spin-table for either of these and never
+>> extended it, but you may want to put in place some discoverability now
+>> to allow future OSs to use that new support while allowing current OSs
+>> to retain functional (e.g. not requiring a new enable-method string).
 >>
->>> Queued implies accepted which they are not. The multiple ways of
->>> expressing targets bothers me. Upstream still has no external
->>> interface to overlays, so I think there is still room to change thi=
-ngs
->>> if we decide it is worthwhile. Better now than stuck with something
->>> forever.
->>>
->>> I too was wondering about the current syntax before this thread
->>> started. We have 2 levels of nodes before we get to any useful
->>> information with the current syntax.
->>>
->=20
-> That=E2=80=99s on purpose. The first level is to contain load manager=
- specific details,
-> i.e. part-numbers and other platform specific properties.
->=20
-> The second level contains the per fragment properties (at the moment =
-targets).
+>>> +---------------------
+>>> +Cache controller node
+>>> +---------------------
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible: Must be "jcore,cache".
+>>> +
+>>> +- reg: A memory range for the cache controller registers.
+>>
+>> There is a well-defined memory map for the cache controller?
 
-My suggestion removed the target property.
+The icache and dcache are 8k each, have 32 byte cache lines, and they
+cache (addr>>5)&255 so reading from + or - 8192 bytes will evict that
+cache line due to aliasing.
 
-What other properties are you envisioning?  (Looking for the architectu=
-ral
-vision that you have.)
+The icache and dcache each have an enable and flush bit in the
+processor's control register. (So 4 bits total controlling the cache, I
+think? I'd have to dig up Niishi-san's slides to check.)
 
-If load manager specific details are appropriate in the devicetree (a w=
-hole
-different discussion) then maybe a /chosen/load-manager node could exis=
-t to
-hold them instead of putting them in /, where the patch currently locat=
-es
-"/* various properties for loader use; i.e. part id etc. */".
+Each processor has its own set of control registers. Back when SMP was
+first implemented there was a lot of talk among the engineers about
+separating the register stuff out, because right now processor stuff and
+SOC I/O devices are kinda mashed together. But "release early, release
+often" won out over endlessly polishing the same stuff in-house before
+showing it to anybody else. We WANT other people to suggest fixes, but
+we also want basic support for what's already been working for a year
+and a half to go into the vanilla kernel at some point.
+
+>> If so, please refer to documentation for it here (either in this
+>> section, or the top of this document if common with other elements
+>> described herein).
+
+During my most recent trip to Japan I sat down with the engineer who
+wrote the dcache and dram controller and passed on his explanation of
+them to somebody on the j-core mailing list, about halfway through this
+message:
+
+  http://lists.j-core.org/pipermail/j-core/2016-April/000038.html
+
+I've been meaning to cut that out and put it on a web page on
+j-core.org, but have been busy with other things. That post also points
+at comments in the VHDL source that implement the features.
+
+That is, alas, the level of documentation we're talking about at the
+moment. Better is on the todo list. In the meantime you can RTFS if you
+understand vhdl, or ask the engineers on the j-core list or #j-core
+freenode channel. The instruction set is based on an existing
+architecture and the other SOC features in the initial release are as
+minimal as we could get them and still be useful. (We've got a lot more
+peripherals implemented than this release includes.)
+
+We thought getting working code into the kernel should be a high
+priority, but apparently everything has to be done before anything can
+be done?
+
+> The current version "jcore,cache" has a single 32-bit control register
+> per cpu that can be used to enable/disable/flush icache and/or dcache.
+> There is no finer-grained control. If/when we do larger caches in the
+> future where it makes sense, there will be a new binding for it. (For
+> example it may make sense to do one that matches the original SH
+> memory-mapped cache interface.)
+
+The first dache-only Linux support I did last year worked by reading an
+aliased cache line from sram to evict individual cache lines, and it
+turned out to have no detectable speed advantage over just blanking the
+whole thing. Then doing the same "flush by aliasing" trick with icache
+would have required an 8k jump table and we just went "no" and
+implemented the flush bits instead, so almost all that code went away.
+
+When we implement L2 cache for j-core, we can start caring about
+granularity again, but http://j-core.org/roadmap.html has scaling _down_
+into arduino country scheduled before scheduling up into MMU and 64-bit
+territory so... not this year. :)
+
+>>> +- reg: A memory range containing a single 32-bit mmio register which produces
+>>> +  the current cpu id (matching the "reg" property of the cpu performing the
+>>> +  read) when read.
+>>
+>> Likewise.
+> 
+> One general question I have about all of your comments -- is the DT
+> binding file really supposed to amount to a hardware programming
+> manual, fully specifying all of the programming interfaces? I don't
+> see that in other binding files, and it feels like what you're asking
+> for is beyond the scope of just specifying the bindings. 
+
+In general if they haven't needed it yet, they haven't done it yet.
+Doesn't mean we haven't thought about it, or even sketched out multiple
+possible paths forward and decided on our favorite and our preferred
+fallback approach. (I have more photographs of whiteboards on my phone
+than anyone really needs. Some of them I could even tell you what the
+subject was.)
+
+But for the initial "here's how people other than us can try this out on
+a $50 FPGA board from india" board support, going down the rathole of
+every possible direction of future expansion as a prerequisite for "one
+release of one processor on one brand of board" introductory support
+seems counterproductive. Or is it just me?
+
+If you want to critique the hardware design on the j-core mailing list,
+I'll happily point the appropriate in-house engineers at the thread. In
+the meantime, Rich submitted a patch to support the SOC we've had for a
+year now.
+
+Rob
