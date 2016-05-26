@@ -1,92 +1,64 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
- number.
-Date: Thu, 26 May 2016 19:47:46 +0100
-Message-ID: <20160526184746.GF16172@sirena.org.uk>
-References: <20160524183256.GP8206@sirena.org.uk>
- <5744E51A.1040506@gmail.com>
- <20160525174932.GA10753@rob-hp-laptop>
- <5745E9B6.5090204@gmail.com>
- <20160525184442.GE8206@sirena.org.uk>
- <57464D0A.1030706@weinigel.se>
- <CAL_JsqJwQvPGtscheZjoJyhF1UPxDSqbS-QB9qm3M4HbpOicVA@mail.gmail.com>
- <574657BB.6070300@weinigel.se>
- <20160526100753.GB16172@sirena.org.uk>
- <5746D6CE.5020605@weinigel.se>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] i2c: demux: Use changeset helpers for clarity
+Date: Thu, 26 May 2016 20:58:24 +0200
+Message-ID: <20160526185823.GF1614@katana>
+References: <1463416888-22044-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1463416888-22044-6-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7uYPyRQQ5N0D02nI"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5746D6CE.5020605-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463416888-22044-6-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---7uYPyRQQ5N0D02nI
+--+jhVVhN62yS6hEJ8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 26, 2016 at 12:58:22PM +0200, Christer Weinigel wrote:
+On Mon, May 16, 2016 at 07:41:28PM +0300, Pantelis Antoniou wrote:
+> The changeset helpers are easier to use, use them instead of
+> using the static property.
+>=20
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
-> One of the main drivers behind devicetree was that Linus got fed up
-> with the churn for all platform device changes in arch/arm.  I faintly
-> recall him writing that he would be rather unhappy if that just got
-> replaced with churn for devicetree dts files.
+If you think this is worthwhile, then it's fine with me :)
 
-Since device trees are hardware descriptions they really shouldn't be
-churning at all - if they are that's an indication that we're failing at
-device tree.
+Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 
-> It makes sense to include dts files for reference boards in the
-> mainline kernel.  To include dts files for every vendors variant of a
-> design would add just as much churn and be rather pointless.  My guess
-> is that the dts file for most platforms are kept private.
+> +				adap_np, "status", "okay");
 
-Well, a huge proportion of platforms don't work with upstream or upgrade
-kernel versions at all but rather use vendor BSPs with all sorts of fun
-stuff that the broader community would question strongly.  It's really
-quite muddy.
+"ok" would be shorter?
 
-> For platforms based on a FPGA such as the Xilinx Zync it's even more
-> pointless to submit dts files to mainline.  When you have "hardware"
-> that can be reconfigured the device tree files can't be set in stone.
->  If I use Xilinx tools [1] to add one more UART I have just added new
-> hardware this needs to be reflected in the devicetree for the devices
-> to be usable in Linux.  And something like aliases which provides a
-> stable device name can be very useful here.
 
-Right, but it doesn't follow that aliases are what we should be doing
-here - both Rob and myself have mentioned providing a way to label the
-actual SPI devices themselves, this seems like a more robust way of
-doing things.  For example in a FPGA environment it would allow you to=20
-keep names stable even if you decide to reorganize the distribution of
-devices between controllers or mappings of chip selects and would have
-similar benefits for handling board variants.  Just numbering the buses
-provides a partial solution for some systems with usability drawbacks
-(you need to know the number to name mapping somehow), naming devices
-is both more direct and more general.
-
---7uYPyRQQ5N0D02nI
+--+jhVVhN62yS6hEJ8
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQEcBAEBCAAGBQJXR0TRAAoJECTWi3JdVIfQ2A4H/3nYZZAE1s1hfgs8GsaNA3Jw
-Jaw07ihFscl5pF3EuoD39cqteH+OVGZ9FAN230TP8Wbs4Q81J5Fy0A/j/nshP0dP
-KRJxmSmcBTmjHRyyDrJDRGmMzEDFWciRh2ECPz7uUeV/xQK7lhpycs/RrKRSRYXZ
-p3yAF3h73XxpkJW2365Tv18BJBBKQiu82mw2ViSbfQKWO6WXaowvfZ2bpojcIPUV
-rKruLxlpEulCmzrI5PWhFcI5VJ14Dm1fy5r/tfVDNtEqC+OG1P8itspa2xdXLRfT
-5gUIRcwJOLTM1A9xKxkGw/u/xDwKmJmfU5fNnwphoVRkepKvsu1lJoaBK3XrmQU=
-=PL/V
+iQIcBAEBAgAGBQJXR0dPAAoJEBQN5MwUoCm2WyoP/3AVJYo8d6qmHzGhGsVq6hYC
+wqumWvZLdL+7EPQLtPpLOYeWLvz23UYqO7tiFs9o+5FRmcFj8cD7E55Cy3lW4zDS
+WDHYkEBzfkXRfxTdKglJFynjIzHo/WKtu+Ai1ZGEfe/7M2ct4Rx1ApdZmjpaTiGK
+6cYZ8KKOT5P9/uOz1DrgsedIvLrgRw0kgUH/PNSxxPGFTEFuIODXRQEUGqQf8V28
+OmVAfutktIDhK/mSdNGfa5pTij5K9ggxYIY6lWoB6wv5XeIDk5gZvOMc3NrAmBQD
+b88lrcR4mIC94Ilr6PlfgzOu7ZxCUPQYJC62mBCmPcOZg4UGzAG8qyh7EhcjTpPW
+S4CpAzY9Jo0p20QsaAwZFncZuJy/pcoUOmaffq447xFzxxeuWWeSyld5eZFsgEGI
+3IRoB0cIfEGhGsoAysp6e8tGYe0EMdFA8iOyZprW2T718VOJGCfri2E6HAaD3M0l
+j5xH4YUESyaPXXBK/95aLMjjRHBY3uSx09dgS1+jL6knn6NAbOSfTD8juDEMEAyC
+X+KRX77h4Aur/cF2o/rc2a7KU9doiEqPg+TooWk4RZPEUTOiJWzfffsgJvP+lfPW
+ed2+MonR08up+EHdrlI0RpOWOzCs7SzkhGLj0SjG9iILpdoba4XBIEbOB9QNz++l
+LbZv1+RJ+d2embhwmIEp
+=l1hH
 -----END PGP SIGNATURE-----
 
---7uYPyRQQ5N0D02nI--
+--+jhVVhN62yS6hEJ8--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
