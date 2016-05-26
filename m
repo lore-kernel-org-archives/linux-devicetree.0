@@ -1,66 +1,39 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] firmware: Amlogic: Add secure monitor driver
-Date: Thu, 26 May 2016 09:45:16 +0200
-Message-ID: <20160526074516.GA14703@mephisto>
-References: <1464207511-11786-1-git-send-email-carlo@caione.org>
- <1464207511-11786-2-git-send-email-carlo@caione.org>
- <5746A308.8070606@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5746A308.8070606-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFC PATCH 2/3] dt-bindings: watchdog: Add Meson GXBB Watchdog bindings
+Date: Thu, 26 May 2016 09:51:51 +0200
+Message-ID: <1464249112-13658-3-git-send-email-narmstrong@baylibre.com>
+References: <1464249112-13658-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464249112-13658-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/05/16 09:17, Neil Armstrong wrote:
-> Hi Carlo,
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/watchdog/meson-gxbb-wdt.txt         | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
 
-Hi Neil,
-
-> On 05/25/2016 10:18 PM, Carlo Caione wrote:
-> > diff --git a/include/dt-bindings/firmware/meson-sm.h b/include/dt-bindings/firmware/meson-sm.h
-> > new file mode 100644
-> > index 0000000..3a52a13
-> > --- /dev/null
-> > +++ b/include/dt-bindings/firmware/meson-sm.h
-> > @@ -0,0 +1,20 @@
-> > +/*
-> > + * Copyright (C) 2016 Endless Mobile, Inc.
-> > + * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License
-> > + * version 2 as published by the Free Software Foundation.
-> > + *
-> > + * You should have received a copy of the GNU General Public License
-> > + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +#ifndef _MESON_DT_H_
-> > +#define _MESON_DT_H_
-> > +
-> > +#define SM_EFUSE_READ		0
-> > +#define SM_EFUSE_WRITE		1
-> > +#define SM_EFUSE_USER_MAX	2
-> > +
-> > +#endif /* _MESON_DT_H_ */
-> 
-> Now this has been refactored, I don't see the point of this dt-bindings header ?
-> 
-> These defines should take place in linux/firmware/meson/meson-sm.h
-
-Yes, that is a possibility I considered before submitting this version
-and now it also seems probably the best way to do it. I'll change it in
-the next revision.
-
-Thanks,
-
+diff --git a/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt b/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
+new file mode 100644
+index 0000000..d06c0a0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
+@@ -0,0 +1,13 @@
++Meson GXBB SoCs Watchdog timer
++
++Required properties:
++
++- compatible : should be "amlogic,meson-gxbb-wdt"
++- reg : Specifies base physical address and size of the registers.
++
++Example:
++
++wdt: watchdog@98d0 {
++	compatible = "amlogic,meson-gxbb-wdt";
++	reg = <0 0x98d0 0x0 0x10>;
++};
 -- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.0
