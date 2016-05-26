@@ -1,65 +1,252 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: Re: [RESEND PATCH v2] ASoC: rockchip: Add machine
- driver for MAX98357A/RT5514/DA7219
-Date: Thu, 26 May 2016 17:04:39 +0800
-Message-ID: <5746BC27.1030008@rock-chips.com>
-References: <1464053774-15914-1-git-send-email-zhengxing@rock-chips.com>
- <20160525173246.GA5125@rob-hp-laptop>
+From: "pankaj.dubey" <pankaj.dubey@samsung.com>
+Subject: Re: ARM: dts: exynos: Add MFC memory banks for Peach boards
+Date: Thu, 26 May 2016 14:40:44 +0530
+Message-ID: <5746BD94.3070903@samsung.com>
+References: <1461871311-18344-1-git-send-email-javier@osg.samsung.com>
+ <57456344.7020708@samsung.com>
+ <d045b880-4a44-acd8-f7f6-e521caf374aa@osg.samsung.com>
+ <574670E7.3060508@samsung.com>
+ <476edff1-9f3e-fc5b-4385-d04ae917b58e@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160525173246.GA5125@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, dianders@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <476edff1-9f3e-fc5b-4385-d04ae917b58e@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMjAxNuW5tDA15pyIMjbml6UgMDE6MzIsIFJvYiBIZXJyaW5nIHdyb3RlOgo+
-IE9uIFR1ZSwgTWF5IDI0LCAyMDE2IGF0IDA5OjM2OjE0QU0gKzA4MDAsIFhpbmcgWmhlbmcgd3Jv
-dGU6Cj4+IFRoZXJlIGFyZSBtdWx0aSBjb2RlYyBkZXZpY2VzIG9uIHRoZSBSSzMzOTkgcGxhdGZv
-cm0sIHdlIGNhbiB1c2UKPj4gdGhpcyBwYXRjaCBzdXBwb3J0IGFuZCBjb250cm9sIHRoZXNlIGNv
-ZGVjcy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWGluZyBaaGVuZyA8emhlbmd4aW5nQHJvY2stY2hp
-cHMuY29tPgo+PiAtLS0KPj4KPj4gQ2hhbmdlcyBpbiB2MjoKPj4gLSB1c2UgdGhlIEZTIDI1NiB0
-byBzZXQgbWNsa3Mgb2YgdGhlIG1heDk4MzU3YSBhbmQgcnQ1NTE0IGRhbmFtaWNhbGx5Cj4+IC0g
-YWRkIG1vcmUgc2FtcGxlIHJhdGUgZm9yIGRhNzIxOQo+Pgo+PiAgIC4uLi9zb3VuZC9yb2NrY2hp
-cC1tYXg5ODM1N2EtcnQ1NTE0LWRhNzIxOS50eHQgICAgIHwgICAxNSArCj4+ICAgc291bmQvc29j
-L3JvY2tjaGlwL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDExICsKPj4gICBz
-b3VuZC9zb2Mvcm9ja2NoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIg
-Kwo+PiAgIC4uLi9yb2NrY2hpcC9yb2NrY2hpcF9tYXg5ODM1N2FfcnQ1NTE0X2RhNzIxOS5jICAg
-IHwgIDMzMyArKysrKysrKysrKysrKysrKysrKwo+PiAgIDQgZmlsZXMgY2hhbmdlZCwgMzYxIGlu
-c2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3NvdW5kL3JvY2tjaGlwLW1heDk4MzU3YS1ydDU1MTQtZGE3MjE5LnR4dAo+
-PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBzb3VuZC9zb2Mvcm9ja2NoaXAvcm9ja2NoaXBfbWF4OTgz
-NTdhX3J0NTUxNF9kYTcyMTkuYwo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3NvdW5kL3JvY2tjaGlwLW1heDk4MzU3YS1ydDU1MTQtZGE3MjE5LnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9yb2NrY2hpcC1tYXg5
-ODM1N2EtcnQ1NTE0LWRhNzIxOS50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXgg
-MDAwMDAwMC4uNTkyODM4NAo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9yb2NrY2hpcC1tYXg5ODM1N2EtcnQ1NTE0LWRhNzIx
-OS50eHQKPj4gQEAgLTAsMCArMSwxNSBAQAo+PiArUk9DS0NISVAgd2l0aCBNQVg5ODM1N0EvUlQ1
-NTE0L0RBNzIxOSBjb2RlY3MKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29t
-cGF0aWJsZTogInJvY2tjaGlwLHJvY2tjaGlwLXNvdW5kIgo+IFRoaXMgaXMgZ2VuZXJpYywgYnV0
-IHRoZSBiaW5kaW5nIHNlZW1zIHRvIGJlIHZlcnkgc3BlY2lmaWMgdG8gb25seSAzCj4gc3BlY2lm
-aWMgY29kZWNzLiBMaXN0aW5nIGFsbCAzIGNvZGVjcyBzZWVtcyBhIGJpdCBzdHJhbmdlLiBQZXJo
-YXBzIGEKPiBuYW1lIHJlbGF0ZWQgdG8gdGhlIGJvYXJkIG5hbWUgd291bGQgYmUgYmV0dGVyLgpZ
-ZXMsIEkgdGhpbmsgdGhhdCBJIHNob3VsZCByZW5hbWUgdG8gcmszMzk5X21heDk4MzU3YV9ydDU1
-MTRfZGE3MjE5LmMsIAppdCBpcyByZWxhdGVkIHRvIHRoZSByazMzOTkgYm9hcmRzLgo+PiArLSBy
-b2NrY2hpcCxjcHU6IFRoZSBwaGFuZGxlIG9mIHRoZSBSb2NrY2hpcCBJMlMgY29udHJvbGxlciB0
-aGF0J3MKPj4gKyAgY29ubmVjdGVkIHRvIHRoZSBjb2RlY3MKPiBXaGF0J3MgdGhlIHNpemU/IGFs
-d2F5cyAzPwpOb3QgYWx3YXlzIDMsIHRoZSBzaXplIGlzIGxpbWl0ZWQgYnkgbWFjaGluZSBkcml2
-ZXIsIFRoZSBzaW1pbGFyIAphcHByb2FjaCB3aXRoIG10ODE3My1ydDU2NTAtcnQ1Njc2LnR4dC4K
-Pj4gKy0gcm9ja2NoaXAsY29kZWM6IFRoZSBwaGFuZGxlIG9mIHRoZSBNQVg5ODM1N0EvUlQ1NTE0
-L0RBNzIxOSBjb2RlY3MKPiBQbGVhc2UgbWFrZSB0aGUgc2l6ZSBhbmQgb3JkZXJpbmcgY2xlYXIu
-CkRpdHRvLgoKVGhhbmtzLgoKLS0gCi0gWGluZyBaaGVuZwoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2Et
-ZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21h
-aWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+Hi Javier,
+
+On Thursday 26 May 2016 01:15 PM, Javier Martinez Canillas wrote:
+> [adding Kevin and Sjoerd who also noticed issues with this patch]
+> 
+> Hi Pankaj,
+> 
+> On 05/25/2016 11:43 PM, pankaj.dubey wrote:
+>> Hi Javier,
+>>
+>> On Wednesday 25 May 2016 08:32 PM, Javier Martinez Canillas wrote:
+>>> Hello Pankaj,
+>>>
+>>> On 05/25/2016 04:33 AM, pankaj.dubey wrote:
+>>>> Hi Javier,
+>>>>
+>>>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>>
+>>>> Just noticed that, current krzk/for-next failed to boot on Exynos5880
+>>>> based Chromebook device. Git bisect is showing culprit as this patch.
+>>>
+>>> Strange, krzk/for-next boots correctly on my Exynos5800 Peach Pi:
+>>>
+>>> $ git log --pretty=oneline --abbrev-commit HEAD
+>>> 35e691cf5165 Merge branch 'fixes-v4.7' into for-next
+>>>
+>>
+>> This is same as mine.
+>>
+>> My other build parameters are:
+>> defconfig: exynos_defconfig
+>> CROSS_COMPILE: gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux
+> 
+> I'm also using exynos_defconfig and a similar compiler
+> (gcc-linaro-arm-linux-gnueabihf-4.9-2015.01-3).
+> 
+>> rootfs: small cramfs
+>>
+>>> $ uname -r
+>>> 4.6.0-00073-g35e691cf5165
+>>>
+>>>> When I reverted this patch, its able to boot normally.
+>>>> Is there any missing patches that we need to take on krzk/for-next to
+>>>> boot on Chromebook.
+>>>>
+>>>
+>>
+>> Further I checked that, either I revert this patch OR do not reserve
+>> memory for MFC in exynos_reserve using following changes, both cases I
+>> am able to boot kernel on Chromebook (Exynos5800).
+>>
+>> diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+>> index f977eea..e615e24 100644
+>> --- a/arch/arm/mach-exynos/exynos.c
+>> +++ b/arch/arm/mach-exynos/exynos.c
+>> @@ -268,7 +268,7 @@ static char const *const exynos_dt_compat[]
+>> __initconst = {
+>>
+>>  static void __init exynos_reserve(void)
+>>  {
+>> -#ifdef CONFIG_S5P_DEV_MFC
+>> +#ifndef CONFIG_S5P_DEV_MFC
+>>         int i;
+>>         char *mfc_mem[] = {
+>>                 "samsung,mfc-v5",
+>> @@ -280,6 +280,8 @@ static void __init exynos_reserve(void)
+>>         for (i = 0; i < ARRAY_SIZE(mfc_mem); i++)
+>>                 if (of_scan_flat_dt(s5p_fdt_alloc_mfc_mem, mfc_mem[i]))
+>>                         break;
+>> +#else
+>> +       pr_err("*****exynos_reserve Bypassing Memory Reservation for MFC
+>> ********\n");
+>>  #endif
+>>  }
+>>
+>>
+>>> No that I'm aware of. I wonder why it boots for me but fails for
+>>> you. Can you please share your complete boot log to see if there
+>>> are any hints there?
+>>>  
+>>
+>> Following is failed boot log:
+>> U-Boot 2013.04-g8e3e5ef (May 26 2015 - 16:11:36) for Peach
+>>
+>> CPU:    Exynos5422@900MHz
+>>
+>> Board: Google Peach Pi, rev 11.6
+>> I2C:   ready
+>> DRAM:  3.5 GiB
+>> Relocation Offset dbd54000, base at ffb54000
+>> SPL stack at 2072c00, used 3f0, free 10
+>> PMIC max77802-pmic initialized
+>> CPU:    Exynos5422@1800MHz
+>> TPS65090 PMIC EC init
+>> MMC:   EXYNOS DWMMC: 0, EXYNOS DWMMC: 1
+>> SF: Detected W25Q32DW with page size 4 KiB, total 32 MiB
+>> In:    cros-ec-keyb
+>> Out:   lcd
+>> Err:   lcd
+>> SF: Detected W25Q32DW with page size 4 KiB, total 32 MiB
+>> ELOG: Event(17) added with size 13
+>> Net:   No ethernet found.
+>> Hit any key to stop autoboot:  0
+>> mmc1 is current device
+>> 4586144 bytes read in 242 ms (18.1 MiB/s)
+>> 26583040 bytes read in 1166 ms (21.7 MiB/s)
+>> ## Loading kernel from FIT Image at 20008000 ...
+>>    Using 'conf@2' configuration
+>>    Trying 'kernel@1' kernel subimage
+>>      Description:  unavailable
+>>      Type:         Kernel Image (no loading done)
+>>      Compression:  uncompressed
+>>      Data Start:   0x200080c8
+>>      Data Size:    4459024 Bytes = 4.3 MiB
+>>    Verifying Hash Integrity ... OK
+>> ## Loading fdt from FIT Image at 20008000 ...
+> 
+> A difference I see is that I'm chain loading a non-verified u-boot and you
+> are loading a signed FIT image directly. But Sjoerd also chain loads a nv
+> u-boot and his Peach doesn't boot either so I don't think that's a cause.
+> 
+>>    Using 'conf@2' configuration
+>>    Trying 'fdt@2' fdt subimage
+>>      Description:  exynos5800-peach-pi.dtb
+>>      Type:         Flat Device Tree
+>>      Compression:  uncompressed
+>>      Data Start:   0x20458148
+>>      Data Size:    63002 Bytes = 61.5 KiB
+>>      Architecture: ARM
+>>      Hash algo:    sha1
+>>      Hash value:   cd1c1703f744b44b1833ca61ec36b625665548de
+>>    Verifying Hash Integrity ... sha1+ OK
+>>    Booting using the fdt blob at 0x20458148
+>>    XIP Kernel Image (no loading done) ... OK
+>>    Loading Device Tree to 3ffe1000, end 3ffffb49 ... OK
+>> boot_kernel.c: ft_board_setup: warning: Must pass exactly one of vboot
+>> or cdata
+>>
+>> Starting kernel ...
+>>
+>> Timer summary in microseconds:
+>>        Mark    Elapsed  Stage
+>>           0          0  reset
+>>     122,793    122,793  board_init_f
+>>     143,214     20,421  board_init_r
+>>     238,069     94,855  id=64
+>>     240,278      2,209  main_loop
+>>   4,841,682  4,601,404  bootm_start
+>>   4,841,683          1  id=1
+>>   4,846,604      4,921  id=100
+>>   4,846,607          3  id=101
+>>   4,846,607          0  id=102
+>>   4,850,208      3,601  id=110
+>>   4,877,729     27,521  id=105
+>>   4,877,731          2  id=106
+>>   4,877,734          3  id=107
+>>   4,877,735          1  id=108
+>>   4,877,736          1  id=109
+>>   4,882,406      4,670  id=90
+>>   4,882,408          2  id=92
+>>   4,882,408          0  id=91
+>>   4,927,272     44,864  id=95
+>>   4,927,274          2  id=96
+>>   4,927,276          2  id=97
+>>   4,927,277          1  id=98
+>>   4,927,279          2  id=99
+>>   4,937,617     10,338  id=7
+>>   4,951,899     14,282  id=15
+>>   4,955,112      3,213  start_kernel
+>>
+>> Accumulated time:
+>>                  6,948  SPI read
+>> Uncompressing Linux... done, booting the kernel.
+>> [    0.000000] Booting Linux on physical CPU 0x0
+>> [    0.000000] Linux version 4.6.0-00073-g35e691c
+>> (pankaj@chromebld-server) (gcc version 4.9.2 20140904 (prerelease)
+>> (crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC
+>> 4.9-2014.09) ) #59 SMP PREEMPT Thu May 26 08:21:07 IST 2016
+>> [    0.000000] CPU: ARMv7 Processor [412fc0f3] revision 3 (ARMv7),
+>> cr=10c5387d
+>> [    0.000000] CPU: div instructions available: patching division code
+>> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction
+>> cache
+>> [    0.000000] Machine model: Google Peach Pi Rev 10+
+>> [    0.000000] bootconsole [earlycon0] enabled
+>> [    0.000000] cma: Reserved 64 MiB at 0xfbc00000
+>> [    0.000000] Memory policy: Data cache writealloc
+>> [    0.000000] Samsung CPU ID: 0xe5422001
+>> [    0.000000] On node 0 totalpages: 913407
+>> [    0.000000] free_area_init_node: node 0, pgdat c0b42cc0, node_mem_map
+>> ee3f7000
+>> [    0.000000]   Normal zone: 1536 pages used for memmap
+>> [    0.000000]   Normal zone: 0 pages reserved
+>> [    0.000000]   Normal zone: 194560 pages, LIFO batch:31
+>> [    0.000000]   HighMem zone: 718847 pages, LIFO batch:31
+>> [    0.000000] percpu: Embedded 12 pages/cpu @ee341000 s19392 r8192
+>> d21568 u49152
+>> [    0.000000] pcpu-alloc: s19392 r8192 d21568 u49152 alloc=12*4096
+>> [    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3 [0] 4 [0] 5 [0] 6 [0] 7
+>> [    0.000000] Built 1 zonelists in Zone order, mobility grouping on.
+>> Total pages: 911871
+>> [    0.000000] Kernel command line: cros_legacy console=ttySAC3,115200
+>> debug earlyprintk cros_debug no_console_suspend root=/dev/ram0 rw
+>> ramdisk=32768 initrd=0x42000000,3
+>> 2M
+> 
+> I see that you are loading an initrd at 0x42000000 with size of 32 MiB.
+> 
+> [...]
+> 
+>> [    1.121421] Trying to unpack rootfs image as initramfs...
+>> [    1.126940] rootfs image is not initramfs (junk in compressed
+>> archive); looks like an initrd
+>> [    1.160139] Unable to handle kernel paging request at virtual address
+>> e3000000
+> 
+> So I wonder if the problem is that the memblock_remove() is called very
+> early and so the kernel is not able to copy the initrd from 0x42000000
+> to 0x44000000 since overlaps with the mfc-r mem (0x43000000-0x43800000).
+> 
+> Specially since the NULL pointer dereference below happens in the
+> populate_rootfs() function when calling xwrite() to do the copy.
+> 
+> Could you please try to change the load address for your initrd, or
+> change the mfc-r start address to see if that prevents the issue?
+> 
+
+Yes, you are correct. This was the case.
+I changed initrd location from 0x42000000 to 0x44000000, and it is able
+to boot without any crash.
+
+Thanks,
+Pankaj Dubey
