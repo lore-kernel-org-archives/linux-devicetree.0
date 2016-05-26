@@ -1,122 +1,92 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: DT description of SRAM with power manageable banks
-Date: Thu, 26 May 2016 13:30:31 -0500
-Message-ID: <CAL_Jsq+R8E7UwAW+aUcmHPhgMS0D39C77kxgqwLK0_kTWHkWFw@mail.gmail.com>
-References: <57473709.1020108@mleia.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Thu, 26 May 2016 19:47:46 +0100
+Message-ID: <20160526184746.GF16172@sirena.org.uk>
+References: <20160524183256.GP8206@sirena.org.uk>
+ <5744E51A.1040506@gmail.com>
+ <20160525174932.GA10753@rob-hp-laptop>
+ <5745E9B6.5090204@gmail.com>
+ <20160525184442.GE8206@sirena.org.uk>
+ <57464D0A.1030706@weinigel.se>
+ <CAL_JsqJwQvPGtscheZjoJyhF1UPxDSqbS-QB9qm3M4HbpOicVA@mail.gmail.com>
+ <574657BB.6070300@weinigel.se>
+ <20160526100753.GB16172@sirena.org.uk>
+ <5746D6CE.5020605@weinigel.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57473709.1020108-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7uYPyRQQ5N0D02nI"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5746D6CE.5020605-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 26, 2016 at 12:48 PM, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
-> Hi DT team,
->
-> let me ask you for advice how to extend a common "mmio-sram" compatible
-> binding description with information about power manageable banks,
-> which are specific to some SRAM. My main interest is to give a better
-> support of NXP LPC32xx SRAM, but as far as I know it concerns other
-> controllers from the LPC series, and maybe some other ones.
->
-> Taking a simple visual example let's consider NXP LPC3250 SRAM, which
-> has four banks, three of them has independent power controls:
->
->         0x00000 - 0x0ffff (64KiB), always on-power bank,
->         0x10000 - 0x1ffff (64KiB), power manageable bank
->         0x20000 - 0x2ffff (64KiB), power manageable bank
->         0x30000 - 0x3ffff (64KiB), power manageable bank
->
-> All banks together form a single continuous address space, and it seems
-> important to have just one SRAM device and not 4, since e.g. in normal
-> runtime operation continuous 100KiB from the whole SRAM area are reserved
-> for storing MAC RX/TX buffers, it won't fit into one bank, however in
-> sleep mode (or when there is no users of some SRAM banks in runtime)
-> it is desirable to turn off unused banks, thus there should be a connection
-> between each power manageable bank and some power domain like this:
->
->         sram_pd: power-controller@110 {
->                 compatible = "nxp,lpc3220-pos";
->                 reg = <0x110 0x8>;
->                 #power-domain-cells = <1>;
->         };
->
-> ...
->
->         sram-bank@08010000 {
->                 reg = <0x08010000 0x10000>;
->                 power-domains = <&sram_pd 0>;
->         };
->
-> ...
->
-> The ordinary SRAM device node looks like
->
->         sram@08000000 {
->                 compatible = "mmio-sram";
->                 reg = <0x08000000 0x40000>;
->         };
->
-> and I would happy to have it just like that, and actually it works
-> perfectly, if the problem with delicate power management is ignored.
-> At least it demonstrates that a generic wide compatible "mmio-sram"
-> suits well here.
->
-> The problem I face is in setting a proper layout of "sram@" and three
-> "sram-bank@" device nodes (remember 1 of 4 banks has no power control).
-> Unfortunately "sram-bank@" device nodes can not be children of "sram@",
-> because children of "mmio-sram" compatible device node play a role
-> of reserved areas ("partitions"), and that's not what I want. Moreover
-> reserved areas and power manageable banks are orthogonal, for instance
-> one reserved area may overlap with two power manageable banks or
-> vice versa.
->
-> Questions I have concerning this case:
->
-> 1) would it be correct to add the second compatible like this?
->
->         sram@08000000 {
->                 compatible = "mmio-sram", "nxp,lpc3220-sram";
 
-Yes, but reverse the order. Most specific first.
+--7uYPyRQQ5N0D02nI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->                 reg = <0x08000000 0x40000>;
+On Thu, May 26, 2016 at 12:58:22PM +0200, Christer Weinigel wrote:
 
-You can just add a single property like this:
+> One of the main drivers behind devicetree was that Linus got fed up
+> with the churn for all platform device changes in arch/arm.  I faintly
+> recall him writing that he would be rather unhappy if that just got
+> replaced with churn for devicetree dts files.
 
-power-domains = <&sram_pd 0>, <&sram_pd 1>, <&sram_pd 2>;
+Since device trees are hardware descriptions they really shouldn't be
+churning at all - if they are that's an indication that we're failing at
+device tree.
 
-The knowledge of what range each PD controls is encoded in the fact
-that the node is a "nxp,lpc3220-sram" and the information would stay
-in your driver.
+> It makes sense to include dts files for reference boards in the
+> mainline kernel.  To include dts files for every vendors variant of a
+> design would add just as much churn and be rather pointless.  My guess
+> is that the dts file for most platforms are kept private.
 
-Of course, if there's a lot of variation in sizes and domains, we may
-want to fully describe things in the DT.
+Well, a huge proportion of platforms don't work with upstream or upgrade
+kernel versions at all but rather use vendor BSPs with all sorts of fun
+stuff that the broader community would question strongly.  It's really
+quite muddy.
 
->         };
->
-> Or should I add the new compatible to device nodes of each of the power
-> manageable banks?
->
-> 2) I assume that "sram-bank@" device nodes still should be descendants
-> of "sram@" node, but because children with "reg" property of "mmio-sram"
-> compatible device node can not be used to describe power manageable banks,
-> what name for an umbrella device node would you suggest? Would "banks" be
-> good enough? Should it have its own compatible?
+> For platforms based on a FPGA such as the Xilinx Zync it's even more
+> pointless to submit dts files to mainline.  When you have "hardware"
+> that can be reconfigured the device tree files can't be set in stone.
+>  If I use Xilinx tools [1] to add one more UART I have just added new
+> hardware this needs to be reflected in the devicetree for the devices
+> to be usable in Linux.  And something like aliases which provides a
+> stable device name can be very useful here.
 
-I don't think you need all this, but in general you want to have
-compatible strings in each node (though there are many exceptions).
+Right, but it doesn't follow that aliases are what we should be doing
+here - both Rob and myself have mentioned providing a way to label the
+actual SPI devices themselves, this seems like a more robust way of
+doing things.  For example in a FPGA environment it would allow you to=20
+keep names stable even if you decide to reorganize the distribution of
+devices between controllers or mappings of chip selects and would have
+similar benefits for handling board variants.  Just numbering the buses
+provides a partial solution for some systems with usability drawbacks
+(you need to know the number to name mapping somehow), naming devices
+is both more direct and more general.
 
-> 3) Do you think that reserved areas nodes should be placed under their
-> own device node with probably own compatible? So, something like it
-> was done recently with MTD partitions (compatible = "fixed-partitions").
+--7uYPyRQQ5N0D02nI
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If we did go down the path of have 2 sets of ranges, then yes.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Rob
+iQEcBAEBCAAGBQJXR0TRAAoJECTWi3JdVIfQ2A4H/3nYZZAE1s1hfgs8GsaNA3Jw
+Jaw07ihFscl5pF3EuoD39cqteH+OVGZ9FAN230TP8Wbs4Q81J5Fy0A/j/nshP0dP
+KRJxmSmcBTmjHRyyDrJDRGmMzEDFWciRh2ECPz7uUeV/xQK7lhpycs/RrKRSRYXZ
+p3yAF3h73XxpkJW2365Tv18BJBBKQiu82mw2ViSbfQKWO6WXaowvfZ2bpojcIPUV
+rKruLxlpEulCmzrI5PWhFcI5VJ14Dm1fy5r/tfVDNtEqC+OG1P8itspa2xdXLRfT
+5gUIRcwJOLTM1A9xKxkGw/u/xDwKmJmfU5fNnwphoVRkepKvsu1lJoaBK3XrmQU=
+=PL/V
+-----END PGP SIGNATURE-----
+
+--7uYPyRQQ5N0D02nI--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
