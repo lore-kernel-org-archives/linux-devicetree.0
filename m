@@ -1,434 +1,399 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH v4] extcon: gpio: Add the support for Device tree bindings
-Date: Thu, 26 May 2016 22:21:54 +0900
-Message-ID: <CAGTfZH25YJDKA+cmFd5Tkid1GYnZmZcfP2q=ggmUiZQriaG+NQ@mail.gmail.com>
-References: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
-Reply-To: cw00.choi@samsung.com
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] dtc: Document the dynamic plugin internals
+Date: Thu, 26 May 2016 08:49:10 -0500
+Message-ID: <CAL_JsqLTrSP577ViKRjoqyagWw4+dZuQQsTMMXdoU3n9HZSYZA@mail.gmail.com>
+References: <1464112239-29856-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1464112239-29856-4-git-send-email-pantelis.antoniou@konsulko.com>
+ <5745F95F.6000600@gmail.com> <1151E0EF-B811-4C0B-858A-00810BE9BA42@konsulko.com>
+ <20160526062848.GG17226@voom.fritz.box> <8CAE1792-841B-4048-B6B1-1F0F973E2E34@konsulko.com>
+ <20160526063334.GH17226@voom.fritz.box> <BE239F34-7B36-4A78-BE21-AA48CB8349E4@konsulko.com>
+ <20160526071243.GI17226@voom.fritz.box> <C43C3B01-5DF5-49DF-848D-0BEA48E3DB6E@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Venkat Reddy Talla <vreddytalla@nvidia.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <C43C3B01-5DF5-49DF-848D-0BEA48E3DB6E-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Venkat,
+On Thu, May 26, 2016 at 2:16 AM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hi David,
+>
+>> On May 26, 2016, at 10:12 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6iEOx6SR5NKn@public.gmane.org=
+u> wrote:
+>>
+>> On Thu, May 26, 2016 at 09:36:02AM +0300, Pantelis Antoniou wrote:
+>>> Hi David,
+>>>
+>>>> On May 26, 2016, at 09:33 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6ryscVyMRj84@public.gmane.org=
+=2Eau> wrote:
+>>>>
+>>>> On Thu, May 26, 2016 at 09:31:20AM +0300, Pantelis Antoniou wrote:
+>>>>> Hi David,
+>>>>>
+>>>>>> On May 26, 2016, at 09:28 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6g@public.gmane.org=
+id.au> wrote:
+>>>>>>
+>>>>>> On Thu, May 26, 2016 at 09:14:49AM +0300, Pantelis Antoniou wrot=
+e:
+>>>>>>> Hi Frank,
+>>>>>>>
+>>>>>>>> On May 25, 2016, at 22:13 , Frank Rowand <frowand.list@gmail.c=
+om> wrote:
+>>>>>>>>
+>>>>>>>> On 5/24/2016 10:50 AM, Pantelis Antoniou wrote:
+>>>>>>>>> Provides the document explaining the internal mechanics of
+>>>>>>>>> plugins and options.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.=
+com>
+>>>>>>>>> ---
+>>>>>>>>> Documentation/dt-object-internal.txt | 318 ++++++++++++++++++=
++++++++++++++++++
+>>>>>>>>> 1 file changed, 318 insertions(+)
+>>>>>>>>> create mode 100644 Documentation/dt-object-internal.txt
+>>>>>>>>>
+>>>>>>>>> diff --git a/Documentation/dt-object-internal.txt b/Documenta=
+tion/dt-object-internal.txt
+>>>>>>>>> new file mode 100644
+>>>>>>>>> index 0000000..d5b841e
+>>>>>>>>> --- /dev/null
+>>>>>>>>> +++ b/Documentation/dt-object-internal.txt
+>>>>>>>>> @@ -0,0 +1,318 @@
+>>>>>>>>> +Device Tree Dynamic Object format internals
+>>>>>>>>> +-------------------------------------------
+>>>>>>>>> +
+>>>>>>>>> +The Device Tree for most platforms is a static representatio=
+n of
+>>>>>>>>> +the hardware capabilities. This is insufficient for many pla=
+tforms
+>>>>>>>>> +that need to dynamically insert device tree fragments to the
+>>>>>>>>> +running kernel's live tree.
+>>>>>>>>> +
+>>>>>>>>> +This document explains the the device tree object format and=
+ the
+>>>>>>>>> +modifications made to the device tree compiler, which make i=
+t possible.
+>>>>>>>>> +
+>>>>>>>>> +1. Simplified Problem Definition
+>>>>>>>>> +--------------------------------
+>>>>>>>>> +
+>>>>>>>>> +Assume we have a platform which boots using following simpli=
+fied device tree.
+>>>>>>>>> +
+>>>>>>>>> +---- foo.dts -----------------------------------------------=
+------------------
+>>>>>>>>> +      /* FOO platform */
+>>>>>>>>> +      / {
+>>>>>>>>> +              compatible =3D "corp,foo";
+>>>>>>>>> +
+>>>>>>>>> +              /* shared resources */
+>>>>>>>>> +              res: res {
+>>>>>>>>> +              };
+>>>>>>>>> +
+>>>>>>>>> +              /* On chip peripherals */
+>>>>>>>>> +              ocp: ocp {
+>>>>>>>>> +                      /* peripherals that are always instant=
+iated */
+>>>>>>>>> +                      peripheral1 { ... };
+>>>>>>>>> +              };
+>>>>>>>>> +      };
+>>>>>>>>> +---- foo.dts -----------------------------------------------=
+------------------
+>>>>>>>>> +
+>>>>>>>>> +We have a number of peripherals that after probing (using so=
+me undefined method)
+>>>>>>>>> +should result in different device tree configuration.
+>>>>>>>>> +
+>>>>>>>>> +We cannot boot with this static tree because due to the conf=
+iguration of the
+>>>>>>>>> +foo platform there exist multiple conficting peripherals DT =
+fragments.
+>>>>>>>>> +
+>>>>>>>>> +So for the bar peripheral we would have this:
+>>>>>>>>> +
+>>>>>>>>> +---- foo+bar.dts -------------------------------------------=
+------------------
+>>>>>>>>> +      /* FOO platform + bar peripheral */
+>>>>>>>>> +      / {
+>>>>>>>>> +              compatible =3D "corp,foo";
+>>>>>>>>> +
+>>>>>>>>> +              /* shared resources */
+>>>>>>>>> +              res: res {
+>>>>>>>>> +              };
+>>>>>>>>> +
+>>>>>>>>> +              /* On chip peripherals */
+>>>>>>>>> +              ocp: ocp {
+>>>>>>>>> +                      /* peripherals that are always instant=
+iated */
+>>>>>>>>> +                      peripheral1 { ... };
+>>>>>>>>> +
+>>>>>>>>> +                      /* bar peripheral */
+>>>>>>>>> +                      bar {
+>>>>>>>>> +                              compatible =3D "corp,bar";
+>>>>>>>>> +                              ... /* various properties and =
+child nodes */
+>>>>>>>>> +                      };
+>>>>>>>>> +              };
+>>>>>>>>> +      };
+>>>>>>>>> +---- foo+bar.dts -------------------------------------------=
+------------------
+>>>>>>>>> +
+>>>>>>>>> +While for the baz peripheral we would have this:
+>>>>>>>>> +
+>>>>>>>>> +---- foo+baz.dts -------------------------------------------=
+------------------
+>>>>>>>>> +      /* FOO platform + baz peripheral */
+>>>>>>>>> +      / {
+>>>>>>>>> +              compatible =3D "corp,foo";
+>>>>>>>>> +
+>>>>>>>>> +              /* shared resources */
+>>>>>>>>> +              res: res {
+>>>>>>>>> +                      /* baz resources */
+>>>>>>>>> +                      baz_res: res_baz { ... };
+>>>>>>>>> +              };
+>>>>>>>>> +
+>>>>>>>>> +              /* On chip peripherals */
+>>>>>>>>> +              ocp: ocp {
+>>>>>>>>> +                      /* peripherals that are always instant=
+iated */
+>>>>>>>>> +                      peripheral1 { ... };
+>>>>>>>>> +
+>>>>>>>>> +                      /* baz peripheral */
+>>>>>>>>> +                      baz {
+>>>>>>>>> +                              compatible =3D "corp,baz";
+>>>>>>>>> +                              /* reference to another point =
+in the tree */
+>>>>>>>>> +                              ref-to-res =3D <&baz_res>;
+>>>>>>>>> +                              ... /* various properties and =
+child nodes */
+>>>>>>>>> +                      };
+>>>>>>>>> +              };
+>>>>>>>>> +      };
+>>>>>>>>> +---- foo+baz.dts -------------------------------------------=
+------------------
+>>>>>>>>> +
+>>>>>>>>> +We note that the baz case is more complicated, since the baz=
+ peripheral needs to
+>>>>>>>>> +reference another node in the DT tree.
+>>>>>>>>> +
+>>>>>>>>> +2. Device Tree Object Format Requirements
+>>>>>>>>> +-----------------------------------------
+>>>>>>>>> +
+>>>>>>>>> +Since the device tree is used for booting a number of very d=
+ifferent hardware
+>>>>>>>>> +platforms it is imperative that we tread very carefully.
+>>>>>>>>> +
+>>>>>>>>> +2.a) No changes to the Device Tree binary format for the bas=
+e tree. We cannot
+>>>>>>>>> +modify the tree format at all and all the information we req=
+uire should be
+>>>>>>>>> +encoded using device tree itself. We can add nodes that can =
+be safely ignored
+>>>>>>>>> +by both bootloaders and the kernel. The plugin dtb's are opt=
+ionally tagged
+>>>>>>>>> +with a different magic number in the header but otherwise th=
+ey too are simple
+>>>>>>>>> +blobs.
+>>>>>>>>> +
+>>>>>>>>> +2.b) Changes to the DTS source format should be absolutely m=
+inimal, and should
+>>>>>>>>> +only be needed for the DT fragment definitions, and not the =
+base boot DT.
+>>>>>>>>> +
+>>>>>>>>> +2.c) An explicit option should be used to instruct DTC to ge=
+nerate the required
+>>>>>>>>> +information needed for object resolution. Platforms that don=
+'t use the
+>>>>>>>>> +dynamic object format can safely ignore it.
+>>>>>>>>> +
+>>>>>>>>> +2.d) Finally, DT syntax changes should be kept to a minimum.=
+ It should be
+>>>>>>>>> +possible to express everything using the existing DT syntax.
+>>>>>>>>> +
+>>>>>>>>> +3. Implementation
+>>>>>>>>> +-----------------
+>>>>>>>>> +
+>>>>>>>>> +The basic unit of addressing in Device Tree is the phandle. =
+Turns out it's
+>>>>>>>>> +relatively simple to extend the way phandles are generated a=
+nd referenced
+>>>>>>>>> +so that it's possible to dynamically convert symbolic refere=
+nces (labels)
+>>>>>>>>> +to phandle values. This is a valid assumption as long as the=
+ author uses
+>>>>>>>>> +reference syntax and does not assign phandle values manually=
+ (which might
+>>>>>>>>> +be a problem with decompiled source files).
+>>>>>>>>> +
+>>>>>>>>> +We can roughly divide the operation into two steps.
+>>>>>>>>> +
+>>>>>>>>> +3.a) Compilation of the base board DTS file using the '-@' o=
+ption
+>>>>>>>>> +generates a valid DT blob with an added __symbols__ node at =
+the root node,
+>>>>>>>>> +containing a list of all nodes that are marked with a label.
+>>>>>>>>> +
+>>>>>>>>> +Using the foo.dts file above the following node will be gene=
+rated;
+>>>>>>>>> +
+>>>>>>>>> +$ dtc -@ -O dtb -o foo.dtb -b 0 foo.dts
+>>>>>>>>> +$ fdtdump foo.dtb
+>>>>>>>>> +...
+>>>>>>>>> +/ {
+>>>>>>>>> +      ...
+>>>>>>>>> +      res {
+>>>>>>>>> +              ...
+>>>>>>>>> +              phandle =3D <0x00000001>;
+>>>>>>>>> +              ...
+>>>>>>>>> +      };
+>>>>>>>>> +      ocp {
+>>>>>>>>> +              ...
+>>>>>>>>> +              phandle =3D <0x00000002>;
+>>>>>>>>> +              ...
+>>>>>>>>> +      };
+>>>>>>>>> +      __symbols__ {
+>>>>>>>>> +              res=3D"/res";
+>>>>>>>>> +              ocp=3D"/ocp";
+>>>>>>>>> +      };
+>>>>>>>>> +};
+>>>>>>>>> +
+>>>>>>>>> +Notice that all the nodes that had a label have been recorde=
+d, and that
+>>>>>>>>> +phandles have been generated for them.
+>>>>>>>>> +
+>>>>>>>>> +This blob can be used to boot the board normally, the __symb=
+ols__ node will
+>>>>>>>>> +be safely ignored both by the bootloader and the kernel (the=
+ only loss will
+>>>>>>>>> +be a few bytes of memory and disk space).
+>>>>>>>>> +
+>>>>>>>>> +3.b) The Device Tree fragments must be compiled with the sam=
+e option but they
+>>>>>>>>> +must also have a tag (/plugin/) that allows undefined refere=
+nces to nodes
+>>>>>>>>> +that are not present at compilation time to be recorded so t=
+hat the runtime
+>>>>>>>>> +loader can fix them.
+>>>>>>>>> +
+>>>>>>>>> +So the bar peripheral's DTS format would be of the form:
+>>>>>>>>> +
+>>>>>>>>> +/dts-v1/ /plugin/;    /* allow undefined references and reco=
+rd them */
+>>>>>>>>> +/ {
+>>>>>>>>> +      ....    /* various properties for loader use; i.e. par=
+t id etc. */
+>>>>>>>>> +      fragment@0 {
+>>>>>>>>> +              target =3D <&ocp>;
+>>>>>>>>> +              __overlay__ {
+>>>>>>>>> +                      /* bar peripheral */
+>>>>>>>>> +                      bar {
+>>>>>>>>> +                              compatible =3D "corp,bar";
+>>>>>>>>> +                              ... /* various properties and =
+child nodes */
+>>>>>>>>> +                      }
+>>>>>>>>
+>>>>>>>>                     };
+>>>>>>>>
+>>>>>>>>> +              };
+>>>>>>>>> +      };
+>>>>>>>>> +};
+>>>>>>>>
+>>>>>>>> Other than the fact that the above syntax is already in the Li=
+nux
+>>>>>>>> kernel overlay implementation, is there a need for the target
+>>>>>>>> property and the __overlay__ node?  I haven't figured out what
+>>>>>>>> extra value they provide.
+>>>>>>>>
+>>>>>>>> Without those added, the overlay dts becomes simpler (though f=
+or a
+>>>>>>>> multi-node target path example this would be more complex unle=
+ss a label
+>>>>>>>> was used for the target node):
+>>>>>>>>
+>>>>>>>> +/dts-v1/ /plugin/;     /* allow undefined references and reco=
+rd them */
+>>>>>>>> +/ {
+>>>>>>>> +       ....    /* various properties for loader use; i.e. par=
+t id etc. */
+>>>>>>>> +       ocp {
+>>>>>>>> +                       /* bar peripheral */
+>>>>>>>> +                       bar {
+>>>>>>>> +                               compatible =3D "corp,bar";
+>>>>>>>> +                               ... /* various properties and =
+child nodes */
+>>>>>>>> +                       };
+>>>>>>>> +       };
+>>>>>>>> +};
+>>>>>>>>
+>>>>>>>
+>>>>>>> No.
+>>>>>>>
+>>>>>>> That only works if the overlay is applied in a single platform.
+>>>>>>>
+>>>>>>> I have working cases where the same overlay is applied on a ppc=
+ and a x86
+>>>>>>> platform.
+>>>>>>
+>>>>>> Huh?  How so..
+>>>>>>
+>>>>>
+>>>>> Yes, it does work. Yes it=E2=80=99s being used right now. It is a=
+ very valid use case.
+>>>>>
+>>>>> Think carrier boards on enterprise routers, plugging to a main bo=
+ard
+>>>>> that=E2=80=99s either ppc or x86 (or anything else for that matte=
+r).
+>>>>
+>>>> Sorry, I wasn't clear.  I have no problem believing overlays can b=
+e
+>>>> applied on multiple platforms.
+>>>>
+>>>> What I can't see is how Frank's format breaks that.  AFAICT it
+>>>> contains exactly the same information in a simpler encoding.
+>>>>
+>>>
+>>> It breaks it because it=E2=80=99s missing the target property.
+>>>
+>>> The layout of the base tree is not going to be the same in differen=
+t
+>>> platforms, so in the above example =E2=80=98ocp=E2=80=99 would not =
+exist in x86 for
+>>> instance.
+>>
+>> I think you're misinterpreting Frank's suggestion.  As I understand =
+it
+>> the node names of the top level nodes in his format aren't treated a=
+s
+>> literal node names, but instead treated as label names which are
+>> resolved similarly to the phandle external fixups.
+>>
+>> Actually.. that is one serious problem with Frank's format, it doesn=
+'t
+>> (easily) allow multiple fragments to be applied to the same target.
+>>
+>
+> Ugh, yeah I misinterpreted that. Still, it is not going to work with =
+the patches
+> I queued with multiple target support.
 
-There is some miscommunication. On previous my reply, I don't mean
-that the author of the patch[1] is changed from me to you.
+Queued implies accepted which they are not. The multiple ways of
+expressing targets bothers me. Upstream still has no external
+interface to overlays, so I think there is still room to change things
+if we decide it is worthwhile. Better now than stuck with something
+forever.
 
-I'd like you to remain the original author(me) for the patch[1]
-without changing the author.
-[1] https://lkml.org/lkml/2015/10/21/8
-- [PATCH v3] extcon: gpio: Add the support for Device tree bindings
+I too was wondering about the current syntax before this thread
+started. We have 2 levels of nodes before we get to any useful
+information with the current syntax.
 
-You can use the patch[1] as based patch and you can add new feature on
-base patch[1]. Also, If you ok, you can modify the extccon-gpio.c
-driver as Rob comment[2].
-
-But, Rob Herring gave me the some comment[2].
-[2] https://lkml.org/lkml/2015/10/21/906
-
-
-Thanks,
-Chanwoo Choi
-
-
-On Thu, May 26, 2016 at 8:47 PM, Venkat Reddy Talla
-<vreddytalla@nvidia.com> wrote:
-> Add the support for Device tree bindings of extcon-gpio driver.
-> The extcon-gpio device tree node must include the both 'extcon-id' and
-> 'gpios' property.
->
-> For example:
->         usb_cable: extcon-gpio-0 {
->                 compatible = "extcon-gpio";
->                 extcon-id = <EXTCON_USB>;
->                 gpios = <&gpio6 1 GPIO_ACTIVE_HIGH>;
->         }
->         ta_cable: extcon-gpio-1 {
->                 compatible = "extcon-gpio";
->                 extcon-id = <EXTCON_CHG_USB_DCP>;
->                 gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
->                 debounce-ms = <50>;     /* 50 millisecond */
->                 wakeup-source;
->         }
->         &dwc3_usb {
->                 extcon = <&usb_cable>;
->         };
->         &charger {
->                 extcon = <&ta_cable>;
->         };
->
-> Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
->
-> ---
-> changes from v3:
-> - add description for wakeup-source in documentation
-> - change dts property extcon-gpio name to gpios
-> - use of_get_named_gpio_flags to get gpio number and flags
-> Changes from v2:
-> - Add the more description for 'extcon-id' property in documentation
-> Changes from v1:
-> - Create the include/dt-bindings/extcon/extcon.h including the identification
-> of external connector. These definitions are used in dts file.
-> - Fix error if CONFIG_OF is disabled.
-> - Add signed-off tag by Myungjoo Ham
-> ---
-> ---
->  .../devicetree/bindings/extcon/extcon-gpio.txt     |  48 +++++++++
->  drivers/extcon/extcon-gpio.c                       | 109 +++++++++++++++++----
->  include/dt-bindings/extcon/extcon.h                |  47 +++++++++
->  include/linux/extcon/extcon-gpio.h                 |   8 +-
->  4 files changed, 189 insertions(+), 23 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
->  create mode 100644 include/dt-bindings/extcon/extcon.h
->
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> new file mode 100644
-> index 0000000..81f7932
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> @@ -0,0 +1,48 @@
-> +GPIO Extcon device
-> +
-> +This is a virtual device used to generate the specific cable states from the
-> +GPIO pin.
-> +
-> +Required properties:
-> +- compatible: Must be "extcon-gpio".
-> +- extcon-id: The extcon support the various type of external connector to check
-> +  whether connector is attached or detached. The each external connector has
-> +  the unique number to identify it. So this property includes the unique number
-> +  which indicates the specific external connector. When external connector is
-> +  attached or detached, GPIO pin detect the changed state. See include/
-> +  dt-bindings/extcon/extcon.h which defines the unique number for supported
-> +  external connector from extcon framework.
-> +- gpios: GPIO pin to detect the external connector. See gpio binding.
-> +
-> +Optional properties:
-> +- debounce-ms: the debounce dealy for GPIO pin in millisecond.
-> +- wakeup-source: Boolean, extcon can wake-up the system from suspend.
-> +  if gpio provided in extcon-gpio DT node is registered as interrupt,
-> +  then extcon can wake-up the system from suspend if wakeup-source property
-> +  is available in DT node, if gpio registered as interrupt but wakeup-source
-> +  is not available in DT node, then system wake-up due to extcon events
-> +  not supported.
-> +
-> +Example: Examples of extcon-gpio node as listed below:
-> +
-> +       usb_cable: extcon-gpio-0 {
-> +               compatible = "extcon-gpio";
-> +               extcon-id = <EXTCON_USB>;
-> +               extcon-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-> +       }
-> +
-> +       ta_cable: extcon-gpio-1 {
-> +               compatible = "extcon-gpio";
-> +               extcon-id = <EXTCON_CHG_USB_DCP>;
-> +               extcon-gpio = <&gpio3 2 GPIO_ACTIVE_LOW>;
-> +               debounce-ms = <50>;     /* 50 millisecond */
-> +               wakeup-source;
-> +       }
-> +
-> +       &dwc3_usb {
-> +               extcon = <&usb_cable>;
-> +       };
-> +
-> +       &charger {
-> +               extcon = <&ta_cable>;
-> +       };
-> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-> index d023789..592f395 100644
-> --- a/drivers/extcon/extcon-gpio.c
-> +++ b/drivers/extcon/extcon-gpio.c
-> @@ -1,11 +1,9 @@
->  /*
->   * extcon_gpio.c - Single-state GPIO extcon driver based on extcon class
->   *
-> - * Copyright (C) 2008 Google, Inc.
-> - * Author: Mike Lockwood <lockwood@android.com>
-> - *
-> - * Modified by MyungJoo Ham <myungjoo.ham@samsung.com> to support extcon
-> - * (originally switch class is supported)
-> + * Copyright (C) 2016 Chanwoo Choi <cw00.choi@samsung.com>, Samsung Electronics
-> + * Copyright (C) 2012 MyungJoo Ham <myungjoo.ham@samsung.com>, Samsung Electronics
-> + * Copyright (C) 2008 Mike Lockwood <lockwood@android.com>, Google, Inc.
->   *
->   * This software is licensed under the terms of the GNU General Public
->   * License version 2, as published by the Free Software Foundation, and
-> @@ -25,13 +23,17 @@
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/platform_device.h>
-> +#include <linux/property.h>
->  #include <linux/slab.h>
->  #include <linux/workqueue.h>
->
->  struct gpio_extcon_data {
->         struct extcon_dev *edev;
->         int irq;
-> +       bool irq_wakeup;
->         struct delayed_work work;
->         unsigned long debounce_jiffies;
->
-> @@ -49,7 +51,7 @@ static void gpio_extcon_work(struct work_struct *work)
->         state = gpiod_get_value_cansleep(data->id_gpiod);
->         if (data->pdata->gpio_active_low)
->                 state = !state;
-> -       extcon_set_state(data->edev, state);
-> +       extcon_set_cable_state_(data->edev, data->pdata->extcon_id, state);
->  }
->
->  static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
-> @@ -61,6 +63,42 @@ static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
->         return IRQ_HANDLED;
->  }
->
-> +static int gpio_extcon_parse_of(struct platform_device *pdev,
-> +                               struct gpio_extcon_data *data)
-> +{
-> +       struct gpio_extcon_pdata *pdata;
-> +       struct device_node *np = pdev->dev.of_node;
-> +       enum of_gpio_flags flags;
-> +       int ret;
-> +
-> +       pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +       if (!pdata)
-> +               return -ENOMEM;
-> +
-> +       ret = device_property_read_u32(&pdev->dev, "extcon-id",
-> +                                        &pdata->extcon_id);
-> +       if (ret < 0)
-> +               return -EINVAL;
-> +
-> +       pdata->gpio = of_get_named_gpio_flags(np, "gpios", 0, &flags);
-> +       if (pdata->gpio < 0)
-> +               return -EINVAL;
-> +
-> +       if (flags & OF_GPIO_ACTIVE_LOW)
-> +               pdata->gpio_active_low = true;
-> +
-> +       data->irq_wakeup = device_property_read_bool(&pdev->dev,
-> +                                               "wakeup-source");
-> +
-> +       device_property_read_u32(&pdev->dev, "debounce-ms", &pdata->debounce);
-> +
-> +       pdata->irq_flags = (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING
-> +                               | IRQF_ONESHOT);
-> +
-> +       data->pdata = pdata;
-> +       return 0;
-> +}
-> +
->  static int gpio_extcon_init(struct device *dev, struct gpio_extcon_data *data)
->  {
->         struct gpio_extcon_pdata *pdata = data->pdata;
-> @@ -96,16 +134,20 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->         struct gpio_extcon_data *data;
->         int ret;
->
-> -       if (!pdata)
-> -               return -EBUSY;
-> -       if (!pdata->irq_flags || pdata->extcon_id > EXTCON_NONE)
-> -               return -EINVAL;
-> -
-> -       data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
-> -                                  GFP_KERNEL);
-> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->         if (!data)
->                 return -ENOMEM;
-> -       data->pdata = pdata;
-> +
-> +       if (!pdata) {
-> +               ret = gpio_extcon_parse_of(pdev, data);
-> +               if (ret < 0)
-> +                       return ret;
-> +       } else {
-> +               data->pdata = pdata;
-> +       }
-> +
-> +       if (!data->pdata->irq_flags || data->pdata->extcon_id == EXTCON_NONE)
-> +               return -EINVAL;
->
->         /* Initialize the gpio */
->         ret = gpio_extcon_init(&pdev->dev, data);
-> @@ -113,7 +155,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->                 return ret;
->
->         /* Allocate the memory of extcon devie and register extcon device */
-> -       data->edev = devm_extcon_dev_allocate(&pdev->dev, &pdata->extcon_id);
-> +       data->edev = devm_extcon_dev_allocate(&pdev->dev,
-> +                                               &data->pdata->extcon_id);
->         if (IS_ERR(data->edev)) {
->                 dev_err(&pdev->dev, "failed to allocate extcon device\n");
->                 return -ENOMEM;
-> @@ -130,7 +173,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->          * is attached or detached.
->          */
->         ret = devm_request_any_context_irq(&pdev->dev, data->irq,
-> -                                       gpio_irq_handler, pdata->irq_flags,
-> +                                       gpio_irq_handler,
-> +                                       data->pdata->irq_flags,
->                                         pdev->name, data);
->         if (ret < 0)
->                 return ret;
-> @@ -139,6 +183,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->         /* Perform initial detection */
->         gpio_extcon_work(&data->work.work);
->
-> +       if (data->irq_wakeup)
-> +               device_init_wakeup(&pdev->dev, data->irq_wakeup);
->         return 0;
->  }
->
-> @@ -152,11 +198,23 @@ static int gpio_extcon_remove(struct platform_device *pdev)
->  }
->
->  #ifdef CONFIG_PM_SLEEP
-> +static int gpio_extcon_suspend(struct device *dev)
-> +{
-> +       struct gpio_extcon_data *data = dev_get_drvdata(dev);
-> +
-> +       if (data->irq_wakeup)
-> +               enable_irq_wake(data->irq);
-> +
-> +       return 0;
-> +}
-> +
->  static int gpio_extcon_resume(struct device *dev)
->  {
-> -       struct gpio_extcon_data *data;
-> +       struct gpio_extcon_data *data = dev_get_drvdata(dev);
-> +
-> +       if (data->irq_wakeup)
-> +               disable_irq_wake(data->irq);
->
-> -       data = dev_get_drvdata(dev);
->         if (data->pdata->check_on_resume)
->                 queue_delayed_work(system_power_efficient_wq,
->                         &data->work, data->debounce_jiffies);
-> @@ -165,7 +223,18 @@ static int gpio_extcon_resume(struct device *dev)
->  }
->  #endif
->
-> -static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id gpio_extcon_of_match[] = {
-> +       { .compatible = "extcon-gpio", },
-> +       { /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_extcon_of_match);
-> +#else
-> +#define gpio_extcon_of_match   NULL
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops,
-> +                       gpio_extcon_suspend, gpio_extcon_resume);
->
->  static struct platform_driver gpio_extcon_driver = {
->         .probe          = gpio_extcon_probe,
-> @@ -173,11 +242,13 @@ static struct platform_driver gpio_extcon_driver = {
->         .driver         = {
->                 .name   = "extcon-gpio",
->                 .pm     = &gpio_extcon_pm_ops,
-> +               .of_match_table = gpio_extcon_of_match,
->         },
->  };
->
->  module_platform_driver(gpio_extcon_driver);
->
-> +MODULE_AUTHOR("Chanwoo Choi <cw00.choi@samsung.com>");
->  MODULE_AUTHOR("Mike Lockwood <lockwood@android.com>");
->  MODULE_DESCRIPTION("GPIO extcon driver");
->  MODULE_LICENSE("GPL");
-> diff --git a/include/dt-bindings/extcon/extcon.h b/include/dt-bindings/extcon/extcon.h
-> new file mode 100644
-> index 0000000..dbba588
-> --- /dev/null
-> +++ b/include/dt-bindings/extcon/extcon.h
-> @@ -0,0 +1,47 @@
-> +/*
-> + * This header provides constants for most extcon bindings.
-> + *
-> + * Most extcon bindings include the unique identification format.
-> + * In most cases, the unique id format uses the standard values/macro
-> + * defined in this header.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_EXTCON_EXTCON_H
-> +#define _DT_BINDINGS_EXTCON_EXTCON_H
-> +
-> +/* USB external connector */
-> +#define EXTCON_USB             1
-> +#define EXTCON_USB_HOST                2
-> +
-> +/* Charging external connector */
-> +#define EXTCON_CHG_USB_SDP     5       /* Standard Downstream Port */
-> +#define EXTCON_CHG_USB_DCP     6       /* Dedicated Charging Port */
-> +#define EXTCON_CHG_USB_CDP     7       /* Charging Downstream Port */
-> +#define EXTCON_CHG_USB_ACA     8       /* Accessory Charger Adapter */
-> +#define EXTCON_CHG_USB_FAST    9
-> +#define EXTCON_CHG_USB_SLOW    10
-> +
-> +/* Jack external connector */
-> +#define EXTCON_JACK_MICROPHONE 20
-> +#define EXTCON_JACK_HEADPHONE  21
-> +#define EXTCON_JACK_LINE_IN    22
-> +#define EXTCON_JACK_LINE_OUT   23
-> +#define EXTCON_JACK_VIDEO_IN   24
-> +#define EXTCON_JACK_VIDEO_OUT  25
-> +#define EXTCON_JACK_SPDIF_IN   26      /* Sony Philips Digital InterFace */
-> +#define EXTCON_JACK_SPDIF_OUT  27
-> +
-> +/* Display external connector */
-> +#define EXTCON_DISP_HDMI       40      /* High-Definition Multimedia Interface */
-> +#define EXTCON_DISP_MHL                41      /* Mobile High-Definition Link */
-> +#define EXTCON_DISP_DVI                42      /* Digital Visual Interface */
-> +#define EXTCON_DISP_VGA                43      /* Video Graphics Array */
-> +
-> +/* Miscellaneous external connector */
-> +#define EXTCON_DOCK            60
-> +#define EXTCON_JIG             61
-> +#define EXTCON_MECHANICAL      62
-> +
-> +#define EXTCON_NUM             63
-> +
-> +#endif /* _DT_BINDINGS_EXTCON_EXTCON_H */
-> diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extcon/extcon-gpio.h
-> index 7cacafb..f7e7673 100644
-> --- a/include/linux/extcon/extcon-gpio.h
-> +++ b/include/linux/extcon/extcon-gpio.h
-> @@ -1,8 +1,8 @@
->  /*
->   * Single-state GPIO extcon driver based on extcon class
->   *
-> - * Copyright (C) 2012 Samsung Electronics
-> - * Author: MyungJoo Ham <myungjoo.ham@samsung.com>
-> + * Copyright (C) 2016 Chanwoo Choi <cw00.choi@samsung.com>, Samsung Electronics
-> + * Copyright (C) 2012 MyungJoo Ham <myungjoo.ham@samsung.com>, Samsung Electronics
->   *
->   * based on switch class driver
->   * Copyright (C) 2008 Google, Inc.
-> @@ -35,10 +35,10 @@
->   *                     while resuming from sleep.
->   */
->  struct gpio_extcon_pdata {
-> -       unsigned int extcon_id;
-> +       u32 extcon_id;
->         unsigned gpio;
->         bool gpio_active_low;
-> -       unsigned long debounce;
-> +       u32 debounce;
->         unsigned long irq_flags;
->
->         bool check_on_resume;
-> --
-> 2.1.4
->
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
