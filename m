@@ -1,64 +1,65 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] i2c: demux: Use changeset helpers for clarity
-Date: Thu, 26 May 2016 20:58:24 +0200
-Message-ID: <20160526185823.GF1614@katana>
-References: <1463416888-22044-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1463416888-22044-6-git-send-email-pantelis.antoniou@konsulko.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
+Date: Thu, 26 May 2016 21:00:00 +0200
+Message-ID: <20160526190000.GE3331@pengutronix.de>
+References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+ <3641492.klKRrvS8tr@wasted.cogentembedded.com>
+ <20160512184233.GJ30822@pengutronix.de>
+ <CACRpkdY3kmOiqVsnBWq8DyDDm-gLjcH4wQ+TTr1+Rp+jYLz+SQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463416888-22044-6-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+In-Reply-To: <CACRpkdY3kmOiqVsnBWq8DyDDm-gLjcH4wQ+TTr1+Rp+jYLz+SQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---+jhVVhN62yS6hEJ8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, May 16, 2016 at 07:41:28PM +0300, Pantelis Antoniou wrote:
-> The changeset helpers are easier to use, use them instead of
-> using the static property.
+On Thu, May 26, 2016 at 11:00:55AM +0200, Linus Walleij wrote:
+> On Thu, May 12, 2016 at 8:42 PM, Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
 >=20
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> > [added Linus Walleij to Cc, there is a question for you/him below]
+> (...)
+> >> +void mdio_device_reset(struct mdio_device *mdiodev, int value)
+> >> +{
+> >> +     if (mdiodev->reset)
+> >> +             gpiod_set_value(mdiodev->reset, value);
+> >
+> > Before v4.6-rc1~108^2~91 it was not necessary to check for the firs=
+t
+> > parameter being non-NULL before calling gpiod_set_value. Linus, did=
+ you
+> > change this on purpose?
+>=20
+> Not really. And AFAICT it is still not necessary: what changed is tha=
+t
+> an error message will be printed by VALIDATE_DESC() if you do that.
+> And that is proper I guess? I think it's sloppy code to randomly pass=
+ in
+> NULL to a call and just expect it to bail out, it seems more like
+> exercising the error path than something you'd normally rely on.
+>=20
+> Or am I getting things wrong?
 
-If you think this is worthwhile, then it's fine with me :)
+is the following sloppy?:
 
-Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+	somegpio =3D gpiod_get_optional(dev, "some", GPIOD_OUT_LOW);
+	if (IS_ERR(somegpio))
+		return PTR_ERR(somegpio);
+	gpiod_set_value(somegpio, 1);
 
-> +				adap_np, "status", "okay");
+If not (as I assume) you really changed something as this might trigger
+the warning.
 
-"ok" would be shorter?
+Best regards
+Uwe
 
-
---+jhVVhN62yS6hEJ8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXR0dPAAoJEBQN5MwUoCm2WyoP/3AVJYo8d6qmHzGhGsVq6hYC
-wqumWvZLdL+7EPQLtPpLOYeWLvz23UYqO7tiFs9o+5FRmcFj8cD7E55Cy3lW4zDS
-WDHYkEBzfkXRfxTdKglJFynjIzHo/WKtu+Ai1ZGEfe/7M2ct4Rx1ApdZmjpaTiGK
-6cYZ8KKOT5P9/uOz1DrgsedIvLrgRw0kgUH/PNSxxPGFTEFuIODXRQEUGqQf8V28
-OmVAfutktIDhK/mSdNGfa5pTij5K9ggxYIY6lWoB6wv5XeIDk5gZvOMc3NrAmBQD
-b88lrcR4mIC94Ilr6PlfgzOu7ZxCUPQYJC62mBCmPcOZg4UGzAG8qyh7EhcjTpPW
-S4CpAzY9Jo0p20QsaAwZFncZuJy/pcoUOmaffq447xFzxxeuWWeSyld5eZFsgEGI
-3IRoB0cIfEGhGsoAysp6e8tGYe0EMdFA8iOyZprW2T718VOJGCfri2E6HAaD3M0l
-j5xH4YUESyaPXXBK/95aLMjjRHBY3uSx09dgS1+jL6knn6NAbOSfTD8juDEMEAyC
-X+KRX77h4Aur/cF2o/rc2a7KU9doiEqPg+TooWk4RZPEUTOiJWzfffsgJvP+lfPW
-ed2+MonR08up+EHdrlI0RpOWOzCs7SzkhGLj0SjG9iILpdoba4XBIEbOB9QNz++l
-LbZv1+RJ+d2embhwmIEp
-=l1hH
------END PGP SIGNATURE-----
-
---+jhVVhN62yS6hEJ8--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
