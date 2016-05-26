@@ -1,108 +1,59 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] devicetree - document using aliases to set spi bus number.
-Date: Thu, 26 May 2016 10:21:00 +0200
-Message-ID: <CAMuHMdXm4jQE4SO3LweVtQe2x9f7gF4J4b74KH6UyMTeK1=U6g@mail.gmail.com>
-References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
-	<20160524174140.GE11605@leverpostej>
-	<20160525184421.GB10753@rob-hp-laptop>
+From: Igor Grinberg <grinberg@compulab.co.il>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
+Date: Thu, 26 May 2016 11:28:59 +0300
+Message-ID: <5746B3CB.20804@compulab.co.il>
+References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
+ <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
+ <CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160525184421.GB10753@rob-hp-laptop>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>, christopher.spinrath@rwth-aachen.de
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 8:44 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, May 24, 2016 at 06:41:41PM +0100, Mark Rutland wrote:
->> On Tue, May 24, 2016 at 06:39:20PM +0200, Christer Weinigel wrote:
->> > Document how to use devicetree aliases to assign a stable
->> > bus number to a spi bus.
->> >
->> > Signed-off-by: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
->> >
->> > ---
->> >
->> > Trivial documentation change.
->> >
->> > Not having used devicetree that much it was surprisingly hard to
->> > figure out how to assign a stable bus number to a spi bus.  Add a
->> > simple example that shows how to do that.
->> >
->> > Mark Cced as the SPI maintainer.  Or should trivial documentation
->> > fixes like this be addressed to someone else?
->> >
->> >   /Christer
->> >
->> >  Documentation/devicetree/bindings/spi/spi-bus.txt | 10 ++++++++++
->> >  1 file changed, 10 insertions(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
->> > index 42d5954..c35c4c2 100644
->> > --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
->> > +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
->> > @@ -94,3 +94,13 @@ SPI example for an MPC5200 SPI bus:
->> >                     reg = <1>;
->> >             };
->> >     };
->> > +
->> > +Normally SPI buses are assigned dynamic bus numbers starting at 32766
->> > +and counting downwards.  It is possible to assign the bus number
->> > +statically using devicetee aliases.  For example, on the MPC5200 the
->> > +"spi@f00" device above is connected to the "soc" bus.  To set its
->> > +bus_num to 1 add an aliases entry like this:
->>
->> As Mark Brown pointed out, this is very Linux-specific (at least in the
->> wording of the above).
->>
->> Generally, aliases are there to match _physical_ identifiers (e.g. to
->> match physical labels for UART0, UART1, and on).
+Hi Fabio,
 
-Indeed.
+On 05/23/2016 08:49 PM, Fabio Estevam wrote:
+> On Sun, May 22, 2016 at 7:47 PM,  <christopher.spinrath@rwth-aachen.de> wrote:
+> 
+>> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+>> new file mode 100644
+>> index 0000000..bcd8e0d
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+>> @@ -0,0 +1,128 @@
+>> +/*
+>> + * Copyright 2016 Christopher Spinrath
+>> + * Copyright 2013 CompuLab Ltd.
+>> + *
+>> + * Based on the GPLv2 licensed devicetree distributed with the vendor
+>> + * kernel for the Utilite Pro:
+>> + *     Copyright 2013 CompuLab Ltd.
+>> + *     Author: Valentin Raevsky <valentin@compulab.co.il>
+>> + *
+>> + * The code contained herein is licensed under the GNU General Public
+>> + * License. You may obtain a copy of the GNU General Public License
+>> + * Version 2 or later at the following locations:
+> 
+> Can you make this dual GPL/X11 license?
+> 
+> For reference take a look at:
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/imx6sl-warp.dts?id=refs/tags/v4.6
 
-> While there may be some correlation to physical identifiers, the reality
-> is aliases are used for mapping to Linux numbering. Their primary use
-> has been to avoid breaking existing userspace and kernel command lines
-> when converting to DT. The reality is that matters on very few platforms
-> and can be solved in other ways for new platforms. For serial port
-> console, that means using stdout-path for example.
+Please excuse me my ignorance, what is the rationale for this change?
 
-Fortunately the SPI aliases are optional, while for serial devices they
-are mandatory in most (all?) drivers. But this is more a relic of the aging
-serial subsystem, which still relies on allocating arrays of NR_MAX_PORTS at
-driver registration time, and thus can't support uart_port.line counting down
-from 32767 for dynamic numbers like SPI does.
-(BTW, I'd really like to see that fixed ;-)
-
-Aliases are also an obstacle for DT overlays:
-  1. You can't update the aliases from an overlay (I did post a patch to
-     implement that, but it's ugly and buggy, but I still use that as I need to
-     load DT overlays for serial port testing),
-  2. They're almost a guarantee for conflicts (does your overlay provide spi2,
-     or does mine?).
-
-So yes, try to stay away from aliases if you can.
-There's nothing a udev rule can't solve, can it?
-
-> For SPI, I think we should use "label" which reflects a name that is
-> defined by the h/w design and is meaningful to the user. Then perhaps
-> the device becomes "/dev/spi/by-name/<label>/spidev.0" or simply
-> "/dev/spidev-<label>.0".
-
-I guess using the node name is not an option (say "use standard node names")?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Igor.
