@@ -1,87 +1,75 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 00/11] Add HW throttle for Tegra soctherm
-Date: Thu, 26 May 2016 17:42:21 +0800
-Message-ID: <5746C4FD.9070909@nvidia.com>
-References: <1462962026-19653-1-git-send-email-wni@nvidia.com>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH 02/11] drivers: clk: st: Add clock propagation for audio clocks
+Date: Thu, 26 May 2016 11:49:46 +0200
+Message-ID: <CAG374jDTCJfZB+PuAnggjXhbcd3NjJqrESpe_EnMniCAeoph9A@mail.gmail.com>
+References: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1463560892-7209-3-git-send-email-gabriel.fernandez@linaro.org> <20160525172409.GA27913@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462962026-19653-1-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160525172409.GA27913@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-ke>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-Does there have any comments on this series?
-Let me know if someone has suggestions.
+On 25 May 2016 at 19:24, Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, May 18, 2016 at 10:41:23AM +0200, Gabriel Fernandez wrote:
+> > This patch allows fine tuning of the quads FS for audio clocks
+> > accuracy.
+> >
+> > Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
+> > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> > ---
+> >  .../devicetree/bindings/clock/st/st,flexgen.txt    |  1 +
+> >  drivers/clk/st/clk-flexgen.c                       | 24 ++++++++++++++++++++++
+> >  2 files changed, 25 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+> > index b7ee5c7..15b33c7 100644
+> > --- a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+> > +++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+> > @@ -60,6 +60,7 @@ This binding uses the common clock binding[2].
+> >  Required properties:
+> >  - compatible : shall be:
+> >    "st,flexgen"
+> > +  "st,stih407-clkgend0", "st,flexgen" (enable clock propagation on parent)
+>
+> What do "d0" and "d2" refer to?
+>
+> This seems to indicate you have too much clock detail in the DT (with
+> individual clocks described) or not enough with genericish compatible
+> strings. What happens for the mext clock you need to adjust the flags
+> on? You should be able to make these adjustments without DT updates.
+> Perhaps you need a wider fixing of clock compatible strings.
+>
+> Rob
 
-Thanks.
-Wei.
+Sorry i sent my response in html...
 
-On 05/11/2016 06:20 PM, Wei Ni wrote:
-> This series add following functions for Tegra soctherm:
-> 1. add HW throttle function.
-> 2. enable soctherm node for Tegra124, Tegra132, Tegra210, and
-> set "critical", "hot" trips for them.
-> 
-> Main changes from v4:
-> 1. drop the "nvidia" prefix from the node name, per Rob's comments.
-> 
-> Main changes from v3:
-> 1. change some properties'name and descriptions, per Rob's comments.
-> 2. change the corresponding driver codes.
-> 
-> Main changes from v2:
-> 1. improve the of-binding, per Eduardo's comments, and
-> change the corresponding driver codes.
-> 2. move two setting critical trip patches in this series,
-> 3. fix some bugs in dts changes.
-> 
-> Main changes from v1:
-> 1. use readl/writel instead of __raw_readl/__raw_writel.
-> 2. rebase on the linux-next.
-> 
-> The v1 series is in:
-> https://lkml.org/lkml/2016/3/31/230
-> 
-> The v2 series is in:
-> https://lkml.org/lkml/2016/4/26/1577
-> 
-> The v3 series is in:
-> https://lkml.org/lkml/2016/5/3/274
-> 
-> The v4 series is in:
-> https://lkml.org/lkml/2016/5/9/45
-> 
-> Wei Ni (11):
->   of: Add bindings of hw throttle for Tegra soctherm
->   thermal: tegra: add hw-throttle function
->   thermal: tegra: add hw-throttle for Tegra132
->   arm: tegra: set critical trips for Tegra124
->   arm: tegra: set hot trips for Tegra124
->   arm64: tegra: use tegra132-soctherm for Tegra132
->   arm64: tegra: set critical trips for Tegra132
->   arm64: tegra: set hot trips for Tegra132
->   arm64: tegra: add soctherm node for Tegra210
->   arm64: tegra: set critical trips for Tegra210
->   arm64: tegra: set hot trips for Tegra210
-> 
->  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 121 ++-
->  arch/arm/boot/dts/tegra124-jetson-tk1.dts          |  18 +-
->  arch/arm/boot/dts/tegra124.dtsi                    |  83 +-
->  arch/arm64/boot/dts/nvidia/tegra132.dtsi           | 119 ++-
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 127 ++++
->  drivers/thermal/tegra/soctherm.c                   | 842 ++++++++++++++++++++-
->  drivers/thermal/tegra/soctherm.h                   |  10 +
->  drivers/thermal/tegra/tegra124-soctherm.c          |  18 +
->  drivers/thermal/tegra/tegra132-soctherm.c          |  18 +
->  drivers/thermal/tegra/tegra210-soctherm.c          |  18 +
->  include/dt-bindings/thermal/tegra124-soctherm.h    |   5 +
->  11 files changed, 1344 insertions(+), 35 deletions(-)
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Rob,
+
+Thanks for reviewing.
+
+Can i remove
+"
+st,stih407-clkgend0" & "
+st,stih407-clkgend2" compatible strings and add proprieties instead ?
+I only need to activate 2 features and then we can keep generic
+compatible strings.
+
+e.g.
+
+clk_s_d2_flexgen: clk-s-d2-flexgen {
+#clock-cells = <1>;
+compatible = "st,flexgen";
+        ...
+       st-sync-mode;
+        st-update
+-parent-rate;
+};
+
+for d0_flexgen i will enable only st-sync-mode;
+
+Best Regards
