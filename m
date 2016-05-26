@@ -1,82 +1,31 @@
-From: Paul Handrigan <paul.handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ASoC: cs35l33: Add device tree bindings file for
- cs35l33
-Date: Thu, 26 May 2016 17:19:39 -0500
-Message-ID: <alpine.DEB.2.10.1605261714310.16316@phandrigan>
-References: <1463173373-648-1-git-send-email-Paul.Handrigan@cirrus.com> <20160516163922.GA21073@rob-hp-laptop>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
+Date: Thu, 26 May 2016 19:20:38 -0300
+Message-ID: <CAOMZO5C3_bd-2Nz+G956+VPOcKoFaGGJK7G1p=U0yf5OyWekZA@mail.gmail.com>
+References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
+	<c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
+	<CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
+	<a6cc6b85d2fa4994b3cb7e2b047f800d@rwthex-w2-b.rwth-ad.de>
+	<9d7793850de942cfb578b0aeb2728f41@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160516163922.GA21073@rob-hp-laptop>
+In-Reply-To: <9d7793850de942cfb578b0aeb2728f41-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
+To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 26, 2016 at 11:26 AM, Christopher Spinrath
+<christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
 
+> Thanks for joining this discussion. I *guess* the rationale is to share
+> the same device tree with projects that are incompatible with the GPL
+> (e.g. *BSD). Even if there is no support for a particular device/board
+> having all (or most) files dual licensed makes it easier to just pull
+> them all in.
 
-On Mon, 16 May 2016, Rob Herring wrote:
-
-> On Fri, May 13, 2016 at 04:02:53PM -0500, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org wrote:
-> > From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-> > 
-> > Add device tree bindings file for the cs35l33 8V boosted
-> > class D amplifier.
-> > 
-> > Signed-off-by: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/sound/cs35l33.txt          | 73 ++++++++++++++++++++++
-> >  1 file changed, 73 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/cs35l33.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/sound/cs35l33.txt b/Documentation/devicetree/bindings/sound/cs35l33.txt
-> > new file mode 100644
-> > index 0000000..273d73a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/sound/cs35l33.txt
-> > @@ -0,0 +1,73 @@
-> > +CS35L33 Speaker Amplifier
-> > +  - boost-ctl : Booster voltage use to supply the amp. If the value is
-> > +    0, then VBST = VP. If greater than 0, the boost voltage will be 3.3V with
-> > +    a value of 1 and will increase at a step size of 0.1V until a maximum of
-> > +    8.0V.
-> 
-> Can you just specify this is microvolts? Looks like an easy conversion.
-Yes, I can change that.
-> 
-> > +
-> > +  - ramp-rate : On power up, it affects the time from when the power
-> > +    up sequence begins to the time the audio reaches a full-scale output.
-> > +    On power down, it affects the time from when the power-down sequence
-> > +    begins to when the amplifier disables the PWM outputs. If this property
-> > +    is not set then soft ramping will be disabled and ramp time would be
-> > +    20ms. If this property is set to 0,1,2,3 then ramp times would be 40ms,
-> > +    60ms,100ms,175ms respectively for 48KHz sample rate.
-> 
-OK.  Thanks!
-> Either use time units or add vendor prefix.
-> 
-> > +  - boost-ipk : The maximum current allowed for the boost converter.
-> > +    The range starts at 1.85A (0xF0) and goes to a maximum of 3.60A (0xE0)
-> > +    with a step size of 0.015625A. The default is 2.50A (0x90).
-> 
-> Can this be in microamps?
-> 
-Yes.
-
-> Are these standard/typical properties for Class D amps?
-Not typical for class D amps in general, but some would be fairly common
-for boosted class D amps.  For example boost current maximum should be
-fairly common.  It is standard for all Cirrus class D boosted amps.
-
-> 
-> > +
-> > +  - hg-algo : Parameters for internal Class H/G algorithm that
-> > +    controls the amplifier supplies.
-> 
-> Each property in this node needs to be defined.
-OK.  Will do.
-> 
+Yes, that's correct.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
