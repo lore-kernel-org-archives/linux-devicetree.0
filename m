@@ -1,104 +1,434 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [STLinux Kernel] [PATCH 02/11] drivers: clk: st: Add clock
- propagation for audio clocks
-Date: Thu, 26 May 2016 08:20:39 -0500
-Message-ID: <CAL_JsqLeD8uTmMYLFZ5Sh9=JV5s1xthvruXL-W=c=zcVS=G-ZA@mail.gmail.com>
-References: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
- <1463560892-7209-3-git-send-email-gabriel.fernandez@linaro.org>
- <20160525172409.GA27913@rob-hp-laptop> <CAG374jDTCJfZB+PuAnggjXhbcd3NjJqrESpe_EnMniCAeoph9A@mail.gmail.com>
- <CAL_JsqLOG4P0H+HkQ3mJhfibatuV2T51KqOn-+U+LK8WUx7QgA@mail.gmail.com> <5746F486.602@st.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v4] extcon: gpio: Add the support for Device tree bindings
+Date: Thu, 26 May 2016 22:21:54 +0900
+Message-ID: <CAGTfZH25YJDKA+cmFd5Tkid1GYnZmZcfP2q=ggmUiZQriaG+NQ@mail.gmail.com>
+References: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
+Reply-To: cw00.choi@samsung.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <5746F486.602@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: loic pallardy <loic.pallardy@st.com>
-Cc: Gabriel Fernandez <gabriel.fernandez@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, linux-clk <linux-clk@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Olivier Bideau <olivier.bideau@st.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vincent ABRIOU <vincent.abriou@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Srinivas Kandagatla <srinivas.kandagatla@gm>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Venkat Reddy Talla <vreddytalla@nvidia.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 26, 2016 at 8:05 AM, loic pallardy <loic.pallardy@st.com> wrote:
->
->
-> On 05/26/2016 02:46 PM, Rob Herring wrote:
->>
->> On Thu, May 26, 2016 at 4:49 AM, Gabriel Fernandez
->> <gabriel.fernandez@linaro.org> wrote:
->>>
->>> On 25 May 2016 at 19:24, Rob Herring <robh@kernel.org> wrote:
->>>>
->>>>
->>>> On Wed, May 18, 2016 at 10:41:23AM +0200, Gabriel Fernandez wrote:
->>>>>
->>>>> This patch allows fine tuning of the quads FS for audio clocks
->>>>> accuracy.
->>>>>
->>>>> Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
->>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
->>>>> ---
->>>>>   .../devicetree/bindings/clock/st/st,flexgen.txt    |  1 +
->>>>>   drivers/clk/st/clk-flexgen.c                       | 24
->>>>> ++++++++++++++++++++++
->>>>>   2 files changed, 25 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
->>>>> b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
->>>>> index b7ee5c7..15b33c7 100644
->>>>> --- a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
->>>>> +++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
->>>>> @@ -60,6 +60,7 @@ This binding uses the common clock binding[2].
->>>>>   Required properties:
->>>>>   - compatible : shall be:
->>>>>     "st,flexgen"
->>>>> +  "st,stih407-clkgend0", "st,flexgen" (enable clock propagation on
->>>>> parent)
->>>>
->>>>
->>>> What do "d0" and "d2" refer to?
->>>>
->>>> This seems to indicate you have too much clock detail in the DT (with
->>>> individual clocks described) or not enough with genericish compatible
->>>> strings. What happens for the mext clock you need to adjust the flags
->>>> on? You should be able to make these adjustments without DT updates.
->>>> Perhaps you need a wider fixing of clock compatible strings.
->>>>
->>>> Rob
->>>
->>>
->>> Sorry i sent my response in html...
->>>
->>> Hi Rob,
->>>
->>> Thanks for reviewing.
->>>
->>> Can i remove
->>> "
->>> st,stih407-clkgend0" & "
->>> st,stih407-clkgend2" compatible strings and add proprieties instead ?
->>> I only need to activate 2 features and then we can keep generic
->>> compatible strings.
->>
->>
-> Hi Rob,
->>
->> That is no different and suffers the same point I raised. It requires
->> updating the DT for any clock configuration change or enhancement.
->>
-> Agree with you, DT update is needed as soon as a clock configuration should
-> be changed. This is due to STiH clock driver design based on DT description
-> of SoC clock tree.
->
-> This clock driver was accepted 2 years ago. At the time being there was
-> discussion about clock tree description location: driver or DT.
-> Bad choice was done for this driver...
->
-> If we decide to redesign STiH clock driver using in-driver clock tree
-> description, this will modify STiH clock DT nodes description and so break
-> DT backward compatibility.
->
-> What's from your pov the best option?
+Hi Venkat,
 
-You can break it once or every time you need a clock change. I'd go
-with the former. Maybe more specific compatible strings throughout
-alone would be enough rather than a flag day changing the binding.
+There is some miscommunication. On previous my reply, I don't mean
+that the author of the patch[1] is changed from me to you.
 
-Rob
+I'd like you to remain the original author(me) for the patch[1]
+without changing the author.
+[1] https://lkml.org/lkml/2015/10/21/8
+- [PATCH v3] extcon: gpio: Add the support for Device tree bindings
+
+You can use the patch[1] as based patch and you can add new feature on
+base patch[1]. Also, If you ok, you can modify the extccon-gpio.c
+driver as Rob comment[2].
+
+But, Rob Herring gave me the some comment[2].
+[2] https://lkml.org/lkml/2015/10/21/906
+
+
+Thanks,
+Chanwoo Choi
+
+
+On Thu, May 26, 2016 at 8:47 PM, Venkat Reddy Talla
+<vreddytalla@nvidia.com> wrote:
+> Add the support for Device tree bindings of extcon-gpio driver.
+> The extcon-gpio device tree node must include the both 'extcon-id' and
+> 'gpios' property.
+>
+> For example:
+>         usb_cable: extcon-gpio-0 {
+>                 compatible = "extcon-gpio";
+>                 extcon-id = <EXTCON_USB>;
+>                 gpios = <&gpio6 1 GPIO_ACTIVE_HIGH>;
+>         }
+>         ta_cable: extcon-gpio-1 {
+>                 compatible = "extcon-gpio";
+>                 extcon-id = <EXTCON_CHG_USB_DCP>;
+>                 gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
+>                 debounce-ms = <50>;     /* 50 millisecond */
+>                 wakeup-source;
+>         }
+>         &dwc3_usb {
+>                 extcon = <&usb_cable>;
+>         };
+>         &charger {
+>                 extcon = <&ta_cable>;
+>         };
+>
+> Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+>
+> ---
+> changes from v3:
+> - add description for wakeup-source in documentation
+> - change dts property extcon-gpio name to gpios
+> - use of_get_named_gpio_flags to get gpio number and flags
+> Changes from v2:
+> - Add the more description for 'extcon-id' property in documentation
+> Changes from v1:
+> - Create the include/dt-bindings/extcon/extcon.h including the identification
+> of external connector. These definitions are used in dts file.
+> - Fix error if CONFIG_OF is disabled.
+> - Add signed-off tag by Myungjoo Ham
+> ---
+> ---
+>  .../devicetree/bindings/extcon/extcon-gpio.txt     |  48 +++++++++
+>  drivers/extcon/extcon-gpio.c                       | 109 +++++++++++++++++----
+>  include/dt-bindings/extcon/extcon.h                |  47 +++++++++
+>  include/linux/extcon/extcon-gpio.h                 |   8 +-
+>  4 files changed, 189 insertions(+), 23 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+>  create mode 100644 include/dt-bindings/extcon/extcon.h
+>
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> new file mode 100644
+> index 0000000..81f7932
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> @@ -0,0 +1,48 @@
+> +GPIO Extcon device
+> +
+> +This is a virtual device used to generate the specific cable states from the
+> +GPIO pin.
+> +
+> +Required properties:
+> +- compatible: Must be "extcon-gpio".
+> +- extcon-id: The extcon support the various type of external connector to check
+> +  whether connector is attached or detached. The each external connector has
+> +  the unique number to identify it. So this property includes the unique number
+> +  which indicates the specific external connector. When external connector is
+> +  attached or detached, GPIO pin detect the changed state. See include/
+> +  dt-bindings/extcon/extcon.h which defines the unique number for supported
+> +  external connector from extcon framework.
+> +- gpios: GPIO pin to detect the external connector. See gpio binding.
+> +
+> +Optional properties:
+> +- debounce-ms: the debounce dealy for GPIO pin in millisecond.
+> +- wakeup-source: Boolean, extcon can wake-up the system from suspend.
+> +  if gpio provided in extcon-gpio DT node is registered as interrupt,
+> +  then extcon can wake-up the system from suspend if wakeup-source property
+> +  is available in DT node, if gpio registered as interrupt but wakeup-source
+> +  is not available in DT node, then system wake-up due to extcon events
+> +  not supported.
+> +
+> +Example: Examples of extcon-gpio node as listed below:
+> +
+> +       usb_cable: extcon-gpio-0 {
+> +               compatible = "extcon-gpio";
+> +               extcon-id = <EXTCON_USB>;
+> +               extcon-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
+> +       }
+> +
+> +       ta_cable: extcon-gpio-1 {
+> +               compatible = "extcon-gpio";
+> +               extcon-id = <EXTCON_CHG_USB_DCP>;
+> +               extcon-gpio = <&gpio3 2 GPIO_ACTIVE_LOW>;
+> +               debounce-ms = <50>;     /* 50 millisecond */
+> +               wakeup-source;
+> +       }
+> +
+> +       &dwc3_usb {
+> +               extcon = <&usb_cable>;
+> +       };
+> +
+> +       &charger {
+> +               extcon = <&ta_cable>;
+> +       };
+> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+> index d023789..592f395 100644
+> --- a/drivers/extcon/extcon-gpio.c
+> +++ b/drivers/extcon/extcon-gpio.c
+> @@ -1,11 +1,9 @@
+>  /*
+>   * extcon_gpio.c - Single-state GPIO extcon driver based on extcon class
+>   *
+> - * Copyright (C) 2008 Google, Inc.
+> - * Author: Mike Lockwood <lockwood@android.com>
+> - *
+> - * Modified by MyungJoo Ham <myungjoo.ham@samsung.com> to support extcon
+> - * (originally switch class is supported)
+> + * Copyright (C) 2016 Chanwoo Choi <cw00.choi@samsung.com>, Samsung Electronics
+> + * Copyright (C) 2012 MyungJoo Ham <myungjoo.ham@samsung.com>, Samsung Electronics
+> + * Copyright (C) 2008 Mike Lockwood <lockwood@android.com>, Google, Inc.
+>   *
+>   * This software is licensed under the terms of the GNU General Public
+>   * License version 2, as published by the Free Software Foundation, and
+> @@ -25,13 +23,17 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/property.h>
+>  #include <linux/slab.h>
+>  #include <linux/workqueue.h>
+>
+>  struct gpio_extcon_data {
+>         struct extcon_dev *edev;
+>         int irq;
+> +       bool irq_wakeup;
+>         struct delayed_work work;
+>         unsigned long debounce_jiffies;
+>
+> @@ -49,7 +51,7 @@ static void gpio_extcon_work(struct work_struct *work)
+>         state = gpiod_get_value_cansleep(data->id_gpiod);
+>         if (data->pdata->gpio_active_low)
+>                 state = !state;
+> -       extcon_set_state(data->edev, state);
+> +       extcon_set_cable_state_(data->edev, data->pdata->extcon_id, state);
+>  }
+>
+>  static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
+> @@ -61,6 +63,42 @@ static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
+>         return IRQ_HANDLED;
+>  }
+>
+> +static int gpio_extcon_parse_of(struct platform_device *pdev,
+> +                               struct gpio_extcon_data *data)
+> +{
+> +       struct gpio_extcon_pdata *pdata;
+> +       struct device_node *np = pdev->dev.of_node;
+> +       enum of_gpio_flags flags;
+> +       int ret;
+> +
+> +       pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +       if (!pdata)
+> +               return -ENOMEM;
+> +
+> +       ret = device_property_read_u32(&pdev->dev, "extcon-id",
+> +                                        &pdata->extcon_id);
+> +       if (ret < 0)
+> +               return -EINVAL;
+> +
+> +       pdata->gpio = of_get_named_gpio_flags(np, "gpios", 0, &flags);
+> +       if (pdata->gpio < 0)
+> +               return -EINVAL;
+> +
+> +       if (flags & OF_GPIO_ACTIVE_LOW)
+> +               pdata->gpio_active_low = true;
+> +
+> +       data->irq_wakeup = device_property_read_bool(&pdev->dev,
+> +                                               "wakeup-source");
+> +
+> +       device_property_read_u32(&pdev->dev, "debounce-ms", &pdata->debounce);
+> +
+> +       pdata->irq_flags = (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING
+> +                               | IRQF_ONESHOT);
+> +
+> +       data->pdata = pdata;
+> +       return 0;
+> +}
+> +
+>  static int gpio_extcon_init(struct device *dev, struct gpio_extcon_data *data)
+>  {
+>         struct gpio_extcon_pdata *pdata = data->pdata;
+> @@ -96,16 +134,20 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>         struct gpio_extcon_data *data;
+>         int ret;
+>
+> -       if (!pdata)
+> -               return -EBUSY;
+> -       if (!pdata->irq_flags || pdata->extcon_id > EXTCON_NONE)
+> -               return -EINVAL;
+> -
+> -       data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
+> -                                  GFP_KERNEL);
+> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+>         if (!data)
+>                 return -ENOMEM;
+> -       data->pdata = pdata;
+> +
+> +       if (!pdata) {
+> +               ret = gpio_extcon_parse_of(pdev, data);
+> +               if (ret < 0)
+> +                       return ret;
+> +       } else {
+> +               data->pdata = pdata;
+> +       }
+> +
+> +       if (!data->pdata->irq_flags || data->pdata->extcon_id == EXTCON_NONE)
+> +               return -EINVAL;
+>
+>         /* Initialize the gpio */
+>         ret = gpio_extcon_init(&pdev->dev, data);
+> @@ -113,7 +155,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>                 return ret;
+>
+>         /* Allocate the memory of extcon devie and register extcon device */
+> -       data->edev = devm_extcon_dev_allocate(&pdev->dev, &pdata->extcon_id);
+> +       data->edev = devm_extcon_dev_allocate(&pdev->dev,
+> +                                               &data->pdata->extcon_id);
+>         if (IS_ERR(data->edev)) {
+>                 dev_err(&pdev->dev, "failed to allocate extcon device\n");
+>                 return -ENOMEM;
+> @@ -130,7 +173,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>          * is attached or detached.
+>          */
+>         ret = devm_request_any_context_irq(&pdev->dev, data->irq,
+> -                                       gpio_irq_handler, pdata->irq_flags,
+> +                                       gpio_irq_handler,
+> +                                       data->pdata->irq_flags,
+>                                         pdev->name, data);
+>         if (ret < 0)
+>                 return ret;
+> @@ -139,6 +183,8 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>         /* Perform initial detection */
+>         gpio_extcon_work(&data->work.work);
+>
+> +       if (data->irq_wakeup)
+> +               device_init_wakeup(&pdev->dev, data->irq_wakeup);
+>         return 0;
+>  }
+>
+> @@ -152,11 +198,23 @@ static int gpio_extcon_remove(struct platform_device *pdev)
+>  }
+>
+>  #ifdef CONFIG_PM_SLEEP
+> +static int gpio_extcon_suspend(struct device *dev)
+> +{
+> +       struct gpio_extcon_data *data = dev_get_drvdata(dev);
+> +
+> +       if (data->irq_wakeup)
+> +               enable_irq_wake(data->irq);
+> +
+> +       return 0;
+> +}
+> +
+>  static int gpio_extcon_resume(struct device *dev)
+>  {
+> -       struct gpio_extcon_data *data;
+> +       struct gpio_extcon_data *data = dev_get_drvdata(dev);
+> +
+> +       if (data->irq_wakeup)
+> +               disable_irq_wake(data->irq);
+>
+> -       data = dev_get_drvdata(dev);
+>         if (data->pdata->check_on_resume)
+>                 queue_delayed_work(system_power_efficient_wq,
+>                         &data->work, data->debounce_jiffies);
+> @@ -165,7 +223,18 @@ static int gpio_extcon_resume(struct device *dev)
+>  }
+>  #endif
+>
+> -static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id gpio_extcon_of_match[] = {
+> +       { .compatible = "extcon-gpio", },
+> +       { /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_extcon_of_match);
+> +#else
+> +#define gpio_extcon_of_match   NULL
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops,
+> +                       gpio_extcon_suspend, gpio_extcon_resume);
+>
+>  static struct platform_driver gpio_extcon_driver = {
+>         .probe          = gpio_extcon_probe,
+> @@ -173,11 +242,13 @@ static struct platform_driver gpio_extcon_driver = {
+>         .driver         = {
+>                 .name   = "extcon-gpio",
+>                 .pm     = &gpio_extcon_pm_ops,
+> +               .of_match_table = gpio_extcon_of_match,
+>         },
+>  };
+>
+>  module_platform_driver(gpio_extcon_driver);
+>
+> +MODULE_AUTHOR("Chanwoo Choi <cw00.choi@samsung.com>");
+>  MODULE_AUTHOR("Mike Lockwood <lockwood@android.com>");
+>  MODULE_DESCRIPTION("GPIO extcon driver");
+>  MODULE_LICENSE("GPL");
+> diff --git a/include/dt-bindings/extcon/extcon.h b/include/dt-bindings/extcon/extcon.h
+> new file mode 100644
+> index 0000000..dbba588
+> --- /dev/null
+> +++ b/include/dt-bindings/extcon/extcon.h
+> @@ -0,0 +1,47 @@
+> +/*
+> + * This header provides constants for most extcon bindings.
+> + *
+> + * Most extcon bindings include the unique identification format.
+> + * In most cases, the unique id format uses the standard values/macro
+> + * defined in this header.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_EXTCON_EXTCON_H
+> +#define _DT_BINDINGS_EXTCON_EXTCON_H
+> +
+> +/* USB external connector */
+> +#define EXTCON_USB             1
+> +#define EXTCON_USB_HOST                2
+> +
+> +/* Charging external connector */
+> +#define EXTCON_CHG_USB_SDP     5       /* Standard Downstream Port */
+> +#define EXTCON_CHG_USB_DCP     6       /* Dedicated Charging Port */
+> +#define EXTCON_CHG_USB_CDP     7       /* Charging Downstream Port */
+> +#define EXTCON_CHG_USB_ACA     8       /* Accessory Charger Adapter */
+> +#define EXTCON_CHG_USB_FAST    9
+> +#define EXTCON_CHG_USB_SLOW    10
+> +
+> +/* Jack external connector */
+> +#define EXTCON_JACK_MICROPHONE 20
+> +#define EXTCON_JACK_HEADPHONE  21
+> +#define EXTCON_JACK_LINE_IN    22
+> +#define EXTCON_JACK_LINE_OUT   23
+> +#define EXTCON_JACK_VIDEO_IN   24
+> +#define EXTCON_JACK_VIDEO_OUT  25
+> +#define EXTCON_JACK_SPDIF_IN   26      /* Sony Philips Digital InterFace */
+> +#define EXTCON_JACK_SPDIF_OUT  27
+> +
+> +/* Display external connector */
+> +#define EXTCON_DISP_HDMI       40      /* High-Definition Multimedia Interface */
+> +#define EXTCON_DISP_MHL                41      /* Mobile High-Definition Link */
+> +#define EXTCON_DISP_DVI                42      /* Digital Visual Interface */
+> +#define EXTCON_DISP_VGA                43      /* Video Graphics Array */
+> +
+> +/* Miscellaneous external connector */
+> +#define EXTCON_DOCK            60
+> +#define EXTCON_JIG             61
+> +#define EXTCON_MECHANICAL      62
+> +
+> +#define EXTCON_NUM             63
+> +
+> +#endif /* _DT_BINDINGS_EXTCON_EXTCON_H */
+> diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extcon/extcon-gpio.h
+> index 7cacafb..f7e7673 100644
+> --- a/include/linux/extcon/extcon-gpio.h
+> +++ b/include/linux/extcon/extcon-gpio.h
+> @@ -1,8 +1,8 @@
+>  /*
+>   * Single-state GPIO extcon driver based on extcon class
+>   *
+> - * Copyright (C) 2012 Samsung Electronics
+> - * Author: MyungJoo Ham <myungjoo.ham@samsung.com>
+> + * Copyright (C) 2016 Chanwoo Choi <cw00.choi@samsung.com>, Samsung Electronics
+> + * Copyright (C) 2012 MyungJoo Ham <myungjoo.ham@samsung.com>, Samsung Electronics
+>   *
+>   * based on switch class driver
+>   * Copyright (C) 2008 Google, Inc.
+> @@ -35,10 +35,10 @@
+>   *                     while resuming from sleep.
+>   */
+>  struct gpio_extcon_pdata {
+> -       unsigned int extcon_id;
+> +       u32 extcon_id;
+>         unsigned gpio;
+>         bool gpio_active_low;
+> -       unsigned long debounce;
+> +       u32 debounce;
+>         unsigned long irq_flags;
+>
+>         bool check_on_resume;
+> --
+> 2.1.4
+>
