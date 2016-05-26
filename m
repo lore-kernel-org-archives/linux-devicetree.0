@@ -1,36 +1,36 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC PATCH 3/3] ARM64: dts: amlogic: meson-gxbb: Add watchdog node
-Date: Thu, 26 May 2016 09:51:52 +0200
-Message-ID: <1464249112-13658-4-git-send-email-narmstrong@baylibre.com>
-References: <1464249112-13658-1-git-send-email-narmstrong@baylibre.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 02/12] of: add J-Core cpu bindings
+Date: Thu, 26 May 2016 09:54:55 +0200
+Message-ID: <CAMuHMdX8whtu0Dfd6598xN6wWsk-s6UPWBhDm-RcaRZp88adYw@mail.gmail.com>
+References: <cover.1464148904.git.dalias@libc.org>
+	<39ad5c69533ef537e6ab0426efc057f9064ee581.1464148904.git.dalias@libc.org>
+	<20160525102214.GF1337@leverpostej>
+	<20160525230407.GT21636@brightrain.aerifal.cx>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464249112-13658-1-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <20160525230407.GT21636@brightrain.aerifal.cx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-watchdog@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Hi Rich,
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 832815d..bcca82f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -136,6 +136,12 @@
- 				clocks = <&xtal>;
- 				status = "disabled";
- 			};
-+
-+			watchdog@98d0 {
-+				compatible = "amlogic,meson-gxbb-wdt";
-+				reg = <0x0 0x098d0 0x0 0x10>;
-+				clocks = <&xtal>;
-+			};
- 		};
- 
- 		gic: interrupt-controller@c4301000 {
--- 
-2.7.0
+On Thu, May 26, 2016 at 1:04 AM, Rich Felker <dalias@libc.org> wrote:
+> If you really do want a lot more detail for SMP-related bindings, I
+> could consider submitting a version with SMP omitted for now (since
+> the kernel patches submitted at this point don't include SMP) and do
+> the addition of SMP as a separate patch later. But with the launch of
+> open-hardware boards capable of running SMP J2 systems (see
+> https://twitter.com/jcoreeng/status/730330848306700288) near, I'd like
+> to be getting bindings we can use stabilized so that we're properly
+> including DTB in the boot rom and not relying on external DTB files or
+> linking DTB in kernel.
+
+Submitting a version now without SMP is indeed a good idea, and allows
+to move forward.
+
+Gr{oetje,eeting}s,
+
+                        Geert
