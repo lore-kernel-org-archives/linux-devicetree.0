@@ -1,75 +1,54 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 1/2] Revert "mtd: atmel_nand: Support variable RB_EDGE
- interrupts"
-Date: Thu, 26 May 2016 08:36:15 +0200
-Message-ID: <20160526083615.6960686d@bbrezillon>
-References: <1462776680-5284-1-git-send-email-wenyou.yang@atmel.com>
-	<1462776680-5284-2-git-send-email-wenyou.yang@atmel.com>
-	<20160526031654.GA107505@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 0/4] clk: renesas: cpg-mssr: Add support for R-Car M3-W
+Date: Thu, 26 May 2016 08:55:35 +0200
+Message-ID: <CAMuHMdW4Q=OO1zX6_wcN85rs8ZtNqFGnQYEMkriSh1q2L4vJSA@mail.gmail.com>
+References: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
+	<20160526023548.GA20224@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160526031654.GA107505@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Wenyou Yang <wenyou.yang@atmel.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Josh Wu <rainyfeeling@outlook.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160526023548.GA20224@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk <linux-clk@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 May 2016 20:16:54 -0700
-Brian Norris <computersforpeace@gmail.com> wrote:
+Hi Simon,
 
-> Hi,
-> 
-> On Mon, May 09, 2016 at 02:51:18PM +0800, Wenyou Yang wrote:
-> > This reverts commit 5ddc7bd43ccc ("mtd: atmel_nand: Support variable
-> > RB_EDGE interrupts")
-> > 
-> > Because for current SoCs, the RB_EDGE3(i.e. bit 27) of HSMC_SR
-> > register does not exist, the RB_EDGE0 (i.e. bit 24) is the ready/busy
-> > line edge status bit. It is a datasheet bug.
-> > 
-> > Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> > ---
-> > 
-> >  .../devicetree/bindings/mtd/atmel-nand.txt         |  2 +-
-> >  drivers/mtd/nand/atmel_nand.c                      | 35 +++++-----------------
-> >  drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
-> >  3 files changed, 10 insertions(+), 30 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> > index d53aba9..3e7ee99 100644
-> > --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> > @@ -39,7 +39,7 @@ Optional properties:
-> >  
-> >  Nand Flash Controller(NFC) is an optional sub-node
-> >  Required properties:
-> > -- compatible : "atmel,sama5d3-nfc" or "atmel,sama5d4-nfc".
-> > +- compatible : "atmel,sama5d3-nfc".
-> >  - reg : should specify the address and size used for NFC command registers,
-> >          NFC registers and NFC SRAM. NFC SRAM address and size can be absent
-> >          if don't want to use it.
-> > diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-> > index efc8ea2..68b9160 100644
-> > --- a/drivers/mtd/nand/atmel_nand.c
-> > +++ b/drivers/mtd/nand/atmel_nand.c  
-> [...]
-> >  static const struct of_device_id atmel_nand_nfc_match[] = {
-> > -	{ .compatible = "atmel,sama5d3-nfc", .data = &sama5d3_nfc_caps },
-> > -	{ .compatible = "atmel,sama5d4-nfc", .data = &sama5d4_nfc_caps },
-> > +	{ .compatible = "atmel,sama5d3-nfc" },  
-> 
-> Hmm, wait. Didn't Rob and Alexandre suggest that we should *not* drop
-> the compatible property? We could have easily supported both here, and
-> just not listed any different capabilities. But I see that Nicholas took
-> the patch anyway, so I guess it's not a big deal...
+On Thu, May 26, 2016 at 4:35 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Wed, May 04, 2016 at 04:35:39PM +0200, Geert Uytterhoeven wrote:
+>> This patch series adds initial support for the Clock Pulse Generator and
+>> Module Standby and Software Reset modules on the Renesas R-Car M3-W
+>> SoC:
+>>   - Basic core clocks,
+>>   - SCIF2 (console) module clock,
+>>   - INTC-AP (GIC) module clock (disabled pending CLK_ENABLE_HAND_OFF).
+>>
+>> Support for more core and module clocks will be added incrementally.
+>
+> I am wondering about the status of this patchset vis a vis mainline.
+>
+> I would like to queue up "[PATCH v3 0/3] arm64: Add Renesas R8A7796 SoC
+> support" for v4.8 but I'd prefer to do so only if there is a good chance
+> that this patch-set, which is provides run-time dependency, will also be in
+> v4.8.
 
-Yes, actually the compatible change was introduced and fixed in the
-same release, so I don't think the stable ABI argument stands here.
+I plan to queue it in clk-renesas-for-v4.8 after the closing of the v4.7 merge
+window.
 
+BTW, as there were no comments on the code, but people are obviously using it,
+and building on top of it, it would be good to receive some
+{Acked,Tested,Reviewed}-by tags.
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
