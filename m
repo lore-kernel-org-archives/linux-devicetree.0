@@ -1,12 +1,12 @@
 From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: sun5i: add spi2 on A10s Olinuxino Micro
-Date: 26 May 2016 19:25:23 -0000
-Message-ID: <602069f7735ad37b1849dac484d2e8e7c9ec08b3.1464129859.git.hramrach@gmail.com>
+Subject: [PATCH 3/3] ARM: dts: sun5i: Add spi2 alias on A10s Olinuxino
+Date: 26 May 2016 19:25:24 -0000
+Message-ID: <df27dbe5931dcb7d8f404759ad42e25b15bcf780.1464129859.git.hramrach@gmail.com>
 References: <908ed06eb46f2162e222258aa14df545d0fa5b48.1464129859.git.hramrach@gmail.com>
 Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCQMLUOX54MBBJU3TW5AKGQE6VL76EI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCQMLUOX54MBBJ43TW5AKGQEH3YF64A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <908ed06eb46f2162e222258aa14df545d0fa5b48.1464129859.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,28 +20,25 @@ List-Id: devicetree@vger.kernel.org
 
 spi2 is available on the UEXT connector
 
+The bus is named spi2 in the A10s manual and Olinuxino manual so it is
+pointless to alias it to something else like spi0.
+
 Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-index 86d046a..7d2ff60 100644
+index 7d2ff60..9729c37 100644
 --- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
 +++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-@@ -192,6 +192,13 @@
- 	status = "okay";
- };
+@@ -58,6 +58,7 @@
+ 		serial0 = &uart0;
+ 		serial1 = &uart2;
+ 		serial2 = &uart3;
++		spi2 = &spi2;
+ 	};
  
-+&spi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi2_pins_a>,
-+		    <&spi2_cs0_pins_a>;
-+	status = "okay";
-+};
-+
- &ohci0 {
- 	status = "okay";
- };
+ 	chosen {
 -- 
 2.8.1
