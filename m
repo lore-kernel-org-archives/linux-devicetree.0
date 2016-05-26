@@ -1,200 +1,94 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: Re: [PATCH 3/3] arm64/numa: fix type info
-Date: Thu, 26 May 2016 10:12:44 -0700
-Message-ID: <57472E8C.1050607@gmail.com>
-References: <1464230639-9852-1-git-send-email-thunder.leizhen@huawei.com> <1464230639-9852-3-git-send-email-thunder.leizhen@huawei.com> <CAFpQJXWih2V9Ki-vkL+cDni=VoWL0nA-fx5B5XtfNxFsoUso-g@mail.gmail.com> <1464280503.16344.40.camel@perches.com>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [RFC/PATCH 1/2] doc: bindings: Add bindings documentation for mtd
+ otp nvmem
+Date: Thu, 26 May 2016 10:28:48 -0700
+Message-ID: <CAAtXAHdxPy5mMjA+9tqjWDYqgpHcycohJHaESwqSE8xd6L4FrQ@mail.gmail.com>
+References: <1464211607-8843-1-git-send-email-moritz.fischer@ettus.com>
+	<1464211607-8843-2-git-send-email-moritz.fischer@ettus.com>
+	<20160526100406.783c6f2d@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464280503.16344.40.camel@perches.com>
+In-Reply-To: <20160526100406.783c6f2d@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>, Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Ganapatrao Kulkarni <gpkulkarni@gmail.com>, devicetree <devicetree@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, David Daney <david.daney@cavium.com>, Catalin Marinas <catalin.marinas@arm.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Rob Herring <robh+dt@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Devicetree List <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The current patch to correct this problem is here:
+Hi Boris,
 
-https://lkml.org/lkml/2016/5/24/679
+On Thu, May 26, 2016 at 1:04 AM, Boris Brezillon
+<boris.brezillon@free-electrons.com> wrote:
 
-Since v7 of the ACPI/NUMA patches are likely going to be added to 
-linux-next as soon as the current merge window ends, further 
-simplifications of the informational prints should probably be rebased 
-on top of it.
+> I think the MTD partition -> nvmem connection could benefit to non-OTP
+> partitions too.
 
-David Daney
+Yeah, I thought about that, too. Would you use the _read, and _write
+callbacks in that case?
 
-On 05/26/2016 09:35 AM, Joe Perches wrote:
-> On Thu, 2016-05-26 at 09:22 -0700, Ganapatrao Kulkarni wrote:
->> On Wed, May 25, 2016 at 7:43 PM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
->>> numa_init(of_numa_init) may returned error because of numa configuration
->>> error. So "No NUMA configuration found" is inaccurate. In fact, specific
->>> configuration error information can be immediately printed by the
->>> testing branch. So "No NUMA..." only needs to be printed when numa_off.
-> []
->>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> []
->>> @@ -362,7 +362,8 @@ static int __init dummy_numa_init(void)
->>>          int ret;
->>>          struct memblock_region *mblk;
->>>
->>> -       pr_info("%s\n", "No NUMA configuration found");
->>> +       if (numa_off)
->> IIRC, it should be
->> if (!numa_off)
->> we want to print this message when we failed to find proper numa configuration.
->> when numa_off is set, we will not look for any numa configuration.
->>
->>>
->>> +               pr_info("%s\n", "No NUMA configuration found");
+> So, how about defining the nvmem regions under the partition nodes,
+> like that:
 >
-> trivia:
+> flash@0 {
+>         partitions {
+>                 compatible = "fixed-partitions";
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
 >
-> Using printk("%s\n", "string") just makes the object code larger
-> for no particular benefit.
+>                 partition@0 {
+>                         label = "uboot-spl";
+>                         reg = <0x0 0xe0000>;
+>                 };
 >
-> 	pr_info("No NUMA configuration found\n");
+>                 /* ... */
 >
-> would be smaller, faster and more intelligible for humans too.
+>                 partition@X{
+>                         label = "factory-data-part";
+>                         reg = <0x200000 0x100000>;
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
 >
-> Maybe something like this:
-> ---
->   arch/arm64/mm/numa.c | 41 ++++++++++++++++++++---------------------
->   1 file changed, 20 insertions(+), 21 deletions(-)
+>                         product: nvmem@0 {
+>                                 reg = <0x0 0x2>;
+>                         };
 >
-> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> index 98dc104..2042452 100644
-> --- a/arch/arm64/mm/numa.c
-> +++ b/arch/arm64/mm/numa.c
-> @@ -17,6 +17,8 @@
->    * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->    */
+>                         revision: nvmem@3 {
+>                                 reg = <0x3 0x2>;
+>                         };
+>                 };
+>         };
 >
-> +#define pr_fmt(fmt) "NUMA: " fmt
-> +
->   #include <linux/bootmem.h>
->   #include <linux/memblock.h>
->   #include <linux/module.h>
-> @@ -36,7 +38,7 @@ static __init int numa_parse_early_param(char *opt)
->   	if (!opt)
->   		return -EINVAL;
->   	if (!strncmp(opt, "off", 3)) {
-> -		pr_info("%s\n", "NUMA turned off");
-> +		pr_info("NUMA turned off\n");
->   		numa_off = 1;
->   	}
->   	return 0;
-> @@ -107,7 +109,7 @@ static void __init setup_node_to_cpumask_map(void)
->   		set_cpu_numa_node(cpu, NUMA_NO_NODE);
+>         otp-partitions {
+>                 compatible = "fixed-partitions";
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
 >
->   	/* cpumask_of_node() will now work */
-> -	pr_debug("NUMA: Node to cpumask map for %d nodes\n", nr_node_ids);
-> +	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
->   }
+>                 partition@X{
+>                         label = "factory-data-part";
+>                         reg = <0x0 0x40>;
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
 >
->   /*
-> @@ -142,14 +144,14 @@ int __init numa_add_memblk(int nid, u64 start, u64 size)
+>                         product: nvmem@0 {
+>                                 reg = <0x0 0x2>;
+>                         };
 >
->   	ret = memblock_set_node(start, size, &memblock.memory, nid);
->   	if (ret < 0) {
-> -		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
-> -			start, (start + size - 1), nid);
-> +		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
-> +		       start, (start + size - 1), nid);
->   		return ret;
->   	}
+>                         revision: nvmem@3 {
+>                                 reg = <0x3 0x2>;
+>                         };
+>                 };
+>         };
+> };
 >
->   	node_set(nid, numa_nodes_parsed);
-> -	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
-> -			start, (start + size - 1), nid);
-> +	pr_info("Adding memblock [0x%llx - 0x%llx] on node %d\n",
-> +		start, (start + size - 1), nid);
->   	return ret;
->   }
->
-> @@ -163,19 +165,18 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
->   	void *nd;
->   	int tnid;
->
-> -	pr_info("NUMA: Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
-> -			nid, start_pfn << PAGE_SHIFT,
-> -			(end_pfn << PAGE_SHIFT) - 1);
-> +	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
-> +		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
->
->   	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
->   	nd = __va(nd_pa);
->
->   	/* report and initialize */
-> -	pr_info("NUMA: NODE_DATA [mem %#010Lx-%#010Lx]\n",
-> +	pr_info("NODE_DATA [mem %#010Lx-%#010Lx]\n",
->   		nd_pa, nd_pa + nd_size - 1);
->   	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
->   	if (tnid != nid)
-> -		pr_info("NUMA: NODE_DATA(%d) on node %d\n", nid, tnid);
-> +		pr_info("NODE_DATA(%d) on node %d\n", nid, tnid);
->
->   	node_data[nid] = nd;
->   	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
-> @@ -232,8 +233,7 @@ static int __init numa_alloc_distance(void)
->   			numa_distance[i * numa_distance_cnt + j] = i == j ?
->   				LOCAL_DISTANCE : REMOTE_DISTANCE;
->
-> -	pr_debug("NUMA: Initialized distance table, cnt=%d\n",
-> -			numa_distance_cnt);
-> +	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
->
->   	return 0;
->   }
-> @@ -254,20 +254,20 @@ static int __init numa_alloc_distance(void)
->   void __init numa_set_distance(int from, int to, int distance)
->   {
->   	if (!numa_distance) {
-> -		pr_warn_once("NUMA: Warning: distance table not allocated yet\n");
-> +		pr_warn_once("Warning: distance table not allocated yet\n");
->   		return;
->   	}
->
->   	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
->   			from < 0 || to < 0) {
-> -		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
-> -			    from, to, distance);
-> +		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
-> +			     from, to, distance);
->   		return;
->   	}
->
->   	if ((u8)distance != distance ||
->   	    (from == to && distance != LOCAL_DISTANCE)) {
-> -		pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
-> +		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
->   			     from, to, distance);
->   		return;
->   	}
-> @@ -294,7 +294,7 @@ static int __init numa_register_nodes(void)
->   	/* Check that valid nid is set to memblks */
->   	for_each_memblock(memory, mblk)
->   		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
-> -			pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
-> +			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
->   				mblk->nid, mblk->base,
->   				mblk->base + mblk->size - 1);
->   			return -EINVAL;
-> @@ -362,9 +362,8 @@ static int __init dummy_numa_init(void)
->   	int ret;
->   	struct memblock_region *mblk;
->
-> -	pr_info("%s\n", "No NUMA configuration found");
-> -	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
-> -	       0LLU, PFN_PHYS(max_pfn) - 1);
-> +	pr_info("No NUMA configuration found - faking a node at [mem %#018Lx-%#018Lx]\n",
-> +		0LLU, PFN_PHYS(max_pfn) - 1);
->
->   	for_each_memblock(memory, mblk) {
->   		ret = numa_add_memblk(0, mblk->base, mblk->size);
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+> I know this requires changing the implementation to select the
+> appropriate nvmem wrapper to use depending on whether we're interfacing
+> with an OTP area or a regular one, but that should be doable.
+
+The implementation still needs work anyways, so I might as well add
+this to my list ...
+Would you do the nvmem mapping always, or conditionalize on a flag in
+the dt node like 'nvmem-export'?
+
+Thanks for the feedback,
+
+Moritz
