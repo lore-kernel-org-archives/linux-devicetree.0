@@ -1,95 +1,48 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 12/12] sh: add device tree source for J2 FPGA on Mimas
- v2  board
-Date: Thu, 26 May 2016 11:39:30 +0100
-Message-ID: <20160526103930.GC32186@leverpostej>
-References: <cover.1464148904.git.dalias@libc.org>
- <3d6f6fd6d674942a6446b0a14d9877017c53eb2f.1464148904.git.dalias@libc.org>
- <20160525103349.GH1337@leverpostej>
- <20160525231525.GV21636@brightrain.aerifal.cx>
+From: Christer Weinigel <christer@weinigel.se>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Thu, 26 May 2016 12:58:22 +0200
+Message-ID: <5746D6CE.5020605@weinigel.se>
+References: <20160524172045.GN8206@sirena.org.uk>
+ <57449784.4070108@weinigel.se> <20160524183256.GP8206@sirena.org.uk>
+ <5744E51A.1040506@gmail.com> <20160525174932.GA10753@rob-hp-laptop>
+ <5745E9B6.5090204@gmail.com> <20160525184442.GE8206@sirena.org.uk>
+ <57464D0A.1030706@weinigel.se>
+ <CAL_JsqJwQvPGtscheZjoJyhF1UPxDSqbS-QB9qm3M4HbpOicVA@mail.gmail.com>
+ <574657BB.6070300@weinigel.se> <20160526100753.GB16172@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160525231525.GV21636@brightrain.aerifal.cx>
+In-Reply-To: <20160526100753.GB16172@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 07:15:25PM -0400, Rich Felker wrote:
-> On Wed, May 25, 2016 at 11:33:50AM +0100, Mark Rutland wrote:
-> > On Wed, May 25, 2016 at 05:43:03AM +0000, Rich Felker wrote:
-> > > Signed-off-by: Rich Felker <dalias@libc.org>
-> > > ---
-> > >  arch/sh/boot/dts/j2_mimas_v2.dts | 87 ++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 87 insertions(+)
-> > >  create mode 100755 arch/sh/boot/dts/j2_mimas_v2.dts
-> > > 
-> > > diff --git a/arch/sh/boot/dts/j2_mimas_v2.dts b/arch/sh/boot/dts/j2_mimas_v2.dts
-> > > new file mode 100755
-> > > index 0000000..4a66cda
-> > > --- /dev/null
-> > > +++ b/arch/sh/boot/dts/j2_mimas_v2.dts
-> > > @@ -0,0 +1,87 @@
-> > > +/dts-v1/;
-> > > +
-> > > +/ {
-> > > +	compatible = "jcore,j2-soc";
-> > > +	model = "J2 FPGA SoC on Mimas v2 board";
-> > > +
-> > > +	#address-cells = <1>;
-> > > +	#size-cells = <1>;
-> > > +
-> > > +	interrupt-parent = <&aic>;
-> > > +
-> > > +	cpus {
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <0>;
-> > > +
-> > > +		cpu@0 {
-> > > +			device_type = "cpu";
-> > > +			compatible = "jcore,j2";
-> > > +			reg = < 0 >;
-> > > +			clock-frequency = < 50000000 >;
-> > 
-> > Nit: please remove the spacing around the '<' and '>' here. If nothing
-> > else, it's inconsistent with the rest of this file.
-> > 
-> > > +		};
-> > > +	};
-> > > +
-> > > +	memory@10000000 {
-> > > +		device_type = "memory";
-> > > +		reg = < 0x10000000 0x4000000 >;
-> > > +	};
-> > 
-> > Likewise.
-> 
-> OK, I'll change both of these.
-> 
-> > > +
-> > > +	chosen {
-> > > +		stdout-path = "/soc@abcd0000/serial@100";
-> > > +	};
-> > 
-> > Please use a label for the serial node, have an alias, and describe the
-> > pre-configured rate per the stdout-path binding, e.g.
-> 
-> Per Documentation/devicetree/bindings/xilinx.txt, current-speed is a
-> required property for "xlnx,xps-uartlite-1.00.a". Note that uartlite
-> does not actually have a programmable baud rate; the property is
-> instead being used to describe the hardware-provided rate.
+On 05/26/2016 12:07 PM, Mark Brown wrote:
+> I think Rob's referring to the fact that there are no in tree DTs
+> that use this feature - all the aliases for SPI controllers in
+> mainline are string based.
 
-Ah, ok. I was not aware of this.
+One of the main drivers behind devicetree was that Linus got fed up
+with the churn for all platform device changes in arch/arm.  I faintly
+recall him writing that he would be rather unhappy if that just got
+replaced with churn for devicetree dts files.
 
-> BTW our uartlite is not actually derived from Xilinx's IP core, just
-> interface-compatible with it, so I'd actually like to add a
-> "jcore,uartlite" binding too in order to express this, with
-> "xlnx,xps-uartlite-1.00.a" as the fallback compatible-tag. I'll
-> propose that as a separate patch later.
+It makes sense to include dts files for reference boards in the
+mainline kernel.  To include dts files for every vendors variant of a
+design would add just as much churn and be rather pointless.  My guess
+is that the dts file for most platforms are kept private.
 
-Please do.
+For platforms based on a FPGA such as the Xilinx Zync it's even more
+pointless to submit dts files to mainline.  When you have "hardware"
+that can be reconfigured the device tree files can't be set in stone.
+ If I use Xilinx tools [1] to add one more UART I have just added new
+hardware this needs to be reflected in the devicetree for the devices
+to be usable in Linux.  And something like aliases which provides a
+stable device name can be very useful here.
 
-Thanks,
-Mark.
+  /Christer
+
+[1] http://www.wiki.xilinx.com/Build+Device+Tree+Blob
