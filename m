@@ -1,95 +1,90 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v4 2/7] media: s5p-mfc: use generic reserved memory
- bindings
-Date: Fri, 27 May 2016 16:41:34 -0400
-Message-ID: <78803037-2aa8-0d62-c69a-f95caec393ab@osg.samsung.com>
-References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
- <1464096690-23605-3-git-send-email-m.szyprowski@samsung.com>
- <a14c4f45-64c9-f72d-532b-ad1ff53fa9eb@osg.samsung.com>
- <20160525173614.GA8309@rob-hp-laptop>
- <709cf900-86dd-5020-d516-24caa971d74a@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <709cf900-86dd-5020-d516-24caa971d74a@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: Introduce SOC_SINGLE_S8_TLV() macro" to the asoc tree
+Date: Fri, 27 May 2016 21:45:12 +0100
+Message-ID: <E1b6Od6-0001X4-KN@debutante>
+References: <1464356746-29610-3-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464356746-29610-3-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Marek,
+The patch
 
-On 05/27/2016 02:37 AM, Marek Szyprowski wrote:
-> Hello,
-> 
-> 
-> On 2016-05-25 19:36, Rob Herring wrote:
->> On Wed, May 25, 2016 at 11:18:59AM -0400, Javier Martinez Canillas wrote:
->>> Hello Marek,
->>>
->>> On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
->>>> Use generic reserved memory bindings and mark old, custom properties
->>>> as obsoleted.
->>>>
->>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>> ---
->>>>   .../devicetree/bindings/media/s5p-mfc.txt          | 39 +++++++++++++++++-----
->>>>   1 file changed, 31 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
->>>> index 2d5787e..92c94f5 100644
->>>> --- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
->>>> +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
->>>> @@ -21,15 +21,18 @@ Required properties:
->>>>     - clock-names : from common clock binding: must contain "mfc",
->>>>             corresponding to entry in the clocks property.
->>>>   -  - samsung,mfc-r : Base address of the first memory bank used by MFC
->>>> -            for DMA contiguous memory allocation and its size.
->>>> -
->>>> -  - samsung,mfc-l : Base address of the second memory bank used by MFC
->>>> -            for DMA contiguous memory allocation and its size.
->>>> -
->>>>   Optional properties:
->>>>     - power-domains : power-domain property defined with a phandle
->>>>                  to respective power domain.
->>>> +  - memory-region : from reserved memory binding: phandles to two reserved
->>>> +    memory regions, first is for "left" mfc memory bus interfaces,
->>>> +    second if for the "right" mfc memory bus, used when no SYSMMU
->>>> +    support is available
->>>> +
->>>> +Obsolete properties:
->>>> +  - samsung,mfc-r, samsung,mfc-l : support removed, please use memory-region
->>>> +    property instead
->>>> +
->>>>
->>> I wonder if we should maintain backward compatibility for this driver
->>> since s5p-mfc memory allocation won't work with an old FDT if support
->>> for the old properties are removed.
->> Well, minimally the commit log should indicate that compatibility is
->> being broken.
-> 
-> Compatibility is only partially broken. I add this to the commit message. Old
-> bindings will still work with the new driver when IOMMU is enabled - in such case reserved
-> memory regions are ignored so this should not be a big issue. Using IOMMU also increases
-> total memory space for the video buffers without wasting it as 'reserved'. Hope that
-> once those patches are merged, the IOMMU can be finally enabled in the exynos_defconfig.
->
+   ASoC: Introduce SOC_SINGLE_S8_TLV() macro
 
-Yes, a problem is that some Exynos machines (for example the Snow and Peach
-Chromebooks) fail to boot when IOMMU is enabled due the bootloader leaving
-the FIMD enabled doing DMA operations automatically as you found before.
+has been applied to the asoc tree at
 
-You proposed to add a "iommu-reserved-mapping" property [0] but that never
-landed due not having an agreement on how should be fixed properly IIUC [1].
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-So that has to be fixed before enabling the Exynos IOMMU support by default.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-[0]: http://www.spinics.net/lists/arm-kernel/msg415501.html
-[1]: http://www.spinics.net/lists/arm-kernel/msg419747.html 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Best regards,
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 627f3c2fc0c8fd52ebe7c0f28744d98d3955a1d6 Mon Sep 17 00:00:00 2001
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Fri, 27 May 2016 14:45:45 +0100
+Subject: [PATCH] ASoC: Introduce SOC_SINGLE_S8_TLV() macro
+
+This patch introduces SOC_SINGLE_S8_TLV() macro for volume control
+on chips which supports both negative and positive gains with sign
+bit on a 8 bit register, Gain ranges from -128 to +127 with a
+predefined step size.
+Currently we only have support to DOUBLE_S8_TLV() which does not fit
+for cases where we just have separate gain control register for each
+channel.
+
+One of the Qualcomm SOC msm8916 has such gain control register whose gain
+range is from -38.4dB to +38.4dB with step size of 0.3dB.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ include/sound/soc.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index fd7b58a58d6f..6144882cc96a 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -179,6 +179,17 @@
+ 	.get = snd_soc_get_volsw, .put = snd_soc_put_volsw, \
+ 	.private_value = SOC_DOUBLE_R_S_VALUE(reg_left, reg_right, xshift, \
+ 					    xmin, xmax, xsign_bit, xinvert) }
++#define SOC_SINGLE_S8_TLV(xname, xreg, xmin, xmax, tlv_array) \
++{	.iface  = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
++	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
++		  SNDRV_CTL_ELEM_ACCESS_READWRITE, \
++	.tlv.p  = (tlv_array), \
++	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw,\
++	.put = snd_soc_put_volsw, \
++	.private_value = (unsigned long)&(struct soc_mixer_control) \
++	{.reg = xreg, .rreg = xreg,  \
++	 .min = xmin, .max = xmax, .platform_max = xmax, \
++	.sign_bit = 7,} }
+ #define SOC_DOUBLE_S8_TLV(xname, xreg, xmin, xmax, tlv_array) \
+ {	.iface  = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
+ 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
