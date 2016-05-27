@@ -1,35 +1,48 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v2 2/5] drm/mediatke: add support for Mediatek SoC MT2701
-Date: Fri, 27 May 2016 10:35:20 +0100
-Message-ID: <CACvgo51gUVtVZtanQh787YeB8F_WHsNx6b1Oi0iBAEYLWZtJMw@mail.gmail.com>
-References: <1463756736-46573-1-git-send-email-yt.shen@mediatek.com>
-	<1463756736-46573-3-git-send-email-yt.shen@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463756736-46573-3-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mao Huang <littlecvr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Subject: [PATCH v2 0/4] hw rng support for NSP SoC
+Date: Fri, 27 May 2016 06:10:37 -0400
+Message-ID: <1464343841-29504-1-git-send-email-yendapally.reddy@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, noltari@gmail.com, Joshua Henderson <joshua.henderson@microchip.com>
+Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi YT Shen,
+This patchset contains the hw random number generator support for the
+Broadcom's NSP SoC. The block is similar to the block available in
+bcm2835 with different default interrupt mask value. Due to lack of
+documentation, I cannot confirm the interrupt mask register details
+in bcm2835. In an effort to not break the existing functionality of
+bcm2835, I used a different compatible string to mask the interrupt
+for NSP SoC. Please let me know. Also supported providing requested
+number of random numbers instead of static size of four bytes.
 
-There's a typo in the commit summary - s/mediatke/mediatek/.
+The first patch contains the documentation changes and the second patch
+contains the support for rng available in NSP SoC. The third patch
+contains the device tree changes for NSP SoC. The fourth patch contains
+the support for reading requested number of random numbers.
 
-On 20 May 2016 at 16:05,  <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->
-> This patch add support for the Mediatek MT2701 DISP subsystem.
-> There is only one OVL engine in MT2701.
->
-As is you introduce a broken driver only to fix it up with patches 3/5
-and 4/5. You really want to have this patch as 4/5, with the MT2701
-hunks from 3/5 merged in here.
+This patch set has been tested on NSP bcm958625HR board.
+This patch set is based on v4.6.0-rc1 and is available from github
+repo: https://github.com/Broadcom/cygnus-linux.git
+branch: nsp-rng-v2
 
-Regards,
-Emil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v1
+
+Addressed the review comments from Eric
+Added acked by Eric
+
+Yendapally Reddy Dhananjaya Reddy (4):
+  dt-bindings: rng: Northstar Plus SoC rng bindings
+  hwrng: bcm2835: Support Broadcom NSP SoC rng
+  ARM: dts: nsp: Add rng device tree entry
+  hwrng: bcm2835: Read as much data as available
+
+ .../devicetree/bindings/rng/brcm,bcm2835.txt       |  7 +++-
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  5 +++
+ drivers/char/hw_random/Kconfig                     |  2 +-
+ drivers/char/hw_random/bcm2835-rng.c               | 46 +++++++++++++++++++---
+ 4 files changed, 52 insertions(+), 8 deletions(-)
+
+-- 
+2.1.0
