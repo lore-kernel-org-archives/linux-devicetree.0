@@ -1,254 +1,144 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [RESEND PATCH 6/6] ASoC: rockchip: Add machine driver for cdn dp codec
-Date: Fri, 27 May 2016 18:45:42 +0800
-Message-ID: <1464345942-4795-7-git-send-email-zyw@rock-chips.com>
-References: <1464345942-4795-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464345942-4795-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com
-Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v4 6/7] ARM: dts: exynos: convert MFC device to generic
+ reserved memory bindings
+Date: Fri, 27 May 2016 13:32:57 +0200
+Message-ID: <f0148d4b-a69c-c84b-4a5e-4ff6bb9fde6f@samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-7-git-send-email-m.szyprowski@samsung.com>
+ <0158bb7a-02cf-bbb3-f903-d99c7351dfc4@osg.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <0158bb7a-02cf-bbb3-f903-d99c7351dfc4@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The driver is used for cdn dp codec embedded in rk3399
+Hello,
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 
----
+On 2016-05-25 19:11, Javier Martinez Canillas wrote:
+> Hello Marek,
+>
+> On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
+>> This patch replaces custom properties for defining reserved memory
+>> regions with generic reserved memory bindings for MFC video codec
+>> device.
+>>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+> [snip]
+>
+>> +
+>> +/ {
+>> +	reserved-memory {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		mfc_left: region@51000000 {
+>> +			compatible = "shared-dma-pool";
+>> +			no-map;
+>> +			reg = <0x51000000 0x800000>;
+>> +		};
+>> +
+>> +		mfc_right: region@43000000 {
+>> +			compatible = "shared-dma-pool";
+>> +			no-map;
+>> +			reg = <0x43000000 0x800000>;
+>> +		};
+>> +	};
+> I've a question probably for a follow up patch, but do you know what's a
+> sane default size for these? I needed to bump the mfc_left size from 8 MiB
+> to 16 MiB in order to decode a 480p H264 video using GStramer. So clearly
+> the default sizes are not that useful.
 
- .../bindings/sound/rockchip-cdn-dp-audio.txt       |  12 ++
- sound/soc/rockchip/Kconfig                         |   9 ++
- sound/soc/rockchip/Makefile                        |   2 +
- sound/soc/rockchip/rockchip-cdn-dp-audio.c         | 167 +++++++++++++++++++++
- 4 files changed, 190 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt
- create mode 100644 sound/soc/rockchip/rockchip-cdn-dp-audio.c
+Right, the default size for the 'left' region can be increased. Frankly, 
+those
+values (8MiB/0x43000000+ 8MiB/0x51000000) comes from my initial patches
+prepared for some demo and don't have much with any real requirements. They
+were copied (blindly...) by various developers without any deeper 
+understanding.
+Probably the most sane would be to use something like this:
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt b/Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt
-new file mode 100644
-index 0000000..b7b0898
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt
-@@ -0,0 +1,12 @@
-+Rockchip cdn dp audio bindings
-+
-+Required properties:
-+- compatible: platform specific, must be "rockchip,cdn-dp-audio"
-+- i2s-controller: the device of i2s controller
-+
-+Example:
-+
-+	cdn_dp_audio: cdn-dp_audio {
-+		compatible = "rockchip,cdn-dp-audio";
-+		i2s-controller = <&i2s2>;
-+	};
-diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
-index f1e0c70..7e7d905 100644
---- a/sound/soc/rockchip/Kconfig
-+++ b/sound/soc/rockchip/Kconfig
-@@ -15,6 +15,15 @@ config SND_SOC_ROCKCHIP_I2S
- 	  Rockchip I2S device. The device supports upto maximum of
- 	  8 channels each for play and record.
- 
-+config SND_SOC_ROCKCHIP_CDN_DP_AUDIO
-+	tristate "cdn DP audio support"
-+	depends on ROCKCHIP_CDN_DP
-+	select SND_SOC_ROCKCHIP_I2S
-+	select SND_SOC_CDN_DP_AUDIO
-+	help
-+	  Say Y or M here if you want to add support for SoC audio on Rockchip
-+	  boards using the cdn dp codec, such as RK3399.
-+
- config SND_SOC_ROCKCHIP_SPDIF
- 	tristate "Rockchip SPDIF Device Driver"
- 	depends on CLKDEV_LOOKUP && SND_SOC_ROCKCHIP
-diff --git a/sound/soc/rockchip/Makefile b/sound/soc/rockchip/Makefile
-index c0bf560..9367f55 100644
---- a/sound/soc/rockchip/Makefile
-+++ b/sound/soc/rockchip/Makefile
-@@ -5,8 +5,10 @@ snd-soc-rockchip-spdif-objs := rockchip_spdif.o
- obj-$(CONFIG_SND_SOC_ROCKCHIP_I2S) += snd-soc-rockchip-i2s.o
- obj-$(CONFIG_SND_SOC_ROCKCHIP_SPDIF) += snd-soc-rockchip-spdif.o
- 
-+snd-soc-rockchip-cdn-dp-objs := rockchip-cdn-dp-audio.o
- snd-soc-rockchip-max98090-objs := rockchip_max98090.o
- snd-soc-rockchip-rt5645-objs := rockchip_rt5645.o
- 
-+obj-$(CONFIG_SND_SOC_ROCKCHIP_CDN_DP_AUDIO) += snd-soc-rockchip-cdn-dp.o
- obj-$(CONFIG_SND_SOC_ROCKCHIP_MAX98090) += snd-soc-rockchip-max98090.o
- obj-$(CONFIG_SND_SOC_ROCKCHIP_RT5645) += snd-soc-rockchip-rt5645.o
-diff --git a/sound/soc/rockchip/rockchip-cdn-dp-audio.c b/sound/soc/rockchip/rockchip-cdn-dp-audio.c
-new file mode 100644
-index 0000000..2bf6649
---- /dev/null
-+++ b/sound/soc/rockchip/rockchip-cdn-dp-audio.c
-@@ -0,0 +1,167 @@
-+/*
-+ * rockchip-cdn-dp-card.c
-+ *
-+ * ROCKCHIP ALSA SoC DAI driver for cdn dp audio on rockchip processors.
-+ *
-+ * Copyright (C) 2016 Chris Zhong <zyw@rock-chips.com>
-+ * Copyright (C) 2016 ROCKCHIP, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include <sound/soc.h>
-+#include <sound/pcm.h>
-+#include <sound/core.h>
-+#include <sound/pcm_params.h>
-+
-+#include "rockchip_i2s.h"
-+
-+#define DRV_NAME "rockchip-cdn-dp-audio"
-+
-+static int cdn_dp_audio_hw_params(struct snd_pcm_substream *substream,
-+				  struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	unsigned int dai_fmt = rtd->dai_link->dai_fmt;
-+	int mclk, ret;
-+
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+	case 24000:
-+	case 32000:
-+	case 48000:
-+	case 64000:
-+	case 96000:
-+		mclk = 12288000;
-+		break;
-+	case 11025:
-+	case 22050:
-+	case 44100:
-+	case 88200:
-+		mclk = 11289600;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = snd_soc_dai_set_fmt(cpu_dai, dai_fmt);
-+	if (ret < 0) {
-+		dev_err(cpu_dai->dev, "failed to set cpu_dai fmt.\n");
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk, SND_SOC_CLOCK_OUT);
-+	if (ret < 0) {
-+		dev_err(cpu_dai->dev, "failed to set cpu_dai sysclk.\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_ops cdn_dp_dai_ops = {
-+	.hw_params = cdn_dp_audio_hw_params,
-+};
-+
-+static struct snd_soc_dai_link cdn_dp_dai = {
-+	.name = "cdn_dp",
-+	.stream_name = "cdn_dp",
-+	.codec_name = "cdn-dp-audio",
-+	.codec_dai_name = "cdn-dp-hifi",
-+	.ops = &cdn_dp_dai_ops,
-+	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+		   SND_SOC_DAIFMT_CBS_CFS,
-+};
-+
-+static struct snd_soc_card cdn_dp_audio_card = {
-+	.name = "cdn_dp",
-+	.owner = THIS_MODULE,
-+	.dai_link = &cdn_dp_dai,
-+	.num_links = 1,
-+};
-+
-+static int cdn_dp_audio_probe(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = &cdn_dp_audio_card;
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+
-+	card->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, card);
-+
-+	cdn_dp_dai.cpu_of_node = of_parse_phandle(np, "i2s-controller", 0);
-+	if (!cdn_dp_dai.cpu_of_node) {
-+		dev_err(&pdev->dev, "Property 'i2s-controller' missing !\n");
-+		goto free_priv_data;
-+	}
-+
-+	cdn_dp_dai.platform_of_node = cdn_dp_dai.cpu_of_node;
-+
-+	ret = snd_soc_register_card(card);
-+	if (ret) {
-+		dev_err(&pdev->dev, "register card failed (%d)\n", ret);
-+		card->dev = NULL;
-+		goto free_cpu_of_node;
-+	}
-+
-+	dev_info(&pdev->dev, "rockchip cdn dp audio init success.\n");
-+
-+	return 0;
-+
-+free_cpu_of_node:
-+	cdn_dp_dai.cpu_of_node = NULL;
-+	cdn_dp_dai.platform_of_node = NULL;
-+free_priv_data:
-+	snd_soc_card_set_drvdata(card, NULL);
-+	platform_set_drvdata(pdev, NULL);
-+	card->dev = NULL;
-+
-+	return ret;
-+}
-+
-+static int cdn_dp_audio_remove(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = platform_get_drvdata(pdev);
-+
-+	snd_soc_unregister_card(card);
-+	snd_soc_card_set_drvdata(card, NULL);
-+	platform_set_drvdata(pdev, NULL);
-+	card->dev = NULL;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cdn_dp_audio_of_match[] = {
-+	{ .compatible = "rockchip,cdn-dp-audio", },
-+	{},
-+};
-+
-+static struct platform_driver cdn_dp_audio_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+		.owner = THIS_MODULE,
-+		.pm = &snd_soc_pm_ops,
-+		.of_match_table = cdn_dp_audio_of_match,
-+	},
-+	.probe = cdn_dp_audio_probe,
-+	.remove = cdn_dp_audio_remove,
-+};
-+module_platform_driver(cdn_dp_audio_driver);
-+
-+MODULE_AUTHOR("Chris Zhong <zyw@rock-chips.com>");
-+MODULE_DESCRIPTION("CDN DP Audio ASoC Interface");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_DEVICE_TABLE(of, cdn_dp_audio_of_match);
+mfc_left: region_mfc_left {
+          compatible = "shared-dma-pool";
+          no-map;
+          size = <0x1000000>;
+          alignment = <0x100000>;
+};
+
+mfc_right: region_mfc_right {
+          compatible = "shared-dma-pool";
+          no-map;
+          size = <0x800000>;
+          alignment = <0x100000>;
+};
+
+So the region will be allocated automatically from the available memory. 
+This way
+another nice feature of the generic reserved memory regions can be used.
+
+The only platform which really requires MFC regions to be placed at 
+certain memory
+offsets is Samsung S5PV210/S5PC110 (sometimes called exynos3), where 
+there is no
+memory address interleaving and MFC device has limited memory interface, 
+which cannot
+do 2 transactions to the same physical memory bank. However 
+S5PV210/S5PC110 machine
+code lost support for MFC during conversion to device tree, so it is not 
+a problem
+here.
+
+All newer platforms (Exynos4, Exynos3250, Exynos5+) use memory 
+interleaving, so the
+actual offset of memory bank has no influence on the physical memory bank.
+
+>> +};
+>> diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
+>> index ad7394c..f5e4eb2 100644
+>> --- a/arch/arm/boot/dts/exynos4210-origen.dts
+>> +++ b/arch/arm/boot/dts/exynos4210-origen.dts
+>> @@ -18,6 +18,7 @@
+>>   #include "exynos4210.dtsi"
+>>   #include <dt-bindings/gpio/gpio.h>
+>>   #include <dt-bindings/input/input.h>
+>> +#include "exynos-mfc-reserved-memory.dtsi"
+>>   
+>>   / {
+>>   	model = "Insignal Origen evaluation board based on Exynos4210";
+>> @@ -288,8 +289,7 @@
+>>   };
+>>   
+>>   &mfc {
+>> -	samsung,mfc-r = <0x43000000 0x800000>;
+>> -	samsung,mfc-l = <0x51000000 0x800000>;
+>> +	memory-region = <&mfc_left>, <&mfc_right>;
+>>   	status = "okay";
+> I wonder if shouldn't be better to include the exynos-mfc-reserved-memory.dtsi
+> on each SoC dtsi and set the memory-regions in the MFC node instead of doing
+> it on each DTS, and let DTS to just replace with its own memory regions if the
+> default sizes are not suitable for them.
+
+I don't have strong opinion on this. Maybe it would make more sense to 
+move the
+following entry:
+
+&mfc {
+         memory-region = <&mfc_left>, <&mfc_right>;
+};
+
+also to the exynos-mfc-reserved-memory.dtsi ? So board will just include 
+it if
+it want to use MFC device with reserved memory regions.
+
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards
 -- 
-2.6.3
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
