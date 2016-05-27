@@ -1,249 +1,88 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 1/3] power: axp20x_usb: Add support for
- usb power-supply on axp22x pmics
-Date: Fri, 27 May 2016 15:59:23 +0200
-Message-ID: <c918e934-17f5-b393-5bee-ac04f838781e@redhat.com>
-References: <1463248289-16456-1-git-send-email-hdegoede@redhat.com>
- <CAGb2v67N7R5U_+dZ4ZO+VuGKo6wbVALnrMq3=Ceec8J122LiDA@mail.gmail.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: interrupts properties and API usage with GPIO controllers/Device
+ Tree
+Date: Fri, 27 May 2016 17:23:00 +0300
+Message-ID: <57485844.3050807@ti.com>
+References: <57461CDC.603@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBRNFUG5AKGQE22SJARI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v67N7R5U_+dZ4ZO+VuGKo6wbVALnrMq3=Ceec8J122LiDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <57461CDC.603@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linus.walleij@linaro.org, gregory.0xf0@gmail.com
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 05/26/2016 12:45 AM, Florian Fainelli wrote:
+> Hi Linus, Gregory,
+> 
+> Recently came across an use case that looks like the following:
+> 
+> gpio0: gpio@deadbeef {
+> 	compatible = "brcm,brcmstb-gpio";
+> 	#interrrupt-cells = <2>;
+> 	#gpio-cells = <2>;
+> 	gpio-controller;
+> 	interrupt-controller;
+> 	...
+> };
+> 
+> test@cafeb00b {
+> 	interrupt-parent = <&gpio0>;
+> 	interrupts = <99 3>;
+> };
+> 
+> The driver consuming the test node's interrupts property tries to get
+> the interrupt by using platform_get_irq() or of_irq_parse_and_map() and
+> in the case of the gpio-brcmstb.c, this fails because the interrupt is
+> out of range  as flagged by kernel/irq/irqdomain.c::irq_domain_associate.
+> 
+> Unlike other GPIO provider drivers gpio-brcmstb.c, this driver registers
+> one gpiolib irqchip per each of its banks, and still uses the generic
+> map/unmap functions for its irq_domain_ops, so there is no way we can
+> provide a valid mapping outside of the gpio_to_irq() function
+> unfortunately since gpiochip_irq_map() does
 
-On 16-05-16 09:07, Chen-Yu Tsai wrote:
-> Hi,
->
-> On Sun, May 15, 2016 at 1:51 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> The usb power-supply on the axp22x pmics is mostly identical to the
->> one on the axp20x pmics. One significant difference is that it cannot
->> measure / monitor the usb voltage / current.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/power/axp20x_usb_power.c | 99 +++++++++++++++++++++++++++++++---------
->>  1 file changed, 77 insertions(+), 22 deletions(-)
->>
->> diff --git a/drivers/power/axp20x_usb_power.c b/drivers/power/axp20x_usb_power.c
->> index 421a90b..b3c1d8e 100644
->> --- a/drivers/power/axp20x_usb_power.c
->> +++ b/drivers/power/axp20x_usb_power.c
->> @@ -42,6 +42,7 @@
->>  #define AXP20X_VBUS_MON_VBUS_VALID     BIT(3)
->>
->>  struct axp20x_usb_power {
->> +       struct axp20x_dev *axp20x;
->>         struct regmap *regmap;
->>         struct power_supply *supply;
->>  };
->> @@ -85,7 +86,15 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
->>
->>                 switch (v & AXP20X_VBUS_CLIMIT_MASK) {
->>                 case AXP20X_VBUC_CLIMIT_100mA:
->> -                       val->intval = 100000;
->> +                       switch (power->axp20x->variant) {
->> +                       case AXP202_ID:
->> +                       case AXP209_ID:
->> +                               val->intval = 100000;
->> +                               break;
->> +                       default:
->> +                               val->intval = -1; /* No 100mA limit */
->> +                               break;
->> +                       }
->
-> Given this hardware actually has DT bindings, I'd prefer matching against the
-> compatible string, and keeping the variant part in axp20x_usb_power. You could
-> still use the AXPXXX_ID constants, but just the ones used in the bindings. This
-> could potentially make adding support for newer PMICs easier by only needing a
-> compatible DT entry.
+And this is not working :( Each irq_domain has to be assigned to separate DT node,
+otherwise IRQ mapping will not work (most probably will work, but only for bank 0)
 
-Fixed for v2 of this patch-set.
+Such kind of GPIO controllers are incompatible with gpiochip_irqchip_add() and required
+to have one, common irq_domain for all internal banks.
 
->>                         break;
->>                 case AXP20X_VBUC_CLIMIT_500mA:
->>                         val->intval = 500000;
->> @@ -122,16 +131,23 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
->>                         break;
->>                 }
->>
->> -               ret = regmap_read(power->regmap, AXP20X_USB_OTG_STATUS, &v);
->> -               if (ret)
->> -                       return ret;
->> +               val->intval = POWER_SUPPLY_HEALTH_GOOD;
->>
->> -               if (!(v & AXP20X_USB_STATUS_VBUS_VALID)) {
->> -                       val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
->> +               switch (power->axp20x->variant) {
->> +               case AXP202_ID:
->> +               case AXP209_ID:
->> +                       ret = regmap_read(power->regmap,
->> +                                         AXP20X_USB_OTG_STATUS, &v);
->> +                       if (ret)
->> +                               return ret;
->> +
->> +                       if (!(v & AXP20X_USB_STATUS_VBUS_VALID))
->> +                               val->intval =
->> +                                       POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
->> +                       break;
->> +               default:
->
-> It seems like you'd return only POWER_SUPPLY_HEALTH_GOOD for AXP22x, even if
-> VBUS is actually disconnected.
+like 	irq_domain = irq_domain_add_xxx(dev->of_node, ngpio, irq, 0,
+							&davinci_gpio_irq_ops,
+							chips);
 
-No, the following sits just above the code in the patch context above:
+ngpio = 120 in case of bcm7445.dtsi
+and custom .map() function need to be implemented 
 
-         case POWER_SUPPLY_PROP_HEALTH:
-                 if (!(input & AXP20X_PWR_STATUS_VBUS_PRESENT)) {
-                         val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
-                         break;
-                 }
+More or less similar situation is with davinci_gpio.
 
-Actually the break from above is part of the context, but the relevant
-bits are missing.
+> 
+> So here are a few questions for either of you:
+> 
+> - is this a valid API and Device Tree use case: call
+> of_irq_parse_and_map on an "interrupts" property which has not been
+> acquired using the GPIO API and then gpio_to_irq? 
 
+this is valid use case
 
+> While gpio_to_irq()
+> works, are not we losing the second specifier in the interrupt cells
+> about what kind of interrupt type this is?
+> 
+> - would it be acceptable to export gpiochip_irq_map and
+> gpiochip_irq_export to make them accessible as helpers so we could just
+> wrap things a bit around or should I just open code the same things and
+> allow gpiochip_irqchip_add to be passed custom irq_domain_ops for instance?
+> 
 
->
->>                         break;
->>                 }
->> -
->> -               val->intval = POWER_SUPPLY_HEALTH_GOOD;
->>                 break;
->>         case POWER_SUPPLY_PROP_PRESENT:
->>                 val->intval = !!(input & AXP20X_PWR_STATUS_VBUS_PRESENT);
->> @@ -156,6 +172,14 @@ static enum power_supply_property axp20x_usb_power_properties[] = {
->>         POWER_SUPPLY_PROP_CURRENT_NOW,
->>  };
->>
->> +static enum power_supply_property axp22x_usb_power_properties[] = {
->> +       POWER_SUPPLY_PROP_HEALTH,
->> +       POWER_SUPPLY_PROP_PRESENT,
->> +       POWER_SUPPLY_PROP_ONLINE,
->> +       POWER_SUPPLY_PROP_VOLTAGE_MIN,
->> +       POWER_SUPPLY_PROP_CURRENT_MAX,
->> +};
->> +
->>  static const struct power_supply_desc axp20x_usb_power_desc = {
->>         .name = "axp20x-usb",
->>         .type = POWER_SUPPLY_TYPE_USB,
->> @@ -164,13 +188,25 @@ static const struct power_supply_desc axp20x_usb_power_desc = {
->>         .get_property = axp20x_usb_power_get_property,
->>  };
->>
->> +static const struct power_supply_desc axp22x_usb_power_desc = {
->> +       .name = "axp20x-usb",
->> +       .type = POWER_SUPPLY_TYPE_USB,
->> +       .properties = axp22x_usb_power_properties,
->> +       .num_properties = ARRAY_SIZE(axp22x_usb_power_properties),
->> +       .get_property = axp20x_usb_power_get_property,
->> +};
->> +
->>  static int axp20x_usb_power_probe(struct platform_device *pdev)
->>  {
->>         struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
->>         struct power_supply_config psy_cfg = {};
->>         struct axp20x_usb_power *power;
->> -       static const char * const irq_names[] = { "VBUS_PLUGIN",
->> -               "VBUS_REMOVAL", "VBUS_VALID", "VBUS_NOT_VALID" };
->> +       static const char * const axp20x_irq_names[] = { "VBUS_PLUGIN",
->> +               "VBUS_REMOVAL", "VBUS_VALID", "VBUS_NOT_VALID", NULL };
->> +       static const char * const axp22x_irq_names[] = {
->> +               "VBUS_PLUGIN", "VBUS_REMOVAL", NULL };
->> +       static const char * const *irq_names;
->> +       const struct power_supply_desc *usb_power_desc;
->>         int i, irq, ret;
->>
->>         if (!of_device_is_available(pdev->dev.of_node))
->> @@ -185,31 +221,50 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
->>         if (!power)
->>                 return -ENOMEM;
->>
->> +       power->axp20x = axp20x;
->>         power->regmap = axp20x->regmap;
->>
->> -       /* Enable vbus valid checking */
->> -       ret = regmap_update_bits(power->regmap, AXP20X_VBUS_MON,
->> -                   AXP20X_VBUS_MON_VBUS_VALID, AXP20X_VBUS_MON_VBUS_VALID);
->> -       if (ret)
->> -               return ret;
->> +       switch (power->axp20x->variant) {
->> +       case AXP202_ID:
->> +       case AXP209_ID:
->> +               /* Enable vbus valid checking */
->> +               ret = regmap_update_bits(power->regmap, AXP20X_VBUS_MON,
->> +                                        AXP20X_VBUS_MON_VBUS_VALID,
->> +                                        AXP20X_VBUS_MON_VBUS_VALID);
->> +               if (ret)
->> +                       return ret;
->>
->> -       /* Enable vbus voltage and current measurement */
->> -       ret = regmap_update_bits(power->regmap, AXP20X_ADC_EN1,
->> +               /* Enable vbus voltage and current measurement */
->> +               ret = regmap_update_bits(power->regmap, AXP20X_ADC_EN1,
->>                         AXP20X_ADC_EN1_VBUS_CURR | AXP20X_ADC_EN1_VBUS_VOLT,
->>                         AXP20X_ADC_EN1_VBUS_CURR | AXP20X_ADC_EN1_VBUS_VOLT);
->> -       if (ret)
->> -               return ret;
->> +               if (ret)
->> +                       return ret;
->> +
->> +               usb_power_desc = &axp20x_usb_power_desc;
->> +               irq_names = axp20x_irq_names;
->> +               break;
->> +       case AXP221_ID:
->> +       case AXP223_ID:
->> +               usb_power_desc = &axp22x_usb_power_desc;
->> +               irq_names = axp22x_irq_names;
->> +               break;
->> +       default:
->> +               dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
->> +                       axp20x->variant);
->> +               return -EINVAL;
->> +       }
->
-> As mentioned above, I'd prefer using the compatible string.
+Yah, custom implementation might be needed.
 
-Fixed for v2.
+Another interesting, related question (as for me) is "Is there a limitation
+ that gpio bank can have only 32 GPIO pins (from gpiolib point of view)?" 
 
-Regards,
-
-Hans
-
-
-
->
-> Regards
-> ChenYu
->
->>
->>         psy_cfg.of_node = pdev->dev.of_node;
->>         psy_cfg.drv_data = power;
->>
->> -       power->supply = devm_power_supply_register(&pdev->dev,
->> -                                       &axp20x_usb_power_desc, &psy_cfg);
->> +       power->supply = devm_power_supply_register(&pdev->dev, usb_power_desc,
->> +                                                  &psy_cfg);
->>         if (IS_ERR(power->supply))
->>                 return PTR_ERR(power->supply);
->>
->>         /* Request irqs after registering, as irqs may trigger immediately */
->> -       for (i = 0; i < ARRAY_SIZE(irq_names); i++) {
->> +       for (i = 0; irq_names[i]; i++) {
->>                 irq = platform_get_irq_byname(pdev, irq_names[i]);
->>                 if (irq < 0) {
->>                         dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
->> --
->> 2.7.4
->>
+-- 
+regards,
+-grygorii
