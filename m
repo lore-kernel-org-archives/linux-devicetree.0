@@ -1,144 +1,34 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v4 6/7] ARM: dts: exynos: convert MFC device to generic
- reserved memory bindings
-Date: Fri, 27 May 2016 13:32:57 +0200
-Message-ID: <f0148d4b-a69c-c84b-4a5e-4ff6bb9fde6f@samsung.com>
-References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
- <1464096690-23605-7-git-send-email-m.szyprowski@samsung.com>
- <0158bb7a-02cf-bbb3-f903-d99c7351dfc4@osg.samsung.com>
+From: Afzal Mohammed <afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 02/12] of: add J-Core cpu bindings
+Date: Fri, 27 May 2016 17:21:10 +0530
+Message-ID: <20160527115110.GA6365@afzalpc>
+References: <cover.1464148904.git.dalias@libc.org>
+ <39ad5c69533ef537e6ab0426efc057f9064ee581.1464148904.git.dalias@libc.org>
+ <20160525102214.GF1337@leverpostej>
+ <20160525230407.GT21636@brightrain.aerifal.cx>
+ <57476E22.6010000@landley.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <0158bb7a-02cf-bbb3-f903-d99c7351dfc4@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57476E22.6010000-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi,
 
+On Thu, May 26, 2016 at 04:44:02PM -0500, Rob Landley wrote:
 
-On 2016-05-25 19:11, Javier Martinez Canillas wrote:
-> Hello Marek,
->
-> On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
->> This patch replaces custom properties for defining reserved memory
->> regions with generic reserved memory bindings for MFC video codec
->> device.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
-> [snip]
->
->> +
->> +/ {
->> +	reserved-memory {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		mfc_left: region@51000000 {
->> +			compatible = "shared-dma-pool";
->> +			no-map;
->> +			reg = <0x51000000 0x800000>;
->> +		};
->> +
->> +		mfc_right: region@43000000 {
->> +			compatible = "shared-dma-pool";
->> +			no-map;
->> +			reg = <0x43000000 0x800000>;
->> +		};
->> +	};
-> I've a question probably for a follow up patch, but do you know what's a
-> sane default size for these? I needed to bump the mfc_left size from 8 MiB
-> to 16 MiB in order to decode a 480p H264 video using GStramer. So clearly
-> the default sizes are not that useful.
+> As far as I know, we're the first nommu SMP implementation in Linux.
 
-Right, the default size for the 'left' region can be increased. Frankly, 
-those
-values (8MiB/0x43000000+ 8MiB/0x51000000) comes from my initial patches
-prepared for some demo and don't have much with any real requirements. They
-were copied (blindly...) by various developers without any deeper 
-understanding.
-Probably the most sane would be to use something like this:
+According to hearsay, thou shall be called Buzz Aldrin, Blackfin is
+Neil Armstrong.
 
-mfc_left: region_mfc_left {
-          compatible = "shared-dma-pool";
-          no-map;
-          size = <0x1000000>;
-          alignment = <0x100000>;
-};
-
-mfc_right: region_mfc_right {
-          compatible = "shared-dma-pool";
-          no-map;
-          size = <0x800000>;
-          alignment = <0x100000>;
-};
-
-So the region will be allocated automatically from the available memory. 
-This way
-another nice feature of the generic reserved memory regions can be used.
-
-The only platform which really requires MFC regions to be placed at 
-certain memory
-offsets is Samsung S5PV210/S5PC110 (sometimes called exynos3), where 
-there is no
-memory address interleaving and MFC device has limited memory interface, 
-which cannot
-do 2 transactions to the same physical memory bank. However 
-S5PV210/S5PC110 machine
-code lost support for MFC during conversion to device tree, so it is not 
-a problem
-here.
-
-All newer platforms (Exynos4, Exynos3250, Exynos5+) use memory 
-interleaving, so the
-actual offset of memory bank has no influence on the physical memory bank.
-
->> +};
->> diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
->> index ad7394c..f5e4eb2 100644
->> --- a/arch/arm/boot/dts/exynos4210-origen.dts
->> +++ b/arch/arm/boot/dts/exynos4210-origen.dts
->> @@ -18,6 +18,7 @@
->>   #include "exynos4210.dtsi"
->>   #include <dt-bindings/gpio/gpio.h>
->>   #include <dt-bindings/input/input.h>
->> +#include "exynos-mfc-reserved-memory.dtsi"
->>   
->>   / {
->>   	model = "Insignal Origen evaluation board based on Exynos4210";
->> @@ -288,8 +289,7 @@
->>   };
->>   
->>   &mfc {
->> -	samsung,mfc-r = <0x43000000 0x800000>;
->> -	samsung,mfc-l = <0x51000000 0x800000>;
->> +	memory-region = <&mfc_left>, <&mfc_right>;
->>   	status = "okay";
-> I wonder if shouldn't be better to include the exynos-mfc-reserved-memory.dtsi
-> on each SoC dtsi and set the memory-regions in the MFC node instead of doing
-> it on each DTS, and let DTS to just replace with its own memory regions if the
-> default sizes are not suitable for them.
-
-I don't have strong opinion on this. Maybe it would make more sense to 
-move the
-following entry:
-
-&mfc {
-         memory-region = <&mfc_left>, <&mfc_right>;
-};
-
-also to the exynos-mfc-reserved-memory.dtsi ? So board will just include 
-it if
-it want to use MFC device with reserved memory regions.
-
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Regards
+afzal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
