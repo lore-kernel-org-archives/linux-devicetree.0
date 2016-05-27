@@ -1,49 +1,38 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: mtd: drop "soft_bch" from example
-Date: Fri, 27 May 2016 09:58:54 -0700
-Message-ID: <20160527165854.GD89390@google.com>
-References: <a206ce4cabf9ba8d376241fc23e9973f6db2443b.1464147910.git.baruch@tkos.co.il>
- <20160527153153.420c86e7@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160527153153.420c86e7@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: [PATCH v2 2/3] arm: tegra: add colibri t30 device tree binding documentation
+Date: Fri, 27 May 2016 19:00:39 +0200
+Message-ID: <1464368440-9963-2-git-send-email-marcel.ziswiler@toradex.com>
+References: <1464368440-9963-1-git-send-email-marcel.ziswiler@toradex.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464368440-9963-1-git-send-email-marcel.ziswiler@toradex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-tegra@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 27, 2016 at 03:31:53PM +0200, Boris Brezillon wrote:
-> On Wed, 25 May 2016 06:45:10 +0300
-> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
->=20
-> > Commit 32698aafc9f0 (Documentation: devicetree: deprecate "soft_bch=
-"
-> > nand-ecc-mode value, 2016-04-22) deprecated "soft_bch". Update the =
-example to
-> > match.
-> >=20
-> > Cc: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
->=20
-> I don't know if we should consider this as a bugfix. If that's the
-> case, can you take it directly in your tree with my
+Add the device tree binding documentation for Colibri T30 which was
+missing so far.
 
-Well, I don't know if it's a "bugfix" per se, but it's obviously correc=
-t
-and has approx 0 risk.
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+---
 
-> Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Changes in v2: None
 
-Wow, thanks! Three acks! Y'all must really love documentation :)
+ Documentation/devicetree/bindings/arm/tegra.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Pushed to linux-mtd.git.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+index 73278c6..428e098 100644
+--- a/Documentation/devicetree/bindings/arm/tegra.txt
++++ b/Documentation/devicetree/bindings/arm/tegra.txt
+@@ -33,6 +33,8 @@ board-specific compatible values:
+   toradex,apalis_t30
+   toradex,apalis_t30-eval
+   toradex,colibri_t20-512
++  toradex,colibri_t30
++  toradex,colibri_t30-eval-v3
+   toradex,iris
+ 
+ Trusted Foundations
+-- 
+2.5.5
