@@ -1,53 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] extcon: gpio: Add the support for Device tree bindings
-Date: Fri, 27 May 2016 10:29:34 -0500
-Message-ID: <20160527152934.GB12024@rob-hp-laptop>
-References: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Venkat Reddy Talla <vreddytalla@nvidia.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+From: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 0/2] OV5645 camera sensor driver
+Date: Fri, 27 May 2016 18:38:48 +0300
+Message-ID: <1464363530-2253-1-git-send-email-todor.tomov@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, matrandg-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 26, 2016 at 05:17:45PM +0530, Venkat Reddy Talla wrote:
-> Add the support for Device tree bindings of extcon-gpio driver.
-> The extcon-gpio device tree node must include the both 'extcon-id' and
-> 'gpios' property.
+This is the third version of the OV5645 camera sensor driver patchset.
 
-I think extcon bindings are a mess in general...
+Changes from version 2 include:
+- external camera clock configuration is moved from DT to driver;
+- pwdn-gpios renamed to enable-gpios;
+- switched polarity of reset-gpios to the more intuitive active low;
+- added Kconfig dependency to OF;
+- return values checks;
+- regulators and gpios are now required (not optional);
+- regulators names renamed;
+- power counter variable changed to a bool power state;
+- ov5645_registered() is removed and sensor id reading moved to probe().
 
-> For example:
-> 	usb_cable: extcon-gpio-0 {
-> 		compatible = "extcon-gpio";
-> 		extcon-id = <EXTCON_USB>;
-> 		gpios = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-> 	}
-> 	ta_cable: extcon-gpio-1 {
-> 		compatible = "extcon-gpio";
-> 		extcon-id = <EXTCON_CHG_USB_DCP>;
-> 		gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
-> 		debounce-ms = <50>;	/* 50 millisecond */
-> 		wakeup-source;
-> 	}
+Changes from version 1 include:
+- patch split to dt binding doc patch and driver patch;
+- changes in power on/off logic - s_power is now not called on
+  open/close;
+- using assigned-clock-rates in dt for setting camera external
+  clock rate;
+- correct api for gpio handling;
+- return values checks;
+- style fixes.
 
-This is all 1 logical connector, the USB connector. Why are you 
-describing cables? Those are not part of the h/w and are dynamic. 
-Describe this as a connector which is one thing (i.e. node). Use a 
-compatible string that reflects the type of connector 
-(usb-microab-connector), not the driver you want to use. Then define 
-GPIO lines needed to provide state information like VBus, ID, charger 
-modes and control lines like soft connect (D+ pullup enable), VBus 
-enable, etc.
+Todor Tomov (2):
+  [media] media: i2c/ov5645: add the device tree binding document
+  media: Add a driver for the ov5645 camera sensor.
 
-> 	&dwc3_usb {
-> 		extcon = <&usb_cable>;
-> 	};
-> 	&charger {
-> 		extcon = <&ta_cable>;
-> 	};
+ .../devicetree/bindings/media/i2c/ov5645.txt       |   50 +
+ drivers/media/i2c/Kconfig                          |   12 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/ov5645.c                         | 1369 ++++++++++++++++++++
+ 4 files changed, 1432 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
+ create mode 100644 drivers/media/i2c/ov5645.c
 
-Rob
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
