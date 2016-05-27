@@ -1,159 +1,122 @@
-From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v1 4/6] dtb: xgene: Add MDIO node
-Date: Fri, 27 May 2016 00:22:46 -0700
-Message-ID: <1464333768-26150-5-git-send-email-isubramanian@apm.com>
-References: <1464333768-26150-1-git-send-email-isubramanian@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464333768-26150-1-git-send-email-isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+From: loic pallardy <loic.pallardy@st.com>
+Subject: Re: [STLinux Kernel] [PATCH 02/11] drivers: clk: st: Add clock
+ propagation for audio clocks
+Date: Fri, 27 May 2016 09:23:20 +0200
+Message-ID: <5747F5E8.5030300@st.com>
+References: <1463560892-7209-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1463560892-7209-3-git-send-email-gabriel.fernandez@linaro.org>
+ <20160525172409.GA27913@rob-hp-laptop>
+ <CAG374jDTCJfZB+PuAnggjXhbcd3NjJqrESpe_EnMniCAeoph9A@mail.gmail.com>
+ <CAL_JsqLOG4P0H+HkQ3mJhfibatuV2T51KqOn-+U+LK8WUx7QgA@mail.gmail.com>
+ <5746F486.602@st.com>
+ <CAL_JsqLeD8uTmMYLFZ5Sh9=JV5s1xthvruXL-W=c=zcVS=G-ZA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLeD8uTmMYLFZ5Sh9=JV5s1xthvruXL-W=c=zcVS=G-ZA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Gabriel Fernandez <gabriel.fernandez@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, linux-clk <linux-clk@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Olivier Bideau <olivier.bideau@st.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vincent ABRIOU <vincent.abriou@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Srinivas Kandagatla <srinivas.kandagatla@gm>
 List-Id: devicetree@vger.kernel.org
 
-Added mdio node for mdio driver.  Also added phy-handle
-reference to the ethernet nodes.  Removed unused mdio
-subnode within ethernet node.
 
-Signed-off-by: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Tested-by: Fushen Chen <fchen-qTEPVZfXA3Y@public.gmane.org>
-Tested-by: Toan Le <toanle-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm/apm-merlin.dts     | 10 ++++++++++
- arch/arm64/boot/dts/apm/apm-mustang.dts    | 12 ++++++++++++
- arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 11 +++++++++++
- arch/arm64/boot/dts/apm/apm-storm.dtsi     | 20 ++++++++++----------
- 4 files changed, 43 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/apm/apm-merlin.dts b/arch/arm64/boot/dts/apm/apm-merlin.dts
-index 387c6a8..7d47a0f 100644
---- a/arch/arm64/boot/dts/apm/apm-merlin.dts
-+++ b/arch/arm64/boot/dts/apm/apm-merlin.dts
-@@ -83,3 +83,13 @@
- 		status = "ok";
- 	};
- };
-+
-+&mdio {
-+	sgenet0phy: phy@3 {
-+		reg = <0x0>;
-+	};
-+	sgenet1phy: phy@2 {
-+		reg = <0x2>;
-+	};
-+};
-+
-diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
-index 44db32e..c4e2bc4 100644
---- a/arch/arm64/boot/dts/apm/apm-mustang.dts
-+++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
-@@ -79,3 +79,15 @@
- &mmc0 {
- 	status = "ok";
- };
-+
-+&mdio {
-+	menetphy: phy@3 {
-+		reg = <0x3>;
-+	};
-+	sgenet0phy: phy@4 {
-+		reg = <0x4>;
-+	};
-+	sgenet1phy: phy@5 {
-+		reg = <0x5>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-index ba04877..8106957 100644
---- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-@@ -625,6 +625,15 @@
- 			apm,irq-start = <8>;
- 		};
- 
-+		mdio: mdio@0x1f610000 {
-+			compatible = "apm,xgene-mdio-sgmii";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x1f610000 0x0 0x100>,
-+			      <0x0 0X1f61d000 0x0 0X100>;
-+			clocks = <&xge0clk 0>;
-+		};
-+
- 		sgenet0: ethernet@1f610000 {
- 			compatible = "apm,xgene2-sgenet";
- 			status = "disabled";
-@@ -637,6 +646,7 @@
- 			clocks = <&xge0clk 0>;
- 			local-mac-address = [00 01 73 00 00 01];
- 			phy-connection-type = "sgmii";
-+			phy-handle = <&sgenet0phy>;
- 		};
- 
- 		xgenet1: ethernet@1f620000 {
-@@ -659,6 +669,7 @@
- 			clocks = <&xge1clk 0>;
- 			local-mac-address = [00 01 73 00 00 02];
- 			phy-connection-type = "xgmii";
-+			phy-handle = <&sgenet1phy>;
- 		};
- 
- 		rng: rng@10520000 {
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index 5147d76..18f694ea 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -921,6 +921,14 @@
- 			clocks = <&rtcclk 0>;
- 		};
- 
-+		mdio: mdio@0x17020000 {
-+			compatible = "apm,xgene-mdio-rgmii";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x17020000 0x0 0xd100>;
-+			clocks = <&menetclk 0>;
-+		};
-+
- 		menet: ethernet@17020000 {
- 			compatible = "apm,xgene-enet";
- 			status = "disabled";
-@@ -935,16 +943,6 @@
- 			local-mac-address = [00 00 00 00 00 00];
- 			phy-connection-type = "rgmii";
- 			phy-handle = <&menetphy>;
--			mdio {
--				compatible = "apm,xgene-mdio";
--				#address-cells = <1>;
--				#size-cells = <0>;
--				menetphy: menetphy@3 {
--					compatible = "ethernet-phy-id001c.c915";
--					reg = <0x3>;
--				};
--
--			};
- 		};
- 
- 		sgenet0: ethernet@1f210000 {
-@@ -960,6 +958,7 @@
- 			clocks = <&sge0clk 0>;
- 			local-mac-address = [00 00 00 00 00 00];
- 			phy-connection-type = "sgmii";
-+			phy-handle = <&sgenet0phy>;
- 		};
- 
- 		sgenet1: ethernet@1f210030 {
-@@ -976,6 +975,7 @@
- 			clocks = <&sge1clk 0>;
- 			local-mac-address = [00 00 00 00 00 00];
- 			phy-connection-type = "sgmii";
-+			phy-handle = <&sgenet1phy>;
- 		};
- 
- 		xgenet: ethernet@1f610000 {
--- 
-1.9.1
+On 05/26/2016 03:20 PM, Rob Herring wrote:
+> On Thu, May 26, 2016 at 8:05 AM, loic pallardy <loic.pallardy@st.com> wrote:
+>>
+>>
+>> On 05/26/2016 02:46 PM, Rob Herring wrote:
+>>>
+>>> On Thu, May 26, 2016 at 4:49 AM, Gabriel Fernandez
+>>> <gabriel.fernandez@linaro.org> wrote:
+>>>>
+>>>> On 25 May 2016 at 19:24, Rob Herring <robh@kernel.org> wrote:
+>>>>>
+>>>>>
+>>>>> On Wed, May 18, 2016 at 10:41:23AM +0200, Gabriel Fernandez wrote:
+>>>>>>
+>>>>>> This patch allows fine tuning of the quads FS for audio clocks
+>>>>>> accuracy.
+>>>>>>
+>>>>>> Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
+>>>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>>>>>> ---
+>>>>>>    .../devicetree/bindings/clock/st/st,flexgen.txt    |  1 +
+>>>>>>    drivers/clk/st/clk-flexgen.c                       | 24
+>>>>>> ++++++++++++++++++++++
+>>>>>>    2 files changed, 25 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+>>>>>> b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+>>>>>> index b7ee5c7..15b33c7 100644
+>>>>>> --- a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+>>>>>> @@ -60,6 +60,7 @@ This binding uses the common clock binding[2].
+>>>>>>    Required properties:
+>>>>>>    - compatible : shall be:
+>>>>>>      "st,flexgen"
+>>>>>> +  "st,stih407-clkgend0", "st,flexgen" (enable clock propagation on
+>>>>>> parent)
+>>>>>
+>>>>>
+>>>>> What do "d0" and "d2" refer to?
+>>>>>
+>>>>> This seems to indicate you have too much clock detail in the DT (with
+>>>>> individual clocks described) or not enough with genericish compatible
+>>>>> strings. What happens for the mext clock you need to adjust the flags
+>>>>> on? You should be able to make these adjustments without DT updates.
+>>>>> Perhaps you need a wider fixing of clock compatible strings.
+>>>>>
+>>>>> Rob
+>>>>
+>>>>
+>>>> Sorry i sent my response in html...
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>> Thanks for reviewing.
+>>>>
+>>>> Can i remove
+>>>> "
+>>>> st,stih407-clkgend0" & "
+>>>> st,stih407-clkgend2" compatible strings and add proprieties instead ?
+>>>> I only need to activate 2 features and then we can keep generic
+>>>> compatible strings.
+>>>
+>>>
+>> Hi Rob,
+>>>
+>>> That is no different and suffers the same point I raised. It requires
+>>> updating the DT for any clock configuration change or enhancement.
+>>>
+>> Agree with you, DT update is needed as soon as a clock configuration should
+>> be changed. This is due to STiH clock driver design based on DT description
+>> of SoC clock tree.
+>>
+>> This clock driver was accepted 2 years ago. At the time being there was
+>> discussion about clock tree description location: driver or DT.
+>> Bad choice was done for this driver...
+>>
+>> If we decide to redesign STiH clock driver using in-driver clock tree
+>> description, this will modify STiH clock DT nodes description and so break
+>> DT backward compatibility.
+>>
+>> What's from your pov the best option?
+>
+> You can break it once or every time you need a clock change. I'd go
+> with the former. Maybe more specific compatible strings throughout
+> alone would be enough rather than a flag day changing the binding.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So if I understand you correctly, main issue is d0 and d2 signification.
+d0 and d2 are indeed location of the flexgen in the SoC. But that's 
+right flexgen are dedicated to clocks generation for features (system, 
+audio, video).
+What about "st,flexgen-audio" and "st,flexgen-video"?
+
+BR,
+Loic
+
+>
+> Rob
+>
