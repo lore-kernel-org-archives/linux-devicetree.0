@@ -1,52 +1,249 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RFC v2 2/3] ASoC: Introduce SOC_SINGLE_S8_TLV() macro
-Date: Fri, 27 May 2016 14:45:45 +0100
-Message-ID: <1464356746-29610-3-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1464356746-29610-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464356746-29610-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, plai@codeaurora.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH 1/3] power: axp20x_usb: Add support for
+ usb power-supply on axp22x pmics
+Date: Fri, 27 May 2016 15:59:23 +0200
+Message-ID: <c918e934-17f5-b393-5bee-ac04f838781e@redhat.com>
+References: <1463248289-16456-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v67N7R5U_+dZ4ZO+VuGKo6wbVALnrMq3=Ceec8J122LiDA@mail.gmail.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBRNFUG5AKGQE22SJARI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v67N7R5U_+dZ4ZO+VuGKo6wbVALnrMq3=Ceec8J122LiDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces SOC_SINGLE_S8_TLV() macro for volume control
-on chips which supports both negative and positive gains with sign
-bit on a 8 bit register, Gain ranges from -128 to +127 with a
-predefined step size.
-Currently we only have support to DOUBLE_S8_TLV() which does not fit
-for cases where we just have separate gain control register for each
-channel.
+Hi,
 
-One of the Qualcomm SOC msm8916 has such gain control register whose gain
-range is from -38.4dB to +38.4dB with step size of 0.3dB.
+On 16-05-16 09:07, Chen-Yu Tsai wrote:
+> Hi,
+>
+> On Sun, May 15, 2016 at 1:51 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> The usb power-supply on the axp22x pmics is mostly identical to the
+>> one on the axp20x pmics. One significant difference is that it cannot
+>> measure / monitor the usb voltage / current.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  drivers/power/axp20x_usb_power.c | 99 +++++++++++++++++++++++++++++++---------
+>>  1 file changed, 77 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/power/axp20x_usb_power.c b/drivers/power/axp20x_usb_power.c
+>> index 421a90b..b3c1d8e 100644
+>> --- a/drivers/power/axp20x_usb_power.c
+>> +++ b/drivers/power/axp20x_usb_power.c
+>> @@ -42,6 +42,7 @@
+>>  #define AXP20X_VBUS_MON_VBUS_VALID     BIT(3)
+>>
+>>  struct axp20x_usb_power {
+>> +       struct axp20x_dev *axp20x;
+>>         struct regmap *regmap;
+>>         struct power_supply *supply;
+>>  };
+>> @@ -85,7 +86,15 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
+>>
+>>                 switch (v & AXP20X_VBUS_CLIMIT_MASK) {
+>>                 case AXP20X_VBUC_CLIMIT_100mA:
+>> -                       val->intval = 100000;
+>> +                       switch (power->axp20x->variant) {
+>> +                       case AXP202_ID:
+>> +                       case AXP209_ID:
+>> +                               val->intval = 100000;
+>> +                               break;
+>> +                       default:
+>> +                               val->intval = -1; /* No 100mA limit */
+>> +                               break;
+>> +                       }
+>
+> Given this hardware actually has DT bindings, I'd prefer matching against the
+> compatible string, and keeping the variant part in axp20x_usb_power. You could
+> still use the AXPXXX_ID constants, but just the ones used in the bindings. This
+> could potentially make adding support for newer PMICs easier by only needing a
+> compatible DT entry.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- include/sound/soc.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Fixed for v2 of this patch-set.
 
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 02b4a21..b23fc50 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -179,6 +179,17 @@
- 	.get = snd_soc_get_volsw, .put = snd_soc_put_volsw, \
- 	.private_value = SOC_DOUBLE_R_S_VALUE(reg_left, reg_right, xshift, \
- 					    xmin, xmax, xsign_bit, xinvert) }
-+#define SOC_SINGLE_S8_TLV(xname, xreg, xmin, xmax, tlv_array) \
-+{	.iface  = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
-+	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
-+		  SNDRV_CTL_ELEM_ACCESS_READWRITE, \
-+	.tlv.p  = (tlv_array), \
-+	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw,\
-+	.put = snd_soc_put_volsw, \
-+	.private_value = (unsigned long)&(struct soc_mixer_control) \
-+	{.reg = xreg, .rreg = xreg,  \
-+	 .min = xmin, .max = xmax, .platform_max = xmax, \
-+	.sign_bit = 7,} }
- #define SOC_DOUBLE_S8_TLV(xname, xreg, xmin, xmax, tlv_array) \
- {	.iface  = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
- 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
--- 
-2.8.2
+>>                         break;
+>>                 case AXP20X_VBUC_CLIMIT_500mA:
+>>                         val->intval = 500000;
+>> @@ -122,16 +131,23 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
+>>                         break;
+>>                 }
+>>
+>> -               ret = regmap_read(power->regmap, AXP20X_USB_OTG_STATUS, &v);
+>> -               if (ret)
+>> -                       return ret;
+>> +               val->intval = POWER_SUPPLY_HEALTH_GOOD;
+>>
+>> -               if (!(v & AXP20X_USB_STATUS_VBUS_VALID)) {
+>> -                       val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
+>> +               switch (power->axp20x->variant) {
+>> +               case AXP202_ID:
+>> +               case AXP209_ID:
+>> +                       ret = regmap_read(power->regmap,
+>> +                                         AXP20X_USB_OTG_STATUS, &v);
+>> +                       if (ret)
+>> +                               return ret;
+>> +
+>> +                       if (!(v & AXP20X_USB_STATUS_VBUS_VALID))
+>> +                               val->intval =
+>> +                                       POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
+>> +                       break;
+>> +               default:
+>
+> It seems like you'd return only POWER_SUPPLY_HEALTH_GOOD for AXP22x, even if
+> VBUS is actually disconnected.
+
+No, the following sits just above the code in the patch context above:
+
+         case POWER_SUPPLY_PROP_HEALTH:
+                 if (!(input & AXP20X_PWR_STATUS_VBUS_PRESENT)) {
+                         val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
+                         break;
+                 }
+
+Actually the break from above is part of the context, but the relevant
+bits are missing.
+
+
+
+>
+>>                         break;
+>>                 }
+>> -
+>> -               val->intval = POWER_SUPPLY_HEALTH_GOOD;
+>>                 break;
+>>         case POWER_SUPPLY_PROP_PRESENT:
+>>                 val->intval = !!(input & AXP20X_PWR_STATUS_VBUS_PRESENT);
+>> @@ -156,6 +172,14 @@ static enum power_supply_property axp20x_usb_power_properties[] = {
+>>         POWER_SUPPLY_PROP_CURRENT_NOW,
+>>  };
+>>
+>> +static enum power_supply_property axp22x_usb_power_properties[] = {
+>> +       POWER_SUPPLY_PROP_HEALTH,
+>> +       POWER_SUPPLY_PROP_PRESENT,
+>> +       POWER_SUPPLY_PROP_ONLINE,
+>> +       POWER_SUPPLY_PROP_VOLTAGE_MIN,
+>> +       POWER_SUPPLY_PROP_CURRENT_MAX,
+>> +};
+>> +
+>>  static const struct power_supply_desc axp20x_usb_power_desc = {
+>>         .name = "axp20x-usb",
+>>         .type = POWER_SUPPLY_TYPE_USB,
+>> @@ -164,13 +188,25 @@ static const struct power_supply_desc axp20x_usb_power_desc = {
+>>         .get_property = axp20x_usb_power_get_property,
+>>  };
+>>
+>> +static const struct power_supply_desc axp22x_usb_power_desc = {
+>> +       .name = "axp20x-usb",
+>> +       .type = POWER_SUPPLY_TYPE_USB,
+>> +       .properties = axp22x_usb_power_properties,
+>> +       .num_properties = ARRAY_SIZE(axp22x_usb_power_properties),
+>> +       .get_property = axp20x_usb_power_get_property,
+>> +};
+>> +
+>>  static int axp20x_usb_power_probe(struct platform_device *pdev)
+>>  {
+>>         struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+>>         struct power_supply_config psy_cfg = {};
+>>         struct axp20x_usb_power *power;
+>> -       static const char * const irq_names[] = { "VBUS_PLUGIN",
+>> -               "VBUS_REMOVAL", "VBUS_VALID", "VBUS_NOT_VALID" };
+>> +       static const char * const axp20x_irq_names[] = { "VBUS_PLUGIN",
+>> +               "VBUS_REMOVAL", "VBUS_VALID", "VBUS_NOT_VALID", NULL };
+>> +       static const char * const axp22x_irq_names[] = {
+>> +               "VBUS_PLUGIN", "VBUS_REMOVAL", NULL };
+>> +       static const char * const *irq_names;
+>> +       const struct power_supply_desc *usb_power_desc;
+>>         int i, irq, ret;
+>>
+>>         if (!of_device_is_available(pdev->dev.of_node))
+>> @@ -185,31 +221,50 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+>>         if (!power)
+>>                 return -ENOMEM;
+>>
+>> +       power->axp20x = axp20x;
+>>         power->regmap = axp20x->regmap;
+>>
+>> -       /* Enable vbus valid checking */
+>> -       ret = regmap_update_bits(power->regmap, AXP20X_VBUS_MON,
+>> -                   AXP20X_VBUS_MON_VBUS_VALID, AXP20X_VBUS_MON_VBUS_VALID);
+>> -       if (ret)
+>> -               return ret;
+>> +       switch (power->axp20x->variant) {
+>> +       case AXP202_ID:
+>> +       case AXP209_ID:
+>> +               /* Enable vbus valid checking */
+>> +               ret = regmap_update_bits(power->regmap, AXP20X_VBUS_MON,
+>> +                                        AXP20X_VBUS_MON_VBUS_VALID,
+>> +                                        AXP20X_VBUS_MON_VBUS_VALID);
+>> +               if (ret)
+>> +                       return ret;
+>>
+>> -       /* Enable vbus voltage and current measurement */
+>> -       ret = regmap_update_bits(power->regmap, AXP20X_ADC_EN1,
+>> +               /* Enable vbus voltage and current measurement */
+>> +               ret = regmap_update_bits(power->regmap, AXP20X_ADC_EN1,
+>>                         AXP20X_ADC_EN1_VBUS_CURR | AXP20X_ADC_EN1_VBUS_VOLT,
+>>                         AXP20X_ADC_EN1_VBUS_CURR | AXP20X_ADC_EN1_VBUS_VOLT);
+>> -       if (ret)
+>> -               return ret;
+>> +               if (ret)
+>> +                       return ret;
+>> +
+>> +               usb_power_desc = &axp20x_usb_power_desc;
+>> +               irq_names = axp20x_irq_names;
+>> +               break;
+>> +       case AXP221_ID:
+>> +       case AXP223_ID:
+>> +               usb_power_desc = &axp22x_usb_power_desc;
+>> +               irq_names = axp22x_irq_names;
+>> +               break;
+>> +       default:
+>> +               dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
+>> +                       axp20x->variant);
+>> +               return -EINVAL;
+>> +       }
+>
+> As mentioned above, I'd prefer using the compatible string.
+
+Fixed for v2.
+
+Regards,
+
+Hans
+
+
+
+>
+> Regards
+> ChenYu
+>
+>>
+>>         psy_cfg.of_node = pdev->dev.of_node;
+>>         psy_cfg.drv_data = power;
+>>
+>> -       power->supply = devm_power_supply_register(&pdev->dev,
+>> -                                       &axp20x_usb_power_desc, &psy_cfg);
+>> +       power->supply = devm_power_supply_register(&pdev->dev, usb_power_desc,
+>> +                                                  &psy_cfg);
+>>         if (IS_ERR(power->supply))
+>>                 return PTR_ERR(power->supply);
+>>
+>>         /* Request irqs after registering, as irqs may trigger immediately */
+>> -       for (i = 0; i < ARRAY_SIZE(irq_names); i++) {
+>> +       for (i = 0; irq_names[i]; i++) {
+>>                 irq = platform_get_irq_byname(pdev, irq_names[i]);
+>>                 if (irq < 0) {
+>>                         dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
+>> --
+>> 2.7.4
+>>
