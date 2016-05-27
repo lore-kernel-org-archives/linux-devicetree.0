@@ -1,45 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 14/14] ASoC: omap-mcpdm: Add support for pdmclk clock
- handling
-Date: Fri, 27 May 2016 21:31:40 +0100
-Message-ID: <20160527203140.GD29837@sirena.org.uk>
-References: <1463579196-5484-1-git-send-email-peter.ujfalusi@ti.com>
- <1463579196-5484-15-git-send-email-peter.ujfalusi@ti.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2 0/6]  of: overlays: New target methods
+Date: Fri, 27 May 2016 13:35:28 -0700
+Message-ID: <5748AF90.3090607@gmail.com>
+References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com> <57476782.3040703@gmail.com> <70AB0C5B-737D-41B9-8D21-4205379ABDB7@konsulko.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="at6+YcpfzWZg/htY"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1463579196-5484-15-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, tony@atomide.com, lee.jones@linaro.org, robh+dt@kernel.org, lgirdwood@gmail.com, t-kristo@ti.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <70AB0C5B-737D-41B9-8D21-4205379ABDB7@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robherring2@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Devicetree List <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 5/27/2016 7:46 AM, Pantelis Antoniou wrote:
+> Hi Frank,
+>=20
+>> On May 27, 2016, at 00:15 , Frank Rowand <frowand.list@gmail.com> wr=
+ote:
+>>
+>> On 5/16/2016 1:18 PM, Pantelis Antoniou wrote:
+>>> This patchset implements two new target methods.
+>>>
+>>> A target index method which allows selecting different
+>>> targets according to an argument using an extended API and
+>>> a target root method that fences the target only
+>>> to a specific given root.
+>>>
+>>> Documentation and unit-tests are included.
+>>
+>> I think you are attacking the problem the wrong way.
+>>
+>> If I understand correctly, the problem statement is:
+>>
+>>  In some cases, a devicetree overlay is meant to describe
+>>  a pluggable piece of hardware, which may be plugged into
+>>  various locations on a platform.  It should be possible
+>>  to apply a single devicetree to one or more locations
+>>  on a given platform.
+>>
+>> If that is the case, then putting the locations where the
+>> overlay can be applied into the devicetree is not the
+>> approach that I would use.  It seems it would be better
+>> to specify the target location as a separate item from
+>> the overlay to the method that applies the devicetree.
+>> In that case, I would put the node(s) describing the
+>> pluggable hardware in the root node of the overlay
+>> devicetree (dtc expects a root node).  The apply
+>> method can easily find the node(s) and relocate them
+>> to the appropriate location in the platform's
+>> devicetree.
+>>
+>=20
+> It=E2=80=99s a bit more complicated. This was considered initially
+> but we ended up with the targets on the overlay.
+>=20
+> It can work either way, but the problem with storing the
+> indirect targets in the base tree is that there is no
+> change in the bindings of the targets.
 
---at6+YcpfzWZg/htY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I am not suggesting putting the targets in the base tree.
 
-On Wed, May 18, 2016 at 04:46:36PM +0300, Peter Ujfalusi wrote:
+I do not know where it should be.  Still thinking about
+that part.
 
-> +	clk_prepare_enable(mcpdm->pdmclk);
-
-Should really check the return value here.
-
---at6+YcpfzWZg/htY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXSK6nAAoJECTWi3JdVIfQgLgH/1n87ZBxKwq4fE9xWWzz7VSe
-g/1vKGI7TcRkGSrC3jnotjQV/Nn8p3HYm19VBxdiQyR6gBRduGi5KFq1S9G6cimk
-ZF2a7er96t8SeCHplP7obU3slnpuAitBRrUnDQJ7Xb+ZGJJjyeDoETFV7XHYMglX
-/PTce4gJkxtTG7WSaru49540J4nU7YKtwOsOY8pmyC2eRxMekfO9HPq92565Y3bT
-hYpjb4HzBgcfL3OID5OWScBVJBZ4lZx/A69wb7lxeR+DWc+uu2XStqojQ1tSpDMv
-4/4Tw0xJ8aXDjQZqr6D6e0gu7jOBp2rOt4kmSJTCKetPrxf+ROcSEjB/IYc3ff0=
-=IO6m
------END PGP SIGNATURE-----
-
---at6+YcpfzWZg/htY--
+>=20
+> Putting things in the overlay seemed like it would have
+> no effect on the base tree whatsoever.
+>=20
+>=20
+>> -Frank
+>>
+>=20
+> Regards
+>=20
+> =E2=80=94 Pantelis
+>=20
+>=20
