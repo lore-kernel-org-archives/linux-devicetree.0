@@ -1,40 +1,93 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] arm: tegra124: remove commas from unit addresses
-Date: Fri, 27 May 2016 12:35:12 -0600
-Message-ID: <57489360.1030300@wwwdotorg.org>
-References: <1464366471-23832-1-git-send-email-marcel.ziswiler@toradex.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Fri, 27 May 2016 19:36:29 +0100
+Message-ID: <20160527183629.GO16172@sirena.org.uk>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+ <20160524174140.GE11605@leverpostej>
+ <5744BC76.9090403@gmail.com>
+ <20160525092034.GE1337@leverpostej>
+ <5745C5A3.6060202@gmail.com>
+ <20160525174809.GA8206@sirena.org.uk>
+ <5745F30B.2040605@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464366471-23832-1-git-send-email-marcel.ziswiler@toradex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-tegra@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="LfQcPIWFRhGivmDw"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5745F30B.2040605-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/2016 10:27 AM, Marcel Ziswiler wrote:
-> Remove commas from unit addresses as suggested by Rob Herring upon me
-> posting initial Apalis TK1 support:
->
-> http://article.gmane.org/gmane.linux.ports.tegra/26608
 
-> diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+--LfQcPIWFRhGivmDw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> -	gpu@0,57000000 {
-> +	gpu@57000000 {
->   		/*
->   		 * Node left disabled on purpose - the bootloader will enable
->   		 * it after having set the VPR up
+On Wed, May 25, 2016 at 11:46:35AM -0700, Frank Rowand wrote:
+> On 5/25/2016 10:48 AM, Mark Brown wrote:
 
-The last time a similar patch was proposed[1], I pointed out that U-Boot 
-uses the node name to enable the node, so this change will break GPU 
-functionality on this board. U-Boot has since been updated to find the 
-node to enable using compatible value rather than hard-coding the node 
-name, but this doesn't help people with existing bootloader binaries; 
-kernel changes shouldn't force them to upgrade the bootloader. I think 
-the DT node names are part of the ABI and shouldn't be changed. We can 
-fix this for completely new SoCs, but not existing SoCs.
+> > Sometimes the best thing to do is remove the behaviour, some of these
 
-[1] http://www.spinics.net/lists/devicetree/msg122164.html "[PATCH] ARM: 
-tegra: Remove 0, prefix from unit-addresses".
+> Yes.  And I have not formed an opinion on whether the existing
+> behavior should be kept, deprecated, or removed.  I have avoided
+> commenting on that.
+
+That's not been clear...
+
+> > Adding documentation for every last implementation that happens to work
+> > in a given situation through layers of indirection isn't going to help
+> > with the usability issues DT has, one of the things that the
+
+> That is not a reasonable description of this case.
+
+> What the kernel does with the spi aliases is not a random unintended
+> side effect.  It was a deliberate choice.  Read the commit message for
+> bb29785e0d6d150181704be2efcc3141044625e2
+
+I've read that (for the benefit of those playing at home that's "spi/of:
+Use DT aliases for assigning bus number").  What that reads like to me
+is that it's a quick hack which may or may not be intended to be used in
+the specific way it's being used now - it's still at a remove from the
+obviously not DT idiomatic spidev which isn't mentioned at all, it could
+be for that but it could also be for people trying to read log messages
+or distinguish between other devices.  If it were for spidev I'd have
+expected labelling at the spidev level as it's both more direct and
+useful (we can easily get a string out rather than just a number).
+
+It does also mention a previous effort based on cell-index which is now
+being ignored as far as I can tell but presumably you feel must also be
+documented as a thing that might've done a thing in some older software
+release, I'm not sure that's useful though.
+
+Personally the way I parse this situation is that the kernel is taking a
+look at what's in the DT and making an effort to present it usefully in
+the running systems.  Fixing our current interpretation in stone as a
+supported thing when we don't have to makes it more cumbersome to
+improve and discourages any efforts to do similar things in the future.
+It is reasonable to provide and document something here but when there's
+some fairly simple and obvious better things we could be doing it should
+be those rather than the legacy stuff.
+
+--LfQcPIWFRhGivmDw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXSJOsAAoJECTWi3JdVIfQfIAH/0idQCgC7AJPmjR/erggSuYo
+mOh6m4x1RCKIbgAyeiuxyyzy+GQAXHuE7xG6H0/ZTE7d8HdzBxSzFJiGTiRsgNA2
+IkKBsjiPqcr+NRRaXU3rx3VVKNNMIwOgNojtkjq6c0/FUajVlGEXJ2+CpSCa1Oa8
+uXyP/2QbGi7qRjKv5LeMF+OWLN1Hgq5myIIC9SdfjnjIOHKogSBDtjavzRj+vu/c
+q0IjsckeKQCnaV2cJKRvgBukk4n3CIXQoaIgEh+XpRsqKmutXomYVECn0FvycrYz
+ETLwUoUQ7SmkDVuyVur4aWBvK/RMWygX/8eUS1PLe+LMHsdCbdal2ir9Btf4a/0=
+=sUj7
+-----END PGP SIGNATURE-----
+
+--LfQcPIWFRhGivmDw--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
