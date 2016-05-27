@@ -1,88 +1,70 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: interrupts properties and API usage with GPIO controllers/Device
- Tree
-Date: Fri, 27 May 2016 17:23:00 +0300
-Message-ID: <57485844.3050807@ti.com>
-References: <57461CDC.603@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <57461CDC.603@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linus.walleij@linaro.org, gregory.0xf0@gmail.com
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH v2 0/6]  of: overlays: New target methods
+Date: Fri, 27 May 2016 17:46:04 +0300
+Message-ID: <70AB0C5B-737D-41B9-8D21-4205379ABDB7@konsulko.com>
+References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com> <57476782.3040703@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57476782.3040703@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: Rob Herring <robherring2@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Devicetree List <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/26/2016 12:45 AM, Florian Fainelli wrote:
-> Hi Linus, Gregory,
-> 
-> Recently came across an use case that looks like the following:
-> 
-> gpio0: gpio@deadbeef {
-> 	compatible = "brcm,brcmstb-gpio";
-> 	#interrrupt-cells = <2>;
-> 	#gpio-cells = <2>;
-> 	gpio-controller;
-> 	interrupt-controller;
-> 	...
-> };
-> 
-> test@cafeb00b {
-> 	interrupt-parent = <&gpio0>;
-> 	interrupts = <99 3>;
-> };
-> 
-> The driver consuming the test node's interrupts property tries to get
-> the interrupt by using platform_get_irq() or of_irq_parse_and_map() and
-> in the case of the gpio-brcmstb.c, this fails because the interrupt is
-> out of range  as flagged by kernel/irq/irqdomain.c::irq_domain_associate.
-> 
-> Unlike other GPIO provider drivers gpio-brcmstb.c, this driver registers
-> one gpiolib irqchip per each of its banks, and still uses the generic
-> map/unmap functions for its irq_domain_ops, so there is no way we can
-> provide a valid mapping outside of the gpio_to_irq() function
-> unfortunately since gpiochip_irq_map() does
+Hi Frank,
 
-And this is not working :( Each irq_domain has to be assigned to separate DT node,
-otherwise IRQ mapping will not work (most probably will work, but only for bank 0)
+> On May 27, 2016, at 00:15 , Frank Rowand <frowand.list@gmail.com> wro=
+te:
+>=20
+> On 5/16/2016 1:18 PM, Pantelis Antoniou wrote:
+>> This patchset implements two new target methods.
+>>=20
+>> A target index method which allows selecting different
+>> targets according to an argument using an extended API and
+>> a target root method that fences the target only
+>> to a specific given root.
+>>=20
+>> Documentation and unit-tests are included.
+>=20
+> I think you are attacking the problem the wrong way.
+>=20
+> If I understand correctly, the problem statement is:
+>=20
+>  In some cases, a devicetree overlay is meant to describe
+>  a pluggable piece of hardware, which may be plugged into
+>  various locations on a platform.  It should be possible
+>  to apply a single devicetree to one or more locations
+>  on a given platform.
+>=20
+> If that is the case, then putting the locations where the
+> overlay can be applied into the devicetree is not the
+> approach that I would use.  It seems it would be better
+> to specify the target location as a separate item from
+> the overlay to the method that applies the devicetree.
+> In that case, I would put the node(s) describing the
+> pluggable hardware in the root node of the overlay
+> devicetree (dtc expects a root node).  The apply
+> method can easily find the node(s) and relocate them
+> to the appropriate location in the platform's
+> devicetree.
+>=20
 
-Such kind of GPIO controllers are incompatible with gpiochip_irqchip_add() and required
-to have one, common irq_domain for all internal banks.
+It=E2=80=99s a bit more complicated. This was considered initially
+but we ended up with the targets on the overlay.
 
-like 	irq_domain = irq_domain_add_xxx(dev->of_node, ngpio, irq, 0,
-							&davinci_gpio_irq_ops,
-							chips);
+It can work either way, but the problem with storing the
+indirect targets in the base tree is that there is no
+change in the bindings of the targets.
 
-ngpio = 120 in case of bcm7445.dtsi
-and custom .map() function need to be implemented 
+Putting things in the overlay seemed like it would have
+no effect on the base tree whatsoever.
 
-More or less similar situation is with davinci_gpio.
 
-> 
-> So here are a few questions for either of you:
-> 
-> - is this a valid API and Device Tree use case: call
-> of_irq_parse_and_map on an "interrupts" property which has not been
-> acquired using the GPIO API and then gpio_to_irq? 
+> -Frank
+>=20
 
-this is valid use case
+Regards
 
-> While gpio_to_irq()
-> works, are not we losing the second specifier in the interrupt cells
-> about what kind of interrupt type this is?
-> 
-> - would it be acceptable to export gpiochip_irq_map and
-> gpiochip_irq_export to make them accessible as helpers so we could just
-> wrap things a bit around or should I just open code the same things and
-> allow gpiochip_irqchip_add to be passed custom irq_domain_ops for instance?
-> 
-
-Yah, custom implementation might be needed.
-
-Another interesting, related question (as for me) is "Is there a limitation
- that gpio bank can have only 32 GPIO pins (from gpiolib point of view)?" 
-
--- 
-regards,
--grygorii
+=E2=80=94 Pantelis
