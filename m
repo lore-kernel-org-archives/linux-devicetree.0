@@ -1,39 +1,86 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
-Date: Fri, 27 May 2016 10:31:55 +0200
-Message-ID: <9495361.v6aft1QR0M@wuerfel>
-References: <cover.1463737502.git.maitysanchayan@gmail.com> <CAL_JsqKCwy=aXveTfnaQuZ5b3Ld9nzABgPfdPm1JX3CBuvzG+Q@mail.gmail.com> <20160527063301.GB1554@Sanchayan-Arch.localdomain>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [PATCH 2/6] Documentation: bindings: add dt doc for Rockchip USB
+ Type-C PHY
+Date: Fri, 27 May 2016 16:46:07 +0800
+Message-ID: <5748094F.6030204@rock-chips.com>
+References: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
+ <1464328939-8073-3-git-send-email-zyw@rock-chips.com>
+ <2812026.ptEv4ktvbn@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160527063301.GB1554@Sanchayan-Arch.localdomain>
+In-Reply-To: <2812026.ptEv4ktvbn@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: maitysanchayan@gmail.com
-Cc: Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: dianders@chromium.org, tfiga@chromium.org, yzq@rock-chips.com, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, May 27, 2016 12:03:01 PM CEST maitysanchayan@gmail.com wrote:
-> 
-> So if I understand correctly, the binding at the SoC level is fine.
-> Keeping that but removing the additional made-up properties, viz. below
-> 
-> rom-revision: phandle to the on-chip ROM node
-> mscm: phandle to the MSCM CPU configuration node
-> nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
-> nvmem-cell-names: should contain string names "cfg0" and "cfg1"
-> 
-> would be fine?
-> 
-> We would have something similar to here
-> http://www.spinics.net/lists/devicetree/msg80655.html
-> 
-> but now with the DT binding under SoC bus.
-> 
+Hi Heiko
 
-
-You look up the OTP device as a syscon here, which seems odd since there
-is already an nvmem driver for it. Shouldn't you use the nvmem API for
-that?
-
-	Arnd
+On 05/27/2016 04:29 PM, Heiko Stuebner wrote:
+> Hi Chris,
+>
+> Am Freitag, 27. Mai 2016, 14:02:15 schrieb Chris Zhong:
+>> This patch adds a binding that describes the Rockchip USB Type-C PHY
+>> for rk3399.
+>>
+>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>> ---
+>>
+>>   .../devicetree/bindings/phy/phy-rockchip-typec.txt | 55
+>> ++++++++++++++++++++++ 1 file changed, 55 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt new file
+>> mode 100644
+>> index 0000000..402f667
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>> @@ -0,0 +1,55 @@
+>> +ROCKCHIP type-c PHY
+>> +
+>> +Required properties:
+>> + - compatible: should be "rockchip,rk3399-typec-phy"
+>> + - reg : Address and length of the usb phy control register set
+>> + - rockchip,grf : phandle to the syscon managing the "general
+>> +   register files"
+>> + - clocks : phandle + clock specifier for the phy clocks
+>> + - clock-names: string, clock name, must be "tcpdcore", "tcpdphy_ref";
+>> + - resets : a list of phandle + reset specifier pairs
+>> + - reset-names : string reset name, must be:
+>> +		 "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst"
+>> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
+>> + - rockchip,usb3phy*: phy registers embed in grf
+>> +
+>> +Example:
+>> +	tcphy0: phy@ff7c0000 {
+>> +		compatible = "rockchip,rk3399-typec-phy";
+>> +		reg = <0x0 0xff7c0000 0x0 0x40000>;
+>> +		#phy-cells = <0>;
+>> +		rockchip,grf = <&grf>;
+>> +		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+>> +			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+>> +		clock-names = "tcpdcore", "tcpdphy_ref";
+>> +		resets = <&cru SRST_UPHY0>,
+>> +			 <&cru SRST_UPHY0_PIPE_L00>,
+>> +			 <&cru SRST_P_UPHY0_TCPHY>;
+>> +		reset-names = "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst";
+>> +		rockchip,usb3phy_con0 = <0x0e580 0 16>;
+>> +		rockchip,usb3phy_con1 = <0x0e584 0 16>;
+>> +		rockchip,usb3phy_con2 = <0x0e588 0 16>;
+>> +		rockchip,usb3phy_status0 = <0x0e5c0 0 13>;
+>> +		rockchip,usb3phy_status1 = <0x0e5c4 0 12>;
+> please embedded this register data in the driver instead (not in the
+> devicetree), matched against the compatible value.
+> See Frank's usb2phy driver for reference if needed.
+Okay, I will move them to driver file next version, Thanks.
+>
+> Thanks
+> Heiko
+>
+>
+>
+>
