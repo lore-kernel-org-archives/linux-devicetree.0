@@ -1,36 +1,40 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH 1/2] ARM: dts: am437x-idk-evm: Mark MAC as having only one PHY
-Date: Fri, 27 May 2016 13:17:42 -0500
-Message-ID: <20160527181743.8401-1-afd@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] arm: tegra124: remove commas from unit addresses
+Date: Fri, 27 May 2016 12:35:12 -0600
+Message-ID: <57489360.1030300@wwwdotorg.org>
+References: <1464366471-23832-1-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464366471-23832-1-git-send-email-marcel.ziswiler@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-tegra@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently am4372.dtsi declares the MAC controller to have two
-slave ports, on this board we only use one, so set the slave
-count to one. This eliminates a console error message when
-the non-existent PHY is not detected.
+On 05/27/2016 10:27 AM, Marcel Ziswiler wrote:
+> Remove commas from unit addresses as suggested by Rob Herring upon me
+> posting initial Apalis TK1 support:
+>
+> http://article.gmane.org/gmane.linux.ports.tegra/26608
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- arch/arm/boot/dts/am437x-idk-evm.dts | 1 +
- 1 file changed, 1 insertion(+)
+> diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
 
-diff --git a/arch/arm/boot/dts/am437x-idk-evm.dts b/arch/arm/boot/dts/am437x-idk-evm.dts
-index 76dcfc6..12a6951 100644
---- a/arch/arm/boot/dts/am437x-idk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-idk-evm.dts
-@@ -382,6 +382,7 @@
- };
- 
- &mac {
-+	slaves = <1>;
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
--- 
-2.8.3
+> -	gpu@0,57000000 {
+> +	gpu@57000000 {
+>   		/*
+>   		 * Node left disabled on purpose - the bootloader will enable
+>   		 * it after having set the VPR up
+
+The last time a similar patch was proposed[1], I pointed out that U-Boot 
+uses the node name to enable the node, so this change will break GPU 
+functionality on this board. U-Boot has since been updated to find the 
+node to enable using compatible value rather than hard-coding the node 
+name, but this doesn't help people with existing bootloader binaries; 
+kernel changes shouldn't force them to upgrade the bootloader. I think 
+the DT node names are part of the ABI and shouldn't be changed. We can 
+fix this for completely new SoCs, but not existing SoCs.
+
+[1] http://www.spinics.net/lists/devicetree/msg122164.html "[PATCH] ARM: 
+tegra: Remove 0, prefix from unit-addresses".
