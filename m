@@ -1,62 +1,75 @@
 From: YT Shen <yt.shen@mediatek.com>
-Subject: Re: [RFC v2 2/5] drm/mediatke: add support for Mediatek SoC MT2701
-Date: Fri, 27 May 2016 15:29:00 +0800
-Message-ID: <1464334140.31149.14.camel@mtksdaap41>
+Subject: Re: [RFC v2 3/5] drm/mediatek: add *driver_data for different
+ hardware settings
+Date: Fri, 27 May 2016 15:31:53 +0800
+Message-ID: <1464334313.31149.16.camel@mtksdaap41>
 References: <1463756736-46573-1-git-send-email-yt.shen@mediatek.com>
- <1463756736-46573-3-git-send-email-yt.shen@mediatek.com>
- <1463994590.31921.14.camel@mtksdaap41>
+	 <1463756736-46573-4-git-send-email-yt.shen@mediatek.com>
+	 <1463996582.30093.5.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1463994590.31921.14.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463996582.30093.5.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
 To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mao Huang <littlecvr@chromium.org>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Cc: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Mao Huang <littlecvr@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, emil.l.velikov@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ0ssCgoKT24gTW9uLCAyMDE2LTA1LTIzIGF0IDE3OjA5ICswODAwLCBDSyBIdSB3cm90ZToK
-PiBIaSwgWVQ6Cj4gCj4gU29tZSBjb21tZW50cyBiZWxvdy4KPiAKPiBPbiBGcmksIDIwMTYtMDUt
-MjAgYXQgMjM6MDUgKzA4MDAsIHl0LnNoZW5AbWVkaWF0ZWsuY29tIHdyb3RlOgo+ID4gRnJvbTog
-WVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+Cj4gPiAKPiA+IFRoaXMgcGF0Y2ggYWRkIHN1
-cHBvcnQgZm9yIHRoZSBNZWRpYXRlayBNVDI3MDEgRElTUCBzdWJzeXN0ZW0uCj4gPiBUaGVyZSBp
-cyBvbmx5IG9uZSBPVkwgZW5naW5lIGluIE1UMjcwMS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTog
-WVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+Cj4gPiAgCj4gPiArc3RhdGljIHZvaWQgbXRr
-X2RkcF9tdXhfc2VsKHZvaWQgX19pb21lbSAqY29uZmlnX3JlZ3MsCj4gPiArCQkJICAgIGVudW0g
-bXRrX2RkcF9jb21wX2lkIGN1ciwgZW51bSBtdGtfZGRwX2NvbXBfaWQgbmV4dCkKPiA+ICt7Cj4g
-PiArCWlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9CTFMgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5U
-X0RTSTApIHsKPiA+ICsJCXdyaXRlbF9yZWxheGVkKEJMU19UT19EU0lfUkRNQTFfVE9fRFBJMSwK
-PiA+ICsJCQkgICAgICAgY29uZmlnX3JlZ3MgKyBESVNQX1JFR19DT05GSUdfT1VUX1NFTCk7Cj4g
-PiArCX0KPiA+ICt9Cj4gPiArCj4gCj4gVGhlIGZ1bmN0aW9uIG5hbWUgJ211eCcgbG9va3Mgc3Ry
-YW5nZS4gVGhlIHJlZ2lzdGVyIHdyaXR0ZW4gaGVyZQo+IGNvbnRyb2xzIHRoZSBzaW5nbGUgb3V0
-cHV0IHNlbGVjdGlvbi4gSSBwcmVmZXIgdG8gcmVuYW1lIGl0IGFzCj4gbXRrX2RkcF9zb3V0X3Nl
-bCgpLgpPSywgSSB3aWxsIHJlbmFtZSB0aGlzIGZ1bmN0aW9uIGluIHRoZSBuZXh0IHZlcnNpb24u
-Cj4gCj4gPiAgCj4gPiAtc3RhdGljIGNvbnN0IGVudW0gbXRrX2RkcF9jb21wX2lkIG10a19kZHBf
-bWFpbltdID0gewo+ID4gK3N0YXRpYyBjb25zdCBlbnVtIG10a19kZHBfY29tcF9pZCBtdGtfZGRw
-X21haW5fMjcwMVtdID0gewo+ID4gKwlERFBfQ09NUE9ORU5UX09WTDAsCj4gPiArCUREUF9DT01Q
-T05FTlRfUkRNQTAsCj4gPiArCUREUF9DT01QT05FTlRfQ09MT1IwLAo+ID4gKwlERFBfQ09NUE9O
-RU5UX0JMUywKPiA+ICsJRERQX0NPTVBPTkVOVF9EU0kwLAo+ID4gK307Cj4gPiArCj4gPiArc3Rh
-dGljIGNvbnN0IGVudW0gbXRrX2RkcF9jb21wX2lkIG10a19kZHBfZXh0XzI3MDFbXSA9IHsKPiA+
-ICsJRERQX0NPTVBPTkVOVF9PVkwwLAo+ID4gKwlERFBfQ09NUE9ORU5UX0RTSTAsCj4gPiArfTsK
-PiA+ICsKPiAKPiBUaGVzZSB0d28gcGlwZWxpbmVzIGhhcyB0aGUgc2FtZSBjb21wb25lbnQgc3Vj
-aCBhcyBPVkwwIGFuZCBEU0kwLiBJCj4gdGhpbmsgdXNlciBwcm9ncmFtIGNvdWxkIG5vdCBlbmFi
-bGUgYm90aCBjcnRjIGF0IHRoZSBzYW1lIHRpbWUuIE1heWJlCj4gTVQyNzAxIGhhcyBvbmx5IG9u
-ZSBjcnRjLCBzbyB5b3Ugc2hvdWxkIG1vZGlmeSBpbml0aWFsIGZsb3cgdG8gY3JlYXRlCj4gb25s
-eSBvbmUgY3J0YyBmb3IgbWFpbiBkaXNwbGF5LiBPciBpdCdzIHR5cG8gZm9yIGV4dGVybmFsIGRp
-c3BsYXkgcGlwZSwKPiBwbGVhc2UgY29ycmVjdCBpdC4KTVQyNzAxIGhhcmR3YXJlIGNhbiBzdXBw
-b3J0IHR3byBvdXRwdXQgY29uY3VycmVudGx5LCBidXQgd2UgaGF2ZW4ndAppbXBsZW1lbnQgRFBJ
-IHBhdGggeWV0LiAgV2Ugd2lsbCBjaGFuZ2UgaXQgbGlrZSB0aGlzOgpzdGF0aWMgY29uc3QgZW51
-bSBtdGtfZGRwX2NvbXBfaWQgbXRrX2RkcF9leHRfMjcwMVtdID0gewoJRERQX0NPTVBPTkVOVF9S
-RE1BMSwKCUREUF9DT01QT05FTlRfRFBJMCwKfTsKClRoYW5rcy4KeXQuc2hlbgo+IAo+IAo+IFJl
-Z2FyZHMsCj4gQ0sKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Hi CK,
+
+
+On Mon, 2016-05-23 at 17:43 +0800, CK Hu wrote:
+> Hi, YT:
+> 
+> One comment below.
+> 
+> On Fri, 2016-05-20 at 23:05 +0800, yt.shen@mediatek.com wrote:
+> > From: YT Shen <yt.shen@mediatek.com>
+> > 
+> > There are some hardware settings changed, between MT8173 & MT2701:
+> > DISP_OVL address offset changed, color format definition changed.
+> > DISP_RDMA fifo size changed.
+> > DISP_COLOR offset changed.
+> > 
+> > Signed-off-by: YT Shen <yt.shen@mediatek.com>
+> > ---
+> > +
+> > +static inline struct mtk_ddp_comp_driver_data *mtk_ovl_get_driver_data(
+> > +	struct platform_device *pdev)
+> > +{
+> > +	const struct of_device_id *of_id =
+> > +		of_match_device(mtk_disp_ovl_driver_dt_match, &pdev->dev);
+> > +
+> > +	return (struct mtk_ddp_comp_driver_data *)of_id->data;
+> > +}
+> > +
+> > +static inline struct mtk_ddp_comp_driver_data *mtk_rdma_get_driver_data(
+> > +	struct platform_device *pdev)
+> > +{
+> > +	const struct of_device_id *of_id =
+> > +		of_match_device(mtk_disp_rdma_driver_dt_match, &pdev->dev);
+> > +
+> > +	return (struct mtk_ddp_comp_driver_data *)of_id->data;
+> > +}
+> > +
+> > +static inline struct mtk_ddp_comp_driver_data *mtk_color_get_driver_data(
+> > +	struct device_node *node)
+> > +{
+> > +	const struct of_device_id *of_id =
+> > +		of_match_node(mtk_disp_color_driver_dt_match, node);
+> > +
+> > +	return (struct mtk_ddp_comp_driver_data *)of_id->data;
+> > +}
+> > + 
+> 
+> These three functions looks the same with different parameter:
+> mtk_disp_ovl_driver_dt_match, mtk_disp_rdma_driver_dt_match, and
+> mtk_disp_color_driver_dt_match. So merge them to prevent duplicated
+> code.
+OK, I'll do this in the next version.
+> 
+> Regards,
+> CK
+> 
+> 
