@@ -1,131 +1,101 @@
-From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 5/5] ARM: dts: mt2701: add iommu/smi dtsi node for mt2701
-Date: Fri, 27 May 2016 16:56:40 +0800
-Message-ID: <1464339400-22559-6-git-send-email-honghui.zhang@mediatek.com>
-References: <1464339400-22559-1-git-send-email-honghui.zhang@mediatek.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 02/12] of: add J-Core cpu bindings
+Date: Fri, 27 May 2016 10:13:59 +0100
+Message-ID: <20160527091359.GA24469@leverpostej>
+References: <cover.1464148904.git.dalias@libc.org>
+ <39ad5c69533ef537e6ab0426efc057f9064ee581.1464148904.git.dalias@libc.org>
+ <20160525102214.GF1337@leverpostej>
+ <20160525230407.GT21636@brightrain.aerifal.cx>
+ <20160526103828.GB32186@leverpostej>
+ <20160526153323.GX21636@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1464339400-22559-1-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160526153323.GX21636-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Thu, May 26, 2016 at 11:33:23AM -0400, Rich Felker wrote:
+> On Thu, May 26, 2016 at 11:38:29AM +0100, Mark Rutland wrote:
+> > On Wed, May 25, 2016 at 07:04:08PM -0400, Rich Felker wrote:
+> > > On Wed, May 25, 2016 at 11:22:15AM +0100, Mark Rutland wrote:
+> > > > * How must the value be written?
+> > > >   - Which endianness?
+> > > 
+> > > CPU native.
+> > 
+> > Ok. I take it that a CPU's endianness cannot be switched onthe fly,
+> > then? Or does the hardware backing the release-addr register handle
+> > arbitrary endianness dynamically?
+> 
+> No, it's not switched on the fly.
+> 
+> > If you want to reuse the same HW block across configurations where CPU
+> > endianness differs, it may make sense to define an endianness
+> > regardless, to simplify integration concerns.
+> 
+> The existing cpus are all big-endian, but I believe at one point there
+> was talk that it's easy to get a little-endian version if you want. In
+> any case the value is to be read by the cpu, so cpu endianness (i.e.
+> no endianness, just a value) is the only thing that makes sense to
+> specify. Adding a fixed endian spec independent of cpu endianness just
+> complicates both hardware and kernel implementation and its only
+> benefit seems to be supporting runtime-switchable chips where the
+> entry-point code has to select the endianness to match the rest of the
+> kernel.
 
-Add the dtsi node of iommu and smi for mt2701.
+Sure. If endianness isn't runtime switchable, and there is no near-term
+plan to add that, then my concerns do not apply.
 
-Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/mt2701.dtsi | 51 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+[...]
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 42d5a37..363de0d 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -16,6 +16,7 @@
- #include <dt-bindings/power/mt2701-power.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/memory/mt2701-larb-port.h>
- #include "skeleton64.dtsi"
- #include "mt2701-pinfunc.h"
- 
-@@ -160,6 +161,16 @@
- 		clock-names = "system-clk", "rtc-clk";
- 	};
- 
-+	smi_common: smi@1000c000 {
-+		compatible = "mediatek,mt2701-smi-common";
-+		reg = <0 0x1000c000 0 0x1000>;
-+		clocks = <&infracfg CLK_INFRA_SMI>,
-+			 <&mmsys CLK_MM_SMI_COMMON>,
-+			 <&infracfg CLK_INFRA_SMI>;
-+		clock-names = "apb", "smi", "async";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-+	};
-+
- 	sysirq: interrupt-controller@10200100 {
- 		compatible = "mediatek,mt2701-sysirq",
- 			     "mediatek,mt6577-sysirq";
-@@ -169,6 +180,16 @@
- 		reg = <0 0x10200100 0 0x1c>;
- 	};
- 
-+	iommu: mmsys_iommu@10205000 {
-+		compatible = "mediatek,mt2701-m4u";
-+		reg = <0 0x10205000 0 0x1000>;
-+		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_M4U>;
-+		clock-names = "bclk";
-+		mediatek,larbs = <&larb0 &larb1 &larb2>;
-+		#iommu-cells = <1>;
-+	};
-+
- 	apmixedsys: syscon@10209000 {
- 		compatible = "mediatek,mt2701-apmixedsys", "syscon";
- 		reg = <0 0x10209000 0 0x1000>;
-@@ -234,6 +255,16 @@
- 		status = "disabled";
- 	};
- 
-+	larb0: larb@14010000 {
-+		compatible = "mediatek,mt2701-smi-larb";
-+		reg = <0 0x14010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		clocks = <&mmsys CLK_MM_SMI_LARB0>,
-+			 <&mmsys CLK_MM_SMI_LARB0>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-+	};
-+
- 	imgsys: syscon@15000000 {
- 		compatible = "mediatek,mt2701-imgsys", "syscon";
- 		reg = <0 0x15000000 0 0x1000>;
-@@ -241,6 +272,16 @@
- 		status = "disabled";
- 	};
- 
-+	larb2: larb@15001000 {
-+		compatible = "mediatek,mt2701-smi-larb";
-+		reg = <0 0x15001000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		clocks = <&imgsys CLK_IMG_SMI_COMM>,
-+			 <&imgsys CLK_IMG_SMI_COMM>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+	};
-+
- 	vdecsys: syscon@16000000 {
- 		compatible = "mediatek,mt2701-vdecsys", "syscon";
- 		reg = <0 0x16000000 0 0x1000>;
-@@ -248,6 +289,16 @@
- 		status = "disabled";
- 	};
- 
-+	larb1: larb@16010000 {
-+		compatible = "mediatek,mt2701-smi-larb";
-+		reg = <0 0x16010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		clocks = <&vdecsys CLK_VDEC_CKGEN>,
-+			 <&vdecsys CLK_VDEC_LARB>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
-+	};
-+
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt2701-hifsys", "syscon";
- 		reg = <0 0x1a000000 0 0x1000>;
--- 
-1.8.1.1.dirty
+> > If you do /memreserve/ the region rather than carving it out of memory
+> > nodes, you will also need to define semantics for memreserve. Typically
+> > memreserve meaans that the OS should not perform any stores to the
+> > region, but is permitted to map it with some architecture-specific
+> > cacheable attributes.
+> 
+> My interpretation of memreserve is just that it marks memory ranges
+> that the kernel cannot use for allocatable memory for its own
+> purposes, despite otherwise possibly lying in the range of a "memory"
+> node. I would not interpret it as excluding accesses by drivers that
+> were told to use specific addresses in the "reserved" range as part of
+> their DT bindings.
+
+Yes, this is strictly more correct than my wording.
+
+Given the lack of MMU or cache configration beynd on/off, it doesn't
+sound like there are any arch-specific memory attribute rules to
+document.
+
+[...]
+
+> > My questions about SMP are largely orthogonal to DT; I simply have
+> > experience in dealing with that for arm64, and am aware of some of the
+> > pain points that were not immediately obvious.
+> 
+> OK, thanks for clarifying that. This is actually really helpful
+> feedback to have but I wasn't sure if you wanted me to consider it
+> part of what needs to be done for DT binding or for consideration in
+> designing and documenting the SMP architecture.
+
+Sorry for that; in retrospect I probably should have sent the boot
+protocol comments as a separate reply.
+
+[...]
+
+> OK. I'll strip it down to just the parts that are relevant for non-SMP
+> and submit the patch adding SMP bindings along with the SMP kernel
+> patches.
+
+That sounds good to me.
+
+Thanks,
+Mark,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
