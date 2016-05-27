@@ -1,195 +1,177 @@
-From: Wenrui Li <wenrui.li@rock-chips.com>
-Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
-Date: Fri, 27 May 2016 14:48:41 +0800
-Message-ID: <5747EDC9.2080603@rock-chips.com>
-References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
- <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
- <9836736.6VjP1ug4kE@wuerfel>
+From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/3] of/numa: fix a memory@ dt node can only contains one
+ memory block
+Date: Fri, 27 May 2016 15:04:11 +0800
+Message-ID: <5747F16B.5050404@huawei.com>
+References: <1464230639-9852-1-git-send-email-thunder.leizhen@huawei.com>
+ <1464230639-9852-2-git-send-email-thunder.leizhen@huawei.com>
+ <20160526131345.GA12024@rob-hp-laptop> <5747C0BF.505@huawei.com>
+ <CAL_JsqJXu36qYMOZeWDnMQ8BnOxMrixv5N70hvTjDixhMCQKRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <9836736.6VjP1ug4kE@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJXu36qYMOZeWDnMQ8BnOxMrixv5N70hvTjDixhMCQKRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2016/5/24 21:03, Arnd Bergmann wrote:
-> On Friday, May 20, 2016 6:29:16 PM CEST Shawn Lin wrote:
->
->> +static int rockchip_pcie_wr_own_conf(struct rockchip_pcie_port *pp,
->> +				     int where, int size, u32 val)
->> +{
->> +	u32 tmp;
->> +	int offset;
->> +
->> +	offset = (where & (~0x3));
->> +	tmp = readl(pp->apb_base + PCIE_RC_CONFIG_BASE + offset);
->> +	if (size == 4) {
->> +		writel(val, pp->apb_base + PCIE_RC_CONFIG_BASE + where);
->> +	} else if (size == 2) {
->> +		if (where & 0x2)
->> +			tmp = ((tmp & 0xffff) | (val << 16));
->> +		else
->> +			tmp = ((tmp & 0xffff0000) | val);
->> +
->> +		writel(tmp, pp->apb_base + PCIE_RC_CONFIG_BASE + offset);
->> +	} else if (size == 1) {
->> +		if ((where & 0x3) == 0)
->> +			tmp = ((tmp & (~0xff)) | val);
->> +		else if ((where & 0x3) == 1)
->> +			tmp = ((tmp & (~0xff00)) | (val << 8));
->> +		else if ((where & 0x3) == 2)
->> +			tmp = ((tmp & (~0xff0000)) | (val << 16));
->> +		else if ((where & 0x3) == 3)
->> +			tmp = ((tmp & (~0xff000000)) | (val << 24));
->> +
->> +		writel(tmp, pp->apb_base + PCIE_RC_CONFIG_BASE + offset);
->> +	} else {
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +	}
->> +	return PCIBIOS_SUCCESSFUL;
->> +}
->
-> Why can't you access the individual sub-word registers here?
-
-Our soc not support byte and word write in these region. so we have to 
-use writel() to write these registers.
-
->
->> +
->> +static int rockchip_pcie_rd_other_conf(struct rockchip_pcie_port *pp,
->> +				       struct pci_bus *bus, u32 devfn,
->> +				       int where, int size, u32 *val)
->> +{
->> +	u32 busdev;
->> +
->> +	busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
->> +				PCI_FUNC(devfn), where);
->> +
->> +	if (busdev & (size - 1)) {
->> +		*val = 0;
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +	}
->> +
->> +	if (size == 4) {
->> +		*val = readl(pp->reg_base + busdev);
->> +	} else if (size == 2) {
->> +		*val = readw(pp->reg_base + busdev);
->> +	} else if (size == 1) {
->> +		*val = readb(pp->reg_base + busdev);
->> +	} else {
->> +		*val = 0;
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +	}
->> +	return PCIBIOS_SUCCESSFUL;
->> +}
->> +
->
-> This looks like the normal ECAM operations, you could just call those.
-
-I read ECAM reference code, I found it not support ioremap config space 
-for each bus individually on 64-bit systems. Our soc is 64-bit system, 
-and bus0 config space base address is 0xfda00000, bus1 base address is 
-0xf8100000. So I think it is not normal ECAM operations, I do not know 
-if I have understood correctly?
-
->
->> +	while (time_before(jiffies, timeout)) {
->> +		regmap_read(port->grf, port->pcie_status, &status);
->> +		if ((status & (1 << 9))) {
->> +			dev_info(port->dev, "pll locked!\n");
->> +			err = 0;
->> +			break;
->> +		}
->> +	}
->
-> Maybe add an msleep(1) here to avoid busy-looping?
-
-Yeah, its a good suggestion.
-
->
->
->> +	for (reg_no = 0; reg_no < (port->mem_size >> 20); reg_no++) {
->> +		err = rockchip_pcie_prog_ob_atu(port, reg_no + 1,
->> +						AXI_WRAPPER_MEM_WRITE,
->> +						20 - 1,
->> +						port->mem_bus_addr +
->> +							(reg_no << 20),
->> +						0);
->> +		if (err) {
->> +			dev_err(dev, "Program RC outbound atu failed\n");
->> +			return err;
->> +		}
->> +	}
->
-> What if there is more than one outbound memory window, e.g. prefetchable
-> and non-prefetchable?
->
-> Where do you set the I/O window?
 
 
-Yeah, our soc support these outbound windows, we will support these 
-windows next patch.
+On 2016/5/27 12:20, Rob Herring wrote:
+> On Thu, May 26, 2016 at 10:36 PM, Leizhen (ThunderTown)
+> <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>>
+>>
+>> On 2016/5/26 21:13, Rob Herring wrote:
+>>> On Thu, May 26, 2016 at 10:43:58AM +0800, Zhen Lei wrote:
+>>>> For a normal memory@ devicetree node, its reg property can contains more
+>>>> memory blocks.
+>>>>
+>>>> Because we don't known how many memory blocks maybe contained, so we try
+>>>> from index=0, increase 1 until error returned(the end).
+>>>>
+>>>> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  drivers/of/of_numa.c | 30 ++++++++++++++++++++----------
+>>>>  1 file changed, 20 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+>>>> index 21d831f..2c5f249 100644
+>>>> --- a/drivers/of/of_numa.c
+>>>> +++ b/drivers/of/of_numa.c
+>>>> @@ -63,7 +63,7 @@ static int __init of_numa_parse_memory_nodes(void)
+>>>>      struct device_node *np = NULL;
+>>>>      struct resource rsrc;
+>>>>      u32 nid;
+>>>> -    int r = 0;
+>>>> +    int i, r = 0;
+>>>>
+>>>>      for (;;) {
+>>>>              np = of_find_node_by_type(np, "memory");
+>>>> @@ -82,17 +82,27 @@ static int __init of_numa_parse_memory_nodes(void)
+>>>>                      /* some other error */
+>>>>                      break;
+>>>>
+>>>> -            r = of_address_to_resource(np, 0, &rsrc);
+>>>> -            if (r) {
+>>>> -                    pr_err("NUMA: bad reg property in memory node\n");
+>>>> -                    break;
+>>>> +            for (i = 0; ; i++) {
+>>>> +                    r = of_address_to_resource(np, i, &rsrc);
+>>>> +                    if (r) {
+>>>> +                            /* reached the end of of_address */
+>>>> +                            if (i > 0) {
+>>>> +                                    r = 0;
+>>>> +                                    break;
+>>>> +                            }
+>>>> +
+>>>> +                            pr_err("NUMA: bad reg property in memory node\n");
+>>>> +                            goto finished;
+>>>> +                    }
+>>>> +
+>>>> +                    r = numa_add_memblk(nid, rsrc.start,
+>>>> +                                        rsrc.end - rsrc.start + 1);
+>>>> +                    if (r)
+>>>> +                            goto finished;
+>>>>              }
+>>>> -
+>>>> -            r = numa_add_memblk(nid, rsrc.start,
+>>>> -                                rsrc.end - rsrc.start + 1);
+>>>> -            if (r)
+>>>> -                    break;
+>>>>      }
+>>>> +
+>>>> +finished:
+>>>>      of_node_put(np);
+>>>
+>>> This function can be simplified down to:
+>>>
+>>>       for_each_node_by_type(np, "memory") {
+>> OK, That's good.
+>>
+>>>               r = of_property_read_u32(np, "numa-node-id", &nid);
+>>>               if (r == -EINVAL)
+>>>                       /*
+>>>                        * property doesn't exist if -EINVAL, continue
+>>>                        * looking for more memory nodes with
+>>>                        * "numa-node-id" property
+>>>                        */
+>>>                       continue;
+>> Hi, everybody:
+>>     If some "memory" node contains "numa-node-id", but some others missed. Can we simply ignored it?
+>> I think we should break out too, and faking to only have node0.
+> 
+> Continuing to work is probably better than not.
+> 
+>>
+>>>               else if (r)
+>>>                       /* some other error */
+>>>                       break;
+>>>
+>>>               r = of_address_to_resource(np, 0, &rsrc);
+>>>               for (i = 0; !r; i++, r = of_address_to_resource(np, i,
+>>
+>> But r(non-zero) is just break this loop, the original is break the outer for (;;) loop
+> 
+> It is not really the kernel's job to validate the DT. If there's
+> random things in it then kernel's behavior is undefined.
+> 
+>>
+>> How about as below?
+>>
+>>         for_each_node_by_type(np, "memory") {
+>>                 ... ...
+>>
+>>                 for (i = 0; !of_address_to_resource(np, i, &rsrc); i++) {
+>>                         r = numa_add_memblk(nid, rsrc.start,
+>>                                             rsrc.end - rsrc.start + 1);
+>>                         if (r)
+>>                                 goto finished;
+>>                 }
+>>
+>>                 if (!i)
+>>                         pr_err("NUMA: bad reg property in memory node\n");
+>>         }
+>>
+>> finished:
+> 
+> Please try to avoid the goto. You can check r in the outer loop too.
 
->
->> +	err = rockchip_pcie_prog_ib_atu(port, 2, 32 - 1, 0x0, 0);
->> +	if (err) {
->> +		dev_err(dev, "Program RC inbound atu failed\n");
->> +		return err;
->> +	}
->
-> And this doesn't seem to reflect the DMA ranges.
+OK. I have rewritten this function according to your advice.
 
-Our soc support all the ram region use as DMA zone. SO I set all the 32 
-bits bypass for the inbound ATS.
+	for_each_node_by_type(np, "memory") {
+                r = of_property_read_u32(np, "numa-node-id", &nid);
+                if (r == -EINVAL)
+                        /*
+                         * property doesn't exist if -EINVAL, continue
+                         * looking for more memory nodes with
+                         * "numa-node-id" property
+                         */
+                        continue;
+									//I deleted the break of "some other error", and it will break in below "if (!i || r)" branch
 
->
->> +
->> +	port->root_bus_nr = port->busn->start;
->> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->> +		bus = pci_scan_root_bus_msi(port->dev, port->root_bus_nr,
->> +					    &rockchip_pcie_ops, port, &res,
->> +					    port->msi);
->> +	} else {
->> +		bus = pci_scan_root_bus(&pdev->dev, 0,
->> +					&rockchip_pcie_ops, port, &res);
->
->
-> PCI_MSI is selected unconditionally from Kconfig for this driver, so no
-> need for the compile-time check here.
+                for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
+                        r = numa_add_memblk(nid, rsrc.start,
+                                            rsrc.end - rsrc.start + 1);
 
-Yeah, we will delete the compile-time check in next patch.
+                if (!i || r) {
+                        of_node_put(np);				//I moved here, so that it looks more clear. Because in the normal use of for_each_node_by_type, of_node_put is not required
+                        pr_err("NUMA: bad property in memory node\n");	//Deleted "reg", so that it's suitable or harmless for other error cases
+                        break;
+                }
+        }
 
->
->> +
->> +static int rockchip_pcie_remove(struct platform_device *pdev)
->> +{
->> +	struct rockchip_pcie_port *port = platform_get_drvdata(pdev);
->> +
->> +	clk_disable_unprepare(port->hclk_pcie);
->> +	clk_disable_unprepare(port->aclk_perf_pcie);
->> +	clk_disable_unprepare(port->aclk_pcie);
->> +	clk_disable_unprepare(port->clk_pciephy_ref);
->> +
->> +	return 0;
->> +}
->
-> You don't seem to remove the child devices here. Have you tried unloading the module?
->
+	return r;
 
-I don't seem the remove function in other pcie host driver. I think this 
-function could be deleted.
+> 
+> Rob
+> 
+> .
+> 
 
-> 	Arnd
->
->
->
->
->
-
-Best Regards
-Wenrui Li
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
