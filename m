@@ -1,97 +1,62 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: Re: [PATCH 0/6] Rockchip Type-C and DispplayPort driver
-Date: Fri, 27 May 2016 15:38:01 +0800
-Message-ID: <5747F959.7010101@rock-chips.com>
-References: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>, dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com
-Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Mans Rullgard <mans@mansr.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Takashi Iwai <tiwai@suse.com>, Jacob Siverskog <jacob@teenage.engineering>, Bard Liao <bardliao@realtek.com>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, Vinod Koul <vinod.koul@intel.com>, anish kumar <yesanishhere@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Michael Trimarchi <michael@amarulasolutions.com>, "Subhransu S. Prusty" <subhransu.s.prusty@intel.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Johan Hovold <johan@kernel.org>, Jyri Sarha <jsarha@ti.com>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, Rob Herring <robh+dt@kernel.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] fdt: Add a subnodes iterator macro
+Date: Fri, 27 May 2016 10:28:45 +0200
+Message-ID: <1464337729-7821-2-git-send-email-maxime.ripard@free-electrons.com>
+References: <1464337729-7821-1-git-send-email-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464337729-7821-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-On 05/27/2016 02:02 PM, Chris Zhong wrote:
-> Hi all
->
-> This series patch is for rockchip Type-C phy and DisplayPort controller
-> driver.
->
-> The USB Type-C PHY is designed to support the USB3 and DP applications.
-> The PHY basically has two main components: USB3 and DisplyPort. USB3
-> operates in SuperSpeed mode and the DP can operate at RBR, HBR and HBR2
-> data rates. The Type-C cable orientation detection and Power Delivery
-> (PD) is accomplished using a PD PHY or a exernal PD chip.
->
-> The DP controller is compliant with DisplayPort Specification,
-> Version 1.3, This IP is compatible with the rockchip type-c PHY IP.
-> There is a uCPU in DP controller, it need a firmware to work, please
-> put the firmware file to /lib/firmware/cdn/dptx.bin. The uCPU in charge
-> of aux communication and link training, the host use mailbox to
-> communicate with the ucpu.
->
-> The PHY driver has register a notification, to get the alt mode from PD,
-> the PD driver need call the tcphy_notifier_call_chain to notify PHY and
-> DP controller.
-For the notification for the port status change from PD, I think we can
-use the extcon class, pls reference the code in drivers/extcon/ for usage.
+The fdt_for_each_subnode() iterator macro provided by this patch can be
+used to iterate over a device tree node's subnodes. At each iteration a
+loop variable will be set to the next subnode.
 
-Thanks,
-- Kever
->
-> This series is based on Mark Yao's branch:
-> https://github.com/markyzq/kernel-drm-rockchip/tree/drm-rockchip-next-2016-05-23
->
-> I test this patches on the rk3399-evb board, with a fusb302 driver,
-> this branch has no rk3399.dtsi, so the patch about dts is not included
-> in this series.
->
->
->
-> Chris Zhong (6):
->    phy: Add USB Type-C PHY driver for rk3399
->    Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
->    drm/rockchip: vop: add cdn DP support for rk3399
->    Documentation: bindings: add dt documentation for cdn DP controller
->    ASoC: cdn-dp: Add cdn DP codec driver
->    ASoC: rockchip: Add machine driver for cdn dp codec
->
->   .../bindings/display/rockchip/cdn-dp-rockchip.txt  |  57 ++
->   .../devicetree/bindings/phy/phy-rockchip-typec.txt |  55 ++
->   .../bindings/sound/rockchip-cdn-dp-audio.txt       |  12 +
->   drivers/gpu/drm/rockchip/Kconfig                   |   9 +
->   drivers/gpu/drm/rockchip/Makefile                  |   1 +
->   drivers/gpu/drm/rockchip/cdn-dp-core.c             | 620 ++++++++++++++++
->   drivers/gpu/drm/rockchip/cdn-dp-core.h             |  95 +++
->   drivers/gpu/drm/rockchip/cdn-dp-reg.c              | 730 ++++++++++++++++++
->   drivers/gpu/drm/rockchip/cdn-dp-reg.h              | 404 ++++++++++
->   drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |   9 +-
->   drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |   2 +
->   drivers/gpu/drm/rockchip/rockchip_vop_reg.c        |   2 +
->   drivers/phy/Kconfig                                |   7 +
->   drivers/phy/Makefile                               |   1 +
->   drivers/phy/phy-rockchip-typec.c                   | 823 +++++++++++++++++++++
->   include/sound/cdn-dp-audio.h                       |  51 ++
->   sound/soc/codecs/Kconfig                           |   3 +
->   sound/soc/codecs/Makefile                          |   2 +
->   sound/soc/codecs/cdn-dp-audio.c                    | 246 ++++++
->   sound/soc/rockchip/Kconfig                         |   9 +
->   sound/soc/rockchip/Makefile                        |   2 +
->   sound/soc/rockchip/rockchip-cdn-dp-audio.c         | 167 +++++
->   22 files changed, 3306 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
->   create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->   create mode 100644 Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt
->   create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.c
->   create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.h
->   create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.c
->   create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.h
->   create mode 100644 drivers/phy/phy-rockchip-typec.c
->   create mode 100644 include/sound/cdn-dp-audio.h
->   create mode 100644 sound/soc/codecs/cdn-dp-audio.c
->   create mode 100644 sound/soc/rockchip/rockchip-cdn-dp-audio.c
->
+Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ libfdt/libfdt.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index 2dfc6d9e5ce7..f3cbb637be41 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -163,6 +163,31 @@ int fdt_first_subnode(const void *fdt, int offset);
+  */
+ int fdt_next_subnode(const void *fdt, int offset);
+ 
++/**
++ * fdt_for_each_subnode - iterate over all subnodes of a parent
++ *
++ * This is actually a wrapper around a for loop and would be used like so:
++ *
++ *	fdt_for_each_subnode(fdt, node, parent) {
++ *		...
++ *		use node
++ *		...
++ *	}
++ *
++ * Note that this is implemented as a macro and node is used as iterator in
++ * the loop. It should therefore be a locally allocated variable. The parent
++ * variable on the other hand is never modified, so it can be constant or
++ * even a literal.
++ *
++ * @fdt:	FDT blob (const void *)
++ * @node:	child node (int)
++ * @parent:	parent node (int)
++ */
++#define fdt_for_each_subnode(fdt, node, parent)		\
++	for (node = fdt_first_subnode(fdt, parent);	\
++	     node >= 0;					\
++	     node = fdt_next_subnode(fdt, node))
++
+ /**********************************************************************/
+ /* General functions                                                  */
+ /**********************************************************************/
+-- 
+2.8.2
