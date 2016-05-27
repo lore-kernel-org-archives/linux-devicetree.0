@@ -1,46 +1,77 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/4] libfdt: Add support for device tree overlays
-Date: Fri, 27 May 2016 10:28:44 +0200
-Message-ID: <1464337729-7821-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 2/6] Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
+Date: Fri, 27 May 2016 10:29:57 +0200
+Message-ID: <2812026.ptEv4ktvbn@phil>
+References: <1464328939-8073-1-git-send-email-zyw@rock-chips.com> <1464328939-8073-3-git-send-email-zyw@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464328939-8073-3-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: dianders@chromium.org, tfiga@chromium.org, yzq@rock-chips.com, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chris,
 
-The device tree overlays are a great solution to the issue raised by
-the bunch expandable boards we find everywhere these days, like the
-Beaglebone, Raspberry Pi or CHIP.
+Am Freitag, 27. Mai 2016, 14:02:15 schrieb Chris Zhong:
+> This patch adds a binding that describes the Rockchip USB Type-C PHY
+> for rk3399.
+> 
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> ---
+> 
+>  .../devicetree/bindings/phy/phy-rockchip-typec.txt | 55
+> ++++++++++++++++++++++ 1 file changed, 55 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt new file
+> mode 100644
+> index 0000000..402f667
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> @@ -0,0 +1,55 @@
+> +ROCKCHIP type-c PHY
+> +
+> +Required properties:
+> + - compatible: should be "rockchip,rk3399-typec-phy"
+> + - reg : Address and length of the usb phy control register set
+> + - rockchip,grf : phandle to the syscon managing the "general
+> +   register files"
+> + - clocks : phandle + clock specifier for the phy clocks
+> + - clock-names: string, clock name, must be "tcpdcore", "tcpdphy_ref";
+> + - resets : a list of phandle + reset specifier pairs
+> + - reset-names : string reset name, must be:
+> +		 "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst"
+> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
+> + - rockchip,usb3phy*: phy registers embed in grf
+> +
+> +Example:
+> +	tcphy0: phy@ff7c0000 {
+> +		compatible = "rockchip,rk3399-typec-phy";
+> +		reg = <0x0 0xff7c0000 0x0 0x40000>;
+> +		#phy-cells = <0>;
+> +		rockchip,grf = <&grf>;
+> +		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+> +			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+> +		clock-names = "tcpdcore", "tcpdphy_ref";
+> +		resets = <&cru SRST_UPHY0>,
+> +			 <&cru SRST_UPHY0_PIPE_L00>,
+> +			 <&cru SRST_P_UPHY0_TCPHY>;
+> +		reset-names = "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst";
+> +		rockchip,usb3phy_con0 = <0x0e580 0 16>;
+> +		rockchip,usb3phy_con1 = <0x0e584 0 16>;
+> +		rockchip,usb3phy_con2 = <0x0e588 0 16>;
+> +		rockchip,usb3phy_status0 = <0x0e5c0 0 13>;
+> +		rockchip,usb3phy_status1 = <0x0e5c4 0 12>;
 
-Although for now Linux is the only available tool that can deal with
-overlays, some other components like bootloaders or user-space tools
-might need to apply these overlays on top of a base device tree.
+please embedded this register data in the driver instead (not in the 
+devicetree), matched against the compatible value.
+See Frank's usb2phy driver for reference if needed.
 
-To address these use cases, we introduce a new function to the libfdt,
-fdt_overlay_apply, that does just that.
 
-You can find a test program here: http://code.bulix.org/792zum-99476?raw
-
-Let me know what you think!
-Maxime
-
-Maxime Ripard (3):
-  libfdt: Add iterator over properties
-  libfdt: Add max phandle retrieval function
-  libfdt: Add overlay application function
-
-Thierry Reding (1):
-  libfdt: Add a subnodes iterator macro
-
- libfdt/Makefile.libfdt |   2 +-
- libfdt/fdt_overlay.c   | 414 +++++++++++++++++++++++++++++++++++++++++++++++++
- libfdt/fdt_ro.c        |  15 ++
- libfdt/libfdt.h        |  92 +++++++++++
- libfdt/libfdt_env.h    |   1 +
- 5 files changed, 523 insertions(+), 1 deletion(-)
- create mode 100644 libfdt/fdt_overlay.c
-
--- 
-2.8.2
+Thanks
+Heiko
