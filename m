@@ -1,32 +1,48 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
-Date: Thu, 26 May 2016 19:20:38 -0300
-Message-ID: <CAOMZO5C3_bd-2Nz+G956+VPOcKoFaGGJK7G1p=U0yf5OyWekZA@mail.gmail.com>
-References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
-	<c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
-	<CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
-	<a6cc6b85d2fa4994b3cb7e2b047f800d@rwthex-w2-b.rwth-ad.de>
-	<9d7793850de942cfb578b0aeb2728f41@rwthex-s1-b.rwth-ad.de>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/4] clk: renesas: cpg-mssr: Add support for R-Car M3-W
+Date: Fri, 27 May 2016 09:49:00 +0900
+Message-ID: <20160527004859.GG14269@verge.net.au>
+References: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
+ <20160526023548.GA20224@verge.net.au>
+ <CAMuHMdW4Q=OO1zX6_wcN85rs8ZtNqFGnQYEMkriSh1q2L4vJSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9d7793850de942cfb578b0aeb2728f41-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW4Q=OO1zX6_wcN85rs8ZtNqFGnQYEMkriSh1q2L4vJSA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk <linux-clk@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 26, 2016 at 11:26 AM, Christopher Spinrath
-<christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
+On Thu, May 26, 2016 at 08:55:35AM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Thu, May 26, 2016 at 4:35 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Wed, May 04, 2016 at 04:35:39PM +0200, Geert Uytterhoeven wrote:
+> >> This patch series adds initial support for the Clock Pulse Generator and
+> >> Module Standby and Software Reset modules on the Renesas R-Car M3-W
+> >> SoC:
+> >>   - Basic core clocks,
+> >>   - SCIF2 (console) module clock,
+> >>   - INTC-AP (GIC) module clock (disabled pending CLK_ENABLE_HAND_OFF).
+> >>
+> >> Support for more core and module clocks will be added incrementally.
+> >
+> > I am wondering about the status of this patchset vis a vis mainline.
+> >
+> > I would like to queue up "[PATCH v3 0/3] arm64: Add Renesas R8A7796 SoC
+> > support" for v4.8 but I'd prefer to do so only if there is a good chance
+> > that this patch-set, which is provides run-time dependency, will also be in
+> > v4.8.
+> 
+> I plan to queue it in clk-renesas-for-v4.8 after the closing of the v4.7 merge
+> window.
+> 
+> BTW, as there were no comments on the code, but people are obviously using it,
+> and building on top of it, it would be good to receive some
+> {Acked,Tested,Reviewed}-by tags.
 
-> Thanks for joining this discussion. I *guess* the rationale is to share
-> the same device tree with projects that are incompatible with the GPL
-> (e.g. *BSD). Even if there is no support for a particular device/board
-> having all (or most) files dual licensed makes it easier to just pull
-> them all in.
+Sorry, I meant to do that a long time ago.
 
-Yes, that's correct.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested-by: Simon Horman <horms+renesas@verge.net.au>
