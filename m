@@ -1,50 +1,61 @@
-From: Kieran Bingham <kieran@ksquared.org.uk>
-Subject: Re: [PATCH 1/4] fcp: Extend FCP compatible list to support the FDP
-Date: Fri, 27 May 2016 18:21:22 +0100
-Message-ID: <57488212.2060704@bingham.xyz>
-References: <1464369565-12259-1-git-send-email-kieran@bingham.xyz>
- <1464369565-12259-2-git-send-email-kieran@bingham.xyz>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
+Date: Fri, 27 May 2016 10:28:45 -0700
+Message-ID: <475f53d2bb4c611bfe1c6652215b8626@agner.ch>
+References: <cover.1463737502.git.maitysanchayan@gmail.com>
+ <CAL_JsqKCwy=aXveTfnaQuZ5b3Ld9nzABgPfdPm1JX3CBuvzG+Q@mail.gmail.com>
+ <20160527063301.GB1554@Sanchayan-Arch.localdomain>
+ <9495361.v6aft1QR0M@wuerfel>
+ <20160527100817.GA8294@Sanchayan-Arch.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1464369565-12259-2-git-send-email-kieran@bingham.xyz>
-Sender: linux-media-owner@vger.kernel.org
-To: laurent.pinchart@ideasonboard.com, linux-renesas-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160527100817.GA8294@Sanchayan-Arch.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maitysanchayan@gmail.com
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-My apologies - I had a stale file in my patches folder :(
-This one had the wrong commit-shortlog, please ignore.
-
---
-Kieran
-
-On 27/05/16 18:19, Kieran Bingham wrote:
-> The FCP must be powered up for the FDP1 to function, even when the FDP1
-> does not make use of the FCNL features. Extend the compatible list
-> to allow us to use the power domain and runtime-pm support.
+On 2016-05-27 03:08, maitysanchayan@gmail.com wrote:
+> On 16-05-27 10:31:55, Arnd Bergmann wrote:
+>> On Friday, May 27, 2016 12:03:01 PM CEST maitysanchayan@gmail.com wrote:
+>> >
+>> > So if I understand correctly, the binding at the SoC level is fine.
+>> > Keeping that but removing the additional made-up properties, viz. below
+>> >
+>> > rom-revision: phandle to the on-chip ROM node
+>> > mscm: phandle to the MSCM CPU configuration node
+>> > nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
+>> > nvmem-cell-names: should contain string names "cfg0" and "cfg1"
+>> >
+>> > would be fine?
+>> >
+>> > We would have something similar to here
+>> > http://www.spinics.net/lists/devicetree/msg80655.html
+>> >
+>> > but now with the DT binding under SoC bus.
+>> >
+>>
+>>
+>> You look up the OTP device as a syscon here, which seems odd since there
+>> is already an nvmem driver for it. Shouldn't you use the nvmem API for
+>> that?
+>>
+>> 	Arnd
 > 
-> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
-> ---
->  drivers/media/platform/rcar-fcp.c | 1 +
->  1 file changed, 1 insertion(+)
+> I need the following 
 > 
-> diff --git a/drivers/media/platform/rcar-fcp.c b/drivers/media/platform/rcar-fcp.c
-> index 6a7bcc3028b1..0ff6b1edf1db 100644
-> --- a/drivers/media/platform/rcar-fcp.c
-> +++ b/drivers/media/platform/rcar-fcp.c
-> @@ -160,6 +160,7 @@ static int rcar_fcp_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id rcar_fcp_of_match[] = {
->  	{ .compatible = "renesas,fcpv" },
-> +	{ .compatible = "renesas,fcpf" },
->  	{ },
->  };
->  
+> nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
+> nvmem-cell-names: should contain string names "cfg0" and "cfg1"
 > 
+> to be able to use the NVMEM consumer API.
 
--- 
-Regards
+I did not tested it, but it seems the NVMEM consumer API has some kind
+of non-DT fallback:
+http://lxr.free-electrons.com/source/drivers/nvmem/core.c#L827
 
-Kieran Bingham
+Right now, it seems to me that it does not handle the case where we have
+a of_node but don't want to use it... You might need to add some extra
+handling if there is a of_node without nvmem-cell-names/nvmem-cells, and
+fall back to nvmem_cell_get_from_list.
