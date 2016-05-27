@@ -1,80 +1,61 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2 0/6]  of: overlays: New target methods
-Date: Fri, 27 May 2016 13:35:28 -0700
-Message-ID: <5748AF90.3090607@gmail.com>
-References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com> <57476782.3040703@gmail.com> <70AB0C5B-737D-41B9-8D21-4205379ABDB7@konsulko.com>
-Reply-To: frowand.list@gmail.com
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7] ASoC: cs53l30: Add codec driver support for Cirrus
+ CS53L30
+Date: Fri, 27 May 2016 21:38:39 +0100
+Message-ID: <20160527203839.GE29837@sirena.org.uk>
+References: <1464205114-17202-1-git-send-email-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pY3vCvL1qV+PayAL"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <70AB0C5B-737D-41B9-8D21-4205379ABDB7@konsulko.com>
+Content-Disposition: inline
+In-Reply-To: <1464205114-17202-1-git-send-email-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robherring2@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Devicetree List <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: robh+dt@kernel.org, brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, Tim.Howe@cirrus.com, somduttar@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/27/2016 7:46 AM, Pantelis Antoniou wrote:
-> Hi Frank,
->=20
->> On May 27, 2016, at 00:15 , Frank Rowand <frowand.list@gmail.com> wr=
-ote:
->>
->> On 5/16/2016 1:18 PM, Pantelis Antoniou wrote:
->>> This patchset implements two new target methods.
->>>
->>> A target index method which allows selecting different
->>> targets according to an argument using an extended API and
->>> a target root method that fences the target only
->>> to a specific given root.
->>>
->>> Documentation and unit-tests are included.
->>
->> I think you are attacking the problem the wrong way.
->>
->> If I understand correctly, the problem statement is:
->>
->>  In some cases, a devicetree overlay is meant to describe
->>  a pluggable piece of hardware, which may be plugged into
->>  various locations on a platform.  It should be possible
->>  to apply a single devicetree to one or more locations
->>  on a given platform.
->>
->> If that is the case, then putting the locations where the
->> overlay can be applied into the devicetree is not the
->> approach that I would use.  It seems it would be better
->> to specify the target location as a separate item from
->> the overlay to the method that applies the devicetree.
->> In that case, I would put the node(s) describing the
->> pluggable hardware in the root node of the overlay
->> devicetree (dtc expects a root node).  The apply
->> method can easily find the node(s) and relocate them
->> to the appropriate location in the platform's
->> devicetree.
->>
->=20
-> It=E2=80=99s a bit more complicated. This was considered initially
-> but we ended up with the targets on the overlay.
->=20
-> It can work either way, but the problem with storing the
-> indirect targets in the base tree is that there is no
-> change in the bindings of the targets.
 
-I am not suggesting putting the targets in the base tree.
+--pY3vCvL1qV+PayAL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I do not know where it should be.  Still thinking about
-that part.
+On Wed, May 25, 2016 at 12:38:34PM -0700, Nicolin Chen wrote:
 
->=20
-> Putting things in the overlay seemed like it would have
-> no effect on the base tree whatsoever.
->=20
->=20
->> -Frank
->>
->=20
-> Regards
->=20
-> =E2=80=94 Pantelis
->=20
->=20
+A few minor issues but this is mostly OK so I'll apply - please send
+followup patches.
+
+> +	SOC_DOUBLE_R_TLV("ADC1 Pre Amp Gain", CS53L30_ADC1A_AFE_CTL,
+> +			 CS53L30_ADC1B_AFE_CTL, CS53L30_ADCxy_PREAMP_SHIFT,
+> +			 2, 0, pga_preamp_tlv),
+> +	SOC_DOUBLE_R_TLV("ADC2 Pre Amp Gain", CS53L30_ADC2A_AFE_CTL,
+> +			 CS53L30_ADC2B_AFE_CTL, CS53L30_ADCxy_PREAMP_SHIFT,
+> +			 2, 0, pga_preamp_tlv),
+
+Volume controls should end Volume.
+
+> +	regcache_cache_only(cs53l30->regmap, false);
+> +	regcache_sync(cs53l30->regmap);
+
+Should really check the return value here.
+
+> +MODULE_AUTHOR("Paul Handrigan, Cirrus Logic Inc, <Paul.Handrigan@cirrus.com>");
+
+I'd have much preferred to have seen Paul's signoff on the patch.
+
+--pY3vCvL1qV+PayAL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXSLBNAAoJECTWi3JdVIfQLSUH/junjyaLyyfuGLTobR16nNS0
+1Nd0++dm+mC8+oM9LWdPpu5fRBgGXav9wQfG+gECY7eEnZSUgGgIPKKMmt2nr+rz
+SJ+Gv9mfd/3xuk0vZCI7q61+FRSXSW6Y0vZ7gxYkX14EIJpFJ0ZplT9bv9Gfbvuu
+jdAp5CNkuqEfQihRcN8J9n2pyf4bq4NgXvqlLYw8M70LHVmGmlaLBaGjgQJKY6qO
+l+/OhTJsRaSRyAkvpyj9ZnX//c2UPQYuEZmOMwk0UUdkEZfQ1CL0ORzmrXSW7CgN
+H1yMWVg6JF8COhc7gcZJK+fkMFgPO2qBp7FP1Uv8gAMtcopbAU6PmDtyr/rQ/Nk=
+=zhI3
+-----END PGP SIGNATURE-----
+
+--pY3vCvL1qV+PayAL--
