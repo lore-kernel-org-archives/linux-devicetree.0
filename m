@@ -1,151 +1,179 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH 2/3] of/numa: fix a memory@ dt node can only contains one
- memory block
-Date: Fri, 27 May 2016 11:36:31 +0800
-Message-ID: <5747C0BF.505@huawei.com>
-References: <1464230639-9852-1-git-send-email-thunder.leizhen@huawei.com>
- <1464230639-9852-2-git-send-email-thunder.leizhen@huawei.com>
- <20160526131345.GA12024@rob-hp-laptop>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt: binding: Add Qualcomm WCNSS control binding
+Date: Thu, 26 May 2016 22:58:26 -0500
+Message-ID: <CAL_JsqLBF+r4JyG5r_WdFOUDPk0BVW-o6rnFa+twztOUtmh2yg@mail.gmail.com>
+References: <1463095068-32225-1-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160526131345.GA12024@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, David Daney <david.daney@cavium.com>, Catalin Marinas <catalin.marinas@arm.com>, Xinwei Hu <huxinwei@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Zefan Li <lizefan@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463095068-32225-1-git-send-email-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
++dt list
 
+On Thu, May 12, 2016 at 6:17 PM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> This binding describes the control interface for the Qualcomm WCNSS.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>
+> Changes since v1:
+> - Introduce reference to wcnss block node for register block definition
+> - Use wcnss block node compatible for hw version detection (riva vs pronto)
+> - Clean up compatible name for bt node
+>
+>  .../devicetree/bindings/soc/qcom/qcom,wcnss.txt    | 115 +++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+>
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+> new file mode 100644
+> index 000000000000..5413098a1e1a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+> @@ -0,0 +1,115 @@
+> +Qualcomm WCNSS Binding
+> +
+> +This binding describes the Qualcomm WCNSS hardware. It consists of control
+> +block and a BT, WiFi and FM radio block, all useing SMD as command channels.
 
-On 2016/5/26 21:13, Rob Herring wrote:
-> On Thu, May 26, 2016 at 10:43:58AM +0800, Zhen Lei wrote:
->> For a normal memory@ devicetree node, its reg property can contains more
->> memory blocks.
->>
->> Because we don't known how many memory blocks maybe contained, so we try
->> from index=0, increase 1 until error returned(the end).
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  drivers/of/of_numa.c | 30 ++++++++++++++++++++----------
->>  1 file changed, 20 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
->> index 21d831f..2c5f249 100644
->> --- a/drivers/of/of_numa.c
->> +++ b/drivers/of/of_numa.c
->> @@ -63,7 +63,7 @@ static int __init of_numa_parse_memory_nodes(void)
->>  	struct device_node *np = NULL;
->>  	struct resource rsrc;
->>  	u32 nid;
->> -	int r = 0;
->> +	int i, r = 0;
->>
->>  	for (;;) {
->>  		np = of_find_node_by_type(np, "memory");
->> @@ -82,17 +82,27 @@ static int __init of_numa_parse_memory_nodes(void)
->>  			/* some other error */
->>  			break;
->>
->> -		r = of_address_to_resource(np, 0, &rsrc);
->> -		if (r) {
->> -			pr_err("NUMA: bad reg property in memory node\n");
->> -			break;
->> +		for (i = 0; ; i++) {
->> +			r = of_address_to_resource(np, i, &rsrc);
->> +			if (r) {
->> +				/* reached the end of of_address */
->> +				if (i > 0) {
->> +					r = 0;
->> +					break;
->> +				}
->> +
->> +				pr_err("NUMA: bad reg property in memory node\n");
->> +				goto finished;
->> +			}
->> +
->> +			r = numa_add_memblk(nid, rsrc.start,
->> +					    rsrc.end - rsrc.start + 1);
->> +			if (r)
->> +				goto finished;
->>  		}
->> -
->> -		r = numa_add_memblk(nid, rsrc.start,
->> -				    rsrc.end - rsrc.start + 1);
->> -		if (r)
->> -			break;
->>  	}
->> +
->> +finished:
->>  	of_node_put(np);
-> 
-> This function can be simplified down to:
-> 
-> 	for_each_node_by_type(np, "memory") {
-OK, That's good.
+s/useing/using/
 
-> 		r = of_property_read_u32(np, "numa-node-id", &nid);
-> 		if (r == -EINVAL)
-> 			/*
-> 			 * property doesn't exist if -EINVAL, continue
-> 			 * looking for more memory nodes with
-> 			 * "numa-node-id" property
-> 			 */
-> 			continue;
-Hi, everybody:
-    If some "memory" node contains "numa-node-id", but some others missed. Can we simply ignored it?
-I think we should break out too, and faking to only have node0.
+> +
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: must be: "qcom,wcnss",
+> +
+> +- qcom,smd-channel:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: standard SMD property specifying the SMD channel used for
+> +                   communication with the WiFi firmware
 
-> 		else if (r)
-> 			/* some other error */
-> 			break;
-> 
-> 		r = of_address_to_resource(np, 0, &rsrc);
-> 		for (i = 0; !r; i++, r = of_address_to_resource(np, i, 
+Is the string value defined somewhere?
 
-But r(non-zero) is just break this loop, the original is break the outer for (;;) loop
+> +
+> +- qcom,mmio:
+> +       Usage: required
+> +       Value type: <prop-encoded-array>
+> +       Definition: reference to a node specifying the wcnss "ccu" and "dxe"
+> +                   register blocks. The node must be compatible with one of
+> +                   the following:
+> +                   "qcom,riva",
+> +                   "qcom,pronto"
+> +
+> += SUBNODES
+> +The subnodes of the wcnss node are optional and describe the individual blocks in
+> +the WCNSS.
+> +
+> +== Bluetooth
+> +The following properties are defined to the bluetooth node:
+> +
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: must be:
+> +                   "qcom,wcnss-bt"
+> +
+> +== WiFi
+> +The following properties are defined to the WiFi node:
+> +
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: must be one of:
+> +                   "qcom,wcnss-wlan",
+> +
+> +- interrupts:
+> +       Usage: required
+> +       Value type: <prop-encoded-array>
+> +       Definition: should specify the "rx" and "tx" interrupts
+> +
+> +- interrupt-names:
+> +       Usage: required
+> +       Value type: <stringlist>
+> +       Definition: must contain "rx" and "tx"
+> +
+> +- qcom,state:
 
-How about as below?
+This is kind of generic.
 
-	for_each_node_by_type(np, "memory") {
-		... ...
+> +       Usage: required
+> +       Value type: <prop-encoded-array>
+> +       Definition: should reference the tx-enable and tx-rings-empty SMEM states
+> +
+> +- qcom,state-names:
+> +       Usage: required
+> +       Value type: <stringlist>
+> +       Definition: must contain "tx-enable" and "tx-rings-empty"
+> +
+> += EXAMPLE
+> +The following example represents a SMD node, with one edge representing the
+> +"pronto" subsystem, with the wcnss device and its wcn3680 BT and WiFi blocks
+> +described; as found on the 8974 platform.
 
-		for (i = 0; !of_address_to_resource(np, i, &rsrc); i++) {
-                        r = numa_add_memblk(nid, rsrc.start,
-                                            rsrc.end - rsrc.start + 1);
-                        if (r)
-                                goto finished;
-                }
+So somewhere in here I'd expect to see 8974 in a compatible string.
 
-		if (!i)
-			pr_err("NUMA: bad reg property in memory node\n");
-	}
+> +
+> +smd {
+> +       compatible = "qcom,smd";
+> +
+> +       pronto {
+> +               interrupts = <0 142 1>;
+> +
+> +               qcom,ipc = <&apcs 8 17>;
+> +               qcom,smd-edge = <6>;
+> +
+> +               wcnss {
+> +                       compatible = "qcom,wcnss";
+> +                       qcom,smd-channels = "WCNSS_CTRL";
+> +
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +
+> +                       qcom,wcnss = <&pronto>;
 
-finished:
-	
+Not documented and poorly named. The property name should reflect what
+this is for or points too.
 
-> &rsrc)) {
-> 			r = numa_add_memblk(nid, rsrc.start,
-> 				    rsrc.end - rsrc.start + 1);
-> 		}
-> 	}
-> 	of_node_put(np);
-> 
-> 	return r;
-> 
-> 
-> Perhaps with a "if (!i && r) pr_err()" for an error message at the end.
-> 
-> Rob
-> 
-> .
-> 
+> +
+> +                       bt {
+> +                               compatible = "qcom,wcnss-bt";
+> +                       };
+> +
+> +                       wlan {
+> +                               compatible = "qcom,wcnss-wlan";
+> +
+> +                               interrupts = <0 145 0>, <0 146 0>;
+> +                               interrupt-names = "tx", "rx";
+> +
+> +                               qcom,state = <&apps_smsm 10>, <&apps_smsm 9>;
+> +                               qcom,state-names = "tx-enable", "tx-rings-empty";
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +soc {
+> +       pronto: pronto {
+
+2 pronto nodes? That's confusing...
+
+> +               compatible = "qcom,pronto";
+> +
+> +               reg = <0xfb204000 0x2000>, <0xfb202000 0x1000>, <0xfb21b000 0x3000>;
+> +               reg-names = "ccu", "dxe", "pmu";
+> +       };
+> +};
+> --
+> 2.5.0
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
