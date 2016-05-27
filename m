@@ -1,101 +1,65 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 02/12] of: add J-Core cpu bindings
-Date: Fri, 27 May 2016 10:13:59 +0100
-Message-ID: <20160527091359.GA24469@leverpostej>
-References: <cover.1464148904.git.dalias@libc.org>
- <39ad5c69533ef537e6ab0426efc057f9064ee581.1464148904.git.dalias@libc.org>
- <20160525102214.GF1337@leverpostej>
- <20160525230407.GT21636@brightrain.aerifal.cx>
- <20160526103828.GB32186@leverpostej>
- <20160526153323.GX21636@brightrain.aerifal.cx>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [RFC v2 3/5] drm/mediatek: add *driver_data for different
+ hardware settings
+Date: Fri, 27 May 2016 10:24:57 +0100
+Message-ID: <CACvgo52xB0KwumC75u2dxfz_yv2PNE0Gem+0t8dqV9qn+pPRLg@mail.gmail.com>
+References: <1463756736-46573-1-git-send-email-yt.shen@mediatek.com>
+ <1463756736-46573-4-git-send-email-yt.shen@mediatek.com>
+ <1463996582.30093.5.camel@mtksdaap41>
+ <1464334313.31149.16.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160526153323.GX21636-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1464334313.31149.16.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YT Shen <yt.shen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Mao Huang <littlecvr@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 26, 2016 at 11:33:23AM -0400, Rich Felker wrote:
-> On Thu, May 26, 2016 at 11:38:29AM +0100, Mark Rutland wrote:
-> > On Wed, May 25, 2016 at 07:04:08PM -0400, Rich Felker wrote:
-> > > On Wed, May 25, 2016 at 11:22:15AM +0100, Mark Rutland wrote:
-> > > > * How must the value be written?
-> > > >   - Which endianness?
-> > > 
-> > > CPU native.
-> > 
-> > Ok. I take it that a CPU's endianness cannot be switched onthe fly,
-> > then? Or does the hardware backing the release-addr register handle
-> > arbitrary endianness dynamically?
-> 
-> No, it's not switched on the fly.
-> 
-> > If you want to reuse the same HW block across configurations where CPU
-> > endianness differs, it may make sense to define an endianness
-> > regardless, to simplify integration concerns.
-> 
-> The existing cpus are all big-endian, but I believe at one point there
-> was talk that it's easy to get a little-endian version if you want. In
-> any case the value is to be read by the cpu, so cpu endianness (i.e.
-> no endianness, just a value) is the only thing that makes sense to
-> specify. Adding a fixed endian spec independent of cpu endianness just
-> complicates both hardware and kernel implementation and its only
-> benefit seems to be supporting runtime-switchable chips where the
-> entry-point code has to select the endianness to match the rest of the
-> kernel.
-
-Sure. If endianness isn't runtime switchable, and there is no near-term
-plan to add that, then my concerns do not apply.
-
-[...]
-
-> > If you do /memreserve/ the region rather than carving it out of memory
-> > nodes, you will also need to define semantics for memreserve. Typically
-> > memreserve meaans that the OS should not perform any stores to the
-> > region, but is permitted to map it with some architecture-specific
-> > cacheable attributes.
-> 
-> My interpretation of memreserve is just that it marks memory ranges
-> that the kernel cannot use for allocatable memory for its own
-> purposes, despite otherwise possibly lying in the range of a "memory"
-> node. I would not interpret it as excluding accesses by drivers that
-> were told to use specific addresses in the "reserved" range as part of
-> their DT bindings.
-
-Yes, this is strictly more correct than my wording.
-
-Given the lack of MMU or cache configration beynd on/off, it doesn't
-sound like there are any arch-specific memory attribute rules to
-document.
-
-[...]
-
-> > My questions about SMP are largely orthogonal to DT; I simply have
-> > experience in dealing with that for arm64, and am aware of some of the
-> > pain points that were not immediately obvious.
-> 
-> OK, thanks for clarifying that. This is actually really helpful
-> feedback to have but I wasn't sure if you wanted me to consider it
-> part of what needs to be done for DT binding or for consideration in
-> designing and documenting the SMP architecture.
-
-Sorry for that; in retrospect I probably should have sent the boot
-protocol comments as a separate reply.
-
-[...]
-
-> OK. I'll strip it down to just the parts that are relevant for non-SMP
-> and submit the patch adding SMP bindings along with the SMP kernel
-> patches.
-
-That sounds good to me.
-
-Thanks,
-Mark,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjcgTWF5IDIwMTYgYXQgMDg6MzEsIFlUIFNoZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPiB3
+cm90ZToKPiBIaSBDSywKPgo+Cj4gT24gTW9uLCAyMDE2LTA1LTIzIGF0IDE3OjQzICswODAwLCBD
+SyBIdSB3cm90ZToKPj4gSGksIFlUOgo+Pgo+PiBPbmUgY29tbWVudCBiZWxvdy4KPj4KPj4gT24g
+RnJpLCAyMDE2LTA1LTIwIGF0IDIzOjA1ICswODAwLCB5dC5zaGVuQG1lZGlhdGVrLmNvbSB3cm90
+ZToKPj4gPiBGcm9tOiBZVCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNvbT4KPj4gPgo+PiA+IFRo
+ZXJlIGFyZSBzb21lIGhhcmR3YXJlIHNldHRpbmdzIGNoYW5nZWQsIGJldHdlZW4gTVQ4MTczICYg
+TVQyNzAxOgo+PiA+IERJU1BfT1ZMIGFkZHJlc3Mgb2Zmc2V0IGNoYW5nZWQsIGNvbG9yIGZvcm1h
+dCBkZWZpbml0aW9uIGNoYW5nZWQuCj4+ID4gRElTUF9SRE1BIGZpZm8gc2l6ZSBjaGFuZ2VkLgo+
+PiA+IERJU1BfQ09MT1Igb2Zmc2V0IGNoYW5nZWQuCj4+ID4KPj4gPiBTaWduZWQtb2ZmLWJ5OiBZ
+VCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNvbT4KPj4gPiAtLS0KPj4gPiArCj4+ID4gK3N0YXRp
+YyBpbmxpbmUgc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSAqbXRrX292bF9nZXRfZHJp
+dmVyX2RhdGEoCj4+ID4gKyAgIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4+ID4gK3sK
+Pj4gPiArICAgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqb2ZfaWQgPQo+PiA+ICsgICAgICAg
+ICAgIG9mX21hdGNoX2RldmljZShtdGtfZGlzcF9vdmxfZHJpdmVyX2R0X21hdGNoLCAmcGRldi0+
+ZGV2KTsKPj4gPiArCj4+ID4gKyAgIHJldHVybiAoc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJf
+ZGF0YSAqKW9mX2lkLT5kYXRhOwo+PiA+ICt9Cj4+ID4gKwo+PiA+ICtzdGF0aWMgaW5saW5lIHN0
+cnVjdCBtdGtfZGRwX2NvbXBfZHJpdmVyX2RhdGEgKm10a19yZG1hX2dldF9kcml2ZXJfZGF0YSgK
+Pj4gPiArICAgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4gPiArewo+PiA+ICsgICBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICpvZl9pZCA9Cj4+ID4gKyAgICAgICAgICAgb2ZfbWF0
+Y2hfZGV2aWNlKG10a19kaXNwX3JkbWFfZHJpdmVyX2R0X21hdGNoLCAmcGRldi0+ZGV2KTsKPj4g
+PiArCj4+ID4gKyAgIHJldHVybiAoc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSAqKW9m
+X2lkLT5kYXRhOwo+PiA+ICt9Cj4+ID4gKwo+PiA+ICtzdGF0aWMgaW5saW5lIHN0cnVjdCBtdGtf
+ZGRwX2NvbXBfZHJpdmVyX2RhdGEgKm10a19jb2xvcl9nZXRfZHJpdmVyX2RhdGEoCj4+ID4gKyAg
+IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKPj4gPiArewo+PiA+ICsgICBjb25zdCBzdHJ1Y3Qg
+b2ZfZGV2aWNlX2lkICpvZl9pZCA9Cj4+ID4gKyAgICAgICAgICAgb2ZfbWF0Y2hfbm9kZShtdGtf
+ZGlzcF9jb2xvcl9kcml2ZXJfZHRfbWF0Y2gsIG5vZGUpOwo+PiA+ICsKPj4gPiArICAgcmV0dXJu
+IChzdHJ1Y3QgbXRrX2RkcF9jb21wX2RyaXZlcl9kYXRhICopb2ZfaWQtPmRhdGE7Cj4+ID4gK30K
+Pj4gPiArCj4+Cj4+IFRoZXNlIHRocmVlIGZ1bmN0aW9ucyBsb29rcyB0aGUgc2FtZSB3aXRoIGRp
+ZmZlcmVudCBwYXJhbWV0ZXI6Cj4+IG10a19kaXNwX292bF9kcml2ZXJfZHRfbWF0Y2gsIG10a19k
+aXNwX3JkbWFfZHJpdmVyX2R0X21hdGNoLCBhbmQKPj4gbXRrX2Rpc3BfY29sb3JfZHJpdmVyX2R0
+X21hdGNoLiBTbyBtZXJnZSB0aGVtIHRvIHByZXZlbnQgZHVwbGljYXRlZAo+PiBjb2RlLgo+IE9L
+LCBJJ2xsIGRvIHRoaXMgaW4gdGhlIG5leHQgdmVyc2lvbi4KCkFsc28gcHJlc2VydmUgdGhlIGNv
+bnN0LW5lc3Mgb2YgdGhlIGRhdGEgLSBkb24ndCBjYXN0IGl0IGF3YXkgb24gdGhlCnJldHVybiBs
+aW5lLgpOb3RlIHRoYXQgdGhlIGZ1bmN0aW9uIHJldHVybiB0eXBlIChhbmQgc29tZSBvZiB0aGUg
+dXNlcnMgb2Ygc2FpZApmdW5jdGlvbnMpIHNob3VsZCBiZSB1cGRhdGVkIGFzIHdlbGwuCgotRW1p
+bApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
