@@ -1,93 +1,97 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v7 4/5] dtc: Plugin and fixup support
-Date: Fri, 27 May 2016 17:33:06 +1000
-Message-ID: <20160527073306.GA17226@voom.fritz.box>
-References: <1464112239-29856-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1464112239-29856-5-git-send-email-pantelis.antoniou@konsulko.com>
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: Re: [PATCH 0/6] Rockchip Type-C and DispplayPort driver
+Date: Fri, 27 May 2016 15:38:01 +0800
+Message-ID: <5747F959.7010101@rock-chips.com>
+References: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="O8nUzFXSEQuWwhTG"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1464112239-29856-5-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>, dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com
+Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Mans Rullgard <mans@mansr.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Takashi Iwai <tiwai@suse.com>, Jacob Siverskog <jacob@teenage.engineering>, Bard Liao <bardliao@realtek.com>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, Vinod Koul <vinod.koul@intel.com>, anish kumar <yesanishhere@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Michael Trimarchi <michael@amarulasolutions.com>, "Subhransu S. Prusty" <subhransu.s.prusty@intel.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Johan Hovold <johan@kernel.org>, Jyri Sarha <jsarha@ti.com>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chris,
 
---O8nUzFXSEQuWwhTG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 05/27/2016 02:02 PM, Chris Zhong wrote:
+> Hi all
+>
+> This series patch is for rockchip Type-C phy and DisplayPort controller
+> driver.
+>
+> The USB Type-C PHY is designed to support the USB3 and DP applications.
+> The PHY basically has two main components: USB3 and DisplyPort. USB3
+> operates in SuperSpeed mode and the DP can operate at RBR, HBR and HBR2
+> data rates. The Type-C cable orientation detection and Power Delivery
+> (PD) is accomplished using a PD PHY or a exernal PD chip.
+>
+> The DP controller is compliant with DisplayPort Specification,
+> Version 1.3, This IP is compatible with the rockchip type-c PHY IP.
+> There is a uCPU in DP controller, it need a firmware to work, please
+> put the firmware file to /lib/firmware/cdn/dptx.bin. The uCPU in charge
+> of aux communication and link training, the host use mailbox to
+> communicate with the ucpu.
+>
+> The PHY driver has register a notification, to get the alt mode from PD,
+> the PD driver need call the tcphy_notifier_call_chain to notify PHY and
+> DP controller.
+For the notification for the port status change from PD, I think we can
+use the extcon class, pls reference the code in drivers/extcon/ for usage.
 
-On Tue, May 24, 2016 at 08:50:38PM +0300, Pantelis Antoniou wrote:
-> This patch enable the generation of symbols & local fixup information
-> for trees compiled with the -@ (--symbols) option.
->=20
-> Using this patch labels in the tree and their users emit information
-> in __symbols__ and __local_fixups__ nodes.
->=20
-> The __fixups__ node make possible the dynamic resolution of phandle
-> references which are present in the plugin tree but lie in the
-> tree that are applying the overlay against.
->=20
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-So, I think I've identified the underlying thing which was bothering
-me about these patches.
-
-With the new dynamic patching stuff, "overlays" (for want of a better
-term) now have a real existence both in the dts source format, and in
-the dtb object format.  However, these patches don't give them a
-concrete, explicit representation within dtc itself - instead we just
-kind of mangle one representation to the other as we're parsing.  I
-think this is a mistaken approach.
-
-I'm toying with some patches to give overlays a full representation in
-dtc which I think will handle these cases better - and allow for
-easier experimentation with different possible ways of encoding the
-overlays.
-
-One side point - writing plugins in dts format leads to an irritating
-little ambiguity in the grammar.  Well, not an ambiguity technically,
-but a place where we need more lookahead than normal, meaning we get
-shift/reduce conflicts.  It arises because both memreserves and
-overlays can have a label in front of them.  So, if we see a label as
-our next token after the version tag, we don't know if a memreserve or
-overlay is coming next, so the parser doesn't know which path to go
-down (with a single token lookahead).  We could handle it with
-%glr-parser, of course, but I have been trying to avoid that.  I think
-this will apply both with your patches and with the approach I'm
-working on - not sure what to do about it yet.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---O8nUzFXSEQuWwhTG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXR/gyAAoJEGw4ysog2bOSLyUP+wbNi4QUUXJ2RGVWrEjKjsvO
-7yTzPoHTRdmmNI6JQHS/y24sJgwAhVcvDa+Pk6USnnVWwmO9fW7Mux3jx31hdrYQ
-vGxvvvIE3ANNYmO4qcUNCK7OuNZruiQm7ihQg3ioLxNHAoAitkcUbrWQGeDigqoC
-hOIzNd62EOfDYqItTH5kKDJ+Yzlofvf43yl9dTDqgleLBkxvIaJPtMblPfQh5s1m
-ieP+FEmpTscCNV9rSwH/URzp7Y0qzApxT/SkoV7IDhV0fdcHSzNWHnHnD0q4YNbw
-3D50XibbU/XTnb5RujZF1szetx/sq8uqawsshWjzSj6qzc+JgLF7iS1ZxWzZgTm3
-gm7Yhta6KoXOeavAX+hErBzIpM/TxEjrOMEbOD39Up21VU0t7HRaBc1apMhARrUF
-FGVH0KyQRhh4BxceDK5k8f7vHjE406pIoNNaiERBTHyGqoB4vRobGa+DBOWcMGWf
-qPWGOiYeTe1IZYNpLKf1aJSxApYDbcoSJx52liggScnXhJf+xWC5salSi3fIkeX1
-3ZiLlZyRai2e4Xui2UzH9+Iw/CS6m9gqApyIBOirXdQOchLr/2kzH/lLEwuPPpAc
-JJayjW+HIXQ4BxZZQ/zawxtLiYGFidMuSyRzweRpnaLKxHR5+MFzMCCnlTpUqTTL
-eGHb3v1WSU5+ASXxN6ji
-=zHtX
------END PGP SIGNATURE-----
-
---O8nUzFXSEQuWwhTG--
+Thanks,
+- Kever
+>
+> This series is based on Mark Yao's branch:
+> https://github.com/markyzq/kernel-drm-rockchip/tree/drm-rockchip-next-2016-05-23
+>
+> I test this patches on the rk3399-evb board, with a fusb302 driver,
+> this branch has no rk3399.dtsi, so the patch about dts is not included
+> in this series.
+>
+>
+>
+> Chris Zhong (6):
+>    phy: Add USB Type-C PHY driver for rk3399
+>    Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
+>    drm/rockchip: vop: add cdn DP support for rk3399
+>    Documentation: bindings: add dt documentation for cdn DP controller
+>    ASoC: cdn-dp: Add cdn DP codec driver
+>    ASoC: rockchip: Add machine driver for cdn dp codec
+>
+>   .../bindings/display/rockchip/cdn-dp-rockchip.txt  |  57 ++
+>   .../devicetree/bindings/phy/phy-rockchip-typec.txt |  55 ++
+>   .../bindings/sound/rockchip-cdn-dp-audio.txt       |  12 +
+>   drivers/gpu/drm/rockchip/Kconfig                   |   9 +
+>   drivers/gpu/drm/rockchip/Makefile                  |   1 +
+>   drivers/gpu/drm/rockchip/cdn-dp-core.c             | 620 ++++++++++++++++
+>   drivers/gpu/drm/rockchip/cdn-dp-core.h             |  95 +++
+>   drivers/gpu/drm/rockchip/cdn-dp-reg.c              | 730 ++++++++++++++++++
+>   drivers/gpu/drm/rockchip/cdn-dp-reg.h              | 404 ++++++++++
+>   drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |   9 +-
+>   drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |   2 +
+>   drivers/gpu/drm/rockchip/rockchip_vop_reg.c        |   2 +
+>   drivers/phy/Kconfig                                |   7 +
+>   drivers/phy/Makefile                               |   1 +
+>   drivers/phy/phy-rockchip-typec.c                   | 823 +++++++++++++++++++++
+>   include/sound/cdn-dp-audio.h                       |  51 ++
+>   sound/soc/codecs/Kconfig                           |   3 +
+>   sound/soc/codecs/Makefile                          |   2 +
+>   sound/soc/codecs/cdn-dp-audio.c                    | 246 ++++++
+>   sound/soc/rockchip/Kconfig                         |   9 +
+>   sound/soc/rockchip/Makefile                        |   2 +
+>   sound/soc/rockchip/rockchip-cdn-dp-audio.c         | 167 +++++
+>   22 files changed, 3306 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+>   create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>   create mode 100644 Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt
+>   create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.c
+>   create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.h
+>   create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.c
+>   create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.h
+>   create mode 100644 drivers/phy/phy-rockchip-typec.c
+>   create mode 100644 include/sound/cdn-dp-audio.h
+>   create mode 100644 sound/soc/codecs/cdn-dp-audio.c
+>   create mode 100644 sound/soc/rockchip/rockchip-cdn-dp-audio.c
+>
