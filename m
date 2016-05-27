@@ -1,177 +1,70 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/3] of/numa: fix a memory@ dt node can only contains one
- memory block
-Date: Fri, 27 May 2016 15:04:11 +0800
-Message-ID: <5747F16B.5050404@huawei.com>
-References: <1464230639-9852-1-git-send-email-thunder.leizhen@huawei.com>
- <1464230639-9852-2-git-send-email-thunder.leizhen@huawei.com>
- <20160526131345.GA12024@rob-hp-laptop> <5747C0BF.505@huawei.com>
- <CAL_JsqJXu36qYMOZeWDnMQ8BnOxMrixv5N70hvTjDixhMCQKRw@mail.gmail.com>
+From: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
+Date: Fri, 27 May 2016 07:13:29 +0000
+Message-ID: <8520D5D51A55D047800579B094147198258AF22F@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
+ <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
+ <9836736.6VjP1ug4kE@wuerfel> <5747EDC9.2080603@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJXu36qYMOZeWDnMQ8BnOxMrixv5N70hvTjDixhMCQKRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <5747EDC9.2080603-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016/5/27 12:20, Rob Herring wrote:
-> On Thu, May 26, 2016 at 10:36 PM, Leizhen (ThunderTown)
-> <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
->>
->>
->> On 2016/5/26 21:13, Rob Herring wrote:
->>> On Thu, May 26, 2016 at 10:43:58AM +0800, Zhen Lei wrote:
->>>> For a normal memory@ devicetree node, its reg property can contains more
->>>> memory blocks.
->>>>
->>>> Because we don't known how many memory blocks maybe contained, so we try
->>>> from index=0, increase 1 until error returned(the end).
->>>>
->>>> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  drivers/of/of_numa.c | 30 ++++++++++++++++++++----------
->>>>  1 file changed, 20 insertions(+), 10 deletions(-)
->>>>
->>>> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
->>>> index 21d831f..2c5f249 100644
->>>> --- a/drivers/of/of_numa.c
->>>> +++ b/drivers/of/of_numa.c
->>>> @@ -63,7 +63,7 @@ static int __init of_numa_parse_memory_nodes(void)
->>>>      struct device_node *np = NULL;
->>>>      struct resource rsrc;
->>>>      u32 nid;
->>>> -    int r = 0;
->>>> +    int i, r = 0;
->>>>
->>>>      for (;;) {
->>>>              np = of_find_node_by_type(np, "memory");
->>>> @@ -82,17 +82,27 @@ static int __init of_numa_parse_memory_nodes(void)
->>>>                      /* some other error */
->>>>                      break;
->>>>
->>>> -            r = of_address_to_resource(np, 0, &rsrc);
->>>> -            if (r) {
->>>> -                    pr_err("NUMA: bad reg property in memory node\n");
->>>> -                    break;
->>>> +            for (i = 0; ; i++) {
->>>> +                    r = of_address_to_resource(np, i, &rsrc);
->>>> +                    if (r) {
->>>> +                            /* reached the end of of_address */
->>>> +                            if (i > 0) {
->>>> +                                    r = 0;
->>>> +                                    break;
->>>> +                            }
->>>> +
->>>> +                            pr_err("NUMA: bad reg property in memory node\n");
->>>> +                            goto finished;
->>>> +                    }
->>>> +
->>>> +                    r = numa_add_memblk(nid, rsrc.start,
->>>> +                                        rsrc.end - rsrc.start + 1);
->>>> +                    if (r)
->>>> +                            goto finished;
->>>>              }
->>>> -
->>>> -            r = numa_add_memblk(nid, rsrc.start,
->>>> -                                rsrc.end - rsrc.start + 1);
->>>> -            if (r)
->>>> -                    break;
->>>>      }
->>>> +
->>>> +finished:
->>>>      of_node_put(np);
->>>
->>> This function can be simplified down to:
->>>
->>>       for_each_node_by_type(np, "memory") {
->> OK, That's good.
->>
->>>               r = of_property_read_u32(np, "numa-node-id", &nid);
->>>               if (r == -EINVAL)
->>>                       /*
->>>                        * property doesn't exist if -EINVAL, continue
->>>                        * looking for more memory nodes with
->>>                        * "numa-node-id" property
->>>                        */
->>>                       continue;
->> Hi, everybody:
->>     If some "memory" node contains "numa-node-id", but some others missed. Can we simply ignored it?
->> I think we should break out too, and faking to only have node0.
+> >
+> >> +
+> >> +static int rockchip_pcie_rd_other_conf(struct rockchip_pcie_port *pp,
+> >> +				       struct pci_bus *bus, u32 devfn,
+> >> +				       int where, int size, u32 *val)
+> >> +{
+> >> +	u32 busdev;
+> >> +
+> >> +	busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
+> >> +				PCI_FUNC(devfn), where);
+> >> +
+> >> +	if (busdev & (size - 1)) {
+> >> +		*val = 0;
+> >> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+> >> +	}
+> >> +
+> >> +	if (size == 4) {
+> >> +		*val = readl(pp->reg_base + busdev);
+> >> +	} else if (size == 2) {
+> >> +		*val = readw(pp->reg_base + busdev);
+> >> +	} else if (size == 1) {
+> >> +		*val = readb(pp->reg_base + busdev);
+> >> +	} else {
+> >> +		*val = 0;
+> >> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+> >> +	}
+> >> +	return PCIBIOS_SUCCESSFUL;
+> >> +}
+> >> +
+> >
+> > This looks like the normal ECAM operations, you could just call those.
 > 
-> Continuing to work is probably better than not.
+> I read ECAM reference code, I found it not support ioremap config space
+> for each bus individually on 64-bit systems. Our soc is 64-bit system,
+> and bus0 config space base address is 0xfda00000, bus1 base address is
+> 0xf8100000. So I think it is not normal ECAM operations, I do not know
+> if I have understood correctly?
 > 
->>
->>>               else if (r)
->>>                       /* some other error */
->>>                       break;
->>>
->>>               r = of_address_to_resource(np, 0, &rsrc);
->>>               for (i = 0; !r; i++, r = of_address_to_resource(np, i,
->>
->> But r(non-zero) is just break this loop, the original is break the outer for (;;) loop
-> 
-> It is not really the kernel's job to validate the DT. If there's
-> random things in it then kernel's behavior is undefined.
-> 
->>
->> How about as below?
->>
->>         for_each_node_by_type(np, "memory") {
->>                 ... ...
->>
->>                 for (i = 0; !of_address_to_resource(np, i, &rsrc); i++) {
->>                         r = numa_add_memblk(nid, rsrc.start,
->>                                             rsrc.end - rsrc.start + 1);
->>                         if (r)
->>                                 goto finished;
->>                 }
->>
->>                 if (!i)
->>                         pr_err("NUMA: bad reg property in memory node\n");
->>         }
->>
->> finished:
-> 
-> Please try to avoid the goto. You can check r in the outer loop too.
+Hi,
 
-OK. I have rewritten this function according to your advice.
+I think Arnd was suggesting to use generic config read/write calls, pci_generic_config_read/pci_generic_config_write
+which does above functionality.
 
-	for_each_node_by_type(np, "memory") {
-                r = of_property_read_u32(np, "numa-node-id", &nid);
-                if (r == -EINVAL)
-                        /*
-                         * property doesn't exist if -EINVAL, continue
-                         * looking for more memory nodes with
-                         * "numa-node-id" property
-                         */
-                        continue;
-									//I deleted the break of "some other error", and it will break in below "if (!i || r)" branch
-
-                for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
-                        r = numa_add_memblk(nid, rsrc.start,
-                                            rsrc.end - rsrc.start + 1);
-
-                if (!i || r) {
-                        of_node_put(np);				//I moved here, so that it looks more clear. Because in the normal use of for_each_node_by_type, of_node_put is not required
-                        pr_err("NUMA: bad property in memory node\n");	//Deleted "reg", so that it's suitable or harmless for other error cases
-                        break;
-                }
-        }
-
-	return r;
-
-> 
-> Rob
-> 
-> .
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bharat 
