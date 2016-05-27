@@ -1,348 +1,195 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v6 3/5] mmc: core: implement enhanced strobe support
-Date: Fri, 27 May 2016 14:45:48 +0800
-Message-ID: <944f9a21-8296-c29d-cccf-f9588aceab4a@rock-chips.com>
-References: <1464227707-30616-1-git-send-email-shawn.lin@rock-chips.com>
- <1464227782-31296-1-git-send-email-shawn.lin@rock-chips.com>
- <5746D854.1020200@intel.com>
+From: Wenrui Li <wenrui.li@rock-chips.com>
+Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
+Date: Fri, 27 May 2016 14:48:41 +0800
+Message-ID: <5747EDC9.2080603@rock-chips.com>
+References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
+ <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
+ <9836736.6VjP1ug4kE@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5746D854.1020200@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <9836736.6VjP1ug4kE@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2016/5/26 19:04, Adrian Hunter =E5=86=99=E9=81=93:
-> On 26/05/16 04:56, Shawn Lin wrote:
->> Controllers use data strobe line to latch data from devices
->> under hs400 mode, but not for cmd line. So since emmc 5.1, JEDEC
->> introduces enhanced strobe mode for latching cmd response from
->> emmc devices to host controllers. This new feature is optional,
->> so it depends both on device's cap and host's cap to decide
->> whether to use it or not.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Hi,
+
+On 2016/5/24 21:03, Arnd Bergmann wrote:
+> On Friday, May 20, 2016 6:29:16 PM CEST Shawn Lin wrote:
 >
-> I have a couple of comments below, but they don't necessarily require=
- any
-> action, so:
->
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->
->>
->> Reviewed-by: Jaehoon Chung <jh80.chung@samsung.com>
->> Tested-by: Douglas Anderson <dianders@chromium.org>
->> Tested-by: Jaehoon Chung <jh80.chung@samsung.com>
->> ---
->>
->> Changes in v6:
->> - add Doug's test-tag and Jaehoon's review-test-tag
->>
->> Changes in v5: None
->> Changes in v4: None
->> Changes in v3: None
->> Changes in v2: None
->>
->>  drivers/mmc/core/bus.c   |  3 +-
->>  drivers/mmc/core/core.c  |  9 ++++++
->>  drivers/mmc/core/mmc.c   | 84 +++++++++++++++++++++++++++++++++++++=
-+++++++++--
->>  include/linux/mmc/card.h |  1 +
->>  include/linux/mmc/host.h | 11 +++++++
->>  include/linux/mmc/mmc.h  |  3 ++
->>  6 files changed, 108 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
->> index 4bc48f1..c64266f 100644
->> --- a/drivers/mmc/core/bus.c
->> +++ b/drivers/mmc/core/bus.c
->> @@ -332,12 +332,13 @@ int mmc_add_card(struct mmc_card *card)
->>  			mmc_card_ddr52(card) ? "DDR " : "",
->>  			type);
->>  	} else {
->> -		pr_info("%s: new %s%s%s%s%s card at address %04x\n",
->> +		pr_info("%s: new %s%s%s%s%s%s card at address %04x\n",
->>  			mmc_hostname(card->host),
->>  			mmc_card_uhs(card) ? "ultra high speed " :
->>  			(mmc_card_hs(card) ? "high speed " : ""),
->>  			mmc_card_hs400(card) ? "HS400 " :
->>  			(mmc_card_hs200(card) ? "HS200 " : ""),
->> +			mmc_card_hs400es(card) ? "Enhanced strobe " : "",
->>  			mmc_card_ddr52(card) ? "DDR " : "",
->>  			uhs_bus_speed_mode, type, card->rca);
->>  	}
->> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
->> index 99275e4..b0c1f07 100644
->> --- a/drivers/mmc/core/core.c
->> +++ b/drivers/mmc/core/core.c
->> @@ -1127,6 +1127,15 @@ void mmc_set_initial_state(struct mmc_host *h=
-ost)
->>  	host->ios.bus_width =3D MMC_BUS_WIDTH_1;
->>  	host->ios.timing =3D MMC_TIMING_LEGACY;
->>  	host->ios.drv_type =3D 0;
->> +	host->ios.enhanced_strobe =3D false;
->> +
->> +	/*
->> +	 * Make sure we are in non-enhanced strobe mode before we
->> +	 * actually enable it in ext_csd.
->> +	 */
->> +	if ((host->caps2 & MMC_CAP2_HS400_ES) &&
->> +	     host->ops->hs400_enhanced_strobe)
->> +		host->ops->hs400_enhanced_strobe(host, &host->ios);
->>
->>  	mmc_set_ios(host);
->>  }
->> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
->> index f99c47e..9dc91ba 100644
->> --- a/drivers/mmc/core/mmc.c
->> +++ b/drivers/mmc/core/mmc.c
->> @@ -235,6 +235,11 @@ static void mmc_select_card_type(struct mmc_car=
-d *card)
->>  		avail_type |=3D EXT_CSD_CARD_TYPE_HS400_1_2V;
->>  	}
->>
->> +	if ((caps2 & MMC_CAP2_HS400_ES) &&
->> +	    card->ext_csd.strobe_support &&
->> +	    (avail_type & EXT_CSD_CARD_TYPE_HS400))
->> +		avail_type |=3D EXT_CSD_CARD_TYPE_HS400ES;
->> +
->>  	card->ext_csd.hs_max_dtr =3D hs_max_dtr;
->>  	card->ext_csd.hs200_max_dtr =3D hs200_max_dtr;
->>  	card->mmc_avail_type =3D avail_type;
->> @@ -383,6 +388,7 @@ static int mmc_decode_ext_csd(struct mmc_card *c=
-ard, u8 *ext_csd)
->>  			mmc_card_set_blockaddr(card);
->>  	}
->>
->> +	card->ext_csd.strobe_support =3D ext_csd[EXT_CSD_STROBE_SUPPORT];
->>  	card->ext_csd.raw_card_type =3D ext_csd[EXT_CSD_CARD_TYPE];
->>  	mmc_select_card_type(card);
->>
->> @@ -1216,6 +1222,78 @@ out_err:
->>  	return err;
->>  }
->>
->> +static int mmc_select_hs400es(struct mmc_card *card)
+>> +static int rockchip_pcie_wr_own_conf(struct rockchip_pcie_port *pp,
+>> +				     int where, int size, u32 val)
 >> +{
->> +	struct mmc_host *host =3D card->host;
->> +	int err =3D 0;
->> +	u8 val;
+>> +	u32 tmp;
+>> +	int offset;
 >> +
->> +	if (!(host->caps & MMC_CAP_8_BIT_DATA)) {
->> +		err =3D -ENOTSUPP;
->> +		goto out_err;
+>> +	offset = (where & (~0x3));
+>> +	tmp = readl(pp->apb_base + PCIE_RC_CONFIG_BASE + offset);
+>> +	if (size == 4) {
+>> +		writel(val, pp->apb_base + PCIE_RC_CONFIG_BASE + where);
+>> +	} else if (size == 2) {
+>> +		if (where & 0x2)
+>> +			tmp = ((tmp & 0xffff) | (val << 16));
+>> +		else
+>> +			tmp = ((tmp & 0xffff0000) | val);
+>> +
+>> +		writel(tmp, pp->apb_base + PCIE_RC_CONFIG_BASE + offset);
+>> +	} else if (size == 1) {
+>> +		if ((where & 0x3) == 0)
+>> +			tmp = ((tmp & (~0xff)) | val);
+>> +		else if ((where & 0x3) == 1)
+>> +			tmp = ((tmp & (~0xff00)) | (val << 8));
+>> +		else if ((where & 0x3) == 2)
+>> +			tmp = ((tmp & (~0xff0000)) | (val << 16));
+>> +		else if ((where & 0x3) == 3)
+>> +			tmp = ((tmp & (~0xff000000)) | (val << 24));
+>> +
+>> +		writel(tmp, pp->apb_base + PCIE_RC_CONFIG_BASE + offset);
+>> +	} else {
+>> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+>> +	}
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+>
+> Why can't you access the individual sub-word registers here?
+
+Our soc not support byte and word write in these region. so we have to 
+use writel() to write these registers.
+
+>
+>> +
+>> +static int rockchip_pcie_rd_other_conf(struct rockchip_pcie_port *pp,
+>> +				       struct pci_bus *bus, u32 devfn,
+>> +				       int where, int size, u32 *val)
+>> +{
+>> +	u32 busdev;
+>> +
+>> +	busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
+>> +				PCI_FUNC(devfn), where);
+>> +
+>> +	if (busdev & (size - 1)) {
+>> +		*val = 0;
+>> +		return PCIBIOS_BAD_REGISTER_NUMBER;
 >> +	}
 >> +
->> +	err =3D mmc_select_bus_width(card);
->> +	if (IS_ERR_VALUE(err))
->> +		goto out_err;
+>> +	if (size == 4) {
+>> +		*val = readl(pp->reg_base + busdev);
+>> +	} else if (size == 2) {
+>> +		*val = readw(pp->reg_base + busdev);
+>> +	} else if (size == 1) {
+>> +		*val = readb(pp->reg_base + busdev);
+>> +	} else {
+>> +		*val = 0;
+>> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+>> +	}
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
 >> +
->> +	/* Switch card to HS mode */
->> +	err =3D mmc_select_hs(card);
+>
+> This looks like the normal ECAM operations, you could just call those.
+
+I read ECAM reference code, I found it not support ioremap config space 
+for each bus individually on 64-bit systems. Our soc is 64-bit system, 
+and bus0 config space base address is 0xfda00000, bus1 base address is 
+0xf8100000. So I think it is not normal ECAM operations, I do not know 
+if I have understood correctly?
+
+>
+>> +	while (time_before(jiffies, timeout)) {
+>> +		regmap_read(port->grf, port->pcie_status, &status);
+>> +		if ((status & (1 << 9))) {
+>> +			dev_info(port->dev, "pll locked!\n");
+>> +			err = 0;
+>> +			break;
+>> +		}
+>> +	}
+>
+> Maybe add an msleep(1) here to avoid busy-looping?
+
+Yeah, its a good suggestion.
+
+>
+>
+>> +	for (reg_no = 0; reg_no < (port->mem_size >> 20); reg_no++) {
+>> +		err = rockchip_pcie_prog_ob_atu(port, reg_no + 1,
+>> +						AXI_WRAPPER_MEM_WRITE,
+>> +						20 - 1,
+>> +						port->mem_bus_addr +
+>> +							(reg_no << 20),
+>> +						0);
+>> +		if (err) {
+>> +			dev_err(dev, "Program RC outbound atu failed\n");
+>> +			return err;
+>> +		}
+>> +	}
+>
+> What if there is more than one outbound memory window, e.g. prefetchable
+> and non-prefetchable?
+>
+> Where do you set the I/O window?
+
+
+Yeah, our soc support these outbound windows, we will support these 
+windows next patch.
+
+>
+>> +	err = rockchip_pcie_prog_ib_atu(port, 2, 32 - 1, 0x0, 0);
 >> +	if (err) {
->> +		pr_err("%s: switch to high-speed failed, err:%d\n",
->> +			mmc_hostname(host), err);
->> +		goto out_err;
+>> +		dev_err(dev, "Program RC inbound atu failed\n");
+>> +		return err;
 >> +	}
->> +
->> +	err =3D mmc_switch_status(card);
->> +	if (err)
->> +		goto out_err;
 >
-> The spec. says "switch to High Speed mode and then set the clock freq=
-uency
-> to a value not greater than 52 MHz" which would tend to imply changin=
-g to
-> the High Speed frequency here. It shouldn't make any difference, so I=
- don't
-> know if it is worth doing.
+> And this doesn't seem to reflect the DMA ranges.
 
-yes, it should't make any difference as we are already assign a clock
-freq not greater than 52M(400k should also work for Highspeed).
+Our soc support all the ram region use as DMA zone. SO I set all the 32 
+bits bypass for the inbound ATS.
 
 >
 >> +
->> +	/* Switch card to DDR with strobe bit */
->> +	val =3D EXT_CSD_DDR_BUS_WIDTH_8 | EXT_CSD_BUS_WIDTH_STROBE;
->> +	err =3D mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
->> +			 EXT_CSD_BUS_WIDTH,
->> +			 val,
->> +			 card->ext_csd.generic_cmd6_time);
->> +	if (err) {
->> +		pr_err("%s: switch to bus width for hs400es failed, err:%d\n",
->> +			mmc_hostname(host), err);
->> +		goto out_err;
->> +	}
->> +
->> +	/* Switch card to HS400 */
->> +	val =3D EXT_CSD_TIMING_HS400 |
->> +	      card->drive_strength << EXT_CSD_DRV_STR_SHIFT;
->> +	err =3D __mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
->> +			   EXT_CSD_HS_TIMING, val,
->> +			   card->ext_csd.generic_cmd6_time,
->> +			   true, false, true);
->> +	if (err) {
->> +		pr_err("%s: switch to hs400es failed, err:%d\n",
->> +			mmc_hostname(host), err);
->> +		goto out_err;
->> +	}
->> +
->> +	/* Set host controller to HS400 timing and frequency */
->> +	mmc_set_timing(host, MMC_TIMING_MMC_HS400);
->> +
->> +	/* Controller enable enhanced strobe function */
->> +	host->ios.enhanced_strobe =3D true;
->> +	if (host->ops->hs400_enhanced_strobe)
->> +		host->ops->hs400_enhanced_strobe(host, &host->ios);
->> +
+>> +	port->root_bus_nr = port->busn->start;
+>> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>> +		bus = pci_scan_root_bus_msi(port->dev, port->root_bus_nr,
+>> +					    &rockchip_pcie_ops, port, &res,
+>> +					    port->msi);
+>> +	} else {
+>> +		bus = pci_scan_root_bus(&pdev->dev, 0,
+>> +					&rockchip_pcie_ops, port, &res);
 >
-> And again here, if we followed the spec. exactly we would change to t=
-he
-> HS400 frequency here rather than after sending CMD13. Again, it shoul=
-dn't
-> make any difference, so I don't if it is worth doing.
+>
+> PCI_MSI is selected unconditionally from Kconfig for this driver, so no
+> need for the compile-time check here.
 
-I delayed the response to your comment as I have been tring some
-different eMMC devices to see whether it makes any difference. Now I
-it's OK. :)
-
-Thanks.
+Yeah, we will delete the compile-time check in next patch.
 
 >
->> +	err =3D mmc_switch_status(card);
->> +	if (err)
->> +		goto out_err;
+>> +
+>> +static int rockchip_pcie_remove(struct platform_device *pdev)
+>> +{
+>> +	struct rockchip_pcie_port *port = platform_get_drvdata(pdev);
+>> +
+>> +	clk_disable_unprepare(port->hclk_pcie);
+>> +	clk_disable_unprepare(port->aclk_perf_pcie);
+>> +	clk_disable_unprepare(port->aclk_pcie);
+>> +	clk_disable_unprepare(port->clk_pciephy_ref);
 >> +
 >> +	return 0;
->> +
->> +out_err:
->> +	pr_err("%s: %s failed, error %d\n", mmc_hostname(card->host),
->> +	       __func__, err);
->> +	return err;
 >> +}
->> +
->>  static void mmc_select_driver_type(struct mmc_card *card)
->>  {
->>  	int card_drv_type, drive_strength, drv_type;
->> @@ -1297,7 +1375,7 @@ err:
->>  }
->>
->>  /*
->> - * Activate High Speed or HS200 mode if supported.
->> + * Activate High Speed, HS200 or HS400ES mode if supported.
->>   */
->>  static int mmc_select_timing(struct mmc_card *card)
->>  {
->> @@ -1306,7 +1384,9 @@ static int mmc_select_timing(struct mmc_card *=
-card)
->>  	if (!mmc_can_ext_csd(card))
->>  		goto bus_speed;
->>
->> -	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200)
->> +	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400ES)
->> +		err =3D mmc_select_hs400es(card);
->> +	else if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200)
->>  		err =3D mmc_select_hs200(card);
->>  	else if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS)
->>  		err =3D mmc_select_hs(card);
->> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
->> index eb0151b..22defc2 100644
->> --- a/include/linux/mmc/card.h
->> +++ b/include/linux/mmc/card.h
->> @@ -95,6 +95,7 @@ struct mmc_ext_csd {
->>  	u8			raw_partition_support;	/* 160 */
->>  	u8			raw_rpmb_size_mult;	/* 168 */
->>  	u8			raw_erased_mem_count;	/* 181 */
->> +	u8			strobe_support;		/* 184 */
->>  	u8			raw_ext_csd_structure;	/* 194 */
->>  	u8			raw_card_type;		/* 196 */
->>  	u8			raw_driver_strength;	/* 197 */
->> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
->> index 2a06fb0..0eabb72 100644
->> --- a/include/linux/mmc/host.h
->> +++ b/include/linux/mmc/host.h
->> @@ -19,6 +19,7 @@
->>
->>  #include <linux/mmc/core.h>
->>  #include <linux/mmc/card.h>
->> +#include <linux/mmc/mmc.h>
->>  #include <linux/mmc/pm.h>
->>
->>  struct mmc_ios {
->> @@ -77,6 +78,8 @@ struct mmc_ios {
->>  #define MMC_SET_DRIVER_TYPE_A	1
->>  #define MMC_SET_DRIVER_TYPE_C	2
->>  #define MMC_SET_DRIVER_TYPE_D	3
->> +
->> +	bool enhanced_strobe;			/* hs400es selection */
->>  };
->>
->>  struct mmc_host_ops {
->> @@ -143,6 +146,9 @@ struct mmc_host_ops {
->>
->>  	/* Prepare HS400 target operating frequency depending host driver =
-*/
->>  	int	(*prepare_hs400_tuning)(struct mmc_host *host, struct mmc_ios =
-*ios);
->> +	/* Prepare enhanced strobe depending host driver */
->> +	void	(*hs400_enhanced_strobe)(struct mmc_host *host,
->> +					 struct mmc_ios *ios);
->>  	int	(*select_drive_strength)(struct mmc_card *card,
->>  					 unsigned int max_dtr, int host_drv,
->>  					 int card_drv, int *drv_type);
->> @@ -513,6 +519,11 @@ static inline bool mmc_card_hs400(struct mmc_ca=
-rd *card)
->>  	return card->host->ios.timing =3D=3D MMC_TIMING_MMC_HS400;
->>  }
->>
->> +static inline bool mmc_card_hs400es(struct mmc_card *card)
->> +{
->> +	return card->host->ios.enhanced_strobe;
->> +}
->> +
->>  void mmc_retune_timer_stop(struct mmc_host *host);
->>
->>  static inline void mmc_retune_needed(struct mmc_host *host)
->> diff --git a/include/linux/mmc/mmc.h b/include/linux/mmc/mmc.h
->> index 15f2c4a..c376209 100644
->> --- a/include/linux/mmc/mmc.h
->> +++ b/include/linux/mmc/mmc.h
->> @@ -297,6 +297,7 @@ struct _mmc_csd {
->>  #define EXT_CSD_PART_CONFIG		179	/* R/W */
->>  #define EXT_CSD_ERASED_MEM_CONT		181	/* RO */
->>  #define EXT_CSD_BUS_WIDTH		183	/* R/W */
->> +#define EXT_CSD_STROBE_SUPPORT		184	/* RO */
->>  #define EXT_CSD_HS_TIMING		185	/* R/W */
->>  #define EXT_CSD_POWER_CLASS		187	/* R/W */
->>  #define EXT_CSD_REV			192	/* RO */
->> @@ -380,12 +381,14 @@ struct _mmc_csd {
->>  #define EXT_CSD_CARD_TYPE_HS400_1_2V	(1<<7)	/* Card can run at 200M=
-Hz DDR, 1.2V */
->>  #define EXT_CSD_CARD_TYPE_HS400		(EXT_CSD_CARD_TYPE_HS400_1_8V | \
->>  					 EXT_CSD_CARD_TYPE_HS400_1_2V)
->> +#define EXT_CSD_CARD_TYPE_HS400ES	(1<<8)	/* Card can run at HS400ES=
- */
->>
->>  #define EXT_CSD_BUS_WIDTH_1	0	/* Card is in 1 bit mode */
->>  #define EXT_CSD_BUS_WIDTH_4	1	/* Card is in 4 bit mode */
->>  #define EXT_CSD_BUS_WIDTH_8	2	/* Card is in 8 bit mode */
->>  #define EXT_CSD_DDR_BUS_WIDTH_4	5	/* Card is in 4 bit DDR mode */
->>  #define EXT_CSD_DDR_BUS_WIDTH_8	6	/* Card is in 8 bit DDR mode */
->> +#define EXT_CSD_BUS_WIDTH_STROBE BIT(7)	/* Enhanced strobe mode */
->>
->>  #define EXT_CSD_TIMING_BC	0	/* Backwards compatility */
->>  #define EXT_CSD_TIMING_HS	1	/* High speed */
->>
+>
+> You don't seem to remove the child devices here. Have you tried unloading the module?
+>
+
+I don't seem the remove function in other pcie host driver. I think this 
+function could be deleted.
+
+> 	Arnd
+>
 >
 >
 >
 >
 
-
---=20
 Best Regards
-Shawn Lin
+Wenrui Li
