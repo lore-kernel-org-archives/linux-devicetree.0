@@ -1,73 +1,90 @@
-From: Wenrui Li <wenrui.li@rock-chips.com>
-Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
-Date: Fri, 27 May 2016 18:31:28 +0800
-Message-ID: <57482200.9090008@rock-chips.com>
-References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
- <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
- <9836736.6VjP1ug4kE@wuerfel> <5747EDC9.2080603@rock-chips.com>
- <8520D5D51A55D047800579B094147198258AF22F@XAP-PVEXMBX01.xlnx.xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <8520D5D51A55D047800579B094147198258AF22F@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [RESEND PATCH 0/6] Rockchip Type-C and DispplayPort driver
+Date: Fri, 27 May 2016 18:45:36 +0800
+Message-ID: <1464345942-4795-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com
+Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, alsa-devel@alsa-project.org, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, Jacob Siverskog <jacob@teenage.engineering>, Oder Chiou <oder_chiou@realtek.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, Takashi Iwai <tiwai@suse.com>, Vinod Koul <vinod.koul@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, anish kumar <yesanishhere@gmail.com>, linux-arm-kernel@lists.infradead.orgJaroslav Kysela <p>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Sorry, forgot a head file in patch 1, so resend.
 
-On 2016/5/27 15:13, Bharat Kumar Gogada wrote:
->>>
->>>> +
->>>> +static int rockchip_pcie_rd_other_conf(struct rockchip_pcie_port *pp,
->>>> +				       struct pci_bus *bus, u32 devfn,
->>>> +				       int where, int size, u32 *val)
->>>> +{
->>>> +	u32 busdev;
->>>> +
->>>> +	busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
->>>> +				PCI_FUNC(devfn), where);
->>>> +
->>>> +	if (busdev & (size - 1)) {
->>>> +		*val = 0;
->>>> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->>>> +	}
->>>> +
->>>> +	if (size == 4) {
->>>> +		*val = readl(pp->reg_base + busdev);
->>>> +	} else if (size == 2) {
->>>> +		*val = readw(pp->reg_base + busdev);
->>>> +	} else if (size == 1) {
->>>> +		*val = readb(pp->reg_base + busdev);
->>>> +	} else {
->>>> +		*val = 0;
->>>> +		return PCIBIOS_BAD_REGISTER_NUMBER;
->>>> +	}
->>>> +	return PCIBIOS_SUCCESSFUL;
->>>> +}
->>>> +
->>>
->>> This looks like the normal ECAM operations, you could just call those.
->>
->> I read ECAM reference code, I found it not support ioremap config space
->> for each bus individually on 64-bit systems. Our soc is 64-bit system,
->> and bus0 config space base address is 0xfda00000, bus1 base address is
->> 0xf8100000. So I think it is not normal ECAM operations, I do not know
->> if I have understood correctly?
->>
-> Hi,
->
-> I think Arnd was suggesting to use generic config read/write calls, pci_generic_config_read/pci_generic_config_write
-> which does above functionality.
+Hi all
 
-Yeah, I seem the pci_generic_config_write use writew/writeb for byte and 
-word write. but our SOC not support byte and word write in RC config 
-spcace. So I redefine the the pci_ops.write
+This series patch is for rockchip Type-C phy and DisplayPort controller
+driver.
 
->
-> Bharat
->
->
->
+The USB Type-C PHY is designed to support the USB3 and DP applications.
+The PHY basically has two main components: USB3 and DisplyPort. USB3
+operates in SuperSpeed mode and the DP can operate at RBR, HBR and HBR2
+data rates. The Type-C cable orientation detection and Power Delivery
+(PD) is accomplished using a PD PHY or a exernal PD chip.
+
+The DP controller is compliant with DisplayPort Specification,
+Version 1.3, This IP is compatible with the rockchip type-c PHY IP.
+There is a uCPU in DP controller, it need a firmware to work, please
+put the firmware file to /lib/firmware/cdn/dptx.bin. The uCPU in charge
+of aux communication and link training, the host use mailbox to
+communicate with the ucpu.
+
+The PHY driver has register a notification, to get the alt mode from PD,
+the PD driver need call the tcphy_notifier_call_chain to notify PHY and
+DP controller.
+
+This series is based on Mark Yao's branch:
+https://github.com/markyzq/kernel-drm-rockchip/tree/drm-rockchip-next-2016-05-23
+
+I test this patches on the rk3399-evb board, with a fusb302 driver,
+this branch has no rk3399.dtsi, so the patch about dts is not included
+in this series.
+
+
+
+Chris Zhong (6):
+  phy: Add USB Type-C PHY driver for rk3399
+  Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
+  drm/rockchip: vop: add cdn DP support for rk3399
+  Documentation: bindings: add dt documentation for cdn DP controller
+  ASoC: cdn-dp: Add cdn DP codec driver
+  ASoC: rockchip: Add machine driver for cdn dp codec
+
+ .../bindings/display/rockchip/cdn-dp-rockchip.txt  |  57 ++
+ .../devicetree/bindings/phy/phy-rockchip-typec.txt |  55 ++
+ .../bindings/sound/rockchip-cdn-dp-audio.txt       |  12 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   9 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/cdn-dp-core.c             | 620 ++++++++++++++++
+ drivers/gpu/drm/rockchip/cdn-dp-core.h             |  95 +++
+ drivers/gpu/drm/rockchip/cdn-dp-reg.c              | 730 ++++++++++++++++++
+ drivers/gpu/drm/rockchip/cdn-dp-reg.h              | 404 ++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |   9 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c        |   2 +
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-rockchip-typec.c                   | 823 +++++++++++++++++++++
+ include/linux/phy/phy-rockchip-typec.h             |  72 ++
+ include/sound/cdn-dp-audio.h                       |  51 ++
+ sound/soc/codecs/Kconfig                           |   3 +
+ sound/soc/codecs/Makefile                          |   2 +
+ sound/soc/codecs/cdn-dp-audio.c                    | 246 ++++++
+ sound/soc/rockchip/Kconfig                         |   9 +
+ sound/soc/rockchip/Makefile                        |   2 +
+ sound/soc/rockchip/rockchip-cdn-dp-audio.c         | 167 +++++
+ 23 files changed, 3378 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.c
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.h
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.c
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.h
+ create mode 100644 drivers/phy/phy-rockchip-typec.c
+ create mode 100644 include/linux/phy/phy-rockchip-typec.h
+ create mode 100644 include/sound/cdn-dp-audio.h
+ create mode 100644 sound/soc/codecs/cdn-dp-audio.c
+ create mode 100644 sound/soc/rockchip/rockchip-cdn-dp-audio.c
+
+-- 
+2.6.3
