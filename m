@@ -1,86 +1,66 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 0/6] Rockchip Type-C and DispplayPort driver
-Date: Fri, 27 May 2016 14:02:13 +0800
-Message-ID: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 4/6] Documentation: bindings: add dt documentation for cdn DP
+ controller
+Date: Fri, 27 May 2016 14:02:17 +0800
+Message-ID: <1464328939-8073-5-git-send-email-zyw@rock-chips.com>
+References: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com
-Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, alsa-devel@alsa-project.org, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Subhransu S. Prusty" <subhransu.s.prusty@intel.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, Jacob Siverskog <jacob@teenage.engineering>, Oder Chiou <oder_chiou@realtek.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Johan Hovold <johan@kernel.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, Takashi Iwai <tiwai@suse.com>, Vinod Koul <vinod.koul@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, anish
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all
-
-This series patch is for rockchip Type-C phy and DisplayPort controller
-driver.
-
-The USB Type-C PHY is designed to support the USB3 and DP applications.
-The PHY basically has two main components: USB3 and DisplyPort. USB3
-operates in SuperSpeed mode and the DP can operate at RBR, HBR and HBR2
-data rates. The Type-C cable orientation detection and Power Delivery
-(PD) is accomplished using a PD PHY or a exernal PD chip.
-
-The DP controller is compliant with DisplayPort Specification,
-Version 1.3, This IP is compatible with the rockchip type-c PHY IP.
-There is a uCPU in DP controller, it need a firmware to work, please
-put the firmware file to /lib/firmware/cdn/dptx.bin. The uCPU in charge
-of aux communication and link training, the host use mailbox to
-communicate with the ucpu.
-
-The PHY driver has register a notification, to get the alt mode from PD,
-the PD driver need call the tcphy_notifier_call_chain to notify PHY and
-DP controller.
-
-This series is based on Mark Yao's branch:
-https://github.com/markyzq/kernel-drm-rockchip/tree/drm-rockchip-next-2016-05-23
-
-I test this patches on the rk3399-evb board, with a fusb302 driver,
-this branch has no rk3399.dtsi, so the patch about dts is not included
-in this series.
-
-
-
-Chris Zhong (6):
-  phy: Add USB Type-C PHY driver for rk3399
-  Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
-  drm/rockchip: vop: add cdn DP support for rk3399
-  Documentation: bindings: add dt documentation for cdn DP controller
-  ASoC: cdn-dp: Add cdn DP codec driver
-  ASoC: rockchip: Add machine driver for cdn dp codec
-
- .../bindings/display/rockchip/cdn-dp-rockchip.txt  |  57 ++
- .../devicetree/bindings/phy/phy-rockchip-typec.txt |  55 ++
- .../bindings/sound/rockchip-cdn-dp-audio.txt       |  12 +
- drivers/gpu/drm/rockchip/Kconfig                   |   9 +
- drivers/gpu/drm/rockchip/Makefile                  |   1 +
- drivers/gpu/drm/rockchip/cdn-dp-core.c             | 620 ++++++++++++++++
- drivers/gpu/drm/rockchip/cdn-dp-core.h             |  95 +++
- drivers/gpu/drm/rockchip/cdn-dp-reg.c              | 730 ++++++++++++++++++
- drivers/gpu/drm/rockchip/cdn-dp-reg.h              | 404 ++++++++++
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |   9 +-
- drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |   2 +
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c        |   2 +
- drivers/phy/Kconfig                                |   7 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-rockchip-typec.c                   | 823 +++++++++++++++++++++
- include/sound/cdn-dp-audio.h                       |  51 ++
- sound/soc/codecs/Kconfig                           |   3 +
- sound/soc/codecs/Makefile                          |   2 +
- sound/soc/codecs/cdn-dp-audio.c                    | 246 ++++++
- sound/soc/rockchip/Kconfig                         |   9 +
- sound/soc/rockchip/Makefile                        |   2 +
- sound/soc/rockchip/rockchip-cdn-dp-audio.c         | 167 +++++
- 22 files changed, 3306 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt
- create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.c
- create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.h
- create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.c
- create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.h
- create mode 100644 drivers/phy/phy-rockchip-typec.c
- create mode 100644 include/sound/cdn-dp-audio.h
- create mode 100644 sound/soc/codecs/cdn-dp-audio.c
- create mode 100644 sound/soc/rockchip/rockchip-cdn-dp-audio.c
-
--- 
-2.6.3
+VGhpcyBwYXRjaCBhZGRzIGEgYmluZGluZyB0aGF0IGRlc2NyaWJlcyB0aGUgY2RuIERQIGNvbnRy
+b2xsZXIgZm9yCnJrMzM5OS4KClNpZ25lZC1vZmYtYnk6IENocmlzIFpob25nIDx6eXdAcm9jay1j
+aGlwcy5jb20+Ci0tLQoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2Nr
+Y2hpcC50eHQgIHwgNTcgKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDU3
+IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9jZG4tZHAtcm9ja2NoaXAudHh0CgpkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAv
+Y2RuLWRwLXJvY2tjaGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+aW5kZXggMDAwMDAwMC4uNjA3OTVjMgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQK
+QEAgLTAsMCArMSw1NyBAQAorUm9ja2NoaXAgUkszMzk5IHNwZWNpZmljIGV4dGVuc2lvbnMgdG8g
+dGhlIGNkbiBEaXNwbGF5IFBvcnQKKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CisK
+K1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6ICJyb2NrY2hpcCxjZG4tZHAiCisK
+Ky0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNvbnRyb2xsZXIgYW5kIGxlbmd0
+aAorCistIGNsb2NrczogZnJvbSBjb21tb24gY2xvY2sgYmluZGluZzogaGFuZGxlIHRvIGRwIGNs
+b2NrLgorCistIGNsb2NrLW5hbWVzOiBmcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nOgorCSAgICAg
+ICBSZXF1aXJlZCBlbGVtZW50czogImNvcmVfY2xrIiAicGNsayIgInNwZGlmIgorCistIHJvY2tj
+aGlwLGdyZjogdGhpcyBzb2Mgc2hvdWxkIHNldCBHUkYgcmVncywgc28gbmVlZCBnZXQgZ3JmIGhl
+cmUuCisKKy0gcG9ydHM6IGNvbnRhaW4gYSBwb3J0IG5vZGVzIHdpdGggZW5kcG9pbnQgZGVmaW5p
+dGlvbnMgYXMgZGVmaW5lZCBpbgorCSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuCisJIGNvbnRhaW5lZCAyIGVuZHBvaW50cywgY29u
+bmVjdGluZyB0byB0aGUgb3V0cHV0IG9mIHZvcC4KKworLSBwaHlzOiBmcm9tIGdlbmVyYWwgUEhZ
+IGJpbmRpbmc6IHRoZSBwaGFuZGxlIGZvciB0aGUgUEhZIGRldmljZS4KKworLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLQorCitFeGFtcGxlOgorCWNkbl9kcDogZHBAZmVjMDAwMDAgeworCQljb21wYXRp
+YmxlID0gInJvY2tjaGlwLGNkbi1kcCI7CisJCXJlZyA9IDwweDAgMHhmZWMwMDAwMCAweDAgMHgx
+MDAwMDA+OworCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsK
+KwkJY2xvY2tzID0gPCZjcnUgU0NMS19EUF9DT1JFPiwgPCZjcnUgUENMS19EUF9DVFJMPiwKKwkJ
+CSA8JmNydSBTQ0xLX1NQRElGX1JFQ19EUFRYPjsKKwkJY2xvY2stbmFtZXMgPSAiY29yZV9jbGsi
+LCAicGNsayIsICJzcGRpZiI7CisJCXBoeXMgPSA8JnRjcGh5MD47CisJCXJvY2tjaGlwLGdyZiA9
+IDwmZ3JmPjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+Owor
+CQlzdGF0dXMgPSAiZGlzYWJsZWQiOworCisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0g
+PDE+OworCQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQlyZWcgPSA8MT47CisKKwkJCWRwX2luOiBw
+b3J0IHsKKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsK
+KwkJCQlkcF9pbl92b3BiOiBlbmRwb2ludEAwIHsKKwkJCQkJcmVnID0gPDA+OworCQkJCQlyZW1v
+dGUtZW5kcG9pbnQgPSA8JnZvcGJfb3V0X2RwPjsKKwkJCQl9OworCisJCQkJZHBfaW5fdm9wbDog
+ZW5kcG9pbnRAMSB7CisJCQkJCXJlZyA9IDwxPjsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2
+b3BsX291dF9kcD47CisJCQkJfTsKKwkJCX07CisJCX07CisJfTsKLS0gCjIuNi4zCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
