@@ -1,52 +1,55 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: [PATCH v2 4/4] hwrng: bcm2835: Read as much data as available
-Date: Fri, 27 May 2016 06:10:41 -0400
-Message-ID: <1464343841-29504-5-git-send-email-yendapally.reddy@broadcom.com>
-References: <1464343841-29504-1-git-send-email-yendapally.reddy@broadcom.com>
+From: maitysanchayan@gmail.com
+Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
+Date: Fri, 27 May 2016 15:38:17 +0530
+Message-ID: <20160527100817.GA8294@Sanchayan-Arch.localdomain>
+References: <cover.1463737502.git.maitysanchayan@gmail.com>
+ <CAL_JsqKCwy=aXveTfnaQuZ5b3Ld9nzABgPfdPm1JX3CBuvzG+Q@mail.gmail.com>
+ <20160527063301.GB1554@Sanchayan-Arch.localdomain>
+ <9495361.v6aft1QR0M@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464343841-29504-1-git-send-email-yendapally.reddy@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <9495361.v6aft1QR0M@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, noltari@gmail.com, Joshua Henderson <joshua.henderson@microchip.com>
-Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Read the requested number of data from the fifo
+On 16-05-27 10:31:55, Arnd Bergmann wrote:
+> On Friday, May 27, 2016 12:03:01 PM CEST maitysanchayan@gmail.com wrote:
+> > 
+> > So if I understand correctly, the binding at the SoC level is fine.
+> > Keeping that but removing the additional made-up properties, viz. below
+> > 
+> > rom-revision: phandle to the on-chip ROM node
+> > mscm: phandle to the MSCM CPU configuration node
+> > nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
+> > nvmem-cell-names: should contain string names "cfg0" and "cfg1"
+> > 
+> > would be fine?
+> > 
+> > We would have something similar to here
+> > http://www.spinics.net/lists/devicetree/msg80655.html
+> > 
+> > but now with the DT binding under SoC bus.
+> > 
+> 
+> 
+> You look up the OTP device as a syscon here, which seems odd since there
+> is already an nvmem driver for it. Shouldn't you use the nvmem API for
+> that?
+> 
+> 	Arnd
 
-Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Reviewed-by: Eric Anholt <eric@anholt.net>
----
- drivers/char/hw_random/bcm2835-rng.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+I need the following 
 
-diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
-index b1e8b78..75ca820 100644
---- a/drivers/char/hw_random/bcm2835-rng.c
-+++ b/drivers/char/hw_random/bcm2835-rng.c
-@@ -43,6 +43,8 @@ static int bcm2835_rng_read(struct hwrng *rng, void *buf, size_t max,
- 			       bool wait)
- {
- 	void __iomem *rng_base = (void __iomem *)rng->priv;
-+	u32 max_words = max / sizeof(u32);
-+	u32 num_words, count;
- 
- 	while ((__raw_readl(rng_base + RNG_STATUS) >> 24) == 0) {
- 		if (!wait)
-@@ -50,8 +52,14 @@ static int bcm2835_rng_read(struct hwrng *rng, void *buf, size_t max,
- 		cpu_relax();
- 	}
- 
--	*(u32 *)buf = __raw_readl(rng_base + RNG_DATA);
--	return sizeof(u32);
-+	num_words = readl(rng_base + RNG_STATUS) >> 24;
-+	if (num_words > max_words)
-+		num_words = max_words;
-+
-+	for (count = 0; count < num_words; count++)
-+		((u32 *)buf)[count] = readl(rng_base + RNG_DATA);
-+
-+	return num_words * sizeof(u32);
- }
- 
- static struct hwrng bcm2835_rng_ops = {
--- 
-2.1.0
+nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
+nvmem-cell-names: should contain string names "cfg0" and "cfg1"
+
+to be able to use the NVMEM consumer API.
+
+If I can put them at SoC node level then I certainly can use the NVMEM API.
+
+Regards,
+Sanchayan.
