@@ -1,75 +1,49 @@
-From: maitysanchayan@gmail.com
-Subject: Re: [PATCH v3 4/4] soc: Add SoC driver for Freescale Vybrid platform
-Date: Fri, 27 May 2016 23:26:41 +0530
-Message-ID: <20160527175641.GA10705@Sanchayan-Arch.localdomain>
-References: <cover.1463737502.git.maitysanchayan@gmail.com>
- <CAL_JsqKCwy=aXveTfnaQuZ5b3Ld9nzABgPfdPm1JX3CBuvzG+Q@mail.gmail.com>
- <20160527063301.GB1554@Sanchayan-Arch.localdomain>
- <9495361.v6aft1QR0M@wuerfel>
- <20160527100817.GA8294@Sanchayan-Arch.localdomain>
- <475f53d2bb4c611bfe1c6652215b8626@agner.ch>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: am335x-bone-common: Mark MAC as having only one PHY
+Date: Fri, 27 May 2016 13:17:43 -0500
+Message-ID: <20160527181743.8401-2-afd@ti.com>
+References: <20160527181743.8401-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <475f53d2bb4c611bfe1c6652215b8626@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160527181743.8401-1-afd-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Stefan,
+Currently am33xx.dtsi declares the MAC controller to have two
+slave ports, on these boards we only use one, so set the slave
+count to one. This eliminates a console error message when
+the non-existent PHY is not detected.
 
-On 16-05-27 10:28:45, Stefan Agner wrote:
-> On 2016-05-27 03:08, maitysanchayan@gmail.com wrote:
-> > On 16-05-27 10:31:55, Arnd Bergmann wrote:
-> >> On Friday, May 27, 2016 12:03:01 PM CEST maitysanchayan@gmail.com wrote:
-> >> >
-> >> > So if I understand correctly, the binding at the SoC level is fine.
-> >> > Keeping that but removing the additional made-up properties, viz. below
-> >> >
-> >> > rom-revision: phandle to the on-chip ROM node
-> >> > mscm: phandle to the MSCM CPU configuration node
-> >> > nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
-> >> > nvmem-cell-names: should contain string names "cfg0" and "cfg1"
-> >> >
-> >> > would be fine?
-> >> >
-> >> > We would have something similar to here
-> >> > http://www.spinics.net/lists/devicetree/msg80655.html
-> >> >
-> >> > but now with the DT binding under SoC bus.
-> >> >
-> >>
-> >>
-> >> You look up the OTP device as a syscon here, which seems odd since there
-> >> is already an nvmem driver for it. Shouldn't you use the nvmem API for
-> >> that?
-> >>
-> >> 	Arnd
-> > 
-> > I need the following 
-> > 
-> > nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
-> > nvmem-cell-names: should contain string names "cfg0" and "cfg1"
-> > 
-> > to be able to use the NVMEM consumer API.
-> 
-> I did not tested it, but it seems the NVMEM consumer API has some kind
-> of non-DT fallback:
-> http://lxr.free-electrons.com/source/drivers/nvmem/core.c#L827
-> 
-> Right now, it seems to me that it does not handle the case where we have
-> a of_node but don't want to use it... You might need to add some extra
-> handling if there is a of_node without nvmem-cell-names/nvmem-cells, and
-> fall back to nvmem_cell_get_from_list.
-> 
+Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-I have already looked at the core nvmem code for options but wanted to avoid
-any additons if possible.
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index 0cc150b..8767bbe 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -359,12 +359,8 @@
+ 	phy-mode = "mii";
+ };
+ 
+-&cpsw_emac1 {
+-	phy_id = <&davinci_mdio>, <1>;
+-	phy-mode = "mii";
+-};
+-
+ &mac {
++	slaves = <1>;
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&cpsw_default>;
+ 	pinctrl-1 = <&cpsw_sleep>;
+-- 
+2.8.3
 
-However if adding the nvmem properties at the SoC node level is frowned upon
-I will make the necessary changes required.
-
-Regards,
-Sanchayan.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
