@@ -1,34 +1,95 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v4 1/4] dt-bindings: sound: add bindings for the max9860
- codec
-Date: Fri, 27 May 2016 22:40:07 +0200
-Message-ID: <a7d38dce-fdee-b485-13e4-33db8c80660a@axentia.se>
-References: <1463260181-21344-1-git-send-email-peda@axentia.se>
- <1463260181-21344-2-git-send-email-peda@axentia.se>
- <20160527202436.GC29837@sirena.org.uk>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v4 2/7] media: s5p-mfc: use generic reserved memory
+ bindings
+Date: Fri, 27 May 2016 16:41:34 -0400
+Message-ID: <78803037-2aa8-0d62-c69a-f95caec393ab@osg.samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-3-git-send-email-m.szyprowski@samsung.com>
+ <a14c4f45-64c9-f72d-532b-ad1ff53fa9eb@osg.samsung.com>
+ <20160525173614.GA8309@rob-hp-laptop>
+ <709cf900-86dd-5020-d516-24caa971d74a@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160527202436.GC29837@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Misbah Ullah Khan <Misbahk@danlawinc.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <709cf900-86dd-5020-d516-24caa971d74a@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-05-27 22:24, Mark Brown wrote:
-> On Sat, May 14, 2016 at 11:09:38PM +0200, Peter Rosin wrote:
->> This adds the device tree binding documentation for the Maxim Integrated
->> MAX9860 mono audio voice codec.
+Hello Marek,
+
+On 05/27/2016 02:37 AM, Marek Szyprowski wrote:
+> Hello,
 > 
-> Please submit patches using subject lines reflecting the style for the
-> subsystem.  This makes it easier for people to identify relevant
-> patches.
+> 
+> On 2016-05-25 19:36, Rob Herring wrote:
+>> On Wed, May 25, 2016 at 11:18:59AM -0400, Javier Martinez Canillas wrote:
+>>> Hello Marek,
+>>>
+>>> On 05/24/2016 09:31 AM, Marek Szyprowski wrote:
+>>>> Use generic reserved memory bindings and mark old, custom properties
+>>>> as obsoleted.
+>>>>
+>>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> ---
+>>>>   .../devicetree/bindings/media/s5p-mfc.txt          | 39 +++++++++++++++++-----
+>>>>   1 file changed, 31 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+>>>> index 2d5787e..92c94f5 100644
+>>>> --- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
+>>>> +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+>>>> @@ -21,15 +21,18 @@ Required properties:
+>>>>     - clock-names : from common clock binding: must contain "mfc",
+>>>>             corresponding to entry in the clocks property.
+>>>>   -  - samsung,mfc-r : Base address of the first memory bank used by MFC
+>>>> -            for DMA contiguous memory allocation and its size.
+>>>> -
+>>>> -  - samsung,mfc-l : Base address of the second memory bank used by MFC
+>>>> -            for DMA contiguous memory allocation and its size.
+>>>> -
+>>>>   Optional properties:
+>>>>     - power-domains : power-domain property defined with a phandle
+>>>>                  to respective power domain.
+>>>> +  - memory-region : from reserved memory binding: phandles to two reserved
+>>>> +    memory regions, first is for "left" mfc memory bus interfaces,
+>>>> +    second if for the "right" mfc memory bus, used when no SYSMMU
+>>>> +    support is available
+>>>> +
+>>>> +Obsolete properties:
+>>>> +  - samsung,mfc-r, samsung,mfc-l : support removed, please use memory-region
+>>>> +    property instead
+>>>> +
+>>>>
+>>> I wonder if we should maintain backward compatibility for this driver
+>>> since s5p-mfc memory allocation won't work with an old FDT if support
+>>> for the old properties are removed.
+>> Well, minimally the commit log should indicate that compatibility is
+>> being broken.
+> 
+> Compatibility is only partially broken. I add this to the commit message. Old
+> bindings will still work with the new driver when IOMMU is enabled - in such case reserved
+> memory regions are ignored so this should not be a big issue. Using IOMMU also increases
+> total memory space for the video buffers without wasting it as 'reserved'. Hope that
+> once those patches are merged, the IOMMU can be finally enabled in the exynos_defconfig.
+>
 
-Ok, but to me it was obviously not obvious if I submitted this patch to
-ASoC or if I submitted it to devicetree.
+Yes, a problem is that some Exynos machines (for example the Snow and Peach
+Chromebooks) fail to boot when IOMMU is enabled due the bootloader leaving
+the FIMD enabled doing DMA operations automatically as you found before.
 
-Should I resend over this detail or will you fix it up?
+You proposed to add a "iommu-reserved-mapping" property [0] but that never
+landed due not having an agreement on how should be fixed properly IIUC [1].
 
-Cheers,
-Peter
+So that has to be fixed before enabling the Exynos IOMMU support by default.
+
+[0]: http://www.spinics.net/lists/arm-kernel/msg415501.html
+[1]: http://www.spinics.net/lists/arm-kernel/msg419747.html 
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
