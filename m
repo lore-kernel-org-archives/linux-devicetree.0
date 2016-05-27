@@ -1,144 +1,86 @@
-From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 2/4] CMDQ: Mediatek CMDQ driver
-Date: Fri, 27 May 2016 13:44:18 +0800
-Message-ID: <1464327858.8578.6.camel@mtksdaap41>
-References: <1464006190-344-1-git-send-email-hs.liao@mediatek.com>
-	 <1464006190-344-3-git-send-email-hs.liao@mediatek.com>
-	 <1464059159.7425.6.camel@mtksdaap41> <1464092829.19894.16.camel@mtksdaap41>
-	 <1464247708.13536.14.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464247708.13536.14.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH 0/6] Rockchip Type-C and DispplayPort driver
+Date: Fri, 27 May 2016 14:02:13 +0800
+Message-ID: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com
+Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, alsa-devel@alsa-project.org, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Subhransu S. Prusty" <subhransu.s.prusty@intel.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, Jacob Siverskog <jacob@teenage.engineering>, Oder Chiou <oder_chiou@realtek.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Johan Hovold <johan@kernel.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, Takashi Iwai <tiwai@suse.com>, Vinod Koul <vinod.koul@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, anish
 List-Id: devicetree@vger.kernel.org
 
-Hi CK,
+Hi all
 
-Reply in line.
+This series patch is for rockchip Type-C phy and DisplayPort controller
+driver.
 
-On Thu, 2016-05-26 at 15:28 +0800, CK Hu wrote:
-> Hi, HS:
-> 
-> Replay inline.
-> 
-> On Tue, 2016-05-24 at 20:27 +0800, Horng-Shyang Liao wrote:
-> > Hi CK,
-> > 
-> > Reply in line.
-> > 
-> > On Tue, 2016-05-24 at 11:05 +0800, CK Hu wrote:
-> > > Hi, HS:
-> > > 
-> > > Some comments below.
-> > > 
-> > ...
-> > > > +static void cmdq_thread_irq_handler(struct cmdq *cmdq, int tid)
-> > > > +{
-> > > > +	struct cmdq_thread *thread = &cmdq->thread[tid];
-> > > > +	unsigned long flags = 0L;
-> > > > +	int value;
-> > > > +
-> > > > +	spin_lock_irqsave(&cmdq->exec_lock, flags);
-> > > > +
-> > > > +	/*
-> > > > +	 * it is possible for another CPU core
-> > > > +	 * to run "release task" right before we acquire the spin lock
-> > > > +	 * and thus reset / disable this HW thread
-> > > > +	 * so we check both the IRQ flag and the enable bit of this thread
-> > > > +	 */
-> > > > +	value = cmdq_thread_readl(thread, CMDQ_THR_IRQ_STATUS);
-> > > > +	if (!(value & CMDQ_THR_IRQ_MASK)) {
-> > > > +		spin_unlock_irqrestore(&cmdq->exec_lock, flags);
-> > > > +		return;
-> > > > +	}
-> > > 
-> > > If this case happen and just return without clearing irq status, the irq
-> > > would keep triggering and system hang up. So just remove this checking
-> > > and go down to clear irq status.
-> > 
-> > This case is safe because irq status is cleared.
-> > But, next if condition has the problem which you mentioned.
-> > 
-> > I will change it as below.
-> > 
-> > 	if (!(cmdq_thread_readl(thread, CMDQ_THR_ENABLE_TASK) &
-> > 	      CMDQ_THR_ENABLED)) {
-> > 		cmdq_thread_writel(thread, ~value, CMDQ_THR_IRQ_STATUS);
-> > 		spin_unlock_irqrestore(&cmdq->exec_lock, flags);
-> > 		return;
-> > 	}
-> > 
-> > If thread is disabled, tasks must be all finished.
-> > Therefore, just clear irq status and return.
-> > 
-> 
-> For irq status checking part, if irq status & irq mask is zero, remove
-> this checking and let it go down, it still do nothing because value &
-> CMDQ_THR_IRQ_ERROR is zero and value & CMDQ_THR_IRQ_DONE is zero. So you
-> can just remove this checking and get the same result.
-> 
-> In general HW design, once a HW is not enable, it does not trigger
-> interrupt any more. Be sure that it's necessary to clear irq status even
-> though thread is disable.
-> 
+The USB Type-C PHY is designed to support the USB3 and DP applications.
+The PHY basically has two main components: USB3 and DisplyPort. USB3
+operates in SuperSpeed mode and the DP can operate at RBR, HBR and HBR2
+data rates. The Type-C cable orientation detection and Power Delivery
+(PD) is accomplished using a PD PHY or a exernal PD chip.
 
-I Will remove first if condition,
-so rewrite first two if condition parts as below.
+The DP controller is compliant with DisplayPort Specification,
+Version 1.3, This IP is compatible with the rockchip type-c PHY IP.
+There is a uCPU in DP controller, it need a firmware to work, please
+put the firmware file to /lib/firmware/cdn/dptx.bin. The uCPU in charge
+of aux communication and link training, the host use mailbox to
+communicate with the ucpu.
 
-value = cmdq_thread_readl(thread, CMDQ_THR_IRQ_STATUS);
-cmdq_thread_writel(thread, ~value, CMDQ_THR_IRQ_STATUS);
+The PHY driver has register a notification, to get the alt mode from PD,
+the PD driver need call the tcphy_notifier_call_chain to notify PHY and
+DP controller.
 
-if (!(cmdq_thread_readl(thread, CMDQ_THR_ENABLE_TASK) &
-			CMDQ_THR_ENABLED))
-	value = 0;
+This series is based on Mark Yao's branch:
+https://github.com/markyzq/kernel-drm-rockchip/tree/drm-rockchip-next-2016-05-23
 
-> > > > +
-> > > > +	if (!(cmdq_thread_readl(thread, CMDQ_THR_ENABLE_TASK) &
-> > > > +	      CMDQ_THR_ENABLED)) {
-> > > > +		spin_unlock_irqrestore(&cmdq->exec_lock, flags);
-> > > > +		return;
-> > > > +	}
-> > > > +
-> > > > +	cmdq_thread_writel(thread, ~value, CMDQ_THR_IRQ_STATUS);
-> > > > +
-> > > > +	if (value & CMDQ_THR_IRQ_ERROR)
-> > > > +		cmdq_handle_error_done(cmdq, thread, true);
-> > > > +	else if (value & CMDQ_THR_IRQ_DONE)
-> > > > +		cmdq_handle_error_done(cmdq, thread, false);
-> > > 
-> > > These irq status checking and clearing code here is the same as those in
-> > > cmdq_task_handle_error_result(). To move the checking and clearing code
-> > > into cmdq_handle_error_done() and here just to call
-> > > cmdq_handle_error_done(cmdq, thread) would reduce duplicated code.
-> > 
-> > Will do.
-> > 
-> > > > +
-> > > > +	spin_unlock_irqrestore(&cmdq->exec_lock, flags);
-> > > > +}
-> > ...
-> > ...
-> > > 
-> > > Regards,
-> > > CK
-> > 
-> > Thanks,
-> > HS
-> > 
-> 
-> Regards,
-> CK
-> 
-> 
+I test this patches on the rk3399-evb board, with a fusb302 driver,
+this branch has no rk3399.dtsi, so the patch about dts is not included
+in this series.
 
-Thanks,
-HS
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Chris Zhong (6):
+  phy: Add USB Type-C PHY driver for rk3399
+  Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
+  drm/rockchip: vop: add cdn DP support for rk3399
+  Documentation: bindings: add dt documentation for cdn DP controller
+  ASoC: cdn-dp: Add cdn DP codec driver
+  ASoC: rockchip: Add machine driver for cdn dp codec
+
+ .../bindings/display/rockchip/cdn-dp-rockchip.txt  |  57 ++
+ .../devicetree/bindings/phy/phy-rockchip-typec.txt |  55 ++
+ .../bindings/sound/rockchip-cdn-dp-audio.txt       |  12 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   9 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/cdn-dp-core.c             | 620 ++++++++++++++++
+ drivers/gpu/drm/rockchip/cdn-dp-core.h             |  95 +++
+ drivers/gpu/drm/rockchip/cdn-dp-reg.c              | 730 ++++++++++++++++++
+ drivers/gpu/drm/rockchip/cdn-dp-reg.h              | 404 ++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |   9 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c        |   2 +
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-rockchip-typec.c                   | 823 +++++++++++++++++++++
+ include/sound/cdn-dp-audio.h                       |  51 ++
+ sound/soc/codecs/Kconfig                           |   3 +
+ sound/soc/codecs/Makefile                          |   2 +
+ sound/soc/codecs/cdn-dp-audio.c                    | 246 ++++++
+ sound/soc/rockchip/Kconfig                         |   9 +
+ sound/soc/rockchip/Makefile                        |   2 +
+ sound/soc/rockchip/rockchip-cdn-dp-audio.c         | 167 +++++
+ 22 files changed, 3306 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.c
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.h
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.c
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.h
+ create mode 100644 drivers/phy/phy-rockchip-typec.c
+ create mode 100644 include/sound/cdn-dp-audio.h
+ create mode 100644 sound/soc/codecs/cdn-dp-audio.c
+ create mode 100644 sound/soc/rockchip/rockchip-cdn-dp-audio.c
+
+-- 
+2.6.3
