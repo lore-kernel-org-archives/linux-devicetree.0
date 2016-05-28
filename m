@@ -1,49 +1,74 @@
-From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 4/5] of/numa: remove a duplicated warning
-Date: Sat, 28 May 2016 17:22:56 +0800
-Message-ID: <1464427377-12712-5-git-send-email-thunder.leizhen@huawei.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v2 2/5] of/numa: fix a memory@ node can only contains one memory block
+Date: Sat, 28 May 2016 17:22:54 +0800
+Message-ID: <1464427377-12712-3-git-send-email-thunder.leizhen@huawei.com>
 References: <1464427377-12712-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464427377-12712-1-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464427377-12712-1-git-send-email-thunder.leizhen@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-This warning has been printed in of_numa_parse_cpu_nodes before.
+For a normal memory@ devicetree node, its reg property can contains more
+memory blocks.
 
-Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Because we don't known how many memory blocks maybe contained, so we try
+from index=0, increase 1 until error returned(the end).
+
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/of/of_numa.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/of/of_numa.c | 26 +++++++++-----------------
+ 1 file changed, 9 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index fa85a51..fb62307 100644
+index fb71b4e..fa85a51 100644
 --- a/drivers/of/of_numa.c
 +++ b/drivers/of/of_numa.c
-@@ -175,13 +175,8 @@ int of_node_to_nid(struct device_node *device)
- 			np->name);
- 	of_node_put(np);
+@@ -63,13 +63,9 @@ static int __init of_numa_parse_memory_nodes(void)
+ 	struct device_node *np = NULL;
+ 	struct resource rsrc;
+ 	u32 nid;
+-	int r = 0;
+-
+-	for (;;) {
+-		np = of_find_node_by_type(np, "memory");
+-		if (!np)
+-			break;
++	int i, r = 0;
 
--	if (!r) {
--		if (nid >= MAX_NUMNODES)
--			pr_warn("NUMA: Node id %u exceeds maximum value\n",
--				nid);
--		else
--			return nid;
--	}
-+	if (!r)
-+		return nid;
++	for_each_node_by_type(np, "memory") {
+ 		r = of_property_read_u32(np, "numa-node-id", &nid);
+ 		if (r == -EINVAL)
+ 			/*
+@@ -78,21 +74,17 @@ static int __init of_numa_parse_memory_nodes(void)
+ 			 * "numa-node-id" property
+ 			 */
+ 			continue;
+-		else if (r)
+-			/* some other error */
+-			break;
 
- 	return NUMA_NO_NODE;
+-		r = of_address_to_resource(np, 0, &rsrc);
+-		if (r) {
+-			pr_err("NUMA: bad reg property in memory node\n");
+-			break;
+-		}
++		for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
++			r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
+
+-		r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
+-		if (r)
++		if (!i || r) {
++			of_node_put(np);
++			pr_err("NUMA: bad property in memory node\n");
++			r = r ? : -EINVAL;
+ 			break;
++		}
+ 	}
+-	of_node_put(np);
+
+ 	return r;
  }
---
-2.5.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
