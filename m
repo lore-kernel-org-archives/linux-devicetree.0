@@ -1,78 +1,30 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v2 5/5] arm64/numa: avoid inconsistent information to be printed
-Date: Sat, 28 May 2016 17:22:57 +0800
-Message-ID: <1464427377-12712-6-git-send-email-thunder.leizhen@huawei.com>
-References: <1464427377-12712-1-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v2 0/5] fix some type infos and bugs for arm64/of numa
+Date: Sat, 28 May 2016 17:22:52 +0800
+Message-ID: <1464427377-12712-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464427377-12712-1-git-send-email-thunder.leizhen@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-numa_init(of_numa_init) may returned error because of numa configuration
-error. So "No NUMA configuration found" is inaccurate. In fact, specific
-configuration error information should be immediately printed by the
-testing branch.
+v1 -> v2:
+1. Base on https://lkml.org/lkml/2016/5/24/679
+2. Rewrote of_numa_parse_memory_nodes according to Rob Herring's advice. So that it looks more clear.
+3. Rewrote patch 5 because some scenes were not considered before.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- arch/arm64/mm/numa.c | 6 +++---
- drivers/of/of_numa.c | 7 +++----
- 2 files changed, 6 insertions(+), 7 deletions(-)
+Zhen Lei (5):
+  of/numa: remove a duplicated pr_debug information
+  of/numa: fix a memory@ node can only contains one memory block
+  arm64/numa: add nid check for memory block
+  of/numa: remove a duplicated warning
+  arm64/numa: avoid inconsistent information to be printed
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 2601660..1b9622c 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -338,8 +338,10 @@ static int __init numa_init(int (*init_func)(void))
- 	if (ret < 0)
- 		return ret;
+ arch/arm64/mm/numa.c | 11 ++++++++---
+ drivers/of/of_numa.c | 42 ++++++++++++------------------------------
+ 2 files changed, 20 insertions(+), 33 deletions(-)
 
--	if (nodes_empty(numa_nodes_parsed))
-+	if (nodes_empty(numa_nodes_parsed)) {
-+		pr_info("No NUMA configuration found\n");
- 		return -EINVAL;
-+	}
-
- 	ret = numa_register_nodes();
- 	if (ret < 0)
-@@ -370,8 +372,6 @@ static int __init dummy_numa_init(void)
-
- 	if (numa_off)
- 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
--	else
--		pr_info("No NUMA configuration found\n");
- 	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
- 	       0LLU, PFN_PHYS(max_pfn) - 1);
-
-diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index fb62307..3157130 100644
---- a/drivers/of/of_numa.c
-+++ b/drivers/of/of_numa.c
-@@ -63,7 +63,7 @@ static int __init of_numa_parse_memory_nodes(void)
- 	struct device_node *np = NULL;
- 	struct resource rsrc;
- 	u32 nid;
--	int i, r = 0;
-+	int i, r;
-
- 	for_each_node_by_type(np, "memory") {
- 		r = of_property_read_u32(np, "numa-node-id", &nid);
-@@ -81,12 +81,11 @@ static int __init of_numa_parse_memory_nodes(void)
- 		if (!i || r) {
- 			of_node_put(np);
- 			pr_err("NUMA: bad property in memory node\n");
--			r = r ? : -EINVAL;
--			break;
-+			return r ? : -EINVAL;
- 		}
- 	}
-
--	return r;
-+	return 0;
- }
-
- static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+-- 
+2.5.0
