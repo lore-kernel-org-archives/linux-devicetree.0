@@ -1,7 +1,7 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v2 1/5] of/numa: remove a duplicated pr_debug information
-Date: Sat, 28 May 2016 17:22:53 +0800
-Message-ID: <1464427377-12712-2-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v2 5/5] arm64/numa: avoid inconsistent information to be printed
+Date: Sat, 28 May 2016 17:22:57 +0800
+Message-ID: <1464427377-12712-6-git-send-email-thunder.leizhen@huawei.com>
 References: <1464427377-12712-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,26 +12,67 @@ To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-This information will be printed in the subfunction numa_add_memblk.
-They are not the same, but very similar.
+numa_init(of_numa_init) may returned error because of numa configuration
+error. So "No NUMA configuration found" is inaccurate. In fact, specific
+configuration error information should be immediately printed by the
+testing branch.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/of/of_numa.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm64/mm/numa.c | 6 +++---
+ drivers/of/of_numa.c | 7 +++----
+ 2 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 2601660..1b9622c 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -338,8 +338,10 @@ static int __init numa_init(int (*init_func)(void))
+ 	if (ret < 0)
+ 		return ret;
+
+-	if (nodes_empty(numa_nodes_parsed))
++	if (nodes_empty(numa_nodes_parsed)) {
++		pr_info("No NUMA configuration found\n");
+ 		return -EINVAL;
++	}
+
+ 	ret = numa_register_nodes();
+ 	if (ret < 0)
+@@ -370,8 +372,6 @@ static int __init dummy_numa_init(void)
+
+ 	if (numa_off)
+ 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+-	else
+-		pr_info("No NUMA configuration found\n");
+ 	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+ 	       0LLU, PFN_PHYS(max_pfn) - 1);
 
 diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index ed5a097..fb71b4e 100644
+index fb62307..3157130 100644
 --- a/drivers/of/of_numa.c
 +++ b/drivers/of/of_numa.c
-@@ -88,10 +88,6 @@ static int __init of_numa_parse_memory_nodes(void)
- 			break;
- 		}
+@@ -63,7 +63,7 @@ static int __init of_numa_parse_memory_nodes(void)
+ 	struct device_node *np = NULL;
+ 	struct resource rsrc;
+ 	u32 nid;
+-	int i, r = 0;
++	int i, r;
 
--		pr_debug("NUMA:  base = %llx len = %llx, node = %u\n",
--			 rsrc.start, rsrc.end - rsrc.start + 1, nid);
--
--
- 		r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
- 		if (r)
- 			break;
+ 	for_each_node_by_type(np, "memory") {
+ 		r = of_property_read_u32(np, "numa-node-id", &nid);
+@@ -81,12 +81,11 @@ static int __init of_numa_parse_memory_nodes(void)
+ 		if (!i || r) {
+ 			of_node_put(np);
+ 			pr_err("NUMA: bad property in memory node\n");
+-			r = r ? : -EINVAL;
+-			break;
++			return r ? : -EINVAL;
+ 		}
+ 	}
+
+-	return r;
++	return 0;
+ }
+
+ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
