@@ -1,224 +1,55 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH] ARM: dts: imx: ventana: Add ext watchdog reset
-Date: Fri, 27 May 2016 16:34:45 -0700
-Message-ID: <1464392085-15425-1-git-send-email-tharvey@gateworks.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Brian Norris <briannorris@chromium.org>
+Subject: [PATCH 0/4] pwm: add support for ChromeOS EC PWM
+Date: Fri, 27 May 2016 18:39:12 -0700
+Message-ID: <1464399556-17222-1-git-send-email-briannorris@chromium.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>
+Cc: linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Sameer Nanda <snanda@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-bc677ff42e81bbf78308a7b66cf7b63b0f5c26b0 adds a device-tree property
-to specify that an external watchdog reset is used to reset other
-portions of the board and not just the IMX6 SoC.
+Hi,
 
-This adds the property to the proper watchdog as well as the pinmux for
-the Gateworks Ventana boards that use this external watchdog reset to
-reset the PMIC which will reset all the PMIC power rails and not just
-a chip-level IMX6 reset. This helps to work around various system issues
-that can cause a hang when coming out of reset.
+This series adds support for the new ChromeOS EC PWM API, so we can control,
+e.g., the backlight when it's attached to the EC. It uses Boris's latest
+"atomic" hooks for the PWM API (i.e., the ->apply() callback), which were
+recently merged.
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
- arch/arm/boot/dts/imx6qdl-gw51xx.dtsi | 12 ++++++++++++
- arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 12 ++++++++++++
- arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 12 ++++++++++++
- arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 17 +++++++++++++++++
- arch/arm/boot/dts/imx6qdl-gw551x.dtsi | 12 ++++++++++++
- arch/arm/boot/dts/imx6qdl-gw552x.dtsi | 12 ++++++++++++
- arch/arm/boot/dts/imx6qdl-gw553x.dtsi |  1 +
- 7 files changed, 78 insertions(+)
+It seems nice to have the cros_ec_cmd_xfer_status() helper, which we have
+locally in the ChromeOS kernel, and which has been part of another larger patch
+series:
 
-diff --git a/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
-index 9d7ab6c..1340e27 100644
---- a/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
-@@ -228,6 +228,12 @@
- 	status = "okay";
- };
- 
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
-+
- &iomuxc {
- 	imx6qdl-gw51xx {
- 		pinctrl_enet: enetgrp {
-@@ -364,5 +370,11 @@
- 				MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0 /* OTG_PWR_EN */
- 			>;
- 		};
-+
-+		pinctrl_wdog: wdoggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
-+			>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-index 7191b84..8bf1020 100644
---- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-@@ -353,6 +353,12 @@
- 	status = "okay";
- };
- 
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
-+
- &iomuxc {
- 	imx6qdl-gw52xx {
- 		pinctrl_audmux: audmuxgrp {
-@@ -549,5 +555,11 @@
- 				MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170f9
- 			>;
- 		};
-+
-+		pinctrl_wdog: wdoggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
-+			>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-index 0fada07..e5f4b6c 100644
---- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-@@ -350,6 +350,12 @@
- 	status = "okay";
- };
- 
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
-+
- &iomuxc {
- 	imx6qdl-gw53xx {
- 		pinctrl_audmux: audmuxgrp {
-@@ -538,5 +544,11 @@
- 				MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170f9
- 			>;
- 		};
-+
-+		pinctrl_wdog: wdoggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
-+			>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-index d6dbe2a..5a8dbab 100644
---- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-@@ -453,6 +453,17 @@
- 	status = "okay";
- };
- 
-+&wdog1 {
-+	status = "disabled";
-+};
-+
-+&wdog2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status = "okay";
-+};
-+
- &iomuxc {
- 	imx6qdl-gw54xx {
- 		pinctrl_audmux: audmuxgrp {
-@@ -654,5 +665,11 @@
- 				MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170f9
- 			>;
- 		};
-+
-+		pinctrl_wdog: wdoggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD1_DAT3__WDOG2_B		0x1b0b0
-+			>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-index 118bea5..4b9fef8 100644
---- a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-@@ -239,6 +239,12 @@
- 	status = "okay";
- };
- 
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
-+
- &iomuxc {
- 	imx6qdl-gw51xx {
- 		pinctrl_flexcan1: flexcan1grp {
-@@ -333,5 +339,11 @@
- 				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
- 			>;
- 		};
-+
-+		pinctrl_wdog: wdoggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
-+			>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
-index f27f184..805e236 100644
---- a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
-@@ -197,6 +197,12 @@
- 	status = "okay";
- };
- 
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
-+
- &iomuxc {
- 	imx6qdl-gw552x {
- 		pinctrl_gpio_leds: gpioledsgrp {
-@@ -286,5 +292,11 @@
- 				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
- 			>;
-                 };
-+
-+		pinctrl_wdog: wdoggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
-+			>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-index 5283bcd..d683e08 100644
---- a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-@@ -271,6 +271,7 @@
- &wdog1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
- };
- 
- &iomuxc {
+https://lkml.org/lkml/2016/4/12/342
+
+So I've picked it into this series as well. Obviously, I don't care which one
+is taken, but AFAICT, Tomeu's USB PD series isn't extremely active right now.
+
+As this touches MFD (sort of), drivers/platform/chrome/, and drivers/pwm/, I'm
+not sure who it should all go through: Lee, Thierry, or Olof?
+
+Anyway, please review.
+
+Regards,
+Brian
+
+Brian Norris (3):
+  mfd: cros_ec: add EC_PWM function definitions
+  doc: dt: pwm: add binding for ChromeOS EC PWM
+  pwm: add ChromeOS EC PWM driver
+
+Tomeu Vizoso (1):
+  mfd: cros_ec: Add cros_ec_cmd_xfer_status helper
+
+ .../devicetree/bindings/pwm/google,cros-ec-pwm.txt |  25 +++
+ drivers/platform/chrome/cros_ec_proto.c            |  15 ++
+ drivers/pwm/Kconfig                                |   7 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-cros-ec.c                          | 230 +++++++++++++++++++++
+ include/linux/mfd/cros_ec.h                        |  18 ++
+ include/linux/mfd/cros_ec_commands.h               |  31 +++
+ 7 files changed, 327 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
+ create mode 100644 drivers/pwm/pwm-cros-ec.c
+
 -- 
-1.9.1
+2.8.0.rc3.226.g39d4020
