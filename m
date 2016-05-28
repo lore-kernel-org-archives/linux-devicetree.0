@@ -1,72 +1,39 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] of: irq: fix of_irq_get[_byname]() kernel-doc
-Date: Sat, 28 May 2016 23:02:50 +0300
-Message-ID: <4469041.XrtPizO4V9@wasted.cogentembedded.com>
+From: Christer Weinigel <christer@weinigel.se>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Sat, 28 May 2016 22:57:33 +0200
+Message-ID: <574A063D.5030700@weinigel.se>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+ <20160524174140.GE11605@leverpostej> <5744BC76.9090403@gmail.com>
+ <20160525092034.GE1337@leverpostej> <5745C5A3.6060202@gmail.com>
+ <20160525174809.GA8206@sirena.org.uk> <5745F30B.2040605@gmail.com>
+ <20160527183629.GO16172@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160527183629.GO16172@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, frowand.list@gmail.com
-Cc: linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The kernel-doc for the of_irq_get[_byname]()  is clearly inadequate in
-describing the return values -- of_irq_get_byname() is documented better
-than of_irq_get() but it  still doesn't mention that 0 is returned iff
-irq_create_of_mapping() fails (it doesn't return an error code in this
-case). Document all possible return value variants, making the writing
-of the word "IRQ" consistent, while at it...
+On 05/27/2016 08:36 PM, Mark Brown wrote:
+> Personally the way I parse this situation is that the kernel is taking 
+> a look at what's in the DT and making an effort to present it usefully 
+> in the running systems. Fixing our current interpretation in stone as 
+> a supported thing when we don't have to makes it more cumbersome to 
+> improve and discourages any efforts to do similar things in the 
+> future. It is reasonable to provide and document something here but 
+> when there's some fairly simple and obvious better things we could be 
+> doing it should be those rather than the legacy stuff. 
 
-Fixes: 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
-Fixes: ad69674e73a1 ("of/irq: do irq resolution in platform_get_irq_byname()")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-CC: stable@vger.kernel.org
+So what are the "simple and obvious better things" that one can use instead?
 
----
-The patch is against Linus' 'linux.git' repo (Grant Likely's repo is outdated).
+   /Christer
 
- drivers/of/irq.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
-
-Index: linux/drivers/of/irq.c
-===================================================================
---- linux.orig/drivers/of/irq.c
-+++ linux/drivers/of/irq.c
-@@ -386,13 +386,13 @@ int of_irq_to_resource(struct device_nod
- EXPORT_SYMBOL_GPL(of_irq_to_resource);
- 
- /**
-- * of_irq_get - Decode a node's IRQ and return it as a Linux irq number
-+ * of_irq_get - Decode a node's IRQ and return it as a Linux IRQ number
-  * @dev: pointer to device tree node
-- * @index: zero-based index of the irq
-- *
-- * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
-- * is not yet created.
-+ * @index: zero-based index of the IRQ
-  *
-+ * Returns Linux IRQ number on success, or 0 on the IRQ mapping failure, or
-+ * -EPROBE_DEFER if the IRQ domain is not yet created, or error code in case
-+ * of any other failure.
-  */
- int of_irq_get(struct device_node *dev, int index)
- {
-@@ -413,12 +413,13 @@ int of_irq_get(struct device_node *dev,
- EXPORT_SYMBOL_GPL(of_irq_get);
- 
- /**
-- * of_irq_get_byname - Decode a node's IRQ and return it as a Linux irq number
-+ * of_irq_get_byname - Decode a node's IRQ and return it as a Linux IRQ number
-  * @dev: pointer to device tree node
-- * @name: irq name
-+ * @name: IRQ name
-  *
-- * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
-- * is not yet created, or error code in case of any other failure.
-+ * Returns Linux IRQ number on success, or 0 on the IRQ mapping failure, or
-+ * -EPROBE_DEFER if the IRQ domain is not yet created, or error code in case
-+ * of any other failure.
-  */
- int of_irq_get_byname(struct device_node *dev, const char *name)
- {
+-- 
+Have laptop, will travel.  I'm a consultant looking for interesting
+jobs anywhere in the world.  I'm an experienced software engineer with
+a solid understanding of hardware.  Specialities: Linux, device
+drivers and embedded systems in general.  Find me at www.weinigel.se.
