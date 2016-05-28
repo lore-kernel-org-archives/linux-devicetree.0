@@ -1,65 +1,72 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Update Renesas R-Car FCP DT binding
-Date: Sat, 28 May 2016 21:06:10 +0200
-Message-ID: <CAMuHMdUhv24QWE44k-nHTAkfy_EnDv76toUuOoD46pKNNR3r3w@mail.gmail.com>
-References: <1464369565-12259-1-git-send-email-kieran@bingham.xyz>
-	<1464369565-12259-4-git-send-email-kieran@bingham.xyz>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] of: irq: fix of_irq_get[_byname]() kernel-doc
+Date: Sat, 28 May 2016 23:02:50 +0300
+Message-ID: <4469041.XrtPizO4V9@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464369565-12259-4-git-send-email-kieran-SI8QzZ7I9JUn3X9lZQuFcg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, frowand.list@gmail.com
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
+The kernel-doc for the of_irq_get[_byname]()  is clearly inadequate in
+describing the return values -- of_irq_get_byname() is documented better
+than of_irq_get() but it  still doesn't mention that 0 is returned iff
+irq_create_of_mapping() fails (it doesn't return an error code in this
+case). Document all possible return value variants, making the writing
+of the word "IRQ" consistent, while at it...
 
-On Fri, May 27, 2016 at 7:19 PM, Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org> wrote:
-> The FCP driver, can also support the FCPF variant for FDP1 compatible
-> processing.
->
-> Signed-off-by: Kieran Bingham <kieran-SI8QzZ7I9JUn3X9lZQuFcg@public.gmane.org>
+Fixes: 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
+Fixes: ad69674e73a1 ("of/irq: do irq resolution in platform_get_irq_byname()")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+CC: stable@vger.kernel.org
 
-Thanks for your patch!
+---
+The patch is against Linus' 'linux.git' repo (Grant Likely's repo is outdated).
 
-> ---
->  Documentation/devicetree/bindings/media/renesas,fcp.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->
-> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> index 6a12960609d8..1c0718b501ef 100644
-> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> @@ -7,11 +7,12 @@ conversion of AXI transactions in order to reduce the memory bandwidth.
->
->  There are three types of FCP: FCP for Codec (FCPC), FCP for VSP (FCPV) and FCP
->  for FDP (FCPF). Their configuration and behaviour depend on the module they
-> -are paired with. These DT bindings currently support the FCPV only.
-> +are paired with. These DT bindings currently support the FCPV and FCPF.
->
->   - compatible: Must be one or more of the following
->
->     - "renesas,r8a7795-fcpv" for R8A7795 (R-Car H3) compatible 'FCP for VSP'
-> +   - "renesas,r8a7795-fcpf" for R8A7795 (R-Car H3) compatible 'FCP for FDP'
->     - "renesas,fcpv" for generic compatible 'FCP for VSP'
+ drivers/of/irq.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-I guess checkpatch complained about your dtsi additions because you forgot
-to add  "renesas,fcpf" here?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: linux/drivers/of/irq.c
+===================================================================
+--- linux.orig/drivers/of/irq.c
++++ linux/drivers/of/irq.c
+@@ -386,13 +386,13 @@ int of_irq_to_resource(struct device_nod
+ EXPORT_SYMBOL_GPL(of_irq_to_resource);
+ 
+ /**
+- * of_irq_get - Decode a node's IRQ and return it as a Linux irq number
++ * of_irq_get - Decode a node's IRQ and return it as a Linux IRQ number
+  * @dev: pointer to device tree node
+- * @index: zero-based index of the irq
+- *
+- * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
+- * is not yet created.
++ * @index: zero-based index of the IRQ
+  *
++ * Returns Linux IRQ number on success, or 0 on the IRQ mapping failure, or
++ * -EPROBE_DEFER if the IRQ domain is not yet created, or error code in case
++ * of any other failure.
+  */
+ int of_irq_get(struct device_node *dev, int index)
+ {
+@@ -413,12 +413,13 @@ int of_irq_get(struct device_node *dev,
+ EXPORT_SYMBOL_GPL(of_irq_get);
+ 
+ /**
+- * of_irq_get_byname - Decode a node's IRQ and return it as a Linux irq number
++ * of_irq_get_byname - Decode a node's IRQ and return it as a Linux IRQ number
+  * @dev: pointer to device tree node
+- * @name: irq name
++ * @name: IRQ name
+  *
+- * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
+- * is not yet created, or error code in case of any other failure.
++ * Returns Linux IRQ number on success, or 0 on the IRQ mapping failure, or
++ * -EPROBE_DEFER if the IRQ domain is not yet created, or error code in case
++ * of any other failure.
+  */
+ int of_irq_get_byname(struct device_node *dev, const char *name)
+ {
