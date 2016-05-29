@@ -1,245 +1,43 @@
-From: Gwendal Grignou <gwendal@chromium.org>
-Subject: Re: [PATCH 4/4] pwm: add ChromeOS EC PWM driver
-Date: Sat, 28 May 2016 22:02:33 -0700
-Message-ID: <CAMHSBOWLqDEH2-V503szG3GXHPGBAXpzjU2J7Kdp__wXhUQOGA@mail.gmail.com>
-References: <1464399556-17222-1-git-send-email-briannorris@chromium.org> <1464399556-17222-5-git-send-email-briannorris@chromium.org>
+From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
+Date: Sun, 29 May 2016 11:01:39 +0300
+Message-ID: <574AA1E3.4070300@compulab.co.il>
+References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
+ <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
+ <CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
+ <a6cc6b85d2fa4994b3cb7e2b047f800d@rwthex-w2-b.rwth-ad.de>
+ <9d7793850de942cfb578b0aeb2728f41@rwthex-s1-b.rwth-ad.de>
+ <CAOMZO5C3_bd-2Nz+G956+VPOcKoFaGGJK7G1p=U0yf5OyWekZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1464399556-17222-5-git-send-email-briannorris@chromium.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, Linux Kernel <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Sameer Nanda <snanda@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5C3_bd-2Nz+G956+VPOcKoFaGGJK7G1p=U0yf5OyWekZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 27, 2016 at 6:39 PM, Brian Norris <briannorris@chromium.org> wrote:
-> Use the new ChromeOS EC EC_CMD_PWM_{GET,SET}_DUTY commands to control
-> one or more PWMs attached to the Embedded Controller. Because the EC
-> allows us to modify the duty cycle (as a percentage, where U16_MAX is
-> 100%) but not the period, we assign the period a fixed value of
-> EC_PWM_MAX_DUTY and reject all attempts to change it.
->
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
+On 05/27/2016 01:20 AM, Fabio Estevam wrote:
+> On Thu, May 26, 2016 at 11:26 AM, Christopher Spinrath
+> <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
+> 
+>> Thanks for joining this discussion. I *guess* the rationale is to share
+>> the same device tree with projects that are incompatible with the GPL
+>> (e.g. *BSD). Even if there is no support for a particular device/board
+>> having all (or most) files dual licensed makes it easier to just pull
+>> them all in.
+> 
+> Yes, that's correct.
+> 
 
-> + */
-> +struct cros_ec_pwm_device {
-> +       struct device *dev;
-> +       struct cros_ec_device *ec;
-> +       struct pwm_chip chip;
-> +};
-> +
-> +static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chip *c)
-> +{
-> +       return container_of(c, struct cros_ec_pwm_device, chip);
-> +}
-> +
-> +static int cros_ec_pwm_set_duty(struct cros_ec_pwm_device *ec_pwm,
-> +                                  struct pwm_device *pwm,
-> +                                  uint16_t duty)
-Given you seprated the pwm stuff from the EC stuff and focusing on
-sending a EC command here, the first parameter should be of
-cros_ec_device* instead of cros_ec_pwm_device*.
-> +{
-> +       struct cros_ec_device *ec = ec_pwm->ec;
-> +       struct ec_params_pwm_set_duty *params;
-> +       struct cros_ec_command *msg;
-> +       int ret;
-> +
-> +       msg = kzalloc(sizeof(*msg) + sizeof(*params), GFP_KERNEL);
-Use an ad-hoc data structure on the stack, so you will always be able
-to send the command to the EC.
-> +       if (!msg)
-> +               return -ENOMEM;
-> +       params = (void *)&msg->data[0];
-> +
-> +       msg->version = 0;
-> +       msg->command = EC_CMD_PWM_SET_DUTY;
-> +       msg->insize = 0;
-> +       msg->outsize = sizeof(*params);
-> +
-> +       params->duty = duty;
-> +       params->pwm_type = EC_PWM_TYPE_GENERIC;
-> +       params->index = pwm->hwpwm;
-> +
-> +       ret = cros_ec_cmd_xfer_status(ec, msg);
-> +       kfree(msg);
-> +       return ret;
-> +}
-> +
-> +static int cros_ec_pwm_get_duty(struct cros_ec_pwm_device *ec_pwm,
-> +                               struct pwm_device *pwm)
-Idem.
-> +{
-> +       struct cros_ec_device *ec = ec_pwm->ec;
-> +       struct ec_params_pwm_get_duty *params;
-> +       struct ec_response_pwm_get_duty *resp;
-> +       struct cros_ec_command *msg;
-> +       int ret;
-> +
-> +       msg = kzalloc(sizeof(*msg) + max(sizeof(*params), sizeof(*resp)),
-Idem.
-> +                       GFP_KERNEL);
-> +       if (!msg)
-> +               return -ENOMEM;
-> +       params = (void *)&msg->data[0];
-> +       resp = (void *)&msg->data[0];
-> +
-> +       msg->version = 0;
-> +       msg->command = EC_CMD_PWM_GET_DUTY;
-> +       msg->insize = sizeof(*params);
-> +       msg->outsize = sizeof(*resp);
-> +
-> +       params->pwm_type = EC_PWM_TYPE_GENERIC;
-> +       params->index = pwm->hwpwm;
-> +
-> +       ret = cros_ec_cmd_xfer_status(ec, msg);
-> +       if (ret < 0)
-> +               goto out;
-> +
-> +       ret = resp->duty;
-> +
-> +out:
-> +       kfree(msg);
-> +       return ret;
-> +}
-> +
-> +static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +                            struct pwm_state *state)
-> +{
-> +       struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
-> +
-> +       /* The EC won't let us change the period */
-> +       if (state->period != EC_PWM_MAX_DUTY)
-> +               return -EINVAL;
-> +
-> +       return cros_ec_pwm_set_duty(ec_pwm, pwm, state->duty_cycle);
-I would use ec_pwm->ec here.
-> +}
-> +
-> +static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +                                 struct pwm_state *state)
-> +{
-> +       struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
-> +       int ret;
-> +
-> +       ret = cros_ec_pwm_get_duty(ec_pwm, pwm);
-> +       if (ret < 0) {
-> +               dev_err(chip->dev, "error getting initial duty: %d\n", ret);
-> +               return;
-> +       }
-> +
-> +       state->enabled = (ret > 0);
-> +       state->period = EC_PWM_MAX_DUTY;
-> +       state->duty_cycle = ret;
-> +}
-> +
-> +static struct pwm_device *
-> +cros_ec_pwm_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
-> +{
-> +       struct pwm_device *pwm;
-> +
-> +       if (args->args[0] >= pc->npwm)
-> +               return ERR_PTR(-EINVAL);
-> +
-> +       pwm = pwm_request_from_chip(pc, args->args[0], NULL);
-> +       if (IS_ERR(pwm))
-> +               return pwm;
-> +
-> +       /* The EC won't let us change the period */
-> +       pwm->args.period = EC_PWM_MAX_DUTY;
-> +
-> +       return pwm;
-> +}
-> +
-> +static const struct pwm_ops cros_ec_pwm_ops = {
-> +       .get_state      = cros_ec_pwm_get_state,
-> +       .apply          = cros_ec_pwm_apply,
-> +       .owner          = THIS_MODULE,
-> +};
-> +
-> +static int cros_ec_pwm_probe(struct platform_device *pdev)
-> +{
-> +       struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct cros_ec_pwm_device *ec_pwm;
-> +       struct pwm_chip *chip;
-> +       u32 val;
-> +       int ret;
-> +
-> +       if (!ec) {
-> +               dev_err(dev, "no parent EC device\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       ec_pwm = devm_kzalloc(dev, sizeof(*ec_pwm), GFP_KERNEL);
-> +       if (!ec_pwm)
-> +               return -ENOMEM;
-> +       chip = &ec_pwm->chip;
-> +       ec_pwm->ec = ec;
-> +
-> +       /* PWM chip */
-> +       chip->dev = dev;
-> +       chip->ops = &cros_ec_pwm_ops;
-> +       chip->of_xlate = cros_ec_pwm_xlate;
-> +       chip->of_pwm_n_cells = 1;
-> +       chip->base = -1;
-> +       ret = of_property_read_u32(np, "google,max-pwms", &val);
-> +       if (ret) {
-> +               dev_err(dev, "Couldn't read max-pwms property: %d\n", ret);
-Does it mean this driver does not work when device tree is not used by
-the platform?
-The rest of the driver still compiles.
-> +               return ret;
-> +       }
-> +       /* The index field is only 8 bits */
-> +       if (val > U8_MAX) {
-> +               dev_err(dev, "Can't support %u PWMs\n", val);
-> +               return -EINVAL;
-> +       }
-> +       chip->npwm = val;
-> +
-> +       ret = pwmchip_add(chip);
-> +       if (ret < 0) {
-> +               dev_err(dev, "cannot register PWM: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, ec_pwm);
-> +
-> +       return ret;
-> +}
-> +
-> +static int cros_ec_pwm_remove(struct platform_device *dev)
-> +{
-> +       struct cros_ec_pwm_device *ec_pwm = platform_get_drvdata(dev);
-> +       struct pwm_chip *chip = &ec_pwm->chip;
-> +
-> +       return pwmchip_remove(chip);
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id cros_ec_pwm_of_match[] = {
-> +       { .compatible = "google,cros-ec-pwm" },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, cros_ec_pwm_of_match);
-> +#endif
-> +
-> +static struct platform_driver cros_ec_pwm_driver = {
-> +       .probe = cros_ec_pwm_probe,
-> +       .remove = cros_ec_pwm_remove,
-> +       .driver = {
-> +               .name = "cros-ec-pwm",
-> +               .of_match_table = of_match_ptr(cros_ec_pwm_of_match),
-> +       },
-> +};
-> +module_platform_driver(cros_ec_pwm_driver);
-> +
-> +MODULE_ALIAS("platform:cros-ec-pwm");
-> +MODULE_DESCRIPTION("ChromeOS EC PWM driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.8.0.rc3.226.g39d4020
->
+Thanks for the explanation.
+
+
+-- 
+Regards,
+Igor.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
