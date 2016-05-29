@@ -1,36 +1,81 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 05/54] MAINTAINERS: Add file patterns for rockchip device
- tree bindings
-Date: Sun, 29 May 2016 11:21:38 +0200
-Message-ID: <CAMuHMdVYd01kWvN5Gv_2RtPXFX2VP0nOx7Ys6=em35rk0HoOmA@mail.gmail.com>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-	<1463907991-7916-6-git-send-email-geert@linux-m68k.org>
-	<1575416.jfSztnP7S8@phil>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1575416.jfSztnP7S8@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 0/3] Add Amlogic secure monitor driver
+Date: Sun, 29 May 2016 13:12:00 +0200
+Message-ID: <1464520323-19531-1-git-send-email-carlo@caione.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-On Sun, May 22, 2016 at 11:27 AM, Heiko Stuebner <heiko@sntech.de> wrote:
-> Am Sonntag, 22. Mai 2016, 11:05:42 schrieb Geert Uytterhoeven:
->> Submitters of device tree binding documentation may forget to CC
->> the subsystem maintainer if this is missing.
->
-> The "N: rockchip" line at the bottom of the block catches this nicely
-> already (also just verified with a get_maintainer.pl -f call), so I don't
-> think this new more explicit line is really necessary?
+In the Amlogic SoCs the secure monitor calls are used for a lot of reasons:
+interact with the NVMEM (efuses), check the reboot reason, set USB boot, ...
 
-Oh right, thanks! I (my bashery) only looked at direct references to
-Documentation/devicetree/bindings. I complely missed the rare users of "N:".
+This driver defines a generic interface towards the secure monitor that can be
+used by more specialized drivers to interact with the secure monitor itself
+without worrying about bounce buffers managing.
 
-Will drop this patch.
+Changelog:
 
-Gr{oetje,eeting}s,
+v5:
+  * Moved IDs from DT to header file
+  * Made read/write bounce buffers not mandatory
+  * Introduced helper meson_sm_map_shmem()
 
-                        Geert
+v4:
+  * Changed patches order
+  * Removed now useless PATCH 2/4
+  * Changed compatible to be SoC-specific
+  * In the DT now we use SoC-agnostic IDs for the SMC functions. These IDs are
+    traslated into SoC specific function IDs inside the driver
+  * Added error checking on meson_sm_call() to retrieve the base address
+  * Improved printing on errors
+
+v3:
+  * Moved driver to drivers/firmware
+  * Added EXPORT_SYMBOL macros
+  * Changed '_' in '-'
+  * Introduced 'struct meson_sm_firmware' and 'meson_sm_get_fw()' to be used by
+    drivers using the secure-monitor to enforce probe ordering
+
+v2:
+  * All the SMC function identifiers are now in a SoC-specific header file to
+    be included by the DTS files so the SMC commands are now defined in the DT
+    instead to be hardcoded into the driver
+  * Patchset is no longer an RFC
+  * Better error management and boundary checking
+  * s/unsigned int/u32/
+  * SMC call not only on CPU 0
+  * Fix memory leaking
+  * s/amlogic/meson/ in the directory names
+
+
+Carlo Caione (3):
+  firmware: Amlogic: Add secure monitor driver
+  documentation: Add secure monitor binding documentation
+  ARM64: dts: amlogic: gxbb: Enable secure monitor
+
+ .../bindings/firmware/meson/meson_sm.txt           |  33 +++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   8 +
+ drivers/firmware/Kconfig                           |   1 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/meson/Kconfig                     |   8 +
+ drivers/firmware/meson/Makefile                    |   1 +
+ drivers/firmware/meson/meson_sm.c                  | 223 +++++++++++++++++++++
+ include/linux/firmware/meson/meson_sm.h            |  32 +++
+ 8 files changed, 307 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+ create mode 100644 drivers/firmware/meson/Kconfig
+ create mode 100644 drivers/firmware/meson/Makefile
+ create mode 100644 drivers/firmware/meson/meson_sm.c
+ create mode 100644 include/linux/firmware/meson/meson_sm.h
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
