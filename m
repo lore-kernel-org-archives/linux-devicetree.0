@@ -1,215 +1,46 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Subject: Re: [PATCH v5 2/2] iio: ad5755: Add DT binding documentation
-Date: Sun, 29 May 2016 14:57:18 +0100
-Message-ID: <8e62350f-ec4c-cba4-fa46-95549a89e720@kernel.org>
+Date: Sun, 29 May 2016 16:12:59 +0200
+Message-ID: <574AF8EB.9060609@metafoo.de>
 References: <1457705561-12253-1-git-send-email-sean.nyekjaer@prevas.dk>
  <1457705561-12253-2-git-send-email-sean.nyekjaer@prevas.dk>
  <56E3E121.9030400@kernel.org> <56F94A21.6070804@kernel.org>
  <8a7b1dcb-205a-8801-737f-6aa1c39f6605@prevas.dk>
+ <8e62350f-ec4c-cba4-fa46-95549a89e720@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8a7b1dcb-205a-8801-737f-6aa1c39f6605-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+In-Reply-To: <8e62350f-ec4c-cba4-fa46-95549a89e720-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/16 09:16, Sean Nyekj=E6r wrote:
+On 05/29/2016 03:57 PM, Jonathan Cameron wrote:
+> On 09/05/16 09:16, Sean Nyekj=E6r wrote:
+>>
+>>
+>> On 2016-03-28 17:13, Jonathan Cameron wrote:
+>>> On 12/03/16 09:28, Jonathan Cameron wrote:
+>>>> On 11/03/16 14:12, Sean Nyekjaer wrote:
+>>>>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+>>>> Looks much better to me.
+>>>>
+>>>> Looking for Acks from Lars and a device tree binding maintainer
+>>>> on this one though.
+>>>> (added CCs)
+>>> Lars?
+>> No response...
+>> Is there anything wrong with this?
+> Given we are early in cycle there is no real rush for this...
 >=20
->=20
-> On 2016-03-28 17:13, Jonathan Cameron wrote:
->> On 12/03/16 09:28, Jonathan Cameron wrote:
->>> On 11/03/16 14:12, Sean Nyekjaer wrote:
->>>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
->>> Looks much better to me.
->>>
->>> Looking for Acks from Lars and a device tree binding maintainer
->>> on this one though.
->>> (added CCs)
->> Lars?
-> No response...
-> Is there anything wrong with this?
-Given we are early in cycle there is no real rush for this...
+> Lars, let me know if you are going to a while getting to this / any o=
+ther
+> patches I want responses on from you.
 
-Lars, let me know if you are going to a while getting to this / any oth=
-er
-patches I want responses on from you.
-
-Thanks,
-
-Jonathan
-
->>> As an aside Device Tree bindings maintainers, do you prefer a perso=
-nal cc
->>> or just getting them directly from the devicetree list?
->>>
->>> Jonthan
->>>> ---
->>>> Changes since v4:
->>>> - Appended -hz to dc-dc-freq
->>>> - Added adi,dc-dc-max-microvolt
->>>> - Added reg property
->>>>
->>>> Changes since v3:
->>>> - replaced '_' with '-'
->>>> - Now used actual values instead of register values.
->>>>
->>>> Changes since v2:
->>>>   - Removed defines, alot easier to read
->>>>
->>>>   .../devicetree/bindings/iio/dac/ad5755.txt         | 124 +++++++=
-++++++++++++++
->>>>   1 file changed, 124 insertions(+)
->>>>   create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5=
-755.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt =
-b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
->>>> new file mode 100644
->>>> index 0000000..f0bbd7e
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
->>>> @@ -0,0 +1,124 @@
->>>> +* Analog Device AD5755 IIO Multi-Channel DAC Linux Driver
->>>> +
->>>> +Required properties:
->>>> + - compatible: Has to contain one of the following:
->>>> +    adi,ad5755
->>>> +    adi,ad5755-1
->>>> +    adi,ad5757
->>>> +    adi,ad5735
->>>> +    adi,ad5737
->>>> +
->>>> + - reg: spi chip select number for the device
->>>> + - spi-cpha or spi-cpol: is the only modes that is supported
->>>> +
->>>> +Recommended properties:
->>>> + - spi-max-frequency: Definition as per
->>>> +        Documentation/devicetree/bindings/spi/spi-bus.txt
->>>> +
->>>> +Optional properties:
->>>> +See include/dt-bindings/iio/ad5755.h
->>>> + - adi,ext-dc-dc-compenstation-resistor: boolean set if the hardw=
-are have an
->>>> +                     external resistor and thereby bypasses
->>>> +                     the internal compensation resistor.
->>>> + - adi,dc-dc-phase:
->>>> +    Valid values for DC DC Phase control is:
->>>> +    0: All dc-to-dc converters clock on the same edge.
->>>> +    1: Channel A and Channel B clock on the same edge,
->>>> +       Channel C and Channel D clock on opposite edges.
->>>> +    2: Channel A and Channel C clock on the same edge,
->>>> +       Channel B and Channel D clock on opposite edges.
->>>> +    3: Channel A, Channel B, Channel C, and Channel D
->>>> +       clock 90 degrees out of phase from each other.
->>>> + - adi,dc-dc-freq-hz:
->>>> +    Valid values for DC DC frequency is [Hz]:
->>>> +    250000
->>>> +    410000
->>>> +    650000
->>>> + - adi,dc-dc-max-microvolt:
->>>> +    Valid values for the maximum allowed Vboost voltage supplied =
-by
->>>> +    the dc-to-dc converter is:
->>>> +    23000000
->>>> +    24500000
->>>> +    27000000
->>>> +    29500000
->>>> +
->>>> +Optional for every channel:
->>>> + - adi,mode:
->>>> +    Valid values for DAC modes is:
->>>> +    0: 0 V to 5 V voltage range.
->>>> +    1: 0 V to 10 V voltage range.
->>>> +    2: Plus minus 5 V voltage range.
->>>> +    3: Plus minus 10 V voltage range.
->>>> +    4: 4 mA to 20 mA current range.
->>>> +    5: 0 mA to 20 mA current range.
->>>> +    6: 0 mA to 24 mA current range.
->>>> + - adi,ext-current-sense-resistor: boolean set if the hardware a =
-external
->>>> +                   current sense resistor.
->>>> + - adi,enable-voltage-overrange: boolean enable voltage overrange
->>>> + - adi,slew: Array of slewrate settings should contain 3 fields:
->>>> +    1: Should be either 0 or 1 in order to enable or disable slew=
-rate.
->>>> +    2: Slew rate settings:
->>>> +        Valid values for the slew rate update frequency:
->>>> +        64000
->>>> +        32000
->>>> +        16000
->>>> +        8000
->>>> +        4000
->>>> +        2000
->>>> +        1000
->>>> +        500
->>>> +        250
->>>> +        125
->>>> +        64
->>>> +        32
->>>> +        16
->>>> +        8
->>>> +        4
->>>> +        0
->>>> +    3: Slew step size:
->>>> +        Valid values for the step size LSBs:
->>>> +        1
->>>> +        2
->>>> +        4
->>>> +        16
->>>> +        32
->>>> +        64
->>>> +        128
->>>> +        256
->>>> +
->>>> +Example:
->>>> +dac@0 {
->>>> +    #address-cells =3D <1>;
->>>> +    #size-cells =3D <0>;
->>>> +    compatible =3D "adi,ad5755";
->>>> +    reg =3D <0>;
->>>> +    spi-max-frequency =3D <1000000>;
->>>> +    spi-cpha;
->>>> +    adi,dc-dc-phase =3D <0>;
->>>> +    adi,dc-dc-freq-hz =3D <410000>;
->>>> +    adi,dc-dc-max-microvolt =3D <23000000>;
->>>> +    channel@0 {
->>>> +        reg =3D <0>;
->>>> +        adi,mode =3D <4>;
->>>> +        adi,ext-current-sense-resistor;
->>>> +        adi,slew =3D <0 64000 1>;
->>>> +    };
->>>> +    channel@1 {
->>>> +        reg =3D <1>;
->>>> +        adi,mode =3D <4>;
->>>> +        adi,ext-current-sense-resistor;
->>>> +        adi,slew =3D <0 64000 1>;
->>>> +    };
->>>> +    channel@2 {
->>>> +        reg =3D <2>;
->>>> +        adi,mode =3D <4>;
->>>> +        adi,ext-current-sense-resistor;
->>>> +        adi,slew =3D <0 64000 1>;
->>>> +    };
->>>> +    channel@3 {
->>>> +        reg =3D <3>;
->>>> +        adi,mode =3D <4>;
->>>> +        adi,ext-current-sense-resistor;
->>>> +        adi,slew =3D <0 64000 1>;
->>>> +    };
->>>> +};
->>>>
->>> --=20
->>> To unsubscribe from this list: send the line "unsubscribe linux-iio=
-" in
->>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
->=20
-> --=20
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" =
-in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't think this solution is the correct approach, but since I'm not =
+able
+to provide an alternative and everybody else is OK with it, I'm not goi=
+ng to
+block it either. So go ahead and apply it.
