@@ -1,46 +1,88 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] iio: ad5755: Add DT binding documentation
-Date: Sun, 29 May 2016 16:12:59 +0200
-Message-ID: <574AF8EB.9060609@metafoo.de>
-References: <1457705561-12253-1-git-send-email-sean.nyekjaer@prevas.dk>
- <1457705561-12253-2-git-send-email-sean.nyekjaer@prevas.dk>
- <56E3E121.9030400@kernel.org> <56F94A21.6070804@kernel.org>
- <8a7b1dcb-205a-8801-737f-6aa1c39f6605@prevas.dk>
- <8e62350f-ec4c-cba4-fa46-95549a89e720@kernel.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/7] iio: inv_mpu6050: Initial regcache support
+Date: Sun, 29 May 2016 16:27:15 +0100
+Message-ID: <92d40b29-5c44-7307-0f25-93ee66c055ae@kernel.org>
+References: <cover.1463582011.git.leonard.crestez@intel.com>
+ <e29974565e941e37684fcd883330915cfaf2cf47.1463582011.git.leonard.crestez@intel.com>
+ <CAKzfze8dDENOvaDf_VH8MRy-HEmCu3q_aGEzD+GYR7B1Ob2rBw@mail.gmail.com>
+ <e0cee595-043b-3642-9e40-2a23975e855a@axentia.se>
+ <61c0fb3d-207a-c126-b80c-f1342fda5878@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8e62350f-ec4c-cba4-fa46-95549a89e720-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <61c0fb3d-207a-c126-b80c-f1342fda5878@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Crestez Dan Leonard <leonard.crestez@intel.com>, Peter Rosin <peda@axentia.se>, Matt Ranostay <mranostay@gmail.com>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, Ge Gao <ggao@invensense.com>, linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2016 03:57 PM, Jonathan Cameron wrote:
-> On 09/05/16 09:16, Sean Nyekj=E6r wrote:
->>
->>
->> On 2016-03-28 17:13, Jonathan Cameron wrote:
->>> On 12/03/16 09:28, Jonathan Cameron wrote:
->>>> On 11/03/16 14:12, Sean Nyekjaer wrote:
->>>>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
->>>> Looks much better to me.
+On 20/05/16 12:01, Crestez Dan Leonard wrote:
+> On 05/20/2016 09:39 AM, Peter Rosin wrote:
+>> On 2016-05-20 04:34, Matt Ranostay wrote:
+>>> On Wed, May 18, 2016 at 8:00 AM, Crestez Dan Leonard
+>>> <leonard.crestez@intel.com> wrote:
+>>>> Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
+>>>> ---
+>>>>  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 47 ++++++++++++++++++++++++++++++
+>>>>  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  |  5 ----
+>>>>  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  1 +
+>>>>  drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c  |  5 ----
+>>>>  4 files changed, 48 insertions(+), 10 deletions(-)
 >>>>
->>>> Looking for Acks from Lars and a device tree binding maintainer
->>>> on this one though.
->>>> (added CCs)
->>> Lars?
->> No response...
->> Is there anything wrong with this?
-> Given we are early in cycle there is no real rush for this...
->=20
-> Lars, let me know if you are going to a while getting to this / any o=
-ther
-> patches I want responses on from you.
+>>>> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+>>>> index b269b37..5918c23 100644
+>>>> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+>>>> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+>>>> @@ -116,6 +116,53 @@ static const struct inv_mpu6050_hw hw_info[] = {
+>>>>         },
+>>>>  };
+>>>>
+>>>> +static bool inv_mpu6050_volatile_reg(struct device *dev, unsigned int reg)
+>>>> +{
+>>>> +       if (reg >= INV_MPU6050_REG_RAW_ACCEL && reg < INV_MPU6050_REG_RAW_ACCEL + 6)
+>>>> +               return true;
+>>>> +       if (reg >= INV_MPU6050_REG_RAW_GYRO && reg < INV_MPU6050_REG_RAW_GYRO + 6)
+>>>> +               return true;
+>>>
+>>> I think you want to put parenthesis around the addition operations...
+>>
+>> Maybe.
+>>
+>>> the condition check probably don't evaluate to what you are expecting.
+>>
+>> Looks sane to me since + has highest precedence, then < and >=, and && comes
+>> in last...
+>>
+>> ...but even so, I think I would use an ellipsis in the switch statement
+>> instead, like so:
+>>
+>> static bool inv_mpu6050_volatile_reg(struct device *dev, unsigned int reg)
+>> {
+>> 	switch (reg) {
+>> 	case INV_MPU6050_REG_RAW_ACCEL ... INV_MPU6050_REG_RAW_ACCEL + 5:
+>> 	case INV_MPU6050_REG_RAW_GYRO ... INV_MPU6050_REG_RAW_GYRO  + 5:
+>> 	case INV_MPU6050_REG_TEMPERATURE:
+>> 	case INV_MPU6050_REG_TEMPERATURE + 1:
+>> 	case INV_MPU6050_REG_USER_CTRL:
+>> 	case INV_MPU6050_REG_PWR_MGMT_1:
+>> 	case INV_MPU6050_REG_FIFO_COUNT_H:
+>> 	case INV_MPU6050_REG_FIFO_COUNT_H + 1:
+>> 	case INV_MPU6050_REG_FIFO_R_W:
+>> 		return true;
+>> 	default:
+>> 		return false;
+>> 	}
+>> }
+> 
+> Neat, I didn't know about this extension. It does look nicer in this
+> function.
+Be careful to use this sparingly as it does make review harder in some
+cases as we have to care which registers happen to numerically fall in the
+range.
 
-I don't think this solution is the correct approach, but since I'm not =
-able
-to provide an alternative and everybody else is OK with it, I'm not goi=
-ng to
-block it either. So go ahead and apply it.
+It's good for some cases though such as multiple bytes of the same 'real
+register'.
+
+Jonathan
+> 
