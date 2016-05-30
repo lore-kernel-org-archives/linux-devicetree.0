@@ -1,46 +1,32 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sun5i: Add spi2 alias on A10s Olinuxino
-Date: Mon, 30 May 2016 10:29:38 +0200
-Message-ID: <20160530082938.GE4247@lukather>
-References: <908ed06eb46f2162e222258aa14df545d0fa5b48.1464129859.git.hramrach@gmail.com>
- <df27dbe5931dcb7d8f404759ad42e25b15bcf780.1464129859.git.hramrach@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Weiqing Kong <weiqing.kong@mediatek.com>
+Subject: [PATCH RESEND 0/3] Support Mediatek Soc MT2701 disp pwm
+Date: Mon, 30 May 2016 16:41:49 +0800
+Message-ID: <1464597712-5399-1-git-send-email-weiqing.kong@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bi5JUZtvcfApsciF"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB5HTV65AKGQEYC5MIWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <df27dbe5931dcb7d8f404759ad42e25b15bcf780.1464129859.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, weiqing.kong@mediatek.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+Sorry for sending many times, because of company
+permission settings, many people and groups can't
+receive these patches before.
 
---bi5JUZtvcfApsciF
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+These series patches modify pwm-mtk-disp.c
+and dts/dtsi config to support MT2701 disp pwm.
 
-On Thu, May 26, 2016 at 07:25:24PM -0000, Michal Suchanek wrote:
-> spi2 is available on the UEXT connector
-> 
-> The bus is named spi2 in the A10s manual and Olinuxino manual so it is
-> pointless to alias it to something else like spi0.
+Weiqing Kong (3):
+  dt-bindings: pwm: Add MediaTek display PWM bindings
+  pwm: Add MediaTek MT2701 display PWM driver support
+  dts: Add disp bls dsti and dts config for MT2701
 
-That's not how aliases work in the DT. It's about indexing the devices
-that are enabled on the board, so it should definitely be 0,
-especially since it's the only SPI bus usable on that board anyway.
-
-Maxime
+ .../devicetree/bindings/pwm/pwm-mtk-disp.txt       |  5 +-
+ arch/arm/boot/dts/mt2701-evb.dts                   | 29 +++++++
+ arch/arm/boot/dts/mt2701.dtsi                      |  9 +++
+ drivers/pwm/pwm-mtk-disp.c                         | 89 +++++++++++++++++-----
+ 4 files changed, 113 insertions(+), 19 deletions(-)
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---bi5JUZtvcfApsciF--
+1.8.1.1.dirty
