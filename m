@@ -1,149 +1,324 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: add binding description of Rockchip
- PCIe controller
-Date: Mon, 30 May 2016 12:08:36 +0100
-Message-ID: <20160530120836.290f0d16@arm.com>
-References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
-	<1463740146-7106-1-git-send-email-shawn.lin@rock-chips.com>
+From: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] ARM: dts: sun7i: Add dts file for Bananapi M1
+ Plus board
+Date: Mon, 30 May 2016 20:30:13 +0800
+Message-ID: <20160530123013.11575-1-luoyi.ly@gmail.com>
+Reply-To: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463740146-7106-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCLONWF5WQNBBM7CWC5AKGQEO37BHZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 May 2016 18:29:06 +0800
-Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> This patch add some required and optional properties for Rockchip
-> PCIe controller. Also we add a example for how to use it.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> ---
-> 
->  .../devicetree/bindings/pci/rockchip-pcie.txt      | 93 ++++++++++++++++++++++
->  1 file changed, 93 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> new file mode 100644
-> index 0000000..69a0804
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> @@ -0,0 +1,93 @@
-> +* Rockchip AXI PCIe Root Port Bridge DT description
-> +
-> +Required properties:
-> +- #address-cells: Address representation for root ports, set to <3>
-> +- #size-cells: Size representation for root ports, set to <2>
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +		interrupt source. The value must be 1.
-> +- compatible: Should contain "rockchip,rk3399-pcie"
-> +- reg: Two register ranges as listed in the reg-names property
-> +- reg-names: The first entry must be "axi-base" for the core registers
-> +	The second entry must be "apb-base" for the client pcie registers
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +		See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +	- "aclk_pcie"
-> +	- "aclk_perf_pcie"
-> +	- "hclk_pcie"
-> +	- "clk_pciephy_ref"
-> +- interrupts: Three interrupt entries must be specified.
-> +- interrupt-names: Must include the following names
-> +	- "pcie-sys"
-> +	- "pcie-legacy"
-> +	- "pcie-client"
-> +- resets: Must contain five entries for each entry in reset-names.
-> +	   See ../reset/reset.txt for details.
-> +- reset-names: Must include the following names
-> +	- "phy-rst"
-> +	- "core-rst"
-> +	- "mgmt-rst"
-> +	- "mgmt-sticky-rst"
-> +	- "pipe-rst"
-> +- rockchip,grf: phandle to the syscon managing the "general register files"
-> +- pcie-conf: offset of pcie client block for  configuration
-> +- pcie-status: offset of pcie client block for status
-> +- pcie-laneoff: offset of pcie client block for lane
-> +- msi-parent: Link to the hardware entity that serves as the Message
-> +- pinctrl-names : The pin control state names
-> +- pinctrl-0: The "default" pinctrl state
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +
-> +Optional Property:
-> +- ep-gpios: contain the entry for pre-reset gpio
-> +- num-lanes: number of lanes to use
-> +- assigned-clocks, assigned-clock-parents and assigned-clock-rates: standard
-> +		   clock bindings. See ../clock/clock-bindings.txt
-> +
-> +Example:
-> +
-> +pci_express: axi-pcie@f8000000 {
-> +	#address-cells = <3>;
-> +	#size-cells = <2>;
-> +	compatible = "rockchip,rk3399-pcie";
-> +	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
-> +		 <&cru PCLK_PCIE>, <&cru SCLK_PCIEPHY_REF>;
-> +	clock-names = "aclk_pcie", "aclk_perf_pcie",
-> +		      "hclk_pcie", "clk_pciephy_ref";
-> +	bus-range = <0x0 0x1>;
-> +	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names: "pcie-sys", "pcie-legacy", "pcie-client";
-> +	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
-> +	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
-> +	assigned-clock-rates = <100000000>;
-> +	ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-> +	ranges = < 0x82000000 0 0xfa000000 0x0 0xfa000000 0 0x600000
-> +		   0x81000000 0 0xfa600000 0x0 0xfa600000 0 0x100000 >;
-> +	num-lanes = <4>;
-> +	reg = < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0x0 0x1000000 >;
-> +	reg-name = "axi-base", "apb-base";
-> +	resets = <&cru SRST_PCIEPHY>, <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-> +		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
-> +	reset-names = "phy-rst", "core-rst", "mgmt-rst", "mgmt-sticky-rst", "pipe-rst";
-> +	rockchip,grf = <&grf>;
-> +	pcie-conf = <0xe220>;
-> +	pcie-status = <0xe2a4>;
-> +	pcie-laneoff = <0xe214>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_clkreq>;
-> +	msi-parent = <&its>;
+Add support for the Bananapi M1 Plus A20 development board from sinovoip.com.cn .
+This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for
+OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiver,
+3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and sdio wifi.
 
-We've moved away from bare msi-parent for the ITS (notice that the
-binding mandates #msi-cells = <1>). So what you need here is an msi-map
-(as described in Documentation/devicetree/bindings/pci/pci-msi.txt).
+Signed-off-by: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                       |   1 +
+ arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 270 +++++++++++++++++++++++
+ 2 files changed, 271 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
 
-Do you have an IOMMU (or some other remapping HW) between the RC and the
-GIC ITS? If so, yo may have to describe the mappings between the PCIe
-RID and the ITS DevID in this msi-map.
-
-> +	#interrupt-cells = <1>;
-> +	interrupt-map-mask = <0 0 0 7>;
-> +	interrupt-map = <0 0 0 1 &pcie_0 1>,
-> +			<0 0 0 2 &pcie_0 2>,
-> +			<0 0 0 3 &pcie_0 3>,
-> +			<0 0 0 4 &pcie_0 4>;
-> +	pcie_0: interrupt-controller {
-> +		interrupt-controller;
-> +		#address-cells = <0>;
-> +		#interrupt-cells = <1>;
-> +	};
-> +
-> +};
-
-Thanks,
-
-	M.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e06a5ab..fde407f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -685,6 +685,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+ 	sun6i-a31s-yones-toptech-bs1078-v2.dtb
+ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-bananapi.dtb \
++	sun7i-a20-bananapi-m1-plus.dtb \
+ 	sun7i-a20-bananapro.dtb \
+ 	sun7i-a20-cubieboard2.dtb \
+ 	sun7i-a20-cubietruck.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+new file mode 100644
+index 0000000..b62fc1d
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+@@ -0,0 +1,270 @@
++/*
++ * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ * 
++ * Thanks to the original work by Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	model = "Banana Pi BPI-M1-Plus";
++	compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_bananapi>;
++
++		red {
++			label = "bananapi:red:usr";
++			gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-on";
++		};
++
++		green {
++			label = "bananapi:green:usr";
++			gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++
++		};
++	};
++
++	reg_gmac_3v3: gmac-3v3 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gmac_power_pin_bananapi>;
++		regulator-name = "gmac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
++	};
++
++	reg_vmmc3: vmmc3 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&vmmc3_pin_bananapi>;
++		regulator-name = "vmmc3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		enable-active-high;
++		gpio = <&pio 7 22 GPIO_ACTIVE_HIGH>;
++	};
++
++};
++
++&ahci {
++	status = "okay";
++};
++
++&codec {
++	status = "okay";
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_pins_rgmii_a>;
++	phy = <&phy1>;
++	phy-mode = "rgmii";
++	phy-supply = <&reg_gmac_3v3>;
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		compatible = "x-powers,axp209";
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++};
++
++&ir0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir0_rx_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
++	cd-inverted;
++	status = "okay";
++};
++
++&mmc3 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins_a>;
++	vmmc-supply = <&reg_vmmc3>;
++	bus-width = <4>;
++	non-removable;
++	enable-sdio-wakeup;
++	status = "okay";
++
++	brcmf: bcrmf@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++		interrupt-parent = <&pio>;
++		interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>; 
++		interrupt-names = "host-wake";
++	};
++
++};
++
++&mmc3_pins_a {
++    /* AP6210 requires pull-up */
++	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++};
++
++&pio {
++	gmac_power_pin_bananapi: gmac_power_pin@0 {
++		allwinner,pins = "PH23";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	led_pins_bananapi: led_pins@0 {
++		allwinner,pins = "PH24", "PG2";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
++		allwinner,pins = "PH10";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	usb1_vbus_pin_bananapi: usb1_vbus_pin@0 {
++		allwinner,pins = "PH0";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	usb2_vbus_pin_bananapi: usb2_vbus_pin@0 {
++		allwinner,pins = "PH1";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	vmmc3_pin_bananapi: vmmc3_pin@0 {
++		allwinner,pins = "PH22";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_usb1_vbus {
++	pinctrl-0 = <&usb1_vbus_pin_bananapi>;
++	gpio = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	pinctrl-0 = <&usb2_vbus_pin_bananapi>;
++	gpio = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
 -- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.8.3
