@@ -1,91 +1,68 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: RE: [PATCH 5/7] net:mdio-mux: Add MDIO mux driver for iProc SoCs
-Date: Mon, 30 May 2016 20:09:08 +0530
-Message-ID: <c26a73e6243f0cf11b7745ac5bcc8a4b@mail.gmail.com>
-References: <1464592251-2688-1-git-send-email-pramod.kumar@broadcom.com>
- <1464592251-2688-6-git-send-email-pramod.kumar@broadcom.com> <20160530133442.GK6027@lunn.ch>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
+Date: Mon, 30 May 2016 16:57:19 +0200
+Message-ID: <CACRpkdYNuRauAqU76Q_b97QO2XtquTAszGJnzNZ7E3ZkEV1_Vg@mail.gmail.com>
+References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+	<3641492.klKRrvS8tr@wasted.cogentembedded.com>
+	<20160512184233.GJ30822@pengutronix.de>
+	<CACRpkdY3kmOiqVsnBWq8DyDDm-gLjcH4wQ+TTr1+Rp+jYLz+SQ@mail.gmail.com>
+	<20160526190000.GE3331@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160530133442.GK6027@lunn.ch>
+In-Reply-To: <20160526190000.GE3331@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
-
-Thanks for reviewing. Please see my comment inline.
-
-> -----Original Message-----
-> From: Andrew Lunn [mailto:andrew@lunn.ch]
-> Sent: 30 May 2016 19:05
-> To: Pramod Kumar
-> Cc: Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala;
-Catalin
-> Marinas; Will Deacon; Kishon Vijay Abraham I; David S. Miller;
-> devicetree@vger.kernel.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; bcm-kernel-feedback-list@broadcom.com;
-linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH 5/7] net:mdio-mux: Add MDIO mux driver for iProc
-SoCs
+On Thu, May 26, 2016 at 9:00 PM, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Thu, May 26, 2016 at 11:00:55AM +0200, Linus Walleij wrote:
+>> On Thu, May 12, 2016 at 8:42 PM, Uwe Kleine-K=C3=B6nig
+>> <u.kleine-koenig@pengutronix.de> wrote:
+>>
+>> > [added Linus Walleij to Cc, there is a question for you/him below]
+>> (...)
+>> >> +void mdio_device_reset(struct mdio_device *mdiodev, int value)
+>> >> +{
+>> >> +     if (mdiodev->reset)
+>> >> +             gpiod_set_value(mdiodev->reset, value);
+>> >
+>> > Before v4.6-rc1~108^2~91 it was not necessary to check for the fir=
+st
+>> > parameter being non-NULL before calling gpiod_set_value. Linus, di=
+d you
+>> > change this on purpose?
+>>
+>> Not really. And AFAICT it is still not necessary: what changed is th=
+at
+>> an error message will be printed by VALIDATE_DESC() if you do that.
+>> And that is proper I guess? I think it's sloppy code to randomly pas=
+s in
+>> NULL to a call and just expect it to bail out, it seems more like
+>> exercising the error path than something you'd normally rely on.
+>>
+>> Or am I getting things wrong?
 >
-> On Mon, May 30, 2016 at 12:40:49PM +0530, Pramod Kumar wrote:
-> > iProc based SoCs supports the integrated mdio multiplexer which has
-> > the bus selection as well as mdio transaction generation logic inside.
+> is the following sloppy?:
 >
-> Hi Pramod
->
-> Great to see you using the existing MDIO framework. Thanks.
->
-> > +static int mdio_mux_iproc_switch_fn(int current_child, int
-desired_child,
-> > +				    void *data)
-> > +{
-> > +	struct iproc_mdiomux_desc *md = data;
-> > +	struct mdiomux_bus_param *bp = &md->bus_param[desired_child];
-> > +	u32 param, bus_id;
-> > +	bool bus_dir;
-> > +
-> > +	/* select bus and its properties */
-> > +	bus_dir = (desired_child < EXT_BUS_START_ADDR);
-> > +	bus_id = bus_dir ? desired_child : (desired_child -
-> > +EXT_BUS_START_ADDR);
-> > +
-> > +	param = (bus_dir ? 1 : 0) << MDIO_PARAM_INTERNAL_SEL;
-> > +	param |= (bp->is_c45 ? 1 : 0) << MDIO_PARAM_C45_SEL;
-> > +	param |= (bus_id << MDIO_PARAM_BUS_ID);
-> > +
-> > +	writel(param, md->base + MDIO_PARAM_OFFSET);
-> > +	return 0;
-> > +}
->
-> What i don't yet see is why you went for the concept of an integrated
-MDIO and
-> MUX. This function above is the mux function, and it looks like it could
-be used
-> to implement a standard mdio-mux driver.
->
+>         somegpio =3D gpiod_get_optional(dev, "some", GPIOD_OUT_LOW);
+>         if (IS_ERR(somegpio))
+>                 return PTR_ERR(somegpio);
+>         gpiod_set_value(somegpio, 1);
 
-iProc based SoCs Integrated MDIO Multiplexer has both logic in a hardware.
-MDIO transaction and Child bus selection logic share the same address
-space.
-For ex-
+Grrr OK I see, it's explicit from the _optional() call that it may be N=
+ULL
+and then it should be ignored. So subsequent functions should ignore
+that and bail out. My bad, sorry.
 
-In above mux function- Register-MDIO_PARAM_OFFSET is used for bus,
-direction and transaction type. Same register
-Is used for programming the PHY Ids and write data values in MDIO parent
-bus transaction.
+> If not (as I assume) you really changed something as this might trigg=
+er
+> the warning.
 
-Writing MDIO bus driver and mux driver separately gives a notion of being
-two separate device/address space, obviously it is not our use case.
-Even if we used syscon for accessing the shared register, this does not
-appears good for writing separate drivers for a single device.
+Making a patch.
 
-
-> Thanks
->      Andrew
-
-Regards,
-Pramod
+Yours,
+Linus Walleij
