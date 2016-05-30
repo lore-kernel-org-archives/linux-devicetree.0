@@ -1,68 +1,35 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun5i: add spi2 on A10s
- Olinuxino Micro
-Date: Mon, 30 May 2016 10:09:40 +0200
-Message-ID: <20160530080940.GD4247@lukather>
-References: <908ed06eb46f2162e222258aa14df545d0fa5b48.1464129859.git.hramrach@gmail.com>
- <602069f7735ad37b1849dac484d2e8e7c9ec08b3.1464129859.git.hramrach@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
+Date: Mon, 30 May 2016 10:16:43 +0200
+Message-ID: <5333252.Un7tdhWc5Q@wuerfel>
+References: <1464067268-35299-1-git-send-email-navam@xilinx.com> <CAL_Jsq+VL6jjo5QLwnsC8rEfgP4KN5hCSB7QicWWN-uvZU0GHw@mail.gmail.com> <C89496FEAE474D468F30D558A9468D9F26CEEBAB@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="M38YqGLZlgb6RLPS"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBRPKV65AKGQEFYRNMJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <602069f7735ad37b1849dac484d2e8e7c9ec08b3.1464129859.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <C89496FEAE474D468F30D558A9468D9F26CEEBAB@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: Rob Herring <robh@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday, May 30, 2016 5:46:21 AM CEST Nava kishore Manne wrote:
+> >
+> The Axi-usb 5.00 IP is a FPGA based one. This IP needs to support two=
+ H/w designs one with 32 bit DMA addressing another one is 64 bit DMA a=
+ddressing.
+> And also in the software point for view we don=E2=80=99t have any reg=
+ister to figure out whether it is supporting 32 bit DMA addressing or 6=
+4 bit DMA addressing.
+> To support both the designs I kept addrwidth property in the dt. I th=
+ink here addrwidth property is make sense to differentiate the h/w conf=
+igurations.
+> If you want me to changes it to boolean please let me know I will fix=
+ it in the next version.
 
---M38YqGLZlgb6RLPS
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+I think boolean would be more logical here, since what is configurable
+here is not how many bits are supported, but whether the XUSB_DMA_DSAR_=
+ADDR
+register is present or not.
 
-Hi,
-
-On Thu, May 26, 2016 at 07:25:23PM -0000, Michal Suchanek wrote:
-> spi2 is available on the UEXT connector
-> 
-> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-> index 86d046a..7d2ff60 100644
-> --- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-> +++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-> @@ -192,6 +192,13 @@
->  	status = "okay";
->  };
->  
-> +&spi2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi2_pins_a>,
-> +		    <&spi2_cs0_pins_a>;
-> +	status = "okay";
-> +};
-> +
-
-This should be ordered alphabetically.
-
-Fixed it, and applied.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---M38YqGLZlgb6RLPS--
+	Arnd
