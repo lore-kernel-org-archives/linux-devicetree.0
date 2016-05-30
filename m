@@ -1,56 +1,37 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: [PATCH 6/7] Binding:PHY: Binding doc for NS2 PCIe PHYs.
-Date: Mon, 30 May 2016 12:40:50 +0530
-Message-ID: <1464592251-2688-7-git-send-email-pramod.kumar@broadcom.com>
-References: <1464592251-2688-1-git-send-email-pramod.kumar@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464592251-2688-1-git-send-email-pramod.kumar@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>, Jon Mason <jonmason@broadcom.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom reserved
+ memory handling
+Date: Mon, 30 May 2016 09:28:56 +0200
+Message-ID: <574BEBB8.8040606@samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Binding doc for NS2 PCIe PHYs.
+On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
+> Once MFC driver has been converted to generic reserved memory bindings,
+> there is no need for custom memory reservation code.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  arch/arm/mach-exynos/Makefile      |  2 -
+>  arch/arm/mach-exynos/exynos.c      | 19 --------
+>  arch/arm/mach-exynos/mfc.h         | 16 -------
+>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 --------------------------------------
+>  4 files changed, 130 deletions(-)
+>  delete mode 100644 arch/arm/mach-exynos/mfc.h
+>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
----
- .../bindings/phy/brcm,mdio-mux-bus-pci.txt         | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
+Thanks, applied.
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt b/Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
-new file mode 100644
-index 0000000..5b51007
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
-@@ -0,0 +1,27 @@
-+* Broadcom NS2 PCIe PHY binding document
-+
-+Required bus properties:
-+- reg: MDIO Bus number for the MDIO interface
-+- #address-cells: must be 1
-+- #size-cells: must be 0
-+
-+Required PHY properties:
-+- compatible: should be "brcm,ns2-pcie-phy"
-+- reg: MDIO Phy ID for the MDIO interface
-+- #phy-cells: must be 0
-+
-+This is a child bus node of "brcm,mdio-mux-iproc" node.
-+
-+Example:
-+
-+mdio@0 {
-+	reg = <0x0>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	pci_phy0: pci-phy@0 {
-+		compatible = "brcm,ns2-pcie-phy";
-+		reg = <0x0>;
-+		#phy-cells = <0>;
-+	};
-+};
--- 
-1.9.1
+What is your final decision for DTS patches? Which approach for MFC
+reserved memory node?
+
+Krzysztof
