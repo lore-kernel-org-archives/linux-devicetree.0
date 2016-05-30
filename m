@@ -1,32 +1,70 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Subject: Re: [PATCH v9 2/2] dmaengine: Add Xilinx zynqmp dma engine driver support
-Date: Mon, 30 May 2016 11:47:01 +0530
-Message-ID: <CAKfKVtE-2rYVmCK1OOzitayH7AzUQHnspoEv6RBLCxUJVnVksg@mail.gmail.com>
-References: <1463123033-5443-1-git-send-email-appanad@xilinx.com>
-	<1463123033-5443-2-git-send-email-appanad@xilinx.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH 0/4] pwm: add support for ChromeOS EC PWM
+Date: Mon, 30 May 2016 08:44:47 +0200
+Message-ID: <8682e810-dd86-71c7-a454-35bfbab8afa8@collabora.com>
+References: <1464399556-17222-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463123033-5443-2-git-send-email-appanad@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, Moritz Fischer <moritz.fischer@ettus.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, luis@debethencourt.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1464399556-17222-1-git-send-email-briannorris@chromium.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>
+Cc: linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Sameer Nanda <snanda@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-> + */
-> +static void zynqmp_dma_update_desc_to_ctrlr(struct zynqmp_dma_chan *chan,
-> +                                     struct zynqmp_dma_desc_sw *desc)
-> +{
-> +       dma_addr_t addr;
-> +
-> +       addr = desc->src_p;
-> +       writel(addr, chan->regs + ZYNQMP_DMA_SRC_START_LSB);
-> +       writel(upper_32_bits(addr), chan->regs + ZYNQMP_DMA_SRC_START_MSB);
-Can we combine the two writes to a 64bit write.
-It may be helpful on 64-bit systems.
+On 05/28/2016 03:39 AM, Brian Norris wrote:
+> Hi,
+> 
+> This series adds support for the new ChromeOS EC PWM API, so we can control,
+> e.g., the backlight when it's attached to the EC. It uses Boris's latest
+> "atomic" hooks for the PWM API (i.e., the ->apply() callback), which were
+> recently merged.
+> 
+> It seems nice to have the cros_ec_cmd_xfer_status() helper, which we have
+> locally in the ChromeOS kernel, and which has been part of another larger patch
+> series:
+> 
+> https://lkml.org/lkml/2016/4/12/342
+> 
+> So I've picked it into this series as well. Obviously, I don't care which one
+> is taken, but AFAICT, Tomeu's USB PD series isn't extremely active right now.
 
+Hi Brian,
 
-> +       addr = desc->dst_p;
-> +       writel(addr, chan->regs + ZYNQMP_DMA_DST_START_LSB);
-> +       writel(upper_32_bits(addr), chan->regs + ZYNQMP_DMA_DST_START_MSB);
-> +}
+that's on hold during the ongoing discussion about type-c userspace API,
+because right now the value of that patchset is on how userspace can
+decide from what port to charge (if any), and it was badly abusing a
+power supply property for that.
+
+Regards,
+
+Tomeu
+
+> As this touches MFD (sort of), drivers/platform/chrome/, and drivers/pwm/, I'm
+> not sure who it should all go through: Lee, Thierry, or Olof?
+> 
+> Anyway, please review.
+> 
+> Regards,
+> Brian
+> 
+> Brian Norris (3):
+>   mfd: cros_ec: add EC_PWM function definitions
+>   doc: dt: pwm: add binding for ChromeOS EC PWM
+>   pwm: add ChromeOS EC PWM driver
+> 
+> Tomeu Vizoso (1):
+>   mfd: cros_ec: Add cros_ec_cmd_xfer_status helper
+> 
+>  .../devicetree/bindings/pwm/google,cros-ec-pwm.txt |  25 +++
+>  drivers/platform/chrome/cros_ec_proto.c            |  15 ++
+>  drivers/pwm/Kconfig                                |   7 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-cros-ec.c                          | 230 +++++++++++++++++++++
+>  include/linux/mfd/cros_ec.h                        |  18 ++
+>  include/linux/mfd/cros_ec_commands.h               |  31 +++
+>  7 files changed, 327 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
+>  create mode 100644 drivers/pwm/pwm-cros-ec.c
+> 
