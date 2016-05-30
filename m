@@ -1,125 +1,57 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 5/6] dtb: xgene: Remove clock nodes
-Date: Mon, 30 May 2016 09:34:00 +0200
-Message-ID: <574BECE8.2050307@gmail.com>
-References: <1464333768-26150-1-git-send-email-isubramanian@apm.com>
- <1464333768-26150-6-git-send-email-isubramanian@apm.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: Add async-bridge clock to MFC power domain
+ for Exynos5420
+Date: Mon, 30 May 2016 09:41:20 +0200
+Message-ID: <574BEEA0.5020103@samsung.com>
+References: <1464111662-15336-1-git-send-email-javier@osg.samsung.com>
+ <1464111662-15336-3-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1464333768-26150-6-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: Iyappan Subramanian <isubramanian@apm.com>, davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: patches@apm.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1464111662-15336-3-git-send-email-javier@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Shuah Khan <shuahkh@osg.samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 27/05/16 09:22, Iyappan Subramanian wrote:
-> Since the MDIO will be responsible for clock reset, removing the clock
-> nodes from shadowcat xge0 and storm sgenet1.
->
-> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-> Tested-by: Fushen Chen <fchen@apm.com>
-> Tested-by: Toan Le <toanle@apm.com>
+On 05/24/2016 07:41 PM, Javier Martinez Canillas wrote:
+> The MFC IP is also inter-connected by an Async-Bridge so the CLK_ACLK333
+> has to be ungated during a power domain switch. Trying to do it when the
+> clock is gated will fail and lead to an imprecise external abort error
+> when the driver tries to access the MFC registers with the PD disabled.
+> 
+> For example, if the s5p-mfc module is removed and the MFC PD turned off:
+> 
+> [  186.835606] Power domain power-domain@10044060 disable failed
+> [  186.835671] s5p-mfc 11000000.codec: Removing 11000000.codec
+> [  186.837670] Power domain power-domain@10044060 disable failed
+> 
+> And when the module is inserted again:
+> 
+> [ 2395.176956] s5p_mfc_wait_for_done_dev:34: Interrupt (dev->int_type:0, command:12) timed out
+> [ 2395.177031] s5p_mfc_init_hw:272: Failed to load firmware
+> [ 2395.177384] Unhandled fault: imprecise external abort (0x1406) at 0x00000000
+> [ 2395.177441] pgd = ec3b4000
+> [ 2395.177467] [00000000] *pgd=00000000
+> [ 2395.177507] Internal error: : 1406 [#1] PREEMPT SMP ARM
+> [ 2395.177550] Modules linked in: s5p_mfc mwifiex_sdio mwifiex uvcvideo s5p_jpeg v4l2_mem2mem videobuf2_vmalloc videobuf2_dma_contig videobuf2_memops videobuf2_v4l2 videobuf2_core v4l2_common videodev media [last unloaded: s5p_mfc]
+> [ 2395.177774] CPU: 1 PID: 2382 Comm: v4l_id Tainted: G        W       4.6.0-rc6-next-20160502-00010-g7730dc64d2c1-dirty #179
+> [ 2395.177857] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+> [ 2395.177906] task: ed275500 ti: e6c8c000 task.ti: e6c8c000
+> [ 2395.177996] PC is at s5p_mfc_reset+0x1c4/0x284 [s5p_mfc]
+> [ 2395.178057] LR is at s5p_mfc_reset+0x1a4/0x284 [s5p_mfc]
+> 
+> This patch fixes this issue by adding the CLK_ACLK333 as an Async-Bridge
+> clock for the MFC power domain, so the PD configuration works properly.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> 
 > ---
->   arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 12 ------------
->   arch/arm64/boot/dts/apm/apm-storm.dtsi     | 18 ++++--------------
->   2 files changed, 4 insertions(+), 26 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-> index 8106957..f27563d 100644
-> --- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-> +++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-> @@ -299,17 +299,6 @@
->   				clock-output-names = "pcie1clk";
->   			};
->
-> -			xge0clk: xge0clk@1f61c000 {
-> -				compatible = "apm,xgene-device-clock";
-> -				#clock-cells = <1>;
-> -				clocks = <&socplldiv2 0>;
-> -				reg = <0x0 0x1f61c000 0x0 0x1000>;
-> -				reg-names = "csr-reg";
-> -				enable-mask = <0x3>;
-> -				csr-mask = <0x3>;
-> -				clock-output-names = "xge0clk";
-> -			};
-> -
+> 
+>  arch/arm/boot/dts/exynos5420.dtsi | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-mdio@0x1f610000 has xge0clk as input (patch 4), so deleting the node 
-here will break the device tree. I suppose the mdio consumes the 
-menetclk as in apm-storm.dtsi.
+Thanks, applied.
 
-Regards,
-Matthias
-
->   			xge1clk: xge1clk@1f62c000 {
->   				compatible = "apm,xgene-device-clock";
->   				#clock-cells = <1>;
-> @@ -643,7 +632,6 @@
->   			interrupts = <0 96 4>,
->   				     <0 97 4>;
->   			dma-coherent;
-> -			clocks = <&xge0clk 0>;
->   			local-mac-address = [00 01 73 00 00 01];
->   			phy-connection-type = "sgmii";
->   			phy-handle = <&sgenet0phy>;
-> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> index 18f694ea..f631fe4 100644
-> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> @@ -237,20 +237,11 @@
->   				clocks = <&socplldiv2 0>;
->   				reg = <0x0 0x1f21c000 0x0 0x1000>;
->   				reg-names = "csr-reg";
-> -				csr-mask = <0x3>;
-> +				csr-mask = <0xa>;
-> +				enable-mask = <0xf>;
->   				clock-output-names = "sge0clk";
->   			};
->
-> -			sge1clk: sge1clk@1f21c000 {
-> -				compatible = "apm,xgene-device-clock";
-> -				#clock-cells = <1>;
-> -				clocks = <&socplldiv2 0>;
-> -				reg = <0x0 0x1f21c000 0x0 0x1000>;
-> -				reg-names = "csr-reg";
-> -				csr-mask = <0xc>;
-> -				clock-output-names = "sge1clk";
-> -			};
-> -
->   			xge0clk: xge0clk@1f61c000 {
->   				compatible = "apm,xgene-device-clock";
->   				#clock-cells = <1>;
-> @@ -938,9 +929,9 @@
->   			reg-names = "enet_csr", "ring_csr", "ring_cmd";
->   			interrupts = <0x0 0x3c 0x4>;
->   			dma-coherent;
-> -			clocks = <&menetclk 0>;
->   			/* mac address will be overwritten by the bootloader */
->   			local-mac-address = [00 00 00 00 00 00];
-> +			clocks = <&menetclk 0>;
->   			phy-connection-type = "rgmii";
->   			phy-handle = <&menetphy>;
->   		};
-> @@ -955,8 +946,8 @@
->   			interrupts = <0x0 0xA0 0x4>,
->   				     <0x0 0xA1 0x4>;
->   			dma-coherent;
-> -			clocks = <&sge0clk 0>;
->   			local-mac-address = [00 00 00 00 00 00];
-> +			clocks = <&sge0clk 0>;
->   			phy-connection-type = "sgmii";
->   			phy-handle = <&sgenet0phy>;
->   		};
-> @@ -972,7 +963,6 @@
->   				     <0x0 0xAD 0x4>;
->   			port-id = <1>;
->   			dma-coherent;
-> -			clocks = <&sge1clk 0>;
->   			local-mac-address = [00 00 00 00 00 00];
->   			phy-connection-type = "sgmii";
->   			phy-handle = <&sgenet1phy>;
->
+Krzysztof
