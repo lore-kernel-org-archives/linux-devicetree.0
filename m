@@ -1,16 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: sun5i: a10s: add spi2 pins
-Date: Mon, 30 May 2016 10:08:51 +0200
-Message-ID: <20160530080851.GC4247@lukather>
+Subject: Re: [PATCH 2/3] ARM: dts: sun5i: add spi2 on A10s
+ Olinuxino Micro
+Date: Mon, 30 May 2016 10:09:40 +0200
+Message-ID: <20160530080940.GD4247@lukather>
 References: <908ed06eb46f2162e222258aa14df545d0fa5b48.1464129859.git.hramrach@gmail.com>
+ <602069f7735ad37b1849dac484d2e8e7c9ec08b3.1464129859.git.hramrach@gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NU0Ex4SbNnrxsi6C"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBFPKV65AKGQERTVOURY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="M38YqGLZlgb6RLPS"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBRPKV65AKGQEFYRNMJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <908ed06eb46f2162e222258aa14df545d0fa5b48.1464129859.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <602069f7735ad37b1849dac484d2e8e7c9ec08b3.1464129859.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,21 +24,45 @@ Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-Dg
 List-Id: devicetree@vger.kernel.org
 
 
---NU0Ex4SbNnrxsi6C
+--M38YqGLZlgb6RLPS
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Thu, May 26, 2016 at 07:25:22PM -0000, Michal Suchanek wrote:
-> Used on A10s Olinuxino.
+Hi,
+
+On Thu, May 26, 2016 at 07:25:23PM -0000, Michal Suchanek wrote:
+> spi2 is available on the UEXT connector
 > 
 > Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> index 86d046a..7d2ff60 100644
+> --- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> +++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> @@ -192,6 +192,13 @@
+>  	status = "okay";
+>  };
+>  
+> +&spi2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi2_pins_a>,
+> +		    <&spi2_cs0_pins_a>;
+> +	status = "okay";
+> +};
+> +
 
-Applied, thanks!
+This should be ordered alphabetically.
 
+Fixed it, and applied.
+
+Thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---NU0Ex4SbNnrxsi6C--
+--M38YqGLZlgb6RLPS--
