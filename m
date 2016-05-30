@@ -1,153 +1,169 @@
-From: Peter Senna Tschudin <peter.senna@collabora.com>
-Subject: [PATCH 1/5] drm/imx-ldb: Add support to drm-bridge
-Date: Mon, 30 May 2016 18:39:41 +0200
-Message-ID: <1464626385-19253-2-git-send-email-peter.senna@collabora.com>
-References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
+Date: Mon, 30 May 2016 22:16:38 +0530
+Message-ID: <1464626798-1334-1-git-send-email-navam@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: airlied@linux.ie, akpm@linux-foundation.org, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, enric.balletbo@collabora.com, galak@codeaurora.org, gregkh@linuxfoundation.org, heiko@sntech.de, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, martin.donnelly@ge.com, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, pawel.moll@arm.com, peter.senna@collabora.com, p.zabel@pengutronix.de, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, shawnguo@kernel.org, tiwai@suse.com, treding@nvidia.com, ykk@rock-chips.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, balbi@ti.com, gregkh@linuxfoundation.org, hyun.kwon@xilinx.com, navam@xilinx.com, radhey.shyam.pandey@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support to attach a drm_bridge to imx-ldb in addition to
-existing support to attach a LVDS panel.
+This patch updates the driver to support 64-bit DMA addressing.
 
-Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
+Signed-off-by: Nava kishore Manne <navam@xilinx.com>
 ---
- drivers/gpu/drm/imx/imx-ldb.c | 75 +++++++++++++++++++++++++++++++------------
- 1 file changed, 54 insertions(+), 21 deletions(-)
+Changes for v4:
+		-Used boolen property insted of addrwith property in the DT
+		 as suggested by Arnd Bergmann.
+		-Adopt the DT relevant changes into the driver.
 
-diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
-index a58eee5..7233a81 100644
---- a/drivers/gpu/drm/imx/imx-ldb.c
-+++ b/drivers/gpu/drm/imx/imx-ldb.c
-@@ -57,7 +57,11 @@ struct imx_ldb_channel {
- 	struct imx_ldb *ldb;
- 	struct drm_connector connector;
- 	struct drm_encoder encoder;
-+
-+	/* Defines what is connected to the ldb, only one at a time */
- 	struct drm_panel *panel;
-+	struct drm_bridge *ext_bridge;
-+
- 	struct device_node *child;
- 	int chno;
- 	void *edid;
-@@ -295,6 +299,10 @@ static void imx_ldb_encoder_mode_set(struct drm_encoder *encoder,
- 	}
- }
+Changes for v3:
+                -Added new compatable string for 5.00 IP version as suggested by
+                 Arnd Bergmann.
+                -Used write_fn() insted of lo_hi_writeq() as suggested by
+                 Arnd Bergmann.
+
+Changes for v2:
+                -Added dma-ranges property in device tree as suggested by Arnd Bergmann.
+                -Modified the driver code based on the xlnx,addrwidth.
+
+ .../devicetree/bindings/usb/udc-xilinx.txt         |  5 ++-
+ drivers/usb/gadget/udc/udc-xilinx.c                | 52 +++++++++++++++++++++-
+ 2 files changed, 54 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+index 47b4e39..d08d972 100644
+--- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
++++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+@@ -1,12 +1,14 @@
+ Xilinx USB2 device controller
  
-+static void imx_ldb_encoder_enable(struct drm_encoder *encoder)
-+{
-+}
+ Required properties:
+-- compatible		: Should be "xlnx,usb2-device-4.00.a"
++- compatible		: Should be "xlnx,usb2-device-4.00.a" or
++			  "xlnx,usb2-device-5.00"
+ - reg			: Physical base address and size of the USB2
+ 			  device registers map.
+ - interrupts		: Should contain single irq line of USB2 device
+ 			  controller
+ - xlnx,has-builtin-dma	: if DMA is included
++- xlnx,has-64bit-dma	: if DMA is included 64-bit addressing support.
+ 
+ Example:
+  		axi-usb2-device@42e00000 {
+@@ -14,5 +16,6 @@ Example:
+                         interrupts = <0x0 0x39 0x1>;
+                         reg = <0x42e00000 0x10000>;
+                         xlnx,has-builtin-dma;
++			xlnx,has-64bit-dma;
+                 };
+ 
+diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
+index 1cbb0ac..6fb80c6 100644
+--- a/drivers/usb/gadget/udc/udc-xilinx.c
++++ b/drivers/usb/gadget/udc/udc-xilinx.c
+@@ -47,6 +47,15 @@
+ #define XUSB_DMA_LENGTH_OFFSET		0x0210	/* DMA Length Register */
+ #define XUSB_DMA_STATUS_OFFSET		0x0214	/* DMA Status Register */
+ 
++/* DMA source Address Reg for LSB */
++#define XUSB_DMA_DSAR_ADDR_OFFSET_LSB   0x0308
++/* DMA source Address Reg for MSB */
++#define XUSB_DMA_DSAR_ADDR_OFFSET_MSB   0x030C
++/* DMA destination Addr Reg LSB */
++#define XUSB_DMA_DDAR_ADDR_OFFSET_LSB   0x0310
++/* DMA destination Addr Reg MSB */
++#define XUSB_DMA_DDAR_ADDR_OFFSET_MSB   0x0314
 +
- static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
- {
- 	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
-@@ -373,6 +381,7 @@ static const struct drm_encoder_helper_funcs imx_ldb_encoder_helper_funcs = {
- 	.prepare = imx_ldb_encoder_prepare,
- 	.commit = imx_ldb_encoder_commit,
- 	.mode_set = imx_ldb_encoder_mode_set,
-+	.enable = imx_ldb_encoder_enable,
- 	.disable = imx_ldb_encoder_disable,
+ /* Endpoint Configuration Space offsets */
+ #define XUSB_EP_CFGSTATUS_OFFSET	0x00	/* Endpoint Config Status  */
+ #define XUSB_EP_BUF0COUNT_OFFSET	0x08	/* Buffer 0 Count */
+@@ -169,6 +178,7 @@ struct xusb_ep {
+  * @setup: usb_ctrlrequest structure for control requests
+  * @req: pointer to dummy request for get status command
+  * @dev: pointer to device structure in gadget
++ * @is_extend_dma: flag indiacting whether the dma is 64-bit support or not.
+  * @usb_state: device in suspended state or not
+  * @remote_wkp: remote wakeup enabled by host
+  * @setupseqtx: tx status
+@@ -186,6 +196,7 @@ struct xusb_udc {
+ 	struct usb_ctrlrequest setup;
+ 	struct xusb_req *req;
+ 	struct device *dev;
++	bool is_extend_dma;
+ 	u32 usb_state;
+ 	u32 remote_wkp;
+ 	u32 setupseqtx;
+@@ -215,6 +226,20 @@ static const struct usb_endpoint_descriptor config_bulk_out_desc = {
  };
  
-@@ -417,16 +426,28 @@ static int imx_ldb_register(struct drm_device *drm,
- 	drm_encoder_init(drm, &imx_ldb_ch->encoder, &imx_ldb_encoder_funcs,
- 			 DRM_MODE_ENCODER_LVDS, NULL);
+ /**
++ * xudc_write64 - write 64bit value to device registers
++ * @ep: pointer to the usb device endpoint structure.
++ * @offset: register offset
++ * @val: data to be written
++ **/
++static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val)
++{
++	struct xusb_udc *udc = ep->udc;
++
++	udc->write_fn(udc->addr, offset, lower_32_bits(val));
++	udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val));
++}
++
++/**
+  * xudc_write32 - little endian write to device registers
+  * @addr: base addr of device registers
+  * @offset: register offset
+@@ -330,8 +355,13 @@ static int xudc_start_dma(struct xusb_ep *ep, dma_addr_t src,
+ 	 * destination registers and then set the length
+ 	 * into the DMA length register.
+ 	 */
+-	udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
+-	udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
++	if (udc->is_extend_dma) {
++		xudc_write64(ep, XUSB_DMA_DSAR_ADDR_OFFSET_LSB, src);
++		xudc_write64(ep, XUSB_DMA_DDAR_ADDR_OFFSET_LSB, dst);
++	} else {
++		udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
++		udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
++	}
+ 	udc->write_fn(udc->addr, XUSB_DMA_LENGTH_OFFSET, length);
  
--	drm_connector_helper_add(&imx_ldb_ch->connector,
--			&imx_ldb_connector_helper_funcs);
--	drm_connector_init(drm, &imx_ldb_ch->connector,
--			   &imx_ldb_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
--
--	if (imx_ldb_ch->panel)
-+	if (imx_ldb_ch->panel) {
-+		drm_connector_helper_add(&imx_ldb_ch->connector,
-+				&imx_ldb_connector_helper_funcs);
-+		drm_connector_init(drm, &imx_ldb_ch->connector,
-+				&imx_ldb_connector_funcs,
-+				DRM_MODE_CONNECTOR_LVDS);
- 		drm_panel_attach(imx_ldb_ch->panel, &imx_ldb_ch->connector);
+ 	/*
+@@ -2097,6 +2127,23 @@ static int xudc_probe(struct platform_device *pdev)
  
--	drm_mode_connector_attach_encoder(&imx_ldb_ch->connector,
--			&imx_ldb_ch->encoder);
-+		drm_mode_connector_attach_encoder(&imx_ldb_ch->connector,
-+				&imx_ldb_ch->encoder);
+ 	udc->dma_enabled = of_property_read_bool(np, "xlnx,has-builtin-dma");
+ 
++	udc->is_extend_dma = false;
++
++	if (of_device_is_compatible(np, "xlnx,usb2-device-5.00"))
++		udc->is_extend_dma = of_property_read_bool(np,
++						"xlnx,has-64bit-dma");
++
++	/* Set the dma mask bits */
++	if (udc->is_extend_dma)
++		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	else
++		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++
++	if (ret < 0) {
++		dev_dbg(&pdev->dev, "no usable DMA configuration");
++		goto fail;
 +	}
 +
-+	if (imx_ldb_ch->ext_bridge) {
-+		imx_ldb_ch->ext_bridge->encoder = &imx_ldb_ch->encoder;
-+
-+		imx_ldb_ch->encoder.bridge = imx_ldb_ch->ext_bridge;
-+		ret = drm_bridge_attach(drm, imx_ldb_ch->ext_bridge);
-+		if (ret) {
-+			DRM_ERROR("Failed to initialize bridge with drm\n");
-+			return ret;
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -583,23 +604,35 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 			endpoint = of_get_child_by_name(port, "endpoint");
- 			if (endpoint) {
- 				remote = of_graph_get_remote_port_parent(endpoint);
--				if (remote)
--					channel->panel = of_drm_find_panel(remote);
--				else
--					return -EPROBE_DEFER;
--				if (!channel->panel) {
--					dev_err(dev, "panel not found: %s\n",
--						remote->full_name);
--					return -EPROBE_DEFER;
-+				if (remote) {
-+					/* Only one of these two will succeed */
-+					channel->panel =
-+						of_drm_find_panel(remote);
-+
-+					channel->ext_bridge =
-+						of_drm_find_bridge(remote);
-+
-+					/*
-+					 * If the bridge is compiled as a
-+					 * module, it may take some time until
-+					 * the bridge driver is available.
-+					 * Defer until the bridge driver is
-+					 * ready.
-+					 */
-+					if (!channel->panel &&
-+							!channel->ext_bridge)
-+						return -EPROBE_DEFER;
- 				}
- 			}
- 		}
- 
--		edidp = of_get_property(child, "edid", &channel->edid_len);
--		if (edidp) {
--			channel->edid = kmemdup(edidp, channel->edid_len,
--						GFP_KERNEL);
--		} else if (!channel->panel) {
-+		if (channel->panel) {
-+			edidp = of_get_property(child, "edid",
-+					&channel->edid_len);
-+			if (edidp)
-+				channel->edid = kmemdup(edidp,
-+						channel->edid_len, GFP_KERNEL);
-+		} else {
- 			ret = of_get_drm_display_mode(child, &channel->mode, 0);
- 			if (!ret)
- 				channel->mode_valid = 1;
+ 	/* Setup gadget structure */
+ 	udc->gadget.ops = &xusb_udc_ops;
+ 	udc->gadget.max_speed = USB_SPEED_HIGH;
+@@ -2168,6 +2215,7 @@ static int xudc_remove(struct platform_device *pdev)
+ /* Match table for of_platform binding */
+ static const struct of_device_id usb_of_match[] = {
+ 	{ .compatible = "xlnx,usb2-device-4.00.a", },
++	{ .compatible = "xlnx,usb2-device-5.00", },
+ 	{ /* end of list */ },
+ };
+ MODULE_DEVICE_TABLE(of, usb_of_match);
 -- 
-2.5.5
+2.1.1
