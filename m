@@ -1,117 +1,32 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: RE: [PATCH v3] Axi-usb: Add support for 64-bit addressing.
-Date: Mon, 30 May 2016 05:46:21 +0000
-Message-ID: <C89496FEAE474D468F30D558A9468D9F26CEEBAB@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1464067268-35299-1-git-send-email-navam@xilinx.com>
- <C89496FEAE474D468F30D558A9468D9F26CED772@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160525173419.GA7510@rob-hp-laptop> <5392766.vCAWrASuOA@wuerfel>
- <CAL_Jsq+VL6jjo5QLwnsC8rEfgP4KN5hCSB7QicWWN-uvZU0GHw@mail.gmail.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Subject: Re: [PATCH v9 2/2] dmaengine: Add Xilinx zynqmp dma engine driver support
+Date: Mon, 30 May 2016 11:47:01 +0530
+Message-ID: <CAKfKVtE-2rYVmCK1OOzitayH7AzUQHnspoEv6RBLCxUJVnVksg@mail.gmail.com>
+References: <1463123033-5443-1-git-send-email-appanad@xilinx.com>
+	<1463123033-5443-2-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+VL6jjo5QLwnsC8rEfgP4KN5hCSB7QicWWN-uvZU0GHw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1463123033-5443-2-git-send-email-appanad@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, Moritz Fischer <moritz.fischer@ettus.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, luis@debethencourt.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21h
-aWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IFNlbnQ6IFRodXJzZGF5LCBNYXkgMjYsIDIwMTYgMTI6
-MjQgQU0NCj4gVG86IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQo+IENjOiBOYXZhIGtp
-c2hvcmUgTWFubmUgPG5hdmFtQHhpbGlueC5jb20+OyBwYXdlbC5tb2xsQGFybS5jb207DQo+IG1h
-cmsucnV0bGFuZEBhcm0uY29tOyBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsNCj4gZ2Fs
-YWtAY29kZWF1cm9yYS5vcmc7IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsgU29y
-ZW4NCj4gQnJpbmttYW5uIDxzb3JlbmJAeGlsaW54LmNvbT47IGJhbGJpQHRpLmNvbTsNCj4gZ3Jl
-Z2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IEh5dW4gS3dvbiA8aHl1bmtAeGlsaW54LmNvbT47IFJh
-ZGhleQ0KPiBTaHlhbSBQYW5kZXkgPHJhZGhleXNAeGlsaW54LmNvbT47IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC0NCj4gYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjNdIEF4
-aS11c2I6IEFkZCBzdXBwb3J0IGZvciA2NC1iaXQgYWRkcmVzc2luZy4NCj4NCj4gT24gV2VkLCBN
-YXkgMjUsIDIwMTYgYXQgMToyOSBQTSwgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4gd3Jv
-dGU6DQo+ID4gT24gV2VkbmVzZGF5LCBNYXkgMjUsIDIwMTYgMTI6MzQ6MTkgUE0gQ0VTVCBSb2Ig
-SGVycmluZyB3cm90ZToNCj4gPj4gT24gVHVlLCBNYXkgMjQsIDIwMTYgYXQgMTE6NDc6MzFBTSAr
-MDAwMCwgTmF2YSBraXNob3JlIE1hbm5lIHdyb3RlOg0KPiA+PiA+DQo+ID4+ID4NCj4gPj4gPiA+
-IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+ID4gPiBGcm9tOiBBcm5kIEJlcmdtYW5u
-IFttYWlsdG86YXJuZEBhcm5kYi5kZV0NCj4gPj4gPiA+IFNlbnQ6IFR1ZXNkYXksIE1heSAyNCwg
-MjAxNiAyOjIxIFBNDQo+ID4+ID4gPiBUbzogTmF2YSBraXNob3JlIE1hbm5lIDxuYXZhbUB4aWxp
-bnguY29tPg0KPiA+PiA+ID4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0u
-Y29tOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPj4gPiA+IGlqYytkZXZpY2V0cmVlQGhl
-bGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsgTWljaGFsIFNpbWVrDQo+ID4+ID4g
-PiA8bWljaGFsc0B4aWxpbnguY29tPjsgU29yZW4gQnJpbmttYW5uIDxzb3JlbmJAeGlsaW54LmNv
-bT47DQo+ID4+ID4gPiBiYWxiaUB0aS5jb207IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBI
-eXVuIEt3b24NCj4gPj4gPiA+IDxoeXVua0B4aWxpbnguY29tPjsgTmF2YSBraXNob3JlIE1hbm5l
-IDxuYXZhbUB4aWxpbnguY29tPjsNCj4gUmFkaGV5DQo+ID4+ID4gPiBTaHlhbSBQYW5kZXkgPHJh
-ZGhleXNAeGlsaW54LmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+PiA+ID4g
-bGludXgtIGFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPj4gPiA+IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjNdIEF4
-aS11c2I6IEFkZCBzdXBwb3J0IGZvciA2NC1iaXQgYWRkcmVzc2luZy4NCj4gPj4gPiA+DQo+ID4+
-ID4gPiBPbiBUdWVzZGF5LCBNYXkgMjQsIDIwMTYgMTA6NTE6MDggQU0gQ0VTVCBOYXZhIGtpc2hv
-cmUgTWFubmUNCj4gd3JvdGU6DQo+ID4+ID4gPiA+IGRpZmYgLS1naXQNCj4gPj4gPiA+ID4gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VkYy14aWxpbngudHh0DQo+ID4+
-ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91ZGMteGlsaW54
-LnR4dA0KPiA+PiA+ID4gPiBpbmRleCA0N2I0ZTM5Li4wOWRmNzU3IDEwMDY0NA0KPiA+PiA+ID4g
-PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VkYy14aWxpbngu
-dHh0DQo+ID4+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91
-c2IvdWRjLXhpbGlueC50eHQNCj4gPj4gPiA+ID4gQEAgLTEsMTggKzEsMjMgQEANCj4gPj4gPiA+
-ID4gIFhpbGlueCBVU0IyIGRldmljZSBjb250cm9sbGVyDQo+ID4+ID4gPiA+DQo+ID4+ID4gPiA+
-ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+PiA+ID4gPiAtLSBjb21wYXRpYmxlICAgICAgICAg
-ICAgIDogU2hvdWxkIGJlICJ4bG54LHVzYjItZGV2aWNlLTQuMDAuYSINCj4gPj4gPiA+ID4gKy0g
-Y29tcGF0aWJsZSAgICAgICAgICAgICA6IFNob3VsZCBiZSAieGxueCx1c2IyLWRldmljZS00LjAw
-LmEiIG9yDQo+ID4+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgInhsbngsdXNiMi1kZXZpY2Ut
-NS4wMCINCj4gPj4gPiA+ID4gIC0gcmVnICAgICAgICAgICAgICAgICAgICA6IFBoeXNpY2FsIGJh
-c2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgVVNCMg0KPiA+PiA+ID4gPiAgICAgICAgICAgICAg
-ICAgICAgIGRldmljZSByZWdpc3RlcnMgbWFwLg0KPiA+PiA+ID4gPiAgLSBpbnRlcnJ1cHRzICAg
-ICAgICAgICAgIDogU2hvdWxkIGNvbnRhaW4gc2luZ2xlIGlycSBsaW5lIG9mIFVTQjIgZGV2aWNl
-DQo+ID4+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgY29udHJvbGxlcg0KPiA+PiA+ID4gPiAg
-LSB4bG54LGhhcy1idWlsdGluLWRtYSAgIDogaWYgRE1BIGlzIGluY2x1ZGVkDQo+ID4+ID4gPiA+
-ICstIGRtYS1yYW5nZXMgICAgICAgICAgICAgOiBTaG91bGQgYmUgYXMgdGhlIGZvbGxvd2luZw0K
-PiA+PiA+ID4gPiArICAgICAgICAgICAgICAgICAgIDxjaGlsZC1idXMtYWRkcmVzcywgcGFyZW50
-LWJ1cy1hZGRyZXNzLA0KPiA+PiA+ID4gPiArbGVuZ3RoPg0KPiA+PiA+ID4NCj4gPj4gPiA+IEEg
-VVNCIGhvc3Qgc2hvdWxkIG5vdCBoYXZlIGFueSBjaGlsZHJlbiB0aGF0IGFyZSBETUEgY2FwYWJs
-ZSwgSQ0KPiA+PiA+ID4gdGhpbmssIHNvIHRoaXMgcHJvcGVydHkgZG9lc24ndCBtYWtlIHNlbnNl
-IGhlcmUuIEl0IHNob3VsZCBiZSBwYXJ0IG9mDQo+IHRoZSBwYXJlbnQgYnVzLg0KPiA+PiA+ID4N
-Cj4gPj4gPiBXaWxsIHNlbmQgbmV4dCB2ZXJzaW9uICh2NCkgYnkgcmVtb3ZpbmcgdGhpcyBwcm9w
-ZXJ0eSBmcm9tIHRoZSBEVC4NCj4gPj4gPg0KPiA+PiA+ID4gPiArLSB4bG54LGFkZHJ3aWR0aCA6
-IFNob3VsZCBiZSB0aGUgZG1hIGFkZHJlc3Npbmcgc2l6ZSBpbg0KPiA+PiA+ID4gPiArYml0cyhl
-eDogNjQNCj4gPj4gPiA+IGJpdHMpDQo+ID4+ID4gPg0KPiA+PiA+ID4gSSdtIHN0aWxsIHVuY29u
-dmluY2VkIGFib3V0IHRoZSBwcm9wZXJ0eSBkZWZpbml0aW9uIGhlcmUuIFdoYXQNCj4gPj4gPiA+
-IGFyZSB0aGUgcG9zc2libGUgb3B0aW9ucyBmb3IgdGhlIElQIGJsb2NrPyBJIGRvbid0IHRoaW5r
-IEkgZXZlcg0KPiA+PiA+ID4gc2F3IGEgcmVwbHkgZnJvbSB5b3UgdG8gbXkgZWFybGllciBxdWVz
-dGlvbnMuDQo+ID4+ID4gPg0KPiA+PiA+DQo+ID4+ID4gU29ycnkgTGV0IG1lIGNsZWFybHkgZXhw
-bGFpbg0KPiA+PiA+DQo+ID4+ID4gRnJvbSB0aGUgSVAgdmVyc2lvbiA1LjAgb253YXJkcyBUaGUg
-SVAgc3VwcG9ydCBib3RoIDMyLWJpdCBhbmQgNjQtYml0DQo+IGFkZHJlc3NpbmcuDQo+ID4+ID4g
-QnV0IHRoZSBvbGRlciB2ZXJzaW9uIG9mIHRoZSBJUCdzIHN1cHBvcnRzIG9ubHkgMzItYml0IGFk
-ZHJlc3NpbmcuDQo+ID4+ID4NCj4gPj4gPiBUaGlzIGFkZHJ3aWR0aCBwcm9wZXJ0eSBkaWZmZXJl
-bnRpYXRlcyB0aGUgYWRkcmVzcyB3aWR0aCBmb3IgdGhlDQo+ID4+ID4gbmV3IElQIChJIG1lYW4g
-NS4wIHZlcnNpb24gb24gd2FyZHMpIEZvciBvbGRlciBJUCBpdCB3aWxsIGJlIGFsd2F5cyAzMi1i
-aXQuDQo+ID4+DQo+ID4+IFRoZW4gSSB0aGluayB5b3Ugc2hvdWxkIGhhdmUgYSBzaW1wbGUgYm9v
-bGVhbiBwcm9wZXJ0eSBmb3IgNjQtYml0DQo+ID4+IGNvbmZpZ3VyYXRpb24uDQo+ID4NCj4gPiBJ
-IHRoaW5rIG1hdGNoaW5nIG9uIHRoZSB2ZXJzaW9uIG51bWJlciBpcyBzbGlnaHRseSBiZXR0ZXIs
-IGFzIHdlIGhhdmUNCj4gPiB0aGUgdmVyc2lvbiBhbHJlYWR5IGFuZCBpdCBpZGVudGlmaWVzIHdo
-ZXRoZXIgdGhlIHJlZ2lzdGVyIGV4aXN0cy4NCj4gPg0KPiA+IEhhdmluZyBhIGJvb2xlYW4gcHJv
-cGVydHkgb2YgY291cnNlIHdvcmtzIGFzIHdlbGwsIGl0IGp1c3QgZHVwbGljYXRlcw0KPiA+IHRo
-YXQgaW5mb3JtYXRpb24uDQo+DQo+IEl0IGRvZXNuJ3QgYmVjYXVzZSB2NS4wIGgvdyBjYW4gYmUg
-Y29uZmlndXJlZCBmb3IgZWl0aGVyIDMyIG9yIDY0LWJpdCBtb2RlLg0KPiBOb3JtYWxseSwgd2Ug
-d291bGQgZW5jb2RlIGNvbmZpZ3VyYXRpb24gaW50byB0aGUgY29tcGF0aWJsZSBzdHJpbmdzLCBi
-dXQgSQ0KPiB2aWV3IEZQR0EgYmFzZWQgYmxvY2tzIHRvIGJlIGFuIGV4Y2VwdGlvbi4gT2YgY291
-cnNlLCBzaW5jZSB0aGV5IGNhbiBqdXN0DQo+ICJmaXggdGhlIGgvdyIgd2UgY291bGQganVzdCBy
-ZXF1aXJlIGgvdyB2ZXJzaW9uIGFuZCBmZWF0dXJlIHJlZ2lzdGVycy4gOykNCj4NClRoZSBBeGkt
-dXNiIDUuMDAgSVAgaXMgYSBGUEdBIGJhc2VkIG9uZS4gVGhpcyBJUCBuZWVkcyB0byBzdXBwb3J0
-IHR3byBIL3cgZGVzaWducyBvbmUgd2l0aCAzMiBiaXQgRE1BIGFkZHJlc3NpbmcgYW5vdGhlciBv
-bmUgaXMgNjQgYml0IERNQSBhZGRyZXNzaW5nLg0KQW5kIGFsc28gaW4gdGhlIHNvZnR3YXJlIHBv
-aW50IGZvciB2aWV3IHdlIGRvbuKAmXQgaGF2ZSBhbnkgcmVnaXN0ZXIgdG8gZmlndXJlIG91dCB3
-aGV0aGVyIGl0IGlzIHN1cHBvcnRpbmcgMzIgYml0IERNQSBhZGRyZXNzaW5nIG9yIDY0IGJpdCBE
-TUEgYWRkcmVzc2luZy4NClRvIHN1cHBvcnQgYm90aCB0aGUgZGVzaWducyBJIGtlcHQgYWRkcndp
-ZHRoIHByb3BlcnR5IGluIHRoZSBkdC4gSSB0aGluayBoZXJlIGFkZHJ3aWR0aCBwcm9wZXJ0eSBp
-cyBtYWtlIHNlbnNlIHRvIGRpZmZlcmVudGlhdGUgdGhlIGgvdyBjb25maWd1cmF0aW9ucy4NCklm
-IHlvdSB3YW50IG1lIHRvIGNoYW5nZXMgaXQgdG8gYm9vbGVhbiBwbGVhc2UgbGV0IG1lIGtub3cg
-SSB3aWxsIGZpeCBpdCBpbiB0aGUgbmV4dCB2ZXJzaW9uLg0KDQpSZWdhcmRzLA0KTmF2YWtpc2hv
-cmUuDQoNCj4gUm9iDQoNCg0KVGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBpbnRl
-bmRlZCBmb3IgdGhlIHNvbGUgdXNlIG9mIHRoZSBuYW1lZCByZWNpcGllbnQocykgYW5kIGNvbnRh
-aW4ocykgY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIHRoYXQgbWF5IGJlIHByb3ByaWV0YXJ5LCBw
-cml2aWxlZ2VkIG9yIGNvcHlyaWdodGVkIHVuZGVyIGFwcGxpY2FibGUgbGF3LiBJZiB5b3UgYXJl
-IG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBkbyBub3QgcmVhZCwgY29weSwgb3IgZm9yd2Fy
-ZCB0aGlzIGVtYWlsIG1lc3NhZ2Ugb3IgYW55IGF0dGFjaG1lbnRzLiBEZWxldGUgdGhpcyBlbWFp
-bCBtZXNzYWdlIGFuZCBhbnkgYXR0YWNobWVudHMgaW1tZWRpYXRlbHkuDQoNCg==
+> + */
+> +static void zynqmp_dma_update_desc_to_ctrlr(struct zynqmp_dma_chan *chan,
+> +                                     struct zynqmp_dma_desc_sw *desc)
+> +{
+> +       dma_addr_t addr;
+> +
+> +       addr = desc->src_p;
+> +       writel(addr, chan->regs + ZYNQMP_DMA_SRC_START_LSB);
+> +       writel(upper_32_bits(addr), chan->regs + ZYNQMP_DMA_SRC_START_MSB);
+Can we combine the two writes to a 64bit write.
+It may be helpful on 64-bit systems.
+
+
+> +       addr = desc->dst_p;
+> +       writel(addr, chan->regs + ZYNQMP_DMA_DST_START_LSB);
+> +       writel(upper_32_bits(addr), chan->regs + ZYNQMP_DMA_DST_START_MSB);
+> +}
