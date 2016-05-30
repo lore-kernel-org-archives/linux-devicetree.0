@@ -1,30 +1,102 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v9 2/2] dmaengine: Add Xilinx zynqmp dma engine driver
- support
-Date: Mon, 30 May 2016 10:38:47 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5B27B7@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1463123033-5443-1-git-send-email-appanad@xilinx.com>
-	<1463123033-5443-2-git-send-email-appanad@xilinx.com>
- <CAKfKVtE-2rYVmCK1OOzitayH7AzUQHnspoEv6RBLCxUJVnVksg@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC v2 1/5] drm/mediatek: rename macros, add chip suffix
+Date: Mon, 30 May 2016 12:41:29 +0200
+Message-ID: <20160530104129.GA8388@ulmo.ba.sec>
+References: <1463756736-46573-1-git-send-email-yt.shen@mediatek.com>
+ <1463756736-46573-2-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKfKVtE-2rYVmCK1OOzitayH7AzUQHnspoEv6RBLCxUJVnVksg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1463756736-46573-2-git-send-email-yt.shen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, Moritz Fischer <moritz.fischer@ettus.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+To: yt.shen@mediatek.com
+Cc: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2h1YmhyYWp5b3RpLA0KDQo+ID4gKyAqLw0KPiA+ICtzdGF0aWMgdm9pZCB6eW5xbXBfZG1h
-X3VwZGF0ZV9kZXNjX3RvX2N0cmxyKHN0cnVjdCB6eW5xbXBfZG1hX2NoYW4NCj4gKmNoYW4sDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgenlucW1wX2Rt
-YV9kZXNjX3N3ICpkZXNjKQ0KPiA+ICt7DQo+ID4gKyAgICAgICBkbWFfYWRkcl90IGFkZHI7DQo+
-ID4gKw0KPiA+ICsgICAgICAgYWRkciA9IGRlc2MtPnNyY19wOw0KPiA+ICsgICAgICAgd3JpdGVs
-KGFkZHIsIGNoYW4tPnJlZ3MgKyBaWU5RTVBfRE1BX1NSQ19TVEFSVF9MU0IpOw0KPiA+ICsgICAg
-ICAgd3JpdGVsKHVwcGVyXzMyX2JpdHMoYWRkciksIGNoYW4tPnJlZ3MgKw0KPiA+ICsgWllOUU1Q
-X0RNQV9TUkNfU1RBUlRfTVNCKTsNCj4gQ2FuIHdlIGNvbWJpbmUgdGhlIHR3byB3cml0ZXMgdG8g
-YSA2NGJpdCB3cml0ZS4NCj4gSXQgbWF5IGJlIGhlbHBmdWwgb24gNjQtYml0IHN5c3RlbXMuDQoN
-Ck9rIHdpbGwgZml4IHRoaXMgaW4gdGhlIG5leHQgdmVyc2lvbiBvZiB0aGUgcGF0Y2guLi4NCg0K
-VGhhbmtzLA0KS2VkYXIuDQoNCg==
+
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 20, 2016 at 11:05:32PM +0800, yt.shen@mediatek.com wrote:
+> From: YT Shen <yt.shen@mediatek.com>
+>=20
+> Add MT8173 suffix for hardware related macros.
+>=20
+> Signed-off-by: YT Shen <yt.shen@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c |   62 ++++++++++++++++----------=
+------
+>  1 file changed, 31 insertions(+), 31 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/med=
+iatek/mtk_drm_ddp.c
+> index 17ba935..d6aafd4 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -36,21 +36,21 @@
+>  #define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
+>  #define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+> =20
+> -#define MUTEX_MOD_DISP_OVL0		BIT(11)
+> -#define MUTEX_MOD_DISP_OVL1		BIT(12)
+> -#define MUTEX_MOD_DISP_RDMA0		BIT(13)
+> -#define MUTEX_MOD_DISP_RDMA1		BIT(14)
+> -#define MUTEX_MOD_DISP_RDMA2		BIT(15)
+> -#define MUTEX_MOD_DISP_WDMA0		BIT(16)
+> -#define MUTEX_MOD_DISP_WDMA1		BIT(17)
+> -#define MUTEX_MOD_DISP_COLOR0		BIT(18)
+> -#define MUTEX_MOD_DISP_COLOR1		BIT(19)
+> -#define MUTEX_MOD_DISP_AAL		BIT(20)
+> -#define MUTEX_MOD_DISP_GAMMA		BIT(21)
+> -#define MUTEX_MOD_DISP_UFOE		BIT(22)
+> -#define MUTEX_MOD_DISP_PWM0		BIT(23)
+> -#define MUTEX_MOD_DISP_PWM1		BIT(24)
+> -#define MUTEX_MOD_DISP_OD		BIT(25)
+> +#define MUTEX_MOD_DISP_OVL0_MT8173		BIT(11)
+> +#define MUTEX_MOD_DISP_OVL1_MT8173		BIT(12)
+> +#define MUTEX_MOD_DISP_RDMA0_MT8173		BIT(13)
+> +#define MUTEX_MOD_DISP_RDMA1_MT8173		BIT(14)
+> +#define MUTEX_MOD_DISP_RDMA2_MT8173		BIT(15)
+> +#define MUTEX_MOD_DISP_WDMA0_MT8173		BIT(16)
+> +#define MUTEX_MOD_DISP_WDMA1_MT8173		BIT(17)
+> +#define MUTEX_MOD_DISP_COLOR0_MT8173		BIT(18)
+> +#define MUTEX_MOD_DISP_COLOR1_MT8173		BIT(19)
+> +#define MUTEX_MOD_DISP_AAL_MT8173		BIT(20)
+> +#define MUTEX_MOD_DISP_GAMMA_MT8173		BIT(21)
+> +#define MUTEX_MOD_DISP_UFOE_MT8173		BIT(22)
+> +#define MUTEX_MOD_DISP_PWM0_MT8173		BIT(23)
+> +#define MUTEX_MOD_DISP_PWM1_MT8173		BIT(24)
+> +#define MUTEX_MOD_DISP_OD_MT8173		BIT(25)
+
+Just a random fly-by comment: this looks like a hardware spinlock, have
+you ever considered implementing this as a hwspinlock driver? See the
+drivers/hwspinlock subdirectory for existing examples.
+
+Thierry
+
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXTBjXAAoJEN0jrNd/PrOhCogQAK4RVgRmuHImo5ySj883GPKV
+PlNTiIgZ+ihlFfk5iuKZtfoRHIwa9MEN+wqVT5Ka4w0kvNqY1FppS1iWxzW2FLY/
+KiTq7IF8n1wuffuyG5Geg0ZRlue3LQmHvR32oVxdhxUk3WNFm6j1sOZnXaPs8Lci
+yEYA++fIupM5esGGpQ66m57RTBAYoplqymoizQKKB0TlJ0OjMnyfkbXrJ6BHyPkw
+l+piXBcwAYjV+Y/2qoAlA+4VU9z5ZSYTTX+uksOMIDKUqfLe6D5dmI70c4piS0T2
+7nkPwPdBKHMLqx/qELNMThvIiNEoqEb/8I8uKt3nCM9O2th3O5pWAnwq2OETTS70
+fOl4hv2v5M0+3darOsjrMSsi6qXhgdXpgv/vkJSOJGZ33+u92CZd3rrr4Bp+3iUY
+pLFZhrXcmrDLB+rjm4Ih0xs3G2Szpy4+spubvz8wZQCFvZzTWjrWJoH29t59/4N8
+k3WTxKg3kRlXisE4hA1jtQox7OBmzIaSv+uMQ0dZp/iKmz0PrIEMnRdifXEueDul
+no0uszriG1H31A5+2b3LrTyLAmmJ8Kl3PNgShtytyguG3Gob2jjw8exdFFTTAv8Y
+sbQNxjIsoTczdMVsVW94D5kpZfJdfYgFwYL9wML86AGKTtIlmNoGWCYtutKVcJdg
+xv8qR9Re1AEYOLsrrkzF
+=ZGuM
+-----END PGP SIGNATURE-----
+
+--AqsLC8rIMeq19msA--
