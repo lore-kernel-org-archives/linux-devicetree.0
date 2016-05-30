@@ -1,469 +1,1407 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v2 0/4] arm64: dts: r8a7795: Add HSUSB device node and
- enable channel 0 of USB2.0
-Date: Mon, 30 May 2016 03:29:58 +0000
-Message-ID: <SG2PR06MB0919E6D163804F427DFC1ECAD8450@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1464086058-1276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20160526024636.GH18393@verge.net.au> <20160530012252.GA12180@verge.net.au>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v9 2/2] dmaengine: Add Xilinx zynqmp dma engine driver
+ support
+Date: Mon, 30 May 2016 04:17:16 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5B2533@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1463123033-5443-1-git-send-email-appanad@xilinx.com>
+ <1463123033-5443-2-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160530012252.GA12180@verge.net.au>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463123033-5443-2-git-send-email-appanad@xilinx.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Appana Durga Kedareswara Rao <appanad@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon-san,
+Ping!!
 
-> From: Simon Horman
-> Sent: Monday, May 30, 2016 10:23 AM
+> -----Original Message-----
+> From: Kedareswara rao Appana [mailto:appana.durga.rao@xilinx.com]
+> Sent: Friday, May 13, 2016 12:34 PM
+> To: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+> vinod.koul@intel.com; dan.j.williams@intel.com; Appana Durga Kedareswara
+> Rao <appanad@xilinx.com>; moritz.fischer@ettus.com;
+> laurent.pinchart@ideasonboard.com; luis@debethencourt.com
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; dmaengine@vger.kernel.org; Punnaiah Choudary
+> Kalluri <punnaia@xilinx.com>
+> Subject: [PATCH v9 2/2] dmaengine: Add Xilinx zynqmp dma engine driver
+> support
 > 
-> On Thu, May 26, 2016 at 11:46:36AM +0900, Simon Horman wrote:
-> > On Tue, May 24, 2016 at 07:34:14PM +0900, Yoshihiro Shimoda wrote:
-> > > This patch is based on the renesas-drivers / renesas-drivers-2016-05-17-v4.6 tag.
-> >
-> > Thanks, I have queued this up for v4.8.
-> > Please let me know if that was not your intention.
+> Added the driver for zynqmp dma engine used in Zynq
+> UltraScale+ MPSoC. This dma controller supports memory to memory
+> and memory to I/O buffer transfers.
 > 
-> Hi Shimoda-san,
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> ---
+> Changes for v9:
+> - Derive the include sg software runtime configuration parameter
+>   through config strucutre as suggested by the Lars.
+> Changes for v8:
+> - Derive the software runtime configuration parameters
+>   through config strucutre and configure them during transfer
+>   as suggested by the Lars.
+> Changes for v7:
+> - Fixed kbuild compilation warnings.
+> - Fixed {src,dst}_addr_widths are supposed to be a bitmask of
+>   supported slave device widths as suggested by Rob.
+> Changes in v6:
+> - Removed unnecessary axcache properties from the driver
+> - Fixed compilation issues
+> Changes in v5:
+> - Removed in_interrupt check from the tasklet cleanup as
+>   suggested by the vinod/lars.
+> Changes in v4:
+> - Modified the defines to start with ZYNQMP_DMA perfix
+> - Changed the zynqmp_dma_alloc_chan_resources to return number of
+>   allocated descriptors
+> - Changed the zynqmp_dma_device variable name
+> - Released the locks before calling user callback
+> - freeup irq in zynqmp_dma_chan_remove function.
+> Changes in v3:
+> - Modified the zynqmp_dma_chan_is_idle function return type to bool Changes
+> in v2:
+> - Corrected the function header documentation
+> - Framework expects bus-width value in bytes. so, fixed it
+> - Removed magic numbers for bus-width
 > 
-> unfortunately I have observed a problem with patch 3/4 ("arm64: dts:
-> salvator-x: enable USB 2.0 Host channel 0") after rebasing the
-> arm64-dt-for-v4.8 branch of the renesas tree on v4.7-rc1.
+>  drivers/dma/Kconfig             |    6 +
+>  drivers/dma/xilinx/Makefile     |    1 +
+>  drivers/dma/xilinx/zynqmp_dma.c | 1262
+> +++++++++++++++++++++++++++++++++++++++
+>  include/linux/dma/xilinx_dma.h  |   21 +-
+>  4 files changed, 1289 insertions(+), 1 deletion(-)  create mode 100644
+> drivers/dma/xilinx/zynqmp_dma.c
 > 
-> The problem I see occurs when booting using "defconfig" to an NFS-root
-> Debian user-space as per the boot log below. It appears to be readily
-> reproducible in my environment.
-
-Thank you for the report!
-I also reproduced this issue if I set the SW15 to pin 1-2 side on the board (this is the default setting).
-(My environment is NFS-rootfs and Yocto user-space.)
-If I set the SW15 to pin 2-3 side (as the commit log mentioned), this issue disappeared.
-Anyway, I will investigate this issue later.
-
-> As the problem prevents the system booting to user-space using the defconfig
-> I have dropped this series pending a resolution.
-
-I got it.
-
-Best regards,
-Yoshihiro Shimoda
-
-> [    0.000000] Booting Linux on physical CPU 0x0
-> [    0.000000] Linux version 4.7.0-rc1+ (horms@ayumi.isobedori.kobe.vergenet.net) (gcc version 4.8.5 (Linaro GCC
-> 4.8-2015.06) ) #161 SMP PREEMPT Mon May 30 10:08:57 JST 2016
-> [    0.000000] Boot CPU: AArch64 Processor [411fd073]
-> [    0.000000] debug: ignoring loglevel setting.
-> [    0.000000] efi: Getting EFI parameters from FDT:
-> [    0.000000] efi: UEFI not found.
-> [    0.000000] cma: Reserved 16 MiB at 0x000000007f000000
-> [    0.000000] On node 0 totalpages: 229376
-> [    0.000000]   DMA zone: 3584 pages used for memmap
-> [    0.000000]   DMA zone: 0 pages reserved
-> [    0.000000]   DMA zone: 229376 pages, LIFO batch:31
-> [    0.000000] psci: probing for conduit method from DT.
-> [    0.000000] psci: PSCIv1.0 detected in firmware.
-> [    0.000000] psci: Using standard PSCI v0.2 function IDs
-> [    0.000000] psci: Trusted OS migration not required
-> [    0.000000] percpu: Embedded 20 pages/cpu @ffff80003ef79000 s42752 r8192 d30976 u81920
-> [    0.000000] pcpu-alloc: s42752 r8192 d30976 u81920 alloc=20*4096
-> [    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3
-> [    0.000000] Detected PIPT I-cache on CPU0
-> [    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 225792
-> [    0.000000] Kernel command line: ignore_loglevel rw root=/dev/nfs ip=dhcp nfsroot=10.3.3.135:/srv/nfs/salvator-x-arm64
-> [    0.000000] log_buf_len individual max cpu contribution: 4096 bytes
-> [    0.000000] log_buf_len total cpu_extra contributions: 12288 bytes
-> [    0.000000] log_buf_len min size: 16384 bytes
-> [    0.000000] log_buf_len: 32768 bytes
-> [    0.000000] early log buf free: 14796(90%)
-> [    0.000000] PID hash table entries: 4096 (order: 3, 32768 bytes)
-> [    0.000000] Dentry cache hash table entries: 131072 (order: 8, 1048576 bytes)
-> [    0.000000] Inode-cache hash table entries: 65536 (order: 7, 524288 bytes)
-> [    0.000000] software IO TLB [mem 0x79c00000-0x7dc00000] (64MB) mapped at [ffff800039c00000-ffff80003dbfffff]
-> [    0.000000] Memory: 804172K/917504K available (7372K kernel code, 642K rwdata, 3184K rodata, 960K init, 259K bss, 96948K
-> reserved, 16384K cma-reserved)
-> [    0.000000] Virtual kernel memory layout:
-> [    0.000000]     modules : 0xffff000000000000 - 0xffff000008000000   (   128 MB)
-> [    0.000000]     vmalloc : 0xffff000008000000 - 0xffff7dffbfff0000   (129022 GB)
-> [    0.000000]       .text : 0xffff000008080000 - 0xffff0000087b0000   (  7360 KB)
-> [    0.000000]     .rodata : 0xffff0000087b0000 - 0xffff000008ad0000   (  3200 KB)
-> [    0.000000]       .init : 0xffff000008ad0000 - 0xffff000008bc0000   (   960 KB)
-> [    0.000000]       .data : 0xffff000008bc0000 - 0xffff000008c60a00   (   643 KB)
-> [    0.000000]        .bss : 0xffff000008c60a00 - 0xffff000008ca19b0   (   260 KB)
-> [    0.000000]     fixed   : 0xffff7dfffe7fd000 - 0xffff7dfffec00000   (  4108 KB)
-> [    0.000000]     PCI I/O : 0xffff7dfffee00000 - 0xffff7dffffe00000   (    16 MB)
-> [    0.000000]     vmemmap : 0xffff7e0000000000 - 0xffff800000000000   (  2048 GB maximum)
-> [    0.000000]               0xffff7e0000200000 - 0xffff7e0001000000   (    14 MB actual)
-> [    0.000000]     memory  : 0xffff800008000000 - 0xffff800040000000   (   896 MB)
-> [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
-> [    0.000000] Preemptible hierarchical RCU implementation.
-> [    0.000000]  Build-time adjustment of leaf fanout to 64.
-> [    0.000000]  RCU restricting CPUs from NR_CPUS=64 to nr_cpu_ids=4.
-> [    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=64, nr_cpu_ids=4
-> [    0.000000] NR_IRQS:64 nr_irqs:64 0
-> [    0.000000] Architected cp15 timer(s) running at 8.33MHz (virt).
-> [    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x1ec02923e, max_idle_ns: 440795202125
-> ns
-> [    0.000003] sched_clock: 56 bits at 8MHz, resolution 120ns, wraps every 2199023255496ns
-> [    0.000162] Console: colour dummy device 80x25
-> [    0.000500] console [tty0] enabled
-> [    0.000526] Calibrating delay loop (skipped), value calculated using timer frequency.. 16.66 BogoMIPS (lpj=33333)
-> [    0.000543] pid_max: default: 32768 minimum: 301
-> [    0.000599] Security Framework initialized
-> [    0.000633] Mount-cache hash table entries: 2048 (order: 2, 16384 bytes)
-> [    0.000643] Mountpoint-cache hash table entries: 2048 (order: 2, 16384 bytes)
-> [    0.001391] ASID allocator initialised with 65536 entries
-> [    0.020598] EFI services will not be available.
-> [    0.044220] Detected PIPT I-cache on CPU1
-> [    0.044273] CPU1: Booted secondary processor [411fd073]
-> [    0.060210] Detected PIPT I-cache on CPU2
-> [    0.060231] CPU2: Booted secondary processor [411fd073]
-> [    0.076218] Detected PIPT I-cache on CPU3
-> [    0.076238] CPU3: Booted secondary processor [411fd073]
-> [    0.076275] Brought up 4 CPUs
-> [    0.076324] SMP: Total of 4 processors activated.
-> [    0.076336] CPU features: detected feature: 32-bit EL0 Support
-> [    0.076347] CPU: All CPU(s) started at EL1
-> [    0.077233] devtmpfs: initialized
-> [    0.080201] DMI not present or invalid.
-> [    0.080376] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
-> [    0.080717] pinctrl core: initialized pinctrl subsystem
-> [    0.081638] NET: Registered protocol family 16
-> [    0.092136] cpuidle: using governor menu
-> [    0.092252] vdso: 2 pages (1 code @ ffff0000087b6000, 1 data @ ffff000008bc4000)
-> [    0.092280] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
-> [    0.092906] DMA: preallocated 256 KiB pool for atomic allocations
-> [    0.093066] Serial: AMBA PL011 UART driver
-> [    0.095910] sh-pfc e6060000.pfc: r8a77950_pfc support registered
-> [    0.096130] renesas_irqc e61c0000.interrupt-controller: failed to add to PM domain always-on: -517
-> [    0.124739] HugeTLB registered 2 MB page size, pre-allocated 0 pages
-> [    0.125565] ACPI: Interpreter disabled.
-> [    0.126257] vgaarb: loaded
-> [    0.126446] SCSI subsystem initialized
-> [    0.126556] libata version 3.00 loaded.
-> [    0.126756] usbcore: registered new interface driver usbfs
-> [    0.126797] usbcore: registered new interface driver hub
-> [    0.126841] usbcore: registered new device driver usb
-> [    0.127189] pps_core: LinuxPPS API ver. 1 registered
-> [    0.127203] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
-> [    0.127227] PTP clock support registered
-> [    0.127327] dmi: Firmware registration failed.
-> [    0.128590] Advanced Linux Sound Architecture Driver Initialized.
-> [    0.129212] clocksource: Switched to clocksource arch_sys_counter
-> [    0.129328] VFS: Disk quotas dquot_6.6.0
-> [    0.129375] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
-> [    0.129559] pnp: PnP ACPI: disabled
-> [    0.134027] NET: Registered protocol family 2
-> [    0.134468] TCP established hash table entries: 8192 (order: 4, 65536 bytes)
-> [    0.134508] TCP bind hash table entries: 8192 (order: 5, 131072 bytes)
-> [    0.134603] TCP: Hash tables configured (established 8192 bind 8192)
-> [    0.134699] UDP hash table entries: 512 (order: 2, 16384 bytes)
-> [    0.134718] UDP-Lite hash table entries: 512 (order: 2, 16384 bytes)
-> [    0.134824] NET: Registered protocol family 1
-> [    0.135023] RPC: Registered named UNIX socket transport module.
-> [    0.135035] RPC: Registered udp transport module.
-> [    0.135043] RPC: Registered tcp transport module.
-> [    0.135051] RPC: Registered tcp NFSv4.1 backchannel transport module.
-> [    0.135065] PCI: CLS 0 bytes, default 128
-> [    0.135517] hw perfevents: enabled with armv8_cortex_a57 PMU driver, 7 counters available
-> [    0.135715] kvm [1]: HYP mode not available
-> [    0.137311] futex hash table entries: 1024 (order: 5, 131072 bytes)
-> [    0.137420] audit: initializing netlink subsys (disabled)
-> [    0.137472] audit: type=2000 audit(0.135:1): initialized
-> [    0.137905] workingset: timestamp_bits=44 max_order=18 bucket_order=0
-> [    0.143669] squashfs: version 4.0 (2009/01/31) Phillip Lougher
-> [    0.144276] NFS: Registering the id_resolver key type
-> [    0.144319] Key type id_resolver registered
-> [    0.144327] Key type id_legacy registered
-> [    0.144486] fuse init (API version 7.24)
-> [    0.144791] 9p: Installing v9fs 9p2000 file system support
-> [    0.146335] io scheduler noop registered
-> [    0.146468] io scheduler cfq registered (default)
-> [    0.149759] gpio_rcar e6050000.gpio: driving 16 GPIOs
-> [    0.150111] gpio_rcar e6051000.gpio: driving 28 GPIOs
-> [    0.150372] gpio_rcar e6052000.gpio: driving 15 GPIOs
-> [    0.150613] gpio_rcar e6053000.gpio: driving 16 GPIOs
-> [    0.150860] gpio_rcar e6054000.gpio: driving 18 GPIOs
-> [    0.151130] gpio_rcar e6055000.gpio: driving 26 GPIOs
-> [    0.151405] gpio_rcar e6055400.gpio: driving 32 GPIOs
-> [    0.151617] gpio_rcar e6055800.gpio: driving 4 GPIOs
-> [    0.152159] PCI host bridge /soc/pcie@fe000000 ranges:
-> [    0.152189]    IO 0xfe100000..0xfe1fffff -> 0x00000000
-> [    0.152205]   MEM 0xfe200000..0xfe3fffff -> 0xfe200000
-> [    0.152217]   MEM 0x30000000..0x37ffffff -> 0x30000000
-> [    0.152227]   MEM 0x38000000..0x3fffffff -> 0x38000000
-> [    0.269217] rcar-pcie fe000000.pcie: PCIe link down
-> [    0.269332] PCI host bridge /soc/pcie@ee800000 ranges:
-> [    0.269354]    IO 0xee900000..0xee9fffff -> 0x00000000
-> [    0.269368]   MEM 0xeea00000..0xeebfffff -> 0xeea00000
-> [    0.269380]   MEM 0xc0000000..0xc7ffffff -> 0xc0000000
-> [    0.269390]   MEM 0xc8000000..0xcfffffff -> 0xc8000000
-> [    0.389211] rcar-pcie ee800000.pcie: PCIe link down
-> [    0.399210] xenfs: not registering filesystem on non-xen platform
-> [    0.401344] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
-> [    0.402593] SuperH (H)SCI(F) driver initialized
-> [    0.403028] e6e68000.serial: ttySC1 at MMIO 0xe6e68000 (irq = 134, base_baud = 0) is a scif
-> [    0.403430] e6e88000.serial: ttySC0 at MMIO 0xe6e88000 (irq = 135, base_baud = 0) is a scif
-> [    1.268247] console [ttySC0] enabled
-> [    1.272313] msm_serial: driver initialized
-> [    1.280657] loop: module loaded
-> [    1.285441] scsi host0: sata_rcar
-> [    1.288932] ata1: SATA max UDMA/133 irq 137
-> [    1.293999] tun: Universal TUN/TAP device driver, 1.6
-> [    1.299093] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
-> [    1.305592] e1000e: Intel(R) PRO/1000 Network Driver - 3.2.6-k
-> [    1.311471] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-> [    1.317443] igb: Intel(R) Gigabit Ethernet Network Driver - version 5.3.0-k
-> [    1.324412] igb: Copyright (c) 2007-2014 Intel Corporation.
-> [    1.330025] igbvf: Intel(R) Gigabit Virtual Function Network Driver - version 2.0.2-k
-> [    1.337866] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
-> [    1.343823] sky2: driver version 1.30
-> [    1.348151] libphy: ravb_mii: probed
-> [    1.352632] ravb e6800000.ethernet eth0: Base address at 0xe6800000, 2e:09:0a:00:83:92, IRQ 131.
-> [    1.361787] VFIO - User Level meta-driver version: 0.3
-> [    1.367651] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-> [    1.374216] ehci-pci: EHCI PCI platform driver
-> [    1.378701] ehci-platform: EHCI generic platform driver
-> [    1.384259] ehci-platform ee0a0100.usb: EHCI Host Controller
-> [    1.389955] ehci-platform ee0a0100.usb: new USB bus registered, assigned bus number 1
-> [    1.397985] ehci-platform ee0a0100.usb: irq 144, io mem 0xee0a0100
-> [    1.413222] ehci-platform ee0a0100.usb: USB 2.0 started, EHCI 1.10
-> [    1.419856] hub 1-0:1.0: USB hub found
-> [    1.423632] hub 1-0:1.0: 1 port detected
-> [    1.427848] ehci-platform ee0c0100.usb: EHCI Host Controller
-> [    1.433529] ehci-platform ee0c0100.usb: new USB bus registered, assigned bus number 2
-> [    1.441486] ehci-platform ee0c0100.usb: irq 145, io mem 0xee0c0100
-> [    1.457217] ehci-platform ee0c0100.usb: USB 2.0 started, EHCI 1.10
-> [    1.463725] hub 2-0:1.0: USB hub found
-> [    1.467492] hub 2-0:1.0: 1 port detected
-> [    1.471608] ehci-msm: Qualcomm On-Chip EHCI Host Controller
-> [    1.477294] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
-> [    1.483492] ohci-pci: OHCI PCI platform driver
-> [    1.487984] ohci-platform: OHCI generic platform driver
-> [    1.493395] ohci-platform ee0a0000.usb: Generic Platform OHCI controller
-> [    1.500113] ohci-platform ee0a0000.usb: new USB bus registered, assigned bus number 3
-> [    1.508029] ohci-platform ee0a0000.usb: irq 144, io mem 0xee0a0000
-> [    1.599661] hub 3-0:1.0: USB hub found
-> [    1.603431] hub 3-0:1.0: 1 port detected
-> [    1.607570] ohci-platform ee0c0000.usb: Generic Platform OHCI controller
-> [    1.614289] ohci-platform ee0c0000.usb: new USB bus registered, assigned bus number 4
-> [    1.622195] ohci-platform ee0c0000.usb: irq 145, io mem 0xee0c0000
-> [    1.701214] ata1: link resume succeeded after 1 retries
-> [    1.711542] hub 4-0:1.0: USB hub found
-> [    1.715309] hub 4-0:1.0: 1 port detected
-> [    1.719514] usbcore: registered new interface driver usb-storage
-> [    1.726259] mousedev: PS/2 mouse device common for all mice
-> [    1.732326] i2c /dev entries driver
-> [    1.736934] i2c-rcar e6510000.i2c: probed
-> [    1.741990] sdhci: Secure Digital Host Controller Interface driver
-> [    1.748182] sdhci: Copyright(c) Pierre Ossman
-> [    1.752562] Synopsys Designware Multimedia Card Interface Driver
-> [    1.758859] sdhci-pltfm: SDHCI platform and OF driver helper
-> [    1.764886] ledtrig-cpu: registered to indicate activity on CPUs
-> [    1.771349] usbcore: registered new interface driver usbhid
-> [    1.776931] usbhid: USB HID core driver
-> [    1.786075] cs2000-cp 2-004f: revision - C1
-> [    1.791318] ak4613-codec 2-0010: No cache used with register defaults set!
-> [    1.802742] rcar_sound ec500000.sound: probed
-> [    1.807384] NET: Registered protocol family 17
-> [    1.811933] 9pnet: Installing 9P2000 support
-> [    1.812641] ata1: SATA link down (SStatus 0 SControl 300)
-> [    1.821686] Key type dns_resolver registered
-> [    1.826430] registered taskstats version 1
-> [    1.830955] renesas_irqc e61c0000.interrupt-controller: driving 6 irqs
-> [    1.838965] ehci-platform ee080100.usb: EHCI Host Controller
-> [    1.844678] ehci-platform ee080100.usb: new USB bus registered, assigned bus number 5
-> [    1.852737] ehci-platform ee080100.usb: irq 143, io mem 0xee080100
-> [    1.869225] ehci-platform ee080100.usb: USB 2.0 started, EHCI 1.10
-> [    1.875924] hub 5-0:1.0: USB hub found
-> [    1.879737] hub 5-0:1.0: 1 port detected
-> [    1.884365] ohci-platform ee080000.usb: Generic Platform OHCI controller
-> [    1.891140] ohci-platform ee080000.usb: new USB bus registered, assigned bus number 6
-> [    1.899193] ohci-platform ee080000.usb: irq 143, io mem 0xee080000
-> [    1.991820] hub 6-0:1.0: USB hub found
-> [    1.995649] hub 6-0:1.0: 1 port detected
-> [    2.000832] asoc-simple-card sound: ak4613-hifi <-> ec500000.sound mapping ok
-> [    2.013932] hctosys: unable to open rtc device (rtc0)
-> [    2.089368] ravb e6800000.ethernet eth0: limited PHY to 100Mbit/s
-> [    2.095566] Micrel KSZ9031 Gigabit PHY e6800000.etherne:00: attached PHY driver [Micrel KSZ9031 Gigabit PHY]
-> (mii_bus:phy_addr=e6800000.etherne:00, irq=208)
-> [    4.643242] ravb e6800000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off
-> [    4.665226] Sending DHCP requests .
-> [    4.670246] ravb e6800000.ethernet eth0: Link is Down
-> [    7.049220] .
-> [    7.210860] ravb e6800000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off
-> [    8.090016] random: nonblocking pool is initialized
-> [   11.221213] ., OK
-> [   12.313237] IP-Config: Got DHCP answer from 10.3.3.2, my address is 10.3.3.70
-> [   12.320632] IP-Config: Complete:
-> [   12.323917]      device=eth0, hwaddr=2e:09:0a:00:83:92, ipaddr=10.3.3.70, mask=255.255.255.0, gw=10.3.3.2
-> [   12.333515]      host=10.3.3.70, domain=isobedori.kobe.vergenet.net kanocho.kobe.vergenet.net vergenet.,
-> nis-domain=(none)
-> [   12.344569]      bootserver=0.0.0.0, rootserver=10.3.3.135, rootpath=     nameserver0=10.3.3.2, nameserver1=8.8.8.8
-> [   12.355073] SDHI0 Vcc: disabling
-> [   12.358311] SDHI3 Vcc: disabling
-> [   12.361895] ALSA device list:
-> [   12.364862]   #0: rsnd-dai.0-ak4613-hifi
-> [   12.372869] VFS: Mounted root (nfs filesystem) on device 0:15.
-> [   12.379011] devtmpfs: mounted
-> [   12.382755] Freeing unused kernel memory: 960K (ffff800008ad0000 - ffff800008bc0000)
-> [   12.790713] systemd[1]: Failed to set the kernel's timezone, ignoring: Invalid argument
-> [   12.829873] systemd[1]: systemd 215 running in system mode. (+PAM +AUDIT +SELINUX +IMA +SYSVINIT +LIBCRYPTSETUP +GCRYPT
-> +ACL +XZ -SECCOMP -APPARMOR)
-> [   12.843536] systemd[1]: Detected architecture 'arm64'.
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig index f843dd5..6758417
+> 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -527,6 +527,12 @@ config ZX_DMA
+>  	help
+>  	  Support the DMA engine for ZTE ZX296702 platform devices.
 > 
-> Welcome to Debian GNU/Linux 8 (jessie)!
+> +config XILINX_ZYNQMP_DMA
+> +	tristate "Xilinx ZynqMP DMA Engine"
+> +	depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
+> +	select DMA_ENGINE
+> +	help
+> +	  Enable support for Xilinx ZynqMP DMA controller.
 > 
-> [   12.863659] systemd[1]: Failed to insert module 'ipv6'
-> [   12.875770] systemd[1]: Set hostname to <Debian>.
-> [   13.116303] systemd[1]: Cannot add dependency job for unit dbus.socket, ignoring: Unit dbus.socket failed to load:
-> No such file or directory.
-> [   13.129178] systemd[1]: Cannot add dependency job for unit display-manager.service, ignoring: Unit
-> display-manager.service failed to load: No such file or directory.
-> [   13.145888] systemd[1]: Expecting device dev-ttySC0.device...
->          Expecting device dev-ttySC0.device...
-> [   13.161320] systemd[1]: Starting Forward Password Requests to Wall Directory Watch.
-> [   13.169165] systemd[1]: Started Forward Password Requests to Wall Directory Watch.
-> [   13.176849] systemd[1]: Starting Remote File Systems (Pre).
-> [  OK  ] Reached target Remote File Systems (Pre).
-> [   13.193270] systemd[1]: Reached target Remote File Systems (Pre).
-> [   13.199488] systemd[1]: Starting Dispatch Password Requests to Console Directory Watch.
-> [   13.207672] systemd[1]: Started Dispatch Password Requests to Console Directory Watch.
-> [   13.215665] systemd[1]: Starting Paths.
-> [  OK  ] Reached target Paths.
-> [   13.229265] systemd[1]: Reached target Paths.
-> [   13.233735] systemd[1]: Set up automount Arbitrary Executable File Formats File System Automount Point.
-> [   13.243206] systemd[1]: Starting Encrypted Volumes.
-> [  OK  ] Reached target Encrypted Volumes.
-> [   13.257266] systemd[1]: Reached target Encrypted Volumes.
-> [   13.262733] systemd[1]: Starting Swap.
-> [  OK  ] Reached target Swap.
-> [   13.273250] systemd[1]: Reached target Swap.
-> [   13.277607] systemd[1]: Starting Root Slice.
-> [  OK  ] Created slice Root Slice.
-> [   13.289264] systemd[1]: Created slice Root Slice.
-> [   13.294053] systemd[1]: Starting User and Session Slice.
-> [  OK  ] Created slice User and Session Slice.
-> [   13.309259] systemd[1]: Created slice User and Session Slice.
-> [   13.315063] systemd[1]: Starting Delayed Shutdown Socket.
-> [  OK  ] Listening on Delayed Shutdown Socket.
-> [   13.329275] systemd[1]: Listening on Delayed Shutdown Socket.
-> [   13.335154] systemd[1]: Starting /dev/initctl Compatibility Named Pipe.
-> [  OK  ] Listening on /dev/initctl Compatibility Named Pipe.
-> [   13.353282] systemd[1]: Listening on /dev/initctl Compatibility Named Pipe.
-> [   13.360319] systemd[1]: Starting Journal Socket (/dev/log).
-> [  OK  ] Listening on Journal Socket (/dev/log).
-> [   13.377273] systemd[1]: Listening on Journal Socket (/dev/log).
-> [   13.383296] systemd[1]: Starting udev Control Socket.
-> [  OK  ] Listening on udev Control Socket.
-> [   13.397275] systemd[1]: Listening on udev Control Socket.
-> [   13.402780] systemd[1]: Starting udev Kernel Socket.
-> [  OK  ] Listening on udev Kernel Socket.
-> [   13.417282] systemd[1]: Listening on udev Kernel Socket.
-> [   13.422700] systemd[1]: Starting Journal Socket.
-> [  OK  ] Listening on Journal Socket.
-> [   13.437279] systemd[1]: Listening on Journal Socket.
-> [   13.442364] systemd[1]: Starting Sockets.
-> [  OK  ] Reached target Sockets.
-> [   13.457272] systemd[1]: Reached target Sockets.
-> [   13.461877] systemd[1]: Starting System Slice.
-> [  OK  ] Created slice System Slice.
-> [   13.477284] systemd[1]: Created slice System Slice.
-> [   13.482283] systemd[1]: Starting system-getty.slice.
-> [  OK  ] Created slice system-getty.slice.
-> [   13.497275] systemd[1]: Created slice system-getty.slice.
-> [   13.502745] systemd[1]: Starting system-serial\x2dgetty.slice.
-> [  OK  ] Created slice system-serial\x2dgetty.slice.
-> [   13.517278] systemd[1]: Created slice system-serial\x2dgetty.slice.
-> [   13.523975] systemd[1]: Mounting Debug File System...
->          Mounting Debug File System...
-> [   13.555894] systemd[1]: Started Set Up Additional Binary Formats.
-> [   13.562185] systemd[1]: Started Create list of required static device nodes for the current kernel.
-> [   13.571527] systemd[1]: Starting Create Static Device Nodes in /dev...
->          Starting Create Static Device Nodes in /dev...
-> [   13.591444] systemd[1]: Starting udev Coldplug all Devices...
->          Starting udev Coldplug all Devices...
-> [   13.620715] systemd[1]: Starting Load Kernel Modules...
->          Starting Load Kernel Modules...
-> [   13.645889] systemd[1]: Mounting POSIX Message Queue File System...
->          Mounting POSIX Message Queue File System...
-> [   13.663576] systemd[1]: Mounting Huge Pages File System...
->          Mounting Huge Pages File System...
-> [   13.679517] systemd[1]: Starting Journal Service...
->          Starting Journal Service...
-> [  OK  ] Started Journal Service.
-> [   13.705397] systemd[1]: Started Journal Service.
-> [  OK  ] Reached target Slices.
->          Starting Remount Root and Kernel File Systems...
-> [  OK  ] Mounted Huge Pages File System.
-> [  OK  ] Mounted POSIX Message Queue File System.
-> [  OK  ] Mounted Debug File System.
-> [  OK  ] Started Create Static Device Nodes in /dev.
-> [   13.806015] BUG: scheduling while atomic: kworker/u8:2/37/0x00010102
-> [   13.812393] Modules linked in:
-> [   13.815463] CPU: 0 PID: 37 Comm: kworker/u8:2 Not tainted 4.7.0-rc1+ #161
-> [   13.822251] Hardware name: Renesas Salvator-X board based on r8a7795 (DT)
-> [   13.829060] Workqueue: events_unbound call_usermodehelper_exec_work
-> [   13.835335] Call trace:
-> [   13.837787] [<ffff000008088864>] dump_backtrace+0x0/0x1ac
-> [   13.843187] [<ffff000008088a24>] show_stack+0x14/0x1c
-> [   13.848246] [<ffff0000083361f4>] dump_stack+0x8c/0xb0
-> [   13.853307] [<ffff00000814d0d4>] __schedule_bug+0x40/0x58
-> [   13.858713] [<ffff00000879a9bc>] __schedule+0x46c/0x568
-> [   13.863936] [<ffff00000879aaf4>] schedule+0x3c/0xa0
-> [   13.868814] [<ffff00000879aec8>] schedule_preempt_disabled+0x20/0x38
-> [   13.875174] [<ffff0000080ee514>] mutex_optimistic_spin+0x174/0x1b0
-> [   13.881355] [<ffff00000879c4e8>] __mutex_lock_slowpath+0x38/0x148
-> [   13.887446] [<ffff00000879c63c>] mutex_lock+0x44/0x48
-> [   13.892501] [<ffff00000833a054>] kobject_uevent_env+0x244/0x510
-> [   13.898427] [<ffff000008687df8>] extcon_update_state+0x1d4/0x2a8
-> [   13.904432] [<ffff000008687f64>] extcon_set_cable_state_+0x70/0x80
-> [   13.910624] [<ffff000008363594>] rcar_gen3_device_recognition+0xc4/0xe0
-> [   13.917239] [<ffff0000083636e0>] rcar_gen3_phy_usb2_irq+0x38/0x44
-> [   13.923334] [<ffff0000080f6b9c>] handle_irq_event_percpu+0x60/0x140
-> [   13.929599] [<ffff0000080f6cc0>] handle_irq_event+0x44/0x74
-> [   13.935174] [<ffff0000080fa0d0>] handle_fasteoi_irq+0xb4/0x184
-> [   13.941005] [<ffff0000080f6124>] generic_handle_irq+0x24/0x38
-> [   13.946750] [<ffff0000080f6460>] __handle_domain_irq+0x64/0xb0
-> [   13.952582] [<ffff00000808153c>] gic_handle_irq+0x5c/0xb4
-> [   13.957979] Exception stack(0xffff80003ef7cca0 to 0xffff80003ef7cdc0)
-> [   13.964420] cca0: ffff80003ef7ccd0 ffff800039095000 ffff80003ef7cdf0 ffff000008561ed8
-> [   13.972253] ccc0: 0000000040000145 0000000000000014 0000000000000040 0000000000000000
-> [   13.980084] cce0: 0000000000000001 ffff000008357584 0000000077ddd380 0000000000000000
-> [   13.987916] cd00: 0000000000040000 ffff800037c6b290 ffff80003ef823e8 ffff0000080932b0
-> [   13.995747] cd20: 0000000000000000 0000000000000000 0000000000000087 0000000000000000
-> [   14.003578] cd40: 000000000a030387 0000000000000000 0000000000000000 0000000000000001
-> [   14.011409] cd60: ffff0000088ad5e0 ffff800039095000 ffff800039095000 ffff00000802c37c
-> [   14.019240] cd80: 000000000000003f ffff000008d8a000 0000000000000014 ffff800038807f00
-> [   14.027071] cda0: 0000000000000602 ffff800039095800 ffff800039095000 ffff80003ef7cdf0
-> [   14.034905] [<ffff000008084720>] el1_irq+0xa0/0x10c
-> [   14.039788] [<ffff0000086dcd0c>] net_rx_action+0x130/0x2cc
-> [   14.045277] [<ffff0000080bc454>] __do_softirq+0x10c/0x210
-> [   14.050675] [<ffff0000080bc7a4>] irq_exit+0x8c/0xcc
-> [   14.055552] [<ffff0000080f6464>] __handle_domain_irq+0x68/0xb0
-> [   14.061383] [<ffff00000808153c>] gic_handle_irq+0x5c/0xb4
-> [   14.066780] Exception stack(0xffff80003ef7d050 to 0xffff80003ef7d170)
-> [   14.073218] d040:                                   ffff800039a9fb70 ffff80003efbe380
-> [   14.081049] d060: ffff800039a9fc90 ffff00000879e310 0000000060000145 ffff800038816e80
-> [   14.088880] d080: ffff800039a9fc90 ffff800039a9fb70 0000000000000000 0000000000000000
-> [   14.096711] d0a0: ffff80003911c750 0000000000000000 0000000000000000 0000000000000000
-> [   14.104542] d0c0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-> [   14.112373] d0e0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-> [   14.120203] d100: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-> [   14.128034] d120: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-> [   14.135865] d140: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-> [   14.143696] d160: 0000000000000000 0000000000000000
-> [   14.148573] [<ffff000008084720>] el1_irq+0xa0/0x10c
-> [   14.153454] [<ffff00000879e310>] _raw_spin_unlock_irqrestore+0x18/0x40
-> [   14.159983] [<ffff0000080db2e0>] wake_up_new_task+0x10c/0x150
-> [   14.165729] [<ffff0000080b7220>] _do_fork+0x138/0x338
-> [   14.170778] [<ffff0000080b746c>] kernel_thread+0x34/0x3c
-> [   14.176091] [<ffff0000080caeb0>] call_usermodehelper_exec_work+0x2c/0xd8
-> [   14.182792] [<ffff0000080cda2c>] process_one_work+0x130/0x2e8
-> [   14.188535] [<ffff0000080cdc3c>] worker_thread+0x58/0x438
-> [   14.193936] [<ffff0000080d34b8>] kthread+0xd4/0xe8
-> [   14.198726] [<ffff000008084e10>] ret_from_fork+0x10/0x40
-> [   14.204075] Unable to handle kernel NULL pointer dereference at virtual address 0000083c
+>  # driver files
+>  source "drivers/dma/bestcomm/Kconfig"
+> diff --git a/drivers/dma/xilinx/Makefile b/drivers/dma/xilinx/Makefile index
+> 3c4e9f2..95469dc 100644
+> --- a/drivers/dma/xilinx/Makefile
+> +++ b/drivers/dma/xilinx/Makefile
+> @@ -1 +1,2 @@
+>  obj-$(CONFIG_XILINX_VDMA) += xilinx_vdma.o
+> +obj-$(CONFIG_XILINX_ZYNQMP_DMA) += zynqmp_dma.o
+> diff --git a/drivers/dma/xilinx/zynqmp_dma.c
+> b/drivers/dma/xilinx/zynqmp_dma.c new file mode 100644 index
+> 0000000..9964dcb
+> --- /dev/null
+> +++ b/drivers/dma/xilinx/zynqmp_dma.c
+> @@ -0,0 +1,1262 @@
+> +/*
+> + * DMA driver for Xilinx ZynqMP DMA Engine
+> + *
+> + * Copyright (C) 2016 Xilinx, Inc. All rights reserved.
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation, either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/dma/xilinx_dma.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/dmapool.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_dma.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/slab.h>
+> +#include <linux/clk.h>
+> +
+> +#include "../dmaengine.h"
+> +
+> +/* Register Offsets */
+> +#define ZYNQMP_DMA_ISR			0x100
+> +#define ZYNQMP_DMA_IMR			0x104
+> +#define ZYNQMP_DMA_IER			0x108
+> +#define ZYNQMP_DMA_IDS			0x10C
+> +#define ZYNQMP_DMA_CTRL0		0x110
+> +#define ZYNQMP_DMA_CTRL1		0x114
+> +#define ZYNQMP_DMA_DATA_ATTR		0x120
+> +#define ZYNQMP_DMA_DSCR_ATTR		0x124
+> +#define ZYNQMP_DMA_SRC_DSCR_WRD0	0x128
+> +#define ZYNQMP_DMA_SRC_DSCR_WRD1	0x12C
+> +#define ZYNQMP_DMA_SRC_DSCR_WRD2	0x130
+> +#define ZYNQMP_DMA_SRC_DSCR_WRD3	0x134
+> +#define ZYNQMP_DMA_DST_DSCR_WRD0	0x138
+> +#define ZYNQMP_DMA_DST_DSCR_WRD1	0x13C
+> +#define ZYNQMP_DMA_DST_DSCR_WRD2	0x140
+> +#define ZYNQMP_DMA_DST_DSCR_WRD3	0x144
+> +#define ZYNQMP_DMA_SRC_START_LSB	0x158
+> +#define ZYNQMP_DMA_SRC_START_MSB	0x15C
+> +#define ZYNQMP_DMA_DST_START_LSB	0x160
+> +#define ZYNQMP_DMA_DST_START_MSB	0x164
+> +#define ZYNQMP_DMA_RATE_CTRL		0x18C
+> +#define ZYNQMP_DMA_IRQ_SRC_ACCT		0x190
+> +#define ZYNQMP_DMA_IRQ_DST_ACCT		0x194
+> +#define ZYNQMP_DMA_CTRL2		0x200
+> +
+> +/* Interrupt registers bit field definitions */
+> +#define ZYNQMP_DMA_DONE			BIT(10)
+> +#define ZYNQMP_DMA_AXI_WR_DATA		BIT(9)
+> +#define ZYNQMP_DMA_AXI_RD_DATA		BIT(8)
+> +#define ZYNQMP_DMA_AXI_RD_DST_DSCR	BIT(7)
+> +#define ZYNQMP_DMA_AXI_RD_SRC_DSCR	BIT(6)
+> +#define ZYNQMP_DMA_IRQ_DST_ACCT_ERR	BIT(5)
+> +#define ZYNQMP_DMA_IRQ_SRC_ACCT_ERR	BIT(4)
+> +#define ZYNQMP_DMA_BYTE_CNT_OVRFL	BIT(3)
+> +#define ZYNQMP_DMA_DST_DSCR_DONE	BIT(2)
+> +#define ZYNQMP_DMA_INV_APB		BIT(0)
+> +
+> +/* Control 0 register bit field definitions */
+> +#define ZYNQMP_DMA_OVR_FETCH		BIT(7)
+> +#define ZYNQMP_DMA_POINT_TYPE_SG	BIT(6)
+> +#define ZYNQMP_DMA_RATE_CTRL_EN		BIT(3)
+> +
+> +/* Control 1 register bit field definitions */
+> +#define ZYNQMP_DMA_SRC_ISSUE		GENMASK(4, 0)
+> +
+> +/* Data Attribute register bit field definitions */
+> +#define ZYNQMP_DMA_ARBURST		GENMASK(27, 26)
+> +#define ZYNQMP_DMA_ARCACHE		GENMASK(25, 22)
+> +#define ZYNQMP_DMA_ARCACHE_OFST		22
+> +#define ZYNQMP_DMA_ARQOS		GENMASK(21, 18)
+> +#define ZYNQMP_DMA_ARQOS_OFST		18
+> +#define ZYNQMP_DMA_ARLEN		GENMASK(17, 14)
+> +#define ZYNQMP_DMA_ARLEN_OFST		14
+> +#define ZYNQMP_DMA_AWBURST		GENMASK(13, 12)
+> +#define ZYNQMP_DMA_AWCACHE		GENMASK(11, 8)
+> +#define ZYNQMP_DMA_AWCACHE_OFST		8
+> +#define ZYNQMP_DMA_AWQOS		GENMASK(7, 4)
+> +#define ZYNQMP_DMA_AWQOS_OFST		4
+> +#define ZYNQMP_DMA_AWLEN		GENMASK(3, 0)
+> +#define ZYNQMP_DMA_AWLEN_OFST		0
+> +
+> +/* Descriptor Attribute register bit field definitions */
+> +#define ZYNQMP_DMA_AXCOHRNT		BIT(8)
+> +#define ZYNQMP_DMA_AXCACHE		GENMASK(7, 4)
+> +#define ZYNQMP_DMA_AXCACHE_OFST		4
+> +#define ZYNQMP_DMA_AXQOS		GENMASK(3, 0)
+> +#define ZYNQMP_DMA_AXQOS_OFST		0
+> +
+> +/* Control register 2 bit field definitions */
+> +#define ZYNQMP_DMA_ENABLE		BIT(0)
+> +
+> +/* Buffer Descriptor definitions */
+> +#define ZYNQMP_DMA_DESC_CTRL_STOP	0x10
+> +#define ZYNQMP_DMA_DESC_CTRL_COMP_INT	0x4
+> +#define ZYNQMP_DMA_DESC_CTRL_SIZE_256	0x2
+> +#define ZYNQMP_DMA_DESC_CTRL_COHRNT	0x1
+> +
+> +/* Interrupt Mask specific definitions */
+> +#define ZYNQMP_DMA_INT_ERR	(ZYNQMP_DMA_AXI_RD_DATA | \
+> +				ZYNQMP_DMA_AXI_WR_DATA | \
+> +				ZYNQMP_DMA_AXI_RD_DST_DSCR | \
+> +				ZYNQMP_DMA_AXI_RD_SRC_DSCR | \
+> +				ZYNQMP_DMA_INV_APB)
+> +#define ZYNQMP_DMA_INT_OVRFL	(ZYNQMP_DMA_BYTE_CNT_OVRFL | \
+> +				ZYNQMP_DMA_IRQ_SRC_ACCT_ERR | \
+> +				ZYNQMP_DMA_IRQ_DST_ACCT_ERR)
+> +#define ZYNQMP_DMA_INT_DONE	(ZYNQMP_DMA_DONE |
+> ZYNQMP_DMA_DST_DSCR_DONE)
+> +#define ZYNQMP_DMA_INT_EN_DEFAULT_MASK
+> 	(ZYNQMP_DMA_INT_DONE | \
+> +					ZYNQMP_DMA_INT_ERR | \
+> +					ZYNQMP_DMA_INT_OVRFL | \
+> +					ZYNQMP_DMA_DST_DSCR_DONE)
+> +
+> +/* Max number of descriptors per channel */
+> +#define ZYNQMP_DMA_NUM_DESCS	32
+> +
+> +/* Max transfer size per descriptor */
+> +#define ZYNQMP_DMA_MAX_TRANS_LEN	0x40000000
+> +
+> +/* Reset values for data attributes */
+> +#define ZYNQMP_DMA_AXCACHE_VAL		0xF
+> +#define ZYNQMP_DMA_ARLEN_RST_VAL	0xF
+> +#define ZYNQMP_DMA_AWLEN_RST_VAL	0xF
+> +
+> +#define ZYNQMP_DMA_SRC_ISSUE_RST_VAL	0x1F
+> +
+> +#define ZYNQMP_DMA_IDS_DEFAULT_MASK	0xFFF
+> +
+> +/* Bus width in bits */
+> +#define ZYNQMP_DMA_BUS_WIDTH_64		64
+> +#define ZYNQMP_DMA_BUS_WIDTH_128	128
+> +
+> +#define ZYNQMP_DMA_DESC_SIZE(chan)	(chan->desc_size)
+> +
+> +#define to_chan(chan)		container_of(chan, struct zynqmp_dma_chan, \
+> +					     common)
+> +#define tx_to_desc(tx)		container_of(tx, struct zynqmp_dma_desc_sw,
+> \
+> +					     async_tx)
+> +
+> +/**
+> + * struct zynqmp_dma_desc_ll - Hw linked list descriptor
+> + * @addr: Buffer address
+> + * @size: Size of the buffer
+> + * @ctrl: Control word
+> + * @nxtdscraddr: Next descriptor base address
+> + * @rsvd: Reserved field and for Hw internal use.
+> + */
+> +struct zynqmp_dma_desc_ll {
+> +	u64 addr;
+> +	u32 size;
+> +	u32 ctrl;
+> +	u64 nxtdscraddr;
+> +	u64 rsvd;
+> +}; __aligned(64)
+> +
+> +/**
+> + * struct zynqmp_dma_desc_sw - Per Transaction structure
+> + * @src: Source address for simple mode dma
+> + * @dst: Destination address for simple mode dma
+> + * @len: Transfer length for simple mode dma
+> + * @node: Node in the channel descriptor list
+> + * @tx_list: List head for the current transfer
+> + * @async_tx: Async transaction descriptor
+> + * @src_v: Virtual address of the src descriptor
+> + * @src_p: Physical address of the src descriptor
+> + * @dst_v: Virtual address of the dst descriptor
+> + * @dst_p: Physical address of the dst descriptor  */ struct
+> +zynqmp_dma_desc_sw {
+> +	u64 src;
+> +	u64 dst;
+> +	u32 len;
+> +	struct list_head node;
+> +	struct list_head tx_list;
+> +	struct dma_async_tx_descriptor async_tx;
+> +	struct zynqmp_dma_desc_ll *src_v;
+> +	dma_addr_t src_p;
+> +	struct zynqmp_dma_desc_ll *dst_v;
+> +	dma_addr_t dst_p;
+> +};
+> +
+> +/**
+> + * struct zynqmp_dma_chan - Driver specific DMA channel structure
+> + * @zdev: Driver specific device structure
+> + * @regs: Control registers offset
+> + * @lock: Descriptor operation lock
+> + * @pending_list: Descriptors waiting
+> + * @free_list: Descriptors free
+> + * @active_list: Descriptors active
+> + * @sw_desc_pool: SW descriptor pool
+> + * @done_list: Complete descriptors
+> + * @common: DMA common channel
+> + * @desc_pool_v: Statically allocated descriptor base
+> + * @desc_pool_p: Physical allocated descriptor base
+> + * @desc_free_cnt: Descriptor available count
+> + * @dev: The dma device
+> + * @irq: Channel IRQ
+> + * @is_dmacoherent: Tells whether dma operations are coherent or not
+> + * @tasklet: Cleanup work after irq
+> + * @idle : Channel status;
+> + * @desc_size: Size of the low level descriptor
+> + * @err: Channel has errors
+> + * @bus_width: Bus width
+> + * @clk_main: Pointer to main clock
+> + * @clk_apb: Pointer to apb clock
+> + * @config: Device configuration info
+> + */
+> +struct zynqmp_dma_chan {
+> +	struct zynqmp_dma_device *zdev;
+> +	void __iomem *regs;
+> +	spinlock_t lock;
+> +	struct list_head pending_list;
+> +	struct list_head free_list;
+> +	struct list_head active_list;
+> +	struct zynqmp_dma_desc_sw *sw_desc_pool;
+> +	struct list_head done_list;
+> +	struct dma_chan common;
+> +	void *desc_pool_v;
+> +	dma_addr_t desc_pool_p;
+> +	u32 desc_free_cnt;
+> +	struct device *dev;
+> +	int irq;
+> +	bool is_dmacoherent;
+> +	struct tasklet_struct tasklet;
+> +	bool idle;
+> +	u32 desc_size;
+> +	bool err;
+> +	u32 bus_width;
+> +	struct clk *clk_main;
+> +	struct clk *clk_apb;
+> +	struct zynqmp_dma_config config;
+> +};
+> +
+> +/**
+> + * struct zynqmp_dma_device - DMA device structure
+> + * @dev: Device Structure
+> + * @common: DMA device structure
+> + * @chan: Driver specific DMA channel
+> + */
+> +struct zynqmp_dma_device {
+> +	struct device *dev;
+> +	struct dma_device common;
+> +	struct zynqmp_dma_chan *chan;
+> +};
+> +
+> +/**
+> + * zynqmp_dma_chan_is_idle - Provides the channel idle status
+> + * @chan: ZynqMP DMA DMA channel pointer
+> + *
+> + * Return: 'true' if the channel is idle otherwise 'false'
+> + */
+> +static inline bool zynqmp_dma_chan_is_idle(struct zynqmp_dma_chan
+> +*chan) {
+> +	return chan->idle;
+> +
+> +}
+> +
+> +/**
+> + * zynqmp_dma_update_desc_to_ctrlr - Updates descriptor to the
+> +controller
+> + * @chan: ZynqMP DMA DMA channel pointer
+> + * @desc: Transaction descriptor pointer  */ static void
+> +zynqmp_dma_update_desc_to_ctrlr(struct zynqmp_dma_chan *chan,
+> +				      struct zynqmp_dma_desc_sw *desc) {
+> +	dma_addr_t addr;
+> +
+> +	addr = desc->src_p;
+> +	writel(addr, chan->regs + ZYNQMP_DMA_SRC_START_LSB);
+> +	writel(upper_32_bits(addr), chan->regs +
+> ZYNQMP_DMA_SRC_START_MSB);
+> +	addr = desc->dst_p;
+> +	writel(addr, chan->regs + ZYNQMP_DMA_DST_START_LSB);
+> +	writel(upper_32_bits(addr), chan->regs +
+> ZYNQMP_DMA_DST_START_MSB); }
+> +
+> +/**
+> + * zynqmp_dma_desc_config_eod - Mark the descriptor as end descriptor
+> + * @chan: ZynqMP DMA channel pointer
+> + * @desc: Hw descriptor pointer
+> + */
+> +static void zynqmp_dma_desc_config_eod(struct zynqmp_dma_chan *chan,
+> +void *desc) {
+> +	struct zynqmp_dma_desc_ll *hw = (struct zynqmp_dma_desc_ll *)desc;
+> +
+> +	hw->ctrl |= ZYNQMP_DMA_DESC_CTRL_STOP;
+> +	hw++;
+> +	hw->ctrl |= ZYNQMP_DMA_DESC_CTRL_COMP_INT |
+> ZYNQMP_DMA_DESC_CTRL_STOP;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_config_simple_desc - Configure the transfer parameters
+> + * @chan: ZynqMP DMA channel pointer
+> + * @src: Source buffer address
+> + * @dst: Destination buffer address
+> + * @len: Transfer length
+> + */
+> +static void zynqmp_dma_config_simple_desc(struct zynqmp_dma_chan *chan,
+> +					  dma_addr_t src, dma_addr_t dst,
+> +					  size_t len)
+> +{
+> +	u32 val;
+> +
+> +	writel(src, chan->regs + ZYNQMP_DMA_SRC_DSCR_WRD0);
+> +	writel(upper_32_bits(src), chan->regs +
+> ZYNQMP_DMA_SRC_DSCR_WRD1);
+> +	writel(len, chan->regs + ZYNQMP_DMA_SRC_DSCR_WRD2);
+> +
+> +	if (chan->is_dmacoherent)
+> +		writel(ZYNQMP_DMA_DESC_CTRL_COHRNT,
+> +			chan->regs + ZYNQMP_DMA_SRC_DSCR_WRD3);
+> +	else
+> +		writel(0, chan->regs + ZYNQMP_DMA_SRC_DSCR_WRD3);
+> +
+> +	writel(dst, chan->regs + ZYNQMP_DMA_DST_DSCR_WRD0);
+> +	writel(upper_32_bits(dst), chan->regs +
+> ZYNQMP_DMA_DST_DSCR_WRD1);
+> +	writel(len, chan->regs + ZYNQMP_DMA_DST_DSCR_WRD2);
+> +
+> +	if (chan->is_dmacoherent)
+> +		val = ZYNQMP_DMA_DESC_CTRL_COHRNT |
+> +				ZYNQMP_DMA_DESC_CTRL_COMP_INT;
+> +	else
+> +		val = ZYNQMP_DMA_DESC_CTRL_COMP_INT;
+> +	writel(val, chan->regs + ZYNQMP_DMA_DST_DSCR_WRD3); }
+> +
+> +/**
+> + * zynqmp_dma_config_sg_ll_desc - Configure the linked list descriptor
+> + * @chan: ZynqMP DMA channel pointer
+> + * @sdesc: Hw descriptor pointer
+> + * @src: Source buffer address
+> + * @dst: Destination buffer address
+> + * @len: Transfer length
+> + * @prev: Previous hw descriptor pointer  */ static void
+> +zynqmp_dma_config_sg_ll_desc(struct zynqmp_dma_chan *chan,
+> +				   struct zynqmp_dma_desc_ll *sdesc,
+> +				   dma_addr_t src, dma_addr_t dst, size_t len,
+> +				   struct zynqmp_dma_desc_ll *prev) {
+> +	struct zynqmp_dma_desc_ll *ddesc = sdesc + 1;
+> +
+> +	sdesc->size = ddesc->size = len;
+> +	sdesc->addr = src;
+> +	ddesc->addr = dst;
+> +
+> +	sdesc->ctrl = ddesc->ctrl = ZYNQMP_DMA_DESC_CTRL_SIZE_256;
+> +	if (chan->is_dmacoherent) {
+> +		sdesc->ctrl |= ZYNQMP_DMA_DESC_CTRL_COHRNT;
+> +		ddesc->ctrl |= ZYNQMP_DMA_DESC_CTRL_COHRNT;
+> +	}
+> +
+> +	if (prev) {
+> +		dma_addr_t addr = chan->desc_pool_p +
+> +			    ((dma_addr_t)sdesc - (dma_addr_t)chan-
+> >desc_pool_v);
+> +		ddesc = prev + 1;
+> +		prev->nxtdscraddr = addr;
+> +		ddesc->nxtdscraddr = addr + ZYNQMP_DMA_DESC_SIZE(chan);
+> +	}
+> +}
+> +
+> +/**
+> + * zynqmp_dma_init - Initialize the channel
+> + * @chan: ZynqMP DMA channel pointer
+> + */
+> +static void zynqmp_dma_init(struct zynqmp_dma_chan *chan) {
+> +	u32 val;
+> +
+> +	writel(ZYNQMP_DMA_IDS_DEFAULT_MASK, chan->regs +
+> ZYNQMP_DMA_IDS);
+> +	val = readl(chan->regs + ZYNQMP_DMA_ISR);
+> +	writel(val, chan->regs + ZYNQMP_DMA_ISR);
+> +
+> +	val = 0;
+> +	if (chan->config.has_sg)
+> +		val |= ZYNQMP_DMA_POINT_TYPE_SG;
+> +	writel(val, chan->regs + ZYNQMP_DMA_CTRL0);
+> +
+> +	val = 0;
+> +	if (chan->is_dmacoherent) {
+> +		val |= ZYNQMP_DMA_AXCOHRNT;
+> +		val = (val & ~ZYNQMP_DMA_AXCACHE) |
+> +			(ZYNQMP_DMA_AXCACHE_VAL <<
+> ZYNQMP_DMA_AXCACHE_OFST);
+> +	}
+> +	writel(val, chan->regs + ZYNQMP_DMA_DSCR_ATTR);
+> +
+> +	val = readl(chan->regs + ZYNQMP_DMA_DATA_ATTR);
+> +	if (chan->is_dmacoherent) {
+> +		val = (val & ~ZYNQMP_DMA_ARCACHE) |
+> +			(ZYNQMP_DMA_AXCACHE_VAL <<
+> ZYNQMP_DMA_ARCACHE_OFST);
+> +		val = (val & ~ZYNQMP_DMA_AWCACHE) |
+> +			(ZYNQMP_DMA_AXCACHE_VAL <<
+> ZYNQMP_DMA_AWCACHE_OFST);
+> +	}
+> +	writel(val, chan->regs + ZYNQMP_DMA_DATA_ATTR);
+> +
+> +	/* Clearing the interrupt account rgisters */
+> +	val = readl(chan->regs + ZYNQMP_DMA_IRQ_SRC_ACCT);
+> +	val = readl(chan->regs + ZYNQMP_DMA_IRQ_DST_ACCT);
+> +
+> +	chan->idle = true;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_tx_submit - Submit DMA transaction
+> + * @tx: Async transaction descriptor pointer
+> + *
+> + * Return: cookie value
+> + */
+> +static dma_cookie_t zynqmp_dma_tx_submit(struct dma_async_tx_descriptor
+> +*tx) {
+> +	struct zynqmp_dma_chan *chan = to_chan(tx->chan);
+> +	struct zynqmp_dma_desc_sw *desc, *new;
+> +	dma_cookie_t cookie;
+> +
+> +	new = tx_to_desc(tx);
+> +	spin_lock_bh(&chan->lock);
+> +	cookie = dma_cookie_assign(tx);
+> +
+> +	if (!list_empty(&chan->pending_list) && chan->config.has_sg) {
+> +		desc = list_last_entry(&chan->pending_list,
+> +				     struct zynqmp_dma_desc_sw, node);
+> +		if (!list_empty(&desc->tx_list))
+> +			desc = list_last_entry(&desc->tx_list,
+> +					       struct zynqmp_dma_desc_sw,
+> node);
+> +		desc->src_v->nxtdscraddr = new->src_p;
+> +		desc->src_v->ctrl &= ~ZYNQMP_DMA_DESC_CTRL_STOP;
+> +		desc->dst_v->nxtdscraddr = new->dst_p;
+> +		desc->dst_v->ctrl &= ~ZYNQMP_DMA_DESC_CTRL_STOP;
+> +	}
+> +
+> +	list_add_tail(&new->node, &chan->pending_list);
+> +	spin_unlock_bh(&chan->lock);
+> +
+> +	return cookie;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_get_descriptor - Get the sw descriptor from the pool
+> + * @chan: ZynqMP DMA channel pointer
+> + *
+> + * Return: The sw descriptor
+> + */
+> +static struct zynqmp_dma_desc_sw *
+> +zynqmp_dma_get_descriptor(struct zynqmp_dma_chan *chan) {
+> +	struct zynqmp_dma_desc_sw *desc;
+> +
+> +	spin_lock_bh(&chan->lock);
+> +	desc = list_first_entry(&chan->free_list, struct zynqmp_dma_desc_sw,
+> +				 node);
+> +	list_del(&desc->node);
+> +	spin_unlock_bh(&chan->lock);
+> +
+> +	INIT_LIST_HEAD(&desc->tx_list);
+> +	/* Clear the src and dst descriptor memory */
+> +	if (chan->config.has_sg) {
+> +		memset((void *)desc->src_v, 0,
+> ZYNQMP_DMA_DESC_SIZE(chan));
+> +		memset((void *)desc->dst_v, 0,
+> ZYNQMP_DMA_DESC_SIZE(chan));
+> +	}
+> +
+> +	return desc;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_free_descriptor - Issue pending transactions
+> + * @chan: ZynqMP DMA channel pointer
+> + * @sdesc: Transaction descriptor pointer  */ static void
+> +zynqmp_dma_free_descriptor(struct zynqmp_dma_chan *chan,
+> +				 struct zynqmp_dma_desc_sw *sdesc)
+> +{
+> +	struct zynqmp_dma_desc_sw *child, *next;
+> +
+> +	chan->desc_free_cnt++;
+> +	list_add_tail(&sdesc->node, &chan->free_list);
+> +	list_for_each_entry_safe(child, next, &sdesc->tx_list, node) {
+> +		chan->desc_free_cnt++;
+> +		INIT_LIST_HEAD(&child->tx_list);
+> +		list_move_tail(&child->node, &chan->free_list);
+> +	}
+> +	INIT_LIST_HEAD(&sdesc->tx_list);
+> +}
+> +
+> +/**
+> + * zynqmp_dma_free_desc_list - Free descriptors list
+> + * @chan: ZynqMP DMA channel pointer
+> + * @list: List to parse and delete the descriptor  */ static void
+> +zynqmp_dma_free_desc_list(struct zynqmp_dma_chan *chan,
+> +				      struct list_head *list)
+> +{
+> +	struct zynqmp_dma_desc_sw *desc, *next;
+> +
+> +	list_for_each_entry_safe(desc, next, list, node)
+> +		zynqmp_dma_free_descriptor(chan, desc); }
+> +
+> +/**
+> + * zynqmp_dma_alloc_chan_resources - Allocate channel resources
+> + * @dchan: DMA channel
+> + *
+> + * Return: Number of descriptors on success and failure value on error
+> +*/ static int zynqmp_dma_alloc_chan_resources(struct dma_chan *dchan) {
+> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
+> +	struct zynqmp_dma_desc_sw *desc;
+> +	int i;
+> +
+> +	chan->sw_desc_pool = kzalloc(sizeof(*desc) *
+> ZYNQMP_DMA_NUM_DESCS,
+> +				     GFP_KERNEL);
+> +	if (!chan->sw_desc_pool)
+> +		return -ENOMEM;
+> +	chan->idle = true;
+> +	chan->desc_free_cnt = ZYNQMP_DMA_NUM_DESCS;
+> +
+> +	INIT_LIST_HEAD(&chan->free_list);
+> +
+> +	for (i = 0; i < ZYNQMP_DMA_NUM_DESCS; i++) {
+> +		desc = chan->sw_desc_pool + i;
+> +		dma_async_tx_descriptor_init(&desc->async_tx, &chan-
+> >common);
+> +		desc->async_tx.tx_submit = zynqmp_dma_tx_submit;
+> +		list_add_tail(&desc->node, &chan->free_list);
+> +	}
+> +
+> +	chan->desc_pool_v = dma_zalloc_coherent(chan->dev,
+> +				(2 * chan->desc_size *
+> ZYNQMP_DMA_NUM_DESCS),
+> +				&chan->desc_pool_p, GFP_KERNEL);
+> +	if (!chan->desc_pool_v)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < ZYNQMP_DMA_NUM_DESCS; i++) {
+> +		desc = chan->sw_desc_pool + i;
+> +		desc->src_v = (struct zynqmp_dma_desc_ll *) (chan-
+> >desc_pool_v +
+> +					(i * ZYNQMP_DMA_DESC_SIZE(chan) *
+> 2));
+> +		desc->dst_v = (struct zynqmp_dma_desc_ll *) (desc->src_v + 1);
+> +		desc->src_p = chan->desc_pool_p +
+> +				(i * ZYNQMP_DMA_DESC_SIZE(chan) * 2);
+> +		desc->dst_p = desc->src_p + ZYNQMP_DMA_DESC_SIZE(chan);
+> +	}
+> +
+> +	return ZYNQMP_DMA_NUM_DESCS;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_start - Start DMA channel
+> + * @chan: ZynqMP DMA channel pointer
+> + */
+> +static void zynqmp_dma_start(struct zynqmp_dma_chan *chan) {
+> +	writel(ZYNQMP_DMA_INT_EN_DEFAULT_MASK, chan->regs +
+> ZYNQMP_DMA_IER);
+> +	chan->idle = false;
+> +	writel(ZYNQMP_DMA_ENABLE, chan->regs + ZYNQMP_DMA_CTRL2); }
+> +
+> +/**
+> + * zynqmp_dma_handle_ovfl_int - Process the overflow interrupt
+> + * @chan: ZynqMP DMA channel pointer
+> + * @status: Interrupt status value
+> + */
+> +static void zynqmp_dma_handle_ovfl_int(struct zynqmp_dma_chan *chan,
+> +u32 status) {
+> +	u32 val;
+> +
+> +	if (status & ZYNQMP_DMA_IRQ_DST_ACCT_ERR)
+> +		val = readl(chan->regs + ZYNQMP_DMA_IRQ_DST_ACCT);
+> +	if (status & ZYNQMP_DMA_IRQ_SRC_ACCT_ERR)
+> +		val = readl(chan->regs + ZYNQMP_DMA_IRQ_SRC_ACCT); }
+> +
+> +static void zynqmp_dma_config(struct zynqmp_dma_chan *chan) {
+> +	u32 val;
+> +
+> +	val = readl(chan->regs + ZYNQMP_DMA_CTRL0);
+> +	if (chan->config.ovrfetch)
+> +		val |= ZYNQMP_DMA_OVR_FETCH;
+> +	if (chan->config.ratectrl) {
+> +		val |= ZYNQMP_DMA_RATE_CTRL_EN;
+> +		writel(chan->config.ratectrl, chan->regs +
+> +		       ZYNQMP_DMA_RATE_CTRL);
+> +	}
+> +	writel(val, chan->regs + ZYNQMP_DMA_CTRL0);
+> +
+> +	val = readl(chan->regs + ZYNQMP_DMA_CTRL1);
+> +	if (chan->config.src_issue)
+> +		val = (val & ~ZYNQMP_DMA_SRC_ISSUE) | chan-
+> >config.src_issue;
+> +	else
+> +		val |= ZYNQMP_DMA_SRC_ISSUE_RST_VAL;
+> +	writel(val, chan->regs + ZYNQMP_DMA_CTRL1);
+> +
+> +	val = readl(chan->regs + ZYNQMP_DMA_DATA_ATTR);
+> +	if (chan->config.src_burst_len)
+> +		val = (val & ~ZYNQMP_DMA_ARLEN) |
+> +			(chan->config.src_burst_len <<
+> ZYNQMP_DMA_ARLEN_OFST);
+> +	else
+> +		val |= ZYNQMP_DMA_ARLEN_RST_VAL;
+> +
+> +	if (chan->config.dst_burst_len)
+> +		val = (val & ~ZYNQMP_DMA_AWLEN) |
+> +			(chan->config.dst_burst_len <<
+> ZYNQMP_DMA_AWLEN_OFST);
+> +	else
+> +		val |= ZYNQMP_DMA_AWLEN_RST_VAL;
+> +	writel(val, chan->regs + ZYNQMP_DMA_DATA_ATTR);
+> +
+> +}
+> +
+> +/**
+> + * zynqmp_dma_start_transfer - Initiate the new transfer
+> + * @chan: ZynqMP DMA channel pointer
+> + */
+> +static void zynqmp_dma_start_transfer(struct zynqmp_dma_chan *chan) {
+> +	struct zynqmp_dma_desc_sw *desc;
+> +
+> +	if (!zynqmp_dma_chan_is_idle(chan))
+> +		return;
+> +
+> +	zynqmp_dma_config(chan);
+> +
+> +	desc = list_first_entry_or_null(&chan->pending_list,
+> +					struct zynqmp_dma_desc_sw, node);
+> +	if (!desc)
+> +		return;
+> +
+> +	if (chan->config.has_sg)
+> +		list_splice_tail_init(&chan->pending_list, &chan->active_list);
+> +	else
+> +		list_move_tail(&desc->node, &chan->active_list);
+> +
+> +	if (chan->config.has_sg)
+> +		zynqmp_dma_update_desc_to_ctrlr(chan, desc);
+> +	else
+> +		zynqmp_dma_config_simple_desc(chan, desc->src, desc->dst,
+> +					      desc->len);
+> +
+> +	zynqmp_dma_start(chan);
+> +}
+> +
+> +
+> +/**
+> + * zynqmp_dma_chan_desc_cleanup - Cleanup the completed descriptors
+> + * @chan: ZynqMP DMA channel
+> + */
+> +static void zynqmp_dma_chan_desc_cleanup(struct zynqmp_dma_chan *chan)
+> +{
+> +	struct zynqmp_dma_desc_sw *desc, *next;
+> +
+> +	list_for_each_entry_safe(desc, next, &chan->done_list, node) {
+> +		dma_async_tx_callback callback;
+> +		void *callback_param;
+> +
+> +		list_del(&desc->node);
+> +
+> +		callback = desc->async_tx.callback;
+> +		callback_param = desc->async_tx.callback_param;
+> +		if (callback) {
+> +			spin_unlock(&chan->lock);
+> +			callback(callback_param);
+> +			spin_lock(&chan->lock);
+> +		}
+> +
+> +		/* Run any dependencies, then free the descriptor */
+> +		zynqmp_dma_free_descriptor(chan, desc);
+> +	}
+> +}
+> +
+> +/**
+> + * zynqmp_dma_complete_descriptor - Mark the active descriptor as
+> +complete
+> + * @chan: ZynqMP DMA channel pointer
+> + */
+> +static void zynqmp_dma_complete_descriptor(struct zynqmp_dma_chan
+> +*chan) {
+> +	struct zynqmp_dma_desc_sw *desc;
+> +
+> +	desc = list_first_entry_or_null(&chan->active_list,
+> +					struct zynqmp_dma_desc_sw, node);
+> +	if (!desc)
+> +		return;
+> +	list_del(&desc->node);
+> +	dma_cookie_complete(&desc->async_tx);
+> +	list_add_tail(&desc->node, &chan->done_list); }
+> +
+> +/**
+> + * zynqmp_dma_issue_pending - Issue pending transactions
+> + * @dchan: DMA channel pointer
+> + */
+> +static void zynqmp_dma_issue_pending(struct dma_chan *dchan) {
+> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
+> +
+> +	spin_lock_bh(&chan->lock);
+> +	zynqmp_dma_start_transfer(chan);
+> +	spin_unlock_bh(&chan->lock);
+> +}
+> +
+> +/**
+> + * zynqmp_dma_free_descriptors - Free channel descriptors
+> + * @dchan: DMA channel pointer
+> + */
+> +static void zynqmp_dma_free_descriptors(struct zynqmp_dma_chan *chan) {
+> +	zynqmp_dma_free_desc_list(chan, &chan->active_list);
+> +	zynqmp_dma_free_desc_list(chan, &chan->pending_list);
+> +	zynqmp_dma_free_desc_list(chan, &chan->done_list); }
+> +
+> +/**
+> + * zynqmp_dma_free_chan_resources - Free channel resources
+> + * @dchan: DMA channel pointer
+> + */
+> +static void zynqmp_dma_free_chan_resources(struct dma_chan *dchan) {
+> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
+> +
+> +	spin_lock_bh(&chan->lock);
+> +	zynqmp_dma_free_descriptors(chan);
+> +	spin_unlock_bh(&chan->lock);
+> +	dma_free_coherent(chan->dev,
+> +		(2 * ZYNQMP_DMA_DESC_SIZE(chan) *
+> ZYNQMP_DMA_NUM_DESCS),
+> +		chan->desc_pool_v, chan->desc_pool_p);
+> +	kfree(chan->sw_desc_pool);
+> +}
+> +
+> +/**
+> + * zynqmp_dma_tx_status - Get dma transaction status
+> + * @dchan: DMA channel pointer
+> + * @cookie: Transaction identifier
+> + * @txstate: Transaction state
+> + *
+> + * Return: DMA transaction status
+> + */
+> +static enum dma_status zynqmp_dma_tx_status(struct dma_chan *dchan,
+> +				      dma_cookie_t cookie,
+> +				      struct dma_tx_state *txstate) {
+> +	return dma_cookie_status(dchan, cookie, txstate); }
+> +
+> +/**
+> + * zynqmp_dma_reset - Reset the channel
+> + * @chan: ZynqMP DMA channel pointer
+> + */
+> +static void zynqmp_dma_reset(struct zynqmp_dma_chan *chan) {
+> +	writel(ZYNQMP_DMA_IDS_DEFAULT_MASK, chan->regs +
+> ZYNQMP_DMA_IDS);
+> +
+> +	zynqmp_dma_complete_descriptor(chan);
+> +	zynqmp_dma_chan_desc_cleanup(chan);
+> +	zynqmp_dma_free_descriptors(chan);
+> +	zynqmp_dma_init(chan);
+> +}
+> +
+> +/**
+> + * zynqmp_dma_irq_handler - ZynqMP DMA Interrupt handler
+> + * @irq: IRQ number
+> + * @data: Pointer to the ZynqMP DMA channel structure
+> + *
+> + * Return: IRQ_HANDLED/IRQ_NONE
+> + */
+> +static irqreturn_t zynqmp_dma_irq_handler(int irq, void *data) {
+> +	struct zynqmp_dma_chan *chan = (struct zynqmp_dma_chan *)data;
+> +	u32 isr, imr, status;
+> +	irqreturn_t ret = IRQ_NONE;
+> +
+> +	isr = readl(chan->regs + ZYNQMP_DMA_ISR);
+> +	imr = readl(chan->regs + ZYNQMP_DMA_IMR);
+> +	status = isr & ~imr;
+> +
+> +	writel(isr, chan->regs + ZYNQMP_DMA_ISR);
+> +	if (status & ZYNQMP_DMA_INT_DONE) {
+> +		tasklet_schedule(&chan->tasklet);
+> +		ret = IRQ_HANDLED;
+> +	}
+> +
+> +	if (status & ZYNQMP_DMA_DONE)
+> +		chan->idle = true;
+> +
+> +	if (status & ZYNQMP_DMA_INT_ERR) {
+> +		chan->err = true;
+> +		tasklet_schedule(&chan->tasklet);
+> +		dev_err(chan->dev, "Channel %p has errors\n", chan);
+> +		ret = IRQ_HANDLED;
+> +	}
+> +
+> +	if (status & ZYNQMP_DMA_INT_OVRFL) {
+> +		zynqmp_dma_handle_ovfl_int(chan, status);
+> +		dev_info(chan->dev, "Channel %p overflow interrupt\n", chan);
+> +		ret = IRQ_HANDLED;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_do_tasklet - Schedule completion tasklet
+> + * @data: Pointer to the ZynqMP DMA channel structure  */ static void
+> +zynqmp_dma_do_tasklet(unsigned long data) {
+> +	struct zynqmp_dma_chan *chan = (struct zynqmp_dma_chan *)data;
+> +	u32 count;
+> +
+> +	spin_lock(&chan->lock);
+> +
+> +	if (chan->err) {
+> +		zynqmp_dma_reset(chan);
+> +		chan->err = false;
+> +		goto unlock;
+> +	}
+> +
+> +	count = readl(chan->regs + ZYNQMP_DMA_IRQ_DST_ACCT);
+> +
+> +	while (count) {
+> +		zynqmp_dma_complete_descriptor(chan);
+> +		zynqmp_dma_chan_desc_cleanup(chan);
+> +		count--;
+> +	}
+> +
+> +	if (chan->idle)
+> +		zynqmp_dma_start_transfer(chan);
+> +
+> +unlock:
+> +	spin_unlock(&chan->lock);
+> +}
+> +
+> +/**
+> + * zynqmp_dma_device_terminate_all - Aborts all transfers on a channel
+> + * @dchan: DMA channel pointer
+> + *
+> + * Return: Always '0'
+> + */
+> +static int zynqmp_dma_device_terminate_all(struct dma_chan *dchan) {
+> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
+> +
+> +	spin_lock_bh(&chan->lock);
+> +	writel(ZYNQMP_DMA_IDS_DEFAULT_MASK, chan->regs +
+> ZYNQMP_DMA_IDS);
+> +	zynqmp_dma_free_descriptors(chan);
+> +	spin_unlock_bh(&chan->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_prep_memcpy - prepare descriptors for memcpy transaction
+> + * @dchan: DMA channel
+> + * @dma_dst: Destination buffer address
+> + * @dma_src: Source buffer address
+> + * @len: Transfer length
+> + * @flags: transfer ack flags
+> + *
+> + * Return: Async transaction descriptor on success and NULL on failure
+> +*/ static struct dma_async_tx_descriptor *zynqmp_dma_prep_memcpy(
+> +				struct dma_chan *dchan, dma_addr_t
+> dma_dst,
+> +				dma_addr_t dma_src, size_t len, ulong flags) {
+> +	struct zynqmp_dma_chan *chan;
+> +	struct zynqmp_dma_desc_sw *new, *first = NULL;
+> +	void *desc = NULL, *prev = NULL;
+> +	size_t copy;
+> +	u32 desc_cnt;
+> +
+> +	chan = to_chan(dchan);
+> +
+> +	if ((len > ZYNQMP_DMA_MAX_TRANS_LEN) && !chan->config.has_sg)
+> +		return NULL;
+> +
+> +	desc_cnt = DIV_ROUND_UP(len, ZYNQMP_DMA_MAX_TRANS_LEN);
+> +
+> +	spin_lock_bh(&chan->lock);
+> +	if ((desc_cnt > chan->desc_free_cnt) && chan->config.has_sg) {
+> +		spin_unlock_bh(&chan->lock);
+> +		dev_dbg(chan->dev, "chan %p descs are not available\n", chan);
+> +		return NULL;
+> +	}
+> +	chan->desc_free_cnt = chan->desc_free_cnt - desc_cnt;
+> +	spin_unlock_bh(&chan->lock);
+> +
+> +	do {
+> +		/* Allocate and populate the descriptor */
+> +		new = zynqmp_dma_get_descriptor(chan);
+> +
+> +		copy = min_t(size_t, len, ZYNQMP_DMA_MAX_TRANS_LEN);
+> +		if (chan->config.has_sg) {
+> +			desc = (struct zynqmp_dma_desc_ll *)new->src_v;
+> +			zynqmp_dma_config_sg_ll_desc(chan, desc, dma_src,
+> +						     dma_dst, copy, prev);
+> +		} else {
+> +			new->src = dma_src;
+> +			new->dst = dma_dst;
+> +			new->len = len;
+> +		}
+> +
+> +		prev = desc;
+> +		len -= copy;
+> +		dma_src += copy;
+> +		dma_dst += copy;
+> +		if (!first)
+> +			first = new;
+> +		else
+> +			list_add_tail(&new->node, &first->tx_list);
+> +	} while (len);
+> +
+> +	if (chan->config.has_sg)
+> +		zynqmp_dma_desc_config_eod(chan, desc);
+> +
+> +	async_tx_ack(&first->async_tx);
+> +	first->async_tx.flags = flags;
+> +	return &first->async_tx;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_prep_slave_sg - prepare descriptors for a memory sg
+> +transaction
+> + * @dchan: DMA channel
+> + * @dst_sg: Destination scatter list
+> + * @dst_sg_len: Number of entries in destination scatter list
+> + * @src_sg: Source scatter list
+> + * @src_sg_len: Number of entries in source scatter list
+> + * @flags: transfer ack flags
+> + *
+> + * Return: Async transaction descriptor on success and NULL on failure
+> +*/ static struct dma_async_tx_descriptor *zynqmp_dma_prep_sg(
+> +			struct dma_chan *dchan, struct scatterlist *dst_sg,
+> +			unsigned int dst_sg_len, struct scatterlist *src_sg,
+> +			unsigned int src_sg_len, unsigned long flags) {
+> +	struct zynqmp_dma_desc_sw *new, *first = NULL;
+> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
+> +	void *desc = NULL, *prev = NULL;
+> +	size_t len, dst_avail, src_avail;
+> +	dma_addr_t dma_dst, dma_src;
+> +	u32 desc_cnt = 0, i;
+> +	struct scatterlist *sg;
+> +
+> +	if (!chan->config.has_sg)
+> +		return NULL;
+> +
+> +	for_each_sg(src_sg, sg, src_sg_len, i)
+> +		desc_cnt += DIV_ROUND_UP(sg_dma_len(sg),
+> +					 ZYNQMP_DMA_MAX_TRANS_LEN);
+> +
+> +	spin_lock_bh(&chan->lock);
+> +	if (desc_cnt > chan->desc_free_cnt) {
+> +		spin_unlock_bh(&chan->lock);
+> +		dev_dbg(chan->dev, "chan %p descs are not available\n", chan);
+> +		return NULL;
+> +	}
+> +	chan->desc_free_cnt = chan->desc_free_cnt - desc_cnt;
+> +	spin_unlock_bh(&chan->lock);
+> +
+> +	dst_avail = sg_dma_len(dst_sg);
+> +	src_avail = sg_dma_len(src_sg);
+> +
+> +	/* Run until we are out of scatterlist entries */
+> +	while (true) {
+> +		/* Allocate and populate the descriptor */
+> +		new = zynqmp_dma_get_descriptor(chan);
+> +		desc = (struct zynqmp_dma_desc_ll *)new->src_v;
+> +		len = min_t(size_t, src_avail, dst_avail);
+> +		len = min_t(size_t, len, ZYNQMP_DMA_MAX_TRANS_LEN);
+> +		if (len == 0)
+> +			goto fetch;
+> +		dma_dst = sg_dma_address(dst_sg) + sg_dma_len(dst_sg) -
+> +			dst_avail;
+> +		dma_src = sg_dma_address(src_sg) + sg_dma_len(src_sg) -
+> +			src_avail;
+> +
+> +		zynqmp_dma_config_sg_ll_desc(chan, desc, dma_src, dma_dst,
+> +					     len, prev);
+> +		prev = desc;
+> +		dst_avail -= len;
+> +		src_avail -= len;
+> +
+> +		if (!first)
+> +			first = new;
+> +		else
+> +			list_add_tail(&new->node, &first->tx_list);
+> +fetch:
+> +		/* Fetch the next dst scatterlist entry */
+> +		if (dst_avail == 0) {
+> +			if (dst_sg_len == 0)
+> +				break;
+> +			dst_sg = sg_next(dst_sg);
+> +			if (dst_sg == NULL)
+> +				break;
+> +			dst_sg_len--;
+> +			dst_avail = sg_dma_len(dst_sg);
+> +		}
+> +		/* Fetch the next src scatterlist entry */
+> +		if (src_avail == 0) {
+> +			if (src_sg_len == 0)
+> +				break;
+> +			src_sg = sg_next(src_sg);
+> +			if (src_sg == NULL)
+> +				break;
+> +			src_sg_len--;
+> +			src_avail = sg_dma_len(src_sg);
+> +		}
+> +	}
+> +
+> +	zynqmp_dma_desc_config_eod(chan, desc);
+> +	first->async_tx.flags = flags;
+> +	return &first->async_tx;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_channel_set_config - Configure ZYNQMP DMA channel
+> + * @dchan: DMA channel
+> + * @cfg: ZYNQMP DMA device configuration pointer
+> + *
+> + * Return: '0' always
+> + */
+> +int zynqmp_dma_channel_set_config(struct dma_chan *dchan,
+> +				  struct zynqmp_dma_config *cfg)
+> +{
+> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
+> +
+> +	chan->config.ovrfetch = cfg->ovrfetch;
+> +	chan->config.has_sg = cfg->has_sg;
+> +	chan->config.ratectrl = cfg->ratectrl;
+> +	chan->config.src_issue = cfg->src_issue;
+> +	chan->config.src_burst_len = cfg->src_burst_len;
+> +	chan->config.dst_burst_len = cfg->dst_burst_len;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(zynqmp_dma_channel_set_config);
+> +
+> +/**
+> + * zynqmp_dma_chan_remove - Channel remove function
+> + * @chan: ZynqMP DMA channel pointer
+> + */
+> +static void zynqmp_dma_chan_remove(struct zynqmp_dma_chan *chan) {
+> +	if (!chan)
+> +		return;
+> +
+> +	devm_free_irq(chan->zdev->dev, chan->irq, chan);
+> +	tasklet_kill(&chan->tasklet);
+> +	list_del(&chan->common.device_node);
+> +	clk_disable_unprepare(chan->clk_apb);
+> +	clk_disable_unprepare(chan->clk_main);
+> +}
+> +
+> +/**
+> + * zynqmp_dma_chan_probe - Per Channel Probing
+> + * @zdev: Driver specific device structure
+> + * @pdev: Pointer to the platform_device structure
+> + *
+> + * Return: '0' on success and failure value on error  */ static int
+> +zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
+> +			   struct platform_device *pdev)
+> +{
+> +	struct zynqmp_dma_chan *chan;
+> +	struct resource *res;
+> +	struct device_node *node = pdev->dev.of_node;
+> +	int err;
+> +
+> +	chan = devm_kzalloc(zdev->dev, sizeof(*chan), GFP_KERNEL);
+> +	if (!chan)
+> +		return -ENOMEM;
+> +	chan->dev = zdev->dev;
+> +	chan->zdev = zdev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	chan->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(chan->regs))
+> +		return PTR_ERR(chan->regs);
+> +
+> +	chan->bus_width = ZYNQMP_DMA_BUS_WIDTH_64;
+> +	chan->config.src_issue = ZYNQMP_DMA_SRC_ISSUE_RST_VAL;
+> +	chan->config.dst_burst_len = ZYNQMP_DMA_AWLEN_RST_VAL;
+> +	chan->config.src_burst_len = ZYNQMP_DMA_ARLEN_RST_VAL;
+> +	err = of_property_read_u32(node, "xlnx,bus-width", &chan-
+> >bus_width);
+> +	if ((err < 0) && ((chan->bus_width != ZYNQMP_DMA_BUS_WIDTH_64) ||
+> +			  (chan->bus_width !=
+> ZYNQMP_DMA_BUS_WIDTH_128))) {
+> +		dev_err(zdev->dev, "invalid bus-width value");
+> +		return err;
+> +	}
+> +
+> +	chan->bus_width = chan->bus_width / 8;
+> +	chan->is_dmacoherent =  of_property_read_bool(node, "dma-
+> coherent");
+> +
+> +	zdev->chan = chan;
+> +	tasklet_init(&chan->tasklet, zynqmp_dma_do_tasklet, (ulong)chan);
+> +	spin_lock_init(&chan->lock);
+> +	INIT_LIST_HEAD(&chan->active_list);
+> +	INIT_LIST_HEAD(&chan->pending_list);
+> +	INIT_LIST_HEAD(&chan->done_list);
+> +	INIT_LIST_HEAD(&chan->free_list);
+> +
+> +	dma_cookie_init(&chan->common);
+> +	chan->common.device = &zdev->common;
+> +	list_add_tail(&chan->common.device_node, &zdev-
+> >common.channels);
+> +
+> +	zynqmp_dma_init(chan);
+> +	chan->irq = platform_get_irq(pdev, 0);
+> +	if (chan->irq < 0)
+> +		return -ENXIO;
+> +	err = devm_request_irq(&pdev->dev, chan->irq,
+> zynqmp_dma_irq_handler, 0,
+> +			       "zynqmp-dma", chan);
+> +	if (err)
+> +		return err;
+> +	chan->clk_main = devm_clk_get(&pdev->dev, "clk_main");
+> +	if (IS_ERR(chan->clk_main)) {
+> +		dev_err(&pdev->dev, "main clock not found.\n");
+> +		return PTR_ERR(chan->clk_main);
+> +	}
+> +
+> +	chan->clk_apb = devm_clk_get(&pdev->dev, "clk_apb");
+> +	if (IS_ERR(chan->clk_apb)) {
+> +		dev_err(&pdev->dev, "apb clock not found.\n");
+> +		return PTR_ERR(chan->clk_apb);
+> +	}
+> +
+> +	err = clk_prepare_enable(chan->clk_main);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Unable to enable main clock.\n");
+> +		return err;
+> +	}
+> +
+> +	err = clk_prepare_enable(chan->clk_apb);
+> +	if (err) {
+> +		clk_disable_unprepare(chan->clk_main);
+> +		dev_err(&pdev->dev, "Unable to enable apb clock.\n");
+> +		return err;
+> +	}
+> +
+> +	chan->desc_size = sizeof(struct zynqmp_dma_desc_ll);
+> +	chan->idle = true;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * of_zynqmp_dma_xlate - Translation function
+> + * @dma_spec: Pointer to DMA specifier as found in the device tree
+> + * @ofdma: Pointer to DMA controller data
+> + *
+> + * Return: DMA channel pointer on success and NULL on error  */ static
+> +struct dma_chan *of_zynqmp_dma_xlate(struct of_phandle_args *dma_spec,
+> +					    struct of_dma *ofdma)
+> +{
+> +	struct zynqmp_dma_device *zdev = ofdma->of_dma_data;
+> +
+> +	return dma_get_slave_channel(&zdev->chan->common);
+> +}
+> +
+> +/**
+> + * zynqmp_dma_probe - Driver probe function
+> + * @pdev: Pointer to the platform_device structure
+> + *
+> + * Return: '0' on success and failure value on error  */ static int
+> +zynqmp_dma_probe(struct platform_device *pdev) {
+> +	struct zynqmp_dma_device *zdev;
+> +	struct dma_device *p;
+> +	int ret;
+> +
+> +	zdev = devm_kzalloc(&pdev->dev, sizeof(*zdev), GFP_KERNEL);
+> +	if (!zdev)
+> +		return -ENOMEM;
+> +
+> +	zdev->dev = &pdev->dev;
+> +	INIT_LIST_HEAD(&zdev->common.channels);
+> +
+> +	dma_set_mask(&pdev->dev, DMA_BIT_MASK(44));
+> +	dma_cap_set(DMA_SG, zdev->common.cap_mask);
+> +	dma_cap_set(DMA_MEMCPY, zdev->common.cap_mask);
+> +
+> +	p = &zdev->common;
+> +	p->device_prep_dma_sg = zynqmp_dma_prep_sg;
+> +	p->device_prep_dma_memcpy = zynqmp_dma_prep_memcpy;
+> +	p->device_terminate_all = zynqmp_dma_device_terminate_all;
+> +	p->device_issue_pending = zynqmp_dma_issue_pending;
+> +	p->device_alloc_chan_resources = zynqmp_dma_alloc_chan_resources;
+> +	p->device_free_chan_resources = zynqmp_dma_free_chan_resources;
+> +	p->device_tx_status = zynqmp_dma_tx_status;
+> +	p->dev = &pdev->dev;
+> +
+> +	platform_set_drvdata(pdev, zdev);
+> +
+> +	ret = zynqmp_dma_chan_probe(zdev, pdev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Probing channel failed\n");
+> +		goto free_chan_resources;
+> +	}
+> +
+> +	p->dst_addr_widths = BIT(zdev->chan->bus_width);
+> +	p->src_addr_widths = BIT(zdev->chan->bus_width);
+> +
+> +	dma_async_device_register(&zdev->common);
+> +
+> +	ret = of_dma_controller_register(pdev->dev.of_node,
+> +					 of_zynqmp_dma_xlate, zdev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Unable to register DMA to DT\n");
+> +		dma_async_device_unregister(&zdev->common);
+> +		goto free_chan_resources;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "ZynqMP DMA driver Probe success\n");
+> +
+> +	return 0;
+> +
+> +free_chan_resources:
+> +	zynqmp_dma_chan_remove(zdev->chan);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * zynqmp_dma_remove - Driver remove function
+> + * @pdev: Pointer to the platform_device structure
+> + *
+> + * Return: Always '0'
+> + */
+> +static int zynqmp_dma_remove(struct platform_device *pdev) {
+> +	struct zynqmp_dma_device *zdev = platform_get_drvdata(pdev);
+> +
+> +	of_dma_controller_free(pdev->dev.of_node);
+> +	dma_async_device_unregister(&zdev->common);
+> +
+> +	zynqmp_dma_chan_remove(zdev->chan);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id zynqmp_dma_of_match[] = {
+> +	{ .compatible = "xlnx,zynqmp-dma-1.0", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, zynqmp_dma_of_match);
+> +
+> +static struct platform_driver zynqmp_dma_driver = {
+> +	.driver = {
+> +		.name = "xilinx-zynqmp-dma",
+> +		.of_match_table = zynqmp_dma_of_match,
+> +	},
+> +	.probe = zynqmp_dma_probe,
+> +	.remove = zynqmp_dma_remove,
+> +};
+> +
+> +module_platform_driver(zynqmp_dma_driver);
+> +
+> +MODULE_AUTHOR("Xilinx, Inc.");
+> +MODULE_DESCRIPTION("Xilinx ZynqMP DMA driver");
+> MODULE_LICENSE("GPL");
+> diff --git a/include/linux/dma/xilinx_dma.h b/include/linux/dma/xilinx_dma.h
+> index 3ae3000..7d7312f 100644
+> --- a/include/linux/dma/xilinx_dma.h
+> +++ b/include/linux/dma/xilinx_dma.h
+> @@ -42,6 +42,24 @@ struct xilinx_vdma_config {  };
+> 
+>  /**
+> + * struct zynqmp_dma_config - ZYNQMP DMA Configuration structure
+> + * @ovrfetch: Overfetch status
+> + * @has_sg: Support scatter gather transfers
+> + * @ratectrl: Rate control value
+> + * @src_issue: Out standing transactions on source
+> + * @src_burst_len: Source burst length
+> + * @dst_burst_len: Dest burst length
+> + */
+> +struct zynqmp_dma_config {
+> +	bool ovrfetch;
+> +	bool has_sg;
+> +	u32 ratectrl;
+> +	u32 src_issue;
+> +	u32 src_burst_len;
+> +	u32 dst_burst_len;
+> +};
+> +
+> +/**
+>   * enum xdma_ip_type: DMA IP type.
+>   *
+>   * XDMA_TYPE_AXIDMA: Axi dma ip.
+> @@ -57,5 +75,6 @@ enum xdma_ip_type {
+> 
+>  int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+>  					struct xilinx_vdma_config *cfg);
+> -
+> +int zynqmp_dma_channel_set_config(struct dma_chan *dchan,
+> +					struct zynqmp_dma_config *cfg);
+>  #endif
+> --
+> 2.1.1
