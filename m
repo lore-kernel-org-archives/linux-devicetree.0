@@ -1,55 +1,48 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 5/7] net:mdio-mux: Add MDIO mux driver for iProc SoCs
-Date: Mon, 30 May 2016 15:34:42 +0200
-Message-ID: <20160530133442.GK6027@lunn.ch>
-References: <1464592251-2688-1-git-send-email-pramod.kumar@broadcom.com>
- <1464592251-2688-6-git-send-email-pramod.kumar@broadcom.com>
+From: Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] iio: inv_mpu6050: Reformat sample for active scan
+ mask
+Date: Mon, 30 May 2016 16:44:41 +0300
+Message-ID: <49c4a235-29fd-aa55-d9d2-8ead5cefd737@intel.com>
+References: <cover.1463582011.git.leonard.crestez@intel.com>
+ <7df4b331d35e3e6a19d13ccbcb5d12f0347b660c.1463582011.git.leonard.crestez@intel.com>
+ <14d4a757-f60a-40c0-03b4-c36d1b22d30e@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1464592251-2688-6-git-send-email-pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <14d4a757-f60a-40c0-03b4-c36d1b22d30e-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ge Gao <ggao-ktqnL0SqcGIj5TC/SZClsA@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 30, 2016 at 12:40:49PM +0530, Pramod Kumar wrote:
-> iProc based SoCs supports the integrated mdio multiplexer which
-> has the bus selection as well as mdio transaction generation logic
-> inside.
+On 05/29/2016 06:47 PM, Jonathan Cameron wrote:
+> On 18/05/16 16:00, Crestez Dan Leonard wrote:
+>> Right now it is possible to only enable some of the x/y/z channels, for
+>> example you can enable accel_z without x or y but if you actually do
+>> that what you get is actually only the x channel.
+>>
+>> Fix this by reformatting the hardware sample to only include the
+>> requested channels.
+> As it stands here there is no benefit in doing this over using the core
+> demux. In fact it's considerably less efficient (fair enough that you
+> are keeping it simple in the first instance).
+> The patch description should make that clear.
 
-Hi Pramod
+Why is it less efficient? All it really does is a bunch of memcpy.
 
-Great to see you using the existing MDIO framework. Thanks.
+> I'd definitely like to see simple extension of that option to handle
+> a callback to get the nearest scanmask that is possible (as an alternative
+> to the static scan_masks_available list.)
+> 
+> This only gets interesting if we are dealing with the unaligned case and for
+> these parts that only kicks in I think if the slave devices have say 3 bytes in
+> their data type.  
 
-> +static int mdio_mux_iproc_switch_fn(int current_child, int desired_child,
-> +				    void *data)
-> +{
-> +	struct iproc_mdiomux_desc *md = data;
-> +	struct mdiomux_bus_param *bp = &md->bus_param[desired_child];
-> +	u32 param, bus_id;
-> +	bool bus_dir;
-> +
-> +	/* select bus and its properties */
-> +	bus_dir = (desired_child < EXT_BUS_START_ADDR);
-> +	bus_id = bus_dir ? desired_child : (desired_child - EXT_BUS_START_ADDR);
-> +
-> +	param = (bus_dir ? 1 : 0) << MDIO_PARAM_INTERNAL_SEL;
-> +	param |= (bp->is_c45 ? 1 : 0) << MDIO_PARAM_C45_SEL;
-> +	param |= (bus_id << MDIO_PARAM_BUS_ID);
-> +
-> +	writel(param, md->base + MDIO_PARAM_OFFSET);
-> +	return 0;
-> +}
+But I want to deal with the unaligned case because it's better than
+introducing odd validations on slave channels. If I added an extension
+to get the nearest scanmask I would have to remove it in PATCH 7.
 
-What i don't yet see is why you went for the concept of an integrated
-MDIO and MUX. This function above is the mux function, and it looks
-like it could be used to implement a standard mdio-mux driver.
-
-Thanks
-     Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Leonard
