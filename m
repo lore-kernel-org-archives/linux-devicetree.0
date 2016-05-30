@@ -1,235 +1,81 @@
-From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
-Date: Mon, 30 May 2016 17:38:03 +0800
-Message-ID: <1464601083.20071.12.camel@mtksdaap41>
-References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
-	 <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
-	 <1464590942.20547.22.camel@mtksdaap41>
+From: Kieran Bingham <kieran@ksquared.org.uk>
+Subject: Re: [PATCH 2/4] dt-bindings: Update Renesas R-Car FCP DT binding
+Date: Mon, 30 May 2016 11:04:03 +0100
+Message-ID: <574C1013.7000804@bingham.xyz>
+References: <1464369565-12259-1-git-send-email-kieran@bingham.xyz>
+ <1464369565-12259-4-git-send-email-kieran@bingham.xyz>
+ <CAMuHMdUhv24QWE44k-nHTAkfy_EnDv76toUuOoD46pKNNR3r3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464590942.20547.22.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUhv24QWE44k-nHTAkfy_EnDv76toUuOoD46pKNNR3r3w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Kieran Bingham <kieran@ksquared.org.uk>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi CK,
+Hi Geert!
 
-Reply inline.
-
-On Mon, 2016-05-30 at 14:49 +0800, CK Hu wrote:
-> Hi, HS:
+On 28/05/16 20:06, Geert Uytterhoeven wrote:
+> Hi Kieran,
 > 
-> Some comments inline.
+> On Fri, May 27, 2016 at 7:19 PM, Kieran Bingham <kieran@ksquared.org.uk> wrote:
+>> The FCP driver, can also support the FCPF variant for FDP1 compatible
+>> processing.
+>>
+>> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
 > 
-> On Mon, 2016-05-30 at 11:19 +0800, HS Liao wrote:
-...
-> > +static void cmdq_thread_irq_handler(struct cmdq *cmdq, int tid)
-> > +{
-> > +	struct cmdq_thread *thread = &cmdq->thread[tid];
-> > +	unsigned long flags = 0L;
-> > +	u32 irq_flag;
-> > +
-> > +	spin_lock_irqsave(&cmdq->exec_lock, flags);
-> > +
-> > +	irq_flag = cmdq_thread_readl(thread, CMDQ_THR_IRQ_STATUS);
-> > +	cmdq_thread_writel(thread, ~irq_flag, CMDQ_THR_IRQ_STATUS);
-> > +
-> > +	/*
-> > +	 * Another CPU core could run "release task" right before we acquire
-> > +	 * the spin lock, and thus reset / disable this GCE thread, so we
-> > +	 * need to check the enable bit of this GCE thread.
-> > +	 */
-> > +	if (!(cmdq_thread_readl(thread, CMDQ_THR_ENABLE_TASK) &
-> > +	      CMDQ_THR_ENABLED))
-> > +		irq_flag = 0;
+> Thanks for your patch!
 > 
-> These three statement (clear irq flag and detect thread enable) can be
-> moved into cmdq_handle_error_done() and the duplicated part in
-> cmdq_task_handle_error_result() can be removed. Even though
-> cmdq_task_handle_error_result() need not check thread enable, it would
-> not influence the flow.
-
-Will do.
-
-> > +
-> > +	cmdq_handle_error_done(cmdq, thread, irq_flag);
-> > +	spin_unlock_irqrestore(&cmdq->exec_lock, flags);
-> > +}
-...
-> > +static int cmdq_task_handle_error_result(struct cmdq_task *task)
-> > +{
-> > +	struct cmdq *cmdq = task->cmdq;
-> > +	struct device *dev = cmdq->dev;
-> > +	struct cmdq_thread *thread = task->thread;
-> > +	struct cmdq_task *next_task, *prev_task;
-> > +	u32 irq_flag;
-> > +
-> > +	/* suspend GCE thread to ensure consistency */
-> > +	WARN_ON(cmdq_thread_suspend(cmdq, thread) < 0);
-> > +
-> > +	/* ISR has handled this error task */
-> > +	if (task->task_state == TASK_STATE_ERROR) {
-> > +		next_task = list_first_entry_or_null(&thread->task_busy_list,
-> > +				struct cmdq_task, list_entry);
-> > +		if (next_task) /* move to next task */
-> > +			cmdq_thread_writel(thread, next_task->pa_base,
-> > +					   CMDQ_THR_CURR_ADDR);
-> > +		cmdq_thread_resume(thread);
-> > +		return -ECANCELED;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Save next_task and prev_task in advance
-> > +	 * since cmdq_handle_error_done will remove list_entry.
-> > +	 */
-> > +	next_task = prev_task = NULL;
-> > +	if (task->list_entry.next != &thread->task_busy_list)
-> > +		next_task = list_next_entry(task, list_entry);
-> > +	if (task->list_entry.prev != &thread->task_busy_list)
-> > +		prev_task = list_prev_entry(task, list_entry);
+>> ---
+>>  Documentation/devicetree/bindings/media/renesas,fcp.txt | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> Cc: devicetree@vger.kernel.org
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+>> index 6a12960609d8..1c0718b501ef 100644
+>> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
+>> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+>> @@ -7,11 +7,12 @@ conversion of AXI transactions in order to reduce the memory bandwidth.
+>>
+>>  There are three types of FCP: FCP for Codec (FCPC), FCP for VSP (FCPV) and FCP
+>>  for FDP (FCPF). Their configuration and behaviour depend on the module they
+>> -are paired with. These DT bindings currently support the FCPV only.
+>> +are paired with. These DT bindings currently support the FCPV and FCPF.
+>>
+>>   - compatible: Must be one or more of the following
+>>
+>>     - "renesas,r8a7795-fcpv" for R8A7795 (R-Car H3) compatible 'FCP for VSP'
+>> +   - "renesas,r8a7795-fcpf" for R8A7795 (R-Car H3) compatible 'FCP for FDP'
+>>     - "renesas,fcpv" for generic compatible 'FCP for VSP'
 > 
-> I think there is always no previous task because task order in
-> thread->task_busy_list is the same as in cmdq->task_release_wq. So each
-> task processed by release work should be the first item in
-> thread->task_busy_list or be removed from thread->task_busy_list.
+> I guess checkpatch complained about your dtsi additions because you forgot
+> to add  "renesas,fcpf" here?
 
-Will remove previous task.
+Yes. Looks quite obvious doesn't it :)
+I thought CP.pl was complaining because the file was renesas,fcp.txt,
+and I was adding in fcpf!.
 
-> > +
-> > +	/*
-> > +	 * Although IRQ is disabled, GCE continues to execute.
-> > +	 * It may have pending IRQ before GCE thread is suspended,
-> > +	 * so check this condition again.
-> > +	 */
-> > +	irq_flag = cmdq_thread_readl(thread, CMDQ_THR_IRQ_STATUS);
-> > +	cmdq_handle_error_done(cmdq, thread, irq_flag);
-> > +	cmdq_thread_writel(thread, ~irq_flag, CMDQ_THR_IRQ_STATUS);
-> > +
-> > +	if (task->task_state == TASK_STATE_DONE) {
-> > +		cmdq_thread_resume(thread);
-> > +		return 0;
-> > +	}
-> > +
-> > +	if (task->task_state == TASK_STATE_ERROR) {
-> > +		dev_err(dev, "task 0x%p error\n", task);
-> > +		if (next_task) /* move to next task */
-> > +			cmdq_thread_writel(thread, next_task->pa_base,
-> > +					   CMDQ_THR_CURR_ADDR);
-> > +		cmdq_thread_resume(thread);
-> > +		return -ECANCELED;
-> > +	}
-> > +
-> > +	/* Task is running, so we force to remove it. */
-> > +	dev_err(dev, "task 0x%p timeout or killed\n", task);
+I was clearly a bit too keen to get those patches out on a friday
+evening. I must remember that I'm not smarter than checkpatch!
+
+I'll add the missing line :)
+
+> Gr{oetje,eeting}s,
 > 
-> No 'kill' state.
-
->From CMDQ v8, there is no killed task.
-I will rewrite output message.
-
-> > +	task->task_state = TASK_STATE_ERROR;
-> > +
-> > +	if (prev_task) {
-> > +		u64 *prev_va = prev_task->va_base;
-> > +		u64 *curr_va = task->va_base;
-> > +
-> > +		/* copy JUMP instruction */
-> > +		prev_va[prev_task->num_cmd - 1] = curr_va[task->num_cmd - 1];
-> > +
-> > +		cmdq_thread_invalidate_fetched_data(thread);
-> > +	} else if (next_task) { /* move to next task */
-> > +		cmdq_thread_writel(thread, next_task->pa_base,
-> > +				   CMDQ_THR_CURR_ADDR);
-> > +	}
+>                         Geert
 > 
-> Just one statement in 'else if' part. So remove the parentheses.
-
-I think we should keep this parentheses.
-
-Quote from CodingStyle document:
-
-This does not apply if only one branch of a conditional statement is a
-single
-statement; in the latter case use braces in both branches:
-
-if (condition) {
-        do_this();
-        do_that();
-} else {
-        otherwise();
-}
-
-> > +
-> > +	list_del(&task->list_entry);
-> > +	cmdq_thread_resume(thread);
-> > +
-> > +	/* call cb here to prevent lock */
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 > 
-> I think these three statements should be place together and there should
-> be no this comment.
-> 
-> 1. Change task state to DONE or ERROR.
-> 2. Callback
-> 3. Remove task from task_busy_list.
-
-I will put these three statements together and wrap up them as a
-function.
-
-> > +	if (task->cb.cb) {
-> > +		struct cmdq_cb_data cmdq_cb_data;
-> > +
-> > +		cmdq_cb_data.err = true;
-> > +		cmdq_cb_data.data = task->cb.data;
-> > +		task->cb.cb(cmdq_cb_data);
-> > +	}
-> > +
-> > +	return -ECANCELED;
-> > +}
-...
-> > +static int cmdq_suspend(struct device *dev)
-> > +{
-> > +	struct cmdq *cmdq = dev_get_drvdata(dev);
-> > +	u32 exec_threads;
-> > +
-> > +	mutex_lock(&cmdq->task_mutex);
-> > +	cmdq->suspended = true;
-> > +	mutex_unlock(&cmdq->task_mutex);
-> > +
-> > +	exec_threads = readl(cmdq->base + CMDQ_CURR_LOADED_THR);
-> > +	if ((exec_threads & CMDQ_THR_EXECUTING) && !cmdq_task_is_empty(cmdq)) {
-> > +		dev_err(dev, "wait active tasks timeout.\n");
-> > +		flush_workqueue(cmdq->task_release_wq);
-> > +	}
-> 
-> Maybe it need not to check exec_threads, it may be written as:
-> 
-> 	if (!cmdq_task_is_empty(cmdq))
-> 		dev_err(dev, "wait active tasks timeout.\n");
-> 
-> 	flush_workqueue(cmdq->task_release_wq);
-> 
-> Even though task_busy_list is empty, that does not mean every task in
-> cmdq->task_release_wq is finished. So always do flush
-> cmdq->task_release_wq.
-
-Will do.
-
-> > +	return 0;
-> > +}
-> > +
-...
-> 
-> Regards,
-> CK
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 > 
 
-Thanks,
-HS
+-- 
+Regards
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kieran Bingham
