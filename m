@@ -1,61 +1,61 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] ASoC: rockchip: Add machine driver for
- MAX98357A/RT5514/DA7219
-Date: Mon, 30 May 2016 17:03:57 +0100
-Message-ID: <20160530160357.GQ29837@sirena.org.uk>
-References: <1464267742-15312-1-git-send-email-zhengxing@rock-chips.com>
- <574BEC9D.50007@rock-chips.com>
+Subject: Re: [PATCH] devicetree - document using aliases to set spi bus
+ number.
+Date: Mon, 30 May 2016 17:13:50 +0100
+Message-ID: <20160530161350.GR29837@sirena.org.uk>
+References: <1464107960-10775-1-git-send-email-christer@weinigel.se>
+ <20160524174140.GE11605@leverpostej>
+ <5744BC76.9090403@gmail.com>
+ <20160525092034.GE1337@leverpostej>
+ <5745C5A3.6060202@gmail.com>
+ <20160525174809.GA8206@sirena.org.uk>
+ <5745F30B.2040605@gmail.com>
+ <20160527183629.GO16172@sirena.org.uk>
+ <574A063D.5030700@weinigel.se>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4T94Hejb80K+e1gX"
+	protocol="application/pgp-signature"; boundary="XAEV7zm15O60d1Zf"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <574BEC9D.50007-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <574A063D.5030700-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Christer Weinigel <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---4T94Hejb80K+e1gX
+--XAEV7zm15O60d1Zf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 30, 2016 at 03:32:45PM +0800, Xing Zheng wrote:
-> Hi,
-> Could any guys help me to review this patch?
+On Sat, May 28, 2016 at 10:57:33PM +0200, Christer Weinigel wrote:
+> On 05/27/2016 08:36 PM, Mark Brown wrote:
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-Sending content free pings just adds to the mail volume (if they are
-seen at all) and if something has gone wrong you'll have to resend the
-patches anyway.
+> > It is reasonable to provide and document something here but when there's
+> > some fairly simple and obvious better things we could be doing it should
+> > be those rather than the legacy stuff.
 
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
+> So what are the "simple and obvious better things" that one can use instead?
 
---4T94Hejb80K+e1gX
+To repeat what Rob said adding a label property on the leaf device
+nodes seems like a more sensible option.
+
+--XAEV7zm15O60d1Zf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXTGRsAAoJECTWi3JdVIfQcQEH/iGNKiR1qqrhtazM8FmtZ36m
-HTse1ltlUcHkAo8VrHvp92rt6tGNjFm6oK/YI8DA0F1Ei8NIJ9yybQKSzzhp1uhG
-EoXeGSx42UZ85QIJstJCjbt8/MGYBlDELSAl4YS3AeKf5FYWYvObexIPWuZYklJe
-8wkO/wmljEJDFmBj0wiI78c+zNpFLQuCOYN2fBxnlXkgk0jNSirYibZ23HwwPyJq
-Nr9sTObnEhglEv7fZwVUnImcYI8vsw+bsMh9Y0aAYBYMipOuls15qmsNx/o2uePH
-/dDpn2Epr364u/xmPjcP3NMe+SappLdz2o46gdnWFYiTpJZfDDTIAV3bust2lOA=
-=DWvB
+iQEcBAEBCAAGBQJXTGa9AAoJECTWi3JdVIfQWEIH/ikj28e4OS0RlFRM6k/mtZ/W
+YdEXx9EWxJjtFamqqOujurgctktvEtTOLSd8PuUcQZ6qD7bsjxYLyiU8LD6TLfOC
+ErxLKC55TH1XnMFmnBb8zktvJMtt4Rcbi6uy/dBydmuJGLw+LG0nL/RYzw5ZTngr
+nFGMI2Fmsg73Pq44asWRzW6lSpYMZ9piKrrBnWnOdLNUqXB8tWZt5NVMrsz3m9B4
+ybWg/4xu2WtuPBAxL6yPDTayOQGhWlNc3pQS/IYJUIgrCRfE503hfh7OpMKl3sIQ
+Xo+ycLIVCo8RS1DRtrqn3GuNNjshzcVCHtjTlj43Zs13SVhz1NIVutKkg77G5fw=
+=BfZp
 -----END PGP SIGNATURE-----
 
---4T94Hejb80K+e1gX--
+--XAEV7zm15O60d1Zf--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
