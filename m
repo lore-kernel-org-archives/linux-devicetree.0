@@ -1,73 +1,67 @@
-From: Kieran Bingham <kieran@ksquared.org.uk>
-Subject: Re: [PATCH 3/4] dt-bindings: Document Renesas R-Car FCP power-domains
- usage
-Date: Mon, 30 May 2016 11:09:12 +0100
-Message-ID: <574C1148.5070708@bingham.xyz>
-References: <1464369565-12259-1-git-send-email-kieran@bingham.xyz>
- <1464369565-12259-5-git-send-email-kieran@bingham.xyz>
- <CAMuHMdUvRN2ysYJ9g0daOD8sD7O5XcrZkKbWr0X_L7mG25Ocww@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: drop "arm,amba-bus" in favor of "simple-bus" part 2
+Date: Mon, 30 May 2016 12:19:21 +0200
+Message-ID: <3072536.5uGCiTBfGN@diego>
+References: <1464574353-31477-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUvRN2ysYJ9g0daOD8sD7O5XcrZkKbWr0X_L7mG25Ocww@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464574353-31477-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chanho Min <chanho.min-Hm3cg6mZ9cc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On 28/05/16 20:03, Geert Uytterhoeven wrote:
-> Hi Kieran,
+Am Montag, 30. Mai 2016, 11:12:33 schrieb Masahiro Yamada:
+> Tree-wide replacement was done by commit 2ef7d5f342c1 (ARM, ARM64:
+> dts: drop "arm,amba-bus" in favor of "simple-bus"), but we have some
+> new users of "arm,amba-bus" at Linux 4.7-rc1.  Eliminate them now.
 > 
-> On Fri, May 27, 2016 at 7:19 PM, Kieran Bingham <kieran@ksquared.org.uk> wrote:
->> The example misses the power-domains usage, and documentation that the
->> property is used by the node.
->>
->> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
-> 
-> Thanks for your patch!
-> 
->> ---
->>  Documentation/devicetree/bindings/media/renesas,fcp.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
->> index 1c0718b501ef..464bb7ae4b92 100644
->> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
->> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
->> @@ -21,6 +21,8 @@ are paired with. These DT bindings currently support the FCPV and FCPF.
->>
->>   - reg: the register base and size for the device registers
->>   - clocks: Reference to the functional clock
->> + - power-domains : power-domain property defined with a phandle
->> +                           to respective power domain.
-> 
-> I'd write "power domain specifier" instead of "phandle". While SYSC on R-Car
-> Gen3 uses #power-domain-cells = 0, the FCP module may show up on another
-> SoC that uses a different value, needing more than just a phandle.
-> 
-> In fact I'm inclined to leave out the power-domains property completely:
-> it's not a feature of the FCP, but of the SoC the FCP is part of.
-> power-domains properties may appear in any device node where needed.
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 
-I'm happy to just drop this part. It was mainly the addition to the
-example I was after, as I had followed the example, and thus missed the
-power-domain setting.
+For the Rockchip part,
+Acked-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
->>  Device node example
->> @@ -30,4 +32,5 @@ Device node example
->>                 compatible = "renesas,r8a7795-fcpv", "renesas,fcpv";
->>                 reg = <0 0xfea2f000 0 0x200>;
->>                 clocks = <&cpg CPG_MOD 602>;
->> +               power-domains = <&sysc R8A7795_PD_A3VP>;
+> ---
 > 
-> Adding it to the example doesn't hurt, though.
+> In order to not leave these compatible strings for the release,
+> is it OK to apply this patch for Linux 4.7 ?
+> 
+> 
+> 
+>  arch/arm64/boot/dts/lg/lg1312.dtsi       | 2 +-
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi
+> b/arch/arm64/boot/dts/lg/lg1312.dtsi index 3a4e9a2..fbafa24 100644
+> --- a/arch/arm64/boot/dts/lg/lg1312.dtsi
+> +++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
+> @@ -125,7 +125,7 @@
+>  		#size-cells = <1>;
+>  		#interrupts-cells = <3>;
+> 
+> -		compatible = "arm,amba-bus";
+> +		compatible = "simple-bus";
+>  		interrupt-parent = <&gic>;
+>  		ranges;
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 46f325a..d7f8e06 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -163,7 +163,7 @@
+>  	};
+> 
+>  	amba {
+> -		compatible = "arm,amba-bus";
+> +		compatible = "simple-bus";
+>  		#address-cells = <2>;
+>  		#size-cells = <2>;
+>  		ranges;
 
-Ok, I'll adjust and just keep the example in v2.
-
--- 
-Regards
-
-Kieran Bingham
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
