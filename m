@@ -1,45 +1,37 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] dt-bindings: clocksource: Add Add Oxford Semiconductor RPS Timer bindings
-Date: Tue, 31 May 2016 11:49:58 +0200
-Message-ID: <1464688198-9655-3-git-send-email-narmstrong@baylibre.com>
-References: <1464688198-9655-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464688198-9655-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org, tglx@linutronix.de, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: interrupts properties and API usage with GPIO controllers/Device
+ Tree
+Date: Tue, 31 May 2016 12:51:05 +0300
+Message-ID: <574D5E89.10906@ti.com>
+References: <57461CDC.603@gmail.com> <57485844.3050807@ti.com>
+ <CACRpkdYULz6fgw8N_yLCGYzqV7DjeJGmh1b0e9coxpGqSgZf+A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYULz6fgw8N_yLCGYzqV7DjeJGmh1b0e9coxpGqSgZf+A@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the Oxford Semiconductor RPS dual Timer.
+On 05/31/2016 11:49 AM, Linus Walleij wrote:
+> On Fri, May 27, 2016 at 4:23 PM, Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+>
+>> Another interesting, related question (as for me) is "Is there a limitation
+>>   that gpio bank can have only 32 GPIO pins (from gpiolib point of view)?"
+>
+> Do you mean for this driver or in general?
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/timer/oxsemi,rps-timer.txt      | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt
+In general.
 
-diff --git a/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt b/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt
-new file mode 100644
-index 0000000..3ca89cd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt
-@@ -0,0 +1,17 @@
-+Oxford Semiconductor OXNAS SoCs Family RPS Timer
-+================================================
-+
-+Required properties:
-+- compatible: Should be "oxsemi,ox810se-rps-timer"
-+- reg : Specifies base physical address and size of the registers.
-+- interrupts : The interrupts of the two timers
-+- clocks : The phandle of the timer clock source
-+
-+example:
-+
-+timer0: timer@200 {
-+	compatible = "oxsemi,ox810se-rps-timer";
-+	reg = <0x200 0x40>;
-+	clocks = <&rpsclk>;
-+	interrupts = <4 5>;
-+};
+>
+> The gpio MMIO driver has this limitation, but not the subsystem
+> and gpiolib as far as I know.
+
+Thanks.
+
 -- 
-1.9.1
+regards,
+-grygorii
