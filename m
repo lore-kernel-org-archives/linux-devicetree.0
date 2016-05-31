@@ -1,75 +1,54 @@
-From: Crestez Dan Leonard <leonard.crestez@intel.com>
-Subject: Re: [PATCH v2 6/7] iio: inv_mpu6050: Reformat sample for active scan
- mask
-Date: Tue, 31 May 2016 11:56:51 +0300
-Message-ID: <3169df0b-78d8-a35c-bd31-f2d4e7e17bde@intel.com>
-References: <cover.1463582011.git.leonard.crestez@intel.com>
- <7df4b331d35e3e6a19d13ccbcb5d12f0347b660c.1463582011.git.leonard.crestez@intel.com>
- <14d4a757-f60a-40c0-03b4-c36d1b22d30e@kernel.org>
- <49c4a235-29fd-aa55-d9d2-8ead5cefd737@intel.com>
- <4EB54DBB-A77A-4BC5-8960-5CE9EB1B5DF2@kernel.org>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v4 15/18] ARM: STi: DT: STiH407: Add sti-sasg-codec dt
+ node
+Date: Tue, 31 May 2016 11:05:43 +0200
+Message-ID: <574D53E7.40008@st.com>
+References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
+ <1464192412-16386-17-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4EB54DBB-A77A-4BC5-8960-5CE9EB1B5DF2@kernel.org>
+In-Reply-To: <1464192412-16386-17-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, Ge Gao <ggao@invensense.com>, Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/31/2016 12:42 AM, Jonathan Cameron wrote:
-> On 30 May 2016 14:44:41 BST, Crestez Dan Leonard <leonard.crestez@intel.com> wrote:
->> On 05/29/2016 06:47 PM, Jonathan Cameron wrote:
->>> On 18/05/16 16:00, Crestez Dan Leonard wrote:
->>>> Right now it is possible to only enable some of the x/y/z channels,
->> for
->>>> example you can enable accel_z without x or y but if you actually do
->>>> that what you get is actually only the x channel.
->>>>
->>>> Fix this by reformatting the hardware sample to only include the
->>>> requested channels.
->>> As it stands here there is no benefit in doing this over using the
->> core
->>> demux. In fact it's considerably less efficient (fair enough that you
->>> are keeping it simple in the first instance).
->>> The patch description should make that clear.
->>
->> Why is it less efficient? All it really does is a bunch of memcpy.
+
+
+On 05/25/2016 06:06 PM, Peter Griffin wrote:
+> This patch adds the dt node for the internal audio
+> codec IP.
 > 
-> Not doing agglomeration of neighbouring copies (iirc) not git either set of code to
-> hand!
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  arch/arm/boot/dts/stih407-family.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> index b423836..60f95b6 100644
+> --- a/arch/arm/boot/dts/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> @@ -746,5 +746,14 @@
+>  				<&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>,
+>  				<&clk_s_c0_flexgen CLK_EXT2F_A9>;
+>  		};
+> +
+> +		sti_sasg_codec: sti-sasg-codec {
+> +			compatible = "st,stih407-sas-codec";
+> +			#sound-dai-cells = <1>;
+> +			status = "okay";
+Should be set to disable in family and enabled it depending on boards
+(stihxxx-b2120.dtsi)
+> +			st,syscfg = <&syscfg_core>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_spdif_out >;
+Declare pinctrl use in stihxxx-b2120.dtsi, should be set only if SPDIF used.
 
-You're right about that. But the total data rate is still very low.
-
->>> I'd definitely like to see simple extension of that option to handle
->>> a callback to get the nearest scanmask that is possible (as an
->> alternative
->>> to the static scan_masks_available list.)
->>>
->>> This only gets interesting if we are dealing with the unaligned case
->> and for
->>> these parts that only kicks in I think if the slave devices have say
->> 3 bytes in
->>> their data type.  
->>
->> But I want to deal with the unaligned case because it's better than
->> introducing odd validations on slave channels. If I added an extension
->> to get the nearest scanmask I would have to remove it in PATCH 7.
-> Hmm I must have misread that. Though you were only supporting 16 bit channels
->  for aux sensors.
-
-That was in a previous version, I dropped that limitation now.
-
-> Then for now can we give this a slightly less generic name. I am not happy
->  enough that we want this in the core 'yet'. 
-> Easy to rename later if it makes sense.
-
-Ok, I will rename these functions to start with inv_mpu_* instead of iio_*.
-
-In theory it would be interesting to refactor the iio demuxing code to
-support this but then this patch serios would grow even more complicated.
-
--- 
-Regards,
-Leonard
+Regards
+Arnaud
+> +		};
+>  	};
+>  };
+> 
