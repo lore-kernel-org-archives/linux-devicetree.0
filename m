@@ -1,375 +1,98 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add dts file for Bananapi
- M1 Plus board
-Date: Tue, 31 May 2016 11:03:51 +0800
-Message-ID: <CAGb2v66ojJfSoCQ13rGyfi4XjbzkZfMn=gfPFN+mQmv8NoBqfA@mail.gmail.com>
-References: <20160530123013.11575-1-luoyi.ly@gmail.com> <20160530194340.GE4908@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v7 4/5] dtc: Plugin and fixup support
+Date: Tue, 31 May 2016 15:06:34 +1000
+Message-ID: <20160531050634.GJ17226@voom.fritz.box>
+References: <1464112239-29856-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1464112239-29856-5-git-send-email-pantelis.antoniou@konsulko.com>
+ <20160527073306.GA17226@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBLX6WO5AKGQEFRVM2TA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160530194340.GE4908@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?UTF-8?B?572X57+8?= <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="E2AOuUyqcJWq6+RR"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160527073306.GA17226-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Tue, May 31, 2016 at 3:43 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Mon, May 30, 2016 at 08:30:13PM +0800, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Add support for the Bananapi M1 Plus A20 development board from sinovoip.com.cn .
->> This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for
->> OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiver,
->> 3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and sdio wifi.
->
-> What is the difference between the M1+ and the M1?
->
->>
->> Signed-off-by: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile                       |   1 +
->>  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 270 +++++++++++++++++++++++
->>  2 files changed, 271 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index e06a5ab..fde407f 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -685,6 +685,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
->>       sun6i-a31s-yones-toptech-bs1078-v2.dtb
->>  dtb-$(CONFIG_MACH_SUN7I) += \
->>       sun7i-a20-bananapi.dtb \
->> +     sun7i-a20-bananapi-m1-plus.dtb \
->>       sun7i-a20-bananapro.dtb \
->>       sun7i-a20-cubieboard2.dtb \
->>       sun7i-a20-cubietruck.dtb \
->> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
->> new file mode 100644
->> index 0000000..b62fc1d
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
->> @@ -0,0 +1,270 @@
->> +/*
->> + * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> + *
->> + * Thanks to the original work by Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +/dts-v1/;
->> +#include "sun7i-a20.dtsi"
->> +#include "sunxi-common-regulators.dtsi"
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +/ {
->> +     model = "Banana Pi BPI-M1-Plus";
->> +     compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
->> +
->> +     aliases {
->> +             serial0 = &uart0;
->> +     };
->> +
->> +     chosen {
->> +             stdout-path = "serial0:115200n8";
->> +     };
->> +
->> +     leds {
->> +             compatible = "gpio-leds";
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&led_pins_bananapi>;
->> +
->> +             red {
->> +                     label = "bananapi:red:usr";
->
-> The first part the label is the board name, in that case that would be
-> bananapi-m1-plus.
->
->> +                     gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
->> +                     linux,default-trigger = "default-on";
->
-> So that's the power led?
->
->> +             };
->> +
->> +             green {
->> +                     label = "bananapi:green:usr";
->> +                     gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
->> +                     linux,default-trigger = "heartbeat";
->
-> We don't enforce any trigger by default.
->
->> +
->> +             };
->> +     };
->> +
->> +     reg_gmac_3v3: gmac-3v3 {
->> +             compatible = "regulator-fixed";
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&gmac_power_pin_bananapi>;
->> +             regulator-name = "gmac-3v3";
->> +             regulator-min-microvolt = <3300000>;
->> +             regulator-max-microvolt = <3300000>;
->> +             startup-delay-us = <100000>;
->> +             enable-active-high;
->> +             gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
->> +     };
->> +
->> +     reg_vmmc3: vmmc3 {
->> +             compatible = "regulator-fixed";
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&vmmc3_pin_bananapi>;
->> +             regulator-name = "vmmc3";
->> +             regulator-min-microvolt = <3300000>;
->> +             regulator-max-microvolt = <3300000>;
->> +             regulator-always-on;
->> +             regulator-boot-on;
->> +             enable-active-high;
->> +             gpio = <&pio 7 22 GPIO_ACTIVE_HIGH>;
->> +     };
->
-> You can use reg_vcc3v3 from sunxi-common-regulators.dtsi.
+--E2AOuUyqcJWq6+RR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is a GPIO controlled one, not just a fixed regulator.
+On Fri, May 27, 2016 at 05:33:06PM +1000, David Gibson wrote:
+> On Tue, May 24, 2016 at 08:50:38PM +0300, Pantelis Antoniou wrote:
+> > This patch enable the generation of symbols & local fixup information
+> > for trees compiled with the -@ (--symbols) option.
+> >=20
+> > Using this patch labels in the tree and their users emit information
+> > in __symbols__ and __local_fixups__ nodes.
+> >=20
+> > The __fixups__ node make possible the dynamic resolution of phandle
+> > references which are present in the plugin tree but lie in the
+> > tree that are applying the overlay against.
+> >=20
+> > Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>=20
+> So, I think I've identified the underlying thing which was bothering
+> me about these patches.
+>=20
+> With the new dynamic patching stuff, "overlays" (for want of a better
+> term) now have a real existence both in the dts source format, and in
+> the dtb object format.  However, these patches don't give them a
+> concrete, explicit representation within dtc itself - instead we just
+> kind of mangle one representation to the other as we're parsing.  I
+> think this is a mistaken approach.
+>=20
+> I'm toying with some patches to give overlays a full representation in
+> dtc which I think will handle these cases better - and allow for
+> easier experimentation with different possible ways of encoding the
+> overlays.
+>=20
+> One side point - writing plugins in dts format leads to an irritating
+> little ambiguity in the grammar.  Well, not an ambiguity technically,
+> but a place where we need more lookahead than normal, meaning we get
+> shift/reduce conflicts.  It arises because both memreserves and
+> overlays can have a label in front of them.  So, if we see a label as
+> our next token after the version tag, we don't know if a memreserve or
+> overlay is coming next, so the parser doesn't know which path to go
+> down (with a single token lookahead).  We could handle it with
+> %glr-parser, of course, but I have been trying to avoid that.  I think
+> this will apply both with your patches and with the approach I'm
+> working on - not sure what to do about it yet.
 
-However, this is a misrepresentation of what is on the board.
+I now have a first cut at said experiments, see:
+    https://github.com/dgibson/dtc/tree/overlay
 
-PH22 here is connected to the REG_ON pin on the WiFi chip.
-So either you represent this as a GPIO toggled fixed
-regulator with a source from reg_vcc3v3, and use this as
-vmmc on mmc3. Or you use the pwrseq_simple bindings for
-this.
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
+--E2AOuUyqcJWq6+RR
+Content-Type: application/pgp-signature; name="signature.asc"
 
-ChenYu
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
->
->> +
->> +};
->> +
->> +&ahci {
->> +     status = "okay";
->> +};
->> +
->> +&codec {
->> +     status = "okay";
->> +};
->> +
->> +&ehci0 {
->> +     status = "okay";
->> +};
->> +
->> +&ehci1 {
->> +     status = "okay";
->> +};
->> +
->> +&ohci0 {
->> +     status = "okay";
->> +};
->> +
->> +&ohci1 {
->> +     status = "okay";
->> +};
->
-> Please order your nodes alphabetically.
->
->> +
->> +&gmac {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&gmac_pins_rgmii_a>;
->> +     phy = <&phy1>;
->> +     phy-mode = "rgmii";
->> +     phy-supply = <&reg_gmac_3v3>;
->> +     status = "okay";
->> +
->> +     phy1: ethernet-phy@1 {
->> +             reg = <1>;
->> +     };
->> +};
->> +
->> +&i2c0 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&i2c0_pins_a>;
->> +     status = "okay";
->> +
->> +     axp209: pmic@34 {
->> +             compatible = "x-powers,axp209";
->> +             reg = <0x34>;
->> +             interrupt-parent = <&nmi_intc>;
->> +             interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->> +
->> +             interrupt-controller;
->> +             #interrupt-cells = <1>;
->> +     };
->> +};
->> +
->> +&ir0 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&ir0_rx_pins_a>;
->> +     status = "okay";
->> +};
->> +
->> +&mmc0 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
->> +     vmmc-supply = <&reg_vcc3v3>;
->> +     bus-width = <4>;
->> +     cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
->> +     cd-inverted;
->> +     status = "okay";
->> +};
->> +
->> +&mmc3 {
->> +     #address-cells = <1>;
->> +     #size-cells = <0>;
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&mmc3_pins_a>;
->> +     vmmc-supply = <&reg_vmmc3>;
->> +     bus-width = <4>;
->> +     non-removable;
->> +     enable-sdio-wakeup;
->> +     status = "okay";
->> +
->> +     brcmf: bcrmf@1 {
->> +             reg = <1>;
->> +             compatible = "brcm,bcm4329-fmac";
->> +             interrupt-parent = <&pio>;
->> +             interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
->> +             interrupt-names = "host-wake";
->> +     };
->> +
->> +};
->> +
->> +&mmc3_pins_a {
->> +    /* AP6210 requires pull-up */
->> +     allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->> +};
->> +
->> +&pio {
->> +     gmac_power_pin_bananapi: gmac_power_pin@0 {
->> +             allwinner,pins = "PH23";
->> +             allwinner,function = "gpio_out";
->> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +     };
->> +
->> +     led_pins_bananapi: led_pins@0 {
->> +             allwinner,pins = "PH24", "PG2";
->> +             allwinner,function = "gpio_out";
->> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +     };
->> +
->> +     mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
->> +             allwinner,pins = "PH10";
->> +             allwinner,function = "gpio_in";
->> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +             allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->> +     };
->> +
->> +     usb1_vbus_pin_bananapi: usb1_vbus_pin@0 {
->> +             allwinner,pins = "PH0";
->> +             allwinner,function = "gpio_out";
->> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +     };
->> +
->> +     usb2_vbus_pin_bananapi: usb2_vbus_pin@0 {
->> +             allwinner,pins = "PH1";
->> +             allwinner,function = "gpio_out";
->> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +     };
->> +
->> +     vmmc3_pin_bananapi: vmmc3_pin@0 {
->> +             allwinner,pins = "PH22";
->> +             allwinner,function = "gpio_out";
->> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +     };
->> +};
->> +
->> +&reg_usb1_vbus {
->> +     pinctrl-0 = <&usb1_vbus_pin_bananapi>;
->> +     gpio = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
->> +     status = "okay";
->> +};
->> +
->> +&reg_usb2_vbus {
->> +     pinctrl-0 = <&usb2_vbus_pin_bananapi>;
->> +     gpio = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
->> +     status = "okay";
->> +};
->> +
->> +&uart0 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&uart0_pins_a>;
->> +     status = "okay";
->> +};
->> +
->> +&usbphy {
->> +     usb1_vbus-supply = <&reg_usb1_vbus>;
->> +     usb2_vbus-supply = <&reg_usb2_vbus>;
->> +     status = "okay";
->> +};
->> --
->> 2.8.3
->>
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+iQIcBAEBAgAGBQJXTRvaAAoJEGw4ysog2bOSj0QP/jS5roflqBMK+ClKTxEM2WgL
+6e8DtYkrpN3qRQtSv/FWQj0XeimUvL6gBOLkoGICUQaiPZ1LVVjMFsotJxuHLluM
+BohpRb7mOe2wc6UTK4u9uIVnpKWNsZ37pLnhYRNPjsH0n0pESa64Uve299rAWAwh
+PRtMAECWw8H652E7Sw9DIY00fdXFzpdw0JFqg9BT2qDk9DTe72DO6sHkASAmGzr9
+fC/d10dDvkQ1bb+nOGEQ6PsmYqvF4Rs/lj45oyRNWL5CjQ7c9RjMaN+7MZygwlB6
+a9V2wti9jiKtEdpaP5QeJhXR2iruZow4RFZlDjCNXyb+FcaGDQ/2cgdj153qFXcU
++kxXcv2oB6B+SXOCGKMZDFqT7oo4W48n4B2H5uNYVlO1EabU6bQmyyk5JK/FILdI
+XwSpuvRyShhuF7nmaNhBLwbHowuMsAVw9h8QOpwxzDLkXreU0Xsec5zQIrhWb7mU
+H+Ga888bliIfQ3u4xMunsU23cffRCxseLJyVJ49DpAfkD9F00KJtP6vnMkCt0Ogp
+xKUakXOeBwRidCH4ow0ugWKHZq93EHYHRGIolioWB+dZNScklEszkLun+EzkA+1c
+3oaysvkojuUKw9H0Xa91RKXFxoVG5jz22w+bAPClbdXTjWcHgpVnUnT1VwYL8b2j
+UdGon7vQ2Y63uZKxInfD
+=9nzK
+-----END PGP SIGNATURE-----
+
+--E2AOuUyqcJWq6+RR--
