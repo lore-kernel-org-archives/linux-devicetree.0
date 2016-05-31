@@ -1,74 +1,128 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2,1/5] dt-bindings: mt8173-xhci: support host side of
- dual-role mode
-Date: Tue, 31 May 2016 14:07:48 +0300
-Message-ID: <7828750b-f5ac-6fa0-ee6e-d4775c227e1a@cogentembedded.com>
-References: <1464673962-11506-1-git-send-email-chunfeng.yun@mediatek.com>
- <1464673962-11506-2-git-send-email-chunfeng.yun@mediatek.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Subject: Re: [PATCH v2 5/5] arm64/numa: avoid inconsistent information to be
+ printed
+Date: Tue, 31 May 2016 19:27:25 +0800
+Message-ID: <574D751D.9020901@huawei.com>
+References: <1464427377-12712-1-git-send-email-thunder.leizhen@huawei.com>
+ <1464427377-12712-6-git-send-email-thunder.leizhen@huawei.com>
+ <574D543A.2090406@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464673962-11506-2-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <574D543A.2090406@suse.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <mbrugger@suse.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David
+ Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank
+ Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Xinwei Hu <huxinwei@huawei.com>, Zefan Li <lizefan@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 5/31/2016 8:52 AM, Chunfeng Yun wrote:
 
-> Some resources, such as IPPC register etc, shared with device
-> driver are moved into common glue layer when xHCI driver is the
-> host side of dual-role mode and they should be changed as optional
-> properties if they are required ones before. For clarity, add
-> a new part of binding to support host side of dual-role mode.
->
-> Additionally add optional properties of pinctrl for host only mode
->
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/mt8173-xhci.txt        |   48 ++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> index b3a7ffa..542e3fa 100644
-> --- a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> @@ -2,6 +2,14 @@ MT8173 xHCI
->
->  The device node for Mediatek SOC USB3.0 host controller
->
-> +There are two scenarios: the first one only supports xHCI driver;
-> +the second one supports dual-role mode, and the host is based on xHCI
-> +driver. Take account of backward compatibility, we divide bindings
-> +into two parts.
-> +
-> +1st: only supports xHCI driver
-> +------------------------------------------------------------------------
-> +
->  Required properties:
->   - compatible : should contain "mediatek,mt8173-xhci"
->   - reg : specifies physical base address and size of the registers,
-> @@ -27,6 +35,9 @@ Optional properties:
->  	control register, it depends on "mediatek,wakeup-src".
->   - vbus-supply : reference to the VBUS regulator;
->   - usb3-lpm-capable : supports USB3.0 LPM
-> + - pinctl-names : a pinctrl state named "default" must be defined
+On 2016/5/31 17:07, Matthias Brugger wrote:
+> 
+> 
+> On 28/05/16 11:22, Zhen Lei wrote:
+>> numa_init(of_numa_init) may returned error because of numa configuration
+>> error. So "No NUMA configuration found" is inaccurate. In fact, specific
+>> configuration error information should be immediately printed by the
+>> testing branch.
+>>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> ---
+> 
+> Which kernel version is this patch based on?
 
-    pinctrl-names.
+Base on mainline(git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git), I git pulled about 3-5 days ago, the last commit-id is dc03c0f.
 
-> + - pinctrl-0 : pin control group
-> +	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
->
->  Example:
->  usb30: usb@11270000 {
-[...]
+And thess patches base on https://lkml.org/lkml/2016/5/24/679 series(acpi numa) as David Daney's requirement.
 
-MBR, Sergei
+> 
+> Regards,
+> Matthias
+> 
+>>   arch/arm64/mm/numa.c | 6 +++---
+>>   drivers/of/of_numa.c | 7 +++----
+>>   2 files changed, 6 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+>> index 2601660..1b9622c 100644
+>> --- a/arch/arm64/mm/numa.c
+>> +++ b/arch/arm64/mm/numa.c
+>> @@ -338,8 +338,10 @@ static int __init numa_init(int (*init_func)(void))
+>>       if (ret < 0)
+>>           return ret;
+>>
+>> -    if (nodes_empty(numa_nodes_parsed))
+>> +    if (nodes_empty(numa_nodes_parsed)) {
+>> +        pr_info("No NUMA configuration found\n");
+>>           return -EINVAL;
+>> +    }
+>>
+>>       ret = numa_register_nodes();
+>>       if (ret < 0)
+>> @@ -370,8 +372,6 @@ static int __init dummy_numa_init(void)
+>>
+>>       if (numa_off)
+>>           pr_info("NUMA disabled\n"); /* Forced off on command line. */
+>> -    else
+>> -        pr_info("No NUMA configuration found\n");
+>>       pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+>>              0LLU, PFN_PHYS(max_pfn) - 1);
+>>
+>> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+>> index fb62307..3157130 100644
+>> --- a/drivers/of/of_numa.c
+>> +++ b/drivers/of/of_numa.c
+>> @@ -63,7 +63,7 @@ static int __init of_numa_parse_memory_nodes(void)
+>>       struct device_node *np = NULL;
+>>       struct resource rsrc;
+>>       u32 nid;
+>> -    int i, r = 0;
+>> +    int i, r;
+>>
+>>       for_each_node_by_type(np, "memory") {
+>>           r = of_property_read_u32(np, "numa-node-id", &nid);
+>> @@ -81,12 +81,11 @@ static int __init of_numa_parse_memory_nodes(void)
+>>           if (!i || r) {
+>>               of_node_put(np);
+>>               pr_err("NUMA: bad property in memory node\n");
+>> -            r = r ? : -EINVAL;
+>> -            break;
+>> +            return r ? : -EINVAL;
+>>           }
+>>       }
+>>
+>> -    return r;
+>> +    return 0;
+>>   }
+>>
+> 
+> Well this is fixing changes you introduced in this patch-set. Any reason this is not part of patch 2?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Because they fixed two different problems.
+
+> 
+>>   static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+>> -- 
+>> 2.5.0
+>>
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> 
+> .
+> 
