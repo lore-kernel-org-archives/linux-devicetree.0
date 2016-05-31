@@ -1,82 +1,48 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v4] extcon: gpio: Add the support for Device tree bindings
-Date: Tue, 31 May 2016 15:44:39 +0900
-Message-ID: <574D32D7.2090902@samsung.com>
-References: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
- <CGME20160527152945epcas1p4de3d2d43f94a20e3f93676b6c4f78244@epcas1p4.samsung.com>
- <20160527152934.GB12024@rob-hp-laptop>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH 0/5] ARM: dts: omap3-gta04: Various updates
+Date: Tue, 31 May 2016 08:48:44 +0200
+Message-ID: <CAAfyv37NE1eogrSRCuRY-9V30FtD3u7oeFWMJk=xNX1hFJ9O-w@mail.gmail.com>
+References: <1463514531-7235-1-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20160527152934.GB12024@rob-hp-laptop>
+In-Reply-To: <1463514531-7235-1-git-send-email-marek@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Venkat Reddy Talla <vreddytalla@nvidia.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+To: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016=EB=85=84 05=EC=9B=94 28=EC=9D=BC 00:29, Rob Herring wrote:
-> On Thu, May 26, 2016 at 05:17:45PM +0530, Venkat Reddy Talla wrote:
->> Add the support for Device tree bindings of extcon-gpio driver.
->> The extcon-gpio device tree node must include the both 'extcon-id' a=
-nd
->> 'gpios' property.
->=20
-> I think extcon bindings are a mess in general...
->=20
->> For example:
->> 	usb_cable: extcon-gpio-0 {
->> 		compatible =3D "extcon-gpio";
->> 		extcon-id =3D <EXTCON_USB>;
->> 		gpios =3D <&gpio6 1 GPIO_ACTIVE_HIGH>;
->> 	}
->> 	ta_cable: extcon-gpio-1 {
->> 		compatible =3D "extcon-gpio";
->> 		extcon-id =3D <EXTCON_CHG_USB_DCP>;
->> 		gpios =3D <&gpio3 2 GPIO_ACTIVE_LOW>;
->> 		debounce-ms =3D <50>;	/* 50 millisecond */
->> 		wakeup-source;
->> 	}
->=20
-> This is all 1 logical connector, the USB connector. Why are you=20
-> describing cables? Those are not part of the h/w and are dynamic.=20
-> Describe this as a connector which is one thing (i.e. node). Use a=20
-> compatible string that reflects the type of connector=20
-> (usb-microab-connector), not the driver you want to use. Then define=20
-> GPIO lines needed to provide state information like VBus, ID, charger=
-=20
-> modes and control lines like soft connect (D+ pullup enable), VBus=20
-> enable, etc.
+Ping? Any objections? Thanks.
 
-You're right. The extcon-gpio driver will not use the "extcon-gpio" raw=
- compatible.
-As you commented[1], the each connector will have the unique name to us=
-e the extcon-gpio.c driver.
-[1] https://lkml.org/lkml/2015/10/21/906
+On Tue, May 17, 2016 at 9:48 PM, Marek Belisko <marek@goldelico.com> wrote:
+> Add various improvements for gta04 device (wifi, backlight, irq lines for sensors)
+>
+> H. Nikolaus Schaller (4):
+>   ARM: dts: omap3-gta04: Define and use bma180 irq pin
+>   ARM: dta: omap3-gta04: Define and use itg3200  irq pin
+>   ARM: dta: omap3-gta04: Define and use hmc5843 irq pin
+>   ARM: dts: omap3-gat04: Fix wifi handling
+>
+> Marek Belisko (1):
+>   ARM: dts: omap3-gta04: Add backlight support
+>
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 60 ++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 57 insertions(+), 3 deletions(-)
+>
+> --
+> 2.5.0
+>
 
+Marek
 
-=46or example,
-The extcon-gpio.c driver may have the different name including the h/w =
-information
-according to the kind of external connector.
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
 
-static const struct of_device_id gpio_extcon_of_match[] =3D {
-	{
-		.compatible =3D "extcon-chg-sdp",	/* SDP charger connector */
-		.data =3D EXTCON_CHG_SDP_DATA,
-	}, {
-		.compatible =3D "extcon-chg-dcp",	/* DCP charger connector */
-		.data =3D EXTCON_CHG_DCP_DATA,
-	}, {
-		.compatible =3D "extcon-jack-microphone", /* Microphone jack connecto=
-r */
-		.data =3D EXTCON_JACK_MICROPHONE_DATA,
-	}, {
-		.compatible =3D "extcon-disp-hdmi", /* HDMI connector*/
-		.data =3D EXTCON_DISP_HDMI_DATA,
-	},
-	......
-};
-
-Thanks,
-Chanwoo Choi
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
