@@ -1,116 +1,129 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [RFC v2 00/13] usb/mmc/power: Fix USB/LAN when TFTP booting
-Date: Tue, 31 May 2016 08:58:08 +0800
-Message-ID: <20160531005808.GA7913@shlinux2>
-References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
- <20160505224240.GA31429@rob-hp-laptop>
- <CAPDyKFqpoi03Egfuvd8qJXnn_+FBgPXAb7S4UvkxVs8BA+zwnA@mail.gmail.com>
- <20160509181829.GA19687@rob-hp-laptop>
- <CAPDyKFq2=mqujFjvJSYxg2nVmK=OrBKLtFfb-ErNJO3Zr_LMVw@mail.gmail.com>
- <20160528033613.GA3291@shlinux2>
+From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for
+ Bananapi M1 Plus board
+Date: Tue, 31 May 2016 10:03:15 +0800
+Message-ID: <CAFfxPQu-WerarpCPDo81Q1O9B10CseHrAWuGBNPDibhWi8G+SQ@mail.gmail.com>
+References: <20160530123013.11575-1-luoyi.ly@gmail.com>
+	<20160530194340.GE4908@lukather>
+	<574CA1ED.8050007@web.de>
+Reply-To: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160528033613.GA3291@shlinux2>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-usb@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, hverkuil@xs4all.nl, tjakobi@math.uni-bielefeld.de, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: multipart/alternative; boundary=001a113d3e04a98811053419c6a9
+Return-path: <linux-sunxi+bncBCLONWF5WQNBBY7BWO5AKGQENFI6LFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <574CA1ED.8050007-S0/GAf8tV78@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 28, 2016 at 11:36:13AM +0800, Peter Chen wrote:
-> On Tue, May 10, 2016 at 01:02:08PM +0200, Ulf Hansson wrote:
-> > + Arnd
-> > 
-> > [...]
-> > 
-> > >> >> Solution
-> > >> >> ========
-> > >> >> This is very similar to the MMC pwrseq behavior so the idea is to:
-> > >> >> 1. Move MMC pwrseq drivers to generic place,
-> > >> >
-> > >> > You can do that, but I'm going to NAK any use of pwrseq bindings outside
-> > >> > of MMC. I think it is the wrong way to do things. The DT should describe
-> > >>
-> > >> Huh, I didn't know that was your view of the mmc pwrseq bindings. Why
-> > >> didn't you NAK them before?
-> > >
-> > > Unfortunately, either I missed it or it was a time I couldn't spend much
-> > > time on reviews.
-> > 
-> > Okay, I guess it's common issue among maintainers. The problem with DT
-> > is that it gets really hard to be fixed up later. :-)
-> > 
-> > >
-> > >> > the devices. If they happen to be "simple" then the core can walk the
-> > >> > tree and do any setup. For example, look for "reset-gpios" and toggle
-> > >> > that GPIO. There is no need for a special node.
-> > >> >
-> > >> >> 2. Extend the pwrseq-simple with regulator toggling,
-> > >> >> 3. Add support to USB hub and port core for pwrseq,
-> > >> >
-> > >> > We discussed this for USB already[1] and is why we defined how to add
-> > >> > USB child devices. The idea is not to add pwrseq to that.
-> > >>
-> > >> I am not familiar with the USB discussion.
-> > >>
-> > >> Still, let me give you some more background to the mmc pwrseq. The
-> > >> idea from the mmc pwrseq bindings comes from the power-domain DT
-> > >> bindings, as I thought these things were a bit related.
-> > >> In both cases they are not directly a property of the device, but more
-> > >> describing a HW dependency to allow the device to work.
-> > >
-> > > I could see this as a board level power domain. However the difference
-> > > is we are not generally exposing internal SOC details the same way as
-> > > board level components. Perhaps we could extend power domains to board
-> > > level, but that is not what was done here.
-> > >
-> > >> One could probably use a child node instead of a phandle, but that
-> > >> wasn't chosen back then. Of course you are the DT expert, but could
-> > >> you perhaps tell me why a child node is better for cases like this?
-> > >
-> > > If there is a control path hierarchy, then we try to model that in DT
-> > > with child nodes. In cases of SDIO and USB, there is a clear hierarchy.
-> > > Ignoring the discovery ordering problem, we already have defined ways to
-> > > describe GPIO connections, regulators, etc. to devices. Describing those
-> > > things separately from the device to solve a particular issue that is
-> > > really a kernel limitation is what I don't like.
-> > 
-> > Okay, I see.
-> > 
-> > To move forward in trying to make mmc pwrseq a generic pwrseq, could
-> > we perhaps allow both cases?
-> > 
-> > In the mmc case, there are already deployed bindings so we need to
-> > cope with these by using the phandle option, but for USB etc we could
-> > force the child node option.
-> > As long as we agree that we keep using a compatible string for the
-> > child node as well, both options should be able to co-exist and we
-> > should probably be able to managed them both from a common pwrseq
-> > driver framework.
-> > 
-> > Although, I do remember from an older conversations around some of
-> > mine submission for the mmc pwrseq code, that some people (maybe
-> > Arnd?) wasn't keen on adding a new framework for this. Perhaps that
-> > has changed?
-> > 
-> 
-> All, how we move on for this?
-> 
-> 1. Using a generic driver to manage both mmc and USB (and further
-> subsystem), USB and further subsystem do not use pwrseq node in dts.
-> 2. USB creates the similar driver under drivers/usb for its own use. 
-> 
-> Which one do you prefer, thanks.
-> 
+--001a113d3e04a98811053419c6a9
+Content-Type: text/plain; charset=UTF-8
 
-Hi Krzysztof Kozlowski,
+bpi m1+'s i2s/spdif  pinout is different with the bpi pro .
 
-I think option 1 may be better according to Rob and Ulf's comment.
-Would you like going on your patch set? You can work on generic pwrseq
-driver, I will do USB stuffs based on generic pwrseq driver?
+2016-05-31 4:26 GMT+08:00 Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>:
+
+> Am 30.05.2016 um 21:43 schrieb Maxime Ripard:
+>
+>> Hi,
+>>
+>> On Mon, May 30, 2016 at 08:30:13PM +0800, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>
+>>> From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> Add support for the Bananapi M1 Plus A20 development board from
+>>> sinovoip.com.cn .
+>>> This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle
+>>> for
+>>> OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir
+>>> receiver,
+>>> 3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and
+>>> sdio wifi.
+>>>
+>> What is the difference between the M1+ and the M1?
+>>
+>
+> The M1+ is an updated version of the original Banana Pi. If you're
+> interested
+> in the details, have a look at http://linux-sunxi.org/Banana_Pi#Variants .
+> "BPi-M1+" is SinoVoip's counterpart of LeMaker's "Banana Pro", for which a
+> .dts
+> already exists. Judging from .fex files, only a single pin assignment
+> seems to
+> differ between the two (audio_pa_ctrl, PH26 vs. PH15).
+>
+> Regards, B. Nortmann
+>
 
 -- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-Best Regards,
-Peter Chen
+--001a113d3e04a98811053419c6a9
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">bpi m1+&#39;s i2s/spdif=C2=A0 pinout is different with the=
+ bpi pro .<br></div><div class=3D"gmail_extra"><br><div class=3D"gmail_quot=
+e">2016-05-31 4:26 GMT+08:00 Bernhard Nortmann <span dir=3D"ltr">&lt;<a hre=
+f=3D"mailto:bernhard.nortmann-S0/GAf8tV78@public.gmane.org" target=3D"_blank">bernhard.nortmann@w=
+eb.de</a>&gt;</span>:<br><blockquote class=3D"gmail_quote" style=3D"margin:=
+0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">Am=
+ 30.05.2016 um 21:43 schrieb Maxime Ripard:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
+Hi,<br>
+<br>
+On Mon, May 30, 2016 at 08:30:13PM +0800, <a href=3D"mailto:luoyi.ly@gmail.=
+com" target=3D"_blank">luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
+From: luoyi &lt;<a href=3D"mailto:luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" target=3D"_blank">luo=
+yi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>&gt;<br>
+<br>
+Add support for the Bananapi M1 Plus A20 development board from <a href=3D"=
+http://sinovoip.com.cn" rel=3D"noreferrer" target=3D"_blank">sinovoip.com.c=
+n</a> .<br>
+This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for=
+<br>
+OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiv=
+er,<br>
+3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and sdio=
+ wifi.<br>
+</blockquote>
+What is the difference between the M1+ and the M1?<br>
+</blockquote>
+<br></span>
+The M1+ is an updated version of the original Banana Pi. If you&#39;re inte=
+rested<br>
+in the details, have a look at <a href=3D"http://linux-sunxi.org/Banana_Pi#=
+Variants" rel=3D"noreferrer" target=3D"_blank">http://linux-sunxi.org/Banan=
+a_Pi#Variants</a> .<br>
+&quot;BPi-M1+&quot; is SinoVoip&#39;s counterpart of LeMaker&#39;s &quot;Ba=
+nana Pro&quot;, for which a .dts<br>
+already exists. Judging from .fex files, only a single pin assignment seems=
+ to<br>
+differ between the two (audio_pa_ctrl, PH26 vs. PH15).<br>
+<br>
+Regards, B. Nortmann<br>
+</blockquote></div><br></div>
+
+<p></p>
+
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
+
+--001a113d3e04a98811053419c6a9--
