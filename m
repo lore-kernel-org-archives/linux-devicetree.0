@@ -1,48 +1,63 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 0/4] hw rng support for NSP SoC
-Date: Tue, 31 May 2016 10:09:39 -0700
-Message-ID: <574DC553.4030009@gmail.com>
-References: <1464343841-29504-1-git-send-email-yendapally.reddy@broadcom.com>
- <20160531101934.GM15376@gondor.apana.org.au>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for
+ Bananapi M1 Plus board
+Date: Tue, 31 May 2016 19:09:57 +0200
+Message-ID: <20160531170957.GM4908@lukather>
+References: <20160530123013.11575-1-luoyi.ly@gmail.com>
+ <20160530194340.GE4908@lukather>
+ <574CA1ED.8050007@web.de>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20160531101934.GM15376@gondor.apana.org.au>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, noltari@gmail.com, Joshua Henderson <joshua.henderson@microchip.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.ke
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pleSNuEbvnUYtMxG"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZ4KW65AKGQEOT5QHQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <574CA1ED.8050007-S0/GAf8tV78@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>
+Cc: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/31/2016 03:19 AM, Herbert Xu wrote:
-> On Fri, May 27, 2016 at 06:10:37AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
->> This patchset contains the hw random number generator support for the
->> Broadcom's NSP SoC. The block is similar to the block available in
->> bcm2835 with different default interrupt mask value. Due to lack of
->> documentation, I cannot confirm the interrupt mask register details
->> in bcm2835. In an effort to not break the existing functionality of
->> bcm2835, I used a different compatible string to mask the interrupt
->> for NSP SoC. Please let me know. Also supported providing requested
->> number of random numbers instead of static size of four bytes.
->>
->> The first patch contains the documentation changes and the second patch
->> contains the support for rng available in NSP SoC. The third patch
->> contains the device tree changes for NSP SoC. The fourth patch contains
->> the support for reading requested number of random numbers.
->>
->> This patch set has been tested on NSP bcm958625HR board.
->> This patch set is based on v4.6.0-rc1 and is available from github
->> repo: https://github.com/Broadcom/cygnus-linux.git
->> branch: nsp-rng-v2
->>
->> Changes since v1
+
+--pleSNuEbvnUYtMxG
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Mon, May 30, 2016 at 10:26:21PM +0200, Bernhard Nortmann wrote:
+> Am 30.05.2016 um 21:43 schrieb Maxime Ripard:
+> >Hi,
+> >
+> >On Mon, May 30, 2016 at 08:30:13PM +0800, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> >>From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>
+> >>Add support for the Bananapi M1 Plus A20 development board from sinovoip.com.cn .
+> >>This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for
+> >>OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiver,
+> >>3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and sdio wifi.
+> >What is the difference between the M1+ and the M1?
 > 
-> All applied.
+> The M1+ is an updated version of the original Banana Pi. If you're
+> interested in the details, have a look at
+> http://linux-sunxi.org/Banana_Pi#Variants .  "BPi-M1+" is SinoVoip's
+> counterpart of LeMaker's "Banana Pro", for which a .dts already
+> exists. Judging from .fex files, only a single pin assignment seems
+> to differ between the two (audio_pa_ctrl, PH26 vs. PH15).
 
-FYI, ARM Device Tree patches usually go via ARM SoC pull requests, so it
-is best if this is planned in advance. Can you make sure you document
-that there could be a merge conflict in your pull request to Linus?
+Gee, that's confusing :)
 
-Thanks
+I guess we should just include the banana pro DTB and change that pin
+(and the i2s pins Luo was mentionning).
+
+Maxime
+
 -- 
-Florian
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--pleSNuEbvnUYtMxG--
