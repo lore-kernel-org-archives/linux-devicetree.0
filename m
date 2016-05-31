@@ -1,62 +1,35 @@
-Return-Path: <weiqing.kong@mediatek.com>
-From: <weiqing.kong@mediatek.com>
-Subject: [PATCH 0/3] Support Mediatek Soc MT2701 disp pwm
-Date: Mon, 23 May 2016 14:23:41 +0800
-Message-ID: <1463984624-20355-1-git-send-email-weiqing.kong@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_001_25000531.895384788"
-To: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, weiqing.kong@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
-List-ID: <devicetree@vger.kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 00/13] Add R8A7794/SILK board eMMC DT support
+Date: Wed, 01 Jun 2016 01:06:37 +0300
+Message-ID: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+List-Id: devicetree@vger.kernel.org
 
-This is MIME multipart 7.
---__=_Part_Boundary_001_25000531.895384788
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
+Hello.
 
-VGhlc2Ugc2VyaWVzIHBhdGNoZXMgbW9kaWZ5IHB3bS1tdGstZGlzcC5jDQphbmQgZHRzL2R0c2kg
-Y29uZmlnIHRvIHN1cHBvcnQgTVQyNzAxIGRpc3AgcHdtLg0KDQpXZWlxaW5nIEtvbmcgKDMpOg0K
-ICBkdC1iaW5kaW5nczogcHdtOiBBZGQgTWVkaWFUZWsgZGlzcGxheSBQV00gYmluZGluZ3MNCiAg
-cHdtOiBBZGQgTWVkaWFUZWsgTVQyNzAxIGRpc3BsYXkgUFdNIGRyaXZlciBzdXBwb3J0DQogIGR0
-czogQWRkIGRpc3AgYmxzIGRzdGkgYW5kIGR0cyBjb25maWcgZm9yIE1UMjcwMQ0KDQogLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcHdtL3B3bS1tdGstZGlzcC50eHQgICAgICAgfCAgNSArLQ0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL210MjcwMS1ldmIuZHRzICAgICAgICAgICAgICAgICAgIHwgMjkgKysr
-KysrKw0KIGFyY2gvYXJtL2Jvb3QvZHRzL210MjcwMS5kdHNpICAgICAgICAgICAgICAgICAgICAg
-IHwgIDkgKysrDQogZHJpdmVycy9wd20vcHdtLW10ay1kaXNwLmMgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCA4OSArKysrKysrKysrKysrKysrKy0tLS0tDQogNCBmaWxlcyBjaGFuZ2VkLCAxMTMg
-aW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRpb25zKC0pDQoNCi0tIA0KMS45LjENCg==
+   Here's the set of 13 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20160530-v4.7-rc1' tag. We add the device tree support for
+the R8A7792-based Blanche board. The R-Car 'clk' driver patch was posted last
+week separately...
 
---__=_Part_Boundary_001_25000531.895384788
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+[01/13] ARM: shmobile: r8a7792: add clock index macros
+[02/13] ARM: shmobile: r8a7792: add power domain index macros
+[03/13] soc: renesas: rcar-sysc: add R8A7792 support
+[04/13] ARM: shmobile: r8a7792: basic SoC support
+[05/13] DT: clock: rcar-gen2-cpg-clocks: document R8A7792 support
+[06/13] DT: clock: cpg-mstp-clocks: document-R8A7792-support
+[07/13] ARM: dts: r8a7792: initial SoC device tree
+[08/13] ARM: dts: r8a7792: add SYS-DMAC support
+[09/13] ARM: dts: r8a7792: add [H]SCIF support
+[10/13] ARM dts: r8a7792: add IRQC support
+[11/13] DT: arm: shmobile: document Blanche board
+[12/13] ARM: dts: blanche: initial device tree
+[13/13] ARM: dts: blanche: add Ethernet support
 
-PHByZT4NClRoZXNlIHNlcmllcyBwYXRjaGVzIG1vZGlmeSBwd20tbXRrLWRpc3AuYw0KYW5kIGR0
-cy9kdHNpIGNvbmZpZyB0byBzdXBwb3J0IE1UMjcwMSBkaXNwIHB3bS4NCg0KV2VpcWluZyBLb25n
-ICgzKToNCiAgZHQtYmluZGluZ3M6IHB3bTogQWRkIE1lZGlhVGVrIGRpc3BsYXkgUFdNIGJpbmRp
-bmdzDQogIHB3bTogQWRkIE1lZGlhVGVrIE1UMjcwMSBkaXNwbGF5IFBXTSBkcml2ZXIgc3VwcG9y
-dA0KICBkdHM6IEFkZCBkaXNwIGJscyBkc3RpIGFuZCBkdHMgY29uZmlnIGZvciBNVDI3MDENCg0K
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20tbXRrLWRpc3AudHh0ICAgICAgIHwgIDUg
-Ky0NCiBhcmNoL2FybS9ib290L2R0cy9tdDI3MDEtZXZiLmR0cyAgICAgICAgICAgICAgICAgICB8
-IDI5ICsrKysrKysNCiBhcmNoL2FybS9ib290L2R0cy9tdDI3MDEuZHRzaSAgICAgICAgICAgICAg
-ICAgICAgICB8ICA5ICsrKw0KIGRyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgODkgKysrKysrKysrKysrKysrKystLS0tLQ0KIDQgZmlsZXMgY2hhbmdl
-ZCwgMTEzIGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KDQotLSANCjEuOS4xDQoNCjwv
-cHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25m
-aWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioqKioqKioqKioqKioqClRoZSBpbmZvcm1hdGlvbiBj
-b250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSAKYXR0YWNobWVu
-dHMpIG1heSBiZSBjb25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhl
-cndpc2UKZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlz
-IGludGVuZGVkIHRvIGJlIApjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVu
-dChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJl
-dGFpbmluZyBvciBjb3B5aW5nIG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIAphdHRhY2ht
-ZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBh
-bmQgbWF5IApiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50
-IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlIAp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMg
-ZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgCmltbWVkaWF0ZWx5IChi
-eSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2Yg
-CnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVt
-LCBhbmQgZG8gbm90CmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBv
-dGhlciBwZXJzb24uIFRoYW5rIHlvdSE8L3ByZT48IS0tfS0tPg==
-
---__=_Part_Boundary_001_25000531.895384788--
+WBR, Sergei
