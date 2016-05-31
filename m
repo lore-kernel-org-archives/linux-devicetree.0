@@ -1,50 +1,28 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 03/54] MAINTAINERS: Add file patterns for mediatek device
- tree bindings
-Date: Tue, 31 May 2016 10:49:11 +0200
-Message-ID: <574D5007.6070003@gmail.com>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
- <1463907991-7916-4-git-send-email-geert@linux-m68k.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: interrupts properties and API usage with GPIO controllers/Device Tree
+Date: Tue, 31 May 2016 10:49:55 +0200
+Message-ID: <CACRpkdYULz6fgw8N_yLCGYzqV7DjeJGmh1b0e9coxpGqSgZf+A@mail.gmail.com>
+References: <57461CDC.603@gmail.com>
+	<57485844.3050807@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463907991-7916-4-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <57485844.3050807@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, May 27, 2016 at 4:23 PM, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 
+> Another interesting, related question (as for me) is "Is there a limitation
+>  that gpio bank can have only 32 GPIO pins (from gpiolib point of view)?"
 
-On 22/05/16 11:05, Geert Uytterhoeven wrote:
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
->
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-mediatek@lists.infradead.org
-> ---
+Do you mean for this driver or in general?
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com
+The gpio MMIO driver has this limitation, but not the subsystem
+and gpiolib as far as I know.
 
-> Please apply this patch directly if you want to be involved in device
-> tree binding documentation for your subsystem.
-> ---
->   MAINTAINERS | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e1bf10e4ad021483..80d97eebcccec449 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1424,6 +1424,7 @@ M:	Matthias Brugger <matthias.bgg@gmail.com>
->   L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->   L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
->   S:	Maintained
-> +F:	Documentation/devicetree/bindings/soc/mediatek/
->   F:	arch/arm/boot/dts/mt6*
->   F:	arch/arm/boot/dts/mt8*
->   F:	arch/arm/mach-mediatek/
->
+Yours,
+Linus Walleij
