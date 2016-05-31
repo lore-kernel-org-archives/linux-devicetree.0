@@ -1,56 +1,84 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: [PATCH v2 6/7] Binding:PHY: Binding doc for NS2 PCIe PHYs.
-Date: Tue, 31 May 2016 19:06:40 +0530
-Message-ID: <1464701801-17243-7-git-send-email-pramod.kumar@broadcom.com>
-References: <1464701801-17243-1-git-send-email-pramod.kumar@broadcom.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1464701801-17243-1-git-send-email-pramod.kumar@broadcom.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>, Jon Mason <jonmason@broadcom.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH v4] extcon: gpio: Add the support for Device tree bindings
+Date: Tue, 31 May 2016 19:14:54 +0530
+Message-ID: <574D9556.9080200@nvidia.com>
+References: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com> <CGME20160527152945epcas1p4de3d2d43f94a20e3f93676b6c4f78244@epcas1p4.samsung.com> <20160527152934.GB12024@rob-hp-laptop> <574D32D7.2090902@samsung.com> <574D3EA7.9080907@samsung.com> <CAL_JsqLpWMX3X77xyVH=5+AtEaRiY9ShkEo0TdHOphqE654OXg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLpWMX3X77xyVH=5+AtEaRiY9ShkEo0TdHOphqE654OXg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Venkat Reddy Talla <vreddytalla@nvidia.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Binding doc for NS2 PCIe PHYs.
+Hi Rob,
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
----
- .../bindings/phy/brcm,mdio-mux-bus-pci.txt         | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
+On Tuesday 31 May 2016 07:05 PM, Rob Herring wrote:
+> On Tue, May 31, 2016 at 2:35 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>> The extcon-gpio.c driver can separate the kind of external connector
+>> by using the 'extcon-id' property.
+> This use of DT is just broken. Come up with another way.
+>
+>
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt b/Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
-new file mode 100644
-index 0000000..5b51007
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
-@@ -0,0 +1,27 @@
-+* Broadcom NS2 PCIe PHY binding document
-+
-+Required bus properties:
-+- reg: MDIO Bus number for the MDIO interface
-+- #address-cells: must be 1
-+- #size-cells: must be 0
-+
-+Required PHY properties:
-+- compatible: should be "brcm,ns2-pcie-phy"
-+- reg: MDIO Phy ID for the MDIO interface
-+- #phy-cells: must be 0
-+
-+This is a child bus node of "brcm,mdio-mux-iproc" node.
-+
-+Example:
-+
-+mdio@0 {
-+	reg = <0x0>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	pci_phy0: pci-phy@0 {
-+		compatible = "brcm,ns2-pcie-phy";
-+		reg = <0x0>;
-+		#phy-cells = <0>;
-+	};
-+};
--- 
-1.9.1
+
+Can we have the DT binding very similar to IIO, clock, reset etc?
+
+Here is details for extcon-jack DT binding and its client:
+
+The client can get the cable information through its node or extcon name
+and once cable information is available, it can register for 
+notification when state gets changed.
+
+The typical dt nodes are:
+
+     Extcon-driver node:
+
+         extcon: arizona-extcon {
+                 compatible = "wlf,arizona-extcon";
+                 #extcon-cells = <1>;
+         };
+
+
+
+     Driver need to specify the cable ID as
+      Cable                      ID
+      ----------------------------
+       Mechanical                0
+       Microphone               1
+       Headphone               2
+       Line-out                    3
+
+     Here #extcon-cells is must and specifies the size of extcon cells. 
+The client need to provide the driver specific information as argument 
+along with handle.
+
+
+Extcon Client node:
+
+         audio-controller@b0000 {
+                ::::
+                 extcon-cables = <&extcon 1>, <&extcon 3>;
+                 extcon-cable-names = "Microphone", "Line-out";
+         };
+
+and client driver can register the cable by passing the cable name
+as above along with its node.
+
+struct extcon_cable {
+     struct extcon_dev *edev,
+     int cable_id;
+};
+
+edev_mic_cable = extcon_get_extcon_cable(dev, "Microphone");
+extcon_register_notification(edev_mic_cable, notifier);
+
+edev_line_out_cable = extcon_get_extcon_cable(dev, "Line-out");
+extcon_register_notification(edev_line_out_cable, notifier);
+
+
+Prototype:
+struct extcon_cable *extcon_get_extcon_cable(struct device *dev, const 
+char *cable_name)
