@@ -1,129 +1,122 @@
-From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for
- Bananapi M1 Plus board
-Date: Tue, 31 May 2016 10:03:15 +0800
-Message-ID: <CAFfxPQu-WerarpCPDo81Q1O9B10CseHrAWuGBNPDibhWi8G+SQ@mail.gmail.com>
-References: <20160530123013.11575-1-luoyi.ly@gmail.com>
-	<20160530194340.GE4908@lukather>
-	<574CA1ED.8050007@web.de>
-Reply-To: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Subject: Re: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
+Date: Tue, 31 May 2016 07:59:01 +0530
+Message-ID: <CAKfKVtF1hOn9QwiqtjqqPYtUz5PscTBs4kBC1zRH6FY-4vVoUA@mail.gmail.com>
+References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/alternative; boundary=001a113d3e04a98811053419c6a9
-Return-path: <linux-sunxi+bncBCLONWF5WQNBBY7BWO5AKGQENFI6LFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <574CA1ED.8050007-S0/GAf8tV78@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464626798-1334-1-git-send-email-navam@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, balbi@ti.com, gregkh@linuxfoundation.org, hyun.kwon@xilinx.com, navam@xilinx.com, radhey.shyam.pandey@xilinx.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---001a113d3e04a98811053419c6a9
-Content-Type: text/plain; charset=UTF-8
-
-bpi m1+'s i2s/spdif  pinout is different with the bpi pro .
-
-2016-05-31 4:26 GMT+08:00 Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>:
-
-> Am 30.05.2016 um 21:43 schrieb Maxime Ripard:
+On Mon, May 30, 2016 at 10:16 PM, Nava kishore Manne
+<nava.manne@xilinx.com> wrote:
+> This patch updates the driver to support 64-bit DMA addressing.
 >
->> Hi,
->>
->> On Mon, May 30, 2016 at 08:30:13PM +0800, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>
->>> From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>
->>> Add support for the Bananapi M1 Plus A20 development board from
->>> sinovoip.com.cn .
->>> This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle
->>> for
->>> OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir
->>> receiver,
->>> 3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and
->>> sdio wifi.
->>>
->> What is the difference between the M1+ and the M1?
->>
+> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+> ---
+> Changes for v4:
+>                 -Used boolen property insted of addrwith property in the DT
+>                  as suggested by Arnd Bergmann.
+>                 -Adopt the DT relevant changes into the driver.
 >
-> The M1+ is an updated version of the original Banana Pi. If you're
-> interested
-> in the details, have a look at http://linux-sunxi.org/Banana_Pi#Variants .
-> "BPi-M1+" is SinoVoip's counterpart of LeMaker's "Banana Pro", for which a
-> .dts
-> already exists. Judging from .fex files, only a single pin assignment
-> seems to
-> differ between the two (audio_pa_ctrl, PH26 vs. PH15).
+> Changes for v3:
+>                 -Added new compatable string for 5.00 IP version as suggested by
+>                  Arnd Bergmann.
+>                 -Used write_fn() insted of lo_hi_writeq() as suggested by
+>                  Arnd Bergmann.
 >
-> Regards, B. Nortmann
+> Changes for v2:
+>                 -Added dma-ranges property in device tree as suggested by Arnd Bergmann.
+>                 -Modified the driver code based on the xlnx,addrwidth.
 >
+>  .../devicetree/bindings/usb/udc-xilinx.txt         |  5 ++-
+>  drivers/usb/gadget/udc/udc-xilinx.c                | 52 +++++++++++++++++++++-
+>  2 files changed, 54 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> index 47b4e39..d08d972 100644
+> --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> @@ -1,12 +1,14 @@
+>  Xilinx USB2 device controller
+>
+>  Required properties:
+> -- compatible           : Should be "xlnx,usb2-device-4.00.a"
+> +- compatible           : Should be "xlnx,usb2-device-4.00.a" or
+> +                         "xlnx,usb2-device-5.00"
+>  - reg                  : Physical base address and size of the USB2
+>                           device registers map.
+>  - interrupts           : Should contain single irq line of USB2 device
+>                           controller
+>  - xlnx,has-builtin-dma : if DMA is included
+> +- xlnx,has-64bit-dma   : if DMA is included 64-bit addressing support.
+>
+>  Example:
+>                 axi-usb2-device@42e00000 {
+> @@ -14,5 +16,6 @@ Example:
+>                          interrupts = <0x0 0x39 0x1>;
+>                          reg = <0x42e00000 0x10000>;
+>                          xlnx,has-builtin-dma;
+> +                       xlnx,has-64bit-dma;
+>                  };
+>
+> diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
+> index 1cbb0ac..6fb80c6 100644
+> --- a/drivers/usb/gadget/udc/udc-xilinx.c
+> +++ b/drivers/usb/gadget/udc/udc-xilinx.c
+> @@ -47,6 +47,15 @@
+>  #define XUSB_DMA_LENGTH_OFFSET         0x0210  /* DMA Length Register */
+>  #define XUSB_DMA_STATUS_OFFSET         0x0214  /* DMA Status Register */
+>
+> +/* DMA source Address Reg for LSB */
+> +#define XUSB_DMA_DSAR_ADDR_OFFSET_LSB   0x0308
+> +/* DMA source Address Reg for MSB */
+> +#define XUSB_DMA_DSAR_ADDR_OFFSET_MSB   0x030C
+> +/* DMA destination Addr Reg LSB */
+> +#define XUSB_DMA_DDAR_ADDR_OFFSET_LSB   0x0310
+> +/* DMA destination Addr Reg MSB */
+> +#define XUSB_DMA_DDAR_ADDR_OFFSET_MSB   0x0314
+> +
+>  /* Endpoint Configuration Space offsets */
+>  #define XUSB_EP_CFGSTATUS_OFFSET       0x00    /* Endpoint Config Status  */
+>  #define XUSB_EP_BUF0COUNT_OFFSET       0x08    /* Buffer 0 Count */
+> @@ -169,6 +178,7 @@ struct xusb_ep {
+>   * @setup: usb_ctrlrequest structure for control requests
+>   * @req: pointer to dummy request for get status command
+>   * @dev: pointer to device structure in gadget
+> + * @is_extend_dma: flag indiacting whether the dma is 64-bit support or not.
+>   * @usb_state: device in suspended state or not
+>   * @remote_wkp: remote wakeup enabled by host
+>   * @setupseqtx: tx status
+> @@ -186,6 +196,7 @@ struct xusb_udc {
+>         struct usb_ctrlrequest setup;
+>         struct xusb_req *req;
+>         struct device *dev;
+> +       bool is_extend_dma;
+>         u32 usb_state;
+>         u32 remote_wkp;
+>         u32 setupseqtx;
+> @@ -215,6 +226,20 @@ static const struct usb_endpoint_descriptor config_bulk_out_desc = {
+>  };
+>
+>  /**
+> + * xudc_write64 - write 64bit value to device registers
+> + * @ep: pointer to the usb device endpoint structure.
+> + * @offset: register offset
+> + * @val: data to be written
+> + **/
+> +static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val)
+> +{
+> +       struct xusb_udc *udc = ep->udc;
+> +
+> +       udc->write_fn(udc->addr, offset, lower_32_bits(val));
+> +       udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val));
 
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---001a113d3e04a98811053419c6a9
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">bpi m1+&#39;s i2s/spdif=C2=A0 pinout is different with the=
- bpi pro .<br></div><div class=3D"gmail_extra"><br><div class=3D"gmail_quot=
-e">2016-05-31 4:26 GMT+08:00 Bernhard Nortmann <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:bernhard.nortmann-S0/GAf8tV78@public.gmane.org" target=3D"_blank">bernhard.nortmann@w=
-eb.de</a>&gt;</span>:<br><blockquote class=3D"gmail_quote" style=3D"margin:=
-0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">Am=
- 30.05.2016 um 21:43 schrieb Maxime Ripard:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-Hi,<br>
-<br>
-On Mon, May 30, 2016 at 08:30:13PM +0800, <a href=3D"mailto:luoyi.ly@gmail.=
-com" target=3D"_blank">luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a> wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-From: luoyi &lt;<a href=3D"mailto:luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" target=3D"_blank">luo=
-yi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>&gt;<br>
-<br>
-Add support for the Bananapi M1 Plus A20 development board from <a href=3D"=
-http://sinovoip.com.cn" rel=3D"noreferrer" target=3D"_blank">sinovoip.com.c=
-n</a> .<br>
-This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for=
-<br>
-OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiv=
-er,<br>
-3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and sdio=
- wifi.<br>
-</blockquote>
-What is the difference between the M1+ and the M1?<br>
-</blockquote>
-<br></span>
-The M1+ is an updated version of the original Banana Pi. If you&#39;re inte=
-rested<br>
-in the details, have a look at <a href=3D"http://linux-sunxi.org/Banana_Pi#=
-Variants" rel=3D"noreferrer" target=3D"_blank">http://linux-sunxi.org/Banan=
-a_Pi#Variants</a> .<br>
-&quot;BPi-M1+&quot; is SinoVoip&#39;s counterpart of LeMaker&#39;s &quot;Ba=
-nana Pro&quot;, for which a .dts<br>
-already exists. Judging from .fex files, only a single pin assignment seems=
- to<br>
-differ between the two (audio_pa_ctrl, PH26 vs. PH15).<br>
-<br>
-Regards, B. Nortmann<br>
-</blockquote></div><br></div>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
---001a113d3e04a98811053419c6a9--
+can we move this to a single 64 bit write?
+> +}
+> +
+> +/**
