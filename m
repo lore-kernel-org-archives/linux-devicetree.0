@@ -1,116 +1,50 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RFC v2 1/3] ASoC: msm8916: Add codec Device Tree
-	bindings.
-Date: Tue, 31 May 2016 09:52:08 +0100
-Message-ID: <574D50B8.5060009@linaro.org>
-References: <1464356746-29610-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1464356746-29610-2-git-send-email-srinivas.kandagatla@linaro.org>
- <20160530230123.GA4004@kwestfie-linux.qualcomm.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v4 11/18] ARM: multi_v7_defconfig: Enable STi and
+ simple-card drivers.
+Date: Tue, 31 May 2016 10:55:20 +0200
+Message-ID: <574D5178.5030200@st.com>
+References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
+ <1464192412-16386-13-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160530230123.GA4004@kwestfie-linux.qualcomm.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464192412-16386-13-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review,
+Hi Peter,
 
-On 31/05/16 00:01, Kenneth Westfield wrote:
-> On Fri, May 27, 2016 at 02:45:44PM +0100, Srinivas Kandagatla wrote:
->> This patch adds DT bindings required for msm8916 codec which is
->> integrated in msm8916 and apq8016 SOCs.
->>
->> Codec IP is divided into two parts, first analog which is integrated
->> in pmic pm8916 and secondly digital part which is integrated into
->> application processor. Codec register controls are also split across
->> pmic an lpass. Analog part is controlled via spmi bus to pmic, registers
->> on the Application processor are memory mapped.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../devicetree/bindings/sound/qcom,msm8916-wcd.txt | 101 +++++++++++++++++++++
->>   1 file changed, 101 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,msm8916-wcd.txt
->>
->> diff --git a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd.txt b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd.txt
->> new file mode 100644
->> index 0000000..4e3826d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd.txt
->> @@ -0,0 +1,101 @@
->> +msm8916 audio CODEC aka Tombak audio CODEC
->
-> Please remove all mentions of "Tombak" from the patch submissions.
-Sure, Will fix that in next version.
->
->> +
->> +Codec IP is divided into two parts, first analog which is integrated in pmic pm8916
->> +and secondly digital part which is integrated into application processor. Codec register
->> +controls are also split across pmic an lpass. Analog part is controlled via spmi bus to pmic.
->> +
->> +## Bindings for codec core on pmic:
->> +
->> +Required properties
->
-> Need to document the clocks and clock-names properties as well.
-yep.
+On 05/25/2016 06:06 PM, Peter Griffin wrote:
+> This patch enables the STi ALSA drivers found on STi platforms
+> as well as the simple-card driver which is a dependency to have
+> working sound.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Cc: arnaud.pouliquen@st.com
+> Cc: broonie@kernel.org
+> ---
+>  arch/arm/configs/multi_v7_defconfig | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> index 5eee45b..0ced665 100644
+> --- a/arch/arm/configs/multi_v7_defconfig
+> +++ b/arch/arm/configs/multi_v7_defconfig
+> @@ -589,6 +589,9 @@ CONFIG_SND_SOC_AK4642=m
+>  CONFIG_SND_SOC_SGTL5000=m
+>  CONFIG_SND_SOC_SPDIF=m
+>  CONFIG_SND_SOC_WM8978=m
+> +CONFIG_SND_SOC_STI=m
+> +CONFIG_SND_SOC_STI_SAS=m
+> +CONFIG_SND_SIMPLE_CARD=m
+Simple card config seems enabled by default, at least on 4.7 rc1.
 
-...
->> +
->> +Required properties
->> + - compatible: should be "qcom,msm8916-lpass-codec" followed by "syscon".
->
-> IMO, the driver names are somewhat confusing.  Perhaps,
-> qcom,msm8916-pmic-codec - for the codec blocks in the PMIC
-Am Ok with this, naming.
-> qcom,msm8916-soc-codec - for the codec blocks in the SoC
-
-But I think we can just use "qcom,msm8916-lpass-codec" for the codec 
-block in side the lpass, as SOC seems to be more generic term.
-
->
->> +		vdd-tx-rx-supply = <&pm8916_l5>;
->> +		vdd-micbias-supply = <&pm8916_l13>;
->> +		qcom,lpass-codec-core = <&lpass_codec_core>;
->
-> Is there a reason the PMIC codec holds a phandle reference to the SoC
-> codec node?  Rather than having the SoC codec hold a ref to the PMIC
-> codec?
-
-It depends, How you want to model the driver.
-But in this case, most of the codec stuff like interrupts are handled in 
-pmic, and the lpass side of it had just few mapped registers, so making 
-a syscon for the lpass and accessing it in the pmic driver made more 
-sense for me, if not we are going to complicate the driver design.
-
-
-Thanks,
-srini
-
->
->> +		#sound-dai-cells = <1>;
->> +	};
->> +};
->> +
->> +soc {
->> +	...
->> +	lpass_codec_core: lpass-codec{
->> +		compatible = "qcom,msm8916-lpass-codec", "syscon";
->> +		reg = <0x0771c000 0x400>;
->> +	};
->> +
->> +};
->> --
->> 2.8.2
->>
->
+Regards,
+Arnaud
+>  CONFIG_USB=y
+>  CONFIG_USB_XHCI_HCD=y
+>  CONFIG_USB_XHCI_MVEBU=y
+> 
