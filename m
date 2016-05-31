@@ -1,29 +1,89 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: mediatek: fix dual-edge code defect
-Date: Tue, 31 May 2016 10:13:35 +0200
-Message-ID: <CACRpkdYWEpVetL=YXs-FjaHUob6U6WjJspmiJYaGR8NPMjh6zA@mail.gmail.com>
-References: <1463815419-11719-1-git-send-email-hongkun.cao@mediatek.com>
+From: Fan Chen <fan.chen@mediatek.com>
+Subject: Re: [PATCH v2 1/3] regulator: DT: Add DT property for operation
+ mode configuration
+Date: Tue, 31 May 2016 16:20:35 +0800
+Message-ID: <1464682835.25847.3.camel@mtksdaap41>
+References: <1463987611-32139-1-git-send-email-henryc.chen@mediatek.com>
+	 <1463987611-32139-2-git-send-email-henryc.chen@mediatek.com>
+	 <20160523104703.GB26992@leverpostej> <20160523112856.GR8206@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1463815419-11719-1-git-send-email-hongkun.cao@mediatek.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: hongkun.cao@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Erin Lo <erin.lo@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, srv_heupstream@mediatek.com, Hongzhou Yang <hongzhou.yang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, inux-mediatek@lists.infradead.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160523112856.GR8206@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Henry Chen <henryc.chen@mediatek.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 21, 2016 at 9:23 AM,  <hongkun.cao@mediatek.com> wrote:
+Hi Mark,
 
-> From: "hongkun.cao" <hongkun.cao@mediatek.com>
->
-> When a dual-edge irq is triggered, an incorrect irq will be reported on
-> condition that the external signal is not stable and this incorrect irq
-> has been registered.
-> Correct the register offset.
->
-> Signed-off-by: hongkun.cao <hongkun.cao@mediatek.com>
+On Mon, 2016-05-23 at 12:28 +0100, Mark Brown wrote:
+> On Mon, May 23, 2016 at 11:47:04AM +0100, Mark Rutland wrote:
+> 
+> > > +/* Regulator operating modes */
+> > > +#define REGULATOR_OPERATION_MODE_FAST			0x0
+> > > +#define REGULATOR_OPERATION_MODE_NORMAL			0x1
+> > > +#define REGULATOR_OPERATION_MODE_IDLE			0x2
+> > > +#define REGULATOR_OPERATION_MODE_STANDBY		0x3
+> 
+> > These sound like they're tied to linux internal details (e.g. the
+> > implementation of idle and/or suspend).
+> 
+> > What do each of these actually mean?
+> 
+> They are not really at all general and I'm fairly sure I've provided the
+> same feedback repeatedly on earlier versions of the patch set.  They are
+> not entirely based on Linux internal details (or at least the Linux
+> internal details tend to flow from the hardware) - broadly fast is
+> forced PWM, normal is default, idle is LDO mode and standby is a lower
+> quality LDO mode - but how this translates into anything that a consumer
+> could actually use is unclear since the supported output loads and
+> quality of regulation can vary wildy.  It's also somewhat implementation
+> dependent what a given regulator does (and it's always possible that
+> some regulators may have more modes to control or differing definitions
+> in the hardware).
+> 
+> Henry, *please* look at how the existing mode support in the bindings is
+> done and consider how a consumer would use this given that it doesn't
+> know anything about the regulator...
 
-Patch applied for fixes with Matthias' review tag.
+Hi Mark,
 
-Yours,
-Linus Walleij
+Thanks for your review and patiently explain your thought to us.
+
+In the case of svs[1], which Henry mentioned in cover letter, it can be
+regarded as a special consumer who requires very accurate voltage for
+calibration the hardware in its initialization stage. So, this kinds of
+consumers know their regulator very well and only need to switch to the
+modes they want in the particular conditions.
+However, IIUC, you want a proposal to provide a sort of QoS framework
+which can cover most of use cases who care about the regular quality in
+runtime, is that correct?
+
+IMHO, some quality index can be considered, for example:
+Minimum Current Requirement (mA): If a user specified this constraint in
+runtime, it means that he cares more about the supplying quality like
+transient voltage drop, ripple above certain load.
+Maximum Current Requirement (mA): If a user specified this constraint in
+runtime, it means that he cares more about the power consumption under
+certain load.
+It could be a flexible way instead to tie the operation modes directly.
+
+BTW, we should encourage people here to share more use cases related to
+regulator quality issues, especially in runtime, so we can evaluate the
+most suitable index to fit the requirements.
+
+What do you think?
+
+
+[1] http://www.spinics.net/lists/devicetree/msg111208.html
+
+
+Best regards,
+Fan
+
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
