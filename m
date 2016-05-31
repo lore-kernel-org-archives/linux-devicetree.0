@@ -1,68 +1,124 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH v4 17/18] ARM: STi: DT: STiH407: Add uniperif reader dt
- nodes
-Date: Tue, 31 May 2016 11:18:06 +0200
-Message-ID: <574D56CE.5020802@st.com>
-References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
- <1464192412-16386-19-git-send-email-peter.griffin@linaro.org>
+From: Shawn Lin <shawn.lin-NgiFYW8Wbx6Ta72+1OMJgUB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: add binding description of Rockchip
+ PCIe controller
+Date: Tue, 31 May 2016 17:48:10 +0800
+Message-ID: <c6fa65a1-58bd-520a-42a1-d6edf576840a@kernel-upstream.org>
+References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
+ <1463740146-7106-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160530120836.290f0d16@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464192412-16386-19-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160530120836.290f0d16-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/25/2016 06:06 PM, Peter Griffin wrote:
-> This patch adds the DT node for the uniperif reader
-> IP block found on STiH407 family silicon.
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  arch/arm/boot/dts/stih407-family.dtsi | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> index 7ca149b..fb6363e1 100644
-> --- a/arch/arm/boot/dts/stih407-family.dtsi
-> +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> @@ -831,5 +831,33 @@
->  			st,version = <5>;
->  			st,mode = "SPDIF";
->  		};
-> +
-> +		sti_uni_reader0: sti-uni-reader@0 {
-> +			compatible = "st,sti-uni-reader";
-> +			status = "disabled";
-> +			#sound-dai-cells = <0>;
-> +			st,syscfg = <&syscfg_core>;
-> +			reg = <0x8D83000 0x158>;
-> +			interrupts = <GIC_SPI 87 IRQ_TYPE_NONE>;
-> +			dmas = <&fdma0 5 0 1>;
-> +			dma-names = "rx";
-> +			dai-name = "Uni Reader #0 (PCM IN)";
-> +			st,version = <3>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_i2s_8ch_in>;
-suppress pinctrl declaration
-> +		};
-> +
-> +		sti_uni_reader1: sti-uni-reader@1 {
-> +			compatible = "st,sti-uni-reader";
-> +			status = "disabled";
-> +			#sound-dai-cells = <0>;
-> +			st,syscfg = <&syscfg_core>;
-> +			reg = <0x8D84000 0x158>;
-> +			interrupts = <GIC_SPI 88 IRQ_TYPE_NONE>;
-> +			dmas = <&fdma0 6 0 1>;
-> +			dma-names = "rx";
-> +			dai-name = "Uni Reader #1 (HDMI RX)";
-> +			st,version = <3>;
-> +		};
->  	};
->  };
-> 
+SGkgTWFyYywKCuWcqCAyMDE2LzUvMzAgMTk6MDgsIE1hcmMgWnluZ2llciDlhpnpgZM6Cj4gT24g
+RnJpLCAyMCBNYXkgMjAxNiAxODoyOTowNiArMDgwMAo+IFNoYXduIExpbiA8c2hhd24ubGluQHJv
+Y2stY2hpcHMuY29tPiB3cm90ZToKPgo+PiBUaGlzIHBhdGNoIGFkZCBzb21lIHJlcXVpcmVkIGFu
+ZCBvcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBSb2NrY2hpcAo+PiBQQ0llIGNvbnRyb2xsZXIuIEFs
+c28gd2UgYWRkIGEgZXhhbXBsZSBmb3IgaG93IHRvIHVzZSBpdC4KPj4KPj4gU2lnbmVkLW9mZi1i
+eTogU2hhd24gTGluIDxzaGF3bi5saW5Acm9jay1jaGlwcy5jb20+Cj4+Cj4+IC0tLQo+Pgo+PiAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3JvY2tjaGlwLXBjaWUudHh0ICAgICAgfCA5MyAr
+KysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgOTMgaW5zZXJ0aW9ucygr
+KQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9wY2kvcm9ja2NoaXAtcGNpZS50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcm9ja2NoaXAtcGNpZS50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3JvY2tjaGlwLXBjaWUudHh0Cj4+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjY5YTA4MDQKPj4gLS0tIC9kZXYvbnVsbAo+PiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3JvY2tjaGlwLXBjaWUu
+dHh0Cj4+IEBAIC0wLDAgKzEsOTMgQEAKPj4gKyogUm9ja2NoaXAgQVhJIFBDSWUgUm9vdCBQb3J0
+IEJyaWRnZSBEVCBkZXNjcmlwdGlvbgo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiAr
+LSAjYWRkcmVzcy1jZWxsczogQWRkcmVzcyByZXByZXNlbnRhdGlvbiBmb3Igcm9vdCBwb3J0cywg
+c2V0IHRvIDwzPgo+PiArLSAjc2l6ZS1jZWxsczogU2l6ZSByZXByZXNlbnRhdGlvbiBmb3Igcm9v
+dCBwb3J0cywgc2V0IHRvIDwyPgo+PiArLSAjaW50ZXJydXB0LWNlbGxzOiBzcGVjaWZpZXMgdGhl
+IG51bWJlciBvZiBjZWxscyBuZWVkZWQgdG8gZW5jb2RlIGFuCj4+ICsJCWludGVycnVwdCBzb3Vy
+Y2UuIFRoZSB2YWx1ZSBtdXN0IGJlIDEuCj4+ICstIGNvbXBhdGlibGU6IFNob3VsZCBjb250YWlu
+ICJyb2NrY2hpcCxyazMzOTktcGNpZSIKPj4gKy0gcmVnOiBUd28gcmVnaXN0ZXIgcmFuZ2VzIGFz
+IGxpc3RlZCBpbiB0aGUgcmVnLW5hbWVzIHByb3BlcnR5Cj4+ICstIHJlZy1uYW1lczogVGhlIGZp
+cnN0IGVudHJ5IG11c3QgYmUgImF4aS1iYXNlIiBmb3IgdGhlIGNvcmUgcmVnaXN0ZXJzCj4+ICsJ
+VGhlIHNlY29uZCBlbnRyeSBtdXN0IGJlICJhcGItYmFzZSIgZm9yIHRoZSBjbGllbnQgcGNpZSBy
+ZWdpc3RlcnMKPj4gKy0gY2xvY2tzOiBNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggZW50
+cnkgaW4gY2xvY2stbmFtZXMuCj4+ICsJCVNlZSAuLi9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0
+IGZvciBkZXRhaWxzLgo+PiArLSBjbG9jay1uYW1lczogTXVzdCBpbmNsdWRlIHRoZSBmb2xsb3dp
+bmcgZW50cmllczoKPj4gKwktICJhY2xrX3BjaWUiCj4+ICsJLSAiYWNsa19wZXJmX3BjaWUiCj4+
+ICsJLSAiaGNsa19wY2llIgo+PiArCS0gImNsa19wY2llcGh5X3JlZiIKPj4gKy0gaW50ZXJydXB0
+czogVGhyZWUgaW50ZXJydXB0IGVudHJpZXMgbXVzdCBiZSBzcGVjaWZpZWQuCj4+ICstIGludGVy
+cnVwdC1uYW1lczogTXVzdCBpbmNsdWRlIHRoZSBmb2xsb3dpbmcgbmFtZXMKPj4gKwktICJwY2ll
+LXN5cyIKPj4gKwktICJwY2llLWxlZ2FjeSIKPj4gKwktICJwY2llLWNsaWVudCIKPj4gKy0gcmVz
+ZXRzOiBNdXN0IGNvbnRhaW4gZml2ZSBlbnRyaWVzIGZvciBlYWNoIGVudHJ5IGluIHJlc2V0LW5h
+bWVzLgo+PiArCSAgIFNlZSAuLi9yZXNldC9yZXNldC50eHQgZm9yIGRldGFpbHMuCj4+ICstIHJl
+c2V0LW5hbWVzOiBNdXN0IGluY2x1ZGUgdGhlIGZvbGxvd2luZyBuYW1lcwo+PiArCS0gInBoeS1y
+c3QiCj4+ICsJLSAiY29yZS1yc3QiCj4+ICsJLSAibWdtdC1yc3QiCj4+ICsJLSAibWdtdC1zdGlj
+a3ktcnN0Igo+PiArCS0gInBpcGUtcnN0Igo+PiArLSByb2NrY2hpcCxncmY6IHBoYW5kbGUgdG8g
+dGhlIHN5c2NvbiBtYW5hZ2luZyB0aGUgImdlbmVyYWwgcmVnaXN0ZXIgZmlsZXMiCj4+ICstIHBj
+aWUtY29uZjogb2Zmc2V0IG9mIHBjaWUgY2xpZW50IGJsb2NrIGZvciAgY29uZmlndXJhdGlvbgo+
+PiArLSBwY2llLXN0YXR1czogb2Zmc2V0IG9mIHBjaWUgY2xpZW50IGJsb2NrIGZvciBzdGF0dXMK
+Pj4gKy0gcGNpZS1sYW5lb2ZmOiBvZmZzZXQgb2YgcGNpZSBjbGllbnQgYmxvY2sgZm9yIGxhbmUK
+Pj4gKy0gbXNpLXBhcmVudDogTGluayB0byB0aGUgaGFyZHdhcmUgZW50aXR5IHRoYXQgc2VydmVz
+IGFzIHRoZSBNZXNzYWdlCj4+ICstIHBpbmN0cmwtbmFtZXMgOiBUaGUgcGluIGNvbnRyb2wgc3Rh
+dGUgbmFtZXMKPj4gKy0gcGluY3RybC0wOiBUaGUgImRlZmF1bHQiIHBpbmN0cmwgc3RhdGUKPj4g
+Ky0gaW50ZXJydXB0LW1hcC1tYXNrIGFuZCBpbnRlcnJ1cHQtbWFwOiBzdGFuZGFyZCBQQ0kgcHJv
+cGVydGllcwo+PiArLSBpbnRlcnJ1cHQtY29udHJvbGxlcjogaWRlbnRpZmllcyB0aGUgbm9kZSBh
+cyBhbiBpbnRlcnJ1cHQgY29udHJvbGxlcgo+PiArCj4+ICtPcHRpb25hbCBQcm9wZXJ0eToKPj4g
+Ky0gZXAtZ3Bpb3M6IGNvbnRhaW4gdGhlIGVudHJ5IGZvciBwcmUtcmVzZXQgZ3Bpbwo+PiArLSBu
+dW0tbGFuZXM6IG51bWJlciBvZiBsYW5lcyB0byB1c2UKPj4gKy0gYXNzaWduZWQtY2xvY2tzLCBh
+c3NpZ25lZC1jbG9jay1wYXJlbnRzIGFuZCBhc3NpZ25lZC1jbG9jay1yYXRlczogc3RhbmRhcmQK
+Pj4gKwkJICAgY2xvY2sgYmluZGluZ3MuIFNlZSAuLi9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQK
+Pj4gKwo+PiArRXhhbXBsZToKPj4gKwo+PiArcGNpX2V4cHJlc3M6IGF4aS1wY2llQGY4MDAwMDAw
+IHsKPj4gKwkjYWRkcmVzcy1jZWxscyA9IDwzPjsKPj4gKwkjc2l6ZS1jZWxscyA9IDwyPjsKPj4g
+Kwljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzM5OS1wY2llIjsKPj4gKwljbG9ja3MgPSA8JmNy
+dSBBQ0xLX1BDSUU+LCA8JmNydSBBQ0xLX1BFUkZfUENJRT4sCj4+ICsJCSA8JmNydSBQQ0xLX1BD
+SUU+LCA8JmNydSBTQ0xLX1BDSUVQSFlfUkVGPjsKPj4gKwljbG9jay1uYW1lcyA9ICJhY2xrX3Bj
+aWUiLCAiYWNsa19wZXJmX3BjaWUiLAo+PiArCQkgICAgICAiaGNsa19wY2llIiwgImNsa19wY2ll
+cGh5X3JlZiI7Cj4+ICsJYnVzLXJhbmdlID0gPDB4MCAweDE+Owo+PiArCWludGVycnVwdHMgPSA8
+R0lDX1NQSSA0OSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgPEdJQ19TUEkgNTAgSVJRX1RZUEVfTEVW
+RUxfSElHSD4sCj4+ICsJCSAgICAgPEdJQ19TUEkgNTEgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4+
+ICsJaW50ZXJydXB0LW5hbWVzOiAicGNpZS1zeXMiLCAicGNpZS1sZWdhY3kiLCAicGNpZS1jbGll
+bnQiOwo+PiArCWFzc2lnbmVkLWNsb2NrcyA9IDwmY3J1IFNDTEtfUENJRVBIWV9SRUY+Owo+PiAr
+CWFzc2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JmNydSBTQ0xLX1BDSUVQSFlfUkVGMTAwTT47Cj4+
+ICsJYXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8MTAwMDAwMDAwPjsKPj4gKwllcC1ncGlvcyA9IDwm
+Z3BpbzMgMTMgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICsJcmFuZ2VzID0gPCAweDgyMDAwMDAwIDAg
+MHhmYTAwMDAwMCAweDAgMHhmYTAwMDAwMCAwIDB4NjAwMDAwCj4+ICsJCSAgIDB4ODEwMDAwMDAg
+MCAweGZhNjAwMDAwIDB4MCAweGZhNjAwMDAwIDAgMHgxMDAwMDAgPjsKPj4gKwludW0tbGFuZXMg
+PSA8ND47Cj4+ICsJcmVnID0gPCAweDAgMHhmODAwMDAwMCAweDAgMHgyMDAwMDAwID4sIDwgMHgw
+IDB4ZmQwMDAwMDAgMHgwIDB4MTAwMDAwMCA+Owo+PiArCXJlZy1uYW1lID0gImF4aS1iYXNlIiwg
+ImFwYi1iYXNlIjsKPj4gKwlyZXNldHMgPSA8JmNydSBTUlNUX1BDSUVQSFk+LCA8JmNydSBTUlNU
+X1BDSUVfQ09SRT4sIDwmY3J1IFNSU1RfUENJRV9NR01UPiwKPj4gKwkJIDwmY3J1IFNSU1RfUENJ
+RV9NR01UX1NUSUNLWT4sIDwmY3J1IFNSU1RfUENJRV9QSVBFPjsKPj4gKwlyZXNldC1uYW1lcyA9
+ICJwaHktcnN0IiwgImNvcmUtcnN0IiwgIm1nbXQtcnN0IiwgIm1nbXQtc3RpY2t5LXJzdCIsICJw
+aXBlLXJzdCI7Cj4+ICsJcm9ja2NoaXAsZ3JmID0gPCZncmY+Owo+PiArCXBjaWUtY29uZiA9IDww
+eGUyMjA+Owo+PiArCXBjaWUtc3RhdHVzID0gPDB4ZTJhND47Cj4+ICsJcGNpZS1sYW5lb2ZmID0g
+PDB4ZTIxND47Cj4+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4gKwlwaW5jdHJsLTAg
+PSA8JnBjaWVfY2xrcmVxPjsKPj4gKwltc2ktcGFyZW50ID0gPCZpdHM+Owo+Cj4gV2UndmUgbW92
+ZWQgYXdheSBmcm9tIGJhcmUgbXNpLXBhcmVudCBmb3IgdGhlIElUUyAobm90aWNlIHRoYXQgdGhl
+Cj4gYmluZGluZyBtYW5kYXRlcyAjbXNpLWNlbGxzID0gPDE+KS4gU28gd2hhdCB5b3UgbmVlZCBo
+ZXJlIGlzIGFuIG1zaS1tYXAKPiAoYXMgZGVzY3JpYmVkIGluIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9wY2kvcGNpLW1zaS50eHQpLgo+Cj4gRG8geW91IGhhdmUgYW4gSU9NTVUg
+KG9yIHNvbWUgb3RoZXIgcmVtYXBwaW5nIEhXKSBiZXR3ZWVuIHRoZSBSQyBhbmQgdGhlCj4gR0lD
+IElUUz8gSWYgc28sIHlvIG1heSBoYXZlIHRvIGRlc2NyaWJlIHRoZSBtYXBwaW5ncyBiZXR3ZWVu
+IHRoZSBQQ0llCj4gUklEIGFuZCB0aGUgSVRTIERldklEIGluIHRoaXMgbXNpLW1hcC4KPgoKeWVz
+LCB3ZSBkb24ndCBuZWVkIG1zaS1wYXJlbnQgaGVyZS4gQW5kIHdlIGRvbid0IG5lZWQgbXNpLW1h
+cCBhcyB3ZWxsLApzaW5jZSB3ZSBkb24ndCBoYXZlIGEgSU9NTVUgYmxvY2sgYmV0d2VlbiBSQyBh
+bmQgSVRTIHdoaWNoIG5lZWQgdG8gYmUKZGVzY3JpYmVkIGluIG1zaS1tYXAuCgoKVGhhbmtzLgoK
+Pj4gKwkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+PiArCWludGVycnVwdC1tYXAtbWFzayA9IDww
+IDAgMCA3PjsKPj4gKwlpbnRlcnJ1cHQtbWFwID0gPDAgMCAwIDEgJnBjaWVfMCAxPiwKPj4gKwkJ
+CTwwIDAgMCAyICZwY2llXzAgMj4sCj4+ICsJCQk8MCAwIDAgMyAmcGNpZV8wIDM+LAo+PiArCQkJ
+PDAgMCAwIDQgJnBjaWVfMCA0PjsKPj4gKwlwY2llXzA6IGludGVycnVwdC1jb250cm9sbGVyIHsK
+Pj4gKwkJaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDA+Owo+
+PiArCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+PiArCX07Cj4+ICsKPj4gK307Cj4KPiBUaGFu
+a3MsCj4KPiAJTS4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtcm9ja2NoaXAK
