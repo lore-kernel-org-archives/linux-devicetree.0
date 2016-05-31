@@ -1,54 +1,99 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
-Date: Tue, 31 May 2016 05:15:10 +0000
-Message-ID: <C89496FEAE474D468F30D558A9468D9F26CEF0EF@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
- <CAKfKVtF1hOn9QwiqtjqqPYtUz5PscTBs4kBC1zRH6FY-4vVoUA@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v2,1/5] dt-bindings: mt8173-xhci: support host side of dual-role mode
+Date: Tue, 31 May 2016 13:52:38 +0800
+Message-ID: <1464673962-11506-2-git-send-email-chunfeng.yun@mediatek.com>
+References: <1464673962-11506-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAKfKVtF1hOn9QwiqtjqqPYtUz5PscTBs4kBC1zRH6FY-4vVoUA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hyun Kwon <hyunk@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Radhey Shyam Pandey <radheys@xilinx.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464673962-11506-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shubhrajyoti,
+Some resources, such as IPPC register etc, shared with device
+driver are moved into common glue layer when xHCI driver is the
+host side of dual-role mode and they should be changed as optional
+properties if they are required ones before. For clarity, add
+a new part of binding to support host side of dual-role mode.
 
-	
-	Thanks for the review...
+Additionally add optional properties of pinctrl for host only mode
 
-> >  /**
-> > + * xudc_write64 - write 64bit value to device registers
-> > + * @ep: pointer to the usb device endpoint structure.
-> > + * @offset: register offset
-> > + * @val: data to be written
-> > + **/
-> > +static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val) {
-> > +       struct xusb_udc *udc = ep->udc;
-> > +
-> > +       udc->write_fn(udc->addr, offset, lower_32_bits(val));
-> > +       udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val));
-> 
-> can we move this to a single 64 bit write?
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ .../devicetree/bindings/usb/mt8173-xhci.txt        |   48 ++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-Initially I sent the patches with writeq() ,lo_hi_writeq()  later we decided to replace with write_fun().
-The reason for this is lo_hi_writeq() always assumes a little-endian register, so it's broken if anyone builds this device with big-endian registers.
-So replaced the 64bit calls with write_fun() as suggested by Arnd Bergmann. Hope it clears your query.
-Please refer to the below thread
-
-	http://lkml.iu.edu/hypermail/linux/kernel/1604.2/02046.html 
-
-
-Regards,
-Navakishore.
+diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+index b3a7ffa..542e3fa 100644
+--- a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+@@ -2,6 +2,14 @@ MT8173 xHCI
+ 
+ The device node for Mediatek SOC USB3.0 host controller
+ 
++There are two scenarios: the first one only supports xHCI driver;
++the second one supports dual-role mode, and the host is based on xHCI
++driver. Take account of backward compatibility, we divide bindings
++into two parts.
++
++1st: only supports xHCI driver
++------------------------------------------------------------------------
++
+ Required properties:
+  - compatible : should contain "mediatek,mt8173-xhci"
+  - reg : specifies physical base address and size of the registers,
+@@ -27,6 +35,9 @@ Optional properties:
+ 	control register, it depends on "mediatek,wakeup-src".
+  - vbus-supply : reference to the VBUS regulator;
+  - usb3-lpm-capable : supports USB3.0 LPM
++ - pinctl-names : a pinctrl state named "default" must be defined
++ - pinctrl-0 : pin control group
++	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
+ 
+ Example:
+ usb30: usb@11270000 {
+@@ -49,3 +60,40 @@ usb30: usb@11270000 {
+ 	mediatek,syscon-wakeup = <&pericfg>;
+ 	mediatek,wakeup-src = <1>;
+ };
++
++2nd: dual-role mode with xHCI driver
++------------------------------------------------------------------------
++
++In the case, xhci is added as subnode to mtu3. An example and the DT binding
++details of mtu3 can be found in:
++Documentation/devicetree/bindings/usb/mtu3.txt
++
++Required properties:
++ - compatible : should contain "mediatek,mt8173-xhci"
++ - reg : specifies physical base address and size of the registers,
++	should be only for xHCI IP registers
++ - interrupts : interrupt used by the host controller
++ - power-domains : a phandle to USB power domain node to control USB's
++	mtcmos
++ - vusb33-supply : regulator of USB avdd3.3v
++
++ - clocks : a list of phandle + clock-specifier pairs, one for each
++	entry in clock-names
++ - clock-names : must be
++	"sys_ck": for clock of xHCI MAC
++
++Optional properties:
++ - vbus-supply : reference to the VBUS regulator;
++ - usb3-lpm-capable : supports USB3.0 LPM
++
++Example:
++usb30: usb@11270000 {
++	compatible = "mediatek,mt8173-xhci";
++	reg = <0 0x11270000 0 0x1000>;
++	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
++	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
++	clocks = <&topckgen CLK_TOP_USB30_SEL>;
++	clock-names = "sys_ck";
++	vusb33-supply = <&mt6397_vusb_reg>;
++	usb3-lpm-capable;
++};
+-- 
+1.7.9.5
