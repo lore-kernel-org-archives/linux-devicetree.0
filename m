@@ -1,141 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] extcon: gpio: Add the support for Device tree bindings
-Date: Tue, 31 May 2016 08:35:22 -0500
-Message-ID: <CAL_JsqLpWMX3X77xyVH=5+AtEaRiY9ShkEo0TdHOphqE654OXg@mail.gmail.com>
-References: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
- <CGME20160527152945epcas1p4de3d2d43f94a20e3f93676b6c4f78244@epcas1p4.samsung.com>
- <20160527152934.GB12024@rob-hp-laptop> <574D32D7.2090902@samsung.com> <574D3EA7.9080907@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Subject: [PATCH v2 0/7] Add MDIO bus multiplexer support for iProc SoCs
+Date: Tue, 31 May 2016 19:06:34 +0530
+Message-ID: <1464701801-17243-1-git-send-email-pramod.kumar@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <574D3EA7.9080907@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Venkat Reddy Talla <vreddytalla@nvidia.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 31, 2016 at 2:35 AM, Chanwoo Choi <cw00.choi@samsung.com> w=
-rote:
-> Hi Rob,
->
-> On 2016=EB=85=84 05=EC=9B=94 31=EC=9D=BC 15:44, Chanwoo Choi wrote:
->> On 2016=EB=85=84 05=EC=9B=94 28=EC=9D=BC 00:29, Rob Herring wrote:
->>> On Thu, May 26, 2016 at 05:17:45PM +0530, Venkat Reddy Talla wrote:
->>>> Add the support for Device tree bindings of extcon-gpio driver.
->>>> The extcon-gpio device tree node must include the both 'extcon-id'=
- and
->>>> 'gpios' property.
->>>
->>> I think extcon bindings are a mess in general...
->>>
->>>> For example:
->>>>     usb_cable: extcon-gpio-0 {
->>>>             compatible =3D "extcon-gpio";
->>>>             extcon-id =3D <EXTCON_USB>;
->>>>             gpios =3D <&gpio6 1 GPIO_ACTIVE_HIGH>;
->>>>     }
->>>>     ta_cable: extcon-gpio-1 {
->>>>             compatible =3D "extcon-gpio";
->>>>             extcon-id =3D <EXTCON_CHG_USB_DCP>;
->>>>             gpios =3D <&gpio3 2 GPIO_ACTIVE_LOW>;
->>>>             debounce-ms =3D <50>;     /* 50 millisecond */
->>>>             wakeup-source;
->>>>     }
->>>
->>> This is all 1 logical connector, the USB connector. Why are you
->>> describing cables? Those are not part of the h/w and are dynamic.
->>> Describe this as a connector which is one thing (i.e. node). Use a
->>> compatible string that reflects the type of connector
->>> (usb-microab-connector), not the driver you want to use. Then defin=
-e
->>> GPIO lines needed to provide state information like VBus, ID, charg=
-er
->>> modes and control lines like soft connect (D+ pullup enable), VBus
->>> enable, etc.
->>
->> You're right. The extcon-gpio driver will not use the "extcon-gpio" =
-raw compatible.
->> As you commented[1], the each connector will have the unique name to=
- use the extcon-gpio.c driver.
->> [1] https://lkml.org/lkml/2015/10/21/906
->>
->>
->> For example,
->> The extcon-gpio.c driver may have the different name including the h=
-/w information
->> according to the kind of external connector.
->>
->> static const struct of_device_id gpio_extcon_of_match[] =3D {
->>       {
->>               .compatible =3D "extcon-chg-sdp", /* SDP charger conne=
-ctor */
->>               .data =3D EXTCON_CHG_SDP_DATA,
->>       }, {
->>               .compatible =3D "extcon-chg-dcp", /* DCP charger conne=
-ctor */
->>               .data =3D EXTCON_CHG_DCP_DATA,
->>       }, {
->>               .compatible =3D "extcon-jack-microphone", /* Microphon=
-e jack connector */
->>               .data =3D EXTCON_JACK_MICROPHONE_DATA,
->>       }, {
->>               .compatible =3D "extcon-disp-hdmi", /* HDMI connector*=
-/
->>               .data =3D EXTCON_DISP_HDMI_DATA,
->>       },
->>       ......
->> };
->
-> I reply it again.
->
-> The extcon-gpio.c is very similar with existing gpio_keys.c driver[1]
-> [1] drivers/input/keyboard/gpio_keys.c
+Broadcom iProc based SoCs use a MDIO bus multiplexer where child buses
+could be internal as well external to SoCs. These buses could supports
+MDIO transaction compatible to C-22/C-45.
 
-There is a big difference in that each gpio-key is independent. The
-only state is pressed or not. A USB connector has multiple pieces of
-state information. You may be treating them independently, but I don't
-think they should be.
+Broadcom MDIO bus mulitplexer is an integrated multiplexer where child bus
+selection and mdio transaction logic lies inside multiplexer itself.
+To accommodate this multiplexer in existing mux framework below changes
+were required-
 
-> The gpio_keys.c driver use the following style to support the device-=
-tree.
-> It use the "gpio-keys" compatible and this dt node include the specif=
-ic
-> 'key code' such as 'extcon-id =3D <EXTCON_CHG_USB_DCP>;'
+1. Passed MDIO parent bus via mdio_mux_init to MDIO mux framework.
 
-This is state information about what is currently attached. The
-analogy with gpio-keys would be multiple key codes on one gpio which
-would be broken...
+2. Defined one new boolean property named "mdio-integrated-mux". Integrated
+   bus Multiplexer node defines this so when parent bus is registered
+   by calling "of_mdiobus_register", this api will not scan for child
+   nodes. Child node of integrated multiplexer will be muxed nodes not
+   PHYs one hence should not be scanned.
 
->
->         gpio_keys {
->                 compatible =3D "gpio-keys";
->
->                 power_key {
->                         gpios =3D <&gpx2 7 GPIO_ACTIVE_LOW>;
->                         linux,code =3D <KEY_POWER>;
->                         label =3D "power key";
->                         debounce-interval =3D <10>;
->                         wakeup-source;
->                 };
->         };
->
-> If the extcon-gpio.c driver should have the separate compatible accor=
-ding to
-> the kind of external connector, the list of compatible name of extcon=
--gpio.c driver
-> will be increased when new external connector is attached.
+This patch set includes MDIO bus multiplexer driver along with above
+framework changes. It includes one external bus node having Ethernet PHY
+attached and two internal bus node holding PCIe PHYs.
 
-So? Different h/w needs different compatible strings.
+This patch series is based on v4.6.0-rc1 and is available from github-
+repo: https://github.com/Broadcom/arm64-linux.git
+branch:mdio-mux-v2
 
-But again, you are mixing describing the connector (only what is
-soldered on a board) and state information (what is attached). Do not
-put state information into DT (describe the gpio signals or chip that
-provides the state information).
+Changes from v1:
+- stop using "brcm,is_c45" from bus node as suggested by Andrew. MDIO
+PHY driver will logically OR MII_ADDR_C45 into the address when issues
+any C45 MDIO read/write transaction.
 
-> The extcon-gpio.c driver can separate the kind of external connector
-> by using the 'extcon-id' property.
+Pramod Kumar (7):
+  mdio:mux: Enhanced MDIO mux framework for integrated multiplexers
+  DT: phy.txt: Add mdio-integrated-mux property
+  binding: mdio-mux: Add DT binding doc for Broadcom MDIO bus mutiplexer
+  DT:mdio-mux: Add mdio multiplexer driver node
+  net:mdio-mux: Add MDIO mux driver for iProc SoCs
+  Binding:PHY: Binding doc for NS2 PCIe PHYs.
+  phy: Add Northstar2 PCI Phy support
 
-This use of DT is just broken. Come up with another way.
+ .../bindings/net/brcm,mdio-mux-iproc.txt           |  60 +++++
+ Documentation/devicetree/bindings/net/mdio-mux.txt |   9 +-
+ .../bindings/phy/brcm,mdio-mux-bus-pci.txt         |  27 +++
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |  12 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  32 +++
+ drivers/net/phy/Kconfig                            |  11 +
+ drivers/net/phy/Makefile                           |   1 +
+ drivers/net/phy/mdio-mux-bcm-iproc.c               | 243 +++++++++++++++++++++
+ drivers/net/phy/mdio-mux-gpio.c                    |   2 +-
+ drivers/net/phy/mdio-mux-mmioreg.c                 |   2 +-
+ drivers/net/phy/mdio-mux.c                         |  28 ++-
+ drivers/of/of_mdio.c                               |   3 +
+ drivers/phy/Kconfig                                |   8 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-ns2-pcie.c                     | 115 ++++++++++
+ include/linux/mdio-mux.h                           |   4 +-
+ 16 files changed, 544 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
+ create mode 100644 drivers/net/phy/mdio-mux-bcm-iproc.c
+ create mode 100644 drivers/phy/phy-bcm-ns2-pcie.c
 
-Rob
+-- 
+1.9.1
