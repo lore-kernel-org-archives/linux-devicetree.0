@@ -1,96 +1,100 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/4] libfdt: Add a subnodes iterator macro
-Date: Tue, 31 May 2016 10:54:33 +1000
-Message-ID: <20160531005433.GH17226@voom.fritz.box>
+Subject: Re: [PATCH 3/4] libfdt: Add max phandle retrieval function
+Date: Tue, 31 May 2016 11:02:41 +1000
+Message-ID: <20160531010241.GI17226@voom.fritz.box>
 References: <1464337729-7821-1-git-send-email-maxime.ripard@free-electrons.com>
- <1464337729-7821-3-git-send-email-maxime.ripard@free-electrons.com>
- <20160531004719.GF17226@voom.fritz.box>
+ <1464337729-7821-5-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="h7PDjUG0eb3vQUSn"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="SUygiN5FMnIY1JbD"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160531004719.GF17226-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1464337729-7821-5-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---h7PDjUG0eb3vQUSn
+--SUygiN5FMnIY1JbD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 31, 2016 at 10:47:19AM +1000, David Gibson wrote:
-> On Fri, May 27, 2016 at 10:28:46AM +0200, Maxime Ripard wrote:
-> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > The fdt_for_each_subnode() iterator macro provided by this patch can be
-> > used to iterate over a device tree node's subnodes. At each iteration a
-> > loop variable will be set to the next subnode.
-> >=20
-> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Fri, May 27, 2016 at 10:28:48AM +0200, Maxime Ripard wrote:
+> Add a function to retrieve the highest phandle in a given device tree.
 >=20
-> Looks good, but needs a testcase.  Extending subnode_iterate would
-> probably make sense.
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Sorry, one other thing, as I noted on 2/4, I prefer the convention
-where the loop counter (so the subnode offset in this case) is the
-first argument to foreach style macros.
+Needs a testcase, plus a couple of smallish problems:
 
+> ---
+>  libfdt/fdt_ro.c | 15 +++++++++++++++
+>  libfdt/libfdt.h | 13 +++++++++++++
+>  2 files changed, 28 insertions(+)
 >=20
-> > ---
-> >  libfdt/libfdt.h | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >=20
-> > diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-> > index 36222fd4a6f4..331f32dd04b5 100644
-> > --- a/libfdt/libfdt.h
-> > +++ b/libfdt/libfdt.h
-> > @@ -168,6 +168,31 @@ int fdt_first_subnode(const void *fdt, int offset);
-> >   */
-> >  int fdt_next_subnode(const void *fdt, int offset);
-> > =20
-> > +/**
-> > + * fdt_for_each_subnode - iterate over all subnodes of a parent
-> > + *
-> > + * This is actually a wrapper around a for loop and would be used like=
- so:
-> > + *
-> > + *	fdt_for_each_subnode(fdt, node, parent) {
-> > + *		...
-> > + *		use node
-> > + *		...
-> > + *	}
-> > + *
-> > + * Note that this is implemented as a macro and node is used as iterat=
-or in
-> > + * the loop. It should therefore be a locally allocated variable. The =
-parent
-> > + * variable on the other hand is never modified, so it can be constant=
- or
-> > + * even a literal.
-> > + *
-> > + * @fdt:	FDT blob (const void *)
-> > + * @node:	child node (int)
-> > + * @parent:	parent node (int)
-> > + */
-> > +#define fdt_for_each_subnode(fdt, node, parent)		\
-> > +	for (node =3D fdt_first_subnode(fdt, parent);	\
-> > +	     node >=3D 0;					\
-> > +	     node =3D fdt_next_subnode(fdt, node))
-> > +
-> >  /*********************************************************************=
-*/
-> >  /* General functions                                                  =
-*/
-> >  /*********************************************************************=
-*/
->=20
+> diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
+> index 50cce864283c..d5a14178190f 100644
+> --- a/libfdt/fdt_ro.c
+> +++ b/libfdt/fdt_ro.c
+> @@ -88,6 +88,21 @@ static int _fdt_string_eq(const void *fdt, int stroffs=
+et,
+>  	return (strlen(p) =3D=3D len) && (memcmp(p, s, len) =3D=3D 0);
+>  }
+> =20
+> +uint32_t fdt_get_max_phandle(const void *fdt)
+> +{
+> +	uint32_t max_phandle =3D 0, phandle;
+> +	int offset;
+> +
+> +	for (offset =3D fdt_next_node(fdt, -1, NULL); offset >=3D 0;
+> +	     offset =3D fdt_next_node(fdt, offset, NULL)) {
+> +		phandle =3D fdt_get_phandle(fdt, offset);
 
+I think you need to check for the case of an invalid -1 valued phandle
+- otherwise if there are any of those, it will come up as the max
+(unsigned comparison).
 
+> +		if (phandle > max_phandle)
+> +			max_phandle =3D phandle;
+> +	}
+
+You need to check for offset !=3D -FDT_ERR_NOTFOUND, which would
+indicate some other error from fdt_next_node.
+
+> +
+> +	return max_phandle;
+> +}
+> +
+>  int fdt_get_mem_rsv(const void *fdt, int n, uint64_t *address, uint64_t =
+*size)
+>  {
+>  	FDT_CHECK_HEADER(fdt);
+> diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+> index 6589e08db7ab..7156b264b1e9 100644
+> --- a/libfdt/libfdt.h
+> +++ b/libfdt/libfdt.h
+> @@ -284,6 +284,19 @@ int fdt_move(const void *fdt, void *buf, int bufsize=
+);
+>  const char *fdt_string(const void *fdt, int stroffset);
+> =20
+>  /**
+> + * fdt_get_max_phandle - retrieves the highest phandle in a tree
+> + * @fdt: pointer to the device tree blob
+> + *
+> + * fdt_get_max_phandle retrieves the highest phandlle in the given
+> + * device tree
+> + *
+> + * returns:
+> + *      the highest phandle on success
+> + *      0, if an error occured
+> + */
+> +uint32_t fdt_get_max_phandle(const void *fdt);
+> +
+> +/**
+>   * fdt_num_mem_rsv - retrieve the number of memory reserve map entries
+>   * @fdt: pointer to the device tree blob
+>   *
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -98,25 +102,29 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---h7PDjUG0eb3vQUSn
+--SUygiN5FMnIY1JbD
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXTODIAAoJEGw4ysog2bOSiWoQAK2BeH+t+jU6gQrGakCCqYqx
-SbXWB68s0D8VdLvUIDsEoCdch3RpX9fry1xMXR6uvI39xP0IQTj0msYj8TRap866
-WdSY0CaH9zLCbo+j4txjvX7fJpHEI+2627ZQchHGfou5/PL0JKFoPlAZuMdvUVCT
-iO+koXRugnsXAXlesSTk5biZPHHLgDiBpgNUHdETAp+qBZAaiFOhV7+MUX5MGE8+
-O481WnJnH/LGCzqN9T6vMtdxMM01jhp2rwr/PIisHgkNDB7Q6VLslmwT8XmvApVl
-6lsHY30LD/mKrjhit/W0/U8rMqjxI98WbZnWLHkWcyH3ZjDKN5LVOT2iRXb8DUDZ
-S3ThcCQUPUN/n+oYNMQF9nm2ywwqWYSsaQd0fXHPmBjEy3S7JZZqpm/E4pLX7Bi5
-f47TKnScAiIn9EJ915IS4K4uoJ4fvo1L5ccne2lxOX0CKSLjxoaskr7lQRiN+zzT
-d0Lq1/0mhEAWWr6aus9USBOeyCmDV5FWfmrAOHmDEeWZKke6deTZU/1ZSe4GdJTr
-3hlNVHTrGE9YQTTwvn5rVrfXTQQfJKqDr6w1JlIjZW/ul6DMZj5ZALI2TpXgdOvS
-o7km0pHJeMV1Nyn2Dra2qvtWEapGIBYy167TFMVUqLZMi8x+cYSu78UGmnwRkJlP
-DZ7iYB5Mnd2KE7miHj/0
-=608C
+iQIcBAEBAgAGBQJXTOKxAAoJEGw4ysog2bOSLX0QAJDjP8C8rZWXaEtYzNBKgnaK
+dT2QltSqyynC8ja5e9YLQjSpdemgx29oR/boXBJ3EzHGWS5S1kUQZxZvXl/GKEPt
+neMoNHEeDFPIKid1UxYcu8dEtmHumlFjM8DkAQf9sGxQlqLBBbnId2FSbJJ7Oy45
+jhHQaHKbbQHjjD5GGn+R3mqA2o+XeQkx0V+7/TQXImNohvr3EOwnvCc1FAmrGlSk
+qBdOLjItYNsVM7qA3+WwIanIYFLoeds0ReirU2JJxltEPkAzSX04GCytxZScwOrR
+HTUQ+BQ/vyQtSnym/7bXcdYj8aspobjdnm0Ks09rn9r+V7eYgDtK5N7RrsBGY0Q3
+Xh5lL1xX2MP4AKXbSSQgiSDF7buKMzz7AajAdCbbmNao0CmDUw53dXmd02dlPlwv
+eDN73kdeGjNfbSyNKz2MwvTugOJD9kmykrancQTvxbHwTR63lW+qWurZsMS8YSQP
+CPY5NzUTI+8rG/GamdRxZKDSiHJmWJYauL/r40hpbNJwav+tR9ZcPrL8h0tLBOeQ
+GLKBmHqoxtN2zIkpBRaCZrwNETxxhirPx6NtnntiC3hysOnqJFHcJIaEQGqrhA+V
+CZBTNHxh2aUSECQaW90djFLq9V5BJauLxV9LIFQapi5aeE3XKV5Jpe1w+ITzyTx3
+Zh2lFj2jMFagyplWk1Y/
+=P7yn
 -----END PGP SIGNATURE-----
 
---h7PDjUG0eb3vQUSn--
+--SUygiN5FMnIY1JbD--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
