@@ -1,81 +1,48 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/4] Documentation: Add documentation for APM X-Gene
- SoC PMU DTS binding
-Date: Tue, 31 May 2016 17:56:30 +0100
-Message-ID: <20160531165630.GE4254@leverpostej>
-References: <1460510547-17611-1-git-send-email-ttnguyen@apm.com>
- <1460510547-17611-3-git-send-email-ttnguyen@apm.com>
- <20160418170009.GA15338@rob-hp-laptop>
- <CACgAJHyBbO_LXwtfNVK1f=dY3v1Jfxwxq1dw98EZ0aYdhjPpAg@mail.gmail.com>
- <20160420113121.GE2514@arm.com>
- <20160502205648.GA7374@rob-hp-laptop>
- <CACgAJHyT31DuVNoyRQZVKjv=zM5Fc-EY0gy=y=pHHrBTT+1Xow@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 0/4] hw rng support for NSP SoC
+Date: Tue, 31 May 2016 10:09:39 -0700
+Message-ID: <574DC553.4030009@gmail.com>
+References: <1464343841-29504-1-git-send-email-yendapally.reddy@broadcom.com>
+ <20160531101934.GM15376@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACgAJHyT31DuVNoyRQZVKjv=zM5Fc-EY0gy=y=pHHrBTT+1Xow@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tai Tri Nguyen <ttnguyen@apm.com>
-Cc: Rob Herring <robh@kernel.org>, Will Deacon <will.deacon@arm.com>, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20160531101934.GM15376@gondor.apana.org.au>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, noltari@gmail.com, Joshua Henderson <joshua.henderson@microchip.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2016 at 02:46:05PM -0700, Tai Tri Nguyen wrote:
-> Hi Rob,
+On 05/31/2016 03:19 AM, Herbert Xu wrote:
+> On Fri, May 27, 2016 at 06:10:37AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
+>> This patchset contains the hw random number generator support for the
+>> Broadcom's NSP SoC. The block is similar to the block available in
+>> bcm2835 with different default interrupt mask value. Due to lack of
+>> documentation, I cannot confirm the interrupt mask register details
+>> in bcm2835. In an effort to not break the existing functionality of
+>> bcm2835, I used a different compatible string to mask the interrupt
+>> for NSP SoC. Please let me know. Also supported providing requested
+>> number of random numbers instead of static size of four bytes.
+>>
+>> The first patch contains the documentation changes and the second patch
+>> contains the support for rng available in NSP SoC. The third patch
+>> contains the device tree changes for NSP SoC. The fourth patch contains
+>> the support for reading requested number of random numbers.
+>>
+>> This patch set has been tested on NSP bcm958625HR board.
+>> This patch set is based on v4.6.0-rc1 and is available from github
+>> repo: https://github.com/Broadcom/cygnus-linux.git
+>> branch: nsp-rng-v2
+>>
+>> Changes since v1
 > 
-> On Mon, May 2, 2016 at 1:56 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Wed, Apr 20, 2016 at 12:31:22PM +0100, Will Deacon wrote:
-> >> On Mon, Apr 18, 2016 at 01:04:53PM -0700, Tai Tri Nguyen wrote:
-> >> > >> +Required properties for MCB subnode:
-> >> > >> +- compatible         : Shall be "apm,xgene-pmu-mcb".
-> >> > >> +- reg                        : First resource shall be the MCB PMU resource.
-> >> > >> +- index                      : Instance number of the MCB PMU.
-> >> > >> +
-> >> > >> +Required properties for MC subnode:
-> >> > >> +- compatible         : Shall be "apm,xgene-pmu-mc".
-> >> > >> +- reg                        : First resource shall be the MC PMU resource.
-> >> > >> +- index                      : Instance number of the MC PMU.
-> >> > >
-> >> > > Don't use indexes. You probably need phandles to the nodes these are
-> >> > > related to.
-> >> > >
-> >> > > How many variations of child nodes do you expect to have? 2, 10, 50? You
-> >> > > might want to just collapse all this down to a single node and put this
-> >> > > information in the driver if it is fixed for each SoC and there's only a
-> >> > > handful.
-> >> > >
-> >> >
-> >> > For each kind of PMU, for example memory controller PMU, I expect to
-> >> > have the number of instances up to 8.
-> >> > They are actually all independent PMU nodes and have their own CSR memory bases.
-> >> > The indexes are used for exposing the devices to perf user only. It
-> >> > doesn't have an impact on the programming model.
-> >> > Mark also had the same concern.
-> >>
-> >> Regardless, I'll need an ack from Rob or Mark before I can merge this.
-> >
-> > I still have a concern with this. Needing an index to expose to the user
-> > is generally not a valid reason. That's OS specific and therefore
-> > doesn't belong in DT.
-> >
-> > Rob
-> 
-> I can use device name here. However, the perf event names will be
-> different between DT and ACPI which I want to avoid.
-> And the names don't look good at all.
-> Also, specifically for MC and MCB PMUs, the indexes are compared
-> against the active MC/MCB mask to find out whether they are populated
-> or not.
-> Without using the index property, I will also need a mapping function
-> of physical device addresses and their physical ids.
+> All applied.
 
-What's wrong with using ${device}.{physical_address} as the PMU name?
-That would be unique and consistent regardless of the firmware, no
-mapping nor index property necessary.
+FYI, ARM Device Tree patches usually go via ARM SoC pull requests, so it
+is best if this is planned in advance. Can you make sure you document
+that there could be a merge conflict in your pull request to Linus?
 
-That's sufficient for any user already familiar with the topology, a
-familiarity you seem to be assuming regardless by not explicitly
-describing the topology in the DT.
-
-Thanks,
-Mark.
+Thanks
+-- 
+Florian
