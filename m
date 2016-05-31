@@ -1,122 +1,375 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Subject: Re: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
-Date: Tue, 31 May 2016 07:59:01 +0530
-Message-ID: <CAKfKVtF1hOn9QwiqtjqqPYtUz5PscTBs4kBC1zRH6FY-4vVoUA@mail.gmail.com>
-References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add dts file for Bananapi
+ M1 Plus board
+Date: Tue, 31 May 2016 11:03:51 +0800
+Message-ID: <CAGb2v66ojJfSoCQ13rGyfi4XjbzkZfMn=gfPFN+mQmv8NoBqfA@mail.gmail.com>
+References: <20160530123013.11575-1-luoyi.ly@gmail.com> <20160530194340.GE4908@lukather>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464626798-1334-1-git-send-email-navam@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, balbi@ti.com, gregkh@linuxfoundation.org, hyun.kwon@xilinx.com, navam@xilinx.com, radhey.shyam.pandey@xilinx.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLX6WO5AKGQEFRVM2TA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160530194340.GE4908@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?B?572X57+8?= <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 30, 2016 at 10:16 PM, Nava kishore Manne
-<nava.manne@xilinx.com> wrote:
-> This patch updates the driver to support 64-bit DMA addressing.
->
-> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
-> ---
-> Changes for v4:
->                 -Used boolen property insted of addrwith property in the DT
->                  as suggested by Arnd Bergmann.
->                 -Adopt the DT relevant changes into the driver.
->
-> Changes for v3:
->                 -Added new compatable string for 5.00 IP version as suggested by
->                  Arnd Bergmann.
->                 -Used write_fn() insted of lo_hi_writeq() as suggested by
->                  Arnd Bergmann.
->
-> Changes for v2:
->                 -Added dma-ranges property in device tree as suggested by Arnd Bergmann.
->                 -Modified the driver code based on the xlnx,addrwidth.
->
->  .../devicetree/bindings/usb/udc-xilinx.txt         |  5 ++-
->  drivers/usb/gadget/udc/udc-xilinx.c                | 52 +++++++++++++++++++++-
->  2 files changed, 54 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> index 47b4e39..d08d972 100644
-> --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> @@ -1,12 +1,14 @@
->  Xilinx USB2 device controller
->
->  Required properties:
-> -- compatible           : Should be "xlnx,usb2-device-4.00.a"
-> +- compatible           : Should be "xlnx,usb2-device-4.00.a" or
-> +                         "xlnx,usb2-device-5.00"
->  - reg                  : Physical base address and size of the USB2
->                           device registers map.
->  - interrupts           : Should contain single irq line of USB2 device
->                           controller
->  - xlnx,has-builtin-dma : if DMA is included
-> +- xlnx,has-64bit-dma   : if DMA is included 64-bit addressing support.
->
->  Example:
->                 axi-usb2-device@42e00000 {
-> @@ -14,5 +16,6 @@ Example:
->                          interrupts = <0x0 0x39 0x1>;
->                          reg = <0x42e00000 0x10000>;
->                          xlnx,has-builtin-dma;
-> +                       xlnx,has-64bit-dma;
->                  };
->
-> diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
-> index 1cbb0ac..6fb80c6 100644
-> --- a/drivers/usb/gadget/udc/udc-xilinx.c
-> +++ b/drivers/usb/gadget/udc/udc-xilinx.c
-> @@ -47,6 +47,15 @@
->  #define XUSB_DMA_LENGTH_OFFSET         0x0210  /* DMA Length Register */
->  #define XUSB_DMA_STATUS_OFFSET         0x0214  /* DMA Status Register */
->
-> +/* DMA source Address Reg for LSB */
-> +#define XUSB_DMA_DSAR_ADDR_OFFSET_LSB   0x0308
-> +/* DMA source Address Reg for MSB */
-> +#define XUSB_DMA_DSAR_ADDR_OFFSET_MSB   0x030C
-> +/* DMA destination Addr Reg LSB */
-> +#define XUSB_DMA_DDAR_ADDR_OFFSET_LSB   0x0310
-> +/* DMA destination Addr Reg MSB */
-> +#define XUSB_DMA_DDAR_ADDR_OFFSET_MSB   0x0314
-> +
->  /* Endpoint Configuration Space offsets */
->  #define XUSB_EP_CFGSTATUS_OFFSET       0x00    /* Endpoint Config Status  */
->  #define XUSB_EP_BUF0COUNT_OFFSET       0x08    /* Buffer 0 Count */
-> @@ -169,6 +178,7 @@ struct xusb_ep {
->   * @setup: usb_ctrlrequest structure for control requests
->   * @req: pointer to dummy request for get status command
->   * @dev: pointer to device structure in gadget
-> + * @is_extend_dma: flag indiacting whether the dma is 64-bit support or not.
->   * @usb_state: device in suspended state or not
->   * @remote_wkp: remote wakeup enabled by host
->   * @setupseqtx: tx status
-> @@ -186,6 +196,7 @@ struct xusb_udc {
->         struct usb_ctrlrequest setup;
->         struct xusb_req *req;
->         struct device *dev;
-> +       bool is_extend_dma;
->         u32 usb_state;
->         u32 remote_wkp;
->         u32 setupseqtx;
-> @@ -215,6 +226,20 @@ static const struct usb_endpoint_descriptor config_bulk_out_desc = {
->  };
->
->  /**
-> + * xudc_write64 - write 64bit value to device registers
-> + * @ep: pointer to the usb device endpoint structure.
-> + * @offset: register offset
-> + * @val: data to be written
-> + **/
-> +static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val)
-> +{
-> +       struct xusb_udc *udc = ep->udc;
-> +
-> +       udc->write_fn(udc->addr, offset, lower_32_bits(val));
-> +       udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val));
+Hi,
 
-can we move this to a single 64 bit write?
-> +}
-> +
-> +/**
+On Tue, May 31, 2016 at 3:43 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Mon, May 30, 2016 at 08:30:13PM +0800, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Add support for the Bananapi M1 Plus A20 development board from sinovoip.com.cn .
+>> This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for
+>> OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiver,
+>> 3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and sdio wifi.
+>
+> What is the difference between the M1+ and the M1?
+>
+>>
+>> Signed-off-by: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile                       |   1 +
+>>  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 270 +++++++++++++++++++++++
+>>  2 files changed, 271 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index e06a5ab..fde407f 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -685,6 +685,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+>>       sun6i-a31s-yones-toptech-bs1078-v2.dtb
+>>  dtb-$(CONFIG_MACH_SUN7I) += \
+>>       sun7i-a20-bananapi.dtb \
+>> +     sun7i-a20-bananapi-m1-plus.dtb \
+>>       sun7i-a20-bananapro.dtb \
+>>       sun7i-a20-cubieboard2.dtb \
+>>       sun7i-a20-cubietruck.dtb \
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+>> new file mode 100644
+>> index 0000000..b62fc1d
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+>> @@ -0,0 +1,270 @@
+>> +/*
+>> + * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * Thanks to the original work by Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun7i-a20.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+>> +     model = "Banana Pi BPI-M1-Plus";
+>> +     compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
+>> +
+>> +     aliases {
+>> +             serial0 = &uart0;
+>> +     };
+>> +
+>> +     chosen {
+>> +             stdout-path = "serial0:115200n8";
+>> +     };
+>> +
+>> +     leds {
+>> +             compatible = "gpio-leds";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&led_pins_bananapi>;
+>> +
+>> +             red {
+>> +                     label = "bananapi:red:usr";
+>
+> The first part the label is the board name, in that case that would be
+> bananapi-m1-plus.
+>
+>> +                     gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
+>> +                     linux,default-trigger = "default-on";
+>
+> So that's the power led?
+>
+>> +             };
+>> +
+>> +             green {
+>> +                     label = "bananapi:green:usr";
+>> +                     gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
+>> +                     linux,default-trigger = "heartbeat";
+>
+> We don't enforce any trigger by default.
+>
+>> +
+>> +             };
+>> +     };
+>> +
+>> +     reg_gmac_3v3: gmac-3v3 {
+>> +             compatible = "regulator-fixed";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&gmac_power_pin_bananapi>;
+>> +             regulator-name = "gmac-3v3";
+>> +             regulator-min-microvolt = <3300000>;
+>> +             regulator-max-microvolt = <3300000>;
+>> +             startup-delay-us = <100000>;
+>> +             enable-active-high;
+>> +             gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
+>> +     };
+>> +
+>> +     reg_vmmc3: vmmc3 {
+>> +             compatible = "regulator-fixed";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&vmmc3_pin_bananapi>;
+>> +             regulator-name = "vmmc3";
+>> +             regulator-min-microvolt = <3300000>;
+>> +             regulator-max-microvolt = <3300000>;
+>> +             regulator-always-on;
+>> +             regulator-boot-on;
+>> +             enable-active-high;
+>> +             gpio = <&pio 7 22 GPIO_ACTIVE_HIGH>;
+>> +     };
+>
+> You can use reg_vcc3v3 from sunxi-common-regulators.dtsi.
+
+This is a GPIO controlled one, not just a fixed regulator.
+
+However, this is a misrepresentation of what is on the board.
+
+PH22 here is connected to the REG_ON pin on the WiFi chip.
+So either you represent this as a GPIO toggled fixed
+regulator with a source from reg_vcc3v3, and use this as
+vmmc on mmc3. Or you use the pwrseq_simple bindings for
+this.
+
+
+ChenYu
+
+>
+>> +
+>> +};
+>> +
+>> +&ahci {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&codec {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&ehci0 {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&ehci1 {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&ohci0 {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&ohci1 {
+>> +     status = "okay";
+>> +};
+>
+> Please order your nodes alphabetically.
+>
+>> +
+>> +&gmac {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&gmac_pins_rgmii_a>;
+>> +     phy = <&phy1>;
+>> +     phy-mode = "rgmii";
+>> +     phy-supply = <&reg_gmac_3v3>;
+>> +     status = "okay";
+>> +
+>> +     phy1: ethernet-phy@1 {
+>> +             reg = <1>;
+>> +     };
+>> +};
+>> +
+>> +&i2c0 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&i2c0_pins_a>;
+>> +     status = "okay";
+>> +
+>> +     axp209: pmic@34 {
+>> +             compatible = "x-powers,axp209";
+>> +             reg = <0x34>;
+>> +             interrupt-parent = <&nmi_intc>;
+>> +             interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> +
+>> +             interrupt-controller;
+>> +             #interrupt-cells = <1>;
+>> +     };
+>> +};
+>> +
+>> +&ir0 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&ir0_rx_pins_a>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&mmc0 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
+>> +     vmmc-supply = <&reg_vcc3v3>;
+>> +     bus-width = <4>;
+>> +     cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
+>> +     cd-inverted;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&mmc3 {
+>> +     #address-cells = <1>;
+>> +     #size-cells = <0>;
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc3_pins_a>;
+>> +     vmmc-supply = <&reg_vmmc3>;
+>> +     bus-width = <4>;
+>> +     non-removable;
+>> +     enable-sdio-wakeup;
+>> +     status = "okay";
+>> +
+>> +     brcmf: bcrmf@1 {
+>> +             reg = <1>;
+>> +             compatible = "brcm,bcm4329-fmac";
+>> +             interrupt-parent = <&pio>;
+>> +             interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
+>> +             interrupt-names = "host-wake";
+>> +     };
+>> +
+>> +};
+>> +
+>> +&mmc3_pins_a {
+>> +    /* AP6210 requires pull-up */
+>> +     allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>> +};
+>> +
+>> +&pio {
+>> +     gmac_power_pin_bananapi: gmac_power_pin@0 {
+>> +             allwinner,pins = "PH23";
+>> +             allwinner,function = "gpio_out";
+>> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +     };
+>> +
+>> +     led_pins_bananapi: led_pins@0 {
+>> +             allwinner,pins = "PH24", "PG2";
+>> +             allwinner,function = "gpio_out";
+>> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +     };
+>> +
+>> +     mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
+>> +             allwinner,pins = "PH10";
+>> +             allwinner,function = "gpio_in";
+>> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +             allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>> +     };
+>> +
+>> +     usb1_vbus_pin_bananapi: usb1_vbus_pin@0 {
+>> +             allwinner,pins = "PH0";
+>> +             allwinner,function = "gpio_out";
+>> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +     };
+>> +
+>> +     usb2_vbus_pin_bananapi: usb2_vbus_pin@0 {
+>> +             allwinner,pins = "PH1";
+>> +             allwinner,function = "gpio_out";
+>> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +     };
+>> +
+>> +     vmmc3_pin_bananapi: vmmc3_pin@0 {
+>> +             allwinner,pins = "PH22";
+>> +             allwinner,function = "gpio_out";
+>> +             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +     };
+>> +};
+>> +
+>> +&reg_usb1_vbus {
+>> +     pinctrl-0 = <&usb1_vbus_pin_bananapi>;
+>> +     gpio = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
+>> +     status = "okay";
+>> +};
+>> +
+>> +&reg_usb2_vbus {
+>> +     pinctrl-0 = <&usb2_vbus_pin_bananapi>;
+>> +     gpio = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+>> +     status = "okay";
+>> +};
+>> +
+>> +&uart0 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&uart0_pins_a>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&usbphy {
+>> +     usb1_vbus-supply = <&reg_usb1_vbus>;
+>> +     usb2_vbus-supply = <&reg_usb2_vbus>;
+>> +     status = "okay";
+>> +};
+>> --
+>> 2.8.3
+>>
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
