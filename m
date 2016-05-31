@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 02/13] ARM: shmobile: r8a7792: add power domain index macros
-Date: Wed, 01 Jun 2016 01:11:40 +0300
-Message-ID: <2701785.yYTs7puE3Y@wasted.cogentembedded.com>
+Subject: [PATCH 05/13] DT: clock: rcar-gen2-cpg-clocks: document R8A7792 support
+Date: Wed, 01 Jun 2016 01:20:11 +0300
+Message-ID: <4688920.9Ektl04hDh@wasted.cogentembedded.com>
 References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -12,43 +12,23 @@ Sender: linux-renesas-soc-owner@vger.kernel.org
 To: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add macros usable by the device tree sources to reference R8A7792 SYSC power
-domains by index.
+Renesas R8A7792 SoC is a member of the R-Car gen2 family and so has CPG...
 
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
- include/dt-bindings/power/r8a7792-sysc.h |   26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-Index: renesas/include/dt-bindings/power/r8a7792-sysc.h
+Index: renesas/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
 ===================================================================
---- /dev/null
-+++ renesas/include/dt-bindings/power/r8a7792-sysc.h
-@@ -0,0 +1,26 @@
-+/*
-+ * Copyright (C) 2016 Cogent Embedded Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A7792_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A7792_SYSC_H__
-+
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A7792_PD_CA15_CPU0		0
-+#define R8A7792_PD_CA15_CPU1		1
-+#define R8A7792_PD_CA15_SCU		12
-+#define R8A7792_PD_SGX			20
-+#define R8A7792_PD_IMP			24
-+
-+/* Always-on power area */
-+#define R8A7792_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A7792_SYSC_H__ */
+--- renesas.orig/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
++++ renesas/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+@@ -10,6 +10,7 @@ Required Properties:
+   - compatible: Must be one of
+     - "renesas,r8a7790-cpg-clocks" for the r8a7790 CPG
+     - "renesas,r8a7791-cpg-clocks" for the r8a7791 CPG
++    - "renesas,r8a7792-cpg-clocks" for the r8a7792 CPG
+     - "renesas,r8a7793-cpg-clocks" for the r8a7793 CPG
+     - "renesas,r8a7794-cpg-clocks" for the r8a7794 CPG
+     and "renesas,rcar-gen2-cpg-clocks" as a fallback.
