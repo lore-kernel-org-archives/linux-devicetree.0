@@ -1,128 +1,49 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH v2 5/5] arm64/numa: avoid inconsistent information to be
- printed
-Date: Tue, 31 May 2016 19:27:25 +0800
-Message-ID: <574D751D.9020901@huawei.com>
-References: <1464427377-12712-1-git-send-email-thunder.leizhen@huawei.com>
- <1464427377-12712-6-git-send-email-thunder.leizhen@huawei.com>
- <574D543A.2090406@suse.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [RFC v2 00/13] usb/mmc/power: Fix USB/LAN when TFTP booting
+Date: Tue, 31 May 2016 13:54:31 +0200
+Message-ID: <574D7B77.4000606@samsung.com>
+References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
+ <20160505224240.GA31429@rob-hp-laptop>
+ <CAPDyKFqpoi03Egfuvd8qJXnn_+FBgPXAb7S4UvkxVs8BA+zwnA@mail.gmail.com>
+ <20160509181829.GA19687@rob-hp-laptop>
+ <CAPDyKFq2=mqujFjvJSYxg2nVmK=OrBKLtFfb-ErNJO3Zr_LMVw@mail.gmail.com>
+ <20160528033613.GA3291@shlinux2> <20160531005808.GA7913@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <574D543A.2090406@suse.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <mbrugger@suse.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David
- Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank
- Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Xinwei Hu <huxinwei@huawei.com>, Zefan Li <lizefan@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20160531005808.GA7913@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-usb@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, hverkuil@xs4all.nl, tjakobi@math.uni-bielefeld.de, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
+On 05/31/2016 02:58 AM, Peter Chen wrote:
+> On Sat, May 28, 2016 at 11:36:13AM +0800, Peter Chen wrote:
+>> All, how we move on for this?
+>>
+>> 1. Using a generic driver to manage both mmc and USB (and further
+>> subsystem), USB and further subsystem do not use pwrseq node in dts.
+>> 2. USB creates the similar driver under drivers/usb for its own use. 
+>>
+>> Which one do you prefer, thanks.
+>>
+> 
+> Hi Krzysztof Kozlowski,
+> 
+> I think option 1 may be better according to Rob and Ulf's comment.
 
+Hi,
 
-On 2016/5/31 17:07, Matthias Brugger wrote:
-> 
-> 
-> On 28/05/16 11:22, Zhen Lei wrote:
->> numa_init(of_numa_init) may returned error because of numa configuration
->> error. So "No NUMA configuration found" is inaccurate. In fact, specific
->> configuration error information should be immediately printed by the
->> testing branch.
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
-> 
-> Which kernel version is this patch based on?
+I like the option #1 as well. The generic driver should rely and parse
+existing bindings like 'reset-gpios'. Still additional property (e.g.
+"do-the-power-sequence") seems needed as we do not want to play with all
+reset-gpios in DTB.
 
-Base on mainline(git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git), I git pulled about 3-5 days ago, the last commit-id is dc03c0f.
+> Would you like going on your patch set? You can work on generic pwrseq
+> driver, I will do USB stuffs based on generic pwrseq driver?
 
-And thess patches base on https://lkml.org/lkml/2016/5/24/679 series(acpi numa) as David Daney's requirement.
+Great, that sounds good! I'll start the work.
 
-> 
-> Regards,
-> Matthias
-> 
->>   arch/arm64/mm/numa.c | 6 +++---
->>   drivers/of/of_numa.c | 7 +++----
->>   2 files changed, 6 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> index 2601660..1b9622c 100644
->> --- a/arch/arm64/mm/numa.c
->> +++ b/arch/arm64/mm/numa.c
->> @@ -338,8 +338,10 @@ static int __init numa_init(int (*init_func)(void))
->>       if (ret < 0)
->>           return ret;
->>
->> -    if (nodes_empty(numa_nodes_parsed))
->> +    if (nodes_empty(numa_nodes_parsed)) {
->> +        pr_info("No NUMA configuration found\n");
->>           return -EINVAL;
->> +    }
->>
->>       ret = numa_register_nodes();
->>       if (ret < 0)
->> @@ -370,8 +372,6 @@ static int __init dummy_numa_init(void)
->>
->>       if (numa_off)
->>           pr_info("NUMA disabled\n"); /* Forced off on command line. */
->> -    else
->> -        pr_info("No NUMA configuration found\n");
->>       pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
->>              0LLU, PFN_PHYS(max_pfn) - 1);
->>
->> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
->> index fb62307..3157130 100644
->> --- a/drivers/of/of_numa.c
->> +++ b/drivers/of/of_numa.c
->> @@ -63,7 +63,7 @@ static int __init of_numa_parse_memory_nodes(void)
->>       struct device_node *np = NULL;
->>       struct resource rsrc;
->>       u32 nid;
->> -    int i, r = 0;
->> +    int i, r;
->>
->>       for_each_node_by_type(np, "memory") {
->>           r = of_property_read_u32(np, "numa-node-id", &nid);
->> @@ -81,12 +81,11 @@ static int __init of_numa_parse_memory_nodes(void)
->>           if (!i || r) {
->>               of_node_put(np);
->>               pr_err("NUMA: bad property in memory node\n");
->> -            r = r ? : -EINVAL;
->> -            break;
->> +            return r ? : -EINVAL;
->>           }
->>       }
->>
->> -    return r;
->> +    return 0;
->>   }
->>
-> 
-> Well this is fixing changes you introduced in this patch-set. Any reason this is not part of patch 2?
-
-Because they fixed two different problems.
-
-> 
->>   static int __init of_numa_parse_distance_map_v1(struct device_node *map)
->> -- 
->> 2.5.0
->>
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
-> 
-> .
-> 
+Best regards,
+Krzysztof
