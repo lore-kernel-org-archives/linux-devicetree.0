@@ -1,85 +1,42 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH v4 18/18] ARM: DT: STi: stihxxx-b2120: Add DT nodes for
- STi audio card
-Date: Tue, 31 May 2016 12:16:19 +0200
-Message-ID: <574D6473.7050902@st.com>
-References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
- <1464192412-16386-20-git-send-email-peter.griffin@linaro.org>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 0/4] hw rng support for NSP SoC
+Date: Tue, 31 May 2016 18:19:34 +0800
+Message-ID: <20160531101934.GM15376@gondor.apana.org.au>
+References: <1464343841-29504-1-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464192412-16386-20-git-send-email-peter.griffin@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1464343841-29504-1-git-send-email-yendapally.reddy@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, noltari@gmail.com, Joshua Henderson <joshua.henderson@microchip.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/25/2016 06:06 PM, Peter Griffin wrote:
-> This patch enables the uniperif players 2 & 3 for b2120 boards
-> and also adds the "simple-audio-card" device node to interconnect
-> the SoC sound device and the codec.
+On Fri, May 27, 2016 at 06:10:37AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
+> This patchset contains the hw random number generator support for the
+> Broadcom's NSP SoC. The block is similar to the block available in
+> bcm2835 with different default interrupt mask value. Due to lack of
+> documentation, I cannot confirm the interrupt mask register details
+> in bcm2835. In an effort to not break the existing functionality of
+> bcm2835, I used a different compatible string to mask the interrupt
+> for NSP SoC. Please let me know. Also supported providing requested
+> number of random numbers instead of static size of four bytes.
 > 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  arch/arm/boot/dts/stihxxx-b2120.dtsi | 40 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
+> The first patch contains the documentation changes and the second patch
+> contains the support for rng available in NSP SoC. The third patch
+> contains the device tree changes for NSP SoC. The fourth patch contains
+> the support for reading requested number of random numbers.
 > 
-> diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> index 722c63f..5297f21 100644
-> --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> @@ -131,5 +131,45 @@
->  				dvb-card	= <STV0367_TDA18212_NIMA_1>;
->  			};
->  		};
-> +
-> +		sti_uni_player2: sti-uni-player@2 {
-> +			status = "okay";
-> +		};
-> +
-> +		sti_uni_player3: sti-uni-player@3 {
-> +			status = "okay";
-> +		};
-enable sti-sasg-codec with spdif pinctrl
-> +
-> +		sound {
-> +			compatible = "simple-audio-card";
-> +			simple-audio-card,name = "sti audio card";
-> +			status = "okay";
-> +
-> +			simple-audio-card,dai-link@0 {
-> +				/* DAC */
-> +				format = "i2s";
-> +				dai-tdm-slot-width = <32>;
-clean dai-tdm-slot-width, not used.
+> This patch set has been tested on NSP bcm958625HR board.
+> This patch set is based on v4.6.0-rc1 and is available from github
+> repo: https://github.com/Broadcom/cygnus-linux.git
+> branch: nsp-rng-v2
+> 
+> Changes since v1
 
-Regards,
-Arnaud
-> +				mclk-fs = <256>;
-> +				cpu {
-> +					sound-dai = <&sti_uni_player2>;
-> +				};
-> +
-> +				codec {
-> +					sound-dai = <&sti_sasg_codec 1>;
-> +				};
-> +			};
-> +			simple-audio-card,dai-link@1 {
-> +				/* SPDIF */
-> +				format = "left_j";
-> +				mclk-fs = <128>;
-> +				cpu {
-> +					sound-dai = <&sti_uni_player3>;
-> +				};
-> +
-> +				codec {
-> +					sound-dai = <&sti_sasg_codec 0>;
-> +				};
-> +			};
-> +		};
->  	};
->  };
-> 
+All applied.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
