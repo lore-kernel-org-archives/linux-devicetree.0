@@ -1,46 +1,67 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 0/4] RCar r8a7795 FCPF support
-Date: Tue, 31 May 2016 11:10:45 +0200
-Message-ID: <CAMuHMdVW56-g8F9SqO8UP62Q9nvFawwL+GgHP2Wni-a8q5YMRw@mail.gmail.com>
-References: <1464369565-12259-1-git-send-email-kieran@bingham.xyz>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v5 00/22] ARM: dts: exynos: Add initial support for Odroid
+ XU
+Date: Tue, 31 May 2016 11:12:31 +0200
+Message-ID: <574D557F.70209@samsung.com>
+References: <1464429273-23457-1-git-send-email-krzk@kernel.org>
+ <574C5BD2.60008@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464369565-12259-1-git-send-email-kieran-SI8QzZ7I9JUn3X9lZQuFcg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <574C5BD2.60008@samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
+On 05/30/2016 05:27 PM, Sylwester Nawrocki wrote:
+> On 05/28/2016 11:54 AM, Krzysztof Kozlowski wrote:
+>>
+>> The clock changes can go to clock tree. ARM changes to samsung-soc tree.
+>> Please provide me a tag with include/dt-bindings/clock commits so I can
+>> merge it.
+> 
+> I applied the clock tree patches and here is the tag for the three
+> include/dt-bindings patches:
 
-On Fri, May 27, 2016 at 7:19 PM, Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org> wrote:
-> An RCar FCP driver is available with support for the FCPV module for VSP.
-> This series updates that driver to support the FCPF and then provide the
-> relevant nodes in the r8a7795 device tree.
->
-> Checkpatch generates a warning on these DT references but they are
-> documented under Documentation/devicetree/bindings/media/renesas,fcp.txt
->
-> These patches are based on Geert's renesas-drivers tree, and are pushed
-> to a branch at git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:kbingham/linux.git renesas/fcpf for
-> convenience.
+Thanks mate!
+Pulled.
 
-As this is based on previous renesas-drivers release, which included the
-Salvator-X HDMI prototype, I created a topic branch topic/fcpf-v1 just
-containing your changes.
+Best regards,
+Krzysztof
 
-Gr{oetje,eeting}s,
+> 
+> The following changes since commit 1a695a905c18548062509178b98bc91e67510864:
+> 
+>   Linux 4.7-rc1 (2016-05-29 09:29:24 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://linuxtv.org/snawrocki/samsung.git tags/clk-v4.8-exynos5410-dt
+> 
+> for you to fetch changes up to ed1e1505db0c116affdfab01e650c44a9c459c65:
+> 
+>   dt-bindings: clock: Add I2C, HSI2C and RTC clock IDs to Exynos5410
+> (2016-05-30 16:00:11 +0200)
+> 
+> ----------------------------------------------------------------
+> Adition of missing clock index definitions for exynos5410 SoC
+> PWM, USB, I2C, and RTC device related clocks.
+> 
+> ----------------------------------------------------------------
+> Krzysztof Kozlowski (3):
+>       dt-bindings: clock: Add license and reformat Exynos5410 clock IDs
+>       dt-bindings: clock: Add PWM and USB clock IDs to Exynos5410
+>       dt-bindings: clock: Add I2C, HSI2C and RTC clock IDs to Exynos5410
+> 
+>  include/dt-bindings/clock/exynos5410.h | 73
+> +++++++++++++++++++++++++++++++++++++++++++++++++++----------------------
+>  1 file changed, 51 insertions(+), 22 deletions(-)
+> 
+> 
+> --
+> Thanks,
+> Sylwester
+> 
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
