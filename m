@@ -1,130 +1,116 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 3/4] libfdt: Add max phandle retrieval function
-Date: Tue, 31 May 2016 11:02:41 +1000
-Message-ID: <20160531010241.GI17226@voom.fritz.box>
-References: <1464337729-7821-1-git-send-email-maxime.ripard@free-electrons.com>
- <1464337729-7821-5-git-send-email-maxime.ripard@free-electrons.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [RFC v2 00/13] usb/mmc/power: Fix USB/LAN when TFTP booting
+Date: Tue, 31 May 2016 08:58:08 +0800
+Message-ID: <20160531005808.GA7913@shlinux2>
+References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
+ <20160505224240.GA31429@rob-hp-laptop>
+ <CAPDyKFqpoi03Egfuvd8qJXnn_+FBgPXAb7S4UvkxVs8BA+zwnA@mail.gmail.com>
+ <20160509181829.GA19687@rob-hp-laptop>
+ <CAPDyKFq2=mqujFjvJSYxg2nVmK=OrBKLtFfb-ErNJO3Zr_LMVw@mail.gmail.com>
+ <20160528033613.GA3291@shlinux2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SUygiN5FMnIY1JbD"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464337729-7821-5-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20160528033613.GA3291@shlinux2>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-usb@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, hverkuil@xs4all.nl, tjakobi@math.uni-bielefeld.de, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, May 28, 2016 at 11:36:13AM +0800, Peter Chen wrote:
+> On Tue, May 10, 2016 at 01:02:08PM +0200, Ulf Hansson wrote:
+> > + Arnd
+> > 
+> > [...]
+> > 
+> > >> >> Solution
+> > >> >> ========
+> > >> >> This is very similar to the MMC pwrseq behavior so the idea is to:
+> > >> >> 1. Move MMC pwrseq drivers to generic place,
+> > >> >
+> > >> > You can do that, but I'm going to NAK any use of pwrseq bindings outside
+> > >> > of MMC. I think it is the wrong way to do things. The DT should describe
+> > >>
+> > >> Huh, I didn't know that was your view of the mmc pwrseq bindings. Why
+> > >> didn't you NAK them before?
+> > >
+> > > Unfortunately, either I missed it or it was a time I couldn't spend much
+> > > time on reviews.
+> > 
+> > Okay, I guess it's common issue among maintainers. The problem with DT
+> > is that it gets really hard to be fixed up later. :-)
+> > 
+> > >
+> > >> > the devices. If they happen to be "simple" then the core can walk the
+> > >> > tree and do any setup. For example, look for "reset-gpios" and toggle
+> > >> > that GPIO. There is no need for a special node.
+> > >> >
+> > >> >> 2. Extend the pwrseq-simple with regulator toggling,
+> > >> >> 3. Add support to USB hub and port core for pwrseq,
+> > >> >
+> > >> > We discussed this for USB already[1] and is why we defined how to add
+> > >> > USB child devices. The idea is not to add pwrseq to that.
+> > >>
+> > >> I am not familiar with the USB discussion.
+> > >>
+> > >> Still, let me give you some more background to the mmc pwrseq. The
+> > >> idea from the mmc pwrseq bindings comes from the power-domain DT
+> > >> bindings, as I thought these things were a bit related.
+> > >> In both cases they are not directly a property of the device, but more
+> > >> describing a HW dependency to allow the device to work.
+> > >
+> > > I could see this as a board level power domain. However the difference
+> > > is we are not generally exposing internal SOC details the same way as
+> > > board level components. Perhaps we could extend power domains to board
+> > > level, but that is not what was done here.
+> > >
+> > >> One could probably use a child node instead of a phandle, but that
+> > >> wasn't chosen back then. Of course you are the DT expert, but could
+> > >> you perhaps tell me why a child node is better for cases like this?
+> > >
+> > > If there is a control path hierarchy, then we try to model that in DT
+> > > with child nodes. In cases of SDIO and USB, there is a clear hierarchy.
+> > > Ignoring the discovery ordering problem, we already have defined ways to
+> > > describe GPIO connections, regulators, etc. to devices. Describing those
+> > > things separately from the device to solve a particular issue that is
+> > > really a kernel limitation is what I don't like.
+> > 
+> > Okay, I see.
+> > 
+> > To move forward in trying to make mmc pwrseq a generic pwrseq, could
+> > we perhaps allow both cases?
+> > 
+> > In the mmc case, there are already deployed bindings so we need to
+> > cope with these by using the phandle option, but for USB etc we could
+> > force the child node option.
+> > As long as we agree that we keep using a compatible string for the
+> > child node as well, both options should be able to co-exist and we
+> > should probably be able to managed them both from a common pwrseq
+> > driver framework.
+> > 
+> > Although, I do remember from an older conversations around some of
+> > mine submission for the mmc pwrseq code, that some people (maybe
+> > Arnd?) wasn't keen on adding a new framework for this. Perhaps that
+> > has changed?
+> > 
+> 
+> All, how we move on for this?
+> 
+> 1. Using a generic driver to manage both mmc and USB (and further
+> subsystem), USB and further subsystem do not use pwrseq node in dts.
+> 2. USB creates the similar driver under drivers/usb for its own use. 
+> 
+> Which one do you prefer, thanks.
+> 
 
---SUygiN5FMnIY1JbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Krzysztof Kozlowski,
 
-On Fri, May 27, 2016 at 10:28:48AM +0200, Maxime Ripard wrote:
-> Add a function to retrieve the highest phandle in a given device tree.
->=20
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+I think option 1 may be better according to Rob and Ulf's comment.
+Would you like going on your patch set? You can work on generic pwrseq
+driver, I will do USB stuffs based on generic pwrseq driver?
 
-Needs a testcase, plus a couple of smallish problems:
+-- 
 
-> ---
->  libfdt/fdt_ro.c | 15 +++++++++++++++
->  libfdt/libfdt.h | 13 +++++++++++++
->  2 files changed, 28 insertions(+)
->=20
-> diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
-> index 50cce864283c..d5a14178190f 100644
-> --- a/libfdt/fdt_ro.c
-> +++ b/libfdt/fdt_ro.c
-> @@ -88,6 +88,21 @@ static int _fdt_string_eq(const void *fdt, int stroffs=
-et,
->  	return (strlen(p) =3D=3D len) && (memcmp(p, s, len) =3D=3D 0);
->  }
-> =20
-> +uint32_t fdt_get_max_phandle(const void *fdt)
-> +{
-> +	uint32_t max_phandle =3D 0, phandle;
-> +	int offset;
-> +
-> +	for (offset =3D fdt_next_node(fdt, -1, NULL); offset >=3D 0;
-> +	     offset =3D fdt_next_node(fdt, offset, NULL)) {
-> +		phandle =3D fdt_get_phandle(fdt, offset);
-
-I think you need to check for the case of an invalid -1 valued phandle
-- otherwise if there are any of those, it will come up as the max
-(unsigned comparison).
-
-> +		if (phandle > max_phandle)
-> +			max_phandle =3D phandle;
-> +	}
-
-You need to check for offset !=3D -FDT_ERR_NOTFOUND, which would
-indicate some other error from fdt_next_node.
-
-> +
-> +	return max_phandle;
-> +}
-> +
->  int fdt_get_mem_rsv(const void *fdt, int n, uint64_t *address, uint64_t =
-*size)
->  {
->  	FDT_CHECK_HEADER(fdt);
-> diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-> index 6589e08db7ab..7156b264b1e9 100644
-> --- a/libfdt/libfdt.h
-> +++ b/libfdt/libfdt.h
-> @@ -284,6 +284,19 @@ int fdt_move(const void *fdt, void *buf, int bufsize=
-);
->  const char *fdt_string(const void *fdt, int stroffset);
-> =20
->  /**
-> + * fdt_get_max_phandle - retrieves the highest phandle in a tree
-> + * @fdt: pointer to the device tree blob
-> + *
-> + * fdt_get_max_phandle retrieves the highest phandlle in the given
-> + * device tree
-> + *
-> + * returns:
-> + *      the highest phandle on success
-> + *      0, if an error occured
-> + */
-> +uint32_t fdt_get_max_phandle(const void *fdt);
-> +
-> +/**
->   * fdt_num_mem_rsv - retrieve the number of memory reserve map entries
->   * @fdt: pointer to the device tree blob
->   *
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---SUygiN5FMnIY1JbD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXTOKxAAoJEGw4ysog2bOSLX0QAJDjP8C8rZWXaEtYzNBKgnaK
-dT2QltSqyynC8ja5e9YLQjSpdemgx29oR/boXBJ3EzHGWS5S1kUQZxZvXl/GKEPt
-neMoNHEeDFPIKid1UxYcu8dEtmHumlFjM8DkAQf9sGxQlqLBBbnId2FSbJJ7Oy45
-jhHQaHKbbQHjjD5GGn+R3mqA2o+XeQkx0V+7/TQXImNohvr3EOwnvCc1FAmrGlSk
-qBdOLjItYNsVM7qA3+WwIanIYFLoeds0ReirU2JJxltEPkAzSX04GCytxZScwOrR
-HTUQ+BQ/vyQtSnym/7bXcdYj8aspobjdnm0Ks09rn9r+V7eYgDtK5N7RrsBGY0Q3
-Xh5lL1xX2MP4AKXbSSQgiSDF7buKMzz7AajAdCbbmNao0CmDUw53dXmd02dlPlwv
-eDN73kdeGjNfbSyNKz2MwvTugOJD9kmykrancQTvxbHwTR63lW+qWurZsMS8YSQP
-CPY5NzUTI+8rG/GamdRxZKDSiHJmWJYauL/r40hpbNJwav+tR9ZcPrL8h0tLBOeQ
-GLKBmHqoxtN2zIkpBRaCZrwNETxxhirPx6NtnntiC3hysOnqJFHcJIaEQGqrhA+V
-CZBTNHxh2aUSECQaW90djFLq9V5BJauLxV9LIFQapi5aeE3XKV5Jpe1w+ITzyTx3
-Zh2lFj2jMFagyplWk1Y/
-=P7yn
------END PGP SIGNATURE-----
-
---SUygiN5FMnIY1JbD--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
