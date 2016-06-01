@@ -1,96 +1,118 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 05/13] DT: clock: rcar-gen2-cpg-clocks: document R8A7792
- support
-Date: Wed, 1 Jun 2016 09:30:16 +0900
-Message-ID: <20160601003016.GE20527@verge.net.au>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <4688920.9Ektl04hDh@wasted.cogentembedded.com>
- <20160601002535.GB20527@verge.net.au>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [PATCH 2/6] Documentation: bindings: add dt doc for Rockchip USB
+ Type-C PHY
+Date: Wed, 1 Jun 2016 08:43:34 +0800
+Message-ID: <574E2FB6.6010008@rock-chips.com>
+References: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
+ <1464328939-8073-3-git-send-email-zyw@rock-chips.com>
+ <2812026.ptEv4ktvbn@phil> <5748094F.6030204@rock-chips.com>
+ <CAD=FV=W9iFXX_BfORP-9=8tnu9Ea_f2k1wK_T2j=ZAVA9cFSwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160601002535.GB20527@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=W9iFXX_BfORP-9=8tnu9Ea_f2k1wK_T2j=ZAVA9cFSwg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Tomasz Figa <tfiga@chromium.org>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 09:25:35AM +0900, Simon Horman wrote:
-> [Cc: Geert]
->=20
-> On Wed, Jun 01, 2016 at 01:20:11AM +0300, Sergei Shtylyov wrote:
-> > Renesas R8A7792 SoC is a member of the R-Car gen2 family and so has=
- CPG...
-> >=20
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->=20
-> Hi Sergei,
->=20
-> I think the prefix of this patch should be "clk: shmobile: rcar-gen2:=
- "
->=20
-> Hi Geert,
->=20
-> I apologise if I have missed a discussion of this topic or if my anal=
-ysis
-> is wrong for some reason but I am curious to know what the intended w=
-ay
-> is for the rcar-gen2 CPG driver to handle differences in the availabi=
-lity
-> of clocks across different SoCs.
->=20
-> My possibly na=C3=AFve expectation is that the implementation would u=
-se compat
-> strings. But as it stands it appears that all clocks supported by the
-> driver are available for all SoCs. This does not seem to reflect the
-> documentation (v2.00).
->=20
-> FWIW my quick analysis of clocks supported by the driver present in
-> renesas-drivers-2016-05-31-v4.7-rc1 but not present on one or more So=
-Cs
-> is as follows:
->=20
-> Not present on V2H: sdh, sd0
-> Not present on V2H or E2: sd1
-> Not present on H2, M2-W, M2-N, E2: rcan
 
-Thinking about a little more, which I obviously should have done
-before hitting send:
 
-There does not seem to be any conflict in the implementation of individ=
-ual
-clocks between SoCs at least so far as clocks supported by the driver g=
-oes.
-Its just that some of them aren't present on all SoCs. But in that case
-they shouldn't be used in DT: the DT describes the HW. So I think I'm o=
-k
-with this patch. Sorry for the noise!
+On 06/01/2016 03:57 AM, Doug Anderson wrote:
+> Chris,
+>
+> On Fri, May 27, 2016 at 1:46 AM, Chris Zhong <zyw@rock-chips.com> wrote:
+>> Hi Heiko
+>>
+>>
+>> On 05/27/2016 04:29 PM, Heiko Stuebner wrote:
+>>> Hi Chris,
+>>>
+>>> Am Freitag, 27. Mai 2016, 14:02:15 schrieb Chris Zhong:
+>>>> This patch adds a binding that describes the Rockchip USB Type-C PHY
+>>>> for rk3399.
+>>>>
+>>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>>>> ---
+>>>>
+>>>>    .../devicetree/bindings/phy/phy-rockchip-typec.txt | 55
+>>>> ++++++++++++++++++++++ 1 file changed, 55 insertions(+)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>>> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt new file
+>>>> mode 100644
+>>>> index 0000000..402f667
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>>> @@ -0,0 +1,55 @@
+>>>> +ROCKCHIP type-c PHY
+>>>> +
+>>>> +Required properties:
+>>>> + - compatible: should be "rockchip,rk3399-typec-phy"
+>>>> + - reg : Address and length of the usb phy control register set
+>>>> + - rockchip,grf : phandle to the syscon managing the "general
+>>>> +   register files"
+>>>> + - clocks : phandle + clock specifier for the phy clocks
+>>>> + - clock-names: string, clock name, must be "tcpdcore", "tcpdphy_ref";
+>>>> + - resets : a list of phandle + reset specifier pairs
+>>>> + - reset-names : string reset name, must be:
+>>>> +                "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst"
+> In other contexts I believe Heiko has requested that a suffix like
+> "_rst" not be present in the names of reset signals.  We already know
+> that this is a list of reset names so the "_rst" is redundant.
+Yes, "_rst" is redundant.I will remove it next version.
+>
+>>>> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
+>>>> + - rockchip,usb3phy*: phy registers embed in grf
+>>>> +
+>>>> +Example:
+>>>> +       tcphy0: phy@ff7c0000 {
+>>>> +               compatible = "rockchip,rk3399-typec-phy";
+>>>> +               reg = <0x0 0xff7c0000 0x0 0x40000>;
+>>>> +               #phy-cells = <0>;
+>>>> +               rockchip,grf = <&grf>;
+>>>> +               clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+>>>> +                        <&cru SCLK_UPHY0_TCPDPHY_REF>;
+>>>> +               clock-names = "tcpdcore", "tcpdphy_ref";
+>>>> +               resets = <&cru SRST_UPHY0>,
+>>>> +                        <&cru SRST_UPHY0_PIPE_L00>,
+>>>> +                        <&cru SRST_P_UPHY0_TCPHY>;
+>>>> +               reset-names = "tcphy_rst", "tcphy_pipe_rst",
+>>>> "uphy_tcphy_rst";
+>>>> +               rockchip,usb3phy_con0 = <0x0e580 0 16>;
+>>>> +               rockchip,usb3phy_con1 = <0x0e584 0 16>;
+>>>> +               rockchip,usb3phy_con2 = <0x0e588 0 16>;
+>>>> +               rockchip,usb3phy_status0 = <0x0e5c0 0 13>;
+>>>> +               rockchip,usb3phy_status1 = <0x0e5c4 0 12>;
+>>> please embedded this register data in the driver instead (not in the
+>>> devicetree), matched against the compatible value.
+>>> See Frank's usb2phy driver for reference if needed.
+>> Okay, I will move them to driver file next version, Thanks.
+> Just making sure: I saw a RESEND of your original version get posted,
+> but nothing that addresses Heiko's comments, right?
+>
+> Also: note that bindings should be sent in the patch _before_ the
+> code.  So instead of:
+>    [1] phy: Add USB Type-C PHY driver for rk3399
+>    [2] Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
+>    [3] drm/rockchip: vop: add cdn DP support for rk3399
+>    [4] Documentation: bindings: add dt documentation for cdn DP controller
+>
+> You should have:
+>    [1] Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
+>    [2] phy: Add USB Type-C PHY driver for rk3399
+>    [3] Documentation: bindings: add dt documentation for cdn DP controller
+>    [4] drm/rockchip: vop: add cdn DP support for rk3399
+The first patch is lack of a header file, so I resend the patches, and 
+did not change anything, I will do them in V1 version.
+And I will change the  sequence of patches, Thanks for your comments.
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
-> > ---
-> >  Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-cloc=
-ks.txt |    1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > Index: renesas/Documentation/devicetree/bindings/clock/renesas,rcar=
--gen2-cpg-clocks.txt
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- renesas.orig/Documentation/devicetree/bindings/clock/renesas,rc=
-ar-gen2-cpg-clocks.txt
-> > +++ renesas/Documentation/devicetree/bindings/clock/renesas,rcar-ge=
-n2-cpg-clocks.txt
-> > @@ -10,6 +10,7 @@ Required Properties:
-> >    - compatible: Must be one of
-> >      - "renesas,r8a7790-cpg-clocks" for the r8a7790 CPG
-> >      - "renesas,r8a7791-cpg-clocks" for the r8a7791 CPG
-> > +    - "renesas,r8a7792-cpg-clocks" for the r8a7792 CPG
-> >      - "renesas,r8a7793-cpg-clocks" for the r8a7793 CPG
-> >      - "renesas,r8a7794-cpg-clocks" for the r8a7794 CPG
-> >      and "renesas,rcar-gen2-cpg-clocks" as a fallback.
-> >=20
->=20
+>
+> -Doug
+>
+>
+>
