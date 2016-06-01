@@ -1,33 +1,40 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/5] clk: qcom: ipq4019: Modified the fixed clock rate to
- proper values
-Date: Wed, 1 Jun 2016 15:18:09 -0700
-Message-ID: <20160601221808.GI28218@codeaurora.org>
-References: <1464618758-20965-1-git-send-email-absahu@codeaurora.org>
- <1464618758-20965-2-git-send-email-absahu@codeaurora.org>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Wed, 1 Jun 2016 17:27:52 -0500
+Message-ID: <574F6168.3020802@codeaurora.org>
+References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
+ <570EC541.6080603@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464618758-20965-2-git-send-email-absahu@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, galak@codeaurora.org, pradeepb@codeaurora.org, mmcclint@codeaurora.org, varada@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org, ntelkar@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <570EC541.6080603@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 05/30, Abhishek Sahu wrote:
-> Modified the fixed clock rate initialization in the IPQ4019 clock
-> probe function with correct values.
-> 
-> Also some of the fixed clocks entries were not added in the current
-> driver file so added the same.
-> 
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Florian Fainelli wrote:
+>> +/* Transmit the packet */
+>> >+static int emac_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+>> >+{
+>> >+	struct emac_adapter *adpt = netdev_priv(netdev);
+>> >+
+>> >+	return emac_mac_tx_buf_send(adpt, &adpt->tx_q, skb);
 
-This was a temporary solution until the PLL recalc code could be
-written. When is the real clk driver coming so we can get rid of
-these fixed rate clks being registered in this driver?
+> I would inline emac_mac_tx_buf_send()'s body here to make it much easier
+> to read and audit...
+
+I'm close to submitting a v5 of this patchset.  The change to phylib has 
+resulted in significant other changes.  I'm sure it's still not quite 
+right, so I ask your patience in reviewing it.
+
+However, I'm not sure inlining emac_mac_tx_buf_send() into 
+emac_start_xmit() is good idea.  That would result in moving several 
+functions from emac-mac.c into emac.c.  I'm concerned about maintaining 
+the functional split between the two files.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation collaborative project.
