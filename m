@@ -1,31 +1,30 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] [media] media: i2c/ov5645: add the device tree
- binding document
-Date: Wed, 1 Jun 2016 09:59:49 -0500
-Message-ID: <20160601145949.GA13480@rob-hp-laptop>
-References: <1464363530-2253-1-git-send-email-todor.tomov@linaro.org>
- <1464363530-2253-2-git-send-email-todor.tomov@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] arm: tegra: add colibri t30 device tree binding
+ documentation
+Date: Wed, 1 Jun 2016 10:00:47 -0500
+Message-ID: <20160601150047.GA14261@rob-hp-laptop>
+References: <1464368440-9963-1-git-send-email-marcel.ziswiler@toradex.com>
+ <1464368440-9963-2-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464363530-2253-2-git-send-email-todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, matrandg-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+In-Reply-To: <1464368440-9963-2-git-send-email-marcel.ziswiler@toradex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, linux-tegra@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 27, 2016 at 06:38:49PM +0300, Todor Tomov wrote:
-> Add the document for ov5645 device tree binding.
+On Fri, May 27, 2016 at 07:00:39PM +0200, Marcel Ziswiler wrote:
+> Add the device tree binding documentation for Colibri T30 which was
+> missing so far.
 > 
-> Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 > ---
->  .../devicetree/bindings/media/i2c/ov5645.txt       | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> 
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/arm/tegra.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
