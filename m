@@ -1,44 +1,172 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v3 09/12] EXAMPLE CODE: usb: port: Parse pwrseq phandle from
- Device Tree
-Date: Wed, 01 Jun 2016 11:16:34 -0700
-Message-ID: <146480499491.3686.4996610748316511864@sboyd-linaro>
-References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
- <1464768141-25420-10-git-send-email-k.kozlowski@samsung.com>
- <146477144362.1485.3331887341591876278@sboyd-linaro>
- <20160601120520.GB16740@shlinux2>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v3 1/2] Documentation: dt: reset: Add syscon reset binding
+Date: Wed, 1 Jun 2016 13:41:24 -0500
+Message-ID: <20160601184125.20241-2-afd@ti.com>
+References: <20160601184125.20241-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20160601120520.GB16740@shlinux2>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160601184125.20241-1-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Chen (2016-06-01 05:05:20)
-> On Wed, Jun 01, 2016 at 01:57:23AM -0700, Stephen Boyd wrote:
-> > Quoting Krzysztof Kozlowski (2016-06-01 01:02:18)
-> > > Parse usb-pwrseq property from Device Tree to get the phandle to pwrseq
-> > > device.  The pwrseq device will be used by USB hub to cycle the power
-> > > before activating ports.
-> > > 
-> > > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > 
-> > Drive by review comment.
-> > 
-> > I was hoping this would help me with a problem I'm having where I have a
-> > hub (smsc4604) that needs to be taken out of reset before my HSIC
-> > controller sends a USB reset to it, but it seems this is more about
-> > doing some sort of power on sequence after enumeration?
-> > 
-> 
-> No, you may need to do reset before enumeration, the general purpose of
-> reset is eliminate unstable hardware state, and let the controller find
-> the device.
-> 
-> Try to do it at bootloader to see if it works for you.
-> 
+Add syscon reset controller binding. This will hook to the reset
+framework and use syscon/regmap to set reset bits. This allows
+reset control of individual SoC subsytems and devices with
+memory-mapped reset registers in a common register memory
+space.
 
-Sorry the bootloader doesn't do this so that doesn't work for me.
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+[s-anna@ti.com: revise the binding format]
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ .../devicetree/bindings/reset/syscon-reset.txt     | 105 +++++++++++++++++++++
+ include/dt-bindings/reset/syscon.h                 |  23 +++++
+ 2 files changed, 128 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/syscon-reset.txt
+ create mode 100644 include/dt-bindings/reset/syscon.h
+
+diff --git a/Documentation/devicetree/bindings/reset/syscon-reset.txt b/Documentation/devicetree/bindings/reset/syscon-reset.txt
+new file mode 100644
+index 0000000..cec6e32
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/syscon-reset.txt
+@@ -0,0 +1,105 @@
++SysCon Reset Controller
++=======================
++
++Almost all SoCs have hardware modules that require reset control in addition
++to clock and power control for their functionality. The reset control is
++typically provided by means of memory-mapped I/O registers. These registers are
++sometimes a part of a larger register space region implementing various
++functionalities. This register range is best represented as a syscon node to
++allow multiple entities to access their relevant registers in the common
++register space.
++
++A SysCon Reset Controller node defines a device that uses a syscon node
++and provides reset management functionality for various hardware modules
++present on the SoC.
++
++SysCon Reset Controller Node
++============================
++Each of the reset provider/controller nodes should be a child of a syscon
++node and have the following properties.
++
++Required properties:
++--------------------
++ - compatible		: Should be "syscon-reset"
++ - #reset-cells		: Should be 1. Please see the reset consumer node below
++			  for usage details
++
++SysCon Reset Child Node
++============================
++Each reset provider/controller node should have a child node for each reset
++it would like to expose to consumers.
++
++Required properties:
++--------------------
++ - reset-control	: Contains the reset control register information
++			  Should contain 3 cells defined as:
++			    Cell #1 : register offset of the reset
++			              control/status register from the syscon
++			              register base
++			    Cell #2 : bit shift value for the reset in the
++			              respective reset control/status register
++			    Cell #3 : polarity of the reset bit. Should be 1 or
++				      RESET_ASSERT_SET for resets that are
++				      asserted when the bit is set, 0 or
++				      RESET_ASSERT_CLEAR for resets that are
++				      asserted when the bit is cleared
++
++Optional properties:
++--------------------
++ - reset-status		: Contains the reset status register information. The
++			  contents of this property are the equivalent to
++			  reset-control as defined above. If this property is
++			  not present and the toggle flag is not set, the
++			  reset register is assumed to be the same as the
++			  control register
++ - toggle		: Mark this reset as a toggle only reset, this is used
++			  when no status register is available.
++
++SysCon Reset Consumer Nodes
++===========================
++Each of the reset consumer nodes should have the following properties,
++in addition to their own properties.
++
++Required properties:
++--------------------
++ - resets	: A phandle to the reset controller node and a phandle to a
++		  reset specifier node as defined above.
++
++Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
++common reset controller usage by consumers.
++
++Example:
++--------
++The following example demonstrates a syscon node, the reset controller node
++using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
++Hawking SoC.
++
++/ {
++	soc {
++		psc: power-sleep-controller@02350000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x02350000 0x1000>;
++
++			pscrst: psc-reset {
++				compatible = "syscon-reset";
++				#reset-cells = <1>;
++
++				pscrst-dsp: dsp {
++					reset-control = <0xa3c 8 RESET_ASSERT_CLEAR>;
++					reset-status = <0x83c 8 RESET_ASSERT_CLEAR>;
++				};
++
++				pscrst-example: example {
++					reset-control = <0xa40 5 RESET_ASSERT_SET>;
++					toggle;
++				};
++			};
++		};
++
++		dsp0: dsp0 {
++			...
++			resets = <&pscrst &pscrst-dsp>;
++			...
++		};
++	};
++};
+diff --git a/include/dt-bindings/reset/syscon.h b/include/dt-bindings/reset/syscon.h
+new file mode 100644
+index 0000000..9927779
+--- /dev/null
++++ b/include/dt-bindings/reset/syscon.h
+@@ -0,0 +1,23 @@
++/*
++ * Syscon Reset definitions
++ *
++ * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __DT_BINDINGS_RESET_SYSCON_H__
++#define __DT_BINDINGS_RESET_SYSCON_H__
++
++#define RESET_ASSERT_CLEAR	0x0
++#define RESET_ASSERT_SET	0x1
++
++#endif
+-- 
+2.8.3
