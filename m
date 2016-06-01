@@ -1,72 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH 4/6] Documentation: bindings: add dt documentation
- for cdn DP controller
-Date: Wed, 1 Jun 2016 09:56:19 -0500
-Message-ID: <20160601145619.GA11202@rob-hp-laptop>
+Subject: Re: [RESEND PATCH 6/6] ASoC: rockchip: Add machine driver for cdn dp
+ codec
+Date: Wed, 1 Jun 2016 09:57:49 -0500
+Message-ID: <20160601145749.GA12362@rob-hp-laptop>
 References: <1464345942-4795-1-git-send-email-zyw@rock-chips.com>
- <1464345942-4795-5-git-send-email-zyw@rock-chips.com>
+ <1464345942-4795-7-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464345942-4795-5-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1464345942-4795-7-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Chris Zhong <zyw@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Cc: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, linux-rockchip@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXkgMjcsIDIwMTYgYXQgMDY6NDU6NDBQTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gVGhpcyBwYXRjaCBhZGRzIGEgYmluZGluZyB0aGF0IGRlc2NyaWJlcyB0aGUgY2RuIERQ
-IGNvbnRyb2xsZXIgZm9yCj4gcmszMzk5Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IENocmlzIFpob25n
-IDx6eXdAcm9jay1jaGlwcy5jb20+Cj4gLS0tCj4gCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3Jv
-Y2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQgIHwgNTcgKysrKysrKysrKysrKysrKysrKysrKwo+
-ICAxIGZpbGUgY2hhbmdlZCwgNTcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvY2RuLWRw
-LXJvY2tjaGlwLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9jZG4tZHAtcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvY2RuLWRwLXJvY2tjaGlw
-LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uNjA3OTVjMgo+IC0t
-LSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9yb2NrY2hpcC9jZG4tZHAtcm9ja2NoaXAudHh0Cj4gQEAgLTAsMCArMSw1NyBAQAo+ICtS
-b2NrY2hpcCBSSzMzOTkgc3BlY2lmaWMgZXh0ZW5zaW9ucyB0byB0aGUgY2RuIERpc3BsYXkgUG9y
-dAo+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+ICsKPiArUmVxdWlyZWQgcHJv
-cGVydGllczoKPiArLSBjb21wYXRpYmxlOiAicm9ja2NoaXAsY2RuLWRwIgoKTmVlZHMgdG8gYmUg
-bW9yZSBzcGVjaWZpYy4KCj4gKwo+ICstIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRo
-ZSBjb250cm9sbGVyIGFuZCBsZW5ndGgKPiArCj4gKy0gY2xvY2tzOiBmcm9tIGNvbW1vbiBjbG9j
-ayBiaW5kaW5nOiBoYW5kbGUgdG8gZHAgY2xvY2suCj4gKwo+ICstIGNsb2NrLW5hbWVzOiBmcm9t
-IGNvbW1vbiBjbG9jayBiaW5kaW5nOgo+ICsJICAgICAgIFJlcXVpcmVkIGVsZW1lbnRzOiAiY29y
-ZV9jbGsiICJwY2xrIiAic3BkaWYiCj4gKwo+ICstIHJvY2tjaGlwLGdyZjogdGhpcyBzb2Mgc2hv
-dWxkIHNldCBHUkYgcmVncywgc28gbmVlZCBnZXQgZ3JmIGhlcmUuCj4gKwo+ICstIHBvcnRzOiBj
-b250YWluIGEgcG9ydCBub2RlcyB3aXRoIGVuZHBvaW50IGRlZmluaXRpb25zIGFzIGRlZmluZWQg
-aW4KPiArCSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50
-ZXJmYWNlcy50eHQuCj4gKwkgY29udGFpbmVkIDIgZW5kcG9pbnRzLCBjb25uZWN0aW5nIHRvIHRo
-ZSBvdXRwdXQgb2Ygdm9wLgo+ICsKPiArLSBwaHlzOiBmcm9tIGdlbmVyYWwgUEhZIGJpbmRpbmc6
-IHRoZSBwaGFuZGxlIGZvciB0aGUgUEhZIGRldmljZS4KPiArCj4gKy0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0KPiArCj4gK0V4YW1wbGU6Cj4gKwljZG5fZHA6IGRwQGZlYzAwMDAwIHsKPiArCQljb21w
-YXRpYmxlID0gInJvY2tjaGlwLGNkbi1kcCI7Cj4gKwkJcmVnID0gPDB4MCAweGZlYzAwMDAwIDB4
-MCAweDEwMDAwMD47Cj4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDkgSVJRX1RZUEVfTEVWRUxf
-SElHSD47Cj4gKwkJY2xvY2tzID0gPCZjcnUgU0NMS19EUF9DT1JFPiwgPCZjcnUgUENMS19EUF9D
-VFJMPiwKPiArCQkJIDwmY3J1IFNDTEtfU1BESUZfUkVDX0RQVFg+Owo+ICsJCWNsb2NrLW5hbWVz
-ID0gImNvcmVfY2xrIiwgInBjbGsiLCAic3BkaWYiOwo+ICsJCXBoeXMgPSA8JnRjcGh5MD47Cj4g
-KwkJcm9ja2NoaXAsZ3JmID0gPCZncmY+Owo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJ
-CSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwo+ICsJCXBv
-cnRzIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+
-Owo+ICsJCQlyZWcgPSA8MT47Cj4gKwo+ICsJCQlkcF9pbjogcG9ydCB7Cj4gKwkJCQkjYWRkcmVz
-cy1jZWxscyA9IDwxPjsKPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQkJZHBfaW5fdm9w
-YjogZW5kcG9pbnRAMCB7Cj4gKwkJCQkJcmVnID0gPDA+Owo+ICsJCQkJCXJlbW90ZS1lbmRwb2lu
-dCA9IDwmdm9wYl9vdXRfZHA+Owo+ICsJCQkJfTsKPiArCj4gKwkJCQlkcF9pbl92b3BsOiBlbmRw
-b2ludEAxIHsKPiArCQkJCQlyZWcgPSA8MT47Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2
-b3BsX291dF9kcD47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+IC0tIAo+IDIu
-Ni4zCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, May 27, 2016 at 06:45:42PM +0800, Chris Zhong wrote:
+> The driver is used for cdn dp codec embedded in rk3399
+> 
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> 
+> ---
+> 
+>  .../bindings/sound/rockchip-cdn-dp-audio.txt       |  12 ++
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  sound/soc/rockchip/Kconfig                         |   9 ++
+>  sound/soc/rockchip/Makefile                        |   2 +
+>  sound/soc/rockchip/rockchip-cdn-dp-audio.c         | 167 +++++++++++++++++++++
+>  4 files changed, 190 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/rockchip-cdn-dp-audio.txt
+>  create mode 100644 sound/soc/rockchip/rockchip-cdn-dp-audio.c
