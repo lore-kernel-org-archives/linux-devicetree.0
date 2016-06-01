@@ -1,60 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 04/12] of: add J-Core timer bindings
-Date: Wed, 1 Jun 2016 08:58:52 -0500
-Message-ID: <20160601135852.GA17217@rob-hp-laptop>
-References: <cover.1464148904.git.dalias@libc.org>
- <5341dfbb085d5647ebb6fe4390ca329b63e0e03d.1464148904.git.dalias@libc.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
+Date: Wed, 1 Jun 2016 17:00:27 +0300
+Message-ID: <83904aa1-edde-0968-3f0b-0d2962d377f5@cogentembedded.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
+ <20160601005751.GG20527@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5341dfbb085d5647ebb6fe4390ca329b63e0e03d.1464148904.git.dalias@libc.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160601005751.GG20527@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 05:43:03AM +0000, Rich Felker wrote:
-> Signed-off-by: Rich Felker <dalias@libc.org>
-> ---
->  .../devicetree/bindings/timer/jcore,pit.txt        | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-> new file mode 100644
-> index 0000000..96c6815
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-> @@ -0,0 +1,28 @@
-> +J-Core Programmable Interval Timer and Clocksource
-> +
-> +Required properties:
-> +
-> +- compatible: Must be "jcore,pit".
-> +
-> +- reg: Memory region for timer/clocksource registers.
-> +
-> +- interrupts: An interrupt to assign for the timer. The actual pit
-> +  core is integrated with the aic and allows the timer interrupt
-> +  assignment to be programmed by software, but this property is
-> +  required in order to reserve an interrupt number that doesn't
-> +  conflict with other devices.
-> +
-> +Optional properties:
-> +
-> +- cpu-offset: For SMP, the per-cpu offset to the local timer
-> +  programming memory range.
-> +
-> +
-> +Example:
-> +
-> +timer@200 {
-> +	compatible = "jcore,pit";
-> +	reg = < 0x200 0x30 >;
-> +	cpu-offset = < 0x300 >;
+On 06/01/2016 03:57 AM, Simon Horman wrote:
 
-This is outside the reg range. Perhaps reg should include each range of 
-per cpu registers.
+>> The initial R8A7792 SoC device tree including 2 CPU cores, GIC, timer, SYSC,
+>> and the required  clock descriptions.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> This is rather large for an initial DTSI. Did you give any consideration
+> to splitting it up: e.g. only providing what is needed to get to a serial
+> console?
 
-Rob
+    You mean dropping the majority of clocks, right?
+
+> With regards to SMP. Have you checked to make sure CPU hotplug works
+> on all CPUs? And that the system behaves sanely on suspend/resume.
+> If it is not possible to verify this at this stage then I would recommend
+> only enabling one CPU at this stage.
+
+    No, the SMP support isn't ready yet.
+    And I'll have to enable SMP on R8A7794 as well...
+
+MBR, Sergei
