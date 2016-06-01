@@ -1,7 +1,7 @@
 From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 22/32] ARM: bcm2835: Include SDHOST in the device tree.
-Date: Wed,  1 Jun 2016 23:43:31 +0200
-Message-ID: <1464817421-8519-23-git-send-email-kraxel@redhat.com>
+Subject: [PATCH 14/32] bcm2837-rpi-3-b.dts: vc4 hdmi fixup
+Date: Wed,  1 Jun 2016 23:43:23 +0200
+Message-ID: <1464817421-8519-15-git-send-email-kraxel@redhat.com>
 References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,40 +18,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-rpi-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Gerd Hoffmann <kraxel@redhat.com>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric@anholt.net>
-
-It's disabled by default, and will be enabled by a particular board's
-DT.  The DMA channels are also currently left out, because our DMA
-engine support doesn't yet include slave SG, and there doesn't appear
-to be a clean way to include "does slave SG" in the channel
-request/config process.
-
-Signed-off-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- arch/arm/boot/dts/bcm283x.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 3866fc7a..170d620 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -399,6 +399,14 @@
- 			status = "disabled";
- 		};
- 
-+		sdhost: sdhost@7e202000 {
-+			compatible = "brcm,bcm2835-sdhost";
-+			reg = <0x7e202000 0x100>;
-+			interrupts = <2 24>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+			status = "disabled";
-+		};
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index e0f429b..a523bd7 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -41,3 +41,7 @@
+ &uart1 {
+ 	status = "okay";
+ };
 +
- 		pwm: pwm@7e20c000 {
- 			compatible = "brcm,bcm2835-pwm";
- 			reg = <0x7e20c000 0x28>;
++&hdmi {
++	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
++};
 -- 
 1.8.3.1
