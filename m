@@ -1,32 +1,124 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 13/13] ARM: dts: blanche: add Ethernet support
-Date: Wed, 1 Jun 2016 10:24:51 +0900
-Message-ID: <20160601012451.GL20527@verge.net.au>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <1669958.qjJ7i3NBPv@wasted.cogentembedded.com>
+From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] Documentation: Add documentation for APM X-Gene
+ SoC PMU DTS binding
+Date: Tue, 31 May 2016 18:25:56 -0700
+Message-ID: <CACgAJHxMCa2Hp_A8YnHmmVrHGd3yLhFs2k33MN6OHRUmZ7Y_Wg@mail.gmail.com>
+References: <1460510547-17611-1-git-send-email-ttnguyen@apm.com>
+	<1460510547-17611-3-git-send-email-ttnguyen@apm.com>
+	<20160418170009.GA15338@rob-hp-laptop>
+	<CACgAJHyBbO_LXwtfNVK1f=dY3v1Jfxwxq1dw98EZ0aYdhjPpAg@mail.gmail.com>
+	<20160420113121.GE2514@arm.com>
+	<20160502205648.GA7374@rob-hp-laptop>
+	<CACgAJHyT31DuVNoyRQZVKjv=zM5Fc-EY0gy=y=pHHrBTT+1Xow@mail.gmail.com>
+	<20160531165630.GE4254@leverpostej>
+	<CACgAJHwtb0hNs0JWOrpyF=_fRVvUi2QG4q7qohgCw4SjxqtX6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1669958.qjJ7i3NBPv@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACgAJHwtb0hNs0JWOrpyF=_fRVvUi2QG4q7qohgCw4SjxqtX6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 01:33:49AM +0300, Sergei Shtylyov wrote:
-> R8A7792  SoC  doesn't have the EtherMAC core, so SMSC  LAN89218  Ethernet
-> chip was used instead on the Blanche board; this chip  is compatible with
-> SMSC LAN9115  for  which there's a (device tree aware) driver. Describe
-> the  chip in  the  Blanche device tree;  enable DHCP and NFS root in the
-> kernel command line for the kernel booting.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Hi Mark,
 
-At this time I do not have access to documentation or hardware for this
-board. So I am relying on you to test this and make sure it complies
-with the spec.
+On Tue, May 31, 2016 at 10:17 AM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+> Hi Mark,
+>
+> On Tue, May 31, 2016 at 9:56 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On Mon, May 02, 2016 at 02:46:05PM -0700, Tai Tri Nguyen wrote:
+>>> Hi Rob,
+>>>
+>>> On Mon, May 2, 2016 at 1:56 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> > On Wed, Apr 20, 2016 at 12:31:22PM +0100, Will Deacon wrote:
+>>> >> On Mon, Apr 18, 2016 at 01:04:53PM -0700, Tai Tri Nguyen wrote:
+>>> >> > >> +Required properties for MCB subnode:
+>>> >> > >> +- compatible         : Shall be "apm,xgene-pmu-mcb".
+>>> >> > >> +- reg                        : First resource shall be the MCB PMU resource.
+>>> >> > >> +- index                      : Instance number of the MCB PMU.
+>>> >> > >> +
+>>> >> > >> +Required properties for MC subnode:
+>>> >> > >> +- compatible         : Shall be "apm,xgene-pmu-mc".
+>>> >> > >> +- reg                        : First resource shall be the MC PMU resource.
+>>> >> > >> +- index                      : Instance number of the MC PMU.
+>>> >> > >
+>>> >> > > Don't use indexes. You probably need phandles to the nodes these are
+>>> >> > > related to.
+>>> >> > >
+>>> >> > > How many variations of child nodes do you expect to have? 2, 10, 50? You
+>>> >> > > might want to just collapse all this down to a single node and put this
+>>> >> > > information in the driver if it is fixed for each SoC and there's only a
+>>> >> > > handful.
+>>> >> > >
+>>> >> >
+>>> >> > For each kind of PMU, for example memory controller PMU, I expect to
+>>> >> > have the number of instances up to 8.
+>>> >> > They are actually all independent PMU nodes and have their own CSR memory bases.
+>>> >> > The indexes are used for exposing the devices to perf user only. It
+>>> >> > doesn't have an impact on the programming model.
+>>> >> > Mark also had the same concern.
+>>> >>
+>>> >> Regardless, I'll need an ack from Rob or Mark before I can merge this.
+>>> >
+>>> > I still have a concern with this. Needing an index to expose to the user
+>>> > is generally not a valid reason. That's OS specific and therefore
+>>> > doesn't belong in DT.
+>>> >
+>>> > Rob
+>>>
+>>> I can use device name here. However, the perf event names will be
+>>> different between DT and ACPI which I want to avoid.
+>>> And the names don't look good at all.
+>>> Also, specifically for MC and MCB PMUs, the indexes are compared
+>>> against the active MC/MCB mask to find out whether they are populated
+>>> or not.
+>>> Without using the index property, I will also need a mapping function
+>>> of physical device addresses and their physical ids.
+>>
+>> What's wrong with using ${device}.{physical_address} as the PMU name?
+>> That would be unique and consistent regardless of the firmware, no
+>> mapping nor index property necessary.
+>>
+>> That's sufficient for any user already familiar with the topology, a
+>> familiarity you seem to be assuming regardless by not explicitly
+>> describing the topology in the DT.
+>>
+>> Thanks,
+>> Mark.
+>
+> Okay. I'll do fix it for the next patches.
+>
+> Thanks,
+> --
+> Tai
 
-What you have looks reasonable to me:
+I'm facing a problem after removing the index for MCU and MC sub-nodes.
+The MCUs and MCs aren't always enabled depending on how DRAM DIMMs are
+installed on the system.
+I still need a way to associate the MCU with its indicator bit in the
+enable mask retrieved from CSR.
+For MC and MCB nodes only, can I introduce an "enable-mask" field?
+For example:
+"
+pmucmcb@7e710000 {
+        compatible = "apm,xgene-pmu-mcb";
+        reg = <0x0 0x7e710000 0x0 0x1000>;
+        enable-mask = <0x00000001>;
+};
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+pmucmcb@7e730000 {
+        compatible = "apm,xgene-pmu-mcb";
+        reg = <0x0 0x7e730000 0x0 0x1000>;
+        enable-mask = <0x00000002>;
+};
+"
+Or can you please give a suggestion how I can fix it?
+
+Thanks,
+-- 
+Tai
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
