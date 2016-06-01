@@ -1,58 +1,44 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 1/9] of: Add a new macro to declare_of for one parameter function returning a value
-Date: Wed,  1 Jun 2016 10:34:44 +0200
-Message-ID: <1464770093-12667-2-git-send-email-daniel.lezcano@linaro.org>
-References: <1464770093-12667-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464770093-12667-1-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 12/13] ARM: dts: blanche: initial device tree
+Date: Wed, 1 Jun 2016 10:36:58 +0200
+Message-ID: <CAMuHMdVnZUC69SoVp4_+BDmMv6hRm-+7jZXwtzeJbKxh0M21Mw@mail.gmail.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <1923946.Jvi0TDUXFC@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1923946.Jvi0TDUXFC@wasted.cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The macro OF_DECLARE_1 expect a void (*func)(struct device_node *) while the
-OF_DECLARE_2 expect a int (*func)(struct device_node *, struct device_node *).
+On Wed, Jun 1, 2016 at 12:32 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add the initial device  tree for the R8A7792 SoC based Blanche board.
+> The board has 2 debug serial ports: SCIF0 and SCIF3; include support for
+> them,  so that  the serial console  can  work.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-The second one allows to pass an init function returning a value, which make
-possible to call the functions in the table and check the return value in order
-to catch at a higher level the errors and handle them from there instead of
-doing a panic in each driver (well at least this is the case for the clkevt).
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Unfortunately the OF_DECLARE_1 does not allow that and that lead to some code
-duplication and crappyness in the drivers.
+Gr{oetje,eeting}s,
 
-The OF_DECLARE_1 is used by all the clk drivers and the clocksource/clockevent
-drivers. It is not possible to do the change in one shot as we have to change
-all the init functions.
+                        Geert
 
-The OF_DECLARE_2 specifies an init function prototype with two parameters with
-the node and its parent. The latter won't be used, ever, in the timer drivers.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Introduce a OF_DECLARE_1_RET macro to be used, and hopefully we can smoothly
-and iteratively change the users of OF_DECLARE_1 to use the new macro instead.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- include/linux/of.h | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 7fcb681..5b396d7 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -944,10 +944,13 @@ static inline int of_get_available_child_count(const struct device_node *np)
- #endif
- 
- typedef int (*of_init_fn_2)(struct device_node *, struct device_node *);
-+typedef int (*of_init_fn_1_ret)(struct device_node *);
- typedef void (*of_init_fn_1)(struct device_node *);
- 
- #define OF_DECLARE_1(table, name, compat, fn) \
- 		_OF_DECLARE(table, name, compat, fn, of_init_fn_1)
-+#define OF_DECLARE_1_RET(table, name, compat, fn) \
-+		_OF_DECLARE(table, name, compat, fn, of_init_fn_1_ret)
- #define OF_DECLARE_2(table, name, compat, fn) \
- 		_OF_DECLARE(table, name, compat, fn, of_init_fn_2)
- 
--- 
-1.9.1
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
