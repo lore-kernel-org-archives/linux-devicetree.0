@@ -1,87 +1,88 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: BCM5301X: Specify PHY of USB 2.0 in DT
-Date: Wed, 1 Jun 2016 12:50:06 -0700
-Message-ID: <574F3C6E.4090001@gmail.com>
-References: <1464808585-14996-1-git-send-email-zajec5@gmail.com>
- <574F35C3.6050004@gmail.com>
- <CACna6ryjSYcxKcCaTtkdkExo0G1qiDMQCUCAgx-bMtnjziAoUQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6ryjSYcxKcCaTtkdkExo0G1qiDMQCUCAgx-bMtnjziAoUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC 0/1] soc: renesas: Add DT fixup code for backwards compatibility
+Date: Wed,  1 Jun 2016 21:50:49 +0200
+Message-ID: <1464810650-23002-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Dirk Behme <dirk.behme@de.bosch.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2016 12:35 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
-> On 1 June 2016 at 21:21, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
->> On 06/01/2016 12:16 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
->>> Driver for Northstar USB 2.0 PHY was added in 4.7-rc1 by:
->>> commit d3feb4067335 ("phy: bcm-ns-usb2: new driver for USB 2.0 PHY =
-on
->>> Northstar").
->>> It should be used to let EHCI platform driver init PHY.
->>>
->>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  arch/arm/boot/dts/bcm5301x.dtsi | 18 ++++++++++++++++++
->>>  1 file changed, 18 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bc=
-m5301x.dtsi
->>> index 7d4d29b..9300e19 100644
->>> --- a/arch/arm/boot/dts/bcm5301x.dtsi
->>> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
->>> @@ -140,6 +140,22 @@
->>>               };
->>>       };
->>>
->>> +     phys {
->>> +             compatible =3D "simple-bus";
->>> +             ranges =3D <0x00000000 0x18000000 0x00100000>;
->>> +             #address-cells =3D <1>;
->>> +             #size-cells =3D <1>;
->>> +
->>> +             usb2_phy2: usb2-phy {
->>> +                     compatible =3D "brcm,ns-usb2-phy";
->>> +                     reg =3D <0x0000c000 0x1000>;
->>> +                     reg-names =3D "dmu";
->>> +                     #phy-cells =3D <0>;
->>> +                     clocks =3D <&genpll BCM_NSP_GENPLL_USB_PHY_RE=
-=46_CLK>;
->>> +                     clock-names =3D "phy-ref-clk";
->>> +             };
->>
->> You guys need to get everything straigthen up when it comes to busin=
-g
->> and child nodes for bcm53101x.dtsi, why do we need a "simple-bus" no=
-de
->> here which overlaps in part with the brcm-bus-axi node's range?
->=20
-> I believed I'm making things cleaner by adding a separated node for
-> PHYs (in the future there will be also USB 3.0 PHY and probably a PCI=
-e
-> PHY). I'm fine with placing this PHY node somewhere else if you think
-> it better fits there.
+	Hi all,
 
-The intent looks good, but it seems to me (and the datasheet helps here
-too) that extending the brcm,bus-axi node to cover a wider register
-range size could allow you to put the different PHYs as child nodes of
-that bus. That way even if the core is probed with BCMA you still have =
-a
-proper of_node refefence that your driver can use.
+When moving functionality from C code to DT, we're regularly faced with
+stable DT issues: old DTBs should keep on working. This requires keeping
+workaround code in the kernel.
 
-Maybe as a better immediate solution, something like the NAND controlle=
-r
-node would be more elegant, where it only consumes its register space
-and not more?
---=20
-=46lorian
+An alternative solution to having workaround C code, would be to
+dynamically modify the DT, to add missing device nodes and phandle links.
+This has several advantages:
+  - All workarounds are kept together,
+  - Workarounds can be enabled/disabled using a single Kconfig option,
+  - Individual driver code is not polluted by workaround code.
+
+Examples of missing support in DT are:
+  - A device node for the R-Car RST (Reset Controller), which a.o.
+    provides access to the Mode Pins (currently handled using an
+    hardcoded address in platform/driver code), cfr. the series
+    "[PATCH/RFC v3 00/22] soc: renesas: Add R-Car RST driver for
+    obtaining mode pin state" I've just sent
+    (http://www.spinics.net/lists/linux-renesas-soc/msg04289.html),
+  - A device node for the R-Car SYSC (System Controller), to link CPUs
+    to their respective power domains (On R-Car Gen2 CPUs can be
+    auto-detected, as there's a register indicating which CPU cores are
+    present),
+  - Add a device node for the R-Car Gen2 APMU (Advanced Power
+    Management Unit), for modern CPU bringup using "enable-method".
+    Note that the method from this RFC doesn't work for
+    "enable-method", as that is parsed in arm_dt_init_cpu_maps(),
+    immediately after unflatten_device_tree(), long before initcalls
+    run.
+
+However, there are other possible uses:
+  - Workarounds for hardware bugs: early engineering samples of an SoC
+    may have non-functional devices. This would allow to describe the
+    latest (functional) hardware in the .dtsi, knowing that the fixup
+    code will disable non-functional devices when running on an early
+    engineering sample, based on reading the PRR (Product Revision
+    Register).
+  - Handle other differences between SoC versions, e.g. change
+    compatible values for an early engineering sample that needs special
+    handling, or limit the features of a device.
+  - Add SoC-specific compatible values to all device nodes (e.g. add
+    "renesas,r8a7795-wdt" to a node already having
+    "renesas,rcar-gen3-wdt" when running on r8a7795). This would make
+    it easier to share .dtsi files within the same SoC family, without
+    relying on e.g. C preprocessor tricks.
+
+This proof-of-concept implements this for the missing R-Car RST (Reset
+Controller) node. This poc is not suitable for all of the above, as some
+DT structures (e.g. the CPU's "enable-method) are parsed long before
+early_initcall(), and would need a different workaround.
+
+What do you think?
+Should this be handled at another level? E.g. operate on the FDT?
+
+Thanks!
+
+Geert Uytterhoeven (1):
+  soc: renesas: Add DT fixup code for missing r8a7791 RST
+
+ drivers/soc/renesas/Makefile           |   4 +
+ drivers/soc/renesas/renesas-dt-fixup.c | 159 +++++++++++++++++++++++++++++++++
+ 2 files changed, 163 insertions(+)
+ create mode 100644 drivers/soc/renesas/renesas-dt-fixup.c
+
+-- 
+1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
