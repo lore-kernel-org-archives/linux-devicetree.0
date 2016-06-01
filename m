@@ -1,181 +1,47 @@
-From: Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
-Date: Wed, 1 Jun 2016 10:56:53 +0800
-Message-ID: <574E4EF5.7040005@rock-chips.com>
-References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
- <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
- <57483CAA.8000005@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <57483CAA.8000005-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Wei-Ning Huang <wnhuang@chromium.org>
+Subject: [PATCH] dt: bindings: fix documentation for MARVELL's bt-sd8xxx wireless device
+Date: Wed,  1 Jun 2016 11:09:24 +0800
+Message-ID: <1464750564-21027-1-git-send-email-wnhuang@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linux Bluetooth <linux-bluetooth@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, akarwar@marvell.com, Wei-Ning Huang <wnhuang@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, huxm@marvell.com, marcel@holtmann.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi:
+The property marvell,wakeup-pin and marvell,wakeup-gap-ms are read as
+u16 in the driver. Fix documentation and example accordingly.
 
-On 2016/5/27 20:25, Marc Zyngier Wrote:
-> [+Lorenzo]
->
-> On 20/05/16 11:29, Shawn Lin wrote:
->> RK3399 has a PCIe controller which can be used as Root Complex.
->> This driver supports a PCIe controller as Root Complex mode.
->>
+Signed-off-by: Wei-Ning Huang <wnhuang@chromium.org>
+---
+ Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-[....]
-
->> +static int rockchip_pcie_init_irq_domain(struct rockchip_pcie_port *pp)
->> +{
->> +	struct device *dev = pp->dev;
->> +	struct device_node *node = dev->of_node;
->> +	struct device_node *pcie_intc_node =  of_get_next_child(node, NULL);
->
-> That's really ugly, as it depends on the layout of your DT.
->
->> +
->> +	if (!pcie_intc_node) {
->> +		dev_err(dev, "No PCIe Intc node found\n");
->> +		return PTR_ERR(pcie_intc_node);
->> +	}
->> +	pp->irq_domain = irq_domain_add_linear(pcie_intc_node, 4,
->> +					       &intx_domain_ops, pp);
->
-> Why can't you just register your host controller as the interrupt
-> controller? You don't need an intermediate node for that.
-
-OK, the child node is really no need here, we will use the host 
-controller as interrupt controller next patch. Thanks!
-
->
->> +	if (!pp->irq_domain) {
->> +		dev_err(dev, "Failed to get a INTx IRQ domain\n");
->> +		return PTR_ERR(pp->irq_domain);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static irqreturn_t rockchip_pcie_subsys_irq_handler(int irq, void *arg)
->> +{
->> +	struct rockchip_pcie_port *pp = arg;
->> +	u32 reg;
->> +	u32 sub_reg;
->> +
->> +	reg = pcie_read(pp, PCIE_CLIENT_INT_STATUS);
->> +	if (reg & LOC_INT) {
->> +		dev_dbg(pp->dev, "local interrupt recived\n");
->> +		sub_reg = pcie_read(pp, PCIE_CORE_INT_STATUS);
->> +		if (sub_reg & PRFPE)
->> +			dev_dbg(pp->dev, "Parity error detected while reading from the PNP Receive FIFO RAM\n");
->> +
->> +		if (sub_reg & CRFPE)
->> +			dev_dbg(pp->dev, "Parity error detected while reading from the Completion Receive FIFO RAM\n");
->> +
->> +		if (sub_reg & RRPE)
->> +			dev_dbg(pp->dev, "Parity error detected while reading from Replay Buffer RAM\n");
->> +
->> +		if (sub_reg & PRFO)
->> +			dev_dbg(pp->dev, "Overflow occurred in the PNP Receive FIFO\n");
->> +
->> +		if (sub_reg & CRFO)
->> +			dev_dbg(pp->dev, "Overflow occurred in the Completion Receive FIFO\n");
->> +
->> +		if (sub_reg & RT)
->> +			dev_dbg(pp->dev, "Replay timer timed out\n");
->> +
->> +		if (sub_reg & RTR)
->> +			dev_dbg(pp->dev, "Replay timer rolled over after 4 transmissions of the same TLP\n");
->> +
->> +		if (sub_reg & PE)
->> +			dev_dbg(pp->dev, "Phy error detected on receive side\n");
->> +
->> +		if (sub_reg & MTR)
->> +			dev_dbg(pp->dev, "Malformed TLP received from the link\n");
->> +
->> +		if (sub_reg & UCR)
->> +			dev_dbg(pp->dev, "Malformed TLP received from the link\n");
->> +
->> +		if (sub_reg & FCE)
->> +			dev_dbg(pp->dev, "An error was observed in the flow control advertisements from the other side\n");
->> +
->> +		if (sub_reg & CT)
->> +			dev_dbg(pp->dev, "A request timed out waiting for completion\n");
->> +
->> +		if (sub_reg & UTC)
->> +			dev_dbg(pp->dev, "Unmapped TC error\n");
->> +
->> +		if (sub_reg & MMVC)
->> +			dev_dbg(pp->dev, "MSI mask register changes\n");
->> +
->> +		pcie_write(pp, sub_reg, PCIE_CORE_INT_STATUS);
->> +	}
->> +
->> +	pcie_write(pp, reg, PCIE_CLIENT_INT_STATUS);
->> +
->> +	return IRQ_HANDLED;
->> +}
-
-[....]
-
->> +static irqreturn_t rockchip_pcie_legacy_int_handler(int irq, void *arg)
->> +{
->> +	struct rockchip_pcie_port *pp = arg;
->> +	u32 reg;
->> +
->> +	reg = pcie_read(pp, PCIE_CLIENT_INT_STATUS);
->> +	reg = (reg & ROCKCHIP_PCIE_RPIFR1_INTR_MASK) >>
->> +	       ROCKCHIP_PCIE_RPIFR1_INTR_SHIFT;
->> +	generic_handle_irq(irq_find_mapping(pp->irq_domain, ffs(reg)));
->
-> NAK. What you have here is a chained interrupt controller, please
-> implement it as such.
-
-Your mean is use handle_nested_irq instead of generic_handle_irq here?
-But, I found all other pci host controller drivers use this api.
-
->
->> +
->> +	pcie_write(pp, reg, PCIE_CLIENT_INT_STATUS);
->> +	return IRQ_HANDLED;
->> +}
->> +
-
-[...]
-
->> +static struct platform_driver rockchip_pcie_driver = {
->> +	.driver = {
->> +		.name = "rockchip-pcie",
->> +		.of_match_table = rockchip_pcie_of_match,
->> +		.suppress_bind_attrs = true,
->> +	},
->> +	.probe = rockchip_pcie_probe,
->> +	.remove = rockchip_pcie_remove,
->> +};
->> +module_platform_driver(rockchip_pcie_driver);
->> +
->> +MODULE_AUTHOR("Rockchip Inc");
->> +MODULE_DESCRIPTION("Rockchip AXI PCIe driver");
->> +MODULE_LICENSE("GPL v2");
->>
->
-> This definitely requires some rework for both the interrupt and MSI
-> parts. I'll leave Lorenzo to comment on the PCI side of things.
->
-> Thanks,
->
-> 	M.
->
-
-Best Regards,
-Li
+diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+index 14aa6cf..6a9a63c 100644
+--- a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
++++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+@@ -13,10 +13,10 @@ Optional properties:
+ 		      initialization. This is an array of 28 values(u8).
+ 
+   - marvell,wakeup-pin: It represents wakeup pin number of the bluetooth chip.
+-		        firmware will use the pin to wakeup host system.
++		        firmware will use the pin to wakeup host system (u16).
+   - marvell,wakeup-gap-ms: wakeup gap represents wakeup latency of the host
+ 		      platform. The value will be configured to firmware. This
+-		      is needed to work chip's sleep feature as expected.
++		      is needed to work chip's sleep feature as expected (u16).
+   - interrupt-parent: phandle of the parent interrupt controller
+   - interrupts : interrupt pin number to the cpu. Driver will request an irq based
+ 		 on this interrupt number. During system suspend, the irq will be
+@@ -50,7 +50,7 @@ calibration data is also available in below example.
+ 			0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
+ 			0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
+ 			0x00 0x00 0xf0 0x00>;
+-		marvell,wakeup-pin = <0x0d>;
+-		marvell,wakeup-gap-ms = <0x64>;
++		marvell,wakeup-pin = /bits/ 16 <0x0d>;
++		marvell,wakeup-gap-ms = /bits/ 16 <0x64>;
+ 	};
+ };
+-- 
+2.1.2
