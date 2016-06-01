@@ -1,36 +1,179 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: [PATCH v2] of: add vendor prefix for UniWest
-Date: Wed,  1 Jun 2016 08:55:00 -0700
-Message-ID: <1464796500-11966-1-git-send-email-stillcompiling@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4] extcon: gpio: Add the support for Device tree bindings
+Date: Wed, 1 Jun 2016 11:00:36 -0500
+Message-ID: <CAL_Jsq+DnSfGKA0s6nP7FsnsdVQSf36PbO=Bxt2qLWEuSS=iEQ@mail.gmail.com>
+References: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
+ <CGME20160527152945epcas1p4de3d2d43f94a20e3f93676b6c4f78244@epcas1p4.samsung.com>
+ <20160527152934.GB12024@rob-hp-laptop> <574D32D7.2090902@samsung.com>
+ <574D3EA7.9080907@samsung.com> <CAL_JsqLpWMX3X77xyVH=5+AtEaRiY9ShkEo0TdHOphqE654OXg@mail.gmail.com>
+ <574D9556.9080200@nvidia.com> <CAL_JsqJ+WBRj0DTREezp1JaanS2EQqSfefQGyPO4BGFVcwqwnw@mail.gmail.com>
+ <574EF603.2020408@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <574EF603.2020408@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Joshua Clayton <stillcompiling@gmail.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Venkat Reddy Talla <vreddytalla@nvidia.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-United Western Technologies Corp, known primarily as UniWest,
-is a manufacturer of eddy current and ultrasonic testing equipment.
+On Wed, Jun 1, 2016 at 9:49 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+>
+> On Tuesday 31 May 2016 09:18 PM, Rob Herring wrote:
+>>
+>> On Tue, May 31, 2016 at 8:44 AM, Laxman Dewangan <ldewangan@nvidia.com>
+>> wrote:
+>>>
+>>> Hi Rob,
+>>>
+>>> On Tuesday 31 May 2016 07:05 PM, Rob Herring wrote:
+>>>>
+>>>> On Tue, May 31, 2016 at 2:35 AM, Chanwoo Choi <cw00.choi@samsung.com>
+>>>> wrote:
+>>>>>
+>>>>> The extcon-gpio.c driver can separate the kind of external connector
+>>>>> by using the 'extcon-id' property.
+>>>>
+>>>> This use of DT is just broken. Come up with another way.
+>>>>
+>>>>
+>>>
+>>> Can we have the DT binding very similar to IIO, clock, reset etc?
+>>
+>> In what way? I'm guessing you mean to describe what controller a
+>> connector is associated with. Certainly, some sort of phandle
+>> reference will be needed. However. the node it points to is what needs
+>> a lot of work first.
+>
+>
+> Here, we just need to define that controller support how many different
+> cable? It does not say anything that which cable is what and all its on
+> platform dependent.
+>
+> So for gpio-extcon, it will just say 1 cable. the name is not decided by
+> driver but it is by platform.
 
-Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
----
- This vendor string is needed primarily for a imx6q-env.dts which
- made its way into mainline through the freescale/nxp soc tree.
- Please apply if all is in order.
+Why the fascination with cables? You need to describe the connector
+and circuitry between the connector and phy/controller, and its
+capabilities. Maybe those properties are implied or explicit. If you
+have some USB chip for Vbus control and charger detect, then it's all
+going to be implied by that chip's compatible. If you have gpio lines
+then the properties and capabilities are explicit.
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+>>> Here is details for extcon-jack DT binding and its client:
+>>>
+>>> The client can get the cable information through its node or extcon name
+>>> and once cable information is available, it can register for notification
+>>> when state gets changed.
+>>>
+>>> The typical dt nodes are:
+>>>
+>>>      Extcon-driver node:
+>>>
+>>>          extcon: arizona-extcon {
+>>>                  compatible = "wlf,arizona-extcon";
+>>>                  #extcon-cells = <1>;
+>>>          };
+>>>
+>>>
+>>>
+>>>      Driver need to specify the cable ID as
+>>
+>> Unless you have cables hardwired to a board, please stop describing
+>> cables in DT. Connectors!
+>
+>
+> If some controller only support cable with names then we need to do it. Like
+> palmas extcon, it detect VBUS, ID_GND, RIDA, RIDB, RIDC. So for these cases,
+> driver need to define cables.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 3736acd..af744cb 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -270,6 +270,7 @@ tronsmart	Tronsmart
- truly	Truly Semiconductors Limited
- tyan	Tyan Computer Corporation
- upisemi	uPI Semiconductor Corp.
-+uniwest	United Western Technologies Corp (UniWest)
- urt	United Radiant Technology Corporation
- usi	Universal Scientific Industrial Co., Ltd.
- v3	V3 Semiconductor
--- 
-2.7.4
+The only thing the DT should have is the palmas chip and any
+connections to it like regulators or interrupts. What the chip can
+control/detect doesn't belong in DT.
+
+> Driver can specify that cable index 0 is for VBUS, 1 is for ID-GND etc.
+
+You are still just making up indexes.
+
+>>>       Cable                      ID
+>>>       ----------------------------
+>>>        Mechanical                0
+>>>        Microphone               1
+>>>        Headphone               2
+>>>        Line-out                    3
+>>
+>> No, please don't create some made up some number space. I don't see
+>> why you need this. You should just need the phandle to "the microphone
+>> jack" node.
+>
+>
+> I am thinking that I will need the phandle of extcon nodes with index for
+> cable ID.
+>
+>
+>>>      Here #extcon-cells is must and specifies the size of extcon cells.
+>>> The
+>>> client need to provide the driver specific information as argument along
+>>> with handle.
+>>>
+>>>
+>>> Extcon Client node:
+>>>
+>>>          audio-controller@b0000 {
+>>>                 ::::
+>>>                  extcon-cables = <&extcon 1>, <&extcon 3>;
+>>>                  extcon-cable-names = "Microphone", "Line-out";
+>>>          };
+>>>
+>>> and client driver can register the cable by passing the cable name
+>>> as above along with its node.
+>>>
+>>> struct extcon_cable {
+>>>      struct extcon_dev *edev,
+>>>      int cable_id;
+>>> };
+>>
+>> If you are showing driver details to explain the binding, something is
+>> wrong.
+>
+>
+>
+> I have USB OTG driver which need the notification when VBUS or ID detected.
+
+That's a kernel architectural detail.
+
+> For this, it can get the phandle of extcon and cable ID from that driver for
+> "id" and "vbus".
+
+You only need to describe the connection of the connector to the
+controller. These details don't need to be in DT.
+
+> I have platform like follows:
+> I have 2 gpios which detect the ID and VBUS.
+> Both are independent. My USB driver get the extcon handle from the DT:
+>
+> extcon_vbus: extcon@0 {
+>         comptaible = "extcon-gpio";
+>         gpio = <&gpio JETSON_VBUS_GPIO 0>;
+>         #extcon-cells = <1>;
+> };
+>
+>
+>
+> extcon_id: extcon@1 {
+>         comptaible = "extcon-gpio";
+>         gpio = <&gpio JETSON_ID_GPIO 0>;
+>         #extcon-cells = <1>;
+> };
+
+Sigh. These are all properties of one entity: a connector.
+
+>
+> usb-otg {
+> ::
+>         extcon-cable = <&extcon_vbus 0 &extcon_d 0>;
+>         extcon-cable-names = "id", "vbus";
+> ::
+> };
+
+Rob
