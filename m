@@ -1,39 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
-Date: Wed, 1 Jun 2016 17:00:27 +0300
-Message-ID: <83904aa1-edde-0968-3f0b-0d2962d377f5@cogentembedded.com>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
- <20160601005751.GG20527@verge.net.au>
+From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
+Subject: Re: [PATCH 2/5] i2c: Add STM32F4 I2C driver
+Date: Wed, 1 Jun 2016 16:01:31 +0200
+Message-ID: <CAOAejn1NQDJpGrTwGtpvSfVOGg3UuCkj8wLJ7B5LnW1-Z2VrQA@mail.gmail.com>
+References: <1462980974-22091-1-git-send-email-cedric.madianga@gmail.com>
+	<1462980974-22091-3-git-send-email-cedric.madianga@gmail.com>
+	<CALszF6A-jiCBtSO1RFDdgHKTKmsonRXFVs0x2zHha1LJ3UhwtQ@mail.gmail.com>
+	<CAOAejn0Fsizp9fK1mNn3BBeL2LeoVgt5_zF5656La4G2uDPH7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160601005751.GG20527@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOAejn0Fsizp9fK1mNn3BBeL2LeoVgt5_zF5656La4G2uDPH7g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Patrice Chotard <patrice.chotard@st.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2016 03:57 AM, Simon Horman wrote:
+Hi Maxime,
 
->> The initial R8A7792 SoC device tree including 2 CPU cores, GIC, timer, SYSC,
->> and the required  clock descriptions.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> This is rather large for an initial DTSI. Did you give any consideration
-> to splitting it up: e.g. only providing what is needed to get to a serial
-> console?
+>>> +static void stm32f4_i2c_set_speed_mode(struct stm32f4_i2c_dev *i2c_dev)
+>>> +{
+>>> +       struct stm32f4_i2c_timings *t = &i2c_timings[i2c_dev->speed];
+>>> +       u32 ccr, val, clk_rate;
+>>> +
+>>> +       ccr = readl_relaxed(i2c_dev->base + STM32F4_I2C_CCR);
+>>> +       ccr &= ~(STM32F4_I2C_CCR_FS | STM32F4_I2C_CCR_DUTY |
+>>> +                STM32F4_I2C_CCR_CCR_MASK);
+>>> +
+>>> +       clk_rate = clk_get_rate(i2c_dev->clk);
+>>> +
+>>> +       switch (i2c_dev->speed) {
+>>> +       case STM32F4_I2C_SPEED_STANDARD:
+>>> +               val = clk_rate / t->rate * 2;
+>>> +               if (val < STM32F4_I2C_MIN_CCR)
+>>> +                       ccr |= STM32F4_I2C_CCR_CCR(STM32F4_I2C_MIN_CCR);
+>>> +               else
+>>> +                       ccr |= STM32F4_I2C_CCR_CCR(val);
+>>> +               break;
+>>> +       case STM32F4_I2C_SPEED_FAST:
+>>> +               ccr |= STM32F4_I2C_CCR_FS;
+>>> +               if (t->duty) {
+>>> +                       ccr |= STM32F4_I2C_CCR_DUTY;
+>>> +                       ccr |= STM32F4_I2C_CCR_CCR(clk_rate / t->rate * 25);
+>>> +               } else {
+>>> +                       ccr |= STM32F4_I2C_CCR_CCR(clk_rate / t->rate * 3);
+>>> +               }
+>> Is it really useful since duty seems to always be 0?
+> Agree, I will rework it by directly set duty at 0 in the register.
 
-    You mean dropping the majority of clocks, right?
-
-> With regards to SMP. Have you checked to make sure CPU hotplug works
-> on all CPUs? And that the system behaves sanely on suspend/resume.
-> If it is not possible to verify this at this stage then I would recommend
-> only enabling one CPU at this stage.
-
-    No, the SMP support isn't ready yet.
-    And I'll have to enable SMP on R8A7794 as well...
-
-MBR, Sergei
+Contrary to what I wrote previously, the duty has to be set for FAST
+Mode to reach 400khz.
+So, I am going to keep the timing struct and set duty to 1 for FAST mode
