@@ -1,65 +1,87 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 09/32] bcm2837-rpi-3-b.dts for 32bit arm
-Date: Wed, 01 Jun 2016 15:30:35 -0700
-Message-ID: <87zir4leyc.fsf@eliezer.anholt.net>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com> <1464817421-8519-10-git-send-email-kraxel@redhat.com> <7065434.SNfT8zjcK3@wuerfel>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 04/12] of: add J-Core timer bindings
+Date: Wed, 1 Jun 2016 17:36:19 -0500
+Message-ID: <CAL_JsqJYyvdc06v2+R=Wnmkk-cO7ZFq=7uGOhPxXdL0UfEu-iA@mail.gmail.com>
+References: <cover.1464148904.git.dalias@libc.org> <5341dfbb085d5647ebb6fe4390ca329b63e0e03d.1464148904.git.dalias@libc.org>
+ <20160601135852.GA17217@rob-hp-laptop> <20160601175307.GC10893@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7065434.SNfT8zjcK3@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160601175307.GC10893@brightrain.aerifal.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
-
-> On Wednesday, June 1, 2016 11:43:18 PM CEST Gerd Hoffmann wrote:
->> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/b=
-cm2837-rpi-3-b.dts
->> new file mode 100644
->> index 0000000..36178a6
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> @@ -0,0 +1 @@
->> +#include "../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts"
->> --=20
->> 1.8.3.1
->>=20
+On Wed, Jun 1, 2016 at 12:53 PM, Rich Felker <dalias@libc.org> wrote:
+> On Wed, Jun 01, 2016 at 08:58:52AM -0500, Rob Herring wrote:
+>> On Wed, May 25, 2016 at 05:43:03AM +0000, Rich Felker wrote:
+>> > Signed-off-by: Rich Felker <dalias@libc.org>
+>> > ---
+>> >  .../devicetree/bindings/timer/jcore,pit.txt        | 28 ++++++++++++++++++++++
+>> >  1 file changed, 28 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
+>> > new file mode 100644
+>> > index 0000000..96c6815
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
+>> > @@ -0,0 +1,28 @@
+>> > +J-Core Programmable Interval Timer and Clocksource
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible: Must be "jcore,pit".
+>> > +
+>> > +- reg: Memory region for timer/clocksource registers.
+>> > +
+>> > +- interrupts: An interrupt to assign for the timer. The actual pit
+>> > +  core is integrated with the aic and allows the timer interrupt
+>> > +  assignment to be programmed by software, but this property is
+>> > +  required in order to reserve an interrupt number that doesn't
+>> > +  conflict with other devices.
+>> > +
+>> > +Optional properties:
+>> > +
+>> > +- cpu-offset: For SMP, the per-cpu offset to the local timer
+>> > +  programming memory range.
+>> > +
+>> > +
+>> > +Example:
+>> > +
+>> > +timer@200 {
+>> > +   compatible = "jcore,pit";
+>> > +   reg = < 0x200 0x30 >;
+>> > +   cpu-offset = < 0x300 >;
+>>
+>> This is outside the reg range. Perhaps reg should include each range of
+>> per cpu registers.
 >
-> What does this gain you?
+> In the hardware, each timer instance is mapped independently so
+> there's no fundamental reason they need to be mapped sufficiently
+> close that it would make sense for a single virtual mapping to cover
+> them all. This doesn't matter for nommu but it would with mmu in the
+> future. In the driver I've updated it to ioremap each percpu instance
+> separately (as its own memory range) using the cpu-offset applied to
+> the range obtained from "reg". Is this acceptable (in which case I
+> suppose the binding needs to be documented that "reg" just covers the
+> cpu0 instance's range)? Do you think it would be preferable to have
+> multiple "reg" ranges indexed by cpu instead of cpu-offset?
 
-Many Raspberry Pi users use a small set of SD cards that they swap
-between various versions of the hardware.  It would be good to have
-their 32-bit OS images work on the Pi3 as well.
+Yes. Either reg should cover the full range of addresses or you should
+have multiple reg values with one for each cpu. I prefer the latter as
+it doesn't create a custom property for expressing register addresses.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> In theory it would even be possible to just require a DT node per
+> cpulocal timer, but I didn't see a good way to make the bindings
+> represent the relationship to cpus or to make the driver handle irqs
+> correctly for such a setup, so I'd need a viable proposal for how that
+> could be done to even consider such an approach.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Yeah, there's not really a standard way to map per cpu blocks to cpus.
+We could, but doesn't really seem necessary here.
 
-iQIcBAEBCgAGBQJXT2IMAAoJELXWKTbR/J7oTC8P/1q961uyhPMRUHUA8BgOHXS9
-STU9QiTgpO//aWrLLnuH/kq5mm2cSzc3TTZjCwT5VweXtR64SvXF+oUXUXUFsUJX
-H/BFb9frsBA5BwPeJa6SAyGiwykgqsrpeD1AuU7OD9vTQN2gVITdPSN7lRc+vaI/
-L3Sg0KVmmlmIXRvcB+eBLkeiAfp197YsQBcoh9OTJFLE4lN+/upQdX9pzlL+HXv+
-ZfTi5TSRJykyO6tNQzRdIL7w9EdzZ0WV+P+IHeVP9sTgl8vks7JLkxQLMBchMh4+
-achaCOmdx5EwJ3ntajrM50v34lR/1APD5HnPIZw4/0vkaVhgm4Kdj0W1/2RO2t2X
-24EXYfyaYUF15KlwcYZgfreiOpnpFpeFgc0Zljx/eSczSjXkMEduCdzs410cKFu1
-jXuWBOor035IOccwzIUL68KEqrRuW9Yz+MthKxAwiF3SiwqlpBA1Idskd4S31hcD
-QLtQZUrIMkH6W41ax/+p30lECAX/wQn6Z1mCr+Awej8C64lzTwqHUKfspfBUxZTZ
-fLo6+2FX1TbiQt2mn88E9Li+FY90snm8F5htM9Xl29bn2Msfzpa43nddf+Rkofy6
-ZOCUYK1vcPqw1yO8veqbgxDNZ247Nt/TnQJJUhO7WMSERlgC7jkNIA5oV321KHWF
-vVg8T/fLbUHmT7zWZTJl
-=N09K
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For the irqs, percpu irqs doesn't help you?
+
+Rob
