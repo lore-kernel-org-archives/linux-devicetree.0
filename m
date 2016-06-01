@@ -1,66 +1,66 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH/RFC v3 21/22] clk: renesas: r8a7779: Remove obsolete r8a7779_clocks_init()
-Date: Wed,  1 Jun 2016 21:21:19 +0200
-Message-ID: <1464808880-343-22-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v3 17/22] ARM: shmobile: r8a7778: Stop passing mode pins state to clock driver
+Date: Wed,  1 Jun 2016 21:21:15 +0200
+Message-ID: <1464808880-343-18-git-send-email-geert+renesas@glider.be>
 References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The R-Car H1 board code no longer calls r8a7779_clocks_init().
+Now the R-Car M1A CPG clock driver obtains the state of the mode pins
+from the R-Car RST driver, there's no longer a need to pass this state
+explicitly. Hence we can just remove the .init_time() callback, the
+generic ARM code will take care of calling of_clk_init().
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v3:
   - New.
 ---
- drivers/clk/renesas/clk-r8a7779.c | 9 ---------
- include/linux/clk/renesas.h       | 1 -
- 2 files changed, 10 deletions(-)
+ arch/arm/mach-shmobile/setup-r8a7778.c | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-diff --git a/drivers/clk/renesas/clk-r8a7779.c b/drivers/clk/renesas/clk-r8a7779.c
-index ca7551bcb1153c3d..27fbfafaf2cd0353 100644
---- a/drivers/clk/renesas/clk-r8a7779.c
-+++ b/drivers/clk/renesas/clk-r8a7779.c
-@@ -89,8 +89,6 @@ static const unsigned int cpg_plla_mult[4] __initconst = { 42, 48, 56, 64 };
-  * Initialization
+diff --git a/arch/arm/mach-shmobile/setup-r8a7778.c b/arch/arm/mach-shmobile/setup-r8a7778.c
+index cf236db686a9dd47..7fa4a0b5f6549287 100644
+--- a/arch/arm/mach-shmobile/setup-r8a7778.c
++++ b/arch/arm/mach-shmobile/setup-r8a7778.c
+@@ -15,7 +15,6 @@
+  * GNU General Public License for more details.
   */
  
--static u32 cpg_mode __initdata;
+-#include <linux/clk/renesas.h>
+ #include <linux/io.h>
+ #include <linux/irqchip.h>
+ 
+@@ -23,19 +22,6 @@
+ 
+ #include "common.h"
+ 
+-#define MODEMR 0xffcc0020
 -
- static struct clk * __init
- r8a7779_cpg_register_clock(struct device_node *np, struct r8a7779_cpg *cpg,
- 			   const struct cpg_clk_config *config,
-@@ -178,10 +176,3 @@ static void __init r8a7779_cpg_clocks_init(struct device_node *np)
- }
- CLK_OF_DECLARE(r8a7779_cpg_clks, "renesas,r8a7779-cpg-clocks",
- 	       r8a7779_cpg_clocks_init);
--
--void __init r8a7779_clocks_init(u32 mode)
+-static void __init r8a7778_timer_init(void)
 -{
--	cpg_mode = mode;
+-	u32 mode;
+-	void __iomem *modemr = ioremap_nocache(MODEMR, 4);
 -
--	of_clk_init(NULL);
+-	BUG_ON(!modemr);
+-	mode = ioread32(modemr);
+-	iounmap(modemr);
+-	r8a7778_clocks_init(mode);
 -}
-diff --git a/include/linux/clk/renesas.h b/include/linux/clk/renesas.h
-index 2b663bba1adcc7c1..9e969941f3f62878 100644
---- a/include/linux/clk/renesas.h
-+++ b/include/linux/clk/renesas.h
-@@ -20,7 +20,6 @@ struct device;
- struct device_node;
- struct generic_pm_domain;
+-
+ #define INT2SMSKCR0	0x82288 /* 0xfe782288 */
+ #define INT2SMSKCR1	0x8228c /* 0xfe78228c */
  
--void r8a7779_clocks_init(u32 mode);
- void rcar_gen2_clocks_init(u32 mode);
- 
- void cpg_mstp_add_clk_domain(struct device_node *np);
+@@ -70,6 +56,5 @@ DT_MACHINE_START(R8A7778_DT, "Generic R8A7778 (Flattened Device Tree)")
+ 	.init_early	= shmobile_init_delay,
+ 	.init_irq	= r8a7778_init_irq_dt,
+ 	.init_late	= shmobile_init_late,
+-	.init_time	= r8a7778_timer_init,
+ 	.dt_compat	= r8a7778_compat_dt,
+ MACHINE_END
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
