@@ -1,48 +1,52 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 2/6] clk: samsung: exynos5410: Add TMU clock
-Date: Wed, 01 Jun 2016 11:59:02 +0200
-Message-ID: <574EB1E6.8050808@samsung.com>
-References: <1464719945-3417-1-git-send-email-krzk@kernel.org>
- <1464719945-3417-2-git-send-email-krzk@kernel.org>
- <8281b473-22c8-f87d-4282-45f93f61b937@osg.samsung.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 00/13] Add R8A7794/SILK board eMMC DT support
+Date: Wed, 1 Jun 2016 13:30:29 +0300
+Message-ID: <ec4904b9-cf61-b396-ef6c-ded717e68ea5@cogentembedded.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <CAMuHMdV4BqUC2QMX-=-R6K6gdrvkX=rUcWn_uFF-jdQuYruhbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <8281b473-22c8-f87d-4282-45f93f61b937@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV4BqUC2QMX-=-R6K6gdrvkX=rUcWn_uFF-jdQuYruhbw@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/31/2016 08:56 PM, Javier Martinez Canillas wrote:
-> On 05/31/2016 02:39 PM, Krzysztof Kozlowski wrote:
->> > Add clock for TMU to the Exynos5410 clock driver.
->> > 
->> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->> > ---
->> >  drivers/clk/samsung/clk-exynos5410.c | 1 +
->> >  1 file changed, 1 insertion(+)
->> > 
->> > diff --git a/drivers/clk/samsung/clk-exynos5410.c b/drivers/clk/samsung/clk-exynos5410.c
->> > index 6c2e59c576ee..db9978dc6e83 100644
->> > --- a/drivers/clk/samsung/clk-exynos5410.c
->> > +++ b/drivers/clk/samsung/clk-exynos5410.c
->> > @@ -160,6 +160,7 @@ static struct samsung_div_clock exynos5410_div_clks[] __initdata = {
->> >  static struct samsung_gate_clock exynos5410_gate_clks[] __initdata = {
->> >  	GATE(CLK_MCT, "mct", "aclk66", GATE_IP_PERIS, 18, 0, 0),
->> >  	GATE(CLK_RTC, "rtc", "aclk66", GATE_IP_PERIS, 20, 0, 0),
->> > +	GATE(CLK_TMU, "tmu", "aclk66", GATE_IP_PERIS, 21, 0, 0),
->> >  
->> >  	GATE(CLK_SCLK_MMC0, "sclk_mmc0", "div_mmc_pre0",
->> >  			SRC_MASK_FSYS, 0, CLK_SET_RATE_PARENT, 0),
->> > 
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Hello.
 
-I have applied patches 1/6, 2/6. I will hold back for a moment
-with providing another tag for the "dt-bindings" patches, in case
-there are more such patches submitted in the coming days.
+On 6/1/2016 10:04 AM, Geert Uytterhoeven wrote:
 
--- 
-Thanks,
-Sylwester
+>>    Here's the set of 13 patches against Simon Horman's 'renesas.git' repo,
+>> 'renesas-devel-20160530-v4.7-rc1' tag. We add the device tree support for
+>> the R8A7792-based Blanche board. The R-Car 'clk' driver patch was posted last
+>> week separately...
+>>
+>> [01/13] ARM: shmobile: r8a7792: add clock index macros
+>> [02/13] ARM: shmobile: r8a7792: add power domain index macros
+>> [03/13] soc: renesas: rcar-sysc: add R8A7792 support
+>> [04/13] ARM: shmobile: r8a7792: basic SoC support
+>> [05/13] DT: clock: rcar-gen2-cpg-clocks: document R8A7792 support
+>> [06/13] DT: clock: cpg-mstp-clocks: document-R8A7792-support
+>> [07/13] ARM: dts: r8a7792: initial SoC device tree
+>> [08/13] ARM: dts: r8a7792: add SYS-DMAC support
+>> [09/13] ARM: dts: r8a7792: add [H]SCIF support
+>> [10/13] ARM dts: r8a7792: add IRQC support
+>> [11/13] DT: arm: shmobile: document Blanche board
+>> [12/13] ARM: dts: blanche: initial device tree
+>> [13/13] ARM: dts: blanche: add Ethernet support
+>
+> Thanks for your series!
+>
+> The subject doesn't seem to cover the contents, though:
+>> [PATCH 00/13] Add R8A7794/SILK board eMMC DT support
+
+    Oops. :-(
+    Sorry about that...
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+
+MBR, Sergei
