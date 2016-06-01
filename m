@@ -1,183 +1,142 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v10 4/4] Documentation: tee subsystem and op-tee driver
-Date: Wed,  1 Jun 2016 14:41:28 +0200
-Message-ID: <1464784888-19854-5-git-send-email-jens.wiklander@linaro.org>
-References: <1464784888-19854-1-git-send-email-jens.wiklander@linaro.org>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] iio: adc: ina3221: Add DT binding details
+Date: Wed, 1 Jun 2016 18:04:12 +0530
+Message-ID: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1464784888-19854-1-git-send-email-jens.wiklander@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: valentin.manea@huawei.com, Mark Rutland <mark.rutland@arm.com>, javier@javigon.com, emmanuel.michel@st.com, Arnd Bergmann <arnd@arndb.de>, Nishanth Menon <nm@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will.deacon@arm.com>, Michal Simek <michal.simek@xilinx.com>, jean-michel.delorme@st.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>, Jens Wiklander <jens.wiklander@linaro.org>, Andreas Dannenberg <dannenberg@ti.com>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Andreas Dannenberg <dannenberg@ti.com>
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
----
- Documentation/00-INDEX |   2 +
- Documentation/tee.txt  | 118 +++++++++++++++++++++++++++++++++++++++++++++++++
- MAINTAINERS            |   1 +
- 3 files changed, 121 insertions(+)
- create mode 100644 Documentation/tee.txt
+The INA3221 is a three-channel, high-side current and bus voltage monitor
+with an I2C interface from Texas Instruments. The INA3221 monitors both
+shunt voltage drops and bus supply voltages in addition to having
+programmable conversion times and averaging modes for these signals.
+The INA3221 offers both critical and warning alerts to detect multiple
+programmable out-of-range conditions for each channel.
 
-diff --git a/Documentation/00-INDEX b/Documentation/00-INDEX
-index cd077ca..bd3f803 100644
---- a/Documentation/00-INDEX
-+++ b/Documentation/00-INDEX
-@@ -435,6 +435,8 @@ sysrq.txt
- 	- info on the magic SysRq key.
- target/
- 	- directory with info on generating TCM v4 fabric .ko modules
-+tee.txt
-+	- info on the TEE subsystem and drivers
- this_cpu_ops.txt
- 	- List rationale behind and the way to use this_cpu operations.
- thermal/
-diff --git a/Documentation/tee.txt b/Documentation/tee.txt
+Add DT binding details for INA3221 device for configuring device in
+different modes and enable multiple functionalities from device.
+
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/iio/adc/ina3221.txt        | 107 +++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ina3221.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/ina3221.txt b/Documentation/devicetree/bindings/iio/adc/ina3221.txt
 new file mode 100644
-index 0000000..7185993
+index 0000000..9f0908d
 --- /dev/null
-+++ b/Documentation/tee.txt
-@@ -0,0 +1,118 @@
-+TEE subsystem
-+This document describes the TEE subsystem in Linux.
++++ b/Documentation/devicetree/bindings/iio/adc/ina3221.txt
+@@ -0,0 +1,107 @@
++TI INA3221 DT binding
 +
-+A TEE (Trusted Execution Environment) is a trusted OS running in some
-+secure environment, for example, TrustZone on ARM CPUs, or a separate
-+secure co-processor etc. A TEE driver handles the details needed to
-+communicate with the TEE.
++The INA3221 is a three-channel, high-side current and bus voltage monitor
++with an I2C interface from Texas Instruments. The INA3221 monitors both
++shunt voltage drops and bus supply voltages in addition to having
++programmable conversion times and averaging modes for these signals.
++The INA3221 offers both critical and warning alerts to detect multiple
++programmable out-of-range conditions for each channel.
 +
-+This subsystem deals with:
++Required properties:
++-------------------
++- compatible:		Must be "ti,ina3221".
++- reg:			I2C slave device address.
++- #io-channel-cells:	Should be set to 1. The value from the client node
++			represent the channel number.
 +
-+- Registration of TEE drivers
++Optional properties:
++------------------
++one-shot-average-sample:	Integer, Number of sample to average before
++				putting in the registers in oneshot mode.
 +
-+- Managing shared memory between Linux and the TEE
++one-shot-vbus-conv-time-us:	Integer in microseconds, ADC conversion time for
++				bus voltage reading in oneshot mode.
 +
-+- Providing a generic API to the TEE
++one-shot-shunt-conv-time-us:	Integer in microseconds, ADC conversion time for
++				shunt voltage reading in oneshot mode.
 +
-+The TEE interface
-+=================
++continuous-average-sample:	Integer, Number of sample to average before
++				putting in the registers in continuous mode.
 +
-+include/uapi/linux/tee.h defines the generic interface to a TEE.
++continuous-vbus-conv-time-us:	Integer in microseconds, ADC conversion time for
++				bus voltage reading in continuous mode.
 +
-+User space (the client) connects to the driver by opening /dev/tee[0-9]* or
-+/dev/teepriv[0-9]*.
++continuous-shunt-conv-time-us:	Integer in microseconds, ADC conversion time for
++				shunt voltage reading in continuous mode.
 +
-+- TEE_IOC_SHM_ALLOC allocates shared memory and returns a file descriptor
-+  which user space can mmap. When user space doesn't need the file
-+  descriptor any more, it should be closed. When shared memory isn't needed
-+  any longer it should be unmapped with munmap() to allow the reuse of
-+  memory.
++enable-power-monitor:		Boolean, Enable power monitoring of the device.
 +
-+- TEE_IOC_VERSION lets user space know which TEE this driver handles and
-+  the its capabilities.
++enable-continuous-mode:		Boolean. Device support oneshot and continuous
++				mode for the channel data conversion. Presence
++				of this property will enable the continuous
++				mode from boot.
 +
-+- TEE_IOC_OPEN_SESSION opens a new session to a Trusted Application.
++enable-warning-alert:		Boolean, Enable the alert signal when shunt
++				current cross the warning threshold on any of
++				the channel. Absence of this property will not
++				enable the warning alert.
 +
-+- TEE_IOC_INVOKE invokes a function in a Trusted Application.
++enable-critical-alert:		Boolean, Enable the alert signal when shunt
++				current cross the critical threshold on any
++				of the channel. Absence of this property will
++				not enable the critical alert.
 +
-+- TEE_IOC_CANCEL may cancel an ongoing TEE_IOC_OPEN_SESSION or TEE_IOC_INVOKE.
++Optional Subnode properties:
++---------------------------
++The channel specific properties are provided as child node of device.
++The fixed child node names of device node used for channel identification.
 +
-+- TEE_IOC_CLOSE_SESSION closes a session to a Trusted Application.
++Child node's name are "channel0" for channel 0, "channel1" for channel 1 and
++"channel2" for channel 2.
 +
-+There are two classes of clients, normal clients and supplicants. The latter is
-+a helper process for the TEE to access resources in Linux, for example file
-+system access. A normal client opens /dev/tee[0-9]* and a supplicant opens
-+/dev/teepriv[0-9].
++Channel specific properties are provided under these child node. Following
++are the properties:
 +
-+Much of the communication between clients and the TEE is opaque to the
-+driver. The main job for the driver is to receive requests from the
-+clients, forward them to the TEE and send back the results. In the case of
-+supplicants the communication goes in the other direction, the TEE sends
-+requests to the supplicant which then sends back the result.
++label:					String, the name of the bus.
++shunt-resistor-mohm:			Integer, The shunt resistance on bus
++					in milli-ohm.
++warning-current-limit-microamp:		Integer in microamp, warning current threshold
++					for the channel	to generate warning alert.
++critical-current-limit-microamp:	Integer in microamp, critical current threshold
++					for the channel to generate warning alert.
 +
-+OP-TEE driver
-+=============
++Example:
 +
-+The OP-TEE driver handles OP-TEE [1] based TEEs. Currently it is only the ARM
-+TrustZone based OP-TEE solution that is supported.
++i2c@7000c400 {
++	ina3221x@42 {
++		compatible = "ti,ina3221";
++		reg = <0x42>;
++		one-shot-average-sample = <1>;
++		one-shot-vbus-conv-time-us = <140>;
++		one-shot-shunt-conv-time-us = <140>;
++		continuous-average-sample = <64>;
++		continuous-vbus-conv-time-us = <140>;
++		continuous-shunt-conv-time-us = <140>;
++		enable-power-monitor;
 +
-+Lowest level of communication with OP-TEE builds on ARM SMC Calling
-+Convention (SMCCC) [2], which is the foundation for OP-TEE's SMC interface
-+[3] used internally by the driver. Stacked on top of that is OP-TEE Message
-+Protocol [4].
++		#io-channel-cells = <1>;
 +
-+OP-TEE SMC interface provides the basic functions required by SMCCC and some
-+additional functions specific for OP-TEE. The most interesting functions are:
++		channel0 {
++			label = "VDD_MUX";
++			shunt-resistor-mohm = <20>;
++		};
 +
-+- OPTEE_SMC_FUNCID_CALLS_UID (part of SMCCC) returns the version information
-+  which is then returned by TEE_IOC_VERSION
++		channel1 {
++			label = "VDD_5V_IO_SYS";
++			shunt-resistor-mohm = <5>;
++			warning-current-limit-microamp = <8190000>;
++			critical-current-limit-microamp = <1000000>;
++		};
 +
-+- OPTEE_SMC_CALL_GET_OS_UUID returns the particular OP-TEE implementation, used
-+  to tell, for instance, a TrustZone OP-TEE apart from an OP-TEE running on a
-+  separate secure co-processor.
-+
-+- OPTEE_SMC_CALL_WITH_ARG drives the OP-TEE message protocol
-+
-+- OPTEE_SMC_GET_SHM_CONFIG lets the driver and OP-TEE agree on which memory
-+  range to used for shared memory between Linux and OP-TEE.
-+
-+The GlobalPlatform TEE Client API [5] is implemented on top of the generic
-+TEE API.
-+
-+Picture of the relationship between the different components in the
-+OP-TEE architecture.
-+
-+    User space                  Kernel                   Secure world
-+    ~~~~~~~~~~                  ~~~~~~                   ~~~~~~~~~~~~
-+ +--------+                                             +-------------+
-+ | Client |                                             | Trusted     |
-+ +--------+                                             | Application |
-+    /\                                                  +-------------+
-+    || +----------+                                           /\
-+    || |tee-      |                                           ||
-+    || |supplicant|                                           \/
-+    || +----------+                                     +-------------+
-+    \/      /\                                          | TEE Internal|
-+ +-------+  ||                                          | API         |
-+ + TEE   |  ||            +--------+--------+           +-------------+
-+ | Client|  ||            | TEE    | OP-TEE |           | OP-TEE      |
-+ | API   |  \/            | subsys | driver |           | Trusted OS  |
-+ +-------+----------------+----+-------+----+-----------+-------------+
-+ |      Generic TEE API        |       |     OP-TEE MSG               |
-+ |      IOCTL (TEE_IOC_*)      |       |     SMCCC (OPTEE_SMC_CALL_*) |
-+ +-----------------------------+       +------------------------------+
-+
-+RPC (Remote Procedure Call) are requests from secure world to kernel driver
-+or tee-supplicant. An RPC is identified by a special range of SMCCC return
-+values from OPTEE_SMC_CALL_WITH_ARG. RPC messages which are intended for the
-+kernel are handled by the kernel driver. Other RPC messages will be forwarded to
-+tee-supplicant without further involvement of the driver, except switching
-+shared memory buffer representation.
-+
-+References:
-+[1] https://github.com/OP-TEE/optee_os
-+[2] http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
-+[3] drivers/tee/optee/optee_smc.h
-+[4] drivers/tee/optee/optee_msg.h
-+[5] http://www.globalplatform.org/specificationsdevice.asp look for
-+    "TEE Client API Specification v1.0" and click download.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c02243c..9ca3646 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10033,6 +10033,7 @@ S:	Maintained
- F:	include/linux/tee_drv.h
- F:	include/uapi/linux/tee.h
- F:	drivers/tee/
-+F:	Documentation/tee.txt
- 
- THUNDERBOLT DRIVER
- M:	Andreas Noever <andreas.noever@gmail.com>
++		channel2 {
++			label = "VDD_3V3_SYS";
++			shunt-resistor-mohm = <10>;
++		};
++	};
++};
 -- 
-1.9.1
+2.1.4
