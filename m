@@ -1,44 +1,80 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH/RFC v3 04/22] ARM: dts: r8a7779: Add device node for RESET/WDT module
-Date: Wed,  1 Jun 2016 21:21:02 +0200
-Message-ID: <1464808880-343-5-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v3 18/22] ARM: shmobile: r8a7779: Stop passing mode pins state to clock driver
+Date: Wed,  1 Jun 2016 21:21:16 +0200
+Message-ID: <1464808880-343-19-git-send-email-geert+renesas@glider.be>
 References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add a device node for the RESET/WDT module, which provides a.o. reset
-control, mode pin monitoring, and watchdog control.
+Now the R-Car H1 CPG clock driver obtains the state of the mode pins
+from the R-Car RST driver, there's no longer a need to pass this state
+explicitly. Hence we can just remove the .init_time() callback, the
+generic ARM code will take care of calling of_clk_init() and
+clocksource_probe().
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v3:
   - New.
 ---
- arch/arm/boot/dts/r8a7779.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-shmobile/setup-r8a7779.c | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index b9bbcce69dfbd5b9..4a30b232624e1d24 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -595,4 +595,9 @@
- 		reg = <0xffd85000 0x0200>;
- 		#power-domain-cells = <1>;
- 	};
-+
-+	rst: reset-controller@ffcc0000 {
-+		compatible = "renesas,r8a7779-reset-wdt";
-+		reg = <0xffcc0000 0x48>;
-+	};
- };
+diff --git a/arch/arm/mach-shmobile/setup-r8a7779.c b/arch/arm/mach-shmobile/setup-r8a7779.c
+index 0007ff51d180379f..0686112f243525b6 100644
+--- a/arch/arm/mach-shmobile/setup-r8a7779.c
++++ b/arch/arm/mach-shmobile/setup-r8a7779.c
+@@ -14,8 +14,6 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  */
+-#include <linux/clk/renesas.h>
+-#include <linux/clocksource.h>
+ #include <linux/init.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+@@ -76,30 +74,6 @@ static void __init r8a7779_init_irq_dt(void)
+ 	__raw_writel(0x003fee3f, INT2SMSKCR4);
+ }
+ 
+-#define MODEMR		0xffcc0020
+-
+-static u32 __init r8a7779_read_mode_pins(void)
+-{
+-	static u32 mode;
+-	static bool mode_valid;
+-
+-	if (!mode_valid) {
+-		void __iomem *modemr = ioremap_nocache(MODEMR, PAGE_SIZE);
+-		BUG_ON(!modemr);
+-		mode = ioread32(modemr);
+-		iounmap(modemr);
+-		mode_valid = true;
+-	}
+-
+-	return mode;
+-}
+-
+-static void __init r8a7779_init_time(void)
+-{
+-	r8a7779_clocks_init(r8a7779_read_mode_pins());
+-	clocksource_probe();
+-}
+-
+ static const char *const r8a7779_compat_dt[] __initconst = {
+ 	"renesas,r8a7779",
+ 	NULL,
+@@ -109,7 +83,6 @@ DT_MACHINE_START(R8A7779_DT, "Generic R8A7779 (Flattened Device Tree)")
+ 	.smp		= smp_ops(r8a7779_smp_ops),
+ 	.map_io		= r8a7779_map_io,
+ 	.init_early	= shmobile_init_delay,
+-	.init_time	= r8a7779_init_time,
+ 	.init_irq	= r8a7779_init_irq_dt,
+ 	.init_late	= shmobile_init_late,
+ 	.dt_compat	= r8a7779_compat_dt,
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
