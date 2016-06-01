@@ -1,72 +1,92 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 09/12] EXAMPLE CODE: usb: port: Parse pwrseq phandle
- from Device Tree
-Date: Wed, 01 Jun 2016 11:06:46 +0200
-Message-ID: <574EA5A6.3090102@samsung.com>
-References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
- <1464768141-25420-10-git-send-email-k.kozlowski@samsung.com>
- <146477144362.1485.3331887341591876278@sboyd-linaro>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: Re: [RFC v2 1/5] drm/mediatek: rename macros, add chip suffix
+Date: Wed, 1 Jun 2016 17:09:05 +0800
+Message-ID: <1464772145.10410.27.camel@mtksdaap41>
+References: <1463756736-46573-1-git-send-email-yt.shen@mediatek.com>
+	 <1463756736-46573-2-git-send-email-yt.shen@mediatek.com>
+	 <20160530104129.GA8388@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <146477144362.1485.3331887341591876278@sboyd-linaro>
+In-Reply-To: <20160530104129.GA8388@ulmo.ba.sec>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, hzpeterchen@gmail.com, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.or, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2016 10:57 AM, Stephen Boyd wrote:
-> Quoting Krzysztof Kozlowski (2016-06-01 01:02:18)
->> Parse usb-pwrseq property from Device Tree to get the phandle to pwrseq
->> device.  The pwrseq device will be used by USB hub to cycle the power
->> before activating ports.
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Hi Thierry,
+
+On Mon, 2016-05-30 at 12:41 +0200, Thierry Reding wrote:
+> On Fri, May 20, 2016 at 11:05:32PM +0800, yt.shen@mediatek.com wrote:
+> > From: YT Shen <yt.shen@mediatek.com>
+> > 
+> > Add MT8173 suffix for hardware related macros.
+> > 
+> > Signed-off-by: YT Shen <yt.shen@mediatek.com>
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c |   62 ++++++++++++++++----------------
+> >  1 file changed, 31 insertions(+), 31 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > index 17ba935..d6aafd4 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > @@ -36,21 +36,21 @@
+> >  #define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
+> >  #define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+> >  
+> > -#define MUTEX_MOD_DISP_OVL0		BIT(11)
+> > -#define MUTEX_MOD_DISP_OVL1		BIT(12)
+> > -#define MUTEX_MOD_DISP_RDMA0		BIT(13)
+> > -#define MUTEX_MOD_DISP_RDMA1		BIT(14)
+> > -#define MUTEX_MOD_DISP_RDMA2		BIT(15)
+> > -#define MUTEX_MOD_DISP_WDMA0		BIT(16)
+> > -#define MUTEX_MOD_DISP_WDMA1		BIT(17)
+> > -#define MUTEX_MOD_DISP_COLOR0		BIT(18)
+> > -#define MUTEX_MOD_DISP_COLOR1		BIT(19)
+> > -#define MUTEX_MOD_DISP_AAL		BIT(20)
+> > -#define MUTEX_MOD_DISP_GAMMA		BIT(21)
+> > -#define MUTEX_MOD_DISP_UFOE		BIT(22)
+> > -#define MUTEX_MOD_DISP_PWM0		BIT(23)
+> > -#define MUTEX_MOD_DISP_PWM1		BIT(24)
+> > -#define MUTEX_MOD_DISP_OD		BIT(25)
+> > +#define MUTEX_MOD_DISP_OVL0_MT8173		BIT(11)
+> > +#define MUTEX_MOD_DISP_OVL1_MT8173		BIT(12)
+> > +#define MUTEX_MOD_DISP_RDMA0_MT8173		BIT(13)
+> > +#define MUTEX_MOD_DISP_RDMA1_MT8173		BIT(14)
+> > +#define MUTEX_MOD_DISP_RDMA2_MT8173		BIT(15)
+> > +#define MUTEX_MOD_DISP_WDMA0_MT8173		BIT(16)
+> > +#define MUTEX_MOD_DISP_WDMA1_MT8173		BIT(17)
+> > +#define MUTEX_MOD_DISP_COLOR0_MT8173		BIT(18)
+> > +#define MUTEX_MOD_DISP_COLOR1_MT8173		BIT(19)
+> > +#define MUTEX_MOD_DISP_AAL_MT8173		BIT(20)
+> > +#define MUTEX_MOD_DISP_GAMMA_MT8173		BIT(21)
+> > +#define MUTEX_MOD_DISP_UFOE_MT8173		BIT(22)
+> > +#define MUTEX_MOD_DISP_PWM0_MT8173		BIT(23)
+> > +#define MUTEX_MOD_DISP_PWM1_MT8173		BIT(24)
+> > +#define MUTEX_MOD_DISP_OD_MT8173		BIT(25)
 > 
-> Drive by review comment.
+> Just a random fly-by comment: this looks like a hardware spinlock, have
+> you ever considered implementing this as a hwspinlock driver? See the
+> drivers/hwspinlock subdirectory for existing examples.
 > 
-> I was hoping this would help me with a problem I'm having where I have a
-> hub (smsc4604) that needs to be taken out of reset before my HSIC
-> controller sends a USB reset to it, but it seems this is more about
-> doing some sort of power on sequence after enumeration?
+> Thierry
 
-This example is not finished but from what you wrote, it might suit your
-needs as well. The power sequence is done before enumeration because
-without it, the device won't enumerate.
+I see the drivers/hwspinlock and Documentation/hwspinlock.txt
+Yes, we can implement this like a hardware spinlock.  But I have some
+questions, the document says:
 
-The exact power sequence for USB devices has to be still developed.
-Comments are welcomed.
+"Hardware spinlock modules provide hardware assistance for
+synchronization and mutual exclusion between heterogeneous processors
+and those not operating under a single, shared operating system"
 
->> diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
->> index 460c855be0d0..89b9bdfc7061 100644
->> --- a/drivers/usb/core/port.c
->> +++ b/drivers/usb/core/port.c
->> @@ -18,6 +18,8 @@
->>  
->>  #include <linux/slab.h>
->>  #include <linux/pm_qos.h>
->> +#include <linux/pwrseq.h>
->> +#include <linux/usb/of.h>
->>  
->>  #include "hub.h"
->>  
->> @@ -526,6 +528,14 @@ int usb_hub_create_port_device(struct usb_hub *hub, int port1)
->>                 return retval;
->>         }
->>  
->> +       port_dev->dev.of_node = usb_of_get_child_node(hdev->dev.parent->of_node,
->> +                                                     port1);
->> +       port_dev->pwrseq = pwrseq_alloc(&port_dev->dev, "usb-pwrseq");
->> +       if (IS_ERR(port_dev->pwrseq)) {
->> +               device_unregister(&port_dev->dev);
->> +               return PTR_ERR(port_dev->pwrseq);
-> 
-> Are we certain that port_dev hasn't been freed at this point? We just
-> called device_unregister() on it, so it seems safer to save away the
-> return value before calling device_unregister() here.
+The mutex here is a handshake interface between software and hardware.
+The hardware is the display controller, the software is the drm display
+driver, and no other consumers need to access this mutex.  So I think
+that using hwspinlock to implement a bit too complicated, am I right?
 
-Right, good point. Thanks for feedback.
+I will use iopoll macros to implement this part in the next version.
+Thanks.
 
-Best regards,
-Krzysztof
+yt.shen
