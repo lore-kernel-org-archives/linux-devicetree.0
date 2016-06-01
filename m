@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC v3 14/22] clk: renesas: r8a7795: Obtain mode pin values from R-Car RST driver
-Date: Wed,  1 Jun 2016 21:21:12 +0200
-Message-ID: <1464808880-343-15-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH/RFC v3 06/22] ARM: dts: r8a7791: Add device node for RST module
+Date: Wed,  1 Jun 2016 21:21:04 +0200
+Message-ID: <1464808880-343-7-git-send-email-geert+renesas@glider.be>
 References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
@@ -10,42 +10,38 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laur
 Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Obtain the values of the mode pins from the R-Car RST driver, which
-relies on the presence in DT of a device node for the RST module.
+Add a device node for the RST module, which provides a.o. reset control
+and mode pin monitoring.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v3:
-  - New.
----
- drivers/clk/renesas/r8a7795-cpg-mssr.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+  - Use "renesas,<soctype>-rst" instead of "renesas,rst-<soctype>",
+  - Drop "syscon" compatible value,
 
-diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-index e53aff5b23ad4967..e1f2359a59feee7e 100644
---- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-@@ -15,6 +15,7 @@
- #include <linux/device.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/soc/renesas/rcar-rst.h>
+v2:
+  - Correct unit address,
+  - Drop RFC status and TODO,
+  - Change one-line summary prefix to match current arm-soc practices.
+---
+ arch/arm/boot/dts/r8a7791.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index 1985bd0dc32ce738..f8f1371f3621d1a3 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -1493,6 +1493,11 @@
+ 		};
+ 	};
  
- #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
- 
-@@ -294,7 +295,12 @@ static const struct rcar_gen3_cpg_pll_config cpg_pll_configs[16] __initconst = {
- static int __init r8a7795_cpg_mssr_init(struct device *dev)
- {
- 	const struct rcar_gen3_cpg_pll_config *cpg_pll_config;
--	u32 cpg_mode = rcar_gen3_read_mode_pins();
-+	u32 cpg_mode;
-+	int error;
++	rst: reset-controller@e6160000 {
++		compatible = "renesas,r8a7791-rst";
++		reg = <0 0xe6160000 0 0x0100>;
++	};
 +
-+	error = rcar_rst_read_mode_pins(&cpg_mode);
-+	if (error)
-+		return error;
- 
- 	cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
- 	if (!cpg_pll_config->extal_div) {
+ 	sysc: system-controller@e6180000 {
+ 		compatible = "renesas,r8a7791-sysc";
+ 		reg = <0 0xe6180000 0 0x0200>;
 -- 
 1.9.1
