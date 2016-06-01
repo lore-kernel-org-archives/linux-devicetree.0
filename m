@@ -1,118 +1,145 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH 2/6] Documentation: bindings: add dt doc for Rockchip USB
- Type-C PHY
-Date: Wed, 1 Jun 2016 08:43:34 +0800
-Message-ID: <574E2FB6.6010008@rock-chips.com>
-References: <1464328939-8073-1-git-send-email-zyw@rock-chips.com>
- <1464328939-8073-3-git-send-email-zyw@rock-chips.com>
- <2812026.ptEv4ktvbn@phil> <5748094F.6030204@rock-chips.com>
- <CAD=FV=W9iFXX_BfORP-9=8tnu9Ea_f2k1wK_T2j=ZAVA9cFSwg@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 01/13] ARM: shmobile: r8a7792: add clock index macros
+Date: Wed, 1 Jun 2016 09:52:46 +0900
+Message-ID: <20160601005246.GF20527@verge.net.au>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2280165.siMXMbFrFe@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=W9iFXX_BfORP-9=8tnu9Ea_f2k1wK_T2j=ZAVA9cFSwg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Tomasz Figa <tfiga@chromium.org>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2280165.siMXMbFrFe@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 01, 2016 at 01:09:58AM +0300, Sergei Shtylyov wrote:
+> Add macros usable by the device tree sources to reference the R8A7792
+> clocks  by index.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  include/dt-bindings/clock/r8a7792-clock.h |  104 ++++++++++++++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+> 
+> Index: renesas/include/dt-bindings/clock/r8a7792-clock.h
+> ===================================================================
+> --- /dev/null
+> +++ renesas/include/dt-bindings/clock/r8a7792-clock.h
+> @@ -0,0 +1,104 @@
+> +/*
+> + * Copyright (C) 2016 Cogent Embedded, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_R8A7792_H__
+> +#define __DT_BINDINGS_CLOCK_R8A7792_H__
+> +
+> +/* CPG */
+> +#define R8A7792_CLK_MAIN		0
+> +#define R8A7792_CLK_PLL0		1
+> +#define R8A7792_CLK_PLL1		2
+> +#define R8A7792_CLK_PLL3		3
+> +#define R8A7792_CLK_LB			4
+> +#define R8A7792_CLK_QSPI		5
+> +#define R8A7792_CLK_SDH			6
+> +#define R8A7792_CLK_SD0			7
+> +#define R8A7792_CLK_SD1			8
+> +#define R8A7792_CLK_Z			9
+
+According to my copy of the documentation (v2.00) SDH, SD0 and SD1 do
+not seem to be provided by the r8a7792 CPG.
+
+It does, however, provide RCAN and ADSP which are supported by the CPG
+driver. You may wish to add them now for completeness though from my point
+of view they could also be added later when they are used.
 
 
-On 06/01/2016 03:57 AM, Doug Anderson wrote:
-> Chris,
->
-> On Fri, May 27, 2016 at 1:46 AM, Chris Zhong <zyw@rock-chips.com> wrote:
->> Hi Heiko
->>
->>
->> On 05/27/2016 04:29 PM, Heiko Stuebner wrote:
->>> Hi Chris,
->>>
->>> Am Freitag, 27. Mai 2016, 14:02:15 schrieb Chris Zhong:
->>>> This patch adds a binding that describes the Rockchip USB Type-C PHY
->>>> for rk3399.
->>>>
->>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->>>> ---
->>>>
->>>>    .../devicetree/bindings/phy/phy-rockchip-typec.txt | 55
->>>> ++++++++++++++++++++++ 1 file changed, 55 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>>> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt new file
->>>> mode 100644
->>>> index 0000000..402f667
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>>> @@ -0,0 +1,55 @@
->>>> +ROCKCHIP type-c PHY
->>>> +
->>>> +Required properties:
->>>> + - compatible: should be "rockchip,rk3399-typec-phy"
->>>> + - reg : Address and length of the usb phy control register set
->>>> + - rockchip,grf : phandle to the syscon managing the "general
->>>> +   register files"
->>>> + - clocks : phandle + clock specifier for the phy clocks
->>>> + - clock-names: string, clock name, must be "tcpdcore", "tcpdphy_ref";
->>>> + - resets : a list of phandle + reset specifier pairs
->>>> + - reset-names : string reset name, must be:
->>>> +                "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst"
-> In other contexts I believe Heiko has requested that a suffix like
-> "_rst" not be present in the names of reset signals.  We already know
-> that this is a list of reset names so the "_rst" is redundant.
-Yes, "_rst" is redundant.I will remove it next version.
->
->>>> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
->>>> + - rockchip,usb3phy*: phy registers embed in grf
->>>> +
->>>> +Example:
->>>> +       tcphy0: phy@ff7c0000 {
->>>> +               compatible = "rockchip,rk3399-typec-phy";
->>>> +               reg = <0x0 0xff7c0000 0x0 0x40000>;
->>>> +               #phy-cells = <0>;
->>>> +               rockchip,grf = <&grf>;
->>>> +               clocks = <&cru SCLK_UPHY0_TCPDCORE>,
->>>> +                        <&cru SCLK_UPHY0_TCPDPHY_REF>;
->>>> +               clock-names = "tcpdcore", "tcpdphy_ref";
->>>> +               resets = <&cru SRST_UPHY0>,
->>>> +                        <&cru SRST_UPHY0_PIPE_L00>,
->>>> +                        <&cru SRST_P_UPHY0_TCPHY>;
->>>> +               reset-names = "tcphy_rst", "tcphy_pipe_rst",
->>>> "uphy_tcphy_rst";
->>>> +               rockchip,usb3phy_con0 = <0x0e580 0 16>;
->>>> +               rockchip,usb3phy_con1 = <0x0e584 0 16>;
->>>> +               rockchip,usb3phy_con2 = <0x0e588 0 16>;
->>>> +               rockchip,usb3phy_status0 = <0x0e5c0 0 13>;
->>>> +               rockchip,usb3phy_status1 = <0x0e5c4 0 12>;
->>> please embedded this register data in the driver instead (not in the
->>> devicetree), matched against the compatible value.
->>> See Frank's usb2phy driver for reference if needed.
->> Okay, I will move them to driver file next version, Thanks.
-> Just making sure: I saw a RESEND of your original version get posted,
-> but nothing that addresses Heiko's comments, right?
->
-> Also: note that bindings should be sent in the patch _before_ the
-> code.  So instead of:
->    [1] phy: Add USB Type-C PHY driver for rk3399
->    [2] Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
->    [3] drm/rockchip: vop: add cdn DP support for rk3399
->    [4] Documentation: bindings: add dt documentation for cdn DP controller
->
-> You should have:
->    [1] Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
->    [2] phy: Add USB Type-C PHY driver for rk3399
->    [3] Documentation: bindings: add dt documentation for cdn DP controller
->    [4] drm/rockchip: vop: add cdn DP support for rk3399
-The first patch is lack of a header file, so I resend the patches, and 
-did not change anything, I will do them in V1 version.
-And I will change the  sequence of patches, Thanks for your comments.
+I reviewed the values below. They appear to be complete and correct.
 
+> +/* MSTP0 */
+> +#define R8A7792_CLK_MSIOF0		0
+> +
+> +/* MSTP1 */
+> +#define R8A7792_CLK_TMU1		11
+> +#define R8A7792_CLK_TMU3		21
+> +#define R8A7792_CLK_TMU2		22
+> +#define R8A7792_CLK_CMT0		24
+> +#define R8A7792_CLK_TMU0		25
+> +#define R8A7792_CLK_VSP1DU1		27
+> +#define R8A7792_CLK_VSP1DU0		28
+> +#define R8A7792_CLK_VSP1_SY		31
+> +/* MSTP2 */
+> +#define R8A7792_CLK_MSIOF1		8
+> +#define R8A7792_CLK_SYS_DMAC0		18
+> +#define R8A7792_CLK_SYS_DMAC1		19
 
->
-> -Doug
->
->
->
+> +/* MSTP3 */
+> +#define R8A7792_CLK_TPU0		4
+> +#define R8A7792_CLK_SDHI0		14
+> +#define R8A7792_CLK_CMT1		29
+> +
+> +/* MSTP4 */
+> +#define R8A7792_CLK_IRQC		7
+> +
+> +/* MSTP5 */
+> +#define R8A7792_CLK_AUDIO_DMAC0		2
+> +#define R8A7792_CLK_THERMAL		22
+> +#define R8A7792_CLK_PWM			23
+> +
+> +/* MSTP7 */
+> +#define R8A7792_CLK_HSCIF1		16
+> +#define R8A7792_CLK_HSCIF0		17
+> +#define R8A7792_CLK_SCIF3		18
+> +#define R8A7792_CLK_SCIF2		19
+> +#define R8A7792_CLK_SCIF1		20
+> +#define R8A7792_CLK_SCIF0		21
+> +#define R8A7792_CLK_DU1			23
+> +#define R8A7792_CLK_DU0			24
+> +
+> +/* MSTP8 */
+> +#define R8A7792_CLK_VIN5		4
+> +#define R8A7792_CLK_VIN4		5
+> +#define R8A7792_CLK_VIN3		8
+> +#define R8A7792_CLK_VIN2		9
+> +#define R8A7792_CLK_VIN1		10
+> +#define R8A7792_CLK_VIN0		11
+> +#define R8A7792_CLK_ETHERAVB		12
+> +
+> +/* MSTP9 */
+> +#define R8A7792_CLK_GPIO7		4
+> +#define R8A7792_CLK_GPIO6		5
+> +#define R8A7792_CLK_GPIO5		7
+> +#define R8A7792_CLK_GPIO4		8
+> +#define R8A7792_CLK_GPIO3		9
+> +#define R8A7792_CLK_GPIO2		10
+> +#define R8A7792_CLK_GPIO1		11
+> +#define R8A7792_CLK_GPIO0		12
+> +#define R8A7792_CLK_GPIO11		13
+> +#define R8A7792_CLK_GPIO10		14
+> +#define R8A7792_CLK_CAN1		15
+> +#define R8A7792_CLK_CAN0		16
+> +#define R8A7792_CLK_QSPI_MOD		17
+> +#define R8A7792_CLK_GPIO9		19
+> +#define R8A7792_CLK_GPIO8		21
+> +#define R8A7792_CLK_I2C5		25
+> +#define R8A7792_CLK_IICDVFS		26
+> +#define R8A7792_CLK_I2C4		27
+> +#define R8A7792_CLK_I2C3		28
+> +#define R8A7792_CLK_I2C2		29
+> +#define R8A7792_CLK_I2C1		30
+> +#define R8A7792_CLK_I2C0		31
+> +
+> +/* MSTP10 */
+> +#define R8A7792_CLK_SSI_ALL		5
+> +#define R8A7792_CLK_SSI4		11
+> +#define R8A7792_CLK_SSI3		12
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_R8A7792_H__ */
+> 
