@@ -1,126 +1,114 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 3/3] ARM: dts: exynos: Add watchdog amd Security SubSystem to
- Exynos5410
-Date: Wed, 01 Jun 2016 11:45:51 +0200
-Message-ID: <1464774351-23604-3-git-send-email-k.kozlowski@samsung.com>
-References: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
+Date: Wed, 1 Jun 2016 17:52:03 +0800
+Message-ID: <dcbc214f-8271-6cb3-92a2-8f43a3178e6e@rock-chips.com>
+References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
+ <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
+ <57483CAA.8000005@arm.com> <574E4EF5.7040005@rock-chips.com>
+ <574E9E27.9070702@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <574E9E27.9070702-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Move watchdog and Security SubSystem nodes from exynos5420.dtsi to file
-shared with Exynos5410 and configure the clocks on the latter.
-
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos5410.dtsi | 11 +++++++++++
- arch/arm/boot/dts/exynos5420.dtsi | 28 +++++++++++-----------------
- arch/arm/boot/dts/exynos54xx.dtsi | 12 ++++++++++++
- 3 files changed, 34 insertions(+), 17 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index f1effd3f03c4..b76f56c2fe8b 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -297,6 +297,11 @@
- 	clock-names = "uart", "clk_uart_baud0";
- };
- 
-+&sss {
-+	clocks = <&clock CLK_SSS>;
-+	clock-names = "secss";
-+};
-+
- &sromc {
- 	#address-cells = <2>;
- 	#size-cells = <1>;
-@@ -349,4 +354,10 @@
- 	samsung,pmureg-phandle = <&pmu_system_controller>;
- };
- 
-+&watchdog {
-+	clocks = <&clock CLK_WDT>;
-+	clock-names = "watchdog";
-+	samsung,syscon-phandle = <&pmu_system_controller>;
-+};
-+
- #include "exynos5410-pinctrl.dtsi"
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 265747bb19d1..beb6f453039e 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -694,23 +694,6 @@
- 			#include "exynos4412-tmu-sensor-conf.dtsi"
- 		};
- 
--		watchdog: watchdog@101D0000 {
--			compatible = "samsung,exynos5420-wdt";
--			reg = <0x101D0000 0x100>;
--			interrupts = <0 42 0>;
--			clocks = <&clock CLK_WDT>;
--			clock-names = "watchdog";
--			samsung,syscon-phandle = <&pmu_system_controller>;
--		};
--
--		sss: sss@10830000 {
--			compatible = "samsung,exynos4210-secss";
--			reg = <0x10830000 0x300>;
--			interrupts = <0 112 0>;
--			clocks = <&clock CLK_SSS>;
--			clock-names = "secss";
--		};
--
- 		sysmmu_g2dr: sysmmu@0x10A60000 {
- 			compatible = "samsung,exynos-sysmmu";
- 			reg = <0x10A60000 0x1000>;
-@@ -1030,6 +1013,11 @@
- 	clock-names = "uart", "clk_uart_baud0";
- };
- 
-+&sss {
-+	clocks = <&clock CLK_SSS>;
-+	clock-names = "secss";
-+};
-+
- &usbdrd3_0 {
- 	clocks = <&clock CLK_USBD300>;
- 	clock-names = "usbdrd30";
-@@ -1073,4 +1061,10 @@
- 	samsung,pmureg-phandle = <&pmu_system_controller>;
- };
- 
-+&watchdog {
-+	clocks = <&clock CLK_WDT>;
-+	clock-names = "watchdog";
-+	samsung,syscon-phandle = <&pmu_system_controller>;
-+};
-+
- #include "exynos5420-pinctrl.dtsi"
-diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-index 0eb8aa31b7d9..06a604911e87 100644
---- a/arch/arm/boot/dts/exynos54xx.dtsi
-+++ b/arch/arm/boot/dts/exynos54xx.dtsi
-@@ -74,6 +74,18 @@
- 			};
- 		};
- 
-+		watchdog: watchdog@101d0000 {
-+			compatible = "samsung,exynos5420-wdt";
-+			reg = <0x101d0000 0x100>;
-+			interrupts = <0 42 0>;
-+		};
-+
-+		sss: sss@10830000 {
-+			compatible = "samsung,exynos4210-secss";
-+			reg = <0x10830000 0x300>;
-+			interrupts = <0 112 0>;
-+		};
-+
- 		/* i2c_0-3 are defined in exynos5.dtsi */
- 		hsi2c_4: i2c@12ca0000 {
- 			compatible = "samsung,exynos5250-hsi2c";
--- 
-1.9.1
+CgrlnKggMjAxNi82LzEgMTY6MzQsIE1hcmMgWnluZ2llciDlhpnpgZM6Cj4gT24gMDEvMDYvMTYg
+MDM6NTYsIFdlbnJ1aSBMaSB3cm90ZToKPj4gSGk6Cj4+Cj4+IE9uIDIwMTYvNS8yNyAyMDoyNSwg
+TWFyYyBaeW5naWVyIFdyb3RlOgo+Pj4gWytMb3JlbnpvXQo+Pj4KPj4+IE9uIDIwLzA1LzE2IDEx
+OjI5LCBTaGF3biBMaW4gd3JvdGU6Cj4+Pj4gUkszMzk5IGhhcyBhIFBDSWUgY29udHJvbGxlciB3
+aGljaCBjYW4gYmUgdXNlZCBhcyBSb290IENvbXBsZXguCj4+Pj4gVGhpcyBkcml2ZXIgc3VwcG9y
+dHMgYSBQQ0llIGNvbnRyb2xsZXIgYXMgUm9vdCBDb21wbGV4IG1vZGUuCj4+Pj4KPj4KPj4gWy4u
+Li5dCj4+Cj4+Pj4gK3N0YXRpYyBpbnQgcm9ja2NoaXBfcGNpZV9pbml0X2lycV9kb21haW4oc3Ry
+dWN0IHJvY2tjaGlwX3BjaWVfcG9ydCAqcHApCj4+Pj4gK3sKPj4+PiArCXN0cnVjdCBkZXZpY2Ug
+KmRldiA9IHBwLT5kZXY7Cj4+Pj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBkZXYtPm9m
+X25vZGU7Cj4+Pj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKnBjaWVfaW50Y19ub2RlID0gIG9mX2dl
+dF9uZXh0X2NoaWxkKG5vZGUsIE5VTEwpOwo+Pj4KPj4+IFRoYXQncyByZWFsbHkgdWdseSwgYXMg
+aXQgZGVwZW5kcyBvbiB0aGUgbGF5b3V0IG9mIHlvdXIgRFQuCj4+Pgo+Pj4+ICsKPj4+PiArCWlm
+ICghcGNpZV9pbnRjX25vZGUpIHsKPj4+PiArCQlkZXZfZXJyKGRldiwgIk5vIFBDSWUgSW50YyBu
+b2RlIGZvdW5kXG4iKTsKPj4+PiArCQlyZXR1cm4gUFRSX0VSUihwY2llX2ludGNfbm9kZSk7Cj4+
+Pj4gKwl9Cj4+Pj4gKwlwcC0+aXJxX2RvbWFpbiA9IGlycV9kb21haW5fYWRkX2xpbmVhcihwY2ll
+X2ludGNfbm9kZSwgNCwKPj4+PiArCQkJCQkgICAgICAgJmludHhfZG9tYWluX29wcywgcHApOwo+
+Pj4KPj4+IFdoeSBjYW4ndCB5b3UganVzdCByZWdpc3RlciB5b3VyIGhvc3QgY29udHJvbGxlciBh
+cyB0aGUgaW50ZXJydXB0Cj4+PiBjb250cm9sbGVyPyBZb3UgZG9uJ3QgbmVlZCBhbiBpbnRlcm1l
+ZGlhdGUgbm9kZSBmb3IgdGhhdC4KPj4KPj4gT0ssIHRoZSBjaGlsZCBub2RlIGlzIHJlYWxseSBu
+byBuZWVkIGhlcmUsIHdlIHdpbGwgdXNlIHRoZSBob3N0Cj4+IGNvbnRyb2xsZXIgYXMgaW50ZXJy
+dXB0IGNvbnRyb2xsZXIgbmV4dCBwYXRjaC4gVGhhbmtzIQo+Pgo+Pj4KPj4+PiArCWlmICghcHAt
+PmlycV9kb21haW4pIHsKPj4+PiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgYSBJTlR4
+IElSUSBkb21haW5cbiIpOwo+Pj4+ICsJCXJldHVybiBQVFJfRVJSKHBwLT5pcnFfZG9tYWluKTsK
+Pj4+PiArCX0KPj4+PiArCj4+Pj4gKwlyZXR1cm4gMDsKPj4+PiArfQo+Pj4+ICsKPj4+PiArc3Rh
+dGljIGlycXJldHVybl90IHJvY2tjaGlwX3BjaWVfc3Vic3lzX2lycV9oYW5kbGVyKGludCBpcnEs
+IHZvaWQgKmFyZykKPj4+PiArewo+Pj4+ICsJc3RydWN0IHJvY2tjaGlwX3BjaWVfcG9ydCAqcHAg
+PSBhcmc7Cj4+Pj4gKwl1MzIgcmVnOwo+Pj4+ICsJdTMyIHN1Yl9yZWc7Cj4+Pj4gKwo+Pj4+ICsJ
+cmVnID0gcGNpZV9yZWFkKHBwLCBQQ0lFX0NMSUVOVF9JTlRfU1RBVFVTKTsKPj4+PiArCWlmIChy
+ZWcgJiBMT0NfSU5UKSB7Cj4+Pj4gKwkJZGV2X2RiZyhwcC0+ZGV2LCAibG9jYWwgaW50ZXJydXB0
+IHJlY2l2ZWRcbiIpOwo+Pj4+ICsJCXN1Yl9yZWcgPSBwY2llX3JlYWQocHAsIFBDSUVfQ09SRV9J
+TlRfU1RBVFVTKTsKPj4+PiArCQlpZiAoc3ViX3JlZyAmIFBSRlBFKQo+Pj4+ICsJCQlkZXZfZGJn
+KHBwLT5kZXYsICJQYXJpdHkgZXJyb3IgZGV0ZWN0ZWQgd2hpbGUgcmVhZGluZyBmcm9tIHRoZSBQ
+TlAgUmVjZWl2ZSBGSUZPIFJBTVxuIik7Cj4+Pj4gKwo+Pj4+ICsJCWlmIChzdWJfcmVnICYgQ1JG
+UEUpCj4+Pj4gKwkJCWRldl9kYmcocHAtPmRldiwgIlBhcml0eSBlcnJvciBkZXRlY3RlZCB3aGls
+ZSByZWFkaW5nIGZyb20gdGhlIENvbXBsZXRpb24gUmVjZWl2ZSBGSUZPIFJBTVxuIik7Cj4+Pj4g
+Kwo+Pj4+ICsJCWlmIChzdWJfcmVnICYgUlJQRSkKPj4+PiArCQkJZGV2X2RiZyhwcC0+ZGV2LCAi
+UGFyaXR5IGVycm9yIGRldGVjdGVkIHdoaWxlIHJlYWRpbmcgZnJvbSBSZXBsYXkgQnVmZmVyIFJB
+TVxuIik7Cj4+Pj4gKwo+Pj4+ICsJCWlmIChzdWJfcmVnICYgUFJGTykKPj4+PiArCQkJZGV2X2Ri
+ZyhwcC0+ZGV2LCAiT3ZlcmZsb3cgb2NjdXJyZWQgaW4gdGhlIFBOUCBSZWNlaXZlIEZJRk9cbiIp
+Owo+Pj4+ICsKPj4+PiArCQlpZiAoc3ViX3JlZyAmIENSRk8pCj4+Pj4gKwkJCWRldl9kYmcocHAt
+PmRldiwgIk92ZXJmbG93IG9jY3VycmVkIGluIHRoZSBDb21wbGV0aW9uIFJlY2VpdmUgRklGT1xu
+Iik7Cj4+Pj4gKwo+Pj4+ICsJCWlmIChzdWJfcmVnICYgUlQpCj4+Pj4gKwkJCWRldl9kYmcocHAt
+PmRldiwgIlJlcGxheSB0aW1lciB0aW1lZCBvdXRcbiIpOwo+Pj4+ICsKPj4+PiArCQlpZiAoc3Vi
+X3JlZyAmIFJUUikKPj4+PiArCQkJZGV2X2RiZyhwcC0+ZGV2LCAiUmVwbGF5IHRpbWVyIHJvbGxl
+ZCBvdmVyIGFmdGVyIDQgdHJhbnNtaXNzaW9ucyBvZiB0aGUgc2FtZSBUTFBcbiIpOwo+Pj4+ICsK
+Pj4+PiArCQlpZiAoc3ViX3JlZyAmIFBFKQo+Pj4+ICsJCQlkZXZfZGJnKHBwLT5kZXYsICJQaHkg
+ZXJyb3IgZGV0ZWN0ZWQgb24gcmVjZWl2ZSBzaWRlXG4iKTsKPj4+PiArCj4+Pj4gKwkJaWYgKHN1
+Yl9yZWcgJiBNVFIpCj4+Pj4gKwkJCWRldl9kYmcocHAtPmRldiwgIk1hbGZvcm1lZCBUTFAgcmVj
+ZWl2ZWQgZnJvbSB0aGUgbGlua1xuIik7Cj4+Pj4gKwo+Pj4+ICsJCWlmIChzdWJfcmVnICYgVUNS
+KQo+Pj4+ICsJCQlkZXZfZGJnKHBwLT5kZXYsICJNYWxmb3JtZWQgVExQIHJlY2VpdmVkIGZyb20g
+dGhlIGxpbmtcbiIpOwo+Pj4+ICsKPj4+PiArCQlpZiAoc3ViX3JlZyAmIEZDRSkKPj4+PiArCQkJ
+ZGV2X2RiZyhwcC0+ZGV2LCAiQW4gZXJyb3Igd2FzIG9ic2VydmVkIGluIHRoZSBmbG93IGNvbnRy
+b2wgYWR2ZXJ0aXNlbWVudHMgZnJvbSB0aGUgb3RoZXIgc2lkZVxuIik7Cj4+Pj4gKwo+Pj4+ICsJ
+CWlmIChzdWJfcmVnICYgQ1QpCj4+Pj4gKwkJCWRldl9kYmcocHAtPmRldiwgIkEgcmVxdWVzdCB0
+aW1lZCBvdXQgd2FpdGluZyBmb3IgY29tcGxldGlvblxuIik7Cj4+Pj4gKwo+Pj4+ICsJCWlmIChz
+dWJfcmVnICYgVVRDKQo+Pj4+ICsJCQlkZXZfZGJnKHBwLT5kZXYsICJVbm1hcHBlZCBUQyBlcnJv
+clxuIik7Cj4+Pj4gKwo+Pj4+ICsJCWlmIChzdWJfcmVnICYgTU1WQykKPj4+PiArCQkJZGV2X2Ri
+ZyhwcC0+ZGV2LCAiTVNJIG1hc2sgcmVnaXN0ZXIgY2hhbmdlc1xuIik7Cj4+Pj4gKwo+Pj4+ICsJ
+CXBjaWVfd3JpdGUocHAsIHN1Yl9yZWcsIFBDSUVfQ09SRV9JTlRfU1RBVFVTKTsKPj4+PiArCX0K
+Pj4+PiArCj4+Pj4gKwlwY2llX3dyaXRlKHBwLCByZWcsIFBDSUVfQ0xJRU5UX0lOVF9TVEFUVVMp
+Owo+Pj4+ICsKPj4+PiArCXJldHVybiBJUlFfSEFORExFRDsKPj4+PiArfQo+Pgo+PiBbLi4uLl0K
+Pj4KPj4+PiArc3RhdGljIGlycXJldHVybl90IHJvY2tjaGlwX3BjaWVfbGVnYWN5X2ludF9oYW5k
+bGVyKGludCBpcnEsIHZvaWQgKmFyZykKPj4+PiArewo+Pj4+ICsJc3RydWN0IHJvY2tjaGlwX3Bj
+aWVfcG9ydCAqcHAgPSBhcmc7Cj4+Pj4gKwl1MzIgcmVnOwo+Pj4+ICsKPj4+PiArCXJlZyA9IHBj
+aWVfcmVhZChwcCwgUENJRV9DTElFTlRfSU5UX1NUQVRVUyk7Cj4+Pj4gKwlyZWcgPSAocmVnICYg
+Uk9DS0NISVBfUENJRV9SUElGUjFfSU5UUl9NQVNLKSA+Pgo+Pj4+ICsJICAgICAgIFJPQ0tDSElQ
+X1BDSUVfUlBJRlIxX0lOVFJfU0hJRlQ7Cj4+Pj4gKwlnZW5lcmljX2hhbmRsZV9pcnEoaXJxX2Zp
+bmRfbWFwcGluZyhwcC0+aXJxX2RvbWFpbiwgZmZzKHJlZykpKTsKPj4+Cj4+PiBOQUsuIFdoYXQg
+eW91IGhhdmUgaGVyZSBpcyBhIGNoYWluZWQgaW50ZXJydXB0IGNvbnRyb2xsZXIsIHBsZWFzZQo+
+Pj4gaW1wbGVtZW50IGl0IGFzIHN1Y2guCj4+Cj4+IFlvdXIgbWVhbiBpcyB1c2UgaGFuZGxlX25l
+c3RlZF9pcnEgaW5zdGVhZCBvZiBnZW5lcmljX2hhbmRsZV9pcnEgaGVyZT8KPgo+IE5vLCBoYW5k
+bGVfbmVzdGVkX2lycSgpIGlzIGZvciB0aHJlYWRlZCBpbnRlcnJ1cHRzLiBXaGF0IEkgbWVhbiBp
+cyB0aGF0Cj4geW91IG5lZWQgdG8gY29uZmlndXJlIHRoZSBpbnRlcnJ1cHQgYXMgYSBjYXNjYWRl
+ZCBpbnRlcnJ1cHQsIGFuZCB1c2UgdGhlCj4gY2hhaW5lZF9pcnFfZW50ZXIvZXhpdCBoZWxwZXJz
+LiBBcyBhIHJ1bGUgb2YgdGh1bWIsIGlmIHlvdSdyZSBjYWxsaW5nCj4gZ2VuZXJpY19oYW5kbGVf
+aXJxKCkgaW4gYW4gaW50ZXJydXB0IGhhbmRsZXIsIHlvdSdyZSBkb2luZyBzb21ldGhpbmcgd3Jv
+bmcuCj4KPiBJZiB5b3UgZG9uJ3QgZG8gdGhhdCwgeW91IG1heSBlbmQgdXAgd2l0aCBpbnRlcnJ1
+cHRzIHRoYXQgYXJlIG5vdCBFT0llZAo+IHByb3Blcmx5LCBSQ1UgdmlvbGF0aW9ucywgYW5kIGRv
+dWJsZSBhY2NvdW50aW5nIG9mIGludGVycnVwdHMuCj4KPj4gQnV0LCBJIGZvdW5kIGFsbCBvdGhl
+ciBwY2kgaG9zdCBjb250cm9sbGVyIGRyaXZlcnMgdXNlIHRoaXMgYXBpLgo+Cj4gSSdtIGFmcmFp
+ZCB0aGF0IGRvZXNuJ3QgbWFrZSBpdCBhbnkgYmV0dGVyLiBCdWdneSBjb2RlIGlzIGV2ZXJ5d2hl
+cmUsCj4gYW5kIGl0IGRvZXMgc3ByZWFkIGZhc3RlciB0aGFuIHByb3Blcmx5IHdyaXR0ZW4gY29k
+ZS4gSGF2ZSBhIGxvb2sgYXQKPiBkcml2ZXJzL3BjaS9ob3N0L3BjaWUtYWx0ZXJhLmMgYXMgYW4g
+ZXhhbXBsZSBvZiB3aGF0IGl0IHNob3VsZCBsb29rIGxpa2UuCj4KCkkgZ2V0IHlvdSBtZWFuLCB3
+ZSB3aWxsIGZpeCBpdCwgdGhhbmtzIQoKPiBUaGFua3MsCj4KPiAJTS4KPgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxp
+bmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
