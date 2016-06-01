@@ -1,137 +1,170 @@
+Return-Path: <wnhuang@google.com>
 MIME-Version: 1.0
-In-Reply-To: <591EAFD4-F40B-4729-B0E7-EB3AC735FF2E@konsulko.com>
-References: <1464985616-11821-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1464985616-11821-3-git-send-email-pantelis.antoniou@konsulko.com>
-	<CAL_JsqLi4=6v-8B8eF-H1iQGa+3Zh=rzAWbCAJubnLNEitPaLQ@mail.gmail.com>
-	<8F93AE08-B340-481B-A5B3-F42227D9D729@konsulko.com>
-	<CAL_Jsq+Z9NrvkZa0x4ZjC_POn96h1yQxXbrHsrMQ-MtvjWKWzQ@mail.gmail.com>
-	<591EAFD4-F40B-4729-B0E7-EB3AC735FF2E@konsulko.com>
-Date: Wed, 8 Jun 2016 13:45:13 -0500
-Message-ID: <CAL_JsqL3XuoeSRZZ0t6uOq1CrOY_1ny9wvMmi4T+YW2b3LGrag@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: Support cascaded GPIO chip lookup for OF
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1464750564-21027-1-git-send-email-wnhuang@chromium.org>
+References: <1464750564-21027-1-git-send-email-wnhuang@chromium.org>
+From: Wei-Ning Huang <wnhuang@google.com>
+Date: Wed, 1 Jun 2016 14:58:28 +0800
+Message-ID: <CABicQ-WJR-BnXqnwHEtypf+DOo323=24G-K7-kfk=dORr_UJWw@mail.gmail.com>
+Subject: Re: [PATCH] dt: bindings: fix documentation for MARVELL's bt-sd8xxx
+ wireless device
+Content-Type: multipart/alternative; boundary=94eb2c034a544bbeba053432045e
+To: Linux Bluetooth <linux-bluetooth@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Hu Xinming <huxm@marvell.com>, marcel@holtmann.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jun 8, 2016 at 10:32 AM, Pantelis Antoniou <pantelis.antoniou@konsu=
-lko.com> wrote:
-> Hi Rob,
+--94eb2c034a544bbeba053432045e
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Please ignore this patch. I think we should make the driver parse 32 bit
+value instead (to be consistent with mwifiex driver).
+
+On Wed, Jun 1, 2016 at 11:09 AM, Wei-Ning Huang <wnhuang@chromium.org>
+wrote:
+
+> The property marvell,wakeup-pin and marvell,wakeup-gap-ms are read as
+> u16 in the driver. Fix documentation and example accordingly.
 >
->> On Jun 8, 2016, at 18:18 , Rob Herring <robherring2@gmail.com> wrote:
->>
->> On Wed, Jun 8, 2016 at 8:41 AM, Pantelis Antoniou
->> <pantelis.antoniou@konsulko.com> wrote:
->>> Hi Rob,
->>>
->>>> On Jun 8, 2016, at 00:00 , Rob Herring <robherring2@gmail.com> wrote:
->>>>
->>>> +Mark R
->>>>
->>>> On Fri, Jun 3, 2016 at 3:26 PM, Pantelis Antoniou
->>>> <pantelis.antoniou@konsulko.com> wrote:
->>>>> In certain cases it makes sense to create cascaded GPIO which
->>>>> are not real GPIOs, merely point to the real backend GPIO chip.
->>>>
->>>> In what cases? Make it clear what this is for. Connectors of course,
->>>> but are there any other use cases you have in mind.
->>>>
->>>
->>> Connectors is one obvious use-case. In fact even when there is no
->>> connector but there is an obvious interface abstraction point you
->>> might want to use it.
->>>
->>> For instance a SoC package may have a number of different GPIO
->>> controllers (that may or may not use the same IP block). You could
->>> abstract all the gpio controllers away in a single GPIO controller
->>> block.
->>
->> There had better be some good reason besides just wanting to make a
->> single virtual controller.
->>
+> Signed-off-by: Wei-Ning Huang <wnhuang@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 >
-> The reason is to forward a gpio reference to a real h/w gpio device
-> while not having to expose said real gpio device details.
-
-That's not a reason.
-
-[...]
-
->>>>>       gpioC: controller_gpio {
->>>>>               compatible =3D "cascaded-gpio";
->>>>
->>>> This compatible is kind of meaningless. I'd expect this to be a
->>>> connector compatible.
->>>>
->>>
->>> No, because this gpio patch is completely independent of the
->>> existence of a connector.
->>
->> My point is that "cascaded-gpio" is not something used to parse the
->> binding and will never be an accepted compatible string. I know it is
->> an example, but you should make that obvious like foocorp is.
->>
+> diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+> b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+> index 14aa6cf..6a9a63c 100644
+> --- a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+> +++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+> @@ -13,10 +13,10 @@ Optional properties:
+>                       initialization. This is an array of 28 values(u8).
 >
-> It doesn=E2=80=99t parse the binding; the xlate method of a driver does.
-
-The GPIO core should be doing the xlate by default just like we have defaul=
-t 1 and 2 cell xlate for interrupts.
-
-Another point, with just "gpios" that is already
-
+>    - marvell,wakeup-pin: It represents wakeup pin number of the bluetooth
+> chip.
+> -                       firmware will use the pin to wakeup host system.
+> +                       firmware will use the pin to wakeup host system
+> (u16).
+>    - marvell,wakeup-gap-ms: wakeup gap represents wakeup latency of the
+> host
+>                       platform. The value will be configured to firmware.
+> This
+> -                     is needed to work chip's sleep feature as expected.
+> +                     is needed to work chip's sleep feature as expected
+> (u16).
+>    - interrupt-parent: phandle of the parent interrupt controller
+>    - interrupts : interrupt pin number to the cpu. Driver will request an
+> irq based
+>                  on this interrupt number. During system suspend, the irq
+> will be
+> @@ -50,7 +50,7 @@ calibration data is also available in below example.
+>                         0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f
+> 0x04 0x02
+>                         0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00
+> 0x00 0x00
+>                         0x00 0x00 0xf0 0x00>;
+> -               marvell,wakeup-pin =3D <0x0d>;
+> -               marvell,wakeup-gap-ms =3D <0x64>;
+> +               marvell,wakeup-pin =3D /bits/ 16 <0x0d>;
+> +               marvell,wakeup-gap-ms =3D /bits/ 16 <0x64>;
+>         };
+>  };
+> --
+> 2.1.2
 >
->>>>>               gpios =3D <&gpioA 10>, <&gpioB 5>;
->>>>
->>>> As we discussed at ELC, I think this should be modeled after
->>>> interrupt-map property like this:
->>>>
->>>> gpio-map =3D <0 0 &soc_gpio 10 0>, <1 0 &soc_gpio 5 0>;
->>>> gpio-map-mask =3D <0xff 0>;
->>>>
->>>> This is more flexible, a known pattern, and allows remapping of flag c=
-ells.
->>>>
->>>
->>> It=E2=80=99s just syntactic sugar. It can work either way.
->>>
->>>> Also, we will likely have interrupt capable GPIOs, so they are going
->>>> to need interrupt-map anyway.
->>>>
->>>
->>> Devices that use interrupts usually convert the GPIO to an interrupt an=
-d use it.
->>> Since the xlat op will return the real GPIO spec the interrupt conversi=
-on will work.
->>>
->>> Bare interrupt lines are sort-of out of fashion nowadays I think. I=E2=
-=80=99m eager to be
->>> proven wrong though with a recent portable expansion board that uses th=
-em.
->>
->> Uh, no! Practically every gpio controller is also an interrupt
->> controller (in DT) and devices pretty much always see just an
->> interrupt line. Just go look at all the I2C devices with an interrupt
->> line. Unless devices have some special needs to control the gpio, we
->> always use interrupts. Expansion boards may be dealing with the GPIO
->> simply because that is the only option for userspace drivers.
->>
 >
-> Looking into a list of 54 capes for the beaglebone I can only find a sing=
-le
-> one that uses an interrupt instead of a gpio, and that can easily be conv=
-erted
-> to using the gpio.
 
-What downstream is using is not an argument. For upstream they are going to=
- have to change when they get reviewed...
 
-> The IRQ forwarding case is easier than the GPIO one TBH. The IRQ parsing =
-core
-> can handle complex cases so adding a new one won=E2=80=99t be a big deal.
+--=20
+Wei-Ning Huang, =E9=BB=83=E5=81=89=E5=AF=A7 | Software Engineer, Google Inc=
+., Taiwan |
+wnhuang@google.com | Cell: +886 910-380678
 
-Yes, when the infrastructure has already been done it is easier. But from a=
- binding perspective I dow
+--94eb2c034a544bbeba053432045e
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+<div dir=3D"ltr">Please ignore this patch. I think we should make the drive=
+r parse 32 bit value instead (to be consistent with mwifiex driver).</div><=
+div class=3D"gmail_extra"><br><div class=3D"gmail_quote">On Wed, Jun 1, 201=
+6 at 11:09 AM, Wei-Ning Huang <span dir=3D"ltr">&lt;<a href=3D"mailto:wnhua=
+ng@chromium.org" target=3D"_blank">wnhuang@chromium.org</a>&gt;</span> wrot=
+e:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-l=
+eft:1px #ccc solid;padding-left:1ex">The property marvell,wakeup-pin and ma=
+rvell,wakeup-gap-ms are read as<br>
+u16 in the driver. Fix documentation and example accordingly.<br>
+<br>
+Signed-off-by: Wei-Ning Huang &lt;<a href=3D"mailto:wnhuang@chromium.org">w=
+nhuang@chromium.org</a>&gt;<br>
+---<br>
+=C2=A0Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt | 8 ++++-=
+---<br>
+=C2=A01 file changed, 4 insertions(+), 4 deletions(-)<br>
+<br>
+diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/=
+Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt<br>
+index 14aa6cf..6a9a63c 100644<br>
+--- a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt<br>
++++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt<br>
+@@ -13,10 +13,10 @@ Optional properties:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 initialization. This is an array of 28 values(u8).<br>
+<br>
+=C2=A0 =C2=A0- marvell,wakeup-pin: It represents wakeup pin number of the b=
+luetooth chip.<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0firmware will use the pin to wakeup host system.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0firmware will use the pin to wakeup host system (u16).<br>
+=C2=A0 =C2=A0- marvell,wakeup-gap-ms: wakeup gap represents wakeup latency =
+of the host<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 platform. The value will be configured to firmware. This<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0is needed to work chip&#39;s sleep feature as expected.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0is needed to work chip&#39;s sleep feature as expected (u16).<br>
+=C2=A0 =C2=A0- interrupt-parent: phandle of the parent interrupt controller=
+<br>
+=C2=A0 =C2=A0- interrupts : interrupt pin number to the cpu. Driver will re=
+quest an irq based<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0on this inter=
+rupt number. During system suspend, the irq will be<br>
+@@ -50,7 +50,7 @@ calibration data is also available in below example.<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 0x00 0x00 0xf0 0x00&gt;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0marvell,wakeup-pin =
+=3D &lt;0x0d&gt;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0marvell,wakeup-gap-=
+ms =3D &lt;0x64&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0marvell,wakeup-pin =
+=3D /bits/ 16 &lt;0x0d&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0marvell,wakeup-gap-=
+ms =3D /bits/ 16 &lt;0x64&gt;;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
+=C2=A0};<br>
+<span class=3D"HOEnZb"><font color=3D"#888888">--<br>
+2.1.2<br>
+<br>
+</font></span></blockquote></div><br><br clear=3D"all"><div><br></div>-- <b=
+r><div class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr"><sp=
+an style=3D"font-size:12.6666669845581px"><font color=3D"#444444"><span sty=
+le=3D"font-family:sans-serif;line-height:19.5px;border-width:2px 0px 0px;bo=
+rder-style:solid;border-color:rgb(213,15,37);padding-top:2px;margin-top:2px=
+">Wei-Ning Huang, =E9=BB=83=E5=81=89=E5=AF=A7 |</span><span style=3D"font-f=
+amily:sans-serif;line-height:19.5px;border-width:2px 0px 0px;border-style:s=
+olid;border-color:rgb(51,105,232);padding-top:2px;margin-top:2px">=C2=A0Sof=
+tware Engineer, Google Inc., Taiwan |</span><span style=3D"font-family:sans=
+-serif;line-height:19.5px;border-width:2px 0px 0px;border-style:solid;borde=
+r-color:rgb(0,153,57);padding-top:2px;margin-top:2px">=C2=A0<a href=3D"mail=
+to:wnhuang@google.com" target=3D"_blank">wnhuang@google.com</a>=C2=A0|</spa=
+n></font></span><span style=3D"font-size:12.6666669845581px"><span style=3D=
+"font-family:sans-serif;line-height:19.5px;border-width:2px 0px 0px;border-=
+style:solid;border-color:rgb(238,178,17);padding-top:2px;margin-top:2px"><f=
+ont color=3D"#444444">=C2=A0Cell: +886 910-380678</font><font color=3D"#000=
+000">=C2=A0</font></span></span><br></div></div></div></div>
+</div>
+
+--94eb2c034a544bbeba053432045e--
