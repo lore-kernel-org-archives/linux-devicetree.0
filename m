@@ -1,28 +1,71 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: BCM5301X: Enable SPI-NOR on dual flash devices
-Date: Wed, 1 Jun 2016 12:26:33 -0700
-Message-ID: <574F36E9.6030400@gmail.com>
-References: <1461740704-21501-1-git-send-email-zajec5@gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: BCM5301X: Specify PHY of USB 2.0 in DT
+Date: Wed, 1 Jun 2016 21:35:26 +0200
+Message-ID: <CACna6ryjSYcxKcCaTtkdkExo0G1qiDMQCUCAgx-bMtnjziAoUQ@mail.gmail.com>
+References: <1464808585-14996-1-git-send-email-zajec5@gmail.com>
+	<574F35C3.6050004@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461740704-21501-1-git-send-email-zajec5@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <574F35C3.6050004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/27/2016 12:05 AM, Rafa=C5=82 Mi=C5=82ecki wrote:
-> Commit 1b47b98acce2 ("ARM: BCM5301X: Add DT entry for SPI controller =
-and
-> NOR flash") enabled SPI-NOR device on routers using serial flash only=
-=2E
-> However there are also devices with two flash memories:
-> 1) Small SPI attached flash used mostly for booting
-> 2) Bigger NAND used mostly for storing firmware
-> On such devices we still need SPI-NOR e.g. to access NVRAM data.
->=20
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
+On 1 June 2016 at 21:21, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 06/01/2016 12:16 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> Driver for Northstar USB 2.0 PHY was added in 4.7-rc1 by:
+>> commit d3feb4067335 ("phy: bcm-ns-usb2: new driver for USB 2.0 PHY o=
+n
+>> Northstar").
+>> It should be used to let EHCI platform driver init PHY.
+>>
+>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/bcm5301x.dtsi | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm=
+5301x.dtsi
+>> index 7d4d29b..9300e19 100644
+>> --- a/arch/arm/boot/dts/bcm5301x.dtsi
+>> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+>> @@ -140,6 +140,22 @@
+>>               };
+>>       };
+>>
+>> +     phys {
+>> +             compatible =3D "simple-bus";
+>> +             ranges =3D <0x00000000 0x18000000 0x00100000>;
+>> +             #address-cells =3D <1>;
+>> +             #size-cells =3D <1>;
+>> +
+>> +             usb2_phy2: usb2-phy {
+>> +                     compatible =3D "brcm,ns-usb2-phy";
+>> +                     reg =3D <0x0000c000 0x1000>;
+>> +                     reg-names =3D "dmu";
+>> +                     #phy-cells =3D <0>;
+>> +                     clocks =3D <&genpll BCM_NSP_GENPLL_USB_PHY_REF=
+_CLK>;
+>> +                     clock-names =3D "phy-ref-clk";
+>> +             };
+>
+> You guys need to get everything straigthen up when it comes to busing
+> and child nodes for bcm53101x.dtsi, why do we need a "simple-bus" nod=
+e
+> here which overlaps in part with the brcm-bus-axi node's range?
 
-Applied, thanks!
+I believed I'm making things cleaner by adding a separated node for
+PHYs (in the future there will be also USB 3.0 PHY and probably a PCIe
+PHY). I'm fine with placing this PHY node somewhere else if you think
+it better fits there.
+
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
