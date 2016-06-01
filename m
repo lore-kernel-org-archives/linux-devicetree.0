@@ -1,105 +1,78 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [RESEND PATCH 2/6] Documentation: bindings: add dt doc for
- Rockchip USB Type-C PHY
-Date: Wed, 1 Jun 2016 23:35:20 +0800
-Message-ID: <574F00B8.2050201@rock-chips.com>
-References: <1464345942-4795-1-git-send-email-zyw@rock-chips.com>
- <1464345942-4795-3-git-send-email-zyw@rock-chips.com>
- <20160601145404.GA7596@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160601145404.GA7596@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, linux-rockchip@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/2] drm/panel: simple: Add support for Sharp LQ101K1LY04
+Date: Wed,  1 Jun 2016 08:35:50 -0700
+Message-ID: <1464795351-11668-1-git-send-email-stillcompiling@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
+Trivial patch to add Sharp LQ101K1LY04i to simple-panel
 
+Support the Sharp LQ101K1LY04i, a 10 inch WXGA (1280x800) lvds panel.
 
-On 06/01/2016 10:54 PM, Rob Herring wrote:
-> On Fri, May 27, 2016 at 06:45:38PM +0800, Chris Zhong wrote:
->> This patch adds a binding that describes the Rockchip USB Type-C PHY
->> for rk3399.
->>
->> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->> ---
->>
->>   .../devicetree/bindings/phy/phy-rockchip-typec.txt | 55 ++++++++++++++++++++++
->>   1 file changed, 55 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->> new file mode 100644
->> index 0000000..402f667
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->> @@ -0,0 +1,55 @@
->> +ROCKCHIP type-c PHY
->> +
->> +Required properties:
->> + - compatible: should be "rockchip,rk3399-typec-phy"
->> + - reg : Address and length of the usb phy control register set
->> + - rockchip,grf : phandle to the syscon managing the "general
->> +   register files"
->> + - clocks : phandle + clock specifier for the phy clocks
->> + - clock-names: string, clock name, must be "tcpdcore", "tcpdphy_ref";
->> + - resets : a list of phandle + reset specifier pairs
->> + - reset-names : string reset name, must be:
->> +		 "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst"
->> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
->> + - rockchip,usb3phy*: phy registers embed in grf
-> You need to document each one and state the number of cells and what the
-> contain. Also, don't use '_' in the names.
-I am going to move these registers to phy driver, Thanks for your comment.
+Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
+ This trivial addition and its documenatation patch was reviewed for 4.5;
+ the only problems then were alphabetization. 
 
->
->> +
->> +Example:
->> +	tcphy0: phy@ff7c0000 {
->> +		compatible = "rockchip,rk3399-typec-phy";
->> +		reg = <0x0 0xff7c0000 0x0 0x40000>;
->> +		#phy-cells = <0>;
->> +		rockchip,grf = <&grf>;
->> +		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
->> +			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
->> +		clock-names = "tcpdcore", "tcpdphy_ref";
->> +		resets = <&cru SRST_UPHY0>,
->> +			 <&cru SRST_UPHY0_PIPE_L00>,
->> +			 <&cru SRST_P_UPHY0_TCPHY>;
->> +		reset-names = "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst";
->> +		rockchip,usb3phy_con0 = <0x0e580 0 16>;
->> +		rockchip,usb3phy_con1 = <0x0e584 0 16>;
->> +		rockchip,usb3phy_con2 = <0x0e588 0 16>;
->> +		rockchip,usb3phy_status0 = <0x0e5c0 0 13>;
->> +		rockchip,usb3phy_status1 = <0x0e5c4 0 12>;
->> +		status = "disabled";
->> +	};
->> +
->> +	tcphy1: phy@ff800000 {
->> +		compatible = "rockchip,rk3399-typec-phy";
->> +		reg = <0x0 0xff800000 0x0 0x40000>;
->> +		#phy-cells = <0>;
->> +		rockchip,grf = <&grf>;
->> +		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
->> +			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
->> +		clock-names = "tcpdcore", "tcpdphy_ref";
->> +		resets = <&cru SRST_UPHY1>,
->> +		         <&cru SRST_UPHY1_PIPE_L00>,
->> +			 <&cru SRST_P_UPHY1_TCPHY>;
->> +		reset-names = "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst";
->> +		rockchip,usb3phy_con0 = <0x0e58c 0 16>;
->> +		rockchip,usb3phy_con1 = <0x0e590 0 16>;
->> +		rockchip,usb3phy_con2 = <0x0e594 0 16>;
->> +		rockchip,usb3phy_status0 = <0x0e5c0 16 13>;
->> +		rockchip,usb3phy_status1 = <0x0e5c4 16 12>;
->> +		status = "disabled";
->> +	};
->> -- 
->> 2.6.3
->>
->
->
+ They slipped through the cracks and I haven't had the time to rebase and
+ repost them until now. hopefully we can get these into 4.8?
+
+ drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 3a7bdf1..c2d377c 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1270,6 +1270,30 @@ static const struct panel_desc samsung_ltn140at29_301 = {
+ 	},
+ };
+ 
++static const struct display_timing sharp_lq101k1ly04_timing = {
++	.pixelclock = { 60000000, 65000000, 80000000 },
++	.hactive = { 1280, 1280, 1280 },
++	.hfront_porch = { 20, 20, 20 },
++	.hback_porch = { 20, 20, 20 },
++	.hsync_len = { 10, 10, 10 },
++	.vactive = { 800, 800, 800 },
++	.vfront_porch = { 4, 4, 4 },
++	.vback_porch = { 4, 4, 4 },
++	.vsync_len = { 4, 4, 4 },
++	.flags = DISPLAY_FLAGS_PIXDATA_POSEDGE,
++};
++
++static const struct panel_desc sharp_lq101k1ly04 = {
++	.timings = &sharp_lq101k1ly04_timing,
++	.num_timings = 1,
++	.bpc = 8,
++	.size = {
++		.width = 217,
++		.height = 136,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
++};
++
+ static const struct drm_display_mode shelly_sca07010_bfn_lnn_mode = {
+ 	.clock = 33300,
+ 	.hdisplay = 800,
+@@ -1487,6 +1511,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "samsung,ltn140at29-301",
+ 		.data = &samsung_ltn140at29_301,
+ 	}, {
++		.compatible = "sharp,lq101k1ly04",
++		.data = &sharp_lq101k1ly04,
++	}, {
+ 		.compatible = "shelly,sca07010-bfn-lnn",
+ 		.data = &shelly_sca07010_bfn_lnn,
+ 	}, {
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
