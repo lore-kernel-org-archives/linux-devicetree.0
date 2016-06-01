@@ -1,209 +1,70 @@
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 11/32] ARM: bcm2835: Define standard pinctrl groups in the gpio node.
-Date: Wed,  1 Jun 2016 23:43:20 +0200
-Message-ID: <1464817421-8519-12-git-send-email-kraxel@redhat.com>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 1/2] drm: bridge: Add sii902x driver
+Date: Wed, 1 Jun 2016 23:56:02 +0200
+Message-ID: <20160601215602.GA7231@phenom.ffwll.local>
+References: <1463407469-21819-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20160517064711.GF27098@phenom.ffwll.local>
+ <20160601180337.28e0917b@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20160601180337.28e0917b@bbrezillon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Meng Yi <meng.yi@nxp.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric@anholt.net>
-
-The BCM2835-ARM-Peripherals.pdf documentation specifies what the
-function selects do for the pins, and there are a bunch of obvious
-groupings to be made.  With these created, we'll be able to replace
-bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
-references to specific groups we want enabled.
-
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- arch/arm/boot/dts/bcm283x.dtsi | 170 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 170 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index b982522..9aefb65 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -131,6 +131,176 @@
- 
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+
-+			/* Defines pin muxing groups according to
-+			 * BCM2835-ARM-Peripherals.pdf page 102.
-+			 *
-+			 * While each pin can have its mux selected
-+			 * for various functions individually, some
-+			 * groups only make sense to switch to a
-+			 * particular function together.
-+			 */
-+			i2c0_gpio0: i2c0_gpio0 {
-+				brcm,pins = <0 1>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			i2c1_gpio2: i2c1_gpio2 {
-+				brcm,pins = <2 3>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk0_gpio4: gpclk0_gpio4 {
-+				brcm,pins = <4>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk1_gpio5: gpclk1_gpio5 {
-+				brcm,pins = <5>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk2_gpio6: gpclk2_gpio6 {
-+				brcm,pins = <6>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			spi0_gpio7: spi0_gpio7 {
-+				brcm,pins = <7 8 9 10 11>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pwm0_gpio12: pwm0_gpio12 {
-+				brcm,pins = <12>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pwm1_gpio13: pwm1_gpio13 {
-+				brcm,pins = <13>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			uart0_gpio14: uart0_gpio14 {
-+				brcm,pins = <14 15>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pcm_gpio18: pcm_gpio18 {
-+				brcm,pins = <18 19 20 21>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			i2c0_gpio32: i2c0_gpio32 {
-+				brcm,pins = <32 34>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			spio0_gpio35: spio0_gpio35 {
-+				brcm,pins = <35 36 37 38 39>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pwm0_gpio40: pwm0_gpio40 {
-+				brcm,pins = <40>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pwm1_gpio41: pwm1_gpio41 {
-+				brcm,pins = <41>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk1_gpio42: gpclk1_gpio42 {
-+				brcm,pins = <42>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk2_gpio43: gpclk2_gpio43 {
-+				brcm,pins = <43>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			gpclk1_gpio44: gpclk1_gpio44 {
-+				brcm,pins = <44>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			pwm1_gpio45: pwm1_gpio45 {
-+				brcm,pins = <45>;
-+				brcm,function = <BCM2835_FSEL_ALT0>;
-+			};
-+			i2c0_gpio44: i2c0_gpio44 {
-+				brcm,pins = <44 45>;
-+				brcm,function = <BCM2835_FSEL_ALT1>;
-+			};
-+			pcm_gpio28: pcm_gpio28 {
-+				brcm,pins = <28 29 30 31>;
-+				brcm,function = <BCM2835_FSEL_ALT2>;
-+			};
-+			uart1_gpio36: uart1_gpio36 {
-+				brcm,pins = <36 37 38 39>;
-+				brcm,function = <BCM2835_FSEL_ALT2>;
-+			};
-+			i2c1_gpio44: i2c1_gpio44 {
-+				brcm,pins = <44 45>;
-+				brcm,function = <BCM2835_FSEL_ALT2>;
-+			};
-+			/* Separate from the uart0_gpio14 group
-+			 * because it conflicts with spi1_gpio16, and
-+			 * people often run uart0 on the two pins
-+			 * without flow contrl.
-+			 */
-+			uart0_ctsrts_gpio16: uart0_ctsrts_gpio16 {
-+				brcm,pins = <16 17>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+			i2c_slave_gpio18: i2c_slave_gpio18 {
-+				brcm,pins = <18 19 20 21>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+			emmc_gpio22: emmc_gpio22 {
-+				brcm,pins = <22 23 24 25 26 27>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+			uart0_gpio30: uart0_gpio30 {
-+				brcm,pins = <30 31>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+			uart0_ctsrts_gpio32: uart0_ctsrts_gpio32 {
-+				brcm,pins = <32 33>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
-+			spi1_gpio16: spi1_gpio16 {
-+				brcm,pins = <16 17 18 19 20 21>;
-+				brcm,function = <BCM2835_FSEL_ALT4>;
-+			};
-+			jtag_gpio22: jtag_gpio22 {
-+				brcm,pins = <22 23 24 25 26 27>;
-+				brcm,function = <BCM2835_FSEL_ALT4>;
-+			};
-+			spi2_gpio40: spi2_gpio40 {
-+				brcm,pins = <40 41 42 43 44 45>;
-+				brcm,function = <BCM2835_FSEL_ALT4>;
-+			};
-+			jtag_gpio4: jtag_gpio4 {
-+				brcm,pins = <4 5 6 12 13>;
-+				brcm,function = <BCM2835_FSEL_ALT4>;
-+			};
-+			uart1_gpio14: uart1_gpio14 {
-+				brcm,pins = <14 15>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_ctsrts_gpio16: uart1_ctsrts_gpio16 {
-+				brcm,pins = <16 17>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			pwm0_gpio18: pwm0_gpio18 {
-+				brcm,pins = <18>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			pwm1_gpio19: pwm1_gpio19 {
-+				brcm,pins = <19>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_gpio30: uart1_gpio30 {
-+				brcm,pins = <30 31>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_ctsrts_gpio32: uart1_ctsrts_gpio32 {
-+				brcm,pins = <32 33>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_gpio40: uart1_gpio40 {
-+				brcm,pins = <40 41>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
-+			uart1_ctsrts_gpio42: uart1_ctsrts_gpio42 {
-+				brcm,pins = <42 43>;
-+				brcm,function = <BCM2835_FSEL_ALT5>;
-+			};
- 		};
- 
- 		uart0: serial@7e201000 {
--- 
-1.8.3.1
+T24gV2VkLCBKdW4gMDEsIDIwMTYgYXQgMDY6MDM6MzdQTSArMDIwMCwgQm9yaXMgQnJlemlsbG9u
+IHdyb3RlOgo+IE9uIFR1ZSwgMTcgTWF5IDIwMTYgMDg6NDc6MTEgKzAyMDAKPiBEYW5pZWwgVmV0
+dGVyIDxkYW5pZWxAZmZ3bGwuY2g+IHdyb3RlOgo+IAo+ID4gPiArc3RhdGljIHN0cnVjdCBkcm1f
+ZW5jb2RlciAqc2lpOTAyeF9iZXN0X2VuY29kZXIoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5l
+Y3RvcikKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCA9IGNvbm5lY3Rv
+cl90b19zaWk5MDJ4KGNvbm5lY3Rvcik7Cj4gPiA+ICsKPiA+ID4gKwlyZXR1cm4gc2lpOTAyeC0+
+YnJpZGdlLmVuY29kZXI7Cj4gPiA+ICt9ICAKPiA+IAo+ID4gZHJtX2F0b21pY19oZWxwZXJfYmVz
+dF9lbmNvZGVyIHNob3VsZCBkbyBleGFjdGx5IHRoaXMgZm9yIHlvdS4gSWYgeW91IGZlZWwKPiA+
+IGJvYXJkIHBpbXAgdGhlIGF0b21pYyBoZWxwZXJzIHRvIGNhbGwgdGhhdCBvbmUgYnkgZGVmYXVs
+dCB0byBldmVuIHJlbW92ZQo+ID4gdGhlIHZmdW5jIGFzc2luZ21lbnQgbGluZSA7LSkKPiAKPiBK
+dXN0IHRvIGJlIHN1cmUsIGlzIHRoYXQgd2hhdCB5b3UgaGFkIGluIG1pbmQ/CgpFeGFjdGx5LCBJ
+J2xsIHBpY2sgdGhpcyBvbmUgdXAgZm9yIGRybS1taXNjLiBidHcgaWYgeW91J3JlIGV2ZW4gbW9y
+ZQptb3RpdmF0ZWQsIHlvdSBjYW4gZ28gdGhyb3VnaCBhbGwgZHJpdmVycyB3aXRoIGEgc3RhdGlj
+IG1hcHBpbmcgZnJvbQpjb25uZWN0b3IgdG8gZW5jb2RlciwgYW5kIG51a2UgdGhvc2UgZnVuY3Rp
+b25zLiBTaW5jZSBpZiBpdCdzIGp1c3QgYQpzdGF0aWMgbWFwcGluZywgdGhlIG9ubHkgd2F5IHRv
+IGRvIGl0IGlzIGxpa2UgdGhlIGhlbHBlciBkb2VzLgoKVGhhbmtzLCBEYW5pZWwKPiAKPiAtLS0+
+OC0tLQo+IEZyb20gZDIxOGI3ZWExNmNhMzU0NTJiMzE3NGM4M2EyMDdlY2Q0MDZlNWM4OCBNb24g
+U2VwIDE3IDAwOjAwOjAwIDIwMDEKPiBGcm9tOiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXpp
+bGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gRGF0ZTogV2VkLCAxIEp1biAyMDE2IDE3OjU3OjE4
+ICswMjAwCj4gU3ViamVjdDogW1BBVENIXSBkcm06IGF0b21pYzogSGFuZGxlIGZ1bmNzLT5iZXN0
+X2VuY29kZXIgPT0gTlVMTCBjYXNlCj4gCj4gRmFsbGJhY2sgZHJtX2F0b21pY19oZWxwZXJfYmVz
+dF9lbmNvZGVyKCkgaXMgZnVuY3MtPmJlc3RfZW5jb2RlcigpIGlzIE5VTEwKPiBzbyB0aGF0IERS
+TSBkcml2ZXJzIGNhbiBsZWF2ZSB0aGlzIGhvb2sgdW5hc3NpZ25lZCBpZiB0aGV5IGtub3cgdGhl
+eSB3YW50Cj4gdG8gdXNlIGRybV9hdG9taWNfaGVscGVyX2Jlc3RfZW5jb2RlcigpLgo+IAo+IFNp
+Z25lZC1vZmYtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ry
+b25zLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2RybV9hdG9taWNfaGVscGVyLmMgfCA0
+ICsrKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+
+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21pY19oZWxwZXIuYyBiL2Ry
+aXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jCj4gaW5kZXggZGRmYTBkMS4uZjZhMzM1
+MCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21pY19oZWxwZXIuYwo+ICsr
+KyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jCj4gQEAgLTExMCw4ICsxMTAs
+MTAgQEAgc3RhdGljIGludCBoYW5kbGVfY29uZmxpY3RpbmdfZW5jb2RlcnMoc3RydWN0IGRybV9h
+dG9taWNfc3RhdGUgKnN0YXRlLAo+ICAKPiAgCQlpZiAoZnVuY3MtPmF0b21pY19iZXN0X2VuY29k
+ZXIpCj4gIAkJCW5ld19lbmNvZGVyID0gZnVuY3MtPmF0b21pY19iZXN0X2VuY29kZXIoY29ubmVj
+dG9yLCBjb25uX3N0YXRlKTsKPiAtCQllbHNlCj4gKwkJZWxzZSBpZiAoZnVuY3MtPmJlc3RfZW5j
+b2RlcikKPiAgCQkJbmV3X2VuY29kZXIgPSBmdW5jcy0+YmVzdF9lbmNvZGVyKGNvbm5lY3Rvcik7
+Cj4gKwkJZWxzZQo+ICsJCQluZXdfZW5jb2RlciA9IGRybV9hdG9taWNfaGVscGVyX2Jlc3RfZW5j
+b2Rlcihjb25uZWN0b3IpOwo+ICAKPiAgCQlpZiAobmV3X2VuY29kZXIpIHsKPiAgCQkJaWYgKGVu
+Y29kZXJfbWFzayAmICgxIDw8IGRybV9lbmNvZGVyX2luZGV4KG5ld19lbmNvZGVyKSkpIHsKPiAK
+PiAKPiAKCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3Jh
+dGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
