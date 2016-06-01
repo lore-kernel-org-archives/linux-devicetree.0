@@ -1,112 +1,87 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 01/13] ARM: shmobile: r8a7792: add clock index macros
-Date: Wed, 1 Jun 2016 09:22:19 +0200
-Message-ID: <CAMuHMdVZ_8z3coEXswM0VSNPx0=yxdBmAmJjwHyZ9PyB5RZRfQ@mail.gmail.com>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
-	<2280165.siMXMbFrFe@wasted.cogentembedded.com>
+From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v10 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma device tree binding documentation
+Date: Wed, 1 Jun 2016 12:53:58 +0530
+Message-ID: <1464765839-29018-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2280165.siMXMbFrFe-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Device-tree binding documentation for Xilinx zynqmp dma engine
+used in Zynq UltraScale+ MPSoC.
 
-On Wed, Jun 1, 2016 at 12:09 AM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Add macros usable by the device tree sources to reference the R8A7792
-> clocks  by index.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->
-> ---
->  include/dt-bindings/clock/r8a7792-clock.h |  104 ++++++++++++++++++++++++++++++
->  1 file changed, 104 insertions(+)
->
-> Index: renesas/include/dt-bindings/clock/r8a7792-clock.h
-> ===================================================================
-> --- /dev/null
-> +++ renesas/include/dt-bindings/clock/r8a7792-clock.h
-> @@ -0,0 +1,104 @@
-> +/*
-> + * Copyright (C) 2016 Cogent Embedded, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_R8A7792_H__
-> +#define __DT_BINDINGS_CLOCK_R8A7792_H__
-> +
-> +/* CPG */
-> +#define R8A7792_CLK_MAIN               0
-> +#define R8A7792_CLK_PLL0               1
-> +#define R8A7792_CLK_PLL1               2
-> +#define R8A7792_CLK_PLL3               3
-> +#define R8A7792_CLK_LB                 4
-> +#define R8A7792_CLK_QSPI               5
-> +#define R8A7792_CLK_SDH                        6
-> +#define R8A7792_CLK_SD0                        7
-> +#define R8A7792_CLK_SD1                        8
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v10:
+- Added Rob Acked-by in the commit message.
+Changs in v9:
+- Removed include sg runtime configuration parameter
+  from the binding doc as suggested by Lars.
+Changes in v8:
+- Removed all the software runtime configuration parameters
+  from the binding doc as suggested by the Lars.
+Changes in v7:
+- None.
+Changes in v6:
+- Removed desc-axi-cache/dst-axi-cache/src-axi-cache properties
+  from the binding doc as it allow broken combinations when dma-coherent
+  is set as suggested by Rob.
+- Fixed minor comments given by Rob related coding(lower case DT node name).
+Changes in v5:
+- Use dma-coherent flag for coherent transfers as suggested by rob.
+- Removed unnecessary properties from binding doc as suggested by Rob.
+Changes in v4:
+- None
+Changes in v3:
+- None
+Changes in v2:
+- None.
 
-As Simon already pointed out, there are no ...SD* clocks on V2H.
+ .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
 
-> +#define R8A7792_CLK_Z                  9
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+new file mode 100644
+index 0000000..a784cdd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+@@ -0,0 +1,27 @@
++Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
++memory to device and device to memory transfers. It also has flow
++control and rate control support for slave/peripheral dma access.
++
++Required properties:
++- compatible		: Should be "xlnx,zynqmp-dma-1.0"
++- reg			: Memory map for gdma/adma module access.
++- interrupt-parent	: Interrupt controller the interrupt is routed through
++- interrupts		: Should contain DMA channel interrupt.
++- xlnx,bus-width	: Axi buswidth in bits. Should contain 128 or 64
++- clock-names		: List of input clocks "clk_main", "clk_apb"
++			  (see clock bindings for details)
++
++Optional properties:
++- dma-coherent		: Present if dma operations are coherent.
++
++Example:
++++++++++
++fpd_dma_chan1: dma@fd500000 {
++	compatible = "xlnx,zynqmp-dma-1.0";
++	reg = <0x0 0xFD500000 0x1000>;
++	interrupt-parent = <&gic>;
++	interrupts = <0 117 4>;
++	clock-names = "clk_main", "clk_apb";
++	xlnx,bus-width = <128>;
++	dma-coherent;
++};
+-- 
+2.1.2
 
-> +/* MSTP1 */
-> +#define R8A7792_CLK_TMU1               11
-> +#define R8A7792_CLK_TMU3               21
-> +#define R8A7792_CLK_TMU2               22
-> +#define R8A7792_CLK_CMT0               24
-> +#define R8A7792_CLK_TMU0               25
-> +#define R8A7792_CLK_VSP1DU1            27
-> +#define R8A7792_CLK_VSP1DU0            28
-> +#define R8A7792_CLK_VSP1_SY            31
-
-These are called ...VSP1_DU1, ...VSP1_DU0, and ...VSP1_S on all other
-R-Car Gen2 SoCs.
-
-> +/* MSTP2 */
-> +#define R8A7792_CLK_MSIOF1             8
-> +#define R8A7792_CLK_SYS_DMAC0          18
-
-This is ...SYS_DMAC1
-
-> +#define R8A7792_CLK_SYS_DMAC1          19
-
-... and this is ...SYS_DMAC0
-
-> +/* MSTP9 */
-> +#define R8A7792_CLK_GPIO7              4
-> +#define R8A7792_CLK_GPIO6              5
-> +#define R8A7792_CLK_GPIO5              7
-> +#define R8A7792_CLK_GPIO4              8
-> +#define R8A7792_CLK_GPIO3              9
-> +#define R8A7792_CLK_GPIO2              10
-> +#define R8A7792_CLK_GPIO1              11
-> +#define R8A7792_CLK_GPIO0              12
-> +#define R8A7792_CLK_GPIO11             13
-> +#define R8A7792_CLK_GPIO10             14
-> +#define R8A7792_CLK_CAN1               15
-> +#define R8A7792_CLK_CAN0               16
-
-These are called ...RCAN1 and ...RCAR0 on all other R-Car Gen2 SoCs.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
