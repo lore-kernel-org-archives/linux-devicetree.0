@@ -1,64 +1,56 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH/RFC v3 12/22] clk: renesas: r8a7779: Obtain mode pin values from R-Car RST driver
-Date: Wed,  1 Jun 2016 21:21:10 +0200
-Message-ID: <1464808880-343-13-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v3 22/22] clk: renesas: rcar-gen2: Remove obsolete rcar_gen2_clocks_init()
+Date: Wed,  1 Jun 2016 21:21:20 +0200
+Message-ID: <1464808880-343-23-git-send-email-geert+renesas@glider.be>
 References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Obtain the values of the mode pins from the R-Car RST driver, which
-relies on the presence in DT of a device node for the RESET/WDT module.
+The R-Car Gen2 board code no longer calls rcar_gen2_clocks_init().
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v3:
-  - New.
----
- drivers/clk/renesas/clk-r8a7779.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+  - rebased,
 
-diff --git a/drivers/clk/renesas/clk-r8a7779.c b/drivers/clk/renesas/clk-r8a7779.c
-index cf2a37df03b15e60..ca7551bcb1153c3d 100644
---- a/drivers/clk/renesas/clk-r8a7779.c
-+++ b/drivers/clk/renesas/clk-r8a7779.c
-@@ -18,6 +18,7 @@
- #include <linux/of_address.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
-+#include <linux/soc/renesas/rcar-rst.h>
+v2:
+  - No changes.
+---
+ drivers/clk/renesas/clk-rcar-gen2.c | 7 -------
+ include/linux/clk/renesas.h         | 2 --
+ 2 files changed, 9 deletions(-)
+
+diff --git a/drivers/clk/renesas/clk-rcar-gen2.c b/drivers/clk/renesas/clk-rcar-gen2.c
+index 436fc7a7714e4bd7..4860022627bb455f 100644
+--- a/drivers/clk/renesas/clk-rcar-gen2.c
++++ b/drivers/clk/renesas/clk-rcar-gen2.c
+@@ -430,10 +430,3 @@ static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
+ }
+ CLK_OF_DECLARE(rcar_gen2_cpg_clks, "renesas,rcar-gen2-cpg-clocks",
+ 	       rcar_gen2_cpg_clocks_init);
+-
+-void __init rcar_gen2_clocks_init(u32 mode)
+-{
+-	cpg_mode = mode;
+-
+-	of_clk_init(NULL);
+-}
+diff --git a/include/linux/clk/renesas.h b/include/linux/clk/renesas.h
+index 9e969941f3f62878..9ebf1f8243bb57af 100644
+--- a/include/linux/clk/renesas.h
++++ b/include/linux/clk/renesas.h
+@@ -20,8 +20,6 @@ struct device;
+ struct device_node;
+ struct generic_pm_domain;
  
- #include <dt-bindings/clock/r8a7779-clock.h>
- 
-@@ -127,6 +128,10 @@ static void __init r8a7779_cpg_clocks_init(struct device_node *np)
- 	struct clk **clks;
- 	unsigned int i, plla_mult;
- 	int num_clks;
-+	u32 mode;
-+
-+	if (rcar_rst_read_mode_pins(&mode))
-+		return;
- 
- 	num_clks = of_property_count_strings(np, "clock-output-names");
- 	if (num_clks < 0) {
-@@ -148,8 +153,8 @@ static void __init r8a7779_cpg_clocks_init(struct device_node *np)
- 	cpg->data.clks = clks;
- 	cpg->data.clk_num = num_clks;
- 
--	config = &cpg_clk_configs[CPG_CLK_CONFIG_INDEX(cpg_mode)];
--	plla_mult = cpg_plla_mult[CPG_PLLA_MULT_INDEX(cpg_mode)];
-+	config = &cpg_clk_configs[CPG_CLK_CONFIG_INDEX(mode)];
-+	plla_mult = cpg_plla_mult[CPG_PLLA_MULT_INDEX(mode)];
- 
- 	for (i = 0; i < num_clks; ++i) {
- 		const char *name;
+-void rcar_gen2_clocks_init(u32 mode);
+-
+ void cpg_mstp_add_clk_domain(struct device_node *np);
+ #ifdef CONFIG_CLK_RENESAS_CPG_MSTP
+ int cpg_mstp_attach_dev(struct generic_pm_domain *unused, struct device *dev);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
