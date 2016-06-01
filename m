@@ -1,58 +1,31 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v4 1/2] drm: bridge: Add sii902x driver
-Date: Wed, 1 Jun 2016 18:03:37 +0200
-Message-ID: <20160601180337.28e0917b@bbrezillon>
-References: <1463407469-21819-1-git-send-email-boris.brezillon@free-electrons.com>
- <20160517064711.GF27098@phenom.ffwll.local>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6: tag boards that have the HW
+ workaround for ERR006687
+Date: Wed, 1 Jun 2016 17:17:29 +0100
+Message-ID: <20160601161729.GB19428@n2100.arm.linux.org.uk>
+References: <1464794983-31484-1-git-send-email-l.stach@pengutronix.de>
+ <1464794983-31484-3-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160517064711.GF27098@phenom.ffwll.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, Meng Yi <meng.yi@nxp.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1464794983-31484-3-git-send-email-l.stach@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>, devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAxNyBNYXkgMjAxNiAwODo0NzoxMSArMDIwMApEYW5pZWwgVmV0dGVyIDxkYW5pZWxA
-ZmZ3bGwuY2g+IHdyb3RlOgoKPiA+ICtzdGF0aWMgc3RydWN0IGRybV9lbmNvZGVyICpzaWk5MDJ4
-X2Jlc3RfZW5jb2RlcihzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ID4gK3sKPiA+
-ICsJc3RydWN0IHNpaTkwMnggKnNpaTkwMnggPSBjb25uZWN0b3JfdG9fc2lpOTAyeChjb25uZWN0
-b3IpOwo+ID4gKwo+ID4gKwlyZXR1cm4gc2lpOTAyeC0+YnJpZGdlLmVuY29kZXI7Cj4gPiArfSAg
-Cj4gCj4gZHJtX2F0b21pY19oZWxwZXJfYmVzdF9lbmNvZGVyIHNob3VsZCBkbyBleGFjdGx5IHRo
-aXMgZm9yIHlvdS4gSWYgeW91IGZlZWwKPiBib2FyZCBwaW1wIHRoZSBhdG9taWMgaGVscGVycyB0
-byBjYWxsIHRoYXQgb25lIGJ5IGRlZmF1bHQgdG8gZXZlbiByZW1vdmUKPiB0aGUgdmZ1bmMgYXNz
-aW5nbWVudCBsaW5lIDstKQoKSnVzdCB0byBiZSBzdXJlLCBpcyB0aGF0IHdoYXQgeW91IGhhZCBp
-biBtaW5kPwoKLS0tPjgtLS0KRnJvbSBkMjE4YjdlYTE2Y2EzNTQ1MmIzMTc0YzgzYTIwN2VjZDQw
-NmU1Yzg4IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBCb3JpcyBCcmV6aWxsb24gPGJv
-cmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+CkRhdGU6IFdlZCwgMSBKdW4gMjAxNiAx
-Nzo1NzoxOCArMDIwMApTdWJqZWN0OiBbUEFUQ0hdIGRybTogYXRvbWljOiBIYW5kbGUgZnVuY3Mt
-PmJlc3RfZW5jb2RlciA9PSBOVUxMIGNhc2UKCkZhbGxiYWNrIGRybV9hdG9taWNfaGVscGVyX2Jl
-c3RfZW5jb2RlcigpIGlzIGZ1bmNzLT5iZXN0X2VuY29kZXIoKSBpcyBOVUxMCnNvIHRoYXQgRFJN
-IGRyaXZlcnMgY2FuIGxlYXZlIHRoaXMgaG9vayB1bmFzc2lnbmVkIGlmIHRoZXkga25vdyB0aGV5
-IHdhbnQKdG8gdXNlIGRybV9hdG9taWNfaGVscGVyX2Jlc3RfZW5jb2RlcigpLgoKU2lnbmVkLW9m
-Zi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29t
-PgotLS0KIGRyaXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jIHwgNCArKystCiAxIGZp
-bGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL2RybV9hdG9taWNfaGVscGVyLmMgYi9kcml2ZXJzL2dwdS9kcm0vZHJt
-X2F0b21pY19oZWxwZXIuYwppbmRleCBkZGZhMGQxLi5mNmEzMzUwIDEwMDY0NAotLS0gYS9kcml2
-ZXJzL2dwdS9kcm0vZHJtX2F0b21pY19oZWxwZXIuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJt
-X2F0b21pY19oZWxwZXIuYwpAQCAtMTEwLDggKzExMCwxMCBAQCBzdGF0aWMgaW50IGhhbmRsZV9j
-b25mbGljdGluZ19lbmNvZGVycyhzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqc3RhdGUsCiAKIAkJ
-aWYgKGZ1bmNzLT5hdG9taWNfYmVzdF9lbmNvZGVyKQogCQkJbmV3X2VuY29kZXIgPSBmdW5jcy0+
-YXRvbWljX2Jlc3RfZW5jb2Rlcihjb25uZWN0b3IsIGNvbm5fc3RhdGUpOwotCQllbHNlCisJCWVs
-c2UgaWYgKGZ1bmNzLT5iZXN0X2VuY29kZXIpCiAJCQluZXdfZW5jb2RlciA9IGZ1bmNzLT5iZXN0
-X2VuY29kZXIoY29ubmVjdG9yKTsKKwkJZWxzZQorCQkJbmV3X2VuY29kZXIgPSBkcm1fYXRvbWlj
-X2hlbHBlcl9iZXN0X2VuY29kZXIoY29ubmVjdG9yKTsKIAogCQlpZiAobmV3X2VuY29kZXIpIHsK
-IAkJCWlmIChlbmNvZGVyX21hc2sgJiAoMSA8PCBkcm1fZW5jb2Rlcl9pbmRleChuZXdfZW5jb2Rl
-cikpKSB7CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Jun 01, 2016 at 05:29:43PM +0200, Lucas Stach wrote:
+> @@ -97,6 +97,7 @@
+>  	phy-reset-gpios = <&gpio3 31 0>;
+>  	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+>  			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+> +	fsl,err006687-war-present;
+
+war?  Any reason not to spell it out, or use the more natural
+abbreviation "wa"?
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
