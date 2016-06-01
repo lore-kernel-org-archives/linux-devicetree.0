@@ -1,186 +1,157 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
 Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
-Date: Wed, 01 Jun 2016 10:24:11 +0200
-Message-ID: <4816755.yFEaWXVu6I@wuerfel>
+Date: Wed, 1 Jun 2016 09:34:47 +0100
+Message-ID: <574E9E27.9070702@arm.com>
 References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
- <8520D5D51A55D047800579B094147198258AF22F@XAP-PVEXMBX01.xlnx.xilinx.com>
- <57482200.9090008@rock-chips.com>
+ <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
+ <57483CAA.8000005@arm.com> <574E4EF5.7040005@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <57482200.9090008-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <574E4EF5.7040005@rock-chips.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Wenrui Li <wenrui.li@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, May 27, 2016 6:31:28 PM CEST Wenrui Li wrote:
-> Hi,
+On 01/06/16 03:56, Wenrui Li wrote:
+> Hi:
 > 
-> On 2016/5/27 15:13, Bharat Kumar Gogada wrote:
-> >>>
-> >>>> +
-> >>>> +static int rockchip_pcie_rd_other_conf(struct rockchip_pcie_port *pp,
-> >>>> +                                 struct pci_bus *bus, u32 devfn,
-> >>>> +                                 int where, int size, u32 *val)
-> >>>> +{
-> >>>> +  u32 busdev;
-> >>>> +
-> >>>> +  busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
-> >>>> +                          PCI_FUNC(devfn), where);
-> >>>> +
-> >>>> +  if (busdev & (size - 1)) {
-> >>>> +          *val = 0;
-> >>>> +          return PCIBIOS_BAD_REGISTER_NUMBER;
-> >>>> +  }
-> >>>> +
-> >>>> +  if (size == 4) {
-> >>>> +          *val = readl(pp->reg_base + busdev);
-> >>>> +  } else if (size == 2) {
-> >>>> +          *val = readw(pp->reg_base + busdev);
-> >>>> +  } else if (size == 1) {
-> >>>> +          *val = readb(pp->reg_base + busdev);
-> >>>> +  } else {
-> >>>> +          *val = 0;
-> >>>> +          return PCIBIOS_BAD_REGISTER_NUMBER;
-> >>>> +  }
-> >>>> +  return PCIBIOS_SUCCESSFUL;
-> >>>> +}
-> >>>> +
-> >>>
-> >>> This looks like the normal ECAM operations, you could just call those.
-> >>
-> >> I read ECAM reference code, I found it not support ioremap config space
-> >> for each bus individually on 64-bit systems. Our soc is 64-bit system,
-> >> and bus0 config space base address is 0xfda00000, bus1 base address is
-> >> 0xf8100000. So I think it is not normal ECAM operations, I do not know
-> >> if I have understood correctly?
-> >>
-> > Hi,
-> >
-> > I think Arnd was suggesting to use generic config read/write calls, pci_generic_config_read/pci_generic_config_write
-> > which does above functionality.
+> On 2016/5/27 20:25, Marc Zyngier Wrote:
+>> [+Lorenzo]
+>>
+>> On 20/05/16 11:29, Shawn Lin wrote:
+>>> RK3399 has a PCIe controller which can be used as Root Complex.
+>>> This driver supports a PCIe controller as Root Complex mode.
+>>>
 > 
-> Yeah, I seem the pci_generic_config_write use writew/writeb for byte and 
-> word write. but our SOC not support byte and word write in RC config 
-> spcace. So I redefine the the pci_ops.write
+> [....]
+> 
+>>> +static int rockchip_pcie_init_irq_domain(struct rockchip_pcie_port *pp)
+>>> +{
+>>> +	struct device *dev = pp->dev;
+>>> +	struct device_node *node = dev->of_node;
+>>> +	struct device_node *pcie_intc_node =  of_get_next_child(node, NULL);
+>>
+>> That's really ugly, as it depends on the layout of your DT.
+>>
+>>> +
+>>> +	if (!pcie_intc_node) {
+>>> +		dev_err(dev, "No PCIe Intc node found\n");
+>>> +		return PTR_ERR(pcie_intc_node);
+>>> +	}
+>>> +	pp->irq_domain = irq_domain_add_linear(pcie_intc_node, 4,
+>>> +					       &intx_domain_ops, pp);
+>>
+>> Why can't you just register your host controller as the interrupt
+>> controller? You don't need an intermediate node for that.
+> 
+> OK, the child node is really no need here, we will use the host 
+> controller as interrupt controller next patch. Thanks!
+> 
+>>
+>>> +	if (!pp->irq_domain) {
+>>> +		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+>>> +		return PTR_ERR(pp->irq_domain);
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static irqreturn_t rockchip_pcie_subsys_irq_handler(int irq, void *arg)
+>>> +{
+>>> +	struct rockchip_pcie_port *pp = arg;
+>>> +	u32 reg;
+>>> +	u32 sub_reg;
+>>> +
+>>> +	reg = pcie_read(pp, PCIE_CLIENT_INT_STATUS);
+>>> +	if (reg & LOC_INT) {
+>>> +		dev_dbg(pp->dev, "local interrupt recived\n");
+>>> +		sub_reg = pcie_read(pp, PCIE_CORE_INT_STATUS);
+>>> +		if (sub_reg & PRFPE)
+>>> +			dev_dbg(pp->dev, "Parity error detected while reading from the PNP Receive FIFO RAM\n");
+>>> +
+>>> +		if (sub_reg & CRFPE)
+>>> +			dev_dbg(pp->dev, "Parity error detected while reading from the Completion Receive FIFO RAM\n");
+>>> +
+>>> +		if (sub_reg & RRPE)
+>>> +			dev_dbg(pp->dev, "Parity error detected while reading from Replay Buffer RAM\n");
+>>> +
+>>> +		if (sub_reg & PRFO)
+>>> +			dev_dbg(pp->dev, "Overflow occurred in the PNP Receive FIFO\n");
+>>> +
+>>> +		if (sub_reg & CRFO)
+>>> +			dev_dbg(pp->dev, "Overflow occurred in the Completion Receive FIFO\n");
+>>> +
+>>> +		if (sub_reg & RT)
+>>> +			dev_dbg(pp->dev, "Replay timer timed out\n");
+>>> +
+>>> +		if (sub_reg & RTR)
+>>> +			dev_dbg(pp->dev, "Replay timer rolled over after 4 transmissions of the same TLP\n");
+>>> +
+>>> +		if (sub_reg & PE)
+>>> +			dev_dbg(pp->dev, "Phy error detected on receive side\n");
+>>> +
+>>> +		if (sub_reg & MTR)
+>>> +			dev_dbg(pp->dev, "Malformed TLP received from the link\n");
+>>> +
+>>> +		if (sub_reg & UCR)
+>>> +			dev_dbg(pp->dev, "Malformed TLP received from the link\n");
+>>> +
+>>> +		if (sub_reg & FCE)
+>>> +			dev_dbg(pp->dev, "An error was observed in the flow control advertisements from the other side\n");
+>>> +
+>>> +		if (sub_reg & CT)
+>>> +			dev_dbg(pp->dev, "A request timed out waiting for completion\n");
+>>> +
+>>> +		if (sub_reg & UTC)
+>>> +			dev_dbg(pp->dev, "Unmapped TC error\n");
+>>> +
+>>> +		if (sub_reg & MMVC)
+>>> +			dev_dbg(pp->dev, "MSI mask register changes\n");
+>>> +
+>>> +		pcie_write(pp, sub_reg, PCIE_CORE_INT_STATUS);
+>>> +	}
+>>> +
+>>> +	pcie_write(pp, reg, PCIE_CLIENT_INT_STATUS);
+>>> +
+>>> +	return IRQ_HANDLED;
+>>> +}
+> 
+> [....]
+> 
+>>> +static irqreturn_t rockchip_pcie_legacy_int_handler(int irq, void *arg)
+>>> +{
+>>> +	struct rockchip_pcie_port *pp = arg;
+>>> +	u32 reg;
+>>> +
+>>> +	reg = pcie_read(pp, PCIE_CLIENT_INT_STATUS);
+>>> +	reg = (reg & ROCKCHIP_PCIE_RPIFR1_INTR_MASK) >>
+>>> +	       ROCKCHIP_PCIE_RPIFR1_INTR_SHIFT;
+>>> +	generic_handle_irq(irq_find_mapping(pp->irq_domain, ffs(reg)));
+>>
+>> NAK. What you have here is a chained interrupt controller, please
+>> implement it as such.
+> 
+> Your mean is use handle_nested_irq instead of generic_handle_irq here?
 
-Rihgt, that bug should be documented somewhere. You can also use
-the pci_generic_config_read32/pci_generic_config_write32 functions
-for this.
+No, handle_nested_irq() is for threaded interrupts. What I mean is that
+you need to configure the interrupt as a cascaded interrupt, and use the
+chained_irq_enter/exit helpers. As a rule of thumb, if you're calling
+generic_handle_irq() in an interrupt handler, you're doing something wrong.
 
-I wonder if we should add a more general way of treating type 1
-config space accesses differently, as a lot of host bridges have
-similar requirements, accessing the registers in a different place,
-different layout, or other constraints.
+If you don't do that, you may end up with interrupts that are not EOIed
+properly, RCU violations, and double accounting of interrupts.
 
-The patch below would make that very easy to do. Suggestions for
-better naming welcome.
+> But, I found all other pci host controller drivers use this api.
 
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+I'm afraid that doesn't make it any better. Buggy code is everywhere,
+and it does spread faster than properly written code. Have a look at
+drivers/pci/host/pcie-altera.c as an example of what it should look like.
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index d11cdbb8fba3..2f7dcaa63e1d 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -34,9 +34,12 @@ int pci_bus_read_config_##size \
- 	u32 data = 0;							\
- 	if (PCI_##size##_BAD) return PCIBIOS_BAD_REGISTER_NUMBER;	\
- 	raw_spin_lock_irqsave(&pci_lock, flags);			\
--	res = bus->ops->read(bus, devfn, pos, len, &data);		\
-+	if (bus->number == 0 && bus->ops->read0)			\
-+		res = bus->ops->read0(bus, devfn, pos, len, &data);	\
-+	else								\
-+		res = bus->ops->read(bus, devfn, pos, len, &data);	\
- 	*value = (type)data;						\
--	raw_spin_unlock_irqrestore(&pci_lock, flags);		\
-+	raw_spin_unlock_irqrestore(&pci_lock, flags);			\
- 	return res;							\
- }
- 
-@@ -48,8 +51,11 @@ int pci_bus_write_config_##size \
- 	unsigned long flags;						\
- 	if (PCI_##size##_BAD) return PCIBIOS_BAD_REGISTER_NUMBER;	\
- 	raw_spin_lock_irqsave(&pci_lock, flags);			\
--	res = bus->ops->write(bus, devfn, pos, len, value);		\
--	raw_spin_unlock_irqrestore(&pci_lock, flags);		\
-+	if (bus->number == 0 && bus->ops->write0)			\
-+		res = bus->ops->write0(bus, devfn, pos, len, value);	\
-+	else								\
-+		res = bus->ops->write(bus, devfn, pos, len, value);	\
-+	raw_spin_unlock_irqrestore(&pci_lock, flags);			\
- 	return res;							\
- }
- 
-@@ -72,7 +78,11 @@ int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
- {
- 	void __iomem *addr;
- 
--	addr = bus->ops->map_bus(bus, devfn, where);
-+	if (bus->number == 0 && bus->ops->map_bus0)
-+		addr = bus->ops->map_bus0(bus, devfn, where);
-+	else
-+		addr = bus->ops->map_bus(bus, devfn, where);
-+
- 	if (!addr) {
- 		*val = ~0;
- 		return PCIBIOS_DEVICE_NOT_FOUND;
-@@ -94,7 +104,10 @@ int pci_generic_config_write(struct pci_bus *bus, unsigned int devfn,
- {
- 	void __iomem *addr;
- 
--	addr = bus->ops->map_bus(bus, devfn, where);
-+	if (bus->number == 0 && bus->ops->map_bus0)
-+		addr = bus->ops->map_bus0(bus, devfn, where);
-+	else
-+		addr = bus->ops->map_bus(bus, devfn, where);
- 	if (!addr)
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 
-@@ -114,7 +127,10 @@ int pci_generic_config_read32(struct pci_bus *bus, unsigned int devfn,
- {
- 	void __iomem *addr;
- 
--	addr = bus->ops->map_bus(bus, devfn, where & ~0x3);
-+	if (bus->number == 0 && bus->ops->map_bus0)
-+		addr = bus->ops->map_bus0(bus, devfn, where);
-+	else
-+		addr = bus->ops->map_bus(bus, devfn, where & ~0x3);
- 	if (!addr) {
- 		*val = ~0;
- 		return PCIBIOS_DEVICE_NOT_FOUND;
-@@ -135,7 +151,10 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
- 	void __iomem *addr;
- 	u32 mask, tmp;
- 
--	addr = bus->ops->map_bus(bus, devfn, where & ~0x3);
-+	if (bus->number == 0 && bus->ops->map_bus0)
-+		addr = bus->ops->map_bus0(bus, devfn, where);
-+	else
-+		addr = bus->ops->map_bus(bus, devfn, where & ~0x3);
- 	if (!addr)
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index df41c4645911..1caae3bd7115 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -580,6 +580,9 @@ struct pci_ops {
- 	void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
- 	int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
- 	int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
-+	void __iomem *(*map_bus0)(struct pci_bus *bus, unsigned int devfn, int where);
-+	int (*read0)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
-+	int (*write0)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
- };
- 
- /*
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
