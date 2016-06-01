@@ -1,34 +1,41 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: rng: Northstar Plus SoC rng bindings
-Date: Wed, 1 Jun 2016 20:34:11 +0530
-Message-ID: <CAL2FKYkSnf1Lc9d=S_7ipgySprTX9Zu=sMSmRnDDtBLcrz2X=Q@mail.gmail.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH] extcon: arizona: Update binding docs to mention new defines for GPSW
+Date: Wed, 1 Jun 2016 16:13:12 +0100
+Message-ID: <1464793992-20670-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Joshua Henderson <joshua.henderson@microchip.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, BC
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 1, 2016 at 8:17 PM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, May 27, 2016 at 06:10:38AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
->> Document the bindings used by Northstar Plus(NSP) SoC random number
->> generator.
->>
->> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
->> Acked-by: Eric Anholt <eric@anholt.net>
->
-> You missed my ack...
+Update the binding documentation to mention the defines added for the
+possible values of wlf,gpsw.
 
-Sorry Rob. I missed it.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+ Documentation/devicetree/bindings/extcon/extcon-arizona.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Herbert,
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+index e27341f..7f3d94a 100644
+--- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
++++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+@@ -46,7 +46,8 @@ Optional properties:
+     The second cell represents the MICBIAS to be used.
+     The third cell represents the value of the micd-pol-gpio pin.
+ 
+-  - wlf,gpsw : Settings for the general purpose switch
++  - wlf,gpsw : Settings for the general purpose switch, set as one of the
++    ARIZONA_GPSW_XXX defines.
+ 
+ Example:
+ 
+-- 
+2.1.4
 
-Can i send the v3 patch set with the ack added.
-
-Regards
-Dhananjay
->
->> ---
->>  Documentation/devicetree/bindings/rng/brcm,bcm2835.txt | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
