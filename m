@@ -1,41 +1,59 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH] extcon: arizona: Update binding docs to mention new defines for GPSW
-Date: Wed, 1 Jun 2016 16:13:12 +0100
-Message-ID: <1464793992-20670-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 3/3] ARM: dts: exynos: Add watchdog amd Security SubSystem
+ to Exynos5410
+Date: Wed, 1 Jun 2016 11:16:58 -0400
+Message-ID: <f7e99aad-f773-27c6-d554-ba30bc54b5f7@osg.samsung.com>
+References: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
+ <1464774351-23604-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1464774351-23604-3-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the binding documentation to mention the defines added for the
-possible values of wlf,gpsw.
+Hello Krzysztof,
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
- Documentation/devicetree/bindings/extcon/extcon-arizona.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On 06/01/2016 05:45 AM, Krzysztof Kozlowski wrote:
+> Move watchdog and Security SubSystem nodes from exynos5420.dtsi to file
+> shared with Exynos5410 and configure the clocks on the latter.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-index e27341f..7f3d94a 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-@@ -46,7 +46,8 @@ Optional properties:
-     The second cell represents the MICBIAS to be used.
-     The third cell represents the value of the micd-pol-gpio pin.
- 
--  - wlf,gpsw : Settings for the general purpose switch
-+  - wlf,gpsw : Settings for the general purpose switch, set as one of the
-+    ARIZONA_GPSW_XXX defines.
- 
- Example:
- 
+[snip]
+
+>  
+> +&sss {
+> +	clocks = <&clock CLK_SSS>;
+> +	clock-names = "secss";
+> +};
+> +
+
+[snip]
+
+>  
+> +&watchdog {
+> +	clocks = <&clock CLK_WDT>;
+> +	clock-names = "watchdog";
+> +	samsung,syscon-phandle = <&pmu_system_controller>;
+> +};
+> +
+
+Since you used the same ID than Exynos5420 for the SSS and WDT clocks,
+I wonder if the clock and clock-names shouldn't be just defined in the
+shared exynos54xx.dtsi as is the case for the interrupts that are also
+the same?
+
+The patch looks good to me though, so whatever you decide:
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
