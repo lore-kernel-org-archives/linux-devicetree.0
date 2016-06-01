@@ -1,52 +1,77 @@
 From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 09/32] bcm2837-rpi-3-b.dts for 32bit arm
-Date: Wed,  1 Jun 2016 23:43:18 +0200
-Message-ID: <1464817421-8519-10-git-send-email-kraxel@redhat.com>
+Subject: [PATCH 29/32] ARM: bcm2835: Use i2c-gpio for the expander, instead.
+Date: Wed,  1 Jun 2016 23:43:38 +0200
+Message-ID: <1464817421-8519-30-git-send-email-kraxel@redhat.com>
 References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rpi-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Cc: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:BROADCOM
+	BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
+	AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
----
- arch/arm/boot/dts/Makefile            | 3 ++-
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+From: Eric Anholt <eric@anholt.net>
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 06b6c2d..16de98f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -66,7 +66,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-b-rev2.dtb \
- 	bcm2835-rpi-b-plus.dtb \
- 	bcm2835-rpi-a-plus.dtb \
--	bcm2836-rpi-2-b.dtb
-+	bcm2836-rpi-2-b.dtb \
-+	bcm2837-rpi-3-b.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4708-asus-rt-ac56u.dtb \
- 	bcm4708-asus-rt-ac68u.dtb \
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-new file mode 100644
-index 0000000..36178a6
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-@@ -0,0 +1 @@
-+#include "../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts"
+I'm seeing a ton of CLKT errors from i2c-bcm2835.c, and haven't
+figured out a cause.
+
+Signed-off-by: Eric Anholt <eric@anholt.net>
+
+Conflicts:
+	arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+---
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts | 32 ++++++++++++------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index 4bc191e..202e8c3 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -23,6 +23,22 @@
+ 			linux,default-trigger = "default-on";
+ 		};
+ 	};
++
++	i2c_gpio {
++		compatible = "i2c-gpio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		gpios = <&gpio 44 0
++			 &gpio 45 0>;
++
++		gpio_expander: gpio@43 {
++			gpio-controller;
++			#gpio-cells = <2>;
++			reg = <0x43>;
++			compatible = "fcs,fxl6408";
++		};
++	};
+ };
+ 
+ &i2s {
+@@ -39,19 +55,3 @@
+ &hdmi {
+ 	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
+ };
+-
+-/* Connect the GPIO expander to I2C1 */
+-&i2c0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_gpio44>;
+-
+-	gpio_expander: gpio@43 {
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		reg = <0x43>;
+-		compatible = "fcs,fxl6408";
+-	};
+-};
+-
+-bt {
+-};
 -- 
 1.8.3.1
