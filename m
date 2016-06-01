@@ -1,243 +1,41 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] usb: ohci-at91: Forcibly suspend ports while USB suspend
-Date: Wed, 1 Jun 2016 12:29:59 +0800
-Message-ID: <1464755400-6825-2-git-send-email-wenyou.yang@atmel.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH v2 2/2] ARM: at91/dt: sama5d2: Use new compatible for ohci node
+Date: Wed, 1 Jun 2016 12:30:00 +0800
+Message-ID: <1464755400-6825-3-git-send-email-wenyou.yang@atmel.com>
 References: <1464755400-6825-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464755400-6825-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464755400-6825-1-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-In order to the save power consumption, as a workaround, suspend
-forcibly the USB PORTA/B/C via set the SUSPEND_A/B/C bits of OHCI
-Interrupt Configuration Register in the SFRs while OHCI USB suspend.
+Use compatible "atmel,sama5d2-ohci" to be capable of suspending
+ports while sleep to save the power consumption.
 
-This suspend operation must be done before the USB clock is disabled,
-resume after the USB clock is enabled.
-
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
 ---
 
 Changes in v2:
- - Add compatible to support forcibly suspend the ports.
- - Add soc/at91/at91_sfr.h to accommodate the defines.
- - Add error checking for .sfr_regmap.
- - Remove unnecessary regmap_read() statement.
+ - Use the new compatible for ohci-node.
 
- .../devicetree/bindings/usb/atmel-usb.txt          |  5 +-
- drivers/usb/host/ohci-at91.c                       | 80 +++++++++++++++++++++-
- include/soc/at91/at91_sfr.h                        | 29 ++++++++
- 3 files changed, 111 insertions(+), 3 deletions(-)
- create mode 100644 include/soc/at91/at91_sfr.h
+ arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-index 5883b73..3e3e58a 100644
---- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-@@ -3,8 +3,9 @@ Atmel SOC USB controllers
- OHCI
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 78996bd..03d6724 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -232,7 +232,7 @@
+ 		};
  
- Required properties:
-- - compatible: Should be "atmel,at91rm9200-ohci" for USB controllers
--   used in host mode.
-+ - compatible: Should be one of the following
-+	       "atmel,at91rm9200-ohci" for USB controllers used in host mode.
-+	       "atmel,sama5d2-ohci" for SAMA5D2 which can force to suspend.
-  - reg: Address and length of the register set for the device
-  - interrupts: Should contain ehci interrupt
-  - clocks: Should reference the peripheral, host and system clocks
-diff --git a/drivers/usb/host/ohci-at91.c b/drivers/usb/host/ohci-at91.c
-index d177372..54e8feb 100644
---- a/drivers/usb/host/ohci-at91.c
-+++ b/drivers/usb/host/ohci-at91.c
-@@ -21,8 +21,11 @@
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- #include <linux/usb.h>
- #include <linux/usb/hcd.h>
-+#include <soc/at91/at91_sfr.h>
- 
- #include "ohci.h"
- 
-@@ -45,12 +48,18 @@ struct at91_usbh_data {
- 	u8 overcurrent_changed[AT91_MAX_USBH_PORTS];
- };
- 
-+struct ohci_at91_caps {
-+	bool suspend_ctrl;
-+};
-+
- struct ohci_at91_priv {
- 	struct clk *iclk;
- 	struct clk *fclk;
- 	struct clk *hclk;
- 	bool clocked;
- 	bool wakeup;		/* Saved wake-up state for resume */
-+	const struct ohci_at91_caps *caps;
-+	struct regmap *sfr_regmap;
- };
- /* interface and function clocks; sometimes also an AHB clock */
- 
-@@ -132,6 +141,17 @@ static void at91_stop_hc(struct platform_device *pdev)
- 
- /*-------------------------------------------------------------------------*/
- 
-+struct regmap *at91_dt_syscon_sfr(void)
-+{
-+	struct regmap *regmap;
-+
-+	regmap = syscon_regmap_lookup_by_compatible("atmel,sama5d2-sfr");
-+	if (IS_ERR(regmap))
-+		regmap = NULL;
-+
-+	return regmap;
-+}
-+
- static void usb_hcd_at91_remove (struct usb_hcd *, struct platform_device *);
- 
- /* configure so an HC device and id are always provided */
-@@ -197,6 +217,17 @@ static int usb_hcd_at91_probe(const struct hc_driver *driver,
- 		goto err;
- 	}
- 
-+	ohci_at91->caps = (const struct ohci_at91_caps *)
-+			  of_device_get_match_data(&pdev->dev);
-+	if (!ohci_at91->caps)
-+		return -ENODEV;
-+
-+	if (ohci_at91->caps->suspend_ctrl) {
-+		ohci_at91->sfr_regmap = at91_dt_syscon_sfr();
-+		if (!ohci_at91->sfr_regmap)
-+			dev_warn(dev, "failed to find sfr node\n");
-+	}
-+
- 	board = hcd->self.controller->platform_data;
- 	ohci = hcd_to_ohci(hcd);
- 	ohci->num_ports = board->ports;
-@@ -440,8 +471,17 @@ static irqreturn_t ohci_hcd_at91_overcurrent_irq(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
-+static const struct ohci_at91_caps at91rm9200_caps = {
-+	.suspend_ctrl = false,
-+};
-+
-+static const struct ohci_at91_caps sama5d2_caps = {
-+	.suspend_ctrl = true,
-+};
-+
- static const struct of_device_id at91_ohci_dt_ids[] = {
--	{ .compatible = "atmel,at91rm9200-ohci" },
-+	{ .compatible = "atmel,at91rm9200-ohci", .data = &at91rm9200_caps },
-+	{ .compatible = "atmel,sama5d2-ohci", .data = &sama5d2_caps },
- 	{ /* sentinel */ }
- };
- 
-@@ -581,6 +621,38 @@ static int ohci_hcd_at91_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int ohci_at91_port_ctrl(struct regmap *regmap, bool enable)
-+{
-+	u32 regval;
-+	int ret;
-+
-+	if (!regmap)
-+		return -EINVAL;
-+
-+	ret = regmap_read(regmap, SFR_OHCIICR, &regval);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		regval &= ~SFR_OHCIICR_USB_SUSPEND;
-+	else
-+		regval |= SFR_OHCIICR_USB_SUSPEND;
-+
-+	regmap_write(regmap, SFR_OHCIICR, regval);
-+
-+	return 0;
-+}
-+
-+static int ohci_at91_port_suspend(struct regmap *regmap)
-+{
-+	return ohci_at91_port_ctrl(regmap, false);
-+}
-+
-+static int ohci_at91_port_resume(struct regmap *regmap)
-+{
-+	return ohci_at91_port_ctrl(regmap, true);
-+}
-+
- static int __maybe_unused
- ohci_hcd_at91_drv_suspend(struct device *dev)
- {
-@@ -618,6 +690,9 @@ ohci_hcd_at91_drv_suspend(struct device *dev)
- 		ohci_writel(ohci, ohci->hc_control, &ohci->regs->control);
- 		ohci->rh_state = OHCI_RH_HALTED;
- 
-+		if (ohci_at91->caps->suspend_ctrl)
-+			ohci_at91_port_suspend(ohci_at91->sfr_regmap);
-+
- 		/* flush the writes */
- 		(void) ohci_readl (ohci, &ohci->regs->control);
- 		at91_stop_clock(ohci_at91);
-@@ -637,6 +712,9 @@ ohci_hcd_at91_drv_resume(struct device *dev)
- 
- 	at91_start_clock(ohci_at91);
- 
-+	if (ohci_at91->caps->suspend_ctrl)
-+		ohci_at91_port_resume(ohci_at91->sfr_regmap);
-+
- 	ohci_resume(hcd, false);
- 	return 0;
- }
-diff --git a/include/soc/at91/at91_sfr.h b/include/soc/at91/at91_sfr.h
-new file mode 100644
-index 0000000..04a3a1e
---- /dev/null
-+++ b/include/soc/at91/at91_sfr.h
-@@ -0,0 +1,29 @@
-+/*
-+ * Header file for the Atmel DDR/SDR SDRAM Controller
-+ *
-+ * Copyright (C) 2016 Atmel Corporation
-+ *
-+ * Author: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#ifndef __AT91_SFR_H__
-+#define __AT91_SFR_H__
-+
-+#define SFR_DDRCFG		0x04	/* DDR Configuration Register */
-+/* 0x08 ~ 0x0c: Reserved */
-+#define SFR_OHCIICR		0x10	/* OHCI Interrupt Configuration Register */
-+#define SFR_OHCIISR		0x14	/* OHCI Interrupt Status Register */
-+
-+#define SFR_OHCIICR_SUSPEND_A	BIT(8)
-+#define SFR_OHCIICR_SUSPEND_B	BIT(9)
-+#define SFR_OHCIICR_SUSPEND_C	BIT(10)
-+
-+#define SFR_OHCIICR_USB_SUSPEND	(SFR_OHCIICR_SUSPEND_A | \
-+				 SFR_OHCIICR_SUSPEND_B | \
-+				 SFR_OHCIICR_SUSPEND_C)
-+
-+#endif
+ 		usb1: ohci@00400000 {
+-			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
++			compatible = "atmel,sama5d2-ohci", "usb-ohci";
+ 			reg = <0x00400000 0x100000>;
+ 			interrupts = <41 IRQ_TYPE_LEVEL_HIGH 2>;
+ 			clocks = <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
