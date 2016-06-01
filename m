@@ -1,179 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] extcon: gpio: Add the support for Device tree bindings
-Date: Wed, 1 Jun 2016 11:00:36 -0500
-Message-ID: <CAL_Jsq+DnSfGKA0s6nP7FsnsdVQSf36PbO=Bxt2qLWEuSS=iEQ@mail.gmail.com>
-References: <1464263265-20187-1-git-send-email-vreddytalla@nvidia.com>
- <CGME20160527152945epcas1p4de3d2d43f94a20e3f93676b6c4f78244@epcas1p4.samsung.com>
- <20160527152934.GB12024@rob-hp-laptop> <574D32D7.2090902@samsung.com>
- <574D3EA7.9080907@samsung.com> <CAL_JsqLpWMX3X77xyVH=5+AtEaRiY9ShkEo0TdHOphqE654OXg@mail.gmail.com>
- <574D9556.9080200@nvidia.com> <CAL_JsqJ+WBRj0DTREezp1JaanS2EQqSfefQGyPO4BGFVcwqwnw@mail.gmail.com>
- <574EF603.2020408@nvidia.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 1/2] drm: bridge: Add sii902x driver
+Date: Wed, 1 Jun 2016 18:03:37 +0200
+Message-ID: <20160601180337.28e0917b@bbrezillon>
+References: <1463407469-21819-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20160517064711.GF27098@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <574EF603.2020408@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Venkat Reddy Talla <vreddytalla@nvidia.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160517064711.GF27098@phenom.ffwll.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, Meng Yi <meng.yi@nxp.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 1, 2016 at 9:49 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
->
-> On Tuesday 31 May 2016 09:18 PM, Rob Herring wrote:
->>
->> On Tue, May 31, 2016 at 8:44 AM, Laxman Dewangan <ldewangan@nvidia.com>
->> wrote:
->>>
->>> Hi Rob,
->>>
->>> On Tuesday 31 May 2016 07:05 PM, Rob Herring wrote:
->>>>
->>>> On Tue, May 31, 2016 at 2:35 AM, Chanwoo Choi <cw00.choi@samsung.com>
->>>> wrote:
->>>>>
->>>>> The extcon-gpio.c driver can separate the kind of external connector
->>>>> by using the 'extcon-id' property.
->>>>
->>>> This use of DT is just broken. Come up with another way.
->>>>
->>>>
->>>
->>> Can we have the DT binding very similar to IIO, clock, reset etc?
->>
->> In what way? I'm guessing you mean to describe what controller a
->> connector is associated with. Certainly, some sort of phandle
->> reference will be needed. However. the node it points to is what needs
->> a lot of work first.
->
->
-> Here, we just need to define that controller support how many different
-> cable? It does not say anything that which cable is what and all its on
-> platform dependent.
->
-> So for gpio-extcon, it will just say 1 cable. the name is not decided by
-> driver but it is by platform.
-
-Why the fascination with cables? You need to describe the connector
-and circuitry between the connector and phy/controller, and its
-capabilities. Maybe those properties are implied or explicit. If you
-have some USB chip for Vbus control and charger detect, then it's all
-going to be implied by that chip's compatible. If you have gpio lines
-then the properties and capabilities are explicit.
-
->>> Here is details for extcon-jack DT binding and its client:
->>>
->>> The client can get the cable information through its node or extcon name
->>> and once cable information is available, it can register for notification
->>> when state gets changed.
->>>
->>> The typical dt nodes are:
->>>
->>>      Extcon-driver node:
->>>
->>>          extcon: arizona-extcon {
->>>                  compatible = "wlf,arizona-extcon";
->>>                  #extcon-cells = <1>;
->>>          };
->>>
->>>
->>>
->>>      Driver need to specify the cable ID as
->>
->> Unless you have cables hardwired to a board, please stop describing
->> cables in DT. Connectors!
->
->
-> If some controller only support cable with names then we need to do it. Like
-> palmas extcon, it detect VBUS, ID_GND, RIDA, RIDB, RIDC. So for these cases,
-> driver need to define cables.
-
-The only thing the DT should have is the palmas chip and any
-connections to it like regulators or interrupts. What the chip can
-control/detect doesn't belong in DT.
-
-> Driver can specify that cable index 0 is for VBUS, 1 is for ID-GND etc.
-
-You are still just making up indexes.
-
->>>       Cable                      ID
->>>       ----------------------------
->>>        Mechanical                0
->>>        Microphone               1
->>>        Headphone               2
->>>        Line-out                    3
->>
->> No, please don't create some made up some number space. I don't see
->> why you need this. You should just need the phandle to "the microphone
->> jack" node.
->
->
-> I am thinking that I will need the phandle of extcon nodes with index for
-> cable ID.
->
->
->>>      Here #extcon-cells is must and specifies the size of extcon cells.
->>> The
->>> client need to provide the driver specific information as argument along
->>> with handle.
->>>
->>>
->>> Extcon Client node:
->>>
->>>          audio-controller@b0000 {
->>>                 ::::
->>>                  extcon-cables = <&extcon 1>, <&extcon 3>;
->>>                  extcon-cable-names = "Microphone", "Line-out";
->>>          };
->>>
->>> and client driver can register the cable by passing the cable name
->>> as above along with its node.
->>>
->>> struct extcon_cable {
->>>      struct extcon_dev *edev,
->>>      int cable_id;
->>> };
->>
->> If you are showing driver details to explain the binding, something is
->> wrong.
->
->
->
-> I have USB OTG driver which need the notification when VBUS or ID detected.
-
-That's a kernel architectural detail.
-
-> For this, it can get the phandle of extcon and cable ID from that driver for
-> "id" and "vbus".
-
-You only need to describe the connection of the connector to the
-controller. These details don't need to be in DT.
-
-> I have platform like follows:
-> I have 2 gpios which detect the ID and VBUS.
-> Both are independent. My USB driver get the extcon handle from the DT:
->
-> extcon_vbus: extcon@0 {
->         comptaible = "extcon-gpio";
->         gpio = <&gpio JETSON_VBUS_GPIO 0>;
->         #extcon-cells = <1>;
-> };
->
->
->
-> extcon_id: extcon@1 {
->         comptaible = "extcon-gpio";
->         gpio = <&gpio JETSON_ID_GPIO 0>;
->         #extcon-cells = <1>;
-> };
-
-Sigh. These are all properties of one entity: a connector.
-
->
-> usb-otg {
-> ::
->         extcon-cable = <&extcon_vbus 0 &extcon_d 0>;
->         extcon-cable-names = "id", "vbus";
-> ::
-> };
-
-Rob
+T24gVHVlLCAxNyBNYXkgMjAxNiAwODo0NzoxMSArMDIwMApEYW5pZWwgVmV0dGVyIDxkYW5pZWxA
+ZmZ3bGwuY2g+IHdyb3RlOgoKPiA+ICtzdGF0aWMgc3RydWN0IGRybV9lbmNvZGVyICpzaWk5MDJ4
+X2Jlc3RfZW5jb2RlcihzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ID4gK3sKPiA+
+ICsJc3RydWN0IHNpaTkwMnggKnNpaTkwMnggPSBjb25uZWN0b3JfdG9fc2lpOTAyeChjb25uZWN0
+b3IpOwo+ID4gKwo+ID4gKwlyZXR1cm4gc2lpOTAyeC0+YnJpZGdlLmVuY29kZXI7Cj4gPiArfSAg
+Cj4gCj4gZHJtX2F0b21pY19oZWxwZXJfYmVzdF9lbmNvZGVyIHNob3VsZCBkbyBleGFjdGx5IHRo
+aXMgZm9yIHlvdS4gSWYgeW91IGZlZWwKPiBib2FyZCBwaW1wIHRoZSBhdG9taWMgaGVscGVycyB0
+byBjYWxsIHRoYXQgb25lIGJ5IGRlZmF1bHQgdG8gZXZlbiByZW1vdmUKPiB0aGUgdmZ1bmMgYXNz
+aW5nbWVudCBsaW5lIDstKQoKSnVzdCB0byBiZSBzdXJlLCBpcyB0aGF0IHdoYXQgeW91IGhhZCBp
+biBtaW5kPwoKLS0tPjgtLS0KRnJvbSBkMjE4YjdlYTE2Y2EzNTQ1MmIzMTc0YzgzYTIwN2VjZDQw
+NmU1Yzg4IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBCb3JpcyBCcmV6aWxsb24gPGJv
+cmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+CkRhdGU6IFdlZCwgMSBKdW4gMjAxNiAx
+Nzo1NzoxOCArMDIwMApTdWJqZWN0OiBbUEFUQ0hdIGRybTogYXRvbWljOiBIYW5kbGUgZnVuY3Mt
+PmJlc3RfZW5jb2RlciA9PSBOVUxMIGNhc2UKCkZhbGxiYWNrIGRybV9hdG9taWNfaGVscGVyX2Jl
+c3RfZW5jb2RlcigpIGlzIGZ1bmNzLT5iZXN0X2VuY29kZXIoKSBpcyBOVUxMCnNvIHRoYXQgRFJN
+IGRyaXZlcnMgY2FuIGxlYXZlIHRoaXMgaG9vayB1bmFzc2lnbmVkIGlmIHRoZXkga25vdyB0aGV5
+IHdhbnQKdG8gdXNlIGRybV9hdG9taWNfaGVscGVyX2Jlc3RfZW5jb2RlcigpLgoKU2lnbmVkLW9m
+Zi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29t
+PgotLS0KIGRyaXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jIHwgNCArKystCiAxIGZp
+bGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL2RybV9hdG9taWNfaGVscGVyLmMgYi9kcml2ZXJzL2dwdS9kcm0vZHJt
+X2F0b21pY19oZWxwZXIuYwppbmRleCBkZGZhMGQxLi5mNmEzMzUwIDEwMDY0NAotLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vZHJtX2F0b21pY19oZWxwZXIuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJt
+X2F0b21pY19oZWxwZXIuYwpAQCAtMTEwLDggKzExMCwxMCBAQCBzdGF0aWMgaW50IGhhbmRsZV9j
+b25mbGljdGluZ19lbmNvZGVycyhzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqc3RhdGUsCiAKIAkJ
+aWYgKGZ1bmNzLT5hdG9taWNfYmVzdF9lbmNvZGVyKQogCQkJbmV3X2VuY29kZXIgPSBmdW5jcy0+
+YXRvbWljX2Jlc3RfZW5jb2Rlcihjb25uZWN0b3IsIGNvbm5fc3RhdGUpOwotCQllbHNlCisJCWVs
+c2UgaWYgKGZ1bmNzLT5iZXN0X2VuY29kZXIpCiAJCQluZXdfZW5jb2RlciA9IGZ1bmNzLT5iZXN0
+X2VuY29kZXIoY29ubmVjdG9yKTsKKwkJZWxzZQorCQkJbmV3X2VuY29kZXIgPSBkcm1fYXRvbWlj
+X2hlbHBlcl9iZXN0X2VuY29kZXIoY29ubmVjdG9yKTsKIAogCQlpZiAobmV3X2VuY29kZXIpIHsK
+IAkJCWlmIChlbmNvZGVyX21hc2sgJiAoMSA8PCBkcm1fZW5jb2Rlcl9pbmRleChuZXdfZW5jb2Rl
+cikpKSB7CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
