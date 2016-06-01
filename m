@@ -1,172 +1,43 @@
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v3 1/2] Documentation: dt: reset: Add syscon reset binding
-Date: Wed, 1 Jun 2016 13:41:24 -0500
-Message-ID: <20160601184125.20241-2-afd@ti.com>
-References: <20160601184125.20241-1-afd@ti.com>
+Subject: [PATCH v3 0/2] Add support for SYSCON reset
+Date: Wed, 1 Jun 2016 13:41:23 -0500
+Message-ID: <20160601184125.20241-1-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160601184125.20241-1-afd@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add syscon reset controller binding. This will hook to the reset
-framework and use syscon/regmap to set reset bits. This allows
-reset control of individual SoC subsytems and devices with
-memory-mapped reset registers in a common register memory
-space.
+Some SoCs contain reset controls for modules that are memory-mapped to
+areas shared with other module configuration settings. This requires
+synchronization across all drivers accessing this memory area. This
+series adds a generic SYSCON reset driver to allow resets toggled
+by bits in memory-mapped registers through SYSCON.
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-[s-anna@ti.com: revise the binding format]
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- .../devicetree/bindings/reset/syscon-reset.txt     | 105 +++++++++++++++++++++
- include/dt-bindings/reset/syscon.h                 |  23 +++++
- 2 files changed, 128 insertions(+)
+Changes from v2:
+ - Rebased on v4.7-rc1
+ - Removed the need to give reset specifier nodes an index address
+
+Changes from v1:
+ - Reset control information is now described in the reset node, this
+   keeps the reset information centralized for easy verification
+ - Other small fixups
+
+Andrew F. Davis (2):
+  Documentation: dt: reset: Add syscon reset binding
+  reset: add a SYSCON based reset driver
+
+ .../devicetree/bindings/reset/syscon-reset.txt     | 105 ++++++++
+ drivers/reset/Kconfig                              |  10 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-syscon.c                       | 289 +++++++++++++++++++++
+ include/dt-bindings/reset/syscon.h                 |  23 ++
+ 5 files changed, 428 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/reset/syscon-reset.txt
+ create mode 100644 drivers/reset/reset-syscon.c
  create mode 100644 include/dt-bindings/reset/syscon.h
 
-diff --git a/Documentation/devicetree/bindings/reset/syscon-reset.txt b/Documentation/devicetree/bindings/reset/syscon-reset.txt
-new file mode 100644
-index 0000000..cec6e32
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/syscon-reset.txt
-@@ -0,0 +1,105 @@
-+SysCon Reset Controller
-+=======================
-+
-+Almost all SoCs have hardware modules that require reset control in addition
-+to clock and power control for their functionality. The reset control is
-+typically provided by means of memory-mapped I/O registers. These registers are
-+sometimes a part of a larger register space region implementing various
-+functionalities. This register range is best represented as a syscon node to
-+allow multiple entities to access their relevant registers in the common
-+register space.
-+
-+A SysCon Reset Controller node defines a device that uses a syscon node
-+and provides reset management functionality for various hardware modules
-+present on the SoC.
-+
-+SysCon Reset Controller Node
-+============================
-+Each of the reset provider/controller nodes should be a child of a syscon
-+node and have the following properties.
-+
-+Required properties:
-+--------------------
-+ - compatible		: Should be "syscon-reset"
-+ - #reset-cells		: Should be 1. Please see the reset consumer node below
-+			  for usage details
-+
-+SysCon Reset Child Node
-+============================
-+Each reset provider/controller node should have a child node for each reset
-+it would like to expose to consumers.
-+
-+Required properties:
-+--------------------
-+ - reset-control	: Contains the reset control register information
-+			  Should contain 3 cells defined as:
-+			    Cell #1 : register offset of the reset
-+			              control/status register from the syscon
-+			              register base
-+			    Cell #2 : bit shift value for the reset in the
-+			              respective reset control/status register
-+			    Cell #3 : polarity of the reset bit. Should be 1 or
-+				      RESET_ASSERT_SET for resets that are
-+				      asserted when the bit is set, 0 or
-+				      RESET_ASSERT_CLEAR for resets that are
-+				      asserted when the bit is cleared
-+
-+Optional properties:
-+--------------------
-+ - reset-status		: Contains the reset status register information. The
-+			  contents of this property are the equivalent to
-+			  reset-control as defined above. If this property is
-+			  not present and the toggle flag is not set, the
-+			  reset register is assumed to be the same as the
-+			  control register
-+ - toggle		: Mark this reset as a toggle only reset, this is used
-+			  when no status register is available.
-+
-+SysCon Reset Consumer Nodes
-+===========================
-+Each of the reset consumer nodes should have the following properties,
-+in addition to their own properties.
-+
-+Required properties:
-+--------------------
-+ - resets	: A phandle to the reset controller node and a phandle to a
-+		  reset specifier node as defined above.
-+
-+Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
-+common reset controller usage by consumers.
-+
-+Example:
-+--------
-+The following example demonstrates a syscon node, the reset controller node
-+using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
-+Hawking SoC.
-+
-+/ {
-+	soc {
-+		psc: power-sleep-controller@02350000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x02350000 0x1000>;
-+
-+			pscrst: psc-reset {
-+				compatible = "syscon-reset";
-+				#reset-cells = <1>;
-+
-+				pscrst-dsp: dsp {
-+					reset-control = <0xa3c 8 RESET_ASSERT_CLEAR>;
-+					reset-status = <0x83c 8 RESET_ASSERT_CLEAR>;
-+				};
-+
-+				pscrst-example: example {
-+					reset-control = <0xa40 5 RESET_ASSERT_SET>;
-+					toggle;
-+				};
-+			};
-+		};
-+
-+		dsp0: dsp0 {
-+			...
-+			resets = <&pscrst &pscrst-dsp>;
-+			...
-+		};
-+	};
-+};
-diff --git a/include/dt-bindings/reset/syscon.h b/include/dt-bindings/reset/syscon.h
-new file mode 100644
-index 0000000..9927779
---- /dev/null
-+++ b/include/dt-bindings/reset/syscon.h
-@@ -0,0 +1,23 @@
-+/*
-+ * Syscon Reset definitions
-+ *
-+ * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __DT_BINDINGS_RESET_SYSCON_H__
-+#define __DT_BINDINGS_RESET_SYSCON_H__
-+
-+#define RESET_ASSERT_CLEAR	0x0
-+#define RESET_ASSERT_SET	0x1
-+
-+#endif
 -- 
 2.8.3
