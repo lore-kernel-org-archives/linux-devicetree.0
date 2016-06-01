@@ -1,45 +1,75 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 11/13] DT: arm: shmobile: document Blanche board
-Date: Wed, 1 Jun 2016 16:34:54 +0300
-Message-ID: <757fa28c-00d0-f17b-e335-658a0b993791@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 01/13] ARM: shmobile: r8a7792: add clock index macros
+Date: Wed, 1 Jun 2016 16:57:40 +0300
+Message-ID: <81cc10bc-47bb-87b8-57e9-84b2cce92b1e@cogentembedded.com>
 References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <52321184.HGKDRaDOBe@wasted.cogentembedded.com>
- <20160531235119.GA20527@verge.net.au>
+ <2280165.siMXMbFrFe@wasted.cogentembedded.com>
+ <20160601005246.GF20527@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160531235119.GA20527-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160601005246.GF20527@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 06/01/2016 03:52 AM, Simon Horman wrote:
 
-On 06/01/2016 02:51 AM, Simon Horman wrote:
-
->> Document the Blanche device tree bindings, listing it as a supported board.
+>> Add macros usable by the device tree sources to reference the R8A7792
+>> clocks  by index.
 >>
->> This allows to use checkpatch.pl to validate .dts files referring to the
->> Blanche board.
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 >>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  include/dt-bindings/clock/r8a7792-clock.h |  104 ++++++++++++++++++++++++++++++
+>>  1 file changed, 104 insertions(+)
+>>
+>> Index: renesas/include/dt-bindings/clock/r8a7792-clock.h
+>> ===================================================================
+>> --- /dev/null
+>> +++ renesas/include/dt-bindings/clock/r8a7792-clock.h
+>> @@ -0,0 +1,104 @@
+>> +/*
+>> + * Copyright (C) 2016 Cogent Embedded, Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +
+>> +#ifndef __DT_BINDINGS_CLOCK_R8A7792_H__
+>> +#define __DT_BINDINGS_CLOCK_R8A7792_H__
+>> +
+>> +/* CPG */
+>> +#define R8A7792_CLK_MAIN		0
+>> +#define R8A7792_CLK_PLL0		1
+>> +#define R8A7792_CLK_PLL1		2
+>> +#define R8A7792_CLK_PLL3		3
+>> +#define R8A7792_CLK_LB			4
+>> +#define R8A7792_CLK_QSPI		5
+>> +#define R8A7792_CLK_SDH			6
+>> +#define R8A7792_CLK_SD0			7
+>> +#define R8A7792_CLK_SD1			8
+>> +#define R8A7792_CLK_Z			9
 >
-> I think the prefix for patch 11 should be: "ARM: dts: blanche: "
+> According to my copy of the documentation (v2.00) SDH, SD0 and SD1 do
+> not seem to be provided by the r8a7792 CPG.
 
-     Hm... why?
+    Right, should have checked the original patch against the manual in that 
+part as well... :-/
 
-> It also looks like it could be squashed into patch 12 but I don't
-> feel strongly about that.
+> It does, however, provide RCAN and ADSP which are supported by the CPG
+> driver. You may wish to add them now for completeness though from my point
+> of view they could also be added later when they are used.
 
-    I'd prefer not to merge them.
+    Hm, the gen2 manual rev1.02 doesn't mention either of these clocks for V2H...
+I still don't have 2.00. :-(
 
-[...]
+> I reviewed the values below. They appear to be complete and correct.
+
+    Geert has found some bug there. :-)
 
 MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
