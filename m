@@ -1,70 +1,61 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: BCM5301X: Specify PHY of USB 2.0 in DT
-Date: Wed,  1 Jun 2016 21:16:25 +0200
-Message-ID: <1464808585-14996-1-git-send-email-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:BROADCOM BCM5301X ARM
-	ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v3 19/22] ARM: shmobile: rcar-gen2: Stop passing mode pins state to clock driver
+Date: Wed,  1 Jun 2016 21:21:17 +0200
+Message-ID: <1464808880-343-20-git-send-email-geert+renesas@glider.be>
+References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Driver for Northstar USB 2.0 PHY was added in 4.7-rc1 by:
-commit d3feb4067335 ("phy: bcm-ns-usb2: new driver for USB 2.0 PHY on
-Northstar").
-It should be used to let EHCI platform driver init PHY.
+Now the R-Car Gen2 CPG clock driver obtains the state of the mode pins
+from the R-Car RST driver, there's no longer a need to pass this state
+explicitly. Hence we can just call of_clk_init() instead.
 
-Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/bcm5301x.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+v3:
+  - Drop "select MFD_SYSCON", as the clock driver no longer uses syscon,
 
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm530=
-1x.dtsi
-index 7d4d29b..9300e19 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -140,6 +140,22 @@
- 		};
- 	};
-=20
-+	phys {
-+		compatible =3D "simple-bus";
-+		ranges =3D <0x00000000 0x18000000 0x00100000>;
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+
-+		usb2_phy2: usb2-phy {
-+			compatible =3D "brcm,ns-usb2-phy";
-+			reg =3D <0x0000c000 0x1000>;
-+			reg-names =3D "dmu";
-+			#phy-cells =3D <0>;
-+			clocks =3D <&genpll BCM_NSP_GENPLL_USB_PHY_REF_CLK>;
-+			clock-names =3D "phy-ref-clk";
-+		};
-+	};
-+
- 	axi@18000000 {
- 		compatible =3D "brcm,bus-axi";
- 		reg =3D <0x18000000 0x1000>;
-@@ -217,6 +233,8 @@
-=20
- 			#address-cells =3D <1>;
- 			#size-cells =3D <1>;
-+
-+			phys =3D <&usb2_phy2>;
- 		};
-=20
- 		usb3: usb3@23000 {
---=20
-1.8.4.5
+v2:
+  - Kill compiler warning if CONFIG_ARM_ARCH_TIMER is not enabled.
+---
+ arch/arm/mach-shmobile/setup-rcar-gen2.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+index 1c6fd11c2f824019..755ce7a940c11848 100644
+--- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+@@ -15,7 +15,7 @@
+  * GNU General Public License for more details.
+  */
+ 
+-#include <linux/clk/renesas.h>
++#include <linux/clk-provider.h>
+ #include <linux/clocksource.h>
+ #include <linux/device.h>
+ #include <linux/dma-contiguous.h>
+@@ -51,8 +51,8 @@ u32 rcar_gen2_read_mode_pins(void)
+ 
+ void __init rcar_gen2_timer_init(void)
+ {
+-	u32 mode = rcar_gen2_read_mode_pins();
+ #ifdef CONFIG_ARM_ARCH_TIMER
++	u32 mode = rcar_gen2_read_mode_pins();
+ 	void __iomem *base;
+ 	int extal_mhz = 0;
+ 	u32 freq;
+@@ -127,7 +127,7 @@ void __init rcar_gen2_timer_init(void)
+ 	iounmap(base);
+ #endif /* CONFIG_ARM_ARCH_TIMER */
+ 
+-	rcar_gen2_clocks_init(mode);
++	of_clk_init(NULL);
+ 	clocksource_probe();
+ }
+ 
+-- 
+1.9.1
