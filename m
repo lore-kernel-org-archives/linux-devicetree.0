@@ -1,36 +1,32 @@
 From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 1/7] mdio:mux: Enhanced MDIO mux framework for
- integrated multiplexers
-Date: Wed, 1 Jun 2016 15:02:07 +0200
-Message-ID: <20160601130207.GE31982@lunn.ch>
+Subject: Re: [PATCH v2 7/7] phy: Add Northstar2 PCI Phy support
+Date: Wed, 1 Jun 2016 15:12:28 +0200
+Message-ID: <20160601131228.GF31982@lunn.ch>
 References: <1464701801-17243-1-git-send-email-pramod.kumar@broadcom.com>
- <1464701801-17243-2-git-send-email-pramod.kumar@broadcom.com>
+ <1464701801-17243-8-git-send-email-pramod.kumar@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464701801-17243-2-git-send-email-pramod.kumar@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1464701801-17243-8-git-send-email-pramod.kumar@broadcom.com>
+Sender: netdev-owner@vger.kernel.org
 To: Pramod Kumar <pramod.kumar@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 8453f08..cf40e7a 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -225,6 +225,9 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  	if (rc)
->  		return rc;
->  
-> +	if (of_property_read_bool(np, "mdio-integrated-mux"))
-> +		return 0;
+> +static int ns2_pci_phy_probe(struct mdio_device *mdiodev)
+> +{
+> +	struct device *dev = &mdiodev->dev;
+> +	struct phy_provider *provider;
+> +	struct ns2_pci_phy *p;
+> +	struct phy *phy;
 > +
+> +	phy = devm_phy_create(dev, dev->of_node, &ns2_pci_phy_ops);
+> +	if (IS_ERR_OR_NULL(phy)) {
+> +		dev_err(dev, "failed to create Phy\n");
+> +		return PTR_ERR(phy);
+> +	}
 
-Hi
-
-Rather than doing this, did you try setting bus->phy_mask = 0 and
-calling mdiobus_register(), rather than of_mdiobus_regsiter() for the
-parent bus?
+https://www.mail-archive.com/linux-omap@vger.kernel.org/msg78030.html
 
 	Andrew
