@@ -1,124 +1,30 @@
-From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] Documentation: Add documentation for APM X-Gene
- SoC PMU DTS binding
-Date: Tue, 31 May 2016 18:25:56 -0700
-Message-ID: <CACgAJHxMCa2Hp_A8YnHmmVrHGd3yLhFs2k33MN6OHRUmZ7Y_Wg@mail.gmail.com>
-References: <1460510547-17611-1-git-send-email-ttnguyen@apm.com>
-	<1460510547-17611-3-git-send-email-ttnguyen@apm.com>
-	<20160418170009.GA15338@rob-hp-laptop>
-	<CACgAJHyBbO_LXwtfNVK1f=dY3v1Jfxwxq1dw98EZ0aYdhjPpAg@mail.gmail.com>
-	<20160420113121.GE2514@arm.com>
-	<20160502205648.GA7374@rob-hp-laptop>
-	<CACgAJHyT31DuVNoyRQZVKjv=zM5Fc-EY0gy=y=pHHrBTT+1Xow@mail.gmail.com>
-	<20160531165630.GE4254@leverpostej>
-	<CACgAJHwtb0hNs0JWOrpyF=_fRVvUi2QG4q7qohgCw4SjxqtX6A@mail.gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 0/4] hw rng support for NSP SoC
+Date: Wed, 1 Jun 2016 09:28:17 +0800
+Message-ID: <20160601012817.GB30653@gondor.apana.org.au>
+References: <1464343841-29504-1-git-send-email-yendapally.reddy@broadcom.com>
+ <20160531101934.GM15376@gondor.apana.org.au>
+ <574DC553.4030009@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACgAJHwtb0hNs0JWOrpyF=_fRVvUi2QG4q7qohgCw4SjxqtX6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <574DC553.4030009@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, noltari@gmail.com, Joshua Henderson <joshua.henderson@microchip.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.ker
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Tue, May 31, 2016 at 10:17 AM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
-> Hi Mark,
+On Tue, May 31, 2016 at 10:09:39AM -0700, Florian Fainelli wrote:
 >
-> On Tue, May 31, 2016 at 9:56 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> On Mon, May 02, 2016 at 02:46:05PM -0700, Tai Tri Nguyen wrote:
->>> Hi Rob,
->>>
->>> On Mon, May 2, 2016 at 1:56 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> > On Wed, Apr 20, 2016 at 12:31:22PM +0100, Will Deacon wrote:
->>> >> On Mon, Apr 18, 2016 at 01:04:53PM -0700, Tai Tri Nguyen wrote:
->>> >> > >> +Required properties for MCB subnode:
->>> >> > >> +- compatible         : Shall be "apm,xgene-pmu-mcb".
->>> >> > >> +- reg                        : First resource shall be the MCB PMU resource.
->>> >> > >> +- index                      : Instance number of the MCB PMU.
->>> >> > >> +
->>> >> > >> +Required properties for MC subnode:
->>> >> > >> +- compatible         : Shall be "apm,xgene-pmu-mc".
->>> >> > >> +- reg                        : First resource shall be the MC PMU resource.
->>> >> > >> +- index                      : Instance number of the MC PMU.
->>> >> > >
->>> >> > > Don't use indexes. You probably need phandles to the nodes these are
->>> >> > > related to.
->>> >> > >
->>> >> > > How many variations of child nodes do you expect to have? 2, 10, 50? You
->>> >> > > might want to just collapse all this down to a single node and put this
->>> >> > > information in the driver if it is fixed for each SoC and there's only a
->>> >> > > handful.
->>> >> > >
->>> >> >
->>> >> > For each kind of PMU, for example memory controller PMU, I expect to
->>> >> > have the number of instances up to 8.
->>> >> > They are actually all independent PMU nodes and have their own CSR memory bases.
->>> >> > The indexes are used for exposing the devices to perf user only. It
->>> >> > doesn't have an impact on the programming model.
->>> >> > Mark also had the same concern.
->>> >>
->>> >> Regardless, I'll need an ack from Rob or Mark before I can merge this.
->>> >
->>> > I still have a concern with this. Needing an index to expose to the user
->>> > is generally not a valid reason. That's OS specific and therefore
->>> > doesn't belong in DT.
->>> >
->>> > Rob
->>>
->>> I can use device name here. However, the perf event names will be
->>> different between DT and ACPI which I want to avoid.
->>> And the names don't look good at all.
->>> Also, specifically for MC and MCB PMUs, the indexes are compared
->>> against the active MC/MCB mask to find out whether they are populated
->>> or not.
->>> Without using the index property, I will also need a mapping function
->>> of physical device addresses and their physical ids.
->>
->> What's wrong with using ${device}.{physical_address} as the PMU name?
->> That would be unique and consistent regardless of the firmware, no
->> mapping nor index property necessary.
->>
->> That's sufficient for any user already familiar with the topology, a
->> familiarity you seem to be assuming regardless by not explicitly
->> describing the topology in the DT.
->>
->> Thanks,
->> Mark.
->
-> Okay. I'll do fix it for the next patches.
->
-> Thanks,
-> --
-> Tai
+> FYI, ARM Device Tree patches usually go via ARM SoC pull requests, so it
+> is best if this is planned in advance. Can you make sure you document
+> that there could be a merge conflict in your pull request to Linus?
 
-I'm facing a problem after removing the index for MCU and MC sub-nodes.
-The MCUs and MCs aren't always enabled depending on how DRAM DIMMs are
-installed on the system.
-I still need a way to associate the MCU with its indicator bit in the
-enable mask retrieved from CSR.
-For MC and MCB nodes only, can I introduce an "enable-mask" field?
-For example:
-"
-pmucmcb@7e710000 {
-        compatible = "apm,xgene-pmu-mcb";
-        reg = <0x0 0x7e710000 0x0 0x1000>;
-        enable-mask = <0x00000001>;
-};
-
-pmucmcb@7e730000 {
-        compatible = "apm,xgene-pmu-mcb";
-        reg = <0x0 0x7e730000 0x0 0x1000>;
-        enable-mask = <0x00000002>;
-};
-"
-Or can you please give a suggestion how I can fix it?
+Sure I can do that.
 
 Thanks,
 -- 
-Tai
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
