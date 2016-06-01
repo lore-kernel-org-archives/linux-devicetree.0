@@ -1,70 +1,157 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v4 1/2] drm: bridge: Add sii902x driver
-Date: Wed, 1 Jun 2016 23:56:02 +0200
-Message-ID: <20160601215602.GA7231@phenom.ffwll.local>
-References: <1463407469-21819-1-git-send-email-boris.brezillon@free-electrons.com>
- <20160517064711.GF27098@phenom.ffwll.local>
- <20160601180337.28e0917b@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20160601180337.28e0917b@bbrezillon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Meng Yi <meng.yi@nxp.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH 07/32] ARM: bcm2835: dt: Add the ethernet to the device trees
+Date: Wed,  1 Jun 2016 23:43:16 +0200
+Message-ID: <1464817421-8519-8-git-send-email-kraxel@redhat.com>
+References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rpi-kernel@lists.infradead.org
+Cc: Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMDEsIDIwMTYgYXQgMDY6MDM6MzdQTSArMDIwMCwgQm9yaXMgQnJlemlsbG9u
-IHdyb3RlOgo+IE9uIFR1ZSwgMTcgTWF5IDIwMTYgMDg6NDc6MTEgKzAyMDAKPiBEYW5pZWwgVmV0
-dGVyIDxkYW5pZWxAZmZ3bGwuY2g+IHdyb3RlOgo+IAo+ID4gPiArc3RhdGljIHN0cnVjdCBkcm1f
-ZW5jb2RlciAqc2lpOTAyeF9iZXN0X2VuY29kZXIoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5l
-Y3RvcikKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCA9IGNvbm5lY3Rv
-cl90b19zaWk5MDJ4KGNvbm5lY3Rvcik7Cj4gPiA+ICsKPiA+ID4gKwlyZXR1cm4gc2lpOTAyeC0+
-YnJpZGdlLmVuY29kZXI7Cj4gPiA+ICt9ICAKPiA+IAo+ID4gZHJtX2F0b21pY19oZWxwZXJfYmVz
-dF9lbmNvZGVyIHNob3VsZCBkbyBleGFjdGx5IHRoaXMgZm9yIHlvdS4gSWYgeW91IGZlZWwKPiA+
-IGJvYXJkIHBpbXAgdGhlIGF0b21pYyBoZWxwZXJzIHRvIGNhbGwgdGhhdCBvbmUgYnkgZGVmYXVs
-dCB0byBldmVuIHJlbW92ZQo+ID4gdGhlIHZmdW5jIGFzc2luZ21lbnQgbGluZSA7LSkKPiAKPiBK
-dXN0IHRvIGJlIHN1cmUsIGlzIHRoYXQgd2hhdCB5b3UgaGFkIGluIG1pbmQ/CgpFeGFjdGx5LCBJ
-J2xsIHBpY2sgdGhpcyBvbmUgdXAgZm9yIGRybS1taXNjLiBidHcgaWYgeW91J3JlIGV2ZW4gbW9y
-ZQptb3RpdmF0ZWQsIHlvdSBjYW4gZ28gdGhyb3VnaCBhbGwgZHJpdmVycyB3aXRoIGEgc3RhdGlj
-IG1hcHBpbmcgZnJvbQpjb25uZWN0b3IgdG8gZW5jb2RlciwgYW5kIG51a2UgdGhvc2UgZnVuY3Rp
-b25zLiBTaW5jZSBpZiBpdCdzIGp1c3QgYQpzdGF0aWMgbWFwcGluZywgdGhlIG9ubHkgd2F5IHRv
-IGRvIGl0IGlzIGxpa2UgdGhlIGhlbHBlciBkb2VzLgoKVGhhbmtzLCBEYW5pZWwKPiAKPiAtLS0+
-OC0tLQo+IEZyb20gZDIxOGI3ZWExNmNhMzU0NTJiMzE3NGM4M2EyMDdlY2Q0MDZlNWM4OCBNb24g
-U2VwIDE3IDAwOjAwOjAwIDIwMDEKPiBGcm9tOiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXpp
-bGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gRGF0ZTogV2VkLCAxIEp1biAyMDE2IDE3OjU3OjE4
-ICswMjAwCj4gU3ViamVjdDogW1BBVENIXSBkcm06IGF0b21pYzogSGFuZGxlIGZ1bmNzLT5iZXN0
-X2VuY29kZXIgPT0gTlVMTCBjYXNlCj4gCj4gRmFsbGJhY2sgZHJtX2F0b21pY19oZWxwZXJfYmVz
-dF9lbmNvZGVyKCkgaXMgZnVuY3MtPmJlc3RfZW5jb2RlcigpIGlzIE5VTEwKPiBzbyB0aGF0IERS
-TSBkcml2ZXJzIGNhbiBsZWF2ZSB0aGlzIGhvb2sgdW5hc3NpZ25lZCBpZiB0aGV5IGtub3cgdGhl
-eSB3YW50Cj4gdG8gdXNlIGRybV9hdG9taWNfaGVscGVyX2Jlc3RfZW5jb2RlcigpLgo+IAo+IFNp
-Z25lZC1vZmYtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ry
-b25zLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2RybV9hdG9taWNfaGVscGVyLmMgfCA0
-ICsrKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+
-IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21pY19oZWxwZXIuYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jCj4gaW5kZXggZGRmYTBkMS4uZjZhMzM1
-MCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21pY19oZWxwZXIuYwo+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jCj4gQEAgLTExMCw4ICsxMTAs
-MTAgQEAgc3RhdGljIGludCBoYW5kbGVfY29uZmxpY3RpbmdfZW5jb2RlcnMoc3RydWN0IGRybV9h
-dG9taWNfc3RhdGUgKnN0YXRlLAo+ICAKPiAgCQlpZiAoZnVuY3MtPmF0b21pY19iZXN0X2VuY29k
-ZXIpCj4gIAkJCW5ld19lbmNvZGVyID0gZnVuY3MtPmF0b21pY19iZXN0X2VuY29kZXIoY29ubmVj
-dG9yLCBjb25uX3N0YXRlKTsKPiAtCQllbHNlCj4gKwkJZWxzZSBpZiAoZnVuY3MtPmJlc3RfZW5j
-b2RlcikKPiAgCQkJbmV3X2VuY29kZXIgPSBmdW5jcy0+YmVzdF9lbmNvZGVyKGNvbm5lY3Rvcik7
-Cj4gKwkJZWxzZQo+ICsJCQluZXdfZW5jb2RlciA9IGRybV9hdG9taWNfaGVscGVyX2Jlc3RfZW5j
-b2Rlcihjb25uZWN0b3IpOwo+ICAKPiAgCQlpZiAobmV3X2VuY29kZXIpIHsKPiAgCQkJaWYgKGVu
-Y29kZXJfbWFzayAmICgxIDw8IGRybV9lbmNvZGVyX2luZGV4KG5ld19lbmNvZGVyKSkpIHsKPiAK
-PiAKPiAKCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3Jh
-dGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+From: Lubomir Rintel <lkundrak@v3.sk>
+
+The hub and the ethernet in its port 1 are hardwired on the board.
+
+Compared to the adapters that can be plugged into the USB ports, this
+one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
+has the MAC address for this adapter in its ROM, accessible from its
+firmware.
+
+U-Boot can read out the address and set the local-mac-address property of the
+node with "ethernet" alias. Let's add the node so that U-Boot can do its
+business.
+
+Model B rev2 and Model B+ entries were verified by me, the hierarchy and
+pid/vid pair for the Version 2 was provided by Peter Chen. Original
+Model B is a blind shot, though very likely correct.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+---
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts         |  1 +
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts       |  1 +
+ arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/bcm283x.dtsi              |  2 ++
+ 7 files changed, 44 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index 57d313b..d5fdb8e 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index cf2774e..bfc4bd9 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index 8b15f9c..0371bb7 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index c4743f4..29e1cfe 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2836.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+new file mode 100644
+index 0000000..12c981e
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+@@ -0,0 +1,19 @@
++/ {
++	aliases {
++		ethernet = &ethernet;
++	};
++};
++
++&usb {
++	usb1@1 {
++		compatible = "usb424,9512";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+new file mode 100644
+index 0000000..3f0a56e
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+@@ -0,0 +1,19 @@
++/ {
++	aliases {
++		ethernet = &ethernet;
++	};
++};
++
++&usb {
++	usb1@1 {
++		compatible = "usb424,9514";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 10b27b9..b982522 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -287,6 +287,8 @@
+ 			compatible = "brcm,bcm2835-usb";
+ 			reg = <0x7e980000 0x10000>;
+ 			interrupts = <1 9>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 		};
+ 
+ 		v3d: v3d@7ec00000 {
+-- 
+1.8.3.1
