@@ -1,62 +1,340 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 1/4] dt-bindings: Add A10 I2S controller binding documentation
-Date: Wed,  1 Jun 2016 19:54:27 +0200
-Message-ID: <20160601175430.11625-2-maxime.ripard@free-electrons.com>
-References: <20160601175430.11625-1-maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160601175430.11625-1-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Andrea Venturi <ennesimamail.av@gmail.com>, Code Kipper <codekipper@gmail.com>, gianfranco@moddevices.com, Maxime Ripard <maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for
+ Bananapi M1 Plus board
+Date: Wed, 1 Jun 2016 19:58:54 +0200
+Message-ID: <20160601175854.GZ4908@lukather>
+References: <20160530123013.11575-1-luoyi.ly@gmail.com>
+ <20160530194340.GE4908@lukather>
+ <574CA1ED.8050007@web.de>
+ <20160531170957.GM4908@lukather>
+ <CAFfxPQss6M4dR_=fPCamZ08A3gPyC0523f+qFTYm1e16O4t_KQ@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OesXTvlsfeLEOFyS"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBX6EXS5AKGQEKXGRGNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAFfxPQss6M4dR_=fPCamZ08A3gPyC0523f+qFTYm1e16O4t_KQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce the device tree binding for the I2S controller found in the
-Allwinner A10 and later SoCs.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- .../devicetree/bindings/sound/sun4i-i2s.txt        | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/sun4i-i2s.txt
+--OesXTvlsfeLEOFyS
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-new file mode 100644
-index 000000000000..365ca4eede5f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-@@ -0,0 +1,33 @@
-+* Allwinner A10 I2S controller
-+
-+The I2S bus (Inter-IC sound bus) is a serial link for digital
-+audio data transfer between devices in the system.
-+
-+Required properties:
-+
-+- compatible: should be one of the followings
-+   - "allwinner,sun4i-a10-i2s"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: should contain the I2S interrupt.
-+- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
-+	Documentation/devicetree/bindings/dma/dma.txt
-+- dma-names: should include "tx" and "rx".
-+- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
-+- clock-names: should contain followings:
-+   - "apb" : clock for the I2S bus interface
-+   - "mod" : module clock for the I2S controller
-+
-+Example:
-+
-+i2s0: i2s@01c22400 {
-+	#sound-dai-cells = <0>;
-+	compatible = "allwinner,sun4i-a10-i2s";
-+	reg = <0x01c22400 0x400>;
-+	interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&apb0_gates 3>, <&i2s0_clk>;
-+	clock-names = "apb", "mod";
-+	dmas = <&dma SUN4I_DMA_NORMAL 3>,
-+	       <&dma SUN4I_DMA_NORMAL 3>;
-+	dma-names = "rx", "tx";
-+};
+Hi,
+
+On Wed, Jun 01, 2016 at 10:40:18AM +0800, luoyi wrote:
+> This is the new version of the patch.  and I think maybe every board
+> should have their own dtb files. and we can you some cpp  macro tricks
+> to merge their coressponding dts file.
+
+Please submit it as a new patch with send-email, with the version
+(using the -v option) and a log of your changes.
+
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e06a5ab..fde407f 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -685,6 +685,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+>      sun6i-a31s-yones-toptech-bs1078-v2.dtb
+>  dtb-$(CONFIG_MACH_SUN7I) += \
+>      sun7i-a20-bananapi.dtb \
+> +    sun7i-a20-bananapi-m1-plus.dtb \
+>      sun7i-a20-bananapro.dtb \
+>      sun7i-a20-cubieboard2.dtb \
+>      sun7i-a20-cubietruck.dtb \
+> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> new file mode 100644
+> index 0000000..548ed31
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> @@ -0,0 +1,266 @@
+> +/*
+> + * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * Thanks to the original work by Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun7i-a20.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +    model = "Banana Pi BPI-M1-Plus";
+> +    compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
+> +
+> +    aliases {
+> +        serial0 = &uart0;
+> +    };
+> +
+> +    chosen {
+> +        stdout-path = "serial0:115200n8";
+> +    };
+> +
+> +    leds {
+> +        compatible = "gpio-leds";
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&led_pins_bananapi>;
+> +
+> +        green {
+> +            label = "bananapi:green:usr";
+> +            gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
+> +        };
+> +
+> +        red {
+> +            label = "bananapi:red:usr";
+> +            gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
+> +            linux,default-trigger = "default-on";
+> +        };
+> +
+> +    };
+> +
+> +    mmc3_pwrseq: mmc3_pwrseq {
+> +        compatible = "mmc-pwrseq-simple";
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&mmc3_pwrseq_pin_bananapim1plus>;
+> +        reset-gpios = <&pio 7 22 GPIO_ACTIVE_LOW>; /* PH22 WL-PMU-EN */
+> +    };
+> +
+> +    reg_gmac_3v3: gmac-3v3 {
+> +        compatible = "regulator-fixed";
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&gmac_power_pin_bananapi>;
+> +        regulator-name = "gmac-3v3";
+> +        regulator-min-microvolt = <3300000>;
+> +        regulator-max-microvolt = <3300000>;
+> +        startup-delay-us = <100000>;
+> +        enable-active-high;
+> +        gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
+> +    };
+> +
+> +};
+> +
+> +&ahci {
+> +    status = "okay";
+> +};
+> +
+> +&codec {
+> +    status = "okay";
+> +};
+> +
+> +&ehci0 {
+> +    status = "okay";
+> +};
+> +
+> +&ehci1 {
+> +    status = "okay";
+> +};
+> +
+> +&gmac {
+> +    pinctrl-names = "default";
+> +    pinctrl-0 = <&gmac_pins_rgmii_a>;
+> +    phy = <&phy1>;
+> +    phy-mode = "rgmii";
+> +    phy-supply = <&reg_gmac_3v3>;
+> +    status = "okay";
+> +
+> +    phy1: ethernet-phy@1 {
+> +        reg = <1>;
+> +    };
+> +};
+> +
+> +&i2c0 {
+> +    pinctrl-names = "default";
+> +    pinctrl-0 = <&i2c0_pins_a>;
+> +    status = "okay";
+> +
+> +    axp209: pmic@34 {
+> +        compatible = "x-powers,axp209";
+> +        reg = <0x34>;
+> +        interrupt-parent = <&nmi_intc>;
+> +        interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +        interrupt-controller;
+> +        #interrupt-cells = <1>;
+> +    };
+> +};
+> +
+> +&ir0 {
+> +    pinctrl-names = "default";
+> +    pinctrl-0 = <&ir0_rx_pins_a>;
+> +    status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +    pinctrl-names = "default";
+> +    pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
+> +    vmmc-supply = <&reg_vcc3v3>;
+> +    bus-width = <4>;
+> +    cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
+> +    cd-inverted;
+> +    status = "okay";
+> +};
+> +
+> +&mmc3 {
+> +
+> +    #address-cells = <1>;
+> +    #size-cells = <0>;
+> +    pinctrl-names = "default";
+> +    pinctrl-0 = <&mmc3_pins_a>;
+> +    vmmc-supply = <&reg_vcc3v3>;
+> +    mmc-pwrseq = <&mmc3_pwrseq>;
+> +    bus-width = <4>;
+> +    non-removable;
+> +    enable-sdio-wakeup;
+> +    status = "okay";
+> +
+> +    brcmf: bcrmf@1 {
+> +        reg = <1>;
+> +        compatible = "brcm,bcm4329-fmac";
+> +        interrupt-parent = <&pio>;
+> +        interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
+> +        interrupt-names = "host-wake";
+> +    };
+> +
+> +};
+> +
+> +&mmc3_pins_a {
+> +    /* AP6210 requires pull-up */
+> +    allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+> +};
+> +
+> +&ohci0 {
+> +    status = "okay";
+> +};
+> +
+> +&ohci1 {
+> +    status = "okay";
+> +};
+> +
+> +&pio {
+> +    gmac_power_pin_bananapi: gmac_power_pin@0 {
+> +        allwinner,pins = "PH23";
+> +        allwinner,function = "gpio_out";
+> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +    };
+> +
+> +    led_pins_bananapi: led_pins@0 {
+> +        allwinner,pins = "PH24", "PG2";
+> +        allwinner,function = "gpio_out";
+> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +    };
+> +
+> +    mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
+> +        allwinner,pins = "PH10";
+> +        allwinner,function = "gpio_in";
+> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +        allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+> +    };
+> +
+> +    mmc3_pwrseq_pin_bananapim1plus: mmc3_pwrseq_pin@0 {
+> +        allwinner,pins = "PH22";
+> +        allwinner,function = "gpio_out";
+> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +    };
+> +
+> +    usb1_vbus_pin_bananapi: usb1_vbus_pin@0 {
+> +        allwinner,pins = "PH0";
+> +        allwinner,function = "gpio_out";
+> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +    };
+> +
+> +    usb2_vbus_pin_bananapi: usb2_vbus_pin@0 {
+> +        allwinner,pins = "PH1";
+> +        allwinner,function = "gpio_out";
+> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +    };
+> +
+> +};
+> +
+> +&reg_usb1_vbus {
+> +    pinctrl-0 = <&usb1_vbus_pin_bananapi>;
+> +    gpio = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
+> +    status = "okay";
+> +};
+> +
+> +&reg_usb2_vbus {
+> +    pinctrl-0 = <&usb2_vbus_pin_bananapi>;
+> +    gpio = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+> +    status = "okay";
+> +};
+> +
+> +&uart0 {
+> +    pinctrl-names = "default";
+> +    pinctrl-0 = <&uart0_pins_a>;
+> +    status = "okay";
+> +};
+> +
+> +&usbphy {
+> +    usb1_vbus-supply = <&reg_usb1_vbus>;
+> +    usb2_vbus-supply = <&reg_usb2_vbus>;
+> +    status = "okay";
+> +};
+
+Please include the bananapro dts to not duplicate all the common parts.
+
+Thanks!
+Maxime
+
 -- 
-2.8.3
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--OesXTvlsfeLEOFyS--
