@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC v3 19/22] ARM: shmobile: rcar-gen2: Stop passing mode pins state to clock driver
-Date: Wed,  1 Jun 2016 21:21:17 +0200
-Message-ID: <1464808880-343-20-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH/RFC v3 14/22] clk: renesas: r8a7795: Obtain mode pin values from R-Car RST driver
+Date: Wed,  1 Jun 2016 21:21:12 +0200
+Message-ID: <1464808880-343-15-git-send-email-geert+renesas@glider.be>
 References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
@@ -10,52 +10,42 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laur
 Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Now the R-Car Gen2 CPG clock driver obtains the state of the mode pins
-from the R-Car RST driver, there's no longer a need to pass this state
-explicitly. Hence we can just call of_clk_init() instead.
+Obtain the values of the mode pins from the R-Car RST driver, which
+relies on the presence in DT of a device node for the RST module.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v3:
-  - Drop "select MFD_SYSCON", as the clock driver no longer uses syscon,
-
-v2:
-  - Kill compiler warning if CONFIG_ARM_ARCH_TIMER is not enabled.
+  - New.
 ---
- arch/arm/mach-shmobile/setup-rcar-gen2.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/clk/renesas/r8a7795-cpg-mssr.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-index 1c6fd11c2f824019..755ce7a940c11848 100644
---- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-@@ -15,7 +15,7 @@
-  * GNU General Public License for more details.
-  */
- 
--#include <linux/clk/renesas.h>
-+#include <linux/clk-provider.h>
- #include <linux/clocksource.h>
+diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+index e53aff5b23ad4967..e1f2359a59feee7e 100644
+--- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+@@ -15,6 +15,7 @@
  #include <linux/device.h>
- #include <linux/dma-contiguous.h>
-@@ -51,8 +51,8 @@ u32 rcar_gen2_read_mode_pins(void)
+ #include <linux/init.h>
+ #include <linux/kernel.h>
++#include <linux/soc/renesas/rcar-rst.h>
  
- void __init rcar_gen2_timer_init(void)
+ #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
+ 
+@@ -294,7 +295,12 @@ static const struct rcar_gen3_cpg_pll_config cpg_pll_configs[16] __initconst = {
+ static int __init r8a7795_cpg_mssr_init(struct device *dev)
  {
--	u32 mode = rcar_gen2_read_mode_pins();
- #ifdef CONFIG_ARM_ARCH_TIMER
-+	u32 mode = rcar_gen2_read_mode_pins();
- 	void __iomem *base;
- 	int extal_mhz = 0;
- 	u32 freq;
-@@ -127,7 +127,7 @@ void __init rcar_gen2_timer_init(void)
- 	iounmap(base);
- #endif /* CONFIG_ARM_ARCH_TIMER */
+ 	const struct rcar_gen3_cpg_pll_config *cpg_pll_config;
+-	u32 cpg_mode = rcar_gen3_read_mode_pins();
++	u32 cpg_mode;
++	int error;
++
++	error = rcar_rst_read_mode_pins(&cpg_mode);
++	if (error)
++		return error;
  
--	rcar_gen2_clocks_init(mode);
-+	of_clk_init(NULL);
- 	clocksource_probe();
- }
- 
+ 	cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
+ 	if (!cpg_pll_config->extal_div) {
 -- 
 1.9.1
