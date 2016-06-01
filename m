@@ -1,28 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: rng: Northstar Plus SoC rng bindings
-Date: Wed, 1 Jun 2016 09:47:03 -0500
-Message-ID: <20160601144703.GA6948@rob-hp-laptop>
-References: <1464343841-29504-1-git-send-email-yendapally.reddy@broadcom.com>
- <1464343841-29504-2-git-send-email-yendapally.reddy@broadcom.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: Add watchdog and SSS clock IDs to
+ Exynos5410
+Date: Wed, 1 Jun 2016 10:53:15 -0400
+Message-ID: <7ec3b4ad-8c80-1289-e3c0-63d3a29ae57b@osg.samsung.com>
+References: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464343841-29504-2-git-send-email-yendapally.reddy@broadcom.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, noltari@gmail.com, Joshua Henderson <joshua.henderson@microchip.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-crypt
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 27, 2016 at 06:10:38AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
-> Document the bindings used by Northstar Plus(NSP) SoC random number
-> generator.
+Hello Krzysztof,
+
+On 06/01/2016 05:45 AM, Krzysztof Kozlowski wrote:
+> Add IDs for watchdog and Security SubSystem to Exynos5410.  Use the same
+> number as for Exynos5420 just in case in future these drivers were
+> merged.
 > 
-> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-> Acked-by: Eric Anholt <eric@anholt.net>
-
-You missed my ack...
-
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 > ---
->  Documentation/devicetree/bindings/rng/brcm,bcm2835.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
