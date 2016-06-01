@@ -1,242 +1,90 @@
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 18/32] ARM: bcm2835: Move most RPi default pin groups to their devices.
-Date: Wed,  1 Jun 2016 23:43:27 +0200
-Message-ID: <1464817421-8519-19-git-send-email-kraxel@redhat.com>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v3 04/12] of: add J-Core timer bindings
+Date: Wed, 1 Jun 2016 17:53:49 -0400
+Message-ID: <20160601215349.GD10893@brightrain.aerifal.cx>
+References: <cover.1464148904.git.dalias@libc.org>
+ <5341dfbb085d5647ebb6fe4390ca329b63e0e03d.1464148904.git.dalias@libc.org>
+ <20160601135852.GA17217@rob-hp-laptop>
+ <20160601175307.GC10893@brightrain.aerifal.cx>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20160601175307.GC10893@brightrain.aerifal.cx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric@anholt.net>
+On Wed, Jun 01, 2016 at 01:53:07PM -0400, Rich Felker wrote:
+> On Wed, Jun 01, 2016 at 08:58:52AM -0500, Rob Herring wrote:
+> > On Wed, May 25, 2016 at 05:43:03AM +0000, Rich Felker wrote:
+> > > Signed-off-by: Rich Felker <dalias@libc.org>
+> > > ---
+> > >  .../devicetree/bindings/timer/jcore,pit.txt        | 28 ++++++++++++++++++++++
+> > >  1 file changed, 28 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
+> > > new file mode 100644
+> > > index 0000000..96c6815
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
+> > > @@ -0,0 +1,28 @@
+> > > +J-Core Programmable Interval Timer and Clocksource
+> > > +
+> > > +Required properties:
+> > > +
+> > > +- compatible: Must be "jcore,pit".
+> > > +
+> > > +- reg: Memory region for timer/clocksource registers.
+> > > +
+> > > +- interrupts: An interrupt to assign for the timer. The actual pit
+> > > +  core is integrated with the aic and allows the timer interrupt
+> > > +  assignment to be programmed by software, but this property is
+> > > +  required in order to reserve an interrupt number that doesn't
+> > > +  conflict with other devices.
+> > > +
+> > > +Optional properties:
+> > > +
+> > > +- cpu-offset: For SMP, the per-cpu offset to the local timer
+> > > +  programming memory range.
+> > > +
+> > > +
+> > > +Example:
+> > > +
+> > > +timer@200 {
+> > > +	compatible = "jcore,pit";
+> > > +	reg = < 0x200 0x30 >;
+> > > +	cpu-offset = < 0x300 >;
+> > 
+> > This is outside the reg range. Perhaps reg should include each range of 
+> > per cpu registers.
+> 
+> In the hardware, each timer instance is mapped independently so
+> there's no fundamental reason they need to be mapped sufficiently
+> close that it would make sense for a single virtual mapping to cover
+> them all. This doesn't matter for nommu but it would with mmu in the
+> future. In the driver I've updated it to ioremap each percpu instance
+> separately (as its own memory range) using the cpu-offset applied to
+> the range obtained from "reg". Is this acceptable (in which case I
+> suppose the binding needs to be documented that "reg" just covers the
+> cpu0 instance's range)? Do you think it would be preferable to have
+> multiple "reg" ranges indexed by cpu instead of cpu-offset?
+> 
+> In theory it would even be possible to just require a DT node per
+> cpulocal timer, but I didn't see a good way to make the bindings
+> represent the relationship to cpus or to make the driver handle irqs
+> correctly for such a setup, so I'd need a viable proposal for how that
+> could be done to even consider such an approach.
 
-This way we can get the duplicated pin group definitions out of each
-RPi board file, and just leave the i2s variations in them.
+As a bit more background: the current mappings at 0xabcd0200 and
+0xabcd0500 seem to have been chosen to maintain address-level
+compatibility with existing non-smp builds (0xabcd0200) while avoiding
+stepping on unrelated nearby mmio ranges -- uarts 1 and 2 were at
+0xabcd0300 and 0xabcd0400 on systems with multiple uarts. Eventually
+these can all be moved arbitrarily and put in a more logical
+arrangement once everything is using device tree, but for the time
+being, compatibility with non-DT kernels is still needed.
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
-
-Conflicts:
-	arch/arm/boot/dts/bcm2835-rpi-b.dts
-	arch/arm/boot/dts/bcm2835-rpi.dtsi
----
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts | 14 +++-----------
- arch/arm/boot/dts/bcm2835-rpi-a.dts      | 14 +++-----------
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 14 +++-----------
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 14 +++-----------
- arch/arm/boot/dts/bcm2835-rpi-b.dts      | 12 ------------
- arch/arm/boot/dts/bcm2835-rpi.dtsi       | 20 ++++++++++++++++++++
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts    | 14 +++-----------
- 7 files changed, 35 insertions(+), 67 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-index 5bd0bfe..670ae70 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-@@ -20,17 +20,9 @@
- 	};
- };
- 
--&gpio {
--	pinctrl-0 = <&i2c0_gpio0
--		     &i2c1_gpio2
--		     &gpclk0_gpio4
--		     &gpclk1_gpio5
--		     &spi0_gpio7
--		     &pcm_gpio18
--		     &pwm0_gpio40
--		     &pwm1_gpio45
--		     &emmc_gpio48
--		     &gpioout>;
-+&i2s {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcm_gpio18>;
- };
- 
- &hdmi {
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-index ba1b0ac..e980637 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-@@ -13,17 +13,9 @@
- 	};
- };
- 
--&gpio {
--	pinctrl-0 = <&i2c0_gpio0
--		     &i2c1_gpio2
--		     &gpclk0_gpio4
--		     &gpclk1_gpio5
--		     &spi0_gpio7
--		     &pcm_gpio28
--		     &pwm0_gpio40
--		     &pwm1_gpio45
--		     &emmc_gpio48
--		     &gpioout>;
-+&i2s {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcm_gpio28>;
- };
- 
- &hdmi {
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index 609a5e8..312d977 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -21,17 +21,9 @@
- 	};
- };
- 
--&gpio {
--	pinctrl-0 = <&i2c0_gpio0
--		     &i2c1_gpio2
--		     &gpclk0_gpio4
--		     &gpclk1_gpio5
--		     &spi0_gpio7
--		     &pcm_gpio18
--		     &pwm0_gpio40
--		     &pwm1_gpio45
--		     &emmc_gpio48
--		     &gpioout>;
-+&i2s {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcm_gpio18>;
- };
- 
- &hdmi {
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index 97de2d5..3d1d061 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -14,17 +14,9 @@
- 	};
- };
- 
--&gpio {
--	pinctrl-0 = <&i2c0_gpio0
--		     &i2c1_gpio2
--		     &gpclk0_gpio4
--		     &gpclk1_gpio5
--		     &spi0_gpio7
--		     &pcm_gpio28
--		     &pwm0_gpio40
--		     &pwm1_gpio45
--		     &emmc_gpio48
--		     &gpioout>;
-+&i2s {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcm_gpio28>;
- };
- 
- &hdmi {
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-index bc59f7e..0f96582 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -14,18 +14,6 @@
- 	};
- };
- 
--&gpio {
--	pinctrl-0 = <&i2c0_gpio0
--		     &i2c1_gpio2
--		     &gpclk0_gpio4
--		     &gpclk1_gpio5
--		     &spi0_gpio7
--		     &pwm0_gpio40
--		     &pwm1_gpio45
--		     &emmc_gpio48
--		     &gpioout>;
--};
--
- &hdmi {
- 	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index 7e65d16..a207693 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -31,6 +31,9 @@
- 
- &gpio {
- 	pinctrl-names = "default";
-+	pinctrl-0 = <&gpclk0_gpio4
-+		     &gpclk1_gpio5
-+		     &gpioout>;
- 
- 	gpioout: gpioout {
- 		brcm,pins = <6>;
-@@ -39,11 +42,17 @@
- };
- 
- &i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_gpio0>;
-+
- 	status = "okay";
- 	clock-frequency = <100000>;
- };
- 
- &i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_gpio2>;
-+
- 	status = "okay";
- 	clock-frequency = <100000>;
- };
-@@ -53,11 +62,17 @@
- };
- 
- &sdhci {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_gpio48>;
-+
- 	status = "okay";
- 	bus-width = <4>;
- };
- 
- &pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio45>;
-+
- 	status = "okay";
- };
- 
-@@ -73,3 +88,8 @@
- 	power-domains = <&power RPI_POWER_DOMAIN_HDMI>;
- 	status = "okay";
- };
-+
-+&spi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_gpio7>;
-+};
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-index b4cbffe..e6e1791 100644
---- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -25,17 +25,9 @@
- 	};
- };
- 
--&gpio {
--	pinctrl-0 = <&i2c0_gpio0
--		     &i2c1_gpio2
--		     &gpclk0_gpio4
--		     &gpclk1_gpio5
--		     &spi0_gpio7
--		     &pcm_gpio18
--		     &pwm0_gpio40
--		     &pwm1_gpio45
--		     &emmc_gpio48
--		     &gpioout>;
-+&i2s {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcm_gpio18>;
- };
- 
- &hdmi {
--- 
-1.8.3.1
+Rich
