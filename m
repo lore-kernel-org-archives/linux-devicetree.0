@@ -1,7 +1,7 @@
 From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 20/32] dt-bindings: Add binding for brcm,bcm2835-sdhost.
-Date: Wed,  1 Jun 2016 23:43:29 +0200
-Message-ID: <1464817421-8519-21-git-send-email-kraxel@redhat.com>
+Subject: [PATCH 16/32] bcm2837-rpi-3-b.dts: move the emmc pin group
+Date: Wed,  1 Jun 2016 23:43:25 +0200
+Message-ID: <1464817421-8519-17-git-send-email-kraxel@redhat.com>
 References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,62 +18,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-rpi-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lee Jones <lee@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Gerd Hoffmann <kraxel@redhat.com>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric@anholt.net>
-
-This is the other SD controller on the platform, which can be swapped
-to the role of SD card host using pin muxing.
-
-Signed-off-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- .../devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt |  3 +++
- .../bindings/mmc/brcm,bcm2835-sdhost.txt           | 24 ++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-index 59476fb..3cc74e2 100644
---- a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-@@ -15,4 +15,7 @@ sdhci: sdhci {
- 	interrupts = <2 30>;
- 	clocks = <&clk_mmc>;
- 	bus-width = <4>;
-+	dmas = <&dma 13>,
-+	       <&dma 13>;
-+	dma-names = "tx", "rx";
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index a523bd7..8579df3 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -34,8 +34,8 @@
+ 		     &pcm_gpio18
+ 		     &pwm0_gpio40
+ 		     &pwm1_gpio45
+-		     &gpioout
+-		     &alt3>;
++		     &emmc_gpio48
++		     &gpioout>;
  };
-diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-new file mode 100644
-index 0000000..074992c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-@@ -0,0 +1,24 @@
-+Broadcom BCM2835 SDHOST controller
-+
-+This file documents differences between the core properties described
-+by mmc.txt and the properties that represent the BCM2835 controller.
-+
-+Required properties:
-+- compatible: Should be "brcm,bcm2835-sdhci".
-+- clocks: The clock feeding the SDHOST controller.
-+
-+Optional properties:
-+- dmas: DMA channels for read and write.
-+          See Documentation/devicetree/bindings/dma/dma.txt for details
-+
-+Example:
-+
-+sdhost: sdhost@7e202000 {
-+	compatible = "brcm,bcm2835-sdhost";
-+	reg = <0x7e202000 0x100>;
-+	interrupts = <2 24>;
-+	clocks = <&clocks BCM2835_CLOCK_VPU>;
-+	dmas = <&dma 13>,
-+	       <&dma 13>;
-+	dma-names = "tx", "rx";
-+};
+ 
+ &uart1 {
 -- 
 1.8.3.1
