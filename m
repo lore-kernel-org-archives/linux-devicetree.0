@@ -1,48 +1,46 @@
 From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 23/32] ARM: bcm2835: Enable SDHOST by default.
-Date: Wed,  1 Jun 2016 23:43:32 +0200
-Message-ID: <1464817421-8519-24-git-send-email-kraxel@redhat.com>
+Subject: [PATCH 19/32] bcm2837-rpi-3-b.dts: move most RPi default pin groups to their devices
+Date: Wed,  1 Jun 2016 23:43:28 +0200
+Message-ID: <1464817421-8519-20-git-send-email-kraxel@redhat.com>
 References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rpi-kernel@lists.infradead.org
-Cc: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Gerd Hoffmann <kraxel@redhat.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:BROADCOM
+	BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
+	AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric@anholt.net>
-
-This improves read speed on my SD card (as reported by hdparm -t) from
-10.15MB/sec to 16.70MB/sec.  Once we add slave DMA, we can get to
-18.45MB/sec.
-
-Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
- arch/arm/boot/dts/bcm2835-rpi.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index a207693..97496cd 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -65,8 +65,16 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&emmc_gpio48>;
- 
-+	bus-width = <4>;
-+};
-+
-+&sdhost {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdhost_gpio48>;
-+
-+	bus-width = <4>;
-+
- 	status = "okay";
--	bus-width = <4>;
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index 8579df3..4636c16 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -25,17 +25,9 @@
+ 	};
  };
  
- &pwm {
+-&gpio {
+-	pinctrl-0 = <&i2c0_gpio0
+-		     &i2c1_gpio2
+-		     &gpclk0_gpio4
+-		     &gpclk1_gpio5
+-		     &spi0_gpio7
+-		     &pcm_gpio18
+-		     &pwm0_gpio40
+-		     &pwm1_gpio45
+-		     &emmc_gpio48
+-		     &gpioout>;
++&i2s {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcm_gpio18>;
+ };
+ 
+ &uart1 {
 -- 
 1.8.3.1
