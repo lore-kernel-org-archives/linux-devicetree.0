@@ -1,7 +1,7 @@
 From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 10/32] don't force serial pins to uart0
-Date: Wed,  1 Jun 2016 23:43:19 +0200
-Message-ID: <1464817421-8519-11-git-send-email-kraxel@redhat.com>
+Subject: [PATCH 04/32] dt-bindings: Add root properties for Raspberry Pi 3
+Date: Wed,  1 Jun 2016 23:43:13 +0200
+Message-ID: <1464817421-8519-5-git-send-email-kraxel@redhat.com>
 References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,27 +18,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-rpi-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lee Jones <lee@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lee Jones <lee@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Eric Anholt <eric@anholt.net>
 
+Signed-off-by: Eric Anholt <eric@anholt.net>
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index caf2707..88bcd0c 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -38,7 +38,7 @@
- 	};
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+index 11d3056..6ffe087 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+@@ -30,6 +30,10 @@ Raspberry Pi 2 Model B
+ Required root node properties:
+ compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
  
- 	alt0: alt0 {
--		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 14 15 40 45>;
-+		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 40 45>;
- 		brcm,function = <BCM2835_FSEL_ALT0>;
- 	};
- 
++Raspberry Pi 3 Model B
++Required root node properties:
++compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
++
+ Raspberry Pi Compute Module
+ Required root node properties:
+ compatible = "raspberrypi,compute-module", "brcm,bcm2835";
 -- 
 1.8.3.1
