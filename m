@@ -1,44 +1,40 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v3 09/12] EXAMPLE CODE: usb: port: Parse pwrseq phandle
- from Device Tree
-Date: Wed, 1 Jun 2016 20:05:20 +0800
-Message-ID: <20160601120520.GB16740@shlinux2>
-References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
- <1464768141-25420-10-git-send-email-k.kozlowski@samsung.com>
- <146477144362.1485.3331887341591876278@sboyd-linaro>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 13/13] ARM: dts: blanche: add Ethernet support
+Date: Wed, 1 Jun 2016 15:16:30 +0300
+Message-ID: <a60346f2-2abb-342b-dd20-38d401c4ceb3@cogentembedded.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <1669958.qjJ7i3NBPv@wasted.cogentembedded.com>
+ <CAMuHMdU2P6VKXNpEHGOKpyuM45Pk0CuHWngxwu5AYGqYfduXXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <146477144362.1485.3331887341591876278@sboyd-linaro>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.or, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdU2P6VKXNpEHGOKpyuM45Pk0CuHWngxwu5AYGqYfduXXg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 01:57:23AM -0700, Stephen Boyd wrote:
-> Quoting Krzysztof Kozlowski (2016-06-01 01:02:18)
-> > Parse usb-pwrseq property from Device Tree to get the phandle to pwrseq
-> > device.  The pwrseq device will be used by USB hub to cycle the power
-> > before activating ports.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> 
-> Drive by review comment.
-> 
-> I was hoping this would help me with a problem I'm having where I have a
-> hub (smsc4604) that needs to be taken out of reset before my HSIC
-> controller sends a USB reset to it, but it seems this is more about
-> doing some sort of power on sequence after enumeration?
-> 
+Hello.
 
-No, you may need to do reset before enumeration, the general purpose of
-reset is eliminate unstable hardware state, and let the controller find
-the device.
+On 6/1/2016 11:22 AM, Geert Uytterhoeven wrote:
 
-Try to do it at bootloader to see if it works for you.
+>> --- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
+>> +++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
+>
+>> +       ethernet@18000000 {
+>> +               compatible = "smsc,lan89218", "smsc,lan9115";
+>
+> The "smsc,lan89218" needs to be documented in the device tree bindings.
 
--- 
+    Have you looked at those bindings?
 
-Best Regards,
-Peter Chen
+> Google couldn't find any evidence you submitted a patch for that.
+
+    Because the bindings document *any* LAN9115 compatible chip already.
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+
+MBR, Sergei
