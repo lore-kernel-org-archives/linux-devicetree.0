@@ -1,59 +1,126 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos: Add watchdog amd Security SubSystem
- to Exynos5410
-Date: Wed, 1 Jun 2016 11:16:58 -0400
-Message-ID: <f7e99aad-f773-27c6-d554-ba30bc54b5f7@osg.samsung.com>
-References: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
- <1464774351-23604-3-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1464774351-23604-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 2/2] ARM: dts: imx6: tag boards that have the HW workaround for ERR006687
+Date: Wed,  1 Jun 2016 17:29:43 +0200
+Message-ID: <1464794983-31484-3-git-send-email-l.stach@pengutronix.de>
+References: <1464794983-31484-1-git-send-email-l.stach@pengutronix.de>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1464794983-31484-1-git-send-email-l.stach@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Add the DT property to all boards that have the hardware workaround
+for erratum ERR006687 present. This allows the CPUidle driver to use
+the deep idle states, even if the FEC is active.
 
-On 06/01/2016 05:45 AM, Krzysztof Kozlowski wrote:
-> Move watchdog and Security SubSystem nodes from exynos5420.dtsi to file
-> shared with Exynos5410 and configure the clocks on the latter.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6dl-riotboard.dts       | 1 +
+ arch/arm/boot/dts/imx6q-arm2.dts             | 1 +
+ arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi     | 1 +
+ arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 1 +
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi    | 1 +
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi     | 1 +
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi     | 1 +
+ arch/arm/boot/dts/imx6qdl-wandboard.dtsi     | 1 +
+ 8 files changed, 8 insertions(+)
 
-[snip]
-
->  
-> +&sss {
-> +	clocks = <&clock CLK_SSS>;
-> +	clock-names = "secss";
-> +};
-> +
-
-[snip]
-
->  
-> +&watchdog {
-> +	clocks = <&clock CLK_WDT>;
-> +	clock-names = "watchdog";
-> +	samsung,syscon-phandle = <&pmu_system_controller>;
-> +};
-> +
-
-Since you used the same ID than Exynos5420 for the SSS and WDT clocks,
-I wonder if the clock and clock-names shouldn't be just defined in the
-shared exynos54xx.dtsi as is the case for the interrupts that are also
-the same?
-
-The patch looks good to me though, so whatever you decide:
-
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards,
+diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
+index bfbed52ce1bd..b10dc9513c6b 100644
+--- a/arch/arm/boot/dts/imx6dl-riotboard.dts
++++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
+@@ -97,6 +97,7 @@
+ 	phy-reset-gpios = <&gpio3 31 0>;
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++	fsl,err006687-war-present;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6q-arm2.dts b/arch/arm/boot/dts/imx6q-arm2.dts
+index d6515f7a56c4..fce60ef991ce 100644
+--- a/arch/arm/boot/dts/imx6q-arm2.dts
++++ b/arch/arm/boot/dts/imx6q-arm2.dts
+@@ -185,6 +185,7 @@
+ 	phy-mode = "rgmii";
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++	fsl,err006687-war-present;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
+index e456b5cc1b03..a74f396965ca 100644
+--- a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
+@@ -250,6 +250,7 @@
+ 	txd3-skew-ps = <0>;
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++	fsl,err006687-war-present;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+index 657da6b6ccd2..da76a128e5a9 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+@@ -385,6 +385,7 @@
+ 	txd3-skew-ps = <0>;
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++	fsl,err006687-war-present;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index 73915db704a0..dfcb5001a126 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -287,6 +287,7 @@
+ 	txd3-skew-ps = <0>;
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++	fsl,err006687-war-present;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index d354d406954d..e250da2a4caa 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -155,6 +155,7 @@
+ 	phy-mode = "rgmii";
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++	fsl,err006687-war-present;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index c47fe6c79b36..d451ca242751 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -273,6 +273,7 @@
+ 	txd3-skew-ps = <0>;
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++	fsl,err006687-war-present;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
+index 8e7c40e114dd..684c6a776565 100644
+--- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
+@@ -211,6 +211,7 @@
+ 	phy-reset-gpios = <&gpio3 29 0>;
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++	fsl,err006687-war-present;
+ 	status = "okay";
+ };
+ 
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+2.8.1
