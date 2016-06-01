@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC v3 01/22] reset: Add renesas,rst DT bindings
-Date: Wed,  1 Jun 2016 21:20:59 +0200
-Message-ID: <1464808880-343-2-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH/RFC v3 13/22] clk: renesas: rcar-gen2: Obtain mode pin values using RST driver
+Date: Wed,  1 Jun 2016 21:21:11 +0200
+Message-ID: <1464808880-343-14-git-send-email-geert+renesas@glider.be>
 References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
@@ -10,73 +10,51 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laur
 Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the Renesas R-Car Reset Controller (R-Car Gen1
-RESET/WDT and R-Car Gen2/Gen3 RST).
+Obtain the values of the mode pins from the R-Car RST driver, which
+relies on the presence in DT of a device node for the RST module.
 
-As the features provided by the hardware module differ a lot across the
-various SoC families and members, only SoC-specific compatible values
-are defined.
-
-For now we use the RST only for providing access to the state of the
-mode pins.
+Fall back to calling rcar_gen2_read_mode_pins() in the R-Car Gen2
+platform code for backward-compatibility with old DTs.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Magnus Damm <damm+renesas@opensource.se>
 ---
 v3:
-  - Clarify current usage,
-  - Use "renesas,<soctype>-rst" instead of "renesas,rst-<soctype>",
-  - Drop "syscon" compatible value,
-  - Add R-Car M3-W,
-  - Add R-Car Gen1,
+  -  Use the R-Car RST driver instead of syscon/regmap and the
+     "renesas,modemr" property in DT,
 
 v2:
-  - Add Acked-by.
+  - drivers/clk/shmobile/ was renamed to drivers/clk/renesas/.
 ---
- .../devicetree/bindings/reset/renesas,rst.txt      | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.txt
+ drivers/clk/renesas/clk-rcar-gen2.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt b/Documentation/devicetree/bindings/reset/renesas,rst.txt
-new file mode 100644
-index 0000000000000000..488c72e1ee849cd3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/renesas,rst.txt
-@@ -0,0 +1,35 @@
-+DT bindings for the Renesas R-Car Reset Controller
+diff --git a/drivers/clk/renesas/clk-rcar-gen2.c b/drivers/clk/renesas/clk-rcar-gen2.c
+index 00e6aba4b9c09596..436fc7a7714e4bd7 100644
+--- a/drivers/clk/renesas/clk-rcar-gen2.c
++++ b/drivers/clk/renesas/clk-rcar-gen2.c
+@@ -19,6 +19,7 @@
+ #include <linux/of_address.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/soc/renesas/rcar-rst.h>
+ 
+ struct rcar_gen2_cpg {
+ 	struct clk_onecell_data data;
+@@ -372,6 +373,15 @@ static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
+ 	unsigned int i;
+ 	int num_clks;
+ 
++	if (rcar_rst_read_mode_pins(&cpg_mode)) {
++		/* Backward-compatibility with old DT */
++		extern u32 rcar_gen2_read_mode_pins(void);
 +
-+The R-Car Reset Controller provides reset control, and implements the following
-+functions:
-+  - Latching of the levels on mode pins when PRESET# is negated,
-+  - Mode monitoring register,
-+  - Reset control of peripheral devices (on R-Car Gen1),
-+  - Watchdog timer (on R-Car Gen1).
-+  - Register-based reset control and boot address registers for the various CPU
-+    cores (on R-Car Gen2/Gen3),
++		pr_warn("%s: failed to obtain mode pins from RST\n",
++			np->full_name);
++		cpg_mode = rcar_gen2_read_mode_pins();
++	}
 +
-+
-+Required properties:
-+  - compatible: Should be
-+		  - "renesas,<soctype>-reset-wdt" for R-Car Gen1,
-+		  - "renesas,<soctype>-rst" for R-Car Gen2/Gen3.
-+		Examples with soctypes are:
-+		  - "renesas,r8a7778-reset-wdt" (R-Car M1A)
-+		  - "renesas,r8a7779-reset-wdt" (R-Car H1)
-+		  - "renesas,r8a7790-rst" (R-Car H2)
-+		  - "renesas,r8a7791-rst" (R-Car M2-W)
-+		  - "renesas,r8a7792-rst" (R-Car V2H
-+		  - "renesas,r8a7793-rst" (R-Car M2-N)
-+		  - "renesas,r8a7794-rst" (R-Car E2)
-+		  - "renesas,r8a7795-rst" (R-Car H3)
-+		  - "renesas,r8a7796-rst" (R-Car M3-W)
-+  - reg: Address start and address range for the device.
-+
-+
-+Example:
-+
-+	rst: reset-controller@e6160000 {
-+		compatible = "renesas,r8a7795-rst";
-+		reg = <0 0xe6160000 0 0x0200>;
-+	};
+ 	num_clks = of_property_count_strings(np, "clock-output-names");
+ 	if (num_clks < 0) {
+ 		pr_err("%s: failed to count clocks\n", __func__);
 -- 
 1.9.1
