@@ -1,347 +1,181 @@
-From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for
- Bananapi M1 Plus board
-Date: Wed, 1 Jun 2016 10:40:18 +0800
-Message-ID: <CAFfxPQss6M4dR_=fPCamZ08A3gPyC0523f+qFTYm1e16O4t_KQ@mail.gmail.com>
-References: <20160530123013.11575-1-luoyi.ly@gmail.com>
-	<20160530194340.GE4908@lukather>
-	<574CA1ED.8050007@web.de>
-	<20160531170957.GM4908@lukather>
-Reply-To: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
+Date: Wed, 1 Jun 2016 10:56:53 +0800
+Message-ID: <574E4EF5.7040005@rock-chips.com>
+References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
+ <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
+ <57483CAA.8000005@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCLONWF5WQNBBE4WXG5AKGQEFUQAGQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160531170957.GM4908@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <57483CAA.8000005-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the new version of the patch.  and I think maybe every board
-should have their own dtb files. and we can you some cpp  macro tricks
-to merge their coressponding dts file.
+Hi:
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e06a5ab..fde407f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -685,6 +685,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
-     sun6i-a31s-yones-toptech-bs1078-v2.dtb
- dtb-$(CONFIG_MACH_SUN7I) += \
-     sun7i-a20-bananapi.dtb \
-+    sun7i-a20-bananapi-m1-plus.dtb \
-     sun7i-a20-bananapro.dtb \
-     sun7i-a20-cubieboard2.dtb \
-     sun7i-a20-cubietruck.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-new file mode 100644
-index 0000000..548ed31
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-@@ -0,0 +1,266 @@
-+/*
-+ * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Thanks to the original work by Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun7i-a20.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+    model = "Banana Pi BPI-M1-Plus";
-+    compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
-+
-+    aliases {
-+        serial0 = &uart0;
-+    };
-+
-+    chosen {
-+        stdout-path = "serial0:115200n8";
-+    };
-+
-+    leds {
-+        compatible = "gpio-leds";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&led_pins_bananapi>;
-+
-+        green {
-+            label = "bananapi:green:usr";
-+            gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
-+        };
-+
-+        red {
-+            label = "bananapi:red:usr";
-+            gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
-+            linux,default-trigger = "default-on";
-+        };
-+
-+    };
-+
-+    mmc3_pwrseq: mmc3_pwrseq {
-+        compatible = "mmc-pwrseq-simple";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&mmc3_pwrseq_pin_bananapim1plus>;
-+        reset-gpios = <&pio 7 22 GPIO_ACTIVE_LOW>; /* PH22 WL-PMU-EN */
-+    };
-+
-+    reg_gmac_3v3: gmac-3v3 {
-+        compatible = "regulator-fixed";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&gmac_power_pin_bananapi>;
-+        regulator-name = "gmac-3v3";
-+        regulator-min-microvolt = <3300000>;
-+        regulator-max-microvolt = <3300000>;
-+        startup-delay-us = <100000>;
-+        enable-active-high;
-+        gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
-+    };
-+
-+};
-+
-+&ahci {
-+    status = "okay";
-+};
-+
-+&codec {
-+    status = "okay";
-+};
-+
-+&ehci0 {
-+    status = "okay";
-+};
-+
-+&ehci1 {
-+    status = "okay";
-+};
-+
-+&gmac {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&gmac_pins_rgmii_a>;
-+    phy = <&phy1>;
-+    phy-mode = "rgmii";
-+    phy-supply = <&reg_gmac_3v3>;
-+    status = "okay";
-+
-+    phy1: ethernet-phy@1 {
-+        reg = <1>;
-+    };
-+};
-+
-+&i2c0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&i2c0_pins_a>;
-+    status = "okay";
-+
-+    axp209: pmic@34 {
-+        compatible = "x-powers,axp209";
-+        reg = <0x34>;
-+        interrupt-parent = <&nmi_intc>;
-+        interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+    };
-+};
-+
-+&ir0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&ir0_rx_pins_a>;
-+    status = "okay";
-+};
-+
-+&mmc0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
-+    vmmc-supply = <&reg_vcc3v3>;
-+    bus-width = <4>;
-+    cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-+    cd-inverted;
-+    status = "okay";
-+};
-+
-+&mmc3 {
-+
-+    #address-cells = <1>;
-+    #size-cells = <0>;
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&mmc3_pins_a>;
-+    vmmc-supply = <&reg_vcc3v3>;
-+    mmc-pwrseq = <&mmc3_pwrseq>;
-+    bus-width = <4>;
-+    non-removable;
-+    enable-sdio-wakeup;
-+    status = "okay";
-+
-+    brcmf: bcrmf@1 {
-+        reg = <1>;
-+        compatible = "brcm,bcm4329-fmac";
-+        interrupt-parent = <&pio>;
-+        interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
-+        interrupt-names = "host-wake";
-+    };
-+
-+};
-+
-+&mmc3_pins_a {
-+    /* AP6210 requires pull-up */
-+    allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+};
-+
-+&ohci0 {
-+    status = "okay";
-+};
-+
-+&ohci1 {
-+    status = "okay";
-+};
-+
-+&pio {
-+    gmac_power_pin_bananapi: gmac_power_pin@0 {
-+        allwinner,pins = "PH23";
-+        allwinner,function = "gpio_out";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+    };
-+
-+    led_pins_bananapi: led_pins@0 {
-+        allwinner,pins = "PH24", "PG2";
-+        allwinner,function = "gpio_out";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+    };
-+
-+    mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
-+        allwinner,pins = "PH10";
-+        allwinner,function = "gpio_in";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+    };
-+
-+    mmc3_pwrseq_pin_bananapim1plus: mmc3_pwrseq_pin@0 {
-+        allwinner,pins = "PH22";
-+        allwinner,function = "gpio_out";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+    };
-+
-+    usb1_vbus_pin_bananapi: usb1_vbus_pin@0 {
-+        allwinner,pins = "PH0";
-+        allwinner,function = "gpio_out";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+    };
-+
-+    usb2_vbus_pin_bananapi: usb2_vbus_pin@0 {
-+        allwinner,pins = "PH1";
-+        allwinner,function = "gpio_out";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+    };
-+
-+};
-+
-+&reg_usb1_vbus {
-+    pinctrl-0 = <&usb1_vbus_pin_bananapi>;
-+    gpio = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
-+    status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+    pinctrl-0 = <&usb2_vbus_pin_bananapi>;
-+    gpio = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+    status = "okay";
-+};
-+
-+&uart0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&uart0_pins_a>;
-+    status = "okay";
-+};
-+
-+&usbphy {
-+    usb1_vbus-supply = <&reg_usb1_vbus>;
-+    usb2_vbus-supply = <&reg_usb2_vbus>;
-+    status = "okay";
-+};
-
-2016-06-01 1:09 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> On Mon, May 30, 2016 at 10:26:21PM +0200, Bernhard Nortmann wrote:
->> Am 30.05.2016 um 21:43 schrieb Maxime Ripard:
->> >Hi,
->> >
->> >On Mon, May 30, 2016 at 08:30:13PM +0800, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> >>From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >>
->> >>Add support for the Bananapi M1 Plus A20 development board from sinovoip.com.cn .
->> >>This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for
->> >>OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiver,
->> >>3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and sdio wifi.
->> >What is the difference between the M1+ and the M1?
+On 2016/5/27 20:25, Marc Zyngier Wrote:
+> [+Lorenzo]
+>
+> On 20/05/16 11:29, Shawn Lin wrote:
+>> RK3399 has a PCIe controller which can be used as Root Complex.
+>> This driver supports a PCIe controller as Root Complex mode.
 >>
->> The M1+ is an updated version of the original Banana Pi. If you're
->> interested in the details, have a look at
->> http://linux-sunxi.org/Banana_Pi#Variants .  "BPi-M1+" is SinoVoip's
->> counterpart of LeMaker's "Banana Pro", for which a .dts already
->> exists. Judging from .fex files, only a single pin assignment seems
->> to differ between the two (audio_pa_ctrl, PH26 vs. PH15).
+
+[....]
+
+>> +static int rockchip_pcie_init_irq_domain(struct rockchip_pcie_port *pp)
+>> +{
+>> +	struct device *dev = pp->dev;
+>> +	struct device_node *node = dev->of_node;
+>> +	struct device_node *pcie_intc_node =  of_get_next_child(node, NULL);
 >
-> Gee, that's confusing :)
+> That's really ugly, as it depends on the layout of your DT.
 >
-> I guess we should just include the banana pro DTB and change that pin
-> (and the i2s pins Luo was mentionning).
+>> +
+>> +	if (!pcie_intc_node) {
+>> +		dev_err(dev, "No PCIe Intc node found\n");
+>> +		return PTR_ERR(pcie_intc_node);
+>> +	}
+>> +	pp->irq_domain = irq_domain_add_linear(pcie_intc_node, 4,
+>> +					       &intx_domain_ops, pp);
 >
-> Maxime
+> Why can't you just register your host controller as the interrupt
+> controller? You don't need an intermediate node for that.
+
+OK, the child node is really no need here, we will use the host 
+controller as interrupt controller next patch. Thanks!
+
 >
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+>> +	if (!pp->irq_domain) {
+>> +		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+>> +		return PTR_ERR(pp->irq_domain);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static irqreturn_t rockchip_pcie_subsys_irq_handler(int irq, void *arg)
+>> +{
+>> +	struct rockchip_pcie_port *pp = arg;
+>> +	u32 reg;
+>> +	u32 sub_reg;
+>> +
+>> +	reg = pcie_read(pp, PCIE_CLIENT_INT_STATUS);
+>> +	if (reg & LOC_INT) {
+>> +		dev_dbg(pp->dev, "local interrupt recived\n");
+>> +		sub_reg = pcie_read(pp, PCIE_CORE_INT_STATUS);
+>> +		if (sub_reg & PRFPE)
+>> +			dev_dbg(pp->dev, "Parity error detected while reading from the PNP Receive FIFO RAM\n");
+>> +
+>> +		if (sub_reg & CRFPE)
+>> +			dev_dbg(pp->dev, "Parity error detected while reading from the Completion Receive FIFO RAM\n");
+>> +
+>> +		if (sub_reg & RRPE)
+>> +			dev_dbg(pp->dev, "Parity error detected while reading from Replay Buffer RAM\n");
+>> +
+>> +		if (sub_reg & PRFO)
+>> +			dev_dbg(pp->dev, "Overflow occurred in the PNP Receive FIFO\n");
+>> +
+>> +		if (sub_reg & CRFO)
+>> +			dev_dbg(pp->dev, "Overflow occurred in the Completion Receive FIFO\n");
+>> +
+>> +		if (sub_reg & RT)
+>> +			dev_dbg(pp->dev, "Replay timer timed out\n");
+>> +
+>> +		if (sub_reg & RTR)
+>> +			dev_dbg(pp->dev, "Replay timer rolled over after 4 transmissions of the same TLP\n");
+>> +
+>> +		if (sub_reg & PE)
+>> +			dev_dbg(pp->dev, "Phy error detected on receive side\n");
+>> +
+>> +		if (sub_reg & MTR)
+>> +			dev_dbg(pp->dev, "Malformed TLP received from the link\n");
+>> +
+>> +		if (sub_reg & UCR)
+>> +			dev_dbg(pp->dev, "Malformed TLP received from the link\n");
+>> +
+>> +		if (sub_reg & FCE)
+>> +			dev_dbg(pp->dev, "An error was observed in the flow control advertisements from the other side\n");
+>> +
+>> +		if (sub_reg & CT)
+>> +			dev_dbg(pp->dev, "A request timed out waiting for completion\n");
+>> +
+>> +		if (sub_reg & UTC)
+>> +			dev_dbg(pp->dev, "Unmapped TC error\n");
+>> +
+>> +		if (sub_reg & MMVC)
+>> +			dev_dbg(pp->dev, "MSI mask register changes\n");
+>> +
+>> +		pcie_write(pp, sub_reg, PCIE_CORE_INT_STATUS);
+>> +	}
+>> +
+>> +	pcie_write(pp, reg, PCIE_CLIENT_INT_STATUS);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+
+[....]
+
+>> +static irqreturn_t rockchip_pcie_legacy_int_handler(int irq, void *arg)
+>> +{
+>> +	struct rockchip_pcie_port *pp = arg;
+>> +	u32 reg;
+>> +
+>> +	reg = pcie_read(pp, PCIE_CLIENT_INT_STATUS);
+>> +	reg = (reg & ROCKCHIP_PCIE_RPIFR1_INTR_MASK) >>
+>> +	       ROCKCHIP_PCIE_RPIFR1_INTR_SHIFT;
+>> +	generic_handle_irq(irq_find_mapping(pp->irq_domain, ffs(reg)));
+>
+> NAK. What you have here is a chained interrupt controller, please
+> implement it as such.
+
+Your mean is use handle_nested_irq instead of generic_handle_irq here?
+But, I found all other pci host controller drivers use this api.
+
+>
+>> +
+>> +	pcie_write(pp, reg, PCIE_CLIENT_INT_STATUS);
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+
+[...]
+
+>> +static struct platform_driver rockchip_pcie_driver = {
+>> +	.driver = {
+>> +		.name = "rockchip-pcie",
+>> +		.of_match_table = rockchip_pcie_of_match,
+>> +		.suppress_bind_attrs = true,
+>> +	},
+>> +	.probe = rockchip_pcie_probe,
+>> +	.remove = rockchip_pcie_remove,
+>> +};
+>> +module_platform_driver(rockchip_pcie_driver);
+>> +
+>> +MODULE_AUTHOR("Rockchip Inc");
+>> +MODULE_DESCRIPTION("Rockchip AXI PCIe driver");
+>> +MODULE_LICENSE("GPL v2");
+>>
+>
+> This definitely requires some rework for both the interrupt and MSI
+> parts. I'll leave Lorenzo to comment on the PCI side of things.
+>
+> Thanks,
+>
+> 	M.
+>
+
+Best Regards,
+Li
