@@ -1,64 +1,105 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 0/2] Software workaround for i.MX6Q/DL ERR006687
-Date: Wed,  1 Jun 2016 17:29:41 +0200
-Message-ID: <1464794983-31484-1-git-send-email-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [RESEND PATCH 2/6] Documentation: bindings: add dt doc for
+ Rockchip USB Type-C PHY
+Date: Wed, 1 Jun 2016 23:35:20 +0800
+Message-ID: <574F00B8.2050201@rock-chips.com>
+References: <1464345942-4795-1-git-send-email-zyw@rock-chips.com>
+ <1464345942-4795-3-git-send-email-zyw@rock-chips.com>
+ <20160601145404.GA7596@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160601145404.GA7596@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, linux-rockchip@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Rob
 
-this short series adds a software workaround for the i.MX6Q/DL erratum
-ERR006687, where the FEC IRQ is unable to wake the CPU from deep idle
-states.
 
-Until now the only two options to avoid triggering the erratum was to
-apply the hardware workround as described in the errata sheet, or to
-disable CPU_IDLE in the kernel configuration. As the hardware workaround
-isn't applicable on all boards, this left a fair amount of boards
-suffering from the erratum, as CPU_IDLE is enabled in the i.MX6 and
-multi-v7 defconfig.
+On 06/01/2016 10:54 PM, Rob Herring wrote:
+> On Fri, May 27, 2016 at 06:45:38PM +0800, Chris Zhong wrote:
+>> This patch adds a binding that describes the Rockchip USB Type-C PHY
+>> for rk3399.
+>>
+>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>> ---
+>>
+>>   .../devicetree/bindings/phy/phy-rockchip-typec.txt | 55 ++++++++++++++++++++++
+>>   1 file changed, 55 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>> new file mode 100644
+>> index 0000000..402f667
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>> @@ -0,0 +1,55 @@
+>> +ROCKCHIP type-c PHY
+>> +
+>> +Required properties:
+>> + - compatible: should be "rockchip,rk3399-typec-phy"
+>> + - reg : Address and length of the usb phy control register set
+>> + - rockchip,grf : phandle to the syscon managing the "general
+>> +   register files"
+>> + - clocks : phandle + clock specifier for the phy clocks
+>> + - clock-names: string, clock name, must be "tcpdcore", "tcpdphy_ref";
+>> + - resets : a list of phandle + reset specifier pairs
+>> + - reset-names : string reset name, must be:
+>> +		 "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst"
+>> + - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
+>> + - rockchip,usb3phy*: phy registers embed in grf
+> You need to document each one and state the number of cells and what the
+> contain. Also, don't use '_' in the names.
+I am going to move these registers to phy driver, Thanks for your comment.
 
-The software workaround implemented here is to simply disable the deeper
-CPU idle states on boards which don't have the HW workaround if the FEC
-is active. Aside from enabling us to run a single kernel config across
-all boards, this has the additional benefit that boards without the HW
-workaround are still able to use the deeper idle states if the network
-interface isn't active.
 
-I would prefer if this series gets merged through the imx achitecture
-tree with acks for the FEC changes from the network people.
-
-Regards,
-Lucas
-
-Lucas Stach (2):
-  ARM: imx6: disable deeper idle states when FEC is active w/o HW
-    workaround
-  ARM: dts: imx6: tag boards that have the HW workaround for ERR006687
-
- Documentation/devicetree/bindings/net/fsl-fec.txt |  3 +++
- arch/arm/boot/dts/imx6dl-riotboard.dts            |  1 +
- arch/arm/boot/dts/imx6q-arm2.dts                  |  1 +
- arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi          |  1 +
- arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi      |  1 +
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi         |  1 +
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi          |  1 +
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi          |  1 +
- arch/arm/boot/dts/imx6qdl-wandboard.dtsi          |  1 +
- arch/arm/mach-imx/cpuidle-imx6q.c                 | 16 +++++++++++++++
- drivers/net/ethernet/freescale/fec.h              |  2 ++
- drivers/net/ethernet/freescale/fec_main.c         | 12 +++++++++++
- include/soc/imx/cpuidle.h                         | 25 +++++++++++++++++++++++
- 13 files changed, 66 insertions(+)
- create mode 100644 include/soc/imx/cpuidle.h
-
--- 
-2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +
+>> +Example:
+>> +	tcphy0: phy@ff7c0000 {
+>> +		compatible = "rockchip,rk3399-typec-phy";
+>> +		reg = <0x0 0xff7c0000 0x0 0x40000>;
+>> +		#phy-cells = <0>;
+>> +		rockchip,grf = <&grf>;
+>> +		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+>> +			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+>> +		clock-names = "tcpdcore", "tcpdphy_ref";
+>> +		resets = <&cru SRST_UPHY0>,
+>> +			 <&cru SRST_UPHY0_PIPE_L00>,
+>> +			 <&cru SRST_P_UPHY0_TCPHY>;
+>> +		reset-names = "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst";
+>> +		rockchip,usb3phy_con0 = <0x0e580 0 16>;
+>> +		rockchip,usb3phy_con1 = <0x0e584 0 16>;
+>> +		rockchip,usb3phy_con2 = <0x0e588 0 16>;
+>> +		rockchip,usb3phy_status0 = <0x0e5c0 0 13>;
+>> +		rockchip,usb3phy_status1 = <0x0e5c4 0 12>;
+>> +		status = "disabled";
+>> +	};
+>> +
+>> +	tcphy1: phy@ff800000 {
+>> +		compatible = "rockchip,rk3399-typec-phy";
+>> +		reg = <0x0 0xff800000 0x0 0x40000>;
+>> +		#phy-cells = <0>;
+>> +		rockchip,grf = <&grf>;
+>> +		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+>> +			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
+>> +		clock-names = "tcpdcore", "tcpdphy_ref";
+>> +		resets = <&cru SRST_UPHY1>,
+>> +		         <&cru SRST_UPHY1_PIPE_L00>,
+>> +			 <&cru SRST_P_UPHY1_TCPHY>;
+>> +		reset-names = "tcphy_rst", "tcphy_pipe_rst", "uphy_tcphy_rst";
+>> +		rockchip,usb3phy_con0 = <0x0e58c 0 16>;
+>> +		rockchip,usb3phy_con1 = <0x0e590 0 16>;
+>> +		rockchip,usb3phy_con2 = <0x0e594 0 16>;
+>> +		rockchip,usb3phy_status0 = <0x0e5c0 16 13>;
+>> +		rockchip,usb3phy_status1 = <0x0e5c4 16 12>;
+>> +		status = "disabled";
+>> +	};
+>> -- 
+>> 2.6.3
+>>
+>
+>
