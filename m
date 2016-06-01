@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH/RFC v3 16/22] clk: renesas: rcar-gen3-cpg: Remove obsolete rcar_gen3_read_mode_pins()
-Date: Wed,  1 Jun 2016 21:21:14 +0200
-Message-ID: <1464808880-343-17-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH/RFC v3 12/22] clk: renesas: r8a7779: Obtain mode pin values from R-Car RST driver
+Date: Wed,  1 Jun 2016 21:21:10 +0200
+Message-ID: <1464808880-343-13-git-send-email-geert+renesas@glider.be>
 References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
@@ -10,55 +10,51 @@ To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <m
 Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-All R-Car Gen3 clock drivers now obtain the values of the mode pins from
-the R-Car RST driver.
+Obtain the values of the mode pins from the R-Car RST driver, which
+relies on the presence in DT of a device node for the RESET/WDT module.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- drivers/clk/renesas/rcar-gen3-cpg.c | 17 -----------------
- drivers/clk/renesas/rcar-gen3-cpg.h |  1 -
- 2 files changed, 18 deletions(-)
+v3:
+  - New.
+---
+ drivers/clk/renesas/clk-r8a7779.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/renesas/rcar-gen3-cpg.c b/drivers/clk/renesas/rcar-gen3-cpg.c
-index bb4f2f9a8c2f5ba8..9d76076da4948fc4 100644
---- a/drivers/clk/renesas/rcar-gen3-cpg.c
-+++ b/drivers/clk/renesas/rcar-gen3-cpg.c
-@@ -333,23 +333,6 @@ struct clk * __init rcar_gen3_cpg_clk_register(struct device *dev,
- 					 __clk_get_name(parent), 0, mult, div);
- }
+diff --git a/drivers/clk/renesas/clk-r8a7779.c b/drivers/clk/renesas/clk-r8a7779.c
+index cf2a37df03b15e60..ca7551bcb1153c3d 100644
+--- a/drivers/clk/renesas/clk-r8a7779.c
++++ b/drivers/clk/renesas/clk-r8a7779.c
+@@ -18,6 +18,7 @@
+ #include <linux/of_address.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/soc/renesas/rcar-rst.h>
  
--/*
-- * Reset register definitions.
-- */
--#define MODEMR	0xe6160060
--
--u32 __init rcar_gen3_read_mode_pins(void)
--{
--	void __iomem *modemr = ioremap_nocache(MODEMR, 4);
--	u32 mode;
--
--	BUG_ON(!modemr);
--	mode = ioread32(modemr);
--	iounmap(modemr);
--
--	return mode;
--}
--
- int __init rcar_gen3_cpg_init(const struct rcar_gen3_cpg_pll_config *config,
- 			      unsigned int clk_extalr)
- {
-diff --git a/drivers/clk/renesas/rcar-gen3-cpg.h b/drivers/clk/renesas/rcar-gen3-cpg.h
-index f699085147d1aece..f788f481dd42cdf6 100644
---- a/drivers/clk/renesas/rcar-gen3-cpg.h
-+++ b/drivers/clk/renesas/rcar-gen3-cpg.h
-@@ -33,7 +33,6 @@ struct rcar_gen3_cpg_pll_config {
+ #include <dt-bindings/clock/r8a7779-clock.h>
  
- #define CPG_RCKCR	0x240
+@@ -127,6 +128,10 @@ static void __init r8a7779_cpg_clocks_init(struct device_node *np)
+ 	struct clk **clks;
+ 	unsigned int i, plla_mult;
+ 	int num_clks;
++	u32 mode;
++
++	if (rcar_rst_read_mode_pins(&mode))
++		return;
  
--u32 rcar_gen3_read_mode_pins(void);
- struct clk *rcar_gen3_cpg_clk_register(struct device *dev,
- 	const struct cpg_core_clk *core, const struct cpg_mssr_info *info,
- 	struct clk **clks, void __iomem *base);
+ 	num_clks = of_property_count_strings(np, "clock-output-names");
+ 	if (num_clks < 0) {
+@@ -148,8 +153,8 @@ static void __init r8a7779_cpg_clocks_init(struct device_node *np)
+ 	cpg->data.clks = clks;
+ 	cpg->data.clk_num = num_clks;
+ 
+-	config = &cpg_clk_configs[CPG_CLK_CONFIG_INDEX(cpg_mode)];
+-	plla_mult = cpg_plla_mult[CPG_PLLA_MULT_INDEX(cpg_mode)];
++	config = &cpg_clk_configs[CPG_CLK_CONFIG_INDEX(mode)];
++	plla_mult = cpg_plla_mult[CPG_PLLA_MULT_INDEX(mode)];
+ 
+ 	for (i = 0; i < num_clks; ++i) {
+ 		const char *name;
 -- 
 1.9.1
 
