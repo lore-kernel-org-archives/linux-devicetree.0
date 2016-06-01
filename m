@@ -1,38 +1,44 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [2/3] hwmon: xgene: Adds hwmon driver
-Date: Wed, 1 Jun 2016 11:10:49 -0700
-Message-ID: <20160601181049.GA10954@roeck-us.net>
-References: <1463415447-29903-3-git-send-email-hotran@apm.com>
- <20160530052507.GA25641@roeck-us.net>
- <CAFHUOYzWj_PbbpzCW5CjO7d3uc7x2h8UvHrYmDoKyttNQVDDZA@mail.gmail.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v3 09/12] EXAMPLE CODE: usb: port: Parse pwrseq phandle from
+ Device Tree
+Date: Wed, 01 Jun 2016 11:16:34 -0700
+Message-ID: <146480499491.3686.4996610748316511864@sboyd-linaro>
+References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
+ <1464768141-25420-10-git-send-email-k.kozlowski@samsung.com>
+ <146477144362.1485.3331887341591876278@sboyd-linaro>
+ <20160601120520.GB16740@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFHUOYzWj_PbbpzCW5CjO7d3uc7x2h8UvHrYmDoKyttNQVDDZA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Hoan Tran <hotran@apm.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Loc Ho <lho@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20160601120520.GB16740@shlinux2>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 31, 2016 at 11:00:05PM -0700, Hoan Tran wrote:
-> Hi Guenter,
+Quoting Peter Chen (2016-06-01 05:05:20)
+> On Wed, Jun 01, 2016 at 01:57:23AM -0700, Stephen Boyd wrote:
+> > Quoting Krzysztof Kozlowski (2016-06-01 01:02:18)
+> > > Parse usb-pwrseq property from Device Tree to get the phandle to pwrseq
+> > > device.  The pwrseq device will be used by USB hub to cycle the power
+> > > before activating ports.
+> > > 
+> > > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > 
+> > Drive by review comment.
+> > 
+> > I was hoping this would help me with a problem I'm having where I have a
+> > hub (smsc4604) that needs to be taken out of reset before my HSIC
+> > controller sends a USB reset to it, but it seems this is more about
+> > doing some sort of power on sequence after enumeration?
+> > 
 > 
-> >
-> > Overall, I have to say that the code is quite complex due to the repeated
-> > checks for ACPI. I am close to suggest having two separate drivers,
-> > one for ACPI and one for non-ACPI. Any chance to separate ACPI vs. non-ACPI
-> > code a bit better ?
+> No, you may need to do reset before enumeration, the general purpose of
+> reset is eliminate unstable hardware state, and let the controller find
+> the device.
 > 
-> How about create separate rx_cb functions for ACPI and non-ACPI ?
-
-Yes, that would be great if it is possible.
-
-> As almost functions are the same between ACPI and non-ACPI, I thought
-> keep the same driver is still OK, isn't it ?
+> Try to do it at bootloader to see if it works for you.
 > 
-If you can separate the ACPI code from the non-ACPI code a bit better than
-right now, yes.
 
-Thanks,
-Guenter
+Sorry the bootloader doesn't do this so that doesn't work for me.
