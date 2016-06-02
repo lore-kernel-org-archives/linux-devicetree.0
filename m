@@ -1,120 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 04/12] of: add J-Core timer bindings
-Date: Thu, 2 Jun 2016 17:44:25 -0500
-Message-ID: <20160602224425.GA15163@rob-hp-laptop>
-References: <cover.1464148904.git.dalias@libc.org>
- <5341dfbb085d5647ebb6fe4390ca329b63e0e03d.1464148904.git.dalias@libc.org>
- <20160601135852.GA17217@rob-hp-laptop>
- <20160601175307.GC10893@brightrain.aerifal.cx>
- <CAL_JsqJYyvdc06v2+R=Wnmkk-cO7ZFq=7uGOhPxXdL0UfEu-iA@mail.gmail.com>
- <20160602013407.GA12184@brightrain.aerifal.cx>
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: Add MediaTek display PWM bindings
+Date: Thu, 2 Jun 2016 17:45:50 -0500
+Message-ID: <20160602224550.GA19256@rob-hp-laptop>
+References: <1464597712-5399-1-git-send-email-weiqing.kong@mediatek.com>
+ <1464597712-5399-2-git-send-email-weiqing.kong@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160602013407.GA12184@brightrain.aerifal.cx>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+In-Reply-To: <1464597712-5399-2-git-send-email-weiqing.kong@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Weiqing Kong <weiqing.kong@mediatek.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 09:34:07PM -0400, Rich Felker wrote:
-> On Wed, Jun 01, 2016 at 05:36:19PM -0500, Rob Herring wrote:
-> > On Wed, Jun 1, 2016 at 12:53 PM, Rich Felker <dalias@libc.org> wrote:
-> > > On Wed, Jun 01, 2016 at 08:58:52AM -0500, Rob Herring wrote:
-> > >> On Wed, May 25, 2016 at 05:43:03AM +0000, Rich Felker wrote:
-> > >> > Signed-off-by: Rich Felker <dalias@libc.org>
-> > >> > ---
-> > >> >  .../devicetree/bindings/timer/jcore,pit.txt        | 28 ++++++++++++++++++++++
-> > >> >  1 file changed, 28 insertions(+)
-> > >> >  create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
-> > >> >
-> > >> > diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-> > >> > new file mode 100644
-> > >> > index 0000000..96c6815
-> > >> > --- /dev/null
-> > >> > +++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-> > >> > @@ -0,0 +1,28 @@
-> > >> > +J-Core Programmable Interval Timer and Clocksource
-> > >> > +
-> > >> > +Required properties:
-> > >> > +
-> > >> > +- compatible: Must be "jcore,pit".
-> > >> > +
-> > >> > +- reg: Memory region for timer/clocksource registers.
-> > >> > +
-> > >> > +- interrupts: An interrupt to assign for the timer. The actual pit
-> > >> > +  core is integrated with the aic and allows the timer interrupt
-> > >> > +  assignment to be programmed by software, but this property is
-> > >> > +  required in order to reserve an interrupt number that doesn't
-> > >> > +  conflict with other devices.
-> > >> > +
-> > >> > +Optional properties:
-> > >> > +
-> > >> > +- cpu-offset: For SMP, the per-cpu offset to the local timer
-> > >> > +  programming memory range.
-> > >> > +
-> > >> > +
-> > >> > +Example:
-> > >> > +
-> > >> > +timer@200 {
-> > >> > +   compatible = "jcore,pit";
-> > >> > +   reg = < 0x200 0x30 >;
-> > >> > +   cpu-offset = < 0x300 >;
-> > >>
-> > >> This is outside the reg range. Perhaps reg should include each range of
-> > >> per cpu registers.
-> > >
-> > > In the hardware, each timer instance is mapped independently so
-> > > there's no fundamental reason they need to be mapped sufficiently
-> > > close that it would make sense for a single virtual mapping to cover
-> > > them all. This doesn't matter for nommu but it would with mmu in the
-> > > future. In the driver I've updated it to ioremap each percpu instance
-> > > separately (as its own memory range) using the cpu-offset applied to
-> > > the range obtained from "reg". Is this acceptable (in which case I
-> > > suppose the binding needs to be documented that "reg" just covers the
-> > > cpu0 instance's range)? Do you think it would be preferable to have
-> > > multiple "reg" ranges indexed by cpu instead of cpu-offset?
-> > 
-> > Yes. Either reg should cover the full range of addresses or you should
-> > have multiple reg values with one for each cpu. I prefer the latter as
-> > it doesn't create a custom property for expressing register addresses.
+On Mon, May 30, 2016 at 04:41:50PM +0800, Weiqing Kong wrote:
+> Add MT2701 compatible string.
 > 
-> OK, let's lean towards going with the latter then. It's more flexible
-> and allows any placement of the maps; the offset per cpu does not have
-> to be constant. It also makes the driver code simpler since of_iomap
-> can be used directly rather than requiring of_address_to_resource,
-> physical address arithmetic arithmetic, and ioremap on the results. Is
-> there any precedent for using multiple reg ranges for percpu register
-> instances like this? Anything else they've been used for?
-
-Maybe the memory mapped ARM arch timer. I'm not too sure off hand. It is 
-quite common for devices to have multiple reg addresses.
-
+> Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> > > In theory it would even be possible to just require a DT node per
-> > > cpulocal timer, but I didn't see a good way to make the bindings
-> > > represent the relationship to cpus or to make the driver handle irqs
-> > > correctly for such a setup, so I'd need a viable proposal for how that
-> > > could be done to even consider such an approach.
-> > 
-> > Yeah, there's not really a standard way to map per cpu blocks to cpus.
-> > We could, but doesn't really seem necessary here.
-> > 
-> > For the irqs, percpu irqs doesn't help you?
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> index f8f59ba..f2f2fa9 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> @@ -1,9 +1,10 @@
+>  MediaTek display PWM controller
+>  
+>  Required properties:
+> - - compatible: should be "mediatek,<name>-disp-pwm":
+> -   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
+> + - compatible: should be like these:
+> +   - "mediatek,mt2701-disp-bls": found on mt2701 SoC.
+
+Why bls instead of pwm?
+
+>     - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
+> +   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
+>   - reg: physical base address and length of the controller's registers.
+>   - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+>     the cell format.
+> -- 
+> 1.8.1.1.dirty
 > 
-> What I mean is that, if there were a separate device node and driver
-> instance per cpu, they'd all want to register the same irq just to
-> handle it on their own cpu, so we'd have a lot of spurious handlers
-> running. The right way to model this, I think, would be as a virtual
-> irqchip that's the irq parent of all the timer nodes, and that
-> multiplexes the real irq to one virq per cpu (where the current cpu id
-> becomes the irq number in its irq domain). But that's a lot of virtual
-> infrastructure just for the sake of modelling each percpu timer as its
-> own DT node and I don't think it makes sense to do it that way.
-
-I would have thought your interrupt controller did all this. On the ARM 
-GIC for example, you have the same irq number but there is a per cpu 
-interface and really N (== # cpus) physical irq lines.
-
-Rob
