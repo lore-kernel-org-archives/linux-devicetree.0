@@ -1,47 +1,59 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv2 7/8] ARM: socfpga: dts: Enable GPIO parent for Arria10 SR chip
-Date: Thu, 2 Jun 2016 12:52:27 -0500
-Message-ID: <1464889948-28793-8-git-send-email-tthayer@opensource.altera.com>
-References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack: add i2c1 DT entry
+Date: Thu, 2 Jun 2016 10:56:35 -0700
+Message-ID: <20160602175635.GG5995@atomide.com>
+References: <1464853310-8738-1-git-send-email-yong.b.li@intel.com>
+ <CAOCHtYib9YxckneM-j0Gk1YE=MnvAwAhvDjEDEuFJbH6W3EcWA@mail.gmail.com>
+ <20160602173932.GF5995@atomide.com>
+ <CAOCHtYiWYrwSidHnKv4siFT-wU=tt5-YeDTwbM022ZTxdPFYYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464889948-28793-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOCHtYiWYrwSidHnKv4siFT-wU=tt5-YeDTwbM022ZTxdPFYYA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: Yong Li <yong.b.li@intel.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux kernel <linux-kernel@vger.kernel.org>, sdliyong@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+* Robert Nelson <robertcnelson@gmail.com> [160602 10:48]:
+> On Thu, Jun 2, 2016 at 12:39 PM, Tony Lindgren <tony@atomide.com> wrote:
+> >
+> > * Robert Nelson <robertcnelson@gmail.com> [160602 10:39]:
+> > > On Thu, Jun 2, 2016 at 2:41 AM, Yong Li <yong.b.li@intel.com> wrote:
+> > >
+> > > > From: Yong Li <sdliyong@gmail.com>
+> > > >
+> > > > Without this patch, I2C-1 is missing on beaglebone black boards
+> > > >
+> > > > Signed-off-by: Yong Li <sdliyong@gmail.com>
+> > > > ---
+> > > >  arch/arm/boot/dts/am335x-boneblack.dts | 15 +++++++++++++++
+> > > >  1 file changed, 15 insertions(+)
+> > > >
+> > >
+> > >
+> > > This is also 'common' for the white/green, if your really going to push
+> > > this, please add it to:
+> > >
+> > > am335x-bone-common.dtsi
+> >
+> > But isn't this exposed on the cape pins? So the use can be
+> > whatever for these pins?
+> 
+> That is correct, "i2c1" is on the cape connector, with no primary
+> function defined.
+> 
+> Currently on mainline, the board and cape eeprom i2c bus's are enabled.
+> 
+> i2c0 = board eeprom
+> i2c2 = 'cape' eeprom
+> 
+> personally, nak by me to add i2c1 by default, should use overlay's to enable it.
 
-Enable the Altera Arria10 GPIO parent for MFD operation.
+Yes sounds like the best we can do is define it but set it with
+status = "disabled" for now.
 
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
-v2:  Added this change.
----
- arch/arm/boot/dts/socfpga_arria10_socdk.dtsi |    4 ++++
- 1 file changed, 4 insertions(+)
+Regards,
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-index 4638870..2655fae 100644
---- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-@@ -70,6 +70,10 @@
- 	status = "okay";
- };
- 
-+&gpio1 {
-+	status = "okay";
-+};
-+
- &spi1 {
- 	status = "okay";
- 
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
