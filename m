@@ -1,95 +1,35 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v9 0/2] memory: add Atmel EBI (External Bus Interface)
- driver
-Date: Thu, 2 Jun 2016 08:36:14 +0200
-Message-ID: <20160602063337.GH4249@piout.net>
-References: <1463989495-13787-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH v2 0/2] Add a new Rockchip usb2 phy driver
+Date: Thu,  2 Jun 2016 14:48:08 +0800
+Message-ID: <1464850090-99371-1-git-send-email-frank.wang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1463989495-13787-1-git-send-email-boris.brezillon@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: heiko@sntech.de, dianders@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, jwerner@chromium.org, xzy.xu@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, william.wu@rock-chips.com, frank.wang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 23/05/2016 at 09:44:53 +0200, Boris Brezillon wrote :
-> Hello,
-> 
-> This patch series provides support for the EBI bus.
-> 
-> The EBI (External Bus Interface) is used to access external peripherals
-> (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> Each device is assigned a CS line and an address range and can have its
-> own configuration (timings, access mode, bus width, ...).
-> This driver provides a generic DT binding to configure a device according
-> to its requirements.
-> For specific device controllers (like the NAND one) the SMC timings
-> should be configured by the controller driver through the matrix and
-> smc syscon regmaps.
-> 
-> Best Regards,
-> 
-> Boris
-> 
-> Changes since v8:
-> - fixed typo in DT bindings doc
-> 
-> Changes since v7:
-> - move EBI bus config properties directly in the sub-device node
-> - prefix all EBI/SMC properties with atmel,smc-
-> - rework the driver to take the new binding into account
-> - disable the subdevice when EBI implementation fails to configure
->   the bus as requested
-> 
-> Changes since v6:
-> - rework the binding to put per-device config information into a
->   separate subnode and have devices connected to the EBI bus
->   defined as direct children of the EBI node
-> - make all EBI timings mandatory
-> - keep adding sub-devices when a failure occurs on one of them
-> 
-> Changes since v5:
-> - remove the "atmel,specialized-logic" property: now all devices are
->   are attached to the SMC logic by default, and specialized drivers
->   (like the NAND controller one), should change this configuration
->   manually.
-> - provide hardware readout to allow partial config description.
->   This is mainly here to keep existing platforms (where everything
->   is configured by the bootloader/bootstrap) in working state.
-> - rename "atmel,tdf-optimized" into "atmel,tdf-mode" and switch from
->   a boolean to string property to properly support partial config
-> 
-> Changes since v4:
-> - fix inconsistencies in SMC and MATRIX registers definition
-> - add missing compatible strings for at91sam9rl SoC
-> - fix DT bindings documentation
-> - replace "atmel,generic-dev" property by "atmel,specialized-logic"
-> 
-> Changes since v3:
-> - added AT91_MATRIX_USBPUCR_PUON definition
-> - removed useless macros (those directly returning SoC specific register
->   offsets)
-> - use syscon_regmap_lookup_by_phandle instead of of_parse_phandle +
->   syscon_node_to_regmap
-> - drop AT91_EBICSA_REGFIELD and AT91_MULTI_EBICSA_REGFIELD macros
-> 
-> Changes since v2:
-> - minor fixes int DT bindings doc
-> - fix SMC macros
-> - make use of SMC macros defined in include/linux/mfd/syscon/atmel-smc.h
-> 
-> Changes since v1:
-> - almost everything :-)
-> 
-> Boris Brezillon (2):
->   memory: add Atmel EBI (External Bus Interface) driver
->   memory: atmel-ebi: add DT bindings documentation
-> 
-Applied, thanks.
+The newer SoCs (rk3366, rk3399) of Rock-chip take a different usb-phy
+IP block than rk3288 and before, and most of phy-related registers are
+also different from the past, so a new phy driver is required necessarily.
+
+These series patches add phy-rockchip-inno-usb2.c and the corresponding
+documentation.
+
+Changes in v2:
+ - Specified more hardware-description into the devicetree bindings.
+ - Optimized some process of driver.
+
+Frank Wang (2):
+  Documentation: bindings: add DT documentation for Rockchip USB2PHY
+  phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
+
+ .../bindings/phy/phy-rockchip-inno-usb2.txt        |   55 ++
+ drivers/phy/Kconfig                                |    7 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-rockchip-inno-usb2.c               |  604 ++++++++++++++++++++
+ 4 files changed, 667 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+ create mode 100644 drivers/phy/phy-rockchip-inno-usb2.c
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+1.7.9.5
