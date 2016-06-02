@@ -1,52 +1,53 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom reserved
- memory handling
-Date: Thu, 2 Jun 2016 11:20:40 -0400
-Message-ID: <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
-References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
- <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
- <574BEBB8.8040606@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 09/32] bcm2837-rpi-3-b.dts for 32bit arm
+Date: Thu, 02 Jun 2016 17:23:22 +0200
+Message-ID: <71381147.fkGgHS4v7X@wuerfel>
+References: <1464817421-8519-1-git-send-email-kraxel@redhat.com> <4795604.XAe8xnhung@wuerfel> <1464880291.24775.111.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <574BEBB8.8040606@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464880291.24775.111.camel@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On Thursday, June 2, 2016 5:11:31 PM CEST Gerd Hoffmann wrote:
+> 
+> > > > > Reference to ../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+> > > > > directly in the Makefile?
+> 
+> Actually tried that, and to my surprise this worked fine for both "make
+> dtbs" and "make dtbs_install".
+> 
+> So we should just do that I guess ...
 
-On 05/30/2016 03:28 AM, Krzysztof Kozlowski wrote:
-> On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
->> Once MFC driver has been converted to generic reserved memory bindings,
->> there is no need for custom memory reservation code.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->>  arch/arm/mach-exynos/Makefile      |  2 -
->>  arch/arm/mach-exynos/exynos.c      | 19 --------
->>  arch/arm/mach-exynos/mfc.h         | 16 -------
->>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 --------------------------------------
->>  4 files changed, 130 deletions(-)
->>  delete mode 100644 arch/arm/mach-exynos/mfc.h
->>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
-> 
-> Thanks, applied.
->
+Right.
 
-This patch can't be applied before patches 2/5 and 3/5, or the custom
-memory regions reservation will break with the current s5p-mfc driver.
- 
-> What is your final decision for DTS patches? Which approach for MFC
-> reserved memory node?
+> > > Yes, in theory.  No, in practice.  As far I know the rpi3 is the only
+> > > 64bit soc where a almost identical 32bit version exists, so running
+> > > 32bit kernels on a 64bit processor actually happens in practice and I
+> > > expect this to continue.  If you want create sdcard images which run on
+> > > any rpi variant this is pretty much the only reasonable way to do it.
+> > 
+> > I think the Allwinner A64 and the Samsung s5p6818 are other examples
+> > for this, where the initial run of boards all run 32-bit kernels
+> > for much of the same reasons. If users want to run a 32-bit distro
+> > on rpi-3 and on e.g. orange-pi, I don't see why they wouldn't also run
+> > the same binary on A64.
 > 
-> Krzysztof
+> ... and others can join the party on a case-by-case basis.
 > 
- 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+> I still expect for the majority of arm64 boards it is not very useful,
+> so I don't think we should build all of them unconditionally.
+
+Well, they are still controlled by Kconfig symbols. Some of them
+are shared between arm and arm64 and you would just get all dtbs in that
+case, while other symbols are specific to one of the two.
+
+Just for fun, which machines do we actually get if we decide to
+just enter the arch/arm64/boot/dts/ directory in an allmodconfig
+build?
+
+	Arnd
