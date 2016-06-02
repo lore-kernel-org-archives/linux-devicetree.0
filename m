@@ -1,32 +1,43 @@
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: Re: [PATCH 32/32] mmc: bcm2835: Import bcm2835-mmc and switch to it
-Date: Thu, 02 Jun 2016 22:03:04 +0200
-Message-ID: <1464897784.24775.126.camel@redhat.com>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
-	 <1464817421-8519-33-git-send-email-kraxel@redhat.com>
-	 <e16936ee-3b0d-3798-72e0-8969c2c1a309@i2se.com>
-	 <87oa7j314j.fsf@eliezer.anholt.net>
-	 <2100811505.238666.65d5fa25-985a-4a30-86e2-3a7bebb5caaf.open-xchange@email.1und1.de>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] of: use pr_fmt prefix for all console printing
+Date: Thu, 02 Jun 2016 13:10:06 -0700
+Message-ID: <1464898206.9273.2.camel@perches.com>
+References: <1464880499-29864-1-git-send-email-robh@kernel.org>
+	 <57506DDC.3060804@gmail.com>
+	 <CAL_JsqLrC27EOkWfRtzUOZox5wkRU=qEb+b3z2JQG++e5uSGSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <2100811505.238666.65d5fa25-985a-4a30-86e2-3a7bebb5caaf.open-xchange@email.1und1.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Lee Jones <lee@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Ulf Hansson <ulf.hansson@linaro.org>, open list <linux-kernel@vger.kernel.org>, "open list:MULTIMEDIA CARD MMC, SECURE DIGITAL SD AND..." <linux-mmc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLrC27EOkWfRtzUOZox5wkRU=qEb+b3z2JQG++e5uSGSg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-  Hi,
+On Thu, 2016-06-02 at 14:56 -0500, Rob Herring wrote:
+> On Thu, Jun 2, 2016 at 12:33 PM, Frank Rowand <frowand.list@gmail.com=
+> wrote:
+[]
+> > > @@ -355,8 +355,6 @@ int of_overlay_create(struct device_node *tre=
+e)
+> > >=20
+> > > =A0=A0=A0=A0=A0=A0id =3D idr_alloc(&ov_idr, ov, 0, 0, GFP_KERNEL)=
+;
+> > > =A0=A0=A0=A0=A0=A0if (id < 0) {
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pr_err("%s: idr_alloc() f=
+ailed for tree@%s\n",
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0__func__, tree->full_name);
+> > Every other error in of_overlay_create() results in a pr_err().
+> > (The other cases of removing pr_err() in this file are fine, becaus=
+e
+> > the errors are already reported in the functions called from this
+> > function.)
+> >=20
+> > I would recommend leaving in the pr_err() for idr_alloc() failure.
+> I was thinking idr_alloc is going to call kmalloc which will print
+> errors on failure, but there may be some case it doesn't.
 
-> > Despite the fact that this is my commit, I don't think it should be
-> > merged.  We should figure out why sdhci-iproc.c isn't working, instead.
-> 
-> so it doesn't work with sdhci-bcm2835 on RPi 3, too?
-
-With sdhci-bcm2835 rpi3 wifi doesn't work for me.
-I didn't try sdhci-iproc yet.
-
-cheers,
-  Gerd
-
+Only if __GFP_NOWARN is used.
+And it's not used in any idr_alloc call.
