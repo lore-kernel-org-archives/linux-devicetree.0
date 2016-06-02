@@ -1,170 +1,181 @@
-Return-Path: <wnhuang@google.com>
+Return-Path: <robertcnelson@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1464750564-21027-1-git-send-email-wnhuang@chromium.org>
-References: <1464750564-21027-1-git-send-email-wnhuang@chromium.org>
-From: Wei-Ning Huang <wnhuang@google.com>
-Date: Wed, 1 Jun 2016 14:58:28 +0800
-Message-ID: <CABicQ-WJR-BnXqnwHEtypf+DOo323=24G-K7-kfk=dORr_UJWw@mail.gmail.com>
-Subject: Re: [PATCH] dt: bindings: fix documentation for MARVELL's bt-sd8xxx
- wireless device
-Content-Type: multipart/alternative; boundary=94eb2c034a544bbeba053432045e
-To: Linux Bluetooth <linux-bluetooth@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Hu Xinming <huxm@marvell.com>, marcel@holtmann.org, devicetree@vger.kernel.org
+In-Reply-To: <1464853310-8738-1-git-send-email-yong.b.li@intel.com>
+References: <1464853310-8738-1-git-send-email-yong.b.li@intel.com>
+From: Robert Nelson <robertcnelson@gmail.com>
+Date: Thu, 2 Jun 2016 12:36:26 -0500
+Message-ID: <CAOCHtYib9YxckneM-j0Gk1YE=MnvAwAhvDjEDEuFJbH6W3EcWA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack: add i2c1 DT entry
+Content-Type: multipart/alternative; boundary=001a113f97c2660de105344f0d54
+To: Yong Li <yong.b.li@intel.com>
+Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux kernel <linux-kernel@vger.kernel.org>, sdliyong@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
---94eb2c034a544bbeba053432045e
+--001a113f97c2660de105344f0d54
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Please ignore this patch. I think we should make the driver parse 32 bit
-value instead (to be consistent with mwifiex driver).
+On Thu, Jun 2, 2016 at 2:41 AM, Yong Li <yong.b.li@intel.com> wrote:
 
-On Wed, Jun 1, 2016 at 11:09 AM, Wei-Ning Huang <wnhuang@chromium.org>
-wrote:
-
-> The property marvell,wakeup-pin and marvell,wakeup-gap-ms are read as
-> u16 in the driver. Fix documentation and example accordingly.
+> From: Yong Li <sdliyong@gmail.com>
 >
-> Signed-off-by: Wei-Ning Huang <wnhuang@chromium.org>
+> Without this patch, I2C-1 is missing on beaglebone black boards
+>
+> Signed-off-by: Yong Li <sdliyong@gmail.com>
 > ---
->  Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  arch/arm/boot/dts/am335x-boneblack.dts | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> index 14aa6cf..6a9a63c 100644
-> --- a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> +++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> @@ -13,10 +13,10 @@ Optional properties:
->                       initialization. This is an array of 28 values(u8).
+
+
+This is also 'common' for the white/green, if your really going to push
+this, please add it to:
+
+am335x-bone-common.dtsi
+
+
 >
->    - marvell,wakeup-pin: It represents wakeup pin number of the bluetooth
-> chip.
-> -                       firmware will use the pin to wakeup host system.
-> +                       firmware will use the pin to wakeup host system
-> (u16).
->    - marvell,wakeup-gap-ms: wakeup gap represents wakeup latency of the
-> host
->                       platform. The value will be configured to firmware.
-> This
-> -                     is needed to work chip's sleep feature as expected.
-> +                     is needed to work chip's sleep feature as expected
-> (u16).
->    - interrupt-parent: phandle of the parent interrupt controller
->    - interrupts : interrupt pin number to the cpu. Driver will request an
-> irq based
->                  on this interrupt number. During system suspend, the irq
-> will be
-> @@ -50,7 +50,7 @@ calibration data is also available in below example.
->                         0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f
-> 0x04 0x02
->                         0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00
-> 0x00 0x00
->                         0x00 0x00 0xf0 0x00>;
-> -               marvell,wakeup-pin =3D <0x0d>;
-> -               marvell,wakeup-gap-ms =3D <0x64>;
-> +               marvell,wakeup-pin =3D /bits/ 16 <0x0d>;
-> +               marvell,wakeup-gap-ms =3D /bits/ 16 <0x64>;
+> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts
+> b/arch/arm/boot/dts/am335x-boneblack.dts
+> index 55c0e95..7eee5c4 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack.dts
+> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+> @@ -64,6 +64,13 @@
+>                         AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLDOWN |
+> MUX_MODE3)    /* xdma_event_intr0 */
+>                 >;
+>         };
+> +
+> +       i2c1_pins: pinmux_i2c1_pins {
+> +               pinctrl-single,pins = <
+> +                       AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE2)
+>      /* spi0_d1.i2c1_sda */
+> +                       AM33XX_IOPAD(0x95c, PIN_INPUT_PULLUP | MUX_MODE2)
+>      /* spi0_cs0.i2c1_scl */
+> +               >;
+> +       };
+>  };
+>
+>  &lcdc {
+> @@ -91,6 +98,14 @@
 >         };
 >  };
+>
+> +&i2c1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&i2c2_pins>;
+> +
+> +       status = "okay";
+> +       clock-frequency = <100000>;
+> +};
+> +
+>  &rtc {
+>         system-power-controller;
+>  };
 > --
-> 2.1.2
+> 2.7.4
 >
->
 
 
---=20
-Wei-Ning Huang, =E9=BB=83=E5=81=89=E5=AF=A7 | Software Engineer, Google Inc=
-., Taiwan |
-wnhuang@google.com | Cell: +886 910-380678
+On the other issue, P9_17/P9_18 can also be used for spi0, pwm and pr1's
+uart0.  Since there are no "i2c" devices physically connected to
+P9_17/P9_18, it would best to just drop this patch and load it as an
+overlay (1) (2)..
 
---94eb2c034a544bbeba053432045e
+1: u-boot's overlay:
+
+https://www.mail-archive.com/u-boot@lists.denx.de/msg214241.html
+
+2: kernel's overlay:
+
+https://github.com/pantoniou/linux-beagle-track-mainline/tree/bbb-overlays
+
+Regards,
+
+-- 
+Robert Nelson
+https://rcn-ee.com/
+
+--001a113f97c2660de105344f0d54
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Please ignore this patch. I think we should make the drive=
-r parse 32 bit value instead (to be consistent with mwifiex driver).</div><=
-div class=3D"gmail_extra"><br><div class=3D"gmail_quote">On Wed, Jun 1, 201=
-6 at 11:09 AM, Wei-Ning Huang <span dir=3D"ltr">&lt;<a href=3D"mailto:wnhua=
-ng@chromium.org" target=3D"_blank">wnhuang@chromium.org</a>&gt;</span> wrot=
-e:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-l=
-eft:1px #ccc solid;padding-left:1ex">The property marvell,wakeup-pin and ma=
-rvell,wakeup-gap-ms are read as<br>
-u16 in the driver. Fix documentation and example accordingly.<br>
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On Thu, Jun 2, 2016 at 2:41 AM, Yong Li <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:yong.b.li@intel.com" target=3D"_blank">yong.b.li@intel.com</a>&g=
+t;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
+px 0px 0.8ex;border-left-width:1px;border-left-style:solid;border-left-colo=
+r:rgb(204,204,204);padding-left:1ex">From: Yong Li &lt;<a href=3D"mailto:sd=
+liyong@gmail.com" target=3D"_blank">sdliyong@gmail.com</a>&gt;<br>
 <br>
-Signed-off-by: Wei-Ning Huang &lt;<a href=3D"mailto:wnhuang@chromium.org">w=
-nhuang@chromium.org</a>&gt;<br>
+Without this patch, I2C-1 is missing on beaglebone black boards<br>
+<br>
+Signed-off-by: Yong Li &lt;<a href=3D"mailto:sdliyong@gmail.com" target=3D"=
+_blank">sdliyong@gmail.com</a>&gt;<br>
 ---<br>
-=C2=A0Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt | 8 ++++-=
----<br>
-=C2=A01 file changed, 4 insertions(+), 4 deletions(-)<br>
+=C2=A0arch/arm/boot/dts/am335x-boneblack.dts | 15 +++++++++++++++<br>
+=C2=A01 file changed, 15 insertions(+)<br></blockquote><div><br></div><div>=
+<br></div><div><div>This is also &#39;common&#39; for the white/green, if y=
+our really going to push this, please add it to:</div><div><br></div><div>a=
+m335x-bone-common.dtsi</div></div><div>=C2=A0</div><blockquote class=3D"gma=
+il_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-le=
+ft-style:solid;border-left-color:rgb(204,204,204);padding-left:1ex">
 <br>
-diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/=
-Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt<br>
-index 14aa6cf..6a9a63c 100644<br>
---- a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt<br>
-+++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt<br>
-@@ -13,10 +13,10 @@ Optional properties:<br>
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am3=
+35x-boneblack.dts<br>
+index 55c0e95..7eee5c4 100644<br>
+--- a/arch/arm/boot/dts/am335x-boneblack.dts<br>
++++ b/arch/arm/boot/dts/am335x-boneblack.dts<br>
+@@ -64,6 +64,13 @@<br>
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 initialization. This is an array of 28 values(u8).<br>
-<br>
-=C2=A0 =C2=A0- marvell,wakeup-pin: It represents wakeup pin number of the b=
-luetooth chip.<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0firmware will use the pin to wakeup host system.<br>
+=A0 =C2=A0 AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLDOWN | MUX_MODE3)=C2=A0 =C2=
+=A0 /* xdma_event_intr0 */<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &gt;;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0i2c1_pins: pinmux_i2c1_pins {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-single,pins=
+ =3D &lt;<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0firmware will use the pin to wakeup host system (u16).<br>
-=C2=A0 =C2=A0- marvell,wakeup-gap-ms: wakeup gap represents wakeup latency =
-of the host<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 platform. The value will be configured to firmware. This<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0is needed to work chip&#39;s sleep feature as expected.<br>
+=A0 =C2=A0AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE2)=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0/* spi0_d1.i2c1_sda */<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0is needed to work chip&#39;s sleep feature as expected (u16).<br>
-=C2=A0 =C2=A0- interrupt-parent: phandle of the parent interrupt controller=
+=A0 =C2=A0AM33XX_IOPAD(0x95c, PIN_INPUT_PULLUP | MUX_MODE2)=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0/* spi0_cs0.i2c1_scl */<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+=C2=A0};<br>
 <br>
-=C2=A0 =C2=A0- interrupts : interrupt pin number to the cpu. Driver will re=
-quest an irq based<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0on this inter=
-rupt number. During system suspend, the irq will be<br>
-@@ -50,7 +50,7 @@ calibration data is also available in below example.<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 0x00 0x00 0xf0 0x00&gt;;<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0marvell,wakeup-pin =
-=3D &lt;0x0d&gt;;<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0marvell,wakeup-gap-=
-ms =3D &lt;0x64&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0marvell,wakeup-pin =
-=3D /bits/ 16 &lt;0x0d&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0marvell,wakeup-gap-=
-ms =3D /bits/ 16 &lt;0x64&gt;;<br>
+=C2=A0&amp;lcdc {<br>
+@@ -91,6 +98,14 @@<br>
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
 =C2=A0};<br>
-<span class=3D"HOEnZb"><font color=3D"#888888">--<br>
-2.1.2<br>
 <br>
-</font></span></blockquote></div><br><br clear=3D"all"><div><br></div>-- <b=
-r><div class=3D"gmail_signature"><div dir=3D"ltr"><div><div dir=3D"ltr"><sp=
-an style=3D"font-size:12.6666669845581px"><font color=3D"#444444"><span sty=
-le=3D"font-family:sans-serif;line-height:19.5px;border-width:2px 0px 0px;bo=
-rder-style:solid;border-color:rgb(213,15,37);padding-top:2px;margin-top:2px=
-">Wei-Ning Huang, =E9=BB=83=E5=81=89=E5=AF=A7 |</span><span style=3D"font-f=
-amily:sans-serif;line-height:19.5px;border-width:2px 0px 0px;border-style:s=
-olid;border-color:rgb(51,105,232);padding-top:2px;margin-top:2px">=C2=A0Sof=
-tware Engineer, Google Inc., Taiwan |</span><span style=3D"font-family:sans=
--serif;line-height:19.5px;border-width:2px 0px 0px;border-style:solid;borde=
-r-color:rgb(0,153,57);padding-top:2px;margin-top:2px">=C2=A0<a href=3D"mail=
-to:wnhuang@google.com" target=3D"_blank">wnhuang@google.com</a>=C2=A0|</spa=
-n></font></span><span style=3D"font-size:12.6666669845581px"><span style=3D=
-"font-family:sans-serif;line-height:19.5px;border-width:2px 0px 0px;border-=
-style:solid;border-color:rgb(238,178,17);padding-top:2px;margin-top:2px"><f=
-ont color=3D"#444444">=C2=A0Cell: +886 910-380678</font><font color=3D"#000=
-000">=C2=A0</font></span></span><br></div></div></div></div>
-</div>
++&amp;i2c1 {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-names =3D &quot;default&quot;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&amp;i2c2_pins&gt;;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0clock-frequency =3D &lt;100000&gt;;<br>
++};<br>
++<br>
+=C2=A0&amp;rtc {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 system-power-controller;<br>
+=C2=A0};<br>
+<span><font color=3D"#888888">--<br>
+2.7.4<br></font></span></blockquote><div><br></div><div><br></div><div>On t=
+he other issue, P9_17/P9_18 can also be used for spi0, pwm and pr1&#39;s ua=
+rt0.=C2=A0 Since there are no &quot;i2c&quot; devices physically connected =
+to P9_17/P9_18, it would best to just drop this patch and load it as an ove=
+rlay (1) (2)..</div><div><br></div><div>1: u-boot&#39;s overlay:=C2=A0</div=
+><div><br></div><div><a href=3D"https://www.mail-archive.com/u-boot@lists.d=
+enx.de/msg214241.html">https://www.mail-archive.com/u-boot@lists.denx.de/ms=
+g214241.html</a><br></div><div><br></div><div>2: kernel&#39;s overlay:</div=
+><div><br></div><div><a href=3D"https://github.com/pantoniou/linux-beagle-t=
+rack-mainline/tree/bbb-overlays">https://github.com/pantoniou/linux-beagle-=
+track-mainline/tree/bbb-overlays</a><br></div><div><br></div><div>Regards,<=
+/div></div><div><br></div>-- <br><div data-smartmail=3D"gmail_signature">Ro=
+bert Nelson<br><a href=3D"https://rcn-ee.com/" target=3D"_blank">https://rc=
+n-ee.com/</a></div>
+</div></div>
 
---94eb2c034a544bbeba053432045e--
+--001a113f97c2660de105344f0d54--
