@@ -1,107 +1,168 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom reserved
- memory handling
-Date: Thu, 2 Jun 2016 13:25:43 -0400
-Message-ID: <e715a7d0-eb25-9d68-27ad-25cf03c499ca@osg.samsung.com>
-References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
- <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
- <574BEBB8.8040606@samsung.com>
- <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
- <57505F5B.90101@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <57505F5B.90101@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/4] phy-sun4i-usb: Add support for peripheral-only mode
+Date: Thu,  2 Jun 2016 19:31:04 +0200
+Message-ID: <1464888666-17728-2-git-send-email-hdegoede@redhat.com>
+References: <1464888666-17728-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464888666-17728-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Use the new of_usb_get_dr_mode_by_phy() function to get the dr_mode
+from the musb controller node instead of assuming that having an id_det
+gpio means otg mode, and not having one means host mode.
 
-On 06/02/2016 12:31 PM, Krzysztof Kozlowski wrote:
-> On 06/02/2016 05:20 PM, Javier Martinez Canillas wrote:
->> Hello Krzysztof,
->>
->> On 05/30/2016 03:28 AM, Krzysztof Kozlowski wrote:
->>> On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
->>>> Once MFC driver has been converted to generic reserved memory bindings,
->>>> there is no need for custom memory reservation code.
->>>>
->>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>> ---
->>>>  arch/arm/mach-exynos/Makefile      |  2 -
->>>>  arch/arm/mach-exynos/exynos.c      | 19 --------
->>>>  arch/arm/mach-exynos/mfc.h         | 16 -------
->>>>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 --------------------------------------
->>>>  4 files changed, 130 deletions(-)
->>>>  delete mode 100644 arch/arm/mach-exynos/mfc.h
->>>>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
->>>
->>> Thanks, applied.
->>>
->>
->> This patch can't be applied before patches 2/5 and 3/5, or the custom
->> memory regions reservation will break with the current s5p-mfc driver.
-> 
-> Yes, I know. As I understood from talk with Marek, the driver is broken
-> now so continuous work was not chosen. If it is not correct and full
+Implement peripheral-only mode by adding a sun4i_usb_phy0_get_id_det
+helper which looks at the dr_mode, always registering our extcon and
+always monitoring vbus.
 
-It's true that the driven is currently broken in mainline and is not really
-stable, I posted fixes for all the issues I found (mostly in module removal
-and insert paths).
+If dr_mode is not specified in the dts, do not register phy0 as we then
+do not know how to treat it. This is actually a good thing as this means
+we will not be registering phy0 on devices where the otg controller is
+not enabled in the devicetree.
 
-But with just the following patch from Ayaka on top of mainline, I'm able to
-have video decoding working: https://lkml.org/lkml/2016/5/6/577
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/phy/phy-sun4i-usb.c | 62 ++++++++++++++++++++++++++++++---------------
+ 1 file changed, 42 insertions(+), 20 deletions(-)
 
-Marek mentioned that bisectability is only partially broken because the old
-binding will still work after this series if IOMMU is enabled (because the
-properties are ignored in this case). But will break if IOMMU isn't enabled
-which will be the case for some boards that fails to boot with IOMMU due the
-bootloader leaving the FIMD enabled doing DMA operations automatically AFAIU. 
-
-Now, I'm OK with not keeping backwards compatibility for the MFC dt bindings
-since arguably the driver has been broken for a long time and nobody cared
-and also I don't think anyone in practice boots a new kernel with an old DTB
-for Exynos.
-
-But I don't think is correct to introduce a new issue as is the case if this
-patch is applied before the previous patches in the series since this causes
-the driver to probe to fail and the following warn on boot (while it used to
-at least probe correctly in mainline):
-
-[   17.190165] WARNING: CPU: 0 PID: 224 at kernel/memremap.c:111 memremap+0x1a8/0x1b0
-[   17.193127] memremap attempted on ram 0x51000000 size: 0x800000
-[   17.196247] Modules linked in: s5p_mfc(+) uvcvideo s5p_jpeg videobuf2_vmalloc v4l2_mem2mem
-[   17.199569] CPU: 0 PID: 224 Comm: systemd-udevd Not tainted 4.7.0-rc1-next-20160531-00006-g569df5b983f3 #68
-[   17.202556] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[   17.205534] [<c010e1ac>] (unwind_backtrace) from [<c010af38>] (show_stack+0x10/0x14)
-[   17.208535] [<c010af38>] (show_stack) from [<c0323b9c>] (dump_stack+0x88/0x9c)
-[   17.211530] [<c0323b9c>] (dump_stack) from [<c011a828>] (__warn+0xe8/0x100)
-[   17.214492] [<c011a828>] (__warn) from [<c011a878>] (warn_slowpath_fmt+0x38/0x48)
-[   17.217479] [<c011a878>] (warn_slowpath_fmt) from [<c0194ee0>] (memremap+0x1a8/0x1b0)
-[   17.220476] [<c0194ee0>] (memremap) from [<c040d92c>] (dma_init_coherent_memory+0xf8/0x130)
-[   17.223489] [<c040d92c>] (dma_init_coherent_memory) from [<c040d990>] (dma_declare_coherent_memory+0x2c/0x6c)
-[   17.226570] [<c040d990>] (dma_declare_coherent_memory) from [<bf1768c4>] (s5p_mfc_probe+0x170/0x650 [s5p_mfc])
-[   17.229648] [<bf1768c4>] (s5p_mfc_probe [s5p_mfc]) from [<c03fb704>] (platform_drv_probe+0x4c/0xb0)
-[   17.232718] [<c03fb704>] (platform_drv_probe) from [<c03f9e58>] (driver_probe_device+0x214/0x2c0)
-[   17.235800] [<c03f9e58>] (driver_probe_device) from [<c03f9fb0>] (__driver_attach+0xac/0xb0)
-[   17.238906] [<c03f9fb0>] (__driver_attach) from [<c03f81d0>] (bus_for_each_dev+0x68/0x9c)
-[   17.242031] [<c03f81d0>] (bus_for_each_dev) from [<c03f944c>] (bus_add_driver+0x1a0/0x218)
-[   17.245160] [<c03f944c>] (bus_add_driver) from [<c03fa7c8>] (driver_register+0x78/0xf8)
-[   17.248300] [<c03fa7c8>] (driver_register) from [<c01017c0>] (do_one_initcall+0x40/0x170)
-[   17.251475] [<c01017c0>] (do_one_initcall) from [<c01956e4>] (do_init_module+0x60/0x1b0)
-[   17.254656] [<c01956e4>] (do_init_module) from [<c0188dc0>] (load_module+0x17ec/0x1dd0)
-[   17.257844] [<c0188dc0>] (load_module) from [<c0189570>] (SyS_finit_module+0x8c/0x9c)
-[   17.261037] [<c0189570>] (SyS_finit_module) from [<c01078c0>] (ret_fast_syscall+0x0/0x3c)
-[   17.265210] ---[ end trace 33de2b5daf697e0f ]---
-[   17.269300] s5p_mfc_alloc_memdevs:1072: Failed to declare coherent memory for
-               MFC device
-[   17.277593] ------------[ cut here ]------------
-
-Best regards,
+diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+index bae54f7..1ea71f5 100644
+--- a/drivers/phy/phy-sun4i-usb.c
++++ b/drivers/phy/phy-sun4i-usb.c
+@@ -40,6 +40,7 @@
+ #include <linux/power_supply.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/reset.h>
++#include <linux/usb/of.h>
+ #include <linux/workqueue.h>
+ 
+ #define REG_ISCR			0x00
+@@ -109,6 +110,7 @@ struct sun4i_usb_phy_cfg {
+ struct sun4i_usb_phy_data {
+ 	void __iomem *base;
+ 	const struct sun4i_usb_phy_cfg *cfg;
++	enum usb_dr_mode dr_mode;
+ 	struct mutex mutex;
+ 	struct sun4i_usb_phy {
+ 		struct phy *phy;
+@@ -119,6 +121,7 @@ struct sun4i_usb_phy_data {
+ 		bool regulator_on;
+ 		int index;
+ 	} phys[MAX_PHYS];
++	int first_phy;
+ 	/* phy0 / otg related variables */
+ 	struct extcon_dev *extcon;
+ 	bool phy0_init;
+@@ -285,16 +288,10 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+ 		sun4i_usb_phy0_update_iscr(_phy, 0, ISCR_DPDM_PULLUP_EN);
+ 		sun4i_usb_phy0_update_iscr(_phy, 0, ISCR_ID_PULLUP_EN);
+ 
+-		if (data->id_det_gpio) {
+-			/* OTG mode, force ISCR and cable state updates */
+-			data->id_det = -1;
+-			data->vbus_det = -1;
+-			queue_delayed_work(system_wq, &data->detect, 0);
+-		} else {
+-			/* Host only mode */
+-			sun4i_usb_phy0_set_id_detect(_phy, 0);
+-			sun4i_usb_phy0_set_vbus_detect(_phy, 1);
+-		}
++		/* Force ISCR and cable state updates */
++		data->id_det = -1;
++		data->vbus_det = -1;
++		queue_delayed_work(system_wq, &data->detect, 0);
+ 	}
+ 
+ 	return 0;
+@@ -319,6 +316,19 @@ static int sun4i_usb_phy_exit(struct phy *_phy)
+ 	return 0;
+ }
+ 
++static int sun4i_usb_phy0_get_id_det(struct sun4i_usb_phy_data *data)
++{
++	switch (data->dr_mode) {
++	case USB_DR_MODE_OTG:
++		return gpiod_get_value_cansleep(data->id_det_gpio);
++	case USB_DR_MODE_HOST:
++		return 0;
++	case USB_DR_MODE_PERIPHERAL:
++	default:
++		return 1;
++	}
++}
++
+ static int sun4i_usb_phy0_get_vbus_det(struct sun4i_usb_phy_data *data)
+ {
+ 	if (data->vbus_det_gpio)
+@@ -414,7 +424,10 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	struct phy *phy0 = data->phys[0].phy;
+ 	int id_det, vbus_det, id_notify = 0, vbus_notify = 0;
+ 
+-	id_det = gpiod_get_value_cansleep(data->id_det_gpio);
++	if (phy0 == NULL)
++		return;
++
++	id_det = sun4i_usb_phy0_get_id_det(data);
+ 	vbus_det = sun4i_usb_phy0_get_vbus_det(data);
+ 
+ 	mutex_lock(&phy0->mutex);
+@@ -501,7 +514,8 @@ static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+ {
+ 	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
+ 
+-	if (args->args[0] >= data->cfg->num_phys)
++	if (args->args[0] < data->first_phy ||
++	    args->args[0] >= data->cfg->num_phys)
+ 		return ERR_PTR(-ENODEV);
+ 
+ 	return data->phys[args->args[0]].phy;
+@@ -575,13 +589,17 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 			return -EPROBE_DEFER;
+ 	}
+ 
+-	/* vbus_det without id_det makes no sense, and is not supported */
+-	if (sun4i_usb_phy0_have_vbus_det(data) && !data->id_det_gpio) {
+-		dev_err(dev, "usb0_id_det missing or invalid\n");
+-		return -ENODEV;
+-	}
+-
+-	if (data->id_det_gpio) {
++	data->dr_mode = of_usb_get_dr_mode_by_phy(np);
++	switch (data->dr_mode) {
++	case USB_DR_MODE_OTG:
++		/* otg without id_det makes no sense, and is not supported */
++		if (!data->id_det_gpio) {
++			dev_err(dev, "usb0_id_det missing or invalid\n");
++			return -ENODEV;
++		}
++		/* fall through */
++	case USB_DR_MODE_HOST:
++	case USB_DR_MODE_PERIPHERAL:
+ 		data->extcon = devm_extcon_dev_allocate(dev,
+ 							sun4i_usb_phy0_cable);
+ 		if (IS_ERR(data->extcon))
+@@ -592,9 +610,13 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 			dev_err(dev, "failed to register extcon: %d\n", ret);
+ 			return ret;
+ 		}
++		break;
++	default:
++		dev_info(dev, "dr_mode unknown, not registering usb phy0\n");
++		data->first_phy = 1;
+ 	}
+ 
+-	for (i = 0; i < data->cfg->num_phys; i++) {
++	for (i = data->first_phy; i < data->cfg->num_phys; i++) {
+ 		struct sun4i_usb_phy *phy = data->phys + i;
+ 		char name[16];
+ 
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
