@@ -1,7 +1,7 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v3 2/5] of/numa: fix a memory@ node can only contains one memory block
-Date: Thu, 2 Jun 2016 10:28:08 +0800
-Message-ID: <1464834491-12024-3-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v3 5/5] arm64/numa: avoid inconsistent information to be printed
+Date: Thu, 2 Jun 2016 10:28:11 +0800
+Message-ID: <1464834491-12024-6-git-send-email-thunder.leizhen@huawei.com>
 References: <1464834491-12024-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,66 +12,37 @@ To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-For a normal memory@ devicetree node, its reg property can contains more
-memory blocks.
-
-Because we don't known how many memory blocks maybe contained, so we try
-from index=0, increase 1 until error returned(the end).
+numa_init(of_numa_init) may returned error because of numa configuration
+error. So "No NUMA configuration found" is inaccurate. In fact, specific
+configuration error information should be immediately printed by the
+testing branch.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/of/of_numa.c | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+ arch/arm64/mm/numa.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index fb71b4e..7b3fbdc 100644
---- a/drivers/of/of_numa.c
-+++ b/drivers/of/of_numa.c
-@@ -63,13 +63,9 @@ static int __init of_numa_parse_memory_nodes(void)
- 	struct device_node *np = NULL;
- 	struct resource rsrc;
- 	u32 nid;
--	int r = 0;
--
--	for (;;) {
--		np = of_find_node_by_type(np, "memory");
--		if (!np)
--			break;
-+	int i, r;
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 2601660..1b9622c 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -338,8 +338,10 @@ static int __init numa_init(int (*init_func)(void))
+ 	if (ret < 0)
+ 		return ret;
 
-+	for_each_node_by_type(np, "memory") {
- 		r = of_property_read_u32(np, "numa-node-id", &nid);
- 		if (r == -EINVAL)
- 			/*
-@@ -78,23 +74,18 @@ static int __init of_numa_parse_memory_nodes(void)
- 			 * "numa-node-id" property
- 			 */
- 			continue;
--		else if (r)
--			/* some other error */
--			break;
+-	if (nodes_empty(numa_nodes_parsed))
++	if (nodes_empty(numa_nodes_parsed)) {
++		pr_info("No NUMA configuration found\n");
+ 		return -EINVAL;
++	}
 
--		r = of_address_to_resource(np, 0, &rsrc);
--		if (r) {
--			pr_err("NUMA: bad reg property in memory node\n");
--			break;
--		}
-+		for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
-+			r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
+ 	ret = numa_register_nodes();
+ 	if (ret < 0)
+@@ -370,8 +372,6 @@ static int __init dummy_numa_init(void)
 
--		r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
--		if (r)
--			break;
-+		if (!i || r) {
-+			of_node_put(np);
-+			pr_err("NUMA: bad property in memory node\n");
-+			return r ? : -EINVAL;
-+		}
- 	}
--	of_node_put(np);
-
--	return r;
-+	return 0;
- }
-
- static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 	if (numa_off)
+ 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+-	else
+-		pr_info("No NUMA configuration found\n");
+ 	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+ 	       0LLU, PFN_PHYS(max_pfn) - 1);
