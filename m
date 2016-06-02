@@ -1,73 +1,51 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 3/5] ARM: dts: Add I2C1 support for STM32F429 SoC
-Date: Thu, 2 Jun 2016 18:07:11 +0200
-Message-ID: <CALszF6D4K1GsFdb0z3Lkb=EJdhzNnZNnAxeyCZGq36+Cnwf+_A@mail.gmail.com>
-References: <1464877568-21897-1-git-send-email-cedric.madianga@gmail.com>
- <1464877568-21897-4-git-send-email-cedric.madianga@gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom reserved
+ memory handling
+Date: Thu, 02 Jun 2016 18:31:23 +0200
+Message-ID: <57505F5B.90101@samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
+ <574BEBB8.8040606@samsung.com>
+ <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1464877568-21897-4-git-send-email-cedric.madianga@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@armlinux.org.uk, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2016-06-02 16:26 GMT+02:00 M'boumba Cedric Madianga <cedric.madianga@gmail.com>:
-> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> ---
->  arch/arm/boot/dts/stm32f429.dtsi | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-> index 434d4b9..d5857eb 100644
-> --- a/arch/arm/boot/dts/stm32f429.dtsi
-> +++ b/arch/arm/boot/dts/stm32f429.dtsi
-> @@ -323,6 +323,18 @@
->                                         slew-rate = <2>;
->                                 };
->                         };
-> +
-> +                       i2c1_sda_pin: i2c1_sda@0 {
-> +                               pins {
-> +                                       pinmux = <STM32F429_PB9_FUNC_I2C1_SDA>;
-> +                                       drive-open-drain;
-> +                               };
-> +                       };
-> +                       i2c1_scl_pin: i2c1_scl@0 {
-> +                               pins {
-> +                                       pinmux = <STM32F429_PB6_FUNC_I2C1_SCL>;
-> +                               };
-> +                       };
->                 };
-Shouldn't be preferrable to group the two functions in a single one,
-as done for usart config in this file?:
+On 06/02/2016 05:20 PM, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
+> 
+> On 05/30/2016 03:28 AM, Krzysztof Kozlowski wrote:
+>> On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
+>>> Once MFC driver has been converted to generic reserved memory bindings,
+>>> there is no need for custom memory reservation code.
+>>>
+>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>> ---
+>>>  arch/arm/mach-exynos/Makefile      |  2 -
+>>>  arch/arm/mach-exynos/exynos.c      | 19 --------
+>>>  arch/arm/mach-exynos/mfc.h         | 16 -------
+>>>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 --------------------------------------
+>>>  4 files changed, 130 deletions(-)
+>>>  delete mode 100644 arch/arm/mach-exynos/mfc.h
+>>>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
+>>
+>> Thanks, applied.
+>>
+> 
+> This patch can't be applied before patches 2/5 and 3/5, or the custom
+> memory regions reservation will break with the current s5p-mfc driver.
 
-            usart1_pins_a: usart1@0 {
-                pins1 {
-                    pinmux = <STM32F429_PA9_FUNC_USART1_TX>;
-                    bias-disable;
-                    drive-push-pull;
-                    slew-rate = <0>;
-                };
-                pins2 {
-                    pinmux = <STM32F429_PA10_FUNC_USART1_RX>;
-                    bias-disable;
-                };
-            };
+Yes, I know. As I understood from talk with Marek, the driver is broken
+now so continuous work was not chosen. If it is not correct and full
+bisectability is required, then entire patchset requires special
+handling - I need a stable tag from media tree. Without this everything
+will be broken anyway.
 
-Also, I would prefer the phandle to be suffixed with the port number,
-as multiple muxing options are available, for example "i2c1_pins_b".
-
-Thanks,
-Maxime
+Best regards,
+Krzysztof
