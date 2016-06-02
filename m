@@ -1,44 +1,104 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v5 13/22] ARM: dts: exynos: Enable UART3 on Exynos5410
-Date: Thu, 02 Jun 2016 06:17:05 +0200
-Message-ID: <574FB341.1090800@kernel.org>
-References: <1464429273-23457-1-git-send-email-krzk@kernel.org>
- <1464429273-23457-14-git-send-email-krzk@kernel.org>
- <CAOi56cXeRjGgE+=psk7K45oeAgZ27HFxbi+an-ELnA3-_Z_BTA@mail.gmail.com>
- <CAJKOXPcDZFaqL7+wT9d9iD7Y4QbZWPFQw2hTR3AzyU4K099WYA@mail.gmail.com>
- <e9a103cc-a5cf-95d8-ee49-d44542dbcb1e@osg.samsung.com>
- <cabfd6c2-fc7e-622a-36e6-5be0b674cdd2@osg.samsung.com>
+From: Po Liu <po.liu@nxp.com>
+Subject: RE: [PATCH 2/2] aer: add support aer interrupt with none
+ MSI/MSI-X/INTx mode
+Date: Thu, 2 Jun 2016 05:01:19 +0000
+Message-ID: <VI1PR0401MB1709E215DCE264B2C27B3DAB92580@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+ <20160602034828.GA10240@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-reply-to: <cabfd6c2-fc7e-622a-36e6-5be0b674cdd2@osg.samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Kevin Hilman <khilman@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160602034828.GA10240@localhost>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2016 10:54 PM, Javier Martinez Canillas wrote:
-> On 06/01/2016 04:52 PM, Javier Martinez Canillas wrote:
->> Hello Krzysztof,
-> 
-> [snip]
-> 
->>>
->>> I left the commit in my tree as it is correct (strictly speaking).
->>> Sorry for any trouble it makes.
->>>
->>
->> Kevin pointed me to this issue over IRC and I was able to reproduce it in
->> my Peach Pi by removing the UART3 clocks from the Exynos5420 clock driver.
->>
->> Your patch indeed fixes the issue, I'll add a Reviewed-by on that thread.
->>
-> 
-> err, I meant a Tested-by tag... but yes I've also reviewed the patch :)
-
-Sure, thanks!
-
-Best regards,
-Krzysztof
-
+SGkgQmpvcm4sDQoNCg0KPiAgLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gIEZyb206IEJq
+b3JuIEhlbGdhYXMgW21haWx0bzpoZWxnYWFzQGtlcm5lbC5vcmddDQo+ICBTZW50OiBUaHVyc2Rh
+eSwgSnVuZSAwMiwgMjAxNiAxMTo0OCBBTQ0KPiAgVG86IFBvIExpdQ0KPiAgQ2M6IGxpbnV4LXBj
+aUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsN
+Cj4gIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBBcm5kIEJlcmdtYW5uOw0KPiAgUm95IFphbmc7IE1hcmMgWnluZ2llcjsgU3R1YXJ0IFlv
+ZGVyOyBZYW5nLUxlbyBMaTsgTWluZ2h1YW4gTGlhbjsgQmpvcm4NCj4gIEhlbGdhYXM7IFNoYXdu
+IEd1bzsgTWluZ2thaSBIdTsgUm9iIEhlcnJpbmcNCj4gIFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8y
+XSBhZXI6IGFkZCBzdXBwb3J0IGFlciBpbnRlcnJ1cHQgd2l0aCBub25lDQo+ICBNU0kvTVNJLVgv
+SU5UeCBtb2RlDQo+ICANCj4gIFsrY2MgUm9iXQ0KPiAgDQo+ICBIaSBQbywNCj4gIA0KPiAgT24g
+VGh1LCBNYXkgMjYsIDIwMTYgYXQgMDI6MDA6MDZQTSArMDgwMCwgUG8gTGl1IHdyb3RlOg0KPiAg
+PiBPbiBzb21lIHBsYXRmb3Jtcywgcm9vdCBwb3J0IGRvZXNuJ3Qgc3VwcG9ydCBNU0kvTVNJLVgv
+SU5UeCBpbiBSQyBtb2RlLg0KPiAgPiBXaGVuIGNoaXAgc3VwcG9ydCB0aGUgYWVyIGludGVycnVw
+dCB3aXRoIG5vbmUgTVNJL01TSS1YL0lOVHggbW9kZSwNCj4gID4gbWF5YmUgdGhlcmUgaXMgaW50
+ZXJydXB0IGxpbmUgZm9yIGFlciBwbWUgZXRjLiBTZWFyY2ggdGhlIGludGVycnVwdA0KPiAgPiBu
+dW1iZXIgaW4gdGhlIGZkdCBmaWxlLg0KPiAgDQo+ICBNeSB1bmRlcnN0YW5kaW5nIGlzIHRoYXQg
+QUVSIGludGVycnVwdCBzaWduYWxpbmcgY2FuIGJlIGRvbmUgdmlhIElOVHgsDQo+ICBNU0ksIG9y
+IE1TSS1YIChQQ0llIHNwZWMgcjMuMCwgc2VjIDYuMi40LjEuMikuICBBcHBhcmVudGx5IHlvdXIg
+ZGV2aWNlDQo+ICBkb2Vzbid0IHN1cHBvcnQgTVNJIG9yIE1TSS1YLiAgQXJlIHlvdSBzYXlpbmcg
+aXQgZG9lc24ndCBzdXBwb3J0IElOVHgNCj4gIGVpdGhlcj8gIEhvdyBpcyB0aGUgaW50ZXJydXB0
+IHlvdSdyZSByZXF1ZXN0aW5nIGhlcmUgZGlmZmVyZW50IGZyb20gSU5UeD8NCg0KTGF5ZXJzY2Fw
+ZSB1c2Ugbm9uZSBvZiBNU0kgb3IgTVNJLVggb3IgSU5UeCB0byBpbmRpY2F0ZSB0aGUgZGV2aWNl
+cyBvciByb290IGVycm9yDQppbiBSQyBtb2RlLiBCdXQgdXNlIGFuIGluZGVwZW5kZW50IFNQSSBp
+bnRlcnJ1cHQoYXJtIGludGVycnVwdCBjb250cm9sbGVyKSBsaW5lLg0KQW5kIGF0IHNhbWUgdGlt
+ZSwgQUVSIGNhcGFiaWxpdHkgbGlzdCBpbiBQQ0llIHJlZ2lzdGVyIGRlc2NyaXB0b3JzLiBBbmQg
+YWxzbywNClRoZSBSb290IEVycm9yIENvbW1hbmQvc3RhdHVzIHJlZ2lzdGVyIHdhcyBwcm9wZXIg
+dG8gZW5hYmxlL2Rpc2FibGUgdGhlIEFFUiBpbnRlcnJ1cHQuDQoNClRoaXMgaGFyZHdhcmUgaW1w
+bGVtZW50YXRpb24gbWFrZSBzZW5zZSBpbiBzb21lIHBsYXRmb3JtcywgYW5kIHRoaXMgd2FzIGRl
+c2NyaWJlZA0KaW4gdGhlIGZ1bmN0aW9uIGluaXRfc2VydmljZV9pcnFzKCkgaW4gdGhlIGRyaXZl
+cnMvcGNpL3BjaWUvcG9ydGRydl9jb3JlLmMgaW4gY3VycmVudA0Ka2VybmVsIGFzOg0KDQoyNDEg
+ICAgICAqIFdlJ3JlIG5vdCBnb2luZyB0byB1c2UgTVNJLVgsIHNvIHRyeSBNU0kgYW5kIGZhbGwg
+YmFjayB0byBJTlR4LiAgICAgDQoyNDIgICAgICAqIElmIG5laXRoZXIgTVNJL01TSS1YIG5vciBJ
+TlR4IGF2YWlsYWJsZSwgdHJ5IG90aGVyIGludGVycnVwdC4gIE9uICANCjI0MyAgICAgICogc29t
+ZSBwbGF0Zm9ybXMsIHJvb3QgcG9ydCBkb2Vzbid0IHN1cHBvcnQgTVNJL01TSS1YL0lOVHggaW4g
+UkMgbW9kZQ0KMjQ0ICAgICAgKi8gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KDQpTbyBJIHRoaW5rIHRo
+aXMgd2FzIHRoZSBwcm9wZXIgcGxhY2UgdG8gdXBkYXRlIHRoZSBpcnEgbnVtYmVyIGJlZm9yZSBh
+ZXIgc2VydmljZQ0KZHJpdmVyIHdhcyBsb2FkZWQuDQoNCj4gIA0KPiAgTXkgZ3Vlc3MgaXMgdGhh
+dCB5b3VyIGRldmljZSAqZG9lcyogc3VwcG9ydCBJTlR4LCBhbmQgd2Ugc2hvdWxkIHVzZSB0aGF0
+Lg0KPiAgQUNQSSBoYXMgdGhlIGdlbmVyaWMgX1BSVCB0aGF0IGRlc2NyaWJlcyBJTlR4IHJvdXRp
+bmcuICBUaGVyZSBtdXN0IGJlDQo+ICBzb21ldGhpbmcgc2ltaWxhciBmb3IgRFQsIGJ1dCBJIGRv
+bid0IGtub3cgd2hhdCBpdCBpcy4gIEl0IHNlZW1zIGxpa2UNCj4gIHRoaXMgc2hvdWxkIGJlIGRl
+c2NyaWJlZCB1c2luZyB0aGF0IERUIG1lY2hhbmlzbSAod2hhdGV2ZXIgaXQgaXMpLCBhbmQNCj4g
+IHdlIHNob3VsZG4ndCBuZWVkIHNwZWNpYWwtY2FzZSBjb2RlIGluIHRoZSBwb3J0ZHJ2IGNvZGUu
+DQo+ICANCj4gID4gU2lnbmVkLW9mZi1ieTogUG8gTGl1IDxwby5saXVAbnhwLmNvbT4NCj4gID4g
+LS0tDQo+ICA+ICBkcml2ZXJzL3BjaS9wY2llL3BvcnRkcnZfY29yZS5jIHwgMzEgKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKy0tLQ0KPiAgPiAgMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlv
+bnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ICA+DQo+ICA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bj
+aS9wY2llL3BvcnRkcnZfY29yZS5jDQo+ICA+IGIvZHJpdmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2Nv
+cmUuYyBpbmRleCAzMmQ0ZDBhLi42NDgzM2U1IDEwMDY0NA0KPiAgPiAtLS0gYS9kcml2ZXJzL3Bj
+aS9wY2llL3BvcnRkcnZfY29yZS5jDQo+ICA+ICsrKyBiL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRy
+dl9jb3JlLmMNCj4gID4gQEAgLTE1LDYgKzE1LDcgQEANCj4gID4gICNpbmNsdWRlIDxsaW51eC9z
+bGFiLmg+DQo+ICA+ICAjaW5jbHVkZSA8bGludXgvcGNpZXBvcnRfaWYuaD4NCj4gID4gICNpbmNs
+dWRlIDxsaW51eC9hZXIuaD4NCj4gID4gKyNpbmNsdWRlIDxsaW51eC9vZl9pcnEuaD4NCj4gID4N
+Cj4gID4gICNpbmNsdWRlICIuLi9wY2kuaCINCj4gID4gICNpbmNsdWRlICJwb3J0ZHJ2LmgiDQo+
+ICA+IEBAIC0xOTksNiArMjAwLDI4IEBAIHN0YXRpYyBpbnQgcGNpZV9wb3J0X2VuYWJsZV9tc2l4
+KHN0cnVjdCBwY2lfZGV2DQo+ICA+ICpkZXYsIGludCAqdmVjdG9ycywgaW50IG1hc2spICBzdGF0
+aWMgaW50IGluaXRfc2VydmljZV9pcnFzKHN0cnVjdA0KPiAgPiBwY2lfZGV2ICpkZXYsIGludCAq
+aXJxcywgaW50IG1hc2spICB7DQo+ICA+ICAJaW50IGksIGlycSA9IC0xOw0KPiAgPiArCWludCBy
+ZXQ7DQo+ICA+ICsJc3RydWN0IGRldmljZV9ub2RlICpucCA9IE5VTEw7DQo+ICA+ICsNCj4gID4g
+Kwlmb3IgKGkgPSAwOyBpIDwgUENJRV9QT1JUX0RFVklDRV9NQVhTRVJWSUNFUzsgaSsrKQ0KPiAg
+PiArCQlpcnFzW2ldID0gMDsNCj4gID4gKw0KPiAgPiArCWlmIChkZXYtPmJ1cy0+ZGV2Lm9mX25v
+ZGUpDQo+ICA+ICsJCW5wID0gZGV2LT5idXMtPmRldi5vZl9ub2RlOw0KPiAgPiArDQo+ICA+ICsJ
+LyogSWYgcm9vdCBwb3J0IGRvZXNuJ3Qgc3VwcG9ydCBNU0kvTVNJLVgvSU5UeCBpbiBSQyBtb2Rl
+LA0KPiAgPiArCSAqIHJlcXVlc3QgaXJxIGZvciBhZXINCj4gID4gKwkgKi8NCj4gID4gKwlpZiAo
+SVNfRU5BQkxFRChDT05GSUdfT0ZfSVJRKSAmJiBucCAmJg0KPiAgPiArCQkJKG1hc2sgJiBQQ0lF
+X1BPUlRfU0VSVklDRV9QTUUpKSB7DQo+ICA+ICsJCXJldCA9IG9mX2lycV9nZXRfYnluYW1lKG5w
+LCAiYWVyIik7DQo+ICA+ICsJCWlmIChyZXQgPiAwKSB7DQo+ICA+ICsJCQlpcnFzW1BDSUVfUE9S
+VF9TRVJWSUNFX0FFUl9TSElGVF0gPSByZXQ7DQo+ICA+ICsJCQlpZiAoZGV2LT5pcnEpDQo+ICA+
+ICsJCQkJaXJxID0gZGV2LT5pcnE7DQo+ICA+ICsJCQlnb3RvIG5vX21zaTsNCj4gID4gKwkJfQ0K
+PiAgPiArCX0NCj4gID4NCj4gID4gIAkvKg0KPiAgPiAgCSAqIElmIE1TSSBjYW5ub3QgYmUgdXNl
+ZCBmb3IgUENJZSBQTUUgb3IgaG90cGx1Zywgd2UgaGF2ZSB0byB1c2UNCj4gIEBADQo+ICA+IC0y
+MjQsMTEgKzI0NywxMyBAQCBzdGF0aWMgaW50IGluaXRfc2VydmljZV9pcnFzKHN0cnVjdCBwY2lf
+ZGV2ICpkZXYsDQo+ICBpbnQgKmlycXMsIGludCBtYXNrKQ0KPiAgPiAgCQlpcnEgPSBkZXYtPmly
+cTsNCj4gID4NCj4gID4gICBub19tc2k6DQo+ICA+IC0JZm9yIChpID0gMDsgaSA8IFBDSUVfUE9S
+VF9ERVZJQ0VfTUFYU0VSVklDRVM7IGkrKykNCj4gID4gLQkJaXJxc1tpXSA9IGlycTsNCj4gID4g
+Kwlmb3IgKGkgPSAwOyBpIDwgUENJRV9QT1JUX0RFVklDRV9NQVhTRVJWSUNFUzsgaSsrKSB7DQo+
+ICA+ICsJCWlmICghaXJxc1tpXSkNCj4gID4gKwkJCWlycXNbaV0gPSBpcnE7DQo+ICA+ICsJfQ0K
+PiAgPiAgCWlycXNbUENJRV9QT1JUX1NFUlZJQ0VfVkNfU0hJRlRdID0gLTE7DQo+ICA+DQo+ICA+
+IC0JaWYgKGlycSA8IDApDQo+ICA+ICsJaWYgKGlycSA8IDAgJiYgaXJxc1tQQ0lFX1BPUlRfU0VS
+VklDRV9BRVJfU0hJRlRdIDwgMCkNCj4gID4gIAkJcmV0dXJuIC1FTk9ERVY7DQo+ICA+ICAJcmV0
+dXJuIDA7DQo+ICA+ICB9DQo+ICA+IC0tDQo+ICA+IDIuMS4wLjI3Lmc5NmRiMzI0DQo+ICA+DQo+
+ICA+DQo+ICA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+DQo+ICA+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+ICA+IGxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiAgPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwNCg==
