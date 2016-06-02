@@ -1,69 +1,50 @@
-From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 09/32] bcm2837-rpi-3-b.dts for 32bit arm
-Date: Thu, 02 Jun 2016 11:14:30 +0200
-Message-ID: <1464858870.24775.65.camel@redhat.com>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
-	 <5616246.RRQ2rLjLud@wuerfel> <1464850565.24775.40.camel@redhat.com>
-	 <3336185.FIBLI6ezsy@wuerfel>
+From: Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>
+Subject: Re: [PATCH] [V2] ARM: dts: sun7i: Add dts file for
+ Bananapi M1 Plus board
+Date: Thu, 2 Jun 2016 11:15:55 +0200
+Message-ID: <574FF94B.3020309@web.de>
+References: <20160602023623.5761-1-luoyi.ly@gmail.com>
+ <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA@mail.gmail.com>
+ <20160602081638.GG4908@lukather>
+Reply-To: bernhard.nortmann-S0/GAf8tV78@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3336185.FIBLI6ezsy@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBCGKZOPV4QPRBVXSX65AKGQEVD5XH5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160602081638.GG4908@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-  Hi,
+Am 02.06.2016 um 10:16 schrieb Maxime Ripard:
+> [...]
+> Yes, everything that is shared with the banana-pro (which, judging
+> from Bernhard, is pretty much everything but a GPIO) should be merged
+> in the banapro DT.
+>
+> Maxime
+>
 
-> > Well, it just includes the arm64 version as-is, so we don't have
-> > duplication.  I'm open to suggestions to how handle this better.  
-> > 
-> > Symbolic link?
-> > 
-> > Reference to ../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-> > directly in the Makefile?
-> > 
-> > I've seen arch/arm/boot/dts/Makefile uses globs on *.dts, so I suspect
-> > the later wouldn't be that straight forward.
-> 
-> It's just weird that the arm64 file includes the .dtsi files from arch/arm/
-> and is then again included back from another file there.
-> 
-> I can see two possible ways to handle this better:
-> 
-> - leave the complete set of bcm2837 files in arch/arm and then have one
->   reference from arch/arm64 per .dts that refers to just that file.
+Don't take my word for granted, as I do not own this hardware or know it
+particularly well. There is no doubt that "BPi-M1+" and "Banana Pro" are
+very similar, but if in doubt the information form the wiki should be 
+verified.
 
-So basically do it the other way around.  Would be a bit less messy
-indeed.
+@luoyi:
 
-> - come up with a rule to also build the .dtb files in arch/arm64 when
->   we run 'make dtbs' for arch/arm and leave this file there. The argument
->   that one could use the same dtb with a 32-bit kernel should basically
->   hold true for any arm64 system, it's not specific to rpi-3 really.
+You seem to be using an editor that uses 4 spaces for displaying a <TAB>.
+It looks like that makes you prone to whitespace formatting issues, which
+have shown up in both versions of the .dts you submitted so far.
 
-Yes, in theory.  No, in practice.  As far I know the rpi3 is the only
-64bit soc where a almost identical 32bit version exists, so running
-32bit kernels on a 64bit processor actually happens in practice and I
-expect this to continue.  If you want create sdcard images which run on
-any rpi variant this is pretty much the only reasonable way to do it.
+Please double-check that you're using TABs for indentation and they weren't
+mixed up with SPACEs accidentally. (Most editors will also offer a setting
+that allows you to display "non-printable" chars, where you might be able to
+distinguish whitespace better.)
 
->   We don't normally test 32-bit kernels on 64-bit SoCs because 64-bit
->   kernels are more efficient in a number of ways, and I'm sure there
->   are bugs that prevent some systems from working (aside from how some
->   machines cannot work because they don't have RAM below 4GB), but if
->   this is now something that users are interested in, making it just
->   work seems nicer than having a couple of board specific hacks.
-
-See above, I have my doubts that the user interest in this expands to
-other boards.  So I'd tend to pick the first option.
-
-cheers,
-  Gerd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards, B. Nortmann
