@@ -1,51 +1,31 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom reserved
- memory handling
-Date: Thu, 02 Jun 2016 18:31:23 +0200
-Message-ID: <57505F5B.90101@samsung.com>
-References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
- <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
- <574BEBB8.8040606@samsung.com>
- <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 32/32] mmc: bcm2835: Import bcm2835-mmc and switch to it
+Date: Thu, 2 Jun 2016 18:52:45 +0200
+Message-ID: <e16936ee-3b0d-3798-72e0-8969c2c1a309@i2se.com>
+References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
+ <1464817421-8519-33-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1464817421-8519-33-git-send-email-kraxel@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Lee Jones <lee@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "open list:MULTIMEDIA CARD MMC, SECURE DIGITAL SD AND..." <linux-mmc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2016 05:20 PM, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 05/30/2016 03:28 AM, Krzysztof Kozlowski wrote:
->> On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
->>> Once MFC driver has been converted to generic reserved memory bindings,
->>> there is no need for custom memory reservation code.
->>>
->>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>> ---
->>>  arch/arm/mach-exynos/Makefile      |  2 -
->>>  arch/arm/mach-exynos/exynos.c      | 19 --------
->>>  arch/arm/mach-exynos/mfc.h         | 16 -------
->>>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 --------------------------------------
->>>  4 files changed, 130 deletions(-)
->>>  delete mode 100644 arch/arm/mach-exynos/mfc.h
->>>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
->>
->> Thanks, applied.
->>
-> 
-> This patch can't be applied before patches 2/5 and 3/5, or the custom
-> memory regions reservation will break with the current s5p-mfc driver.
+Hi Gerd,
 
-Yes, I know. As I understood from talk with Marek, the driver is broken
-now so continuous work was not chosen. If it is not correct and full
-bisectability is required, then entire patchset requires special
-handling - I need a stable tag from media tree. Without this everything
-will be broken anyway.
+Am 01.06.2016 um 23:43 schrieb Gerd Hoffmann:
+> From: Eric Anholt <eric@anholt.net>
+>
+> With this we can get wifi (brcmfmac) to probe.  Without it we're stuck
+> with timeouts from sdio.c when it tries to set the bus width to 4.
 
-Best regards,
-Krzysztof
+adding a new MMC driver to fix a wifi issue is really weird.
+
+Beside that there are already two MMC drivers (sdhci-bcm2835.c and
+sdhci-iproc.c) in the Kernel which are compatible to BCM2835. Why should
+we add two new ones?
+
+Stefan
