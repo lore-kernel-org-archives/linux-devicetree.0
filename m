@@ -1,41 +1,149 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
-Date: Thu, 2 Jun 2016 17:58:15 -0500
-Message-ID: <20160602225815.GA5508@rob-hp-laptop>
-References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
+Subject: Re: [PATCH v3 2/2] [media] atmel-isc: DT binding for Image Sensor
+ Controller driver
+Date: Thu, 2 Jun 2016 18:16:09 -0500
+Message-ID: <20160602231609.GA24529@rob-hp-laptop>
+References: <1464677903-28412-1-git-send-email-songjun.wu@atmel.com>
+ <1464677903-28412-3-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464626798-1334-1-git-send-email-navam@xilinx.com>
+In-Reply-To: <1464677903-28412-3-git-send-email-songjun.wu@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, balbi@ti.com, gregkh@linuxfoundation.org, hyun.kwon@xilinx.com, navam@xilinx.com, radhey.shyam.pandey@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Songjun Wu <songjun.wu@atmel.com>
+Cc: g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 30, 2016 at 10:16:38PM +0530, Nava kishore Manne wrote:
-> This patch updates the driver to support 64-bit DMA addressing.
+On Tue, May 31, 2016 at 02:58:23PM +0800, Songjun Wu wrote:
+> DT binding documentation for ISC driver.
 > 
-> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+> Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
 > ---
-> Changes for v4:
-> 		-Used boolen property insted of addrwith property in the DT
-> 		 as suggested by Arnd Bergmann.
-> 		-Adopt the DT relevant changes into the driver.
 > 
-> Changes for v3:
->                 -Added new compatable string for 5.00 IP version as suggested by
->                  Arnd Bergmann.
->                 -Used write_fn() insted of lo_hi_writeq() as suggested by
->                  Arnd Bergmann.
+> Changes in v3:
+> - Remove the 'atmel,sensor-preferred'.
+> - Modify the isc clock node according to the Rob's remarks.
 > 
-> Changes for v2:
->                 -Added dma-ranges property in device tree as suggested by Arnd Bergmann.
->                 -Modified the driver code based on the xlnx,addrwidth.
+> Changes in v2:
+> - Remove the unit address of the endpoint.
+> - Add the unit address to the clock node.
+> - Avoid using underscores in node names.
+> - Drop the "0x" in the unit address of the i2c node.
+> - Modify the description of 'atmel,sensor-preferred'.
+> - Add the description for the ISC internal clock.
 > 
->  .../devicetree/bindings/usb/udc-xilinx.txt         |  5 ++-
+>  .../devicetree/bindings/media/atmel-isc.txt        | 88 ++++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> new file mode 100644
+> index 0000000..2ae1d60
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> @@ -0,0 +1,88 @@
+> +Atmel Image Sensor Controller (ISC)
+> +----------------------------------------------
+> +
+> +Required properties for ISC:
+> +- compatible
+> +	Must be "atmel,sama5d2-isc"
+> +- reg
+> +	Physical base address and length of the registers set for the device;
+> +- interrupts
+> +	Should contain IRQ line for the ISI;
+> +- clocks
+> +	List of clock specifiers, corresponding to entries in
+> +	the clock-names property;
+> +	Please refer to clock-bindings.txt.
+> +- clock-names
+> +	Required elements: "hclock", "ispck".
+> +- pinctrl-names, pinctrl-0
+> +	Please refer to pinctrl-bindings.txt.
+> +- isc-ispck
+> +	The clock for the ISC digital pipeline.
+> +	- compatible
+> +		Must be "atmel,sama5d2-isc-ispck".
+> +	- clock-cells
+> +		From common clock binding; should be set to 0.
+> +	- clocks
+> +		The clock source phandles.
+> +- isc-mck
+> +	The clock for the image sensor.
+> +	- compatible
+> +		Must be "atmel,sama5d2-isc-mck".
+> +	- clock-cells
+> +		From common clock binding; should be set to 0.
+> +	- clocks
+> +		The clock source phandles.
+> +
+> +ISC supports a single port node with parallel bus. It should contain one
+> +'port' child node with child 'endpoint' node. Please refer to the bindings
+> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +isc: isc@f0008000 {
+> +	compatible = "atmel,sama5d2-isc";
+> +	reg = <0xf0008000 0x4000>;
+> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
+> +	clocks = <&isc_clk>, <&isc_ispck>;
+> +	clock-names = "hclock", "ispck";
+> +
+> +	port {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		isc_0: endpoint {
+> +			remote-endpoint = <&ov7740_0>;
+> +			hsync-active = <1>;
+> +			vsync-active = <0>;
+> +			pclk-sample = <1>;
+> +		};
+> +	};
+> +
+> +	isc_ispck: isc-ispck@0 {
 
-Acked-by: Rob Herring <robh@kernel.org>
+Drop the unit-address. You should only have one if you have a reg 
+property.
 
->  drivers/usb/gadget/udc/udc-xilinx.c                | 52 +++++++++++++++++++++-
->  2 files changed, 54 insertions(+), 3 deletions(-)
+> +		compatible = "atmel,sama5d2-isc-ispck";
+> +		#clock-cells = <0>;
+> +		clocks = <&isc_clk>, <&iscck>;
+> +	};
+> +
+> +	isc_mck: isc-mck@1 {
+
+ditto.
+
+I still think these should be implied by atmel,sama5d2-isc and not in 
+DT. The fact that you don't have any registers for them pretty much 
+indicates that. It is also strange that isc-ispck is used by isc. If 
+that is the only user, there is certainly no need to put it in DT.
+
+
+> +		compatible = "atmel,sama5d2-isc-mck";
+> +		#clock-cells = <0>;
+> +		clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
+> +	};
+> +};
+> +
+> +i2c1: i2c@fc028000 {
+> +	ov7740: camera@21 {
+> +	compatible = "ovti,ov7740";
+> +	reg = <0x21>;
+> +
+> +	clocks = <&isc_mck>;
+> +	clock-names = "xvclk";
+> +	assigned-clocks = <&isc_mck>;
+> +	assigned-clock-rates = <24000000>;
+> +
+> +	port {
+> +		ov7740_0: endpoint {
+> +			remote-endpoint = <&isc_0>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
