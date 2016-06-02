@@ -1,53 +1,52 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH v1 2/2] ARM: dts: keystone: add interrupt property to PCI controller bindings
-Date: Thu, 2 Jun 2016 11:17:52 -0400
-Message-ID: <1464880672-15203-2-git-send-email-m-karicheri2@ti.com>
-References: <1464880672-15203-1-git-send-email-m-karicheri2@ti.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom reserved
+ memory handling
+Date: Thu, 2 Jun 2016 11:20:40 -0400
+Message-ID: <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
+ <574BEBB8.8040606@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464880672-15203-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ssantosh@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <574BEBB8.8040606@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that Keystone PCIe controller supports error interrupt handling
-add interrupt property to PCI controller DT bindings to enable
-error interrupt handling.
+Hello Krzysztof,
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- - v1 - no change from initial version
- - applies to master v4.7-rcx at kernel.org git repo
- arch/arm/boot/dts/keystone-k2e.dtsi | 2 ++
- arch/arm/boot/dts/keystone.dtsi     | 2 ++
- 2 files changed, 4 insertions(+)
+On 05/30/2016 03:28 AM, Krzysztof Kozlowski wrote:
+> On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
+>> Once MFC driver has been converted to generic reserved memory bindings,
+>> there is no need for custom memory reservation code.
+>>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+>>  arch/arm/mach-exynos/Makefile      |  2 -
+>>  arch/arm/mach-exynos/exynos.c      | 19 --------
+>>  arch/arm/mach-exynos/mfc.h         | 16 -------
+>>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 --------------------------------------
+>>  4 files changed, 130 deletions(-)
+>>  delete mode 100644 arch/arm/mach-exynos/mfc.h
+>>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
+> 
+> Thanks, applied.
+>
 
-diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
-index 5374c9a..9a51b8c 100644
---- a/arch/arm/boot/dts/keystone-k2e.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e.dtsi
-@@ -104,6 +104,8 @@
- 			num-lanes = <2>;
- 			bus-range = <0x00 0xff>;
+This patch can't be applied before patches 2/5 and 3/5, or the custom
+memory regions reservation will break with the current s5p-mfc driver.
  
-+			/* error interrupt */
-+			interrupts = <GIC_SPI 385 IRQ_TYPE_EDGE_RISING>;
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 7>;
- 			interrupt-map = <0 0 0 1 &pcie_intc1 0>, /* INT A */
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index f627a1c..e23f46d 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -302,6 +302,8 @@
- 			num-lanes = <2>;
- 			bus-range = <0x00 0xff>;
+> What is your final decision for DTS patches? Which approach for MFC
+> reserved memory node?
+> 
+> Krzysztof
+> 
  
-+			/* error interrupt */
-+			interrupts = <GIC_SPI 38 IRQ_TYPE_EDGE_RISING>;
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 7>;
- 			interrupt-map = <0 0 0 1 &pcie_intc0 0>, /* INT A */
+Best regards,
 -- 
-1.9.1
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
