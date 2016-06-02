@@ -1,60 +1,52 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos: Add watchdog amd Security SubSystem
- to Exynos5410
-Date: Thu, 2 Jun 2016 09:27:28 -0400
-Message-ID: <057fb9e8-002a-0aac-a36d-ef074ab2111e@osg.samsung.com>
-References: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
- <1464774351-23604-3-git-send-email-k.kozlowski@samsung.com>
- <f7e99aad-f773-27c6-d554-ba30bc54b5f7@osg.samsung.com>
- <574FCFB2.1080607@samsung.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH 2/2] ARM: dts: keystone: add interrupt property to PCI controller bindings
+Date: Thu, 2 Jun 2016 09:54:41 -0400
+Message-ID: <1464875681-14543-2-git-send-email-m-karicheri2@ti.com>
+References: <1464875681-14543-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <574FCFB2.1080607@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464875681-14543-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ssantosh@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Now that Keystone PCIe controller supports error interrupt handling
+add interrupt property to PCI controller DT bindings to enable
+error interrupt handling.
 
-On 06/02/2016 02:18 AM, Krzysztof Kozlowski wrote:
-> On 06/01/2016 05:16 PM, Javier Martinez Canillas wrote:
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ - applies to master v4.7-rcx at kernel.org git repo
+ arch/arm/boot/dts/keystone-k2e.dtsi | 2 ++
+ arch/arm/boot/dts/keystone.dtsi     | 2 ++
+ 2 files changed, 4 insertions(+)
 
-[snip]
-
->>>  
->>> +&watchdog {
->>> +	clocks = <&clock CLK_WDT>;
->>> +	clock-names = "watchdog";
->>> +	samsung,syscon-phandle = <&pmu_system_controller>;
->>> +};
->>> +
->>
->> Since you used the same ID than Exynos5420 for the SSS and WDT clocks,
->> I wonder if the clock and clock-names shouldn't be just defined in the
->> shared exynos54xx.dtsi as is the case for the interrupts that are also
->> the same?
->>
->> The patch looks good to me though, so whatever you decide:
->>
->> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> 
-> Thanks for review and comments.
-> 
-> The 'clock' property cannot be moved - there is no clock phandle and the
-> clock IDs are not included in 54xx.
->
-
-You are right, I missed that. Thanks a lot for the clarification.
-
-> Best regards,
-> Krzysztof
-> 
-
-Best regards,
+diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
+index 5374c9a..9a51b8c 100644
+--- a/arch/arm/boot/dts/keystone-k2e.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e.dtsi
+@@ -104,6 +104,8 @@
+ 			num-lanes = <2>;
+ 			bus-range = <0x00 0xff>;
+ 
++			/* error interrupt */
++			interrupts = <GIC_SPI 385 IRQ_TYPE_EDGE_RISING>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0 0 0 1 &pcie_intc1 0>, /* INT A */
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index f627a1c..e23f46d 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -302,6 +302,8 @@
+ 			num-lanes = <2>;
+ 			bus-range = <0x00 0xff>;
+ 
++			/* error interrupt */
++			interrupts = <GIC_SPI 38 IRQ_TYPE_EDGE_RISING>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0 0 0 1 &pcie_intc0 0>, /* INT A */
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+1.9.1
