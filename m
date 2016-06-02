@@ -1,63 +1,47 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 8/8] ARM: socfpga: dts: Add LED framework to A10-SR GPIO
-Date: Thu, 2 Jun 2016 12:52:28 -0500
-Message-ID: <1464889948-28793-9-git-send-email-tthayer@opensource.altera.com>
+From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCHv2 7/8] ARM: socfpga: dts: Enable GPIO parent for Arria10 SR chip
+Date: Thu, 2 Jun 2016 12:52:27 -0500
+Message-ID: <1464889948-28793-8-git-send-email-tthayer@opensource.altera.com>
 References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Thor Thayer <tthayer@opensource.altera.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464889948-28793-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Add the LED framework to the Arria10 System Resource chip GPIO hooks.
+Enable the Altera Arria10 GPIO parent for MFD operation.
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
-v2  No change
+v2:  Added this change.
 ---
- arch/arm/boot/dts/socfpga_arria10_socdk.dtsi |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-index 2655fae..3ff6321 100644
+index 4638870..2655fae 100644
 --- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
 +++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-@@ -31,6 +31,30 @@
- 		reg = <0x0 0x40000000>; /* 1GB */
- 	};
+@@ -70,6 +70,10 @@
+ 	status = "okay";
+ };
  
-+	a10leds {
-+		compatible = "gpio-leds";
++&gpio1 {
++	status = "okay";
++};
 +
-+		a10sr_led0 {
-+			label = "a10sr-led0";
-+			gpios = <&a10sr_gpio 0 1>;
-+		};
-+
-+		a10sr_led1 {
-+			label = "a10sr-led1";
-+			gpios = <&a10sr_gpio 1 1>;
-+		};
-+
-+		a10sr_led2 {
-+			label = "a10sr-led2";
-+			gpios = <&a10sr_gpio 2 1>;
-+		};
-+
-+		a10sr_led3 {
-+			label = "a10sr-led3";
-+			gpios = <&a10sr_gpio 3 1>;
-+		};
-+	};
-+
- 	soc {
- 		clkmgr@ffd04000 {
- 			clocks {
+ &spi1 {
+ 	status = "okay";
+ 
 -- 
 1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
