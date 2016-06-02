@@ -1,241 +1,211 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH/RFC 1/1] soc: renesas: Add DT fixup code for missing r8a7791 RST
-Date: Thu, 2 Jun 2016 21:01:50 +0300
-Message-ID: <A591F05A-3288-410D-8D56-9AEAD3B21ED3@konsulko.com>
-References: <1464810650-23002-1-git-send-email-geert+renesas@glider.be> <1464810650-23002-2-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1464810650-23002-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Dirk Behme <dirk.behme@de.bosch.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: <tthayer@opensource.altera.com>
+Subject: [PATCHv2 4/8] gpio: altera-a10sr: Add A10 System Resource Chip GPIO support.
+Date: Thu, 2 Jun 2016 12:52:24 -0500
+Message-ID: <1464889948-28793-5-git-send-email-tthayer@opensource.altera.com>
+References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Thor Thayer <tthayer@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+From: Thor Thayer <tthayer@opensource.altera.com>
 
-A few notes.
+Add the GPIO functionality for the Altera Arria10 MAX5 System Resource
+Chip. The A10 MAX5 has 12 bits of GPIO assigned to switches, buttons,
+and LEDs as a GPIO extender on the SPI bus.
 
-> On Jun 1, 2016, at 22:50 , Geert Uytterhoeven <geert+renesas@glider.b=
-e> wrote:
->=20
-> Add DT fixup code to add a reset-controller node for the r8a7791 RST
-> module if it's not yet present.
->=20
-> This allows the R-Car Gen2 clock driver to use the RST driver to obta=
-in
-> the value of the mode pins, instead of reading from a hardcoded addre=
-ss
-> in rcar_gen2_read_mode_pins(), while providing backward compatibility
-> with old DTBs.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> ---
-> drivers/soc/renesas/Makefile           |   4 +
-> drivers/soc/renesas/renesas-dt-fixup.c | 159 ++++++++++++++++++++++++=
-+++++++++
-> 2 files changed, 163 insertions(+)
-> create mode 100644 drivers/soc/renesas/renesas-dt-fixup.c
->=20
-> diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makef=
-ile
-> index 0d732ff893dd8fba..e5f4454821ca6f63 100644
-> --- a/drivers/soc/renesas/Makefile
-> +++ b/drivers/soc/renesas/Makefile
-> @@ -1,3 +1,7 @@
-> +# FIXME Depend on new Kconfig symbol CONFIG_ARCH_RENESAS_LEGACY
-> +# FIXME Needs OF_DYNAMIC
-> +obj-$(CONFIG_ARCH_RENESAS)	+=3D renesas-dt-fixup.o
-> +
-> obj-$(CONFIG_ARCH_RCAR_GEN1)	+=3D rcar-rst.o
-> obj-$(CONFIG_ARCH_RCAR_GEN2)	+=3D rcar-rst.o
-> obj-$(CONFIG_ARCH_R8A7795)	+=3D rcar-rst.o
-> diff --git a/drivers/soc/renesas/renesas-dt-fixup.c b/drivers/soc/ren=
-esas/renesas-dt-fixup.c
-> new file mode 100644
-> index 0000000000000000..83c9ca6b44f8136c
-> --- /dev/null
-> +++ b/drivers/soc/renesas/renesas-dt-fixup.c
-> @@ -0,0 +1,159 @@
-> +/*
-> + * Renesas DT Fixup Code
-> + *
-> + * Provide backwards compatibility with old DTBs by updating the DT
-> + *
-> + * Copyright (C) 2016 Glider bvba
-> + *
-> + * This file is subject to the terms and conditions of the GNU Gener=
-al Public
-> + * License.  See the file "COPYING" in the main directory of this ar=
-chive
-> + * for more details.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/slab.h>
-> +
-> +#define RST_BASE	0xe6160000
-> +#define RST_SIZE	0x0100		/* R-Car Gen2 */
-> +
-> +static struct property rst_compatible =3D {
-> +	.name =3D "compatible",
-> +};
-> +
-> +static __be32 rst_reg_values[4] =3D {
-> +	cpu_to_be32(0),
-> +	cpu_to_be32(RST_BASE),
-> +	cpu_to_be32(0),
-> +	cpu_to_be32(RST_SIZE),
-> +};
-> +
-> +static struct property rst_name =3D {
-> +	.name =3D "name",
-> +	.length =3D sizeof("reset-controller"),
-> +	.value =3D "reset-controller",
-> +};
-> +
-> +static struct property rst_reg =3D {
-> +	.name =3D "reg",
-> +	.length =3D sizeof(rst_reg_values),
-> +	.value =3D rst_reg_values,
-> +};
-> +
-> +static int __init add_rst(struct device_node *parent, const char *pa=
-th,
-> +			  char *compatible)
-> +{
-> +	struct property *prop[] =3D { &rst_compatible, &rst_name, &rst_reg =
-};
-> +	struct device_node *np;
-> +	char *full_name;
-> +	unsigned int i;
-> +	int error;
-> +
-> +	pr_debug("Adding RST node %s\n", compatible);
-> +	np =3D kzalloc(sizeof(*np), GFP_KERNEL);
-> +	if (!np)
-> +		return -ENOMEM;
-> +
-> +	np->name =3D kasprintf(GFP_KERNEL, "%s@%x", (char *)rst_name.value,
-> +			     RST_BASE);
-> +	full_name =3D kasprintf(GFP_KERNEL, "%s/%s", path, np->name);
-> +	np->full_name =3D full_name;
-> +	np->parent =3D parent;
-> +
-> +	of_node_set_flag(np, OF_DYNAMIC);
-> +	of_node_init(np);
-> +
-> +	error =3D of_attach_node(np);
-> +	if (error) {
-> +		pr_err("%s: of_attach_node() %s failed %d\n", __func__,
-> +		       np->name, error);
-> +		kfree(np);
-> +		return error;
-> +	}
-> +
-> +	rst_compatible.value =3D compatible;
-> +	rst_compatible.length =3D strlen(rst_compatible.value) + 1;
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(prop); i++) {
-> +		error =3D of_add_property(np, prop[i]);
-> +		if (error)
-> +			pr_err("%s: of_add_property() %s/%s failed %d\n",
-> +			       __func__, np->name, prop[i]->name, error);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>i
+---
+v2	Change Altera to Intel in copyright header
+---
+ drivers/gpio/Kconfig             |    8 +++
+ drivers/gpio/Makefile            |    1 +
+ drivers/gpio/gpio-altera-a10sr.c |  140 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 149 insertions(+)
+ create mode 100644 drivers/gpio/gpio-altera-a10sr.c
 
-Using changesets (especially with the new changeset helpers would make =
-this
-so much simpler. Or you could compile in a DTBO that performs the chang=
-es
-although you will have to tweak it since it appears you=E2=80=99re not =
-using fixed
-names and properties all the way.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 9244381..c41c74a 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -786,6 +786,14 @@ config GPIO_ADP5520
+ 	  This option enables support for on-chip GPIO found
+ 	  on Analog Devices ADP5520 PMICs.
+ 
++config GPIO_ALTERA_A10SR
++	tristate "Altera Arria10 System Resource GPIO"
++	depends on MFD_ALTERA_A10SR
++	help
++	  Driver for Arria10 Development Kit GPIO expansion which
++	  includes reads of pushbuttons and DIP switches as well
++	  as writes to LEDs.
++
+ config GPIO_ARIZONA
+ 	tristate "Wolfson Microelectronics Arizona class devices"
+ 	depends on MFD_ARIZONA
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 6e111fc..ac4b09b 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -24,6 +24,7 @@ obj-$(CONFIG_GPIO_ADNP)		+= gpio-adnp.o
+ obj-$(CONFIG_GPIO_ADP5520)	+= gpio-adp5520.o
+ obj-$(CONFIG_GPIO_ADP5588)	+= gpio-adp5588.o
+ obj-$(CONFIG_GPIO_ALTERA)  	+= gpio-altera.o
++obj-$(CONFIG_GPIO_ALTERA_A10SR)	+= gpio-altera-a10sr.o
+ obj-$(CONFIG_GPIO_AMD8111)	+= gpio-amd8111.o
+ obj-$(CONFIG_GPIO_AMDPT)	+= gpio-amdpt.o
+ obj-$(CONFIG_GPIO_ARIZONA)	+= gpio-arizona.o
+diff --git a/drivers/gpio/gpio-altera-a10sr.c b/drivers/gpio/gpio-altera-a10sr.c
+new file mode 100644
+index 0000000..8274f98
+--- /dev/null
++++ b/drivers/gpio/gpio-altera-a10sr.c
+@@ -0,0 +1,140 @@
++/*
++ *  Copyright Intel Corporation (C) 2014-2016. All Rights Reserved
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * GPIO driver for  Altera Arria10 MAX5 System Resource Chip
++ *
++ * Adapted from gpio-tps65910.c
++ */
++
++#include <linux/gpio/driver.h>
++#include <linux/mfd/altera-a10sr.h>
++#include <linux/module.h>
++
++/**
++ * struct altr_a10sr_gpio - Altera Max5 GPIO device private data structure
++ * @gp:   : instance of the gpio_chip
++ * @regmap: the regmap from the parent device.
++ */
++struct altr_a10sr_gpio {
++	struct gpio_chip gp;
++	struct regmap *regmap;
++};
++
++static int altr_a10sr_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct altr_a10sr_gpio *gpio = gpiochip_get_data(chip);
++	int ret, val;
++
++	ret = regmap_read(gpio->regmap, ALTR_A10SR_PBDSW_REG, &val);
++	if (ret < 0)
++		return ret;
++
++	return !!(val & BIT(offset - ALTR_A10SR_LED_VALID_SHIFT));
++}
++
++static void altr_a10sr_gpio_set(struct gpio_chip *chip, unsigned int offset,
++				int value)
++{
++	struct altr_a10sr_gpio *gpio = gpiochip_get_data(chip);
++
++	regmap_update_bits(gpio->regmap, ALTR_A10SR_LED_REG,
++			   BIT(ALTR_A10SR_LED_VALID_SHIFT + offset),
++			   value ? BIT(ALTR_A10SR_LED_VALID_SHIFT + offset)
++			   : 0);
++}
++
++static int altr_a10sr_gpio_direction_input(struct gpio_chip *gc,
++					   unsigned int nr)
++{
++	if (nr >= (ALTR_A10SR_IN_VALID_RANGE_LO - ALTR_A10SR_LED_VALID_SHIFT))
++		return 0;
++	return -EINVAL;
++}
++
++static int altr_a10sr_gpio_direction_output(struct gpio_chip *gc,
++					    unsigned int nr, int value)
++{
++	if (nr <= (ALTR_A10SR_OUT_VALID_RANGE_HI - ALTR_A10SR_LED_VALID_SHIFT))
++		return 0;
++	return -EINVAL;
++}
++
++static struct gpio_chip altr_a10sr_gc = {
++	.label = "altr_a10sr_gpio",
++	.owner = THIS_MODULE,
++	.get = altr_a10sr_gpio_get,
++	.set = altr_a10sr_gpio_set,
++	.direction_input = altr_a10sr_gpio_direction_input,
++	.direction_output = altr_a10sr_gpio_direction_output,
++	.can_sleep = true,
++	.ngpio = 12,
++	.base = -1,
++};
++
++static int altr_a10sr_gpio_probe(struct platform_device *pdev)
++{
++	struct altr_a10sr_gpio *gpio;
++	int ret;
++	struct altr_a10sr *a10sr = dev_get_drvdata(pdev->dev.parent);
++
++	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
++
++	gpio->regmap = a10sr->regmap;
++
++	gpio->gp = altr_a10sr_gc;
++
++	gpio->gp.of_node = pdev->dev.of_node;
++
++	ret = devm_gpiochip_add_data(&pdev->dev, &gpio->gp, gpio);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, gpio);
++
++	return 0;
++}
++
++static int altr_a10sr_gpio_remove(struct platform_device *pdev)
++{
++	struct altr_a10sr_gpio *gpio = platform_get_drvdata(pdev);
++
++	gpiochip_remove(&gpio->gp);
++
++	return 0;
++}
++
++static const struct of_device_id altr_a10sr_gpio_of_match[] = {
++	{ .compatible = "altr,a10sr-gpio" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, altr_a10sr_gpio_of_match);
++
++static struct platform_driver altr_a10sr_gpio_driver = {
++	.probe = altr_a10sr_gpio_probe,
++	.remove = altr_a10sr_gpio_remove,
++	.driver = {
++		.name	= "altr_a10sr_gpio",
++		.of_match_table = of_match_ptr(altr_a10sr_gpio_of_match),
++	},
++};
++module_platform_driver(altr_a10sr_gpio_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Thor Thayer <tthayer@opensource.altera.com>");
++MODULE_DESCRIPTION("Altera Arria10 System Resource Chip GPIO");
+-- 
+1.7.9.5
 
-> +static int __init add_sysc(struct device_node *parent, const char *p=
-ath,
-> +			   char *compatible)
-> +{
-> +	pr_debug("NOT YET adding SYSC node %s\n", compatible);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id renesas_matches[] __initconst =3D {
-> +	{ .compatible =3D "renesas,r8a7791", },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static int __init renesas_dt_fixup(void)
-> +{
-> +	const struct of_device_id *match;
-> +	struct device_node *np, *parent;
-> +	const char *parent_path;
-> +	char *compatible;
-> +
-> +	np =3D of_find_node_by_path("/");
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	for (match =3D renesas_matches; match->compatible[0]; match++)
-> +		if (of_device_is_compatible(np, match->compatible))
-> +			break;
-> +	of_node_put(np);
-> +
-> +	if (!match->compatible[0])
-> +		return -ENODEV;
-> +
-> +	/* Find the main SoC bus node */
-> +	np =3D of_find_compatible_node(NULL, NULL, "arm,gic-400");
-> +	if (!np) {
-> +		pr_warn("%s: Cannot find %s\n", __func__, "arm,gic-400");
-> +		return -ENODEV;
-> +	}
-> +
-> +	parent =3D of_get_parent(np);
-> +	of_node_put(np);
-> +	if (!parent) {
-> +		pr_warn("%s: Cannot find GIC parent\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +
-> +	parent_path =3D parent->full_name;
-> +	/* Prevent double leading slash */
-> +	if (!parent_path[1])
-> +		parent_path++;
-> +
-> +	compatible =3D kasprintf(GFP_KERNEL, "%s-rst", match->compatible);
-> +	if (of_find_compatible_node(NULL, NULL, compatible)) {
-> +		pr_debug("%s: RST node %s present\n", __func__, compatible);
-> +		kfree(compatible);
-> +	} else {
-> +		add_rst(parent, parent_path, compatible);
-> +	}
-> +
-> +	compatible =3D kasprintf(GFP_KERNEL, "%s-sysc", match->compatible);
-> +	if (of_find_compatible_node(NULL, NULL, compatible)) {
-> +		pr_debug("%s: SYSC node %s present\n", __func__, compatible);
-> +		kfree(compatible);
-> +	} else {
-> +		add_sysc(parent, parent_path, compatible);
-> +	}
-> +
-> +	of_node_put(parent);
-> +	return 0;
-> +}
-> +early_initcall(renesas_dt_fixup);
-> --=20
-> 1.9.1
->=20
-
-Regards
-
-=E2=80=94 Pantelis
