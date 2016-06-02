@@ -1,110 +1,106 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v3 04/12] of: add J-Core timer bindings
-Date: Wed, 1 Jun 2016 21:34:07 -0400
-Message-ID: <20160602013407.GA12184@brightrain.aerifal.cx>
-References: <cover.1464148904.git.dalias@libc.org>
- <5341dfbb085d5647ebb6fe4390ca329b63e0e03d.1464148904.git.dalias@libc.org>
- <20160601135852.GA17217@rob-hp-laptop>
- <20160601175307.GC10893@brightrain.aerifal.cx>
- <CAL_JsqJYyvdc06v2+R=Wnmkk-cO7ZFq=7uGOhPxXdL0UfEu-iA@mail.gmail.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Subject: Re: [PATCH v2 2/5] of/numa: fix a memory@ node can only contains one
+ memory block
+Date: Thu, 2 Jun 2016 09:36:40 +0800
+Message-ID: <574F8DA8.4040503@huawei.com>
+References: <1464427377-12712-1-git-send-email-thunder.leizhen@huawei.com>
+ <1464427377-12712-3-git-send-email-thunder.leizhen@huawei.com>
+ <CAL_JsqJO1jXpmAJWUhCW+OK2mpTvtwzCuy_--3sQNUQhTvyFdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJYyvdc06v2+R=Wnmkk-cO7ZFq=7uGOhPxXdL0UfEu-iA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJO1jXpmAJWUhCW+OK2mpTvtwzCuy_--3sQNUQhTvyFdA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, David Daney <david.daney@cavium.com>, Catalin Marinas <catalin.marinas@arm.com>, Xinwei Hu <huxinwei@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Zefan Li <lizefan@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 05:36:19PM -0500, Rob Herring wrote:
-> On Wed, Jun 1, 2016 at 12:53 PM, Rich Felker <dalias@libc.org> wrote:
-> > On Wed, Jun 01, 2016 at 08:58:52AM -0500, Rob Herring wrote:
-> >> On Wed, May 25, 2016 at 05:43:03AM +0000, Rich Felker wrote:
-> >> > Signed-off-by: Rich Felker <dalias@libc.org>
-> >> > ---
-> >> >  .../devicetree/bindings/timer/jcore,pit.txt        | 28 ++++++++++++++++++++++
-> >> >  1 file changed, 28 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-> >> > new file mode 100644
-> >> > index 0000000..96c6815
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-> >> > @@ -0,0 +1,28 @@
-> >> > +J-Core Programmable Interval Timer and Clocksource
-> >> > +
-> >> > +Required properties:
-> >> > +
-> >> > +- compatible: Must be "jcore,pit".
-> >> > +
-> >> > +- reg: Memory region for timer/clocksource registers.
-> >> > +
-> >> > +- interrupts: An interrupt to assign for the timer. The actual pit
-> >> > +  core is integrated with the aic and allows the timer interrupt
-> >> > +  assignment to be programmed by software, but this property is
-> >> > +  required in order to reserve an interrupt number that doesn't
-> >> > +  conflict with other devices.
-> >> > +
-> >> > +Optional properties:
-> >> > +
-> >> > +- cpu-offset: For SMP, the per-cpu offset to the local timer
-> >> > +  programming memory range.
-> >> > +
-> >> > +
-> >> > +Example:
-> >> > +
-> >> > +timer@200 {
-> >> > +   compatible = "jcore,pit";
-> >> > +   reg = < 0x200 0x30 >;
-> >> > +   cpu-offset = < 0x300 >;
-> >>
-> >> This is outside the reg range. Perhaps reg should include each range of
-> >> per cpu registers.
-> >
-> > In the hardware, each timer instance is mapped independently so
-> > there's no fundamental reason they need to be mapped sufficiently
-> > close that it would make sense for a single virtual mapping to cover
-> > them all. This doesn't matter for nommu but it would with mmu in the
-> > future. In the driver I've updated it to ioremap each percpu instance
-> > separately (as its own memory range) using the cpu-offset applied to
-> > the range obtained from "reg". Is this acceptable (in which case I
-> > suppose the binding needs to be documented that "reg" just covers the
-> > cpu0 instance's range)? Do you think it would be preferable to have
-> > multiple "reg" ranges indexed by cpu instead of cpu-offset?
+
+
+On 2016/6/2 4:13, Rob Herring wrote:
+> On Sat, May 28, 2016 at 4:22 AM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
+>> For a normal memory@ devicetree node, its reg property can contains more
+>> memory blocks.
+>>
+>> Because we don't known how many memory blocks maybe contained, so we try
+>> from index=0, increase 1 until error returned(the end).
+>>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> ---
+>>  drivers/of/of_numa.c | 26 +++++++++-----------------
+>>  1 file changed, 9 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+>> index fb71b4e..fa85a51 100644
+>> --- a/drivers/of/of_numa.c
+>> +++ b/drivers/of/of_numa.c
+>> @@ -63,13 +63,9 @@ static int __init of_numa_parse_memory_nodes(void)
+>>         struct device_node *np = NULL;
+>>         struct resource rsrc;
+>>         u32 nid;
+>> -       int r = 0;
+>> -
+>> -       for (;;) {
+>> -               np = of_find_node_by_type(np, "memory");
+>> -               if (!np)
+>> -                       break;
+>> +       int i, r = 0;
+>>
+>> +       for_each_node_by_type(np, "memory") {
+>>                 r = of_property_read_u32(np, "numa-node-id", &nid);
+>>                 if (r == -EINVAL)
+>>                         /*
+>> @@ -78,21 +74,17 @@ static int __init of_numa_parse_memory_nodes(void)
+>>                          * "numa-node-id" property
+>>                          */
+>>                         continue;
+>> -               else if (r)
+>> -                       /* some other error */
+>> -                       break;
+>>
+>> -               r = of_address_to_resource(np, 0, &rsrc);
+>> -               if (r) {
+>> -                       pr_err("NUMA: bad reg property in memory node\n");
+>> -                       break;
+>> -               }
+>> +               for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
+>> +                       r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
+>>
+>> -               r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
+>> -               if (r)
+>> +               if (!i || r) {
+>> +                       of_node_put(np);
+>> +                       pr_err("NUMA: bad property in memory node\n");
+>> +                       r = r ? : -EINVAL;
+>>                         break;
+>> +               }
+>>         }
+>> -       of_node_put(np);
 > 
-> Yes. Either reg should cover the full range of addresses or you should
-> have multiple reg values with one for each cpu. I prefer the latter as
-> it doesn't create a custom property for expressing register addresses.
+> I believe you still need this and not the one above. You only need it
+> within the loop if you return. Otherwise, the last node always need to
+> be put.
 
-OK, let's lean towards going with the latter then. It's more flexible
-and allows any placement of the maps; the offset per cpu does not have
-to be constant. It also makes the driver code simpler since of_iomap
-can be used directly rather than requiring of_address_to_resource,
-physical address arithmetic arithmetic, and ioremap on the results. Is
-there any precedent for using multiple reg ranges for percpu register
-instances like this? Anything else they've been used for?
+OK. Thanks.
 
-> > In theory it would even be possible to just require a DT node per
-> > cpulocal timer, but I didn't see a good way to make the bindings
-> > represent the relationship to cpus or to make the driver handle irqs
-> > correctly for such a setup, so I'd need a viable proposal for how that
-> > could be done to even consider such an approach.
+Addition with Matthias's suggestion, I will move "return" into this patch, so that this of_node_put(np) can be safely removed.
+
+
 > 
-> Yeah, there's not really a standard way to map per cpu blocks to cpus.
-> We could, but doesn't really seem necessary here.
+> With that, for the series:
 > 
-> For the irqs, percpu irqs doesn't help you?
-
-What I mean is that, if there were a separate device node and driver
-instance per cpu, they'd all want to register the same irq just to
-handle it on their own cpu, so we'd have a lot of spurious handlers
-running. The right way to model this, I think, would be as a virtual
-irqchip that's the irq parent of all the timer nodes, and that
-multiplexes the real irq to one virq per cpu (where the current cpu id
-becomes the irq number in its irq domain). But that's a lot of virtual
-infrastructure just for the sake of modelling each percpu timer as its
-own DT node and I don't think it makes sense to do it that way.
-
-Rich
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> Rob
+> 
+> .
+> 
