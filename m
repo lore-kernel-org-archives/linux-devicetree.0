@@ -1,89 +1,73 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: Add ADAU7002 Stereo PDM-to-I2S/TDM Converter DT bindings" to the asoc tree
-Date: Thu, 02 Jun 2016 16:50:16 +0100
-Message-ID: <E1b8Usy-0004vW-Sk@finisterre>
-References: <1464869982-6722-1-git-send-email-lars@metafoo.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464869982-6722-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 0/4] mtd: nand: Add support for Evatronix NANDFLASH-CTRL
+Date: Thu, 2 Jun 2016 18:00:59 +0200
+Message-ID: <20160602180059.11928d40@bbrezillon>
+References: <alpine.DEB.2.02.1606020944180.19416@lnxricardw1.se.axis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1606020944180.19416@lnxricardw1.se.axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ricard Wanderlof <ricard.wanderlof@axis.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, Linux mtd <linux-mtd@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Ricard,
 
-   ASoC: Add ADAU7002 Stereo PDM-to-I2S/TDM Converter DT bindings
+I was not in Cc of this series, so you're either developing an old
+kernel version, or you didn't check the MAINTAINERS file (or didn't run
+get_maintainer.pl on your series). And please, next time make sure
+patches 1 to X are sent in replies to your cover letter.
 
-has been applied to the asoc tree at
+On Thu, 2 Jun 2016 09:46:31 +0200
+Ricard Wanderlof <ricard.wanderlof@axis.com> wrote:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> This patch set adds a driver and relevant devicetree bindings for the
+> Evatronix NANDFLASH-CTRL NAND flash controller IP. This controller is
+> used in the Axis ARTPEC-6 SoC.
+> 
+> The driver supports BCH ECC using the controller's hardware, but there is
+> also an option to use software BCH ECC. However, the ECC layouts are not
+> compatible so it's not possible to mix them. The main advantage to using
+> software ECC is that there are more OOB bytes free, as the hardware is
+> slightly wasteful on OOB space.
+> 
+> BCH ECC from 4 to 32 bits over 256, 512 or 1024 byte ECC blocks is supported.
+> 
+> Only large-page flash chips are supported, using 4 or 5 address cycles.
+> 
+> The driver has been extensively tested using hardware ECC on 2 Mbit flash chips,
+> with 8 bit ECC over 512 bytes ECC blocks.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I'll to review the driver soon.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Regards,
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Boris
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> 
+> Ricard Wanderlof (4):
+>   of: Add device tree bindings for Evatronix NANDFLASH-CTRL
+>   dts: Add Evatronix NAND flash driver to ARTPEC-6 dtsi
+>   mtd: nand: Add support for Evatronix NANDFLASH-CTRL
+>   MAINTAINERS: mtd: Add maintainer for Evatronix NAND flash driver
+> 
+>  .../devicetree/bindings/mtd/evatronix-nand.txt     |   44 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  MAINTAINERS                                        |    6 +
+>  arch/arm/boot/dts/artpec6.dtsi                     |   19 +
+>  drivers/mtd/nand/Kconfig                           |    6 +
+>  drivers/mtd/nand/Makefile                          |    1 +
+>  drivers/mtd/nand/evatronix_nand.c                  | 1909 ++++++++++++++++++++
+>  7 files changed, 1986 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/evatronix-nand.txt
+>  create mode 100644 drivers/mtd/nand/evatronix_nand.c
+> 
 
-Thanks,
-Mark
 
->From 254a13811ef41932b1315f524943050e6b5ae5a1 Mon Sep 17 00:00:00 2001
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Date: Thu, 2 Jun 2016 14:19:41 +0200
-Subject: [PATCH] ASoC: Add ADAU7002 Stereo PDM-to-I2S/TDM Converter DT
- bindings
 
-The ADAU7002 takes a stereo PDM signal (e.g. from two digital microphones)
-and converts it into a I2S/TDM PCM stream. The chip does not have a
-control interface and has a single power supply that is modeled in the
-devicetree.
-
-Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/sound/adi,adau7002.txt        | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/adi,adau7002.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/adi,adau7002.txt b/Documentation/devicetree/bindings/sound/adi,adau7002.txt
-new file mode 100644
-index 000000000000..f144ee1abf85
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/adi,adau7002.txt
-@@ -0,0 +1,19 @@
-+Analog Devices ADAU7002 Stereo PDM-to-I2S/TDM Converter
-+
-+Required properties:
-+
-+ - compatible: Must be "adi,adau7002"
-+
-+Optional properties:
-+
-+ - IOVDD-supply: Phandle and specifier for the power supply providing the IOVDD
-+	supply as covered in Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+	If this property is not present it is assumed that the supply pin is
-+	hardwired to always on.
-+
-+Example:
-+	adau7002: pdm-to-i2s {
-+		compatible = "adi,adau7002";
-+		IOVDD-supply = <&supply>;
-+	};
 -- 
-2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
