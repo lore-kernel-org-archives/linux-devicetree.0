@@ -1,35 +1,64 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [Patch v5 3/8] firmware: qcom: scm: Use atomic SCM for cold boot
-Date: Thu, 2 Jun 2016 15:15:01 -0700
-Message-ID: <20160602221501.GO28218@codeaurora.org>
-References: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
- <1463111221-6963-4-git-send-email-andy.gross@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463111221-6963-4-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] MAINTAINERS: DeviceTree maintainer updates
+Date: Thu,  2 Jun 2016 17:26:04 -0500
+Message-ID: <1464906364-8742-1-git-send-email-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/12, Andy Gross wrote:
-> This patch changes the cold_set_boot_addr function to use atomic SCM
-> calls.  cold_set_boot_addr required adding qcom_scm_call_atomic2 to
-> support the two arguments going to the smc call.  Using atomic removes
-> the need for memory allocation and instead places all arguments in
-> registers.
-> 
-> Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+Grant stepped down as kernel DT maintainer and his linaro.org email will
+be bouncing soon, so remove him now. Pawel, Ian and Kumar either said
+they don't want to remain maintainers or didn't reply, so removing them
+as binding maintainers.
 
-Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Update the DT git tree to mine. Grant's has not been active for a while
+now.
 
+I'm actively using patchwork for binding review tracking, so add its
+URL.
+
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ MAINTAINERS | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7304d2e..e60872e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8404,10 +8404,9 @@ F:	drivers/i2c/busses/i2c-ocores.c
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ M:	Rob Herring <robh+dt@kernel.org>
+ M:	Frank Rowand <frowand.list@gmail.com>
+-M:	Grant Likely <grant.likely@linaro.org>
+ L:	devicetree@vger.kernel.org
+ W:	http://www.devicetree.org/
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ S:	Maintained
+ F:	drivers/of/
+ F:	include/linux/of*.h
+@@ -8415,12 +8414,10 @@ F:	scripts/dtc/
+ 
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+ M:	Rob Herring <robh+dt@kernel.org>
+-M:	Pawel Moll <pawel.moll@arm.com>
+ M:	Mark Rutland <mark.rutland@arm.com>
+-M:	Ian Campbell <ijc+devicetree@hellion.org.uk>
+-M:	Kumar Gala <galak@codeaurora.org>
+ L:	devicetree@vger.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
++Q:	http://patchwork.ozlabs.org/project/devicetree-bindings/list/
+ S:	Maintained
+ F:	Documentation/devicetree/
+ F:	arch/*/boot/dts/
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
