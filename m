@@ -1,51 +1,73 @@
-From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 09/32] bcm2837-rpi-3-b.dts for 32bit arm
-Date: Thu, 02 Jun 2016 17:11:31 +0200
-Message-ID: <1464880291.24775.111.camel@redhat.com>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
-	 <3336185.FIBLI6ezsy@wuerfel> <1464858870.24775.65.camel@redhat.com>
-	 <4795604.XAe8xnhung@wuerfel>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v1 1/2] ARM: dts: keystone: remove bogus IO resource entry from PCI binding
+Date: Thu, 2 Jun 2016 11:17:51 -0400
+Message-ID: <1464880672-15203-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4795604.XAe8xnhung@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ssantosh@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-  Hi,
+The PCI DT bindings contain a bogus entry for IO space which is not
+supported on Keystone. The current bogus entry has an invalid size
+and throws following error during boot.
 
-> > > > Reference to ../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-> > > > directly in the Makefile?
+[0.420713] keystone-pcie 21021000.pcie: error -22: failed to map
+           resource [io  0x0000-0x400000003fff]
 
-Actually tried that, and to my surprise this worked fine for both "make
-dtbs" and "make dtbs_install".
+So remove it from the dts. While at it also add a bus-range
+value that eliminates following log at boot up.
 
-So we should just do that I guess ...
+[0.420659] No bus range found for /soc/pcie@21020000, using [bus 00-ff]
 
-> > Yes, in theory.  No, in practice.  As far I know the rpi3 is the only
-> > 64bit soc where a almost identical 32bit version exists, so running
-> > 32bit kernels on a 64bit processor actually happens in practice and I
-> > expect this to continue.  If you want create sdcard images which run on
-> > any rpi variant this is pretty much the only reasonable way to do it.
-> 
-> I think the Allwinner A64 and the Samsung s5p6818 are other examples
-> for this, where the initial run of boards all run 32-bit kernels
-> for much of the same reasons. If users want to run a 32-bit distro
-> on rpi-3 and on e.g. orange-pi, I don't see why they wouldn't also run
-> the same binary on A64.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ v1 - fixed subject to something more meaningful
+ applies to master v4.7-rcx at kernel.org git repo
+ arch/arm/boot/dts/keystone-k2e.dtsi | 5 +++--
+ arch/arm/boot/dts/keystone.dtsi     | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-... and others can join the party on a case-by-case basis.
-
-I still expect for the majority of arm64 boards it is not very useful,
-so I don't think we should build all of them unconditionally.
-
-cheers,
-  Gerd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
+index 96b349f..5374c9a 100644
+--- a/arch/arm/boot/dts/keystone-k2e.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e.dtsi
+@@ -96,12 +96,13 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			reg =  <0x21021000 0x2000>, <0x21020000 0x1000>, <0x02620128 4>;
+-			ranges = <0x81000000 0 0 0x23260000 0x4000 0x4000
+-				0x82000000 0 0x60000000 0x60000000 0 0x10000000>;
++			ranges = <0x82000000 0 0x60000000 0x60000000
++				  0 0x10000000>;
+ 
+ 			status = "disabled";
+ 			device_type = "pci";
+ 			num-lanes = <2>;
++			bus-range = <0x00 0xff>;
+ 
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index e34b226..f627a1c 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -294,12 +294,13 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			reg =  <0x21801000 0x2000>, <0x21800000 0x1000>, <0x02620128 4>;
+-			ranges = <0x81000000 0 0 0x23250000 0 0x4000
+-				0x82000000 0 0x50000000 0x50000000 0 0x10000000>;
++			ranges = <0x82000000 0 0x50000000 0x50000000
++				  0 0x10000000>;
+ 
+ 			status = "disabled";
+ 			device_type = "pci";
+ 			num-lanes = <2>;
++			bus-range = <0x00 0xff>;
+ 
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+-- 
+1.9.1
