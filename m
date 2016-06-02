@@ -1,50 +1,29 @@
-From: Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>
-Subject: Re: [PATCH] [V2] ARM: dts: sun7i: Add dts file for
- Bananapi M1 Plus board
-Date: Thu, 2 Jun 2016 11:15:55 +0200
-Message-ID: <574FF94B.3020309@web.de>
-References: <20160602023623.5761-1-luoyi.ly@gmail.com>
- <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA@mail.gmail.com>
- <20160602081638.GG4908@lukather>
-Reply-To: bernhard.nortmann-S0/GAf8tV78@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 2/3] clk: samsung: exynos5410: Add WDT,
+ ACLK266 and SSS clocks
+Date: Thu, 02 Jun 2016 11:20:05 +0200
+Message-ID: <574FFA45.9060409@samsung.com>
+References: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
+ <1464774351-23604-2-git-send-email-k.kozlowski@samsung.com>
+ <61eead99-d8a7-71f7-a2a4-18dfd3d780a1@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBCGKZOPV4QPRBVXSX65AKGQEVD5XH5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160602081638.GG4908@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <61eead99-d8a7-71f7-a2a4-18dfd3d780a1@osg.samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 02.06.2016 um 10:16 schrieb Maxime Ripard:
-> [...]
-> Yes, everything that is shared with the banana-pro (which, judging
-> from Bernhard, is pretty much everything but a GPIO) should be merged
-> in the banapro DT.
->
-> Maxime
->
+On 06/01/2016 04:55 PM, Javier Martinez Canillas wrote:
+> On 06/01/2016 05:45 AM, Krzysztof Kozlowski wrote:
+>> > Add clock hierarchy for Security SubSystem clock and watchdog.
+>> > 
+>> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> > ---
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-Don't take my word for granted, as I do not own this hardware or know it
-particularly well. There is no doubt that "BPi-M1+" and "Banana Pro" are
-very similar, but if in doubt the information form the wiki should be 
-verified.
+Patches 1/3, 2/3 applied, thanks.
 
-@luoyi:
 
-You seem to be using an editor that uses 4 spaces for displaying a <TAB>.
-It looks like that makes you prone to whitespace formatting issues, which
-have shown up in both versions of the .dts you submitted so far.
-
-Please double-check that you're using TABs for indentation and they weren't
-mixed up with SPACEs accidentally. (Most editors will also offer a setting
-that allows you to display "non-printable" chars, where you might be able to
-distinguish whitespace better.)
-
-Regards, B. Nortmann
