@@ -1,90 +1,59 @@
-From: Wadim Egorov <w.egorov@phytec.de>
-Subject: [RESEND PATCH v5 3/5] mfd: dt-bindings: Add RK818 device tree bindings document
-Date: Thu, 2 Jun 2016 08:50:26 +0200
-Message-ID: <1464850228-17244-3-git-send-email-w.egorov@phytec.de>
-References: <1464850228-17244-1-git-send-email-w.egorov@phytec.de>
+From: Gerd Hoffmann <kraxel@redhat.com>
+Subject: Re: [PATCH 09/32] bcm2837-rpi-3-b.dts for 32bit arm
+Date: Thu, 02 Jun 2016 08:56:05 +0200
+Message-ID: <1464850565.24775.40.camel@redhat.com>
+References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
+	 <7065434.SNfT8zjcK3@wuerfel> <87zir4leyc.fsf@eliezer.anholt.net>
+	 <5616246.RRQ2rLjLud@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464850228-17244-1-git-send-email-w.egorov@phytec.de>
+In-Reply-To: <5616246.RRQ2rLjLud@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Rockchip's RK818 PMIC.
+On Do, 2016-06-02 at 00:39 +0200, Arnd Bergmann wrote:
+> On Wednesday, June 1, 2016 3:30:35 PM CEST Eric Anholt wrote:
+> > Arnd Bergmann <arnd@arndb.de> writes:
+> > 
+> > > On Wednesday, June 1, 2016 11:43:18 PM CEST Gerd Hoffmann wrote:
+> > >> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> > >> new file mode 100644
+> > >> index 0000000..36178a6
+> > >> --- /dev/null
+> > >> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> > >> @@ -0,0 +1 @@
+> > >> +#include "../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts"
+> > >> -- 
+> > >> 1.8.3.1
+> > >> 
+> > >
+> > > What does this gain you?
+> > 
+> > Many Raspberry Pi users use a small set of SD cards that they swap
+> > between various versions of the hardware.  It would be good to have
+> > their 32-bit OS images work on the Pi3 as well.
+> 
+> Sure, but you already have the dts file in the other directory,
+> and the dtb is the same.
+> 
+> According to the comment in the other patch, the idea was to have
+> the file in the arm64 directory because it's a 64-bit platform,
+> but now you have it here as well.
 
-Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/mfd/rk808.txt | 37 +++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 3 deletions(-)
+Well, it just includes the arm64 version as-is, so we don't have
+duplication.  I'm open to suggestions to how handle this better.  
 
-diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-index 4ca6aab..9636ae8 100644
---- a/Documentation/devicetree/bindings/mfd/rk808.txt
-+++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-@@ -1,7 +1,11 @@
--RK808 Power Management Integrated Circuit
-+RK8XX Power Management Integrated Circuit
-+
-+The rk8xx family current members:
-+rk808
-+rk818
- 
- Required properties:
--- compatible: "rockchip,rk808"
-+- compatible: "rockchip,rk808", "rockchip,rk818"
- - reg: I2C slave address
- - interrupt-parent: The parent interrupt controller.
- - interrupts: the interrupt outputs of the controller.
-@@ -13,6 +17,8 @@ Optional properties:
-   default output clock name
- - rockchip,system-power-controller: Telling whether or not this pmic is controlling
-   the system power.
-+
-+Optional RK808 properties:
- - vcc1-supply:  The input supply for DCDC_REG1
- - vcc2-supply:  The input supply for DCDC_REG2
- - vcc3-supply:  The input supply for DCDC_REG3
-@@ -29,7 +35,20 @@ Optional properties:
-   the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
-   very quickly with no slow ramp time.
- 
--Regulators: All the regulators of RK808 to be instantiated shall be
-+Optional RK818 properties:
-+- vcc1-supply:  The input supply for DCDC_REG1
-+- vcc2-supply:  The input supply for DCDC_REG2
-+- vcc3-supply:  The input supply for DCDC_REG3
-+- vcc4-supply:  The input supply for DCDC_REG4
-+- boost-supply: The input supply for DCDC_BOOST
-+- vcc6-supply:  The input supply for LDO_REG1 and LDO_REG2
-+- vcc7-supply:  The input supply for LDO_REG3, LDO_REG5 and LDO_REG7
-+- vcc8-supply:  The input supply for LDO_REG4, LDO_REG6 and LDO_REG8
-+- vcc9-supply:  The input supply for LDO_REG9 and SWITCH_REG
-+- h_5v-supply:  The input supply for HDMI_SWITCH
-+- usb-supply:   The input supply for OTG_SWITCH
-+
-+Regulators: All the regulators of RK8XX to be instantiated shall be
- listed in a child node named 'regulators'. Each regulator is represented
- by a child node of the 'regulators' node.
- 
-@@ -48,6 +67,18 @@ number as described in RK808 datasheet.
- 	- SWITCH_REGn
- 		- valid values for n are 1 to 2
- 
-+Following regulators of the RK818 PMIC block are supported. Note that
-+the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-+number as described in RK818 datasheet.
-+
-+	- DCDC_REGn
-+		- valid values for n are 1 to 4.
-+	- LDO_REGn
-+		- valid values for n are 1 to 9.
-+	- SWITCH_REG
-+	- HDMI_SWITCH
-+	- OTG_SWITCH
-+
- Standard regulator bindings are used inside regulator subnodes. Check
-   Documentation/devicetree/bindings/regulator/regulator.txt
- for more details
--- 
-1.9.1
+Symbolic link?
+
+Reference to ../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+directly in the Makefile?
+
+I've seen arch/arm/boot/dts/Makefile uses globs on *.dts, so I suspect
+the later wouldn't be that straight forward.
+
+cheers,
+  Gerd
