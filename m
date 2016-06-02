@@ -1,142 +1,107 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 4/4] regulator: axp20x: Add support for the (external) drivebus regulator
-Date: Thu,  2 Jun 2016 19:18:56 +0200
-Message-ID: <1464887936-17020-4-git-send-email-hdegoede@redhat.com>
-References: <1464887936-17020-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1464887936-17020-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom reserved
+ memory handling
+Date: Thu, 2 Jun 2016 13:25:43 -0400
+Message-ID: <e715a7d0-eb25-9d68-27ad-25cf03c499ca@osg.samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
+ <574BEBB8.8040606@samsung.com>
+ <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
+ <57505F5B.90101@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <57505F5B.90101@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The axp20x pmics have 2 power inputs, one called ACIN which is intended
-for to be supplied via a powerbarrel on the board and one called VBUS
-which is intended to be supplied via an otg connector.
+Hello Krzysztof,
 
-In the VBUS case the pmic needs to know if the board is supplying power
-to the otg connector, because then it should not take any power from
-its VBUS pin. The axp209 pmic has a N_VBUSEN input pin via which the
-board can signal to the pmic whether the board is supplying power to the
-otg connector or not.
+On 06/02/2016 12:31 PM, Krzysztof Kozlowski wrote:
+> On 06/02/2016 05:20 PM, Javier Martinez Canillas wrote:
+>> Hello Krzysztof,
+>>
+>> On 05/30/2016 03:28 AM, Krzysztof Kozlowski wrote:
+>>> On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
+>>>> Once MFC driver has been converted to generic reserved memory bindings,
+>>>> there is no need for custom memory reservation code.
+>>>>
+>>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> ---
+>>>>  arch/arm/mach-exynos/Makefile      |  2 -
+>>>>  arch/arm/mach-exynos/exynos.c      | 19 --------
+>>>>  arch/arm/mach-exynos/mfc.h         | 16 -------
+>>>>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 --------------------------------------
+>>>>  4 files changed, 130 deletions(-)
+>>>>  delete mode 100644 arch/arm/mach-exynos/mfc.h
+>>>>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
+>>>
+>>> Thanks, applied.
+>>>
+>>
+>> This patch can't be applied before patches 2/5 and 3/5, or the custom
+>> memory regions reservation will break with the current s5p-mfc driver.
+> 
+> Yes, I know. As I understood from talk with Marek, the driver is broken
+> now so continuous work was not chosen. If it is not correct and full
 
-On the axp221/axp223 this pin can alternatively be used as an output
-which controls an external regulator which (optionally) supplies
-power to the otg connector from the board. When the pin is used as
-output it is called DRIVEVBUS in the datasheet.
+It's true that the driven is currently broken in mainline and is not really
+stable, I posted fixes for all the issues I found (mostly in module removal
+and insert paths).
 
-This commit adds support for the DRIVEVBUS pin as an extra pmic
-controlled regulator. Since this is optional a new x-powers,drivebus dt
-property is added. When this is present the misc-control register is
-written to change the N_VBUSEN input pin to DRIVEVBUS output pin mode and
-the extra drivebus regulator is registered with the regulator subsystem.
+But with just the following patch from Ayaka on top of mainline, I'm able to
+have video decoding working: https://lkml.org/lkml/2016/5/6/577
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
--Rename the dt property to drive-vbus-en
--s/drivebus/drivevbus/
--Add a line describing the drivevbus regulator to the table in
- Documentation/devicetree/bindings/mfd/axp20x.txt
--Set supply_name to drivevbus-supply
----
- Documentation/devicetree/bindings/mfd/axp20x.txt |  6 +++++
- drivers/regulator/axp20x-regulator.c             | 30 ++++++++++++++++++++++++
- 2 files changed, 36 insertions(+)
+Marek mentioned that bisectability is only partially broken because the old
+binding will still work after this series if IOMMU is enabled (because the
+properties are ignored in this case). But will break if IOMMU isn't enabled
+which will be the case for some boards that fails to boot with IOMMU due the
+bootloader leaving the FIMD enabled doing DMA operations automatically AFAIU. 
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index d20b103..6aca4fe 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -22,6 +22,11 @@ Optional properties:
- 		      AXP152/20X: range:  750-1875, Default: 1.5 MHz
- 		      AXP22X/80X: range: 1800-4050, Default: 3   MHz
- 
-+- x-powers,drive-vbus-en: axp221 / axp223 only boolean, set this when the
-+                  N_VBUSEN pin is used as an output pin to control an external
-+                  regulator to drive the OTG VBus, rather then as an input pin
-+                  which signals whether the board is driving OTG VBus or not.
-+
- - <input>-supply: a phandle to the regulator supply node. May be omitted if
- 		  inputs are unregulated, such as using the IPSOUT output
- 		  from the PMIC.
-@@ -79,6 +84,7 @@ ELDO3		: LDO		: eldoin-supply		: shared supply
- LDO_IO0		: LDO		: ips-supply		: GPIO 0
- LDO_IO1		: LDO		: ips-supply		: GPIO 1
- RTC_LDO		: LDO		: ips-supply		: always on
-+DRIVEVBUS	: Enable output	: drivevbus-supply	: external regulator
- 
- AXP809 regulators, type, and corresponding input supply names:
- 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 728be64..3f1bba4 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -36,6 +36,8 @@
- 
- #define AXP20X_FREQ_DCDC_MASK		0x0f
- 
-+#define AXP22X_MISC_N_VBUSEN_FUNC	BIT(4)
-+
- #define AXP_DESC_IO(_family, _id, _match, _supply, _min, _max, _step, _vreg,	\
- 		    _vmask, _ereg, _emask, _enable_val, _disable_val)		\
- 	[_family##_##_id] = {							\
-@@ -230,6 +232,18 @@ static const struct regulator_desc axp22x_regulators[] = {
- 	AXP_DESC_FIXED(AXP22X, RTC_LDO, "rtc_ldo", "ips", 3000),
- };
- 
-+static const struct regulator_desc axp22x_drivevbus_regulator = {
-+	.name		= "drivevbus",
-+	.supply_name	= "drivevbus-supply",
-+	.of_match	= of_match_ptr("drivevbus"),
-+	.regulators_node = of_match_ptr("regulators"),
-+	.type		= REGULATOR_VOLTAGE,
-+	.owner		= THIS_MODULE,
-+	.enable_reg	= AXP20X_VBUS_IPSOUT_MGMT,
-+	.enable_mask	= BIT(2),
-+	.ops		= &axp20x_ops_sw,
-+};
-+
- static const struct regulator_linear_range axp809_dcdc4_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(600000, 0x0, 0x2f, 20000),
- 	REGULATOR_LINEAR_RANGE(1800000, 0x30, 0x38, 100000),
-@@ -411,6 +425,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 	u32 workmode;
- 	const char *dcdc1_name = axp22x_regulators[AXP22X_DCDC1].name;
- 	const char *dcdc5_name = axp22x_regulators[AXP22X_DCDC5].name;
-+	bool drivevbus = false;
- 
- 	switch (axp20x->variant) {
- 	case AXP202_ID:
-@@ -422,6 +437,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 	case AXP223_ID:
- 		regulators = axp22x_regulators;
- 		nregulators = AXP22X_REG_ID_MAX;
-+		drivevbus = of_property_read_bool(pdev->dev.parent->of_node,
-+						  "x-powers,drive-vbus-en");
- 		break;
- 	case AXP809_ID:
- 		regulators = axp809_regulators;
-@@ -500,6 +517,19 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 						&dcdc5_name);
- 	}
- 
-+	if (drivevbus) {
-+		/* Change N_VBUSEN sense pin to DRIVEVBUS output pin */
-+		regmap_update_bits(axp20x->regmap, AXP20X_OVER_TMP,
-+				   AXP22X_MISC_N_VBUSEN_FUNC, 0);
-+		rdev = devm_regulator_register(&pdev->dev,
-+					       &axp22x_drivevbus_regulator,
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(&pdev->dev, "Failed to register drivevbus\n");
-+			return PTR_ERR(rdev);
-+		}
-+	}
-+
- 	return 0;
- }
- 
+Now, I'm OK with not keeping backwards compatibility for the MFC dt bindings
+since arguably the driver has been broken for a long time and nobody cared
+and also I don't think anyone in practice boots a new kernel with an old DTB
+for Exynos.
+
+But I don't think is correct to introduce a new issue as is the case if this
+patch is applied before the previous patches in the series since this causes
+the driver to probe to fail and the following warn on boot (while it used to
+at least probe correctly in mainline):
+
+[   17.190165] WARNING: CPU: 0 PID: 224 at kernel/memremap.c:111 memremap+0x1a8/0x1b0
+[   17.193127] memremap attempted on ram 0x51000000 size: 0x800000
+[   17.196247] Modules linked in: s5p_mfc(+) uvcvideo s5p_jpeg videobuf2_vmalloc v4l2_mem2mem
+[   17.199569] CPU: 0 PID: 224 Comm: systemd-udevd Not tainted 4.7.0-rc1-next-20160531-00006-g569df5b983f3 #68
+[   17.202556] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+[   17.205534] [<c010e1ac>] (unwind_backtrace) from [<c010af38>] (show_stack+0x10/0x14)
+[   17.208535] [<c010af38>] (show_stack) from [<c0323b9c>] (dump_stack+0x88/0x9c)
+[   17.211530] [<c0323b9c>] (dump_stack) from [<c011a828>] (__warn+0xe8/0x100)
+[   17.214492] [<c011a828>] (__warn) from [<c011a878>] (warn_slowpath_fmt+0x38/0x48)
+[   17.217479] [<c011a878>] (warn_slowpath_fmt) from [<c0194ee0>] (memremap+0x1a8/0x1b0)
+[   17.220476] [<c0194ee0>] (memremap) from [<c040d92c>] (dma_init_coherent_memory+0xf8/0x130)
+[   17.223489] [<c040d92c>] (dma_init_coherent_memory) from [<c040d990>] (dma_declare_coherent_memory+0x2c/0x6c)
+[   17.226570] [<c040d990>] (dma_declare_coherent_memory) from [<bf1768c4>] (s5p_mfc_probe+0x170/0x650 [s5p_mfc])
+[   17.229648] [<bf1768c4>] (s5p_mfc_probe [s5p_mfc]) from [<c03fb704>] (platform_drv_probe+0x4c/0xb0)
+[   17.232718] [<c03fb704>] (platform_drv_probe) from [<c03f9e58>] (driver_probe_device+0x214/0x2c0)
+[   17.235800] [<c03f9e58>] (driver_probe_device) from [<c03f9fb0>] (__driver_attach+0xac/0xb0)
+[   17.238906] [<c03f9fb0>] (__driver_attach) from [<c03f81d0>] (bus_for_each_dev+0x68/0x9c)
+[   17.242031] [<c03f81d0>] (bus_for_each_dev) from [<c03f944c>] (bus_add_driver+0x1a0/0x218)
+[   17.245160] [<c03f944c>] (bus_add_driver) from [<c03fa7c8>] (driver_register+0x78/0xf8)
+[   17.248300] [<c03fa7c8>] (driver_register) from [<c01017c0>] (do_one_initcall+0x40/0x170)
+[   17.251475] [<c01017c0>] (do_one_initcall) from [<c01956e4>] (do_init_module+0x60/0x1b0)
+[   17.254656] [<c01956e4>] (do_init_module) from [<c0188dc0>] (load_module+0x17ec/0x1dd0)
+[   17.257844] [<c0188dc0>] (load_module) from [<c0189570>] (SyS_finit_module+0x8c/0x9c)
+[   17.261037] [<c0189570>] (SyS_finit_module) from [<c01078c0>] (ret_fast_syscall+0x0/0x3c)
+[   17.265210] ---[ end trace 33de2b5daf697e0f ]---
+[   17.269300] s5p_mfc_alloc_memdevs:1072: Failed to declare coherent memory for
+               MFC device
+[   17.277593] ------------[ cut here ]------------
+
+Best regards,
 -- 
-2.7.4
-
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
