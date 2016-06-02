@@ -1,137 +1,80 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 12/12] ARM: dts: exynos: Fix LAN and HUB after
- bootloader initialization on Odroid U3
-Date: Thu, 02 Jun 2016 09:26:57 +0200
-Message-ID: <574FDFC1.5050209@samsung.com>
-References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
- <1464768141-25420-13-git-send-email-k.kozlowski@samsung.com>
- <20160601115929.GA16740@shlinux2>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 1/2] drm: bridge: Add sii902x driver
+Date: Thu, 2 Jun 2016 09:40:56 +0200
+Message-ID: <20160602094056.22fce872@bbrezillon>
+References: <1463407469-21819-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20160517064711.GF27098@phenom.ffwll.local>
+ <20160601180337.28e0917b@bbrezillon>
+ <20160601215602.GA7231@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20160601115929.GA16740@shlinux2>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.or, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160601215602.GA7231@phenom.ffwll.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, Meng Yi <meng.yi@nxp.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2016 01:59 PM, Peter Chen wrote:
-> On Wed, Jun 01, 2016 at 10:02:21AM +0200, Krzysztof Kozlowski wrote:
->> On Odroid U3 (Exynos4412-based) board if USB was initialized by
->> bootloader (in U-Boot "usb start" before tftpboot), the HUB (usb3503)
->> and LAN (smsc95xx) after after successful probing were not visible in the
->> system ("lsusb").
->>
->> In such case the devices had to be fully reset before configuring.
->> Reset by GPIO (called RESET_N pin) and by RESET field in STCD register
->> in usb3503 HUB are not sufficient. Instead full reset has to be done by
->> disabling and enabling regulator.
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos4412-odroidu3.dts | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
->> index 31cdc036fda4..23e30e4609df 100644
->> --- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
->> +++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
->> @@ -99,11 +99,15 @@
->>  	clock-names = "refclk";
->>  	clocks = <&pmu_system_controller 0>;
->>  	refclk-frequency = <24000000>;
->> +
->> +	power-sequence;
->> +	ext-supply = <&buck8_reg>;
->>  };
->>  
->>  &ehci {
->>  	port@1 {
->>  		status = "okay";
->> +		usb-pwrseq = <&usb3503>;
->>  	};
->>  	port@2 {
->>  		status = "okay";
->> -- 
->> 1.9.1
->>
-> 
-> The hub is under the port1, you may need to describe it
-> under the port@1, see below:
-> Documentation/devicetree/bindings/usb/usb-device.txt
-
-My configuration is a little bit different than yours.
-
-In my case I have a USB hub (usb3503) which is also a a i2c device
-because it has to be configured through I2C.
-
-I can add the power-sequence properties to the I2C node or as you
-pointed under port using the vendor-product-id compatible. In the first
-option: not many USB changes are needed. It works for me, at least as a
-proof of concept.
-
-The second solution: currently it does not work because the USB device
-does not get enumerated before the power sequence begins. It would be
-great if you could implement this on USB side.
-
-> 
-> If I get Rob's comments correctly, you may need to consider 
-> below MMC and USB device tree description together, it seems
-> hard for USB to use pwrseq driver, sorry for confusing you.
-> 
-> If rob can accept below USB device description, we have to
-> do it under USB. In future, if there is some suitable framework,
-> we can move it.
-> 
-> 1. MMC device:
-> 	usdhc3_pwrseq: usdhc3_pwrseq {
-> 		compatible = "mmc-pwrseq-simple";
-> 		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>, 	/* WL_REG_ON */
-> 			      <&gpio4 7 GPIO_ACTIVE_LOW>, 	/* WL_HOSTWAKE */
-> 			      <&gpio3 25 GPIO_ACTIVE_LOW>, 	/* BT_REG_ON */
-> 			      <&gpio3 27 GPIO_ACTIVE_LOW>,	/* BT_HOSTWAKE */
-> 			      <&gpio4 4 GPIO_ACTIVE_LOW>, 	/* BT_WAKE */
-> 			      <&gpio4 6 GPIO_ACTIVE_LOW>; 	/* BT_RST_N */
-> 	};
-> 
-> &usdhc3 {
-> 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> 	pinctrl-0 = <&pinctrl_usdhc3>;
-> 	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-> 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-> 	bus-width = <4>;
-> 	non-removable;
-> 	keep-power-in-suspend;
-> 	wakeup-source;
-> 	mmc-pwrseq = <&usdhc3_pwrseq>;
-> 	status = "okay";
-> };
-> 
-> 2. USB device 
-> 
-> &usbotg1 {
-> 	vbus-supply = <&reg_usb_otg1_vbus>;
-> 	pinctrl-names = "default";
-> 	pinctrl-0 = <&pinctrl_usb_otg1_id>;
-> 	status = "okay";
-> 
-> 	#address-cells = <1>;
-> 	#size-cells = <0>;
-> 	hub: genesys@1 {
-> 		compatible = "usb5e3,608";
-> 		reg = <1>;
-> 		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
-> 		reset-duration-us = <10>;
-> 		clocks = <&clks IMX6SX_CLK_CKO>;
-> 	};
-
-Yes, that looks like what Rob wanted... Do you plan to work on it? The
-power sequence is needed before device is enumerated.
-
-BTW, if you would like to play with the patchset, it is here:
-repo:   https://github.com/krzk/linux
-branch: for-next/odroid-u3-usb3503-lan-boot-fixes-v3
-
-Best regards,
-Krzysztof
+SGkgRGFuaWVsLAoKT24gV2VkLCAxIEp1biAyMDE2IDIzOjU2OjAyICswMjAwCkRhbmllbCBWZXR0
+ZXIgPGRhbmllbEBmZndsbC5jaD4gd3JvdGU6Cgo+IE9uIFdlZCwgSnVuIDAxLCAyMDE2IGF0IDA2
+OjAzOjM3UE0gKzAyMDAsIEJvcmlzIEJyZXppbGxvbiB3cm90ZToKPiA+IE9uIFR1ZSwgMTcgTWF5
+IDIwMTYgMDg6NDc6MTEgKzAyMDAKPiA+IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4g
+d3JvdGU6Cj4gPiAgIAo+ID4gPiA+ICtzdGF0aWMgc3RydWN0IGRybV9lbmNvZGVyICpzaWk5MDJ4
+X2Jlc3RfZW5jb2RlcihzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ID4gPiA+ICt7
+Cj4gPiA+ID4gKwlzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCA9IGNvbm5lY3Rvcl90b19zaWk5MDJ4
+KGNvbm5lY3Rvcik7Cj4gPiA+ID4gKwo+ID4gPiA+ICsJcmV0dXJuIHNpaTkwMngtPmJyaWRnZS5l
+bmNvZGVyOwo+ID4gPiA+ICt9ICAgIAo+ID4gPiAKPiA+ID4gZHJtX2F0b21pY19oZWxwZXJfYmVz
+dF9lbmNvZGVyIHNob3VsZCBkbyBleGFjdGx5IHRoaXMgZm9yIHlvdS4gSWYgeW91IGZlZWwKPiA+
+ID4gYm9hcmQgcGltcCB0aGUgYXRvbWljIGhlbHBlcnMgdG8gY2FsbCB0aGF0IG9uZSBieSBkZWZh
+dWx0IHRvIGV2ZW4gcmVtb3ZlCj4gPiA+IHRoZSB2ZnVuYyBhc3NpbmdtZW50IGxpbmUgOy0pICAK
+PiA+IAo+ID4gSnVzdCB0byBiZSBzdXJlLCBpcyB0aGF0IHdoYXQgeW91IGhhZCBpbiBtaW5kPyAg
+Cj4gCj4gRXhhY3RseSwgSSdsbCBwaWNrIHRoaXMgb25lIHVwIGZvciBkcm0tbWlzYy4gYnR3IGlm
+IHlvdSdyZSBldmVuIG1vcmUKPiBtb3RpdmF0ZWQsIHlvdSBjYW4gZ28gdGhyb3VnaCBhbGwgZHJp
+dmVycyB3aXRoIGEgc3RhdGljIG1hcHBpbmcgZnJvbQo+IGNvbm5lY3RvciB0byBlbmNvZGVyLCBh
+bmQgbnVrZSB0aG9zZSBmdW5jdGlvbnMuIFNpbmNlIGlmIGl0J3MganVzdCBhCj4gc3RhdGljIG1h
+cHBpbmcsIHRoZSBvbmx5IHdheSB0byBkbyBpdCBpcyBsaWtlIHRoZSBoZWxwZXIgZG9lcy4KPiAK
+PiBUaGFua3MsIERhbmllbAo+ID4gICAKPiA+IC0tLT44LS0tICAKPiA+IEZyb20gZDIxOGI3ZWEx
+NmNhMzU0NTJiMzE3NGM4M2EyMDdlY2Q0MDZlNWM4OCBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDEK
+PiA+IEZyb206IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ryb25z
+LmNvbT4KPiA+IERhdGU6IFdlZCwgMSBKdW4gMjAxNiAxNzo1NzoxOCArMDIwMAo+ID4gU3ViamVj
+dDogW1BBVENIXSBkcm06IGF0b21pYzogSGFuZGxlIGZ1bmNzLT5iZXN0X2VuY29kZXIgPT0gTlVM
+TCBjYXNlCj4gPiAKPiA+IEZhbGxiYWNrIGRybV9hdG9taWNfaGVscGVyX2Jlc3RfZW5jb2Rlcigp
+IGlzIGZ1bmNzLT5iZXN0X2VuY29kZXIoKSBpcyBOVUxMCgpPb3BzLCBjYW4geW91IGZpeCB0aGUg
+Y29tbWl0IG1lc3NhZ2UgYmVmb3JlIGFwcGx5aW5nPwoKIgpGYWxsYmFjayAqdG8qIGRybV9hdG9t
+aWNfaGVscGVyX2Jlc3RfZW5jb2RlcigpICppZioKZnVuY3MtPmJlc3RfZW5jb2RlcigpIGlzIE5V
+TEwKIgoKTWF5YmUgSSBzaG91bGQgcmVzZW5kIHRoZSBwYXRjaCBhbG9uZyB3aXRoIHRoZSBvdGhl
+ciBtb2RpZmljYXRpb25zIHlvdQphc2tlZCBmb3IuIFRoaXMgd2F5IGl0IHdpbGwgaW4gYSBkZWRp
+Y2F0ZWQgdGhyZWFkLCBpbnN0ZWFkIG9mIGJlaW5nCmhpZGRlbiBpbiBhbiB1bnJlbGF0ZWQgcGF0
+Y2ggc2VyaWVzLgoKUmVnYXJkcywKCkJvcmlzCgoKPiA+IHNvIHRoYXQgRFJNIGRyaXZlcnMgY2Fu
+IGxlYXZlIHRoaXMgaG9vayB1bmFzc2lnbmVkIGlmIHRoZXkga25vdyB0aGV5IHdhbnQKPiA+IHRv
+IHVzZSBkcm1fYXRvbWljX2hlbHBlcl9iZXN0X2VuY29kZXIoKS4KPiA+IAo+ID4gU2lnbmVkLW9m
+Zi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29t
+Pgo+ID4gLS0tCj4gPiAgZHJpdmVycy9ncHUvZHJtL2RybV9hdG9taWNfaGVscGVyLmMgfCA0ICsr
+Ky0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4g
+PiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21pY19oZWxwZXIuYyBi
+L2RyaXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jCj4gPiBpbmRleCBkZGZhMGQxLi5m
+NmEzMzUwIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2RybV9hdG9taWNfaGVscGVy
+LmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jCj4gPiBAQCAt
+MTEwLDggKzExMCwxMCBAQCBzdGF0aWMgaW50IGhhbmRsZV9jb25mbGljdGluZ19lbmNvZGVycyhz
+dHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqc3RhdGUsCj4gPiAgCj4gPiAgCQlpZiAoZnVuY3MtPmF0
+b21pY19iZXN0X2VuY29kZXIpCj4gPiAgCQkJbmV3X2VuY29kZXIgPSBmdW5jcy0+YXRvbWljX2Jl
+c3RfZW5jb2Rlcihjb25uZWN0b3IsIGNvbm5fc3RhdGUpOwo+ID4gLQkJZWxzZQo+ID4gKwkJZWxz
+ZSBpZiAoZnVuY3MtPmJlc3RfZW5jb2RlcikKPiA+ICAJCQluZXdfZW5jb2RlciA9IGZ1bmNzLT5i
+ZXN0X2VuY29kZXIoY29ubmVjdG9yKTsKPiA+ICsJCWVsc2UKPiA+ICsJCQluZXdfZW5jb2RlciA9
+IGRybV9hdG9taWNfaGVscGVyX2Jlc3RfZW5jb2Rlcihjb25uZWN0b3IpOwo+ID4gIAo+ID4gIAkJ
+aWYgKG5ld19lbmNvZGVyKSB7Cj4gPiAgCQkJaWYgKGVuY29kZXJfbWFzayAmICgxIDw8IGRybV9l
+bmNvZGVyX2luZGV4KG5ld19lbmNvZGVyKSkpIHsKPiA+IAo+ID4gCj4gPiAgIAo+IAoKCgotLSAK
+Qm9yaXMgQnJlemlsbG9uLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVs
+IGVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
