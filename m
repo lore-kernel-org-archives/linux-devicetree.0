@@ -1,40 +1,37 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 5/7] net:mdio-mux: Add MDIO mux driver for iProc SoCs
-Date: Wed, 01 Jun 2016 16:18:05 -0700 (PDT)
-Message-ID: <20160601.161805.1142999841225463527.davem@davemloft.net>
-References: <1464701801-17243-1-git-send-email-pramod.kumar@broadcom.com>
-	<1464701801-17243-6-git-send-email-pramod.kumar@broadcom.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 1/4] dt-bindings: rng: Northstar Plus SoC rng bindings
+Date: Thu, 2 Jun 2016 09:06:48 +0800
+Message-ID: <20160602010648.GA3171@gondor.apana.org.au>
+References: <CAL2FKYkSnf1Lc9d=S_7ipgySprTX9Zu=sMSmRnDDtBLcrz2X=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464701801-17243-6-git-send-email-pramod.kumar@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <CAL2FKYkSnf1Lc9d=S_7ipgySprTX9Zu=sMSmRnDDtBLcrz2X=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pramod.kumar@broadcom.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Matt Mackall <mpm@selenic.com>, Daniel Thompson <daniel.thompson@linaro.org>, Kieran Bingham <kieranbingham@gmail.com>, Pankaj Dev <pankaj.dev@st.com>, Richard Weinberger <richard@nod.at>, =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, Joshua Henderson <joshua.henderson@microchip.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, BCM
 List-Id: devicetree@vger.kernel.org
 
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Date: Tue, 31 May 2016 19:06:39 +0530
+On Wed, Jun 01, 2016 at 08:34:11PM +0530, Yendapally Reddy Dhananjaya Reddy wrote:
+> On Wed, Jun 1, 2016 at 8:17 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Fri, May 27, 2016 at 06:10:38AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
+> >> Document the bindings used by Northstar Plus(NSP) SoC random number
+> >> generator.
+> >>
+> >> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+> >> Acked-by: Eric Anholt <eric@anholt.net>
+> >
+> > You missed my ack...
+> 
+> Sorry Rob. I missed it.
+> 
+> Herbert,
+> 
+> Can i send the v3 patch set with the ack added.
 
-> +static int iproc_mdio_wait_for_idle(void __iomem *base, bool result)
-> +{
-> +	u32 val;
-> +	unsigned int timeout = 1000; /* loop for 1s */
-
-Please order your local variable declarations from longest to shortest line.
-
-> +static int start_miim_ops(void __iomem *base,
-> +			  u16 phyid, u32 reg, u16 val, u32 op)
-> +{
-> +	int ret;
-> +	u32 param;
-
-Likewise.
-
-> +static int iproc_mdiomux_read(struct mii_bus *bus, int phyid, int reg)
-> +{
-> +	int ret;
-> +	struct iproc_mdiomux_desc *md = bus->priv;
-
-Likewise.
+It's too late.  Your patches have already been applied.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
