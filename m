@@ -1,28 +1,42 @@
-From: "Banavathi, Pradeep" <pradeepb@codeaurora.org>
-Subject: Re: [PATCH 1/5] clk: qcom: ipq4019: Modified the fixed clock rate to
- proper values
-Date: Thu, 2 Jun 2016 19:48:38 +0530
-Message-ID: <9a9ac449-4c14-e0fa-5637-5ca7aac321aa@codeaurora.org>
-References: <1464618758-20965-1-git-send-email-absahu@codeaurora.org>
- <1464618758-20965-2-git-send-email-absahu@codeaurora.org>
- <20160601221808.GI28218@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160601221808.GI28218@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Abhishek Sahu <absahu@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, galak@codeaurora.org, mmcclint@codeaurora.org, varada@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org, ntelkar@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Subject: [PATCH v2 0/5] Add support for the STM32F4 I2C
+Date: Thu,  2 Jun 2016 16:26:03 +0200
+Message-ID: <1464877568-21897-1-git-send-email-cedric.madianga@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: patrice.chotard@st.com, mcoquelin.stm32@gmail.com, wsa@the-dreams.de, robh+dt@kernel.org, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The PLLs on IPQ4019 cannot be reconfigured by design. The recommendation 
-is to program these PLLS only once. Since, the  Bootloaders configure 
-the PLLs and clocks already. we did not support the recalc rate and 
-marked them as fixed clocks.
+This patchset adds support for the I2C controller embedded in STM32F4xx SoC.
+It enables I2C transfer in interrupt mode with Standard-mode and Fast-mode bus
+speed.
 
+Changes since v1:
+- use compatible st,stm32f4-i2c instead of st,i2c-stm32f4 (Rob)
+- fix typo s/enmpty/empty (Maxime)
+- use one function to handle TX fifo empty and byte xfer finished IT (Maxime)
+- set duty cycle in timing struct in Fast mode
+- Rework clock management (call prepare/unprepare at probe and remove, call
+  clk_enable/clk_disable for each I2C transfer)
 
-On 6/2/2016 3:48 AM, Stephen Boyd wrote:
-> This was a temporary solution until the PLL recalc code could be
-> written. When is the real clk driver coming so we can get rid of
-> these fixed rate clks being registered in this driver?
+M'boumba Cedric Madianga (5):
+  dt-bindings: Document the STM32 I2C bindings
+  i2c: Add STM32F4 I2C driver
+  ARM: dts: Add I2C1 support for STM32F429 SoC
+  ARM: dts: Add I2C1 support for STM32429 eval board
+  ARM: configs: Add I2C support for STM32 defconfig
+
+ .../devicetree/bindings/i2c/i2c-stm32.txt          |  33 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |   6 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |  24 +
+ arch/arm/configs/stm32_defconfig                   |   3 +
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-stm32f4.c                   | 867 +++++++++++++++++++++
+ 7 files changed, 944 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+ create mode 100644 drivers/i2c/busses/i2c-stm32f4.c
+
+-- 
+1.9.1
