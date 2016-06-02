@@ -1,7 +1,7 @@
 From: Ricard Wanderlof <ricard.wanderlof@axis.com>
-Subject: [PATCH 1/4] of: Add device tree bindings for Evatronix
-Date: Thu, 2 Jun 2016 09:47:18 +0200
-Message-ID: <alpine.DEB.2.02.1606020946500.19416@lnxricardw1.se.axis.com>
+Subject: [PATCH 2/4] dts: Add Evatronix NAND flash driver to ARTPEC-6 dtsi
+Date: Thu, 2 Jun 2016 09:47:59 +0200
+Message-ID: <alpine.DEB.2.02.1606020947300.19416@lnxricardw1.se.axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
@@ -12,101 +12,47 @@ Cc: Linux mtd <linux-mtd@lists.infradead.org>, devicetree@vger.kernel.org, linux
 List-Id: devicetree@vger.kernel.org
 
 
-Devicetree bindings for the driver for the Evatronix NANDFLASH-CTRL NAN=
-D flash
-controller IP.  This controller is used in the Axis ARTPEC-6 SoC.
+Add Evatronix NANDFLASH-CTRL NAND flash controller to ARTPEC-6 SoC.
 
-The driver supports BCH ECC using the controller's hardware, but there =
-is
-also an option to use software BCH ECC. However, the ECC layouts are no=
-t
-compatible so it's not possible to mix them. The main advantage to usin=
-g
-software ECC is that there are more OOB bytes free, as the hardware is
-slightly wasteful on OOB space.
-
-BCH ECC from 4 to 32 bits over 256, 512 or 1024 byte ECC blocks is supp=
-orted.
-
-Only large-page flash chips are supported, using 4 or 5 address cycles.
+ONFi mode 2 timing has been set as this is compatible also with non-ONF=
+i
+SLC NAND flashes, with higher throughput than the default ONFi mode 0.
 
 Signed-off-by: Ricard Wanderlof <ricardw@axis.com>
 ---
- .../devicetree/bindings/mtd/evatronix-nand.txt     |   44 ++++++++++++=
-++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 2 files changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/evatronix-nan=
-d.txt
+ arch/arm/boot/dts/artpec6.dtsi |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/evatronix-nand.txt b=
-/Documentation/devicetree/bindings/mtd/evatronix-nand.txt
-new file mode 100644
-index 0000000..7ceb95a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/evatronix-nand.txt
-@@ -0,0 +1,44 @@
-+Evatronix NANDFLASH-CTRL NAND flash controller
-+
-+Required properties:
-+- compatible : "evatronix,nandflash-ctrl"
-+- reg : specify bus address and register area size.
-+- interrupts : controller interrupt number and irq type.
-+- nand-ecc-mode : See nand.txt. Supported values "hw", "soft".
-+- nand-ecc-algo : See nand.txt. Supported value "bch".
-+- nand-ecc-strength : See nand.txt. Supported values: 4, 8, 16, 24, 32=
-=2E
-+- nand-ecc-step-size : See nand.txt. Supported values: 256, 512, 1024.
-+
-+Optional properties:
-+- nand-on-flash-bbt: See nand.txt.
-+- #address-cells, #size-cells: See partition.txt.
-+- evatronix,use-bank-select : Use controller bank select function to a=
-ccess
-+			      multiple chips, rather than chip enable.
-+- evatronix,rb-wired-and: Assume ready/busy signal from all flash chip=
-s are
-+			  connected using a wired-AND topology rather than
-+			  individually.
-+- evatronix,timings: Seven 32-bit values for initializing the TIME_SEQ=
-_0,
-+		     TIME_SEQ_1, TIMINGS_ASYN, TIME_GEN_SEQ_0, TIME_GEN_SEQ_1,
-+		     TIME_GEN_SEQ_2 and TIME_GEN_SEQ_3 registers, respectively.
-+
-+Example:
-+
-+nand: nand@f801e000 {
-+	compatible =3D "evatronix,nandflash-ctrl";
-+	#address-cells =3D <1>;
-+	#size-cells =3D <1>;
-+	reg =3D <0xf801e000 0x0200>;
-+	interrupts =3D <0 139 IRQ_TYPE_LEVEL_HIGH>;
-+	/* ONFi mode 0 timing, assuming 100 MHz clock. */
-+	/* Order is TIME_SEQ_0, TIME_SEQ_1, TIMINGS_ASYN,
-+	 * TIME_GEN_SEQ_0, _1, _2, _3 */
-+	evatronix,timings =3D <0x0d151533 0x000b0515 0x00000046
-+			     0x00150000 0x00000000 0x00000005 0x00000015>;
-+	nand-ecc-mode =3D "hw";
-+	nand-ecc-algo =3D "bch";
-+	nand-on-flash-bbt;
-+	nand-ecc-strength =3D <8>;
-+	nand-ecc-step-size =3D <512>;
-+	evatronix,use-bank-select;
-+	evatronix,rb-wired-and;
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
-cumentation/devicetree/bindings/vendor-prefixes.txt
-index 86740d4..4018162 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -83,6 +83,7 @@ epson	Seiko Epson Corp.
- est	ESTeem Wireless Modems
- ettus	NI Ettus Research
- eukrea  Eukr=C3=A9a Electromatique
-+evatronix	Evatronix SA
- everest	Everest Semiconductor Co. Ltd.
- everspin	Everspin Technologies, Inc.
- excito	Excito
+diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6=
+=2Edtsi
+index 3043016..17f6924 100644
+--- a/arch/arm/boot/dts/artpec6.dtsi
++++ b/arch/arm/boot/dts/artpec6.dtsi
+@@ -266,5 +266,24 @@
+ 			clock-names =3D "uart_clk", "apb_pclk";
+ 			status =3D "disabled";
+ 		};
++		nand: nand@f801e000 {
++			compatible =3D "evatronix,nandflash-ctrl";
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			reg =3D <0xf801e000 0x0200>;
++			interrupts =3D <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
++			/* ONFi mode 2 timing */
++			/* Order is TIME_SEQ_0, TIME_SEQ_1, TIMINGS_ASYN,
++			 * TIME_GEN_SEQ_0, _1, _2, _3
++			 */
++			evatronix,timings =3D <0x080a0a32 0x0007020a 0x00000023
++					     0x00000000 0x00000000 0x00000000
++					     0x00000000>;
++			nand-ecc-mode =3D "hw";
++			nand-ecc-algo =3D "bch";
++			nand-on-flash-bbt;
++			nand-ecc-strength =3D <8>;
++			nand-ecc-step-size =3D <512>;
++		};
+ 	};
+ };
 --=20
 1.7.10.4
 
