@@ -1,41 +1,62 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH 1/5] clk: qcom: ipq4019: Modified the fixed clock rate to
- proper values
-Date: Fri, 3 Jun 2016 00:45:32 +0530
-Message-ID: <20160602191532.GA23619@chewinlnx07.qualcomm.com>
-References: <1464618758-20965-1-git-send-email-absahu@codeaurora.org>
- <1464618758-20965-2-git-send-email-absahu@codeaurora.org>
- <20160601221808.GI28218@codeaurora.org>
- <9a9ac449-4c14-e0fa-5637-5ca7aac321aa@codeaurora.org>
- <20160602183540.GK28218@codeaurora.org>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: [PATCH] device tree description for AD5820 camera auto-focus coil
+Date: Thu, 2 Jun 2016 21:30:27 +0200
+Message-ID: <20160602193027.GB7984@amd>
+References: <574049EF.2090208@gmail.com>
+ <20160524090433.GA1277@amd>
+ <20160524091746.GA14536@amd>
+ <20160525212659.GK26360@valkosipuli.retiisi.org.uk>
+ <20160527205140.GA26767@amd>
+ <20160531212222.GP26360@valkosipuli.retiisi.org.uk>
+ <20160531213437.GA28397@amd>
+ <20160601152439.GQ26360@valkosipuli.retiisi.org.uk>
+ <20160601220840.GA21946@amd>
+ <20160602074544.GR26360@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160602183540.GK28218@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "Banavathi, Pradeep" <pradeepb@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, galak@codeaurora.org, mmcclint@codeaurora.org, varada@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org, ntelkar@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20160602074544.GR26360-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 02, 2016 at 11:35:40AM -0700, Stephen Boyd wrote:
-> On 06/02, Banavathi, Pradeep wrote:
-> > The PLLs on IPQ4019 cannot be reconfigured by design. The
-> > recommendation is to program these PLLS only once. Since, the
-> > Bootloaders configure the PLLs and clocks already. we did not
-> > support the recalc rate and marked them as fixed clocks.
-> > 
-> 
-> (Please don't top post)
-> 
-> That doesn't matter. We recalculate PLL rates on all other qcom
-> SoCs by reading the hardware even though an overwhelming majority
-> of them are fixed by the bootloader.
->
-We will check for this. Already we added the APSS CPU PLL divider
-in clock framework in next 3 patches of this patchset. Could you
-please review the same so that we can follow the similar thing for
-other PLL and dividers.
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+
+Add documentation for ad5820 device tree binding.
+
+Signed-off-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+new file mode 100644
+index 0000000..fb70ca5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+@@ -0,0 +1,19 @@
++* Analog Devices AD5820 autofocus coil
++
++Required Properties:
++
++  - compatible: Must contain "adi,ad5820"
++
++  - reg: I2C slave address
++
++  - VANA-supply: supply of voltage for VANA pin
++
++Example:
++
++       ad5820: coil@0c {
++               compatible = "adi,ad5820";
++               reg = <0x0c>;
++
++               VANA-supply = <&vaux4>;
++       };
++
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
