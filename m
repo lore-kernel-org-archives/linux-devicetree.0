@@ -1,59 +1,241 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: am335x-boneblack: add i2c1 DT entry
-Date: Thu, 2 Jun 2016 10:56:35 -0700
-Message-ID: <20160602175635.GG5995@atomide.com>
-References: <1464853310-8738-1-git-send-email-yong.b.li@intel.com>
- <CAOCHtYib9YxckneM-j0Gk1YE=MnvAwAhvDjEDEuFJbH6W3EcWA@mail.gmail.com>
- <20160602173932.GF5995@atomide.com>
- <CAOCHtYiWYrwSidHnKv4siFT-wU=tt5-YeDTwbM022ZTxdPFYYA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOCHtYiWYrwSidHnKv4siFT-wU=tt5-YeDTwbM022ZTxdPFYYA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Nelson <robertcnelson@gmail.com>
-Cc: Yong Li <yong.b.li@intel.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux kernel <linux-kernel@vger.kernel.org>, sdliyong@gmail.com
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH/RFC 1/1] soc: renesas: Add DT fixup code for missing r8a7791 RST
+Date: Thu, 2 Jun 2016 21:01:50 +0300
+Message-ID: <A591F05A-3288-410D-8D56-9AEAD3B21ED3@konsulko.com>
+References: <1464810650-23002-1-git-send-email-geert+renesas@glider.be> <1464810650-23002-2-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1464810650-23002-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Dirk Behme <dirk.behme@de.bosch.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Robert Nelson <robertcnelson@gmail.com> [160602 10:48]:
-> On Thu, Jun 2, 2016 at 12:39 PM, Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Robert Nelson <robertcnelson@gmail.com> [160602 10:39]:
-> > > On Thu, Jun 2, 2016 at 2:41 AM, Yong Li <yong.b.li@intel.com> wrote:
-> > >
-> > > > From: Yong Li <sdliyong@gmail.com>
-> > > >
-> > > > Without this patch, I2C-1 is missing on beaglebone black boards
-> > > >
-> > > > Signed-off-by: Yong Li <sdliyong@gmail.com>
-> > > > ---
-> > > >  arch/arm/boot/dts/am335x-boneblack.dts | 15 +++++++++++++++
-> > > >  1 file changed, 15 insertions(+)
-> > > >
-> > >
-> > >
-> > > This is also 'common' for the white/green, if your really going to push
-> > > this, please add it to:
-> > >
-> > > am335x-bone-common.dtsi
-> >
-> > But isn't this exposed on the cape pins? So the use can be
-> > whatever for these pins?
-> 
-> That is correct, "i2c1" is on the cape connector, with no primary
-> function defined.
-> 
-> Currently on mainline, the board and cape eeprom i2c bus's are enabled.
-> 
-> i2c0 = board eeprom
-> i2c2 = 'cape' eeprom
-> 
-> personally, nak by me to add i2c1 by default, should use overlay's to enable it.
+Hi Geert,
 
-Yes sounds like the best we can do is define it but set it with
-status = "disabled" for now.
+A few notes.
 
-Regards,
+> On Jun 1, 2016, at 22:50 , Geert Uytterhoeven <geert+renesas@glider.b=
+e> wrote:
+>=20
+> Add DT fixup code to add a reset-controller node for the r8a7791 RST
+> module if it's not yet present.
+>=20
+> This allows the R-Car Gen2 clock driver to use the RST driver to obta=
+in
+> the value of the mode pins, instead of reading from a hardcoded addre=
+ss
+> in rcar_gen2_read_mode_pins(), while providing backward compatibility
+> with old DTBs.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> ---
+> drivers/soc/renesas/Makefile           |   4 +
+> drivers/soc/renesas/renesas-dt-fixup.c | 159 ++++++++++++++++++++++++=
++++++++++
+> 2 files changed, 163 insertions(+)
+> create mode 100644 drivers/soc/renesas/renesas-dt-fixup.c
+>=20
+> diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makef=
+ile
+> index 0d732ff893dd8fba..e5f4454821ca6f63 100644
+> --- a/drivers/soc/renesas/Makefile
+> +++ b/drivers/soc/renesas/Makefile
+> @@ -1,3 +1,7 @@
+> +# FIXME Depend on new Kconfig symbol CONFIG_ARCH_RENESAS_LEGACY
+> +# FIXME Needs OF_DYNAMIC
+> +obj-$(CONFIG_ARCH_RENESAS)	+=3D renesas-dt-fixup.o
+> +
+> obj-$(CONFIG_ARCH_RCAR_GEN1)	+=3D rcar-rst.o
+> obj-$(CONFIG_ARCH_RCAR_GEN2)	+=3D rcar-rst.o
+> obj-$(CONFIG_ARCH_R8A7795)	+=3D rcar-rst.o
+> diff --git a/drivers/soc/renesas/renesas-dt-fixup.c b/drivers/soc/ren=
+esas/renesas-dt-fixup.c
+> new file mode 100644
+> index 0000000000000000..83c9ca6b44f8136c
+> --- /dev/null
+> +++ b/drivers/soc/renesas/renesas-dt-fixup.c
+> @@ -0,0 +1,159 @@
+> +/*
+> + * Renesas DT Fixup Code
+> + *
+> + * Provide backwards compatibility with old DTBs by updating the DT
+> + *
+> + * Copyright (C) 2016 Glider bvba
+> + *
+> + * This file is subject to the terms and conditions of the GNU Gener=
+al Public
+> + * License.  See the file "COPYING" in the main directory of this ar=
+chive
+> + * for more details.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/slab.h>
+> +
+> +#define RST_BASE	0xe6160000
+> +#define RST_SIZE	0x0100		/* R-Car Gen2 */
+> +
+> +static struct property rst_compatible =3D {
+> +	.name =3D "compatible",
+> +};
+> +
+> +static __be32 rst_reg_values[4] =3D {
+> +	cpu_to_be32(0),
+> +	cpu_to_be32(RST_BASE),
+> +	cpu_to_be32(0),
+> +	cpu_to_be32(RST_SIZE),
+> +};
+> +
+> +static struct property rst_name =3D {
+> +	.name =3D "name",
+> +	.length =3D sizeof("reset-controller"),
+> +	.value =3D "reset-controller",
+> +};
+> +
+> +static struct property rst_reg =3D {
+> +	.name =3D "reg",
+> +	.length =3D sizeof(rst_reg_values),
+> +	.value =3D rst_reg_values,
+> +};
+> +
+> +static int __init add_rst(struct device_node *parent, const char *pa=
+th,
+> +			  char *compatible)
+> +{
+> +	struct property *prop[] =3D { &rst_compatible, &rst_name, &rst_reg =
+};
+> +	struct device_node *np;
+> +	char *full_name;
+> +	unsigned int i;
+> +	int error;
+> +
+> +	pr_debug("Adding RST node %s\n", compatible);
+> +	np =3D kzalloc(sizeof(*np), GFP_KERNEL);
+> +	if (!np)
+> +		return -ENOMEM;
+> +
+> +	np->name =3D kasprintf(GFP_KERNEL, "%s@%x", (char *)rst_name.value,
+> +			     RST_BASE);
+> +	full_name =3D kasprintf(GFP_KERNEL, "%s/%s", path, np->name);
+> +	np->full_name =3D full_name;
+> +	np->parent =3D parent;
+> +
+> +	of_node_set_flag(np, OF_DYNAMIC);
+> +	of_node_init(np);
+> +
+> +	error =3D of_attach_node(np);
+> +	if (error) {
+> +		pr_err("%s: of_attach_node() %s failed %d\n", __func__,
+> +		       np->name, error);
+> +		kfree(np);
+> +		return error;
+> +	}
+> +
+> +	rst_compatible.value =3D compatible;
+> +	rst_compatible.length =3D strlen(rst_compatible.value) + 1;
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(prop); i++) {
+> +		error =3D of_add_property(np, prop[i]);
+> +		if (error)
+> +			pr_err("%s: of_add_property() %s/%s failed %d\n",
+> +			       __func__, np->name, prop[i]->name, error);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
 
-Tony
+Using changesets (especially with the new changeset helpers would make =
+this
+so much simpler. Or you could compile in a DTBO that performs the chang=
+es
+although you will have to tweak it since it appears you=E2=80=99re not =
+using fixed
+names and properties all the way.
+
+> +static int __init add_sysc(struct device_node *parent, const char *p=
+ath,
+> +			   char *compatible)
+> +{
+> +	pr_debug("NOT YET adding SYSC node %s\n", compatible);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id renesas_matches[] __initconst =3D {
+> +	{ .compatible =3D "renesas,r8a7791", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static int __init renesas_dt_fixup(void)
+> +{
+> +	const struct of_device_id *match;
+> +	struct device_node *np, *parent;
+> +	const char *parent_path;
+> +	char *compatible;
+> +
+> +	np =3D of_find_node_by_path("/");
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	for (match =3D renesas_matches; match->compatible[0]; match++)
+> +		if (of_device_is_compatible(np, match->compatible))
+> +			break;
+> +	of_node_put(np);
+> +
+> +	if (!match->compatible[0])
+> +		return -ENODEV;
+> +
+> +	/* Find the main SoC bus node */
+> +	np =3D of_find_compatible_node(NULL, NULL, "arm,gic-400");
+> +	if (!np) {
+> +		pr_warn("%s: Cannot find %s\n", __func__, "arm,gic-400");
+> +		return -ENODEV;
+> +	}
+> +
+> +	parent =3D of_get_parent(np);
+> +	of_node_put(np);
+> +	if (!parent) {
+> +		pr_warn("%s: Cannot find GIC parent\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	parent_path =3D parent->full_name;
+> +	/* Prevent double leading slash */
+> +	if (!parent_path[1])
+> +		parent_path++;
+> +
+> +	compatible =3D kasprintf(GFP_KERNEL, "%s-rst", match->compatible);
+> +	if (of_find_compatible_node(NULL, NULL, compatible)) {
+> +		pr_debug("%s: RST node %s present\n", __func__, compatible);
+> +		kfree(compatible);
+> +	} else {
+> +		add_rst(parent, parent_path, compatible);
+> +	}
+> +
+> +	compatible =3D kasprintf(GFP_KERNEL, "%s-sysc", match->compatible);
+> +	if (of_find_compatible_node(NULL, NULL, compatible)) {
+> +		pr_debug("%s: SYSC node %s present\n", __func__, compatible);
+> +		kfree(compatible);
+> +	} else {
+> +		add_sysc(parent, parent_path, compatible);
+> +	}
+> +
+> +	of_node_put(parent);
+> +	return 0;
+> +}
+> +early_initcall(renesas_dt_fixup);
+> --=20
+> 1.9.1
+>=20
+
+Regards
+
+=E2=80=94 Pantelis
