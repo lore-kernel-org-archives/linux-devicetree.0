@@ -1,76 +1,106 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: use pr_fmt prefix for all console printing
-Date: Thu, 2 Jun 2016 14:44:16 -0700
-Message-ID: <5750A8B0.9010702@gmail.com>
-References: <1464880499-29864-1-git-send-email-robh@kernel.org>
- <57506DDC.3060804@gmail.com>
- <CAL_JsqLrC27EOkWfRtzUOZox5wkRU=qEb+b3z2JQG++e5uSGSg@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC v3 01/22] reset: Add renesas,rst DT bindings
+Date: Fri, 03 Jun 2016 00:47:03 +0300
+Message-ID: <10393056.BKo7UTPXFi@avalon>
+References: <1464808880-343-1-git-send-email-geert+renesas@glider.be> <1464808880-343-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLrC27EOkWfRtzUOZox5wkRU=qEb+b3z2JQG++e5uSGSg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1464808880-343-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/16 12:56, Rob Herring wrote:
-> On Thu, Jun 2, 2016 at 12:33 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->> On 06/02/16 08:14, Rob Herring wrote:
->>> Clean-up all the DT printk functions to use common pr_fmt prefix.
->>>
->>> Some print statements such as kmalloc errors were redundant, so just
->>> drop those.
->>>
->>> Cc: Frank Rowand <frowand.list@gmail.com>
->>> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>> ---
->>>  drivers/of/address.c         | 49 ++++++++++++++++++++++----------------------
->>>  drivers/of/base.c            | 11 ++++++----
->>>  drivers/of/dynamic.c         | 47 +++++++++++++++++++++---------------------
->>>  drivers/of/fdt.c             | 12 +++++------
->>>  drivers/of/fdt_address.c     | 35 ++++++++++++++++---------------
->>>  drivers/of/irq.c             |  2 ++
->>>  drivers/of/of_numa.c         | 22 ++++++--------------
->>>  drivers/of/of_pci.c          |  6 ++++--
->>>  drivers/of/of_reserved_mem.c | 22 ++++++++++----------
->>>  drivers/of/overlay.c         | 43 +++++++++++++++-----------------------
->>>  drivers/of/platform.c        | 16 +++++++--------
->>>  drivers/of/resolver.c        |  2 ++
->>>  12 files changed, 130 insertions(+), 137 deletions(-)
->>>
->>
->> Nice cleanup.  A couple of comments below.
->>
->> Reviewed-by: Frank Rowand <frank.rowand@am.sony.com>
->>
->> < snip >
+Hi Geert,
 
-< snip >
+Thank you for the patch.
 
->>> @@ -355,8 +355,6 @@ int of_overlay_create(struct device_node *tree)
->>>
->>>       id = idr_alloc(&ov_idr, ov, 0, 0, GFP_KERNEL);
->>>       if (id < 0) {
->>> -             pr_err("%s: idr_alloc() failed for tree@%s\n",
->>> -                             __func__, tree->full_name);
->>
->> Every other error in of_overlay_create() results in a pr_err().
->> (The other cases of removing pr_err() in this file are fine, because
->> the errors are already reported in the functions called from this
->> function.)
->>
->> I would recommend leaving in the pr_err() for idr_alloc() failure.
+On Wednesday 01 Jun 2016 21:20:59 Geert Uytterhoeven wrote:
+> Add DT bindings for the Renesas R-Car Reset Controller (R-Car Gen1
+> RESET/WDT and R-Car Gen2/Gen3 RST).
 > 
-> I was thinking idr_alloc is going to call kmalloc which will print
-> errors on failure, but there may be some case it doesn't.
+> As the features provided by the hardware module differ a lot across the
+> various SoC families and members, only SoC-specific compatible values
+> are defined.
 > 
-> Rob
+> For now we use the RST only for providing access to the state of the
+> mode pins.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Magnus Damm <damm+renesas@opensource.se>
+> ---
+> v3:
+>   - Clarify current usage,
+>   - Use "renesas,<soctype>-rst" instead of "renesas,rst-<soctype>",
+>   - Drop "syscon" compatible value,
+>   - Add R-Car M3-W,
+>   - Add R-Car Gen1,
+> 
+> v2:
+>   - Add Acked-by.
+> ---
+>  .../devicetree/bindings/reset/renesas,rst.txt      | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt
+> b/Documentation/devicetree/bindings/reset/renesas,rst.txt new file mode
+> 100644
+> index 0000000000000000..488c72e1ee849cd3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/renesas,rst.txt
+> @@ -0,0 +1,35 @@
+> +DT bindings for the Renesas R-Car Reset Controller
+> +
+> +The R-Car Reset Controller provides reset control, and implements the
+> following
+> +functions:
+> +  - Latching of the levels on mode pins when PRESET# is negated,
+> +  - Mode monitoring register,
+> +  - Reset control of peripheral devices (on R-Car Gen1),
+> +  - Watchdog timer (on R-Car Gen1).
+> +  - Register-based reset control and boot address registers for the various
+> CPU
+> +    cores (on R-Car Gen2/Gen3),
+> +
+> +
+> +Required properties:
+> +  - compatible: Should be
+> +		  - "renesas,<soctype>-reset-wdt" for R-Car Gen1,
+> +		  - "renesas,<soctype>-rst" for R-Car Gen2/Gen3.
+> +		Examples with soctypes are:
+> +		  - "renesas,r8a7778-reset-wdt" (R-Car M1A)
+> +		  - "renesas,r8a7779-reset-wdt" (R-Car H1)
+> +		  - "renesas,r8a7790-rst" (R-Car H2)
+> +		  - "renesas,r8a7791-rst" (R-Car M2-W)
+> +		  - "renesas,r8a7792-rst" (R-Car V2H
+> +		  - "renesas,r8a7793-rst" (R-Car M2-N)
+> +		  - "renesas,r8a7794-rst" (R-Car E2)
+> +		  - "renesas,r8a7795-rst" (R-Car H3)
+> +		  - "renesas,r8a7796-rst" (R-Car M3-W)
 
-I did not read idr_alloc() carefully enough.  Given the arguments it
-is called with, none of the non-kmalloc error returns are possible.
-So you were correct to remove this pr_err().
+Any specific reason for such a large indentation ? (I know this is really 
+nitpicking)
 
--Frank
+Apart from that, it's just a bit of a shame we can't have generic compatible 
+strings, but that would require additional DT properties to describe the reset 
+controller features, and I assume that's not a path we want to take.
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +  - reg: Address start and address range for the device.
+> +
+> +
+> +Example:
+> +
+> +	rst: reset-controller@e6160000 {
+> +		compatible = "renesas,r8a7795-rst";
+> +		reg = <0 0xe6160000 0 0x0200>;
+> +	};
+
+-- 
+Regards,
+
+Laurent Pinchart
