@@ -1,55 +1,110 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v3 09/12] EXAMPLE CODE: usb: port: Parse pwrseq phandle
- from Device Tree
-Date: Thu, 2 Jun 2016 09:24:19 +0800
-Message-ID: <20160602012419.GA7953@shlinux2>
-References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
- <1464768141-25420-10-git-send-email-k.kozlowski@samsung.com>
- <146477144362.1485.3331887341591876278@sboyd-linaro>
- <20160601120520.GB16740@shlinux2>
- <146480499491.3686.4996610748316511864@sboyd-linaro>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v3 04/12] of: add J-Core timer bindings
+Date: Wed, 1 Jun 2016 21:34:07 -0400
+Message-ID: <20160602013407.GA12184@brightrain.aerifal.cx>
+References: <cover.1464148904.git.dalias@libc.org>
+ <5341dfbb085d5647ebb6fe4390ca329b63e0e03d.1464148904.git.dalias@libc.org>
+ <20160601135852.GA17217@rob-hp-laptop>
+ <20160601175307.GC10893@brightrain.aerifal.cx>
+ <CAL_JsqJYyvdc06v2+R=Wnmkk-cO7ZFq=7uGOhPxXdL0UfEu-iA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <146480499491.3686.4996610748316511864@sboyd-linaro>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+In-Reply-To: <CAL_JsqJYyvdc06v2+R=Wnmkk-cO7ZFq=7uGOhPxXdL0UfEu-iA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 11:16:34AM -0700, Stephen Boyd wrote:
-> Quoting Peter Chen (2016-06-01 05:05:20)
-> > On Wed, Jun 01, 2016 at 01:57:23AM -0700, Stephen Boyd wrote:
-> > > Quoting Krzysztof Kozlowski (2016-06-01 01:02:18)
-> > > > Parse usb-pwrseq property from Device Tree to get the phandle to pwrseq
-> > > > device.  The pwrseq device will be used by USB hub to cycle the power
-> > > > before activating ports.
-> > > > 
-> > > > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > > 
-> > > Drive by review comment.
-> > > 
-> > > I was hoping this would help me with a problem I'm having where I have a
-> > > hub (smsc4604) that needs to be taken out of reset before my HSIC
-> > > controller sends a USB reset to it, but it seems this is more about
-> > > doing some sort of power on sequence after enumeration?
-> > > 
-> > 
-> > No, you may need to do reset before enumeration, the general purpose of
-> > reset is eliminate unstable hardware state, and let the controller find
-> > the device.
-> > 
-> > Try to do it at bootloader to see if it works for you.
-> > 
+On Wed, Jun 01, 2016 at 05:36:19PM -0500, Rob Herring wrote:
+> On Wed, Jun 1, 2016 at 12:53 PM, Rich Felker <dalias@libc.org> wrote:
+> > On Wed, Jun 01, 2016 at 08:58:52AM -0500, Rob Herring wrote:
+> >> On Wed, May 25, 2016 at 05:43:03AM +0000, Rich Felker wrote:
+> >> > Signed-off-by: Rich Felker <dalias@libc.org>
+> >> > ---
+> >> >  .../devicetree/bindings/timer/jcore,pit.txt        | 28 ++++++++++++++++++++++
+> >> >  1 file changed, 28 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
+> >> > new file mode 100644
+> >> > index 0000000..96c6815
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
+> >> > @@ -0,0 +1,28 @@
+> >> > +J-Core Programmable Interval Timer and Clocksource
+> >> > +
+> >> > +Required properties:
+> >> > +
+> >> > +- compatible: Must be "jcore,pit".
+> >> > +
+> >> > +- reg: Memory region for timer/clocksource registers.
+> >> > +
+> >> > +- interrupts: An interrupt to assign for the timer. The actual pit
+> >> > +  core is integrated with the aic and allows the timer interrupt
+> >> > +  assignment to be programmed by software, but this property is
+> >> > +  required in order to reserve an interrupt number that doesn't
+> >> > +  conflict with other devices.
+> >> > +
+> >> > +Optional properties:
+> >> > +
+> >> > +- cpu-offset: For SMP, the per-cpu offset to the local timer
+> >> > +  programming memory range.
+> >> > +
+> >> > +
+> >> > +Example:
+> >> > +
+> >> > +timer@200 {
+> >> > +   compatible = "jcore,pit";
+> >> > +   reg = < 0x200 0x30 >;
+> >> > +   cpu-offset = < 0x300 >;
+> >>
+> >> This is outside the reg range. Perhaps reg should include each range of
+> >> per cpu registers.
+> >
+> > In the hardware, each timer instance is mapped independently so
+> > there's no fundamental reason they need to be mapped sufficiently
+> > close that it would make sense for a single virtual mapping to cover
+> > them all. This doesn't matter for nommu but it would with mmu in the
+> > future. In the driver I've updated it to ioremap each percpu instance
+> > separately (as its own memory range) using the cpu-offset applied to
+> > the range obtained from "reg". Is this acceptable (in which case I
+> > suppose the binding needs to be documented that "reg" just covers the
+> > cpu0 instance's range)? Do you think it would be preferable to have
+> > multiple "reg" ranges indexed by cpu instead of cpu-offset?
 > 
-> Sorry the bootloader doesn't do this so that doesn't work for me.
+> Yes. Either reg should cover the full range of addresses or you should
+> have multiple reg values with one for each cpu. I prefer the latter as
+> it doesn't create a custom property for expressing register addresses.
 
-I mean try to see if the HUB can work if you reset it at bootloader.
-If it works, it means you need to do reset before enumeration, and you
-don't need to do anything after enumeration.
+OK, let's lean towards going with the latter then. It's more flexible
+and allows any placement of the maps; the offset per cpu does not have
+to be constant. It also makes the driver code simpler since of_iomap
+can be used directly rather than requiring of_address_to_resource,
+physical address arithmetic arithmetic, and ioremap on the results. Is
+there any precedent for using multiple reg ranges for percpu register
+instances like this? Anything else they've been used for?
 
--- 
+> > In theory it would even be possible to just require a DT node per
+> > cpulocal timer, but I didn't see a good way to make the bindings
+> > represent the relationship to cpus or to make the driver handle irqs
+> > correctly for such a setup, so I'd need a viable proposal for how that
+> > could be done to even consider such an approach.
+> 
+> Yeah, there's not really a standard way to map per cpu blocks to cpus.
+> We could, but doesn't really seem necessary here.
+> 
+> For the irqs, percpu irqs doesn't help you?
 
-Best Regards,
-Peter Chen
+What I mean is that, if there were a separate device node and driver
+instance per cpu, they'd all want to register the same irq just to
+handle it on their own cpu, so we'd have a lot of spurious handlers
+running. The right way to model this, I think, would be as a virtual
+irqchip that's the irq parent of all the timer nodes, and that
+multiplexes the real irq to one virq per cpu (where the current cpu id
+becomes the irq number in its irq domain). But that's a lot of virtual
+infrastructure just for the sake of modelling each percpu timer as its
+own DT node and I don't think it makes sense to do it that way.
+
+Rich
