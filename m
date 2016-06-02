@@ -1,43 +1,112 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v1 1/2] ARM: dts: keystone: remove bogus IO resource entry
- from PCI binding
-Date: Thu, 2 Jun 2016 17:07:46 -0400
-Message-ID: <5750A022.2000601@ti.com>
-References: <1464880672-15203-1-git-send-email-m-karicheri2@ti.com>
- <bdf18787-46ed-cc15-8914-fc14a3557681@oracle.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC 0/1] soc: renesas: Add DT fixup code for backwards compatibility
+Date: Fri, 03 Jun 2016 00:24:53 +0300
+Message-ID: <1504590.41feUl4EiT@avalon>
+References: <1464810650-23002-1-git-send-email-geert+renesas@glider.be> <CAL_JsqLOO9UsAhBu4MVBBu2uiBpbiBvUO_pPeYg+S-7wg-xVkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bdf18787-46ed-cc15-8914-fc14a3557681@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, ssantosh@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLOO9UsAhBu4MVBBu2uiBpbiBvUO_pPeYg+S-7wg-xVkQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Dirk Behme <dirk.behme@de.bosch.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2016 02:08 PM, Santosh Shilimkar wrote:
-> On 6/2/2016 8:17 AM, Murali Karicheri wrote:
->> The PCI DT bindings contain a bogus entry for IO space which is not
->> supported on Keystone. The current bogus entry has an invalid size
->> and throws following error during boot.
->>
->> [0.420713] keystone-pcie 21021000.pcie: error -22: failed to map
->>            resource [io  0x0000-0x400000003fff]
->>
->> So remove it from the dts. While at it also add a bus-range
->> value that eliminates following log at boot up.
->>
->> [0.420659] No bus range found for /soc/pcie@21020000, using [bus 00-ff]
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> ---
-> Both 1/2 and 2/2 looks fine to me. Will queue them for
-> next merge window.
+Hi Rob and Geert,
+
+On Wednesday 01 Jun 2016 15:27:59 Rob Herring wrote:
+> On Wed, Jun 1, 2016 at 2:50 PM, Geert Uytterhoeven wrote:
+> > Hi all,
+> > 
+> > When moving functionality from C code to DT, we're regularly faced with
+> > stable DT issues: old DTBs should keep on working. This requires keeping
+> > workaround code in the kernel.
+> > 
+> > An alternative solution to having workaround C code, would be to
+> > dynamically modify the DT, to add missing device nodes and phandle links.
+> > 
+> > This has several advantages:
+> >   - All workarounds are kept together,
+> >   - Workarounds can be enabled/disabled using a single Kconfig option,
+> >   - Individual driver code is not polluted by workaround code.
+> > 
+> > Examples of missing support in DT are:
+> >   - A device node for the R-Car RST (Reset Controller), which a.o.
+> >     provides access to the Mode Pins (currently handled using an
+> >     hardcoded address in platform/driver code), cfr. the series
+> >     "[PATCH/RFC v3 00/22] soc: renesas: Add R-Car RST driver for
+> >     obtaining mode pin state" I've just sent
+> >     (http://www.spinics.net/lists/linux-renesas-soc/msg04289.html),
+> >   
+> >   - A device node for the R-Car SYSC (System Controller), to link CPUs
+> >     to their respective power domains (On R-Car Gen2 CPUs can be
+> >     auto-detected, as there's a register indicating which CPU cores are
+> >     present),
+> >   
+> >   - Add a device node for the R-Car Gen2 APMU (Advanced Power
+> >   
+> >     Management Unit), for modern CPU bringup using "enable-method".
+> >     Note that the method from this RFC doesn't work for
+> >     "enable-method", as that is parsed in arm_dt_init_cpu_maps(),
+> >     immediately after unflatten_device_tree(), long before initcalls
+> >     run.
+> > 
+> > However, there are other possible uses:
+> >   - Workarounds for hardware bugs: early engineering samples of an SoC
+> >   
+> >     may have non-functional devices. This would allow to describe the
+> >     latest (functional) hardware in the .dtsi, knowing that the fixup
+> >     code will disable non-functional devices when running on an early
+> >     engineering sample, based on reading the PRR (Product Revision
+> >     Register).
+> >   
+> >   - Handle other differences between SoC versions, e.g. change
+> >   
+> >     compatible values for an early engineering sample that needs special
+> >     handling, or limit the features of a device.
+> >   
+> >   - Add SoC-specific compatible values to all device nodes (e.g. add
+> >   
+> >     "renesas,r8a7795-wdt" to a node already having
+> >     "renesas,rcar-gen3-wdt" when running on r8a7795). This would make
+> >     it easier to share .dtsi files within the same SoC family, without
+> >     relying on e.g. C preprocessor tricks.
+> > 
+> > This proof-of-concept implements this for the missing R-Car RST (Reset
+> > Controller) node. This poc is not suitable for all of the above, as some
+> > DT structures (e.g. the CPU's "enable-method) are parsed long before
+> > early_initcall(), and would need a different workaround.
+> > 
+> > What do you think?
 > 
-> Regards,
-> Santosh
+> I have no objection to this method of dealing with compatibility.
+> However your handling is still C code. What I would like to see here
+> is using overlays to apply updates. I would like to be able to take 2
+> dts files and create an overlay dts based on their diff (or you could
+> do this step manually). Then build the overlay dtb into the kernel and
+> apply it on boot based on some match. Then thru the magic of linker
+> sections, it becomes a matter of just adding the dtbo into the build
+> and a one line declaration:
 > 
-Ok. Thanks Santosh!
+> DT_QUIRK(my_quirk_dtbo, "vendor,board");
+> 
+> BTW, I'd also like to see tools to apply overlays offline into a new
+> dtb or compile dts files and overlays to a dtb.
+
+We need to keep the use case in mind. The main (and possibly only) reason why 
+we want to patch DT this way is to support systems whose DTB can't be updated 
+(otherwise we could just update the DTB) and isn't fully known in advance to 
+the kernel (otherwise we would just bundle an updated full DTB with the 
+kernel). We thus need a heuristic-based approach at runtime to identify 
+missing or outdated DT pieces and patch them, with some level of fuzziness. 
+I'm not sure we could handle this with overlays.
+
+> > Should this be handled at another level? E.g. operate on the FDT?
+> 
+> We should try to avoid doing things with the FDT if possible.
 
 -- 
-Murali Karicheri
-Linux Kernel, Keystone
+Regards,
+
+Laurent Pinchart
