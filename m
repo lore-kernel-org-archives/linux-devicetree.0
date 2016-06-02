@@ -1,59 +1,45 @@
-From: Po Liu <po.liu@nxp.com>
-Subject: RE: [PATCH 1/2] freescale/dts: add pcie aer interrupt-name property
- in the dts
-Date: Thu, 2 Jun 2016 01:17:24 +0000
-Message-ID: <VI1PR0401MB1709DFD5A437FD01D724FF9F92580@VI1PR0401MB1709.eurprd04.prod.outlook.com>
-References: <1464242349-15323-1-git-send-email-po.liu@nxp.com>
- <20160601143950.GA1817@rob-hp-laptop>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH 4/4] Revert "powerpc/fsl: Move fsl_guts.h out of
+ arch/powerpc"
+Date: Wed, 01 Jun 2016 20:24:20 -0500
+Message-ID: <1464830660.22191.6.camel@buserror.net>
+References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com>
+	 <HE1PR04MB0889852B7809A1CCFF8922ACF8410@HE1PR04MB0889.eurprd04.prod.outlook.com>
+	 <CAPDyKFqx2JMLzXoDxGCKFYMFV47+SegnkuWFXKvsQHK7L5w-1g@mail.gmail.com>
+	 <5513501.AmZs7h1vI2@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160601143950.GA1817@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Yang-Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <5513501.AmZs7h1vI2@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Yangbo Lu <yangbo.lu@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, iommu
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2016-05-30 at 15:18 +0200, Arnd Bergmann wrote:
+> All users of this driver are PowerPC specific and the header file
+> has no business in the global include/linux/ hierarchy, so move
+> it back before anyone starts using it on ARM.
+> 
+> This reverts commit 948486544713492f00ac8a9572909101ea892cb0.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> This part of the series is not required for the eSDHC quirk,
+> but it restores the asm/fsl_guts.h header so it doesn't accidentally
+> get abused for this in the future. I found two drivers outside of
+> arch/powerpc that already accessed the registers directly, but the
+> functions look fairly contained, and can be easily hidden in an
+> #ifdef CONFIG_PPC
 
->  -----Original Message-----
->  From: Rob Herring [mailto:robh@kernel.org]
->  Sent: Wednesday, June 01, 2016 10:40 PM
->  To: Po Liu
->  Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Shawn Guo;
->  Marc Zyngier; Roy Zang; Mingkai Hu; Stuart Yoder; Yang-Leo Li; Arnd
->  Bergmann; Bjorn Helgaas; Minghuan Lian
->  Subject: Re: [PATCH 1/2] freescale/dts: add pcie aer interrupt-name
->  property in the dts
->  
->  On Thu, May 26, 2016 at 01:59:09PM +0800, Po Liu wrote:
->  > Freescale some platforms aer interrupt was not MSI/MSI-X/INTx
->  
->  some or all?
+NACK
 
-For all Layerscape platforms, that should be clear, sorry.
+Besides adding ifdef pollution for no good reason, this register block is used
+on some ARM chips as well.  Why is it a problem if "anyone starts using it on
+ARM"?
 
->  
->  > but using interrupt line independently. This patch add a "aer"
->  > interrupt-names for aer interrupt.
->  
->  You are not adding, but replacing the interrupt. This needs a better
->  explanation as you are breaking compatibility.
+BTW, of all the mailing lists you included on this CC, you seem to have left
+off the PPC list (I've added it).
 
-We used to the "intr" name for general concept, but no use. So removed.
-In the Layerscape platform, the aer and pme interrupt lines are independent, 
-not in the Complex Root by MSI or MSIX, so need to read from the DTS before
-MSIX and MSI searching for pci service driver.
- 
->  
->  Rob
+-Scott
