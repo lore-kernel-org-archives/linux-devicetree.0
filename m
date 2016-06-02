@@ -1,62 +1,81 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 09/32] bcm2837-rpi-3-b.dts for 32bit arm
-Date: Thu, 02 Jun 2016 11:53:13 +0200
-Message-ID: <4795604.XAe8xnhung@wuerfel>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com> <3336185.FIBLI6ezsy@wuerfel> <1464858870.24775.65.camel@redhat.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH 1/2 v16] Documentation: bridge: Add documentation for ps8640 DT properties
+Date: Thu, 2 Jun 2016 17:57:24 +0800
+Message-ID: <1464861445-11086-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464858870.24775.65.camel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Airlie <airlied@linux.ie>, Thierry Reding <treding@nvidia.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jitao Shi <jitao.shi@mediatek.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, cawa.cheng@mediatek.com, bibby.hsieh@media
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, June 2, 2016 11:14:30 AM CEST Gerd Hoffmann wrote:
->   Hi,
-> 
-> > > Well, it just includes the arm64 version as-is, so we don't have
-> > > duplication.  I'm open to suggestions to how handle this better.  
-> > > 
-> > > Symbolic link?
-> > > 
-> > > Reference to ../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-> > > directly in the Makefile?
-> > > 
-> > > I've seen arch/arm/boot/dts/Makefile uses globs on *.dts, so I suspect
-> > > the later wouldn't be that straight forward.
-> > 
-> > It's just weird that the arm64 file includes the .dtsi files from arch/arm/
-> > and is then again included back from another file there.
-> > 
-> > I can see two possible ways to handle this better:
-> > 
-> > - leave the complete set of bcm2837 files in arch/arm and then have one
-> >   reference from arch/arm64 per .dts that refers to just that file.
-> 
-> So basically do it the other way around.  Would be a bit less messy
-> indeed.
-> 
-> > - come up with a rule to also build the .dtb files in arch/arm64 when
-> >   we run 'make dtbs' for arch/arm and leave this file there. The argument
-> >   that one could use the same dtb with a 32-bit kernel should basically
-> >   hold true for any arm64 system, it's not specific to rpi-3 really.
-> 
-> Yes, in theory.  No, in practice.  As far I know the rpi3 is the only
-> 64bit soc where a almost identical 32bit version exists, so running
-> 32bit kernels on a 64bit processor actually happens in practice and I
-> expect this to continue.  If you want create sdcard images which run on
-> any rpi variant this is pretty much the only reasonable way to do it.
+Add documentation for DT properties supported by
+ps8640 DSI-eDP converter.
 
-I think the Allwinner A64 and the Samsung s5p6818 are other examples
-for this, where the initial run of boards all run 32-bit kernels
-for much of the same reasons. If users want to run a 32-bit distro
-on rpi-3 and on e.g. orange-pi, I don't see why they wouldn't also run
-the same binary on A64.
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+Changes since v15:
+ - No change.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v14:
+ - change mode-sel-gpios as optional.
+---
+ .../devicetree/bindings/display/bridge/ps8640.txt  |   44 ++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.txt b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+new file mode 100644
+index 0000000..7b13f92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+@@ -0,0 +1,44 @@
++ps8640-bridge bindings
++
++Required properties:
++	- compatible: "parade,ps8640"
++	- reg: first page address of the bridge.
++	- sleep-gpios: OF device-tree gpio specification for PD pin.
++	- reset-gpios: OF device-tree gpio specification for reset pin.
++	- vdd12-supply: OF device-tree regulator specification for 1.2V power.
++	- vdd33-supply: OF device-tree regulator specification for 3.3V power.
++	- ports: The device node can contain video interface port nodes per
++		 the video-interfaces bind[1]. For port@0,set the reg = <0> as
++		 ps8640 dsi in and port@1,set the reg = <1> as ps8640 eDP out.
++
++Optional properties:
++	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++	edp-bridge@18 {
++		compatible = "parade,ps8640";
++		reg = <0x18>;
++		sleep-gpios = <&pio 116 GPIO_ACTIVE_LOW>;
++		reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
++		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
++		vdd12-supply = <&ps8640_fixed_1v2>;
++		vdd33-supply = <&mt6397_vgp2_reg>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				ps8640_in: endpoint {
++					remote-endpoint = <&dsi0_out>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				ps8640_out: endpoint {
++					remote-endpoint = <&panel_in>;
++				};
++			};
++		};
++	};
+-- 
+1.7.9.5
