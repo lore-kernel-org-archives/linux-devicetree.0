@@ -1,74 +1,53 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/4] Revert "powerpc/fsl: Move fsl_guts.h out of
-	arch/powerpc"
-Date: Thu, 02 Jun 2016 11:01:45 +0200
-Message-ID: <3225846.9EJ0sHv0XK@wuerfel>
-References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com>
-	<5513501.AmZs7h1vI2@wuerfel>
-	<1464830660.22191.6.camel@buserror.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1464830660.22191.6.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iomm>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: [PATCH 1/2] ASoC: Add ADAU7002 Stereo PDM-to-I2S/TDM Converter DT bindings
+Date: Thu,  2 Jun 2016 14:19:41 +0200
+Message-ID: <1464869982-6722-1-git-send-email-lars@metafoo.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 1, 2016 8:24:20 PM CEST Scott Wood wrote:
-> On Mon, 2016-05-30 at 15:18 +0200, Arnd Bergmann wrote:
-> > All users of this driver are PowerPC specific and the header file
-> > has no business in the global include/linux/ hierarchy, so move
-> > it back before anyone starts using it on ARM.
-> > 
-> > This reverts commit 948486544713492f00ac8a9572909101ea892cb0.
-> > 
-> > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > ---
-> > This part of the series is not required for the eSDHC quirk,
-> > but it restores the asm/fsl_guts.h header so it doesn't accidentally
-> > get abused for this in the future. I found two drivers outside of
-> > arch/powerpc that already accessed the registers directly, but the
-> > functions look fairly contained, and can be easily hidden in an
-> > #ifdef CONFIG_PPC
-> 
-> NACK
-> 
-> Besides adding ifdef pollution for no good reason, this register block is used
-> on some ARM chips as well.  Why is it a problem if "anyone starts using it on
-> ARM"?
+The ADAU7002 takes a stereo PDM signal (e.g. from two digital microphones)
+and converts it into a I2S/TDM PCM stream. The chip does not have a
+control interface and has a single power supply that is modeled in the
+devicetree.
 
-It's just not a good interface when it's defined as "this is the layout of
-a register area that any driver can ioremap() if they can figure out the
-device node". It's not uncommon to have register areas like that, but
-normally you have at the minimum a 'syscon' device to handle locking
-between drivers accessing the same registers and to avoid having to map
-the same area multiple times.
+Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+---
+ .../devicetree/bindings/sound/adi,adau7002.txt        | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/adi,adau7002.txt
 
-If we need to use 'guts' registers on ARM, we can find a way to abstract
-them properly for the given use cases, using a syscon or a driver with
-exported functions, but just making a PowerPC platform specific header
-global to all Linux drivers by putting it into include/linux doesn't seem
-right.
+diff --git a/Documentation/devicetree/bindings/sound/adi,adau7002.txt b/Documentation/devicetree/bindings/sound/adi,adau7002.txt
+new file mode 100644
+index 0000000..f144ee1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/adi,adau7002.txt
+@@ -0,0 +1,19 @@
++Analog Devices ADAU7002 Stereo PDM-to-I2S/TDM Converter
++
++Required properties:
++
++ - compatible: Must be "adi,adau7002"
++
++Optional properties:
++
++ - IOVDD-supply: Phandle and specifier for the power supply providing the IOVDD
++	supply as covered in Documentation/devicetree/bindings/regulator/regulator.txt
++
++	If this property is not present it is assumed that the supply pin is
++	hardwired to always on.
++
++Example:
++	adau7002: pdm-to-i2s {
++		compatible = "adi,adau7002";
++		IOVDD-supply = <&supply>;
++	};
+-- 
+2.1.4
 
-Note that the header file uses a structure definition rather than the more
-common macros with register offsets, which is fine for a driver that has
-its own registers and abstracts them, but it doesn't really work with
-the regmap interface, so if we want to use it with syscon, it also needs to
-be rewritten.
-
-> BTW, of all the mailing lists you included on this CC, you seem to have left
-> off the PPC list (I've added it).
-
-Sorry, my mistake.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
