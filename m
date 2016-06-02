@@ -1,40 +1,55 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH] device tree description for AD5820 camera auto-focus coil
-Date: Fri, 3 Jun 2016 00:27:46 +0300
-Message-ID: <20160602212746.GT26360@valkosipuli.retiisi.org.uk>
-References: <20160524090433.GA1277@amd>
- <20160524091746.GA14536@amd>
- <20160525212659.GK26360@valkosipuli.retiisi.org.uk>
- <20160527205140.GA26767@amd>
- <20160531212222.GP26360@valkosipuli.retiisi.org.uk>
- <20160531213437.GA28397@amd>
- <20160601152439.GQ26360@valkosipuli.retiisi.org.uk>
- <20160601220840.GA21946@amd>
- <20160602074544.GR26360@valkosipuli.retiisi.org.uk>
- <20160602193027.GB7984@amd>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 13/13] ARM: dts: blanche: add Ethernet support
+Date: Fri, 3 Jun 2016 00:33:05 +0300
+Message-ID: <3097ebac-9d5a-8e71-ee64-f3f4629c1785@cogentembedded.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <1669958.qjJ7i3NBPv@wasted.cogentembedded.com>
+ <CAMuHMdU2P6VKXNpEHGOKpyuM45Pk0CuHWngxwu5AYGqYfduXXg@mail.gmail.com>
+ <a60346f2-2abb-342b-dd20-38d401c4ceb3@cogentembedded.com>
+ <CAMuHMdXUdg8+ux2j5SsthZS6DWZnHfan0jL=PpYEwfnS7fbRkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160602193027.GB7984@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, patrikbachan@gmail.com, serge@hallyn.com, linux-media@vger.kernel.org, mchehab@osg.samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXUdg8+ux2j5SsthZS6DWZnHfan0jL=PpYEwfnS7fbRkQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 02, 2016 at 09:30:27PM +0200, Pavel Machek wrote:
-> 
-> Add documentation for ad5820 device tree binding.
-> 
-> Signed-off-by: Pavel Machek <pavel@denx.de>
+On 06/01/2016 03:27 PM, Geert Uytterhoeven wrote:
 
-Thanks, Pavel!!
+>>>> --- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
+>>>> +++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
+>>>
+>>>> +       ethernet@18000000 {
+>>>> +               compatible = "smsc,lan89218", "smsc,lan9115";
+>>>
+>>>
+>>> The "smsc,lan89218" needs to be documented in the device tree bindings.
+>>
+>>    Have you looked at those bindings?
+>
+> Now I did.
+>
+>>> Google couldn't find any evidence you submitted a patch for that.
+>>
+>>    Because the bindings document *any* LAN9115 compatible chip already.
+>
+> Ah, generic wildcard, not listing valid values. Hence checkpatch complained...
 
-Can I pick the two patches (this one + the driver) or would you like to send
-a pull request? In the latter case you can add:
+    Note that it doesn't complain about "smsc,lan9220" though that is only 
+mentioned in the example.
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Google predict-while-you-type suggests "lan89218aq"? Should you use that?
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+    No, my googling shows that the suffix can be different, and the Microchip 
+(the new owner?) has it without the suffix on their site.
+
+> BTW, that's why we always want to document all valid values...
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+
+MBR, Sergei
