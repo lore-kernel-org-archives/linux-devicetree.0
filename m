@@ -1,70 +1,69 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/4] mmc: sdhci-of-esdhc: fix host version for T4240-R1.0-R2.0
-Date: Thu, 02 Jun 2016 10:52:48 +0200
-Message-ID: <3851136.KiJNtFycNm@wuerfel>
-References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com> <6110875.0k1HlSKhzn@wuerfel> <1464829874.16584.163.camel@buserror.net>
+From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 09/32] bcm2837-rpi-3-b.dts for 32bit arm
+Date: Thu, 02 Jun 2016 11:14:30 +0200
+Message-ID: <1464858870.24775.65.camel@redhat.com>
+References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
+	 <5616246.RRQ2rLjLud@wuerfel> <1464850565.24775.40.camel@redhat.com>
+	 <3336185.FIBLI6ezsy@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1464829874.16584.163.camel@buserror.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Scott Wood <oss@buserror.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Yangbo Lu <yangbo.lu@nxp.com>, Kumar Gala <galak@codeaurora.org>, Yang-Leo Li <leoyang.li@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vg>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3336185.FIBLI6ezsy@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 1, 2016 8:11:14 PM CEST Scott Wood wrote:
-> > +#define T4240_HOST_VER ((VENDOR_V_23 << SDHCI_VENDOR_VER_SHIFT) |
-> > SDHCI_SPEC_200)
-> > +static const struct soc_device_attribute esdhc_t4240_quirk = {
-> > +     /* T4240 revision < 0x20 uses vendor version 23, SDHCI version 200
-> > */
-> > +     { .soc_id = "T4*(0x824000)", .revision = "0x[01]?",
-> > +       .data = (void *)(uintptr_t)(T4240_HOST_VER) },
+  Hi,
+
+> > Well, it just includes the arm64 version as-is, so we don't have
+> > duplication.  I'm open to suggestions to how handle this better.  
+> > 
+> > Symbolic link?
+> > 
+> > Reference to ../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+> > directly in the Makefile?
+> > 
+> > I've seen arch/arm/boot/dts/Makefile uses globs on *.dts, so I suspect
+> > the later wouldn't be that straight forward.
 > 
-> Why should this code need to care that the string begins with "T4"?  This
-> creates dual maintenance if that were to change.  It's also broken because
-> T4240 has compatible = "fsl,t4240-device-config", "fsl,qoriq-device-config
-> -2.0" and thus with these patches it would incorrectly show up as "P series
-> (0x824000)".  The compatible string of this node was never meant to be a key
-> for choosing a string to describe the system to userspace.
-
-This is an artifact of not knowing the specific SoC name, and we can change
-that by looking up the name from the SVR value in the soc_device driver.
- 
-> 0x824000 is a magic number which should be represented symbolically.
-
-Sure, feel free to change the format of the soc_device string in any
-name, I just converted the information I had available in the comments.
-The only thing that is important here is that the string matches what
-the soc_device driver calls it.
-
-> If T4240 is affected, then so are the reduced-core variants T4160 and T4080,
-> but 0x824000 doesn't match them (Yangbo's patch had the same problem).  And
-> please don't respond with "0x824*"
+> It's just weird that the arm64 file includes the .dtsi files from arch/arm/
+> and is then again included back from another file there.
 > 
-> You also didn't strip out the E bit of SVR which indicates encryption
-> capability and nothing else (Yangbo's patch did not have this problem because
-> it used SVR_SOC_VER).
+> I can see two possible ways to handle this better:
+> 
+> - leave the complete set of bcm2837 files in arch/arm and then have one
+>   reference from arch/arm64 per .dts that refers to just that file.
 
-Ok, that should be easy enough to fix in the soc_device driver.
+So basically do it the other way around.  Would be a bit less messy
+indeed.
 
-> What happens if the revision condition is more complicated, such as <= 0x20
-> with 0x21 being fine?  Multiple quirk entries where before we had as simple
-> comparison?
+> - come up with a rule to also build the .dtb files in arch/arm64 when
+>   we run 'make dtbs' for arch/arm and leave this file there. The argument
+>   that one could use the same dtb with a 32-bit kernel should basically
+>   hold true for any arm64 system, it's not specific to rpi-3 really.
 
-I guess yes. I would really hope that there is no need to use this interface
-pervasively, it's really just to work around the cases where there is no
-way to pass the information in DT otherwise.
+Yes, in theory.  No, in practice.  As far I know the rpi3 is the only
+64bit soc where a almost identical 32bit version exists, so running
+32bit kernels on a 64bit processor actually happens in practice and I
+expect this to continue.  If you want create sdcard images which run on
+any rpi variant this is pretty much the only reasonable way to do it.
 
-> I fail to see how this approach is an improvement (much less one that needs to
-> hold up a patchset that is fixing a problem and is not touching any generic
-> code).  Why does this need to be a string?
+>   We don't normally test 32-bit kernels on 64-bit SoCs because 64-bit
+>   kernels are more efficient in a number of ways, and I'm sure there
+>   are bugs that prevent some systems from working (aside from how some
+>   machines cannot work because they don't have RAM below 4GB), but if
+>   this is now something that users are interested in, making it just
+>   work seems nicer than having a couple of board specific hacks.
 
-A string is what user space gets in /sys/devices/soc/*, and we already have
-code that does the same things there to work around quirks, here we just
-use the same interface in a completely generic way. Note that not every
-SoC family uses numbers in the same way, some have multiple subrevisions,
-some have names etc.
+See above, I have my doubts that the user interest in this expands to
+other boards.  So I'd tend to pick the first option.
 
-	Arnd
+cheers,
+  Gerd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
