@@ -1,48 +1,108 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
-Date: Thu, 2 Jun 2016 12:47:16 +0200
-Message-ID: <fccd7d19bc774e17bccf57b0af7b99b1@rwthex-s1-b.rwth-ad.de>
-References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
- <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
- <CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
- <a6cc6b85d2fa4994b3cb7e2b047f800d@rwthex-w2-b.rwth-ad.de>
- <9d7793850de942cfb578b0aeb2728f41@rwthex-s1-b.rwth-ad.de>
- <CAOMZO5C3_bd-2Nz+G956+VPOcKoFaGGJK7G1p=U0yf5OyWekZA@mail.gmail.com>
- <c7a1b8de98814b95afc43cc6df3c92df@rwthex-w2-a.rwth-ad.de>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
+Date: Thu, 2 Jun 2016 14:07:52 +0300
+Message-ID: <57501388.9000107@ti.com>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
+ <1463133808-10630-14-git-send-email-rogerq@ti.com>
+ <20160601073804.GC15045@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c7a1b8de98814b95afc43cc6df3c92df-cBaz+nnMw1+1MzRH+ruthl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160601073804.GC15045@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Igor,
-
-On 05/29/2016 10:01 AM, Igor Grinberg wrote:
-> On 05/27/2016 01:20 AM, Fabio Estevam wrote:
->> On Thu, May 26, 2016 at 11:26 AM, Christopher Spinrath
->> <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
->>
->>> Thanks for joining this discussion. I *guess* the rationale is to share
->>> the same device tree with projects that are incompatible with the GPL
->>> (e.g. *BSD). Even if there is no support for a particular device/board
->>> having all (or most) files dual licensed makes it easier to just pull
->>> them all in.
->>
->> Yes, that's correct.
->>
+On 01/06/16 10:38, Peter Chen wrote:
+> On Fri, May 13, 2016 at 01:03:27PM +0300, Roger Quadros wrote:
+>> @@ -530,6 +683,8 @@ void usb_del_gadget_udc(struct usb_gadget *gadget)
+>>  	}
+>>  	mutex_unlock(&udc_lock);
+>>  
+>> +	mutex_unlock(&udc_lock);
+>> +
 > 
-> Thanks for the explanation.
-> 
+> Here, you have one more mutex_unlock.
 
-Have you/CompuLab made a decision? Do you/CompuLab approve the dual license?
+Will fix it. Thanks.
 
-Thanks,
-Christopher
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>  	kobject_uevent(&udc->dev.kobj, KOBJ_REMOVE);
+>>  	flush_work(&gadget->work);
+>>  	device_unregister(&udc->dev);
+>> @@ -539,6 +694,13 @@ EXPORT_SYMBOL_GPL(usb_del_gadget_udc);
+>>  
+>>  /* ------------------------------------------------------------------------- */
+>>  
+>> +struct otg_gadget_ops otg_gadget_intf = {
+>> +	.start = usb_gadget_start,
+>> +	.stop = usb_gadget_stop,
+>> +	.connect_control = usb_gadget_connect_control,
+>> +};
+>> +
+>> +/* udc_lock must be held */
+>>  static int udc_bind_to_driver(struct usb_udc *udc, struct usb_gadget_driver *driver)
+>>  {
+>>  	int ret;
+>> @@ -553,12 +715,20 @@ static int udc_bind_to_driver(struct usb_udc *udc, struct usb_gadget_driver *dri
+>>  	ret = driver->bind(udc->gadget, driver);
+>>  	if (ret)
+>>  		goto err1;
+>> -	ret = usb_gadget_udc_start(udc);
+>> -	if (ret) {
+>> -		driver->unbind(udc->gadget);
+>> -		goto err1;
+>> +
+>> +	/* If OTG, the otg core starts the UDC when needed */
+>> +	if (udc->gadget->otg_dev) {
+>> +		mutex_unlock(&udc_lock);
+>> +		usb_otg_register_gadget(udc->gadget, &otg_gadget_intf);
+>> +		mutex_lock(&udc_lock);
+>> +	} else {
+>> +		ret = usb_gadget_udc_start(udc);
+>> +		if (ret) {
+>> +			driver->unbind(udc->gadget);
+>> +			goto err1;
+>> +		}
+>> +		usb_udc_connect_control(udc);
+>>  	}
+>> -	usb_udc_connect_control(udc);
+>>  
+>>  	kobject_uevent(&udc->dev.kobj, KOBJ_CHANGE);
+>>  	return 0;
+>> @@ -660,9 +830,15 @@ static ssize_t usb_udc_softconn_store(struct device *dev,
+>>  		return -EOPNOTSUPP;
+>>  	}
+>>  
+>> +	/* In OTG mode we don't support softconnect, but b_bus_req */
+>> +	if (udc->gadget->otg_dev) {
+>> +		dev_err(dev, "soft-connect not supported in OTG mode\n");
+>> +		return -EOPNOTSUPP;
+>> +	}
+>> +
+>>  	if (sysfs_streq(buf, "connect")) {
+>>  		usb_gadget_udc_start(udc);
+>> -		usb_gadget_connect(udc->gadget);
+>> +		usb_udc_connect_control(udc);
+>>  	} else if (sysfs_streq(buf, "disconnect")) {
+>>  		usb_gadget_disconnect(udc->gadget);
+>>  		udc->driver->disconnect(udc->gadget);
+>> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+>> index 3ecfddd..79d654f 100644
+>> --- a/include/linux/usb/gadget.h
+>> +++ b/include/linux/usb/gadget.h
+>> @@ -1162,6 +1162,10 @@ extern int usb_add_gadget_udc(struct device *parent, struct usb_gadget *gadget);
+>>  extern void usb_del_gadget_udc(struct usb_gadget *gadget);
+>>  extern char *usb_get_gadget_udc_name(void);
+>>  
+>> +extern int usb_otg_add_gadget_udc(struct device *parent,
+>> +				  struct usb_gadget *gadget,
+>> +				  struct device *otg_dev);
+>> +
+>>  /*-------------------------------------------------------------------------*/
+>>  
+>>  /* utility to simplify dealing with string descriptors */
+>> -- 
+>> 2.7.4
+>>
