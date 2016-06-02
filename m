@@ -1,145 +1,124 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v3 12/12] ARM: dts: exynos: Fix LAN and HUB after
- bootloader initialization on Odroid U3
-Date: Thu, 2 Jun 2016 15:58:44 +0800
-Message-ID: <20160602075844.GA7889@shlinux2>
-References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
- <1464768141-25420-13-git-send-email-k.kozlowski@samsung.com>
- <20160601115929.GA16740@shlinux2>
- <574FDFC1.5050209@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] [V2] ARM: dts: sun7i: Add dts file for
+ Bananapi M1 Plus board
+Date: Thu, 2 Jun 2016 10:16:38 +0200
+Message-ID: <20160602081638.GG4908@lukather>
+References: <20160602023623.5761-1-luoyi.ly@gmail.com>
+ <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="K3Y3NTg/qyuIFs24"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4OWX65AKGQE2IFSA5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <574FDFC1.5050209@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.or, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 02, 2016 at 09:26:57AM +0200, Krzysztof Kozlowski wrote:
-> On 06/01/2016 01:59 PM, Peter Chen wrote:
-> > On Wed, Jun 01, 2016 at 10:02:21AM +0200, Krzysztof Kozlowski wrote:
-> >> On Odroid U3 (Exynos4412-based) board if USB was initialized by
-> >> bootloader (in U-Boot "usb start" before tftpboot), the HUB (usb3503)
-> >> and LAN (smsc95xx) after after successful probing were not visible in the
-> >> system ("lsusb").
-> >>
-> >> In such case the devices had to be fully reset before configuring.
-> >> Reset by GPIO (called RESET_N pin) and by RESET field in STCD register
-> >> in usb3503 HUB are not sufficient. Instead full reset has to be done by
-> >> disabling and enabling regulator.
-> >>
-> >> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> >> ---
-> >>  arch/arm/boot/dts/exynos4412-odroidu3.dts | 4 ++++
-> >>  1 file changed, 4 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> >> index 31cdc036fda4..23e30e4609df 100644
-> >> --- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> >> +++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-> >> @@ -99,11 +99,15 @@
-> >>  	clock-names = "refclk";
-> >>  	clocks = <&pmu_system_controller 0>;
-> >>  	refclk-frequency = <24000000>;
-> >> +
-> >> +	power-sequence;
-> >> +	ext-supply = <&buck8_reg>;
-> >>  };
-> >>  
-> >>  &ehci {
-> >>  	port@1 {
-> >>  		status = "okay";
-> >> +		usb-pwrseq = <&usb3503>;
-> >>  	};
-> >>  	port@2 {
-> >>  		status = "okay";
-> >> -- 
-> >> 1.9.1
-> >>
-> > 
-> > The hub is under the port1, you may need to describe it
-> > under the port@1, see below:
-> > Documentation/devicetree/bindings/usb/usb-device.txt
-> 
-> My configuration is a little bit different than yours.
-> 
-> In my case I have a USB hub (usb3503) which is also a a i2c device
-> because it has to be configured through I2C.
-> 
-> I can add the power-sequence properties to the I2C node or as you
-> pointed under port using the vendor-product-id compatible. In the first
-> option: not many USB changes are needed. It works for me, at least as a
-> proof of concept.
-> 
-> The second solution: currently it does not work because the USB device
-> does not get enumerated before the power sequence begins. It would be
-> great if you could implement this on USB side.
 
-Well, not matter which solution, the USB device can't be enumerated
-without power sequence. For the #2 solution, it just handles all
-gpios under dts before the enumeration at USB code.
+--K3Y3NTg/qyuIFs24
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
+On Thu, Jun 02, 2016 at 12:55:23PM +1000, Julian Calaby wrote:
+> Hi Luo yi,
 > 
-> > 
-> > If I get Rob's comments correctly, you may need to consider 
-> > below MMC and USB device tree description together, it seems
-> > hard for USB to use pwrseq driver, sorry for confusing you.
-> > 
-> > If rob can accept below USB device description, we have to
-> > do it under USB. In future, if there is some suitable framework,
-> > we can move it.
-> > 
-> > 1. MMC device:
-> > 	usdhc3_pwrseq: usdhc3_pwrseq {
-> > 		compatible = "mmc-pwrseq-simple";
-> > 		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>, 	/* WL_REG_ON */
-> > 			      <&gpio4 7 GPIO_ACTIVE_LOW>, 	/* WL_HOSTWAKE */
-> > 			      <&gpio3 25 GPIO_ACTIVE_LOW>, 	/* BT_REG_ON */
-> > 			      <&gpio3 27 GPIO_ACTIVE_LOW>,	/* BT_HOSTWAKE */
-> > 			      <&gpio4 4 GPIO_ACTIVE_LOW>, 	/* BT_WAKE */
-> > 			      <&gpio4 6 GPIO_ACTIVE_LOW>; 	/* BT_RST_N */
-> > 	};
-> > 
-> > &usdhc3 {
-> > 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> > 	pinctrl-0 = <&pinctrl_usdhc3>;
-> > 	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-> > 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-> > 	bus-width = <4>;
-> > 	non-removable;
-> > 	keep-power-in-suspend;
-> > 	wakeup-source;
-> > 	mmc-pwrseq = <&usdhc3_pwrseq>;
-> > 	status = "okay";
-> > };
-> > 
-> > 2. USB device 
-> > 
-> > &usbotg1 {
-> > 	vbus-supply = <&reg_usb_otg1_vbus>;
-> > 	pinctrl-names = "default";
-> > 	pinctrl-0 = <&pinctrl_usb_otg1_id>;
-> > 	status = "okay";
-> > 
-> > 	#address-cells = <1>;
-> > 	#size-cells = <0>;
-> > 	hub: genesys@1 {
-> > 		compatible = "usb5e3,608";
-> > 		reg = <1>;
-> > 		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
-> > 		reset-duration-us = <10>;
-> > 		clocks = <&clks IMX6SX_CLK_CKO>;
-> > 	};
+> On Thu, Jun 2, 2016 at 12:36 PM,  <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > From: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >
+> > Add support for the Bananapi M1 Plus A20 development board from
+> > sinovoip.com.cn . This board is nearly a clone of the Lemaker's
+> > Bananapro, but differ with the wlan chipset connection and i2s pinout.
+> > And I also enable the integrated audio codec on default.
 > 
-> Yes, that looks like what Rob wanted... Do you plan to work on it? The
-> power sequence is needed before device is enumerated.
+> No signed-off-by.
 > 
+> > ---
+> >  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 72 ++++++++++++++++++++++++
+> >  1 file changed, 72 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> >
+> > diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> > new file mode 100644
+> > index 0000000..6fd55d7
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> > @@ -0,0 +1,72 @@
+> > +/*
+> > + * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > + *
+> > + * This file is dual-licensed: you can use it either under the terms
+> > + * of the GPL or the X11 license, at your option. Note that this dual
+> > + * licensing only applies to this file, and not this project as a
+> > + * whole.
+> > + *
+> > + *  a) This file is free software; you can redistribute it and/or
+> > + *     modify it under the terms of the GNU General Public License as
+> > + *     published by the Free Software Foundation; either version 2 of the
+> > + *     License, or (at your option) any later version.
+> > + *
+> > + *     This file is distributed in the hope that it will be useful,
+> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + *     GNU General Public License for more details.
+> > + *
+> > + * Or, alternatively,
+> > + *
+> > + *  b) Permission is hereby granted, free of charge, to any person
+> > + *     obtaining a copy of this software and associated documentation
+> > + *     files (the "Software"), to deal in the Software without
+> > + *     restriction, including without limitation the rights to use,
+> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> > + *     sell copies of the Software, and to permit persons to whom the
+> > + *     Software is furnished to do so, subject to the following
+> > + *     conditions:
+> > + *
+> > + *     The above copyright notice and this permission notice shall be
+> > + *     included in all copies or substantial portions of the Software.
+> > + *
+> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> > + *     OTHER DEALINGS IN THE SOFTWARE.
+> > + */
+> > +
+> > +#include "sun7i-a20-bananapro.dts"
+> > +
+> > +/ {
+> > +       model = "Banana Pi BPI-M1-Plus";
+> > +       compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
+> > +};
+> > +
+> > +
+> 
+> Extra line.
+> 
+> > +&codec {
+> > +       status = "okay";
+> > +};
+> 
+> Does anyone know if this should be enabled on the bananapro too?
 
-Ok, I will work on it.
+Yes, everything that is shared with the banana-pro (which, judging
+from Bernhard, is pretty much everything but a GPIO) should be merged
+in the banapro DT.
+
+Maxime
 
 -- 
-
-Best Regards,
-Peter Chen
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--K3Y3NTg/qyuIFs24--
