@@ -1,43 +1,95 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2] ARM: dts: exynos: Add TMU nodes regulator supply for
- Peach boards
-Date: Thu, 02 Jun 2016 08:21:29 +0200
-Message-ID: <574FD069.8020709@samsung.com>
-References: <1464787235-8400-1-git-send-email-javier@osg.samsung.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v9 0/2] memory: add Atmel EBI (External Bus Interface)
+ driver
+Date: Thu, 2 Jun 2016 08:36:14 +0200
+Message-ID: <20160602063337.GH4249@piout.net>
+References: <1463989495-13787-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1464787235-8400-1-git-send-email-javier@osg.samsung.com>
+Content-Disposition: inline
+In-Reply-To: <1463989495-13787-1-git-send-email-boris.brezillon@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2016 03:20 PM, Javier Martinez Canillas wrote:
-> The Exynos5800 Peach Pi and Exynos5420 Peach Pit Chromebooks have the
-> LDO10 1.8V output connected to the VDD18_TS{01,23,4} Exynos SoC pins.
+On 23/05/2016 at 09:44:53 +0200, Boris Brezillon wrote :
+> Hello,
 > 
-> Add this regulator as the input supply of the Thermal Management Unit
-> channels and also remove the always-on property since all the devices
-> using LDO10 as input supply are now defined.
+> This patch series provides support for the EBI bus.
 > 
-> Suggested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> The EBI (External Bus Interface) is used to access external peripherals
+> (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> Each device is assigned a CS line and an address range and can have its
+> own configuration (timings, access mode, bus width, ...).
+> This driver provides a generic DT binding to configure a device according
+> to its requirements.
+> For specific device controllers (like the NAND one) the SMC timings
+> should be configured by the controller driver through the matrix and
+> smc syscon regmaps.
 > 
-> ---
+> Best Regards,
 > 
-> Changes in v2:
-> - Sorted nodes in alphabetical order (Krzysztof Kozlowski).
-> - Added Krzysztof's Suggested-by tag since he mentioned in other
->   thread that the TMU supplies were missing.
+> Boris
 > 
->  arch/arm/boot/dts/exynos5420-peach-pit.dts | 21 ++++++++++++++++++++-
->  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 21 ++++++++++++++++++++-
->  2 files changed, 40 insertions(+), 2 deletions(-)
+> Changes since v8:
+> - fixed typo in DT bindings doc
 > 
+> Changes since v7:
+> - move EBI bus config properties directly in the sub-device node
+> - prefix all EBI/SMC properties with atmel,smc-
+> - rework the driver to take the new binding into account
+> - disable the subdevice when EBI implementation fails to configure
+>   the bus as requested
+> 
+> Changes since v6:
+> - rework the binding to put per-device config information into a
+>   separate subnode and have devices connected to the EBI bus
+>   defined as direct children of the EBI node
+> - make all EBI timings mandatory
+> - keep adding sub-devices when a failure occurs on one of them
+> 
+> Changes since v5:
+> - remove the "atmel,specialized-logic" property: now all devices are
+>   are attached to the SMC logic by default, and specialized drivers
+>   (like the NAND controller one), should change this configuration
+>   manually.
+> - provide hardware readout to allow partial config description.
+>   This is mainly here to keep existing platforms (where everything
+>   is configured by the bootloader/bootstrap) in working state.
+> - rename "atmel,tdf-optimized" into "atmel,tdf-mode" and switch from
+>   a boolean to string property to properly support partial config
+> 
+> Changes since v4:
+> - fix inconsistencies in SMC and MATRIX registers definition
+> - add missing compatible strings for at91sam9rl SoC
+> - fix DT bindings documentation
+> - replace "atmel,generic-dev" property by "atmel,specialized-logic"
+> 
+> Changes since v3:
+> - added AT91_MATRIX_USBPUCR_PUON definition
+> - removed useless macros (those directly returning SoC specific register
+>   offsets)
+> - use syscon_regmap_lookup_by_phandle instead of of_parse_phandle +
+>   syscon_node_to_regmap
+> - drop AT91_EBICSA_REGFIELD and AT91_MULTI_EBICSA_REGFIELD macros
+> 
+> Changes since v2:
+> - minor fixes int DT bindings doc
+> - fix SMC macros
+> - make use of SMC macros defined in include/linux/mfd/syscon/atmel-smc.h
+> 
+> Changes since v1:
+> - almost everything :-)
+> 
+> Boris Brezillon (2):
+>   memory: add Atmel EBI (External Bus Interface) driver
+>   memory: atmel-ebi: add DT bindings documentation
+> 
+Applied, thanks.
 
-Thanks, applied.
-
-Best regards,
-Krzysztof
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
