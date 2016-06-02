@@ -1,50 +1,49 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] extcon: arizona: Update binding docs to mention new
- defines for GPSW
-Date: Thu, 02 Jun 2016 10:56:51 +0900
-Message-ID: <574F9263.80503@samsung.com>
-References: <CGME20160601151314epcas1p2f8947d634e4afbe414d174b3b057fbd8@epcas1p2.samsung.com>
- <1464793992-20670-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 4/5] of/numa: remove a duplicated warning
+Date: Thu, 2 Jun 2016 10:28:10 +0800
+Message-ID: <1464834491-12024-5-git-send-email-thunder.leizhen@huawei.com>
+References: <1464834491-12024-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1464793992-20670-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, myungjoo.ham@samsung.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464834491-12024-1-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Charles,
+This warning has been printed in of_numa_parse_cpu_nodes before.
 
-On 2016=EB=85=84 06=EC=9B=94 02=EC=9D=BC 00:13, Charles Keepax wrote:
-> Update the binding documentation to mention the defines added for the
-> possible values of wlf,gpsw.
->=20
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
->  Documentation/devicetree/bindings/extcon/extcon-arizona.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.=
-txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> index e27341f..7f3d94a 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> @@ -46,7 +46,8 @@ Optional properties:
->      The second cell represents the MICBIAS to be used.
->      The third cell represents the value of the micd-pol-gpio pin.
-> =20
-> -  - wlf,gpsw : Settings for the general purpose switch
-> +  - wlf,gpsw : Settings for the general purpose switch, set as one o=
-f the
-> +    ARIZONA_GPSW_XXX defines.
-> =20
->  Example:
-> =20
->=20
+Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ drivers/of/of_numa.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-Applied it.
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index 7b3fbdc..3157130 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -174,13 +174,8 @@ int of_node_to_nid(struct device_node *device)
+ 			np->name);
+ 	of_node_put(np);
 
-Thanks,
-Chanwoo Choi
+-	if (!r) {
+-		if (nid >= MAX_NUMNODES)
+-			pr_warn("NUMA: Node id %u exceeds maximum value\n",
+-				nid);
+-		else
+-			return nid;
+-	}
++	if (!r)
++		return nid;
+
+ 	return NUMA_NO_NODE;
+ }
+--
+2.5.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
