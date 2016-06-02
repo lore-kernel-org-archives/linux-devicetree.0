@@ -1,35 +1,56 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/5] clk: qcom: ipq4019: Modified the fixed clock rate to
- proper values
-Date: Thu, 2 Jun 2016 11:35:40 -0700
-Message-ID: <20160602183540.GK28218@codeaurora.org>
-References: <1464618758-20965-1-git-send-email-absahu@codeaurora.org>
- <1464618758-20965-2-git-send-email-absahu@codeaurora.org>
- <20160601221808.GI28218@codeaurora.org>
- <9a9ac449-4c14-e0fa-5637-5ca7aac321aa@codeaurora.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 32/32] mmc: bcm2835: Import bcm2835-mmc and switch to it
+Date: Thu, 2 Jun 2016 21:09:06 +0200 (CEST)
+Message-ID: <2100811505.238666.65d5fa25-985a-4a30-86e2-3a7bebb5caaf.open-xchange@email.1und1.de>
+References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
+ <1464817421-8519-33-git-send-email-kraxel@redhat.com>
+ <e16936ee-3b0d-3798-72e0-8969c2c1a309@i2se.com>
+ <87oa7j314j.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9a9ac449-4c14-e0fa-5637-5ca7aac321aa@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: "Banavathi, Pradeep" <pradeepb@codeaurora.org>
-Cc: Abhishek Sahu <absahu@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, galak@codeaurora.org, mmcclint@codeaurora.org, varada@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org, ntelkar@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87oa7j314j.fsf@eliezer.anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gerd Hoffmann <kraxel@redhat.com>, Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee@kernel.org>, "open list:MULTIMEDIA CARD MMC,
+ SECURE DIGITAL SD AND..." <linux-mmc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/02, Banavathi, Pradeep wrote:
-> The PLLs on IPQ4019 cannot be reconfigured by design. The
-> recommendation is to program these PLLS only once. Since, the
-> Bootloaders configure the PLLs and clocks already. we did not
-> support the recalc rate and marked them as fixed clocks.
+Hi Eric,
+
+> Eric Anholt <eric@anholt.net> hat am 2. Juni 2016 um 20:18 geschrieben:
 > 
+> 
+> Stefan Wahren <stefan.wahren@i2se.com> writes:
+> 
+> > Hi Gerd,
+> >
+> > Am 01.06.2016 um 23:43 schrieb Gerd Hoffmann:
+> >> From: Eric Anholt <eric@anholt.net>
+> >>
+> >> With this we can get wifi (brcmfmac) to probe.  Without it we're stuck
+> >> with timeouts from sdio.c when it tries to set the bus width to 4.
+> >
+> > adding a new MMC driver to fix a wifi issue is really weird.
+> >
+> > Beside that there are already two MMC drivers (sdhci-bcm2835.c and
+> > sdhci-iproc.c) in the Kernel which are compatible to BCM2835. Why should
+> > we add two new ones?
+> 
+> Despite the fact that this is my commit, I don't think it should be
+> merged.  We should figure out why sdhci-iproc.c isn't working, instead.
 
-(Please don't top post)
+so it doesn't work with sdhci-bcm2835 on RPi 3, too?
 
-That doesn't matter. We recalculate PLL rates on all other qcom
-SoCs by reading the hardware even though an overwhelming majority
-of them are fixed by the bootloader.
+I plan to send a patch series to remove sdhci-bcm2835.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Stefan
