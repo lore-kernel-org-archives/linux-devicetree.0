@@ -1,25 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: watchdog: Add Meson GXBB Watchdog
- bindings
-Date: Thu, 2 Jun 2016 17:47:17 -0500
-Message-ID: <20160602224717.GA20178@rob-hp-laptop>
-References: <1464614948-28247-1-git-send-email-narmstrong@baylibre.com>
- <1464617526-29140-1-git-send-email-narmstrong@baylibre.com>
+Subject: Re: [PATCH 3/5] Documentation/devicetree/bindings: Add b850v3_lvds_dp
+Date: Thu, 2 Jun 2016 17:57:07 -0500
+Message-ID: <20160602225707.GA29417@rob-hp-laptop>
+References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
+ <1464626385-19253-4-git-send-email-peter.senna@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464617526-29140-1-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <1464626385-19253-4-git-send-email-peter.senna@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-watchdog@vger.kernel.org
+To: Peter Senna Tschudin <peter.senna@collabora.com>
+Cc: airlied@linux.ie, akpm@linux-foundation.org, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, enric.balletbo@collabora.com, galak@codeaurora.org, gregkh@linuxfoundation.org, heiko@sntech.de, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, martin.donnelly@ge.com, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, pawel.moll@arm.com, p.zabel@pengutronix.de, rmk+kernel@armlinux.org.uk, shawnguo@kernel.org, tiwai@suse.com, treding@nvidia.com, ykk@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 30, 2016 at 04:12:06PM +0200, Neil Armstrong wrote:
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+On Mon, May 30, 2016 at 06:39:43PM +0200, Peter Senna Tschudin wrote:
+> Devicetree bindings documentation for the GE B850v3 LVDS/DP++
+> display bridge.
+> 
+> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
 > ---
->  .../devicetree/bindings/watchdog/meson-gxbb-wdt.txt      | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
+>  .../devicetree/bindings/ge/b850v3_lvds_dp.txt      | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ge/b850v3_lvds_dp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/ge/b850v3_lvds_dp.txt b/Documentation/devicetree/bindings/ge/b850v3_lvds_dp.txt
+> new file mode 100644
+> index 0000000..32e123a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ge/b850v3_lvds_dp.txt
+> @@ -0,0 +1,38 @@
+> +Driver for GE B850v3 LVDS/DP++ display bridge
+> +
+> +Required properties:
+> +  - compatible : should be "ge,b850v3_lvds_dp".
+> +  - reg : should contain the address used to ack the interrupts.
+> +  - interrupt-parent : should link to the gpio used as interrupt
+> +    source on the host.
+> +  - interrupts : one interrupt should be described here, as in
+> +    <0 IRQ_TYPE_LEVEL_HIGH>.
+> +  - edid-reg : should contain the address used to read edid information
 
-Acked-by: Rob Herring <robh@kernel.org>
+This should be known based on the bridge chip you are using.
+
+> +  - port : should describe the vide signal connection between the host
+> +    and the bridge.
+> +
+> +Example:
+> +
+> +&mux2_i2c2 {
+> +	status = "okay";
+> +	clock-frequency = <100000>;
+> +
+> +	b850v3_dp_bridge {
+
+Don't use '_' in node or property names or compatible strings.
+
+> +		compatible = "ge,b850v3_lvds_dp";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		reg = <0x73>;
+> +		interrupt-parent = <&gpio2>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		edid-reg = <0x72>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +			b850v3_dp_bridge_in: endpoint {
+> +				remote-endpoint = <&lvds0_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.5.5
+> 
