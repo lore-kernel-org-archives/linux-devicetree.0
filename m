@@ -1,136 +1,109 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH] [V2] ARM: dts: sun7i: Add dts file for
- Bananapi M1 Plus board
-Date: Thu, 2 Jun 2016 12:55:23 +1000
-Message-ID: <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA@mail.gmail.com>
-References: <20160602023623.5761-1-luoyi.ly@gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 2/2] aer: add support aer interrupt with none
+ MSI/MSI-X/INTx mode
+Date: Wed, 1 Jun 2016 22:48:28 -0500
+Message-ID: <20160602034828.GA10240@localhost>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160602023623.5761-1-luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Po Liu <po.liu@nxp.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Luo yi,
+[+cc Rob]
 
-On Thu, Jun 2, 2016 at 12:36 PM,  <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Add support for the Bananapi M1 Plus A20 development board from
-> sinovoip.com.cn . This board is nearly a clone of the Lemaker's
-> Bananapro, but differ with the wlan chipset connection and i2s pinout.
-> And I also enable the integrated audio codec on default.
+Hi Po,
 
-No signed-off-by.
+On Thu, May 26, 2016 at 02:00:06PM +0800, Po Liu wrote:
+> On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
+> When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
+> maybe there is interrupt line for aer pme etc. Search the interrupt
+> number in the fdt file.
 
+My understanding is that AER interrupt signaling can be done via INTx,
+MSI, or MSI-X (PCIe spec r3.0, sec 6.2.4.1.2).  Apparently your device
+doesn't support MSI or MSI-X.  Are you saying it doesn't support INTx
+either?  How is the interrupt you're requesting here different from
+INTx?
+
+My guess is that your device *does* support INTx, and we should use
+that.  ACPI has the generic _PRT that describes INTx routing.  There
+must be something similar for DT, but I don't know what it is.  It
+seems like this should be described using that DT mechanism (whatever
+it is), and we shouldn't need special-case code in the portdrv code.
+
+> Signed-off-by: Po Liu <po.liu@nxp.com>
 > ---
->  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 72 ++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
->
-> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> new file mode 100644
-> index 0000000..6fd55d7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> @@ -0,0 +1,72 @@
-> +/*
-> + * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
+>  drivers/pci/pcie/portdrv_core.c | 31 ++++++++++++++++++++++++++++---
+>  1 file changed, 28 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 32d4d0a..64833e5 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/pcieport_if.h>
+>  #include <linux/aer.h>
+> +#include <linux/of_irq.h>
+>  
+>  #include "../pci.h"
+>  #include "portdrv.h"
+> @@ -199,6 +200,28 @@ static int pcie_port_enable_msix(struct pci_dev *dev, int *vectors, int mask)
+>  static int init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>  {
+>  	int i, irq = -1;
+> +	int ret;
+> +	struct device_node *np = NULL;
 > +
-> +#include "sun7i-a20-bananapro.dts"
+> +	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
+> +		irqs[i] = 0;
 > +
-> +/ {
-> +       model = "Banana Pi BPI-M1-Plus";
-> +       compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
-> +};
+> +	if (dev->bus->dev.of_node)
+> +		np = dev->bus->dev.of_node;
 > +
-> +
-
-Extra line.
-
-> +&codec {
-> +       status = "okay";
-> +};
-
-Does anyone know if this should be enabled on the bananapro too?
-
-> +
-> +&mmc3 {
-> +       enable-sdio-wakeup;
-> +
-> +       brcmf: bcrmf@1 {
-> +               reg = <1>;
-> +               compatible = "brcm,bcm4329-fmac";
-> +               interrupt-parent = <&pio>;
-> +               interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
-> +               interrupt-names = "host-wake";
-> +       };
-> +
-
-Extra line.
-
-> +};
-> +
-> +&mmc3_pins_a {
-> +    /* AP6210 requires pull-up */
-
-Should this be indented the same as the following line?
-
-> +       allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +};
-> +
-
-Extra line.
-
-Thanks,
-
--- 
-Julian Calaby
-
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	/* If root port doesn't support MSI/MSI-X/INTx in RC mode,
+> +	 * request irq for aer
+> +	 */
+> +	if (IS_ENABLED(CONFIG_OF_IRQ) && np &&
+> +			(mask & PCIE_PORT_SERVICE_PME)) {
+> +		ret = of_irq_get_byname(np, "aer");
+> +		if (ret > 0) {
+> +			irqs[PCIE_PORT_SERVICE_AER_SHIFT] = ret;
+> +			if (dev->irq)
+> +				irq = dev->irq;
+> +			goto no_msi;
+> +		}
+> +	}
+>  
+>  	/*
+>  	 * If MSI cannot be used for PCIe PME or hotplug, we have to use
+> @@ -224,11 +247,13 @@ static int init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>  		irq = dev->irq;
+>  
+>   no_msi:
+> -	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
+> -		irqs[i] = irq;
+> +	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++) {
+> +		if (!irqs[i])
+> +			irqs[i] = irq;
+> +	}
+>  	irqs[PCIE_PORT_SERVICE_VC_SHIFT] = -1;
+>  
+> -	if (irq < 0)
+> +	if (irq < 0 && irqs[PCIE_PORT_SERVICE_AER_SHIFT] < 0)
+>  		return -ENODEV;
+>  	return 0;
+>  }
+> -- 
+> 2.1.0.27.g96db324
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
