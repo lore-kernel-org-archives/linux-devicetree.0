@@ -1,86 +1,260 @@
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v8 0/3] dtc: Dynamic DT support
-Date: Thu,  2 Jun 2016 20:47:19 +0300
-Message-ID: <1464889642-28080-1-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v8 1/3] DTBO magic and dtbo format options
+Date: Thu,  2 Jun 2016 20:47:20 +0300
+Message-ID: <1464889642-28080-2-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1464889642-28080-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464889642-28080-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The first patch introduces a new magic number and new output/input
-format options marking dynamic objects.
+Introduce a new magic number for dynamic plugin objects,
+which is enabled by selecting dtbo/input output options.
 
-The next two patches enable generation of symbol & fixup
-information for use with dynamic DT loading, along with the
-documentation about the internal operation.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/manual.txt |  8 ++++++++
+ dtc.c                    | 14 +++++++++++---
+ dtc.h                    |  4 ++--
+ fdtdump.c                |  2 +-
+ flattree.c               | 11 ++++++-----
+ libfdt/fdt.c             |  2 +-
+ libfdt/fdt.h             |  3 ++-
+ tests/mangle-layout.c    |  7 ++++---
+ 8 files changed, 35 insertions(+), 16 deletions(-)
 
-This patchset is generated against the tree and branch at
-https://github.com/dgibson/dtc/tree/overlay
-
-It is also available for a pull request at
-https://github.com/pantoniou/dtc/tree/dgibson-overlay-panto
-
-Changes since v7:
-* Dropped xasprintf & backward compatibility patch
-* Rebased against dgibson's overlay branch
-* Minor doc wording fixes.
-
-Changes since v6:
-* Introduced xasprintf
-* Added append_to_property and used it
-* Changed some die()'s to assert
-* Reordered node generation to respect sort
-* Addressed remaining maintainer changes from v6
-
-Changes since v5:
-* Rebase to latest dtc version.
-* Addressed all the maintainer requested changes from v5
-* Added new magic value for dynamic objects and new format
-
-Changes since v4:
-* Rebase to latest dtc version.
-* Completely redesigned the generation of resolution data.
-Now instead of being generated as part of blob generation
-they are created in the live tree.
-* Consequently the patchset is much smaller.
-* Added -A auto-label alias generation option.
-* Addressed maintainer comments.
-* Added syntactic sugar for overlays in the form of .dtsi
-* Added /dts-v1/ /plugin/ preferred plugin form and deprecate
-the previous form (although still works for backward compatibility)
-
-Changes since v3:
-* Rebase to latest dtc version.
-
-Changes since v2:
-* Split single patch to a patchset.
-* Updated to dtc mainline.
-* Changed __local_fixups__ format
-* Clean up for better legibility.
-
-Pantelis Antoniou (3):
-  DTBO magic and dtbo format options
-  dtc: Document the dynamic plugin internals
-  dtc: Plugin and fixup support
-
- Documentation/dt-object-internal.txt | 321 +++++++++++++++++++++++++++++++++++
- Documentation/manual.txt             |  32 +++-
- checks.c                             |   8 +-
- dtc-lexer.l                          |   5 +
- dtc-parser.y                         |  33 +++-
- dtc.c                                |  37 +++-
- dtc.h                                |  35 +++-
- fdtdump.c                            |   2 +-
- flattree.c                           |  13 +-
- fstree.c                             |   2 +-
- libfdt/fdt.c                         |   2 +-
- libfdt/fdt.h                         |   3 +-
- livetree.c                           | 219 +++++++++++++++++++++++-
- tests/mangle-layout.c                |   7 +-
- treesource.c                         |   1 +
- 15 files changed, 688 insertions(+), 32 deletions(-)
- create mode 100644 Documentation/dt-object-internal.txt
-
+diff --git a/Documentation/manual.txt b/Documentation/manual.txt
+index 398de32..6d2811b 100644
+--- a/Documentation/manual.txt
++++ b/Documentation/manual.txt
+@@ -60,6 +60,9 @@ The currently supported Input Formats are:
+     - "dtb": "blob" format.  A flattened device-tree block with
+         header in one binary blob.
+ 
++    - "dtbo" : "blob" format. Identical with "dtb" but meant
++        for use with dynamic-device tree objects.
++
+     - "dts": "source" format.  A text file containing a "source"
+         for a device-tree.
+ 
+@@ -71,6 +74,8 @@ The currently supported Output Formats are:
+ 
+      - "dtb": "blob" format
+ 
++     - "dtbo": "blob" format - for dynamic device tree objects/overlays
++
+      - "dts": "source" format
+ 
+      - "asm": assembly language file.  A file that can be sourced
+@@ -78,6 +83,9 @@ The currently supported Output Formats are:
+         then simply be added to your Makefile.  Additionally, the
+         assembly file exports some symbols that can be used.
+ 
++     - "asmo": assembly language file for dynamic device tree objects/overlays.
++        Identical to "asm" for most purposes.
++
+ 
+ 3) Command Line
+ 
+diff --git a/dtc.c b/dtc.c
+index 1c1f88f..43ba19d 100644
+--- a/dtc.c
++++ b/dtc.c
+@@ -127,6 +127,8 @@ static const char *guess_type_by_name(const char *fname, const char *fallback)
+ 		return "dts";
+ 	if (!strcasecmp(s, ".dtb"))
+ 		return "dtb";
++	if (!strcasecmp(s, ".dtbo"))
++		return "dtbo";
+ 	return fallback;
+ }
+ 
+@@ -157,6 +159,8 @@ static const char *guess_input_format(const char *fname, const char *fallback)
+ 	magic = fdt32_to_cpu(magic);
+ 	if (magic == FDT_MAGIC)
+ 		return "dtb";
++	if (magic == FDT_MAGIC_DTBO)
++		return "dtbo";
+ 
+ 	return guess_type_by_name(fname, fallback);
+ }
+@@ -285,7 +289,7 @@ int main(int argc, char *argv[])
+ 		dti = dt_from_source(arg);
+ 	else if (streq(inform, "fs"))
+ 		dti = dt_from_fs(arg);
+-	else if(streq(inform, "dtb"))
++	else if (streq(inform, "dtb") || streq(inform, "dtbo"))
+ 		dti = dt_from_blob(arg);
+ 	else
+ 		die("Unknown input format \"%s\"\n", inform);
+@@ -319,9 +323,13 @@ int main(int argc, char *argv[])
+ 	if (streq(outform, "dts")) {
+ 		dt_to_source(outf, dti);
+ 	} else if (streq(outform, "dtb")) {
+-		dt_to_blob(outf, dti, outversion);
++		dt_to_blob(outf, dti, FDT_MAGIC, outversion);
++	} else if (streq(outform, "dtbo")) {
++		dt_to_blob(outf, dti, FDT_MAGIC_DTBO, outversion);
+ 	} else if (streq(outform, "asm")) {
+-		dt_to_asm(outf, dti, outversion);
++		dt_to_asm(outf, dti, FDT_MAGIC, outversion);
++	} else if (streq(outform, "asmo")) {
++		dt_to_asm(outf, dti, FDT_MAGIC_DTBO, outversion);
+ 	} else if (streq(outform, "null")) {
+ 		/* do nothing */
+ 	} else {
+diff --git a/dtc.h b/dtc.h
+index 040f8d4..fa66dca 100644
+--- a/dtc.h
++++ b/dtc.h
+@@ -266,8 +266,8 @@ void process_checks(bool force, struct dt_info *dti);
+ 
+ /* Flattened trees */
+ 
+-void dt_to_blob(FILE *f, struct dt_info *dti, int version);
+-void dt_to_asm(FILE *f, struct dt_info *dti, int version);
++void dt_to_blob(FILE *f, struct dt_info *dti, fdt32_t magic, int version);
++void dt_to_asm(FILE *f, struct dt_info *dti, fdt32_t magic, int version);
+ 
+ struct dt_info *dt_from_blob(const char *fname);
+ 
+diff --git a/fdtdump.c b/fdtdump.c
+index 95a6a20..fa5a050 100644
+--- a/fdtdump.c
++++ b/fdtdump.c
+@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
+ 			p = memchr(p, smagic[0], endp - p - 4);
+ 			if (!p)
+ 				break;
+-			if (fdt_magic(p) == FDT_MAGIC) {
++			if (fdt_magic(p) == FDT_MAGIC || fdt_magic(p) == FDT_MAGIC_DTBO) {
+ 				/* try and validate the main struct */
+ 				off_t this_len = endp - p;
+ 				fdt32_t max_version = 17;
+diff --git a/flattree.c b/flattree.c
+index 45fcb04..59bdc7d 100644
+--- a/flattree.c
++++ b/flattree.c
+@@ -335,6 +335,7 @@ static struct data flatten_reserve_list(struct reserve_info *reservelist,
+ }
+ 
+ static void make_fdt_header(struct fdt_header *fdt,
++			    fdt32_t magic,
+ 			    struct version_info *vi,
+ 			    int reservesize, int dtsize, int strsize,
+ 			    int boot_cpuid_phys)
+@@ -345,7 +346,7 @@ static void make_fdt_header(struct fdt_header *fdt,
+ 
+ 	memset(fdt, 0xff, sizeof(*fdt));
+ 
+-	fdt->magic = cpu_to_fdt32(FDT_MAGIC);
++	fdt->magic = cpu_to_fdt32(magic);
+ 	fdt->version = cpu_to_fdt32(vi->version);
+ 	fdt->last_comp_version = cpu_to_fdt32(vi->last_comp_version);
+ 
+@@ -366,7 +367,7 @@ static void make_fdt_header(struct fdt_header *fdt,
+ 		fdt->size_dt_struct = cpu_to_fdt32(dtsize);
+ }
+ 
+-void dt_to_blob(FILE *f, struct dt_info *dti, int version)
++void dt_to_blob(FILE *f, struct dt_info *dti, fdt32_t magic, int version)
+ {
+ 	struct version_info *vi = NULL;
+ 	int i;
+@@ -390,7 +391,7 @@ void dt_to_blob(FILE *f, struct dt_info *dti, int version)
+ 	reservebuf = flatten_reserve_list(dti->reservelist, vi);
+ 
+ 	/* Make header */
+-	make_fdt_header(&fdt, vi, reservebuf.len, dtbuf.len, strbuf.len,
++	make_fdt_header(&fdt, magic, vi, reservebuf.len, dtbuf.len, strbuf.len,
+ 			dti->boot_cpuid_phys);
+ 
+ 	/*
+@@ -460,7 +461,7 @@ static void dump_stringtable_asm(FILE *f, struct data strbuf)
+ 	}
+ }
+ 
+-void dt_to_asm(FILE *f, struct dt_info *dti, int version)
++void dt_to_asm(FILE *f, struct dt_info *dti, fdt32_t magic, int version)
+ {
+ 	struct version_info *vi = NULL;
+ 	int i;
+@@ -832,7 +833,7 @@ struct dt_info *dt_from_blob(const char *fname)
+ 	}
+ 
+ 	magic = fdt32_to_cpu(magic);
+-	if (magic != FDT_MAGIC)
++	if (magic != FDT_MAGIC && magic != FDT_MAGIC_DTBO)
+ 		die("Blob has incorrect magic number\n");
+ 
+ 	rc = fread(&totalsize, sizeof(totalsize), 1, f);
+diff --git a/libfdt/fdt.c b/libfdt/fdt.c
+index 22286a1..28d422c 100644
+--- a/libfdt/fdt.c
++++ b/libfdt/fdt.c
+@@ -57,7 +57,7 @@
+ 
+ int fdt_check_header(const void *fdt)
+ {
+-	if (fdt_magic(fdt) == FDT_MAGIC) {
++	if (fdt_magic(fdt) == FDT_MAGIC || fdt_magic(fdt) == FDT_MAGIC_DTBO) {
+ 		/* Complete tree */
+ 		if (fdt_version(fdt) < FDT_FIRST_SUPPORTED_VERSION)
+ 			return -FDT_ERR_BADVERSION;
+diff --git a/libfdt/fdt.h b/libfdt/fdt.h
+index 526aedb..493cd55 100644
+--- a/libfdt/fdt.h
++++ b/libfdt/fdt.h
+@@ -55,7 +55,7 @@
+ #ifndef __ASSEMBLY__
+ 
+ struct fdt_header {
+-	fdt32_t magic;			 /* magic word FDT_MAGIC */
++	fdt32_t magic;			 /* magic word FDT_MAGIC[|_DTBO] */
+ 	fdt32_t totalsize;		 /* total size of DT block */
+ 	fdt32_t off_dt_struct;		 /* offset to structure */
+ 	fdt32_t off_dt_strings;		 /* offset to strings */
+@@ -93,6 +93,7 @@ struct fdt_property {
+ #endif /* !__ASSEMBLY */
+ 
+ #define FDT_MAGIC	0xd00dfeed	/* 4: version, 4: total size */
++#define FDT_MAGIC_DTBO	0xd00dfdb0	/* DTBO magic */
+ #define FDT_TAGSIZE	sizeof(fdt32_t)
+ 
+ #define FDT_BEGIN_NODE	0x1		/* Start node: full name */
+diff --git a/tests/mangle-layout.c b/tests/mangle-layout.c
+index a76e51e..d29ebc6 100644
+--- a/tests/mangle-layout.c
++++ b/tests/mangle-layout.c
+@@ -42,7 +42,8 @@ static void expand_buf(struct bufstate *buf, int newsize)
+ 	buf->size = newsize;
+ }
+ 
+-static void new_header(struct bufstate *buf, int version, const void *fdt)
++static void new_header(struct bufstate *buf, fdt32_t magic, int version,
++		       const void *fdt)
+ {
+ 	int hdrsize;
+ 
+@@ -56,7 +57,7 @@ static void new_header(struct bufstate *buf, int version, const void *fdt)
+ 	expand_buf(buf, hdrsize);
+ 	memset(buf->buf, 0, hdrsize);
+ 
+-	fdt_set_magic(buf->buf, FDT_MAGIC);
++	fdt_set_magic(buf->buf, magic);
+ 	fdt_set_version(buf->buf, version);
+ 	fdt_set_last_comp_version(buf->buf, 16);
+ 	fdt_set_boot_cpuid_phys(buf->buf, fdt_boot_cpuid_phys(fdt));
+@@ -145,7 +146,7 @@ int main(int argc, char *argv[])
+ 	if (fdt_version(fdt) < 17)
+ 		CONFIG("Input tree must be v17");
+ 
+-	new_header(&buf, version, fdt);
++	new_header(&buf, FDT_MAGIC, version, fdt);
+ 
+ 	while (*blockorder) {
+ 		add_block(&buf, version, *blockorder, fdt);
 -- 
 1.7.12
