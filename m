@@ -1,99 +1,69 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] dt documentation: etnaviv: add devicetree bindings
-Date: Fri, 03 Jun 2016 17:01:59 +0200
-Message-ID: <1464966119.32235.3.camel@pengutronix.de>
-References: <E1b8qYp-0005n7-9D@rmk-PC.armlinux.org.uk>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: Add MediaTek display PWM bindings
+Date: Fri, 3 Jun 2016 17:03:53 +0200
+Message-ID: <57519C59.5040107@gmail.com>
+References: <1464597712-5399-1-git-send-email-weiqing.kong@mediatek.com>
+ <1464597712-5399-2-git-send-email-weiqing.kong@mediatek.com>
+ <20160602224550.GA19256@rob-hp-laptop> <1464936349.5209.9.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1b8qYp-0005n7-9D-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1464936349.5209.9.camel@mhfsdcap03>
+Sender: linux-pwm-owner@vger.kernel.org
+To: weiqing kong <weiqing.kong@mediatek.com>, Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 03.06.2016, 15:58 +0100 schrieb Russell King:
-> From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Etnaviv follows the same priciple as imx-drm to have a virtual
-> master device node to bind all the individual GPU cores together
-> into one DRM device.
-> 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> ---
-> This was supposed to be merged along with Etnaviv, but for whatever
-> reason, Etnaviv was merged without this patch.  Can someone please
-> merge this?  I won't be re-sending this as I'm deleting it from my
-> tree.
-> 
-NACK
-
-The etnaviv bindings are mainline. They just moved location to
-Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt,
-following the reorganization done by Rob Herring.
-
-Regards,
-Lucas
-
->  .../bindings/drm/etnaviv/etnaviv-drm.txt           | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/drm/etnaviv/etnaviv-drm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/drm/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/drm/etnaviv/etnaviv-drm.txt
-> new file mode 100644
-> index 000000000000..e27082bdba0d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/drm/etnaviv/etnaviv-drm.txt
-> @@ -0,0 +1,44 @@
-> +Etnaviv DRM master device
-> +================================
-> +
-> +The Etnaviv DRM master device is a virtual device needed to list all
-> +Vivante GPU cores that comprise the GPU subsystem.
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,imx-gpu-subsystem"
-> +- cores: Should contain a list of phandles pointing to Vivante GPU devices
-> +
-> +example:
-> +
-> +gpu-subsystem {
-> +	compatible = "fsl,imx-gpu-subsystem";
-> +	cores = <&gpu_2d>, <&gpu_3d>;
-> +};
-> +
-> +
-> +Vivante GPU core devices
-> +====================
-> +
-> +Required properties:
-> +- compatible: Should be "vivante,gc"
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- interrupts: Should contain the cores interrupt line
-> +- clocks: should contain one clock for entry in clock-names
-> +  see Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +- clock-names:
-> +   - "bus":    AXI/register clock
-> +   - "core":   GPU core clock
-> +   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
-> +
-> +example:
-> +
-> +gpu_3d: gpu@00130000 {
-> +	compatible = "vivante,gc";
-> +	reg = <0x00130000 0x4000>;
-> +	interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
-> +	         <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> +	         <&clks IMX6QDL_CLK_GPU3D_SHADER>;
-> +	clock-names = "bus", "core", "shader";
-> +};
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 03/06/16 08:45, weiqing kong wrote:
+> On Thu, 2016-06-02 at 17:45 -0500, Rob Herring wrote:
+>> On Mon, May 30, 2016 at 04:41:50PM +0800, Weiqing Kong wrote:
+>>> Add MT2701 compatible string.
+>>>
+>>> Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt | 5 +++--
+>>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+>>> index f8f59ba..f2f2fa9 100644
+>>> --- a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+>>> +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+>>> @@ -1,9 +1,10 @@
+>>>   MediaTek display PWM controller
+>>>
+>>>   Required properties:
+>>> - - compatible: should be "mediatek,<name>-disp-pwm":
+>>> -   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
+>>> + - compatible: should be like these:
+>>> +   - "mediatek,mt2701-disp-bls": found on mt2701 SoC.
+>>
+>> Why bls instead of pwm?
+>
+> In mt6595/mt8173, we have a hardware module named pwm.
+> In mt2701, we have bls hardware module which includes disp pwm function,
+> so we named it mt2701-disp-bls rather than mt2701-disp-pwm in order to
+> match with hardware spec.
+> thanks.
+>
+
+ From what I understand pwm module and disp pwm in mt6589/mt8173 is 
+independent from the disp pwm. Actually the disp pwm in mt6589 is part 
+of the bls module, so this should me mediatek,mt2701-disp-pwm as well
+
+Thanks,
+Matthias
+
+>>
+>>>      - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
+>>> +   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
+>>>    - reg: physical base address and length of the controller's registers.
+>>>    - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+>>>      the cell format.
+>>> --
+>>> 1.8.1.1.dirty
+>>>
+>
+>
