@@ -1,44 +1,66 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 1/3] iio: adc: ina3221: Add DT binding details
-Date: Fri, 3 Jun 2016 14:32:38 +0530
-Message-ID: <575147AE.30209@nvidia.com>
-References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com> <20160603020759.GA23947@rob-hp-laptop>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v2 1/2] usb: ohci-at91: Forcibly suspend ports while USB
+ suspend
+Date: Fri, 3 Jun 2016 09:22:42 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A24364101650B1491@penmbx01>
+References: <1464755400-6825-1-git-send-email-wenyou.yang@atmel.com>
+ <1464755400-6825-2-git-send-email-wenyou.yang@atmel.com>
+ <20160603015409.GA18051@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160603020759.GA23947@rob-hp-laptop>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160603015409.GA18051@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: jic23@kernel.org, corbet@lwn.net, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org
+Cc: Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Friday 03 June 2016 07:37 AM, Rob Herring wrote:
-> On Wed, Jun 01, 2016 at 06:04:12PM +0530, Laxman Dewangan wrote:
->> +
->> +enable-power-monitor:		Boolean, Enable power monitoring of the device.
->> +
->> +enable-continuous-mode:		Boolean. Device support oneshot and continuous
->> +				mode for the channel data conversion. Presence
->> +				of this property will enable the continuous
->> +				mode from boot.
->> +
->> +enable-warning-alert:		Boolean, Enable the alert signal when shunt
->> +				current cross the warning threshold on any of
->> +				the channel. Absence of this property will not
->> +				enable the warning alert.
->> +
->> +enable-critical-alert:		Boolean, Enable the alert signal when shunt
->> +				current cross the critical threshold on any
->> +				of the channel. Absence of this property will
->> +				not enable the critical alert.
-> Seems like these would be a user decision.
-
-In some of platform, we want this to be from driver init itself. That's 
-why it is there.
-
-But I will move this to sysfs if this is something user level policy.
-
-
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRv
+OnJvYmhAa2VybmVsLm9yZ10NCj4gU2VudDogMjAxNsTqNtTCM8jVIDk6NTQNCj4gVG86IFlhbmcs
+IFdlbnlvdSA8V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzogQWxhbiBTdGVybiA8c3Rlcm5A
+cm93bGFuZC5oYXJ2YXJkLmVkdT47IEdyZWcgS3JvYWgtSGFydG1hbg0KPiA8Z3JlZ2toQGxpbnV4
+Zm91bmRhdGlvbi5vcmc+OyBGZXJyZSwgTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+
+Ow0KPiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIEJyb3duIDxicm9vbmll
+QGtlcm5lbC5vcmc+OyBJYW4NCj4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3Jn
+LnVrPjsgS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+Ow0KPiBBbGV4YW5kcmUgQmVs
+bG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29tPjsgbGludXgtDQo+IGtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
+cm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC11c2JAdmdlci5rZXJuZWwu
+b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSB1c2I6IG9oY2ktYXQ5MTogRm9yY2li
+bHkgc3VzcGVuZCBwb3J0cyB3aGlsZSBVU0INCj4gc3VzcGVuZA0KPiANCj4gT24gV2VkLCBKdW4g
+MDEsIDIwMTYgYXQgMTI6Mjk6NTlQTSArMDgwMCwgV2VueW91IFlhbmcgd3JvdGU6DQo+ID4gSW4g
+b3JkZXIgdG8gdGhlIHNhdmUgcG93ZXIgY29uc3VtcHRpb24sIGFzIGEgd29ya2Fyb3VuZCwgc3Vz
+cGVuZA0KPiA+IGZvcmNpYmx5IHRoZSBVU0IgUE9SVEEvQi9DIHZpYSBzZXQgdGhlIFNVU1BFTkRf
+QS9CL0MgYml0cyBvZiBPSENJDQo+ID4gSW50ZXJydXB0IENvbmZpZ3VyYXRpb24gUmVnaXN0ZXIg
+aW4gdGhlIFNGUnMgd2hpbGUgT0hDSSBVU0Igc3VzcGVuZC4NCj4gPg0KPiA+IFRoaXMgc3VzcGVu
+ZCBvcGVyYXRpb24gbXVzdCBiZSBkb25lIGJlZm9yZSB0aGUgVVNCIGNsb2NrIGlzIGRpc2FibGVk
+LA0KPiA+IHJlc3VtZSBhZnRlciB0aGUgVVNCIGNsb2NrIGlzIGVuYWJsZWQuDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPg0KPiA+IC0t
+LQ0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiAgLSBBZGQgY29tcGF0aWJsZSB0byBzdXBw
+b3J0IGZvcmNpYmx5IHN1c3BlbmQgdGhlIHBvcnRzLg0KPiA+ICAtIEFkZCBzb2MvYXQ5MS9hdDkx
+X3Nmci5oIHRvIGFjY29tbW9kYXRlIHRoZSBkZWZpbmVzLg0KPiA+ICAtIEFkZCBlcnJvciBjaGVj
+a2luZyBmb3IgLnNmcl9yZWdtYXAuDQo+ID4gIC0gUmVtb3ZlIHVubmVjZXNzYXJ5IHJlZ21hcF9y
+ZWFkKCkgc3RhdGVtZW50Lg0KPiA+DQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9h
+dG1lbC11c2IudHh0ICAgICAgICAgIHwgIDUgKy0NCj4gPiAgZHJpdmVycy91c2IvaG9zdC9vaGNp
+LWF0OTEuYyAgICAgICAgICAgICAgICAgICAgICAgfCA4MCArKysrKysrKysrKysrKysrKysrKyst
+DQo+ID4gIGluY2x1ZGUvc29jL2F0OTEvYXQ5MV9zZnIuaCAgICAgICAgICAgICAgICAgICAgICAg
+IHwgMjkgKysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMTEgaW5zZXJ0aW9ucygrKSwg
+MyBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4gMTAwNjQ0IGluY2x1ZGUvc29jL2F0OTEv
+YXQ5MV9zZnIuaA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy91c2IvYXRtZWwtdXNiLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3VzYi9hdG1lbC11c2IudHh0DQo+ID4gaW5kZXggNTg4M2I3My4uM2UzZTU4
+YSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNi
+L2F0bWVsLXVzYi50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdXNiL2F0bWVsLXVzYi50eHQNCj4gPiBAQCAtMyw4ICszLDkgQEAgQXRtZWwgU09DIFVTQiBj
+b250cm9sbGVycyAgT0hDSQ0KPiA+DQo+ID4gIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gLSAt
+IGNvbXBhdGlibGU6IFNob3VsZCBiZSAiYXRtZWwsYXQ5MXJtOTIwMC1vaGNpIiBmb3IgVVNCIGNv
+bnRyb2xsZXJzDQo+ID4gLSAgIHVzZWQgaW4gaG9zdCBtb2RlLg0KPiA+ICsgLSBjb21wYXRpYmxl
+OiBTaG91bGQgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmcNCj4gPiArCSAgICAgICAiYXRtZWwsYXQ5
+MXJtOTIwMC1vaGNpIiBmb3IgVVNCIGNvbnRyb2xsZXJzIHVzZWQgaW4gaG9zdCBtb2RlLg0KPiA+
+ICsJICAgICAgICJhdG1lbCxzYW1hNWQyLW9oY2kiIGZvciBTQU1BNUQyIHdoaWNoIGNhbiBmb3Jj
+ZSB0byBzdXNwZW5kLg0KPiANCj4gVGhhdCBtYXkgYmUgd2h5IHlvdSBuZWVkIHRoaXMgbm93LCBi
+dXQgdGhhdCBpcyBpcnJlbGV2YW50IHRvIGhhdmluZyBhIGNoaXAgc3BlY2lmaWMNCj4gY29tcGF0
+aWJsZSBzdHJpbmcuDQoNCk1heWJlIGEgcHJvcGVydHkgaXMgYmV0dGVyLg0KDQoNCkJlc3QgUmVn
+YXJkcywNCldlbnlvdSBZYW5nDQo=
