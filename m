@@ -1,83 +1,56 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom reserved
- memory handling
-Date: Fri, 03 Jun 2016 08:57:46 +0200
-Message-ID: <57512A6A.1050209@samsung.com>
-References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
- <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
- <574BEBB8.8040606@samsung.com>
- <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
- <57505F5B.90101@samsung.com>
- <e715a7d0-eb25-9d68-27ad-25cf03c499ca@osg.samsung.com>
+From: Jia Hongtao <hongtao.jia@nxp.com>
+Subject: [PATCH 3/7] powerpc/mpc85xx: Update TMU device tree node for
+ T1023/T1024
+Date: Fri, 3 Jun 2016 14:57:35 +0800
+Message-ID: <1464937059-19349-3-git-send-email-hongtao.jia@nxp.com>
+References: <1464937059-19349-1-git-send-email-hongtao.jia@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <e715a7d0-eb25-9d68-27ad-25cf03c499ca@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1464937059-19349-1-git-send-email-hongtao.jia@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: edubezval@gmail.com, rui.zhang@intel.com, robh+dt@kernel.org, galak@codeaurora.org, scott.wood@nxp.com, shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, hongtao.jia@nxp.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2016 07:25 PM, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 06/02/2016 12:31 PM, Krzysztof Kozlowski wrote:
->> On 06/02/2016 05:20 PM, Javier Martinez Canillas wrote:
->>> Hello Krzysztof,
->>>
->>> On 05/30/2016 03:28 AM, Krzysztof Kozlowski wrote:
->>>> On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
->>>>> Once MFC driver has been converted to generic reserved memory bindings,
->>>>> there is no need for custom memory reservation code.
->>>>>
->>>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>>> ---
->>>>>  arch/arm/mach-exynos/Makefile      |  2 -
->>>>>  arch/arm/mach-exynos/exynos.c      | 19 --------
->>>>>  arch/arm/mach-exynos/mfc.h         | 16 -------
->>>>>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 --------------------------------------
->>>>>  4 files changed, 130 deletions(-)
->>>>>  delete mode 100644 arch/arm/mach-exynos/mfc.h
->>>>>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
->>>>
->>>> Thanks, applied.
->>>>
->>>
->>> This patch can't be applied before patches 2/5 and 3/5, or the custom
->>> memory regions reservation will break with the current s5p-mfc driver.
->>
->> Yes, I know. As I understood from talk with Marek, the driver is broken
->> now so continuous work was not chosen. If it is not correct and full
-> 
-> It's true that the driven is currently broken in mainline and is not really
-> stable, I posted fixes for all the issues I found (mostly in module removal
-> and insert paths).
-> 
-> But with just the following patch from Ayaka on top of mainline, I'm able to
-> have video decoding working: https://lkml.org/lkml/2016/5/6/577
+SoC compatible string and endianness property are added according to the
+new bindings.
 
-Which is still a "future" patch, not current state...
-> 
-> Marek mentioned that bisectability is only partially broken because the old
-> binding will still work after this series if IOMMU is enabled (because the
-> properties are ignored in this case). But will break if IOMMU isn't enabled
-> which will be the case for some boards that fails to boot with IOMMU due the
-> bootloader leaving the FIMD enabled doing DMA operations automatically AFAIU. 
-> 
-> Now, I'm OK with not keeping backwards compatibility for the MFC dt bindings
-> since arguably the driver has been broken for a long time and nobody cared
-> and also I don't think anyone in practice boots a new kernel with an old DTB
-> for Exynos.
-> 
-> But I don't think is correct to introduce a new issue as is the case if this
-> patch is applied before the previous patches in the series since this causes
-> the driver to probe to fail and the following warn on boot (while it used to
-> at least probe correctly in mainline):
+Signed-off-by: Jia Hongtao <hongtao.jia@nxp.com>
+---
+ arch/powerpc/boot/dts/fsl/t1023si-post.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Okay but the patches will go through separate tree. This is not a
-problem, as I said, I just need a stable tag from media tree with first
-four patches (Mauro?).
-
-Best regards,
-Krzysztof
+diff --git a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+index 6e0b489..bce762a 100644
+--- a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+@@ -321,7 +321,7 @@
+ 				       0x00030001 0x0000000d
+ 				       0x00030002 0x00000019
+ 				       0x00030003 0x00000024>;
+-		#thermal-sensor-cells = <0>;
++		#thermal-sensor-cells = <1>;
+ 	};
+ 
+ 	thermal-zones {
+@@ -329,7 +329,7 @@
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <5000>;
+ 
+-			thermal-sensors = <&tmu>;
++			thermal-sensors = <&tmu 0>;
+ 
+ 			trips {
+ 				cpu_alert: cpu-alert {
+-- 
+2.1.0.27.g96db324
