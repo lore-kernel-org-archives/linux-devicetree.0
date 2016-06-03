@@ -1,61 +1,64 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v3 5/5] arm64/numa: avoid inconsistent information to be
- printed
-Date: Fri, 3 Jun 2016 10:55:46 +0100
-Message-ID: <20160603095545.GI9915@arm.com>
-References: <1464834491-12024-1-git-send-email-thunder.leizhen@huawei.com>
- <1464834491-12024-6-git-send-email-thunder.leizhen@huawei.com>
+From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/5] net-next: ethernet: add sun8i-emac driver
+Date: Fri,  3 Jun 2016 11:56:25 +0200
+Message-ID: <1464947790-22991-1-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464834491-12024-6-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD7YLCN32UNBB7VIYW5AKGQEI4OFQWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 02, 2016 at 10:28:11AM +0800, Zhen Lei wrote:
-> numa_init(of_numa_init) may returned error because of numa configuration
-> error. So "No NUMA configuration found" is inaccurate. In fact, specific
-> configuration error information should be immediately printed by the
-> testing branch.
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  arch/arm64/mm/numa.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+Hello
 
-Looks fine to me, but this doesn't apply against -rc1.
+This patch series add the driver for sun8i-emac which handle the Ethernet MAC
+present on Allwinner H3/A83T/A64 SoCs.
 
-Will
+It supports 10/100/1000 Mbit/s speed with half/full duplex.
+It can use an internal PHY (MII 10/100) or an external PHY
+via RGMII/RMII.
 
-> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> index 2601660..1b9622c 100644
-> --- a/arch/arm64/mm/numa.c
-> +++ b/arch/arm64/mm/numa.c
-> @@ -338,8 +338,10 @@ static int __init numa_init(int (*init_func)(void))
->  	if (ret < 0)
->  		return ret;
-> 
-> -	if (nodes_empty(numa_nodes_parsed))
-> +	if (nodes_empty(numa_nodes_parsed)) {
-> +		pr_info("No NUMA configuration found\n");
->  		return -EINVAL;
-> +	}
-> 
->  	ret = numa_register_nodes();
->  	if (ret < 0)
-> @@ -370,8 +372,6 @@ static int __init dummy_numa_init(void)
-> 
->  	if (numa_off)
->  		pr_info("NUMA disabled\n"); /* Forced off on command line. */
-> -	else
-> -		pr_info("No NUMA configuration found\n");
->  	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
->  	       0LLU, PFN_PHYS(max_pfn) - 1);
-> 
-> --
-> 2.5.0
-> 
-> 
+This patch series enable the driver only for the H3 SoC since A83T and A64
+doesn't have the necessary clocks present in mainline.
+
+This patch series enable the driver only for the OrangePiPC board since other
+board with H3 use external PHY which need optional regulators that will be
+supported later.
+
+The driver have been tested on the following boards:
+- H3 Orange PI PC, Orange PI Plus, BananaPI-M2+
+- A64 Pine64
+- A83T BananaPI-M3
+
+I would like to thanks Chen-Yu Tsai for his help on developing this driver.
+
+Regards
+
+LABBE Corentin (5):
+  ethernet: add sun8i-emac driver
+  MAINTAINERS: Add myself as maintainers of sun8i-emac
+  ARM: sun8i: dt: Add DT bindings documentation for Allwinner sun8i-emac
+  ARM: dts: sun8i-h3: add sun8i-emac ethernet driver
+  ARM: dts: sun8i: Enable sun8i-emac on the Orange PI PC
+
+ .../bindings/net/allwinner,sun8i-emac.txt          |   64 +
+ MAINTAINERS                                        |    6 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |   11 +
+ arch/arm/boot/dts/sun8i-h3.dtsi                    |   14 +
+ drivers/net/ethernet/allwinner/Kconfig             |   13 +
+ drivers/net/ethernet/allwinner/Makefile            |    1 +
+ drivers/net/ethernet/allwinner/sun8i-emac.c        | 1943 ++++++++++++++++++++
+ 7 files changed, 2052 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+ create mode 100644 drivers/net/ethernet/allwinner/sun8i-emac.c
+
+-- 
+2.7.3
