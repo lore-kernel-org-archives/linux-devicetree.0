@@ -1,131 +1,62 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2,3/5] dt-bindings: mtu3: add devicetree bindings
-Date: Fri, 3 Jun 2016 15:34:04 +0200
-Message-ID: <5751874C.9070100@gmail.com>
-References: <1464673962-11506-1-git-send-email-chunfeng.yun@mediatek.com>
- <1464673962-11506-4-git-send-email-chunfeng.yun@mediatek.com>
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Subject: RE: [PATCH v2 1/7] mdio:mux: Enhanced MDIO mux framework for
+ integrated multiplexers
+Date: Fri, 3 Jun 2016 19:11:44 +0530
+Message-ID: <722986e44cf0e0fbb8073605c8d8dcda@mail.gmail.com>
+References: <1464701801-17243-1-git-send-email-pramod.kumar@broadcom.com>
+ <1464701801-17243-2-git-send-email-pramod.kumar@broadcom.com> <20160601130207.GE31982@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464673962-11506-4-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <20160601130207.GE31982@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
-
-On 31/05/16 07:52, Chunfeng Yun wrote:
-> add a DT binding doc for MediaTek USB3 DRD driver
+> -----Original Message-----
+> From: Andrew Lunn [mailto:andrew@lunn.ch]
+> Sent: 01 June 2016 18:32
+> To: Pramod Kumar
+> Cc: Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala;
+Catalin
+> Marinas; Will Deacon; Kishon Vijay Abraham I; David S. Miller;
+> devicetree@vger.kernel.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; bcm-kernel-feedback-list@broadcom.com;
+linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH v2 1/7] mdio:mux: Enhanced MDIO mux framework for
+> integrated multiplexers
 >
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->   Documentation/devicetree/bindings/usb/mtu3.txt |   85 ++++++++++++++++++++++++
->   1 file changed, 85 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/usb/mtu3.txt
+> > diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c index
+> > 8453f08..cf40e7a 100644
+> > --- a/drivers/of/of_mdio.c
+> > +++ b/drivers/of/of_mdio.c
+> > @@ -225,6 +225,9 @@ int of_mdiobus_register(struct mii_bus *mdio,
+struct
+> device_node *np)
+> >  	if (rc)
+> >  		return rc;
+> >
+> > +	if (of_property_read_bool(np, "mdio-integrated-mux"))
+> > +		return 0;
+> > +
 >
-> diff --git a/Documentation/devicetree/bindings/usb/mtu3.txt b/Documentation/devicetree/bindings/usb/mtu3.txt
-> new file mode 100644
-> index 0000000..571ae8b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mtu3.txt
-
-The file should be called mt8173-mtu3.txt to be in line with mt8173-xhci.txt
-
-> @@ -0,0 +1,85 @@
-> +The device node for Mediatek USB3.0 DRD controller
-> +
-> +Required properties:
-> + - compatible : should be "mediatek,mt8173-mtu3"
-> + - reg : specifies physical base address and size of the registers
-> + - reg-names: should be "mac" for device IP and "ippc" for IP port control
-> + - interrupts : interrupt used by the device IP
-> + - power-domains : a phandle to USB power domain node to control USB's
-> +	mtcmos
-> + - vusb33-supply : regulator of USB avdd3.3v
-> + - clocks : a list of phandle + clock-specifier pairs, one for each
-> +	entry in clock-names
-> + - clock-names : must contain "sys_ck" for clock of controller;
-> +	"wakeup_deb_p0" and "wakeup_deb_p1" are optional, they are
-> +	depends on "mediatek,enable-wakeup"
-> + - phys : a list of phandle + phy specifier pairs
-> + - dr_mode : should be one of "host", "peripheral" or "otg",
-> +	refer to usb/generic.txt
-> +
-> +Optional properties:
-> + - #address-cells, #size-cells : should be '2' if the device has sub-nodes
-> +	with 'reg' property
-> + - ranges : allows valid 1:1 translation between child's address space and
-> +	parent's address space
-> + - extcon : external connector for vbus and idpin changes detection, needed
-> +	when supports dual-role mode.
-> + - vbus-supply : reference to the VBUS regulator, needed when supports
-> +	dual-role mode.
-> + - pinctl-names : a pinctrl state named "default" must be defined,
-> +	"id_float" and "id_ground" are optinal which depends on
-> +	"mediatek,enable-manual-drd"
-
-So pinctrl is optional, but if you put it, you need at least "default"?
-
-Apart from that, DT maintainers prefer to have the binding patches at 
-the beginning of a series, so it's easier for them to not oversee any.
-
-Regards,
-Matthias
-
-> + - pinctrl-0 : pin control group
-> +	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-> +
-> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
-> +	"full-speed"; refer to usb/generic.txt
-> + - enable-manual-drd : supports manual dual-role switch via sysfs; only used
-> +	when receptacle is TYPE-A and also wants to support dual-role mode.
-> + - mediatek,enable-wakeup : supports ip sleep wakeup used by host mode
-> + - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
-> +	control register, it depends on "mediatek,enable-wakeup".
-> +
-> +Sub-nodes:
-> +The xhci should be added as subnode to mtu3 as shown in the following example
-> +if host mode is enabled. The DT binding details of xhci can be found in:
-> +Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> +
-> +Example:
-> +ssusb: usb@11271000 {
-> +	compatible = "mediatek,mt8173-mtu3";
-> +	reg = <0 0x11271000 0 0x3000>,
-> +	      <0 0x11280700 0 0x0100>;
-> +	reg-names = "mac", "ippc";
-> +	interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>;
-> +	phys = <&phy_port0 PHY_TYPE_USB3>,
-> +	       <&phy_port1 PHY_TYPE_USB2>;
-> +	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-> +	clocks = <&topckgen CLK_TOP_USB30_SEL>,
-> +		 <&pericfg CLK_PERI_USB0>,
-> +		 <&pericfg CLK_PERI_USB1>;
-> +	clock-names = "sys_ck",
-> +		      "wakeup_deb_p0",
-> +		      "wakeup_deb_p1";
-> +	vusb33-supply = <&mt6397_vusb_reg>;
-> +	vbus-supply = <&usb_p0_vbus>;
-> +	extcon = <&extcon_usb>;
-> +	dr_mode = "otg";
-> +	mediatek,enable-wakeup;
-> +	mediatek,syscon-wakeup = <&pericfg>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +	ranges;
-> +	status = "disabled";
-> +
-> +	usb_host: xhci@11270000 {
-> +		compatible = "mediatek,mt8173-xhci";
-> +		reg = <0 0x11270000 0 0x1000>;
-> +		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-> +		clocks = <&topckgen CLK_TOP_USB30_SEL>;
-> +		clock-names = "sys_ck";
-> +		vusb33-supply = <&mt6397_vusb_reg>;
-> +		status = "disabled";
-> +	};
-> +};
+> Hi
 >
+> Rather than doing this, did you try setting bus->phy_mask = 0 and
+calling
+> mdiobus_register(), rather than of_mdiobus_regsiter() for the parent
+bus?
+>
+
+After setting bus->phy_mask = ~0 and using mdiobus_regsiter() I could get
+rid of newly added
+Property. It works for me as I find same has been done inside of
+of_mdiobus_regsiter().
+
+Thanks for pointing out this.
+
+> 	Andrew
