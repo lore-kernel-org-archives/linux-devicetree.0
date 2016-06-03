@@ -1,73 +1,66 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v4 18/18] ARM: DT: STi: stihxxx-b2120: Add DT nodes for
- STi audio card
-Date: Fri, 3 Jun 2016 13:47:33 +0100
-Message-ID: <20160603124733.GB9912@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 17/18] ARM: STi: DT: STiH407: Add uniperif reader dt
+ nodes
+Date: Fri, 3 Jun 2016 13:50:23 +0100
+Message-ID: <20160603125023.GC9912@griffinp-ThinkPad-X1-Carbon-2nd>
 References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
- <1464192412-16386-20-git-send-email-peter.griffin@linaro.org>
- <574D6473.7050902@st.com>
+ <1464192412-16386-19-git-send-email-peter.griffin@linaro.org>
+ <574D56CE.5020802@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <574D6473.7050902@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org
+In-Reply-To: <574D56CE.5020802-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Arnaud,
-
-Thanks for reviewing.
 
 On Tue, 31 May 2016, Arnaud Pouliquen wrote:
 
 > 
 > 
 > On 05/25/2016 06:06 PM, Peter Griffin wrote:
-> > This patch enables the uniperif players 2 & 3 for b2120 boards
-> > and also adds the "simple-audio-card" device node to interconnect
-> > the SoC sound device and the codec.
+> > This patch adds the DT node for the uniperif reader
+> > IP block found on STiH407 family silicon.
 > > 
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > > ---
-> >  arch/arm/boot/dts/stihxxx-b2120.dtsi | 40 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 40 insertions(+)
+> >  arch/arm/boot/dts/stih407-family.dtsi | 28 ++++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
 > > 
-> > diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> > index 722c63f..5297f21 100644
-> > --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> > +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> > @@ -131,5 +131,45 @@
-> >  				dvb-card	= <STV0367_TDA18212_NIMA_1>;
-> >  			};
+> > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> > index 7ca149b..fb6363e1 100644
+> > --- a/arch/arm/boot/dts/stih407-family.dtsi
+> > +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> > @@ -831,5 +831,33 @@
+> >  			st,version = <5>;
+> >  			st,mode = "SPDIF";
 > >  		};
 > > +
-> > +		sti_uni_player2: sti-uni-player@2 {
-> > +			status = "okay";
-> > +		};
-> > +
-> > +		sti_uni_player3: sti-uni-player@3 {
-> > +			status = "okay";
-> > +		};
-> enable sti-sasg-codec with spdif pinctrl
-
-Will fix in v5
-
-> > +
-> > +		sound {
-> > +			compatible = "simple-audio-card";
-> > +			simple-audio-card,name = "sti audio card";
-> > +			status = "okay";
-> > +
-> > +			simple-audio-card,dai-link@0 {
-> > +				/* DAC */
-> > +				format = "i2s";
-> > +				dai-tdm-slot-width = <32>;
-> clean dai-tdm-slot-width, not used.
+> > +		sti_uni_reader0: sti-uni-reader@0 {
+> > +			compatible = "st,sti-uni-reader";
+> > +			status = "disabled";
+> > +			#sound-dai-cells = <0>;
+> > +			st,syscfg = <&syscfg_core>;
+> > +			reg = <0x8D83000 0x158>;
+> > +			interrupts = <GIC_SPI 87 IRQ_TYPE_NONE>;
+> > +			dmas = <&fdma0 5 0 1>;
+> > +			dma-names = "rx";
+> > +			dai-name = "Uni Reader #0 (PCM IN)";
+> > +			st,version = <3>;
+> > +			pinctrl-names = "default";
+> > +			pinctrl-0 = <&pinctrl_i2s_8ch_in>;
+> suppress pinctrl declaration
 
 Will fix in v5
 
 regards,
 
 Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
