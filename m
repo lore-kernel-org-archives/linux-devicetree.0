@@ -1,103 +1,132 @@
-From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/5] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner sun8i-emac
-Date: Fri,  3 Jun 2016 11:56:28 +0200
-Message-ID: <1464947790-22991-4-git-send-email-clabbe.montjoie@gmail.com>
-References: <1464947790-22991-1-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [ATTN] Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom
+ reserved memory handling
+Date: Fri, 03 Jun 2016 11:59:41 +0200
+Message-ID: <5751550D.3080404@samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
+ <574BEBB8.8040606@samsung.com>
+ <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
+ <57505F5B.90101@samsung.com>
+ <e715a7d0-eb25-9d68-27ad-25cf03c499ca@osg.samsung.com>
+ <57512A6A.1050209@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBA5JYW5AKGQE5I2EEQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1464947790-22991-1-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <57512A6A.1050209@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-media@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for Device-Tree bindings for the
-Allwinner sun8i-emac driver.
+On 06/03/2016 08:57 AM, Krzysztof Kozlowski wrote:
+> On 06/02/2016 07:25 PM, Javier Martinez Canillas wrote:
+>> On 06/02/2016 12:31 PM, Krzysztof Kozlowski wrote:
+>>> On 06/02/2016 05:20 PM, Javier Martinez Canillas wrote:
+>>>> On 05/30/2016 03:28 AM, Krzysztof Kozlowski wrote:
+>>>>> On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
+>>>>>> Once MFC driver has been converted to generic reserved memory bindings,
+>>>>>> there is no need for custom memory reservation code.
+>>>>>>
+>>>>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>>>> ---
+>>>>>>  arch/arm/mach-exynos/Makefile      |  2 -
+>>>>>>  arch/arm/mach-exynos/exynos.c      | 19 --------
+>>>>>>  arch/arm/mach-exynos/mfc.h         | 16 -------
+>>>>>>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 -----------------------------
+>>>>>>  4 files changed, 130 deletions(-)
+>>>>>>  delete mode 100644 arch/arm/mach-exynos/mfc.h
+>>>>>>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
+>>>>>
+>>>>> Thanks, applied.
+>>>>
+>>>> This patch can't be applied before patches 2/5 and 3/5, or the custom
+>>>> memory regions reservation will break with the current s5p-mfc driver.
+>>>
+>>> Yes, I know. As I understood from talk with Marek, the driver is broken
+>>> now so continuous work was not chosen. If it is not correct and full
+>>
+>> It's true that the driven is currently broken in mainline and is not really
+>> stable, I posted fixes for all the issues I found (mostly in module removal
+>> and insert paths).
+>>
+>> But with just the following patch from Ayaka on top of mainline, I'm able to
+>> have video decoding working: https://lkml.org/lkml/2016/5/6/577
+> 
+> Which is still a "future" patch, not current state...
+>>
+>> Marek mentioned that bisectability is only partially broken because the old
+>> binding will still work after this series if IOMMU is enabled (because the
+>> properties are ignored in this case). But will break if IOMMU isn't enabled
+>> which will be the case for some boards that fails to boot with IOMMU due the
+>> bootloader leaving the FIMD enabled doing DMA operations automatically AFAIU. 
+>>
+>> Now, I'm OK with not keeping backwards compatibility for the MFC dt bindings
+>> since arguably the driver has been broken for a long time and nobody cared
+>> and also I don't think anyone in practice boots a new kernel with an old DTB
+>> for Exynos.
+>>
+>> But I don't think is correct to introduce a new issue as is the case if this
+>> patch is applied before the previous patches in the series since this causes
+>> the driver to probe to fail and the following warn on boot (while it used to
+>> at least probe correctly in mainline):
+> 
+> Okay but the patches will go through separate tree. This is not a
+> problem, as I said, I just need a stable tag from media tree with first
+> four patches (Mauro?).
 
-Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../bindings/net/allwinner,sun8i-emac.txt          | 64 ++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+I have prepared a topic branch including media patches from this patch
+series and the dependency fix patches from Javier and Marek.
+So this could be used as a topic branch to pull into media master branch
+and a dependency topic branch for Krzysztof's samsung-soc tree.
+Mauro, can we do it this way? I already talked to Kamil about this.
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-new file mode 100644
-index 0000000..cf71a71
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-@@ -0,0 +1,64 @@
-+* Allwinner sun8i EMAC ethernet controller
-+
-+Required properties:
-+- compatible: "allwinner,sun8i-a83t-emac", "allwinner,sun8i-h3-emac",
-+		or "allwinner,sun50i-a64-emac"
-+- reg: address and length of the register sets for the device.
-+- reg-names: should be "emac" and "syscon", matching the register sets
-+- interrupts: interrupt for the device
-+- clocks: A phandle to the reference clock for this device
-+- clock-names: should be "ahb"
-+- resets: A phandle to the reset control for this device
-+- reset-names: should be "ahb"
-+- phy-mode: See ethernet.txt
-+- phy or phy-handle: See ethernet.txt
-+- #address-cells: shall be 1
-+- #size-cells: shall be 0
-+
-+"allwinner,sun8i-h3-emac" also requires:
-+- clocks: an extra phandle to the reference clock for the EPHY
-+- clock-names: an extra "ephy" entry matching the clocks property
-+- resets: an extra phandle to the reset control for the EPHY
-+- resets-names: an extra "ephy" entry matching the resets property
-+
-+See ethernet.txt in the same directory for generic bindings for ethernet
-+controllers.
-+
-+The device node referenced by "phy" or "phy-handle" should be a child node
-+of this node. See phy.txt for the generic PHY bindings.
-+
-+Optional properties:
-+- phy-supply: phandle to a regulator if the PHY needs one
-+- phy-io-supply: phandle to a regulator if the PHY needs a another one for I/O.
-+		 This is sometimes found with RGMII PHYs, which use a second
-+		 regulator for the lower I/O voltage.
-+- allwinner,tx-delay: The setting of the TX clock delay chain
-+- allwinner,rx-delay: The setting of the RX clock delay chain
-+
-+The TX/RX clock delay chain settings are board specific.
-+
-+Optional properties for "allwinner,sun8i-h3-emac":
-+- allwinner,use-internal-phy: Use the H3 SoC's internal E(thernet) PHY
-+- allwinner,leds-active-low: EPHY LEDs are active low
-+
-+When the internal PHY is requested, the implementation shall configure the
-+internal PHY to use the address specified in the child PHY node.
-+
-+Example:
-+
-+emac: ethernet@01c0b000 {
-+	compatible = "allwinner,sun8i-h3-emac";
-+	reg = <0x01c0b000 0x1000>;
-+	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&bus_gates 17>, <&bus_gates 128>;
-+	clock-names = "ahb", "ephy";
-+	resets = <&ahb_rst 17>, <&ahb_rst 66>;
-+	reset-names = "ahb", "ephy";
-+	phy = <&phy1>;
-+	allwinner,use-internal-phy;
-+	allwinner,leds-active-low;
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
+---8<----
+The following changes since commit 1a695a905c18548062509178b98bc91e67510864:
+
+  Linux 4.7-rc1 (2016-05-29 09:29:24 -0700)
+
+are available in the git repository at:
+
+  git://linuxtv.org/snawrocki/samsung.git for-v4.8/media/exynos-mfc
+
+for you to fetch changes up to 04f776734c4e03e33111d3d5a994b589870df623:
+
+  media: s5p-mfc: add iommu support (2016-06-03 11:13:45 +0200)
+
+----------------------------------------------------------------
+Javier Martinez Canillas (3):
+      s5p-mfc: Set device name for reserved memory region devs
+      s5p-mfc: Add release callback for memory region devs
+      s5p-mfc: Fix race between s5p_mfc_probe() and s5p_mfc_open()
+
+Marek Szyprowski (6):
+      media: vb2-dma-contig: add helper for setting dma max seg size
+      media: set proper max seg size for devices on Exynos SoCs
+      of: reserved_mem: add support for using more than one region for given device
+      media: s5p-mfc: use generic reserved memory bindings
+      media: s5p-mfc: replace custom reserved memory handling code with generic one
+      media: s5p-mfc: add iommu support
+
+ Documentation/devicetree/bindings/media/s5p-mfc.txt |  39 ++++-
+ drivers/media/platform/exynos-gsc/gsc-core.c        |   2 +
+ drivers/media/platform/exynos4-is/fimc-core.c       |   2 +
+ drivers/media/platform/exynos4-is/fimc-is.c         |   2 +
+ drivers/media/platform/exynos4-is/fimc-lite.c       |   2 +
+ drivers/media/platform/s5p-g2d/g2d.c                |   2 +
+ drivers/media/platform/s5p-jpeg/jpeg-core.c         |   2 +
+ drivers/media/platform/s5p-mfc/s5p_mfc.c            | 198 ++++++++++++++-----------
+ drivers/media/platform/s5p-mfc/s5p_mfc_iommu.h      |  79 ++++++++++
+ drivers/media/platform/s5p-tv/mixer_video.c         |   2 +
+ drivers/media/v4l2-core/videobuf2-dma-contig.c      |  53 +++++++
+ drivers/of/of_reserved_mem.c                        |  85 ++++++++---
+ include/linux/of_reserved_mem.h                     |  25 +++-
+ include/media/videobuf2-dma-contig.h                |   2 +
+ 14 files changed, 379 insertions(+), 116 deletions(-)
+ create mode 100644 drivers/media/platform/s5p-mfc/s5p_mfc_iommu.h
+---8<----
+
 -- 
-2.7.3
+Regards,
+Sylwester
