@@ -1,72 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of: silence warnings due to max() usage
-Date: Fri, 3 Jun 2016 07:27:20 -0500
-Message-ID: <20160603122720.GC8472@rob-hp-laptop>
-References: <20160531093856.75c0b04d@canb.auug.org.au>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver
+ for TI INA3221
+Date: Fri, 3 Jun 2016 17:47:01 +0530
+Message-ID: <5751753D.40107@nvidia.com>
+References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com> <1464784454-7988-2-git-send-email-ldewangan@nvidia.com> <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org> <57516980.1040907@nvidia.com> <c12d7b59-3013-91fc-5414-5583bdb7d962@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160531093856.75c0b04d@canb.auug.org.au>
+In-Reply-To: <c12d7b59-3013-91fc-5414-5583bdb7d962@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Liu <r64343@freescale.com>
+To: Jonathan Cameron <jic23@kernel.org>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 31, 2016 at 09:38:56AM +1000, Stephen Rothwell wrote:
-> pageblock_order can be (at least) an unsigned int or an unsigned long
-> depending on the kernel config and architecture, so use max_t(unsigne=
-d
-> long ...) when comparing it.
->=20
-> fixes these warnings:
->=20
-> In file included from include/linux/list.h:8:0,
->                  from include/linux/kobject.h:20,
->                  from include/linux/of.h:21,
->                  from drivers/of/of_reserved_mem.c:17:
-> drivers/of/of_reserved_mem.c: In function =E2=80=98__reserved_mem_all=
-oc_size=E2=80=99:
-> include/linux/kernel.h:748:17: warning: comparison of distinct pointe=
-r types lacks a cast
->   (void) (&_max1 =3D=3D &_max2);  \
->                  ^
-> include/linux/kernel.h:747:9: note: in definition of macro =E2=80=98m=
-ax=E2=80=99
->   typeof(y) _max2 =3D (y);   \
->          ^
-> drivers/of/of_reserved_mem.c:131:48: note: in expansion of macro =E2=80=
-=98max=E2=80=99
->    align =3D max(align, (phys_addr_t)PAGE_SIZE << max(MAX_ORDER - 1, =
-pageblock_ord
->                                                 ^
-> include/linux/kernel.h:748:17: warning: comparison of distinct pointe=
-r types lacks a cast
->   (void) (&_max1 =3D=3D &_max2);  \
->                  ^
-> include/linux/kernel.h:747:21: note: in definition of macro =E2=80=98=
-max=E2=80=99
->   typeof(y) _max2 =3D (y);   \
->                      ^
-> drivers/of/of_reserved_mem.c:131:48: note: in expansion of macro =E2=80=
-=98max=E2=80=99
->    align =3D max(align, (phys_addr_t)PAGE_SIZE << max(MAX_ORDER - 1, =
-pageblock_ord
->                                                 ^
->=20
-> Fixes: 1cc8e3458b51 ("drivers: of: of_reserved_mem: fixup the alignme=
-nt with CMA setup")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/of/of_reserved_mem.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->=20
-> Hi guys, this has been irking me for some time now ... I will add thi=
-s
-> to my fixes tree in linux-next today.  Please apply and send to Linus=
-=2E
 
-Applied, thanks.
+On Friday 03 June 2016 05:39 PM, Jonathan Cameron wrote:
+> On 03/06/16 12:26, Laxman Dewangan wrote:
+>> On Friday 03 June 2016 03:36 PM, Jonathan Cameron wrote:
+>>
+>> I thought that all ADC or monitors are going to be part of IIO device
+>> framework. I saw the ina2xx which is same (single channel) which was
+>> my reference point.
+> That had a rather specific use case IIRC - they needed the buffered support
+> to get the data fast enough.
 
-Rob
+I think in our particular  requirements, we dont need the buffering 
+support but HW keep monitor and check with warning/critical threshold to 
+generate HW signal.
+>>> Funily enough I know this datasheet a little as was evaluating
+>>> it for use on some boards at the day job a week or so ago.
+>>>
+>>> Various comments inline. Major points are:
+>>> * Don't use 'fake' channels to control events. If the events infrastructure
+>>> doesn't handle your events, then fix that rather than working around it.
+>>> * There is a lot of ABI in here concerned with oneshot vs continuous.
+>>> This seems to me to be more than it should be. We wouldn't expect to
+>>> see stuff changing as a result of switching between these modes other
+>>> than wrt to when the data shows up.  So I'd expect to not see this
+>>> directly exposed at all - but rather sit in oneshot unless either:
+>>> 1) Buffered mode is running (not currently supported)
+>>> 2) Alerts are on - which I think requires it to be in continuous mode.
+>>>
+>>> Other question to my mind is whether we should be reporting vshunt or
+>>> (using device tree to pass resistance) current.
+>> This is bus and shunt voltage device for power monitoring. In our
+>> platforms, we use this device for bus current and so power monitor.
+>>
+>> We have two usecases, one is one shot, read when it needs it. And
+>> other continuous when we have multiple core running then continuous
+>> mode to get the power consumption by rail.
+> That's fine, but continuous should be using the buffered interfaces
+> really as that's there explicitly to support groups of channels
+> captured using a sequencer.
+>
+> Then the abi ends up much more standard which is nice. Also allows
+> for high speed ish continuous monitoring which is what the was
+> I think the point of the single channel driver.
+
+The requirement for continuous monitoring is to ADC generate alert when 
+the current on bus cross the threshold of warning/critical level so that 
+alert signal can be used for throttling.
+So in my this particular usecase, we may not need buffered data.
+
+
+>> Yaah, alert is used only on continuous mode and mainly used for
+>> throttling when rail power goes beyond some limit.
+> Of interesting in Linux, or routed directly to hardware?
+
+Yaah, In some platform this is routed to the hardware for throttling.
