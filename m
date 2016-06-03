@@ -1,116 +1,270 @@
 From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v5 1/2] drm/bridge: Add sii902x driver
-Date: Fri, 3 Jun 2016 12:02:38 +0200
-Message-ID: <20160603120238.76dc9380@bbrezillon>
-References: <1464879601-30569-1-git-send-email-boris.brezillon@free-electrons.com>
- <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA@mail.gmail.com>
+Subject: Re: [PATCH v2] mtd: brcmnand: Add v7.2 controller support
+Date: Fri, 3 Jun 2016 12:05:17 +0200
+Message-ID: <20160603120517.7d7189b5@bbrezillon>
+References: <1464715383-26053-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Emil Velikov <emil.l.velikov@gmail.com>, Meng Yi <meng.yi@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464715383-26053-1-git-send-email-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-mtd@lists.infradead.org, thomas.petazzoni@free-electrons.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Simon Arlott <simon@fire.lp0.eu>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:BROADCOM STB NAND
+	FLASH DRIVER" <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRW1pbCwKCk9uIEZyaSwgMyBKdW4gMjAxNiAxMDozODo0OSArMDEwMApFbWlsIFZlbGlrb3Yg
-PGVtaWwubC52ZWxpa292QGdtYWlsLmNvbT4gd3JvdGU6Cgo+IEhpIEJvcmlzLgo+IAo+IE9uIDIg
-SnVuZSAyMDE2IGF0IDE2OjAwLCBCb3JpcyBCcmV6aWxsb24KPiA8Ym9yaXMuYnJlemlsbG9uQGZy
-ZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4gCj4gPiArc3RhdGljIHZvaWQgc2lpOTAyeF9yZXNl
-dChzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCkKPiA+ICt7Cj4gPiArICAgICAgIGlmICghc2lpOTAy
-eC0+cmVzZXRfZ3BpbykKPiA+ICsgICAgICAgICAgICAgICByZXR1cm47Cj4gPiArICAKPiBUaGlz
-IGlzIHdyb25nIChyZXNldF9ncGlvIGlzIGVycl9wdHIpIGFsdGhvdWdoIHdlIGNhbi9zaG91bGQg
-bnVrZSBpdAo+IGFsbCB0b2dldGhlci4gU2VlIGJlbG93IGZvciByZWFzb25pbmcuCj4gCj4gPiAr
-ICAgICAgIGdwaW9kX3NldF92YWx1ZShzaWk5MDJ4LT5yZXNldF9ncGlvLCAxKTsKPiA+ICsKPiA+
-ICsgICAgICAgbXNsZWVwKDEwMCk7ICAKPiBPdWNoIHRoYXQgaXMgc29tZSBqdWljeSBudW1iZXIu
-IENhbiB3ZSBnZXQgYSBjb21tZW50IHdpdGgKPiByZWFzb25pbmcvb3JpZ2luIG9mIGl0ID8KCkFz
-IGFscmVhZHkgZXhwbGFpbmVkIHRvIE1heGltZSwgSSBqdXN0IGRvbid0IGtub3cgd2h5IHRoaXMg
-aXMgbmVlZGVkLApzaW1wbHkgYmVjYXVzZSBJIGRvbid0IGhhdmUgYWNjZXNzIHRvIHRoZSBkYXRh
-c2hlZXQgYW5kIEkganVzdCBiYXNlZCBteQppbXBsZW1lbnRhdGlvbiBvbiBhbm90aGVyIGRyaXZl
-ci4KSSBjYW4gYWRkIGEgY29tbWVudCBzdGF0aW5nIHRoYXQgdGhpcyB3YXMgZXh0cmFjdGVkIGZy
-b20gYW5vdGhlcgppbXBsZW1lbnRhdGlvbiwgYnV0IHdpdGggbm8gZXhwbGFuYXRpb24gb24gd2h5
-IHRoaXMgaXMgbmVlZGVkLgoKTWVuZywgZG8geW91IGhhdmUgYW55IGluZm9ybWF0aW9uIGFib3V0
-IHN0YXJ0dXAtdGltZSwgb3Igc29tZXRoaW5nIGxpa2UKdGhhdD8KCj4gCj4gLi4uCj4gCj4gPiAr
-c3RhdGljIHZvaWQgc2lpOTAyeF9icmlkZ2VfbW9kZV9zZXQoc3RydWN0IGRybV9icmlkZ2UgKmJy
-aWRnZSwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1f
-ZGlzcGxheV9tb2RlICptb2RlLAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKmFkaikKPiA+ICt7Cj4gPiArICAgICAgIHU4IGJ1
-ZltIRE1JX0lORk9GUkFNRV9IRUFERVJfU0laRSArIEhETUlfQVZJX0lORk9GUkFNRV9TSVpFXTsg
-IAo+IEhETUlfSU5GT0ZSQU1FX1NJWkUoQVZJKSBzZWVtcyBzaG9ydGVyL2Vhc2llciB0byBoZWFk
-IGltaG8uCgpZZXAuCgo+IAo+ID4gKyAgICAgICBzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCA9IGJy
-aWRnZV90b19zaWk5MDJ4KGJyaWRnZSk7Cj4gPiArICAgICAgIHN0cnVjdCByZWdtYXAgKnJlZ21h
-cCA9IHNpaTkwMngtPnJlZ21hcDsKPiA+ICsgICAgICAgc3RydWN0IGhkbWlfYXZpX2luZm9mcmFt
-ZSBmcmFtZTsKPiA+ICsgICAgICAgaW50IHJldDsKPiA+ICsKPiA+ICsgICAgICAgYnVmWzBdID0g
-YWRqLT5jbG9jazsKPiA+ICsgICAgICAgYnVmWzFdID0gYWRqLT5jbG9jayA+PiA4Owo+ID4gKyAg
-ICAgICBidWZbMl0gPSBhZGotPnZyZWZyZXNoOwo+ID4gKyAgICAgICBidWZbM10gPSAweDAwOwo+
-ID4gKyAgICAgICBidWZbNF0gPSBhZGotPmhkaXNwbGF5Owo+ID4gKyAgICAgICBidWZbNV0gPSBh
-ZGotPmhkaXNwbGF5ID4+IDg7Cj4gPiArICAgICAgIGJ1Zls2XSA9IGFkai0+dmRpc3BsYXk7Cj4g
-PiArICAgICAgIGJ1Zls3XSA9IGFkai0+dmRpc3BsYXkgPj4gODsKPiA+ICsgICAgICAgYnVmWzhd
-ID0gU0lMOTAyWF9UUElfQ0xLX1JBVElPXzFYIHwgU0lMOTAyWF9UUElfQVZJX1BJWEVMX1JFUF9O
-T05FIHwKPiA+ICsgICAgICAgICAgICAgICAgU0lMOTAyWF9UUElfQVZJX1BJWEVMX1JFUF9CVVNf
-MjRCSVQ7Cj4gPiArICAgICAgIGJ1Zls5XSA9IFNJTDkwMlhfVFBJX0FWSV9JTlBVVF9SQU5HRV9B
-VVRPIHwKPiA+ICsgICAgICAgICAgICAgICAgU0lMOTAyWF9UUElfQVZJX0lOUFVUX0NPTE9SU1BB
-Q0VfUkdCOwo+ID4gKyAgCj4gU2luY2UgYWxsIG9mIHRoZSBjb250ZW50cyBhcmUgY2xlYXJlZCBp
-biBoZG1pX2F2aV9pbmZvZnJhbWVfcGFjaywgbW92ZQo+IHRoZSBhYm92ZSBpbnRvIGNvbnN0IHZp
-ZGVvX2RhdGFbXSA/CgpTb21ldGhpbmcgbGlrZQoKCWNvbnN0IHZpZGVvX2RhdGFbXSA9IHsKCQlh
-ZGotPmNsb2NrLAoJCWFkai0+Y2xvY2sgPj4gOCwKCQkuLi4KCX07CgpTbyB3ZSB3b3VsZCBoYXZl
-IDIgYnVmZmVycyBvbiB0aGUgc3RhY2s/IElzIHRoaXMgcmVhbGx5IHVzZWZ1bD8KCj4gCj4gPiAr
-ICAgICAgIHJldCA9IHJlZ21hcF9idWxrX3dyaXRlKHJlZ21hcCwgU0lMOTAyWF9UUElfVklERU9f
-REFUQSwgYnVmLCAxMCk7ICAKPiAuLi4gYW5kIHVzZSBBUlJBWV9TSVpFKHZpZGVvX2RhdGEpIG92
-ZXIgdGhlIGhhcmRjb2RlZCAxMCA/Cj4gCj4gLi4uCj4gCj4gPiArc3RhdGljIGludCBzaWk5MDJ4
-X2JyaWRnZV9hdHRhY2goc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKPiA+ICt7Cj4gPiArICAg
-ICAgIHN0cnVjdCBzaWk5MDJ4ICpzaWk5MDJ4ID0gYnJpZGdlX3RvX3NpaTkwMngoYnJpZGdlKTsK
-PiA+ICsgICAgICAgc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IGJyaWRnZS0+ZGV2Owo+ID4gKyAg
-ICAgICBpbnQgcmV0Owo+ID4gKwo+ID4gKyAgICAgICBkcm1fY29ubmVjdG9yX2hlbHBlcl9hZGQo
-JnNpaTkwMngtPmNvbm5lY3RvciwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICZzaWk5MDJ4X2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MpOwo+ID4gKwo+ID4gKyAgICAgICBpZiAo
-IWRybV9jb3JlX2NoZWNrX2ZlYXR1cmUoZHJtLCBEUklWRVJfQVRPTUlDKSkgewo+ID4gKyAgICAg
-ICAgICAgICAgIGRldl9lcnIoJnNpaTkwMngtPmkyYy0+ZGV2LAo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgInNpaTkwMnggZHJpdmVyIGlzIG9ubHkgY29tcGF0aWJsZSB3aXRoIERSTSBkZXZp
-Y2VzIHN1cHBvcnRpbmcgYXRvbWljIHVwZGF0ZXMiKTsKPiA+ICsgICAgICAgICAgICAgICByZXR1
-cm4gLUVOT1RTVVBQOwo+ID4gKyAgICAgICB9Cj4gPiArCj4gPiArICAgICAgIHJldCA9IGRybV9j
-b25uZWN0b3JfaW5pdChkcm0sICZzaWk5MDJ4LT5jb25uZWN0b3IsCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAmc2lpOTAyeF9jb25uZWN0b3JfZnVuY3MsCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBEUk1fTU9ERV9DT05ORUNUT1JfSERNSUEpOyAgCj4g
-U2lkZSBub3RlOiBzZWVtcyBsaWtlIG1vc3QgcGxhY2VzIGluIERSTSBkbyBub3QgY2hlY2sgdGhl
-IHJldHVybiB2YWx1ZQo+ICh+ODAgdnMgfjIwKS4gSSB3b25kZXIgaG93IGJhZGx5L2xpa2VseSBh
-cmUgdGhpbmdzIHRvIGV4cGxvZGUuCgpZZXAuIEkgdGVuZCB0byBhbHdheXMgY2hlY2sgcmV0dXJu
-IGNvZGUsIGJ1dCBpZiB5b3Ugc2F5IGl0J3MgdXNlbGVzcwooYW5kIGVycm9yLXByb25lKSBJIGNh
-biByZW1vdmUgaXQuCgo+IAo+IC4uLgo+IAo+ID4gK3N0YXRpYyBpbnQgc2lpOTAyeF9wcm9iZShz
-dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgIGNv
-bnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkKPiA+ICt7ICAKPiAuLi4KPiAKPiA+ICsKPiA+
-ICsgICAgICAgc2lpOTAyeC0+cmVzZXRfZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRl
-diwgInJlc2V0IiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIEdQSU9EX09VVF9MT1cpOwo+ID4gKyAgICAgICBpZiAoSVNfRVJSKHNpaTkw
-MngtPnJlc2V0X2dwaW8pKQo+ID4gKyAgICAgICAgICAgICAgIGRldl93YXJuKGRldiwgIkZhaWxl
-ZCB0byByZXRyaWV2ZS9yZXF1ZXN0IHJlc2V0IGdwaW86ICVsZFxuIiwKPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICBQVFJfRVJSKHNpaTkwMngtPnJlc2V0X2dwaW8pKTsKPiA+ICsgIAo+IERv
-Y3VtZW50YXRpb24gc2F5cyAiUmVxdWlyZWQiIG5vdCBvcHRpb25hbC4gVGhlIGFib3ZlIHNob3Vs
-ZCBiZQo+IHVwZGF0ZWQgYW5kIG9uZSBzaG91bGQgZXJyb3Igb3V0IGlmIG1pc3NpbmcsIHJpZ2h0
-ID8KCkFjdHVhbGx5IEkgd2FzIGFza2VkIHRvIG1ha2UgaXQgb3B0aW9uYWwsIGp1c3QgZm9yZ290
-IHRvIHVwZGF0ZSB0aGUKZG9jdW1lbnRhdGlvbi4gVGhpcyBiZWluZyBzYWlkLCBkZXZtX2dwaW9k
-X2dldF9vcHRpb25hbCgpIHJldHVybnMgTlVMTAppZiB0aGUgcHJvcGVydHkgaXMgbm90IGRlZmlu
-ZWQgaW4gdGhlIERUIGFuZCBhbiBlcnJvciBjb2RlIGlmIHRoZSBlcnJvcgpjb21lcyBmcm9tIHRo
-ZSBHUElPIGxheWVyLCBzbyBJIHNob3VsZCBqdXN0IHN3aXRjaCBiYWNrIHRvIGRldl9lcnIoKQph
-bmQgcmV0dXJuIHRoZSBlcnJvciBjb2RlIGhlcmUuCgpUaGlzIHdvdWxkIG1ha2UgdGhlIHRlc3Qg
-aW4gc2lpOTAyeF9yZXNldCgpIHZhbGlkIGFnYWluLgoKPiAKPiAuLi4KPiAKPiA+ICsKPiA+ICsg
-ICAgICAgaWYgKGNsaWVudC0+aXJxID4gMCkgeyAgCj4gSSB3YXMgYWx3YXlzIGNvbmZ1c2VkIHdo
-aWNoIGlzIHRoZSBjb3JyZWN0IHdheSB0byBjaGVjayB0aGlzID49IDAgdnMgPgo+IDAuIERSTSBo
-YXMgYm90aCA6LVwKPiBEbyB5b3UgaGF2ZSBhbnkgc3VnZ2VzdGlvbnMsIHNob3VsZCBiZSAnbWFz
-cyBjb252ZXJ0JyBEUk0gdG8gdXNlIG9ubHkKPiBvbmUgb2YgdGhlIHR3byA/CgpOb3Qgc3VyZSAw
-IGlzIGEgdmFsaWQgaXJxIG51bWJlciBhbnltb3JlLCBzbyBJIGRvbid0IHRoaW5rIGl0J3MgcmVh
-bGx5CmltcG9ydGFudCwgYnV0IEkgY2FuIGNoYW5nZSBpdCBpZiB5b3Ugd2FudC4KClJlZ2FyZHMs
-CgpCb3JpcwoKLS0gCkJvcmlzIEJyZXppbGxvbiwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGlu
-dXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, 31 May 2016 10:23:02 -0700
+Florian Fainelli <f.fainelli@gmail.com> wrote:
+
+> The 7.2 controller differs in a few area compared to its predecssor (7.1):
+> 
+> - NAND scrambler, which we are not using just yet
+> - higher ECC levels (up to 120 bits) per 1KB data blocks, also not supported yet
+> - up to 128B OOB
+> 
+> This patchs adds the ncessary code to support such a controller
+> generation and updates the Device Tree binding.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Applied with Rob's fixes.
+
+Thanks,
+
+Boris
+
+> ---
+> Changes in v2:
+> 
+> - fixed a bunch of conditionals on the versions which should
+>   have been exclusive (spotted by Thomas)
+> 
+>  .../devicetree/bindings/mtd/brcm,brcmnand.txt      |  1 +
+>  drivers/mtd/nand/brcmnand/brcmnand.c               | 91 ++++++++++++++++++----
+>  2 files changed, 78 insertions(+), 14 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> index deb24cbdda82..c8d71e75cb09 100644
+> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> @@ -27,6 +27,7 @@ Required properties:
+>                           brcm,brcmnand-v6.2
+>                           brcm,brcmnand-v7.0
+>                           brcm,brcmnand-v7.1
+> +                         brcm,brcmnand-v7.2
+>                           brcm,brcmnand
+>  - reg              : the register start and length for NAND register region.
+>                       (optional) Flash DMA register range (if present)
+> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
+> index b76ad7c0144f..0a54a0f5a4b1 100644
+> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+> @@ -340,6 +340,36 @@ static const u16 brcmnand_regs_v71[] = {
+>  	[BRCMNAND_FC_BASE]		= 0x400,
+>  };
+>  
+> +/* BRCMNAND v7.2 */
+> +static const u16 brcmnand_regs_v72[] = {
+> +	[BRCMNAND_CMD_START]		=  0x04,
+> +	[BRCMNAND_CMD_EXT_ADDRESS]	=  0x08,
+> +	[BRCMNAND_CMD_ADDRESS]		=  0x0c,
+> +	[BRCMNAND_INTFC_STATUS]		=  0x14,
+> +	[BRCMNAND_CS_SELECT]		=  0x18,
+> +	[BRCMNAND_CS_XOR]		=  0x1c,
+> +	[BRCMNAND_LL_OP]		=  0x20,
+> +	[BRCMNAND_CS0_BASE]		=  0x50,
+> +	[BRCMNAND_CS1_BASE]		=     0,
+> +	[BRCMNAND_CORR_THRESHOLD]	=  0xdc,
+> +	[BRCMNAND_CORR_THRESHOLD_EXT]	=  0xe0,
+> +	[BRCMNAND_UNCORR_COUNT]		=  0xfc,
+> +	[BRCMNAND_CORR_COUNT]		= 0x100,
+> +	[BRCMNAND_CORR_EXT_ADDR]	= 0x10c,
+> +	[BRCMNAND_CORR_ADDR]		= 0x110,
+> +	[BRCMNAND_UNCORR_EXT_ADDR]	= 0x114,
+> +	[BRCMNAND_UNCORR_ADDR]		= 0x118,
+> +	[BRCMNAND_SEMAPHORE]		= 0x150,
+> +	[BRCMNAND_ID]			= 0x194,
+> +	[BRCMNAND_ID_EXT]		= 0x198,
+> +	[BRCMNAND_LL_RDATA]		= 0x19c,
+> +	[BRCMNAND_OOB_READ_BASE]	= 0x200,
+> +	[BRCMNAND_OOB_READ_10_BASE]	=     0,
+> +	[BRCMNAND_OOB_WRITE_BASE]	= 0x400,
+> +	[BRCMNAND_OOB_WRITE_10_BASE]	=     0,
+> +	[BRCMNAND_FC_BASE]		= 0x600,
+> +};
+> +
+>  enum brcmnand_cs_reg {
+>  	BRCMNAND_CS_CFG_EXT = 0,
+>  	BRCMNAND_CS_CFG,
+> @@ -435,7 +465,9 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
+>  	}
+>  
+>  	/* Register offsets */
+> -	if (ctrl->nand_version >= 0x0701)
+> +	if (ctrl->nand_version >= 0x0702)
+> +		ctrl->reg_offsets = brcmnand_regs_v72;
+> +	else if (ctrl->nand_version >= 0x0701)
+>  		ctrl->reg_offsets = brcmnand_regs_v71;
+>  	else if (ctrl->nand_version >= 0x0600)
+>  		ctrl->reg_offsets = brcmnand_regs_v60;
+> @@ -480,7 +512,9 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
+>  	}
+>  
+>  	/* Maximum spare area sector size (per 512B) */
+> -	if (ctrl->nand_version >= 0x0600)
+> +	if (ctrl->nand_version >= 0x0702)
+> +		ctrl->max_oob = 128;
+> +	else if (ctrl->nand_version >= 0x0600)
+>  		ctrl->max_oob = 64;
+>  	else if (ctrl->nand_version >= 0x0500)
+>  		ctrl->max_oob = 32;
+> @@ -583,14 +617,20 @@ static void brcmnand_wr_corr_thresh(struct brcmnand_host *host, u8 val)
+>  	enum brcmnand_reg reg = BRCMNAND_CORR_THRESHOLD;
+>  	int cs = host->cs;
+>  
+> -	if (ctrl->nand_version >= 0x0600)
+> +	if (ctrl->nand_version >= 0x0702)
+> +		bits = 7;
+> +	else if (ctrl->nand_version >= 0x0600)
+>  		bits = 6;
+>  	else if (ctrl->nand_version >= 0x0500)
+>  		bits = 5;
+>  	else
+>  		bits = 4;
+>  
+> -	if (ctrl->nand_version >= 0x0600) {
+> +	if (ctrl->nand_version >= 0x0702) {
+> +		if (cs >= 4)
+> +			reg = BRCMNAND_CORR_THRESHOLD_EXT;
+> +		shift = (cs % 4) * bits;
+> +	} else if (ctrl->nand_version >= 0x0600) {
+>  		if (cs >= 5)
+>  			reg = BRCMNAND_CORR_THRESHOLD_EXT;
+>  		shift = (cs % 5) * bits;
+> @@ -631,19 +671,28 @@ enum {
+>  
+>  static inline u32 brcmnand_spare_area_mask(struct brcmnand_controller *ctrl)
+>  {
+> -	if (ctrl->nand_version >= 0x0600)
+> +	if (ctrl->nand_version >= 0x0702)
+> +		return GENMASK(7, 0);
+> +	else if (ctrl->nand_version >= 0x0600)
+>  		return GENMASK(6, 0);
+>  	else
+>  		return GENMASK(5, 0);
+>  }
+>  
+>  #define NAND_ACC_CONTROL_ECC_SHIFT	16
+> +#define NAND_ACC_CONTROL_ECC_EXT_SHIFT	13
+>  
+>  static inline u32 brcmnand_ecc_level_mask(struct brcmnand_controller *ctrl)
+>  {
+>  	u32 mask = (ctrl->nand_version >= 0x0600) ? 0x1f : 0x0f;
+>  
+> -	return mask << NAND_ACC_CONTROL_ECC_SHIFT;
+> +	mask <<= NAND_ACC_CONTROL_ECC_SHIFT;
+> +
+> +	/* v7.2 includes additional ECC levels */
+> +	if (ctrl->nand_version >= 0x0702)
+> +		mask |= 0x7 << NAND_ACC_CONTROL_ECC_EXT_SHIFT;
+> +
+> +	return mask;
+>  }
+>  
+>  static void brcmnand_set_ecc_enabled(struct brcmnand_host *host, int en)
+> @@ -667,7 +716,9 @@ static void brcmnand_set_ecc_enabled(struct brcmnand_host *host, int en)
+>  
+>  static inline int brcmnand_sector_1k_shift(struct brcmnand_controller *ctrl)
+>  {
+> -	if (ctrl->nand_version >= 0x0600)
+> +	if (ctrl->nand_version >= 0x0702)
+> +		return 9;
+> +	else if (ctrl->nand_version >= 0x0600)
+>  		return 7;
+>  	else if (ctrl->nand_version >= 0x0500)
+>  		return 6;
+> @@ -773,10 +824,16 @@ enum brcmnand_llop_type {
+>   * Internal support functions
+>   ***********************************************************************/
+>  
+> -static inline bool is_hamming_ecc(struct brcmnand_cfg *cfg)
+> +static inline bool is_hamming_ecc(struct brcmnand_controller *ctrl,
+> +				  struct brcmnand_cfg *cfg)
+>  {
+> -	return cfg->sector_size_1k == 0 && cfg->spare_area_size == 16 &&
+> -		cfg->ecc_level == 15;
+> +	if (ctrl->nand_version <= 0x0701)
+> +		return cfg->sector_size_1k == 0 && cfg->spare_area_size == 16 &&
+> +			cfg->ecc_level == 15;
+> +	else
+> +		return cfg->sector_size_1k == 0 && ((cfg->spare_area_size == 16 &&
+> +			cfg->ecc_level == 15) ||
+> +			(cfg->spare_area_size == 28 && cfg->ecc_level == 16));
+>  }
+>  
+>  /*
+> @@ -931,7 +988,7 @@ static int brcmstb_choose_ecc_layout(struct brcmnand_host *host)
+>  	if (p->sector_size_1k)
+>  		ecc_level <<= 1;
+>  
+> -	if (is_hamming_ecc(p)) {
+> +	if (is_hamming_ecc(host->ctrl, p)) {
+>  		ecc->bytes = 3 * sectors;
+>  		mtd_set_ooblayout(mtd, &brcmnand_hamming_ooblayout_ops);
+>  		return 0;
+> @@ -1857,7 +1914,8 @@ static int brcmnand_set_cfg(struct brcmnand_host *host,
+>  	return 0;
+>  }
+>  
+> -static void brcmnand_print_cfg(char *buf, struct brcmnand_cfg *cfg)
+> +static void brcmnand_print_cfg(struct brcmnand_host *host,
+> +			       char *buf, struct brcmnand_cfg *cfg)
+>  {
+>  	buf += sprintf(buf,
+>  		"%lluMiB total, %uKiB blocks, %u%s pages, %uB OOB, %u-bit",
+> @@ -1868,7 +1926,7 @@ static void brcmnand_print_cfg(char *buf, struct brcmnand_cfg *cfg)
+>  		cfg->spare_area_size, cfg->device_width);
+>  
+>  	/* Account for Hamming ECC and for BCH 512B vs 1KiB sectors */
+> -	if (is_hamming_ecc(cfg))
+> +	if (is_hamming_ecc(host->ctrl, cfg))
+>  		sprintf(buf, ", Hamming ECC");
+>  	else if (cfg->sector_size_1k)
+>  		sprintf(buf, ", BCH-%u (1KiB sector)", cfg->ecc_level << 1);
+> @@ -1987,7 +2045,7 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
+>  
+>  	brcmnand_set_ecc_enabled(host, 1);
+>  
+> -	brcmnand_print_cfg(msg, cfg);
+> +	brcmnand_print_cfg(host, msg, cfg);
+>  	dev_info(ctrl->dev, "detected %s\n", msg);
+>  
+>  	/* Configure ACC_CONTROL */
+> @@ -1995,6 +2053,10 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
+>  	tmp = nand_readreg(ctrl, offs);
+>  	tmp &= ~ACC_CONTROL_PARTIAL_PAGE;
+>  	tmp &= ~ACC_CONTROL_RD_ERASED;
+> +
+> +	/* We need to turn on Read from erased paged protected by ECC */
+> +	if (ctrl->nand_version >= 0x0702)
+> +		tmp |= ACC_CONTROL_RD_ERASED;
+>  	tmp &= ~ACC_CONTROL_FAST_PGM_RDIN;
+>  	if (ctrl->features & BRCMNAND_HAS_PREFETCH) {
+>  		/*
+> @@ -2195,6 +2257,7 @@ static const struct of_device_id brcmnand_of_match[] = {
+>  	{ .compatible = "brcm,brcmnand-v6.2" },
+>  	{ .compatible = "brcm,brcmnand-v7.0" },
+>  	{ .compatible = "brcm,brcmnand-v7.1" },
+> +	{ .compatible = "brcm,brcmnand-v7.2" },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, brcmnand_of_match);
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
