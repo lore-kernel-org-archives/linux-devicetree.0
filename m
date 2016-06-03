@@ -1,41 +1,72 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver
- for TI INA3221
-Date: Fri, 3 Jun 2016 17:33:12 +0530
-Message-ID: <57517200.6080102@nvidia.com>
-References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com> <1464784454-7988-2-git-send-email-ldewangan@nvidia.com> <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org> <20f70b31-afb5-e012-0baf-ba0b83ac6d36@kernel.org> <57516A74.4060008@nvidia.com> <42c00dfb-bb45-405c-a1d2-516ece137826@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of: silence warnings due to max() usage
+Date: Fri, 3 Jun 2016 07:27:20 -0500
+Message-ID: <20160603122720.GC8472@rob-hp-laptop>
+References: <20160531093856.75c0b04d@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <42c00dfb-bb45-405c-a1d2-516ece137826-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160531093856.75c0b04d@canb.auug.org.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Liu <r64343@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 31, 2016 at 09:38:56AM +1000, Stephen Rothwell wrote:
+> pageblock_order can be (at least) an unsigned int or an unsigned long
+> depending on the kernel config and architecture, so use max_t(unsigne=
+d
+> long ...) when comparing it.
+>=20
+> fixes these warnings:
+>=20
+> In file included from include/linux/list.h:8:0,
+>                  from include/linux/kobject.h:20,
+>                  from include/linux/of.h:21,
+>                  from drivers/of/of_reserved_mem.c:17:
+> drivers/of/of_reserved_mem.c: In function =E2=80=98__reserved_mem_all=
+oc_size=E2=80=99:
+> include/linux/kernel.h:748:17: warning: comparison of distinct pointe=
+r types lacks a cast
+>   (void) (&_max1 =3D=3D &_max2);  \
+>                  ^
+> include/linux/kernel.h:747:9: note: in definition of macro =E2=80=98m=
+ax=E2=80=99
+>   typeof(y) _max2 =3D (y);   \
+>          ^
+> drivers/of/of_reserved_mem.c:131:48: note: in expansion of macro =E2=80=
+=98max=E2=80=99
+>    align =3D max(align, (phys_addr_t)PAGE_SIZE << max(MAX_ORDER - 1, =
+pageblock_ord
+>                                                 ^
+> include/linux/kernel.h:748:17: warning: comparison of distinct pointe=
+r types lacks a cast
+>   (void) (&_max1 =3D=3D &_max2);  \
+>                  ^
+> include/linux/kernel.h:747:21: note: in definition of macro =E2=80=98=
+max=E2=80=99
+>   typeof(y) _max2 =3D (y);   \
+>                      ^
+> drivers/of/of_reserved_mem.c:131:48: note: in expansion of macro =E2=80=
+=98max=E2=80=99
+>    align =3D max(align, (phys_addr_t)PAGE_SIZE << max(MAX_ORDER - 1, =
+pageblock_ord
+>                                                 ^
+>=20
+> Fixes: 1cc8e3458b51 ("drivers: of: of_reserved_mem: fixup the alignme=
+nt with CMA setup")
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/of/of_reserved_mem.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>=20
+> Hi guys, this has been irking me for some time now ... I will add thi=
+s
+> to my fixes tree in linux-next today.  Please apply and send to Linus=
+=2E
 
-On Friday 03 June 2016 05:34 PM, Jonathan Cameron wrote:
-> On 03/06/16 12:31, Laxman Dewangan wrote:
->> On Friday 03 June 2016 03:46 PM, Jonathan Cameron wrote:
->>> On 03/06/16 11:06, Jonathan Cameron wrote:
->>>> Code looks good, bu these more fundamental bits need sorting.
->>> Another minor point - why do the power calculations in driver?
->>> no hardware support for it, so why not just leave it to userspace?
->> Device supports the bus and shunt voltage monitoring. So even no current. Also the warning/critical limit is for the voltage across shunt.
->>
->> So should we only expose the shunt/bus voltage, no power/current?
->>
->> I am thinking that user space should not know the platform and hence shunt resistance and so exposing the current and power on bus is better option.
->>
-> I'd go for current and voltage rather than current and power, but
-> otherwise agree.
+Applied, thanks.
 
-OK, I will have the voltage (bus voltage) and current (on bus).
-User space can get power out of this.
-
-Thanks for suggestion.
-
-The critical limits will be still in current. And it should be 
-customized sysfs instead of the iio_chan_spec i.e. iio_device attribute 
-interface.
+Rob
