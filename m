@@ -1,164 +1,395 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 04/14] pwm: rockchip: Add support for hardware readout
-Date: Fri, 3 Jun 2016 13:20:06 -0700
-Message-ID: <20160603202006.GC124478@google.com>
-References: <1464942192-25967-1-git-send-email-boris.brezillon@free-electrons.com>
- <1464942192-25967-5-git-send-email-boris.brezillon@free-electrons.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM64: boot: dts: Add regulators for Tegra210 Smaug
+Date: Fri, 3 Jun 2016 16:22:45 -0400
+Message-ID: <1464985365-11612-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464942192-25967-5-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2016 at 10:23:02AM +0200, Boris Brezillon wrote:
-> Implement the ->get_state() function to expose initial state.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> ---
->  drivers/pwm/pwm-rockchip.c | 67 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-> index 68d72ce..dfacf7d 100644
-> --- a/drivers/pwm/pwm-rockchip.c
-> +++ b/drivers/pwm/pwm-rockchip.c
-> @@ -51,6 +51,8 @@ struct rockchip_pwm_data {
->  
->  	void (*set_enable)(struct pwm_chip *chip,
->  			   struct pwm_device *pwm, bool enable);
-> +	void (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			  struct pwm_state *state);
->  };
->  
->  static inline struct rockchip_pwm_chip *to_rockchip_pwm_chip(struct pwm_chip *c)
-> @@ -75,6 +77,19 @@ static void rockchip_pwm_set_enable_v1(struct pwm_chip *chip,
->  	writel_relaxed(val, pc->base + pc->data->regs.ctrl);
->  }
->  
-> +static void rockchip_pwm_get_state_v1(struct pwm_chip *chip,
-> +				      struct pwm_device *pwm,
-> +				      struct pwm_state *state)
-> +{
-> +	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
-> +	u32 enable_conf = PWM_CTRL_OUTPUT_EN | PWM_CTRL_TIMER_EN;
-> +	u32 val;
-> +
-> +	val = readl(pc->base + pc->data->regs.ctrl);
+Add regulators to the Tegra210 Smaug DTS file including
+support for the max77620 PMIC.
 
-Nit: I just noticed you've been starting to use readl()/writel() in this
-series, where previously {readl,writel}_relaxed() were being used. Any
-reason?
+Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 350 ++++++++++++++++++++++++++
+ 1 file changed, 350 insertions(+)
 
-Anyway, LGTM:
-
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Brian Norris <briannorris@chromium.org>
-
-> +	if ((val & enable_conf) == enable_conf)
-> +		state->enabled = true;
-> +}
-> +
->  static void rockchip_pwm_set_enable_v2(struct pwm_chip *chip,
->  				       struct pwm_device *pwm, bool enable)
->  {
-> @@ -98,6 +113,53 @@ static void rockchip_pwm_set_enable_v2(struct pwm_chip *chip,
->  	writel_relaxed(val, pc->base + pc->data->regs.ctrl);
->  }
->  
-> +static void rockchip_pwm_get_state_v2(struct pwm_chip *chip,
-> +				      struct pwm_device *pwm,
-> +				      struct pwm_state *state)
-> +{
-> +	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
-> +	u32 enable_conf = PWM_OUTPUT_LEFT | PWM_LP_DISABLE | PWM_ENABLE |
-> +			  PWM_CONTINUOUS;
-> +	u32 val;
-> +
-> +	val = readl(pc->base + pc->data->regs.ctrl);
-> +	if ((val & enable_conf) != enable_conf)
-> +		return;
-> +
-> +	state->enabled = true;
-> +
-> +	if (!(val & PWM_DUTY_POSITIVE))
-> +		state->polarity = PWM_POLARITY_INVERSED;
-> +}
-> +
-> +static void rockchip_pwm_get_state(struct pwm_chip *chip,
-> +				   struct pwm_device *pwm,
-> +				   struct pwm_state *state)
-> +{
-> +	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
-> +	unsigned long clk_rate;
-> +	u64 tmp;
-> +	int ret;
-> +
-> +	ret = clk_enable(pc->clk);
-> +	if (ret)
-> +		return;
-> +
-> +	clk_rate = clk_get_rate(pc->clk);
-> +
-> +	tmp = readl(pc->base + pc->data->regs.period);
-> +	tmp *= pc->data->prescaler * NSEC_PER_SEC;
-> +	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
-> +
-> +	tmp = readl(pc->base + pc->data->regs.duty);
-> +	tmp *= pc->data->prescaler * NSEC_PER_SEC;
-> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
-> +
-> +	pc->data->get_state(chip, pwm, state);
-> +
-> +	clk_disable(pc->clk);
-> +}
-> +
->  static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  			       int duty_ns, int period_ns)
->  {
-> @@ -170,6 +232,7 @@ static void rockchip_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  }
->  
->  static const struct pwm_ops rockchip_pwm_ops_v1 = {
-> +	.get_state = rockchip_pwm_get_state,
->  	.config = rockchip_pwm_config,
->  	.enable = rockchip_pwm_enable,
->  	.disable = rockchip_pwm_disable,
-> @@ -177,6 +240,7 @@ static const struct pwm_ops rockchip_pwm_ops_v1 = {
->  };
->  
->  static const struct pwm_ops rockchip_pwm_ops_v2 = {
-> +	.get_state = rockchip_pwm_get_state,
->  	.config = rockchip_pwm_config,
->  	.set_polarity = rockchip_pwm_set_polarity,
->  	.enable = rockchip_pwm_enable,
-> @@ -194,6 +258,7 @@ static const struct rockchip_pwm_data pwm_data_v1 = {
->  	.prescaler = 2,
->  	.ops = &rockchip_pwm_ops_v1,
->  	.set_enable = rockchip_pwm_set_enable_v1,
-> +	.get_state = rockchip_pwm_get_state_v1,
->  };
->  
->  static const struct rockchip_pwm_data pwm_data_v2 = {
-> @@ -206,6 +271,7 @@ static const struct rockchip_pwm_data pwm_data_v2 = {
->  	.prescaler = 1,
->  	.ops = &rockchip_pwm_ops_v2,
->  	.set_enable = rockchip_pwm_set_enable_v2,
-> +	.get_state = rockchip_pwm_get_state_v2,
->  };
->  
->  static const struct rockchip_pwm_data pwm_data_vop = {
-> @@ -218,6 +284,7 @@ static const struct rockchip_pwm_data pwm_data_vop = {
->  	.prescaler = 1,
->  	.ops = &rockchip_pwm_ops_v2,
->  	.set_enable = rockchip_pwm_set_enable_v2,
-> +	.get_state = rockchip_pwm_get_state_v2,
->  };
->  
->  static const struct of_device_id rockchip_pwm_dt_ids[] = {
-> -- 
-> 2.7.4
-> 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+index 4d89f4e02d98..fdca5b5d79e8 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ 
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/mfd/max77620.h>
+ #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+ 
+ #include "tegra210.dtsi"
+@@ -1327,6 +1328,269 @@
+ 		};
+ 	};
+ 
++	i2c@7000d000 {
++		status = "okay";
++		clock-frequency = <1000000>;
++
++		max77620: max77620@3c {
++			compatible = "maxim,max77620";
++			reg = <0x3c>;
++			interrupts = <0 86 IRQ_TYPE_NONE>;
++
++			#interrupt-cells = <2>;
++			interrupt-controller;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&max77620_default>;
++
++			max77620_default: pinmux@0 {
++				pin_gpio {
++					pins = "gpio0", "gpio1", "gpio2", "gpio5",
++					       "gpio6", "gpio7";
++					function = "gpio";
++				};
++
++				/*
++				 * GPIO3 is used to en_pp3300, and it is part of power
++				 * sequence, So it must be sequenced up (automatically
++				 * set by OTP) and down properly.
++				 */
++				pin_gpio3 {
++					pins = "gpio3";
++					function = "fps-out";
++					drive-open-drain = <1>;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_0>;
++					maxim,active-fps-power-up-slot = <4>;
++					maxim,active-fps-power-down-slot = <2>;
++				};
++
++				pin_gpio5_6_7 {
++					pins = "gpio5", "gpio6";
++					function = "gpio";
++					drive-push-pull = <1>;
++				};
++
++				pin_32k {
++					pins = "gpio4";
++					function = "32k-out1";
++				};
++			};
++
++			fps {
++				fps0 {
++					maxim,shutdown-fps-time-period-us = <5120>;
++					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
++				};
++
++				fps1 {
++					maxim,shutdown-fps-time-period-us = <5120>;
++					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN1>;
++					maxim,enable-sleep;
++				};
++
++				fps2 {
++					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
++				};
++			};
++
++			regulators {
++				in-ldo0-1-supply = <&pp1350>;
++				in-ldo2-supply = <&pp3300>;
++				in-ldo3-5-supply = <&pp3300>;
++				in-ldo7-8-supply = <&pp1350>;
++
++				ppvar_soc: sd0 {
++					regulator-name = "PPVAR_SOC";
++					regulator-min-microvolt = <825000>;
++					regulator-max-microvolt = <1125000>;
++					regulator-enable-ramp-delay = <146>;
++					regulator-disable-ramp-delay = <4080>;
++					regulator-ramp-delay = <27500>;
++					regulator-ramp-delay-scale = <300>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_1>;
++					maxim,active-fps-power-up-slot = <1>;
++					maxim,active-fps-power-down-slot = <7>;
++				};
++
++				pp1100_sd1: sd1 {
++					regulator-name = "PP1100";
++					regulator-min-microvolt = <1125000>;
++					regulator-max-microvolt = <1125000>;
++					regulator-enable-ramp-delay = <130>;
++					regulator-disable-ramp-delay = <145800>;
++					regulator-ramp-delay = <27500>;
++					regulator-ramp-delay-scale = <300>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_0>;
++					maxim,active-fps-power-up-slot = <5>;
++					maxim,active-fps-power-down-slot = <1>;
++				};
++
++				pp1350: sd2 {
++					regulator-name = "PP1350";
++					regulator-min-microvolt = <1350000>;
++					regulator-max-microvolt = <1350000>;
++					regulator-enable-ramp-delay = <176>;
++					regulator-disable-ramp-delay = <32000>;
++					regulator-ramp-delay = <27500>;
++					regulator-ramp-delay-scale = <350>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_NONE>;
++					maxim,active-fps-power-up-slot = <2>;
++					maxim,active-fps-power-down-slot = <5>;
++				};
++
++				pp1800: sd3 {
++					regulator-name = "PP1800";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-enable-ramp-delay = <242>;
++					regulator-disable-ramp-delay = <118000>;
++					regulator-ramp-delay = <27500>;
++					regulator-ramp-delay-scale = <360>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_0>;
++					maxim,active-fps-power-up-slot = <3>;
++					maxim,active-fps-power-down-slot = <3>;
++				};
++
++				pp1200_avdd: ldo0 {
++					regulator-name = "PP1200_AVDD";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-enable-ramp-delay = <26>;
++					regulator-disable-ramp-delay = <626>;
++					regulator-ramp-delay = <100000>;
++					regulator-ramp-delay-scale = <200>;
++					regulator-boot-on;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_NONE>;
++					maxim,active-fps-power-up-slot = <0>;
++					maxim,active-fps-power-down-slot = <7>;
++				};
++
++				pp1200_rcam: ldo1 {
++					regulator-name = "PP1200_RCAM";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-enable-ramp-delay = <22>;
++					regulator-disable-ramp-delay = <630>;
++					regulator-ramp-delay = <100000>;
++					regulator-ramp-delay-scale = <200>;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_NONE>;
++					maxim,active-fps-power-up-slot = <0>;
++					maxim,active-fps-power-down-slot = <7>;
++				};
++
++				pp_ldo2: ldo2 {
++					regulator-name = "PP_LDO2";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-enable-ramp-delay = <62>;
++					regulator-disable-ramp-delay = <650>;
++					regulator-ramp-delay = <100000>;
++					regulator-ramp-delay-scale = <200>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_NONE>;
++					maxim,active-fps-power-up-slot = <0>;
++					maxim,active-fps-power-down-slot = <7>;
++				};
++
++				pp2800l_rcam: ldo3 {
++					regulator-name = "PP2800L_RCAM";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-enable-ramp-delay = <50>;
++					regulator-disable-ramp-delay = <1110>;
++					regulator-ramp-delay = <100000>;
++					regulator-ramp-delay-scale = <200>;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_NONE>;
++					maxim,active-fps-power-up-slot = <0>;
++					maxim,active-fps-power-down-slot = <7>;
++				};
++
++				pp100_soc_rtc: ldo4 {
++					regulator-name = "PP1100_SOC_RTC";
++					regulator-min-microvolt = <850000>;
++					regulator-max-microvolt = <850000>;
++					regulator-enable-ramp-delay = <22>;
++					regulator-disable-ramp-delay = <610>;
++					regulator-ramp-delay = <100000>;
++					regulator-ramp-delay-scale = <200>;
++					regulator-always-on; /* Check this */
++					regulator-boot-on;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_0>;
++					maxim,active-fps-power-up-slot = <1>;
++					maxim,active-fps-power-down-slot = <7>;
++				};
++
++				pp2800l_fcam: ldo5 {
++					regulator-name = "PP2800L_FCAM";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-enable-ramp-delay = <62>;
++					regulator-disable-ramp-delay = <640>;
++					regulator-ramp-delay = <100000>;
++					regulator-ramp-delay-scale = <200>;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_NONE>;
++					maxim,active-fps-power-up-slot = <0>;
++					maxim,active-fps-power-down-slot = <7>;
++				};
++
++				ldo6 {
++					/* Unused. */
++					regulator-name = "PP_LDO6";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-enable-ramp-delay = <36>;
++					regulator-disable-ramp-delay = <674>;
++					regulator-ramp-delay = <100000>;
++					regulator-ramp-delay-scale = <200>;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_NONE>;
++					maxim,active-fps-power-up-slot = <0>;
++					maxim,active-fps-power-down-slot = <7>;
++				};
++
++				pp1050_avdd: ldo7 {
++					regulator-name = "PP1050_AVDD";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1050000>;
++					regulator-enable-ramp-delay = <24>;
++					regulator-disable-ramp-delay = <2768>;
++					regulator-ramp-delay = <100000>;
++					regulator-ramp-delay-scale = <200>;
++					regulator-always-on;
++					regulator-boot-on;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_1>;
++					maxim,active-fps-power-up-slot = <3>;
++					maxim,active-fps-power-down-slot = <4>;
++				};
++
++				avddio_1v05: ldo8 {
++					regulator-name = "AVDDIO_1V05";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1050000>;
++					regulator-enable-ramp-delay = <22>;
++					regulator-disable-ramp-delay = <1160>;
++					regulator-ramp-delay = <100000>;
++					regulator-ramp-delay-scale = <200>;
++					regulator-boot-on;
++					maxim,active-fps-source = <MAX77620_FPS_SRC_NONE>;
++					maxim,active-fps-power-up-slot = <0>;
++					maxim,active-fps-power-down-slot = <7>;
++				};
++			};
++		};
++	};
++
+ 	pmc@7000e400 {
+ 		nvidia,invert-interrupt;
+ 		nvidia,suspend-mode = <0>;
+@@ -1421,4 +1685,90 @@
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
+ 	};
++
++	regulators {
++		compatible = "simple-bus";
++		device_type = "fixed-regulators";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ppvar_sys: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "PPVAR_SYS";
++			regulator-min-microvolt = <4400000>;
++			regulator-max-microvolt = <4400000>;
++			regulator-always-on;
++		};
++
++		pplcd_vdd: regulator@1 {
++			compatible = "regulator-fixed";
++			reg = <1>;
++			regulator-name = "PPLCD_VDD";
++			regulator-min-microvolt = <4400000>;
++			regulator-max-microvolt = <4400000>;
++			gpio = <&gpio TEGRA_GPIO(V, 4) 0>;
++			enable-active-high;
++			regulator-boot-on;
++		};
++
++		pp3000_always: regulator@2 {
++			compatible = "regulator-fixed";
++			reg = <2>;
++			regulator-name = "PP3000_ALWAYS";
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++			regulator-always-on;
++		};
++
++		pp3300: regulator@3 {
++			compatible = "regulator-fixed";
++			reg = <3>;
++			regulator-name = "PP3300";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-boot-on;
++			regulator-always-on;
++			gpio = <&max77620 3 0>;
++			enable-active-high;
++		};
++
++		pp5000: regulator@4 {
++			compatible = "regulator-fixed";
++			reg = <4>;
++			regulator-name = "PP5000";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++		};
++
++		pp1800_lcdio: regulator@5 {
++			compatible = "regulator-fixed";
++			reg = <5>;
++			regulator-name = "PP1800_LCDIO";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			gpio = <&gpio TEGRA_GPIO(V, 3) 0>;
++			enable-active-high;
++			regulator-boot-on;
++		};
++
++		pp1800_cam: regulator@6 {
++			compatible = "regulator-fixed";
++			reg= <6>;
++			regulator-name = "PP1800_CAM";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			gpio = <&gpio TEGRA_GPIO(K, 3) 0>;
++			enable-active-high;
++		};
++
++		usbc_vbus: regulator@7 {
++			compatible = "regulator-fixed";
++			reg = <7>;
++			regulator-name = "USBC_VBUS";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++		};
++	};
+ };
+-- 
+1.9.1
