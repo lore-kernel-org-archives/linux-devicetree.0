@@ -1,319 +1,219 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [v2, 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
-Date: Fri, 03 Jun 2016 23:24:23 +0200
-Message-ID: <1561602.DGny4Hlya3@diego>
-References: <1464850090-99371-3-git-send-email-frank.wang@rock-chips.com> <20160603195922.GB3524@roeck-us.net>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 05/11] ARM: dts: r8a7792: initial SoC device tree
+Date: Sat, 04 Jun 2016 00:26:10 +0300
+Message-ID: <2268000.l71DRbJSRE@wasted.cogentembedded.com>
+References: <3446154.oZ24315zaL@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160603195922.GB3524-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <3446154.oZ24315zaL-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 3. Juni 2016, 12:59:22 schrieb Guenter Roeck:
-> On Thu, Jun 02, 2016 at 02:48:10PM +0800, Frank Wang wrote:
-> > The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
-> > than rk3288 and before, and most of phy-related registers are also
-> > different from the past, so a new phy driver is required necessarily.
-> > 
-> > Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > ---
-> > 
-> > Changes in v2:
-> >  - Changed vbus_host operation from gpio to regulator in *_probe.
-> >  - Improved the fault treatment relate to 480m clock register.
-> >  - Cleaned up some meaningless codes in *_clk480m_disable.
-> >  - made more clear the comment of *_sm_work.
-> >  
-> >  drivers/phy/Kconfig                  |    7 +
-> >  drivers/phy/Makefile                 |    1 +
-> >  drivers/phy/phy-rockchip-inno-usb2.c |  604
-> >  ++++++++++++++++++++++++++++++++++ 3 files changed, 612 insertions(+)
-> >  create mode 100644 drivers/phy/phy-rockchip-inno-usb2.c
-> > 
-> > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> > index b869b98..29ef15c 100644
-> > --- a/drivers/phy/Kconfig
-> > +++ b/drivers/phy/Kconfig
-> > @@ -347,6 +347,13 @@ config PHY_ROCKCHIP_USB
-> > 
-> >  	help
-> >  	
-> >  	  Enable this to support the Rockchip USB 2.0 PHY.
-> > 
-> > +config PHY_ROCKCHIP_INNO_USB2
-> > +	tristate "Rockchip INNO USB2PHY Driver"
-> > +	depends on ARCH_ROCKCHIP && OF
-> > +	select GENERIC_PHY
-> > +	help
-> > +	  Support for Rockchip USB2.0 PHY with Innosilicon IP block.
-> > +
-> > 
-> >  config PHY_ROCKCHIP_EMMC
-> >  
-> >  	tristate "Rockchip EMMC PHY Driver"
-> >  	depends on ARCH_ROCKCHIP && OF
-> > 
-> > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> > index 9c3e73c..4963fbc 100644
-> > --- a/drivers/phy/Makefile
-> > +++ b/drivers/phy/Makefile
-> > @@ -38,6 +38,7 @@ phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)	+=
-> > phy-s5pv210-usb2.o> 
-> >  obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
-> >  obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
-> >  obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
-> > 
-> > +obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
-> > 
-> >  obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
-> >  obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
-> >  obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
-> > 
-> > diff --git a/drivers/phy/phy-rockchip-inno-usb2.c
-> > b/drivers/phy/phy-rockchip-inno-usb2.c new file mode 100644
-> > index 0000000..eca46ff
-> > --- /dev/null
-> > +++ b/drivers/phy/phy-rockchip-inno-usb2.c
-> > @@ -0,0 +1,604 @@
-> > +/*
-> > + * Rockchip USB2.0 PHY with Innosilicon IP block driver
-> > + *
-> > + * Copyright (C) 2016 Fuzhou Rockchip Electronics Co., Ltd
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/jiffies.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/mfd/syscon.h>
-> > +
-> > +#define BIT_WRITEABLE_SHIFT	16
-> > +#define SCHEDULE_DELAY	(60 * HZ)
-> > +
-> > +enum rockchip_usb2phy_port_id {
-> > +	USB2PHY_PORT_OTG,
-> > +	USB2PHY_PORT_HOST,
-> > +	USB2PHY_NUM_PORTS,
-> > +};
-> > +
-> > +enum rockchip_usb2phy_host_state {
-> > +	PHY_STATE_HS_ONLINE	= 0,
-> > +	PHY_STATE_DISCONNECT	= 1,
-> > +	PHY_STATE_HS_CONNECT	= 2,
-> > +	PHY_STATE_FS_CONNECT	= 4,
-> > +};
-> > +
-> > +struct usb2phy_reg {
-> > +	unsigned int	offset;
-> > +	unsigned int	bitend;
-> > +	unsigned int	bitstart;
-> > +	unsigned int	disable;
-> > +	unsigned int	enable;
-> > +};
-> > +
-> > +/**
-> > + * struct rockchip_usb2phy_port_cfg: usb-phy port configuration.
-> > + * @phy_sus: phy suspend register.
-> > + * @ls_det_en: linestate detection enable register.
-> > + * @ls_det_st: linestate detection state register.
-> > + * @ls_det_clr: linestate detection clear register.
-> > + * @utmi_ls: utmi linestate state register.
-> > + * @utmi_hstdet: utmi host disconnect register.
-> > + */
-> > +struct rockchip_usb2phy_port_cfg {
-> > +	struct usb2phy_reg	phy_sus;
-> > +	struct usb2phy_reg	ls_det_en;
-> > +	struct usb2phy_reg	ls_det_st;
-> > +	struct usb2phy_reg	ls_det_clr;
-> > +	struct usb2phy_reg	utmi_ls;
-> > +	struct usb2phy_reg	utmi_hstdet;
-> > +};
-> > +
-> > +/**
-> > + * struct rockchip_usb2phy_cfg: usb-phy configuration.
-> > + * @num_ports: specify how many ports that the phy has.
-> > + * @clkout_ctl: keep on/turn off output clk of phy.
-> > + */
-> > +struct rockchip_usb2phy_cfg {
-> > +	unsigned int	num_ports;
-> > +	struct usb2phy_reg	clkout_ctl;
-> > +	const struct rockchip_usb2phy_port_cfg	*port_cfgs;
-> > +};
-> > +
-> > +/**
-> > + * struct rockchip_usb2phy_port: usb-phy port data.
-> > + * @port_id: flag for otg port or host port.
-> > + * @suspended: phy suspended flag.
-> > + * @ls_irq: IRQ number assigned for linestate detection.
-> > + * @mutex: for register updating in sm_work.
-> > + * @sm_work: OTG state machine work.
-> > + * @phy_cfg: port register configuration, assigned by driver data.
-> > + */
-> > +struct rockchip_usb2phy_port {
-> > +	struct phy	*phy;
-> > +	unsigned int	port_id;
-> > +	bool		suspended;
-> > +	int		ls_irq;
-> > +	struct mutex	mutex;
-> > +	struct		delayed_work sm_work;
-> > +	const struct	rockchip_usb2phy_port_cfg *port_cfg;
-> > +};
-> > +
-> > +/**
-> > + * struct rockchip_usb2phy: usb2.0 phy driver data.
-> > + * @grf: General Register Files regmap.
-> > + * @clk480m: clock struct of phy output clk.
-> > + * @clk_hw: clock struct of phy output clk management.
-> > + * @vbus_host: the regulator for vbus_host supply.
-> > + * @phy_cfg: phy register configuration, assigned by driver data.
-> > + * @ports: phy port instance.
-> > + */
-> > +struct rockchip_usb2phy {
-> > +	struct device	*dev;
-> > +	struct regmap	*grf;
-> > +	struct clk	*clk480m;
-> > +	struct clk_hw	clk480m_hw;
-> > +	struct regulator	*vbus_host;
-> > +	const struct rockchip_usb2phy_cfg	*phy_cfg;
-> > +	struct rockchip_usb2phy_port	ports[USB2PHY_NUM_PORTS];
-> > +};
-> > +
-> > +static inline int property_enable(struct rockchip_usb2phy *rphy,
-> > +				  const struct usb2phy_reg *reg, bool en)
-> > +{
-> > +	unsigned int val, mask, tmp;
-> > +
-> > +	tmp = en ? reg->enable : reg->disable;
-> > +	mask = GENMASK(reg->bitend, reg->bitstart);
-> > +	val = (tmp << reg->bitstart) | (mask << BIT_WRITEABLE_SHIFT);
-> > +
-> > +	return regmap_write(rphy->grf, reg->offset, val);
-> > +}
-> > +
-> > +static inline bool property_enabled(struct rockchip_usb2phy *rphy,
-> > +				    const struct usb2phy_reg *reg)
-> > +{
-> > +	int ret;
-> > +	unsigned int tmp, orig;
-> > +	unsigned int mask = GENMASK(reg->bitend, reg->bitstart);
-> > +
-> > +	ret = regmap_read(rphy->grf, reg->offset, &orig);
-> > +	if (ret)
-> > +		return false;
-> > +
-> > +	tmp = (orig & mask) >> reg->bitstart;
-> > +	return tmp == reg->enable;
-> > +}
-> > +
-> > +static int rockchip_usb2phy_clk480m_enable(struct clk_hw *hw)
-> > +{
-> > +	struct rockchip_usb2phy *rphy =
-> > +		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
-> > +	int ret = 0;
-> > +
-> > +	/* turn on 480m clk output if it is off */
-> > +	if (!property_enabled(rphy, &rphy->phy_cfg->clkout_ctl)) {
-> > +		ret = property_enable(rphy, &rphy->phy_cfg->clkout_ctl, true);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		/* waitting for the clk become stable */
-> > +		mdelay(1);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static void rockchip_usb2phy_clk480m_disable(struct clk_hw *hw)
-> > +{
-> > +	struct rockchip_usb2phy *rphy =
-> > +		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
-> > +
-> > +	/* turn off 480m clk output */
-> > +	property_enable(rphy, &rphy->phy_cfg->clkout_ctl, false);
-> > +}
-> > +
-> > +static int rockchip_usb2phy_clk480m_enabled(struct clk_hw *hw)
-> > +{
-> > +	struct rockchip_usb2phy *rphy =
-> > +		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
-> > +
-> > +	return property_enabled(rphy, &rphy->phy_cfg->clkout_ctl);
-> > +}
-> > +
-> > +static unsigned long
-> > +rockchip_usb2phy_clk480m_recalc_rate(struct clk_hw *hw,
-> > +				     unsigned long parent_rate)
-> > +{
-> > +	return 480000000;
-> > +}
-> > +
-> > +static const struct clk_ops rockchip_usb2phy_clkout_ops = {
-> > +	.enable = rockchip_usb2phy_clk480m_enable,
-> > +	.disable = rockchip_usb2phy_clk480m_disable,
-> > +	.is_enabled = rockchip_usb2phy_clk480m_enabled,
-> > +	.recalc_rate = rockchip_usb2phy_clk480m_recalc_rate,
-> > +};
-> > +
-> > +static void rockchip_usb2phy_clk480m_unregister(void *data)
-> > +{
-> > +	struct rockchip_usb2phy *rphy = data;
-> > +
-> > +	of_clk_del_provider(rphy->dev->of_node);
-> > +	clk_unregister(rphy->clk480m);
-> > +}
-> > +
-> > +static struct clk *
-> > +rockchip_usb2phy_clk480m_register(struct rockchip_usb2phy *rphy)
-> > +{
-> > +	struct device_node *node = rphy->dev->of_node;
-> > +	struct clk *clk;
-> > +	struct clk_init_data init;
-> > +	int ret;
-> > +
-> > +	init.name = "clk_usbphy_480m";
-> > +	init.ops = &rockchip_usb2phy_clkout_ops;
-> > +	init.flags = CLK_IS_ROOT;
-> 
-> One more comment:
-> 
-> include/linux/clk-provider.h:#define CLK_IS_ROOT                BIT(4) /*
-> Deprecated: Don't use */
-> 
-> ... and the definition has been removed in linux-next.
+The initial R8A7792 SoC device tree including CPU core, GIC, timer, SYSC,
+and the required  clock descriptions.
 
-also, the created clock should be a child of the phy-supply clock. Please take 
-a look at the picophy-variant (phy-rockchip-usb) that already handles that 
-parent assignment.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
+---
+Changes in version 2:
+- explicitly included the IRQ header;
+- removed the CPU1 node;
+- removed the audio and PCIe bus clocks;
+- removed the SDH, SD0, and SD1 CPG clocks;
+- added RCAN and ADSP CPG clocks;
+- removed the PLL1/2, Z2, ZS, I, B, P, CL, M2, RCLK, OSCCLK, ZB3, ZB3D2, DDR,
+  and MP fixed factor clocks;
+- fixed up the parent and divisor for the CP fixed factor clock;
+- swapped  the SYS-DMAC0/1 clocks;
+- removed  all gated clocks except the [H]SCIF, IRQC, and SYS-DMAC ones;
+- created  the "soc" subnode, moving the SoC  device  nodes there;
+- removed  the "clocks" node, moving its fixed clock  subnodes to the root and
+  the MSTP subnodes into the "soc" node.
 
-Heiko
+ arch/arm/boot/dts/r8a7792.dtsi |  171 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 171 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
+===================================================================
+--- /dev/null
++++ renesas/arch/arm/boot/dts/r8a7792.dtsi
+@@ -0,0 +1,171 @@
++/*
++ * Device Tree Source for the r8a7792 SoC
++ *
++ * Copyright (C) 2016 Cogent Embedded Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#include <dt-bindings/clock/r8a7792-clock.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/power/r8a7792-sysc.h>
++
++/ {
++	compatible = "renesas,r8a7792";
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <0>;
++			clock-frequency = <1000000000>;
++			clocks = <&cpg_clocks R8A7792_CLK_Z>;
++			power-domains = <&sysc R8A7792_PD_CA15_CPU0>;
++			next-level-cache = <&L2_CA15>;
++		};
++
++		L2_CA15: cache-controller@0 {
++			compatible = "cache";
++			reg = <0>;
++			cache-unified;
++			cache-level = <2>;
++			power-domains = <&sysc R8A7792_PD_CA15_SCU>;
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		interrupt-parent = <&gic>;
++
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		gic: interrupt-controller@f1001000 {
++			compatible = "arm,gic-400";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0 0xf1001000 0 0x1000>,
++			      <0 0xf1002000 0 0x1000>,
++			      <0 0xf1004000 0 0x2000>,
++			      <0 0xf1006000 0 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_HIGH)>;
++		};
++
++		timer {
++			compatible = "arm,armv7-timer";
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>;
++		};
++
++		sysc: system-controller@e6180000 {
++			compatible = "renesas,r8a7792-sysc";
++			reg = <0 0xe6180000 0 0x0200>;
++			#power-domain-cells = <1>;
++		};
++
++		/* Special CPG clocks */
++		cpg_clocks: cpg_clocks@e6150000 {
++			compatible = "renesas,r8a7792-cpg-clocks",
++				     "renesas,rcar-gen2-cpg-clocks";
++			reg = <0 0xe6150000 0 0x1000>;
++			clocks = <&extal_clk>;
++			#clock-cells = <1>;
++			clock-output-names = "main", "pll0", "pll1", "pll3",
++					     "lb", "qspi", "z", "rcan", "adsp";
++			#power-domain-cells = <0>;
++		};
++
++		/* Gate clocks */
++		mstp2_clks: mstp2_clks@e6150138 {
++			compatible = "renesas,r8a7792-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150138 0 4>, <0 0xe6150040 0 4>;
++			clocks = <&zs_clk>, <&zs_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7792_CLK_SYS_DMAC1 R8A7792_CLK_SYS_DMAC0
++			>;
++			clock-output-names = "sys-dmac1", "sys-dmac0";
++		};
++		mstp4_clks: mstp4_clks@e6150140 {
++			compatible = "renesas,r8a7792-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150140 0 4>, <0 0xe615004c 0 4>;
++			clocks = <&cp_clk>;
++			#clock-cells = <1>;
++			clock-indices = <R8A7792_CLK_IRQC>;
++			clock-output-names = "irqc";
++		};
++		mstp7_clks: mstp7_clks@e615014c {
++			compatible = "renesas,r8a7792-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
++			clocks = <&zs_clk>, <&zs_clk>, <&p_clk>, <&p_clk>,
++				 <&p_clk>, <&p_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7792_CLK_HSCIF1 R8A7792_CLK_HSCIF0
++				R8A7792_CLK_SCIF3 R8A7792_CLK_SCIF2
++				R8A7792_CLK_SCIF1 R8A7792_CLK_SCIF0
++			>;
++			clock-output-names = "hscif1", "hscif0", "scif3",
++					     "scif2", "scif1", "scif0",
++					     "du1", "du0";
++		};
++	};
++
++	/* External root clock */
++	extal_clk: extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	/* External SCIF clock */
++	scif_clk: scif {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	/* Fixed factor clocks */
++	zs_clk: zs {
++		compatible = "fixed-factor-clock";
++		clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
++		#clock-cells = <0>;
++		clock-div = <6>;
++		clock-mult = <1>;
++	};
++	p_clk: p {
++		compatible = "fixed-factor-clock";
++		clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
++		#clock-cells = <0>;
++		clock-div = <24>;
++		clock-mult = <1>;
++	};
++	cp_clk: cp {
++		compatible = "fixed-factor-clock";
++		clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
++		#clock-cells = <0>;
++		clock-div = <3>;
++		clock-mult = <1>;
++	};
++};
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
