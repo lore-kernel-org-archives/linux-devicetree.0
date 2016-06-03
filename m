@@ -1,27 +1,99 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] DT: bindings: remove bcm2835-sdhci
-Date: Fri, 3 Jun 2016 14:00:49 -0600
-Message-ID: <5751E1F1.5020202@wwwdotorg.org>
-References: <1464983233-27001-1-git-send-email-stefan.wahren@i2se.com>
- <1464983233-27001-2-git-send-email-stefan.wahren@i2se.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 03/14] pwm: rockchip: Fix period and duty_cycle
+ approximation
+Date: Fri, 3 Jun 2016 13:03:26 -0700
+Message-ID: <20160603200326.GA124478@google.com>
+References: <1464942192-25967-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1464942192-25967-4-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464983233-27001-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1464942192-25967-4-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2016 01:47 PM, Stefan Wahren wrote:
-> The sdhci-iproc also supports bcm2835. So this binding is obsolete.
+On Fri, Jun 03, 2016 at 10:23:01AM +0200, Boris Brezillon wrote:
+> The current implementation always round down the duty and period
+> values, while it would be better to round them to the closest integer.
 
-sdhci-iproc supports this binding, so I don't believe the binding is 
-obsolete. The duplicate implementations (drivers) can possibly be 
-removed, but not the binding doc, which is (or at least could be) still 
-in use.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Agreed. As I noted to you elsewhere, not having this change can cause
+problems where doing a series of pwm_get_state() / modify /
+pwm_apply_state() will propagate rounding errors, which will change the
+period unexpectedly. e.g., I have an expected period of 3.333 us and a
+clk rate of 112.666667 MHz -- the clock frequency doesn't divide evenly,
+so the period (stashed in nanoseconds) shrinks when we convert to the
+register value and back, as follows:
+
+ pwm_apply_state(): register = period * 112666667 / 1000000000;
+ pwm_get_state(): period = register * 1000000000 / 112666667;
+
+or in other words:
+
+ period = period * 112666667 / 1000000000 * 1000000000 / 112666667;
+
+which yields a sequence like:
+
+ 3333 -> 3328
+ 3328 -> 3319
+ 3319 -> 3310
+ 3310 -> 3301
+ 3301 -> 3292
+ 3292 -> ... (etc) ...
+
+With this patch, we'd see instead:
+
+ period = div_round_closest(period * 112666667, 1000000000) * 1000000000 / 112666667;
+
+which yields a stable sequence:
+
+ 3333 -> 3337
+ 3337 -> 3337
+ 3337 -> ... (etc) ...
+
+Seems much saner to me.
+
+Now, I note that in patch 10 you're now using pwm_prepare_new_state() to
+avoid this propagation problem entirely (good idea anyway, IMO), but I
+just wanted to further note what kind of real problems we can see when
+we don't round to the closest value.
+
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Brian Norris <briannorris@chromium.org>
+
+Tested this whole series on rk3399's PWM regulators used for the CPUs,
+to clarify what my Tested-by means.
+
+Thanks for the patches.
+
+> ---
+>  drivers/pwm/pwm-rockchip.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+> index 7d9cc90..68d72ce 100644
+> --- a/drivers/pwm/pwm-rockchip.c
+> +++ b/drivers/pwm/pwm-rockchip.c
+> @@ -114,12 +114,11 @@ static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	 * default prescaler value for all practical clock rate values.
+>  	 */
+>  	div = clk_rate * period_ns;
+> -	do_div(div, pc->data->prescaler * NSEC_PER_SEC);
+> -	period = div;
+> +	period = DIV_ROUND_CLOSEST_ULL(div,
+> +				       pc->data->prescaler * NSEC_PER_SEC);
+>  
+>  	div = clk_rate * duty_ns;
+> -	do_div(div, pc->data->prescaler * NSEC_PER_SEC);
+> -	duty = div;
+> +	duty = DIV_ROUND_CLOSEST_ULL(div, pc->data->prescaler * NSEC_PER_SEC);
+>  
+>  	ret = clk_enable(pc->clk);
+>  	if (ret)
+> -- 
+> 2.7.4
+> 
