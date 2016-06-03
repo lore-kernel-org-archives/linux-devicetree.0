@@ -1,106 +1,131 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] usb: ohci-at91: Forcibly suspend ports while USB
- suspend
-Date: Fri, 3 Jun 2016 15:32:11 +0200
-Message-ID: <575186DB.6030405@atmel.com>
-References: <1464755400-6825-1-git-send-email-wenyou.yang@atmel.com>
- <1464755400-6825-2-git-send-email-wenyou.yang@atmel.com>
- <20160603015409.GA18051@rob-hp-laptop>
- <B256D81BAE5131468A838E5D7A24364101650B1491@penmbx01>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2,3/5] dt-bindings: mtu3: add devicetree bindings
+Date: Fri, 3 Jun 2016 15:34:04 +0200
+Message-ID: <5751874C.9070100@gmail.com>
+References: <1464673962-11506-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1464673962-11506-4-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <B256D81BAE5131468A838E5D7A24364101650B1491@penmbx01>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464673962-11506-4-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Le 03/06/2016 11:22, Yang, Wenyou a =A8=A6crit :
->> -----Original Message-----
->> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
->> Sent: 2016=C4=EA6=D4=C23=C8=D5 9:54
->> To: Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>; Greg Kroah-Hartman
->> <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Ferre, Nicolas <Nicolas.FERRE-AIFe0yeh4nA@public.gmane.org=
-m>;
->> Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>; Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Ia=
-n
->> Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>; Kumar Gala <galak@codeauro=
-ra.org>;
->> Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>; linux-
->> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
->> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Subject: Re: [PATCH v2 1/2] usb: ohci-at91: Forcibly suspend ports w=
-hile USB
->> suspend
->>
->> On Wed, Jun 01, 2016 at 12:29:59PM +0800, Wenyou Yang wrote:
->>> In order to the save power consumption, as a workaround, suspend
->>> forcibly the USB PORTA/B/C via set the SUSPEND_A/B/C bits of OHCI
->>> Interrupt Configuration Register in the SFRs while OHCI USB suspend=
-=2E
->>>
->>> This suspend operation must be done before the USB clock is disable=
-d,
->>> resume after the USB clock is enabled.
->>>
->>> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>> ---
->>>
->>> Changes in v2:
->>>  - Add compatible to support forcibly suspend the ports.
->>>  - Add soc/at91/at91_sfr.h to accommodate the defines.
->>>  - Add error checking for .sfr_regmap.
->>>  - Remove unnecessary regmap_read() statement.
->>>
->>>  .../devicetree/bindings/usb/atmel-usb.txt          |  5 +-
->>>  drivers/usb/host/ohci-at91.c                       | 80 ++++++++++=
-+++++++++++-
->>>  include/soc/at91/at91_sfr.h                        | 29 ++++++++
->>>  3 files changed, 111 insertions(+), 3 deletions(-)  create mode
->>> 100644 include/soc/at91/at91_sfr.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt
->>> b/Documentation/devicetree/bindings/usb/atmel-usb.txt
->>> index 5883b73..3e3e58a 100644
->>> --- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
->>> +++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
->>> @@ -3,8 +3,9 @@ Atmel SOC USB controllers  OHCI
->>>
->>>  Required properties:
->>> - - compatible: Should be "atmel,at91rm9200-ohci" for USB controlle=
-rs
->>> -   used in host mode.
->>> + - compatible: Should be one of the following
->>> +	       "atmel,at91rm9200-ohci" for USB controllers used in host m=
-ode.
->>> +	       "atmel,sama5d2-ohci" for SAMA5D2 which can force to suspen=
-d.
->>
->> That may be why you need this now, but that is irrelevant to having =
-a chip specific
->> compatible string.
->=20
-> Maybe a property is better.
 
-It seems that it's not an issue to the binding that Rob is talking abou=
-t
-but the description that you used: "for SAMA5D2 which can force
-suspend". Don't modify it to use a property for this: a compatible stin=
-g
-makes a lot of sense.
 
-So just listing the new compatible string is enough. If the "force
-suspend" is not needed anymore in next product, we will come back to th=
-e
-"atmel,at91rm9200-ohci" compatible string or add a new one if needed...
+On 31/05/16 07:52, Chunfeng Yun wrote:
+> add a DT binding doc for MediaTek USB3 DRD driver
+>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>   Documentation/devicetree/bindings/usb/mtu3.txt |   85 ++++++++++++++++++++++++
+>   1 file changed, 85 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/mtu3.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/mtu3.txt b/Documentation/devicetree/bindings/usb/mtu3.txt
+> new file mode 100644
+> index 0000000..571ae8b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/mtu3.txt
 
-bye,
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The file should be called mt8173-mtu3.txt to be in line with mt8173-xhci.txt
+
+> @@ -0,0 +1,85 @@
+> +The device node for Mediatek USB3.0 DRD controller
+> +
+> +Required properties:
+> + - compatible : should be "mediatek,mt8173-mtu3"
+> + - reg : specifies physical base address and size of the registers
+> + - reg-names: should be "mac" for device IP and "ippc" for IP port control
+> + - interrupts : interrupt used by the device IP
+> + - power-domains : a phandle to USB power domain node to control USB's
+> +	mtcmos
+> + - vusb33-supply : regulator of USB avdd3.3v
+> + - clocks : a list of phandle + clock-specifier pairs, one for each
+> +	entry in clock-names
+> + - clock-names : must contain "sys_ck" for clock of controller;
+> +	"wakeup_deb_p0" and "wakeup_deb_p1" are optional, they are
+> +	depends on "mediatek,enable-wakeup"
+> + - phys : a list of phandle + phy specifier pairs
+> + - dr_mode : should be one of "host", "peripheral" or "otg",
+> +	refer to usb/generic.txt
+> +
+> +Optional properties:
+> + - #address-cells, #size-cells : should be '2' if the device has sub-nodes
+> +	with 'reg' property
+> + - ranges : allows valid 1:1 translation between child's address space and
+> +	parent's address space
+> + - extcon : external connector for vbus and idpin changes detection, needed
+> +	when supports dual-role mode.
+> + - vbus-supply : reference to the VBUS regulator, needed when supports
+> +	dual-role mode.
+> + - pinctl-names : a pinctrl state named "default" must be defined,
+> +	"id_float" and "id_ground" are optinal which depends on
+> +	"mediatek,enable-manual-drd"
+
+So pinctrl is optional, but if you put it, you need at least "default"?
+
+Apart from that, DT maintainers prefer to have the binding patches at 
+the beginning of a series, so it's easier for them to not oversee any.
+
+Regards,
+Matthias
+
+> + - pinctrl-0 : pin control group
+> +	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
+> +
+> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
+> +	"full-speed"; refer to usb/generic.txt
+> + - enable-manual-drd : supports manual dual-role switch via sysfs; only used
+> +	when receptacle is TYPE-A and also wants to support dual-role mode.
+> + - mediatek,enable-wakeup : supports ip sleep wakeup used by host mode
+> + - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
+> +	control register, it depends on "mediatek,enable-wakeup".
+> +
+> +Sub-nodes:
+> +The xhci should be added as subnode to mtu3 as shown in the following example
+> +if host mode is enabled. The DT binding details of xhci can be found in:
+> +Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> +
+> +Example:
+> +ssusb: usb@11271000 {
+> +	compatible = "mediatek,mt8173-mtu3";
+> +	reg = <0 0x11271000 0 0x3000>,
+> +	      <0 0x11280700 0 0x0100>;
+> +	reg-names = "mac", "ippc";
+> +	interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>;
+> +	phys = <&phy_port0 PHY_TYPE_USB3>,
+> +	       <&phy_port1 PHY_TYPE_USB2>;
+> +	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+> +	clocks = <&topckgen CLK_TOP_USB30_SEL>,
+> +		 <&pericfg CLK_PERI_USB0>,
+> +		 <&pericfg CLK_PERI_USB1>;
+> +	clock-names = "sys_ck",
+> +		      "wakeup_deb_p0",
+> +		      "wakeup_deb_p1";
+> +	vusb33-supply = <&mt6397_vusb_reg>;
+> +	vbus-supply = <&usb_p0_vbus>;
+> +	extcon = <&extcon_usb>;
+> +	dr_mode = "otg";
+> +	mediatek,enable-wakeup;
+> +	mediatek,syscon-wakeup = <&pericfg>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +	ranges;
+> +	status = "disabled";
+> +
+> +	usb_host: xhci@11270000 {
+> +		compatible = "mediatek,mt8173-xhci";
+> +		reg = <0 0x11270000 0 0x1000>;
+> +		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+> +		clocks = <&topckgen CLK_TOP_USB30_SEL>;
+> +		clock-names = "sys_ck";
+> +		vusb33-supply = <&mt6397_vusb_reg>;
+> +		status = "disabled";
+> +	};
+> +};
+>
