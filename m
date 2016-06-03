@@ -1,47 +1,61 @@
-From: "Franklin Cooper Jr." <fcooper@ti.com>
-Subject: Re: [PATCH 0/5] ARM:Keystone: Add pinmuxing support
-Date: Fri, 3 Jun 2016 13:42:19 -0500
-Message-ID: <5cc270d6-aec9-a1a8-597b-37c8413496a9@ti.com>
-References: <1461766308-27669-1-git-send-email-fcooper@ti.com>
+From: Andrew Duggan <aduggan@synaptics.com>
+Subject: [PATCH 3/7] Input: synaptics-rmi4: Add dribble and palm gesture parameters to devicetree
+Date: Fri, 3 Jun 2016 11:40:28 -0700
+Message-ID: <1464979228-2497-1-git-send-email-aduggan@synaptics.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461766308-27669-1-git-send-email-fcooper@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, linux@arm.linux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andrew Duggan <aduggan@synaptics.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Nick Dyer <nick.dyer@itdev.co.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Gentle ping on this series
+Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+---
+ .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt       |  5 +++++
+ drivers/input/rmi4/rmi_2d_sensor.c                         | 14 ++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-On 04/27/2016 09:11 AM, Franklin S Cooper Jr wrote:
-> Unlike most Keystone 2 devices, K2G supports pinmuxing of its pins. This
-> patch series enables pinmuxing for Keystone 2 devices.
->
-> Franklin S Cooper Jr (1):
->   ARM: keystone: defconfig: Enable PINCTRL SINGLE for Keystone 2
->
-> Lokesh Vutla (3):
->   ARM: Keystone: Enable PINCTRL for Keystone ARCH
->   ARM: dts: keystone: Header file for pinctrl constants
->   ARM: dts: k2g-evm: Add pinmuxing for UART0
->
-> Vitaly Andrianov (1):
->   ARM: dts: k2g: Add pinctrl support
->
->  arch/arm/boot/dts/keystone-k2g-evm.dts | 11 ++++++++++
->  arch/arm/boot/dts/keystone-k2g.dtsi    |  8 +++++++
->  arch/arm/configs/keystone_defconfig    |  1 +
->  arch/arm/mach-keystone/Kconfig         |  1 +
->  include/dt-bindings/pinctrl/keystone.h | 39 ++++++++++++++++++++++++++++++++++
->  5 files changed, 60 insertions(+)
->  create mode 100644 include/dt-bindings/pinctrl/keystone.h
->
+diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+index f2c30c8..822df11 100644
+--- a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
++++ b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+@@ -37,6 +37,11 @@ Optional Properties:
+ 				disable reporing absolute position data.
+ - syna,rezero-wait-ms: Time in miliseconds to wait after issuing a rezero
+ 				command.
++- syna,dribble: Control reporting of dribble packets. Values are 0 for
++		default, 1 for explicitly disable, 2 for explicitly enable.
++- syna,palm_detect: Control reporting of the palm detect gesture. Values
++			are 0 for default, 1 for explicitly disable, 2 for
++			explicitly enable.
+ 
+ 
+ Example of a RMI4 I2C device with F11:
+diff --git a/drivers/input/rmi4/rmi_2d_sensor.c b/drivers/input/rmi4/rmi_2d_sensor.c
+index e97bd7f..c41db3b 100644
+--- a/drivers/input/rmi4/rmi_2d_sensor.c
++++ b/drivers/input/rmi4/rmi_2d_sensor.c
+@@ -317,6 +317,20 @@ int rmi_2d_sensor_of_probe(struct device *dev,
+ 
+ 	pdata->rezero_wait = val;
+ 
++	retval = rmi_of_property_read_u32(dev, &val, "syna,dribble",
++						1);
++	if (retval)
++		return retval;
++
++	pdata->dribble = val;
++
++	retval = rmi_of_property_read_u32(dev, &val, "syna,palm_detect",
++						1);
++	if (retval)
++		return retval;
++
++	pdata->palm_detect = val;
++
+ 	return 0;
+ }
+ #else
+-- 
+2.5.0
