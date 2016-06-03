@@ -1,40 +1,52 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/3] dt-bindings: hwrng: Add Amlogic Meson Hardware Random Generator bindings
-Date: Fri,  3 Jun 2016 10:47:00 +0200
-Message-ID: <1464943621-18278-3-git-send-email-narmstrong@baylibre.com>
-References: <1464943621-18278-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464943621-18278-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 7/8] ARM: keystone: dts: add psci command definition
+Date: Fri, 03 Jun 2016 09:50:43 +0100
+Message-ID: <E1b8koV-0004Hf-2j@rmk-PC.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-ia64-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-ia64-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/rng/amlogic,meson-rng.txt          | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+From: Vitaly Andrianov <vitalya@ti.com>
 
-diff --git a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
-new file mode 100644
-index 0000000..202f2d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
-@@ -0,0 +1,14 @@
-+Amlogic Meson Random number generator
-+=====================================
+This commit adds definition for cpu_on, cpu_off and cpu_suspend commands.
+These definitions must match the corresponding PSCI definitions in
+boot monitor.
+
+Having those command and corresponding PSCI support in boot monitor allows
+run time CPU hot plugin.
+
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ arch/arm/boot/dts/keystone.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 3f272826f537..007648971744 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -59,6 +59,14 @@
+ 			     <GIC_SPI 23 IRQ_TYPE_EDGE_RISING>;
+ 	};
+ 
++	psci {
++		compatible	= "arm,psci";
++		method		= "smc";
++		cpu_suspend	= <0x84000001>;
++		cpu_off		= <0x84000002>;
++		cpu_on		= <0x84000003>;
++	};
 +
-+Required properties:
-+
-+- compatible : should be "amlogic,meson-rng"
-+- reg : Specifies base physical address and size of the registers.
-+
-+Example:
-+
-+rng {
-+        compatible = "amlogic,meson-rng";
-+        reg = <0x0 0xc8834000 0x0 0x4>;
-+};
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
-2.7.0
+2.1.0
+
