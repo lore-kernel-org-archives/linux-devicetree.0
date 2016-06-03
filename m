@@ -1,87 +1,48 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 11/14] regulator: pwm: properly initialize the ->state field
-Date: Fri,  3 Jun 2016 10:23:09 +0200
-Message-ID: <1464942192-25967-12-git-send-email-boris.brezillon@free-electrons.com>
-References: <1464942192-25967-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
+ addresses
+Date: Fri, 3 Jun 2016 10:24:56 +0200
+Message-ID: <57513ED8.6000703@metafoo.de>
+References: <1460992811.8946.22.camel@linux.intel.com>
+ <5714FCBE.3060009@metafoo.de> <20160419124028.GF1725@lahna.fi.intel.com>
+ <57162C4E.9090904@metafoo.de> <20160419131631.GG1725@lahna.fi.intel.com>
+ <5716333D.1040106@metafoo.de> <20160419144027.GH1725@lahna.fi.intel.com>
+ <20160424201437.GA2123@katana> <20160425072553.GK1725@lahna.fi.intel.com>
+ <20160425073940.GD1541@katana> <20160425074126.GL1725@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1464942192-25967-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160425074126.GL1725@lahna.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Jean-Michel Hautbois <jhautbois@gmail.com>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
 List-Id: devicetree@vger.kernel.org
 
-The ->state field is currently initialized to 0, thus referencing the
-voltage selector at index 0, which might not reflect the current voltage
-value.
-If possible, retrieve the current voltage selector from the PWM state, else
-return -EINVAL.
+On 04/25/2016 09:41 AM, Mika Westerberg wrote:
+> On Mon, Apr 25, 2016 at 09:39:41AM +0200, Wolfram Sang wrote:
+>> On Mon, Apr 25, 2016 at 10:25:53AM +0300, Mika Westerberg wrote:
+>>> On Sun, Apr 24, 2016 at 10:14:37PM +0200, Wolfram Sang wrote:
+>>>>
+>>>>> The above should work with both DT and ACPI so I'm OK with the current
+>>>>> patch. We can add ACPI parts later when needed.
+>>>>
+>>>> Just to make sure, I read this as an ack for the original patch?
+>>>
+>>> Yes :)
+>>
+>> Thanks! Could you use the formal tag for that in the future please?
+>> Patchwork automatically collects them and that saves me some work. (I
+>> even have a keyboard macro for that and use it a lot)
+> 
+> Sure, sorry about that.
+> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
-Heiko, Mark,
+Hi Wolfram,
 
-I know you already added your Tested-by/Acked-by tags on this patch
-but this version has slightly change and is now making use of the
-pwm_get_relative_duty_cycle() helper instead of manually converting
-the absolute duty_cycle value into a relative one.
----
- drivers/regulator/pwm-regulator.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+It looks like everybody was OK now with this patch, but it got lost somehow.
+Should it be resent, or can you still pick it up from patchwork?
 
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index bf033fd..8c56e16 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -48,10 +48,31 @@ struct pwm_voltages {
- /**
-  * Voltage table call-backs
-  */
-+static void pwm_regulator_init_state(struct regulator_dev *rdev)
-+{
-+	struct pwm_regulator_data *drvdata = rdev_get_drvdata(rdev);
-+	struct pwm_state pwm_state;
-+	unsigned int dutycycle;
-+	int i;
-+
-+	pwm_get_state(drvdata->pwm, &pwm_state);
-+	dutycycle = pwm_get_relative_duty_cycle(&pwm_state, 100);
-+
-+	for (i = 0; i < rdev->desc->n_voltages; i++) {
-+		if (dutycycle == drvdata->duty_cycle_table[i].dutycycle) {
-+			drvdata->state = i;
-+			return;
-+		}
-+	}
-+}
-+
- static int pwm_regulator_get_voltage_sel(struct regulator_dev *rdev)
- {
- 	struct pwm_regulator_data *drvdata = rdev_get_drvdata(rdev);
- 
-+	if (drvdata->state < 0)
-+		pwm_regulator_init_state(rdev);
-+
- 	return drvdata->state;
- }
- 
-@@ -203,6 +224,7 @@ static int pwm_regulator_init_table(struct platform_device *pdev,
- 		return ret;
- 	}
- 
-+	drvdata->state			= -EINVAL;
- 	drvdata->duty_cycle_table	= duty_cycle_table;
- 	memcpy(&drvdata->ops, &pwm_regulator_voltage_table_ops,
- 	       sizeof(drvdata->ops));
--- 
-2.7.4
+Thanks,
+- Lars
