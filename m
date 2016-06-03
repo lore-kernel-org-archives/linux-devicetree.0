@@ -1,39 +1,56 @@
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH v2 6/9] dt-bindings: Add root properties for Raspberry Pi 3
-Date: Fri,  3 Jun 2016 08:18:25 +0200
-Message-ID: <1464934708-24769-7-git-send-email-kraxel@redhat.com>
-References: <1464934708-24769-1-git-send-email-kraxel@redhat.com>
+From: weiqing kong <weiqing.kong@mediatek.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: Add MediaTek display PWM bindings
+Date: Fri, 3 Jun 2016 14:45:49 +0800
+Message-ID: <1464936349.5209.9.camel@mhfsdcap03>
+References: <1464597712-5399-1-git-send-email-weiqing.kong@mediatek.com>
+	 <1464597712-5399-2-git-send-email-weiqing.kong@mediatek.com>
+	 <20160602224550.GA19256@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464934708-24769-1-git-send-email-kraxel@redhat.com>
+In-Reply-To: <20160602224550.GA19256@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Cc: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric@anholt.net>
+On Thu, 2016-06-02 at 17:45 -0500, Rob Herring wrote:
+> On Mon, May 30, 2016 at 04:41:50PM +0800, Weiqing Kong wrote:
+> > Add MT2701 compatible string.
+> > 
+> > Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> > index f8f59ba..f2f2fa9 100644
+> > --- a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> > @@ -1,9 +1,10 @@
+> >  MediaTek display PWM controller
+> >  
+> >  Required properties:
+> > - - compatible: should be "mediatek,<name>-disp-pwm":
+> > -   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
+> > + - compatible: should be like these:
+> > +   - "mediatek,mt2701-disp-bls": found on mt2701 SoC.
+> 
+> Why bls instead of pwm?
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+In mt6595/mt8173, we have a hardware module named pwm.
+In mt2701, we have bls hardware module which includes disp pwm function,
+so we named it mt2701-disp-bls rather than mt2701-disp-pwm in order to
+match with hardware spec.
+thanks.
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-index 11d3056..6ffe087 100644
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-@@ -30,6 +30,10 @@ Raspberry Pi 2 Model B
- Required root node properties:
- compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
- 
-+Raspberry Pi 3 Model B
-+Required root node properties:
-+compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
-+
- Raspberry Pi Compute Module
- Required root node properties:
- compatible = "raspberrypi,compute-module", "brcm,bcm2835";
--- 
-1.8.3.1
+> 
+> >     - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
+> > +   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
+> >   - reg: physical base address and length of the controller's registers.
+> >   - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+> >     the cell format.
+> > -- 
+> > 1.8.1.1.dirty
+> > 
