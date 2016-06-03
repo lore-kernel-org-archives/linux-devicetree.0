@@ -1,71 +1,198 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: pwm: Drop unneeded pwm_enable() call" to the regulator tree
-Date: Fri, 03 Jun 2016 12:08:47 +0100
-Message-ID: <E1b8my7-0004mI-St@finisterre>
-References: <1464942192-25967-3-git-send-email-boris.brezillon@free-electrons.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 2/2] [media] atmel-isc: DT binding for Image Sensor
+ Controller driver
+Date: Fri, 3 Jun 2016 13:10:09 +0200
+Message-ID: <20160603131009.456dc101@bbrezillon>
+References: <1464677903-28412-1-git-send-email-songjun.wu@atmel.com>
+	<1464677903-28412-3-git-send-email-songjun.wu@atmel.com>
+	<20160602231609.GA24529@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464942192-25967-3-git-send-email-boris.brezillon@free-electrons.com>
+In-Reply-To: <20160602231609.GA24529@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.orgMark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Brian Norris <briannorris@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.co>
+To: Rob Herring <robh@kernel.org>, Songjun Wu <songjun.wu@atmel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com, Kumar Gala <galak@codeaurora.org>, g.liakhovetski@gmx.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Thu, 2 Jun 2016 18:16:09 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-   regulator: pwm: Drop unneeded pwm_enable() call
+> On Tue, May 31, 2016 at 02:58:23PM +0800, Songjun Wu wrote:
+> > DT binding documentation for ISC driver.
+> > 
+> > Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
+> > ---
+> > 
+> > Changes in v3:
+> > - Remove the 'atmel,sensor-preferred'.
+> > - Modify the isc clock node according to the Rob's remarks.
+> > 
+> > Changes in v2:
+> > - Remove the unit address of the endpoint.
+> > - Add the unit address to the clock node.
+> > - Avoid using underscores in node names.
+> > - Drop the "0x" in the unit address of the i2c node.
+> > - Modify the description of 'atmel,sensor-preferred'.
+> > - Add the description for the ISC internal clock.
+> > 
+> >  .../devicetree/bindings/media/atmel-isc.txt        | 88 ++++++++++++++++++++++
+> >  1 file changed, 88 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> > new file mode 100644
+> > index 0000000..2ae1d60
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> > @@ -0,0 +1,88 @@
+> > +Atmel Image Sensor Controller (ISC)
+> > +----------------------------------------------
+> > +
+> > +Required properties for ISC:
+> > +- compatible
+> > +	Must be "atmel,sama5d2-isc"
+> > +- reg
+> > +	Physical base address and length of the registers set for the device;
+> > +- interrupts
+> > +	Should contain IRQ line for the ISI;
+> > +- clocks
+> > +	List of clock specifiers, corresponding to entries in
+> > +	the clock-names property;
+> > +	Please refer to clock-bindings.txt.
+> > +- clock-names
+> > +	Required elements: "hclock", "ispck".
+> > +- pinctrl-names, pinctrl-0
+> > +	Please refer to pinctrl-bindings.txt.
+> > +- isc-ispck
+> > +	The clock for the ISC digital pipeline.
+> > +	- compatible
+> > +		Must be "atmel,sama5d2-isc-ispck".
+> > +	- clock-cells
+> > +		From common clock binding; should be set to 0.
+> > +	- clocks
+> > +		The clock source phandles.
+> > +- isc-mck
+> > +	The clock for the image sensor.
+> > +	- compatible
+> > +		Must be "atmel,sama5d2-isc-mck".
+> > +	- clock-cells
+> > +		From common clock binding; should be set to 0.
+> > +	- clocks
+> > +		The clock source phandles.
+> > +
+> > +ISC supports a single port node with parallel bus. It should contain one
+> > +'port' child node with child 'endpoint' node. Please refer to the bindings
+> > +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +
+> > +Example:
+> > +isc: isc@f0008000 {
+> > +	compatible = "atmel,sama5d2-isc";
+> > +	reg = <0xf0008000 0x4000>;
+> > +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
+> > +	clocks = <&isc_clk>, <&isc_ispck>;
+> > +	clock-names = "hclock", "ispck";
+> > +
+> > +	port {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		isc_0: endpoint {
+> > +			remote-endpoint = <&ov7740_0>;
+> > +			hsync-active = <1>;
+> > +			vsync-active = <0>;
+> > +			pclk-sample = <1>;
+> > +		};
+> > +	};
+> > +
+> > +	isc_ispck: isc-ispck@0 {  
+> 
+> Drop the unit-address. You should only have one if you have a reg 
+> property.
+> 
+> > +		compatible = "atmel,sama5d2-isc-ispck";
+> > +		#clock-cells = <0>;
+> > +		clocks = <&isc_clk>, <&iscck>;
+> > +	};
+> > +
+> > +	isc_mck: isc-mck@1 {  
+> 
+> ditto.
+> 
+> I still think these should be implied by atmel,sama5d2-isc and not in 
+> DT. The fact that you don't have any registers for them pretty much 
+> indicates that. It is also strange that isc-ispck is used by isc. If 
+> that is the only user, there is certainly no need to put it in DT.
 
-has been applied to the regulator tree at
+I had a look at the block diagram, and it seems you are partially right.
+The only clock that is really exported by the ISC is isc_mck (isc_pck is
+not).
+So I'd suggest dropping these clk sub-nodes, putting the #clock-cells,
+and clock-names properties in the isc node, and then referencing the
+isc node in you i2c device.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+isc: isc@f0008000 {
+	compatible = "atmel,sama5d2-isc";
+	reg = <0xf0008000 0x4000>;
+	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
+	clocks = <&isc_clk>, <&isc_ispck>;
+	clock-names = "hclock", "ispck";
+	#clock-cells = <0>;
+	clock-output-names = "isc-mck";
+};
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+i2c1: i2c@fc028000 {
+	/* ... */
+	ov7740: camera@21 {
+		/* ... */
+		clocks = <&isc>;
+		clock-names = "xvclk";
+	}
+};
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+If I'm wrong and the ISC IP is really exposing several clks, you just
+have to change #clock-cells to 1, and use clocks = <&isc X>; in the i2c
+device node.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Rob, Songjun, would you agree on this representation?
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> 
+> 
+> > +		compatible = "atmel,sama5d2-isc-mck";
+> > +		#clock-cells = <0>;
+> > +		clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
+> > +	};
+> > +};
+> > +
+> > +i2c1: i2c@fc028000 {
+> > +	ov7740: camera@21 {
+> > +	compatible = "ovti,ov7740";
+> > +	reg = <0x21>;
+> > +
+> > +	clocks = <&isc_mck>;
+> > +	clock-names = "xvclk";
+> > +	assigned-clocks = <&isc_mck>;
+> > +	assigned-clock-rates = <24000000>;
+> > +
+> > +	port {
+> > +		ov7740_0: endpoint {
+> > +			remote-endpoint = <&isc_0>;
+> > +		};
+> > +	};
+> > +};
+> > -- 
+> > 2.7.4
+> >   
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Thanks,
-Mark
 
->From 830583004e615a4637eacc77866b84908414d7a0 Mon Sep 17 00:00:00 2001
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Date: Fri, 3 Jun 2016 10:23:00 +0200
-Subject: [PATCH] regulator: pwm: Drop unneeded pwm_enable() call
 
-Now that the PWM regulator driver implements the ->enable/disable() hooks
-we can remove the pwm_enable() call from pwm_regulator_set_voltage().
-
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/pwm-regulator.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index fafa3488e960..ab3cc0235843 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -159,11 +159,6 @@ static int pwm_regulator_set_voltage(struct regulator_dev *rdev,
- 		return ret;
- 	}
- 
--	ret = pwm_enable(drvdata->pwm);
--	if (ret) {
--		dev_err(&rdev->dev, "Failed to enable PWM: %d\n", ret);
--		return ret;
--	}
- 	drvdata->volt_uV = min_uV;
- 
- 	/* Delay required by PWM regulator to settle to the new voltage */
 -- 
-2.8.1
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
