@@ -1,46 +1,182 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: am437x-idk-evm: Mark MAC as having only one
- PHY
-Date: Fri, 3 Jun 2016 19:47:23 +0300
-Message-ID: <5751B49B.1000508@ti.com>
-References: <20160527181743.8401-1-afd@ti.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 4/4] regulator: axp20x: Add support for the (external)
+ drivebus regulator
+Date: Fri, 3 Jun 2016 18:59:33 +0200
+Message-ID: <22e0130a-1f95-a177-f2c3-793493707296@redhat.com>
+References: <1464887936-17020-1-git-send-email-hdegoede@redhat.com>
+ <1464887936-17020-4-git-send-email-hdegoede@redhat.com>
+ <CAGb2v67qsJ+U71UJj=HTTbgsQZgK1YEVNhyw5Q6XV+n38NpK0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160527181743.8401-1-afd@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGb2v67qsJ+U71UJj=HTTbgsQZgK1YEVNhyw5Q6XV+n38NpK0Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/2016 09:17 PM, Andrew F. Davis wrote:
-> Currently am4372.dtsi declares the MAC controller to have two
-> slave ports, on this board we only use one, so set the slave
-> count to one. This eliminates a console error message when
-> the non-existent PHY is not detected.
->
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> ---
->   arch/arm/boot/dts/am437x-idk-evm.dts | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/am437x-idk-evm.dts b/arch/arm/boot/dts/am437x-idk-evm.dts
-> index 76dcfc6..12a6951 100644
-> --- a/arch/arm/boot/dts/am437x-idk-evm.dts
-> +++ b/arch/arm/boot/dts/am437x-idk-evm.dts
-> @@ -382,6 +382,7 @@
->   };
->
->   &mac {
-> +	slaves = <1>;
->   	pinctrl-names = "default", "sleep";
->   	pinctrl-0 = <&cpsw_default>;
->   	pinctrl-1 = <&cpsw_sleep>;
->
+Hi,
 
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+On 03-06-16 03:38, Chen-Yu Tsai wrote:
+> Hi,
+>
+> On Fri, Jun 3, 2016 at 1:18 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> The axp20x pmics have 2 power inputs, one called ACIN which is intended
+>> for to be supplied via a powerbarrel on the board and one called VBUS
+>> which is intended to be supplied via an otg connector.
+>>
+>> In the VBUS case the pmic needs to know if the board is supplying power
+>> to the otg connector, because then it should not take any power from
+>> its VBUS pin. The axp209 pmic has a N_VBUSEN input pin via which the
+>> board can signal to the pmic whether the board is supplying power to the
+>> otg connector or not.
+>>
+>> On the axp221/axp223 this pin can alternatively be used as an output
+>> which controls an external regulator which (optionally) supplies
+>> power to the otg connector from the board. When the pin is used as
+>> output it is called DRIVEVBUS in the datasheet.
+>>
+>> This commit adds support for the DRIVEVBUS pin as an extra pmic
+>> controlled regulator. Since this is optional a new x-powers,drivebus dt
+>> property is added. When this is present the misc-control register is
+>> written to change the N_VBUSEN input pin to DRIVEVBUS output pin mode and
+>> the extra drivebus regulator is registered with the regulator subsystem.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> -Rename the dt property to drive-vbus-en
+>> -s/drivebus/drivevbus/
+>> -Add a line describing the drivevbus regulator to the table in
+>>  Documentation/devicetree/bindings/mfd/axp20x.txt
+>> -Set supply_name to drivevbus-supply
+>> ---
+>>  Documentation/devicetree/bindings/mfd/axp20x.txt |  6 +++++
+>>  drivers/regulator/axp20x-regulator.c             | 30 ++++++++++++++++++++++++
+>>  2 files changed, 36 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+>> index d20b103..6aca4fe 100644
+>> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+>> @@ -22,6 +22,11 @@ Optional properties:
+>>                       AXP152/20X: range:  750-1875, Default: 1.5 MHz
+>>                       AXP22X/80X: range: 1800-4050, Default: 3   MHz
+>>
+>> +- x-powers,drive-vbus-en: axp221 / axp223 only boolean, set this when the
+>> +                  N_VBUSEN pin is used as an output pin to control an external
+>> +                  regulator to drive the OTG VBus, rather then as an input pin
+>> +                  which signals whether the board is driving OTG VBus or not.
+>
+> Git complains about space indentation here.
+>
+>> +
+>>  - <input>-supply: a phandle to the regulator supply node. May be omitted if
+>>                   inputs are unregulated, such as using the IPSOUT output
+>>                   from the PMIC.
+>> @@ -79,6 +84,7 @@ ELDO3         : LDO           : eldoin-supply         : shared supply
+>>  LDO_IO0                : LDO           : ips-supply            : GPIO 0
+>>  LDO_IO1                : LDO           : ips-supply            : GPIO 1
+>>  RTC_LDO                : LDO           : ips-supply            : always on
+>> +DRIVEVBUS      : Enable output : drivevbus-supply      : external regulator
+>>
+>>  AXP809 regulators, type, and corresponding input supply names:
+>>
+>> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+>> index 728be64..3f1bba4 100644
+>> --- a/drivers/regulator/axp20x-regulator.c
+>> +++ b/drivers/regulator/axp20x-regulator.c
+>> @@ -36,6 +36,8 @@
+>>
+>>  #define AXP20X_FREQ_DCDC_MASK          0x0f
+>>
+>> +#define AXP22X_MISC_N_VBUSEN_FUNC      BIT(4)
+>> +
+>>  #define AXP_DESC_IO(_family, _id, _match, _supply, _min, _max, _step, _vreg,   \
+>>                     _vmask, _ereg, _emask, _enable_val, _disable_val)           \
+>>         [_family##_##_id] = {                                                   \
+>> @@ -230,6 +232,18 @@ static const struct regulator_desc axp22x_regulators[] = {
+>>         AXP_DESC_FIXED(AXP22X, RTC_LDO, "rtc_ldo", "ips", 3000),
+>>  };
+>>
+>> +static const struct regulator_desc axp22x_drivevbus_regulator = {
+>> +       .name           = "drivevbus",
+>> +       .supply_name    = "drivevbus-supply",
+>
+> The "-supply" suffix is added by the regulator core upon lookup. No need
+> to add it here. I assume the regulator core won't get confused over a
+> supply name that's the same as the regulator requesting it.
+>
+>
+> Otherwise,
+>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
 
--- 
-regards,
--grygorii
+Thanks, I'll send a v3 with both issues fixed.
+
+Regards,
+
+Hans
+
+>
+>> +       .of_match       = of_match_ptr("drivevbus"),
+>> +       .regulators_node = of_match_ptr("regulators"),
+>> +       .type           = REGULATOR_VOLTAGE,
+>> +       .owner          = THIS_MODULE,
+>> +       .enable_reg     = AXP20X_VBUS_IPSOUT_MGMT,
+>> +       .enable_mask    = BIT(2),
+>> +       .ops            = &axp20x_ops_sw,
+>> +};
+>> +
+>>  static const struct regulator_linear_range axp809_dcdc4_ranges[] = {
+>>         REGULATOR_LINEAR_RANGE(600000, 0x0, 0x2f, 20000),
+>>         REGULATOR_LINEAR_RANGE(1800000, 0x30, 0x38, 100000),
+>> @@ -411,6 +425,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>>         u32 workmode;
+>>         const char *dcdc1_name = axp22x_regulators[AXP22X_DCDC1].name;
+>>         const char *dcdc5_name = axp22x_regulators[AXP22X_DCDC5].name;
+>> +       bool drivevbus = false;
+>>
+>>         switch (axp20x->variant) {
+>>         case AXP202_ID:
+>> @@ -422,6 +437,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>>         case AXP223_ID:
+>>                 regulators = axp22x_regulators;
+>>                 nregulators = AXP22X_REG_ID_MAX;
+>> +               drivevbus = of_property_read_bool(pdev->dev.parent->of_node,
+>> +                                                 "x-powers,drive-vbus-en");
+>>                 break;
+>>         case AXP809_ID:
+>>                 regulators = axp809_regulators;
+>> @@ -500,6 +517,19 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>>                                                 &dcdc5_name);
+>>         }
+>>
+>> +       if (drivevbus) {
+>> +               /* Change N_VBUSEN sense pin to DRIVEVBUS output pin */
+>> +               regmap_update_bits(axp20x->regmap, AXP20X_OVER_TMP,
+>> +                                  AXP22X_MISC_N_VBUSEN_FUNC, 0);
+>> +               rdev = devm_regulator_register(&pdev->dev,
+>> +                                              &axp22x_drivevbus_regulator,
+>> +                                              &config);
+>> +               if (IS_ERR(rdev)) {
+>> +                       dev_err(&pdev->dev, "Failed to register drivevbus\n");
+>> +                       return PTR_ERR(rdev);
+>> +               }
+>> +       }
+>> +
+>>         return 0;
+>>  }
+>>
+>> --
+>> 2.7.4
+>>
