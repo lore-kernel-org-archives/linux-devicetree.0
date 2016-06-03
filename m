@@ -1,19 +1,19 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 1/2] clk: renesas: rcar-gen2: document R8A7792 support
-Date: Fri, 03 Jun 2016 23:58:03 +0300
-Message-ID: <4065352.p9EIad1BPG@wasted.cogentembedded.com>
+Subject: [PATCH v2 2/2] clk: renesas: mstp: document R8A7792 support
+Date: Fri, 03 Jun 2016 23:59:07 +0300
+Message-ID: <6111329.VScVCF4Z1u@wasted.cogentembedded.com>
 References: <2432690.FBaBKRolRm@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <2432690.FBaBKRolRm@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: mturquette@baylibre.com, linux-clk@vger.kernel.org, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 Cc: linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Renesas R8A7792 SoC is a member of the R-Car gen2 family and so has CPG...
+Renesas R8A7792 SoC also has the CPG MSTP clocks...
 
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Acked-by: Simon Horman <horms+renesas@verge.net.au>
@@ -22,21 +22,22 @@ Acked-by: Rob Herring <robh@kernel.org>
 
 ---
 Changes in version 2:
-- added Simon's, Geert's, and Rob's ACKs;
+- added Simon's, Geert's and Rob's ACKs;
 - renamed the patch.
 
- Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt |    1 +
+ Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt |    1 +
  1 file changed, 1 insertion(+)
 
-Index: linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+Index: linux/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
 ===================================================================
---- linux.orig/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-+++ linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-@@ -10,6 +10,7 @@ Required Properties:
-   - compatible: Must be one of
-     - "renesas,r8a7790-cpg-clocks" for the r8a7790 CPG
-     - "renesas,r8a7791-cpg-clocks" for the r8a7791 CPG
-+    - "renesas,r8a7792-cpg-clocks" for the r8a7792 CPG
-     - "renesas,r8a7793-cpg-clocks" for the r8a7793 CPG
-     - "renesas,r8a7794-cpg-clocks" for the r8a7794 CPG
-     and "renesas,rcar-gen2-cpg-clocks" as a fallback.
+--- linux.orig/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
++++ linux/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+@@ -17,6 +17,7 @@ Required Properties:
+     - "renesas,r8a7779-mstp-clocks" for R8A7779 (R-Car H1) MSTP gate clocks
+     - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
+     - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2-W) MSTP gate clocks
++    - "renesas,r8a7792-mstp-clocks" for R8A7792 (R-Car V2H) MSTP gate clocks
+     - "renesas,r8a7793-mstp-clocks" for R8A7793 (R-Car M2-N) MSTP gate clocks
+     - "renesas,r8a7794-mstp-clocks" for R8A7794 (R-Car E2) MSTP gate clocks
+     - "renesas,sh73a0-mstp-clocks" for SH73A0 (SH-MobileAG5) MSTP gate clocks
+
