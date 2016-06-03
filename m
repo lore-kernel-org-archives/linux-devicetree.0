@@ -1,57 +1,55 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: Re: [PATCH 1/1] devicetree: sunxi: Add OLinuXino
- Lime2 eMMC to the Makefile
-Date: Fri, 3 Jun 2016 12:26:28 -0700
-Message-ID: <20160603192628.GH3761@localhost>
-References: <1463169436-6170-1-git-send-email-oliver@schinagl.nl>
- <20160516144552.GH27618@lukather>
-Reply-To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/3] of: add common OF-based component functionality
+Date: Fri, 3 Jun 2016 14:52:28 -0500
+Message-ID: <CAL_Jsq+=iUtXXHQRe3kM-zMJUo4iTODEiSMmp7nXHaG2QdxL_Q@mail.gmail.com>
+References: <20160603141548.GC1041@n2100.armlinux.org.uk>
+ <E1b8pyR-0005OJ-V3@rmk-PC.armlinux.org.uk>
+ <CAL_JsqKaRGk6RMdDWUFYH8_J1gp3pcNeuvx-r=JSg7nc6jh_eg@mail.gmail.com>
+ <20160603153630.GE1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDE5PA6ZWADBBC6BY65AKGQEXREQPXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160516144552.GH27618@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160603153630.GE1041@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-mediatek@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 16, 2016 at 04:45:52PM +0200, Maxime Ripard wrote:
-> On Fri, May 13, 2016 at 09:57:16PM +0200, Olliver Schinagl wrote:
-> > commit 27dd9af6bc000ab21fd ("ARM: dts: sunxi: Add a olinuxino-lime2-emmc")
-> > added the new emmc equipped lime2 but forgot its Makefile.
-> > 
-> > This patch adds an entry to the Makefile.
-> > 
-> > Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> 
-> Having the version of the patch would be nice too.
-> 
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> 
-> Arnd, Kevin, Olof, could you apply that patch directly for 4.7?
+On Fri, Jun 3, 2016 at 10:36 AM, Russell King - ARM Linux
+<linux@armlinux.org.uk> wrote:
+> On Fri, Jun 03, 2016 at 10:29:40AM -0500, Rob Herring wrote:
+>> On Fri, Jun 3, 2016 at 9:21 AM, Russell King <rmk+kernel@armlinux.org.uk> wrote:
+>> > Add common OF-based component functionality for matching devices by
+>> > device node, and releasing the device node at the appropraite time.
+>> >
+>> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+>> > ---
+>> >  drivers/of/Makefile          |  2 +-
+>> >  drivers/of/of_component.c    | 41 +++++++++++++++++++++++++++++++++++++++++
+>> >  include/linux/of_component.h | 14 ++++++++++++++
+>>
+>> I'd prefer this to go into drivers/base/component.c. That's the
+>> general direction we've been moving.
+>
+> I'd prefer not to, I don't want to turn the component helpers into
+> something OF specific.  They aren't OF specific.
 
-Applied as fix now, but with the patch subject fixed up (ARM: dts: sunxi: ...).
+Fine, not enough code to argue about...
 
+>> I'd expect this would cause some build failures unless the cases you
+>> converted all depend on CONFIG_OF.
+>
+> Okay, I'll stick with v1 then, and the duplication that v1 involves.
 
--Olof
+Why? You don't want to add empty functions? Seems like good clean-up.
 
-> 
-> Thanks,
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+Rob
