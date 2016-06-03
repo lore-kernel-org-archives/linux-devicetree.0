@@ -1,140 +1,212 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/2] gpio: Remove const from gpiospec in of_xlate
-Date: Fri,  3 Jun 2016 23:26:55 +0300
-Message-ID: <1464985616-11821-2-git-send-email-pantelis.antoniou@konsulko.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH 2/2] gpio: Support cascaded GPIO chip lookup for OF
+Date: Fri,  3 Jun 2016 23:26:56 +0300
+Message-ID: <1464985616-11821-3-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1464985616-11821-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464985616-11821-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464985616-11821-1-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robherring2@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Cascaded GPIO chips modify gpiospec to pass along
-the next gpio chip to match against. Remove the const
-specifier to make it possible.
-Change all in kernel users also.
+In certain cases it makes sense to create cascaded GPIO which
+are not real GPIOs, merely point to the real backend GPIO chip.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In order to support this, cascaded of_xlate lookup need to be
+performed.
+
+For example let's take a connector that we want to abstract
+having two GPIO pins from different GPIO controllers, connector
+pin #0 connected to gpioA controller with offset 10 and gpioB
+with 4.
+
+In pseudo DT form this is analogous to:
+
+	gpioA: gpioa@80000 {
+		compatible = "foocorp,gpio";
+		...
+	};
+
+	gpioB: gpiob@80800 {
+		compatible = "foocorp,gpio";
+		....
+	};
+
+	gpioC: controller_gpio {
+		compatible = "cascaded-gpio";
+		gpios = <&gpioA 10>, <&gpioB 5>;
+	};
+
+For example a user of gpioC (let's take a led driver) will have a
+reference to gpioC like this:
+
+	leds {
+		compatible = "gpio-leds";
+		led@0 {
+			gpios = <&gpioC 0 GPIO_ACTIVE_HIGH>;
+			...
+		};
+		led@1 {
+			gpios = <&gpioC 1 GPIO_ACTIVE_HIGH>;
+			..
+		};
+	};
+
+We want the matches for gpioC to instead refer to gpioA & gpioB.
+
+This is accomplished by a new method of_gpiochip_find() which
+is an extension of the standard gpiochip_find() method.
+
+A cascaded GPIO controller can modify the gpiospec node pointer
+and arg[0] to point to the next GPIO in sequence and return -EAGAIN.
+of_gpiochip_find() will restart the match using the new data
+until either the final real GPIO is found or a maximum iteration
+limit is reached.
+
+In our example the cascaded-gpio driver can have a of_xlate method that
+will point to gpioA/10 for gpioC/0 and gpioB/5 for gpioC/1.
+
+Note that the cascade-gpio driver needs not to define any other member
+methods since no actual reference will ever be made to it.
+
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/gpio/gpio-brcmstb.c | 2 +-
- drivers/gpio/gpio-davinci.c | 2 +-
- drivers/gpio/gpio-etraxfs.c | 2 +-
- drivers/gpio/gpio-lpc32xx.c | 2 +-
- drivers/gpio/gpio-pxa.c     | 2 +-
- drivers/gpio/gpiolib-of.c   | 2 +-
- include/linux/gpio/driver.h | 2 +-
- include/linux/of_gpio.h     | 2 +-
- 8 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/gpio/gpiolib-of.c | 16 ++++----------
+ drivers/gpio/gpiolib.c    | 54 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib.h    | 14 ++++++++++++
+ 3 files changed, 72 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index e648914..29a71d6 100644
---- a/drivers/gpio/gpio-brcmstb.c
-+++ b/drivers/gpio/gpio-brcmstb.c
-@@ -302,7 +302,7 @@ static int brcmstb_gpio_remove(struct platform_device *pdev)
- }
- 
- static int brcmstb_gpio_of_xlate(struct gpio_chip *gc,
--		const struct of_phandle_args *gpiospec, u32 *flags)
-+		struct of_phandle_args *gpiospec, u32 *flags)
- {
- 	struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
- 	struct brcmstb_gpio_bank *bank = gpiochip_get_data(gc);
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index dd262f0..87add80 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -173,7 +173,7 @@ of_err:
- 
- #ifdef CONFIG_OF_GPIO
- static int davinci_gpio_of_xlate(struct gpio_chip *gc,
--			     const struct of_phandle_args *gpiospec,
-+			     struct of_phandle_args *gpiospec,
- 			     u32 *flags)
- {
- 	struct davinci_gpio_controller *chips = dev_get_drvdata(gc->parent);
-diff --git a/drivers/gpio/gpio-etraxfs.c b/drivers/gpio/gpio-etraxfs.c
-index 00b022c..660bffb 100644
---- a/drivers/gpio/gpio-etraxfs.c
-+++ b/drivers/gpio/gpio-etraxfs.c
-@@ -180,7 +180,7 @@ static unsigned int etraxfs_gpio_chip_to_port(struct gpio_chip *gc)
- }
- 
- static int etraxfs_gpio_of_xlate(struct gpio_chip *gc,
--			       const struct of_phandle_args *gpiospec,
-+			       struct of_phandle_args *gpiospec,
- 			       u32 *flags)
- {
- 	/*
-diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
-index fc5f197..3be9169 100644
---- a/drivers/gpio/gpio-lpc32xx.c
-+++ b/drivers/gpio/gpio-lpc32xx.c
-@@ -478,7 +478,7 @@ static struct lpc32xx_gpio_chip lpc32xx_gpiochip[] = {
- };
- 
- static int lpc32xx_of_xlate(struct gpio_chip *gc,
--			    const struct of_phandle_args *gpiospec, u32 *flags)
-+			    struct of_phandle_args *gpiospec, u32 *flags)
- {
- 	/* Is this the correct bank? */
- 	u32 bank = gpiospec->args[0];
-diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-index 76ac906..47e35ab 100644
---- a/drivers/gpio/gpio-pxa.c
-+++ b/drivers/gpio/gpio-pxa.c
-@@ -317,7 +317,7 @@ static void pxa_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- 
- #ifdef CONFIG_OF_GPIO
- static int pxa_gpio_of_xlate(struct gpio_chip *gc,
--			     const struct of_phandle_args *gpiospec,
-+			     struct of_phandle_args *gpiospec,
- 			     u32 *flags)
- {
- 	if (gpiospec->args[0] > pxa_last_gpio)
 diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index d22dcc3..50cb787 100644
+index 50cb787..771060f 100644
 --- a/drivers/gpio/gpiolib-of.c
 +++ b/drivers/gpio/gpiolib-of.c
-@@ -285,7 +285,7 @@ static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
-  * is less than ngpios (that is specified in the gpio_chip).
-  */
- int of_gpio_simple_xlate(struct gpio_chip *gc,
--			 const struct of_phandle_args *gpiospec, u32 *flags)
-+			 struct of_phandle_args *gpiospec, u32 *flags)
+@@ -26,18 +26,10 @@
+ 
+ #include "gpiolib.h"
+ 
+-/* Private data structure for of_gpiochip_find_and_xlate */
+-struct gg_data {
+-	enum of_gpio_flags *flags;
+-	struct of_phandle_args gpiospec;
+-
+-	struct gpio_desc *out_gpio;
+-};
+-
+ /* Private function for resolving node pointer to gpio_chip */
+-static int of_gpiochip_find_and_xlate(struct gpio_chip *gc, void *data)
++static int of_gpiochip_find_and_xlate(struct gpio_chip *gc,
++		struct gg_data *gg_data)
  {
- 	/*
- 	 * We're discouraging gpio_cells < 2, since that way you'll have to
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 50882e0..793297c 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -201,7 +201,7 @@ struct gpio_chip {
- 	struct device_node *of_node;
- 	int of_gpio_n_cells;
- 	int (*of_xlate)(struct gpio_chip *gc,
--			const struct of_phandle_args *gpiospec, u32 *flags);
-+			struct of_phandle_args *gpiospec, u32 *flags);
- #endif
- };
+-	struct gg_data *gg_data = data;
+ 	int ret;
  
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index 092186c..bdeb4b1 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -64,7 +64,7 @@ extern void of_mm_gpiochip_remove(struct of_mm_gpio_chip *mm_gc);
- extern int of_gpiochip_add(struct gpio_chip *gc);
- extern void of_gpiochip_remove(struct gpio_chip *gc);
- extern int of_gpio_simple_xlate(struct gpio_chip *gc,
--				const struct of_phandle_args *gpiospec,
-+				struct of_phandle_args *gpiospec,
- 				u32 *flags);
+ 	if ((gc->of_node != gg_data->gpiospec.np) ||
+@@ -95,7 +87,7 @@ struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
+ 		return ERR_PTR(ret);
+ 	}
  
- #else /* CONFIG_OF_GPIO */
+-	gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
++	of_gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
+ 
+ 	of_node_put(gg_data.gpiospec.np);
+ 	pr_debug("%s: parsed '%s' property of node '%s[%d]' - status (%d)\n",
+@@ -166,7 +158,7 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
+ 			return ERR_PTR(ret);
+ 	}
+ 
+-	gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
++	of_gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
+ 	if (!gg_data.out_gpio) {
+ 		if (np->parent == np)
+ 			return ERR_PTR(-ENXIO);
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 24f60d2..e719499 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -884,6 +884,60 @@ struct gpio_chip *gpiochip_find(void *data,
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_find);
+ 
++#ifdef CONFIG_OF_GPIO
++
++/* allow a maximum of 10 GPIO cascades (should be enough) */
++#define OF_GPIOCHIP_RETRY_COUNT_MAX	10
++
++/**
++ * of_gpiochip_find() - iterator for locating a specific gpio_chip
++ * @gg_data: data to pass to match function
++ * @callback: Callback function to check gpio_chip
++ *
++ * Similar to bus_find_device.  It returns a reference to a gpio_chip as
++ * determined by a user supplied @match callback.  The callback should return
++ * 0 if the device doesn't match and non-zero if it does.  If the callback is
++ * non-zero, this function will return to the caller and not iterate over any
++ * more gpio_chips.
++ */
++struct gpio_chip *of_gpiochip_find(struct gg_data *gg_data,
++		int (*match)(struct gpio_chip *chip, struct gg_data *gg_data))
++{
++	struct gpio_device *gdev;
++	struct gpio_chip *chip;
++	unsigned long flags;
++	int i;
++
++	spin_lock_irqsave(&gpio_lock, flags);
++	/* always start with defer */
++	gg_data->out_gpio = ERR_PTR(-EPROBE_DEFER);
++	for (i = 0; gg_data->out_gpio == ERR_PTR(-EPROBE_DEFER) &&
++			i < OF_GPIOCHIP_RETRY_COUNT_MAX; i++) {
++
++		list_for_each_entry(gdev, &gpio_devices, list) {
++			if (match(gdev->chip, gg_data))
++				break;
++			/* again? cascaded; try agan */
++			if (gg_data->out_gpio == ERR_PTR(-EAGAIN)) {
++				/* defer is the default again */
++				gg_data->out_gpio = ERR_PTR(-EPROBE_DEFER);
++				break;
++			}
++		}
++	}
++
++	/* no match or maximum retry limit? */
++	if (&gdev->list == &gpio_devices || i >= OF_GPIOCHIP_RETRY_COUNT_MAX)
++		chip = NULL;
++	else
++		chip = gdev->chip;
++	spin_unlock_irqrestore(&gpio_lock, flags);
++
++	return chip;
++}
++EXPORT_SYMBOL_GPL(of_gpiochip_find);
++#endif
++
+ static int gpiochip_match_name(struct gpio_chip *chip, void *data)
+ {
+ 	const char *name = data;
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 2d9ea5e..58cbf75 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -236,4 +236,18 @@ static inline void gpiochip_sysfs_unregister(struct gpio_device *gdev)
+ 
+ #endif /* CONFIG_GPIO_SYSFS */
+ 
++#ifdef CONFIG_OF_GPIO
++
++/* Private data structure for of_gpiochip_find_and_xlate */
++struct gg_data {
++	enum of_gpio_flags *flags;
++	struct of_phandle_args gpiospec;
++	struct gpio_desc *out_gpio;
++};
++
++extern struct gpio_chip *of_gpiochip_find(struct gg_data *gg_data,
++		int (*match)(struct gpio_chip *chip, struct gg_data *gg_data));
++
++#endif
++
+ #endif /* GPIOLIB_H */
 -- 
 1.7.12
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
