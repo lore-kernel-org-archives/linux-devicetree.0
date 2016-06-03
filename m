@@ -1,97 +1,35 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: [PATCH v3 4/7] dt:mdio-mux: Add mdio multiplexer driver node
-Date: Fri,  3 Jun 2016 20:56:05 +0530
-Message-ID: <1464967568-27562-5-git-send-email-pramod.kumar@broadcom.com>
-References: <1464967568-27562-1-git-send-email-pramod.kumar@broadcom.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] of: add common OF-based component functionality
+Date: Fri, 3 Jun 2016 10:29:40 -0500
+Message-ID: <CAL_JsqKaRGk6RMdDWUFYH8_J1gp3pcNeuvx-r=JSg7nc6jh_eg@mail.gmail.com>
+References: <20160603141548.GC1041@n2100.armlinux.org.uk> <E1b8pyR-0005OJ-V3@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1464967568-27562-1-git-send-email-pramod.kumar@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1b8pyR-0005OJ-V3-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add integrated MDIO multiplexer driver node which contains
-two mux PCIe bus and one ethernet bus along with phys
-lying on these bus.
+On Fri, Jun 3, 2016 at 9:21 AM, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> Add common OF-based component functionality for matching devices by
+> device node, and releasing the device node at the appropraite time.
+>
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> ---
+>  drivers/of/Makefile          |  2 +-
+>  drivers/of/of_component.c    | 41 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_component.h | 14 ++++++++++++++
 
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
----
- arch/arm64/boot/dts/broadcom/ns2-svk.dts | 12 ++++++++++++
- arch/arm64/boot/dts/broadcom/ns2.dtsi    | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
+I'd prefer this to go into drivers/base/component.c. That's the
+general direction we've been moving.
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-index ce0ab84..8f6a6cc 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-@@ -87,3 +87,15 @@
- 		#size-cells = <1>;
- 	};
- };
-+
-+&mdio_mux_iproc {
-+	mdio@10 {
-+		reg = <0x10>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		gphy0: eth-phy@10 {
-+			reg = <0x10>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index 6f81c9d..1bf4bb6 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -330,6 +330,37 @@
- 			      <0x65260000 0x1000>;
- 		};
- 
-+		mdio_mux_iproc: mdio-mux@6602023c {
-+			compatible = "brcm,mdio-mux-iproc";
-+			reg = <0x6602023c 0x14>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			mdio@0 {
-+				reg = <0x0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				pci_phy0: pci-phy@0 {
-+					compatible = "brcm,ns2-pcie-phy";
-+					reg = <0x0>;
-+					#phy-cells = <0>;
-+				};
-+			};
-+
-+			mdio@7 {
-+				reg = <0x7>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				pci_phy1: pci-phy@0 {
-+					compatible = "brcm,ns2-pcie-phy";
-+					reg = <0x0>;
-+					#phy-cells = <0>;
-+				};
-+			};
-+		};
-+
- 		timer0: timer@66030000 {
- 			compatible = "arm,sp804", "arm,primecell";
- 			reg = <0x66030000 0x1000>;
--- 
-1.9.1
+I'd expect this would cause some build failures unless the cases you
+converted all depend on CONFIG_OF.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
