@@ -1,37 +1,86 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of: irq: fix of_irq_get[_byname]() kernel-doc
-Date: Fri, 3 Jun 2016 07:08:10 -0500
-Message-ID: <20160603120810.GA8472@rob-hp-laptop>
-References: <4469041.XrtPizO4V9@wasted.cogentembedded.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver for
+ TI INA3221
+Date: Fri, 3 Jun 2016 13:09:16 +0100
+Message-ID: <c12d7b59-3013-91fc-5414-5583bdb7d962@kernel.org>
+References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com>
+ <1464784454-7988-2-git-send-email-ldewangan@nvidia.com>
+ <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org>
+ <57516980.1040907@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4469041.XrtPizO4V9@wasted.cogentembedded.com>
+In-Reply-To: <57516980.1040907@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: grant.likely@linaro.org, devicetree@vger.kernel.org, frowand.list@gmail.com, linux-kernel@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 28, 2016 at 11:02:50PM +0300, Sergei Shtylyov wrote:
-> The kernel-doc for the of_irq_get[_byname]()  is clearly inadequate in
-> describing the return values -- of_irq_get_byname() is documented better
-> than of_irq_get() but it  still doesn't mention that 0 is returned iff
-> irq_create_of_mapping() fails (it doesn't return an error code in this
-> case). Document all possible return value variants, making the writing
-> of the word "IRQ" consistent, while at it...
+On 03/06/16 12:26, Laxman Dewangan wrote:
 > 
-> Fixes: 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
-> Fixes: ad69674e73a1 ("of/irq: do irq resolution in platform_get_irq_byname()")
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> CC: stable@vger.kernel.org
+> On Friday 03 June 2016 03:36 PM, Jonathan Cameron wrote:
+>> On 01/06/16 13:34, Laxman Dewangan wrote:
+>>> Add support for INA3221 SW driver via IIO ADC interface. The device is
+>>> register as iio-device and provides interface for voltage/current and power
+>>> monitor. Also provide interface for setting oneshot/continuous mode and
+>>> critical/warning threshold for the shunt voltage drop.
+>>>
+>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>> Hi Laxman,
+>>
+>> As ever with any driver lying on the border of IIO and hwmon, please include
+>> a short justification of why you need an IIO driver and also cc the
+>> hwmon list + maintainers. (cc'd on this reply).
+>>
+>> I simply won't take a driver where the hwmon maintainers aren't happy.
+>> As it stands I'm not seeing obvious reasons in the code for why this
+>> should be an IIO device.
 > 
-> ---
-> The patch is against Linus' 'linux.git' repo (Grant Likely's repo is outdated).
-> 
->  drivers/of/irq.c |   19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
+> I thought that all ADC or monitors are going to be part of IIO device
+> framework. I saw the ina2xx which is same (single channel) which was
+> my reference point.
 
-Applied, thanks.
+That had a rather specific use case IIRC - they needed the buffered support
+to get the data fast enough.
+> 
+>> Funily enough I know this datasheet a little as was evaluating
+>> it for use on some boards at the day job a week or so ago.
+>>
+>> Various comments inline. Major points are:
+>> * Don't use 'fake' channels to control events. If the events infrastructure
+>> doesn't handle your events, then fix that rather than working around it.
+>> * There is a lot of ABI in here concerned with oneshot vs continuous.
+>> This seems to me to be more than it should be. We wouldn't expect to
+>> see stuff changing as a result of switching between these modes other
+>> than wrt to when the data shows up.  So I'd expect to not see this
+>> directly exposed at all - but rather sit in oneshot unless either:
+>> 1) Buffered mode is running (not currently supported)
+>> 2) Alerts are on - which I think requires it to be in continuous mode.
+>>
+>> Other question to my mind is whether we should be reporting vshunt or
+>> (using device tree to pass resistance) current.
+> 
 
-Rob
+> This is bus and shunt voltage device for power monitoring. In our
+> platforms, we use this device for bus current and so power monitor.
+> 
+> We have two usecases, one is one shot, read when it needs it. And
+> other continuous when we have multiple core running then continuous
+> mode to get the power consumption by rail.
+That's fine, but continuous should be using the buffered interfaces
+really as that's there explicitly to support groups of channels
+captured using a sequencer.
+
+Then the abi ends up much more standard which is nice. Also allows
+for high speed ish continuous monitoring which is what the was
+I think the point of the single channel driver.
+
+> 
+> Yaah, alert is used only on continuous mode and mainly used for
+> throttling when rail power goes beyond some limit.
+Of interesting in Linux, or routed directly to hardware?
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
