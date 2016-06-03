@@ -1,55 +1,101 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
-Date: Fri, 3 Jun 2016 20:46:08 +0530
-Message-ID: <CAKfKVtHfGXvXeOC-vsVaRNtttO+nyG40sAxqaswXEbsEOUotbA@mail.gmail.com>
-References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
- <CAKfKVtF1hOn9QwiqtjqqPYtUz5PscTBs4kBC1zRH6FY-4vVoUA@mail.gmail.com> <C89496FEAE474D468F30D558A9468D9F26CEF0EF@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver for
+ TI INA3221
+Date: Fri, 3 Jun 2016 10:17:55 -0500
+Message-ID: <57519FA3.9010208@ti.com>
+References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com>
+ <1464784454-7988-2-git-send-email-ldewangan@nvidia.com>
+ <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org> <5751863E.907@roeck-us.net>
+ <575190A9.2090906@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C89496FEAE474D468F30D558A9468D9F26CEF0EF-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Radhey Shyam Pandey <radheys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <575190A9.2090906@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 31, 2016 at 10:45 AM, Nava kishore Manne
-<nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi Shubhrajyoti,
->
->
->         Thanks for the review...
->
->> >  /**
->> > + * xudc_write64 - write 64bit value to device registers
->> > + * @ep: pointer to the usb device endpoint structure.
->> > + * @offset: register offset
->> > + * @val: data to be written
->> > + **/
->> > +static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val) {
->> > +       struct xusb_udc *udc = ep->udc;
->> > +
->> > +       udc->write_fn(udc->addr, offset, lower_32_bits(val));
->> > +       udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val));
+On 06/03/2016 09:14 AM, Laxman Dewangan wrote:
+> 
+> On Friday 03 June 2016 06:59 PM, Guenter Roeck wrote:
+>> On 06/03/2016 03:06 AM, Jonathan Cameron wrote:
+>>> On 01/06/16 13:34, Laxman Dewangan wrote:
+>>>> The INA3221 is a three-channel, high-side current and bus voltage
+>>>> monitor
+>>>> with an I2C interface from Texas Instruments. The INA3221 monitors both
+>>>> shunt voltage drops and bus supply voltages in addition to having
+>>>> programmable conversion times and averaging modes for these signals.
+>>>> The INA3221 offers both critical and warning alerts to detect multiple
+>>>> programmable out-of-range conditions for each channel.
+>>>>
+>>>> Add support for INA3221 SW driver via IIO ADC interface. The device is
+>>>> register as iio-device and provides interface for voltage/current
+>>>> and power
+>>>> monitor. Also provide interface for setting oneshot/continuous mode and
+>>>> critical/warning threshold for the shunt voltage drop.
+>>>>
+>>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>>> Hi Laxman,
+>>>
+>>> As ever with any driver lying on the border of IIO and hwmon, please
+>>> include
+>>> a short justification of why you need an IIO driver and also cc the
+>>> hwmon list + maintainers. (cc'd on this reply).
+>>>
+>>> I simply won't take a driver where the hwmon maintainers aren't happy.
+>>> As it stands I'm not seeing obvious reasons in the code for why this
+>>> should be an IIO device.
+>>>
 >>
->> can we move this to a single 64 bit write?
->
-> Initially I sent the patches with writeq() ,lo_hi_writeq()  later we decided to replace with write_fun().
-> The reason for this is lo_hi_writeq() always assumes a little-endian register, so it's broken if anyone builds this device with big-endian registers.
-> So replaced the 64bit calls with write_fun() as suggested by Arnd Bergmann. Hope it clears your query.
-> Please refer to the below thread
->
->         http://lkml.iu.edu/hypermail/linux/kernel/1604.2/02046.html
+>> Me not either.
+>>
+>> I have a hwmon driver for the same chip pending from Andrew Davis (TI)
+>> which I am just about to accept. We had directed Andrew back in April
+>> to write a hwmon driver for the chip, which he did.
+>>
+> 
+> Thanks Guenter,  I found the series
+> 
+> [PATCH v2 0/2] Add support for INA3221 Triple Current/Voltage Monitors
+> Looks fine to me. I can use the hwmon.
+> 
 
-missed that discurssion.
+If you search even further back you can see I originally went with an
+IIO driver as well, comparing the IIO and hwmon version for the simple
+use cases I needed the hwmod version turned out much simpler, so it was
+probably the right framework for now.
 
-thanks
->
->
-> Regards,
-> Navakishore.
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> However, some of the stuff from my patch are not there which I will add
+> later once original patch applied:
+> - Dynamic mode changes for continuous and one-shot from sysfs.
+> - In one shot, when try to read voltage data, do conversion and then read.
+> 
+
+My attempt is rather minimal, to be honest I like your stab at this
+driver better in some ways, especially relating to DT putting each
+channel in its own node with labels, I think this is a bit more clean
+and will be more extendable if/when new multi-channel monitor chips are
+made.
+
+> Not sure whether exporting the following will help or not. Can you
+> please confirm?
+> - Oversampling time i.e. average sample
+> - conversion time for bus voltage and shunt voltage if default is not
+> suited for system.
+> 
+> 
+
+These can always be added as needed, but the DT changes are not as easy.
+I would like it if this got in this cycle but if you think something
+will be needed to help your improvements, that can not be added
+incrementally, it would probably be best to get them into the initial DT
+binding doc now.
+
+Thanks,
+Andrew
+
+> 
+> 
