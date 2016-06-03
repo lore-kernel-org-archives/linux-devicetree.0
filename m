@@ -1,40 +1,47 @@
 From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] arm64: dts: drop "arm, amba-bus" in favor of "simple-bus"
- part 2
-Date: Fri, 3 Jun 2016 12:13:40 -0700
-Message-ID: <20160603191340.GA3761@localhost>
-References: <1464574353-31477-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 0/2] ARM: dts: sun6i: Drop constraints on dc1sw regulator
+Date: Fri, 3 Jun 2016 12:30:36 -0700
+Message-ID: <20160603193036.GK3761@localhost>
+References: <1462944194-6920-1-git-send-email-wens@csie.org>
+ <20160511124344.GO3733@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464574353-31477-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Chanho Min <chanho.min@lge.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20160511124344.GO3733@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 30, 2016 at 11:12:33AM +0900, Masahiro Yamada wrote:
-> Tree-wide replacement was done by commit 2ef7d5f342c1 (ARM, ARM64:
-> dts: drop "arm,amba-bus" in favor of "simple-bus"), but we have some
-> new users of "arm,amba-bus" at Linux 4.7-rc1.  Eliminate them now.
+On Wed, May 11, 2016 at 02:43:44PM +0200, Maxime Ripard wrote:
+> On Wed, May 11, 2016 at 01:23:12PM +0800, Chen-Yu Tsai wrote:
+> > Hi Arnd, Olof,
+> > 
+> > Here are 2 last minute fixes for 4.6. The 2 patches drop constaints on
+> > the dc1sw regulator for 2 A31s tablets. I checked with Maxime and he said
+> > to send them directly to you.
+> > 
+> > The issue was first brought up and fixed for A23/A33 Q8 tablets in commit
+> > dcf5341f0150 ("ARM: dts: sun8i-q8-common: Do not set constraints on dc1sw
+> > regulator"). It was brought up again yesterday on IRC, and I realized that
+> > 2 sun6i A31s tablet DTS files also had this setting. The setting causes
+> > PMIC regulator registration to fail, and since among other things, mmc
+> > depends on the regulators, the system will likely hang.
+> > 
+> > There seems to be a fix for this queued up for 4.7: commit 45389c47526d
+> > ("regulator: core: Add early supply resolution for regulators") in the
+> > regulator "supply" topic branch. So we should be able to revert these
+> > fixes in 4.7.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 > 
-> In order to not leave these compatible strings for the release,
-> is it OK to apply this patch for Linux 4.7 ?
+> For the two patches.
+> 
 
-Thanks, applied to fixes.
+Looks like these weren't applied. I've applied them to fixes now and cc:d
+stable for 4.6.
+
 
 
 -Olof
