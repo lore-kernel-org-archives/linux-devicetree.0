@@ -1,80 +1,50 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [RFC 3/3] dts: beaglebone: Portable connector BB_RELAY_4PORT definition
-Date: Fri,  3 Jun 2016 23:37:53 +0300
-Message-ID: <1464986273-12039-4-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1464986273-12039-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464986273-12039-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <stephen.boyd@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 09/14] regulator: pwm: Adjust PWM config at probe time
+Date: Fri, 3 Jun 2016 13:41:04 -0700
+Message-ID: <20160603204104.GG124478@google.com>
+References: <1464942192-25967-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1464942192-25967-10-git-send-email-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1464942192-25967-10-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Example of a portable connector port for the BB_RELAY_4PORT cape
+On Fri, Jun 03, 2016 at 10:23:07AM +0200, Boris Brezillon wrote:
+> The PWM attached to a PWM regulator device might have been previously
+> configured by the bootloader.
+> Make sure the bootloader and linux config are in sync, and adjust the PWM
+> config if that's not the case.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> ---
+>  drivers/regulator/pwm-regulator.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
+> index ab3cc02..524b43f 100644
+> --- a/drivers/regulator/pwm-regulator.c
+> +++ b/drivers/regulator/pwm-regulator.c
+> @@ -285,11 +285,9 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	/*
+> -	 * FIXME: pwm_apply_args() should be removed when switching to the
+> -	 * atomic PWM API.
+> -	 */
+> -	pwm_apply_args(drvdata->pwm);
+> +	ret = pwm_adjust_config(drvdata->pwm);
+> +	if (ret)
+> +		return ret;
+>  
+>  	regulator = devm_regulator_register(&pdev->dev,
+>  					    &drvdata->desc, &config);
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- arch/arm/boot/dts/am335x-bone-common.dtsi | 48 +++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 0e73ab6..06f2191 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -2045,6 +2045,54 @@
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+
-+			BB_RELAY_4PORT {
-+				compatible = "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				gpio_relay_4port: gpio_relay_4port@0 {
-+					compatible = "dtcon-gpio";
-+					status = "okay";
-+
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+
-+					pin-list = <9 15>,	/* #0 P9.15 */
-+						   <9 23>,	/* #1 P9.23 */
-+						   <9 12>,	/* #2 P9.12 */
-+						   <9 27>;	/* #3 P9.27 */
-+				};
-+
-+				leds@0 {
-+					compatible = "gpio-leds";
-+					status = "okay";
-+
-+					jp@1 {
-+						label = "relay-jp1";
-+						gpios = <&gpio_relay_4port 0 GPIO_ACTIVE_HIGH>;
-+						default-state = "keep";
-+					};
-+
-+					jp@2 {
-+						label = "relay-jp2";
-+						gpios = <&gpio_relay_4port 1 GPIO_ACTIVE_HIGH>;
-+						default-state = "keep";
-+					};
-+
-+					jp@3 {
-+						label = "relay-jp3";
-+						gpios = <&gpio_relay_4port 2 GPIO_ACTIVE_HIGH>;
-+						default-state = "keep";
-+					};
-+
-+					jp@4 {
-+						label = "relay-jp4";
-+						gpios = <&gpio_relay_4port 3 GPIO_ACTIVE_HIGH>;
-+						default-state = "keep";
-+					};
-+				};
-+			};
- 		};
- 	};
- };
--- 
-1.7.12
+Acked-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Brian Norris <briannorris@chromium.org>
