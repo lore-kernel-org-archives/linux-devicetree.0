@@ -1,66 +1,63 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH v2 1/2] usb: ohci-at91: Forcibly suspend ports while USB
- suspend
-Date: Fri, 3 Jun 2016 09:22:42 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A24364101650B1491@penmbx01>
-References: <1464755400-6825-1-git-send-email-wenyou.yang@atmel.com>
- <1464755400-6825-2-git-send-email-wenyou.yang@atmel.com>
- <20160603015409.GA18051@rob-hp-laptop>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] documentation: Add secure monitor binding
+ documentation
+Date: Fri, 3 Jun 2016 11:25:17 +0200
+Message-ID: <20160603092517.GA18149@mephisto>
+References: <1464520323-19531-1-git-send-email-carlo@caione.org>
+ <1464520323-19531-3-git-send-email-carlo@caione.org>
+ <20160602171422.GA17166@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160603015409.GA18051@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160602171422.GA17166@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRv
-OnJvYmhAa2VybmVsLm9yZ10NCj4gU2VudDogMjAxNsTqNtTCM8jVIDk6NTQNCj4gVG86IFlhbmcs
-IFdlbnlvdSA8V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzogQWxhbiBTdGVybiA8c3Rlcm5A
-cm93bGFuZC5oYXJ2YXJkLmVkdT47IEdyZWcgS3JvYWgtSGFydG1hbg0KPiA8Z3JlZ2toQGxpbnV4
-Zm91bmRhdGlvbi5vcmc+OyBGZXJyZSwgTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+
-Ow0KPiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIEJyb3duIDxicm9vbmll
-QGtlcm5lbC5vcmc+OyBJYW4NCj4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3Jn
-LnVrPjsgS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+Ow0KPiBBbGV4YW5kcmUgQmVs
-bG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29tPjsgbGludXgtDQo+IGtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
-cm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC11c2JAdmdlci5rZXJuZWwu
-b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSB1c2I6IG9oY2ktYXQ5MTogRm9yY2li
-bHkgc3VzcGVuZCBwb3J0cyB3aGlsZSBVU0INCj4gc3VzcGVuZA0KPiANCj4gT24gV2VkLCBKdW4g
-MDEsIDIwMTYgYXQgMTI6Mjk6NTlQTSArMDgwMCwgV2VueW91IFlhbmcgd3JvdGU6DQo+ID4gSW4g
-b3JkZXIgdG8gdGhlIHNhdmUgcG93ZXIgY29uc3VtcHRpb24sIGFzIGEgd29ya2Fyb3VuZCwgc3Vz
-cGVuZA0KPiA+IGZvcmNpYmx5IHRoZSBVU0IgUE9SVEEvQi9DIHZpYSBzZXQgdGhlIFNVU1BFTkRf
-QS9CL0MgYml0cyBvZiBPSENJDQo+ID4gSW50ZXJydXB0IENvbmZpZ3VyYXRpb24gUmVnaXN0ZXIg
-aW4gdGhlIFNGUnMgd2hpbGUgT0hDSSBVU0Igc3VzcGVuZC4NCj4gPg0KPiA+IFRoaXMgc3VzcGVu
-ZCBvcGVyYXRpb24gbXVzdCBiZSBkb25lIGJlZm9yZSB0aGUgVVNCIGNsb2NrIGlzIGRpc2FibGVk
-LA0KPiA+IHJlc3VtZSBhZnRlciB0aGUgVVNCIGNsb2NrIGlzIGVuYWJsZWQuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPg0KPiA+IC0t
-LQ0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiAgLSBBZGQgY29tcGF0aWJsZSB0byBzdXBw
-b3J0IGZvcmNpYmx5IHN1c3BlbmQgdGhlIHBvcnRzLg0KPiA+ICAtIEFkZCBzb2MvYXQ5MS9hdDkx
-X3Nmci5oIHRvIGFjY29tbW9kYXRlIHRoZSBkZWZpbmVzLg0KPiA+ICAtIEFkZCBlcnJvciBjaGVj
-a2luZyBmb3IgLnNmcl9yZWdtYXAuDQo+ID4gIC0gUmVtb3ZlIHVubmVjZXNzYXJ5IHJlZ21hcF9y
-ZWFkKCkgc3RhdGVtZW50Lg0KPiA+DQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9h
-dG1lbC11c2IudHh0ICAgICAgICAgIHwgIDUgKy0NCj4gPiAgZHJpdmVycy91c2IvaG9zdC9vaGNp
-LWF0OTEuYyAgICAgICAgICAgICAgICAgICAgICAgfCA4MCArKysrKysrKysrKysrKysrKysrKyst
-DQo+ID4gIGluY2x1ZGUvc29jL2F0OTEvYXQ5MV9zZnIuaCAgICAgICAgICAgICAgICAgICAgICAg
-IHwgMjkgKysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMTEgaW5zZXJ0aW9ucygrKSwg
-MyBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4gMTAwNjQ0IGluY2x1ZGUvc29jL2F0OTEv
-YXQ5MV9zZnIuaA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy91c2IvYXRtZWwtdXNiLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3VzYi9hdG1lbC11c2IudHh0DQo+ID4gaW5kZXggNTg4M2I3My4uM2UzZTU4
-YSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNi
-L2F0bWVsLXVzYi50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdXNiL2F0bWVsLXVzYi50eHQNCj4gPiBAQCAtMyw4ICszLDkgQEAgQXRtZWwgU09DIFVTQiBj
-b250cm9sbGVycyAgT0hDSQ0KPiA+DQo+ID4gIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gLSAt
-IGNvbXBhdGlibGU6IFNob3VsZCBiZSAiYXRtZWwsYXQ5MXJtOTIwMC1vaGNpIiBmb3IgVVNCIGNv
-bnRyb2xsZXJzDQo+ID4gLSAgIHVzZWQgaW4gaG9zdCBtb2RlLg0KPiA+ICsgLSBjb21wYXRpYmxl
-OiBTaG91bGQgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmcNCj4gPiArCSAgICAgICAiYXRtZWwsYXQ5
-MXJtOTIwMC1vaGNpIiBmb3IgVVNCIGNvbnRyb2xsZXJzIHVzZWQgaW4gaG9zdCBtb2RlLg0KPiA+
-ICsJICAgICAgICJhdG1lbCxzYW1hNWQyLW9oY2kiIGZvciBTQU1BNUQyIHdoaWNoIGNhbiBmb3Jj
-ZSB0byBzdXNwZW5kLg0KPiANCj4gVGhhdCBtYXkgYmUgd2h5IHlvdSBuZWVkIHRoaXMgbm93LCBi
-dXQgdGhhdCBpcyBpcnJlbGV2YW50IHRvIGhhdmluZyBhIGNoaXAgc3BlY2lmaWMNCj4gY29tcGF0
-aWJsZSBzdHJpbmcuDQoNCk1heWJlIGEgcHJvcGVydHkgaXMgYmV0dGVyLg0KDQoNCkJlc3QgUmVn
-YXJkcywNCldlbnlvdSBZYW5nDQo=
+On 02/06/16 12:14, Rob Herring wrote:
+> On Sun, May 29, 2016 at 01:12:02PM +0200, Carlo Caione wrote:
+> > From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add the binding documentation for the Amlogic secure monitor driver.
+> > 
+> > Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../bindings/firmware/meson/meson_sm.txt           | 33 ++++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+> > new file mode 100644
+> > index 0000000..6f0b5bc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+> > @@ -0,0 +1,33 @@
+> > +* Amlogic Secure Monitor
+> > +
+> > +In the Amlogic SoCs the Secure Monitor code is used to provide access to the
+> > +NVMEM, enable JTAG, set USB boot, etc...
+> > +
+> > +Required properties for the secure monitor node:
+> > +- compatible: Should be "amlogic,meson-gxbb-sm"
+> > +
+> > +Example:
+> > +
+> > +	firmware {
+> > +		compatible = "simple-bus";
+> 
+> Drop this. Sorry, but no abusing simple-bus to get automagic creation of 
+> your platform device.
+
+Sounds reasonable. I can hook this up to some *_initcall. What about
+introducing a new FIRMWARE_OF_DECLARE() ?
+
+Cheers,
+
+-- 
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
