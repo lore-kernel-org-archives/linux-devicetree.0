@@ -1,43 +1,108 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v2 7/9] ARM: bcm2835: Add devicetree for the Raspberry Pi
- 3.
-Date: Fri, 3 Jun 2016 11:04:43 +0200
-Message-ID: <18208c0b-d33b-49f2-8f7e-5418954c283b@i2se.com>
-References: <1464934708-24769-1-git-send-email-kraxel@redhat.com>
- <1464934708-24769-8-git-send-email-kraxel@redhat.com>
+From: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Subject: Re: [PATCH V5 0/6] Introduce framework for SLIMbus device drivers
+Date: Fri, 3 Jun 2016 18:14:19 +0900
+Message-ID: <20160603181419.f7e6fbb02a294d3161ab54d6@linaro.org>
+References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464934708-24769-8-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sagar Dharia <sdharia@codeaurora.org>
+Cc: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, broonie@kernel.org, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Sagar,
 
-Am 03.06.2016 um 08:18 schrieb Gerd Hoffmann:
-> From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->
-> While this devicetree also works for booting in 32-bit mode, it's
-> placed in arm64 since it's a 64-bit CPU (as suggested by Arnd).
+On Wed, 27 Apr 2016 17:58:03 -0600
+Sagar Dharia <sdharia@codeaurora.org> wrote:
 
-i'm currently working on a patch series to fix dtc warnings like
+> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
+> developed by MIPI (Mobile Industry Processor Interface) alliance.
+> SLIMbus is a 2-wire implementation, which is used to communicate with
+> peripheral components like audio-codec.
+> SLIMbus uses Time-Division-Multiplexing to accommodate multiple data
+> channels, and control channel. Control channel has messages to do
+> device-enumeration, messages to send/receive control-data to/from
+> slimbus devices, messages for port/channel management, and messages to
+> do bandwidth allocation.
+> Framework is introduced to support  multiple instances of the bus
+> (1 controller per bus), and multiple slave devices per controller.
+> SPI and I2C frameworks, and comments from last time when I submitted
+> the patches were referred-to while working on this framework.
+> 
+> These patchsets introduce device-management, OF helpers, and messaging
+> APIs, controller driver for Qualcomm's slimbus controller, and
+> clock-pause feature for entering/exiting low-power mode for SLIMbus.
+> Framework patches to do channel, port and bandwidth
+> management are work-in-progress and will be sent out once these
+> initial patches are accepted.
 
-Warning (unit_address_vs_reg): Node /memory has a reg or ranges
-property, but no unit name
+I'm interested in this framework, especially the channel and port
+parts since it is needed for device drivers on the slimbus.
+Would you have any public git repository where I can review the
+work-in-progress part of the framework?
 
-This a copy of affected parts ( look at memory, soc and local_intc node ).
+Thank you,
 
-So how should this be handled?
+> 
+> These patchsets were tested on Qualcomm Snapdragon processor board
+> using the controller driver, and a test slave device.
+> 
+> Changes from V4 to V5:
+> * Addressed inline-code review comments from Mark Brown and Rob Herring.
+> * Comments to document usage of workqueue while sending device-up/down
+>   notifications to slave drivers.
+> * Introduced module_slimbus_driver macro for ease of registering and
+>   de-registering slimbus client driver.
+> * Modified framework and controller remove functionality and tested
+>   bind/unbind for slimbus controller and slimbus device drivers.
+> * Modified Device Tree compatible string to follow format from other
+>   discoverable buses, and clarified documentation about when node
+>   definition and compatible fields should be used.
+> * Clock-pause initiated by the framework when controller is being
+>   removed to make sure there are no ongoing transfers.
+> 
+> Sagar Dharia (6):
+>   SLIMbus: Device management on SLIMbus
+>   of/slimbus: OF helper for SLIMbus
+>   slimbus: Add messaging APIs to slimbus framework
+>   slim: qcom: Add Qualcomm Slimbus controller driver
+>   slimbus: Add support for 'clock-pause' feature
+>   slim: qcom: Add runtime-pm support using clock-pause feature
+> 
+>  Documentation/devicetree/bindings/slimbus/bus.txt  |  55 ++
+>  .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt |  45 ++
+>  Documentation/slimbus/summary                      | 109 +++
+>  drivers/Kconfig                                    |   2 +
+>  drivers/Makefile                                   |   1 +
+>  drivers/slimbus/Kconfig                            |  20 +
+>  drivers/slimbus/Makefile                           |   5 +
+>  drivers/slimbus/slim-core.c                        | 806 +++++++++++++++++++++
+>  drivers/slimbus/slim-messaging.c                   | 433 +++++++++++
+>  drivers/slimbus/slim-qcom-ctrl.c                   | 683 +++++++++++++++++
+>  drivers/slimbus/slim-qcom.h                        |  64 ++
+>  drivers/slimbus/slim-sched.c                       | 126 ++++
+>  include/linux/mod_devicetable.h                    |  13 +
+>  include/linux/slimbus.h                            | 685 +++++++++++++++++
+>  14 files changed, 3047 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
+>  create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+>  create mode 100644 Documentation/slimbus/summary
+>  create mode 100644 drivers/slimbus/Kconfig
+>  create mode 100644 drivers/slimbus/Makefile
+>  create mode 100644 drivers/slimbus/slim-core.c
+>  create mode 100644 drivers/slimbus/slim-messaging.c
+>  create mode 100644 drivers/slimbus/slim-qcom-ctrl.c
+>  create mode 100644 drivers/slimbus/slim-qcom.h
+>  create mode 100644 drivers/slimbus/slim-sched.c
+>  create mode 100644 include/linux/slimbus.h
+> 
+> -- 
+> 1.8.2.1
+> 
 
-a) fix the issues here
-b) extend my patch series after this patch has been applied
 
-Stefan
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Masami Hiramatsu <masami.hiramatsu@linaro.org>
