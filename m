@@ -1,53 +1,66 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: RE: [PATCH v2 7/7] phy: Add Northstar2 PCI Phy support
-Date: Fri, 3 Jun 2016 16:53:51 +0530
-Message-ID: <a8b5b6ef2c80b534eca1812caeacde57@mail.gmail.com>
-References: <1464701801-17243-1-git-send-email-pramod.kumar@broadcom.com>
- <1464701801-17243-8-git-send-email-pramod.kumar@broadcom.com> <20160601131228.GF31982@lunn.ch>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver
+ for TI INA3221
+Date: Fri, 3 Jun 2016 16:56:56 +0530
+Message-ID: <57516980.1040907@nvidia.com>
+References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com> <1464784454-7988-2-git-send-email-ldewangan@nvidia.com> <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160601131228.GF31982@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <44e28639-67b6-7586-5e6d-c0180ccded79-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
 
-> -----Original Message-----
-> From: Andrew Lunn [mailto:andrew@lunn.ch]
-> Sent: 01 June 2016 18:42
-> To: Pramod Kumar
-> Cc: Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala;
-Catalin
-> Marinas; Will Deacon; Kishon Vijay Abraham I; David S. Miller;
-> devicetree@vger.kernel.org; Jon Mason; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; bcm-kernel-feedback-list@broadcom.com;
-linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH v2 7/7] phy: Add Northstar2 PCI Phy support
+On Friday 03 June 2016 03:36 PM, Jonathan Cameron wrote:
+> On 01/06/16 13:34, Laxman Dewangan wrote:
+>> Add support for INA3221 SW driver via IIO ADC interface. The device is
+>> register as iio-device and provides interface for voltage/current and power
+>> monitor. Also provide interface for setting oneshot/continuous mode and
+>> critical/warning threshold for the shunt voltage drop.
+>>
+>> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Hi Laxman,
 >
-> > +static int ns2_pci_phy_probe(struct mdio_device *mdiodev) {
-> > +	struct device *dev = &mdiodev->dev;
-> > +	struct phy_provider *provider;
-> > +	struct ns2_pci_phy *p;
-> > +	struct phy *phy;
-> > +
-> > +	phy = devm_phy_create(dev, dev->of_node, &ns2_pci_phy_ops);
-> > +	if (IS_ERR_OR_NULL(phy)) {
-> > +		dev_err(dev, "failed to create Phy\n");
-> > +		return PTR_ERR(phy);
-> > +	}
+> As ever with any driver lying on the border of IIO and hwmon, please include
+> a short justification of why you need an IIO driver and also cc the
+> hwmon list + maintainers. (cc'd on this reply).
 >
-> https://www.mail-archive.com/linux-omap@vger.kernel.org/msg78030.html
+> I simply won't take a driver where the hwmon maintainers aren't happy.
+> As it stands I'm not seeing obvious reasons in the code for why this
+> should be an IIO device.
+
+I thought that all ADC or monitors are going to be part of IIO device 
+framework. I saw the ina2xx which is same (single channel) which was my 
+reference point.
+
+
+> Funily enough I know this datasheet a little as was evaluating
+> it for use on some boards at the day job a week or so ago.
 >
+> Various comments inline. Major points are:
+> * Don't use 'fake' channels to control events. If the events infrastructure
+> doesn't handle your events, then fix that rather than working around it.
+> * There is a lot of ABI in here concerned with oneshot vs continuous.
+> This seems to me to be more than it should be. We wouldn't expect to
+> see stuff changing as a result of switching between these modes other
+> than wrt to when the data shows up.  So I'd expect to not see this
+> directly exposed at all - but rather sit in oneshot unless either:
+> 1) Buffered mode is running (not currently supported)
+> 2) Alerts are on - which I think requires it to be in continuous mode.
+>
+> Other question to my mind is whether we should be reporting vshunt or
+> (using device tree to pass resistance) current.
 
-I've explored inside this API and see it never returning NULL. I'll
-replace IS_ERR_OR_NULL to IS_ERR.
-Thanks for pointing this out.
+This is bus and shunt voltage  device for power monitoring. In our 
+platforms, we use this device for bus current and so  power monitor.
 
-> 	Andrew
+We have two usecases, one is one shot, read when it needs it. And other 
+continuous when we have multiple core running then continuous mode to 
+get the power consumption by rail.
 
-Regards,
-Pramod
+Yaah, alert is used only on continuous mode and mainly used for 
+throttling when rail power goes beyond some limit.
