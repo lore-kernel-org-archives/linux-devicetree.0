@@ -1,72 +1,79 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 11/11] ARM: dts: blanche: add Ethernet support
-Date: Sat, 04 Jun 2016 00:37:37 +0300
-Message-ID: <3446158.3RAgrIF8O1@wasted.cogentembedded.com>
-References: <3446154.oZ24315zaL@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <3446154.oZ24315zaL@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Andy Gross <andy.gross@linaro.org>
+Subject: [Patch v6 00/10] Qualcomm SCM Rework
+Date: Fri,  3 Jun 2016 18:25:20 -0500
+Message-ID: <1464996330-16952-1-git-send-email-andy.gross@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-R8A7792  SoC  doesn't have the EtherMAC core, so SMSC  LAN89218  Ethernet
-chip was used instead on the Blanche board; this chip  is compatible with
-SMSC LAN9115  for  which there's a (device tree aware) driver. Describe
-the  chip in  the  Blanche device tree;  enable DHCP and NFS root in the
-kernel command line for the kernel booting.
+The following set of patches does a bit of rework on the existing
+Qualcomm SCM firmware.  The first couple of patches deals with turning
+the current SCM into a platform driver.  The next couple are cleanups
+that make adding the 64 support a little easier.  I added in a patch to
+convert the scm-32 to use DMA streaming APIs.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+I took Kumar's 64 bit support patch and modified it to use the arm_smccc
+calls.  This simplified things quite a bit.
 
----
-Changes in version 2:
-- added Simon's ACK.
+Lastly, there are a few DT patches to add the firmware node for a couple of the
+supported platforms.
 
- arch/arm/boot/dts/r8a7792-blanche.dts |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+Changes from v5:
+  * Added SCM DT nodes for APQ8064 and MSM8974
+  * Make core clk optional in probe
+  * Update commit messages to describe some of the changes in more detail
+  * Put back some of the SCM64 helper functions
+  * Fix other miscellaneous review comments
 
-Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
-+++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-@@ -21,7 +21,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "ignore_loglevel";
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-@@ -29,6 +29,27 @@
- 		device_type = "memory";
- 		reg = <0 0x40000000 0 0x40000000>;
- 	};
-+
-+	d3_3v: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "D3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	ethernet@18000000 {
-+		compatible = "smsc,lan89218", "smsc,lan9115";
-+		reg = <0 0x18000000 0 0x100>;
-+		phy-mode = "mii";
-+		interrupt-parent = <&irqc>;
-+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+		smsc,irq-push-pull;
-+		reg-io-width = <4>;
-+		vddvario-supply = <&d3_3v>;
-+		vdd33a-supply = <&d3_3v>;
-+	};
- };
- 
- &extal_clk {
+Changes from v4:
+  * Fix Documentation error
+  * Fix misc review comments
+
+Changes from v3:
+  * Added compatibles for the specific platforms requiring one clock.
+  * All other platforms will use the generic binding that requires 3 clocks.
+
+Changes from v2:
+  * Added use of streaming DMA APIs for scm-32.
+  * Changed DT binding to simplify compats.
+  * Removed Kconfig.platform change that selected QCOM_SCM for ARM64
+  * Fixed misc comments
+  * Changed init function to populate the device differently.
+  * Fixed missing of_node_put
+
+Changes from v1:
+  * Changed binding to reflect proper firmware node usage
+  * Added arch_initcall to populate the firmware device, if present
+  * Fixed various review comments
+  * Removed extraneous includes from SCM 64 file.
+
+Andy Gross (9):
+  dt/bindings: firmware: Add Qualcomm SCM binding
+  firmware: qcom: scm: Convert SCM to platform driver
+  firmware: qcom: scm: Use atomic SCM for cold boot
+  firmware: qcom: scm: Generalize shared error map
+  firmware: qcom: scm: Convert to streaming DMA APIS
+  dts: qcom: apq8084: Add SCM firmware node
+  arm64: dts: msm8916: Add SCM firmware node
+  dts: qcom: msm8974: Add SCM firmware node
+  dts: qcom: apq8064: Add SCM firmware node
+
+Kumar Gala (1):
+  firmware: qcom: scm: Add support for ARM64 SoCs
+
+ .../devicetree/bindings/firmware/qcom,scm.txt      |  28 +++
+ arch/arm/boot/dts/qcom-apq8064.dtsi                |   6 +
+ arch/arm/boot/dts/qcom-apq8084.dtsi                |   8 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |   8 +
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |   8 +
+ drivers/firmware/qcom_scm-32.c                     | 225 +++++++++------------
+ drivers/firmware/qcom_scm-64.c                     | 202 +++++++++++++++++-
+ drivers/firmware/qcom_scm.c                        | 180 ++++++++++++++++-
+ drivers/firmware/qcom_scm.h                        |  31 ++-
+ 9 files changed, 543 insertions(+), 153 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+
+-- 
+1.9.1
