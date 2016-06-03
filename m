@@ -1,101 +1,71 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver for
- TI INA3221
-Date: Fri, 3 Jun 2016 10:17:55 -0500
-Message-ID: <57519FA3.9010208@ti.com>
-References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com>
- <1464784454-7988-2-git-send-email-ldewangan@nvidia.com>
- <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org> <5751863E.907@roeck-us.net>
- <575190A9.2090906@nvidia.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [v1 PATCH 3/4] Documentation: bindings: add dt documentation for cdn
+ DP controller
+Date: Fri,  3 Jun 2016 23:15:10 +0800
+Message-ID: <1464966911-18949-4-git-send-email-zyw@rock-chips.com>
+References: <1464966911-18949-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <575190A9.2090906@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1464966911-18949-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2016 09:14 AM, Laxman Dewangan wrote:
-> 
-> On Friday 03 June 2016 06:59 PM, Guenter Roeck wrote:
->> On 06/03/2016 03:06 AM, Jonathan Cameron wrote:
->>> On 01/06/16 13:34, Laxman Dewangan wrote:
->>>> The INA3221 is a three-channel, high-side current and bus voltage
->>>> monitor
->>>> with an I2C interface from Texas Instruments. The INA3221 monitors both
->>>> shunt voltage drops and bus supply voltages in addition to having
->>>> programmable conversion times and averaging modes for these signals.
->>>> The INA3221 offers both critical and warning alerts to detect multiple
->>>> programmable out-of-range conditions for each channel.
->>>>
->>>> Add support for INA3221 SW driver via IIO ADC interface. The device is
->>>> register as iio-device and provides interface for voltage/current
->>>> and power
->>>> monitor. Also provide interface for setting oneshot/continuous mode and
->>>> critical/warning threshold for the shunt voltage drop.
->>>>
->>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->>> Hi Laxman,
->>>
->>> As ever with any driver lying on the border of IIO and hwmon, please
->>> include
->>> a short justification of why you need an IIO driver and also cc the
->>> hwmon list + maintainers. (cc'd on this reply).
->>>
->>> I simply won't take a driver where the hwmon maintainers aren't happy.
->>> As it stands I'm not seeing obvious reasons in the code for why this
->>> should be an IIO device.
->>>
->>
->> Me not either.
->>
->> I have a hwmon driver for the same chip pending from Andrew Davis (TI)
->> which I am just about to accept. We had directed Andrew back in April
->> to write a hwmon driver for the chip, which he did.
->>
-> 
-> Thanks Guenter,  I found the series
-> 
-> [PATCH v2 0/2] Add support for INA3221 Triple Current/Voltage Monitors
-> Looks fine to me. I can use the hwmon.
-> 
-
-If you search even further back you can see I originally went with an
-IIO driver as well, comparing the IIO and hwmon version for the simple
-use cases I needed the hwmod version turned out much simpler, so it was
-probably the right framework for now.
-
-> 
-> However, some of the stuff from my patch are not there which I will add
-> later once original patch applied:
-> - Dynamic mode changes for continuous and one-shot from sysfs.
-> - In one shot, when try to read voltage data, do conversion and then read.
-> 
-
-My attempt is rather minimal, to be honest I like your stab at this
-driver better in some ways, especially relating to DT putting each
-channel in its own node with labels, I think this is a bit more clean
-and will be more extendable if/when new multi-channel monitor chips are
-made.
-
-> Not sure whether exporting the following will help or not. Can you
-> please confirm?
-> - Oversampling time i.e. average sample
-> - conversion time for bus voltage and shunt voltage if default is not
-> suited for system.
-> 
-> 
-
-These can always be added as needed, but the DT changes are not as easy.
-I would like it if this got in this cycle but if you think something
-will be needed to help your improvements, that can not be added
-incrementally, it would probably be best to get them into the initial DT
-binding doc now.
-
-Thanks,
-Andrew
-
-> 
-> 
+VGhpcyBwYXRjaCBhZGRzIGEgYmluZGluZyB0aGF0IGRlc2NyaWJlcyB0aGUgY2RuIERQIGNvbnRy
+b2xsZXIgZm9yCnJrMzM5OS4KClNpZ25lZC1vZmYtYnk6IENocmlzIFpob25nIDx6eXdAcm9jay1j
+aGlwcy5jb20+CgotLS0KCkNoYW5nZXMgaW4gdjE6Ci0gYWRkIGV4dGNvbiBub2RlIGRlc2NyaXB0
+aW9uCi0gYWRkICNzb3VuZC1kYWktY2VsbHMgZGVzY3JpcHRpb24KCiAuLi4vYmluZGluZ3MvZGlz
+cGxheS9yb2NrY2hpcC9jZG4tZHAtcm9ja2NoaXAudHh0ICB8IDYyICsrKysrKysrKysrKysrKysr
+KysrKysKIDEgZmlsZSBjaGFuZ2VkLCA2MiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvY2Ru
+LWRwLXJvY2tjaGlwLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9jZG4tZHAtcm9ja2NoaXAu
+dHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjRhNjZmYzMKLS0tIC9kZXYv
+bnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2Nr
+Y2hpcC9jZG4tZHAtcm9ja2NoaXAudHh0CkBAIC0wLDAgKzEsNjIgQEAKK1JvY2tjaGlwIFJLMzM5
+OSBzcGVjaWZpYyBleHRlbnNpb25zIHRvIHRoZSBjZG4gRGlzcGxheSBQb3J0Cis9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRp
+YmxlOiBtdXN0IGJlICJyb2NrY2hpcCxjZG4tZHAiCisKKy0gcmVnOiBwaHlzaWNhbCBiYXNlIGFk
+ZHJlc3Mgb2YgdGhlIGNvbnRyb2xsZXIgYW5kIGxlbmd0aAorCistIGNsb2NrczogZnJvbSBjb21t
+b24gY2xvY2sgYmluZGluZzogaGFuZGxlIHRvIGRwIGNsb2NrLgorCistIGNsb2NrLW5hbWVzOiBm
+cm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nOgorCSAgICAgICBSZXF1aXJlZCBlbGVtZW50czogImNv
+cmVfY2xrIiAicGNsayIgInNwZGlmIgorCistIHJvY2tjaGlwLGdyZjogdGhpcyBzb2Mgc2hvdWxk
+IHNldCBHUkYgcmVncywgc28gbmVlZCBnZXQgZ3JmIGhlcmUuCisKKy0gcG9ydHM6IGNvbnRhaW4g
+YSBwb3J0IG5vZGVzIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMgYXMgZGVmaW5lZCBpbgorCSBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50
+eHQuCisJIGNvbnRhaW5lZCAyIGVuZHBvaW50cywgY29ubmVjdGluZyB0byB0aGUgb3V0cHV0IG9m
+IHZvcC4KKworLSBwaHlzOiBmcm9tIGdlbmVyYWwgUEhZIGJpbmRpbmc6IHRoZSBwaGFuZGxlIGZv
+ciB0aGUgUEhZIGRldmljZS4KKworLSBleHRjb246IGV4dGNvbiBzcGVjaWZpZXIgZm9yIHRoZSBQ
+b3dlciBEZWxpdmVyeQorCistICNzb3VuZC1kYWktY2VsbHMgPSBpdCBtdXN0IGJlIDEgaWYgeW91
+ciBzeXN0ZW0gaXMgdXNpbmcgMiBEQUlzOiBJMlMsIFNQRElGCisKKy0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0KKworRXhhbXBsZToKKwljZG5fZHA6IGRwQGZlYzAwMDAwIHsKKwkJY29tcGF0aWJsZSA9
+ICJyb2NrY2hpcCxjZG4tZHAiOworCQlyZWcgPSA8MHgwIDB4ZmVjMDAwMDAgMHgwIDB4MTAwMDAw
+PjsKKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDkgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCWNs
+b2NrcyA9IDwmY3J1IFNDTEtfRFBfQ09SRT4sIDwmY3J1IFBDTEtfRFBfQ1RSTD4sCisJCQkgPCZj
+cnUgU0NMS19TUERJRl9SRUNfRFBUWD47CisJCWNsb2NrLW5hbWVzID0gImNvcmVfY2xrIiwgInBj
+bGsiLCAic3BkaWYiOworCQlwaHlzID0gPCZ0Y3BoeTA+OworCQlleHRjb24gPSA8JmZ1c2IxPjsK
+KwkJcm9ja2NoaXAsZ3JmID0gPCZncmY+OworCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJI3Np
+emUtY2VsbHMgPSA8MD47CisJCSNzb3VuZC1kYWktY2VsbHMgPSA8MT47CisKKwkJcG9ydHMgewor
+CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwkJCXJlZyA9
+IDwxPjsKKworCQkJZHBfaW46IHBvcnQgeworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJ
+CSNzaXplLWNlbGxzID0gPDA+OworCQkJCWRwX2luX3ZvcGI6IGVuZHBvaW50QDAgeworCQkJCQly
+ZWcgPSA8MD47CisJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdm9wYl9vdXRfZHA+OworCQkJCX07
+CisKKwkJCQlkcF9pbl92b3BsOiBlbmRwb2ludEAxIHsKKwkJCQkJcmVnID0gPDE+OworCQkJCQly
+ZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGxfb3V0X2RwPjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwl9
+OwotLSAKMi42LjMKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
