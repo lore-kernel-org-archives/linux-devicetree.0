@@ -1,180 +1,157 @@
-From: Raashid Muhammed <raashidmuhammed@zilogic.com>
-Subject: [PATCH v3 2/2] ARM: at91: Add DT support for Olimex SAM9-L9260 board.
-Date: Fri,  3 Jun 2016 11:45:39 +0530
-Message-ID: <1464934539-4737-2-git-send-email-raashidmuhammed@zilogic.com>
-References: <1464934539-4737-1-git-send-email-raashidmuhammed@zilogic.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH v2 8/9] ARM: bcm2835: dt: Add the ethernet to the device trees
+Date: Fri,  3 Jun 2016 08:18:27 +0200
+Message-ID: <1464934708-24769-9-git-send-email-kraxel@redhat.com>
+References: <1464934708-24769-1-git-send-email-kraxel@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464934539-4737-1-git-send-email-raashidmuhammed@zilogic.com>
+In-Reply-To: <1464934708-24769-1-git-send-email-kraxel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, plagnioj@jcrosoft.com, vijaykumar@bravegnu.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Raashid Muhammed <raashidmuhammed@zilogic.com>
+To: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Raashid Muhammed <raashidmuhammed@zilogic.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-sam9-l9260 is a low cost board designed by Olimex.
+The hub and the ethernet in its port 1 are hardwired on the board.
 
-More information is available at:
-https://www.olimex.com/Products/ARM/Atmel/SAM9-L9260/
+Compared to the adapters that can be plugged into the USB ports, this
+one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
+has the MAC address for this adapter in its ROM, accessible from its
+firmware.
 
-Signed-off-by: Raashid Muhammed <raashidmuhammed@zilogic.com>
-Reviewed-by: Vijay Kumar B. <vijaykumar@bravegnu.org>
-Acked-by: Rob Herring <robh@kernel.org>
+U-Boot can read out the address and set the local-mac-address property of the
+node with "ethernet" alias. Let's add the node so that U-Boot can do its
+business.
+
+Model B rev2 and Model B+ entries were verified by me, the hierarchy and
+pid/vid pair for the Version 2 was provided by Peter Chen. Original
+Model B is a blind shot, though very likely correct.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Stephen Warren <swarren@wwwdotorg.org>
 ---
- Documentation/devicetree/bindings/arm/olimex.txt |   8 +-
- arch/arm/boot/dts/Makefile                       |   1 +
- arch/arm/boot/dts/at91-sam9_l9260.dts            | 115 +++++++++++++++++++++++
- 3 files changed, 122 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91-sam9_l9260.dts
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts         |  1 +
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts       |  1 +
+ arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/bcm283x.dtsi              |  2 ++
+ 7 files changed, 44 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/olimex.txt b/Documentation/devicetree/bindings/arm/olimex.txt
-index 007fb5c..d726aec 100644
---- a/Documentation/devicetree/bindings/arm/olimex.txt
-+++ b/Documentation/devicetree/bindings/arm/olimex.txt
-@@ -1,5 +1,9 @@
--Olimex i.MX Platforms Device Tree Bindings
--------------------------------------------
-+Olimex Device Tree Bindings
-+---------------------------
-+
-+SAM9-L9260 Board
-+Required root node properties:
-+    - compatible = "olimex,sam9-l9260", "atmel,at91sam9260";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index 57d313b..d5fdb8e 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
  
- i.MX23 Olinuxino Low Cost Board
- Required root node properties:
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0f89d87..d27f09d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -19,6 +19,7 @@ dtb-$(CONFIG_SOC_SAM_V4_V5) += \
- 	usb_a9260.dtb \
- 	at91sam9261ek.dtb \
- 	at91sam9263ek.dtb \
-+	at91-sam9_l9260.dtb \
- 	tny_a9263.dtb \
- 	usb_a9263.dtb \
- 	at91-foxg20.dtb \
-diff --git a/arch/arm/boot/dts/at91-sam9_l9260.dts b/arch/arm/boot/dts/at91-sam9_l9260.dts
+ / {
+ 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index cf2774e..bfc4bd9 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index 8b15f9c..0371bb7 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index c4743f4..29e1cfe 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2836.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
 new file mode 100644
-index 0000000..349a461
+index 0000000..12c981e
 --- /dev/null
-+++ b/arch/arm/boot/dts/at91-sam9_l9260.dts
-@@ -0,0 +1,115 @@
-+/*
-+ * at91-sam9_l9260.dts - Device Tree file for Olimex SAM9-L9260 board
-+ *
-+ *  Copyright (C) 2016 Raashid Muhammed <raashidmuhammed@zilogic.com>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+/dts-v1/;
-+#include "at91sam9260.dtsi"
-+
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+@@ -0,0 +1,19 @@
 +/ {
-+	model = "Olimex sam9-l9260";
-+	compatible = "olimex,sam9-l9260", "atmel,at91sam9260", "atmel,at91sam9";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0x20000000 0x4000000>;
-+	};
-+
-+	clocks {
-+		slow_xtal {
-+			clock-frequency = <32768>;
-+		};
-+
-+		main_xtal {
-+			clock-frequency = <18432000>;
-+		};
-+	};
-+
-+	ahb {
-+		apb {
-+			mmc0: mmc@fffa8000 {
-+				pinctrl-0 = <
-+					&pinctrl_board_mmc0
-+					&pinctrl_mmc0_clk
-+					&pinctrl_mmc0_slot1_cmd_dat0
-+					&pinctrl_mmc0_slot1_dat1_3>;
-+				status = "okay";
-+
-+				slot@1 {
-+					reg = <1>;
-+					bus-width = <4>;
-+					cd-gpios = <&pioC 8 GPIO_ACTIVE_HIGH>;
-+					wp-gpios = <&pioC 4 GPIO_ACTIVE_HIGH>;
-+				};
-+			};
-+
-+			macb0: ethernet@fffc4000 {
-+				phy-mode = "mii";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "okay";
-+
-+				ethernet-phy@1 {
-+					reg = <0x1>;
-+				};
-+			};
-+
-+			spi0: spi@fffc8000 {
-+				cs-gpios = <&pioC 11 0>, <0>, <0>, <0>;
-+				status = "okay";
-+
-+				flash@0 {
-+					compatible = "atmel,at45", "atmel,dataflash";
-+					spi-max-frequency = <15000000>;
-+					reg = <0>;
-+				};
-+			};
-+
-+			dbgu: serial@fffff200 {
-+				status = "okay";
-+			};
-+
-+			pinctrl@fffff400 {
-+				mmc0 {
-+					pinctrl_board_mmc0: mmc0-board {
-+						atmel,pins =
-+							<AT91_PIOC 8 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH	/* CD pin */
-+							 AT91_PIOC 4 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;	/* WP pin */
-+					};
-+				};
-+			};
-+		};
-+
-+		nand0: nand@40000000 {
-+			nand-bus-width = <8>;
-+			nand-ecc-mode = "soft";
-+			nand-on-flash-bbt = <1>;
-+			status = "okay";
-+		};
-+
-+		usb0: ohci@500000 {
-+			status = "okay";
-+		};
-+
-+	};
-+
-+	i2c@0 {
-+		status = "okay";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		b0 {
-+			label = "b0";
-+			gpios = <&pioA 6 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
++	aliases {
++		ethernet = &ethernet;
 +	};
 +};
++
++&usb {
++	usb1@1 {
++		compatible = "usb424,9512";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+new file mode 100644
+index 0000000..3f0a56e
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+@@ -0,0 +1,19 @@
++/ {
++	aliases {
++		ethernet = &ethernet;
++	};
++};
++
++&usb {
++	usb1@1 {
++		compatible = "usb424,9514";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 10b27b9..b982522 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -287,6 +287,8 @@
+ 			compatible = "brcm,bcm2835-usb";
+ 			reg = <0x7e980000 0x10000>;
+ 			interrupts = <1 9>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 		};
+ 
+ 		v3d: v3d@7ec00000 {
 -- 
-2.1.4
+1.8.3.1
