@@ -1,50 +1,73 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH] dt documentation: etnaviv: add devicetree bindings
-Date: Fri, 3 Jun 2016 16:20:12 +0100
-Message-ID: <20160603152012.GD1041@n2100.armlinux.org.uk>
-References: <E1b8qYp-0005n7-9D@rmk-PC.armlinux.org.uk>
- <1464966119.32235.3.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1464966119.32235.3.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Subject: [PATCH v3 0/7] Add MDIO bus multiplexer support for iProc SoCs
+Date: Fri,  3 Jun 2016 20:56:01 +0530
+Message-ID: <1464967568-27562-1-git-send-email-pramod.kumar@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2016 at 05:01:59PM +0200, Lucas Stach wrote:
-> Am Freitag, den 03.06.2016, 15:58 +0100 schrieb Russell King:
-> > From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > 
-> > Etnaviv follows the same priciple as imx-drm to have a virtual
-> > master device node to bind all the individual GPU cores together
-> > into one DRM device.
-> > 
-> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> > ---
-> > This was supposed to be merged along with Etnaviv, but for whatever
-> > reason, Etnaviv was merged without this patch.  Can someone please
-> > merge this?  I won't be re-sending this as I'm deleting it from my
-> > tree.
-> > 
-> NACK
-> 
-> The etnaviv bindings are mainline. They just moved location to
-> Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt,
-> following the reorganization done by Rob Herring.
+Broadcom iProc based SoCs use a MDIO bus multiplexer where child buses
+could be internal as well external to SoCs. These buses could supports
+MDIO transaction compatible to C-22/C-45.
 
-It would be good if you could've kept the other Etnaviv maintainers
-informed of such changes.  It wasn't obvious that such a change had
-been made when etnaviv was merged.
+Broadcom MDIO bus mulitplexer is an integrated multiplexer where child bus
+selection and mdio transaction logic lies inside multiplexer itself.
+To accommodate this multiplexer in existing mux framework below changes
+were required-
+
+1. Passed MDIO parent bus via mdio_mux_init to MDIO mux framework.
+
+This patch set includes MDIO bus multiplexer driver along with above
+framework change. It includes one external bus node having Ethernet PHY
+attached and two internal bus node holding PCIe PHYs.
+
+This patch series is based on v4.6.0-rc1 and is available from github-
+repo: https://github.com/Broadcom/arm64-linux.git
+branch:mdio-mux-v3
+
+Changes from v2:
+-Addressed Rob's comments in this patch regarding typo/grammers.
+-Addressed David's comments regarding local variables order.
+-Removed property "mdio-integrated-mux" and used mdiobus_register()
+in place of of_mdiobus_regsiter().
+-removed usage of IS_ERR_OR_NULL to IS_ERR in PCIe PHY driver.
+
+Changes from v1:
+- stop using "brcm,is_c45" from bus node as suggested by Andrew. MDIO
+PHY driver will logically OR MII_ADDR_C45 into the address when issues
+any C45 MDIO read/write transaction.
+
+Pramod Kumar (7):
+  mdio:mux: Enhanced MDIO mux framework for integrated multiplexers
+  binding: Make "mdio-parent-bus" property from mandatory to optional
+  binding: mdio-mux: Add DT binding doc for Broadcom MDIO bus mutiplexer
+  dt:mdio-mux: Add mdio multiplexer driver node
+  net:mdio-mux: Add MDIO mux driver for iProc SoCs
+  Binding:PHY: Binding doc for NS2 PCIe PHYs.
+  phy: Add Northstar2 PCI Phy support
+
+ .../bindings/net/brcm,mdio-mux-iproc.txt           |  59 +++++
+ Documentation/devicetree/bindings/net/mdio-mux.txt |   3 +-
+ .../bindings/phy/brcm,mdio-mux-bus-pci.txt         |  27 +++
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |  12 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  31 +++
+ drivers/net/phy/Kconfig                            |  11 +
+ drivers/net/phy/Makefile                           |   1 +
+ drivers/net/phy/mdio-mux-bcm-iproc.c               | 246 +++++++++++++++++++++
+ drivers/net/phy/mdio-mux-gpio.c                    |   2 +-
+ drivers/net/phy/mdio-mux-mmioreg.c                 |   2 +-
+ drivers/net/phy/mdio-mux.c                         |  28 ++-
+ drivers/phy/Kconfig                                |   8 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-ns2-pcie.c                     | 115 ++++++++++
+ include/linux/mdio-mux.h                           |   4 +-
+ 15 files changed, 536 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
+ create mode 100644 drivers/net/phy/mdio-mux-bcm-iproc.c
+ create mode 100644 drivers/phy/phy-bcm-ns2-pcie.c
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
