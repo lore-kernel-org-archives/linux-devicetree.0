@@ -1,171 +1,67 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 2/4] phy-sun4i-usb: Add support for peripheral-only mode
-Date: Fri,  3 Jun 2016 16:05:09 +0200
-Message-ID: <1464962711-5871-2-git-send-email-hdegoede@redhat.com>
-References: <1464962711-5871-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464962711-5871-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: Re: [PATCH v3] ASoC: rockchip: Add machine driver for
+	MAX98357A/RT5514/DA7219
+Date: Fri, 03 Jun 2016 22:16:12 +0800
+Message-ID: <5751912C.6080904@rock-chips.com>
+References: <1464267742-15312-1-git-send-email-zhengxing@rock-chips.com>
+ <20160601144542.GA3835@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160601144542.GA3835@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, dianders@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_usb_get_dr_mode_by_phy() function to get the dr_mode
-from the musb controller node instead of assuming that having an id_det
-gpio means otg mode, and not having one means host mode.
-
-Implement peripheral-only mode by adding a sun4i_usb_phy0_get_id_det
-helper which looks at the dr_mode, always registering our extcon and
-always monitoring vbus.
-
-If dr_mode is not specified in the dts, do not register phy0 as we then
-do not know how to treat it. This is actually a good thing as this means
-we will not be registering phy0 on devices where the otg controller is
-not enabled in the devicetree.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Adjust for of_usb_get_dr_mode_by_phy now taking an args0 parameter
----
- drivers/phy/phy-sun4i-usb.c | 62 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 42 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index bae54f7..9196c8a 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -40,6 +40,7 @@
- #include <linux/power_supply.h>
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
-+#include <linux/usb/of.h>
- #include <linux/workqueue.h>
- 
- #define REG_ISCR			0x00
-@@ -109,6 +110,7 @@ struct sun4i_usb_phy_cfg {
- struct sun4i_usb_phy_data {
- 	void __iomem *base;
- 	const struct sun4i_usb_phy_cfg *cfg;
-+	enum usb_dr_mode dr_mode;
- 	struct mutex mutex;
- 	struct sun4i_usb_phy {
- 		struct phy *phy;
-@@ -119,6 +121,7 @@ struct sun4i_usb_phy_data {
- 		bool regulator_on;
- 		int index;
- 	} phys[MAX_PHYS];
-+	int first_phy;
- 	/* phy0 / otg related variables */
- 	struct extcon_dev *extcon;
- 	bool phy0_init;
-@@ -285,16 +288,10 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		sun4i_usb_phy0_update_iscr(_phy, 0, ISCR_DPDM_PULLUP_EN);
- 		sun4i_usb_phy0_update_iscr(_phy, 0, ISCR_ID_PULLUP_EN);
- 
--		if (data->id_det_gpio) {
--			/* OTG mode, force ISCR and cable state updates */
--			data->id_det = -1;
--			data->vbus_det = -1;
--			queue_delayed_work(system_wq, &data->detect, 0);
--		} else {
--			/* Host only mode */
--			sun4i_usb_phy0_set_id_detect(_phy, 0);
--			sun4i_usb_phy0_set_vbus_detect(_phy, 1);
--		}
-+		/* Force ISCR and cable state updates */
-+		data->id_det = -1;
-+		data->vbus_det = -1;
-+		queue_delayed_work(system_wq, &data->detect, 0);
- 	}
- 
- 	return 0;
-@@ -319,6 +316,19 @@ static int sun4i_usb_phy_exit(struct phy *_phy)
- 	return 0;
- }
- 
-+static int sun4i_usb_phy0_get_id_det(struct sun4i_usb_phy_data *data)
-+{
-+	switch (data->dr_mode) {
-+	case USB_DR_MODE_OTG:
-+		return gpiod_get_value_cansleep(data->id_det_gpio);
-+	case USB_DR_MODE_HOST:
-+		return 0;
-+	case USB_DR_MODE_PERIPHERAL:
-+	default:
-+		return 1;
-+	}
-+}
-+
- static int sun4i_usb_phy0_get_vbus_det(struct sun4i_usb_phy_data *data)
- {
- 	if (data->vbus_det_gpio)
-@@ -414,7 +424,10 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 	struct phy *phy0 = data->phys[0].phy;
- 	int id_det, vbus_det, id_notify = 0, vbus_notify = 0;
- 
--	id_det = gpiod_get_value_cansleep(data->id_det_gpio);
-+	if (phy0 == NULL)
-+		return;
-+
-+	id_det = sun4i_usb_phy0_get_id_det(data);
- 	vbus_det = sun4i_usb_phy0_get_vbus_det(data);
- 
- 	mutex_lock(&phy0->mutex);
-@@ -501,7 +514,8 @@ static struct phy *sun4i_usb_phy_xlate(struct device *dev,
- {
- 	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
- 
--	if (args->args[0] >= data->cfg->num_phys)
-+	if (args->args[0] < data->first_phy ||
-+	    args->args[0] >= data->cfg->num_phys)
- 		return ERR_PTR(-ENODEV);
- 
- 	return data->phys[args->args[0]].phy;
-@@ -575,13 +589,17 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 			return -EPROBE_DEFER;
- 	}
- 
--	/* vbus_det without id_det makes no sense, and is not supported */
--	if (sun4i_usb_phy0_have_vbus_det(data) && !data->id_det_gpio) {
--		dev_err(dev, "usb0_id_det missing or invalid\n");
--		return -ENODEV;
--	}
--
--	if (data->id_det_gpio) {
-+	data->dr_mode = of_usb_get_dr_mode_by_phy(np, 0);
-+	switch (data->dr_mode) {
-+	case USB_DR_MODE_OTG:
-+		/* otg without id_det makes no sense, and is not supported */
-+		if (!data->id_det_gpio) {
-+			dev_err(dev, "usb0_id_det missing or invalid\n");
-+			return -ENODEV;
-+		}
-+		/* fall through */
-+	case USB_DR_MODE_HOST:
-+	case USB_DR_MODE_PERIPHERAL:
- 		data->extcon = devm_extcon_dev_allocate(dev,
- 							sun4i_usb_phy0_cable);
- 		if (IS_ERR(data->extcon))
-@@ -592,9 +610,13 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 			dev_err(dev, "failed to register extcon: %d\n", ret);
- 			return ret;
- 		}
-+		break;
-+	default:
-+		dev_info(dev, "dr_mode unknown, not registering usb phy0\n");
-+		data->first_phy = 1;
- 	}
- 
--	for (i = 0; i < data->cfg->num_phys; i++) {
-+	for (i = data->first_phy; i < data->cfg->num_phys; i++) {
- 		struct sun4i_usb_phy *phy = data->phys + i;
- 		char name[16];
- 
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLAoKT24gMjAxNuW5tDA25pyIMDHml6UgMjI6NDUsIFJvYiBIZXJyaW5nIHdyb3RlOgo+
+IE9uIFRodSwgTWF5IDI2LCAyMDE2IGF0IDA5OjAyOjIyUE0gKzA4MDAsIFhpbmcgWmhlbmcgd3Jv
+dGU6Cj4+IFRoZXJlIGFyZSBtdWx0aSBjb2RlYyBkZXZpY2VzIG9uIHRoZSBSSzMzOTkgcGxhdGZv
+cm0sIHdlIGNhbiB1c2UKPj4gdGhpcyBwYXRjaCBzdXBwb3J0IGFuZCBjb250cm9sIHRoZXNlIGNv
+ZGVjcy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWGluZyBaaGVuZzx6aGVuZ3hpbmdAcm9jay1jaGlw
+cy5jb20+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VzIGluIHYzOgo+PiAtIHJlbmFtZSBET0MgdG8gcm9j
+a2NoaXAscmszMzk5LW1heDk4MzU3YS1ydDU1MTQtZGE3MjE5LnR4dAo+PiAtIHJlbmFtZSBjb21w
+YXRpYmxlIHRvIHJvY2tjaGlwLHJrMzM5OS1tYXg5ODM1N2EtcnQ1NTE0LWRhNzIxOQo+PiAtIHJl
+bmFtZSBzb3VyY2UgY29kZSB0byByazMzOTlfbWF4OTgzNTdhX3J0NTUxNF9kYTcyMTkuYwo+Pgo+
+PiBDaGFuZ2VzIGluIHYyOgo+PiAtIHVzZSB0aGUgRlMgMjU2IHRvIHNldCBtY2xrcyBvZiB0aGUg
+bWF4OTgzNTdhIGFuZCBydDU1MTQgZGFuYW1pY2FsbHkKPj4gLSBhZGQgbW9yZSBzYW1wbGUgcmF0
+ZSBmb3IgZGE3MjE5Cj4+Cj4+ICAgLi4uL3JvY2tjaGlwLHJrMzM5OS1tYXg5ODM1N2EtcnQ1NTE0
+LWRhNzIxOS50eHQgICAgfCAgIDE1ICsKPj4gICBzb3VuZC9zb2Mvcm9ja2NoaXAvS2NvbmZpZyAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTEgKwo+PiAgIHNvdW5kL3NvYy9yb2NrY2hpcC9N
+YWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArCj4+ICAgLi4uL3NvYy9yb2Nr
+Y2hpcC9yazMzOTlfbWF4OTgzNTdhX3J0NTUxNF9kYTcyMTkuYyAgfCAgMzMzICsrKysrKysrKysr
+KysrKysrKysrCj4+ICAgNCBmaWxlcyBjaGFuZ2VkLCAzNjEgaW5zZXJ0aW9ucygrKQo+PiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQv
+cm9ja2NoaXAscmszMzk5LW1heDk4MzU3YS1ydDU1MTQtZGE3MjE5LnR4dAo+PiAgIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBzb3VuZC9zb2Mvcm9ja2NoaXAvcmszMzk5X21heDk4MzU3YV9ydDU1MTRfZGE3
+MjE5LmMKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9zb3VuZC9yb2NrY2hpcCxyazMzOTktbWF4OTgzNTdhLXJ0NTUxNC1kYTcyMTkudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3JvY2tjaGlwLHJrMzM5OS1tYXg5
+ODM1N2EtcnQ1NTE0LWRhNzIxOS50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXgg
+MDAwMDAwMC4uM2FlNjAzZQo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9yb2NrY2hpcCxyazMzOTktbWF4OTgzNTdhLXJ0NTUx
+NC1kYTcyMTkudHh0Cj4+IEBAIC0wLDAgKzEsMTUgQEAKPj4gK1JPQ0tDSElQIHdpdGggTUFYOTgz
+NTdBL1JUNTUxNC9EQTcyMTkgY29kZWNzCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+
+ICstIGNvbXBhdGlibGU6ICJyb2NrY2hpcCxyazMzOTktbWF4OTgzNTdhLXJ0NTUxNC1kYTcyMTki
+Cj4gSSdtIHN0aWxsIG5vdCB2ZXJ5IGNsZWFyIG9uIHRoZSBuYW1pbmcgY29udmVudGlvbiB0aG91
+Z2hvdXQgdGhpcy4gVGhpcwo+IGRvZXNuJ3Qgc2VlbSBsaWtlIGEgcGF0dGVybiB3ZSB3YW50IHRv
+IHJlcGVhdCAoPGNoaXA+LTxjb2RlYz4tPGNvZGVjPikuCj4KVGhhbmsgeW91IGZvciB5b3VyIHJl
+cGx5LiA6LSkKCkkgcmVmZXJlZCB0byBNVEsncyBtdDgxNzMtcnQ1NjUwLXJ0NTUxNC50eHQgb24g
+dXBzdHJlYW0sIHRoYXQgY29tcGF0aWJsZSAKbmFtZSBpcyAibWVkaWF0ZWssbXQ4MTczLXJ0NTY1
+MC1ydDU1MTQiLgpCZWNhdXNlIG91ciBwbGF0Zm9ybSBuZWVkIHRvIHN1cHBvcnQgMyBjb2RlY3Mg
+KG1heDk4MzU3YSAvIGRhNzIxOSAvIApydDU1MTQpLiBQZXJoYXBzLCB5b3UgbWF5YmUgZmVlbCB0
+aGF0IG5hbWUgaXMgdG9vIGxvbmc/IEFuZCwgY291bGQgeW91IApwbGVhc2UgdGVsbCBtZSB3aGF0
+IG5hbWVzIHdvdWxkIGJlIGJldHRlcj8KCkZvciBleGFtcGxlOiAicmszMzk5LWNvbXBvc2l0ZS1j
+b2RlY3MiID8KClRoYW5rcy4KCgotLSAKLSBYaW5nIFpoZW5nCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxz
+YS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
