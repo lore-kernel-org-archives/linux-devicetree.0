@@ -1,47 +1,245 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [Patch v6 07/10] dts: qcom: apq8084: Add SCM firmware node
-Date: Fri,  3 Jun 2016 18:25:27 -0500
-Message-ID: <1464996330-16952-8-git-send-email-andy.gross@linaro.org>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: [Patch v6 02/10] firmware: qcom: scm: Convert SCM to platform driver
+Date: Fri,  3 Jun 2016 18:25:22 -0500
+Message-ID: <1464996330-16952-3-git-send-email-andy.gross@linaro.org>
 References: <1464996330-16952-1-git-send-email-andy.gross@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464996330-16952-1-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1464996330-16952-1-git-send-email-andy.gross@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the firmware node for the SCM
+This patch converts the Qualcomm SCM firmware driver into a platform
+driver.  It also adds clock management for firmware calls which require
+clocks to be enabled during the duration of their execution.  Rate
+setting of the core clock is also in place for higher performance.
 
-Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8084.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/firmware/qcom_scm.c | 174 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 165 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index a33a09f..7c2df06 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -86,6 +86,14 @@
- 		};
- 	};
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 45c008d..c4ec60d 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -10,19 +10,61 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+- * 02110-1301, USA.
+  */
+-
++#include <linux/platform_device.h>
++#include <linux/module.h>
+ #include <linux/cpumask.h>
+ #include <linux/export.h>
+ #include <linux/types.h>
+ #include <linux/qcom_scm.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/clk.h>
  
-+	firmware {
-+		scm {
-+			compatible = "qcom,scm";
-+			clocks = <&gcc GCC_CE1_CLK> , <&gcc GCC_CE1_AXI_CLK>, <&gcc GCC_CE1_AHB_CLK>;
-+			clock-names = "core", "bus", "iface";
-+		};
-+	};
+ #include "qcom_scm.h"
+ 
++struct qcom_scm {
++	struct device *dev;
++	struct clk *core_clk;
++	struct clk *iface_clk;
++	struct clk *bus_clk;
++};
 +
- 	cpu-pmu {
- 		compatible = "qcom,krait-pmu";
- 		interrupts = <1 7 0xf04>;
++static struct qcom_scm *__scm;
++
++static int qcom_scm_clk_enable(void)
++{
++	int ret;
++
++	ret = clk_prepare_enable(__scm->core_clk);
++	if (ret)
++		goto bail;
++
++	ret = clk_prepare_enable(__scm->iface_clk);
++	if (ret)
++		goto disable_core;
++
++	ret = clk_prepare_enable(__scm->bus_clk);
++	if (ret)
++		goto disable_iface;
++
++	return 0;
++
++disable_iface:
++	clk_disable_unprepare(__scm->iface_clk);
++disable_core:
++	clk_disable_unprepare(__scm->core_clk);
++bail:
++	return ret;
++}
++
++static void qcom_scm_clk_disable(void)
++{
++	clk_disable_unprepare(__scm->core_clk);
++	clk_disable_unprepare(__scm->iface_clk);
++	clk_disable_unprepare(__scm->bus_clk);
++}
++
+ /**
+  * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
+  * @entry: Entry point function for the cpus
+@@ -72,12 +114,17 @@ EXPORT_SYMBOL(qcom_scm_cpu_power_down);
+  */
+ bool qcom_scm_hdcp_available(void)
+ {
+-	int ret;
++	int ret = qcom_scm_clk_enable();
++
++	if (ret)
++		return ret;
+ 
+ 	ret = __qcom_scm_is_call_available(QCOM_SCM_SVC_HDCP,
+-		QCOM_SCM_CMD_HDCP);
++						QCOM_SCM_CMD_HDCP);
++
++	qcom_scm_clk_disable();
+ 
+-	return (ret > 0) ? true : false;
++	return ret > 0 ? true : false;
+ }
+ EXPORT_SYMBOL(qcom_scm_hdcp_available);
+ 
+@@ -91,6 +138,115 @@ EXPORT_SYMBOL(qcom_scm_hdcp_available);
+  */
+ int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp)
+ {
+-	return __qcom_scm_hdcp_req(req, req_cnt, resp);
++	int ret = qcom_scm_clk_enable();
++
++	if (ret)
++		return ret;
++
++	ret = __qcom_scm_hdcp_req(req, req_cnt, resp);
++	qcom_scm_clk_disable();
++	return ret;
+ }
+ EXPORT_SYMBOL(qcom_scm_hdcp_req);
++
++static int qcom_scm_probe(struct platform_device *pdev)
++{
++	struct qcom_scm *scm;
++	int ret;
++
++	scm = devm_kzalloc(&pdev->dev, sizeof(*scm), GFP_KERNEL);
++	if (!scm)
++		return -ENOMEM;
++
++	scm->core_clk = devm_clk_get(&pdev->dev, "core");
++	if (IS_ERR(scm->core_clk)) {
++		if (PTR_ERR(scm->core_clk) == -EPROBE_DEFER)
++			return PTR_ERR(scm->core_clk);
++
++		scm->core_clk = NULL;
++	}
++
++	if (of_device_is_compatible(pdev->dev.of_node, "qcom,scm")) {
++		scm->iface_clk = devm_clk_get(&pdev->dev, "iface");
++		if (IS_ERR(scm->iface_clk)) {
++			if (PTR_ERR(scm->iface_clk) != -EPROBE_DEFER)
++				dev_err(&pdev->dev, "failed to acquire iface clk\n");
++			return PTR_ERR(scm->iface_clk);
++		}
++
++		scm->bus_clk = devm_clk_get(&pdev->dev, "bus");
++		if (IS_ERR(scm->bus_clk)) {
++			if (PTR_ERR(scm->bus_clk) != -EPROBE_DEFER)
++				dev_err(&pdev->dev, "failed to acquire bus clk\n");
++			return PTR_ERR(scm->bus_clk);
++		}
++	}
++
++	/* vote for max clk rate for highest performance */
++	ret = clk_set_rate(scm->core_clk, INT_MAX);
++	if (ret)
++		return ret;
++
++	__scm = scm;
++	__scm->dev = &pdev->dev;
++
++	return 0;
++}
++
++static const struct of_device_id qcom_scm_dt_match[] = {
++	{ .compatible = "qcom,scm-apq8064",},
++	{ .compatible = "qcom,scm-msm8660",},
++	{ .compatible = "qcom,scm-msm8960",},
++	{ .compatible = "qcom,scm",},
++	{}
++};
++
++MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
++
++static struct platform_driver qcom_scm_driver = {
++	.driver = {
++		.name	= "qcom_scm",
++		.of_match_table = qcom_scm_dt_match,
++	},
++	.probe = qcom_scm_probe,
++};
++
++static int __init qcom_scm_init(void)
++{
++	struct device_node *np, *fw_np;
++	int ret;
++
++	fw_np = of_find_node_by_name(NULL, "firmware");
++
++	if (!fw_np)
++		return -ENODEV;
++
++	np = of_find_matching_node(fw_np, qcom_scm_dt_match);
++
++	if (!np) {
++		of_node_put(fw_np);
++		return -ENODEV;
++	}
++
++	of_node_put(np);
++
++	ret = of_platform_populate(fw_np, qcom_scm_dt_match, NULL, NULL);
++
++	of_node_put(fw_np);
++
++	if (ret)
++		return ret;
++
++	return platform_driver_register(&qcom_scm_driver);
++}
++
++arch_initcall(qcom_scm_init);
++
++static void __exit qcom_scm_exit(void)
++{
++	platform_driver_unregister(&qcom_scm_driver);
++}
++module_exit(qcom_scm_exit);
++
++MODULE_DESCRIPTION("Qualcomm SCM driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
