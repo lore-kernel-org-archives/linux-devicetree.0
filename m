@@ -1,184 +1,83 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] drm/bridge: Add sii902x driver
-Date: Fri, 3 Jun 2016 08:56:11 +0200
-Message-ID: <20160603085611.60208fbf@bbrezillon>
-References: <1464879601-30569-1-git-send-email-boris.brezillon@free-electrons.com>
-	<CAFqH_51mfuTsRKOYtiyTkQT0pbRnWJdHdeXdHGFKaGzPXujEZw@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 5/7] ARM: Exynos: remove code for MFC custom reserved
+ memory handling
+Date: Fri, 03 Jun 2016 08:57:46 +0200
+Message-ID: <57512A6A.1050209@samsung.com>
+References: <1464096690-23605-1-git-send-email-m.szyprowski@samsung.com>
+ <1464096690-23605-6-git-send-email-m.szyprowski@samsung.com>
+ <574BEBB8.8040606@samsung.com>
+ <5a12a8be-0402-dc0c-d242-5d9f3145e001@osg.samsung.com>
+ <57505F5B.90101@samsung.com>
+ <e715a7d0-eb25-9d68-27ad-25cf03c499ca@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFqH_51mfuTsRKOYtiyTkQT0pbRnWJdHdeXdHGFKaGzPXujEZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>, Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <e715a7d0-eb25-9d68-27ad-25cf03c499ca@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Uli Middelberg <uli@middelberg.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
-
-On Thu, 2 Jun 2016 23:47:23 +0200
-Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-
-
-> > +static int sii902x_get_modes(struct drm_connector *connector)
-> > +{
-> > +       struct sii902x *sii902x = connector_to_sii902x(connector);
-> > +       struct regmap *regmap = sii902x->regmap;
-> > +       u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
-> > +       unsigned int status;
-> > +       struct edid *edid;
-> > +       int num = 0;
-> > +       int ret;
-> > +       int i;  
+On 06/02/2016 07:25 PM, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
 > 
-> Is the i variable really needed? (see my comments below)
+> On 06/02/2016 12:31 PM, Krzysztof Kozlowski wrote:
+>> On 06/02/2016 05:20 PM, Javier Martinez Canillas wrote:
+>>> Hello Krzysztof,
+>>>
+>>> On 05/30/2016 03:28 AM, Krzysztof Kozlowski wrote:
+>>>> On 05/24/2016 03:31 PM, Marek Szyprowski wrote:
+>>>>> Once MFC driver has been converted to generic reserved memory bindings,
+>>>>> there is no need for custom memory reservation code.
+>>>>>
+>>>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>>> ---
+>>>>>  arch/arm/mach-exynos/Makefile      |  2 -
+>>>>>  arch/arm/mach-exynos/exynos.c      | 19 --------
+>>>>>  arch/arm/mach-exynos/mfc.h         | 16 -------
+>>>>>  arch/arm/mach-exynos/s5p-dev-mfc.c | 93 --------------------------------------
+>>>>>  4 files changed, 130 deletions(-)
+>>>>>  delete mode 100644 arch/arm/mach-exynos/mfc.h
+>>>>>  delete mode 100644 arch/arm/mach-exynos/s5p-dev-mfc.c
+>>>>
+>>>> Thanks, applied.
+>>>>
+>>>
+>>> This patch can't be applied before patches 2/5 and 3/5, or the custom
+>>> memory regions reservation will break with the current s5p-mfc driver.
+>>
+>> Yes, I know. As I understood from talk with Marek, the driver is broken
+>> now so continuous work was not chosen. If it is not correct and full
 > 
-> > +
-> > +       ret = regmap_update_bits(regmap, SIL902X_SYS_CTRL_DATA,
-> > +                                SIL902X_SYS_CTRL_DDC_BUS_REQ,
-> > +                                SIL902X_SYS_CTRL_DDC_BUS_REQ);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       i = 0;  
+> It's true that the driven is currently broken in mainline and is not really
+> stable, I posted fixes for all the issues I found (mostly in module removal
+> and insert paths).
 > 
-> You assign i to 0
+> But with just the following patch from Ayaka on top of mainline, I'm able to
+> have video decoding working: https://lkml.org/lkml/2016/5/6/577
+
+Which is still a "future" patch, not current state...
 > 
-> > +       do {
-> > +               ret = regmap_read(regmap, SIL902X_SYS_CTRL_DATA, &status);
-> > +               if (ret)
-> > +                       return ret;
-> > +               i++;  
+> Marek mentioned that bisectability is only partially broken because the old
+> binding will still work after this series if IOMMU is enabled (because the
+> properties are ignored in this case). But will break if IOMMU isn't enabled
+> which will be the case for some boards that fails to boot with IOMMU due the
+> bootloader leaving the FIMD enabled doing DMA operations automatically AFAIU. 
 > 
-> And you increment i, for what?
-
-Oops, this is a leftover from when I was debugging the implementation.
-
+> Now, I'm OK with not keeping backwards compatibility for the MFC dt bindings
+> since arguably the driver has been broken for a long time and nobody cared
+> and also I don't think anyone in practice boots a new kernel with an old DTB
+> for Exynos.
 > 
-> > +       } while (!(status & SIL902X_SYS_CTRL_DDC_BUS_GRTD));
-> > +
-> > +       ret = regmap_write(regmap, SIL902X_SYS_CTRL_DATA, status);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       edid = drm_get_edid(connector, sii902x->i2c->adapter);
-> > +       drm_mode_connector_update_edid_property(connector, edid);
-> > +       if (edid) {
-> > +               num += drm_add_edid_modes(connector, edid);  
-> 
-> This is always 0 + the returned value, so you can do:
->   num = drm_add_edid_modes(connector, edid);
-> It's more clear for me.
+> But I don't think is correct to introduce a new issue as is the case if this
+> patch is applied before the previous patches in the series since this causes
+> the driver to probe to fail and the following warn on boot (while it used to
+> at least probe correctly in mainline):
 
-Sure.
+Okay but the patches will go through separate tree. This is not a
+problem, as I said, I just need a stable tag from media tree with first
+four patches (Mauro?).
 
-> 
-> > +               kfree(edid);
-> > +       }
-> > +
-> > +       ret = drm_display_info_set_bus_formats(&connector->display_info,
-> > +                                              &bus_format, 1);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       regmap_read(regmap, SIL902X_SYS_CTRL_DATA, &status);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = regmap_update_bits(regmap, SIL902X_SYS_CTRL_DATA,
-> > +                                SIL902X_SYS_CTRL_DDC_BUS_REQ |
-> > +                                SIL902X_SYS_CTRL_DDC_BUS_GRTD, 0);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       i = 0;  
-> 
-> Again, you can remove the i variable, here and the i++ from the loop below
-> 
-> > +       do {
-> > +               ret = regmap_read(regmap, SIL902X_SYS_CTRL_DATA, &status);
-> > +               if (ret)
-> > +                       return ret;
-> > +               i++;
-> > +       } while (status & (SIL902X_SYS_CTRL_DDC_BUS_REQ |
-> > +                          SIL902X_SYS_CTRL_DDC_BUS_GRTD));
-> > +
-> > +       return num;
-> > +}
-
-[...]
-
-> > +static void sii902x_bridge_nop(struct drm_bridge *bridge)
-> > +{
-> > +}
-> > +  
-> 
-> You can remove this dummy callback function now.
-> 
-> > +static const struct drm_bridge_funcs sii902x_bridge_funcs = {
-> > +       .attach = sii902x_bridge_attach,
-> > +       .mode_set = sii902x_bridge_mode_set,
-> > +       .disable = sii902x_bridge_disable,
-> > +       .post_disable = sii902x_bridge_nop,
-> > +       .pre_enable = sii902x_bridge_nop,  
-> 
-> Remove .pre_enable
-
-I guess ->{pre,post}_enable() were mandatory when I started the
-development of this driver. I'll drop both.
-
-> 
-> > +       .enable = sii902x_bridge_enable,
-> > +};
-> > +
-
-[...]
-
-> > +
-> > +#ifdef CONFIG_OF  
-> 
-> You already depend on OF in Kconfig so this will always be evaluated.
-
-Indeed.
-
-> 
-> > +static const struct of_device_id sii902x_dt_ids[] = {
-> > +       { .compatible = "sil,sii9022", },
-> > +       { }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, sii902x_dt_ids);
-> > +#endif
-> > +
-> > +static const struct i2c_device_id sii902x_i2c_ids[] = {
-> > +       { "sii9022", 0 },
-> > +       { },
-> > +};
-> > +MODULE_DEVICE_TABLE(i2c, sii902x_i2c_ids);
-> > +
-> > +static struct i2c_driver sii902x_driver = {
-> > +       .probe = sii902x_probe,
-> > +       .remove = sii902x_remove,
-> > +       .driver = {
-> > +               .name = "sii902x",
-> > +               .of_match_table = of_match_ptr(sii902x_dt_ids),  
-> 
-> You already depend on OF in Kconfig so you don't need of_match_ptr()
-> here, of_match_ptr(x) will always evaluate to x.
-
-I'll directly pass sii902x_dt_ids.
-
-Thanks for your review.
-
-Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
