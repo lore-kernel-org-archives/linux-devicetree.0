@@ -1,77 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 7/9] ARM: bcm2835: Add devicetree for the Raspberry Pi
- 3.
-Date: Fri, 03 Jun 2016 10:55:17 +0200
-Message-ID: <3885625.kWfxlR3OJi@wuerfel>
-References: <1464934708-24769-1-git-send-email-kraxel@redhat.com>
- <5490184.9quKRk1Imx@wuerfel> <1464943546.24775.131.camel@redhat.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
+Date: Fri, 3 Jun 2016 10:01:55 +0100
+Message-ID: <57514783.6000407@arm.com>
+References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
+ <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
+ <57483CAA.8000005@arm.com> <20160603085547.GB24547@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1464943546.24775.131.camel@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Scott Branden <sbranden@broadcom.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, "open list:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, linux-rpi-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160603085547.GB24547@red-moon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, June 3, 2016 10:45:46 AM CEST Gerd Hoffmann wrote:
-> On Fr, 2016-06-03 at 09:38 +0200, Arnd Bergmann wrote:
-> > On Friday, June 3, 2016 8:18:26 AM CEST Gerd Hoffmann wrote:
-> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > > index 06b6c2d..71e2d36 100644
-> > > --- a/arch/arm/boot/dts/Makefile
-> > > +++ b/arch/arm/boot/dts/Makefile
-> > > @@ -66,7 +66,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
-> > >         bcm2835-rpi-b-rev2.dtb \
-> > >         bcm2835-rpi-b-plus.dtb \
-> > >         bcm2835-rpi-a-plus.dtb \
-> > > -       bcm2836-rpi-2-b.dtb
-> > > +       bcm2836-rpi-2-b.dtb \
-> > > +       ../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dtb
-> > >  dtb-$(CONFIG_ARCH_BCM_5301X) += \
-> > >         bcm4708-asus-rt-ac56u.dtb \
-> > >         bcm4708-asus-rt-ac68u.dtb \
-> > 
-> > Let's make this hunk a separate patch so we can discuss it on its
-> > own.
+On 03/06/16 09:55, Lorenzo Pieralisi wrote:
+> On Fri, May 27, 2016 at 01:25:14PM +0100, Marc Zyngier wrote:
 > 
-> Hmm, I through we where in agreement to do it this way ...
-
-I think it's ok in principle, this is about the specific syntax.
-
-> > I'm not really happy about the way it looks (in general, using ../../../
-> > anywhere in the kernel looks hacky.
-> > 
-> > How about a separate
-> > 
-> > dtb-$(CONFIG_ARCH_BCM2835) +=
-> >       ../../../arm64/boot/dts/broadcom/
+> [...]
 > 
-> Not working.
+>>> +	} else {
+>>> +		bus = pci_scan_root_bus(&pdev->dev, 0,
+>>> +					&rockchip_pcie_ops, port, &res);
+>>> +	}
+>>> +	if (!bus)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	if (!pci_has_flag(PCI_PROBE_ONLY)) {
+>>
+>> Why do you have catter for the PCI_PROBE_ONLY case? Nobody should ever
+>> use that for properly implemented HW.
 > 
-> Tried "subdir-$(CONFIG_ARCH_BCM) += ...".  Didn't work either.
-> Same for "dts-dirs += ...".
+> I think that's just copy and paste and it is a useless check given
+> that the only way we can set that flag on ARM/ARM64 is through DT
+> (of_pci_check_probe_only()) and I doubt that systems probing this
+> driver really require a PCI_PROBE_ONLY set-up.
 > 
-> Running out of ideas.  Guess I have to leave this to someone who knows
-> kbuild better than me.
+> So, unless you can explain to us why it is really needed, please
+> remove the:
+> 
+> if (!pci_has_flag(PCI_PROBE_ONLY))
+> 
+> check.
 
-I tried
+Agreed. Maybe we should add a comment somewhere saying that this is
+deprecated on arm/arm64, and only useful to slightly dumb virtualization
+environments (kvmtool being the prime example).
 
-subdir-y += ../../../arm64/boot/dts/broadcom
+Thanks,
 
-and it seemed to work fine, I got
-
-  DTC     arch/arm/boot/dts/../../../arm64/boot/dts/broadcom/ns2-svk.dtb
-
-in an allmodconfig build, which also includes CONFIG_ARCH_BCM_IPROC.
-
-	Arnd
+	M.
+-- 
+Jazz is not dead. It just smells funny...
