@@ -1,84 +1,26 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: dts: sunxi: Add a startup delay for fixed regulator enabled phys
-Date: Fri,  3 Jun 2016 22:00:24 +0200
-Message-ID: <1464984024-22669-1-git-send-email-hdegoede@redhat.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] DT: bindings: remove bcm2835-sdhci
+Date: Fri, 3 Jun 2016 14:00:49 -0600
+Message-ID: <5751E1F1.5020202@wwwdotorg.org>
+References: <1464983233-27001-1-git-send-email-stefan.wahren@i2se.com>
+ <1464983233-27001-2-git-send-email-stefan.wahren@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464983233-27001-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It seems that recent kernels have a shorter timeout when scanning for
-ethernet phys causing us to hit a timeout on boards where the phy's
-regulator gets enabled just before scanning, which leads to non working
-ethernet.
+On 06/03/2016 01:47 PM, Stefan Wahren wrote:
+> The sdhci-iproc also supports bcm2835. So this binding is obsolete.
 
-A 10ms startup delay seems to be enough to fix it, this commit adds a
-20ms startup delay just to be safe.
-
-This has been tested on a sun4i-a10-a1000 and sun5i-a10s-wobo-i5 board,
-both of which have non-working ethernet on recent kernels without this
-fix.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10-a1000.dts      | 1 +
- arch/arm/boot/dts/sun4i-a10-hackberry.dts  | 1 +
- arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts | 1 +
- arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts   | 1 +
- 4 files changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-index c92a1ae..fa70b8f 100644
---- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-@@ -84,6 +84,7 @@
- 		regulator-name = "emac-3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <20000>;
- 		enable-active-high;
- 		gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>;
- 	};
-diff --git a/arch/arm/boot/dts/sun4i-a10-hackberry.dts b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-index 2b17c51..6de83a6 100644
---- a/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-@@ -66,6 +66,7 @@
- 		regulator-name = "emac-3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <20000>;
- 		enable-active-high;
- 		gpio = <&pio 7 19 GPIO_ACTIVE_HIGH>;
- 	};
-diff --git a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-index 7afc7a6..e28f080 100644
---- a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-@@ -80,6 +80,7 @@
- 		regulator-name = "emac-3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <20000>;
- 		enable-active-high;
- 		gpio = <&pio 7 19 GPIO_ACTIVE_HIGH>;   /* PH19 */
- 	};
-diff --git a/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts b/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
-index 52d18ca..b5de75f 100644
---- a/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
-+++ b/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
-@@ -79,6 +79,7 @@
- 		regulator-name = "emac-3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <20000>;
- 		enable-active-high;
- 		gpio = <&pio 0 2 GPIO_ACTIVE_HIGH>;
- 	};
--- 
-2.7.4
-
+sdhci-iproc supports this binding, so I don't believe the binding is 
+obsolete. The duplicate implementations (drivers) can possibly be 
+removed, but not the binding doc, which is (or at least could be) still 
+in use.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
