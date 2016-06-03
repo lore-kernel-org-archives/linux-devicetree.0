@@ -1,50 +1,77 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
-Date: Fri, 3 Jun 2016 09:55:47 +0100
-Message-ID: <20160603085547.GB24547@red-moon>
-References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
- <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
- <57483CAA.8000005@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 7/9] ARM: bcm2835: Add devicetree for the Raspberry Pi
+ 3.
+Date: Fri, 03 Jun 2016 10:55:17 +0200
+Message-ID: <3885625.kWfxlR3OJi@wuerfel>
+References: <1464934708-24769-1-git-send-email-kraxel@redhat.com>
+ <5490184.9quKRk1Imx@wuerfel> <1464943546.24775.131.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57483CAA.8000005-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1464943546.24775.131.camel@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Scott Branden <sbranden@broadcom.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, "open list:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, linux-rpi-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 27, 2016 at 01:25:14PM +0100, Marc Zyngier wrote:
-
-[...]
-
-> > +	} else {
-> > +		bus = pci_scan_root_bus(&pdev->dev, 0,
-> > +					&rockchip_pcie_ops, port, &res);
-> > +	}
-> > +	if (!bus)
-> > +		return -ENOMEM;
-> > +
-> > +	if (!pci_has_flag(PCI_PROBE_ONLY)) {
+On Friday, June 3, 2016 10:45:46 AM CEST Gerd Hoffmann wrote:
+> On Fr, 2016-06-03 at 09:38 +0200, Arnd Bergmann wrote:
+> > On Friday, June 3, 2016 8:18:26 AM CEST Gerd Hoffmann wrote:
+> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > > index 06b6c2d..71e2d36 100644
+> > > --- a/arch/arm/boot/dts/Makefile
+> > > +++ b/arch/arm/boot/dts/Makefile
+> > > @@ -66,7 +66,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+> > >         bcm2835-rpi-b-rev2.dtb \
+> > >         bcm2835-rpi-b-plus.dtb \
+> > >         bcm2835-rpi-a-plus.dtb \
+> > > -       bcm2836-rpi-2-b.dtb
+> > > +       bcm2836-rpi-2-b.dtb \
+> > > +       ../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dtb
+> > >  dtb-$(CONFIG_ARCH_BCM_5301X) += \
+> > >         bcm4708-asus-rt-ac56u.dtb \
+> > >         bcm4708-asus-rt-ac68u.dtb \
+> > 
+> > Let's make this hunk a separate patch so we can discuss it on its
+> > own.
 > 
-> Why do you have catter for the PCI_PROBE_ONLY case? Nobody should ever
-> use that for properly implemented HW.
+> Hmm, I through we where in agreement to do it this way ...
 
-I think that's just copy and paste and it is a useless check given
-that the only way we can set that flag on ARM/ARM64 is through DT
-(of_pci_check_probe_only()) and I doubt that systems probing this
-driver really require a PCI_PROBE_ONLY set-up.
+I think it's ok in principle, this is about the specific syntax.
 
-So, unless you can explain to us why it is really needed, please
-remove the:
+> > I'm not really happy about the way it looks (in general, using ../../../
+> > anywhere in the kernel looks hacky.
+> > 
+> > How about a separate
+> > 
+> > dtb-$(CONFIG_ARCH_BCM2835) +=
+> >       ../../../arm64/boot/dts/broadcom/
+> 
+> Not working.
+> 
+> Tried "subdir-$(CONFIG_ARCH_BCM) += ...".  Didn't work either.
+> Same for "dts-dirs += ...".
+> 
+> Running out of ideas.  Guess I have to leave this to someone who knows
+> kbuild better than me.
 
-if (!pci_has_flag(PCI_PROBE_ONLY))
+I tried
 
-check.
+subdir-y += ../../../arm64/boot/dts/broadcom
 
-Lorenzo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+and it seemed to work fine, I got
+
+  DTC     arch/arm/boot/dts/../../../arm64/boot/dts/broadcom/ns2-svk.dtb
+
+in an allmodconfig build, which also includes CONFIG_ARCH_BCM_IPROC.
+
+	Arnd
