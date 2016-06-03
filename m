@@ -1,55 +1,43 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 2/2] pci: Add PCIe driver for Rockchip Soc
-Date: Fri, 3 Jun 2016 10:01:55 +0100
-Message-ID: <57514783.6000407@arm.com>
-References: <1463740105-7061-1-git-send-email-shawn.lin@rock-chips.com>
- <1463740156-7148-1-git-send-email-shawn.lin@rock-chips.com>
- <57483CAA.8000005@arm.com> <20160603085547.GB24547@red-moon>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v2 7/9] ARM: bcm2835: Add devicetree for the Raspberry Pi
+ 3.
+Date: Fri, 3 Jun 2016 11:04:43 +0200
+Message-ID: <18208c0b-d33b-49f2-8f7e-5418954c283b@i2se.com>
+References: <1464934708-24769-1-git-send-email-kraxel@redhat.com>
+ <1464934708-24769-8-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160603085547.GB24547@red-moon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464934708-24769-8-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/16 09:55, Lorenzo Pieralisi wrote:
-> On Fri, May 27, 2016 at 01:25:14PM +0100, Marc Zyngier wrote:
-> 
-> [...]
-> 
->>> +	} else {
->>> +		bus = pci_scan_root_bus(&pdev->dev, 0,
->>> +					&rockchip_pcie_ops, port, &res);
->>> +	}
->>> +	if (!bus)
->>> +		return -ENOMEM;
->>> +
->>> +	if (!pci_has_flag(PCI_PROBE_ONLY)) {
->>
->> Why do you have catter for the PCI_PROBE_ONLY case? Nobody should ever
->> use that for properly implemented HW.
-> 
-> I think that's just copy and paste and it is a useless check given
-> that the only way we can set that flag on ARM/ARM64 is through DT
-> (of_pci_check_probe_only()) and I doubt that systems probing this
-> driver really require a PCI_PROBE_ONLY set-up.
-> 
-> So, unless you can explain to us why it is really needed, please
-> remove the:
-> 
-> if (!pci_has_flag(PCI_PROBE_ONLY))
-> 
-> check.
+Hi,
 
-Agreed. Maybe we should add a comment somewhere saying that this is
-deprecated on arm/arm64, and only useful to slightly dumb virtualization
-environments (kvmtool being the prime example).
+Am 03.06.2016 um 08:18 schrieb Gerd Hoffmann:
+> From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>
+> While this devicetree also works for booting in 32-bit mode, it's
+> placed in arm64 since it's a 64-bit CPU (as suggested by Arnd).
 
-Thanks,
+i'm currently working on a patch series to fix dtc warnings like
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Warning (unit_address_vs_reg): Node /memory has a reg or ranges
+property, but no unit name
+
+This a copy of affected parts ( look at memory, soc and local_intc node ).
+
+So how should this be handled?
+
+a) fix the issues here
+b) extend my patch series after this patch has been applied
+
+Stefan
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
