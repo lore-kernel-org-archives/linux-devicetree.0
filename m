@@ -1,92 +1,168 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 2/3] MIPS: BMIPS: Add BCM6345 support
-Date: Fri, 3 Jun 2016 13:46:17 +0200
-Message-ID: <CAOiHx=nu-5_CeHn8dki+v9nrP8uN2QH13gcNsejYKpt7dsmX2w@mail.gmail.com>
-References: <1464941524-3992-1-git-send-email-noltari@gmail.com> <1464941524-3992-2-git-send-email-noltari@gmail.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/3] iio: adc: ina3221: Add DT binding details
+Date: Fri, 3 Jun 2016 17:18:01 +0530
+Message-ID: <57516E71.8080506@nvidia.com>
+References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com> <20160603020759.GA23947@rob-hp-laptop> <433b182c-fe43-df5c-ac6a-20a024630514@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464941524-3992-2-git-send-email-noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <433b182c-fe43-df5c-ac6a-20a024630514@kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: corbet@lwn.net, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 3 June 2016 at 10:12, =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmai=
-l.com> wrote:
-> BCM6345 has only one CPU, so SMP support must be disabled.
+On Friday 03 June 2016 03:49 PM, Jonathan Cameron wrote:
+> On 03/06/16 03:07, Rob Herring wrote:
+>> On Wed, Jun 01, 2016 at 06:04:12PM +0530, Laxman Dewangan wrote:
+>>> +
+>>> +Optional properties:
+>>> +------------------
+>>> +one-shot-average-sample:	Integer, Number of sample to average befo=
+re
+>>> +				putting in the registers in oneshot mode.
+> Pick a sensible default in the driver then leave this to userspace to
+> control.
+
+>>> +
+>>> +one-shot-vbus-conv-time-us:	Integer in microseconds, ADC conversio=
+n time for
+>>> +				bus voltage reading in oneshot mode.
+> Hmm. This one is a little non obvious. It's really controlling the no=
+ise
+> level more than anything else.  Kind of integration time I guess thou=
+gh
+> not described as such in the datasheet.
+
+Yes the conversion time and average time help to reduce noise on=20
+conversion and efefctively tune the conversion delay per channel based=20
+on system need.
+
+ From data sheet:
+The INA3221 has programmable conversion times for both the shunt and bu=
+s=20
+voltage measurements. The conversion times for these measurements can b=
+e=20
+selected from 140 =B5s to 8.244 ms. The conversion time settings, along=
+=20
+with the programmable averaging mode, enable the INA3221 to be=20
+configured to optimize available timing requirements in a given=20
+application. For example, if a system requires data to be read every 2=20
+ms with all three channels monitored, the INA3221 can be configured wit=
+h=20
+the conversion times for the shunt and bus voltage measurements set to=20
+332 =B5s. The INA3221 can also be configured with a different conversio=
+n=20
+time setting for the shunt and bus voltage measurements. This approach=20
+is common in applications where the bus voltage tends to be relatively=20
+stable. This situation allows for the time focused on the bus voltage=20
+measurement to be reduced relative to the shunt voltage measurement. Fo=
+r=20
+example, the shunt voltage conversion time can be set to 4.156 ms with=20
+the bus voltage conversion time set to 588 =B5s for a 5-ms update time.
+There are trade-offs associated with conversion time settings and the=20
+averaging mode used. The averaging feature can significantly improve th=
+e=20
+measurement accuracy by effectively filtering the signal. This approach=
+=20
+allows the INA3221 to reduce the amount of noise in the measurement tha=
+t=20
+may be caused by noise coupling into the signal. A greater number of=20
+averages allows the INA3221 to be more effective in reducing the=20
+measurement noise component. The trade-off to this noise reduction is=20
+that the averaged value has a longer response time to input signal=20
+changes. This aspect of the averaging feature is mitigated to some=20
+extent with the critical alert feature that compares each single=20
+conversion to determine if a measured signal (with its noise component)=
+=20
+has exceeded the maximum acceptable level.
+
+
+
+We have different values for these parameters for oneshot and continuou=
+s=20
+mode.
+
+
 >
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mips/brcm/soc.txt | 2 +-
->  arch/mips/bmips/setup.c                             | 9 +++++++++
->  2 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mips/brcm/soc.txt b/Do=
-cumentation/devicetree/bindings/mips/brcm/soc.txt
-> index 4a7e030..1936e8a 100644
-> --- a/Documentation/devicetree/bindings/mips/brcm/soc.txt
-> +++ b/Documentation/devicetree/bindings/mips/brcm/soc.txt
-> @@ -4,7 +4,7 @@ Required properties:
->
->  - compatible: "brcm,bcm3384", "brcm,bcm33843"
->                "brcm,bcm3384-viper", "brcm,bcm33843-viper"
-> -              "brcm,bcm6328", "brcm,bcm6358", "brcm,bcm6368",
-> +              "brcm,bcm6328", "brcm,bcm6345", "brcm,bcm6358", "brcm,=
-bcm6368",
->                "brcm,bcm63168", "brcm,bcm63268",
->                "brcm,bcm7125", "brcm,bcm7346", "brcm,bcm7358", "brcm,=
-bcm7360",
->                "brcm,bcm7362", "brcm,bcm7420", "brcm,bcm7425"
+> Again, I don't think this is really device tree material.
+> However, you could argue the right decision on this is hardware depen=
+dant
+> as it really depends on ripple in the voltages? Not how it's describe=
+d in
+> the datasheet though.
 
-This is reasonable.
-
-> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-> index f146d12..b0d339d 100644
-> --- a/arch/mips/bmips/setup.c
-> +++ b/arch/mips/bmips/setup.c
-> @@ -95,6 +95,14 @@ static void bcm6328_quirks(void)
->                 bcm63xx_fixup_cpu1();
->  }
->
-> +static void bcm6345_quirks(void)
-> +{
-> +       /*
-> +        * BCM6345 has only one CPU and no SMP support
-> +        */
-> +       bmips_smp_enabled =3D 0;
-> +}
-> +
->  static void bcm6358_quirks(void)
->  {
->         /*
-> @@ -113,6 +121,7 @@ static const struct bmips_quirk bmips_quirk_list[=
-] =3D {
->         { "brcm,bcm3384-viper",         &bcm3384_viper_quirks        =
-   },
->         { "brcm,bcm33843-viper",        &bcm3384_viper_quirks        =
-   },
->         { "brcm,bcm6328",               &bcm6328_quirks              =
-   },
-> +       { "brcm,bcm6345",               &bcm6345_quirks              =
-   },
->         { "brcm,bcm6358",               &bcm6358_quirks              =
-   },
->         { "brcm,bcm6368",               &bcm6368_quirks              =
-   },
->         { "brcm,bcm63168",              &bcm6368_quirks              =
-   },
-
-This part is unnecessary, as cpu-bmips will only try to enable smp for
-bmips4350 and higher. but not for bmips32/bmips3300.
+The tuning is done on platform specific and hence it is from the device=
+=20
+tree here.
 
 
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> +
+>>> +one-shot-shunt-conv-time-us:	Integer in microseconds, ADC conversi=
+on time for
+>>> +				shunt voltage reading in oneshot mode.
+>>> +
+>>> +continuous-average-sample:	Integer, Number of sample to average be=
+fore
+>>> +				putting in the registers in continuous mode.
+> Classic oversampling - not device tree material as it may well want
+> runtime configuration.
+
+Yaah, it is oversampling.
+
+
+>>> +
+>>> +continuous-vbus-conv-time-us:	Integer in microseconds, ADC convers=
+ion time for
+>>> +				bus voltage reading in continuous mode.
+> Why should these be different from the one-shot versions?  Might be
+> separately controlled (though I don't think they are).  If one settin=
+g
+> makes sense fo the hardware in oneshot mode, surely the same setting =
+makes
+> sense in continuous mode.
+
+The oneshot and continuous mode get change in run time. We have=20
+different configuration for the continuous mode and one shot mode for=20
+the oversampling.
+
+>>> +
+>>> +continuous-shunt-conv-time-us:	Integer in microseconds, ADC conver=
+sion time for
+>>> +				shunt voltage reading in continuous mode.
+>> These all need vendor prefix and need to state the valid range of
+>> values.
+>>
+>>> +
+>>> +enable-power-monitor:		Boolean, Enable power monitoring of the dev=
+ice.
+> Is this the power good stuff?  description should be more detailed.
+
+If there is no shunt resistance then we can not enable power monitor on=
+=20
+that rail. Device does not mandate to have shunt and so this is based o=
+n=20
+platforms.
+
+
+
+>>> +
+>>> +enable-continuous-mode:		Boolean. Device support oneshot and conti=
+nuous
+>>> +				mode for the channel data conversion. Presence
+>>> +				of this property will enable the continuous
+>>> +				mode from boot.
+> Is the difference between driver load time and the point where usespa=
+ce can
+> set it up significant enough to justify this?
+
+We change the mode dynamically. If we have more core then goto the=20
+continuous mode so that we can apply throttling if power consumption is=
+=20
+going more than requirement. If we are running single core then change=20
+to oneshot mode.
+
+
