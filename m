@@ -1,71 +1,53 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver
- for TI INA3221
-Date: Fri, 3 Jun 2016 17:47:01 +0530
-Message-ID: <5751753D.40107@nvidia.com>
-References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com> <1464784454-7988-2-git-send-email-ldewangan@nvidia.com> <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org> <57516980.1040907@nvidia.com> <c12d7b59-3013-91fc-5414-5583bdb7d962@kernel.org>
+Subject: Re: [PATCH 1/3] iio: adc: ina3221: Add DT binding details
+Date: Fri, 3 Jun 2016 17:51:53 +0530
+Message-ID: <57517661.8090205@nvidia.com>
+References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com> <20160603020759.GA23947@rob-hp-laptop> <433b182c-fe43-df5c-ac6a-20a024630514@kernel.org> <57516E71.8080506@nvidia.com> <c5a10e77-d326-9fd5-7c5f-2f5593295b1e@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c12d7b59-3013-91fc-5414-5583bdb7d962@kernel.org>
+In-Reply-To: <c5a10e77-d326-9fd5-7c5f-2f5593295b1e@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>
+To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: corbet@lwn.net, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Friday 03 June 2016 05:39 PM, Jonathan Cameron wrote:
-> On 03/06/16 12:26, Laxman Dewangan wrote:
->> On Friday 03 June 2016 03:36 PM, Jonathan Cameron wrote:
->>
->> I thought that all ADC or monitors are going to be part of IIO device
->> framework. I saw the ina2xx which is same (single channel) which was
->> my reference point.
-> That had a rather specific use case IIRC - they needed the buffered support
-> to get the data fast enough.
+On Friday 03 June 2016 05:41 PM, Jonathan Cameron wrote:
+> On 03/06/16 12:48, Laxman Dewangan wrote:
+>> On Friday 03 June 2016 03:49 PM, Jonathan Cameron wrote:
+>>>>> +
+>>>>> +enable-power-monitor:        Boolean, Enable power monitoring of the device.
+>>> Is this the power good stuff?  description should be more detailed.
+>> If there is no shunt resistance then we can not enable power monitor
+>> on that rail. Device does not mandate to have shunt and so this is
+>> based on platforms.
+> The voltage shunt also becomes meaningless (unless you have other very
+> small voltage drops to measure!). So drop that channel as well.
+> Either it is there to do current measurement or it isn't.
 
-I think in our particular  requirements, we dont need the buffering 
-support but HW keep monitor and check with warning/critical threshold to 
-generate HW signal.
->>> Funily enough I know this datasheet a little as was evaluating
->>> it for use on some boards at the day job a week or so ago.
->>>
->>> Various comments inline. Major points are:
->>> * Don't use 'fake' channels to control events. If the events infrastructure
->>> doesn't handle your events, then fix that rather than working around it.
->>> * There is a lot of ABI in here concerned with oneshot vs continuous.
->>> This seems to me to be more than it should be. We wouldn't expect to
->>> see stuff changing as a result of switching between these modes other
->>> than wrt to when the data shows up.  So I'd expect to not see this
->>> directly exposed at all - but rather sit in oneshot unless either:
->>> 1) Buffered mode is running (not currently supported)
->>> 2) Alerts are on - which I think requires it to be in continuous mode.
->>>
->>> Other question to my mind is whether we should be reporting vshunt or
->>> (using device tree to pass resistance) current.
->> This is bus and shunt voltage device for power monitoring. In our
->> platforms, we use this device for bus current and so power monitor.
->>
->> We have two usecases, one is one shot, read when it needs it. And
->> other continuous when we have multiple core running then continuous
->> mode to get the power consumption by rail.
-> That's fine, but continuous should be using the buffered interfaces
-> really as that's there explicitly to support groups of channels
-> captured using a sequencer.
+OK. understood.
+
+
+>>>>> +
+>>>>> +enable-continuous-mode:        Boolean. Device support oneshot and continuous
+>>>>> +                mode for the channel data conversion. Presence
+>>>>> +                of this property will enable the continuous
+>>>>> +                mode from boot.
+>>> Is the difference between driver load time and the point where usespace can
+>>> set it up significant enough to justify this?
+>> We change the mode dynamically. If we have more core then goto the
+>> continuous mode so that we can apply throttling if power consumption
+>> is going more than requirement. If we are running single core then
+>> change to oneshot mode.
+> That's definitely a usespace or firmware decision, not a kernel one
+> to my mind - unless I guess you an enforcing bringing this device up
+> before firing up the additional cores?
 >
-> Then the abi ends up much more standard which is nice. Also allows
-> for high speed ish continuous monitoring which is what the was
-> I think the point of the single channel driver.
+> Then it's nasty but I can start to see some justification.
 
-The requirement for continuous monitoring is to ADC generate alert when 
-the current on bus cross the threshold of warning/critical level so that 
-alert signal can be used for throttling.
-So in my this particular usecase, we may not need buffered data.
-
-
->> Yaah, alert is used only on continuous mode and mainly used for
->> throttling when rail power goes beyond some limit.
-> Of interesting in Linux, or routed directly to hardware?
-
-Yaah, In some platform this is routed to the hardware for throttling.
+Yaah, this is FW decision. Our need on some platform was that start the 
+driver with the continuous mode.
+But I think that may be specific need. I can remove this and let user 
+space can enable the continuous mode.
