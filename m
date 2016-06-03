@@ -1,50 +1,116 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 01/11] serial: sh-sci: Update DT binding documentation for GPIO modem lines
-Date: Fri,  3 Jun 2016 12:00:01 +0200
-Message-ID: <1464948011-377-2-git-send-email-geert+renesas@glider.be>
-References: <1464948011-377-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1464948011-377-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Peter Hurley <peter@hurleysoftware.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-serial@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v5 1/2] drm/bridge: Add sii902x driver
+Date: Fri, 3 Jun 2016 12:02:38 +0200
+Message-ID: <20160603120238.76dc9380@bbrezillon>
+References: <1464879601-30569-1-git-send-email-boris.brezillon@free-electrons.com>
+ <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Emil Velikov <emil.l.velikov@gmail.com>, Meng Yi <meng.yi@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Amend the DT bindings for the Renesas SCI driver to allow describing
-optional GPIO-controlled modem lines, which can be used where dedicated
-modem lines are not available.
-
-The property naming is dictated by the Generic Serial DT Bindings.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
----
-v3:
-  - No changes,
-
-v2:
-  - Add Acked-by,
-  - Drop RFC status,
-  - Refer to the Generic Serial DT Bindings,
-  - Drop out[12]-gpios.
----
- Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-index 528c3b90f23cb04b..997baeaa869baa6f 100644
---- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-+++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -76,6 +76,8 @@ Optional properties:
-   - dmas: Must contain a list of two references to DMA specifiers, one for
- 	  transmission, and one for reception.
-   - dma-names: Must contain a list of two DMA names, "tx" and "rx".
-+  - {cts,dsr,dcd,rng,rts,dtr}-gpios: Specify GPIOs for modem lines, cfr. the
-+    generic serial DT bindings in serial.txt.
- 
- Example:
- 	aliases {
--- 
-1.9.1
-
+SGkgRW1pbCwKCk9uIEZyaSwgMyBKdW4gMjAxNiAxMDozODo0OSArMDEwMApFbWlsIFZlbGlrb3Yg
+PGVtaWwubC52ZWxpa292QGdtYWlsLmNvbT4gd3JvdGU6Cgo+IEhpIEJvcmlzLgo+IAo+IE9uIDIg
+SnVuZSAyMDE2IGF0IDE2OjAwLCBCb3JpcyBCcmV6aWxsb24KPiA8Ym9yaXMuYnJlemlsbG9uQGZy
+ZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4gCj4gPiArc3RhdGljIHZvaWQgc2lpOTAyeF9yZXNl
+dChzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCkKPiA+ICt7Cj4gPiArICAgICAgIGlmICghc2lpOTAy
+eC0+cmVzZXRfZ3BpbykKPiA+ICsgICAgICAgICAgICAgICByZXR1cm47Cj4gPiArICAKPiBUaGlz
+IGlzIHdyb25nIChyZXNldF9ncGlvIGlzIGVycl9wdHIpIGFsdGhvdWdoIHdlIGNhbi9zaG91bGQg
+bnVrZSBpdAo+IGFsbCB0b2dldGhlci4gU2VlIGJlbG93IGZvciByZWFzb25pbmcuCj4gCj4gPiAr
+ICAgICAgIGdwaW9kX3NldF92YWx1ZShzaWk5MDJ4LT5yZXNldF9ncGlvLCAxKTsKPiA+ICsKPiA+
+ICsgICAgICAgbXNsZWVwKDEwMCk7ICAKPiBPdWNoIHRoYXQgaXMgc29tZSBqdWljeSBudW1iZXIu
+IENhbiB3ZSBnZXQgYSBjb21tZW50IHdpdGgKPiByZWFzb25pbmcvb3JpZ2luIG9mIGl0ID8KCkFz
+IGFscmVhZHkgZXhwbGFpbmVkIHRvIE1heGltZSwgSSBqdXN0IGRvbid0IGtub3cgd2h5IHRoaXMg
+aXMgbmVlZGVkLApzaW1wbHkgYmVjYXVzZSBJIGRvbid0IGhhdmUgYWNjZXNzIHRvIHRoZSBkYXRh
+c2hlZXQgYW5kIEkganVzdCBiYXNlZCBteQppbXBsZW1lbnRhdGlvbiBvbiBhbm90aGVyIGRyaXZl
+ci4KSSBjYW4gYWRkIGEgY29tbWVudCBzdGF0aW5nIHRoYXQgdGhpcyB3YXMgZXh0cmFjdGVkIGZy
+b20gYW5vdGhlcgppbXBsZW1lbnRhdGlvbiwgYnV0IHdpdGggbm8gZXhwbGFuYXRpb24gb24gd2h5
+IHRoaXMgaXMgbmVlZGVkLgoKTWVuZywgZG8geW91IGhhdmUgYW55IGluZm9ybWF0aW9uIGFib3V0
+IHN0YXJ0dXAtdGltZSwgb3Igc29tZXRoaW5nIGxpa2UKdGhhdD8KCj4gCj4gLi4uCj4gCj4gPiAr
+c3RhdGljIHZvaWQgc2lpOTAyeF9icmlkZ2VfbW9kZV9zZXQoc3RydWN0IGRybV9icmlkZ2UgKmJy
+aWRnZSwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1f
+ZGlzcGxheV9tb2RlICptb2RlLAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKmFkaikKPiA+ICt7Cj4gPiArICAgICAgIHU4IGJ1
+ZltIRE1JX0lORk9GUkFNRV9IRUFERVJfU0laRSArIEhETUlfQVZJX0lORk9GUkFNRV9TSVpFXTsg
+IAo+IEhETUlfSU5GT0ZSQU1FX1NJWkUoQVZJKSBzZWVtcyBzaG9ydGVyL2Vhc2llciB0byBoZWFk
+IGltaG8uCgpZZXAuCgo+IAo+ID4gKyAgICAgICBzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCA9IGJy
+aWRnZV90b19zaWk5MDJ4KGJyaWRnZSk7Cj4gPiArICAgICAgIHN0cnVjdCByZWdtYXAgKnJlZ21h
+cCA9IHNpaTkwMngtPnJlZ21hcDsKPiA+ICsgICAgICAgc3RydWN0IGhkbWlfYXZpX2luZm9mcmFt
+ZSBmcmFtZTsKPiA+ICsgICAgICAgaW50IHJldDsKPiA+ICsKPiA+ICsgICAgICAgYnVmWzBdID0g
+YWRqLT5jbG9jazsKPiA+ICsgICAgICAgYnVmWzFdID0gYWRqLT5jbG9jayA+PiA4Owo+ID4gKyAg
+ICAgICBidWZbMl0gPSBhZGotPnZyZWZyZXNoOwo+ID4gKyAgICAgICBidWZbM10gPSAweDAwOwo+
+ID4gKyAgICAgICBidWZbNF0gPSBhZGotPmhkaXNwbGF5Owo+ID4gKyAgICAgICBidWZbNV0gPSBh
+ZGotPmhkaXNwbGF5ID4+IDg7Cj4gPiArICAgICAgIGJ1Zls2XSA9IGFkai0+dmRpc3BsYXk7Cj4g
+PiArICAgICAgIGJ1Zls3XSA9IGFkai0+dmRpc3BsYXkgPj4gODsKPiA+ICsgICAgICAgYnVmWzhd
+ID0gU0lMOTAyWF9UUElfQ0xLX1JBVElPXzFYIHwgU0lMOTAyWF9UUElfQVZJX1BJWEVMX1JFUF9O
+T05FIHwKPiA+ICsgICAgICAgICAgICAgICAgU0lMOTAyWF9UUElfQVZJX1BJWEVMX1JFUF9CVVNf
+MjRCSVQ7Cj4gPiArICAgICAgIGJ1Zls5XSA9IFNJTDkwMlhfVFBJX0FWSV9JTlBVVF9SQU5HRV9B
+VVRPIHwKPiA+ICsgICAgICAgICAgICAgICAgU0lMOTAyWF9UUElfQVZJX0lOUFVUX0NPTE9SU1BB
+Q0VfUkdCOwo+ID4gKyAgCj4gU2luY2UgYWxsIG9mIHRoZSBjb250ZW50cyBhcmUgY2xlYXJlZCBp
+biBoZG1pX2F2aV9pbmZvZnJhbWVfcGFjaywgbW92ZQo+IHRoZSBhYm92ZSBpbnRvIGNvbnN0IHZp
+ZGVvX2RhdGFbXSA/CgpTb21ldGhpbmcgbGlrZQoKCWNvbnN0IHZpZGVvX2RhdGFbXSA9IHsKCQlh
+ZGotPmNsb2NrLAoJCWFkai0+Y2xvY2sgPj4gOCwKCQkuLi4KCX07CgpTbyB3ZSB3b3VsZCBoYXZl
+IDIgYnVmZmVycyBvbiB0aGUgc3RhY2s/IElzIHRoaXMgcmVhbGx5IHVzZWZ1bD8KCj4gCj4gPiAr
+ICAgICAgIHJldCA9IHJlZ21hcF9idWxrX3dyaXRlKHJlZ21hcCwgU0lMOTAyWF9UUElfVklERU9f
+REFUQSwgYnVmLCAxMCk7ICAKPiAuLi4gYW5kIHVzZSBBUlJBWV9TSVpFKHZpZGVvX2RhdGEpIG92
+ZXIgdGhlIGhhcmRjb2RlZCAxMCA/Cj4gCj4gLi4uCj4gCj4gPiArc3RhdGljIGludCBzaWk5MDJ4
+X2JyaWRnZV9hdHRhY2goc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKPiA+ICt7Cj4gPiArICAg
+ICAgIHN0cnVjdCBzaWk5MDJ4ICpzaWk5MDJ4ID0gYnJpZGdlX3RvX3NpaTkwMngoYnJpZGdlKTsK
+PiA+ICsgICAgICAgc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IGJyaWRnZS0+ZGV2Owo+ID4gKyAg
+ICAgICBpbnQgcmV0Owo+ID4gKwo+ID4gKyAgICAgICBkcm1fY29ubmVjdG9yX2hlbHBlcl9hZGQo
+JnNpaTkwMngtPmNvbm5lY3RvciwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICZzaWk5MDJ4X2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MpOwo+ID4gKwo+ID4gKyAgICAgICBpZiAo
+IWRybV9jb3JlX2NoZWNrX2ZlYXR1cmUoZHJtLCBEUklWRVJfQVRPTUlDKSkgewo+ID4gKyAgICAg
+ICAgICAgICAgIGRldl9lcnIoJnNpaTkwMngtPmkyYy0+ZGV2LAo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgInNpaTkwMnggZHJpdmVyIGlzIG9ubHkgY29tcGF0aWJsZSB3aXRoIERSTSBkZXZp
+Y2VzIHN1cHBvcnRpbmcgYXRvbWljIHVwZGF0ZXMiKTsKPiA+ICsgICAgICAgICAgICAgICByZXR1
+cm4gLUVOT1RTVVBQOwo+ID4gKyAgICAgICB9Cj4gPiArCj4gPiArICAgICAgIHJldCA9IGRybV9j
+b25uZWN0b3JfaW5pdChkcm0sICZzaWk5MDJ4LT5jb25uZWN0b3IsCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAmc2lpOTAyeF9jb25uZWN0b3JfZnVuY3MsCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBEUk1fTU9ERV9DT05ORUNUT1JfSERNSUEpOyAgCj4g
+U2lkZSBub3RlOiBzZWVtcyBsaWtlIG1vc3QgcGxhY2VzIGluIERSTSBkbyBub3QgY2hlY2sgdGhl
+IHJldHVybiB2YWx1ZQo+ICh+ODAgdnMgfjIwKS4gSSB3b25kZXIgaG93IGJhZGx5L2xpa2VseSBh
+cmUgdGhpbmdzIHRvIGV4cGxvZGUuCgpZZXAuIEkgdGVuZCB0byBhbHdheXMgY2hlY2sgcmV0dXJu
+IGNvZGUsIGJ1dCBpZiB5b3Ugc2F5IGl0J3MgdXNlbGVzcwooYW5kIGVycm9yLXByb25lKSBJIGNh
+biByZW1vdmUgaXQuCgo+IAo+IC4uLgo+IAo+ID4gK3N0YXRpYyBpbnQgc2lpOTAyeF9wcm9iZShz
+dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgIGNv
+bnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkKPiA+ICt7ICAKPiAuLi4KPiAKPiA+ICsKPiA+
+ICsgICAgICAgc2lpOTAyeC0+cmVzZXRfZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRl
+diwgInJlc2V0IiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIEdQSU9EX09VVF9MT1cpOwo+ID4gKyAgICAgICBpZiAoSVNfRVJSKHNpaTkw
+MngtPnJlc2V0X2dwaW8pKQo+ID4gKyAgICAgICAgICAgICAgIGRldl93YXJuKGRldiwgIkZhaWxl
+ZCB0byByZXRyaWV2ZS9yZXF1ZXN0IHJlc2V0IGdwaW86ICVsZFxuIiwKPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICBQVFJfRVJSKHNpaTkwMngtPnJlc2V0X2dwaW8pKTsKPiA+ICsgIAo+IERv
+Y3VtZW50YXRpb24gc2F5cyAiUmVxdWlyZWQiIG5vdCBvcHRpb25hbC4gVGhlIGFib3ZlIHNob3Vs
+ZCBiZQo+IHVwZGF0ZWQgYW5kIG9uZSBzaG91bGQgZXJyb3Igb3V0IGlmIG1pc3NpbmcsIHJpZ2h0
+ID8KCkFjdHVhbGx5IEkgd2FzIGFza2VkIHRvIG1ha2UgaXQgb3B0aW9uYWwsIGp1c3QgZm9yZ290
+IHRvIHVwZGF0ZSB0aGUKZG9jdW1lbnRhdGlvbi4gVGhpcyBiZWluZyBzYWlkLCBkZXZtX2dwaW9k
+X2dldF9vcHRpb25hbCgpIHJldHVybnMgTlVMTAppZiB0aGUgcHJvcGVydHkgaXMgbm90IGRlZmlu
+ZWQgaW4gdGhlIERUIGFuZCBhbiBlcnJvciBjb2RlIGlmIHRoZSBlcnJvcgpjb21lcyBmcm9tIHRo
+ZSBHUElPIGxheWVyLCBzbyBJIHNob3VsZCBqdXN0IHN3aXRjaCBiYWNrIHRvIGRldl9lcnIoKQph
+bmQgcmV0dXJuIHRoZSBlcnJvciBjb2RlIGhlcmUuCgpUaGlzIHdvdWxkIG1ha2UgdGhlIHRlc3Qg
+aW4gc2lpOTAyeF9yZXNldCgpIHZhbGlkIGFnYWluLgoKPiAKPiAuLi4KPiAKPiA+ICsKPiA+ICsg
+ICAgICAgaWYgKGNsaWVudC0+aXJxID4gMCkgeyAgCj4gSSB3YXMgYWx3YXlzIGNvbmZ1c2VkIHdo
+aWNoIGlzIHRoZSBjb3JyZWN0IHdheSB0byBjaGVjayB0aGlzID49IDAgdnMgPgo+IDAuIERSTSBo
+YXMgYm90aCA6LVwKPiBEbyB5b3UgaGF2ZSBhbnkgc3VnZ2VzdGlvbnMsIHNob3VsZCBiZSAnbWFz
+cyBjb252ZXJ0JyBEUk0gdG8gdXNlIG9ubHkKPiBvbmUgb2YgdGhlIHR3byA/CgpOb3Qgc3VyZSAw
+IGlzIGEgdmFsaWQgaXJxIG51bWJlciBhbnltb3JlLCBzbyBJIGRvbid0IHRoaW5rIGl0J3MgcmVh
+bGx5CmltcG9ydGFudCwgYnV0IEkgY2FuIGNoYW5nZSBpdCBpZiB5b3Ugd2FudC4KClJlZ2FyZHMs
+CgpCb3JpcwoKLS0gCkJvcmlzIEJyZXppbGxvbiwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGlu
+dXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
