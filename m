@@ -1,124 +1,84 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v7 4/5] dtc: Plugin and fixup support
-Date: Fri, 3 Jun 2016 11:11:23 +1000
-Message-ID: <20160603011123.GB1087@voom.fritz.box>
-References: <1464112239-29856-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1464112239-29856-5-git-send-email-pantelis.antoniou@konsulko.com>
- <20160527073306.GA17226@voom.fritz.box>
- <20160531050634.GJ17226@voom.fritz.box>
- <60DA9B11-16A5-49C6-AB27-888D4FCBE3A3@konsulko.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 3/4] doc: dt: pwm: add binding for ChromeOS EC PWM
+Date: Thu, 2 Jun 2016 18:17:39 -0700
+Message-ID: <20160603011739.GA36948@google.com>
+References: <1464399556-17222-1-git-send-email-briannorris@chromium.org>
+ <1464399556-17222-4-git-send-email-briannorris@chromium.org>
+ <CAMHSBOWSJbcsuojctqOY+8d2Bg8Txtxd-5wFrM0LwJQt7=YRQQ@mail.gmail.com>
+ <20160601011059.GB121799@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1UWUbFP1cBYEclgG"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <60DA9B11-16A5-49C6-AB27-888D4FCBE3A3-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160601011059.GB121799@google.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Gwendal Grignou <gwendal@chromium.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, Linux Kernel <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Sameer Nanda <snanda@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---1UWUbFP1cBYEclgG
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+After some more thought, a small change in plans.
 
-On Thu, Jun 02, 2016 at 08:13:51PM +0300, Pantelis Antoniou wrote:
-> Hi David,
->=20
-> > On May 31, 2016, at 08:06 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
-wrote:
-> >=20
-> > On Fri, May 27, 2016 at 05:33:06PM +1000, David Gibson wrote:
-> >> On Tue, May 24, 2016 at 08:50:38PM +0300, Pantelis Antoniou wrote:
-> >>> This patch enable the generation of symbols & local fixup information
-> >>> for trees compiled with the -@ (--symbols) option.
-> >>>=20
-> >>> Using this patch labels in the tree and their users emit information
-> >>> in __symbols__ and __local_fixups__ nodes.
-> >>>=20
-> >>> The __fixups__ node make possible the dynamic resolution of phandle
-> >>> references which are present in the plugin tree but lie in the
-> >>> tree that are applying the overlay against.
-> >>>=20
-> >>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> >>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>> Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>=20
-> >> So, I think I've identified the underlying thing which was bothering
-> >> me about these patches.
-> >>=20
-> >> With the new dynamic patching stuff, "overlays" (for want of a better
-> >> term) now have a real existence both in the dts source format, and in
-> >> the dtb object format.  However, these patches don't give them a
-> >> concrete, explicit representation within dtc itself - instead we just
-> >> kind of mangle one representation to the other as we're parsing.  I
-> >> think this is a mistaken approach.
-> >>=20
-> >> I'm toying with some patches to give overlays a full representation in
-> >> dtc which I think will handle these cases better - and allow for
-> >> easier experimentation with different possible ways of encoding the
-> >> overlays.
-> >>=20
-> >> One side point - writing plugins in dts format leads to an irritating
-> >> little ambiguity in the grammar.  Well, not an ambiguity technically,
-> >> but a place where we need more lookahead than normal, meaning we get
-> >> shift/reduce conflicts.  It arises because both memreserves and
-> >> overlays can have a label in front of them.  So, if we see a label as
-> >> our next token after the version tag, we don't know if a memreserve or
-> >> overlay is coming next, so the parser doesn't know which path to go
-> >> down (with a single token lookahead).  We could handle it with
-> >> %glr-parser, of course, but I have been trying to avoid that.  I think
-> >> this will apply both with your patches and with the approach I'm
-> >> working on - not sure what to do about it yet.
-> >=20
-> > I now have a first cut at said experiments, see:
-> >    https://github.com/dgibson/dtc/tree/overlay
-> >=20
->=20
-> Rebased my work and will submit again a couple of minutes.
->=20
-> Everything works besides a small niggle with the overlay syntax.
->=20
-> You cannot get rid of the basetree token. So=E2=80=A6
->=20
-> &foo { };=20
->=20
-> Does not work for an overlay, you need a dummy basetree=20
->=20
-> / { }; &foo { };
+On Tue, May 31, 2016 at 06:10:59PM -0700, Brian Norris wrote:
+> On Sat, May 28, 2016 at 10:00:45PM -0700, Gwendal Grignou wrote:
+> > Instead of using device tree, assuming you have firmware control,
+> > another way could be to add a firmware feature:
+> 
+> I do have firmware control, but I don't think that will be too necessary
+> actually.
+> 
+> > for instance, there is one EC_FEATURE_PWM_FAN, the fan PWM, one for
+> > the keyboard lightning as well. (see num ec_feature_code)
+> > By adding one more, you let cros_ec_dev load the platform driver for
+> > you, it works even if the machine does not use device tree.
+> 
+> I think we can actually get this without doing the EC_FEATURE_* thing
+> (which notably is not in upstream, BTW), nor by requiring a separate
+> node with the "google,cros-ec-pwm" property, but instead by running a
+> sample EC_CMD_PWM_GET_DUTY command on indeces [0, 255], stopping at the
+> first INVAL_PARAM failure (if we stop at 0, then we have no PWM API at
+> all).
+> 
+> But that still leaves the problem of mapping PWMs to consumer devices.
+> The phandle translation is very helpful for our DT-based systems, but
+> there isn't a really nice equivalent for non-DT ones. I see struct
+> pwm_lookup, which looks like it could do some of what we want, but we'd
+> still either need to encode a ton of board-specific information in the
+> kernel, or else start exposing PWMs via the non-EC_PWM_TYPE_GENERIC
+> methods (see the new enum ec_pwm_type, where we can see
+> EC_PWM_TYPE_KB_LIGHT and EC_PWM_TYPE_DISPLAY_LIGHT).
 
+I think the way that DT systems and non-DT systems work means that we
+really want to address this in different ways. DT has nice phandles,
+which naturally work well with index-based addressing, while non-DT has
+the much inferior pwm_lookup stuff, which we'd have to encode directly
+in the drivers, and which would probably work out better with the
+TYPE-based addressing. So if/when we want to work on the non-DT case,
+we'll just need to extend this driver to support either method.
+But as we're interested in DT right now, I plan to only implement the DT
+method.
 
-Right, it was my intention to remove that restriction but it hits the
-grammar complication discussed above.  I might have to bite the bullet
-and turn on %glr-parser.
+> Anyway, along this line, perhaps it makes sense to:
+> 
+>  (a) drop the "google,cros-ec-pwm" property (via the probe method I
+>  described above)
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+So I will be doing (a) still...
 
---1UWUbFP1cBYEclgG
-Content-Type: application/pgp-signature; name="signature.asc"
+>  (b) drop the separate node for "google,cros-ec-pwm", since the presence
+>  of this feature can be detected by the same methods as in (a)
+> 
+> leaving the only DT binding change to be to:
+> 
+>  (c) add an optional #pwm-cells property to the cros-ec node
+>  (Documentation/devicetree/bindings/mfd/cros-ec.txt) so that we can
+>  still utilize the nice PWM of_xlate stuff (and its corresponding pwms =
+>  <...> property for consumer devices)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+...but I'm not doing (b) or (c).
 
-iQIcBAEBAgAGBQJXUNk7AAoJEGw4ysog2bOSvOAQANezX4rsaZk4CK0XhPvSdaH5
-lPFRpAYNoQW3l5mcClMrNTpRKCWLAT0LOQwVIqG11zJTIsM/rXKTuCb0fPWCNqss
-/N51Y4+6bJacGi5mwbsR5CGQ5WkVAIby8ZVChutNyJwOfjMRnHUyG682GitfkVUb
-jl9wiLq47N//K4wTBOwElgVh8iJzYntVbIHOdba+bzQRnIQrOU66Px7rEV2pluuR
-ZbTx5WgxIFJKOaH2zvkB1x6wf0ba7MB17ZHQnhfWufKE5TDNZF4hKx4sSwbmt04h
-NOWn0apz1EgGdrd95YnrfvX5Kxa1SzTwysuEKDNekH2nmCaas7vkJyVzJOjhmyMv
-qNTQ6yWhFcFwSJhB0K8eo9jl+qIxOt2qED2J3Wqb0WCvmS7yz9XCHZGOefVmZ/kU
-GagRvCE+QKJqQmKPb/x4DCLw532MOWC+Pt5D3vfhrMK9DRt72AWI04A+n2Q2UJPZ
-Yzqqkd7wlcwliO1t8DA6SajdXdnbn6OW2SuQfeKRbxcCuWw+M9N6FGjp8eyiwhY8
-KslvFy3GPKNalbtWnlNHMOnPDgUSvyHf/XuDR4J70rviZUXp6rS2/B6ZFcCYVejT
-9RP/npAuGzg0f5sWjsrL2gQ8gsQndWVypBVXtHtSqKLEarB5TFFWYhJ2YSeyMGRa
-ZBCB6GyiIjwSgi5qoM3Y
-=N4FT
------END PGP SIGNATURE-----
+Will send v2 shortly.
 
---1UWUbFP1cBYEclgG--
+Regards,
+Brian
