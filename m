@@ -1,67 +1,107 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: Re: [PATCH v3] ASoC: rockchip: Add machine driver for
-	MAX98357A/RT5514/DA7219
-Date: Fri, 03 Jun 2016 22:16:12 +0800
-Message-ID: <5751912C.6080904@rock-chips.com>
-References: <1464267742-15312-1-git-send-email-zhengxing@rock-chips.com>
- <20160601144542.GA3835@rob-hp-laptop>
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH v2 1/3] of: add common OF-based component functionality
+Date: Fri, 03 Jun 2016 15:21:19 +0100
+Message-ID: <E1b8pyR-0005OJ-V3@rmk-PC.armlinux.org.uk>
+References: <20160603141548.GC1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160601144542.GA3835@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, dianders@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160603141548.GC1041@n2100.armlinux.org.uk>
+Content-Disposition: inline
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMjAxNuW5tDA25pyIMDHml6UgMjI6NDUsIFJvYiBIZXJyaW5nIHdyb3RlOgo+
-IE9uIFRodSwgTWF5IDI2LCAyMDE2IGF0IDA5OjAyOjIyUE0gKzA4MDAsIFhpbmcgWmhlbmcgd3Jv
-dGU6Cj4+IFRoZXJlIGFyZSBtdWx0aSBjb2RlYyBkZXZpY2VzIG9uIHRoZSBSSzMzOTkgcGxhdGZv
-cm0sIHdlIGNhbiB1c2UKPj4gdGhpcyBwYXRjaCBzdXBwb3J0IGFuZCBjb250cm9sIHRoZXNlIGNv
-ZGVjcy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWGluZyBaaGVuZzx6aGVuZ3hpbmdAcm9jay1jaGlw
-cy5jb20+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VzIGluIHYzOgo+PiAtIHJlbmFtZSBET0MgdG8gcm9j
-a2NoaXAscmszMzk5LW1heDk4MzU3YS1ydDU1MTQtZGE3MjE5LnR4dAo+PiAtIHJlbmFtZSBjb21w
-YXRpYmxlIHRvIHJvY2tjaGlwLHJrMzM5OS1tYXg5ODM1N2EtcnQ1NTE0LWRhNzIxOQo+PiAtIHJl
-bmFtZSBzb3VyY2UgY29kZSB0byByazMzOTlfbWF4OTgzNTdhX3J0NTUxNF9kYTcyMTkuYwo+Pgo+
-PiBDaGFuZ2VzIGluIHYyOgo+PiAtIHVzZSB0aGUgRlMgMjU2IHRvIHNldCBtY2xrcyBvZiB0aGUg
-bWF4OTgzNTdhIGFuZCBydDU1MTQgZGFuYW1pY2FsbHkKPj4gLSBhZGQgbW9yZSBzYW1wbGUgcmF0
-ZSBmb3IgZGE3MjE5Cj4+Cj4+ICAgLi4uL3JvY2tjaGlwLHJrMzM5OS1tYXg5ODM1N2EtcnQ1NTE0
-LWRhNzIxOS50eHQgICAgfCAgIDE1ICsKPj4gICBzb3VuZC9zb2Mvcm9ja2NoaXAvS2NvbmZpZyAg
-ICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTEgKwo+PiAgIHNvdW5kL3NvYy9yb2NrY2hpcC9N
-YWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArCj4+ICAgLi4uL3NvYy9yb2Nr
-Y2hpcC9yazMzOTlfbWF4OTgzNTdhX3J0NTUxNF9kYTcyMTkuYyAgfCAgMzMzICsrKysrKysrKysr
-KysrKysrKysrCj4+ICAgNCBmaWxlcyBjaGFuZ2VkLCAzNjEgaW5zZXJ0aW9ucygrKQo+PiAgIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQv
-cm9ja2NoaXAscmszMzk5LW1heDk4MzU3YS1ydDU1MTQtZGE3MjE5LnR4dAo+PiAgIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBzb3VuZC9zb2Mvcm9ja2NoaXAvcmszMzk5X21heDk4MzU3YV9ydDU1MTRfZGE3
-MjE5LmMKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9zb3VuZC9yb2NrY2hpcCxyazMzOTktbWF4OTgzNTdhLXJ0NTUxNC1kYTcyMTkudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3JvY2tjaGlwLHJrMzM5OS1tYXg5
-ODM1N2EtcnQ1NTE0LWRhNzIxOS50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXgg
-MDAwMDAwMC4uM2FlNjAzZQo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9yb2NrY2hpcCxyazMzOTktbWF4OTgzNTdhLXJ0NTUx
-NC1kYTcyMTkudHh0Cj4+IEBAIC0wLDAgKzEsMTUgQEAKPj4gK1JPQ0tDSElQIHdpdGggTUFYOTgz
-NTdBL1JUNTUxNC9EQTcyMTkgY29kZWNzCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+
-ICstIGNvbXBhdGlibGU6ICJyb2NrY2hpcCxyazMzOTktbWF4OTgzNTdhLXJ0NTUxNC1kYTcyMTki
-Cj4gSSdtIHN0aWxsIG5vdCB2ZXJ5IGNsZWFyIG9uIHRoZSBuYW1pbmcgY29udmVudGlvbiB0aG91
-Z2hvdXQgdGhpcy4gVGhpcwo+IGRvZXNuJ3Qgc2VlbSBsaWtlIGEgcGF0dGVybiB3ZSB3YW50IHRv
-IHJlcGVhdCAoPGNoaXA+LTxjb2RlYz4tPGNvZGVjPikuCj4KVGhhbmsgeW91IGZvciB5b3VyIHJl
-cGx5LiA6LSkKCkkgcmVmZXJlZCB0byBNVEsncyBtdDgxNzMtcnQ1NjUwLXJ0NTUxNC50eHQgb24g
-dXBzdHJlYW0sIHRoYXQgY29tcGF0aWJsZSAKbmFtZSBpcyAibWVkaWF0ZWssbXQ4MTczLXJ0NTY1
-MC1ydDU1MTQiLgpCZWNhdXNlIG91ciBwbGF0Zm9ybSBuZWVkIHRvIHN1cHBvcnQgMyBjb2RlY3Mg
-KG1heDk4MzU3YSAvIGRhNzIxOSAvIApydDU1MTQpLiBQZXJoYXBzLCB5b3UgbWF5YmUgZmVlbCB0
-aGF0IG5hbWUgaXMgdG9vIGxvbmc/IEFuZCwgY291bGQgeW91IApwbGVhc2UgdGVsbCBtZSB3aGF0
-IG5hbWVzIHdvdWxkIGJlIGJldHRlcj8KCkZvciBleGFtcGxlOiAicmszMzk5LWNvbXBvc2l0ZS1j
-b2RlY3MiID8KClRoYW5rcy4KCgotLSAKLSBYaW5nIFpoZW5nCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxz
-YS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+Add common OF-based component functionality for matching devices by
+device node, and releasing the device node at the appropraite time.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ drivers/of/Makefile          |  2 +-
+ drivers/of/of_component.c    | 41 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_component.h | 14 ++++++++++++++
+ 3 files changed, 56 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/of/of_component.c
+ create mode 100644 include/linux/of_component.h
+
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index d7efd9d458aa..6a4a5e2c0839 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -1,4 +1,4 @@
+-obj-y = base.o device.o platform.o
++obj-y = base.o of_component.o device.o platform.o
+ obj-$(CONFIG_OF_DYNAMIC) += dynamic.o
+ obj-$(CONFIG_OF_FLATTREE) += fdt.o
+ obj-$(CONFIG_OF_EARLY_FLATTREE) += fdt_address.o
+diff --git a/drivers/of/of_component.c b/drivers/of/of_component.c
+new file mode 100644
+index 000000000000..41e6e817d264
+--- /dev/null
++++ b/drivers/of/of_component.c
+@@ -0,0 +1,41 @@
++/*
++ * Copyright (C) 2016 Russell King.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#include <linux/component.h>
++#include <linux/device.h>
++#include <linux/of.h>
++#include <linux/of_component.h>
++#include <linux/of_graph.h>
++
++static void component_release_of(struct device *dev, void *data)
++{
++	of_node_put(data);
++}
++
++void component_match_add_of_compare(struct device *master,
++	struct component_match **matchptr,
++	int (*compare)(struct device *, void *), struct device_node *node)
++{
++	of_node_get(node);
++	component_match_add_release(master, matchptr, component_release_of,
++				    compare, node);
++}
++EXPORT_SYMBOL_GPL(component_match_add_of_compare);
++
++static void component_compare_of(struct device *dev, void *data)
++{
++	return dev->of_node == data;
++}
++
++void component_match_add_of(struct device *master,
++	struct component_match **matchptr, struct device_node *node)
++{
++	of_node_get(node);
++	component_match_add_release(master, matchptr, component_release_of,
++				    component_compare_of, node);
++}
++EXPORT_SYMBOL_GPL(component_match_add_of);
+diff --git a/include/linux/of_component.h b/include/linux/of_component.h
+new file mode 100644
+index 000000000000..a8170ba3b786
+--- /dev/null
++++ b/include/linux/of_component.h
+@@ -0,0 +1,14 @@
++#ifndef __LINUX_COMPONENT_OF_H
++#define __LINUX_COMPONENT_OF_H
++
++struct component_match;
++struct device;
++struct device_node;
++
++void component_match_add_of_compare(struct device *master,
++	struct component_match **matchptr,
++	int (*compare)(struct device *, void *), struct device_node *node);
++void component_match_add_of(struct device *master,
++	struct component_match **matchptr, struct device_node *node);
++
++#endif
+-- 
+2.1.0
