@@ -1,41 +1,57 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v4 10/18] ASoC: sti: Update DT example to match the
- driver code
-Date: Fri, 3 Jun 2016 14:05:12 +0100
-Message-ID: <20160603130512.GF9912@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
- <1464192412-16386-12-git-send-email-peter.griffin@linaro.org>
- <20160527171403.GN16172@sirena.org.uk>
+From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/4] USB: Fix of_usb_get_dr_mode_by_phy with a shared phy
+ block
+Date: Fri, 3 Jun 2016 08:04:54 -0500
+Message-ID: <20160603130454.GA3778@uda0271908>
+References: <1464888666-17728-1-git-send-email-hdegoede@redhat.com>
+ <20160602181648.GB28820@uda0271908>
+ <88cada17-af4c-9548-e734-351b6695e30f@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160527171403.GN16172@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, arnaud.pouliquen@st.com
+In-Reply-To: <88cada17-af4c-9548-e734-351b6695e30f-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi,
 
-On Fri, 27 May 2016, Mark Brown wrote:
-
-> On Wed, May 25, 2016 at 05:06:44PM +0100, Peter Griffin wrote:
-> > uniperiph-id, version and mode are ST specific bindings and
-> > need the 'st,' prefix. Update the examples, as otherwise copying
-> > them yields a runtime error parsing the DT node.
+On Fri, Jun 03, 2016 at 12:34:35PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> You've not copied me on the rest of the series so I've no idea what's
-> going on with dependencies.  When sending a patch series it is important
-> to ensure that all the various maintainers understand what the
-> relationship between the patches as the expecation is that there will be
-> interdependencies.  Either copy everyone on the whole series or at least
-> copy them on the cover letter and explain what's going on.  If there are
-> no strong interdependencies then it's generally simplest to just send
-> the patches separately to avoid any possible confusion.
+> On 02-06-16 20:16, Bin Liu wrote:
+> >Hi,
+> >
+> >On Thu, Jun 02, 2016 at 07:31:03PM +0200, Hans de Goede wrote:
+> >>Some SoCs have a single phy-hw-block with multiple phys, this is
+> >>modelled by a single phy dts node, so we end up with multiple
+> >>controller nodes with a phys property pointing to the phy-node
+> >>of the otg-phy.
+> >>
+> >>Only one of these controllers typically is an otg controller, yet we
+> >
+> >Is it guaranteed that only one of them will be otg?
+> 
+> I guess not, but if there are 2 then with my patch we are of no worse
+> then today, we will then pick the first otg controller. Whereas
 
-Ok will bare this in mind for v5 series.
+What if the first otg controller is not what we want? this patch does
+not solve the problem. I would think Kishon's suggestion in another
+email - seperate dt phy nodes - is a better option.
+
+> of_usb_get_dr_mode_by_phy currently is broken even on setups with
+> a shared phy dt-node and only 1 otg controller, which are quite
+> common.
+
+If that is the case, the model has to be changed. Otherwise, a single
+phy driver is unable to handle different operations from multiple
+controllers.
 
 Regards,
-
-Peter.
+-Bin.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
