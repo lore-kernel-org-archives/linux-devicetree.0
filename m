@@ -1,40 +1,42 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 1/3] of: add common OF-based component functionality
-Date: Fri, 3 Jun 2016 17:11:29 +0100
-Message-ID: <20160603161129.GF1041@n2100.armlinux.org.uk>
-References: <20160603141548.GC1041@n2100.armlinux.org.uk>
- <E1b8pyR-0005OJ-V3@rmk-PC.armlinux.org.uk>
- <20160603154430.GA21013@ulmo.ba.sec>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH 4/5] ARM: dts: Arria10 ECC Manager IRQ controller changes
+Date: Fri, 3 Jun 2016 11:06:18 -0500
+Message-ID: <alpine.DEB.2.02.1606031105540.1763@linux-builds1>
+References: <1464193783-5071-1-git-send-email-tthayer@opensource.altera.com>
+ <1464193783-5071-5-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160603154430.GA21013@ulmo.ba.sec>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1464193783-5071-5-git-send-email-tthayer@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tthayer@opensource.altera.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, robh+dt@kernel.org, bp@alien8.de, dougthompson@xmission.com, grant.likely@linaro.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2016 at 05:44:30PM +0200, Thierry Reding wrote:
-> On Fri, Jun 03, 2016 at 03:21:19PM +0100, Russell King wrote:
-> [...]
-> > diff --git a/drivers/of/of_component.c b/drivers/of/of_component.c
-> [...]
-> > +static void component_compare_of(struct device *dev, void *data)
-> > +{
-> > +	return dev->of_node == data;
-> > +}
+On Wed, 25 May 2016, tthayer@opensource.altera.com wrote:
+
+> From: Thor Thayer <tthayer@opensource.altera.com>
 > 
-> The return statement here doesn't match the return value. Didn't GCC
-> complain about this?
+> Changes to support IRQ controller implementation including adding
+> new property irq-controller to eccmgr and adding IRQ property
+> to children.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+>  arch/arm/boot/dts/socfpga_arria10.dtsi |    6 ++++++
+>  1 file changed, 6 insertions(+)
+>
 
-I didn't build-test it, because I wanted people's opinions on it first
-(building means rebuilding my entire tree...)
+Applied! 
 
-Anyway, the patch series is dead because I'm not prepared to make the
-changes which Rob mentioned, so we're back to v1 instead.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Thanks,
+Dinh
