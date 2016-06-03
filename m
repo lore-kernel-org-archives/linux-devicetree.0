@@ -1,37 +1,51 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] drm/bridge: Add sii902x driver
-Date: Fri, 03 Jun 2016 15:20:08 +0200
-Message-ID: <1464960008.32235.1.camel@pengutronix.de>
-References: <1464879601-30569-1-git-send-email-boris.brezillon@free-electrons.com>
-	 <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver for
+ TI INA3221
+Date: Fri, 3 Jun 2016 06:29:34 -0700
+Message-ID: <5751863E.907@roeck-us.net>
+References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com>
+ <1464784454-7988-2-git-send-email-ldewangan@nvidia.com>
+ <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>, Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 03.06.2016, 10:38 +0100 schrieb Emil Velikov:
-> Hi Boris.
-[...]
-> 
-> > +
-> > +       if (client->irq > 0) {
-> I was always confused which is the correct way to check this >= 0 vs >
-> 0. DRM has both :-\
-> Do you have any suggestions, should be 'mass convert' DRM to use only
-> one of the two ?
-> 
-IRQ 0 is "no assigned irq", so invalid. Checking for > 0 is the right
-thing to do.
+On 06/03/2016 03:06 AM, Jonathan Cameron wrote:
+> On 01/06/16 13:34, Laxman Dewangan wrote:
+>> The INA3221 is a three-channel, high-side current and bus voltage monitor
+>> with an I2C interface from Texas Instruments. The INA3221 monitors both
+>> shunt voltage drops and bus supply voltages in addition to having
+>> programmable conversion times and averaging modes for these signals.
+>> The INA3221 offers both critical and warning alerts to detect multiple
+>> programmable out-of-range conditions for each channel.
+>>
+>> Add support for INA3221 SW driver via IIO ADC interface. The device is
+>> register as iio-device and provides interface for voltage/current and power
+>> monitor. Also provide interface for setting oneshot/continuous mode and
+>> critical/warning threshold for the shunt voltage drop.
+>>
+>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Hi Laxman,
+>
+> As ever with any driver lying on the border of IIO and hwmon, please include
+> a short justification of why you need an IIO driver and also cc the
+> hwmon list + maintainers. (cc'd on this reply).
+>
+> I simply won't take a driver where the hwmon maintainers aren't happy.
+> As it stands I'm not seeing obvious reasons in the code for why this
+> should be an IIO device.
+>
 
-Regards,
-LUcas
+Me not either.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have a hwmon driver for the same chip pending from Andrew Davis (TI)
+which I am just about to accept. We had directed Andrew back in April
+to write a hwmon driver for the chip, which he did.
+
+Guenter
