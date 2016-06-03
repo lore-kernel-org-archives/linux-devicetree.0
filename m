@@ -1,150 +1,164 @@
-From: <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 2/2] ASoC: cs35l33: Add device tree bindings file for cs35l33
-Date: Fri, 3 Jun 2016 15:11:48 -0500
-Message-ID: <1464984708-2748-1-git-send-email-Paul.Handrigan@cirrus.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 04/14] pwm: rockchip: Add support for hardware readout
+Date: Fri, 3 Jun 2016 13:20:06 -0700
+Message-ID: <20160603202006.GC124478@google.com>
+References: <1464942192-25967-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1464942192-25967-5-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1464942192-25967-5-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+On Fri, Jun 03, 2016 at 10:23:02AM +0200, Boris Brezillon wrote:
+> Implement the ->get_state() function to expose initial state.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> ---
+>  drivers/pwm/pwm-rockchip.c | 67 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+> index 68d72ce..dfacf7d 100644
+> --- a/drivers/pwm/pwm-rockchip.c
+> +++ b/drivers/pwm/pwm-rockchip.c
+> @@ -51,6 +51,8 @@ struct rockchip_pwm_data {
+>  
+>  	void (*set_enable)(struct pwm_chip *chip,
+>  			   struct pwm_device *pwm, bool enable);
+> +	void (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			  struct pwm_state *state);
+>  };
+>  
+>  static inline struct rockchip_pwm_chip *to_rockchip_pwm_chip(struct pwm_chip *c)
+> @@ -75,6 +77,19 @@ static void rockchip_pwm_set_enable_v1(struct pwm_chip *chip,
+>  	writel_relaxed(val, pc->base + pc->data->regs.ctrl);
+>  }
+>  
+> +static void rockchip_pwm_get_state_v1(struct pwm_chip *chip,
+> +				      struct pwm_device *pwm,
+> +				      struct pwm_state *state)
+> +{
+> +	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
+> +	u32 enable_conf = PWM_CTRL_OUTPUT_EN | PWM_CTRL_TIMER_EN;
+> +	u32 val;
+> +
+> +	val = readl(pc->base + pc->data->regs.ctrl);
 
-Add device tree bindings file for the cs35l33 8V boosted
-class D amplifier.
+Nit: I just noticed you've been starting to use readl()/writel() in this
+series, where previously {readl,writel}_relaxed() were being used. Any
+reason?
 
-Signed-off-by: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/sound/cs35l33.txt          | 114 +++++++++++++++++++++
- 1 file changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cs35l33.txt
+Anyway, LGTM:
 
-diff --git a/Documentation/devicetree/bindings/sound/cs35l33.txt b/Documentation/devicetree/bindings/sound/cs35l33.txt
-new file mode 100644
-index 0000000..01fa8fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cs35l33.txt
-@@ -0,0 +1,114 @@
-+CS35L33 Speaker Amplifier
-+
-+Required properties:
-+
-+  - compatible : "cirrus,cs35l33"
-+
-+  - reg : the I2C address of the device for I2C
-+
-+  - VA-supply, VP-supply : power supplies for the device,
-+    as covered in
-+    Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+Optional properties:
-+
-+  - reset-gpios : gpio used to reset the amplifier
-+
-+  - interrupt-parent : Specifies the phandle of the interrupt controller to
-+    which the IRQs from CS35L33 are delivered to.
-+ -  interrupts : IRQ line info CS35L33.
-+    (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+    for further information relating to interrupt properties)
-+
-+  - boost-ctl : Booster voltage use to supply the amp. If the value is
-+    0, then VBST = VP. If greater than 0, the boost voltage will be 3300mV with
-+    a value of 1 and will increase at a step size of 100mV until a maximum of
-+    8000mV.
-+
-+  - ramp-rate : On power up, it affects the time from when the power
-+    up sequence begins to the time the audio reaches a full-scale output.
-+    On power down, it affects the time from when the power-down sequence
-+    begins to when the amplifier disables the PWM outputs. If this property
-+    is not set then soft ramping will be disabled and ramp time would be
-+    20ms. If this property is set to 0,1,2,3 then ramp times would be 40ms,
-+    60ms,100ms,175ms respectively for 48KHz sample rate.
-+
-+  - boost-ipk : The maximum current allowed for the boost converter.
-+    The range starts at 1850mA (0xF0) and goes to a maximum of 3600mA (0xE0)
-+    with a step size of 15.625mA. The default is 2500mA (0x90).
-+
-+  - hg-algo : Parameters for internal Class H/G algorithm that
-+    controls the amplifier supplies.
-+
-+  - mem-depth : Memory depth for the Class H/G algorithm measured in LRCLK
-+    cycles. If this property is set to 0, 1, 2, or 3 then the memory depths
-+    will be 1, 4, 8, 16 LRCLK cycles.  The default is 16 LRCLK cycles.
-+
-+    release-rate : The number of consecutive LRCLK periods before allowing
-+    release condition tracking updates. The number of LRCLK periods start
-+    at 3 to a maximum of 255.
-+
-+  - ldo-thld : Configures the signal threshold at which the PWM output stage
-+    enters LDO operation. Starts as a default value of 50mV for a value of 1
-+    and increases with a step size of 50mV to a maximum of 750mV (value of
-+    0xF).
-+
-+  - ldo-path-disable : This is a boolean property. If present, the H/G
-+    algorithm uses the max detection path.  If not present, the LDO
-+    detection path is used.
-+
-+  - ldo-entry-delay : The LDO entry delay in milliseconds before the H/G
-+    algorithm switches to the LDO voltage.  This property can be set to values
-+    from 0 to 7 for delays of 5ms, 10ms, 50ms, 100ms, 200ms, 500ms, 1000ms.
-+    The default is 100ms.
-+
-+  - vp-hg-auto : This is a boolean property.  When set, class H/G VPhg
-+    automatic updating is enabled.
-+
-+  - vp-hg :  Class H/G algorithm VPhg.  Controls the H/G algorithm's
-+    reference to the VP voltage for when to start generating a boosted VBST.
-+    The reference voltage starts at 3000mV with a value of 0x3 and is increased
-+    by 100mV per step to a maximum of 5500mV.
-+
-+  - vp-hg-rate : The rate (number of LRCLK periods) at which the VPhg is
-+    allowed to increase to a higher voltage when using VPhg automatic
-+    tracking. This property can be set to values from 0 to 3 with rates of 128
-+    periods, 2048 periods, 32768 periods, and 524288 periods.
-+    The default is 32768 periods.
-+
-+  - vp-hg-va : VA calculation reference for automatic VPhg tracking using VPMON.
-+    This property can be set to values from 0 to 6 starting at 1800mV with a
-+    step size of 50mV up to a maximum value of 1750mV.  Default is 1800mV.
-+
-+
-+Example:
-+
-+cs35l33: cs35l33@40 {
-+	compatible = "cirrus,cs35l33";
-+	reg = <0x40>;
-+
-+	VA-supply = <&ldo5_reg>;
-+	VP-supply = <&ldo5_reg>;
-+
-+	interrupt-parent = <&gpio8>;
-+	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+	reset-gpios = <&cs47l91 34 0>;
-+
-+	ramp-rate = <0x0>;
-+	boost-ctl = <0x30>;  /* VBST = 8000mV */
-+	boost-ipk = <0xE0>; /* 3600mA */
-+
-+	hg-algo {
-+		mem-depth = <0x3>;
-+		release-rate = <0x3>;
-+		hd-rm = <0xA>;
-+		ldo-thld = <0x1>;
-+		ldo-path-disable = <0x0>;
-+		ldo-entry-delay=<0x4>;
-+		vp-hg-auto;
-+		vp-hg=<0xF>;
-+		vp-hg-rate=<0x2>;
-+		vp-hg-va=<0x0>;
-+	};
-+};
--- 
-1.9.1
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Brian Norris <briannorris@chromium.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	if ((val & enable_conf) == enable_conf)
+> +		state->enabled = true;
+> +}
+> +
+>  static void rockchip_pwm_set_enable_v2(struct pwm_chip *chip,
+>  				       struct pwm_device *pwm, bool enable)
+>  {
+> @@ -98,6 +113,53 @@ static void rockchip_pwm_set_enable_v2(struct pwm_chip *chip,
+>  	writel_relaxed(val, pc->base + pc->data->regs.ctrl);
+>  }
+>  
+> +static void rockchip_pwm_get_state_v2(struct pwm_chip *chip,
+> +				      struct pwm_device *pwm,
+> +				      struct pwm_state *state)
+> +{
+> +	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
+> +	u32 enable_conf = PWM_OUTPUT_LEFT | PWM_LP_DISABLE | PWM_ENABLE |
+> +			  PWM_CONTINUOUS;
+> +	u32 val;
+> +
+> +	val = readl(pc->base + pc->data->regs.ctrl);
+> +	if ((val & enable_conf) != enable_conf)
+> +		return;
+> +
+> +	state->enabled = true;
+> +
+> +	if (!(val & PWM_DUTY_POSITIVE))
+> +		state->polarity = PWM_POLARITY_INVERSED;
+> +}
+> +
+> +static void rockchip_pwm_get_state(struct pwm_chip *chip,
+> +				   struct pwm_device *pwm,
+> +				   struct pwm_state *state)
+> +{
+> +	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
+> +	unsigned long clk_rate;
+> +	u64 tmp;
+> +	int ret;
+> +
+> +	ret = clk_enable(pc->clk);
+> +	if (ret)
+> +		return;
+> +
+> +	clk_rate = clk_get_rate(pc->clk);
+> +
+> +	tmp = readl(pc->base + pc->data->regs.period);
+> +	tmp *= pc->data->prescaler * NSEC_PER_SEC;
+> +	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
+> +
+> +	tmp = readl(pc->base + pc->data->regs.duty);
+> +	tmp *= pc->data->prescaler * NSEC_PER_SEC;
+> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
+> +
+> +	pc->data->get_state(chip, pwm, state);
+> +
+> +	clk_disable(pc->clk);
+> +}
+> +
+>  static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			       int duty_ns, int period_ns)
+>  {
+> @@ -170,6 +232,7 @@ static void rockchip_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>  }
+>  
+>  static const struct pwm_ops rockchip_pwm_ops_v1 = {
+> +	.get_state = rockchip_pwm_get_state,
+>  	.config = rockchip_pwm_config,
+>  	.enable = rockchip_pwm_enable,
+>  	.disable = rockchip_pwm_disable,
+> @@ -177,6 +240,7 @@ static const struct pwm_ops rockchip_pwm_ops_v1 = {
+>  };
+>  
+>  static const struct pwm_ops rockchip_pwm_ops_v2 = {
+> +	.get_state = rockchip_pwm_get_state,
+>  	.config = rockchip_pwm_config,
+>  	.set_polarity = rockchip_pwm_set_polarity,
+>  	.enable = rockchip_pwm_enable,
+> @@ -194,6 +258,7 @@ static const struct rockchip_pwm_data pwm_data_v1 = {
+>  	.prescaler = 2,
+>  	.ops = &rockchip_pwm_ops_v1,
+>  	.set_enable = rockchip_pwm_set_enable_v1,
+> +	.get_state = rockchip_pwm_get_state_v1,
+>  };
+>  
+>  static const struct rockchip_pwm_data pwm_data_v2 = {
+> @@ -206,6 +271,7 @@ static const struct rockchip_pwm_data pwm_data_v2 = {
+>  	.prescaler = 1,
+>  	.ops = &rockchip_pwm_ops_v2,
+>  	.set_enable = rockchip_pwm_set_enable_v2,
+> +	.get_state = rockchip_pwm_get_state_v2,
+>  };
+>  
+>  static const struct rockchip_pwm_data pwm_data_vop = {
+> @@ -218,6 +284,7 @@ static const struct rockchip_pwm_data pwm_data_vop = {
+>  	.prescaler = 1,
+>  	.ops = &rockchip_pwm_ops_v2,
+>  	.set_enable = rockchip_pwm_set_enable_v2,
+> +	.get_state = rockchip_pwm_get_state_v2,
+>  };
+>  
+>  static const struct of_device_id rockchip_pwm_dt_ids[] = {
+> -- 
+> 2.7.4
+> 
