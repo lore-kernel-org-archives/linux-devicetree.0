@@ -1,37 +1,55 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 2/3] drm: convert DT component matching to
- component_match_add_release()
-Date: Fri, 03 Jun 2016 17:10:32 +0200
-Message-ID: <1464966632.32235.4.camel@pengutronix.de>
-References: <20160603141548.GC1041@n2100.armlinux.org.uk>
- <E1b8pyX-0005OP-2s@rmk-PC.armlinux.org.uk>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
+Date: Fri, 3 Jun 2016 20:46:08 +0530
+Message-ID: <CAKfKVtHfGXvXeOC-vsVaRNtttO+nyG40sAxqaswXEbsEOUotbA@mail.gmail.com>
+References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
+ <CAKfKVtF1hOn9QwiqtjqqPYtUz5PscTBs4kBC1zRH6FY-4vVoUA@mail.gmail.com> <C89496FEAE474D468F30D558A9468D9F26CEF0EF@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <E1b8pyX-0005OP-2s@rmk-PC.armlinux.org.uk>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-mediatek@lists.infradead.org, freedreno@lists.freedesktop.org, Vincent Abriou <vincent.abriou@st.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <C89496FEAE474D468F30D558A9468D9F26CEF0EF-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Radhey Shyam Pandey <radheys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgZGVuIDAzLjA2LjIwMTYsIDE1OjIxICswMTAwIHNjaHJpZWIgUnVzc2VsbCBL
-aW5nOgo+IENvbnZlcnQgRFQgY29tcG9uZW50IG1hdGNoaW5nIHRvIHVzZSBjb21wb25lbnRfbWF0
-Y2hfYWRkX3JlbGVhc2UoKS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBSdXNzZWxsIEtpbmcgPHJtaytr
-ZXJuZWxAYXJtbGludXgub3JnLnVrPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNk
-X2Rydi5jICAgICAgICAgICAgIHwgIDkgKysrLS0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9hcm1h
-ZGEvYXJtYWRhX2Rydi5jICAgICAgICAgfCAgOCArKy0tLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0v
-ZHJtX29mLmMgICAgICAgICAgICAgICAgICAgIHwgIDYgKysrKy0tCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9ldG5hdml2L2V0bmF2aXZfZHJ2LmMgICAgICAgfCAxMSArKy0tLS0tLS0tLQoKRm9yIHRoZSBl
-dG5hdml2IHBhcnQ6CgpBY2tlZC1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXgu
-ZGU+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, May 31, 2016 at 10:45 AM, Nava kishore Manne
+<nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Shubhrajyoti,
+>
+>
+>         Thanks for the review...
+>
+>> >  /**
+>> > + * xudc_write64 - write 64bit value to device registers
+>> > + * @ep: pointer to the usb device endpoint structure.
+>> > + * @offset: register offset
+>> > + * @val: data to be written
+>> > + **/
+>> > +static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val) {
+>> > +       struct xusb_udc *udc = ep->udc;
+>> > +
+>> > +       udc->write_fn(udc->addr, offset, lower_32_bits(val));
+>> > +       udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val));
+>>
+>> can we move this to a single 64 bit write?
+>
+> Initially I sent the patches with writeq() ,lo_hi_writeq()  later we decided to replace with write_fun().
+> The reason for this is lo_hi_writeq() always assumes a little-endian register, so it's broken if anyone builds this device with big-endian registers.
+> So replaced the 64bit calls with write_fun() as suggested by Arnd Bergmann. Hope it clears your query.
+> Please refer to the below thread
+>
+>         http://lkml.iu.edu/hypermail/linux/kernel/1604.2/02046.html
+
+missed that discurssion.
+
+thanks
+>
+>
+> Regards,
+> Navakishore.
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
