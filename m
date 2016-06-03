@@ -1,73 +1,52 @@
-From: "Li, Yong B" <yong.b.li@intel.com>
-Subject: RE: [PATCH] ARM: dts: am335x-boneblack: add i2c1 DT entry
-Date: Fri, 3 Jun 2016 05:46:50 +0000
-Message-ID: <BCE6BEBCDDF4B84E891D2320CBF96F1D3F9FB1EC@SHSMSX101.ccr.corp.intel.com>
-References: <1464853310-8738-1-git-send-email-yong.b.li@intel.com>
- <CAOCHtYib9YxckneM-j0Gk1YE=MnvAwAhvDjEDEuFJbH6W3EcWA@mail.gmail.com>
- <20160602173932.GF5995@atomide.com>
- <CAOCHtYiWYrwSidHnKv4siFT-wU=tt5-YeDTwbM022ZTxdPFYYA@mail.gmail.com>
- <20160602175635.GG5995@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160602175635.GG5995@atomide.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Robert Nelson <robertcnelson@gmail.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux kernel <linux-kernel@vger.kernel.org>, "sdliyong@gmail.com" <sdliyong@gmail.com>
+From: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [linux-sunxi] [PATCH] [V2] ARM: dts: sun7i: Add dts file for Bananapi M1 Plus board
+Date: Fri,  3 Jun 2016 14:13:36 +0800
+Message-ID: <20160603061336.16263-1-luoyi.ly@gmail.com>
+References: <574FF94B.3020309@web.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <574FF94B.3020309-S0/GAf8tV78@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+From: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I can submit a V2 version about the "disabled", or just drop this patch?
+Remove the extra empty line and add signed off. 
 
-Thanks,
-Yong
------Original Message-----
-From: Tony Lindgren [mailto:tony@atomide.com] 
-Sent: Friday, June 3, 2016 1:57 AM
-To: Robert Nelson <robertcnelson@gmail.com>
-Cc: Li, Yong B <yong.b.li@intel.com>; Benoit Cousson <bcousson@baylibre.com>; Rob Herring <robh+dt@kernel.org>; Pawel Moll <pawel.moll@arm.com>; Mark Rutland <mark.rutland@arm.com>; Ian Campbell <ijc+devicetree@hellion.org.uk>; Kumar Gala <galak@codeaurora.org>; Russell King <linux@arm.linux.org.uk>; linux-omap@vger.kernel.org; devicetree <devicetree@vger.kernel.org>; linux-arm-kernel@lists.infradead.org; linux kernel <linux-kernel@vger.kernel.org>; sdliyong@gmail.com
-Subject: Re: [PATCH] ARM: dts: am335x-boneblack: add i2c1 DT entry
+Signed-off-by: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-* Robert Nelson <robertcnelson@gmail.com> [160602 10:48]:
-> On Thu, Jun 2, 2016 at 12:39 PM, Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Robert Nelson <robertcnelson@gmail.com> [160602 10:39]:
-> > > On Thu, Jun 2, 2016 at 2:41 AM, Yong Li <yong.b.li@intel.com> wrote:
-> > >
-> > > > From: Yong Li <sdliyong@gmail.com>
-> > > >
-> > > > Without this patch, I2C-1 is missing on beaglebone black boards
-> > > >
-> > > > Signed-off-by: Yong Li <sdliyong@gmail.com>
-> > > > ---
-> > > >  arch/arm/boot/dts/am335x-boneblack.dts | 15 +++++++++++++++
-> > > >  1 file changed, 15 insertions(+)
-> > > >
-> > >
-> > >
-> > > This is also 'common' for the white/green, if your really going to 
-> > > push this, please add it to:
-> > >
-> > > am335x-bone-common.dtsi
-> >
-> > But isn't this exposed on the cape pins? So the use can be whatever 
-> > for these pins?
-> 
-> That is correct, "i2c1" is on the cape connector, with no primary 
-> function defined.
-> 
-> Currently on mainline, the board and cape eeprom i2c bus's are enabled.
-> 
-> i2c0 = board eeprom
-> i2c2 = 'cape' eeprom
-> 
-> personally, nak by me to add i2c1 by default, should use overlay's to enable it.
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+index 6fd55d7..f9063ba 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+@@ -47,7 +47,6 @@
+ 	compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
+ };
+ 
+-
+ &codec {
+ 	status = "okay";
+ };
+@@ -62,11 +61,8 @@
+ 		interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>; 
+ 		interrupt-names = "host-wake";
+ 	};
+-
+ };
+ 
+ &mmc3_pins_a {
+-    /* AP6210 requires pull-up */
+ 	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ };
+-
+-- 
+2.8.3
 
-Yes sounds like the best we can do is define it but set it with status = "disabled" for now.
-
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
