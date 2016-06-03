@@ -1,76 +1,161 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v2 2/4] mfd: cros_ec: add EC_PWM function definitions
-Date: Thu,  2 Jun 2016 18:21:42 -0700
-Message-ID: <1464916904-37554-3-git-send-email-briannorris@chromium.org>
-References: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>
-Cc: linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Brian Norris <briannorris@chromium.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 4/4] regulator: axp20x: Add support for the (external)
+ drivebus regulator
+Date: Fri, 3 Jun 2016 09:38:26 +0800
+Message-ID: <CAGb2v67qsJ+U71UJj=HTTbgsQZgK1YEVNhyw5Q6XV+n38NpK0Q@mail.gmail.com>
+References: <1464887936-17020-1-git-send-email-hdegoede@redhat.com> <1464887936-17020-4-git-send-email-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1464887936-17020-4-git-send-email-hdegoede@redhat.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The EC_CMD_PWM_{GET,SET}_DUTY commands allow us to control a PWM that is
-attached to the EC, rather than the main host SoC. The API provides
-functionality-based (e.g., keyboard light, backlight) or index-based
-addressing of the PWM(s). Duty cycles are represented by a 16-bit value,
-where 0 maps to 0% duty cycle and U16_MAX maps to 100%. The period
-cannot be controlled.
+Hi,
 
-This command set is more generic than, e.g.,
-EC_CMD_PWM_{GET,SET}_KEYBOARD_BACKLIGHT and could possibly used to
-replace it on future products.
+On Fri, Jun 3, 2016 at 1:18 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+> The axp20x pmics have 2 power inputs, one called ACIN which is intended
+> for to be supplied via a powerbarrel on the board and one called VBUS
+> which is intended to be supplied via an otg connector.
+>
+> In the VBUS case the pmic needs to know if the board is supplying power
+> to the otg connector, because then it should not take any power from
+> its VBUS pin. The axp209 pmic has a N_VBUSEN input pin via which the
+> board can signal to the pmic whether the board is supplying power to the
+> otg connector or not.
+>
+> On the axp221/axp223 this pin can alternatively be used as an output
+> which controls an external regulator which (optionally) supplies
+> power to the otg connector from the board. When the pin is used as
+> output it is called DRIVEVBUS in the datasheet.
+>
+> This commit adds support for the DRIVEVBUS pin as an extra pmic
+> controlled regulator. Since this is optional a new x-powers,drivebus dt
+> property is added. When this is present the misc-control register is
+> written to change the N_VBUSEN input pin to DRIVEVBUS output pin mode and
+> the extra drivebus regulator is registered with the regulator subsystem.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> -Rename the dt property to drive-vbus-en
+> -s/drivebus/drivevbus/
+> -Add a line describing the drivevbus regulator to the table in
+>  Documentation/devicetree/bindings/mfd/axp20x.txt
+> -Set supply_name to drivevbus-supply
+> ---
+>  Documentation/devicetree/bindings/mfd/axp20x.txt |  6 +++++
+>  drivers/regulator/axp20x-regulator.c             | 30 ++++++++++++++++++++++++
+>  2 files changed, 36 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> index d20b103..6aca4fe 100644
+> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -22,6 +22,11 @@ Optional properties:
+>                       AXP152/20X: range:  750-1875, Default: 1.5 MHz
+>                       AXP22X/80X: range: 1800-4050, Default: 3   MHz
+>
+> +- x-powers,drive-vbus-en: axp221 / axp223 only boolean, set this when the
+> +                  N_VBUSEN pin is used as an output pin to control an external
+> +                  regulator to drive the OTG VBus, rather then as an input pin
+> +                  which signals whether the board is driving OTG VBus or not.
 
-Let's update the command header to include the definitions.
+Git complains about space indentation here.
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
-v2: no change
+> +
+>  - <input>-supply: a phandle to the regulator supply node. May be omitted if
+>                   inputs are unregulated, such as using the IPSOUT output
+>                   from the PMIC.
+> @@ -79,6 +84,7 @@ ELDO3         : LDO           : eldoin-supply         : shared supply
+>  LDO_IO0                : LDO           : ips-supply            : GPIO 0
+>  LDO_IO1                : LDO           : ips-supply            : GPIO 1
+>  RTC_LDO                : LDO           : ips-supply            : always on
+> +DRIVEVBUS      : Enable output : drivevbus-supply      : external regulator
+>
+>  AXP809 regulators, type, and corresponding input supply names:
+>
+> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+> index 728be64..3f1bba4 100644
+> --- a/drivers/regulator/axp20x-regulator.c
+> +++ b/drivers/regulator/axp20x-regulator.c
+> @@ -36,6 +36,8 @@
+>
+>  #define AXP20X_FREQ_DCDC_MASK          0x0f
+>
+> +#define AXP22X_MISC_N_VBUSEN_FUNC      BIT(4)
+> +
+>  #define AXP_DESC_IO(_family, _id, _match, _supply, _min, _max, _step, _vreg,   \
+>                     _vmask, _ereg, _emask, _enable_val, _disable_val)           \
+>         [_family##_##_id] = {                                                   \
+> @@ -230,6 +232,18 @@ static const struct regulator_desc axp22x_regulators[] = {
+>         AXP_DESC_FIXED(AXP22X, RTC_LDO, "rtc_ldo", "ips", 3000),
+>  };
+>
+> +static const struct regulator_desc axp22x_drivevbus_regulator = {
+> +       .name           = "drivevbus",
+> +       .supply_name    = "drivevbus-supply",
 
- include/linux/mfd/cros_ec_commands.h | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+The "-supply" suffix is added by the regulator core upon lookup. No need
+to add it here. I assume the regulator core won't get confused over a
+supply name that's the same as the regulator requesting it.
 
-diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 13b630c10d4c..d673575e0ada 100644
---- a/include/linux/mfd/cros_ec_commands.h
-+++ b/include/linux/mfd/cros_ec_commands.h
-@@ -949,6 +949,37 @@ struct ec_params_pwm_set_fan_duty {
- 	uint32_t percent;
- } __packed;
- 
-+#define EC_CMD_PWM_SET_DUTY 0x25
-+/* 16 bit duty cycle, 65535 = 100% */
-+#define EC_PWM_MAX_DUTY 65535
-+
-+enum ec_pwm_type {
-+	/* All types, indexed by board-specific enum pwm_channel */
-+	EC_PWM_TYPE_GENERIC = 0,
-+	/* Keyboard backlight */
-+	EC_PWM_TYPE_KB_LIGHT,
-+	/* Display backlight */
-+	EC_PWM_TYPE_DISPLAY_LIGHT,
-+	EC_PWM_TYPE_COUNT,
-+};
-+
-+struct ec_params_pwm_set_duty {
-+	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY = 100% */
-+	uint8_t pwm_type;  /* ec_pwm_type */
-+	uint8_t index;     /* Type-specific index, or 0 if unique */
-+} __packed;
-+
-+#define EC_CMD_PWM_GET_DUTY 0x26
-+
-+struct ec_params_pwm_get_duty {
-+	uint8_t pwm_type;  /* ec_pwm_type */
-+	uint8_t index;     /* Type-specific index, or 0 if unique */
-+} __packed;
-+
-+struct ec_response_pwm_get_duty {
-+	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY = 100% */
-+} __packed;
-+
- /*****************************************************************************/
- /*
-  * Lightbar commands. This looks worse than it is. Since we only use one HOST
--- 
-2.8.0.rc3.226.g39d4020
+
+Otherwise,
+
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+
+> +       .of_match       = of_match_ptr("drivevbus"),
+> +       .regulators_node = of_match_ptr("regulators"),
+> +       .type           = REGULATOR_VOLTAGE,
+> +       .owner          = THIS_MODULE,
+> +       .enable_reg     = AXP20X_VBUS_IPSOUT_MGMT,
+> +       .enable_mask    = BIT(2),
+> +       .ops            = &axp20x_ops_sw,
+> +};
+> +
+>  static const struct regulator_linear_range axp809_dcdc4_ranges[] = {
+>         REGULATOR_LINEAR_RANGE(600000, 0x0, 0x2f, 20000),
+>         REGULATOR_LINEAR_RANGE(1800000, 0x30, 0x38, 100000),
+> @@ -411,6 +425,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>         u32 workmode;
+>         const char *dcdc1_name = axp22x_regulators[AXP22X_DCDC1].name;
+>         const char *dcdc5_name = axp22x_regulators[AXP22X_DCDC5].name;
+> +       bool drivevbus = false;
+>
+>         switch (axp20x->variant) {
+>         case AXP202_ID:
+> @@ -422,6 +437,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>         case AXP223_ID:
+>                 regulators = axp22x_regulators;
+>                 nregulators = AXP22X_REG_ID_MAX;
+> +               drivevbus = of_property_read_bool(pdev->dev.parent->of_node,
+> +                                                 "x-powers,drive-vbus-en");
+>                 break;
+>         case AXP809_ID:
+>                 regulators = axp809_regulators;
+> @@ -500,6 +517,19 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>                                                 &dcdc5_name);
+>         }
+>
+> +       if (drivevbus) {
+> +               /* Change N_VBUSEN sense pin to DRIVEVBUS output pin */
+> +               regmap_update_bits(axp20x->regmap, AXP20X_OVER_TMP,
+> +                                  AXP22X_MISC_N_VBUSEN_FUNC, 0);
+> +               rdev = devm_regulator_register(&pdev->dev,
+> +                                              &axp22x_drivevbus_regulator,
+> +                                              &config);
+> +               if (IS_ERR(rdev)) {
+> +                       dev_err(&pdev->dev, "Failed to register drivevbus\n");
+> +                       return PTR_ERR(rdev);
+> +               }
+> +       }
+> +
+>         return 0;
+>  }
+>
+> --
+> 2.7.4
+>
