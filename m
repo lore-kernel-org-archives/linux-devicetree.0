@@ -1,160 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] iio: adc: ina3221: Add DT binding details
-Date: Thu, 2 Jun 2016 21:07:59 -0500
-Message-ID: <20160603020759.GA23947@rob-hp-laptop>
-References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 1/6] power: Introduce Broadcom kona reset driver
+Date: Fri, 3 Jun 2016 04:38:53 +0200
+Message-ID: <20160603023853.GD8921@earth>
+References: <1463002582-6875-1-git-send-email-chris.brand@broadcom.com>
+ <1463002582-6875-2-git-send-email-chris.brand@broadcom.com>
+ <57409633.8060605@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Ycz6tD7Th1CMF4v7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464784454-7988-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <57409633.8060605@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Chris Brand <chris.brand@broadcom.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 06:04:12PM +0530, Laxman Dewangan wrote:
-> The INA3221 is a three-channel, high-side current and bus voltage monitor
-> with an I2C interface from Texas Instruments. The INA3221 monitors both
-> shunt voltage drops and bus supply voltages in addition to having
-> programmable conversion times and averaging modes for these signals.
-> The INA3221 offers both critical and warning alerts to detect multiple
-> programmable out-of-range conditions for each channel.
-> 
-> Add DT binding details for INA3221 device for configuring device in
-> different modes and enable multiple functionalities from device.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/adc/ina3221.txt        | 107 +++++++++++++++++++++
->  1 file changed, 107 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ina3221.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/ina3221.txt b/Documentation/devicetree/bindings/iio/adc/ina3221.txt
-> new file mode 100644
-> index 0000000..9f0908d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/ina3221.txt
-> @@ -0,0 +1,107 @@
-> +TI INA3221 DT binding
-> +
-> +The INA3221 is a three-channel, high-side current and bus voltage monitor
-> +with an I2C interface from Texas Instruments. The INA3221 monitors both
-> +shunt voltage drops and bus supply voltages in addition to having
-> +programmable conversion times and averaging modes for these signals.
-> +The INA3221 offers both critical and warning alerts to detect multiple
-> +programmable out-of-range conditions for each channel.
-> +
-> +Required properties:
-> +-------------------
-> +- compatible:		Must be "ti,ina3221".
-> +- reg:			I2C slave device address.
-> +- #io-channel-cells:	Should be set to 1. The value from the client node
-> +			represent the channel number.
-> +
-> +Optional properties:
-> +------------------
-> +one-shot-average-sample:	Integer, Number of sample to average before
-> +				putting in the registers in oneshot mode.
-> +
-> +one-shot-vbus-conv-time-us:	Integer in microseconds, ADC conversion time for
-> +				bus voltage reading in oneshot mode.
-> +
-> +one-shot-shunt-conv-time-us:	Integer in microseconds, ADC conversion time for
-> +				shunt voltage reading in oneshot mode.
-> +
-> +continuous-average-sample:	Integer, Number of sample to average before
-> +				putting in the registers in continuous mode.
-> +
-> +continuous-vbus-conv-time-us:	Integer in microseconds, ADC conversion time for
-> +				bus voltage reading in continuous mode.
-> +
-> +continuous-shunt-conv-time-us:	Integer in microseconds, ADC conversion time for
-> +				shunt voltage reading in continuous mode.
 
-These all need vendor prefix and need to state the valid range of 
-values.
+--Ycz6tD7Th1CMF4v7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +enable-power-monitor:		Boolean, Enable power monitoring of the device.
-> +
-> +enable-continuous-mode:		Boolean. Device support oneshot and continuous
-> +				mode for the channel data conversion. Presence
-> +				of this property will enable the continuous
-> +				mode from boot.
-> +
-> +enable-warning-alert:		Boolean, Enable the alert signal when shunt
-> +				current cross the warning threshold on any of
-> +				the channel. Absence of this property will not
-> +				enable the warning alert.
-> +
-> +enable-critical-alert:		Boolean, Enable the alert signal when shunt
-> +				current cross the critical threshold on any
-> +				of the channel. Absence of this property will
-> +				not enable the critical alert.
+Hi Florian,
 
-Seems like these would be a user decision.
+On Sat, May 21, 2016 at 10:09:07AM -0700, Florian Fainelli wrote:
+> Le 11/05/2016 14:36, Chris Brand a =E9crit :
+> > This driver supports reset on both BCM21664 and BCM23550.
+> > Code is being moved from arch/arm/mach-bcm/board_bcm21664.c
+> >=20
+> > Signed-off-by: Chris Brand <chris.brand@broadcom.com>
 
-> +
-> +Optional Subnode properties:
-> +---------------------------
-> +The channel specific properties are provided as child node of device.
-> +The fixed child node names of device node used for channel identification.
-> +
-> +Child node's name are "channel0" for channel 0, "channel1" for channel 1 and
-> +"channel2" for channel 2.
-> +
-> +Channel specific properties are provided under these child node. Following
-> +are the properties:
-> +
-> +label:					String, the name of the bus.
-> +shunt-resistor-mohm:			Integer, The shunt resistance on bus
-> +					in milli-ohm.
+> Sebastian, Dmitry, I know we are in the merge window, let me know if you
+> would want me to take this patch and the 5 others in the next arm-soc
+> pull request, or if you prefer to take this one in your own tree.
 
-Use -micro-ohms
+Feel free to queue it via arm-soc with
 
-> +warning-current-limit-microamp:		Integer in microamp, warning current threshold
-> +					for the channel	to generate warning alert.
-> +critical-current-limit-microamp:	Integer in microamp, critical current threshold
-> +					for the channel to generate warning alert.
-> +
-> +Example:
-> +
-> +i2c@7000c400 {
-> +	ina3221x@42 {
+Acked-By: Sebastian Reichel <sre@kernel.org>
 
-What's the x?
+If I didn't overlook it, it's missing DT documentation, though.
 
-> +		compatible = "ti,ina3221";
-> +		reg = <0x42>;
-> +		one-shot-average-sample = <1>;
-> +		one-shot-vbus-conv-time-us = <140>;
-> +		one-shot-shunt-conv-time-us = <140>;
-> +		continuous-average-sample = <64>;
-> +		continuous-vbus-conv-time-us = <140>;
-> +		continuous-shunt-conv-time-us = <140>;
-> +		enable-power-monitor;
-> +
-> +		#io-channel-cells = <1>;
-> +
-> +		channel0 {
-> +			label = "VDD_MUX";
-> +			shunt-resistor-mohm = <20>;
-> +		};
-> +
-> +		channel1 {
-> +			label = "VDD_5V_IO_SYS";
-> +			shunt-resistor-mohm = <5>;
-> +			warning-current-limit-microamp = <8190000>;
-> +			critical-current-limit-microamp = <1000000>;
-> +		};
-> +
-> +		channel2 {
-> +			label = "VDD_3V3_SYS";
-> +			shunt-resistor-mohm = <10>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.1.4
-> 
+-- Sebastian
+
+--Ycz6tD7Th1CMF4v7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXUO26AAoJENju1/PIO/qaZPcP/2gZa+TYc7gQxES7TDUsNnLU
+OKTIRQPXId7lzwIZG3LaBrMvjfsavxMEtohGV+Ccj7i1xYImr8RogrRGsAVDi4OL
+1/jx/WezJGgqoyfXS8V9PM99qcHZjvW4lijZwpw5EVUy4TjcIaRI3IrhNUrlxS8V
+Pc6dm3/Rwf6WgbVGpQrD/wF48hIL9FVBbmNSLKKBA3/9OiiVW9v5vmcDvAvmY+UD
+H42nCBIr5aEGdXoZHjvuQ3LY+GOUBNqASL2HqYbn6+Wfr60a3anBvZTaJP0PJUrs
+IJ0Rg3WWZqVA8X/lOVoKyNAwL+TRFm+km7q5qtDzk4TD3YSqBIT1TSy4kfsmPRGd
+b/vdvO4ARs4en9Z3g1doHBU8Ttmouw5WExEuruU34L5rzk0xXOGxBTn+/CZnEgl2
+MhlMaAcE2iBQRT+kbooOhp3CzFI+/BIQyAwYUYLNGOX4w2TKC+YaABs2rrzNqHK6
+Edmc/iCsxN+ZFF7GWwX663q+D85JtiaOUuw0jqltMZsO+ReQJHSgbP4UMKYOSHBF
+zmLtzBzXrIL1DGV41ruHt4u9343SboKczaHU1UK/gISH+ezfMptp6pa9i7RFDAmV
+M5r5GSxBTQ8bwDjN00xdTK2KwWQpp8VMovRfHdvUDiR6BEVF/aWNbgMucNBy+BSB
+uK2rEyMu90Ak7qplRqRB
+=+JU8
+-----END PGP SIGNATURE-----
+
+--Ycz6tD7Th1CMF4v7--
