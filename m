@@ -1,131 +1,104 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 1/4] USB: Fix of_usb_get_dr_mode_by_phy with a shared phy block
-Date: Fri,  3 Jun 2016 16:05:08 +0200
-Message-ID: <1464962711-5871-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v2 3/4] phy-sun4i-usb: Add workaround for missing Vbus det interrupts on A31
+Date: Fri,  3 Jun 2016 16:05:10 +0200
+Message-ID: <1464962711-5871-3-git-send-email-hdegoede@redhat.com>
+References: <1464962711-5871-1-git-send-email-hdegoede@redhat.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464962711-5871-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some SoCs have a single phy-hw-block with multiple phys, this is
-modelled by a single phy dts node, so we end up with multiple
-controller nodes with a phys property pointing to the phy-node
-of the otg-phy.
-
-Only one of these controllers typically is an otg controller, yet we
-were checking the first controller who uses a phy from the block and
-then end up looking for a dr_mode property in e.g. the ehci controller.
-
-This commit fixes this by adding an arg0 parameter to
-of_usb_get_dr_mode_by_phy and make of_usb_get_dr_mode_by_phy
-check that this matches the phandle args[0] value when looking for
-the otg controller.
+The A31 companion pmic (axp221) does not generate vbus change interrupts
+when the board is driving vbus, so we must poll when using the pmic for
+vbus-det _and_ we're driving vbus.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
--Changes in v2: Add a args0 parameter instead of looking for nodes with
- a dr_mode property
+Changes in v2:
+-No changes
 ---
- drivers/usb/common/common.c  | 31 ++++++++++++++++++-------------
- drivers/usb/phy/phy-am335x.c |  2 +-
- include/linux/usb/of.h       |  4 ++--
- 3 files changed, 21 insertions(+), 16 deletions(-)
+ drivers/phy/phy-sun4i-usb.c | 34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index e3d0161..bd716f4 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -131,32 +131,37 @@ EXPORT_SYMBOL_GPL(usb_get_dr_mode);
-  * of_usb_get_dr_mode_by_phy - Get dual role mode for the controller device
-  * which is associated with the given phy device_node
-  * @np:	Pointer to the given phy device_node
-+ * @arg0: phandle args[0] for phy's with #phy-cells >= 1
-  *
-  * In dts a usb controller associates with phy devices.  The function gets
-  * the string from property 'dr_mode' of the controller associated with the
-  * given phy device node, and returns the correspondig enum usb_dr_mode.
-  */
--enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
-+enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *np, int arg0)
+diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+index 9196c8a..7f12439c 100644
+--- a/drivers/phy/phy-sun4i-usb.c
++++ b/drivers/phy/phy-sun4i-usb.c
+@@ -95,6 +95,7 @@
+ 
+ enum sun4i_usb_phy_type {
+ 	sun4i_a10_phy,
++	sun6i_a31_phy,
+ 	sun8i_a33_phy,
+ 	sun8i_h3_phy,
+ };
+@@ -125,7 +126,6 @@ struct sun4i_usb_phy_data {
+ 	/* phy0 / otg related variables */
+ 	struct extcon_dev *extcon;
+ 	bool phy0_init;
+-	bool phy0_poll;
+ 	struct gpio_desc *id_det_gpio;
+ 	struct gpio_desc *vbus_det_gpio;
+ 	struct power_supply *vbus_power_supply;
+@@ -353,6 +353,24 @@ static bool sun4i_usb_phy0_have_vbus_det(struct sun4i_usb_phy_data *data)
+ 	return data->vbus_det_gpio || data->vbus_power_supply;
+ }
+ 
++static bool sun4i_usb_phy0_poll(struct sun4i_usb_phy_data *data)
++{
++	if ((data->id_det_gpio && data->id_det_irq < 0) ||
++	    (data->vbus_det_gpio && data->vbus_det_irq < 0))
++		return true;
++
++	/*
++	 * The A31 companion pmic (axp221) does not generate vbus change
++	 * interrupts when the board is driving vbus, so we must poll
++	 * when using the pmic for vbus-det _and_ we're driving vbus.
++	 */
++	if (data->cfg->type == sun6i_a31_phy &&
++	    data->vbus_power_supply && data->phys[0].regulator_on)
++		return true;
++
++	return false;
++}
++
+ static int sun4i_usb_phy_power_on(struct phy *_phy)
  {
- 	struct device_node *controller = NULL;
--	struct device_node *phy;
-+	struct of_phandle_args args;
- 	const char *dr_mode;
- 	int index;
- 	int err;
-+	bool found = false;
+ 	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+@@ -374,7 +392,7 @@ static int sun4i_usb_phy_power_on(struct phy *_phy)
+ 	phy->regulator_on = true;
  
- 	do {
- 		controller = of_find_node_with_property(controller, "phys");
--		index = 0;
--		do {
--			phy = of_parse_phandle(controller, "phys", index);
--			of_node_put(phy);
--			if (phy == phy_np)
--				goto finish;
--			index++;
--		} while (phy);
--	} while (controller);
--
--finish:
-+		for (index = 0; !found; index++) {
-+			err = of_parse_phandle_with_args(controller, "phys",
-+					"#phy-cells", index, &args);
-+			if (err)
-+				break;
-+
-+			if (args.np == np && (args.args_count == 0 ||
-+					      args.args[0] == arg0))
-+				found = true;
-+
-+			of_node_put(args.np);
-+		}
-+	} while (controller && !found);
-+
- 	err = of_property_read_string(controller, "dr_mode", &dr_mode);
- 	of_node_put(controller);
+ 	/* We must report Vbus high within OTG_TIME_A_WAIT_VRISE msec. */
+-	if (phy->index == 0 && data->vbus_det_gpio && data->phy0_poll)
++	if (phy->index == 0 && sun4i_usb_phy0_poll(data))
+ 		mod_delayed_work(system_wq, &data->detect, DEBOUNCE_TIME);
  
-diff --git a/drivers/usb/phy/phy-am335x.c b/drivers/usb/phy/phy-am335x.c
-index a262a43..7e5aece 100644
---- a/drivers/usb/phy/phy-am335x.c
-+++ b/drivers/usb/phy/phy-am335x.c
-@@ -54,7 +54,7 @@ static int am335x_phy_probe(struct platform_device *pdev)
- 		return am_phy->id;
+ 	return 0;
+@@ -395,7 +413,7 @@ static int sun4i_usb_phy_power_off(struct phy *_phy)
+ 	 * phy0 vbus typically slowly discharges, sometimes this causes the
+ 	 * Vbus gpio to not trigger an edge irq on Vbus off, so force a rescan.
+ 	 */
+-	if (phy->index == 0 && data->vbus_det_gpio && !data->phy0_poll)
++	if (phy->index == 0 && !sun4i_usb_phy0_poll(data))
+ 		mod_delayed_work(system_wq, &data->detect, POLL_TIME);
+ 
+ 	return 0;
+@@ -481,7 +499,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	if (vbus_notify)
+ 		extcon_set_cable_state_(data->extcon, EXTCON_USB, vbus_det);
+ 
+-	if (data->phy0_poll)
++	if (sun4i_usb_phy0_poll(data))
+ 		queue_delayed_work(system_wq, &data->detect, POLL_TIME);
+ }
+ 
+@@ -666,11 +684,6 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
  	}
  
--	am_phy->dr_mode = of_usb_get_dr_mode_by_phy(pdev->dev.of_node);
-+	am_phy->dr_mode = of_usb_get_dr_mode_by_phy(pdev->dev.of_node, -1);
- 
- 	ret = usb_phy_gen_create_phy(dev, &am_phy->usb_phy_gen, NULL);
- 	if (ret)
-diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-index de3237f..5ff9032 100644
---- a/include/linux/usb/of.h
-+++ b/include/linux/usb/of.h
-@@ -12,7 +12,7 @@
- #include <linux/usb/phy.h>
- 
- #if IS_ENABLED(CONFIG_OF)
--enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *phy_np);
-+enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *np, int arg0);
- bool of_usb_host_tpl_support(struct device_node *np);
- int of_usb_update_otg_caps(struct device_node *np,
- 			struct usb_otg_caps *otg_caps);
-@@ -20,7 +20,7 @@ struct device_node *usb_of_get_child_node(struct device_node *parent,
- 			int portnum);
- #else
- static inline enum usb_dr_mode
--of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
-+of_usb_get_dr_mode_by_phy(struct device_node *np, int arg0)
- {
- 	return USB_DR_MODE_UNKNOWN;
- }
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ 	data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
+-	data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
+-	if ((data->id_det_gpio && data->id_det_irq < 0) ||
+-	    (data->vbus_det_gpio && data->vbus_det_irq < 0))
+-		data->phy0_poll = true;
