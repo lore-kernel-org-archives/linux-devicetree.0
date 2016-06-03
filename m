@@ -1,53 +1,89 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 1/3] iio: adc: ina3221: Add DT binding details
-Date: Fri, 3 Jun 2016 17:51:53 +0530
-Message-ID: <57517661.8090205@nvidia.com>
-References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com> <20160603020759.GA23947@rob-hp-laptop> <433b182c-fe43-df5c-ac6a-20a024630514@kernel.org> <57516E71.8080506@nvidia.com> <c5a10e77-d326-9fd5-7c5f-2f5593295b1e@kernel.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v3 06/12] power: pwrseq: simple: Add support for regulator
+ and generic property
+Date: Fri, 03 Jun 2016 14:35:08 +0200
+Message-ID: <5751797C.3020607@samsung.com>
+References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
+ <1464768141-25420-7-git-send-email-k.kozlowski@samsung.com>
+ <20160603020218.GA19436@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c5a10e77-d326-9fd5-7c5f-2f5593295b1e@kernel.org>
+In-reply-to: <20160603020218.GA19436@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: corbet@lwn.net, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: hzpeterchen@gmail.com, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.or, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On 06/03/2016 04:02 AM, Rob Herring wrote:
+> On Wed, Jun 01, 2016 at 10:02:15AM +0200, Krzysztof Kozlowski wrote:
+>> Some devices need real hard-reset by cutting the power.  During power
+>> sequence turn off and on the regulator, if it is provided.
+>>
+>> Additionally add support for instantiating the pwrseq-simple device on a
+>> generic property 'power-sequence'.  The device will attach itself to the
+>> node containing the property and parse the node's properties like
+>> reset-gpios, ext-supply etc.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> ---
+>>  .../bindings/power/pwrseq/pwrseq-simple.txt        | 29 +++++++-
+>>  drivers/power/pwrseq/pwrseq_simple.c               | 85 +++++++++++++++++++++-
+>>  2 files changed, 107 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-simple.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-simple.txt
+>> index ce0e76749671..a8c3f13ee83f 100644
+>> --- a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-simple.txt
+>> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-simple.txt
+>> @@ -1,11 +1,17 @@
+>> -* The simple MMC power sequence provider
+>> +* The simple power sequence provider
+>>  
+>> -The purpose of the simple MMC power sequence provider is to supports a set of
+>> +The purpose of the simple power sequence provider is to supports a set of
+>>  common properties between various SOC designs. It thus enables us to use the
+>>  same provider for several SOC designs.
+>>  
+>> -Required properties:
+>> -- compatible : contains "mmc-pwrseq-simple".
+>> +The driver supports two types of bindings:
+>> +1. Separate node
+>> +   Required properties:
+>> +   - compatible : contains "mmc-pwrseq-simple".
+> 
+> Please note that this is not recommended for new users.
 
-On Friday 03 June 2016 05:41 PM, Jonathan Cameron wrote:
-> On 03/06/16 12:48, Laxman Dewangan wrote:
->> On Friday 03 June 2016 03:49 PM, Jonathan Cameron wrote:
->>>>> +
->>>>> +enable-power-monitor:        Boolean, Enable power monitoring of the device.
->>> Is this the power good stuff?  description should be more detailed.
->> If there is no shunt resistance then we can not enable power monitor
->> on that rail. Device does not mandate to have shunt and so this is
->> based on platforms.
-> The voltage shunt also becomes meaningless (unless you have other very
-> small voltage drops to measure!). So drop that channel as well.
-> Either it is there to do current measurement or it isn't.
+Sure.
 
-OK. understood.
+> 
+>> +
+>> +2. Property for any node
+>> +   Required properties:
+>> +   - power-sequence
+>>  
+>>  Optional properties:
+>>  - reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
+>> @@ -16,6 +22,7 @@ Optional properties:
+>>    See ../clocks/clock-bindings.txt for details.
+>>  - clock-names : Must include the following entry:
+>>    "ext_clock" (External clock provided to the card).
+>> +- ext-supply : External regulator supply
+> 
+> What happens when there are 2 supplies?
+> 
+> I'd prefer the name not be genericish and use the real supply names. 
+> Then the power seq code should just turn on all supplies it finds. If 
+> the order or timing to turn on matters, then sorry, no generic sequence.
 
+Understood. I'll change the code to use any supply.
 
->>>>> +
->>>>> +enable-continuous-mode:        Boolean. Device support oneshot and continuous
->>>>> +                mode for the channel data conversion. Presence
->>>>> +                of this property will enable the continuous
->>>>> +                mode from boot.
->>> Is the difference between driver load time and the point where usespace can
->>> set it up significant enough to justify this?
->> We change the mode dynamically. If we have more core then goto the
->> continuous mode so that we can apply throttling if power consumption
->> is going more than requirement. If we are running single core then
->> change to oneshot mode.
-> That's definitely a usespace or firmware decision, not a kernel one
-> to my mind - unless I guess you an enforcing bringing this device up
-> before firing up the additional cores?
->
-> Then it's nasty but I can start to see some justification.
+As for the genericness of this approach, Sylwester Nawrocki pointed an
+old thread:
+[PATCH v6 0/4] Runtime Interpreted Power Sequences
+https://lkml.org/lkml/2012/9/12/127
 
-Yaah, this is FW decision. Our need on some platform was that start the 
-driver with the continuous mode.
-But I think that may be specific need. I can remove this and let user 
-space can enable the continuous mode.
+How do you like that approach?
+
+Best regards,
+Krzysztof
