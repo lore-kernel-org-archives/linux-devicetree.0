@@ -1,66 +1,36 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 17/18] ARM: STi: DT: STiH407: Add uniperif reader dt
- nodes
-Date: Fri, 3 Jun 2016 13:50:23 +0100
-Message-ID: <20160603125023.GC9912@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
- <1464192412-16386-19-git-send-email-peter.griffin@linaro.org>
- <574D56CE.5020802@st.com>
+From: Raashid Muhammed <raashidmuhammed@zilogic.com>
+Subject: Re: [PATCH v3 1/2] ARM: at91/dt: at91sam9260: Remove leading zeros in OHCI node.
+Date: Fri, 03 Jun 2016 18:21:06 +0530
+Message-ID: <87shwumo07.fsf@zilogic.com>
+References: <1464934539-4737-1-git-send-email-raashidmuhammed@zilogic.com> <20160603124452.GB4594@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <574D56CE.5020802-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20160603124452.GB4594@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, vijaykumar@bravegnu.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnaud,
 
-On Tue, 31 May 2016, Arnaud Pouliquen wrote:
+Alexandre Belloni writes:
 
-> 
-> 
-> On 05/25/2016 06:06 PM, Peter Griffin wrote:
-> > This patch adds the DT node for the uniperif reader
-> > IP block found on STiH407 family silicon.
-> > 
-> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/stih407-family.dtsi | 28 ++++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> > index 7ca149b..fb6363e1 100644
-> > --- a/arch/arm/boot/dts/stih407-family.dtsi
-> > +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> > @@ -831,5 +831,33 @@
-> >  			st,version = <5>;
-> >  			st,mode = "SPDIF";
-> >  		};
-> > +
-> > +		sti_uni_reader0: sti-uni-reader@0 {
-> > +			compatible = "st,sti-uni-reader";
-> > +			status = "disabled";
-> > +			#sound-dai-cells = <0>;
-> > +			st,syscfg = <&syscfg_core>;
-> > +			reg = <0x8D83000 0x158>;
-> > +			interrupts = <GIC_SPI 87 IRQ_TYPE_NONE>;
-> > +			dmas = <&fdma0 5 0 1>;
-> > +			dma-names = "rx";
-> > +			dai-name = "Uni Reader #0 (PCM IN)";
-> > +			st,version = <3>;
-> > +			pinctrl-names = "default";
-> > +			pinctrl-0 = <&pinctrl_i2s_8ch_in>;
-> suppress pinctrl declaration
+> Hi,
+>
+> On 03/06/2016 at 11:45:38 +0530, Raashid Muhammed wrote :
+>> From: Raashid Muhammed <raashidmuhammed@zilogic.com>
+>>
+>> Remove leading zeros in OHCI node for at91sam9260 based boards.
+>>
+>> Signed-off-by: Raashid Muhammed <raashidmuhammed@zilogic.com>
+>> Reviewed-by: Vijay Kumar B. <vijaykumar@bravegnu.org>
+>> ---
+>
+> Could you include a changelog here? It is difficult to understand why
+> you are resending. Can I review it now?
+>
 
-Will fix in v5
+Changelog:
 
-regards,
-
-Peter.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ * Added Acked-by to commit message.
+ * Renamed mtd_dataflash node to flash in DT.
