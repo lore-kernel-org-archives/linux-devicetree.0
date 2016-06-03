@@ -1,63 +1,41 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH 3/8] mfd: tps65218: Use mfd_add_devices instead of
- of_platform_populate
-Date: Fri, 3 Jun 2016 16:38:57 +0530
-Message-ID: <57516549.6040102@ti.com>
-References: <1462945691-904-1-git-send-email-j-keerthy@ti.com>
- <1462945691-904-4-git-send-email-j-keerthy@ti.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] drm/bridge: Add sii902x driver
+Date: Fri, 3 Jun 2016 13:15:10 +0200
+Message-ID: <20160603111510.GA4594@piout.net>
+References: <1464879601-30569-1-git-send-email-boris.brezillon@free-electrons.com>
+ <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462945691-904-4-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>, broonie@kernel.org, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nikita@compulab.co.il, nm@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>, Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee Jones,
+Hi,
 
-On Wednesday 11 May 2016 11:18 AM, Keerthy wrote:
-> mfd_add_devices enables parsing device tree nodes without compatibles
-> for child nodes. Replace of_platform_populate with mfd_add_devices.
->
+On 03/06/2016 at 10:38:49 +0100, Emil Velikov wrote :
+> On 2 June 2016 at 16:00, Boris Brezillon
+> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > +
+> > +       if (client->irq > 0) {
+> I was always confused which is the correct way to check this >= 0 vs >
+> 0. DRM has both :-\
+> Do you have any suggestions, should be 'mass convert' DRM to use only
+> one of the two ?
+> 
 
-A gentle ping on this patch.
+0 is an invalid irq number for any i2c devices since
+  dab472eb931bc2916fa779e56deccd0ec319cf5b.
 
-Regards,
-Keerthy
 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->   drivers/mfd/tps65218.c | 10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
-> index f20a531..b8b3a58 100644
-> --- a/drivers/mfd/tps65218.c
-> +++ b/drivers/mfd/tps65218.c
-> @@ -33,6 +33,10 @@
->
->   #define TPS65218_PASSWORD_REGS_UNLOCK   0x7D
->
-> +static const struct mfd_cell tps65218_cells[] = {
-> +	{ .name = "tps65218-regulator", },
-> +};
-> +
->   /**
->    * tps65218_reg_write: Write a single tps65218 register.
->    *
-> @@ -236,8 +240,10 @@ static int tps65218_probe(struct i2c_client *client,
->   	if (ret < 0)
->   		return ret;
->
-> -	ret = of_platform_populate(client->dev.of_node, NULL, NULL,
-> -				   &client->dev);
-> +	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cells,
-> +			      ARRAY_SIZE(tps65218_cells), NULL, 0,
-> +			      regmap_irq_get_domain(tps->irq_data));
-> +
->   	if (ret < 0)
->   		goto err_irq;
->
->
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
