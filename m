@@ -1,44 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] mtd: brcmnand: Add v7.2 controller support
-Date: Thu, 2 Jun 2016 20:47:49 -0500
-Message-ID: <20160603014749.GA14989@rob-hp-laptop>
-References: <1464715383-26053-1-git-send-email-f.fainelli@gmail.com>
+Subject: Re: [PATCH 05/13] DT: clock: rcar-gen2-cpg-clocks: document R8A7792
+ support
+Date: Thu, 2 Jun 2016 20:49:22 -0500
+Message-ID: <20160603014922.GA16194@rob-hp-laptop>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <4688920.9Ektl04hDh@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464715383-26053-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-mtd@lists.infradead.org, thomas.petazzoni@free-electrons.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Simon Arlott <simon@fire.lp0.eu>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:BROADCOM STB NAND FLASH DRIVER" <bcm-kernel-feedback-list@broadcom.com>
+In-Reply-To: <4688920.9Ektl04hDh@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 31, 2016 at 10:23:02AM -0700, Florian Fainelli wrote:
-> The 7.2 controller differs in a few area compared to its predecssor (7.1):
+On Wed, Jun 01, 2016 at 01:20:11AM +0300, Sergei Shtylyov wrote:
+> Renesas R8A7792 SoC is a member of the R-Car gen2 family and so has CPG...
 > 
-> - NAND scrambler, which we are not using just yet
-> - higher ECC levels (up to 120 bits) per 1KB data blocks, also not supported yet
-> - up to 128B OOB
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > 
-> This patchs adds the ncessary code to support such a controller
-
-s/patchs/patch/
-s/ncessary/necessary/
-
-> generation and updates the Device Tree binding.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
-> Changes in v2:
-> 
-> - fixed a bunch of conditionals on the versions which should
->   have been exclusive (spotted by Thomas)
-> 
->  .../devicetree/bindings/mtd/brcm,brcmnand.txt      |  1 +
-
-With those changes,
+>  Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt |    1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/mtd/nand/brcmnand/brcmnand.c               | 91 ++++++++++++++++++----
->  2 files changed, 78 insertions(+), 14 deletions(-)
