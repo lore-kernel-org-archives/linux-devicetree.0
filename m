@@ -1,111 +1,99 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH] net: ethernet: ti: cpsw: remove rx_descs property
-Date: Fri, 3 Jun 2016 22:13:36 +0300
-Message-ID: <5751D6E0.5040207@ti.com>
-References: <1464907420-19694-1-git-send-email-ivan.khoronzhuk@linaro.org>
- <5751B562.8020708@ti.com> <5751CB80.4060802@linaro.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [v2, 1/2] Documentation: bindings: add DT documentation for
+ Rockchip USB2PHY
+Date: Fri, 3 Jun 2016 12:25:32 -0700
+Message-ID: <20160603192532.GA4241@roeck-us.net>
+References: <1464850090-99371-2-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5751CB80.4060802@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, mugunthanvnm@ti.com, linux-kernel@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1464850090-99371-2-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2016 09:25 PM, Ivan Khoronzhuk wrote:
+On Thu, Jun 02, 2016 at 02:48:09PM +0800, Frank Wang wrote:
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
 > 
+> Changes in v2:
+>  - Changed vbus_host optional property from gpio to regulator.
+>  - Specified vbus_otg-supply optional property.
+>  - Specified otg_id and otg_bvalid property.
 > 
-> On 03.06.16 19:50, Grygorii Strashko wrote:
->> On 06/03/2016 01:43 AM, Ivan Khoronzhuk wrote:
->>> There is no reason to hold s/w dependent parameter in device tree.
->>> Even more, there is no reason in this parameter because davinici_cpdma
->>> driver splits pool of descriptors equally between tx and rx channels.
->>> That is, if number of descriptors 256, 128 of them are for rx
->>> channels. While receiving, the descriptor is freed to the pool and
->>> then allocated with new skb. And if in DT the "rx_descs" is set to
->>> 64, then 128 - 64 = 64 descriptors are always in the pool and cannot
->>> be used, for tx, for instance. It's not correct resource usage,
->>> better to set it to half of pool, then the rx pool can be used in
->>> full. It will not have any impact on performance, as anyway, the
->>> "redundant" descriptors were unused.
->>>
->>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->>> ---
->>>
->>> Based on master
->>>
->>>   Documentation/devicetree/bindings/net/cpsw.txt |  3 ---
->>>   arch/arm/boot/dts/am33xx.dtsi                  |  1 -
->>>   arch/arm/boot/dts/am4372.dtsi                  |  1 -
->>>   arch/arm/boot/dts/dm814x.dtsi                  |  1 -
->>>   arch/arm/boot/dts/dra7.dtsi                    |  1 -
->>
->>
->> Pls, split DT and non-DT changes, seems code changes should go first.
-> Ok.
+>  .../bindings/phy/phy-rockchip-inno-usb2.txt        |   55 ++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
 > 
->>
->>>   drivers/net/ethernet/ti/cpsw.c                 | 13 +++----------
->>>   drivers/net/ethernet/ti/cpsw.h                 |  1 -
->>>   drivers/net/ethernet/ti/davinci_cpdma.c        |  6 ++++++
->>>   drivers/net/ethernet/ti/davinci_cpdma.h        |  1 +
->>>   9 files changed, 10 insertions(+), 18 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt 
->>> b/Documentation/devicetree/bindings/net/cpsw.txt
->>> index 0ae0649..5fe6239 100644
->>> --- a/Documentation/devicetree/bindings/net/cpsw.txt
->>> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
->>> @@ -15,7 +15,6 @@ Required properties:
->>>   - cpdma_channels     : Specifies number of channels in CPDMA
->>>   - ale_entries        : Specifies No of entries ALE can hold
->>>   - bd_ram_size        : Specifies internal descriptor RAM size
->>> -- rx_descs        : Specifies number of Rx descriptors
->>>   - mac_control        : Specifies Default MAC control register content
->>>                 for the specific platform
->>>   - slaves        : Specifies number for slaves
->>> @@ -70,7 +69,6 @@ Examples:
->>
->> [....]
->>
->>>               slaves = <2>;
->>>               active_slave = <0>;
->>> diff --git a/drivers/net/ethernet/ti/cpsw.c 
->>> b/drivers/net/ethernet/ti/cpsw.c
->>> index 4b08a2f..635be3e 100644
->>> --- a/drivers/net/ethernet/ti/cpsw.c
->>> +++ b/drivers/net/ethernet/ti/cpsw.c
->>> @@ -1277,6 +1277,7 @@ static int cpsw_ndo_open(struct net_device *ndev)
->>>                     ALE_ALL_PORTS, ALE_ALL_PORTS, 0, 0);
->>>
->>>       if (!cpsw_common_res_usage_state(priv)) {
->>> +        int buf_num;
->>>           struct cpsw_priv *priv_sl0 = cpsw_get_slave_priv(priv, 0);
->>>
->>>           /* setup tx dma to fixed prio and zero offset */
->>> @@ -1305,10 +1306,8 @@ static int cpsw_ndo_open(struct net_device *ndev)
->>>               enable_irq(priv->irqs_table[0]);
->>>           }
->>>
->>> -        if (WARN_ON(!priv->data.rx_descs))
->>> -            priv->data.rx_descs = 128;
->>> -
->>> -        for (i = 0; i < priv->data.rx_descs; i++) {
->>> +        buf_num = cpdma_chan_get_buf_num(priv->dma) / 2;
->>
->> Could you get rid of "/ 2", pls?
->>
-> Why? compiler is smart enough to translate it to shift.
-> And this is not time critical place.
-> Anyway, will change it to >> 1 while splitting.
-> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> new file mode 100644
+> index 0000000..132e707
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> @@ -0,0 +1,55 @@
+> +ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
+> +
+> +Required properties (phy (parent) node):
+> + - compatible : should contain:
+> +	* "rockchip,rk3366-usb2phy"
+> +	* "rockchip,rk3399-usb2phy"
+> + - #clock-cells : should be 0.
+> + - clock-names : specify the 480m output clk name.
+> +
+> +Optional properties:
+> + - vbus_host-supply : phandle to a regulator that supplies host vbus.
+> + - vbus_otg-supply : phandle to a regulator that supplies otg vbus.
+> +
+> +Required nodes : a sub-node is required for each port the phy provides.
+> +		 The sub-node name is used to identify host or otg port.
+> +
+Would it make sense to also specify the sub-node names ? The driver matches
+"host-port", and presumably once supported "otg-port". Someone not knowing
+this may specify "hostport" or some other name variant and wonder why nothing
+works as expected.
 
-I mean here that cpsw, in general, should not have any knowledge about rules
- used by cpdma to split pool on rx and tx part. How about cpdma_chan_get_rx_buf_num()?
-
-
--- 
-regards,
--grygorii
+> +Required properties (port (child) node):
+> + - #phy-cells : must be 0. See ./phy-bindings.txt for details.
+> + - interrupts : specify an interrupt for each entry in interrupt-names.
+> + - interrupt-names : a list which shall be the following entries:
+> +	* "otg_id" : for the otg id interrupt.
+> +	* "otg_bvalid" : for the otg vbus interrupt.
+> +	* "linestate" : for the host or otg linestate interrupt.
+> +
+> +Example:
+> +
+> +grf: syscon@ff770000 {
+> +	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +...
+> +
+> +	u2phy: usb2-phy {
+> +		compatible = "rockchip,rk3366-usb2phy";
+> +		#clock-cells = <0>;
+> +		clock-output-names = "sclk_otgphy0_480m";
+> +
+> +		u2phy_otg: otg-port {
+> +			#phy-cells = <0>;
+> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "otg_id", "otg_bvalid", "linestate";
+> +			status = "okay";
+> +		};
+> +
+> +		u2phy_host: host-port {
+> +			#phy-cells = <0>;
+> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "linestate";
+> +			status = "okay";
+> +		};
+> +	};
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
