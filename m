@@ -1,35 +1,82 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [33/54] MAINTAINERS: Add file patterns for wireless device tree
- bindings
-Date: Sat,  4 Jun 2016 14:24:20 +0000 (UTC)
-Message-ID: <20160604142420.95257613E3@smtp.codeaurora.org>
-References: <1463907991-7916-34-git-send-email-geert@linux-m68k.org>
+From: "Langer, Thomas" <thomas.langer@intel.com>
+Subject: RE: [RFC v3 1/3] NET: PHY: adds driver for Intel XWAY PHY
+Date: Sat, 4 Jun 2016 14:43:11 +0000
+Message-ID: <0DAF21CFE1B20740AE23D6AF6E54843F1E503ECE@IRSMSX101.ger.corp.intel.com>
+References: <1465040728-4904-1-git-send-email-hauke@hauke-m.de>
+ <1465040728-4904-2-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463907991-7916-34-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1465040728-4904-2-git-send-email-hauke@hauke-m.de>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Hauke Mehrtens <hauke@hauke-m.de>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Cc: "alexander.stein@systec-electronic.com" <alexander.stein@systec-electronic.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>, "john@phrozen.org" <john@phrozen.org>, "openwrt@kresin.me" <openwrt@kresin.me>, "Mehrtens, Hauke" <hauke.mehrtens@intel.com>, "daniel.schwierzeck@gmail.com" <daniel.schwierzeck@gmail.com>, "eckert.florian@googlemail.com" <eckert.florian@googlemail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Hello Hauke,
 
-Thanks, 1 patch applied to wireless-drivers.git:
+[...]
+> +
+> +static int xway_gphy_ack_interrupt(struct phy_device *phydev)
+> +{
+> +	int reg;
+> +
+> +	/**
+> +	 * Possible IRQ numbers:
+> +	 * - IM3_IRL18 for GPHY0
+> +	 * - IM3_IRL17 for GPHY1
 
-182fd9eecb28 MAINTAINERS: Add file patterns for wireless device tree bindings
+These are references to the SoC interrupts.
 
--- 
-Sent by pwcli
-https://patchwork.kernel.org/patch/9130849/
+> +	 *
+> +	 * Due to a silicon bug IRQ lines are not really independent from
+> +	 * each other. Sometimes the two lines are driven at the same time
+> +	 * if only one GPHY core raises the interrupt.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So this errata sounds like a SoC errata, not an errata for the PHY.
+
+> +	 */
+> +	reg = phy_read(phydev, XWAY_MDIO_ISTAT);
+> +
+> +	return (reg < 0) ? reg : 0;
+> +}
+> +
+[...]
+> +
+> +static struct phy_driver xway_gphy[] = {
+> +	{
+> +		.phy_id		= PHY_ID_PHY11G_1_3,
+> +		.phy_id_mask	= 0xffffffff,
+> +		.name		= "Intel XWAY PHY11G (PEF 7071/PEF 7072)
+> v1.3",
+> +		.features	= (PHY_GBIT_FEATURES |
+> SUPPORTED_Pause |
+> +				   SUPPORTED_Asym_Pause),
+> +		 /* there is an errata regarding irqs in this rev */
+
+And then this is comment is also now valid.
+What about a system with a single external phy connected,
+on a non-Lantiq/Intel SoC?
+
+I think the feasibility of using interrupts is not related to the phy version,
+but indirectly by the version of the SoC it is integrated.
+
+So maybe he use of interrupts (on these SoCs) should be controlled by devicetree or
+network driver, where the SoC type and version can be handled?
+
+> +		.flags		= 0,
+> +		.config_init	= xway_gphy_config_init,
+> +		.config_aneg	= xway_gphy14_config_aneg,
+> +		.read_status	= genphy_read_status,
+> +		.ack_interrupt	= xway_gphy_ack_interrupt,
+> +		.did_interrupt	= xway_gphy_did_interrupt,
+> +		.config_intr	= xway_gphy_config_intr,
+> +		.suspend	= genphy_suspend,
+> +		.resume		= genphy_resume,
+> +	}, {
+[...]
+
+Regards,
+Thomas
