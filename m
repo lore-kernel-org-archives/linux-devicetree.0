@@ -1,53 +1,45 @@
-From: Daniel Schwierzeck <daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v3 1/3] NET: PHY: adds driver for Intel XWAY PHY
-Date: Sat, 4 Jun 2016 17:27:38 +0200
-Message-ID: <5752F36A.4050007@gmail.com>
-References: <1465040728-4904-1-git-send-email-hauke@hauke-m.de>
- <1465040728-4904-2-git-send-email-hauke@hauke-m.de>
- <0DAF21CFE1B20740AE23D6AF6E54843F1E503ECE@IRSMSX101.ger.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/1] ARM: dts: sunxi: Fix simplefb not working in 4.7-rc1
+Date: Sat,  4 Jun 2016 20:05:23 +0200
+Message-ID: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0DAF21CFE1B20740AE23D6AF6E54843F1E503ECE-kPTMFJFq+rF9qrmMLTLiibfspsVTdybXVpNB7YpNyf8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Langer, Thomas" <thomas.langer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org" <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org" <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, "openwrt-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org" <openwrt-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org>, "Mehrtens, Hauke" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "eckert.florian-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <eckert.florian-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Maxime,
 
+While testing 4.7-rc1 / linux-sunxi/sunxi-next on a A10s I noticed that
+hdmi out is no longer working (screen goes black when the kernel turns
+of unused clocks).
 
-Am 04.06.2016 um 16:43 schrieb Langer, Thomas:
-> Hello Hauke,
-> 
-> [...]
->> +
->> +static int xway_gphy_ack_interrupt(struct phy_device *phydev)
->> +{
->> +	int reg;
->> +
->> +	/**
->> +	 * Possible IRQ numbers:
->> +	 * - IM3_IRL18 for GPHY0
->> +	 * - IM3_IRL17 for GPHY1
-> 
-> These are references to the SoC interrupts.
-> 
->> +	 *
->> +	 * Due to a silicon bug IRQ lines are not really independent from
->> +	 * each other. Sometimes the two lines are driven at the same time
->> +	 * if only one GPHY core raises the interrupt.
-> 
-> So this errata sounds like a SoC errata, not an errata for the PHY.
-> 
+This is caused by the dtsi for sun4i / sun5i / sun7i based boards now
+listing pll3, without pll3 being added to the clocks list for the
+simplefb nodes.
 
-this comment is a remnant from the first driver version which was mainly
-used on a VRX200 SoC. But interrupts are generally working fine so this
-comment should be removed.
+For sun5i-r8 this does not happen because it lists the de_be and
+tcon_ch#_clk in the framebuffer node's clocks which will in turn keep
+ppl3 (and pll5) alive.
 
+With this commit:
+https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/for-next&id=eadc0660c2bca3a2a6d2c15fe04bc2aaa2709cef
 
--- 
-- Daniel
+This is also fixed for A13 based devices, but it still is a problem for
+A10s, hence this patch, which sits on top of the commit I just linked too.
+
+Note that we've the same problem in 4.7-rc1 for A10 / A20, this is fixed
+by these 2 commits:
+
+https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=5a7f2310cc847a73852e70bc720a61ca9bf986a6
+https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=c79255ca4d7b67cce4eac4dd532e097ce49f3679
+
+This also means that we must send all 3 linked commits + the patch I'm
+sending now to 4.7 as fixes, to avoid regressing in 4.7.
+
+Regards,
+
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
