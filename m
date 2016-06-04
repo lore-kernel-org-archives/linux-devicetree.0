@@ -1,47 +1,67 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH] hwmon: ina2xx: Document compatible for INA231
-Date: Fri, 3 Jun 2016 21:15:22 -0700
-Message-ID: <575255DA.607@roeck-us.net>
-References: <1464774192-21887-1-git-send-email-k.kozlowski@samsung.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 03/14] pwm: rockchip: Fix period and duty_cycle
+ approximation
+Date: Sat, 4 Jun 2016 08:19:55 +0200
+Message-ID: <20160604081955.47393878@bbrezillon>
+References: <1464942192-25967-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1464942192-25967-4-git-send-email-boris.brezillon@free-electrons.com>
+	<20160603200326.GA124478@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464774192-21887-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160603200326.GA124478@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2016 02:43 AM, Krzysztof Kozlowski wrote:
-> Document the compatible for INA231 sensor.
->
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Fri, 3 Jun 2016 13:03:26 -0700
+Brian Norris <briannorris@chromium.org> wrote:
 
-Applied.
+> On Fri, Jun 03, 2016 at 10:23:01AM +0200, Boris Brezillon wrote:
+> > The current implementation always round down the duty and period
+> > values, while it would be better to round them to the closest integer.  
+> 
+> Agreed. As I noted to you elsewhere, not having this change can cause
+> problems where doing a series of pwm_get_state() / modify /
+> pwm_apply_state() will propagate rounding errors, which will change the
+> period unexpectedly. e.g., I have an expected period of 3.333 us and a
+> clk rate of 112.666667 MHz -- the clock frequency doesn't divide evenly,
+> so the period (stashed in nanoseconds) shrinks when we convert to the
+> register value and back, as follows:
+> 
+>  pwm_apply_state(): register = period * 112666667 / 1000000000;
+>  pwm_get_state(): period = register * 1000000000 / 112666667;
+> 
+> or in other words:
+> 
+>  period = period * 112666667 / 1000000000 * 1000000000 / 112666667;
+> 
+> which yields a sequence like:
+> 
+>  3333 -> 3328
+>  3328 -> 3319
+>  3319 -> 3310
+>  3310 -> 3301
+>  3301 -> 3292
+>  3292 -> ... (etc) ...
+> 
+> With this patch, we'd see instead:
+> 
+>  period = div_round_closest(period * 112666667, 1000000000) * 1000000000 / 112666667;
+> 
+> which yields a stable sequence:
+> 
+>  3333 -> 3337
+>  3337 -> 3337
+>  3337 -> ... (etc) ...
 
-Thanks,
-Guenter
+Woh! Thanks for the detailed explanation. Do you want me to put that in
+a comment explaining why we're using DIV_ROUND_CLOSEST_ULL()?
 
-> ---
->   Documentation/devicetree/bindings/hwmon/ina2xx.txt | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/ina2xx.txt b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> index 9bcd5e87830d..02af0d94e921 100644
-> --- a/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> @@ -7,6 +7,7 @@ Required properties:
->   	- "ti,ina220" for ina220
->   	- "ti,ina226" for ina226
->   	- "ti,ina230" for ina230
-> +	- "ti,ina231" for ina231
->   - reg: I2C address
->
->   Optional properties:
->
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
