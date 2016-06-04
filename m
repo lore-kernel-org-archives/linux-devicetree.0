@@ -1,40 +1,41 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] of/irq: Break out msi-map lookup (again)
-Date: Sat, 4 Jun 2016 09:10:21 +0100
-Message-ID: <20160604091021.661c5508@arm.com>
-References: <cover.1464966939.git.robin.murphy@arm.com>
-	<2cbffa9a341edfd10114994f6486f6b08d0c390c.1464966939.git.robin.murphy@arm.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH V4 2/9] genirq: Look-up trigger type if not specified by
+ caller
+Date: Sat, 4 Jun 2016 10:41:17 +0100
+Message-ID: <20160604104117.7d22bdb2@arm.com>
+References: <1463066372-13115-1-git-send-email-jonathanh@nvidia.com>
+	<1463066372-13115-3-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2cbffa9a341edfd10114994f6486f6b08d0c390c.1464966939.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463066372-13115-3-git-send-email-jonathanh@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 3 Jun 2016 18:15:38 +0100
-Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+On Thu, 12 May 2016 16:19:25 +0100
+Jon Hunter <jonathanh@nvidia.com> wrote:
 
-> The PCI msi-map code is already doing double-duty translating IDs and
-> retrieving MSI parents, which unsurprisingly is the same functionality
-> we need for the identically-formatted PCI iommu-map property. Drag the
-> core parsing routine up yet another layer into the general OF-PCI code,
-> and further generalise it for either kind of lookup in either flavour
-> of map property.
+> For some devices the IRQ trigger type for a device is read from
+> firmware, such as device-tree. The IRQ trigger type is typically read
+> when the mapping for IRQ is created, which is before the IRQ is
+> requested. Hence, the IRQ trigger type is programmed when mapping the
+> IRQ and not when requesting the IRQ.
 > 
-> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> CC: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> Although this works for most cases, in order to support IRQ chips which
+> require runtime power management, which may not be accessible prior
+> to requesting the IRQ, it is desirable to look-up the IRQ trigger type
+> when it is requested. Therefore, if the IRQ trigger type is not
+> specified when __setup_irq() is called, look-up the saved IRQ trigger
+> type. This will allow us to defer the programming of the trigger type
+> from when the IRQ is mapped to when it is actually requested.
+> 
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
 
 	M.
 -- 
 Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
