@@ -1,39 +1,48 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 1/5] ethernet: add sun8i-emac driver
-Date: Fri, 03 Jun 2016 20:07:12 -0400 (EDT)
-Message-ID: <20160603.200712.1655112462975368614.davem@davemloft.net>
-References: <1464947790-22991-1-git-send-email-clabbe.montjoie@gmail.com>
-	<1464947790-22991-2-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sunxi+bncBDCIDJ4RTAOBBMVXZC5AKGQEMGOMIII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1464947790-22991-2-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Yinghai Lu <yinghai@kernel.org>
+Subject: [PATCH v12 10/15] OF/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
+Date: Fri,  3 Jun 2016 17:06:37 -0700
+Message-ID: <20160604000642.28162-11-yinghai@kernel.org>
+References: <20160604000642.28162-1-yinghai@kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160604000642.28162-1-yinghai@kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, David Miller <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Wei Yang <weiyang@linux.vnet.ibm.com>, Khalid Aziz <khalid.aziz@oracle.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Fri,  3 Jun 2016 11:56:26 +0200
+For device resource PREF bit setting under bridge 64-bit pref resource,
+we need to make sure only set PREF for 64bit resource.
 
-> +static int nbdesc_tx = 256;
-> +module_param(nbdesc_tx, int, S_IRUGO | S_IWUSR);
-> +MODULE_PARM_DESC(nbdesc_tx, "Number of descriptors in the TX list");
-> +static int nbdesc_rx = 128;
-> +module_param(nbdesc_rx, int, S_IRUGO | S_IWUSR);
-> +MODULE_PARM_DESC(nbdesc_rx, "Number of descriptors in the RX list");
+This patch set IORESOUCE_MEM_64 for 64bit resource during OF device resource
+flags parsing.
 
-Module parameters are not appropriate.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
+Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Tested-by: Khalid Aziz <khalid.aziz@oracle.com>
+---
+ drivers/of/address.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Please use the proper ethtool configuration facilities to control
-the size of the RX and TX queues.
-
-Thanks.
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 0a553c0..fa10b99 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -129,9 +129,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+ 		flags |= IORESOURCE_IO;
+ 		break;
+ 	case 0x02: /* 32 bits */
+-	case 0x03: /* 64 bits */
+ 		flags |= IORESOURCE_MEM;
+ 		break;
++	case 0x03: /* 64 bits */
++		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
++		break;
+ 	}
+ 	if (w & 0x40000000)
+ 		flags |= IORESOURCE_PREFETCH;
+-- 
+2.8.3
