@@ -1,32 +1,39 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [Patch v6 05/10] firmware: qcom: scm: Convert to streaming DMA
- APIS
-Date: Fri, 3 Jun 2016 17:04:52 -0700
-Message-ID: <20160604000452.GY28218@codeaurora.org>
-References: <1464996330-16952-1-git-send-email-andy.gross@linaro.org>
- <1464996330-16952-6-git-send-email-andy.gross@linaro.org>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 1/5] ethernet: add sun8i-emac driver
+Date: Fri, 03 Jun 2016 20:07:12 -0400 (EDT)
+Message-ID: <20160603.200712.1655112462975368614.davem@davemloft.net>
+References: <1464947790-22991-1-git-send-email-clabbe.montjoie@gmail.com>
+	<1464947790-22991-2-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464996330-16952-6-git-send-email-andy.gross@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sunxi+bncBDCIDJ4RTAOBBMVXZC5AKGQEMGOMIII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1464947790-22991-2-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/03, Andy Gross wrote:
-> This patch converts the Qualcomm SCM driver to use the streaming DMA APIs
-> for communication buffers.  This is being done so that the
-> secure_flush_area call can be removed.  Using the DMA APIs will also make
-> the SCM32 symmetric to the coming SCM64 code.
-> 
-> Signed-off-by: Andy Gross <andy.gross@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Fri,  3 Jun 2016 11:56:26 +0200
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+> +static int nbdesc_tx = 256;
+> +module_param(nbdesc_tx, int, S_IRUGO | S_IWUSR);
+> +MODULE_PARM_DESC(nbdesc_tx, "Number of descriptors in the TX list");
+> +static int nbdesc_rx = 128;
+> +module_param(nbdesc_rx, int, S_IRUGO | S_IWUSR);
+> +MODULE_PARM_DESC(nbdesc_rx, "Number of descriptors in the RX list");
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Module parameters are not appropriate.
+
+Please use the proper ethtool configuration facilities to control
+the size of the RX and TX queues.
+
+Thanks.
