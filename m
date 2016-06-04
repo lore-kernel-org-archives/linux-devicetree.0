@@ -1,84 +1,39 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2] ARM: dts: sunxi: Add a startup delay for fixed regulator enabled phys
-Date: Sat,  4 Jun 2016 12:58:39 +0200
-Message-ID: <1465037919-8497-1-git-send-email-hdegoede@redhat.com>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, stable@vger.kernel.org
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Subject: [RFC v3 0/3] NET: PHY: Intel XWAY driver
+Date: Sat,  4 Jun 2016 13:45:25 +0200
+Message-ID: <1465040728-4904-1-git-send-email-hauke@hauke-m.de>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: f.fainelli@gmail.com
+Cc: alexander.stein@systec-electronic.com, netdev@vger.kernel.org, andrew@lunn.ch, john@phrozen.org, openwrt@kresin.me, hauke.mehrtens@intel.com, daniel.schwierzeck@gmail.com, eckert.florian@googlemail.com, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-It seems that recent kernels have a shorter timeout when scanning for
-ethernet phys causing us to hit a timeout on boards where the phy's
-regulator gets enabled just before scanning, which leads to non working
-ethernet.
+This adds the Intel XWAY driver and also adds a device tree binding for 
+Ethernet PHY LEDs.
 
-A 10ms startup delay seems to be enough to fix it, this commit adds a
-20ms startup delay just to be safe.
+changes since
+RFC v2:
+ * add Documentation/devicetree/bindings/phy/intel-xway.txt
+ * fixed some typos
+ * renamed from lantiq.c to intel-xway.c
+ * split the generic PHY binding information out
 
-This has been tested on a sun4i-a10-a1000 and sun5i-a10s-wobo-i5 board,
-both of which have non-working ethernet on recent kernels without this
-fix.
+Hauke Mehrtens (3):
+  NET: PHY: adds driver for Intel XWAY PHY
+  NET: PHY: Add PHY LED control binding.
+  NET: PHY: Intel XWAY: add LED configuration support
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
--Add Cc stable
----
- arch/arm/boot/dts/sun4i-a10-a1000.dts      | 1 +
- arch/arm/boot/dts/sun4i-a10-hackberry.dts  | 1 +
- arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts | 1 +
- arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts   | 1 +
- 4 files changed, 4 insertions(+)
+ .../devicetree/bindings/phy/intel-xway.txt         |  77 +++
+ Documentation/devicetree/bindings/phy/phy-leds.txt |  52 ++
+ drivers/net/phy/Kconfig                            |   6 +
+ drivers/net/phy/Makefile                           |   1 +
+ drivers/net/phy/intel-xway.c                       | 541 +++++++++++++++++++++
+ include/dt-bindings/phy/phy-leds.h                 |  27 +
+ 6 files changed, 704 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel-xway.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-leds.txt
+ create mode 100644 drivers/net/phy/intel-xway.c
+ create mode 100644 include/dt-bindings/phy/phy-leds.h
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-index c92a1ae..fa70b8f 100644
---- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-@@ -84,6 +84,7 @@
- 		regulator-name = "emac-3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <20000>;
- 		enable-active-high;
- 		gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>;
- 	};
-diff --git a/arch/arm/boot/dts/sun4i-a10-hackberry.dts b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-index 2b17c51..6de83a6 100644
---- a/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-@@ -66,6 +66,7 @@
- 		regulator-name = "emac-3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <20000>;
- 		enable-active-high;
- 		gpio = <&pio 7 19 GPIO_ACTIVE_HIGH>;
- 	};
-diff --git a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-index 7afc7a6..e28f080 100644
---- a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-@@ -80,6 +80,7 @@
- 		regulator-name = "emac-3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <20000>;
- 		enable-active-high;
- 		gpio = <&pio 7 19 GPIO_ACTIVE_HIGH>;   /* PH19 */
- 	};
-diff --git a/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts b/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
-index 52d18ca..b5de75f 100644
---- a/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
-+++ b/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
-@@ -79,6 +79,7 @@
- 		regulator-name = "emac-3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <20000>;
- 		enable-active-high;
- 		gpio = <&pio 0 2 GPIO_ACTIVE_HIGH>;
- 	};
 -- 
-2.7.4
+2.8.1
