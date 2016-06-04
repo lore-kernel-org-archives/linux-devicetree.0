@@ -1,75 +1,63 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 2/2] mmc: sdhci-bcm2835: remove driver
-Date: Fri, 03 Jun 2016 17:02:16 -0700
-Message-ID: <87inxp7ref.fsf@eliezer.anholt.net>
-References: <1464983233-27001-1-git-send-email-stefan.wahren@i2se.com>
- <1464983233-27001-3-git-send-email-stefan.wahren@i2se.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [Patch v6 02/10] firmware: qcom: scm: Convert SCM to platform
+ driver
+Date: Fri, 3 Jun 2016 17:03:43 -0700
+Message-ID: <20160604000343.GW28218@codeaurora.org>
+References: <1464996330-16952-1-git-send-email-andy.gross@linaro.org>
+ <1464996330-16952-3-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2655772443303433652=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1464983233-27001-3-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1464996330-16952-3-git-send-email-andy.gross@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---===============2655772443303433652==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+On 06/03, Andy Gross wrote:
+> This patch converts the Qualcomm SCM firmware driver into a platform
+> driver.  It also adds clock management for firmware calls which require
+> clocks to be enabled during the duration of their execution.  Rate
+> setting of the core clock is also in place for higher performance.
+> 
+> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
---=-=-=
-Content-Type: text/plain
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
 
-Stefan Wahren <stefan.wahren@i2se.com> writes:
+> +
+> +static int __init qcom_scm_init(void)
+> +{
+> +	struct device_node *np, *fw_np;
+> +	int ret;
+> +
+> +	fw_np = of_find_node_by_name(NULL, "firmware");
+> +
+> +	if (!fw_np)
+> +		return -ENODEV;
+> +
+> +	np = of_find_matching_node(fw_np, qcom_scm_dt_match);
+> +
+> +	if (!np) {
+> +		of_node_put(fw_np);
+> +		return -ENODEV;
+> +	}
+> +
+> +	of_node_put(np);
+> +
+> +	ret = of_platform_populate(fw_np, qcom_scm_dt_match, NULL, NULL);
+> +
+> +	of_node_put(fw_np);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	return platform_driver_register(&qcom_scm_driver);
+> +}
 
-> The sdhci-bcm2835 is no more needed since it has been replaced
-> by sdhci-iproc.
+There are lots of newlines in this function, but that's a style nitpick.
 
-We've had a cycle to catch regressions from the merged driver, so I'm
-happy to see the old one go.  Thanks Stefan!
-
-Acked-by: Eric Anholt <eric@anholt.net>
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXUhqJAAoJELXWKTbR/J7oOzQQALoMi7JZzb8/kN3oVJt5UJwK
-mmoPQnOpd946Y1Gm/eyjdPG9S+W+9gBGQctubhTVddthMsZWYcfylud70Bsral6S
-N+dS7o7QLKCmk9fPOdN8MlYpfncHBOQbNMaEY2WEcHnd58uAV+CMME2p1WtTLJbd
-tdWrDpN8qrrc+nsLB32bjTADExhSY5krSoGj+AeBB7okHvhFM6HTIwnDWjhnkOiC
-KjXJadqbisUCWBPhW5vhWmNhLnFEt3IV/QtKGp9rm9IG6yCJp8MtzkcSlTt5s4qq
-OhWKggyLM74fm8vByiXqqnR6xzQlTi4fKg+mimZnyzgYap4vdgynGhbmGr+8Kbpu
-XraUWdbGG1X4Yr8v0W3j3mShtYEHK7JckNc5/90d9q/PNKhCSSCbCKGu0fjmsqZu
-wP2h/xKwZQZn1R63Gks3cYRk1e7gwObmQ1GQQmpOxniB+d/Xwp+glETMnqu7YRP2
-9xMUrEBlogZs/fC4BLKTfXH5U5Ggvpa8ZRfxxdGTt/4LFPCkLjAdd+VJZax92F2x
-ljSx8IpJX5UmsHzxhHSO279Xi60DwhBPy48zy8KX+Nv+Y1JO/MzIFY5gD16lUT3B
-gyMXXooIxjFv51JVZGS87FeREx5flLZvYvap0hf/DseeTkpME1568EjsB+JXDytt
-SHwV+9r0r7vhCNNkKX1x
-=CbU3
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============2655772443303433652==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2655772443303433652==--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
