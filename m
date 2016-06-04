@@ -1,121 +1,40 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: [RFC v3 2/3] NET: PHY: Add PHY LED control binding.
-Date: Sat,  4 Jun 2016 13:45:27 +0200
-Message-ID: <1465040728-4904-3-git-send-email-hauke@hauke-m.de>
-References: <1465040728-4904-1-git-send-email-hauke@hauke-m.de>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1465040728-4904-1-git-send-email-hauke@hauke-m.de>
-Sender: netdev-owner@vger.kernel.org
-To: f.fainelli@gmail.com
-Cc: alexander.stein@systec-electronic.com, netdev@vger.kernel.org, andrew@lunn.ch, john@phrozen.org, openwrt@kresin.me, hauke.mehrtens@intel.com, daniel.schwierzeck@gmail.com, eckert.florian@googlemail.com, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH] ARM: dts: omap3-gta04: Add RFID eeprom node
+Date: Sat,  4 Jun 2016 14:05:55 +0200
+Message-ID: <1465041955-410-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux@armlinux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-This binding makes it possible to control the LEDs of an Ethernet PHY.
-These settings allow it to abstract the hardware configuration which
-tells the hardware when to switch the LED constant on or blink for
-example. This will be used by the Intel XWAY PHY driver.  I also
-checked datasheets for some other Ethernet PHYs and it should be
-possible to also control their LED behavior with these settings, but
-they all did not allow a so fine control over the LED behavior.
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Define RFID eeprom node which is present on gta04
+device.
+
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Marek Belisko <marek@goldelico.com>
 ---
- Documentation/devicetree/bindings/phy/phy-leds.txt | 52 ++++++++++++++++++++++
- include/dt-bindings/phy/phy-leds.h                 | 27 +++++++++++
- 2 files changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-leds.txt
- create mode 100644 include/dt-bindings/phy/phy-leds.h
+ arch/arm/boot/dts/omap3-gta04.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-leds.txt b/Documentation/devicetree/bindings/phy/phy-leds.txt
-new file mode 100644
-index 0000000..1a35e3d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-leds.txt
-@@ -0,0 +1,52 @@
-+LED configuration for Ethernet phys
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index a922472..b652dae 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -433,6 +433,12 @@
+ 		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;
+ 		ti,x-plate-ohms = <600>;
+ 	};
 +
-+All these properties are optional, not all properties are supported by
-+all PHYs. When more then one property name is define for one LED the
-+order they get applied is device depended.
-+Property names:
-+	led-const-on: conditions the LED should be constant on
-+	led-pulse: condition the LED should be pulsed on
-+	led-blink-slow: condition the LED should slowly blink
-+	led-blink-fast: condition the LED should fast blink
-+
-+These property values define the states a LED is triggered by the
-+hardware. Not all PHYs support all states. It is possible to connect
-+these property values with OR to trigger the LED in multiple stats like
-+10MBit/s and 100MBit/s. The possible combinations are device specific.
-+property values:
-+	PHY_LED_OFF:		LED is off
-+	PHY_LED_LINK10:		link is 10MBit/s
-+	PHY_LED_LINK100:	link is 100MBit/s
-+	PHY_LED_LINK1000:	link is 1000MBit/s
-+	PHY_LED_PDOWN:		link is powered down
-+	PHY_LED_EEE:		link is in EEE mode
-+	PHY_LED_ANEG:		auto negotiation is running
-+	PHY_LED_ABIST:		analog self testing is running
-+	PHY_LED_CDIAG:		cable diagnostics is running
-+	PHY_LED_COPPER:		copper interface detected
-+	PHY_LED_FIBER:		fiber interface detected
-+	PHY_LED_TXACT:		Transmit activity
-+	PHY_LED_RXACT:		Receive activity
-+	PHY_LED_COL:		Collision
-+
-+Example:
-+
-+#include <dt-bindings/phy/phy-leds.h>
-+phy@0 {
-+	compatible = "ethernet-phy-ieee802.3-c22";
-+	reg = <0x0>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	led@0 {
-+		compatible = "phy,led";
-+		reg = <0>;
-+		led-const-on = <(PHY_LED_LINK10 | PHY_LED_LINK100 | PHY_LED_LINK1000)>;
-+		led-pulse = <(PHY_LED_TXACT | PHY_LED_RXACT)>;
++	/* RFID EEPROM */
++	m24lr64@50 {
++		compatible = "at,24c64";
++		reg = <0x50>;
 +	};
-+	led@2 {
-+		compatible = "phy,led";
-+		reg = <2>;
-+		led-blink-slow = <PHY_LED_EEE>;
-+		led-blink-fast = <PHY_LED_PDOWN>;
-+	};
-+};
-diff --git a/include/dt-bindings/phy/phy-leds.h b/include/dt-bindings/phy/phy-leds.h
-new file mode 100644
-index 0000000..801fdaf
---- /dev/null
-+++ b/include/dt-bindings/phy/phy-leds.h
-@@ -0,0 +1,27 @@
-+/*
-+ * Copyright (C) 2016 Hauke Mehrtens <hauke@hauke-m.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ */
-+
-+#ifndef _DT_BINDINGS_PHY_LEDS
-+#define _DT_BINDINGS_PHY_LEDS
-+
-+#define PHY_LED_OFF		(1 << 0)  /* is off */
-+#define PHY_LED_LINK10		(1 << 1)  /* link is 10MBit/s */
-+#define PHY_LED_LINK100		(1 << 2)  /* link is 100MBit/s */
-+#define PHY_LED_LINK1000	(1 << 3)  /* link is 1000MBit/s */
-+#define PHY_LED_PDOWN		(1 << 4)  /* link is powered down */
-+#define PHY_LED_EEE		(1 << 5)  /* link is in EEE mode */
-+#define PHY_LED_ANEG		(1 << 6)  /* auto negotiation is running */
-+#define PHY_LED_ABIST		(1 << 7)  /* analog self testing is running */
-+#define PHY_LED_CDIAG		(1 << 8)  /* cable diagnostics is running */
-+#define PHY_LED_COPPER		(1 << 9)  /* copper interface detected */
-+#define PHY_LED_FIBER		(1 << 10) /* fiber interface detected */
-+#define PHY_LED_TXACT		(1 << 11) /* Transmit activity */
-+#define PHY_LED_RXACT		(1 << 12) /* Receive activity */
-+#define PHY_LED_COL		(1 << 13) /* Collision */
-+
-+#endif /* _DT_BINDINGS_PHY_LEDS */
+ };
+ 
+ &i2c3 {
 -- 
-2.8.1
+2.5.0
