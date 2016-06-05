@@ -1,10 +1,12 @@
 From: <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH v2 1/4] ARM: dts: imx6q-cm-fx6: remove iomuxc container node
-Date: Sun, 5 Jun 2016 20:26:54 +0200
-Message-ID: <05d1fc32889043ad9a711782bde7957a@rwthex-s1-b.rwth-ad.de>
+Subject: [PATCH v2 4/4] ARM: dts: imx6q-cm-fx6: Relicense under GPLv2/X11
+Date: Sun, 5 Jun 2016 20:26:57 +0200
+Message-ID: <c2d37f17a8b049169909c7a9391fa9a3@rwthex-s1-b.rwth-ad.de>
+References: <20160605182657.1706-1-christopher.spinrath@rwth-aachen.de>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160605182657.1706-1-christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
@@ -12,125 +14,76 @@ List-Id: devicetree@vger.kernel.org
 
 From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 
-The imx6q-cm-fx6 iomuxc container node is not required. Remove it.
+GPLv2-only devicetrees make reuse difficult for software components
+licensed under a different license. In particular, the Utilite Pro
+devicetree file (which includes on imx6q-cm-fx5.dts) is already dual
+licensed under GPLv2/X11.
+
+Hence, relicense imx6q-cm-fx6.dts under GPLv2/X11 dual license.
 
 Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 ---
 
 Changes since v1:
- - this is a new patch in v2 required to address the iomuxc review
-   comments of v1 (remove container nodes to reduce indentation)
+ - new patch in v2; without it the dual licensed of the imx6q-utilite-pro.dts
+   is not really useful because it includes imx6q-cm-fx6.dts.
 
- arch/arm/boot/dts/imx6q-cm-fx6.dts | 94 +++++++++++++++++++-------------------
- 1 file changed, 46 insertions(+), 48 deletions(-)
+ arch/arm/boot/dts/imx6q-cm-fx6.dts | 40 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 35 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-index 99b46f8..21c513f 100644
+index c6f0e58..fe2c868 100644
 --- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
 +++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-@@ -47,56 +47,54 @@
- };
+@@ -3,12 +3,42 @@
+  *
+  * Author: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+  *
+- * The code contained herein is licensed under the GNU General Public
+- * License. You may obtain a copy of the GNU General Public License
+- * Version 2 or later at the following locations:
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
+  *
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
+  */
  
- &iomuxc {
--	imx6q-cm-fx6 {
--		pinctrl_enet: enetgrp {
--			fsl,pins = <
--				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
--				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
--				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
--				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
--				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
--				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
--				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
--				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
--				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
--				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
--				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
--				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
--				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
--				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
--				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
--				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
--			>;
--		};
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
-+		>;
-+	};
- 
--		pinctrl_gpmi_nand: gpminandgrp {
--			fsl,pins = <
--				MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
--				MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
--				MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
--				MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
--				MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
--				MX6QDL_PAD_NANDF_CS1__NAND_CE1_B	0xb0b1
--				MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
--				MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
--				MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
--				MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
--				MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
--				MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
--				MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
--				MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
--				MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
--				MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
--				MX6QDL_PAD_SD4_DAT0__NAND_DQS		0x00b1
--			>;
--		};
-+	pinctrl_gpmi_nand: gpminandgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
-+			MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
-+			MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
-+			MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
-+			MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
-+			MX6QDL_PAD_NANDF_CS1__NAND_CE1_B	0xb0b1
-+			MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
-+			MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
-+			MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
-+			MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
-+			MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
-+			MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
-+			MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
-+			MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
-+			MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
-+			MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
-+			MX6QDL_PAD_SD4_DAT0__NAND_DQS		0x00b1
-+		>;
-+	};
- 
--		pinctrl_uart4: uart4grp {
--			fsl,pins = <
--				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
--				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
--			>;
--		};
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
-+		>;
- 	};
- };
- 
+ /dts-v1/;
 -- 
 2.8.3
 
