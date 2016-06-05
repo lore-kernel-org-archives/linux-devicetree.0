@@ -1,40 +1,120 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 1/5] ARM: dts: meson: minix-neo-x8: define PMIC as power controller
-Date: Sat,  4 Jun 2016 17:17:44 -0700
-Message-ID: <20160605001749.4062-2-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 3/5] regulator: rn5t618: add RN5T567 PMIC support
+Date: Sat,  4 Jun 2016 17:17:47 -0700
+Message-ID: <20160605001749.4062-5-stefan@agner.ch>
 References: <20160605001749.4062-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160605001749.4062-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, max.oss.09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160605001749.4062-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org
+Cc: b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-The PMIC driver used to register itself as poweroff controller by
-default, hence assuming that this device is using the PMIC as
-system power controller.
+Extend the driver to support Ricoh RN5T567. Support the additional
+DCDC and slightly different voltage range of LDORTC1.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/meson8-minix-neo-x8.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/Kconfig             |  5 +++--
+ drivers/regulator/rn5t618-regulator.c | 40 +++++++++++++++++++++++++++++++----
+ include/linux/mfd/rn5t618.h           |  1 +
+ 3 files changed, 40 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8-minix-neo-x8.dts b/arch/arm/boot/dts/meson8-minix-neo-x8.dts
-index 4f536bb..8bceb8d 100644
---- a/arch/arm/boot/dts/meson8-minix-neo-x8.dts
-+++ b/arch/arm/boot/dts/meson8-minix-neo-x8.dts
-@@ -80,6 +80,7 @@
- 	pmic@32 {
- 		compatible = "ricoh,rn5t618";
- 		reg = <0x32>;
-+		system-power-controller;
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 144cbf5..5472694 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -636,10 +636,11 @@ config REGULATOR_RK808
+ 	  outputs which can be controlled by i2c communication.
  
- 		regulators {
- 		};
+ config REGULATOR_RN5T618
+-	tristate "Ricoh RN5T618 voltage regulators"
++	tristate "Ricoh RN5T567/618 voltage regulators"
+ 	depends on MFD_RN5T618
+ 	help
+-	  Say y here to support the regulators found on Ricoh RN5T618 PMIC.
++	  Say y here to support the regulators found on Ricoh RN5T567 or
++	  RN5T618 PMIC.
+ 
+ config REGULATOR_RT5033
+ 	tristate "Richtek RT5033 Regulators"
+diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
+index b85ceb8..9c930eb 100644
+--- a/drivers/regulator/rn5t618-regulator.c
++++ b/drivers/regulator/rn5t618-regulator.c
+@@ -46,6 +46,23 @@ static struct regulator_ops rn5t618_reg_ops = {
+ 		.vsel_mask	= (vmask),				\
+ 	}
+ 
++static struct regulator_desc rn5t567_regulators[] = {
++	/* DCDC */
++	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
++	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
++	REG(DCDC3, DC3CTL, BIT(0), DC3DAC, 0xff, 600000, 3500000, 12500),
++	REG(DCDC4, DC4CTL, BIT(0), DC4DAC, 0xff, 600000, 3500000, 12500),
++	/* LDO */
++	REG(LDO1, LDOEN1, BIT(0), LDO1DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO2, LDOEN1, BIT(1), LDO2DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO3, LDOEN1, BIT(2), LDO3DAC, 0x7f, 600000, 3500000, 25000),
++	REG(LDO4, LDOEN1, BIT(3), LDO4DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO5, LDOEN1, BIT(4), LDO5DAC, 0x7f, 900000, 3500000, 25000),
++	/* LDO RTC */
++	REG(LDORTC1, LDOEN2, BIT(4), LDORTCDAC, 0x7f, 1200000, 3500000, 25000),
++	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
++};
++
+ static struct regulator_desc rn5t618_regulators[] = {
+ 	/* DCDC */
+ 	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
+@@ -67,18 +84,33 @@ static int rn5t618_regulator_probe(struct platform_device *pdev)
+ 	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
+ 	struct regulator_config config = { };
+ 	struct regulator_dev *rdev;
++	struct regulator_desc *regulators;
+ 	int i;
+ 
++	switch (rn5t618->variant) {
++	case RN5T567:
++		regulators = rn5t567_regulators;
++		break;
++	case RN5T618:
++		regulators = rn5t618_regulators;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	config.dev = pdev->dev.parent;
++	config.regmap = rn5t618->regmap;
++
+ 	for (i = 0; i < RN5T618_REG_NUM; i++) {
+-		config.dev = pdev->dev.parent;
+-		config.regmap = rn5t618->regmap;
++		if (!regulators[i].name)
++			continue;
+ 
+ 		rdev = devm_regulator_register(&pdev->dev,
+-					       &rn5t618_regulators[i],
++					       &regulators[i],
+ 					       &config);
+ 		if (IS_ERR(rdev)) {
+ 			dev_err(&pdev->dev, "failed to register %s regulator\n",
+-				rn5t618_regulators[i].name);
++				regulators[i].name);
+ 			return PTR_ERR(rdev);
+ 		}
+ 	}
+diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
+index 54179c2..cadc654 100644
+--- a/include/linux/mfd/rn5t618.h
++++ b/include/linux/mfd/rn5t618.h
+@@ -217,6 +217,7 @@ enum {
+ 	RN5T618_DCDC1,
+ 	RN5T618_DCDC2,
+ 	RN5T618_DCDC3,
++	RN5T618_DCDC4,
+ 	RN5T618_LDO1,
+ 	RN5T618_LDO2,
+ 	RN5T618_LDO3,
 -- 
 2.8.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
