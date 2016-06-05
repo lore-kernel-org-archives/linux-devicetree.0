@@ -1,48 +1,57 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH RFT 2/4] ARM: dts: imx28-eukrea-mbmx28lc: add missing
- reg properties
-Date: Sun, 5 Jun 2016 17:54:00 +0200 (CEST)
-Message-ID: <1527550523.279555.c2b71a89-24ac-4970-b99e-c80b6a2e1ba0.open-xchange@email.1und1.de>
-References: <1465134666-13459-1-git-send-email-stefan.wahren@i2se.com>
- <CAOMZO5DqYV97M+heNaehqFCTEiYnYKRqCfiF0FMxzqEvw-gkZw@mail.gmail.com>
+From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
+Date: Sun, 5 Jun 2016 19:25:42 +0300
+Message-ID: <57545286.3070203@compulab.co.il>
+References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
+ <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
+ <CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
+ <a6cc6b85d2fa4994b3cb7e2b047f800d@rwthex-w2-b.rwth-ad.de>
+ <9d7793850de942cfb578b0aeb2728f41@rwthex-s1-b.rwth-ad.de>
+ <CAOMZO5C3_bd-2Nz+G956+VPOcKoFaGGJK7G1p=U0yf5OyWekZA@mail.gmail.com>
+ <c7a1b8de98814b95afc43cc6df3c92df@rwthex-w2-a.rwth-ad.de>
+ <fccd7d19bc774e17bccf57b0af7b99b1@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5DqYV97M+heNaehqFCTEiYnYKRqCfiF0FMxzqEvw-gkZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <fccd7d19bc774e17bccf57b0af7b99b1-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Eric_B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Hi Christopher,
 
-> Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 5. Juni 2016 um 16:00 geschrieben:
-> 
-> 
-> On Sun, Jun 5, 2016 at 10:51 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
-> > This patch adds the missing reg properties for the regulator nodes
-> > in order to fix the dtc warnings.
-> >
-> > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi |    4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi
-> > b/arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi
-> > index 8859474..581e85f 100644
-> > --- a/arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi
-> > +++ b/arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi
-> > @@ -84,6 +84,7 @@
-> >
-> >                 reg_3p3v: regulator@0 {
-> >                         compatible = "regulator-fixed";
-> > +                       reg = <0>;
-> 
-> The proper fix here would be to remove "@0" instead.
+Thanks for bringing this to my attention.
 
-in this case many other mxs boards are wrong.
+On 06/02/2016 01:47 PM, Christopher Spinrath wrote:
+> Hi Igor,
+> 
+> On 05/29/2016 10:01 AM, Igor Grinberg wrote:
+>> On 05/27/2016 01:20 AM, Fabio Estevam wrote:
+>>> On Thu, May 26, 2016 at 11:26 AM, Christopher Spinrath
+>>> <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
+>>>
+>>>> Thanks for joining this discussion. I *guess* the rationale is to share
+>>>> the same device tree with projects that are incompatible with the GPL
+>>>> (e.g. *BSD). Even if there is no support for a particular device/board
+>>>> having all (or most) files dual licensed makes it easier to just pull
+>>>> them all in.
+>>>
+>>> Yes, that's correct.
+>>>
+>>
+>> Thanks for the explanation.
+>>
+> 
+> Have you/CompuLab made a decision? Do you/CompuLab approve the dual license?
+
+Yes, please use the dual license.
+You can count this answer official.
+
+-- 
+Regards,
+Igor.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
