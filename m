@@ -1,68 +1,40 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH RFT 2/4] ARM: dts: imx28-eukrea-mbmx28lc: add missing reg
- properties
-Date: Sun,  5 Jun 2016 13:51:06 +0000
-Message-ID: <1465134666-13459-1-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, linux-arm-kernel@lists.infradead.org
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH RFT 4/4] ARM: dts: imx28-tx28: fix dtc warning
+Date: Sun,  5 Jun 2016 13:52:27 +0000
+Message-ID: <1465134747-13536-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the missing reg properties for the regulator nodes
-in order to fix the dtc warnings.
+This fixes the following dtc warning by removing the unnecessary unit:
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Warning (unit_address_vs_reg): Node /matrix-keypad@0 has a unit name,
+but no reg property
+
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 ---
- arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/imx28-tx28.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi b/arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi
-index 8859474..581e85f 100644
---- a/arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi
-+++ b/arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi
-@@ -84,6 +84,7 @@
+diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
+index fd20e99..0ebbc83 100644
+--- a/arch/arm/boot/dts/imx28-tx28.dts
++++ b/arch/arm/boot/dts/imx28-tx28.dts
+@@ -173,7 +173,7 @@
+ 		default-brightness-level = <50>;
+ 	};
  
- 		reg_3p3v: regulator@0 {
- 			compatible = "regulator-fixed";
-+			reg = <0>;
- 			regulator-name = "3P3V";
- 			regulator-min-microvolt = <3300000>;
- 			regulator-max-microvolt = <3300000>;
-@@ -92,6 +93,7 @@
- 
- 		reg_lcd_3v3: regulator@1 {
- 			compatible = "regulator-fixed";
-+			reg = <1>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&reg_lcd_3v3_pins_mbmx28lc>;
- 			regulator-name = "lcd-3v3";
-@@ -103,6 +105,7 @@
- 
- 		reg_usb0_vbus: regulator@2 {
- 			compatible = "regulator-fixed";
-+			reg = <2>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&reg_usb0_vbus_pins_mbmx28lc>;
- 			regulator-name = "usb0_vbus";
-@@ -114,6 +117,7 @@
- 
- 		reg_usb1_vbus: regulator@3 {
- 			compatible = "regulator-fixed";
-+			reg = <3>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&reg_usb1_vbus_pins_mbmx28lc>;
- 			regulator-name = "usb1_vbus";
+-	matrix_keypad: matrix-keypad@0 {
++	matrix_keypad: matrix-keypad {
+ 		compatible = "gpio-matrix-keypad";
+ 		col-gpios = <
+ 			&gpio5 0 GPIO_ACTIVE_HIGH
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
