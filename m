@@ -1,106 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 3/4] phy-sun4i-usb: Add workaround for missing Vbus det interrupts on A31
-Date: Sun,  5 Jun 2016 16:59:35 +0200
-Message-ID: <1465138776-6003-3-git-send-email-hdegoede@redhat.com>
-References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465138776-6003-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] mfd: axp20x: Add a 500ms delay at the end of axp20x_power_off
+Date: Sun, 5 Jun 2016 23:03:44 +0800
+Message-ID: <CAGb2v67Mc9D+6BSehOYJBfyCdV-Z-YKtF=UWT8wnFXhvtDqpNw@mail.gmail.com>
+References: <1465134648-27113-1-git-send-email-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465134648-27113-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A31 companion pmic (axp221) does not generate vbus change interrupts
-when the board is driving vbus, so we must poll when using the pmic for
-vbus-det _and_ we're driving vbus.
+On Sun, Jun 5, 2016 at 9:50 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The kernel expects the power_off function to not return, and if it does
+> it panics. At a slight delay after the i2c write which turns off power
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--No changes
-Changes in v3:
--No changes
----
- drivers/phy/phy-sun4i-usb.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+             ^^^ Add?
 
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index e3cbaae..a7abae6 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -95,6 +95,7 @@
- 
- enum sun4i_usb_phy_type {
- 	sun4i_a10_phy,
-+	sun6i_a31_phy,
- 	sun8i_a33_phy,
- 	sun8i_h3_phy,
- };
-@@ -125,7 +126,6 @@ struct sun4i_usb_phy_data {
- 	/* phy0 / otg related variables */
- 	struct extcon_dev *extcon;
- 	bool phy0_init;
--	bool phy0_poll;
- 	struct gpio_desc *id_det_gpio;
- 	struct gpio_desc *vbus_det_gpio;
- 	struct power_supply *vbus_power_supply;
-@@ -353,6 +353,24 @@ static bool sun4i_usb_phy0_have_vbus_det(struct sun4i_usb_phy_data *data)
- 	return data->vbus_det_gpio || data->vbus_power_supply;
- }
- 
-+static bool sun4i_usb_phy0_poll(struct sun4i_usb_phy_data *data)
-+{
-+	if ((data->id_det_gpio && data->id_det_irq < 0) ||
-+	    (data->vbus_det_gpio && data->vbus_det_irq < 0))
-+		return true;
-+
-+	/*
-+	 * The A31 companion pmic (axp221) does not generate vbus change
-+	 * interrupts when the board is driving vbus, so we must poll
-+	 * when using the pmic for vbus-det _and_ we're driving vbus.
-+	 */
-+	if (data->cfg->type == sun6i_a31_phy &&
-+	    data->vbus_power_supply && data->phys[0].regulator_on)
-+		return true;
-+
-+	return false;
-+}
-+
- static int sun4i_usb_phy_power_on(struct phy *_phy)
- {
- 	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-@@ -374,7 +392,7 @@ static int sun4i_usb_phy_power_on(struct phy *_phy)
- 	phy->regulator_on = true;
- 
- 	/* We must report Vbus high within OTG_TIME_A_WAIT_VRISE msec. */
--	if (phy->index == 0 && data->vbus_det_gpio && data->phy0_poll)
-+	if (phy->index == 0 && sun4i_usb_phy0_poll(data))
- 		mod_delayed_work(system_wq, &data->detect, DEBOUNCE_TIME);
- 
- 	return 0;
-@@ -395,7 +413,7 @@ static int sun4i_usb_phy_power_off(struct phy *_phy)
- 	 * phy0 vbus typically slowly discharges, sometimes this causes the
- 	 * Vbus gpio to not trigger an edge irq on Vbus off, so force a rescan.
- 	 */
--	if (phy->index == 0 && data->vbus_det_gpio && !data->phy0_poll)
-+	if (phy->index == 0 && !sun4i_usb_phy0_poll(data))
- 		mod_delayed_work(system_wq, &data->detect, POLL_TIME);
- 
- 	return 0;
-@@ -483,7 +501,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 	if (vbus_notify)
- 		extcon_set_cable_state_(data->extcon, EXTCON_USB, vbus_det);
- 
--	if (data->phy0_poll)
-+	if (sun4i_usb_phy0_poll(data))
- 		queue_delayed_work(system_wq, &data->detect, POLL_TIME);
- }
- 
-@@ -668,11 +686,6 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 	}
- 
- 	data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
--	data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
--	if ((data->id_det_gpio && data->id_det_irq < 0) ||
--	    (data->vbus_det_gpio && data->vbus_det_irq < 0))
--		data->phy0_poll = true;
+Otherwise,
+
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+> through the pmic, to give capacitors etc. some time to drain.
+>
+> Without this the kernel lives on long enough after the poweroff to
+> print the following on the serial console on my Mele A1000G quad:
+>
+> [  248.583588] reboot: Power down
+> [  248.600490] Kernel pa
+>
+> With the delay the start of printing "Kernel panic" is gone.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/mfd/axp20x.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 6364dab..fd80b09 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -17,6 +17,7 @@
+>   */
+>
+>  #include <linux/err.h>
+> +#include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> @@ -677,6 +678,9 @@ static void axp20x_power_off(void)
+>
+>         regmap_write(axp20x_pm_power_off->regmap, AXP20X_OFF_CTRL,
+>                      AXP20X_OFF);
+> +
+> +       /* Give capacitors etc. time to drain to avoid kernel panic msg. */
+> +       msleep(500);
+>  }
+>
+>  int axp20x_match_device(struct axp20x_dev *axp20x)
+> --
+> 2.7.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
