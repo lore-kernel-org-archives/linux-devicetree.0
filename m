@@ -1,291 +1,487 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: [PATCH 2/2] NET: PHY: Intel XWAY: add LED configuration support
-Date: Sun,  5 Jun 2016 23:45:50 +0200
-Message-ID: <1465163150-21429-3-git-send-email-hauke@hauke-m.de>
-References: <1465163150-21429-1-git-send-email-hauke@hauke-m.de>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1465163150-21429-1-git-send-email-hauke@hauke-m.de>
-Sender: netdev-owner@vger.kernel.org
-To: f.fainelli@gmail.com
-Cc: alexander.stein@systec-electronic.com, netdev@vger.kernel.org, andrew@lunn.ch, john@phrozen.org, openwrt@kresin.me, hauke.mehrtens@intel.com, daniel.schwierzeck@gmail.com, eckert.florian@googlemail.com, devicetree@vger.kernel.org, thomas.langer@intel.com, Hauke Mehrtens <hauke@hauke-m.de>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/5] ethernet: add sun8i-emac driver
+Date: Sun, 5 Jun 2016 23:32:11 +0100
+Message-ID: <5754A86B.6050607@arm.com>
+References: <1464947790-22991-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1464947790-22991-2-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBI6R2K5AKGQEGBSWWOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1464947790-22991-2-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This makes it possible to configure the behavior of the LEDs connected
-to a PHY. The LEDs are controlled by the chip, this makes it possible
-to configure the behavior when the hardware should activate and
-deactivate the LEDs.
+On 03/06/16 10:56, LABBE Corentin wrote:
 
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
----
- .../devicetree/bindings/phy/intel-xway.txt         |  77 +++++++++++
- drivers/net/phy/intel-xway.c                       | 152 +++++++++++++++++++++
- 2 files changed, 229 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/intel-xway.txt
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/phy/intel-xway.txt b/Documentation/devicetree/bindings/phy/intel-xway.txt
-new file mode 100644
-index 0000000..02891c4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/intel-xway.txt
-@@ -0,0 +1,77 @@
-+Intel XWAY Ethernet PHY binding
-+------------------------------
-+
-+This supports the Intel XWAY (former Lantiq) 11G and 22E PHYs. These
-+PHYs are also named PEF 7061, PEF 7071 and PEF 7072.
-+
-+Required properties:
-+ - compatible:	should be "ethernet-phy-ieee802.3-c22"
-+ - reg:		MDIO address of this PHY
-+
-+
-+LEDs:
-+The PEF 7071 PHY supports 3 LEDs, the PEF 7072 PHY supports 4 LEDs. Use
-+one subnode for each LED. By default the LEDs 0, 1 and 2 are switched
-+to be constant on when a 10MBit/s, 100MBit/s or 1000MBit/s link is
-+detected and they blink when TX or RX traffic is detected. All 3 LEDs
-+are doing the same as most known devices only have one LED.
-+
-+To change the behavior create a subnode with the following attributes:
-+
-+Required properties:
-+ - compatible: 	should be: "phy,led"
-+ - reg:		led number
-+
-+optional properties:
-+ - led-const-on:	Conditions when being constant on
-+			Possible options are one of these:
-+			LED_LINK10, LED_LINK100 and LED_LINK1000, or
-+			some of these 3 values connected with OR.
-+			PHY_LED_PDOWN, PHY_LED_EEE, PHY_LED_ANEG,
-+			PHY_LED_ABIST, PHY_LED_CDIAG, PHY_LED_COPPER,
-+			PHY_LED_FIBER.
-+ - led-pulse:		Conditions when led is pulsed
-+			The following values can be connected with OR:
-+			PHY_LED_TXACT, PHY_LED_RXACT, PHY_LED_COL
-+ - led-blink-slow:	Conditions when led should blink with 2Hz:
-+			Possible options are one of these:
-+			LED_LINK10, LED_LINK100 and LED_LINK1000, or
-+			some of these 3 values connected with OR.
-+			PHY_LED_PDOWN, PHY_LED_EEE, PHY_LED_ANEG,
-+			PHY_LED_ABIST, PHY_LED_CDIAG.
-+ - led-blink-fast:	Conditions when led should blink with 16Hz:
-+			Possible options are one of these:
-+			LED_LINK10, LED_LINK100 and LED_LINK1000, or
-+			some of these 3 values connected with OR.
-+			PHY_LED_PDOWN, PHY_LED_EEE, PHY_LED_ANEG,
-+			PHY_LED_ABIST, PHY_LED_CDIAG.
-+
-+When multiple properties are set they are applied with the following priority:
-+ 1. led-pulse
-+ 2. led-blink-fast
-+ 3. led-blink-slow
-+ 4. led-const-on
-+ 5. off
-+
-+
-+Example:
-+
-+#include <dt-bindings/phy/phy-leds.h>
-+phy@0 {
-+	compatible = "intel,phy11g", "ethernet-phy-ieee802.3-c22";
-+	reg = <0x0>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	led@0 {
-+		compatible = "phy,led";
-+		reg = <0>;
-+		led-const-on = <(PHY_LED_LINK10 | PHY_LED_LINK100 | PHY_LED_LINK1000)>;
-+		led-pulse = <(PHY_LED_TXACT | PHY_LED_RXACT)>;
-+	};
-+	led@2 {
-+		compatible = "phy,led";
-+		reg = <2>;
-+		led-blink-slow = <PHY_LED_EEE>;
-+		led-blink-fast = <PHY_LED_PDOWN>;
-+	};
-+};
-diff --git a/drivers/net/phy/intel-xway.c b/drivers/net/phy/intel-xway.c
-index c300ab5..6469ded 100644
---- a/drivers/net/phy/intel-xway.c
-+++ b/drivers/net/phy/intel-xway.c
-@@ -17,6 +17,7 @@
- #include <linux/module.h>
- #include <linux/phy.h>
- #include <linux/of.h>
-+#include <dt-bindings/phy/phy-leds.h>
- 
- #define XWAY_MDIO_IMASK			0x19	/* interrupt mask */
- #define XWAY_MDIO_ISTAT			0x1A	/* interrupt status */
-@@ -152,11 +153,158 @@
- #define PHY_ID_PHY11G_VR9		0xD565A409
- #define PHY_ID_PHY22F_VR9		0xD565A419
- 
-+static void xway_gphy_config_led(struct phy_device *phydev,
-+				 struct device_node *led_np)
-+{
-+	const __be32 *addr, *blink_fast_p, *const_on_p, *pulse_p, *blink_slow_p;
-+	u32 num, blink_fast, const_on, pulse, blink_slow;
-+	u32 ledxl;
-+	u32 ledxh;
-+
-+	addr = of_get_property(led_np, "reg", NULL);
-+	if (!addr)
-+		return;
-+	num = be32_to_cpu(*addr);
-+
-+	if (num < 0 || num > 3)
-+		return;
-+
-+	ledxh = XWAY_MMD_LEDxH_BLINKF_NONE | XWAY_MMD_LEDxH_CON_LINK10XX;
-+	blink_fast_p = of_get_property(led_np, "led-blink-fast", NULL);
-+	if (blink_fast_p) {
-+		ledxh &= ~XWAY_MMD_LEDxH_BLINKF_MASK;
-+		blink_fast = be32_to_cpu(*blink_fast_p);
-+		if ((blink_fast & PHY_LED_LINK10) &&
-+		    (blink_fast & PHY_LED_LINK100) &&
-+		    (blink_fast & PHY_LED_LINK1000)) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_LINK10XX;
-+		} else if ((blink_fast & PHY_LED_LINK10) &&
-+			   (blink_fast & PHY_LED_LINK1000)) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_LINK10_0;
-+		} else if ((blink_fast & PHY_LED_LINK10) &&
-+			   (blink_fast & PHY_LED_LINK100)) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_LINK10X;
-+		} else if ((blink_fast & PHY_LED_LINK100) &&
-+			   (blink_fast & PHY_LED_LINK1000)) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_LINK100X;
-+		} else if (blink_fast & PHY_LED_LINK10) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_LINK10;
-+		} else if (blink_fast & PHY_LED_LINK100) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_LINK100;
-+		} else if (blink_fast & PHY_LED_LINK1000) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_LINK1000;
-+		} else if (blink_fast & PHY_LED_PDOWN) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_PDOWN;
-+		} else if (blink_fast & PHY_LED_EEE) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_EEE;
-+		} else if (blink_fast & PHY_LED_ANEG) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_ANEG;
-+		} else if (blink_fast & PHY_LED_ABIST) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_ABIST;
-+		} else if (blink_fast & PHY_LED_CDIAG) {
-+			ledxh |= XWAY_MMD_LEDxH_BLINKF_CDIAG;
-+		}
-+	}
-+	const_on_p = of_get_property(led_np, "led-const-on", NULL);
-+	if (const_on_p) {
-+		ledxh &= ~XWAY_MMD_LEDxH_CON_MASK;
-+		const_on = be32_to_cpu(*const_on_p);
-+		if ((const_on & PHY_LED_LINK10) &&
-+		    (const_on & PHY_LED_LINK100) &&
-+		    (const_on & PHY_LED_LINK1000)) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_LINK10XX;
-+		} else if ((const_on & PHY_LED_LINK10) &&
-+			   (const_on & PHY_LED_LINK1000)) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_LINK10_0;
-+		} else if ((const_on & PHY_LED_LINK10) &&
-+			   (const_on & PHY_LED_LINK100)) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_LINK10X;
-+		} else if ((const_on & PHY_LED_LINK100) &&
-+			   (const_on & PHY_LED_LINK1000)) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_LINK100X;
-+		} else if (const_on & PHY_LED_LINK10) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_LINK10;
-+		} else if (const_on & PHY_LED_LINK100) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_LINK100;
-+		} else if (const_on & PHY_LED_LINK1000) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_LINK1000;
-+		} else if (const_on & PHY_LED_PDOWN) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_PDOWN;
-+		} else if (const_on & PHY_LED_EEE) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_EEE;
-+		} else if (const_on & PHY_LED_ANEG) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_ANEG;
-+		} else if (const_on & PHY_LED_ABIST) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_ABIST;
-+		} else if (const_on & PHY_LED_CDIAG) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_CDIAG;
-+		} else if (const_on & PHY_LED_COPPER) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_COPPER;
-+		} else if (const_on & PHY_LED_FIBER) {
-+			ledxh |= XWAY_MMD_LEDxH_CON_FIBER;
-+		}
-+	}
-+	phy_write_mmd_indirect(phydev, XWAY_MMD_LED0H + (num * 2),
-+			       MDIO_MMD_VEND2, ledxh);
-+
-+	ledxl = XWAY_MMD_LEDxL_PULSE_TXACT | XWAY_MMD_LEDxL_PULSE_RXACT |
-+		XWAY_MMD_LEDxL_BLINKS_NONE;
-+	pulse_p = of_get_property(led_np, "led-pulse", NULL);
-+	if (pulse_p) {
-+		ledxl &= ~XWAY_MMD_LEDxL_PULSE_MASK;
-+		pulse = be32_to_cpu(*pulse_p);
-+		if (pulse & PHY_LED_TXACT)
-+			ledxl |= XWAY_MMD_LEDxL_PULSE_TXACT;
-+		if (pulse & PHY_LED_RXACT)
-+			ledxl |= XWAY_MMD_LEDxL_PULSE_RXACT;
-+		if (pulse & PHY_LED_COL)
-+			ledxl |= XWAY_MMD_LEDxL_PULSE_COL;
-+	}
-+	blink_slow_p = of_get_property(led_np, "led-blink-slow", NULL);
-+	if (blink_slow_p) {
-+		ledxl &= ~XWAY_MMD_LEDxL_BLINKS_MASK;
-+		blink_slow = be32_to_cpu(*blink_slow_p);
-+		if ((blink_slow & PHY_LED_LINK10) &&
-+		    (blink_slow & PHY_LED_LINK100) &&
-+		    (blink_slow & PHY_LED_LINK1000)) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_LINK10XX;
-+		} else if ((blink_slow & PHY_LED_LINK10) &&
-+			   (blink_slow & PHY_LED_LINK1000)) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_LINK10_0;
-+		} else if ((blink_slow & PHY_LED_LINK10) &&
-+			   (blink_slow & PHY_LED_LINK100)) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_LINK10X;
-+		} else if ((blink_slow & PHY_LED_LINK100) &&
-+			   (blink_slow & PHY_LED_LINK1000)) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_LINK100X;
-+		} else if (blink_slow & PHY_LED_LINK10) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_LINK10;
-+		} else if (blink_slow & PHY_LED_LINK100) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_LINK100;
-+		} else if (blink_slow & PHY_LED_LINK1000) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_LINK1000;
-+		} else if (blink_slow & PHY_LED_PDOWN) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_PDOWN;
-+		} else if (blink_slow & PHY_LED_EEE) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_EEE;
-+		} else if (blink_slow & PHY_LED_ANEG) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_ANEG;
-+		} else if (blink_slow & PHY_LED_ABIST) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_ABIST;
-+		} else if (blink_slow & PHY_LED_CDIAG) {
-+			ledxl |= XWAY_MMD_LEDxL_BLINKS_CDIAG;
-+		}
-+	}
-+	phy_write_mmd_indirect(phydev, XWAY_MMD_LED0L + (num * 2),
-+			       MDIO_MMD_VEND2, ledxl);
-+}
-+
- static int xway_gphy_config_init(struct phy_device *phydev)
- {
- 	int err;
- 	u32 ledxh;
- 	u32 ledxl;
-+	struct device_node *led_np;
- 
- 	/* Mask all interrupts */
- 	err = phy_write(phydev, XWAY_MDIO_IMASK, 0);
-@@ -190,6 +338,10 @@ static int xway_gphy_config_init(struct phy_device *phydev)
- 	phy_write_mmd_indirect(phydev, XWAY_MMD_LED2H, MDIO_MMD_VEND2, ledxh);
- 	phy_write_mmd_indirect(phydev, XWAY_MMD_LED2L, MDIO_MMD_VEND2, ledxl);
- 
-+	for_each_child_of_node(phydev->mdio.dev.of_node, led_np)
-+		if (of_device_is_compatible(led_np, "phy,led"))
-+			xway_gphy_config_led(phydev, led_np);
-+
- 	return 0;
- }
- 
--- 
-2.8.1
+first: thanks for posting this and the time and work that you spent on
+it. With the respective DT nodes this works for me on the Pine64 and
+turns this board eventually into something useful.
+
+Some comments below:
+
+> This patch add support for sun8i-emac ethernet MAC hardware.
+> It could be found in Allwinner H3/A83T/A64 SoCs.
+> 
+> It supports 10/100/1000 Mbit/s speed with half/full duplex.
+> It can use an internal PHY (MII 10/100) or an external PHY
+> via RGMII/RMII.
+> 
+> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/net/ethernet/allwinner/Kconfig      |   13 +
+>  drivers/net/ethernet/allwinner/Makefile     |    1 +
+>  drivers/net/ethernet/allwinner/sun8i-emac.c | 1943 +++++++++++++++++++++++++++
+>  3 files changed, 1957 insertions(+)
+>  create mode 100644 drivers/net/ethernet/allwinner/sun8i-emac.c
+> 
+> diff --git a/drivers/net/ethernet/allwinner/Kconfig b/drivers/net/ethernet/allwinner/Kconfig
+> index 47da7e7..226499d 100644
+> --- a/drivers/net/ethernet/allwinner/Kconfig
+> +++ b/drivers/net/ethernet/allwinner/Kconfig
+> @@ -33,4 +33,17 @@ config SUN4I_EMAC
+>            To compile this driver as a module, choose M here.  The module
+>            will be called sun4i-emac.
+>  
+> +config SUN8I_EMAC
+> +        tristate "Allwinner sun8i EMAC support"
+
+nit: w/s error
+
+> +	depends on ARCH_SUNXI || COMPILE_TEST
+> +	depends on OF
+> +	select MII
+> +	select PHYLIB
+> +        ---help---
+> +	  This driver support the sun8i EMAC ethernet driver present on
+> +	  H3/A83T/A64 Allwinner SoCs.
+> +
+> +          To compile this driver as a module, choose M here.  The module
+> +          will be called sun8i-emac.
+> +
+>  endif # NET_VENDOR_ALLWINNER
+> diff --git a/drivers/net/ethernet/allwinner/Makefile b/drivers/net/ethernet/allwinner/Makefile
+> index 03129f7..8bd1693c 100644
+> --- a/drivers/net/ethernet/allwinner/Makefile
+> +++ b/drivers/net/ethernet/allwinner/Makefile
+> @@ -3,3 +3,4 @@
+>  #
+>  
+>  obj-$(CONFIG_SUN4I_EMAC) += sun4i-emac.o
+> +obj-$(CONFIG_SUN8I_EMAC) += sun8i-emac.o
+> diff --git a/drivers/net/ethernet/allwinner/sun8i-emac.c b/drivers/net/ethernet/allwinner/sun8i-emac.c
+> new file mode 100644
+> index 0000000..179aa61
+> --- /dev/null
+> +++ b/drivers/net/ethernet/allwinner/sun8i-emac.c
+> @@ -0,0 +1,1943 @@
+> +/*
+> + * sun8i-emac driver
+> + *
+> + * Copyright (C) 2015-2016 Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This is the driver for Allwinner Ethernet MAC found in H3/A83T/A64 SoC
+> + *
+> + * TODO:
+> + * - NAPI
+> + * - MAC filtering
+> + * - Jumbo frame
+> + * - features rx-all (NETIF_F_RXALL_BIT)
+> + */
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/etherdevice.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/mii.h>
+> +#include <linux/module.h>
+> +#include <linux/netdevice.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/of_net.h>
+> +#include <linux/phy.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+> +#include <linux/scatterlist.h>
+> +#include <linux/skbuff.h>
+> +
+> +#define SUN8I_EMAC_BASIC_CTL0 0x00
+> +#define SUN8I_EMAC_BASIC_CTL1 0x04
+> +
+> +#define SUN8I_EMAC_MDIO_CMD 0x48
+> +#define SUN8I_EMAC_MDIO_DATA 0x4C
+
+Can you align all these register offsets with tabs, so that the actual
+offset values are below each other?
+Also ordering them by address seems useful to me.
+
+> +
+> +#define SUN8I_EMAC_RX_CTL0 0x24
+> +#define SUN8I_EMAC_RX_CTL1 0x28
+> +
+> +#define SUN8I_EMAC_TX_CTL0 0x10
+> +#define SUN8I_EMAC_TX_CTL1 0x14
+> +
+> +#define SUN8I_EMAC_TX_FLOW_CTL 0x1C
+> +
+> +#define SUN8I_EMAC_RX_FRM_FLT 0x38
+> +
+> +#define SUN8I_EMAC_INT_STA 0x08
+> +#define SUN8I_EMAC_INT_EN 0x0C
+> +#define SUN8I_EMAC_RGMII_STA 0xD0
+
+
+> +
+> +#define SUN8I_EMAC_TX_DMA_STA 0xB0
+> +#define SUN8I_EMAC_TX_CUR_DESC 0xB4
+> +#define SUN8I_EMAC_TX_CUR_BUF 0xB8
+> +#define SUN8I_EMAC_RX_DMA_STA 0xC0
+> +
+> +#define MDIO_CMD_MII_BUSY	BIT(0)
+> +#define MDIO_CMD_MII_WRITE	BIT(1)
+> +#define MDIO_CMD_MII_PHY_REG_ADDR_MASK	GENMASK(8, 4)
+> +#define MDIO_CMD_MII_PHY_REG_ADDR_SHIFT	4
+> +#define MDIO_CMD_MII_PHY_ADDR_MASK	GENMASK(16, 12)
+> +#define MDIO_CMD_MII_PHY_ADDR_SHIFT	12
+> +
+> +#define SUN8I_EMAC_MACADDR_HI	0x50
+> +#define SUN8I_EMAC_MACADDR_LO	0x54
+> +
+> +#define SUN8I_EMAC_RX_DESC_LIST 0x34
+> +#define SUN8I_EMAC_TX_DESC_LIST 0x20
+> +
+> +#define SUN8I_EMAC_TX_DO_CRC (BIT(27) | BIT(28))
+> +#define SUN8I_EMAC_RX_DO_CRC BIT(27)
+> +#define SUN8I_EMAC_RX_STRIP_FCS BIT(28)
+> +
+> +#define SUN8I_COULD_BE_USED_BY_DMA BIT(31)
+> +
+> +#define FLOW_RX 1
+> +#define FLOW_TX 2
+> +
+> +/* describe how data from skb are DMA mapped */
+> +#define MAP_SINGLE 1
+> +#define MAP_PAGE 2
+> +
+> +enum emac_variant {
+> +	A83T_EMAC,
+> +	H3_EMAC,
+> +	A64_EMAC,
+> +};
+> +
+> +struct ethtool_str {
+> +	char name[ETH_GSTRING_LEN];
+> +};
+> +
+> +static const struct ethtool_str estats_str[] = {
+> +	/* errors */
+> +	{ "rx_payload_error" },
+> +	{ "rx_CRC_error" },
+> +	{ "rx_phy_error" },
+> +	{ "rx_length_error" },
+> +	{ "rx_col_error" },
+> +	{ "rx_header_error" },
+> +	{ "rx_overflow_error" },
+> +	{ "rx_saf_error" },
+> +	{ "rx_daf_error" },
+> +	{ "rx_buf_error" },
+> +	/* misc infos */
+> +	{ "tx_stop_queue" },
+> +	{ "rx_dma_ua" },
+> +	{ "rx_dma_stop" },
+> +	{ "tx_dma_ua" },
+> +	{ "tx_dma_stop" },
+> +	{ "rx_hw_csum" },
+> +	{ "tx_hw_csum" },
+> +	/* interrupts */
+> +	{ "rx_early_int" },
+> +	{ "tx_early_int" },
+> +	{ "tx_underflow_int" },
+> +	/* debug */
+> +	{ "tx_used_desc" },
+> +};
+> +
+> +struct sun8i_emac_stats {
+> +	u64 rx_payload_error;
+> +	u64 rx_crc_error;
+> +	u64 rx_phy_error;
+> +	u64 rx_length_error;
+> +	u64 rx_col_error;
+> +	u64 rx_header_error;
+> +	u64 rx_overflow_error;
+> +	u64 rx_saf_fail;
+> +	u64 rx_daf_fail;
+> +	u64 rx_buf_error;
+> +
+> +	u64 tx_stop_queue;
+> +	u64 rx_dma_ua;
+> +	u64 rx_dma_stop;
+> +	u64 tx_dma_ua;
+> +	u64 tx_dma_stop;
+> +	u64 rx_hw_csum;
+> +	u64 tx_hw_csum;
+> +
+> +	u64 rx_early_int;
+> +	u64 tx_early_int;
+> +	u64 tx_underflow_int;
+> +	u64 tx_used_desc;
+> +};
+> +
+> +/* The datasheet said that each descriptor can transfers up to 4096bytes
+> + * But latter, a register documentation reduce that value to 2048
+> + * Anyway using 2048 cause strange behaviours and even BSP driver use 2047
+> + */
+> +#define DESC_BUF_MAX 2044
+> +#if (DESC_BUF_MAX < (ETH_FRAME_LEN + 4))
+> +#error "DESC_BUF_MAX must be set at minimum to ETH_FRAME_LEN + 4"
+> +#endif
+> +
+> +/* MAGIC value for knowing if a descriptor is available or not */
+> +#define DCLEAN (BIT(16) | BIT(14) | BIT(12) | BIT(10) | BIT(9))
+> +
+> +/* Structure of DMA descriptor used by the hardware  */
+> +struct dma_desc {
+> +	u32 status; /* status of the descriptor */
+> +	u32 st; /* Information on the frame */
+> +	u32 buf_addr; /* physical address of the frame data */
+> +	u32 next; /* physical address of next dma_desc */
+> +} __packed __aligned(4);
+
+I don't think we need this alignment attribute here:
+1) The structure will be 4-byte aligned anyway, because the first member
+is naturally 4 bytes aligned.
+2) The alignment requirement is on the physical DMA side. I don't see
+how the compiler should be able to guarantee this. So technically you
+have to tell the DMA allocation code about your alignment requirement.
+But due to 1), I think this is a moot discussion.
+
+> +
+> +/* Benched on OPIPC with 100M, setting more than 256 does not give any
+> + * perf boost
+> + */
+> +static int nbdesc_tx = 256;
+> +module_param(nbdesc_tx, int, S_IRUGO | S_IWUSR);
+> +MODULE_PARM_DESC(nbdesc_tx, "Number of descriptors in the TX list");
+> +static int nbdesc_rx = 128;
+> +module_param(nbdesc_rx, int, S_IRUGO | S_IWUSR);
+> +MODULE_PARM_DESC(nbdesc_rx, "Number of descriptors in the RX list");
+> +
+> +struct sun8i_emac_priv {
+> +	void __iomem *base;
+> +	void __iomem *syscon;
+> +	int irq;
+> +	struct device *dev;
+> +	struct net_device *ndev;
+> +	struct mii_bus *mdio;
+> +	spinlock_t lock;/* for adjust_link */
+> +	spinlock_t tx_lock;/* control the access of transmit descriptors */
+> +	int duplex;
+> +	int speed;
+> +	int link;
+> +	int phy_interface;
+> +	enum emac_variant variant;
+> +	struct device_node *phy_node;
+> +	struct clk *ahb_clk;
+> +	struct clk *ephy_clk;
+> +	bool use_internal_phy;
+> +
+> +	struct reset_control *rst;
+> +	struct reset_control *rst_ephy;
+> +
+> +	struct dma_desc *dd_rx __aligned(4);
+> +	dma_addr_t dd_rx_phy __aligned(4);
+> +	struct dma_desc *dd_tx __aligned(4);
+> +	dma_addr_t dd_tx_phy __aligned(4);
+
+Same here. The alignment attribute is pointless (the data types are at
+least 4 bytes aligned anyway) and also wrong for the pointers (the
+virtual address of the pointer can be anything (and will be 4 or 8-bytes
+aligned anyway), but the memory its points to should be aligned.
+
+So I think it's safe to remove them.
+
+> +	struct sk_buff **rx_sk;
+> +	struct sk_buff **tx_sk;
+> +	int *tx_map;
+> +
+> +	int tx_slot;
+> +	int tx_dirty;
+> +	int rx_dirty;
+> +	struct sun8i_emac_stats estats;
+> +	u32 msg_enable;
+> +	int flow_ctrl;
+> +	int pause;
+> +};
+> +
+> +static void rb_inc(int *p, const int max)
+> +{
+> +	(*p)++;
+> +	if (*p >= max)
+> +		*p = 0;
+> +}
+> +
+> +/* Return the number of contiguous free descriptors
+> + * starting from tx_slot
+> + */
+> +static int rb_tx_numfreedesc(struct net_device *ndev)
+> +{
+> +	struct sun8i_emac_priv *priv = netdev_priv(ndev);
+> +
+> +	if (priv->tx_slot < priv->tx_dirty)
+> +		return priv->tx_dirty - priv->tx_slot;
+> +
+> +	return (nbdesc_tx - priv->tx_slot) + priv->tx_dirty;
+> +}
+> +
+> +/* Allocate a skb in a DMA descriptor
+> + *
+> + * @i index of slot to fill
+> +*/
+> +static int sun8i_emac_rx_sk(struct net_device *ndev, int i)
+> +{
+> +	struct sun8i_emac_priv *priv = netdev_priv(ndev);
+> +	struct dma_desc *ddesc;
+> +	struct sk_buff *sk;
+> +
+> +	ddesc = priv->dd_rx + i;
+> +
+> +	ddesc->st = 0;
+> +
+> +	sk = netdev_alloc_skb_ip_align(ndev, DESC_BUF_MAX);
+> +	if (!sk)
+> +		return -ENOMEM;
+> +
+> +	/* should not happen */
+> +	if (unlikely(priv->rx_sk[i]))
+> +		dev_warn(priv->dev, "BUG: Leaking a skbuff\n");
+> +
+> +	priv->rx_sk[i] = sk;
+> +
+> +	ddesc->buf_addr = dma_map_single(priv->dev, sk->data,
+> +					 DESC_BUF_MAX, DMA_FROM_DEVICE);
+> +	if (dma_mapping_error(priv->dev, ddesc->buf_addr)) {
+> +		dev_err(priv->dev, "ERROR: Cannot dma_map RX buffer\n");
+> +		dev_kfree_skb(sk);
+> +		return -EFAULT;
+> +	}
+
+DMA-API.txt tells me that we have to make sure this memory region is
+cache-line aligned, also ends on a cache line boundary, to ensure coherency.
+Do we need any special calls here to make this happen? I am not an DMA
+expert, so don't know of the usual way to ensure this.
+
+Or shall we use dma_malloc_coherent (or even a DMA pool) to allocate DMA
+memory with the proper alignment requirements and then put the skb's in
+there?
+
+> +	ddesc->st |= DESC_BUF_MAX;
+> +	ddesc->status = BIT(31);
+> +
+> +	return 0;
+> +}
+
+....
+
+> +
+> +
+> +	priv->rx_sk = kcalloc(nbdesc_rx, sizeof(struct sk_buff *), GFP_KERNEL);
+> +	if (!priv->rx_sk) {
+> +		err = -ENOMEM;
+> +		goto rx_sk_error;
+> +	}
+> +	priv->tx_sk = kcalloc(nbdesc_tx, sizeof(struct sk_buff *), GFP_KERNEL);
+> +	if (!priv->tx_sk) {
+> +		err = -ENOMEM;
+> +		goto tx_sk_error;
+> +	}
+> +	priv->tx_map = kcalloc(nbdesc_tx, sizeof(int), GFP_KERNEL);
+> +	if (!priv->tx_map) {
+> +		err = -ENOMEM;
+> +		goto tx_map_error;
+> +	}
+> +
+> +	priv->dd_rx = dma_alloc_coherent(priv->dev,
+> +			nbdesc_rx * sizeof(struct dma_desc),
+> +			&priv->dd_rx_phy,
+> +			GFP_KERNEL);
+
+You need to be sure here to allocate 32-bit DMA memory only, since the
+hardware holds only 32 bits worth of addresses. If I am not mistaken,
+the following snippet (preferrably in the probe function below) should
+take care of this:
+
+	if (dma_set_mask_and_coherent(&priv->dev, DMA_BIT_MASK(32))) {
+		dev_err(&priv->dev, "No suitable DMA available\n");
+		return -ENOMEM;
+	}
+
+This isn't an issue for the SoCs we know of (they have a 32-bit bus
+anyway), but future SoCs could support more memory (the A80 does
+already!), so you have to allocate it from the low 4GB. This is a
+limitation of that particular _device_ (and not the platform), since it
+does the DMA itself and this engine is limited to 32-bit physical addresses.
+
+> +	if (!priv->dd_rx) {
+> +		dev_err(priv->dev, "ERROR: cannot DMA RX");
+> +		err = -ENOMEM;
+> +		goto dma_rx_error;
+> +	}
+
+....
+
+> +
+> +static const struct of_device_id sun8i_emac_of_match_table[] = {
+> +	{ .compatible = "allwinner,sun8i-a83t-emac",
+> +	  .data = (void *)A83T_EMAC },
+> +	{ .compatible = "allwinner,sun8i-h3-emac",
+> +	  .data = (void *)H3_EMAC },
+> +	{ .compatible = "allwinner,sun50i-a64-emac",
+> +	  .data = (void *)A64_EMAC },
+> +	{}
+> +};
+
+I am not sure this is the proper way to model the different variants of
+the device. I see two differing features here:
+1) the H3 has an internal PHY
+2) the A83T does not support RMII
+
+So wouldn't it be wiser to put those two options as properties into the
+DT node? This way any future EMAC version could pick the matching
+features and we wouldn't need to add a new compatible string for each
+and every new SoC which carries this device and thus hardcode it's
+properties in this driver.
+
+Cheers,
+Andre.
+
+> +MODULE_DEVICE_TABLE(of, sun8i_emac_of_match_table);
+> +
+> +static struct platform_driver sun8i_emac_driver = {
+> +	.probe          = sun8i_emac_probe,
+> +	.remove         = sun8i_emac_remove,
+> +	.driver         = {
+> +		.name           = "sun8i-emac",
+> +		.of_match_table	= sun8i_emac_of_match_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(sun8i_emac_driver);
+> +
+> +MODULE_DESCRIPTION("sun8i Ethernet driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org");
+> 
