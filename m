@@ -1,96 +1,54 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 1/4] ARM: dts: mxs: add missing reg properties for GPIO banks
-Date: Sun,  5 Jun 2016 13:49:27 +0000
-Message-ID: <1465134567-13421-1-git-send-email-stefan.wahren@i2se.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] mfd: axp20x: Add a 500ms delay at the end of axp20x_power_off
+Date: Sun,  5 Jun 2016 15:50:48 +0200
+Message-ID: <1465134648-27113-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the missing reg properties for the MXS GPIO banks
-in order to fix the dtc warnings.
+The kernel expects the power_off function to not return, and if it does
+it panics. At a slight delay after the i2c write which turns off power
+through the pmic, to give capacitors etc. some time to drain.
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Without this the kernel lives on long enough after the poweroff to
+print the following on the serial console on my Mele A1000G quad:
+
+[  248.583588] reboot: Power down
+[  248.600490] Kernel pa
+
+With the delay the start of printing "Kernel panic" is gone.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx23.dtsi |    3 +++
- arch/arm/boot/dts/imx28.dtsi |    5 +++++
- 2 files changed, 8 insertions(+)
+ drivers/mfd/axp20x.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
-index 302d116..1bfa533 100644
---- a/arch/arm/boot/dts/imx23.dtsi
-+++ b/arch/arm/boot/dts/imx23.dtsi
-@@ -111,6 +111,7 @@
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 6364dab..fd80b09 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -17,6 +17,7 @@
+  */
  
- 				gpio0: gpio@0 {
- 					compatible = "fsl,imx23-gpio", "fsl,mxs-gpio";
-+					reg = <0>;
- 					interrupts = <16>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
-@@ -120,6 +121,7 @@
+ #include <linux/err.h>
++#include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -677,6 +678,9 @@ static void axp20x_power_off(void)
  
- 				gpio1: gpio@1 {
- 					compatible = "fsl,imx23-gpio", "fsl,mxs-gpio";
-+					reg = <1>;
- 					interrupts = <17>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
-@@ -129,6 +131,7 @@
+ 	regmap_write(axp20x_pm_power_off->regmap, AXP20X_OFF_CTRL,
+ 		     AXP20X_OFF);
++
++	/* Give capacitors etc. time to drain to avoid kernel panic msg. */
++	msleep(500);
+ }
  
- 				gpio2: gpio@2 {
- 					compatible = "fsl,imx23-gpio", "fsl,mxs-gpio";
-+					reg = <2>;
- 					interrupts = <18>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 74aa151..0ad893b 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -165,6 +165,7 @@
- 
- 				gpio0: gpio@0 {
- 					compatible = "fsl,imx28-gpio", "fsl,mxs-gpio";
-+					reg = <0>;
- 					interrupts = <127>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
-@@ -174,6 +175,7 @@
- 
- 				gpio1: gpio@1 {
- 					compatible = "fsl,imx28-gpio", "fsl,mxs-gpio";
-+					reg = <1>;
- 					interrupts = <126>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
-@@ -183,6 +185,7 @@
- 
- 				gpio2: gpio@2 {
- 					compatible = "fsl,imx28-gpio", "fsl,mxs-gpio";
-+					reg = <2>;
- 					interrupts = <125>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
-@@ -192,6 +195,7 @@
- 
- 				gpio3: gpio@3 {
- 					compatible = "fsl,imx28-gpio", "fsl,mxs-gpio";
-+					reg = <3>;
- 					interrupts = <124>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
-@@ -201,6 +205,7 @@
- 
- 				gpio4: gpio@4 {
- 					compatible = "fsl,imx28-gpio", "fsl,mxs-gpio";
-+					reg = <4>;
- 					interrupts = <123>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
+ int axp20x_match_device(struct axp20x_dev *axp20x)
 -- 
-1.7.9.5
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
