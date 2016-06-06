@@ -1,7 +1,7 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 07/22] of/platform: Use of_device_match()
-Date: Mon,  6 Jun 2016 10:31:49 +0200
-Message-ID: <20160606083204.19760-8-thierry.reding@gmail.com>
+Subject: [PATCH 09/22] of: mdio: Use of_device_match()
+Date: Mon,  6 Jun 2016 10:31:51 +0200
+Message-ID: <20160606083204.19760-10-thierry.reding@gmail.com>
 References: <20160606083204.19760-1-thierry.reding@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
@@ -12,37 +12,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Use the common implementation rather than the OF-private variant.
+Use the common implementation rather than the MDIO-private variant.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/of/platform.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/of/of_mdio.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 16e8daffac06..61d00cce9291 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -33,11 +33,6 @@ const struct of_device_id of_default_bus_match_table[] = {
- };
- EXPORT_SYMBOL(of_default_bus_match_table);
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index e051e1b57609..5d7d95900f44 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -16,6 +16,7 @@
+ #include <linux/phy.h>
+ #include <linux/phy_fixed.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/of_gpio.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_mdio.h>
+@@ -265,12 +266,6 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ }
+ EXPORT_SYMBOL(of_mdiobus_register);
  
--static int of_dev_node_match(struct device *dev, void *data)
+-/* Helper function for of_phy_find_device */
+-static int of_phy_match(struct device *dev, void *phy_np)
 -{
--	return dev->of_node == data;
+-	return dev->of_node == phy_np;
 -}
 -
  /**
-  * of_find_device_by_node - Find the platform_device associated with a node
-  * @np: Pointer to device tree node
-@@ -48,7 +43,7 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
- {
- 	struct device *dev;
+  * of_phy_find_device - Give a PHY node, find the phy_device
+  * @phy_np: Pointer to the phy's device tree node
+@@ -286,7 +281,7 @@ struct phy_device *of_phy_find_device(struct device_node *phy_np)
+ 	if (!phy_np)
+ 		return NULL;
  
--	dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
-+	dev = bus_find_device(&platform_bus_type, NULL, np, of_device_match);
- 	return dev ? to_platform_device(dev) : NULL;
- }
- EXPORT_SYMBOL(of_find_device_by_node);
+-	d = bus_find_device(&mdio_bus_type, NULL, phy_np, of_phy_match);
++	d = bus_find_device(&mdio_bus_type, NULL, phy_np, of_device_match);
+ 	if (d) {
+ 		mdiodev = to_mdio_device(d);
+ 		if (mdiodev->flags & MDIO_DEVICE_FLAG_PHY)
 -- 
 2.8.3
