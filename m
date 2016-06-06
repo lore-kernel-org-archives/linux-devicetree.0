@@ -1,12 +1,13 @@
 From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 6/7] ARM: dts: sun4i: Enable NAND on Marsboard A10
-Date: Mon,  6 Jun 2016 13:24:23 +0300
-Message-ID: <1465208664-9366-7-git-send-email-mamlinav@gmail.com>
+Subject: [PATCH 5/7] mtd: nand: Add Hynix H27UBG8T2BTR-BC to
+ nand_ids table
+Date: Mon,  6 Jun 2016 13:24:22 +0300
+Message-ID: <1465208664-9366-6-git-send-email-mamlinav@gmail.com>
 References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
 Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIIBH6VXICRUBAAESNPM-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCENVD7YAEIP7HWVXICRUBEGFDMIG-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1465208664-9366-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,64 +20,29 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the NFC and describe the NAND flash connected to this controller.
+Add the full description of the Hynix H27UBG8T2BTR-BC NAND chip in the
+nand_ids table so that we can later use the NAND ECC infos and ONFI timings
+mode in controller drivers.
 
 Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10-marsboard.dts | 41 +++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ drivers/mtd/nand/nand_ids.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-marsboard.dts b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-index 8e50723..ea6e2d5 100644
---- a/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-@@ -150,6 +150,47 @@
- 	status = "okay";
- };
+diff --git a/drivers/mtd/nand/nand_ids.c b/drivers/mtd/nand/nand_ids.c
+index ccc05f5..ccdc773 100644
+--- a/drivers/mtd/nand/nand_ids.c
++++ b/drivers/mtd/nand/nand_ids.c
+@@ -52,6 +52,10 @@ struct nand_flash_dev nand_flash_ids[] = {
+ 		{ .id = {0xad, 0xde, 0x94, 0xda, 0x74, 0xc4} },
+ 		  SZ_8K, SZ_8K, SZ_2M, NAND_NEED_SCRAMBLING, 6, 640,
+ 		  NAND_ECC_INFO(40, SZ_1K), 4 },
++	{"H27UBG8T2BTR-BC 32G 3.3V 8-bit",
++		{ .id = {0xad, 0xd7, 0x94, 0xda, 0x74, 0xc3} },
++		  SZ_8K, SZ_4K, SZ_2M, NAND_NEED_SCRAMBLING, 6, 640,
++		  NAND_ECC_INFO(40, SZ_1K), 0 },
  
-+&nfc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nand_pins_a>, <&nand_cs0_pins_a>, <&nand_rb0_pins_a>;
-+	status = "okay";
-+
-+	nand@0 {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		reg = <0>;
-+		allwinner,rb = <0>;
-+
-+		nand-ecc-mode = "hw";
-+		nand-on-flash-bbt;
-+
-+		boot0@0 {
-+			label = "boot0";
-+			reg = /bits/ 64 <0x0 0x200000>;
-+		};
-+
-+		boot0-rescue@200000 {
-+			label = "boot0-rescue";
-+			reg = /bits/ 64 <0x200000 0x200000>;
-+		};
-+
-+		uboot@400000 {
-+			label = "uboot";
-+			reg = /bits/ 64 <0x400000 0x200000>;
-+		};
-+
-+		uboot-rescue@600000 {
-+			label = "uboot-rescue";
-+			reg = /bits/ 64 <0x600000 0x200000>;
-+		};
-+
-+		main@800000 {
-+			label = "main";
-+			reg = /bits/ 64 <0x800000 0xff800000>;
-+		};
-+	};
-+};
-+
- &ohci0 {
- 	status = "okay";
- };
+ 	LEGACY_ID_NAND("NAND 4MiB 5V 8-bit",   0x6B, 4, SZ_8K, SP_OPTIONS),
+ 	LEGACY_ID_NAND("NAND 4MiB 3,3V 8-bit", 0xE3, 4, SZ_8K, SP_OPTIONS),
 -- 
 2.7.3
