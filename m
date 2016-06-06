@@ -1,125 +1,81 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/2] Documentation: bindings: add DT documentation for Rockchip USB2PHY
-Date: Mon, 06 Jun 2016 14:33:27 +0200
-Message-ID: <7083100.uVXA4CkAgE@diego>
-References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com> <1465204804-31161-2-git-send-email-frank.wang@rock-chips.com> <20160606112754.GE6831@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Subject: [PATCH v4 0/7] Add MDIO bus multiplexer support for iProc SoCs
+Date: Mon,  6 Jun 2016 18:11:33 +0530
+Message-ID: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160606112754.GE6831@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Frank Wang <frank.wang@rock-chips.com>, dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 6. Juni 2016, 12:27:54 schrieb Mark Rutland:
-> On Mon, Jun 06, 2016 at 05:20:03PM +0800, Frank Wang wrote:
-> > Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
-> > ---
-> > 
-> > Changes in v3:
-> >  - Added 'clocks' and 'clock-names' optional properties.
-> >  - Specified 'otg-port' and 'host-port' as the sub-node name.
-> > 
-> > Changes in v2:
-> >  - Changed vbus_host optional property from gpio to regulator.
-> >  - Specified vbus_otg-supply optional property.
-> >  - Specified otg_id and otg_bvalid property.
-> >  
-> >  .../bindings/phy/phy-rockchip-inno-usb2.txt        |   60
-> >  ++++++++++++++++++++ 1 file changed, 60 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt> 
-> > diff --git
-> > a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> > b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt new
-> > file mode 100644
-> > index 0000000..0b4bbbb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> > @@ -0,0 +1,60 @@
-> > +ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
-> > +
-> > +Required properties (phy (parent) node):
-> > + - compatible : should be one of the listed compatibles:
-> > +	* "rockchip,rk3366-usb2phy"
-> > +	* "rockchip,rk3399-usb2phy"
-> > + - #clock-cells : should be 0.
-> > + - clock-output-names : specify the 480m output clock name.
-> > +
-> > +Optional properties:
-> > + - clocks : phandle + phy specifier pair, for the input clock of phy.
-> > + - clock-names : input clock name of phy, must be "phyclk".
-> > + - vbus_host-supply : phandle to a regulator that supplies host vbus.
-> > + - vbus_otg-supply : phandle to a regulator that supplies otg vbus.
-> 
-> Nit: s/_/-/ here.
+Broadcom iProc based SoCs use a MDIO bus multiplexer where child buses
+could be internal as well external to SoCs. These buses could supports
+MDIO transaction compatible to C-22/C-45.
 
-Something I only stumbled over yesterday for the first time on my rk3288-
-popmetal: The phy subnodes seem to be able to use a generic phy-supply
-property from inside the phy-core itself, see:
+Broadcom MDIO bus multiplexer is an integrated multiplexer where child bus
+selection and mdio transaction logic lies inside multiplexer itself.
+To accommodate this multiplexer in existing mux framework below changes
+were required-
 
-https://github.com/mmind/linux-rockchip/commit/93739f521fc65f44524b00c9aaf6db46bca94e02#diff-ddf3e45ebb753d6debf57022003a1a57R597
+1. Passed MDIO parent bus via mdio_mux_init to MDIO mux framework.
 
-for my WIP code for that other board.
+This patch set includes MDIO bus multiplexer driver along with above
+framework change. It includes one external bus node having Ethernet PHY
+attached and two internal bus node holding PCIe PHYs.
 
+This patch series is based on v4.7-rc1 and is available from github-
+repo: https://github.com/Broadcom/arm64-linux.git
+branch:mdio-mux-v4
 
-> Otherwise the rest of this looks generally fine, though I'm confused as
-> to how you address the programming interface(s), given none are
-> described.
+-Changes from v3:
+- Unregister and free the parent MDIO bus.
+- rebased on net-next/master branch.
 
-I think that comes generally down to phy_power_on and phy_power_off from the
-host driver (ehci / dwc2 / whatever) using the generic phy interface. The usb2
-phys on Rockchip SoCs seem always pretty easy to handle, while the new
-additional typeC phy seems to require more work
+Reason for resend:
+-Rebased on v4.7-rc1
 
+Changes from v2:
+-Addressed Rob's comments in this patch regarding typo/grammers.
+-Addressed David's comments regarding local variables order.
+-Removed property "mdio-integrated-mux" and used mdiobus_register()
+in place of of_mdiobus_regsiter().
+-removed usage of IS_ERR_OR_NULL to IS_ERR in PCIe PHY driver.
 
-Heiko
+Changes from v1:
+- stop using "brcm,is_c45" from bus node as suggested by Andrew. MDIO
+PHY driver will logically OR MII_ADDR_C45 into the address when issues
+any C45 MDIO read/write transaction.
 
-> > +
-> > +Required nodes : a sub-node is required for each port the phy provides.
-> > +		 The sub-node name is used to identify host or otg port,
-> > +		 and shall be the following entries:
-> > +	* "otg-port" : the name of otg port.
-> > +	* "host-port" : the name of host port.
-> > +
-> > +Required properties (port (child) node):
-> > + - #phy-cells : must be 0. See ./phy-bindings.txt for details.
-> > + - interrupts : specify an interrupt for each entry in interrupt-names.
-> > + - interrupt-names : a list which shall be the following entries:
-> > +	* "otg_id" : for the otg id interrupt.
-> > +	* "otg_bvalid" : for the otg vbus interrupt.
-> > +	* "linestate" : for the host/otg linestate interrupt.
-> > +
-> > +Example:
-> > +
-> > +grf: syscon@ff770000 {
-> > +	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +
-> > +...
-> > +
-> > +	u2phy: usb2-phy {
-> > +		compatible = "rockchip,rk3366-usb2phy";
-> > +		#clock-cells = <0>;
-> > +		clock-output-names = "sclk_otgphy0_480m";
-> > +
-> > +		u2phy_otg: otg-port {
-> > +			#phy-cells = <0>;
-> > +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-> > +			interrupt-names = "otg_id", "otg_bvalid", "linestate";
-> > +			status = "okay";
-> > +		};
-> > +
-> > +		u2phy_host: host-port {
-> > +			#phy-cells = <0>;
-> > +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-> > +			interrupt-names = "linestate";
-> > +			status = "okay";
-> > +		};
-> > +	};
-> > +};
+Pramod Kumar (7):
+  mdio: mux: Enhanced MDIO mux framework for integrated multiplexers
+  binding: Make "mdio-parent-bus" property from mandatory to optional
+  binding: mdio-mux: Add DT binding doc for Broadcom MDIO bus
+    multiplexer
+  dt: mdio-mux: Add mdio multiplexer driver node
+  net: mdio-mux: Add MDIO mux driver for iProc SoCs
+  binding: PHY: Binding doc for NS2 PCIe PHYs.
+  phy: Add Northstar2 PCI Phy support
+
+ .../bindings/net/brcm,mdio-mux-iproc.txt           |  59 +++++
+ Documentation/devicetree/bindings/net/mdio-mux.txt |   3 +-
+ .../bindings/phy/brcm,mdio-mux-bus-pci.txt         |  27 +++
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |  12 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  31 +++
+ drivers/net/phy/Kconfig                            |  11 +
+ drivers/net/phy/Makefile                           |   1 +
+ drivers/net/phy/mdio-mux-bcm-iproc.c               | 248 +++++++++++++++++++++
+ drivers/net/phy/mdio-mux-gpio.c                    |   2 +-
+ drivers/net/phy/mdio-mux-mmioreg.c                 |   2 +-
+ drivers/net/phy/mdio-mux.c                         |  28 ++-
+ drivers/phy/Kconfig                                |   8 +
+ drivers/phy/Makefile                               |   2 +-
+ drivers/phy/phy-bcm-ns2-pcie.c                     | 115 ++++++++++
+ include/linux/mdio-mux.h                           |   4 +-
+ 15 files changed, 538 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
+ create mode 100644 drivers/net/phy/mdio-mux-bcm-iproc.c
+ create mode 100644 drivers/phy/phy-bcm-ns2-pcie.c
+
+-- 
+1.9.1
