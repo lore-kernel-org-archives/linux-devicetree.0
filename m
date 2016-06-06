@@ -1,7 +1,7 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 04/22] i2c: core: Use of_device_match()
-Date: Mon,  6 Jun 2016 10:31:46 +0200
-Message-ID: <20160606083204.19760-5-thierry.reding@gmail.com>
+Subject: [PATCH 07/22] of/platform: Use of_device_match()
+Date: Mon,  6 Jun 2016 10:31:49 +0200
+Message-ID: <20160606083204.19760-8-thierry.reding@gmail.com>
 References: <20160606083204.19760-1-thierry.reding@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
@@ -12,45 +12,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Use the common implementation rather than the I2C-private variant.
+Use the common implementation rather than the OF-private variant.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/i2c/i2c-core.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/of/platform.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index af11b658984d..f0c7d8a64013 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -1426,18 +1426,13 @@ static void of_i2c_register_devices(struct i2c_adapter *adap)
- 	}
- }
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 16e8daffac06..61d00cce9291 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -33,11 +33,6 @@ const struct of_device_id of_default_bus_match_table[] = {
+ };
+ EXPORT_SYMBOL(of_default_bus_match_table);
  
 -static int of_dev_node_match(struct device *dev, void *data)
 -{
 -	return dev->of_node == data;
 -}
 -
- /* must call put_device() when done with returned i2c_client device */
- struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
+ /**
+  * of_find_device_by_node - Find the platform_device associated with a node
+  * @np: Pointer to device tree node
+@@ -48,7 +43,7 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
  {
  	struct device *dev;
- 	struct i2c_client *client;
  
--	dev = bus_find_device(&i2c_bus_type, NULL, node, of_dev_node_match);
-+	dev = bus_find_device(&i2c_bus_type, NULL, node, of_device_match);
- 	if (!dev)
- 		return NULL;
- 
-@@ -1455,7 +1450,7 @@ struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node)
- 	struct device *dev;
- 	struct i2c_adapter *adapter;
- 
--	dev = bus_find_device(&i2c_bus_type, NULL, node, of_dev_node_match);
-+	dev = bus_find_device(&i2c_bus_type, NULL, node, of_device_match);
- 	if (!dev)
- 		return NULL;
- 
+-	dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
++	dev = bus_find_device(&platform_bus_type, NULL, np, of_device_match);
+ 	return dev ? to_platform_device(dev) : NULL;
+ }
+ EXPORT_SYMBOL(of_find_device_by_node);
 -- 
 2.8.3
