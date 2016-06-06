@@ -1,7 +1,7 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 16/22] drm/mediatek: Use of_device_match()
-Date: Mon,  6 Jun 2016 10:31:58 +0200
-Message-ID: <20160606083204.19760-17-thierry.reding@gmail.com>
+Subject: [PATCH 14/22] drm/etnaviv: Use of_device_match()
+Date: Mon,  6 Jun 2016 10:31:56 +0200
+Message-ID: <20160606083204.19760-15-thierry.reding@gmail.com>
 References: <20160606083204.19760-1-thierry.reding@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
@@ -16,41 +16,45 @@ Use the common implementation rather than the driver-private variant.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_drv.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 06a417b2f91e..9ab44224dcc0 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -21,6 +21,7 @@
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+index 3d4f56df8359..187523110d58 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+@@ -15,6 +15,7 @@
+  */
+ 
  #include <linux/component.h>
- #include <linux/iommu.h>
- #include <linux/of_address.h>
 +#include <linux/of_device.h>
  #include <linux/of_platform.h>
- #include <linux/pm_runtime.h>
  
-@@ -265,11 +266,6 @@ static struct drm_driver mtk_drm_driver = {
- 	.minor = DRIVER_MINOR,
+ #include "etnaviv_drv.h"
+@@ -606,13 +607,6 @@ static const struct component_master_ops etnaviv_master_ops = {
+ 	.unbind = etnaviv_unbind,
  };
  
 -static int compare_of(struct device *dev, void *data)
 -{
--	return dev->of_node == data;
+-	struct device_node *np = data;
+-
+-	return dev->of_node == np;
 -}
 -
- static int mtk_drm_bind(struct device *dev)
+ static int compare_str(struct device *dev, void *data)
  {
- 	struct mtk_drm_private *private = dev_get_drvdata(dev);
-@@ -406,7 +402,7 @@ static int mtk_drm_probe(struct platform_device *pdev)
- 		    comp_type == MTK_DPI) {
- 			dev_info(dev, "Adding component match for %s\n",
- 				 node->full_name);
--			component_match_add(dev, &match, compare_of, node);
-+			component_match_add(dev, &match, of_device_match, node);
- 		} else {
- 			struct mtk_ddp_comp *comp;
+ 	return !strcmp(dev_name(dev), data);
+@@ -635,8 +629,8 @@ static int etnaviv_pdev_probe(struct platform_device *pdev)
+ 			if (!core_node)
+ 				break;
  
+-			component_match_add(&pdev->dev, &match, compare_of,
+-					    core_node);
++			component_match_add(&pdev->dev, &match,
++					    of_device_match, core_node);
+ 			of_node_put(core_node);
+ 		}
+ 	} else if (dev->platform_data) {
 -- 
 2.8.3
