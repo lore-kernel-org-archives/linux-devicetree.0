@@ -1,20 +1,20 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun6i: The blue led on the Mele A1000G quad
- is a power led
-Date: Mon, 6 Jun 2016 15:01:52 +0800
-Message-ID: <CAGb2v67fSH=d8Aw=Pk2zMd=wmiBpaO2hbRiMxqCAUfmisGB6ZQ@mail.gmail.com>
-References: <1465129393-22379-1-git-send-email-hdegoede@redhat.com> <1465129393-22379-2-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH 3/3] ARM: dts: sun6i: The blue led on the Mele M9 is a
+ power led
+Date: Mon, 6 Jun 2016 15:02:12 +0800
+Message-ID: <CAGb2v65VBRcmv7BFbaFLk64femc1ix+Yzy55UPeUHXGdAvfyiA@mail.gmail.com>
+References: <1465129393-22379-1-git-send-email-hdegoede@redhat.com> <1465129393-22379-3-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465129393-22379-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1465129393-22379-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Sun, Jun 5, 2016 at 8:23 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> The blue led on the Mele A1000 is wired to light up as soon as the board
+> The blue led on the Mele M9 is wired to light up as soon as the board
 > has powered (it will be on while the gpio is still in input / floating
 > mode), also its location on the top-set box clearly signals "power led".
 >
@@ -22,9 +22,8 @@ On Sun, Jun 5, 2016 at 8:23 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@p
 > means that when you plug power into the top-set box, the power-led lights
 > and then turns off as soon as the kernel loads, which looks wrong.
 >
-> This renames the led from m9:blue:usr to a1000g:blue:pwr (fixing a copy
-> and paste error in the prefix while at it) and marks it as default on,
-> fixing this.
+> This renames the led from m9:blue:usr to m9:blue:pwr and marks
+> it as default on, fixing this.
 >
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
