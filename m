@@ -1,131 +1,108 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V5 7/9] irqchip/gic: Prepare for adding platform driver
-Date: Mon, 6 Jun 2016 13:39:43 +0100
-Message-ID: <57556F0F.9030605@nvidia.com>
-References: <1465214023-8299-1-git-send-email-jonathanh@nvidia.com>
- <1465214023-8299-8-git-send-email-jonathanh@nvidia.com>
+From: William Mills <wmills@ti.com>
+Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
+Date: Mon, 6 Jun 2016 08:50:58 -0400
+Message-ID: <575571B2.7090601@ti.com>
+References: <1465183229-24147-1-git-send-email-wmills@ti.com>
+ <1465183229-24147-5-git-send-email-wmills@ti.com>
+ <20160606085627.GA6831@leverpostej> <5480709.cGbSehIKrE@wuerfel>
+ <20160606114256.GF6831@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465214023-8299-8-git-send-email-jonathanh@nvidia.com>
+In-Reply-To: <20160606114256.GF6831@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: rmk+kernel@armlinux.org.uk, t-kristo@ti.com, ssantosh@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, r-woodruff2@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 06/06/16 12:53, Jon Hunter wrote:
-> To support GICs that require runtime power management, it is necessary
-> to add a platform driver, so that the probing of the chip can be
-> deferred if resources, such as a power-domain, is not yet available.
+
+On 06/06/2016 07:42 AM, Mark Rutland wrote:
+> On Mon, Jun 06, 2016 at 11:09:07AM +0200, Arnd Bergmann wrote:
+>> On Monday, June 6, 2016 9:56:27 AM CEST Mark Rutland wrote:
+>>> [adding devicetree]
+>>>
+>>> On Sun, Jun 05, 2016 at 11:20:29PM -0400, Bill Mills wrote:
+>>>> Keystone2 can do DMA coherency but only if:
+>>>> 1) DDR3A DMA buffers are in high physical addresses (0x8_0000_0000)
+>>>>     (DDR3B does not have this constraint)
+>>>> 2) Memory is marked outer shared
+>>>> 3) DMA Master marks transactions as outer shared
+>>>>     (This is taken care of in bootloader)
+>>>>
+>>>> Use outer shared instead of inner shared.
+>>>> This choice is done at early init time and uses the attr_mod facility
+>>>>
+>>>> If the kernel is not configured for LPAE and using high PA, or if the
+>>>> switch to outer shared fails, then we fail to meet this criteria.
+>>>> Under any of these conditions we veto any dma-coherent attributes in
+>>>> the DTB.
+>>>
+>>> I very much do not like this. As I previously mentioned [1],
+>>> dma-coherent has de-facto semantics today. This series deliberately
+>>> changes that, and inverts the relationship between DT and kernel (as the
+>>> describption in the DT would now depend on the configuration of the
+>>> kernel).
+>>>
+>>> I would prefer that we have a separate property (e.g.
+>>> "dma-outer-coherent") to describe when a device can be coherent with
+>>> Normal, Outer Shareable, Inner Write-Back, Outer Write-Back memory.
+>>> Then the kernel can figure out whether or not device can be used
+>>> coherently, depending on how it is configured.
+>>
+>> I share your concern, but I don't think the dma-outer-coherent attribute
+>> would be a good solution either.
+>>
+>> The problem really is that keystone is a platform that is sometimes
+>> coherent, depending purely on what kernel we run, and not at all on
+>> anything we can describe in devicetree, and I don't see any good way
+>> to capture the behavior of the hardware in generic DT bindings.
 > 
-> To prepare for adding a platform driver:
->  1. Drop the __init section from the gic_dist_config() so this can be
->     re-used by the platform driver.
->  2. Add prototypes for functions required by the platform driver to the
->     GIC header file so they can be re-used.
+> I think that above doesn't quite capture the situation:
 > 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/irqchip/irq-gic-common.c |  4 ++--
->  drivers/irqchip/irq-gic.c        | 15 ++++++++-------
->  include/linux/irqchip/arm-gic.h  |  5 +++++
->  3 files changed, 15 insertions(+), 9 deletions(-)
+> Some DMA masters can be cache-coherent (only) with Outer Shareable
+> transactions. That is a property we could capture inthe DT (e.g.
+> dma-outer-coherent), and is independent of the kernel configuration.
 > 
-> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-> index 89e7423f0ebb..9ae71804b5dd 100644
-> --- a/drivers/irqchip/irq-gic-common.c
-> +++ b/drivers/irqchip/irq-gic-common.c
-> @@ -90,8 +90,8 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
->  	return ret;
->  }
->  
-> -void __init gic_dist_config(void __iomem *base, int gic_irqs,
-> -			    void (*sync_access)(void))
-> +void gic_dist_config(void __iomem *base, int gic_irqs,
-> +		     void (*sync_access)(void))
->  {
->  	unsigned int i;
->  
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index 94eab6e23124..3d3ab9045244 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -449,7 +449,7 @@ static void gic_cpu_if_up(struct gic_chip_data *gic)
->  }
->  
->  
-> -static void __init gic_dist_init(struct gic_chip_data *gic)
-> +static void gic_dist_init(struct gic_chip_data *gic)
->  {
->  	unsigned int i;
->  	u32 cpumask;
-> @@ -535,7 +535,7 @@ int gic_cpu_if_down(unsigned int gic_nr)
->   * this function, no interrupts will be delivered by the GIC, and another
->   * platform-specific wakeup source must be enabled.
->   */
-> -static void gic_dist_save(struct gic_chip_data *gic)
-> +void gic_dist_save(struct gic_chip_data *gic)
->  {
->  	unsigned int gic_irqs;
->  	void __iomem *dist_base;
-> @@ -574,7 +574,7 @@ static void gic_dist_save(struct gic_chip_data *gic)
->   * handled normally, but any edge interrupts that occured will not be seen by
->   * the GIC and need to be handled by the platform-specific wakeup source.
->   */
-> -static void gic_dist_restore(struct gic_chip_data *gic)
-> +void gic_dist_restore(struct gic_chip_data *gic)
->  {
->  	unsigned int gic_irqs;
->  	unsigned int i;
-> @@ -620,7 +620,7 @@ static void gic_dist_restore(struct gic_chip_data *gic)
->  	writel_relaxed(GICD_ENABLE, dist_base + GIC_DIST_CTRL);
->  }
->  
-> -static void gic_cpu_save(struct gic_chip_data *gic)
-> +void gic_cpu_save(struct gic_chip_data *gic)
->  {
->  	int i;
->  	u32 *ptr;
-> @@ -650,7 +650,7 @@ static void gic_cpu_save(struct gic_chip_data *gic)
->  
->  }
->  
-> -static void gic_cpu_restore(struct gic_chip_data *gic)
-> +void gic_cpu_restore(struct gic_chip_data *gic)
->  {
->  	int i;
->  	u32 *ptr;
-> @@ -727,7 +727,7 @@ static struct notifier_block gic_notifier_block = {
->  	.notifier_call = gic_notifier,
->  };
->  
-> -static int __init gic_pm_init(struct gic_chip_data *gic)
-> +static int gic_pm_init(struct gic_chip_data *gic)
->  {
->  	gic->saved_ppi_enable = __alloc_percpu(DIV_ROUND_UP(32, 32) * 4,
->  		sizeof(u32));
-> @@ -757,7 +757,7 @@ free_ppi_enable:
->  	return -ENOMEM;
->  }
->  #else
-> -static int __init gic_pm_init(struct gic_chip_data *gic)
-> +static int gic_pm_init(struct gic_chip_data *gic)
->  {
->  	return 0;
->  }
-> @@ -1179,6 +1179,7 @@ static int __init __gic_init_bases(struct gic_chip_data *gic,
->  		set_smp_cross_call(gic_raise_softirq);
->  		register_cpu_notifier(&gic_cpu_notifier);
->  #endif
-> +
+> Whether or not the devices are coherent with the kernel's chosen memory
+> attributes certainly depends on the kernel configuration, but that is
+> not what we capture in the DT.
+> 
+>> So far, the assumption has been:
+>>
+>> - when running a non-LPAE kernel, keystone is not coherent, and we
+>>   must ignore both the dma-coherent properties in devices and the
+>>   dma-ranges properties in bus nodes.
+> 
+> I wasn't able to spot if/where that was enforced. Is it possible to boot
+> Keystone UP, !LPAE?
+> 
 
-Not sure where this extra line came from but shouldn't be here.
+Yes ...  with the right combination of DTB, u-boot, u-boot vars, and
+kernel config.  Mismatches either fail hard or use dma-coherent ops
+without actually providing coherency. I am attempting to make this less
+fragile.
 
-Marc let me know if you want me to resend.
+Mis-configured coherency can be dead-wrong and still only fail 1
+transaction in 1,000,000.  I have seen customers run for weeks or months
+w/o detecting the issue.  Thats why I wanted the veto logic.
 
-Jon
+There are 3 cases to cover:
+LPAE w/ high PA:
+	this is the normal mode for KS2.  Uses coherent dma-ops.
+!LPAE:
+	obviously uses low PA and must use non-coherent dma-ops.
+LPAE w/ low PA:
+	This happens with an LPAE kernel but the user has passed a low
+	PA memory DTB and u-boot has not fixed it up.
+	This case must also use non-coherent dma-ops
 
--- 
-nvpublic
+Upstream DTS has keystone memory at the low PA.  I agree with that.
+U-boot and kernel opt-in to the use of high PA.
+
+If you give high PA to a non-LPAE kernel I believe it will fail hard and
+fast.  I can check.
+
+Thanks,
+Bill
