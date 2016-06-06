@@ -1,13 +1,13 @@
 From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/7] ARM: dts: sun7i: Add A20 NAND controller
+Subject: [PATCH 1/7] ARM: dts: sun4i: Add A10 NAND controller
  pin definitions
-Date: Mon,  6 Jun 2016 13:24:20 +0300
-Message-ID: <1465208664-9366-4-git-send-email-mamlinav@gmail.com>
+Date: Mon,  6 Jun 2016 13:24:18 +0300
+Message-ID: <1465208664-9366-2-git-send-email-mamlinav@gmail.com>
 References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
 Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIPZHWVXICRUBHYMJYXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCENVD7YAEIPVHWVXICRUBFXIVCN2-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1465208664-9366-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -27,14 +27,14 @@ Define the NAND controller pin configs.
 Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 80 ++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/sun4i-a10.dtsi | 80 ++++++++++++++++++++++++++++++++++++++++
  1 file changed, 80 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 82e28c3..915979f 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1328,6 +1328,86 @@
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index a9c3190..146a08db 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -1144,6 +1144,86 @@
  				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
  				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
  			};
