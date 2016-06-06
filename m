@@ -1,72 +1,87 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: Add A10 I2S controller binding
- documentation
-Date: Mon, 6 Jun 2016 08:08:18 -0500
-Message-ID: <20160606130818.GA6952@rob-hp-laptop>
-References: <20160601175430.11625-1-maxime.ripard@free-electrons.com>
- <20160601175430.11625-2-maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 20/32] dt-bindings: Add binding for brcm,bcm2835-sdhost.
+Date: Mon, 6 Jun 2016 08:12:43 -0500
+Message-ID: <20160606131243.GA8629@rob-hp-laptop>
+References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
+ <1464817421-8519-21-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160601175430.11625-2-maxime.ripard@free-electrons.com>
+In-Reply-To: <1464817421-8519-21-git-send-email-kraxel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Andrea Venturi <ennesimamail.av@gmail.com>, Code Kipper <codekipper@gmail.com>, gianfranco@moddevices.com
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: linux-rpi-kernel@lists.infradead.org, Eric Anholt <eric@anholt.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 07:54:27PM +0200, Maxime Ripard wrote:
-> Introduce the device tree binding for the I2S controller found in the
-> Allwinner A10 and later SoCs.
+On Wed, Jun 01, 2016 at 11:43:29PM +0200, Gerd Hoffmann wrote:
+> From: Eric Anholt <eric@anholt.net>
 > 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> This is the other SD controller on the platform, which can be swapped
+> to the role of SD card host using pin muxing.
+> 
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 > ---
->  .../devicetree/bindings/sound/sun4i-i2s.txt        | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/sun4i-i2s.txt
+>  .../devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt |  3 +++
+>  .../bindings/mmc/brcm,bcm2835-sdhost.txt           | 24 ++++++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
+> diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
+> index 59476fb..3cc74e2 100644
+> --- a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
+> @@ -15,4 +15,7 @@ sdhci: sdhci {
+>  	interrupts = <2 30>;
+>  	clocks = <&clk_mmc>;
+>  	bus-width = <4>;
+> +	dmas = <&dma 13>,
+> +	       <&dma 13>;
+> +	dma-names = "tx", "rx";
+
+This looks unrelated. Plus SDHCI implies internal DMA master generally, 
+so is external DMA really supported?
+
+>  };
+> diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
 > new file mode 100644
-> index 000000000000..365ca4eede5f
+> index 0000000..074992c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-> @@ -0,0 +1,33 @@
-> +* Allwinner A10 I2S controller
+> +++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
+> @@ -0,0 +1,24 @@
+> +Broadcom BCM2835 SDHOST controller
 > +
-> +The I2S bus (Inter-IC sound bus) is a serial link for digital
-> +audio data transfer between devices in the system.
+> +This file documents differences between the core properties described
+> +by mmc.txt and the properties that represent the BCM2835 controller.
 > +
 > +Required properties:
+> +- compatible: Should be "brcm,bcm2835-sdhci".
+
+sdhost?
+
+> +- clocks: The clock feeding the SDHOST controller.
+
+reg, interrupts missing.
+
 > +
-> +- compatible: should be one of the followings
-> +   - "allwinner,sun4i-a10-i2s"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: should contain the I2S interrupt.
-> +- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
-> +	Documentation/devicetree/bindings/dma/dma.txt
-> +- dma-names: should include "tx" and "rx".
-> +- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
-> +- clock-names: should contain followings:
-> +   - "apb" : clock for the I2S bus interface
-> +   - "mod" : module clock for the I2S controller
+> +Optional properties:
+> +- dmas: DMA channels for read and write.
+> +          See Documentation/devicetree/bindings/dma/dma.txt for details
+
+dma-names?
+
 > +
 > +Example:
 > +
-> +i2s0: i2s@01c22400 {
-> +	#sound-dai-cells = <0>;
-
-This is missing from the property list.
-
-> +	compatible = "allwinner,sun4i-a10-i2s";
-> +	reg = <0x01c22400 0x400>;
-> +	interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&apb0_gates 3>, <&i2s0_clk>;
-> +	clock-names = "apb", "mod";
-> +	dmas = <&dma SUN4I_DMA_NORMAL 3>,
-> +	       <&dma SUN4I_DMA_NORMAL 3>;
-> +	dma-names = "rx", "tx";
+> +sdhost: sdhost@7e202000 {
+> +	compatible = "brcm,bcm2835-sdhost";
+> +	reg = <0x7e202000 0x100>;
+> +	interrupts = <2 24>;
+> +	clocks = <&clocks BCM2835_CLOCK_VPU>;
+> +	dmas = <&dma 13>,
+> +	       <&dma 13>;
+> +	dma-names = "tx", "rx";
 > +};
 > -- 
-> 2.8.3
+> 1.8.3.1
 > 
