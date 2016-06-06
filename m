@@ -1,92 +1,49 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: Re: [PATCH] ARM64: boot: dts: Add regulators for Tegra210 Smaug
-Date: Mon, 6 Jun 2016 17:52:14 -0400
-Message-ID: <b28b44d9-7f3e-c1bb-7df8-238191ab1941@nvidia.com>
-References: <1464985365-11612-1-git-send-email-rklein@nvidia.com>
- <57551AAD.2020805@nvidia.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
+Date: Tue, 7 Jun 2016 01:26:04 +0300
+Message-ID: <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
+ <20160601005751.GG20527@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57551AAD.2020805@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Jon Hunter <jonathanh@nvidia.com>, Alexandre Courbot <gnurou@gmail.com>, Andrew Bresticker <abrestic@chromium.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160601005751.GG20527@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/6/2016 2:39 AM, Laxman Dewangan wrote:
-> 
-> On Saturday 04 June 2016 01:52 AM, Rhyland Klein wrote:
->> +
->> +			max77620_default: pinmux@0 {
->> +				pin_gpio {
->> +					pins = "gpio0", "gpio1", "gpio2", "gpio5",
->> +					       "gpio6", "gpio7";
-> gpio5 and gpio6 are already there in below nodes and hence it is not 
-> needed here.
+Hello.
 
-Yep thanks.
+On 06/01/2016 03:57 AM, Simon Horman wrote:
 
-> 
->> +					function = "gpio";
->> +				};
->> +
->> +				/*
->> +				 * GPIO3 is used to en_pp3300, and it is part of power
->> +				 * sequence, So it must be sequenced up (automatically
->> +				 * set by OTP) and down properly.
->> +				 */
->> +				pin_gpio3 {
->> +					pins = "gpio3";
->> +					function = "fps-out";
->> +					drive-open-drain = <1>;
->> +					maxim,active-fps-source = <MAX77620_FPS_SRC_0>;
->> +					maxim,active-fps-power-up-slot = <4>;
->> +					maxim,active-fps-power-down-slot = <2>;
->> +				};
->> +
->> +				pin_gpio5_6_7 {
-> node name should be gpio5_6 as there is no gpio7 inside this node.
+>> The initial R8A7792 SoC device tree including 2 CPU cores, GIC, timer, SYSC,
+>> and the required  clock descriptions.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> This is rather large for an initial DTSI. Did you give any consideration
+> to splitting it up: e.g. only providing what is needed to get to a serial
+> console?
 
-Thanks.
-> 
-> 
->> +
->> +			regulators {
->> +				in-ldo0-1-supply = <&pp1350>;
->> +				in-ldo2-supply = <&pp3300>;
->> +				in-ldo3-5-supply = <&pp3300>;
->> +				in-ldo7-8-supply = <&pp1350>;
->> +
->> +				ppvar_soc: sd0 {
->> +					regulator-name = "PPVAR_SOC";
->> +					regulator-min-microvolt = <825000>;
->> +					regulator-max-microvolt = <1125000>;
->> +					regulator-enable-ramp-delay = <146>;
->> +					regulator-disable-ramp-delay = <4080>;
->> +					regulator-ramp-delay = <27500>;
->> +					regulator-ramp-delay-scale = <300>;
-> 
-> There is no disable-ramp-delay in mainline.
-> Please use the correct value for property as:
->                                       regulator-ramp-delay = <9000>;
->                                       maxim,ramp-rate-setting = <27500>;
-> 
-> 
-> instead of regulator-ramp-delay and regulator-ramp-delay-scale.
-> The property differs from downstream.
-> 
-> regulator-ramp-delay is what you see in platform and 
-> maxim,ramp-rate-setting is what you want in register.
+    Was done in the v2 patchset...
 
-Where does "<9000>" come from in the above comment? It looks like
-maxim,ramp-rate-setting sets the slew rate, and regulator-ramp-delay
-will as well, but will be ignored if maxim,ramp-delay-setting is set. So
-does it ever make sense to have both defined for a regulator? And if
-not, should max77620 regulators just use the maxim property and not the
-regulator core property?
+> With regards to SMP. Have you checked to make sure CPU hotplug works
+> on all CPUs?
 
--rhyland
+    How to test the CPU hotplug? I've now added the SMP support and made sure 
+both CPUs are online and serve IRQs...
 
--- 
-nvpublic
+> And that the system behaves sanely on suspend/resume.
+
+    I'd be thankful if you told me how to test that. :-)
+
+> If it is not possible to verify this at this stage then I would recommend
+> only enabling one CPU at this stage.
+
+    Had a hard time debugging SMP until I realized I'd removed CPU1 from the 
+device tree. :-)
+
+MBR, Sergei
