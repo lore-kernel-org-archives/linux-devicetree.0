@@ -1,7 +1,7 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 10/22] usb: phy: am335x-control: Use of_device_match()
-Date: Mon,  6 Jun 2016 10:31:52 +0200
-Message-ID: <20160606083204.19760-11-thierry.reding@gmail.com>
+Subject: [PATCH 13/22] drm/armada: Use of_device_match()
+Date: Mon,  6 Jun 2016 10:31:55 +0200
+Message-ID: <20160606083204.19760-14-thierry.reding@gmail.com>
 References: <20160606083204.19760-1-thierry.reding@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20160606083204.19760-1-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,51 +12,45 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-This driver uses bus_find_device() to go through every platform device
-and match using the driver and device tree node. It's more efficient to
-use driver_find_device() to iterate over all devices associated with a
-particular driver, in which case the matching is reduced to the device
-tree node and can be done using the common implementation.
+Use the common implementation rather than the driver-private variant.
 
 Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/usb/phy/phy-am335x-control.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/armada/armada_drv.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-am335x-control.c b/drivers/usb/phy/phy-am335x-control.c
-index 42a1afe36a90..1ac16f649154 100644
---- a/drivers/usb/phy/phy-am335x-control.c
-+++ b/drivers/usb/phy/phy-am335x-control.c
-@@ -2,6 +2,7 @@
- #include <linux/platform_device.h>
- #include <linux/err.h>
- #include <linux/of.h>
+diff --git a/drivers/gpu/drm/armada/armada_drv.c b/drivers/gpu/drm/armada/armada_drv.c
+index 6ca2aa36515e..c86807187183 100644
+--- a/drivers/gpu/drm/armada/armada_drv.c
++++ b/drivers/gpu/drm/armada/armada_drv.c
+@@ -8,6 +8,7 @@
+ #include <linux/clk.h>
+ #include <linux/component.h>
+ #include <linux/module.h>
 +#include <linux/of_device.h>
- #include <linux/io.h>
- #include <linux/delay.h>
- #include <linux/usb/otg.h>
-@@ -117,12 +118,6 @@ static const struct of_device_id omap_control_usb_id_table[] = {
- MODULE_DEVICE_TABLE(of, omap_control_usb_id_table);
+ #include <linux/of_graph.h>
+ #include <drm/drmP.h>
+ #include <drm/drm_crtc_helper.h>
+@@ -227,11 +228,6 @@ static void armada_drm_unbind(struct device *dev)
+ 	drm_put_dev(dev_get_drvdata(dev));
+ }
  
- static struct platform_driver am335x_control_driver;
--static int match(struct device *dev, void *data)
+-static int compare_of(struct device *dev, void *data)
 -{
--	struct device_node *node = (struct device_node *)data;
--	return dev->of_node == node &&
--		dev->driver == &am335x_control_driver.driver;
+-	return dev->of_node == data;
 -}
- 
- struct phy_control *am335x_get_phy_control(struct device *dev)
+-
+ static void release_of(struct device *dev, void *data)
  {
-@@ -133,7 +128,8 @@ struct phy_control *am335x_get_phy_control(struct device *dev)
- 	if (!node)
- 		return NULL;
+ 	of_node_put(data);
+@@ -261,7 +257,7 @@ static void armada_add_endpoints(struct device *dev,
+ 		}
  
--	dev = bus_find_device(&platform_bus_type, NULL, node, match);
-+	dev = driver_find_device(&am335x_control_driver.driver, NULL, node,
-+				 of_device_match);
- 	if (!dev)
- 		return NULL;
+ 		component_match_add_release(dev, match, release_of,
+-					    compare_of, remote);
++					    of_device_match, remote);
+ 	}
+ }
  
 -- 
 2.8.3
