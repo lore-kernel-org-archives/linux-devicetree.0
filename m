@@ -1,60 +1,53 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 27/32] gpio: Add support for the FXL6408 GPIO expander.
-Date: Mon, 06 Jun 2016 16:50:31 -0700
-Message-ID: <87port98s8.fsf@eliezer.anholt.net>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com> <1464817421-8519-28-git-send-email-kraxel@redhat.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3] ASoC: rockchip: Add machine driver for
+ MAX98357A/RT5514/DA7219
+Date: Tue, 7 Jun 2016 00:50:26 +0100
+Message-ID: <20160606235026.GP7510@sirena.org.uk>
+References: <1464267742-15312-1-git-send-email-zhengxing@rock-chips.com>
+ <20160601144542.GA3835@rob-hp-laptop>
+ <5751912C.6080904@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464817421-8519-28-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="8G1nIWD3RY794FAy"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5751912C.6080904@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xing Zheng <zhengxing@rock-chips.com>
+Cc: Rob Herring <robh@kernel.org>, linux-rockchip@lists.infradead.org, dianders@chromium.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
 
-Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
+--8G1nIWD3RY794FAy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->
-> This commit needs to be split up and cleaned up.  Also we should add
-> interrupt support before pushing upstream.
->
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+On Fri, Jun 03, 2016 at 10:16:12PM +0800, Xing Zheng wrote:
 
-OK, I've confirmed with the firmware maintainers: We really can't drive
-this natively from Linux.  The firmware is polling one of the fxl6408's
-pins 10 times a second for detecting under-voltage, so if we also try to
-drive it we'll end up smashing each others' I2C transactions.  We'll
-need to do a GPIO driver using the GET/SET_GPIO_STATE firmware calls,
-instead.  Unfortunately, we don't have a direction-setting API for that
-at the moment, but it'll at least let us read the HDMI HPD signal.
+> I refered to MTK's mt8173-rt5650-rt5514.txt on upstream, that compatible
+> name is "mediatek,mt8173-rt5650-rt5514".
+> Because our platform need to support 3 codecs (max98357a / da7219 / rt5514).
+> Perhaps, you maybe feel that name is too long? And, could you please tell me
+> what names would be better?
 
---=-=-=
+> For example: "rk3399-composite-codecs" ?
+
+It should probably be three compatibles, one per CODEC, if the driver
+needs to handle each separately.
+
+--8G1nIWD3RY794FAy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBCgAGBQJXVgxIAAoJELXWKTbR/J7oiOUP/iCUKM2ALetrzGMef5oPyWRw
-iBh/BAo0aPbYCN1ISB3/uL92QFEIo6HqirK/Xcn4adzUiMO6Vlqa9KLZEtgkATlu
-VdsZO5pktTv4RUHw0oCMUm1UO7wp/3StbdcwgPl5kHBQIggvD3C4zbuM2BN/xlvR
-mw+n0Drp3mTJJ0/6hLORBhceCuqg0D8OwB4/cCNCnb/splZDpNxWHNDdJNCxTKzP
-N9nkeX2cJ2YFBF8vziL880AjSle2ktVFrMPg/EZ/TwwxSwfdm0rKUH1FFn3BbG/K
-40c5jx8sKGBRX+bAZNYeAS12o9ChQDqXCka4UVWqal6uhuQoKTZCIuFfrR+eKpSy
-bR0MG9yh+vOmAZxRehgCi8bhrvm3uYgu9f/VlijdNLxUw/lxN3u+Lw+JoyZo9LDY
-MZb9QdT3sXAKCVnzfxbyppHX6M6emZDlj6WrYSZQLo+1hQxzcIo1hCSZd2/db8Wb
-uJV7aes1hnHEBfP8LbxHSqQ5vmEKXTfrqDkjTEqWDbxx1jiIuyMBm80YB1OF/qeZ
-NlS/B8awjgl6ShSCI160YYaAb4gr1U3aLGiT7HiOHJIcNZW71oxSTmaHbyPo3dQu
-6nHPTAdzC7qtTC2JWlvFQ/8i3lnQRgdummUDkREkq/1dSG03ElgWR6dhI3g2S0wb
-RNfxNK0s0gm/OSbv2g9U
-=UGRD
+iQEcBAEBCAAGBQJXVgxBAAoJECTWi3JdVIfQ5igH/jnLX9QnvgwFxKK8BdX/+PAY
+1I5XTG+mUzb1nTvkzdDjlJgveR2i3vvKComkPcWheEJvJlydsEwYu7jm9UHhXxf0
+osExbR9R9nlflVNRVNfFgalNjR2aZ39Xh2SuQrH/uTpVlNWm/FGn55sAwuSkxj3C
+EHTErkoDFWUWlrkxll2q3AN8uax16EUKvwfAnr1tWUzq08zu3OwlRmmX/WUHkt4z
+dxCdAE7XAotvNoIYBJ+8NrZEcMkOVS/EQcctMFBgcgJyvfyI+rOT4Ue2APopDEq3
+FfqYsARth8gr+TN1NjrqL8uroXa34Xj/IRJo65uVw8txvDkxstnjGVwtASrPzoE=
+=Qv6x
 -----END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--8G1nIWD3RY794FAy--
