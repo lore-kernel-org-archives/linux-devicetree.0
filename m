@@ -1,66 +1,87 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/18]  Add support for FDMA DMA controller and xp70
- rproc found on STi chipsets
-Date: Mon, 6 Jun 2016 10:31:48 +0530
-Message-ID: <20160606050148.GX16910@localhost>
-References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH 3/3] ARM: configs: keystone: Enable PINCTRL_SINGLE Config
+Date: Mon, 6 Jun 2016 10:26:00 +0530
+Message-ID: <57550260.6030902@ti.com>
+References: <1464006547-19569-1-git-send-email-j-keerthy@ti.com>
+ <1464006547-19569-4-git-send-email-j-keerthy@ti.com>
+ <5743CC80.4070404@ti.com> <5743D0FD.5070804@ti.com>
+ <6325832e-24d2-43c7-09b4-a73b6549ee2c@oracle.com> <57451A36.8050809@ti.com>
+ <5754F00C.108@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1464192412-16386-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5754F00C.108@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, "Cooper Jr., Franklin" <fcooper@ti.com>
+Cc: nm@ti.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, m-karicheri2@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 05:06:33PM +0100, Peter Griffin wrote:
-> 
-> Peter Griffin (18):
->   dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding
->     documentation
->   dmaengine: st_fdma:  Add STMicroelectronics FDMA driver header file
->   dmaengine: st_fdma: Add STMicroelectronics FDMA engine driver support
->   dmaengine: st_fdma: Add xp70 firmware loading mechanism.
->   dmaengine: st_fdma: Add fdma suspend and resume callbacks.
 
-I do not see the latter two patches in this series. Something is missed here
-from cover to actual patches which is bit bizarre as one tends to generate
-patches and cover together
 
->   ARM: STi: DT: STiH407: Add FDMA driver dt nodes.
->   MAINTAINERS: Add FDMA driver files to STi section.
->   ARM: multi_v7_defconfig: Enable STi FDMA driver
->   ASoC: sti: Update DT example to match the driver code
->   ASoC: sti: Update example to include assigned-clocks and mclk-fs
->   ARM: multi_v7_defconfig: Enable STi and simple-card drivers.
->   ARM: DT: STiH407: Add i2s_out pinctrl configuration
->   ARM: DT: STiH407: Add i2s_in pinctrl configuration
->   ARM: DT: STiH407: Add spdif_out pinctrl config
->   ARM: STi: DT: STiH407: Add sti-sasg-codec dt node
->   ARM: STi: DT: STiH407: Add uniperif player dt nodes
->   ARM: STi: DT: STiH407: Add uniperif reader dt nodes
->   ARM: DT: STi: stihxxx-b2120: Add DT nodes for STi audio card
-> 
->  Documentation/devicetree/bindings/dma/st_fdma.txt  |   87 ++
->  .../devicetree/bindings/sound/st,sti-asoc-card.txt |   22 +-
->  MAINTAINERS                                        |    1 +
->  arch/arm/boot/dts/stih407-family.dtsi              |  164 +++
->  arch/arm/boot/dts/stih407-pinctrl.dtsi             |   55 +
->  arch/arm/boot/dts/stihxxx-b2120.dtsi               |   40 +
->  arch/arm/configs/multi_v7_defconfig                |    4 +
->  drivers/dma/Kconfig                                |   12 +
->  drivers/dma/Makefile                               |    1 +
->  drivers/dma/st_fdma.c                              | 1203 ++++++++++++++++++++
->  drivers/dma/st_fdma.h                              |  281 +++++
->  11 files changed, 1863 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/st_fdma.txt
->  create mode 100644 drivers/dma/st_fdma.c
->  create mode 100644 drivers/dma/st_fdma.h
+On Monday 06 June 2016 09:07 AM, Keerthy wrote:
+>
+>
+> On Wednesday 25 May 2016 08:51 AM, Keerthy wrote:
+>> Hi Santosh,
+>>
+>> On Tuesday 24 May 2016 09:59 PM, Santosh Shilimkar wrote:
+>>> Hi Keerthy,
+>>>
+>>> On 5/23/2016 8:56 PM, Keerthy wrote:
+>>>>
+>>>>
+>>>> On Tuesday 24 May 2016 09:07 AM, Lokesh Vutla wrote:
+>>>>>
+>>>>>
+>>>>> On Monday 23 May 2016 05:59 PM, Keerthy wrote:
+>>>>>> keystone-k2l devices use pinmux and are compliant with
+>>>>>> PINCTRL_SINGLE.
+>>>>>> Hence enable the config option.
+>>>>>>
+>>>>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>>>>
+>>>>> A similar patch[1] is already posted.
+>>>>>
+>>>>> [1]https://patchwork.kernel.org/patch/8958091/
+>>>>
+>>>> Ah I had not seen them. If they are already reviewed and closer to be
+>>>> merged then Patch 2 and Patch 3 of this series can be dropped.
+>>>>
+>>> Once the 4.7-rc2 is out, please rebase these floating patches
+>>> against it and post a consolidated patches. I will line them
+>>> up for 4.8
+>>
+>> Thanks for the quick response. I will wait for 4.7-rc2 and send the
+>> re-based series.
+>
+> Now the 4.7-rc2 is tagged i will be sending a consolidated series.
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Santosh,
+
+I posted a consolidated series for k2l.
+
+Franklin,
+
+Could you re-post k2g series on top of the series i posted today.
+
+Regards,
+Keerthy
+
+
+>
+>>
+>> Regards,
+>> Keerthy
+>>
+>>>
+>>> Regards,
+>>> Santosh
