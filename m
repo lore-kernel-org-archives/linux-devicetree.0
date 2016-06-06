@@ -1,61 +1,48 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH 3/3] ARM: configs: keystone: Enable PINCTRL_SINGLE Config
-Date: Mon, 6 Jun 2016 09:07:48 +0530
-Message-ID: <5754F00C.108@ti.com>
-References: <1464006547-19569-1-git-send-email-j-keerthy@ti.com>
- <1464006547-19569-4-git-send-email-j-keerthy@ti.com>
- <5743CC80.4070404@ti.com> <5743D0FD.5070804@ti.com>
- <6325832e-24d2-43c7-09b4-a73b6549ee2c@oracle.com> <57451A36.8050809@ti.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v4 05/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ driver header file
+Date: Mon, 6 Jun 2016 10:06:19 +0530
+Message-ID: <20160606043618.GV16910@localhost>
+References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
+ <1464192412-16386-7-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57451A36.8050809@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1464192412-16386-7-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org
-Cc: nm@ti.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, m-karicheri2@ti.com, linux-arm-kernel@lists.infradead.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 25, 2016 at 05:06:39PM +0100, Peter Griffin wrote:
 
+> +/*
+> + * request control bits
+> + */
+> +#define REQ_CTRL_NUM_OPS_MASK		GENMASK(31, 24)
+> +#define REQ_CTRL_NUM_OPS(n)		(REQ_CTRL_NUM_OPS_MASK & ((n) << 24))
+> +#define REQ_CTRL_INITIATOR_MASK		BIT(22)
+> +#define	REQ_CTRL_INIT0			(0x0 << 22)
+> +#define	REQ_CTRL_INIT1			(0x1 << 22)
 
-On Wednesday 25 May 2016 08:51 AM, Keerthy wrote:
-> Hi Santosh,
->
-> On Tuesday 24 May 2016 09:59 PM, Santosh Shilimkar wrote:
->> Hi Keerthy,
->>
->> On 5/23/2016 8:56 PM, Keerthy wrote:
->>>
->>>
->>> On Tuesday 24 May 2016 09:07 AM, Lokesh Vutla wrote:
->>>>
->>>>
->>>> On Monday 23 May 2016 05:59 PM, Keerthy wrote:
->>>>> keystone-k2l devices use pinmux and are compliant with PINCTRL_SINGLE.
->>>>> Hence enable the config option.
->>>>>
->>>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
->>>>
->>>> A similar patch[1] is already posted.
->>>>
->>>> [1]https://patchwork.kernel.org/patch/8958091/
->>>
->>> Ah I had not seen them. If they are already reviewed and closer to be
->>> merged then Patch 2 and Patch 3 of this series can be dropped.
->>>
->> Once the 4.7-rc2 is out, please rebase these floating patches
->> against it and post a consolidated patches. I will line them
->> up for 4.8
->
-> Thanks for the quick response. I will wait for 4.7-rc2 and send the
-> re-based series.
+pls keep spaces or tabs, not both :(
 
-Now the 4.7-rc2 is tagged i will be sending a consolidated series.
+> +#define REQ_CTRL_INC_ADDR_ON		BIT(21)
+> +#define REQ_CTRL_DATA_SWAP_ON		BIT(17)
+> +#define REQ_CTRL_WNR			BIT(14)
+> +#define REQ_CTRL_OPCODE_MASK		GENMASK(7, 4)
+> +#define REQ_CTRL_OPCODE_LD_ST1		(0x0 << 4)
+> +#define REQ_CTRL_OPCODE_LD_ST2		(0x1 << 4)
+> +#define REQ_CTRL_OPCODE_LD_ST4		(0x2 << 4)
+> +#define REQ_CTRL_OPCODE_LD_ST8		(0x3 << 4)
+> +#define REQ_CTRL_OPCODE_LD_ST16		(0x4 << 4)
+> +#define REQ_CTRL_OPCODE_LD_ST32		(0x5 << 4)
+> +#define REQ_CTRL_OPCODE_LD_ST64		(0x6 << 4)
+> +#define REQ_CTRL_HOLDOFF_MASK		GENMASK(2, 0)
+> +#define REQ_CTRL_HOLDOFF(n)		((n) & REQ_CTRL_HOLDOFF_MASK)
 
->
-> Regards,
-> Keerthy
->
->>
->> Regards,
->> Santosh
+Everything here is FDMA_ so why not these as well
+
+-- 
+~Vinod
