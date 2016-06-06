@@ -1,70 +1,64 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 1/2] ARM: dts: exynos: Fix port nodes names for Exynos5250 Snow board
-Date: Mon,  6 Jun 2016 16:24:43 -0400
-Message-ID: <1465244684-23612-2-git-send-email-javier@osg.samsung.com>
-References: <1465244684-23612-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465244684-23612-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/7] mtd: nand: Add Hynix H27UBG8T2BTR-BC to
+ nand_ids table
+Date: Mon, 6 Jun 2016 22:31:38 +0200
+Message-ID: <20160606223138.3c2032ee@bbrezillon>
+References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
+	<1465208664-9366-6-git-send-email-mamlinav@gmail.com>
+	<20160606205549.1ecd6fdb@bbrezillon>
+	<20160606225903.264abc01647eb1528cc226bd@gmail.com>
+Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCK63FO5TUHRBNN3265AKGQELJ7ESYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160606225903.264abc01647eb1528cc226bd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 5c9cbade0629 ("ARM: dts: exynos: Fix DTC unit name warnings in
-Exynos5250") fixed all the DTC warnings about mismatchs between unit
-names and reg properties in Exynos5250 boards DTS.
+On Mon, 6 Jun 2016 22:59:03 +0300
+Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-But unfortunately it also added a regression on the Exynos5250 Snow
-Chromebook when changing the port node names since the OF graph logic
-expects the port nodes to be always named 'port'.
+> On Mon, 6 Jun 2016 20:55:49 +0200
+> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > On Mon,  6 Jun 2016 13:24:22 +0300
+> > Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >   
+> > > Add the full description of the Hynix H27UBG8T2BTR-BC NAND chip in the
+> > > nand_ids table so that we can later use the NAND ECC infos and ONFI timings
+> > > mode in controller drivers.  
+> > 
+> > Still hoping to get this series [1] merged in 4.8, but if that's
+> > not the case, I'll apply your patch.
+> > 
+> > BTW, that would be great if you could test it on your platforms.
+> >   
+> 
+> It seems that Hynix-specific initialization code can't handle H27UBG8T2BTR-BC
+> chip:
+> 
+> [    0.886153] nand: Could not find valid ONFI parameter page; aborting
+> [    0.892665] nand: device found, Manufacturer ID: 0xad, Chip ID: 0xd7
+> [    0.899025] nand: Hynix 1c03000.nand
+> [    0.902596] nand: bus width 8 instead 16 bit
+> [    0.906858] nand: No NAND device found
+> [    0.910620] sunxi_nand 1c03000.nand: failed to init nand chips
+> [    0.916528] sunxi_nand: probe of 1c03000.nand failed with error -22
 
-The Documentation/devicetree/bindings/graph.txt binding document says
-that when there is more than one port, '#address-cells', '#size-cells'
-and 'reg' properties should be used to number the port nodes.
+Can you try this patch? It should fix the problem [1].
 
-Fixes: 5c9cbade0629 ("ARM: dts: exynos: Fix DTC unit name warnings in Exynos5250")
-Reported-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
----
+[1]http://code.bulix.org/6hjww1-100494
 
- arch/arm/boot/dts/exynos5250-snow-common.dtsi | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-snow-common.dtsi b/arch/arm/boot/dts/exynos5250-snow-common.dtsi
-index 419d59da1751..fadbea744e1a 100644
---- a/arch/arm/boot/dts/exynos5250-snow-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5250-snow-common.dtsi
-@@ -242,7 +242,7 @@
- 	hpd-gpios = <&gpx0 7 GPIO_ACTIVE_HIGH>;
- 
- 	ports {
--		port0 {
-+		port {
- 			dp_out: endpoint {
- 				remote-endpoint = <&bridge_in>;
- 			};
-@@ -485,13 +485,20 @@
- 		edid-emulation = <5>;
- 
- 		ports {
--			port0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
- 				bridge_out: endpoint {
- 					remote-endpoint = <&panel_in>;
- 				};
- 			};
- 
--			port1 {
-+			port@1 {
-+				reg = <1>;
-+
- 				bridge_in: endpoint {
- 					remote-endpoint = <&dp_out>;
- 				};
 -- 
-2.5.5
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
