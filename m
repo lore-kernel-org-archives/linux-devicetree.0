@@ -1,53 +1,118 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 2/3] clk: samsung: exynos5410: Add WDT,
- ACLK266 and SSS clocks
-Date: Mon, 06 Jun 2016 13:13:21 +0200
-Message-ID: <57555AD1.6050403@samsung.com>
-References: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
- <1464774351-23604-2-git-send-email-k.kozlowski@samsung.com>
- <57555851.6020206@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] Documentation: bindings: add DT documentation for
+ Rockchip USB2PHY
+Date: Mon, 6 Jun 2016 12:27:54 +0100
+Message-ID: <20160606112754.GE6831@leverpostej>
+References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com>
+ <1465204804-31161-2-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-reply-to: <57555851.6020206@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1465204804-31161-2-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2016 01:02 PM, Sylwester Nawrocki wrote:
-> On 06/01/2016 11:45 AM, Krzysztof Kozlowski wrote:
->> Add clock hierarchy for Security SubSystem clock and watchdog.
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+On Mon, Jun 06, 2016 at 05:20:03PM +0800, Frank Wang wrote:
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
 > 
-> A applied patches: 
+> Changes in v3:
+>  - Added 'clocks' and 'clock-names' optional properties.
+>  - Specified 'otg-port' and 'host-port' as the sub-node name.
 > 
-> [PATCH 1/3] dt-bindings: clock: Add watchdog and SSS clock IDs to Exynos5410
-> [PATCH 2/3] clk: samsung: exynos5410: Add WDT, ACLK266 and SSS clocks
+> Changes in v2:
+>  - Changed vbus_host optional property from gpio to regulator.
+>  - Specified vbus_otg-supply optional property.
+>  - Specified otg_id and otg_bvalid property.
 > 
-> [PATCH 1/6] dt-bindings: clock: Add TMU clock ID to Exynos5410
-> [PATCH 2/6] clk: samsung: exynos5410: Add TMU clock
+>  .../bindings/phy/phy-rockchip-inno-usb2.txt        |   60 ++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
 > 
-> And here is a subsequent tag from a stable branch including all 
-> the dependency "dt-bindings" patches:
-> 
-> ------8<------
-> The following changes since commit 1a695a905c18548062509178b98bc91e67510864:
-> 
->   Linux 4.7-rc1 (2016-05-29 09:29:24 -0700)
-> 
-> are available in the git repository at:
-> 
->   git://linuxtv.org/snawrocki/samsung.git tags/clk-v4.8-exynos5410-dt-2
-> 
-> for you to fetch changes up to 4528dd8ed477bf202bd33ee48d38d656672d37f8:
-> 
->   dt-bindings: clock: Add watchdog and SSS clock IDs to Exynos5410 (2016-06-02 11:17:55 +0200)
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> new file mode 100644
+> index 0000000..0b4bbbb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> @@ -0,0 +1,60 @@
+> +ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
+> +
+> +Required properties (phy (parent) node):
+> + - compatible : should be one of the listed compatibles:
+> +	* "rockchip,rk3366-usb2phy"
+> +	* "rockchip,rk3399-usb2phy"
+> + - #clock-cells : should be 0.
+> + - clock-output-names : specify the 480m output clock name.
+> +
+> +Optional properties:
+> + - clocks : phandle + phy specifier pair, for the input clock of phy.
+> + - clock-names : input clock name of phy, must be "phyclk".
+> + - vbus_host-supply : phandle to a regulator that supplies host vbus.
+> + - vbus_otg-supply : phandle to a regulator that supplies otg vbus.
 
-Thanks, pulled!
+Nit: s/_/-/ here.
 
-BR,
-Krzysztof
+Otherwise the rest of this looks generally fine, though I'm confused as
+to how you address the programming interface(s), given none are
+described.
 
+Thanks,
+Mark.
+
+> +
+> +Required nodes : a sub-node is required for each port the phy provides.
+> +		 The sub-node name is used to identify host or otg port,
+> +		 and shall be the following entries:
+> +	* "otg-port" : the name of otg port.
+> +	* "host-port" : the name of host port.
+> +
+> +Required properties (port (child) node):
+> + - #phy-cells : must be 0. See ./phy-bindings.txt for details.
+> + - interrupts : specify an interrupt for each entry in interrupt-names.
+> + - interrupt-names : a list which shall be the following entries:
+> +	* "otg_id" : for the otg id interrupt.
+> +	* "otg_bvalid" : for the otg vbus interrupt.
+> +	* "linestate" : for the host/otg linestate interrupt.
+> +
+> +Example:
+> +
+> +grf: syscon@ff770000 {
+> +	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +...
+> +
+> +	u2phy: usb2-phy {
+> +		compatible = "rockchip,rk3366-usb2phy";
+> +		#clock-cells = <0>;
+> +		clock-output-names = "sclk_otgphy0_480m";
+> +
+> +		u2phy_otg: otg-port {
+> +			#phy-cells = <0>;
+> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "otg_id", "otg_bvalid", "linestate";
+> +			status = "okay";
+> +		};
+> +
+> +		u2phy_host: host-port {
+> +			#phy-cells = <0>;
+> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "linestate";
+> +			status = "okay";
+> +		};
+> +	};
+> +};
+> -- 
+> 1.7.9.5
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
