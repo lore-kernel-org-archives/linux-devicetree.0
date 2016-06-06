@@ -1,48 +1,101 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v4 05/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
- driver header file
-Date: Mon, 6 Jun 2016 10:06:19 +0530
-Message-ID: <20160606043618.GV16910@localhost>
-References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
- <1464192412-16386-7-git-send-email-peter.griffin@linaro.org>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: Re: [v2, 1/2] Documentation: bindings: add DT documentation for
+ Rockchip USB2PHY
+Date: Mon, 6 Jun 2016 12:30:11 +0800
+Message-ID: <59bd62b5-cc4f-68ce-e4d8-bd96e52db8bd@rock-chips.com>
+References: <1464850090-99371-2-git-send-email-frank.wang@rock-chips.com>
+ <20160603192532.GA4241@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464192412-16386-7-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <20160603192532.GA4241@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+To: Guenter Roeck <linux@roeck-us.net>, heiko@sntech.de
+Cc: dianders@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, jwerner@chromium.org, xzy.xu@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, william.wu@rock-chips.com, frank.wang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 05:06:39PM +0100, Peter Griffin wrote:
+Hi Guenter,
 
-> +/*
-> + * request control bits
-> + */
-> +#define REQ_CTRL_NUM_OPS_MASK		GENMASK(31, 24)
-> +#define REQ_CTRL_NUM_OPS(n)		(REQ_CTRL_NUM_OPS_MASK & ((n) << 24))
-> +#define REQ_CTRL_INITIATOR_MASK		BIT(22)
-> +#define	REQ_CTRL_INIT0			(0x0 << 22)
-> +#define	REQ_CTRL_INIT1			(0x1 << 22)
-
-pls keep spaces or tabs, not both :(
-
-> +#define REQ_CTRL_INC_ADDR_ON		BIT(21)
-> +#define REQ_CTRL_DATA_SWAP_ON		BIT(17)
-> +#define REQ_CTRL_WNR			BIT(14)
-> +#define REQ_CTRL_OPCODE_MASK		GENMASK(7, 4)
-> +#define REQ_CTRL_OPCODE_LD_ST1		(0x0 << 4)
-> +#define REQ_CTRL_OPCODE_LD_ST2		(0x1 << 4)
-> +#define REQ_CTRL_OPCODE_LD_ST4		(0x2 << 4)
-> +#define REQ_CTRL_OPCODE_LD_ST8		(0x3 << 4)
-> +#define REQ_CTRL_OPCODE_LD_ST16		(0x4 << 4)
-> +#define REQ_CTRL_OPCODE_LD_ST32		(0x5 << 4)
-> +#define REQ_CTRL_OPCODE_LD_ST64		(0x6 << 4)
-> +#define REQ_CTRL_HOLDOFF_MASK		GENMASK(2, 0)
-> +#define REQ_CTRL_HOLDOFF(n)		((n) & REQ_CTRL_HOLDOFF_MASK)
-
-Everything here is FDMA_ so why not these as well
-
--- 
-~Vinod
+On 2016/6/4 3:25, Guenter Roeck wrote:
+> On Thu, Jun 02, 2016 at 02:48:09PM +0800, Frank Wang wrote:
+>> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+>> ---
+>>
+>> Changes in v2:
+>>   - Changed vbus_host optional property from gpio to regulator.
+>>   - Specified vbus_otg-supply optional property.
+>>   - Specified otg_id and otg_bvalid property.
+>>
+>>   .../bindings/phy/phy-rockchip-inno-usb2.txt        |   55 ++++++++++++++++++++
+>>   1 file changed, 55 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> new file mode 100644
+>> index 0000000..132e707
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> @@ -0,0 +1,55 @@
+>> +ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
+>> +
+>> +Required properties (phy (parent) node):
+>> + - compatible : should contain:
+>> +	* "rockchip,rk3366-usb2phy"
+>> +	* "rockchip,rk3399-usb2phy"
+>> + - #clock-cells : should be 0.
+>> + - clock-names : specify the 480m output clk name.
+>> +
+>> +Optional properties:
+>> + - vbus_host-supply : phandle to a regulator that supplies host vbus.
+>> + - vbus_otg-supply : phandle to a regulator that supplies otg vbus.
+>> +
+>> +Required nodes : a sub-node is required for each port the phy provides.
+>> +		 The sub-node name is used to identify host or otg port.
+>> +
+> Would it make sense to also specify the sub-node names ? The driver matches
+> "host-port", and presumably once supported "otg-port". Someone not knowing
+> this may specify "hostport" or some other name variant and wonder why nothing
+> works as expected.
+Well, Yeah, I will correct it in the next patch (patch v3).
+>> +Required properties (port (child) node):
+>> + - #phy-cells : must be 0. See ./phy-bindings.txt for details.
+>> + - interrupts : specify an interrupt for each entry in interrupt-names.
+>> + - interrupt-names : a list which shall be the following entries:
+>> +	* "otg_id" : for the otg id interrupt.
+>> +	* "otg_bvalid" : for the otg vbus interrupt.
+>> +	* "linestate" : for the host or otg linestate interrupt.
+>> +
+>> +Example:
+>> +
+>> +grf: syscon@ff770000 {
+>> +	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +
+>> +...
+>> +
+>> +	u2phy: usb2-phy {
+>> +		compatible = "rockchip,rk3366-usb2phy";
+>> +		#clock-cells = <0>;
+>> +		clock-output-names = "sclk_otgphy0_480m";
+>> +
+>> +		u2phy_otg: otg-port {
+>> +			#phy-cells = <0>;
+>> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-names = "otg_id", "otg_bvalid", "linestate";
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		u2phy_host: host-port {
+>> +			#phy-cells = <0>;
+>> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-names = "linestate";
+>> +			status = "okay";
+>> +		};
+>> +	};
+>> +};
+>
+>
