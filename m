@@ -1,139 +1,68 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 06/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
- engine driver support
-Date: Mon, 6 Jun 2016 10:24:28 +0530
-Message-ID: <20160606045428.GW16910@localhost>
-References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
- <1464192412-16386-8-git-send-email-peter.griffin@linaro.org>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: Re: [v2, 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip
+ usb2phy
+Date: Mon, 6 Jun 2016 12:51:43 +0800
+Message-ID: <b860eb32-265e-ddb2-cb99-aba652540a34@rock-chips.com>
+References: <1464850090-99371-3-git-send-email-frank.wang@rock-chips.com>
+ <20160603195922.GB3524@roeck-us.net> <1561602.DGny4Hlya3@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1464192412-16386-8-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1561602.DGny4Hlya3@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Guenter Roeck <linux@roeck-us.net>
+Cc: dianders@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, jwerner@chromium.org, xzy.xu@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, william.wu@rock-chips.com, frank.wang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 05:06:40PM +0100, Peter Griffin wrote:
+Hi Heiko & Guenter,
 
-> @@ -527,6 +527,18 @@ config ZX_DMA
->  	help
->  	  Support the DMA engine for ZTE ZX296702 platform devices.
->  
-> +config ST_FDMA
-> +	tristate "ST FDMA dmaengine support"
-> +	depends on ARCH_STI || COMPILE_TEST
-> +        depends on ST_XP70_REMOTEPROC
-> +	select DMA_ENGINE
-> +	select DMA_VIRTUAL_CHANNELS
-> +	help
-> +	  Enable support for ST FDMA controller.
-> +	  It supports 16 independent DMA channels, accepts up to 32 DMA requests
-> +
-> +	  Say Y here if you have such a chipset.
-> +	  If unsure, say N.
+On 2016/6/4 5:24, Heiko St=FCbner wrote:
+> Am Freitag, 3. Juni 2016, 12:59:22 schrieb Guenter Roeck:
+>> On Thu, Jun 02, 2016 at 02:48:10PM +0800, Frank Wang wrote:
+>>> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+>>> than rk3288 and before, and most of phy-related registers are also
+>>> different from the past, so a new phy driver is required necessaril=
+y.
+>>>
+>>> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+>>> ---
+>>>
+>>> Changes in v2:
+>>>   - Changed vbus_host operation from gpio to regulator in *_probe.
+>>>   - Improved the fault treatment relate to 480m clock register.
+>>>   - Cleaned up some meaningless codes in *_clk480m_disable.
+>>>   - made more clear the comment of *_sm_work.
+>>>  =20
+>>> [...]
+>>>
+>>> +static struct clk *
+>>> +rockchip_usb2phy_clk480m_register(struct rockchip_usb2phy *rphy)
+>>> +{
+>>> +	struct device_node *node =3D rphy->dev->of_node;
+>>> +	struct clk *clk;
+>>> +	struct clk_init_data init;
+>>> +	int ret;
+>>> +
+>>> +	init.name =3D "clk_usbphy_480m";
+>>> +	init.ops =3D &rockchip_usb2phy_clkout_ops;
+>>> +	init.flags =3D CLK_IS_ROOT;
+>> One more comment:
+>>
+>> include/linux/clk-provider.h:#define CLK_IS_ROOT                BIT(=
+4) /*
+>> Deprecated: Don't use */
+>>
+>> ... and the definition has been removed in linux-next.
+> also, the created clock should be a child of the phy-supply clock. Pl=
+ease take
+> a look at the picophy-variant (phy-rockchip-usb) that already handles=
+ that
+> parent assignment.
+>
 
-Alphabetical order in Kconfig and makefile please...
+Okay, I will refer and correct them in the next patch (patch v3) .
 
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_dma.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/clk.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/dmapool.h>
-> +#include <linux/firmware.h>
-> +#include <linux/elf.h>
-> +#include <linux/atomic.h>
-> +#include <linux/remoteproc.h>
-> +#include <linux/io.h>
-
-that seems to be quite a lot of headers, am sure some of them are not
-required..
-
-
-> +static int st_fdma_dreq_get(struct st_fdma_chan *fchan)
-> +{
-> +	struct st_fdma_dev *fdev = fchan->fdev;
-> +	u32 req_line_cfg = fchan->cfg.req_line;
-> +	u32 dreq_line;
-> +	int try = 0;
-> +
-> +	/*
-> +	 * dreq_mask is shared for n channels of fdma, so all accesses must be
-> +	 * atomic. if the dreq_mask it change between ffz ant set_bit,
-
-s/ant/and
-
-> +	switch (ch_sta) {
-> +	case FDMA_CH_CMD_STA_PAUSED:
-> +		fchan->status = DMA_PAUSED;
-> +		break;
-
-empty line here please
-
-> +static void st_fdma_free_chan_res(struct dma_chan *chan)
-> +{
-> +	struct st_fdma_chan *fchan = to_st_fdma_chan(chan);
-> +	unsigned long flags;
-> +
-> +	LIST_HEAD(head);
-> +
-> +	dev_dbg(fchan->fdev->dev, "%s: freeing chan:%d\n",
-> +		__func__, fchan->vchan.chan.chan_id);
-> +
-> +	if (fchan->cfg.type != ST_FDMA_TYPE_FREE_RUN)
-> +		st_fdma_dreq_put(fchan);
-> +
-> +	spin_lock_irqsave(&fchan->vchan.lock, flags);
-> +	fchan->fdesc = NULL;
-> +	vchan_get_all_descriptors(&fchan->vchan, &head);
-
-and what are you doing with all these descriptors?
-
-> +	spin_unlock_irqrestore(&fchan->vchan.lock, flags);
-> +
-> +	dma_pool_destroy(fchan->node_pool);
-> +	fchan->node_pool = NULL;
-> +	memset(&fchan->cfg, 0, sizeof(struct st_fdma_cfg));
-> +
-> +	rproc_shutdown(fchan->fdev->rproc);
-> +}
-
-> +static enum dma_status st_fdma_tx_status(struct dma_chan *chan,
-> +					 dma_cookie_t cookie,
-> +					 struct dma_tx_state *txstate)
-> +{
-> +	struct st_fdma_chan *fchan = to_st_fdma_chan(chan);
-> +	struct virt_dma_desc *vd;
-> +	enum dma_status ret;
-> +	unsigned long flags;
-> +
-> +	ret = dma_cookie_status(chan, cookie, txstate);
-> +	if (ret == DMA_COMPLETE)
-
-check for txtstate here, that can be NULL and in that case no need to
-calculate residue
-
-> +
-> +	dma_cap_set(DMA_SLAVE, fdev->dma_device.cap_mask);
-
-why slave, you only support cyclic
-
-> +	dma_cap_set(DMA_CYCLIC, fdev->dma_device.cap_mask);
-> +	dma_cap_set(DMA_MEMCPY, fdev->dma_device.cap_mask);
-
-
-helps to print the 'ret' too
-
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BR.
+=46rank
