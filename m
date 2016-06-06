@@ -1,106 +1,34 @@
 From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: imx6q-cm-fx6: Relicense under GPLv2/X11
-Date: Mon, 6 Jun 2016 10:53:26 +0300
-Message-ID: <57552BF6.6040807@compulab.co.il>
+Subject: Re: [PATCH v2 3/4] ARM: dts: imx6q: add support for the Utilite Pro
+Date: Mon, 6 Jun 2016 10:55:55 +0300
+Message-ID: <57552C8B.80207@compulab.co.il>
 References: <20160605182657.1706-1-christopher.spinrath@rwth-aachen.de>
- <c2d37f17a8b049169909c7a9391fa9a3@rwthex-s1-b.rwth-ad.de>
+ <50a8a6e8b5c6426fb02f59d9300503e5@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c2d37f17a8b049169909c7a9391fa9a3-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
+In-Reply-To: <50a8a6e8b5c6426fb02f59d9300503e5-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christopher,
-
 On 06/05/2016 09:26 PM, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
 > From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 > 
-> GPLv2-only devicetrees make reuse difficult for software components
-> licensed under a different license. In particular, the Utilite Pro
-> devicetree file (which includes on imx6q-cm-fx5.dts) is already dual
-                                               ^^^
-That's a downgrade ;-)
-With the above fixed, please add my ack below.
-
-> licensed under GPLv2/X11.
+> The CompuLab Utilite Pro is a miniature fanless desktop pc based on
+> the i.MX6 Quad powered cm-fx6 module. It features two serial ports,
+> USB OTG, 4x USB, analog audio and S/PDIF, 2x Gb Ethernet, HDMI and
+> DVI ports, an on-board 32GB SSD, a mmc slot, and on-board wifi/bt.
 > 
-> Hence, relicense imx6q-cm-fx6.dts under GPLv2/X11 dual license.
-
-Off topic of this patch, I think SPDX works much better than having
-this huge license "hat" in each file.
-
+> Add initial support for it including USB, Ethernet (both ports), sata
+> and HDMI support.
 > 
 > Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 > Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 
 Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-
-> ---
-> 
-> Changes since v1:
->  - new patch in v2; without it the dual licensed of the imx6q-utilite-pro.dts
->    is not really useful because it includes imx6q-cm-fx6.dts.
-> 
->  arch/arm/boot/dts/imx6q-cm-fx6.dts | 40 +++++++++++++++++++++++++++++++++-----
->  1 file changed, 35 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> index c6f0e58..fe2c868 100644
-> --- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> +++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> @@ -3,12 +3,42 @@
->   *
->   * Author: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->   *
-> - * The code contained herein is licensed under the GNU General Public
-> - * License. You may obtain a copy of the GNU General Public License
-> - * Version 2 or later at the following locations:
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
->   *
-> - * http://www.opensource.org/licenses/gpl-license.html
-> - * http://www.gnu.org/copyleft/gpl.html
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License
-> + *     version 2 as published by the Free Software Foundation.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
->   */
->  
->  /dts-v1/;
-> 
 
 -- 
 Regards,
