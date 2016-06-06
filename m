@@ -1,114 +1,97 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner sun8i-emac
-Date: Mon, 6 Jun 2016 09:14:38 -0500
-Message-ID: <20160606141438.GA9510@rob-hp-laptop>
-References: <1464947790-22991-1-git-send-email-clabbe.montjoie@gmail.com>
- <1464947790-22991-4-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH V5 4/9] genirq: Add runtime power management support for
+ IRQ chips
+Date: Mon, 6 Jun 2016 17:13:55 +0300
+Message-ID: <57558523.9070700@ti.com>
+References: <1465214023-8299-1-git-send-email-jonathanh@nvidia.com>
+ <1465214023-8299-5-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBUEK225AKGQELQVSE7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1464947790-22991-4-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465214023-8299-5-git-send-email-jonathanh@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2016 at 11:56:28AM +0200, LABBE Corentin wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> Allwinner sun8i-emac driver.
+On 06/06/2016 02:53 PM, Jon Hunter wrote:
+> Some IRQ chips may be located in a power domain outside of the CPU
+> subsystem and hence will require device specific runtime power
+> management. In order to support such IRQ chips, add a pointer for a
+> device structure to the irq_chip structure, and if this pointer is
+> populated by the IRQ chip driver and CONFIG_PM is selected in the kernel
+> configuration, then the pm_runtime_get/put APIs for this chip will be
+> called when an IRQ is requested/freed, respectively.
 > 
-> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
 > ---
->  .../bindings/net/allwinner,sun8i-emac.txt          | 64 ++++++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+>   include/linux/irq.h    |  4 ++++
+>   kernel/irq/chip.c      | 35 +++++++++++++++++++++++++++++++++++
+>   kernel/irq/internals.h |  1 +
+>   kernel/irq/manage.c    | 31 ++++++++++++++++++++++++++++++-
+>   4 files changed, 70 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> new file mode 100644
-> index 0000000..cf71a71
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> @@ -0,0 +1,64 @@
-> +* Allwinner sun8i EMAC ethernet controller
+> diff --git a/include/linux/irq.h b/include/linux/irq.h
+> index 4d758a7c604a..6c92a847394d 100644
+> --- a/include/linux/irq.h
+> +++ b/include/linux/irq.h
+> @@ -315,6 +315,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
+>   /**
+>    * struct irq_chip - hardware interrupt chip descriptor
+>    *
+> + * @parent_device:	pointer to parent device for irqchip
+>    * @name:		name for /proc/interrupts
+>    * @irq_startup:	start up the interrupt (defaults to ->enable if NULL)
+>    * @irq_shutdown:	shut down the interrupt (defaults to ->disable if NULL)
+> @@ -354,6 +355,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
+>    * @flags:		chip specific flags
+>    */
+>   struct irq_chip {
+> +	struct device	*parent_device;
+>   	const char	*name;
+>   	unsigned int	(*irq_startup)(struct irq_data *data);
+>   	void		(*irq_shutdown)(struct irq_data *data);
+> @@ -488,6 +490,8 @@ extern void handle_bad_irq(struct irq_desc *desc);
+>   extern void handle_nested_irq(unsigned int irq);
+>   
+>   extern int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg);
+> +extern int irq_chip_pm_get(struct irq_data *data);
+> +extern int irq_chip_pm_put(struct irq_data *data);
+>   #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+>   extern void irq_chip_enable_parent(struct irq_data *data);
+>   extern void irq_chip_disable_parent(struct irq_data *data);
+> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+> index 2f9f2b0e79f2..b09226e895c7 100644
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -1093,3 +1093,38 @@ int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>   
+>   	return 0;
+>   }
 > +
-> +Required properties:
-> +- compatible: "allwinner,sun8i-a83t-emac", "allwinner,sun8i-h3-emac",
-> +		or "allwinner,sun50i-a64-emac"
-> +- reg: address and length of the register sets for the device.
-> +- reg-names: should be "emac" and "syscon", matching the register sets
+> +/**
+> + * irq_chip_pm_get - Enable power for an IRQ chip
+> + * @data:	Pointer to interrupt specific data
+> + *
+> + * Enable the power to the IRQ chip referenced by the interrupt data
+> + * structure.
+> + */
+> +int irq_chip_pm_get(struct irq_data *data)
+> +{
+> +	int retval = 0;
+> +
+> +	if (IS_ENABLED(CONFIG_PM) && data->chip->parent_device)
+> +		retval = pm_runtime_get_sync(data->chip->parent_device);
 
-Is syscon shared with other devices? Your example only has 1 reg 
-address.
+Sry, for the late comment - above require pm_runtime_put_noidle(data->chip->parent_device);
+in case of failure.
 
-> +- interrupts: interrupt for the device
-> +- clocks: A phandle to the reference clock for this device
-> +- clock-names: should be "ahb"
-> +- resets: A phandle to the reset control for this device
-> +- reset-names: should be "ahb"
-> +- phy-mode: See ethernet.txt
-> +- phy or phy-handle: See ethernet.txt
-> +- #address-cells: shall be 1
-> +- #size-cells: shall be 0
-> +
-> +"allwinner,sun8i-h3-emac" also requires:
-> +- clocks: an extra phandle to the reference clock for the EPHY
-> +- clock-names: an extra "ephy" entry matching the clocks property
-> +- resets: an extra phandle to the reset control for the EPHY
-> +- resets-names: an extra "ephy" entry matching the resets property
-> +
-> +See ethernet.txt in the same directory for generic bindings for ethernet
-> +controllers.
-> +
-> +The device node referenced by "phy" or "phy-handle" should be a child node
-> +of this node. See phy.txt for the generic PHY bindings.
-> +
-> +Optional properties:
-> +- phy-supply: phandle to a regulator if the PHY needs one
-> +- phy-io-supply: phandle to a regulator if the PHY needs a another one for I/O.
-> +		 This is sometimes found with RGMII PHYs, which use a second
-> +		 regulator for the lower I/O voltage.
+[...]
 
-These should go in the phy's node.
 
-> +- allwinner,tx-delay: The setting of the TX clock delay chain
-> +- allwinner,rx-delay: The setting of the RX clock delay chain
-> +
-> +The TX/RX clock delay chain settings are board specific.
-> +
-> +Optional properties for "allwinner,sun8i-h3-emac":
-> +- allwinner,use-internal-phy: Use the H3 SoC's internal E(thernet) PHY
-> +- allwinner,leds-active-low: EPHY LEDs are active low
-> +
-> +When the internal PHY is requested, the implementation shall configure the
-> +internal PHY to use the address specified in the child PHY node.
-> +
-> +Example:
-> +
-> +emac: ethernet@01c0b000 {
-> +	compatible = "allwinner,sun8i-h3-emac";
-> +	reg = <0x01c0b000 0x1000>;
-> +	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&bus_gates 17>, <&bus_gates 128>;
-> +	clock-names = "ahb", "ephy";
-> +	resets = <&ahb_rst 17>, <&ahb_rst 66>;
-> +	reset-names = "ahb", "ephy";
-> +	phy = <&phy1>;
-> +	allwinner,use-internal-phy;
-> +	allwinner,leds-active-low;
-> +
-> +	phy1: ethernet-phy@1 {
-> +		reg = <1>;
-> +	};
-> +};
-> -- 
-> 2.7.3
-> 
+-- 
+regards,
+-grygorii
