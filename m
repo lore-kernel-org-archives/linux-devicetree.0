@@ -1,137 +1,57 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 5/5] mfd: rn5t618: register restart handler
-Date: Mon, 06 Jun 2016 10:19:42 -0700
-Message-ID: <534fc51778d2bea235ae465e1a40b018@agner.ch>
-References: <20160605001749.4062-1-stefan@agner.ch>
- <20160605001749.4062-7-stefan@agner.ch>
- <56D9496A-2927-4D23-B8E2-A1A06F03A654@ziswiler.com>
+From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: dts: imx6q-cm-fx6: Relicense under GPLv2/X11
+Date: Mon, 6 Jun 2016 19:24:56 +0200
+Message-ID: <a07d079d2dcd4a55a09b66486324d399@rwthex-s1-b.rwth-ad.de>
+References: <20160605182657.1706-1-christopher.spinrath@rwth-aachen.de>
+ <c2d37f17a8b049169909c7a9391fa9a3@rwthex-s1-b.rwth-ad.de>
+ <c2c21863a715471880d2369d111bc28e@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D9496A-2927-4D23-B8E2-A1A06F03A654@ziswiler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org, b.galvani@gmail.com, max.oss.09@gmail.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c2c21863a715471880d2369d111bc28e-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-06-06 06:25, Marcel Ziswiler wrote:
-> On June 5, 2016 2:17:49 AM GMT+02:00, Stefan Agner <stefan@agner.ch> wrote:
->>Use the PMIC's repower capability for reboots. Register a restart
->>handler with use a default priority of 128.
+Hi Igor,
+
+On 06/06/2016 09:53 AM, Igor Grinberg wrote:
+> Hi Christopher,
 > 
-> Apart from that last sentence above which is not clear to me the whole
-> series looks fine to me.
+> On 06/05/2016 09:26 PM, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
+>> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+>>
+>> GPLv2-only devicetrees make reuse difficult for software components
+>> licensed under a different license. In particular, the Utilite Pro
+>> devicetree file (which includes on imx6q-cm-fx5.dts) is already dual
+>                                                ^^^
+> That's a downgrade ;-)
+> With the above fixed, please add my ack below.
+> 
 
-Check the kernel docs of the register_restart_handler:
-http://lxr.free-electrons.com/source/kernel/reboot.c#L113
+uups, I will fix it.
 
-I am actually not sure anymore whether 128 is really a good choice. With
-that, in the Colibri case, the restart handler would have the same
-priority as the i.MX watchdog has (imx2_wdt.c), but the PMIC's restart
-capabilities are clearly superior (as it resets all peripherals on the
-module). In fact, using the watchdog to restart the system seems to hang
-for some reason...
+Thanks,
+Christopher
 
-Maybe 192?
+>> licensed under GPLv2/X11.
+>>
+>> Hence, relicense imx6q-cm-fx6.dts under GPLv2/X11 dual license.
+> 
+> Off topic of this patch, I think SPDX works much better than having
+> this huge license "hat" in each file.
+> 
+>>
+>> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+>> Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> 
+> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> 
 
+[...]
 --
-Stefan
-
-> 
-> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
->>Signed-off-by: Stefan Agner <stefan@agner.ch>
->>---
->> drivers/mfd/rn5t618.c | 42 ++++++++++++++++++++++++++++++++++++------
->> 1 file changed, 36 insertions(+), 6 deletions(-)
->>
->>diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
->>index d9b4d40..d9bd61c 100644
->>--- a/drivers/mfd/rn5t618.c
->>+++ b/drivers/mfd/rn5t618.c
->>@@ -12,13 +12,17 @@
->> * along with this program. If not, see <http://www.gnu.org/licenses/>.
->>  */
->>
->>+#include <linux/delay.h>
->> #include <linux/i2c.h>
->> #include <linux/mfd/core.h>
->> #include <linux/mfd/rn5t618.h>
->> #include <linux/module.h>
->> #include <linux/of_device.h>
->>+#include <linux/reboot.h>
->> #include <linux/regmap.h>
->>
->>+#include <asm/system_misc.h>
->>+
->> static const struct mfd_cell rn5t618_cells[] = {
->> 	{ .name = "rn5t618-regulator" },
->> 	{ .name = "rn5t618-wdt" },
->>@@ -50,17 +54,34 @@ static const struct regmap_config
->>rn5t618_regmap_config = {
->> };
->>
->> static struct rn5t618 *rn5t618_pm_power_off;
->>+static struct notifier_block rn5t618_restart_handler;
->>
->>-static void rn5t618_power_off(void)
->>+static void rn5t618_trigger_poweroff_sequence(bool repower)
->> {
->> 	/* disable automatic repower-on */
->> 	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_REPCNT,
->>-			   RN5T618_REPCNT_REPWRON, 0);
->>+			   RN5T618_REPCNT_REPWRON, repower);
->> 	/* start power-off sequence */
->> 	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_SLPCNT,
->> 			   RN5T618_SLPCNT_SWPWROFF, RN5T618_SLPCNT_SWPWROFF);
->> }
->>
->>+static void rn5t618_power_off(void)
->>+{
->>+	rn5t618_trigger_poweroff_sequence(false);
->>+}
->>+
->>+static int rn5t618_restart(struct notifier_block *this,
->>+			    unsigned long mode, void *cmd)
->>+{
->>+	rn5t618_trigger_poweroff_sequence(true);
->>+
->>+	mdelay(10);
->>+
->>+	return NOTIFY_DONE;
->>+}
->>+
->>+
->> static const struct of_device_id rn5t618_of_match[] = {
->> 	{ .compatible = "ricoh,rn5t567", .data = (void *)RN5T567 },
->> 	{ .compatible = "ricoh,rn5t618", .data = (void *)RN5T618 },
->>@@ -103,13 +124,22 @@ static int rn5t618_i2c_probe(struct i2c_client
->>*i2c,
->> 		return ret;
->> 	}
->>
->>+	rn5t618_pm_power_off = priv;
->> 	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
->>-		if (!pm_power_off) {
->>-			rn5t618_pm_power_off = priv;
->>+		if (!pm_power_off)
->> 			pm_power_off = rn5t618_power_off;
->>-		} else {
->>+		else
->>			dev_err(&i2c->dev, "Failed to set poweroff capability, already
->>defined\n");
->>-		}
->>+	}
->>+
->>+	rn5t618_restart_handler.notifier_call = rn5t618_restart;
->>+	rn5t618_restart_handler.priority = 128;
->>+
->>+	ret = register_restart_handler(&rn5t618_restart_handler);
->>+	if (ret) {
->>+		dev_err(&i2c->dev, "%s: cannot register restart handler, %d\n",
->>+				__func__, ret);
->>+		return ret;
->> 	}
->>
->> 	return 0;
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
