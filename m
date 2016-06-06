@@ -1,50 +1,62 @@
-From: Kamlakant Patel <kamlakant.patel@broadcom.com>
-Subject: Re: [PATCH 0/4] mtd: nand: Add support for Evatronix NANDFLASH-CTRL
-Date: Mon, 6 Jun 2016 16:32:06 +0530
-Message-ID: <CAB=aS0OZ493Smov2E41G1iChi9gEOV5j0Gf8=SS_CbhXZjmw5g@mail.gmail.com>
-References: <alpine.DEB.2.02.1606020944180.19416@lnxricardw1.se.axis.com>
-	<20160602180059.11928d40@bbrezillon>
-	<alpine.DEB.2.02.1606060742210.23377@lnxricardw1.se.axis.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 2/3] clk: samsung: exynos5410: Add WDT,
+ ACLK266 and SSS clocks
+Date: Mon, 06 Jun 2016 13:02:41 +0200
+Message-ID: <57555851.6020206@samsung.com>
+References: <1464774351-23604-1-git-send-email-k.kozlowski@samsung.com>
+ <1464774351-23604-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1606060742210.23377@lnxricardw1.se.axis.com>
+In-reply-to: <1464774351-23604-2-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ricard Wanderlof <ricard.wanderlof@axis.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Linux mtd <linux-mtd@lists.infradead.org>, Benoit Cousson <bcousson@baylibre.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 6, 2016 at 11:17 AM, Ricard Wanderlof
-<ricard.wanderlof@axis.com> wrote:
->
-> On Thu, 2 Jun 2016, Boris Brezillon wrote:
->
->> Hi Ricard,
->>
->> I was not in Cc of this series, so you're either developing an old
->> kernel version, or you didn't check the MAINTAINERS file (or didn't run
->> get_maintainer.pl on your series).
->
-> The patch is intended to apply to the mtd l2 tree, and I did check
-> MAINTAINERS, however, for whatever reason I failed to notice that the NAND
-> flash subsystem has its own entry (going for the general MTD entry), so
-> both you and Richard got left off the CC list. Sorry about that. I'll
-> rectify it on subsequent patch submissions.
->
->> And please, next time make sure patches 1 to X are sent in replies to
->> your cover letter.
->
-> Ok. Will do.
->
->> I'll to review the driver soon.
->
-> Much appreciated.
+On 06/01/2016 11:45 AM, Krzysztof Kozlowski wrote:
+> Add clock hierarchy for Security SubSystem clock and watchdog.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Hi Ricard,
+A applied patches: 
 
-I am using the previous version of your patch on Netlogic XLP MIPS64
-platform with some cleanups, some of them are mentioned by Borris.
-I can send you the patch if you would like to integrate it.
+[PATCH 1/3] dt-bindings: clock: Add watchdog and SSS clock IDs to Exynos5410
+[PATCH 2/3] clk: samsung: exynos5410: Add WDT, ACLK266 and SSS clocks
 
-Thanks,
- Kamlakant Patel
+[PATCH 1/6] dt-bindings: clock: Add TMU clock ID to Exynos5410
+[PATCH 2/6] clk: samsung: exynos5410: Add TMU clock
+
+And here is a subsequent tag from a stable branch including all 
+the dependency "dt-bindings" patches:
+
+------8<------
+The following changes since commit 1a695a905c18548062509178b98bc91e67510864:
+
+  Linux 4.7-rc1 (2016-05-29 09:29:24 -0700)
+
+are available in the git repository at:
+
+  git://linuxtv.org/snawrocki/samsung.git tags/clk-v4.8-exynos5410-dt-2
+
+for you to fetch changes up to 4528dd8ed477bf202bd33ee48d38d656672d37f8:
+
+  dt-bindings: clock: Add watchdog and SSS clock IDs to Exynos5410 (2016-06-02 11:17:55 +0200)
+
+----------------------------------------------------------------
+Adition of missing clock index definitions for exynos5410 SoC:
+PWM, USB, I2C, RTC, PMU, watchdog and the security device related
+clocks.
+
+----------------------------------------------------------------
+Krzysztof Kozlowski (5):
+      dt-bindings: clock: Add license and reformat Exynos5410 clock IDs
+      dt-bindings: clock: Add PWM and USB clock IDs to Exynos5410
+      dt-bindings: clock: Add I2C, HSI2C and RTC clock IDs to Exynos5410
+      dt-bindings: clock: Add TMU clock ID to Exynos5410
+      dt-bindings: clock: Add watchdog and SSS clock IDs to Exynos5410
+
+ include/dt-bindings/clock/exynos5410.h | 76 +++++++++++++++++++++++++++------------
+ 1 file changed, 54 insertions(+), 22 deletions(-)
+------8<------
