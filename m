@@ -1,97 +1,34 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH V5 4/9] genirq: Add runtime power management support for
- IRQ chips
-Date: Mon, 6 Jun 2016 17:13:55 +0300
-Message-ID: <57558523.9070700@ti.com>
-References: <1465214023-8299-1-git-send-email-jonathanh@nvidia.com>
- <1465214023-8299-5-git-send-email-jonathanh@nvidia.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] net: mdio-mux: Add MDIO mux driver for iProc SoCs
+Date: Mon, 6 Jun 2016 16:15:24 +0200
+Message-ID: <20160606141524.GL2063@lunn.ch>
+References: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
+ <1465216900-11755-6-git-send-email-pramod.kumar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465214023-8299-5-git-send-email-jonathanh@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1465216900-11755-6-git-send-email-pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2016 02:53 PM, Jon Hunter wrote:
-> Some IRQ chips may be located in a power domain outside of the CPU
-> subsystem and hence will require device specific runtime power
-> management. In order to support such IRQ chips, add a pointer for a
-> device structure to the irq_chip structure, and if this pointer is
-> populated by the IRQ chip driver and CONFIG_PM is selected in the kernel
-> configuration, then the pm_runtime_get/put APIs for this chip will be
-> called when an IRQ is requested/freed, respectively.
+On Mon, Jun 06, 2016 at 06:11:38PM +0530, Pramod Kumar wrote:
+> iProc based SoCs supports the integrated mdio multiplexer which
+> has the bus selection as well as mdio transaction generation logic
+> inside.
 > 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
->   include/linux/irq.h    |  4 ++++
->   kernel/irq/chip.c      | 35 +++++++++++++++++++++++++++++++++++
->   kernel/irq/internals.h |  1 +
->   kernel/irq/manage.c    | 31 ++++++++++++++++++++++++++++++-
->   4 files changed, 70 insertions(+), 1 deletion(-)
+> This multiplexer has child buses for PCIe, SATA, USB and ETH. These
+> buses could be internal or external to SOC where PHYs are attached.
+> These buses could use C-45 or C-22 mdio transaction.
 > 
-> diff --git a/include/linux/irq.h b/include/linux/irq.h
-> index 4d758a7c604a..6c92a847394d 100644
-> --- a/include/linux/irq.h
-> +++ b/include/linux/irq.h
-> @@ -315,6 +315,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
->   /**
->    * struct irq_chip - hardware interrupt chip descriptor
->    *
-> + * @parent_device:	pointer to parent device for irqchip
->    * @name:		name for /proc/interrupts
->    * @irq_startup:	start up the interrupt (defaults to ->enable if NULL)
->    * @irq_shutdown:	shut down the interrupt (defaults to ->disable if NULL)
-> @@ -354,6 +355,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
->    * @flags:		chip specific flags
->    */
->   struct irq_chip {
-> +	struct device	*parent_device;
->   	const char	*name;
->   	unsigned int	(*irq_startup)(struct irq_data *data);
->   	void		(*irq_shutdown)(struct irq_data *data);
-> @@ -488,6 +490,8 @@ extern void handle_bad_irq(struct irq_desc *desc);
->   extern void handle_nested_irq(unsigned int irq);
->   
->   extern int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg);
-> +extern int irq_chip_pm_get(struct irq_data *data);
-> +extern int irq_chip_pm_put(struct irq_data *data);
->   #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
->   extern void irq_chip_enable_parent(struct irq_data *data);
->   extern void irq_chip_disable_parent(struct irq_data *data);
-> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-> index 2f9f2b0e79f2..b09226e895c7 100644
-> --- a/kernel/irq/chip.c
-> +++ b/kernel/irq/chip.c
-> @@ -1093,3 +1093,38 @@ int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->   
->   	return 0;
->   }
-> +
-> +/**
-> + * irq_chip_pm_get - Enable power for an IRQ chip
-> + * @data:	Pointer to interrupt specific data
-> + *
-> + * Enable the power to the IRQ chip referenced by the interrupt data
-> + * structure.
-> + */
-> +int irq_chip_pm_get(struct irq_data *data)
-> +{
-> +	int retval = 0;
-> +
-> +	if (IS_ENABLED(CONFIG_PM) && data->chip->parent_device)
-> +		retval = pm_runtime_get_sync(data->chip->parent_device);
+> Signed-off-by: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-Sry, for the late comment - above require pm_runtime_put_noidle(data->chip->parent_device);
-in case of failure.
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-[...]
-
-
--- 
-regards,
--grygorii
+     Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
