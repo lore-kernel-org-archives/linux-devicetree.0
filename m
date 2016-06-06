@@ -1,39 +1,63 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 0/6] Add R8A7794/SILK sound DT support
-Date: Mon, 6 Jun 2016 21:11:17 +0300
-Message-ID: <b77ad169-c9d1-4d67-0973-fc9639ddb613@cogentembedded.com>
-References: <2378837.cigT3tNQPe@wasted.cogentembedded.com>
- <7d19e749-8264-9004-64f4-aefabda699c6@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <7d19e749-8264-9004-64f4-aefabda699c6@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: [PATCH v3 0/5] drivers: net: xgene: Fix 1G hot-plug and module support
+Date: Mon,  6 Jun 2016 11:15:57 -0700
+Message-ID: <1465236962-12131-1-git-send-email-isubramanian@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, matthias.bgg@gmail.com, andrew@lunn.ch, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patchset addresses the following issues,
 
-On 05/13/2016 12:16 AM, Sergei Shtylyov wrote:
+1. hot-plug issue on the SGMII 1G interface
+	- by adding a driver for MDIO management
+2. fixes the kernel crash when the driver loaded as an kernel module
+	- by fixing hardware cleanups and rearrange kernel API calls
 
->>    Here's the set of 6 patches against Simon Horman's 'renesas.git' repo,
->> 'renesas-devel-20160509-v4.6-rc7' tag. I'm adding the sound device tree support
->> for the R8A7794 SoC based SILK board.
->>
->> [1/6] ARM: dts: r8a7794: add audio clocks
->> [2/6] ARM: dts: r8a7794: add MSTP5 clocks
->> [3/6] ARM: dts: r8a7794: add MSTP10 clocks
->> [4/6] ARM: dts: r8a7794: add Audio-DMAC support
->> [5/6] ARM: dts: r8a7794: add sound support
->> [6/6] ARM: dts: silk: add sound support
->
->    Oops, forgot to mention that patch #5 depends on the R-Car sound patch
-> posted yesterday in order to get interpreted as intended (it uses a disabled
-> SRC node).
+Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+Tested-by: Matthias Brugger <mbrugger@suse.com>
+---
+v3: Address review comments from v2
+	- Add comment about hardware clock reset sequence on xgene_mdio_reset
 
-   Simon, that patch has already hit Linus' tree but this series seems to be 
-stuck. Please merge!
+v2: Address review comments from v1
+	- Fixed patch 1 compilation error
+	- Fixed mdio@1f610000 xge0clk reference
+	- Squashed dtb patches
+	- Added PORT_OFFSET macro
 
-WBR, Sergei
+v1:
+	- Initial version
+---
+
+Iyappan Subramanian (5):
+  drivers: net: xgene: MAC and PHY configuration changes
+  drivers: net: xgene: Backward compatibility with older firmware
+  drivers: net: phy: Add MDIO driver
+  dtb: xgene: Add MDIO node
+  drivers: net: xgene: Fix module load/unload crash
+
+ arch/arm64/boot/dts/apm/apm-merlin.dts            |   9 +
+ arch/arm64/boot/dts/apm/apm-mustang.dts           |  12 +
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi        |  11 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi            |  38 +-
+ drivers/net/ethernet/apm/xgene/Kconfig            |   1 +
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c    | 241 ++++++----
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.h    |  19 +-
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c  | 325 ++++++++-----
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.h  |  36 +-
+ drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c | 191 +++++++-
+ drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.h |   8 +
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c |  66 ++-
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.h |   4 +
+ drivers/net/phy/Kconfig                           |   7 +
+ drivers/net/phy/Makefile                          |   1 +
+ drivers/net/phy/mdio-xgene.c                      | 532 ++++++++++++++++++++++
+ drivers/net/phy/mdio-xgene.h                      | 140 ++++++
+ 17 files changed, 1374 insertions(+), 267 deletions(-)
+ create mode 100644 drivers/net/phy/mdio-xgene.c
+ create mode 100644 drivers/net/phy/mdio-xgene.h
+
+-- 
+1.9.1
