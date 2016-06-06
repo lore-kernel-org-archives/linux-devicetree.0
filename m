@@ -1,10 +1,10 @@
 From: =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
 Subject: Re: [PATCH v10 2/4] tee: generic TEE subsystem
-Date: Mon, 6 Jun 2016 20:34:30 +0200
-Message-ID: <D973E4F0-4E78-468C-B41D-2EB3F5A6F987@javigon.com>
+Date: Mon, 6 Jun 2016 20:34:35 +0200
+Message-ID: <6806F7D5-88B2-425D-A3C6-731FD19579E6@javigon.com>
 References: <1464784888-19854-1-git-send-email-jens.wiklander@linaro.org> <1464784888-19854-3-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: multipart/signed; boundary="Apple-Mail=_7B8DF229-71EB-474D-A4EE-F7AF861C6C5D"; protocol="application/pgp-signature"; micalg=pgp-sha512
+Content-Type: multipart/signed; boundary="Apple-Mail=_B3255C67-EF91-43EF-A749-8AF36E56BADD"; protocol="application/pgp-signature"; micalg=pgp-sha512
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1464784888-19854-3-git-send-email-jens.wiklander@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -13,7 +13,7 @@ Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetr
 List-Id: devicetree@vger.kernel.org
 
 
---Apple-Mail=_7B8DF229-71EB-474D-A4EE-F7AF861C6C5D
+--Apple-Mail=_B3255C67-EF91-43EF-A749-8AF36E56BADD
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain;
 	charset=utf-8
@@ -2537,7 +2537,7 @@ struct
 
 Reviewed-by: Javier Gonz=C3=A1lez <javier@javigon.com>
 
---Apple-Mail=_7B8DF229-71EB-474D-A4EE-F7AF861C6C5D
+--Apple-Mail=_B3255C67-EF91-43EF-A749-8AF36E56BADD
 Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment;
 	filename=signature.asc
@@ -2548,19 +2548,19 @@ Content-Description: Message signed with OpenPGP using GPGMail
 -----BEGIN PGP SIGNATURE-----
 Comment: GPGTools - https://gpgtools.org
 
-iQIcBAEBCgAGBQJXVcI2AAoJEDxGAX0tJXjgmEcP/2fLYr1z36pAZ4tNYAugTL9G
-TQSMLejGvooXpNkH80Q1qOWBcABHnJz4ycoMdgehwocAKC1wZ8QoT8L8td5MUZOQ
-X65FpQNYS3QWdb+1rCJm/SxsbRwYDxmArEFEbM7k1lCrf2gtIHU2QkpQCLwwtWHN
-8l0dyYdfhibNpKsJw/x+HZAr5z0kjbrmkE4ekWZ4a6vQwEsiwILr6o0EsbygRxks
-9YtmxT/6iehukJ2i6umYaeM+1CDTE3kCFo5NUSsM4b04VuTd0qBLiHiQXgtK1dAn
-DNdvJOPAoD8RKKgwSfhB/mNjpm8OSFrA6KjY87Woul4DnbymwZhMXGglta14u2IP
-xxN90wpMal9QYobXbDHUvJcebbal5rxEbDO71z7XxH79zPmNkPa/XmIYrlqNmEgJ
-wLzxFhjqzj426SfIUh1Pwr04/WcOiSmnA8nEVzKNCYkBbd0gJNRZxz04PknJQeAv
-vuaQwjFK3bimhwa5JkdHXw2CBs0KRtYre0gKW9mxU2MtKwK0e479n4VUQtn1NTaY
-w1dKOMwSsSZyjMQLUuj4B1LN2yKEQbFpFFspBuu//G6XbodytgnJIRf3caKGWcLC
-/sFSqWl1ttjrDRhNsdic6/quKwsrjwjaHmLyu4yQiHea8Fsz3MU5dWOA4dOD6xOl
-oT5nAHmZB91HFo+7cUXU
-=wPS6
+iQIcBAEBCgAGBQJXVcI7AAoJEDxGAX0tJXjgxrQP/RlHG8LjnTsWunm1xWPIaDLh
+7tQi8SWLzziXpOeQtp1IN3o7nDdK3Xck6ErRX1glIV4yh6vl2ylhvaB8X2JGSaJL
+O/WwwBbSzkPgy/pizmoDNA9fBeN3QKJ81E6oiA6mPr/HRDkjQk08PuZgcaaxhtp9
+QbghOiUI5eKyy+yTM8YgRQ4qZJsdD/kPTtBRx5ULQxziTyiLJQ0v71RB/3CpZWZs
+VTmZKDGrqQIE35Gl9X6rH1ThVV1ZTCMGhmjBxQ+rzqFBlFWJT0KZl5hoqVa31KPp
+C+bap4Q9rpQbGiMdeCsW5scjJtbCR+b9ORh79/m9DFC9R3HzO9LGB0/65RGJaE9o
+z28lwYOy2r/pvpffnUqK0O5xACW5g01Wo7324rV7+3WC9+N1XTw1bBf14Bk73AEy
+SXVdpAk2d+jyF51QIef/bEB0MMZapuK956C1x36wcuQSK1lUBlJ59GyXbRetmXo1
+irB/B+w5zhBZ1YCz4qkISFHvjILaI6Oqjb+MhZgA+t0wW/MpiFNCJenVfBCPYyF1
+J72oJOgs9CK7tM0Ek+orRBgPog6KagKAB2NLiMf/JmUJTE5uGi9PEO/5A+fOEF2T
+hawNfvv9C/9hsbIQpoJwuRSKY8oil1yn2dviyRo81J1v0N+IpjJW6JRZFpI/ry3T
+fredPRuRSeyQIdAeJdos
+=qNIv
 -----END PGP SIGNATURE-----
 
---Apple-Mail=_7B8DF229-71EB-474D-A4EE-F7AF861C6C5D--
+--Apple-Mail=_B3255C67-EF91-43EF-A749-8AF36E56BADD--
