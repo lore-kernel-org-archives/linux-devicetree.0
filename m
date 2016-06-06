@@ -1,88 +1,57 @@
 From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: [PATCH v4 3/7] binding: mdio-mux: Add DT binding doc for Broadcom MDIO bus multiplexer
-Date: Mon,  6 Jun 2016 18:11:36 +0530
-Message-ID: <1465216900-11755-4-git-send-email-pramod.kumar@broadcom.com>
+Subject: [PATCH v4 6/7] binding: PHY: Binding doc for NS2 PCIe PHYs.
+Date: Mon,  6 Jun 2016 18:11:39 +0530
+Message-ID: <1465216900-11755-7-git-send-email-pramod.kumar@broadcom.com>
 References: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>, Jon Mason <jonmason@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding doc for Broadcom MDIO bus multiplexer driver.
+Binding doc for NS2 PCIe PHYs.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
 Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
 ---
- .../bindings/net/brcm,mdio-mux-iproc.txt           | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt
+ .../bindings/phy/brcm,mdio-mux-bus-pci.txt         | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
 
-diff --git a/Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt b/Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt
+diff --git a/Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt b/Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
 new file mode 100644
-index 0000000..dfe287a
+index 0000000..5b51007
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt
-@@ -0,0 +1,59 @@
-+Properties for an MDIO bus multiplexer found in Broadcom iProc based SoCs.
++++ b/Documentation/devicetree/bindings/phy/brcm,mdio-mux-bus-pci.txt
+@@ -0,0 +1,27 @@
++* Broadcom NS2 PCIe PHY binding document
 +
-+This MDIO bus multiplexer defines buses that could be internal as well as
-+external to SoCs and could accept MDIO transaction compatible to C-22 or
-+C-45 Clause. When child bus is selected, one needs to select these two
-+properties as well to generate desired MDIO transaction on appropriate bus.
++Required bus properties:
++- reg: MDIO Bus number for the MDIO interface
++- #address-cells: must be 1
++- #size-cells: must be 0
 +
-+Required properties in addition to the generic multiplexer properties:
++Required PHY properties:
++- compatible: should be "brcm,ns2-pcie-phy"
++- reg: MDIO Phy ID for the MDIO interface
++- #phy-cells: must be 0
 +
-+MDIO multiplexer node:
-+- compatible: brcm,mdio-mux-iproc.
++This is a child bus node of "brcm,mdio-mux-iproc" node.
 +
-+Every non-ethernet PHY requires a compatible so that it could be probed based
-+on this compatible string.
++Example:
 +
-+Additional information regarding generic multiplexer properties can be found
-+at- Documentation/devicetree/bindings/net/mdio-mux.txt
++mdio@0 {
++	reg = <0x0>;
++	#address-cells = <1>;
++	#size-cells = <0>;
 +
-+
-+for example:
-+		mdio_mux_iproc: mdio-mux@6602023c {
-+			compatible = "brcm,mdio-mux-iproc";
-+			reg = <0x6602023c 0x14>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			mdio@0 {
-+				reg = <0x0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				pci_phy0: pci-phy@0 {
-+					compatible = "brcm,ns2-pcie-phy";
-+					reg = <0x0>;
-+					#phy-cells = <0>;
-+				};
-+			};
-+
-+			mdio@7 {
-+				reg = <0x7>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				pci_phy1: pci-phy@0 {
-+					compatible = "brcm,ns2-pcie-phy";
-+					reg = <0x0>;
-+					#phy-cells = <0>;
-+				};
-+			};
-+			mdio@10 {
-+				reg = <0x10>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				gphy0: eth-phy@10 {
-+					reg = <0x10>;
-+				};
-+			};
-+		};
++	pci_phy0: pci-phy@0 {
++		compatible = "brcm,ns2-pcie-phy";
++		reg = <0x0>;
++		#phy-cells = <0>;
++	};
++};
 -- 
 1.9.1
