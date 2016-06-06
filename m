@@ -1,88 +1,70 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Enable NAND on Wexler TAB7200
-Date: Mon, 6 Jun 2016 20:51:24 +0200
-Message-ID: <20160606205124.06b2f963@bbrezillon>
-References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
-	<1465208664-9366-8-git-send-email-mamlinav@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 02/22] amba: tegra-ahb: Use of_device_match()
+Date: Mon, 6 Jun 2016 11:51:24 -0700
+Message-ID: <5755C62C.4030109@gmail.com>
+References: <20160606083204.19760-1-thierry.reding@gmail.com>
+ <20160606083204.19760-3-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465208664-9366-8-git-send-email-mamlinav@gmail.com>
+In-Reply-To: <20160606083204.19760-3-thierry.reding@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aleksei Mamlin <mamlinav@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  6 Jun 2016 13:24:24 +0300
-Aleksei Mamlin <mamlinav@gmail.com> wrote:
-
-> Enable the NFC and describe the NAND flash connected to this controller.
+On 06/06/16 01:31, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
-
-Reviewed-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-
+> Use the common implementation rather than the open-coded variant.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 41 ++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
+>  drivers/amba/tegra-ahb.c | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> index 2f6b21a..42aff91 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> @@ -159,6 +159,47 @@
->  	status = "okay";
->  };
+> diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
+> index b0b688c481e8..d87e76cf448c 100644
+> --- a/drivers/amba/tegra-ahb.c
+> +++ b/drivers/amba/tegra-ahb.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
 >  
-> +&nfc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&nand_pins_a>, <&nand_cs0_pins_a>, <&nand_rb0_pins_a>;
-> +	status = "okay";
-> +
-> +	nand@0 {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		reg = <0>;
-> +		allwinner,rb = <0>;
-> +
-> +		nand-ecc-mode = "hw";
-> +		nand-on-flash-bbt;
-> +
-> +		boot0@0 {
-> +			label = "boot0";
-> +			reg = /bits/ 64 <0x0 0x200000>;
-> +		};
-> +
-> +		boot0-rescue@200000 {
-> +			label = "boot0-rescue";
-> +			reg = /bits/ 64 <0x200000 0x200000>;
-> +		};
-> +
-> +		uboot@400000 {
-> +			label = "uboot";
-> +			reg = /bits/ 64 <0x400000 0x200000>;
-> +		};
-> +
-> +		uboot-rescue@600000 {
-> +			label = "uboot-rescue";
-> +			reg = /bits/ 64 <0x600000 0x200000>;
-> +		};
-> +
-> +		main@800000 {
-> +			label = "main";
-> +			reg = /bits/ 64 <0x800000 0xff800000>;
-> +		};
-> +	};
-> +};
-> +
->  &ohci0 {
->  	status = "okay";
->  };
+>  #include <soc/tegra/ahb.h>
+>  
+> @@ -143,14 +144,6 @@ static inline void gizmo_writel(struct tegra_ahb *ahb, u32 value, u32 offset)
+>  }
+>  
+>  #ifdef CONFIG_TEGRA_IOMMU_SMMU
+> -static int tegra_ahb_match_by_smmu(struct device *dev, void *data)
+> -{
+> -	struct tegra_ahb *ahb = dev_get_drvdata(dev);
+> -	struct device_node *dn = data;
+> -
+> -	return (ahb->dev->of_node == dn) ? 1 : 0;
+> -}
+> -
+>  int tegra_ahb_enable_smmu(struct device_node *dn)
+>  {
+>  	struct device *dev;
+> @@ -158,7 +151,7 @@ int tegra_ahb_enable_smmu(struct device_node *dn)
+>  	struct tegra_ahb *ahb;
+>  
+>  	dev = driver_find_device(&tegra_ahb_driver.driver, NULL, dn,
+
+To use of_device_match, should that be something like:
+
+        struct tegra_ahb *ahb = dev_get_drvdata(dev);
+        dev = driver_find_device(&tegra_ahb_driver.driver, NULL, ahb->dev,
 
 
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> -				 tegra_ahb_match_by_smmu);
+> +				 of_device_match);
+>  	if (!dev)
+>  		return -EPROBE_DEFER;
+>  	ahb = dev_get_drvdata(dev);
+> 
