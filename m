@@ -1,7 +1,7 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 12/22] drm/hdlcd: Use of_device_match()
-Date: Mon,  6 Jun 2016 10:31:54 +0200
-Message-ID: <20160606083204.19760-13-thierry.reding@gmail.com>
+Subject: [PATCH 11/22] usb: phy: isp1301: Use of_device_match()
+Date: Mon,  6 Jun 2016 10:31:53 +0200
+Message-ID: <20160606083204.19760-12-thierry.reding@gmail.com>
 References: <20160606083204.19760-1-thierry.reding@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
@@ -12,45 +12,50 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Use the common implementation rather than the driver-private variant.
+This driver uses bus_find_device() to go through every platform device
+and match using the driver and device tree node. It's more efficient to
+use driver_find_device() to iterate over all devices associated with a
+particular driver, in which case the matching is reduced to the device
+tree node and can be done using the common implementation.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/gpu/drm/arm/hdlcd_drv.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/usb/phy/phy-isp1301.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
-index 3422ca23cfaf..4fa93123802b 100644
---- a/drivers/gpu/drm/arm/hdlcd_drv.c
-+++ b/drivers/gpu/drm/arm/hdlcd_drv.c
-@@ -14,6 +14,7 @@
- #include <linux/clk.h>
- #include <linux/component.h>
- #include <linux/list.h>
+diff --git a/drivers/usb/phy/phy-isp1301.c b/drivers/usb/phy/phy-isp1301.c
+index db68156568e6..a5f5dc0b8c18 100644
+--- a/drivers/usb/phy/phy-isp1301.c
++++ b/drivers/usb/phy/phy-isp1301.c
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/i2c.h>
 +#include <linux/of_device.h>
- #include <linux/of_graph.h>
- #include <linux/of_reserved_mem.h>
- #include <linux/pm_runtime.h>
-@@ -429,11 +430,6 @@ static const struct component_master_ops hdlcd_master_ops = {
- 	.unbind		= hdlcd_drm_unbind,
- };
+ #include <linux/usb/phy.h>
+ #include <linux/usb/isp1301.h>
  
--static int compare_of(struct device *dev, void *data)
+@@ -138,18 +139,12 @@ static struct i2c_driver isp1301_driver = {
+ 
+ module_i2c_driver(isp1301_driver);
+ 
+-static int match(struct device *dev, void *data)
 -{
--	return dev->of_node == data;
+-	struct device_node *node = (struct device_node *)data;
+-	return (dev->of_node == node) &&
+-		(dev->driver == &isp1301_driver.driver);
 -}
 -
- static void release_of(struct device *dev, void *data)
+ struct i2c_client *isp1301_get_client(struct device_node *node)
  {
- 	of_node_put(data);
-@@ -466,7 +462,7 @@ static int hdlcd_probe(struct platform_device *pdev)
- 	}
- 
- 	component_match_add_release(&pdev->dev, &match, release_of,
--				    compare_of, port);
-+				    of_device_match, port);
- 
- 	return component_master_add_with_match(&pdev->dev, &hdlcd_master_ops,
- 					       match);
+ 	if (node) { /* reference of ISP1301 I2C node via DT */
+-		struct device *dev = bus_find_device(&i2c_bus_type, NULL,
+-						     node, match);
++		struct device *dev = driver_find_device(&isp1301_driver.driver,
++							NULL, node,
++							of_device_match);
+ 		if (!dev)
+ 			return NULL;
+ 		return to_i2c_client(dev);
 -- 
 2.8.3
