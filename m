@@ -1,74 +1,125 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
-Date: Mon, 6 Jun 2016 13:32:10 +0100
-Message-ID: <20160606123210.GL1041@n2100.armlinux.org.uk>
-References: <1465183229-24147-1-git-send-email-wmills@ti.com>
- <1465183229-24147-5-git-send-email-wmills@ti.com>
- <20160606085627.GA6831@leverpostej>
- <20160606114321.GJ1041@n2100.armlinux.org.uk>
- <20160606115918.GG6831@leverpostej>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/2] Documentation: bindings: add DT documentation for Rockchip USB2PHY
+Date: Mon, 06 Jun 2016 14:33:27 +0200
+Message-ID: <7083100.uVXA4CkAgE@diego>
+References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com> <1465204804-31161-2-git-send-email-frank.wang@rock-chips.com> <20160606112754.GE6831@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160606115918.GG6831@leverpostej>
+In-Reply-To: <20160606112754.GE6831@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mark Rutland <mark.rutland@arm.com>
-Cc: Bill Mills <wmills@ti.com>, t-kristo@ti.com, ssantosh@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, r-woodruff2@ti.com, devicetree@vger.kernel.org
+Cc: Frank Wang <frank.wang@rock-chips.com>, dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 12:59:18PM +0100, Mark Rutland wrote:
-> I agree that whether or not devices are coherent in practice depends on
-> the kernel's configuration. The flip side, as you point out, is that
-> devices are coherent when a specific set of attributes are used.
+Am Montag, 6. Juni 2016, 12:27:54 schrieb Mark Rutland:
+> On Mon, Jun 06, 2016 at 05:20:03PM +0800, Frank Wang wrote:
+> > Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+> > ---
+> > 
+> > Changes in v3:
+> >  - Added 'clocks' and 'clock-names' optional properties.
+> >  - Specified 'otg-port' and 'host-port' as the sub-node name.
+> > 
+> > Changes in v2:
+> >  - Changed vbus_host optional property from gpio to regulator.
+> >  - Specified vbus_otg-supply optional property.
+> >  - Specified otg_id and otg_bvalid property.
+> >  
+> >  .../bindings/phy/phy-rockchip-inno-usb2.txt        |   60
+> >  ++++++++++++++++++++ 1 file changed, 60 insertions(+)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt> 
+> > diff --git
+> > a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> > b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt new
+> > file mode 100644
+> > index 0000000..0b4bbbb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> > @@ -0,0 +1,60 @@
+> > +ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
+> > +
+> > +Required properties (phy (parent) node):
+> > + - compatible : should be one of the listed compatibles:
+> > +	* "rockchip,rk3366-usb2phy"
+> > +	* "rockchip,rk3399-usb2phy"
+> > + - #clock-cells : should be 0.
+> > + - clock-output-names : specify the 480m output clock name.
+> > +
+> > +Optional properties:
+> > + - clocks : phandle + phy specifier pair, for the input clock of phy.
+> > + - clock-names : input clock name of phy, must be "phyclk".
+> > + - vbus_host-supply : phandle to a regulator that supplies host vbus.
+> > + - vbus_otg-supply : phandle to a regulator that supplies otg vbus.
 > 
-> i.e. that if you read dma-coherent as meaning "coherent iff Normal,
-> Inner Shareable, Inner WB Cacheable, Outer WB Cacheable", then
-> dma-coherent consistently describes the same thing, rather than
-> depending on the configuration of the OS.
-> 
-> DT is a datastructure provided to the kernel, potentially without deep
-> internal knowledge of that kernel configuration. Having a consistent
-> rule that is independent of the kernel configuration seems worth aiming
-> for.
+> Nit: s/_/-/ here.
 
-I think you've missed the point.  dma-coherent is _already_ dependent on
-the kernel configuration.  "Having a consistent rule that is independent
-of the kernel configuration" is already an impossibility, as I illustrated
-in my previous message concerning Marvell Armada SoCs, and you also said
-in your preceding paragraph!
+Something I only stumbled over yesterday for the first time on my rk3288-
+popmetal: The phy subnodes seem to be able to use a generic phy-supply
+property from inside the phy-core itself, see:
 
-For example, if you clear the shared bit in the page tables on non-LPAE
-SoCs, devices are no longer coherent.
+https://github.com/mmind/linux-rockchip/commit/93739f521fc65f44524b00c9aaf6db46bca94e02#diff-ddf3e45ebb753d6debf57022003a1a57R597
 
-DMA coherence on ARM _is_ already tightly linked with the kernel
-configuration.  You already can't get away from that, so I think you
-should give up trying to argue that point. :)
+for my WIP code for that other board.
 
-Whether devices are DMA coherent is a combination of two things:
- * is the device connected to a coherent bus.
- * is the system setup to allow coherency on that bus to work.
 
-We capture the first through the dma-coherent property, which is clearly
-a per-device property.  We ignore the second because we assume everyone
-is going to configure the CPU side correctly.  That's untrue today, and
-it's untrue not only because of Keystone II, but also because of other
-SoCs as well which pre-date Keystone II.  We currently miss out on
-considering that, because if we ignore it, we get something that works
-for most platforms.
+> Otherwise the rest of this looks generally fine, though I'm confused as
+> to how you address the programming interface(s), given none are
+> described.
 
-I don't see that adding a dma-outer-coherent property helps this - it's
-muddying the waters somewhat - and it's also forcing additional complexity
-into places where we shouldn't have it.  We would need to parse two
-properties in the DMA API code, and then combine it with knowledge as
-to how the system page tables have been setup.  If they've been setup
-as inner sharable, then dma-coherent identifies whether the device is
-coherent.  If they've been setup as outer sharable, then
-dma-outer-coherent specifies that and dma-coherent is meaningless.
+I think that comes generally down to phy_power_on and phy_power_off from the
+host driver (ehci / dwc2 / whatever) using the generic phy interface. The usb2
+phys on Rockchip SoCs seem always pretty easy to handle, while the new
+additional typeC phy seems to require more work
 
-Sounds like a recipe for confusion.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Heiko
+
+> > +
+> > +Required nodes : a sub-node is required for each port the phy provides.
+> > +		 The sub-node name is used to identify host or otg port,
+> > +		 and shall be the following entries:
+> > +	* "otg-port" : the name of otg port.
+> > +	* "host-port" : the name of host port.
+> > +
+> > +Required properties (port (child) node):
+> > + - #phy-cells : must be 0. See ./phy-bindings.txt for details.
+> > + - interrupts : specify an interrupt for each entry in interrupt-names.
+> > + - interrupt-names : a list which shall be the following entries:
+> > +	* "otg_id" : for the otg id interrupt.
+> > +	* "otg_bvalid" : for the otg vbus interrupt.
+> > +	* "linestate" : for the host/otg linestate interrupt.
+> > +
+> > +Example:
+> > +
+> > +grf: syscon@ff770000 {
+> > +	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +
+> > +...
+> > +
+> > +	u2phy: usb2-phy {
+> > +		compatible = "rockchip,rk3366-usb2phy";
+> > +		#clock-cells = <0>;
+> > +		clock-output-names = "sclk_otgphy0_480m";
+> > +
+> > +		u2phy_otg: otg-port {
+> > +			#phy-cells = <0>;
+> > +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+> > +			interrupt-names = "otg_id", "otg_bvalid", "linestate";
+> > +			status = "okay";
+> > +		};
+> > +
+> > +		u2phy_host: host-port {
+> > +			#phy-cells = <0>;
+> > +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+> > +			interrupt-names = "linestate";
+> > +			status = "okay";
+> > +		};
+> > +	};
+> > +};
