@@ -1,53 +1,163 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: Re: [PATCH RFT 4/4] ARM: dts: imx28-tx28: fix dtc warning
-Date: Mon, 6 Jun 2016 08:33:01 +0200
-Message-ID: <20160606083301.679ad9f5@ipc1.ka-ro>
-References: <1465134747-13536-1-git-send-email-stefan.wahren@i2se.com>
+From: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] [media] atmel-isc: DT binding for Image Sensor
+ Controller driver
+Date: Mon, 6 Jun 2016 14:42:05 +0800
+Message-ID: <867b83cb-c3c2-f53d-7c41-0d6983dc8468@atmel.com>
+References: <1464677903-28412-1-git-send-email-songjun.wu@atmel.com>
+ <1464677903-28412-3-git-send-email-songjun.wu@atmel.com>
+ <20160602231609.GA24529@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465134747-13536-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <20160602231609.GA24529@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On Sun,  5 Jun 2016 13:52:27 +0000 Stefan Wahren wrote:
-> This fixes the following dtc warning by removing the unnecessary unit=
-:
->=20
-> Warning (unit_address_vs_reg): Node /matrix-keypad@0 has a unit name,
-> but no reg property
->=20
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx28-tx28.dts |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx=
-28-tx28.dts
-> index fd20e99..0ebbc83 100644
-> --- a/arch/arm/boot/dts/imx28-tx28.dts
-> +++ b/arch/arm/boot/dts/imx28-tx28.dts
-> @@ -173,7 +173,7 @@
->  		default-brightness-level =3D <50>;
->  	};
-> =20
-> -	matrix_keypad: matrix-keypad@0 {
-> +	matrix_keypad: matrix-keypad {
->  		compatible =3D "gpio-matrix-keypad";
->  		col-gpios =3D <
->  			&gpio5 0 GPIO_ACTIVE_HIGH
+Thank you for your comments.
+
+On 6/3/2016 07:16, Rob Herring wrote:
+> On Tue, May 31, 2016 at 02:58:23PM +0800, Songjun Wu wrote:
+>> DT binding documentation for ISC driver.
+>>
+>> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>
+>> Changes in v3:
+>> - Remove the 'atmel,sensor-preferred'.
+>> - Modify the isc clock node according to the Rob's remarks.
+>>
+>> Changes in v2:
+>> - Remove the unit address of the endpoint.
+>> - Add the unit address to the clock node.
+>> - Avoid using underscores in node names.
+>> - Drop the "0x" in the unit address of the i2c node.
+>> - Modify the description of 'atmel,sensor-preferred'.
+>> - Add the description for the ISC internal clock.
+>>
+>>  .../devicetree/bindings/media/atmel-isc.txt        | 88 ++++++++++++++++++++++
+>>  1 file changed, 88 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+>> new file mode 100644
+>> index 0000000..2ae1d60
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+>> @@ -0,0 +1,88 @@
+>> +Atmel Image Sensor Controller (ISC)
+>> +----------------------------------------------
+>> +
+>> +Required properties for ISC:
+>> +- compatible
+>> +	Must be "atmel,sama5d2-isc"
+>> +- reg
+>> +	Physical base address and length of the registers set for the device;
+>> +- interrupts
+>> +	Should contain IRQ line for the ISI;
+>> +- clocks
+>> +	List of clock specifiers, corresponding to entries in
+>> +	the clock-names property;
+>> +	Please refer to clock-bindings.txt.
+>> +- clock-names
+>> +	Required elements: "hclock", "ispck".
+>> +- pinctrl-names, pinctrl-0
+>> +	Please refer to pinctrl-bindings.txt.
+>> +- isc-ispck
+>> +	The clock for the ISC digital pipeline.
+>> +	- compatible
+>> +		Must be "atmel,sama5d2-isc-ispck".
+>> +	- clock-cells
+>> +		From common clock binding; should be set to 0.
+>> +	- clocks
+>> +		The clock source phandles.
+>> +- isc-mck
+>> +	The clock for the image sensor.
+>> +	- compatible
+>> +		Must be "atmel,sama5d2-isc-mck".
+>> +	- clock-cells
+>> +		From common clock binding; should be set to 0.
+>> +	- clocks
+>> +		The clock source phandles.
+>> +
+>> +ISC supports a single port node with parallel bus. It should contain one
+>> +'port' child node with child 'endpoint' node. Please refer to the bindings
+>> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> +
+>> +Example:
+>> +isc: isc@f0008000 {
+>> +	compatible = "atmel,sama5d2-isc";
+>> +	reg = <0xf0008000 0x4000>;
+>> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
+>> +	clocks = <&isc_clk>, <&isc_ispck>;
+>> +	clock-names = "hclock", "ispck";
+>> +
+>> +	port {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		isc_0: endpoint {
+>> +			remote-endpoint = <&ov7740_0>;
+>> +			hsync-active = <1>;
+>> +			vsync-active = <0>;
+>> +			pclk-sample = <1>;
+>> +		};
+>> +	};
+>> +
+>> +	isc_ispck: isc-ispck@0 {
 >
-Acked-By: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> Drop the unit-address. You should only have one if you have a reg
+> property.
+>
+Accept. Thank you.
 
-
-Lothar Wa=C3=9Fmann
+>> +		compatible = "atmel,sama5d2-isc-ispck";
+>> +		#clock-cells = <0>;
+>> +		clocks = <&isc_clk>, <&iscck>;
+>> +	};
+>> +
+>> +	isc_mck: isc-mck@1 {
+>
+> ditto.
+>
+> I still think these should be implied by atmel,sama5d2-isc and not in
+> DT. The fact that you don't have any registers for them pretty much
+> indicates that. It is also strange that isc-ispck is used by isc. If
+> that is the only user, there is certainly no need to put it in DT.
+>
+The isc-ispck in only used by isc, it can be removed from DT.
+Thank you.
+>
+>> +		compatible = "atmel,sama5d2-isc-mck";
+>> +		#clock-cells = <0>;
+>> +		clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
+>> +	};
+>> +};
+>> +
+>> +i2c1: i2c@fc028000 {
+>> +	ov7740: camera@21 {
+>> +	compatible = "ovti,ov7740";
+>> +	reg = <0x21>;
+>> +
+>> +	clocks = <&isc_mck>;
+>> +	clock-names = "xvclk";
+>> +	assigned-clocks = <&isc_mck>;
+>> +	assigned-clock-rates = <24000000>;
+>> +
+>> +	port {
+>> +		ov7740_0: endpoint {
+>> +			remote-endpoint = <&isc_0>;
+>> +		};
+>> +	};
+>> +};
+>> --
+>> 2.7.4
+>>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
