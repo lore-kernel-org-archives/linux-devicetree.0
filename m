@@ -1,12 +1,15 @@
 From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/7] dts: sunxi: Add sunxi NAND Flash Controller support
-Date: Mon,  6 Jun 2016 13:24:17 +0300
-Message-ID: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
+Subject: [PATCH 2/7] ARM: dts: sun4i: Add NFC node to Allwinner
+ A10 SoC
+Date: Mon,  6 Jun 2016 13:24:19 +0300
+Message-ID: <1465208664-9366-3-git-send-email-mamlinav@gmail.com>
+References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
 Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIPTHWVXICRUBFS5PMOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCENVD7YAEIPXHWVXICRUBDHFAPKC-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1465208664-9366-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,32 +20,37 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-This series adds the sunxi NAND Flash Controller nodes to dts.
+Add NAND Flash controller node definition to the A10 SoC.
 
-The first 4 patches is Boris Brezillon's patches with dtsi changes.
-The second 1 patch adds Hynix H27UBG8T2BTR-BC NAND chip definition.
-The last 2 patches enables NAND on Marsboard A10 board and Wexler TAB7200
-tablet.
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Aleksei Mamlin (3):
-  mtd: nand: Add Hynix H27UBG8T2BTR-BC to nand_ids table
-  ARM: dts: sun4i: Enable NAND on Marsboard A10
-  ARM: dts: sun7i: Enable NAND on Wexler TAB7200
-
-Boris Brezillon (4):
-  ARM: dts: sun4i: Add A10 NAND controller pin definitions
-  ARM: dts: sun4i: Add NFC node to Allwinner A10 SoC
-  ARM: dts: sun7i: Add A20 NAND controller pin definitions
-  ARM: dts: sun7i: Add NFC node to Allwinner A20 SoC
-
- arch/arm/boot/dts/sun4i-a10-marsboard.dts      | 41 ++++++++++++
- arch/arm/boot/dts/sun4i-a10.dtsi               | 91 ++++++++++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 41 ++++++++++++
- arch/arm/boot/dts/sun7i-a20.dtsi               | 91 ++++++++++++++++++++++++++
- drivers/mtd/nand/nand_ids.c                    |  4 ++
- 5 files changed, 268 insertions(+)
-
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 146a08db..22950d8 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -747,6 +747,17 @@
+ 			#size-cells = <0>;
+ 		};
+ 
++		nfc: nand@01c03000 {
++			compatible = "allwinner,sun4i-a10-nand";
++			reg = <0x01c03000 0x1000>;
++			interrupts = <37>;
++			clocks = <&ahb_gates 13>, <&nand_clk>;
++			clock-names = "ahb", "mod";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		emac: ethernet@01c0b000 {
+ 			compatible = "allwinner,sun4i-a10-emac";
+ 			reg = <0x01c0b000 0x1000>;
 -- 
 2.7.3
