@@ -1,72 +1,33 @@
-From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add support for the Utilite Pro
-Date: Mon, 6 Jun 2016 09:52:26 +0300
-Message-ID: <57551DAA.9020506@compulab.co.il>
-References: <1463957258-4893-1-git-send-email-christopher.spinrath@rwth-aachen.de>
- <c4ab0387041f42ada68296141befe332@rwthex-s1-b.rwth-ad.de>
- <CAOMZO5C5goJUdHKB9a=eOv9TKDkJWxnkWWb-G7E5Kvceg6sZVg@mail.gmail.com>
- <a6cc6b85d2fa4994b3cb7e2b047f800d@rwthex-w2-b.rwth-ad.de>
- <9d7793850de942cfb578b0aeb2728f41@rwthex-s1-b.rwth-ad.de>
- <CAOMZO5C3_bd-2Nz+G956+VPOcKoFaGGJK7G1p=U0yf5OyWekZA@mail.gmail.com>
- <c7a1b8de98814b95afc43cc6df3c92df@rwthex-w2-a.rwth-ad.de>
- <fccd7d19bc774e17bccf57b0af7b99b1@rwthex-s1-b.rwth-ad.de>
- <92298f2d0d69413abb9ba7a336f534ab@rwthex-w1-a.rwth-ad.de>
- <fb796ef1-fb2a-b120-f009-e7947afd195f@rwth-aachen.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun4i: The blue led on the Mele A1000 is a
+ power led
+Date: Mon, 6 Jun 2016 15:01:28 +0800
+Message-ID: <CAGb2v66iYcOCSbX6Q9OLFYaaCpzqRC94v+OXfd8gcD7GG1eZRg@mail.gmail.com>
+References: <1465129393-22379-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fb796ef1-fb2a-b120-f009-e7947afd195f-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+In-Reply-To: <1465129393-22379-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/05/2016 08:36 PM, Christopher Spinrath wrote:
-> Hi Igor,
-> 
-> On 06/05/2016 06:25 PM, Igor Grinberg wrote:
->> Hi Christopher,
->>
->> Thanks for bringing this to my attention.
->>
->> On 06/02/2016 01:47 PM, Christopher Spinrath wrote:
->>> Hi Igor,
->>>
->>> On 05/29/2016 10:01 AM, Igor Grinberg wrote:
->>>> On 05/27/2016 01:20 AM, Fabio Estevam wrote:
->>>>> On Thu, May 26, 2016 at 11:26 AM, Christopher Spinrath
->>>>> <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
->>>>>
->>>>>> Thanks for joining this discussion. I *guess* the rationale is to share
->>>>>> the same device tree with projects that are incompatible with the GPL
->>>>>> (e.g. *BSD). Even if there is no support for a particular device/board
->>>>>> having all (or most) files dual licensed makes it easier to just pull
->>>>>> them all in.
->>>>>
->>>>> Yes, that's correct.
->>>>>
->>>>
->>>> Thanks for the explanation.
->>>>
->>>
->>> Have you/CompuLab made a decision? Do you/CompuLab approve the dual license?
->>
->> Yes, please use the dual license.
->> You can count this answer official.
->>
-> Thank you very much! I will send v2 later today with the dual license
-> (and also changing the license of the cm-fx6 file).
-> 
-> I would be very nice, if you could provide your Acked-By (or whatever)
-> for the license changes (I will keep you in cc).
+On Sun, Jun 5, 2016 at 8:23 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The blue led on the Mele A1000 is wired to light up as soon as the board
+> has powered (it will be on while the gpio is still in input / floating
+> mode), also its location on the top-set box clearly signals "power led".
+>
+> Until now we've been treating this as a generic usr function led, which
+> means that when you plug power into the top-set box, the power-led lights
+> and then turns off as soon as the kernel loads, which looks wrong.
+>
+> This renames the led from a1000:blue:usr to a1000:blue:pwr and marks
+> it as default on, fixing this.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Sure! No problem!
-
-
--- 
-Regards,
-Igor.
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
