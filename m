@@ -1,74 +1,61 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [PATCH] userspace API definitions for auto-focus coil
-Date: Mon, 6 Jun 2016 09:06:29 +0300
-Message-ID: <575512E5.5030000@gmail.com>
-References: <20160524091746.GA14536@amd>
- <20160525212659.GK26360@valkosipuli.retiisi.org.uk>
- <20160527205140.GA26767@amd>
- <20160531212222.GP26360@valkosipuli.retiisi.org.uk>
- <20160531213437.GA28397@amd>
- <20160601152439.GQ26360@valkosipuli.retiisi.org.uk>
- <20160601220840.GA21946@amd>
- <20160602074544.GR26360@valkosipuli.retiisi.org.uk>
- <20160602193027.GB7984@amd>
- <20160602212746.GT26360@valkosipuli.retiisi.org.uk>
- <20160605190716.GA11321@amd>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 10/14] regulator: pwm: Switch to the atomic PWM API
+Date: Mon, 6 Jun 2016 11:44:59 +0530
+Message-ID: <575514E3.7050802@nvidia.com>
+References: <1464942192-25967-1-git-send-email-boris.brezillon@free-electrons.com>	<1464942192-25967-11-git-send-email-boris.brezillon@free-electrons.com>	<20160603205028.GH124478@google.com> <20160604082848.0b897b14@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160605190716.GA11321@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>
-Cc: pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, patrikbachan@gmail.com, serge@hallyn.com, linux-media@vger.kernel.org, mchehab@osg.samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20160604082848.0b897b14@bbrezillon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Brian Norris <briannorris@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On  5.06.2016 22:07, Pavel Machek wrote:
-> Add userspace API definitions.
+On Saturday 04 June 2016 11:58 AM, Boris Brezillon wrote:
+> On Fri, 3 Jun 2016 13:50:28 -0700
+> Brian Norris <briannorris@chromium.org> wrote:
 >
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>> + Laxman
+>>
+>> Hi,
+>>
+>> On Fri, Jun 03, 2016 at 10:23:08AM +0200, Boris Brezillon wrote:
+>>> -	 * calculation loss.
+>>> -	 */
+>>> -	req_period = req_diff * pargs.period;
+>>> -	div_u64_rem(req_period, diff, &rem);
+>>> -	if (!rem) {
+>>> -		do_div(req_period, diff);
+>>> -		duty_pulse = (unsigned int)req_period;
+>>> -	} else {
+>>> -		duty_pulse = (pargs.period / 100) * ((req_diff * 100) / diff);
+>>> -	}
+>>> +	/* We pass diff as the scale to get a uV precision. */
+>>> +	pwm_set_relative_duty_cycle(&pstate, req_diff, diff);
+>> Notably, you're dropping much of Laxman's commit fd786fb0276a ("regulator:
+>> pwm: Try to avoid voltage error in duty cycle calculation"), but I
+>> believe the DIV_ROUND_CLOSEST_ULL() in pwm_set_relative_duty_cycle()
+>> solves his problem better.
+> Oops, forgot to comment on that in the commit message. Indeed, the use
+> of pwm_set_relative_duty_cycle() solves the problem Laxman was seeing.
 >
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index b6a357a..23011cc 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -974,4 +975,9 @@ enum v4l2_detect_md_mode {
->   #define V4L2_CID_DETECT_MD_THRESHOLD_GRID	(V4L2_CID_DETECT_CLASS_BASE + 3)
->   #define V4L2_CID_DETECT_MD_REGION_GRID		(V4L2_CID_DETECT_CLASS_BASE + 4)
->
-> +/* Control IDs specific to the AD5820 driver as defined by V4L2 */
-> +#define V4L2_CID_FOCUS_AD5820_BASE 	(V4L2_CTRL_CLASS_CAMERA | 0x10af)
-> +#define V4L2_CID_FOCUS_AD5820_RAMP_TIME	(V4L2_CID_FOCUS_AD5820_BASE+0)
-> +#define V4L2_CID_FOCUS_AD5820_RAMP_MODE	(V4L2_CID_FOCUS_AD5820_BASE+1)
-> +
->   #endif
->
+Yaah, the issue which I was seeing and had fix will be resolved with 
+this also.
+I wanted to do req_diff * period first before any scaling/division.
 
-Sakari, what about adding those as standard camera controls? It seems 
-ad5820 is not the only VCM driver to implement "antiringing" controls, 
-http://rohmfs.rohm.com/en/products/databook/datasheet/ic/motor/mobile_module/bu64241gwz-e.pdf 
-is another example I found by quick search.
+Function pwm_set_relative_duty_cycle() does the same,  and hence it is fine.
 
-What about:
+state->duty_cycle = DIV_ROUND_CLOSEST_ULL((u64)val * state->period,
++                          scale);
 
-#define V4L2_CID_FOCUS_STEP_MODE xxx
-enum v4l2_cid_focus_step_mode {
-V4L2_CID_FOCUS_STEP_MODE_DIRECT,
-V4L2_CID_FOCUS_STEP_MODE_LINEAR,
-V4L2_CID_FOCUS_STEP_MODE_AUTO
-};
-#define V4L2_CID_FOCUS_STEP_TIME xxx+1
 
-Also, how the userspace(or the kernel) is notified by v4l that there is 
-an event? The point is - I think it is a good idea to notify when VCM 
-has completed its movement, we can start a timer based on the current 
-position, mode, step time etc and notify after the pre-calculated 
-movement time.
 
-Here ftp://ftp.analog.com/pub/evalcd/AD5820_v1_0/AD5820_Quickstart.pdf 
-can be found the modes/timings description for ad5820 along with the 
-equations needed to calculate timings etc.
+Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
 
-Ivo
+
+
+Thanks,
+Laxman
