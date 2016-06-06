@@ -1,81 +1,41 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
-Date: Mon, 06 Jun 2016 11:09:07 +0200
-Message-ID: <5480709.cGbSehIKrE@wuerfel>
-References: <1465183229-24147-1-git-send-email-wmills@ti.com> <1465183229-24147-5-git-send-email-wmills@ti.com> <20160606085627.GA6831@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH v3 0/2] Add a new Rockchip usb2 phy driver
+Date: Mon,  6 Jun 2016 17:20:02 +0800
+Message-ID: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160606085627.GA6831@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Bill Mills <wmills@ti.com>, rmk+kernel@armlinux.org.uk, t-kristo@ti.com, ssantosh@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, r-woodruff2@ti.com, devicetree@vger.kernel.org
+To: heiko@sntech.de, dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com, frank.wang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 6, 2016 9:56:27 AM CEST Mark Rutland wrote:
-> [adding devicetree]
-> 
-> On Sun, Jun 05, 2016 at 11:20:29PM -0400, Bill Mills wrote:
-> > Keystone2 can do DMA coherency but only if:
-> > 1) DDR3A DMA buffers are in high physical addresses (0x8_0000_0000)
-> >     (DDR3B does not have this constraint)
-> > 2) Memory is marked outer shared
-> > 3) DMA Master marks transactions as outer shared
-> >     (This is taken care of in bootloader)
-> > 
-> > Use outer shared instead of inner shared.
-> > This choice is done at early init time and uses the attr_mod facility
-> > 
-> > If the kernel is not configured for LPAE and using high PA, or if the
-> > switch to outer shared fails, then we fail to meet this criteria.
-> > Under any of these conditions we veto any dma-coherent attributes in
-> > the DTB.
-> 
-> I very much do not like this. As I previously mentioned [1],
-> dma-coherent has de-facto semantics today. This series deliberately
-> changes that, and inverts the relationship between DT and kernel (as the
-> describption in the DT would now depend on the configuration of the
-> kernel).
-> 
-> I would prefer that we have a separate property (e.g.
-> "dma-outer-coherent") to describe when a device can be coherent with
-> Normal, Outer Shareable, Inner Write-Back, Outer Write-Back memory.
-> Then the kernel can figure out whether or not device can be used
-> coherently, depending on how it is configured.
+The newer SoCs (rk3366, rk3399) of Rock-chip take a different usb-phy
+IP block than rk3288 and before, and most of phy-related registers are
+also different from the past, so a new phy driver is required necessarily.
 
-I share your concern, but I don't think the dma-outer-coherent attribute
-would be a good solution either.
+These series patches add phy-rockchip-inno-usb2.c and the corresponding
+documentation.
 
-The problem really is that keystone is a platform that is sometimes
-coherent, depending purely on what kernel we run, and not at all on
-anything we can describe in devicetree, and I don't see any good way
-to capture the behavior of the hardware in generic DT bindings.
+Changes in v3:
+ - Supplemented some hardware-description into the devicetree bindings.
+ - Resolved the mapping defect between fixed value in driver and the property
+   in devicetree.
+ - Code cleanup.
 
-So far, the assumption has been:
+Changes in v2:
+ - Specified more hardware-description into the devicetree bindings.
+ - Optimized some process of driver.
 
-- when running a non-LPAE kernel, keystone is not coherent, and we
-  must ignore both the dma-coherent properties in devices and the
-  dma-ranges properties in bus nodes.
-- when running an LPAE kernel, keystone is coherent, and we must
-  respect both of those.
+Frank Wang (2):
+  Documentation: bindings: add DT documentation for Rockchip USB2PHY
+  phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
 
-My interpretation of Bill's description above is that we now have
-an additional requirement that at least I was not aware of before,
-regarding the outer-sharable attribute. I don't think there is
-much value in making this a boot-time option, since everyone would
-want to run this platform in a cache-coherent way if at all possible.
+ .../bindings/phy/phy-rockchip-inno-usb2.txt        |   60 ++
+ drivers/phy/Kconfig                                |    7 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-rockchip-inno-usb2.c               |  630 ++++++++++++++++++++
+ 4 files changed, 698 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+ create mode 100644 drivers/phy/phy-rockchip-inno-usb2.c
 
-We already have special hacks to detect the case of keystone running
-in LPAE mode, in order to do the special rewrite-all-page-tables
-hack at boot time for relocating the physical address, and we could
-use the same hack to change the page table attributes.
-
-The question is how to communicate the requirement for outer-sharable
-for a platform. If we think it's a safe assumption that there will
-not be future 32-bit platforms with this requirement (or maybe one
-or two more at most), we could leave it in the special keystone hack.
-Alternatively, a DT property in an appropriate node could indicate
-that a particular platform requires it.
-
-	Arnd
+-- 
+1.7.9.5
