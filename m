@@ -1,177 +1,131 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: [PATCH v4 7/7] phy: Add Northstar2 PCI Phy support
-Date: Mon,  6 Jun 2016 18:11:40 +0530
-Message-ID: <1465216900-11755-8-git-send-email-pramod.kumar@broadcom.com>
-References: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V5 7/9] irqchip/gic: Prepare for adding platform driver
+Date: Mon, 6 Jun 2016 13:39:43 +0100
+Message-ID: <57556F0F.9030605@nvidia.com>
+References: <1465214023-8299-1-git-send-email-jonathanh@nvidia.com>
+ <1465214023-8299-8-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
+In-Reply-To: <1465214023-8299-8-git-send-email-jonathanh@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>, Jon Mason <jonmason@broadcom.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add PCI Phy support for Broadcom Northstar2 SoCs.  This driver uses the
-interface from the iproc mdio mux driver to enable the devices
-respective phys.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
----
- drivers/phy/Kconfig            |   8 +++
- drivers/phy/Makefile           |   2 +-
- drivers/phy/phy-bcm-ns2-pcie.c | 115 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 124 insertions(+), 1 deletion(-)
- create mode 100644 drivers/phy/phy-bcm-ns2-pcie.c
+On 06/06/16 12:53, Jon Hunter wrote:
+> To support GICs that require runtime power management, it is necessary
+> to add a platform driver, so that the probing of the chip can be
+> deferred if resources, such as a power-domain, is not yet available.
+> 
+> To prepare for adding a platform driver:
+>  1. Drop the __init section from the gic_dist_config() so this can be
+>     re-used by the platform driver.
+>  2. Add prototypes for functions required by the platform driver to the
+>     GIC header file so they can be re-used.
+> 
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/irqchip/irq-gic-common.c |  4 ++--
+>  drivers/irqchip/irq-gic.c        | 15 ++++++++-------
+>  include/linux/irqchip/arm-gic.h  |  5 +++++
+>  3 files changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
+> index 89e7423f0ebb..9ae71804b5dd 100644
+> --- a/drivers/irqchip/irq-gic-common.c
+> +++ b/drivers/irqchip/irq-gic-common.c
+> @@ -90,8 +90,8 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
+>  	return ret;
+>  }
+>  
+> -void __init gic_dist_config(void __iomem *base, int gic_irqs,
+> -			    void (*sync_access)(void))
+> +void gic_dist_config(void __iomem *base, int gic_irqs,
+> +		     void (*sync_access)(void))
+>  {
+>  	unsigned int i;
+>  
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 94eab6e23124..3d3ab9045244 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -449,7 +449,7 @@ static void gic_cpu_if_up(struct gic_chip_data *gic)
+>  }
+>  
+>  
+> -static void __init gic_dist_init(struct gic_chip_data *gic)
+> +static void gic_dist_init(struct gic_chip_data *gic)
+>  {
+>  	unsigned int i;
+>  	u32 cpumask;
+> @@ -535,7 +535,7 @@ int gic_cpu_if_down(unsigned int gic_nr)
+>   * this function, no interrupts will be delivered by the GIC, and another
+>   * platform-specific wakeup source must be enabled.
+>   */
+> -static void gic_dist_save(struct gic_chip_data *gic)
+> +void gic_dist_save(struct gic_chip_data *gic)
+>  {
+>  	unsigned int gic_irqs;
+>  	void __iomem *dist_base;
+> @@ -574,7 +574,7 @@ static void gic_dist_save(struct gic_chip_data *gic)
+>   * handled normally, but any edge interrupts that occured will not be seen by
+>   * the GIC and need to be handled by the platform-specific wakeup source.
+>   */
+> -static void gic_dist_restore(struct gic_chip_data *gic)
+> +void gic_dist_restore(struct gic_chip_data *gic)
+>  {
+>  	unsigned int gic_irqs;
+>  	unsigned int i;
+> @@ -620,7 +620,7 @@ static void gic_dist_restore(struct gic_chip_data *gic)
+>  	writel_relaxed(GICD_ENABLE, dist_base + GIC_DIST_CTRL);
+>  }
+>  
+> -static void gic_cpu_save(struct gic_chip_data *gic)
+> +void gic_cpu_save(struct gic_chip_data *gic)
+>  {
+>  	int i;
+>  	u32 *ptr;
+> @@ -650,7 +650,7 @@ static void gic_cpu_save(struct gic_chip_data *gic)
+>  
+>  }
+>  
+> -static void gic_cpu_restore(struct gic_chip_data *gic)
+> +void gic_cpu_restore(struct gic_chip_data *gic)
+>  {
+>  	int i;
+>  	u32 *ptr;
+> @@ -727,7 +727,7 @@ static struct notifier_block gic_notifier_block = {
+>  	.notifier_call = gic_notifier,
+>  };
+>  
+> -static int __init gic_pm_init(struct gic_chip_data *gic)
+> +static int gic_pm_init(struct gic_chip_data *gic)
+>  {
+>  	gic->saved_ppi_enable = __alloc_percpu(DIV_ROUND_UP(32, 32) * 4,
+>  		sizeof(u32));
+> @@ -757,7 +757,7 @@ free_ppi_enable:
+>  	return -ENOMEM;
+>  }
+>  #else
+> -static int __init gic_pm_init(struct gic_chip_data *gic)
+> +static int gic_pm_init(struct gic_chip_data *gic)
+>  {
+>  	return 0;
+>  }
+> @@ -1179,6 +1179,7 @@ static int __init __gic_init_bases(struct gic_chip_data *gic,
+>  		set_smp_cross_call(gic_raise_softirq);
+>  		register_cpu_notifier(&gic_cpu_notifier);
+>  #endif
+> +
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index b869b98..01fb93b 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -434,4 +434,12 @@ config PHY_CYGNUS_PCIE
- 
- source "drivers/phy/tegra/Kconfig"
- 
-+config PHY_NS2_PCIE
-+	tristate "Broadcom Northstar2 PCIe PHY driver"
-+	depends on OF && MDIO_BUS_MUX_BCM_IPROC
-+	select GENERIC_PHY
-+	default ARCH_BCM_IPROC
-+	help
-+	  Enable this to support the Broadcom Northstar2 PCIe PHY.
-+	  If unsure, say N.
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 9c3e73c..7aea094 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -53,5 +53,5 @@ obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
- obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
- obj-$(CONFIG_PHY_CYGNUS_PCIE)		+= phy-bcm-cygnus-pcie.o
--
- obj-$(CONFIG_ARCH_TEGRA) += tegra/
-+obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
-diff --git a/drivers/phy/phy-bcm-ns2-pcie.c b/drivers/phy/phy-bcm-ns2-pcie.c
-new file mode 100644
-index 0000000..9513f7a
---- /dev/null
-+++ b/drivers/phy/phy-bcm-ns2-pcie.c
-@@ -0,0 +1,115 @@
-+/*
-+ * Copyright (C) 2016 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of_mdio.h>
-+#include <linux/mdio.h>
-+#include <linux/phy.h>
-+#include <linux/phy/phy.h>
-+
-+struct ns2_pci_phy {
-+	struct mdio_device *mdiodev;
-+	struct phy *phy;
-+};
-+
-+#define BLK_ADDR_REG_OFFSET	0x1f
-+#define PLL_AFE1_100MHZ_BLK	0x2100
-+#define PLL_CLK_AMP_OFFSET	0x03
-+#define PLL_CLK_AMP_2P05V	0x2b18
-+
-+static int ns2_pci_phy_init(struct phy *p)
-+{
-+	struct ns2_pci_phy *phy = phy_get_drvdata(p);
-+	int rc;
-+
-+	/* select the AFE 100MHz block page */
-+	rc = mdiobus_write(phy->mdiodev->bus, phy->mdiodev->addr,
-+			   BLK_ADDR_REG_OFFSET, PLL_AFE1_100MHZ_BLK);
-+	if (rc)
-+		goto err;
-+
-+	/* set the 100 MHz reference clock amplitude to 2.05 v */
-+	rc = mdiobus_write(phy->mdiodev->bus, phy->mdiodev->addr,
-+			   PLL_CLK_AMP_OFFSET, PLL_CLK_AMP_2P05V);
-+	if (rc)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	dev_err(&phy->mdiodev->dev, "Error %d writing to phy\n", rc);
-+	return rc;
-+}
-+
-+static struct phy_ops ns2_pci_phy_ops = {
-+	.init = ns2_pci_phy_init,
-+};
-+
-+static int ns2_pci_phy_probe(struct mdio_device *mdiodev)
-+{
-+	struct device *dev = &mdiodev->dev;
-+	struct phy_provider *provider;
-+	struct ns2_pci_phy *p;
-+	struct phy *phy;
-+
-+	phy = devm_phy_create(dev, dev->of_node, &ns2_pci_phy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(dev, "failed to create Phy\n");
-+		return PTR_ERR(phy);
-+	}
-+
-+	p = devm_kmalloc(dev, sizeof(struct ns2_pci_phy),
-+			 GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	p->mdiodev = mdiodev;
-+	dev_set_drvdata(dev, p);
-+
-+	p->phy = phy;
-+	phy_set_drvdata(phy, p);
-+
-+	provider = devm_of_phy_provider_register(&phy->dev,
-+						 of_phy_simple_xlate);
-+	if (IS_ERR(provider)) {
-+		dev_err(dev, "failed to register Phy provider\n");
-+		return PTR_ERR(provider);
-+	}
-+
-+	dev_info(dev, "%s PHY registered\n", dev_name(dev));
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ns2_pci_phy_of_match[] = {
-+	{ .compatible = "brcm,ns2-pcie-phy", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ns2_pci_phy_of_match);
-+
-+static struct mdio_driver ns2_pci_phy_driver = {
-+	.mdiodrv = {
-+		.driver = {
-+			.name = "phy-bcm-ns2-pci",
-+			.of_match_table = ns2_pci_phy_of_match,
-+		},
-+	},
-+	.probe = ns2_pci_phy_probe,
-+};
-+mdio_module_driver(ns2_pci_phy_driver);
-+
-+MODULE_AUTHOR("Broadcom");
-+MODULE_DESCRIPTION("Broadcom Northstar2 PCI Phy driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:phy-bcm-ns2-pci");
+Not sure where this extra line came from but shouldn't be here.
+
+Marc let me know if you want me to resend.
+
+Jon
+
 -- 
-1.9.1
+nvpublic
