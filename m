@@ -1,89 +1,224 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/7] mtd: nand: Add Hynix H27UBG8T2BTR-BC to
- nand_ids table
-Date: Tue, 7 Jun 2016 00:06:45 +0300
-Message-ID: <20160607000645.5d1f428b40406a5db7cbe285@gmail.com>
-References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
-	<1465208664-9366-6-git-send-email-mamlinav@gmail.com>
-	<20160606205549.1ecd6fdb@bbrezillon>
-	<20160606225903.264abc01647eb1528cc226bd@gmail.com>
-	<20160606223138.3c2032ee@bbrezillon>
-Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v10 2/4] tee: generic TEE subsystem
+Date: Mon, 6 Jun 2016 16:44:42 -0500
+Message-ID: <5755EECA.6040606@ti.com>
+References: <1464784888-19854-1-git-send-email-jens.wiklander@linaro.org>
+ <1464784888-19854-3-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIORS6XXICRUBEKYDTRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160606223138.3c2032ee@bbrezillon>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464784888-19854-3-git-send-email-jens.wiklander@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Viro <viro@ZenIV.linux.org.uk>, Andreas Dannenberg <dannenberg@ti.com>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 6 Jun 2016 22:31:38 +0200
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On 06/01/2016 07:41 AM, Jens Wiklander wrote:
+few minor comments below.
 
-> On Mon, 6 Jun 2016 22:59:03 +0300
-> Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
-> > On Mon, 6 Jun 2016 20:55:49 +0200
-> > Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > 
-> > > On Mon,  6 Jun 2016 13:24:22 +0300
-> > > Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > >   
-> > > > Add the full description of the Hynix H27UBG8T2BTR-BC NAND chip in the
-> > > > nand_ids table so that we can later use the NAND ECC infos and ONFI timings
-> > > > mode in controller drivers.  
-> > > 
-> > > Still hoping to get this series [1] merged in 4.8, but if that's
-> > > not the case, I'll apply your patch.
-> > > 
-> > > BTW, that would be great if you could test it on your platforms.
-> > >   
-> > 
-> > It seems that Hynix-specific initialization code can't handle H27UBG8T2BTR-BC
-> > chip:
-> > 
-> > [    0.886153] nand: Could not find valid ONFI parameter page; aborting
-> > [    0.892665] nand: device found, Manufacturer ID: 0xad, Chip ID: 0xd7
-> > [    0.899025] nand: Hynix 1c03000.nand
-> > [    0.902596] nand: bus width 8 instead 16 bit
-> > [    0.906858] nand: No NAND device found
-> > [    0.910620] sunxi_nand 1c03000.nand: failed to init nand chips
-> > [    0.916528] sunxi_nand: probe of 1c03000.nand failed with error -22
-> 
-> Can you try this patch? It should fix the problem [1].
-> 
-> [1]http://code.bulix.org/6hjww1-100494
-> 
+I see the patch generated (with --strict):
+> CHECK: Alignment should match open parenthesis
+> #512: FILE: drivers/tee/tee.c:375:
+> +static int tee_ioctl_close_session(struct tee_context *ctx,
+> +              struct tee_ioctl_close_session_arg __user *uarg)
+> CHECK: Alignment should match open parenthesis
+> #1607: FILE: drivers/tee/tee_shm_pool.c:103:
+> +struct tee_shm_pool *tee_shm_pool_alloc_res_mem(struct device *dev,
+> +                      struct tee_shm_pool_mem_info *priv_info,
+> CHECK: Alignment should match open parenthesis
+> #1789: FILE: include/linux/tee_drv.h:124:
+> +struct tee_device *tee_device_alloc(const struct tee_desc *teedesc,
+> +                      struct device *dev, struct tee_shm_pool *pool,
+> WARNING: line over 80 characters
+> #1814: FILE: include/linux/tee_drv.h:149:
+> + * struct tee_shm_pool_mem_info - holds information needed to create a shared memory pool  
+> WARNING: line over 80 characters
+> #1826: FILE: include/linux/tee_drv.h:161:
+> + * tee_shm_pool_alloc_res_mem() - Create a shared memory pool from reserved memory range  
+> CHECK: Alignment should match open parenthesis
+> #1839: FILE: include/linux/tee_drv.h:174:
+> +struct tee_shm_pool *tee_shm_pool_alloc_res_mem(struct device *dev,                        
+> +                      struct tee_shm_pool_mem_info *priv_info,
+> CHECK: Prefer using the BIT macro
+> #1995: FILE: include/uapi/linux/tee.h:51:
+> +#define TEE_GEN_CAP_GP                (1 << 0)/* GlobalPlatform compliant TEE */ 
+> CHECK: Prefer using the BIT macro
+> #2005: FILE: include/uapi/linux/tee.h:61:
+> +#define TEE_OPTEE_CAP_TZ      (1 << 0)
+> WARNING: line over 80 characters
+> #2205: FILE: include/uapi/linux/tee.h:261:
+> + * struct tee_ioctl_invoke_func_arg - Invokes a function in a Trusted Application 
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+>       them to the maintainer, see CHECKPATCH in MAINTAINERS.
 
-Yes, it fixes problem. What about ONFI parameter page? Should it be ignored?
-[    0.886068] nand: Could not find valid ONFI parameter page; aborting
-[    0.892571] nand: device found, Manufacturer ID: 0xad, Chip ID: 0xd7
-[    0.898917] nand: Hynix NAND 4GiB 3,3V 8-bit
-[    0.903198] nand: 4096 MiB, MLC, erase size: 2048 KiB, page size: 8192, OOB size: 640
-[    0.911908] Bad block table found at page 524032, version 0x01
-[    0.918534] Bad block table found at page 523776, version 0x01
-[    0.972112] 5 ofpart partitions found on MTD device 1c03000.nand
-[    0.978116] Creating 5 MTD partitions on "1c03000.nand":
-[    0.983477] 0x000000000000-0x000000200000 : "boot0"
-[    0.988803] 0x000000200000-0x000000400000 : "boot0-rescue"
-[    0.994692] 0x000000400000-0x000000600000 : "uboot"
-[    0.999944] 0x000000600000-0x000000800000 : "uboot-rescue"
-[    1.005763] 0x000000800000-0x000100000000 : "main"
+Might be nice to fix them up.
 
-> 
-> -- 
-> Boris Brezillon, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+[...]
 
+> diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
+> new file mode 100644
+> index 0000000..f3ba154
+> --- /dev/null
+> +++ b/drivers/tee/Kconfig
+> @@ -0,0 +1,9 @@
+> +# Generic Trusted Execution Environment Configuration
+> +config TEE
+> +	bool "Trusted Execution Environment support"
 
+Why could not this be tristate? we would like to enforce subsystem init?
+
+> +	default n
+
+You should not need this. (default is n)
+
+> +	select DMA_SHARED_BUFFER
+> +	select GENERIC_ALLOCATOR
+
+select or depends?
+
+> +	help
+> +	  This implements a generic interface towards a Trusted Execution
+> +	  Environment (TEE).
+> diff --git a/drivers/tee/Makefile b/drivers/tee/Makefile
+> new file mode 100644
+> index 0000000..60d2dab
+> --- /dev/null
+> +++ b/drivers/tee/Makefile
+> @@ -0,0 +1,3 @@
+> +obj-y += tee.o
+> +obj-y += tee_shm.o
+> +obj-y += tee_shm_pool.o
+> diff --git a/drivers/tee/tee.c b/drivers/tee/tee.c
+> new file mode 100644
+> index 0000000..119e18e
+> --- /dev/null
+> +++ b/drivers/tee/tee.c
+> @@ -0,0 +1,877 @@
+> +/*
+> + * Copyright (c) 2015-2016, Linaro Limited
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+Adding a
+#define pr_fmt(fmt) "%s: " fmt, __func__ might help
+might help give reasonable errors where pr_* is used.
+
+> +#include <linux/cdev.h>
+> +#include <linux/device.h>
+> +#include <linux/fs.h>
+> +#include <linux/idr.h>
+> +#include <linux/slab.h>
+> +#include <linux/tee_drv.h>
+> +#include <linux/uaccess.h>
+> +#include "tee_private.h"
+> +
+> +#define TEE_NUM_DEVICES	32
+
+I have a personal allergy to MAX_* macros, so I wonder if idr can help
+us get rid of fixed size tables? I wonder if the use should be limited
+to tee_shm.c ?
+
+static DEFINE_IDR(tee_id);
+....
+
+teedev->id =  idr_alloc(&tee_id, teedev, 0, 0, GFP_KERNEL);
+or something similar?
+
+> +
+> +#define TEE_IOCTL_PARAM_SIZE(x) (sizeof(struct tee_param) * (x))
+> +
+> +/*
+> + * Unprivileged devices in the in the lower half range and privileged
+> + * devices in the upper half range.
+> + */
+> +static DECLARE_BITMAP(dev_mask, TEE_NUM_DEVICES);
+> +static DEFINE_SPINLOCK(driver_lock);
+
+I think you might be able to get rid of the above two with idr usage.
+
+> +
+> +static struct class *tee_class;
+> +static dev_t tee_devt;
+> +
+> +static int tee_open(struct inode *inode, struct file *filp)
+> +{
+> +	int rc;
+> +	struct tee_device *teedev;
+> +	struct tee_context *ctx;
+> +
+> +	teedev = container_of(inode->i_cdev, struct tee_device, cdev);
+> +	if (!tee_device_get(teedev))
+> +		return -EINVAL;
+> +
+> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx) {
+> +		rc = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	ctx->teedev = teedev;
+> +	filp->private_data = ctx;
+
+I wonder if the teedev was a module, could it be removed /
+unregistered after tee_open was invoked?
+
+> +static int tee_ioctl_invoke(struct tee_context *ctx,
+> +			    struct tee_ioctl_buf_data __user *ubuf)
+> +{
+> +	int rc;
+> +	size_t n;
+> +	struct tee_ioctl_buf_data buf;
+> +	struct tee_ioctl_invoke_arg __user *uarg;
+> +	struct tee_ioctl_invoke_arg arg;
+> +	struct tee_ioctl_param __user *uparams = NULL;
+> +	struct tee_param *params = NULL;
+> +
+> +	if (!ctx->teedev->desc->ops->invoke_func)
+> +		return -EINVAL;
+> +
+> +	rc = copy_from_user(&buf, ubuf, sizeof(buf));
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (buf.buf_len > TEE_MAX_ARG_SIZE ||
+> +	    buf.buf_len < sizeof(struct tee_ioctl_invoke_arg))
+> +		return -EINVAL;
+> +
+> +	uarg = (struct tee_ioctl_invoke_arg __user *)(unsigned long)buf.buf_ptr;
+> +	if (copy_from_user(&arg, uarg, sizeof(arg)))
+> +		return -EFAULT;
+> +
+> +	if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) != buf.buf_len)
+> +		return -EINVAL;
+> +
+> +	if (arg.num_params) {
+> +		params = kcalloc(arg.num_params, sizeof(struct tee_param),
+> +				 GFP_KERNEL);
+> +		if (!params)
+> +			return -ENOMEM;
+> +		uparams = (struct tee_ioctl_param __user *)(uarg + 1);
+> +		rc = params_from_user(ctx, params, arg.num_params, uparams);
+> +		if (rc)
+> +			goto out;
+> +	}
+> +
+> +	rc = ctx->teedev->desc->ops->invoke_func(ctx, &arg, params);
+> +	if (rc)
+> +		goto out;
+
+Hmm.. I wonder if the teedev drivers should get subsystem level lock
+protection for ops invocation or should they implement locking themselves?
+
+[...]
 -- 
-Thanks and regards,
-Aleksei Mamlin
+Regards,
+Nishanth Menon
