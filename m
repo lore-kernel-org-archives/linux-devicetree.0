@@ -1,35 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 1/8] dt-bindings: mfd: Add Altera Arria10 System
- Resource Chip bindings
-Date: Mon, 6 Jun 2016 08:28:27 -0500
-Message-ID: <20160606132827.GA17802@rob-hp-laptop>
-References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com>
- <1464889948-28793-2-git-send-email-tthayer@opensource.altera.com>
+Subject: Re: [PATCH] device tree description for AD5820 camera auto-focus coil
+Date: Mon, 6 Jun 2016 08:29:23 -0500
+Message-ID: <20160606132923.GA18804@rob-hp-laptop>
+References: <20160524090433.GA1277@amd>
+ <20160524091746.GA14536@amd>
+ <20160525212659.GK26360@valkosipuli.retiisi.org.uk>
+ <20160527205140.GA26767@amd>
+ <20160531212222.GP26360@valkosipuli.retiisi.org.uk>
+ <20160531213437.GA28397@amd>
+ <20160601152439.GQ26360@valkosipuli.retiisi.org.uk>
+ <20160601220840.GA21946@amd>
+ <20160602074544.GR26360@valkosipuli.retiisi.org.uk>
+ <20160602193027.GB7984@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464889948-28793-2-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20160602193027.GB7984@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, patrikbachan@gmail.com, serge@hallyn.com, linux-media@vger.kernel.org, mchehab@osg.samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 02, 2016 at 12:52:21PM -0500, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
+On Thu, Jun 02, 2016 at 09:30:27PM +0200, Pavel Machek wrote:
 > 
-> The Altera Arria10 Devkit System Resource chip is a Multi-Function
-> Device with a GPIO expander.
+> Add documentation for ad5820 device tree binding.
 > 
-> This patch adds documentation for the Altera A10-SR DT bindings.
+> Signed-off-by: Pavel Machek <pavel@denx.de>
 > 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
-> v2  Addition of IRQ controller bindings.
->     Removal of hw_mon sub-device.
-> ---
->  .../devicetree/bindings/mfd/altera-a10sr.txt       |   46 ++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> new file mode 100644
+> index 0000000..fb70ca5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> @@ -0,0 +1,19 @@
+> +* Analog Devices AD5820 autofocus coil
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must contain "adi,ad5820"
+> +
+> +  - reg: I2C slave address
+> +
+> +  - VANA-supply: supply of voltage for VANA pin
+> +
+> +Example:
+> +
+> +       ad5820: coil@0c {
+
+Drop the leading 0. With that,
 
 Acked-by: Rob Herring <robh@kernel.org>
