@@ -1,130 +1,93 @@
-From: Jean-Philippe Brucker <Jean-Philippe.Brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] iommu/arm-smmu: Finish off SMMUv3 default domain
- support
-Date: Mon, 6 Jun 2016 16:47:12 +0100
-Message-ID: <20160606154712.GA9864@e106794-lin.localdomain>
-References: <cover.1464966939.git.robin.murphy@arm.com>
- <aabcdd814b93b2b6a902b189f6911f929a29b64f.1464966939.git.robin.murphy@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <aabcdd814b93b2b6a902b189f6911f929a29b64f.1464966939.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH 2/3] Documentation: add DT bindings for ARM SCPI power domains
+Date: Mon,  6 Jun 2016 16:53:58 +0100
+Message-ID: <1465228439-13457-3-git-send-email-sudeep.holla@arm.com>
+References: <1465228439-13457-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465228439-13457-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Jon Medhurst <tixy@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
+The System Control Processor (SCP) provides peripheral devices with
+power domains that can be enabled and disabled viathe System Control
+and Power Interface (SCPI) Message Protocol. Add bindings to allow
+probing of these device power domians.
 
-I quite like this change, the result looks pretty clean. I rebased my
-current work and didn't notice any major issue. Some nits below.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ Documentation/devicetree/bindings/arm/arm,scpi.txt | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-On Fri, Jun 03, 2016 at 06:15:41PM +0100, Robin Murphy wrote:
-> The driver's current reliance on attaching/detaching an entire group
-> for the first device it sees is at odds with the IOMMU core's initial
-> construction of a group by adding each device and attaching it to the
-> default domain in turn. As it turns out, we can happily do away with the
-> whole palaver by simply letting each device be in charge of its own
-> stream ID/stream table entry, and reducing the problem of tracking
-> duplicate IDs and domains down to "Is the STE already associated with
-> the appropriate context?", which is easily done by just looking at the
-> stream table itself.
-> 
-> With an of_xlate() callback in place, devices attached to default
-> domains will now get appropriate DMA ops installed, so make sure we
-> enable translation again to stop them getting horribly confused - this
-> reverts the SMMUv3 portion of cbf8277ef456 ("iommu/arm-smmu: Treat
-> IOMMU_DOMAIN_DMA as bypass for now")
-> 
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
-...
->  
-> -static int arm_smmu_install_ste_for_group(struct arm_smmu_group *smmu_group)
-> +static void arm_smmu_install_ste(struct arm_smmu_master_data *master,
-> +				struct arm_smmu_domain *smmu_domain)
+diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+index 313dabdc14f9..7141670d649b 100644
+--- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
++++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+@@ -87,10 +87,33 @@ SCPI provides an API to access the various sensors on the SoC.
+ 			 implementation for the IDs to use. For Juno
+ 			 R0 and Juno R1 refer to [3].
 
-(Second line is misaligned here)
++Power domain bindings for the power domains based on SCPI Message Protocol
++------------------------------------------------------------
++
++This binding uses the generic power domain binding[4].
++
++PM domain providers
++===================
++
++Required properties:
++ - #power-domain-cells : Should be 1. Contains the device or the power
++			 domain ID value used by SCPI commands.
++ - num-domains: Total number of power domains provided by SCPI. This is
++		needed as the SCPI message protocol lacks a mechanism to
++		query this information runtime.
++
++PM domain consumers
++===================
++
++Required properties:
++ - power-domains : A phandle and PM domain specifier as defined by bindings of
++                   the power controller specified by phandle.
++
+ [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
+ [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+ [2] Documentation/devicetree/bindings/thermal/thermal.txt
+ [3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
++[4] Documentation/devicetree/bindings/power/power_domain.txt
 
->  {
-> -	int i;
-> -	struct arm_smmu_domain *smmu_domain = smmu_group->domain;
-> -	struct arm_smmu_strtab_ent *ste = &smmu_group->ste;
-> -	struct arm_smmu_device *smmu = smmu_group->smmu;
-> +	struct arm_smmu_device *smmu = master->smmu;
-> +	struct arm_smmu_strtab_ent *ste = &master->ste;
-> +	__le64 *step = arm_smmu_get_step_for_sid(smmu, master->sid);
->  
->  	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
->  		ste->s1_cfg = &smmu_domain->s1_cfg;
-> @@ -1634,42 +1628,16 @@ static int arm_smmu_install_ste_for_group(struct arm_smmu_group *smmu_group)
->  		ste->s2_cfg = &smmu_domain->s2_cfg;
->  	}
->  
-> -	for (i = 0; i < smmu_group->num_sids; ++i) {
-> -		u32 sid = smmu_group->sids[i];
-> -		__le64 *step = arm_smmu_get_step_for_sid(smmu, sid);
-> -
-> -		arm_smmu_write_strtab_ent(smmu, sid, step, ste);
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-> -static void arm_smmu_detach_dev(struct device *dev)
-> -{
-> -	struct arm_smmu_group *smmu_group = arm_smmu_group_get(dev);
-> -
-> -	smmu_group->ste.bypass = true;
-> -	if (arm_smmu_install_ste_for_group(smmu_group) < 0)
-> -		dev_warn(dev, "failed to install bypass STE\n");
-> -
-> -	smmu_group->domain = NULL;
-> +	arm_smmu_write_strtab_ent(smmu, master->sid, step, ste);
->  }
->  
->  static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  {
->  	int ret = 0;
-> -	struct arm_smmu_device *smmu;
->  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> -	struct arm_smmu_group *smmu_group = arm_smmu_group_get(dev);
-> +	struct arm_smmu_master_data *master = dev->archdata.iommu;
+ Example:
 
-(calling this member 'master' or 'smmu_master' consistently, instead of
-'data', would make the driver easier to grep)
+@@ -144,6 +167,12 @@ scpi_protocol: scpi@2e000000 {
+ 		compatible = "arm,scpi-sensors";
+ 		#thermal-sensor-cells = <1>;
+ 	};
++
++	scpi_devpd: scpi-power-domains {
++		compatible = "arm,scpi-power-domains";
++		num-domains = <2>;
++		#power-domain-cells = <1>;
++	};
+ };
 
-> +	struct arm_smmu_device *smmu = master->smmu;
->  
-> -	if (!smmu_group)
-> -		return -ENOENT;
-> -
-> -	/* Already attached to a different domain? */
-> -	if (smmu_group->domain && smmu_group->domain != smmu_domain)
-> -		arm_smmu_detach_dev(dev);
-> -
-> -	smmu = smmu_group->smmu;
->  	mutex_lock(&smmu_domain->init_mutex);
->  
->  	if (!smmu_domain->smmu) {
-> @@ -1688,21 +1656,9 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  		goto out_unlock;
->  	}
->  
-> -	/* Group already attached to this domain? */
-> -	if (smmu_group->domain)
-> -		goto out_unlock;
-> +	master->ste.bypass = false;
+ cpu@0 {
+@@ -156,6 +185,7 @@ hdlcd@7ff60000 {
+ 	...
+ 	reg = <0 0x7ff60000 0 0x1000>;
+ 	clocks = <&scpi_clk 4>;
++	power-domains = <&scpi_devpd 1>;
+ };
 
-Should also set master->ste.valid = true. It worked out of the box
-during my first test, because master is allocated with kmalloc and
-initialised with garbage. Could we also use kzalloc, in the of_xlate
-patch?
-
-Thanks,
-Jean-Philippe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ thermal-zones {
+@@ -186,3 +216,7 @@ The thermal-sensors property in the soc_thermal node uses the
+ temperature sensor provided by SCP firmware to setup a thermal
+ zone. The ID "3" is the sensor identifier for the temperature sensor
+ as used by the firmware.
++
++The num-domains property in scpi-power-domains domain specifies that
++SCPI provides 2 power domains. The hdlcd node uses the power domain with
++domain ID 1.
