@@ -1,74 +1,101 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
-Date: Mon, 6 Jun 2016 12:43:21 +0100
-Message-ID: <20160606114321.GJ1041@n2100.armlinux.org.uk>
-References: <1465183229-24147-1-git-send-email-wmills@ti.com>
- <1465183229-24147-5-git-send-email-wmills@ti.com>
- <20160606085627.GA6831@leverpostej>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V5 0/9] Add support for Tegra210 AGIC
+Date: Mon, 6 Jun 2016 12:53:34 +0100
+Message-ID: <1465214023-8299-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160606085627.GA6831@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Bill Mills <wmills-l0cyMroinI0@public.gmane.org>, t-kristo-l0cyMroinI0@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, r-woodruff2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 09:56:27AM +0100, Mark Rutland wrote:
-> I very much do not like this. As I previously mentioned [1],
-> dma-coherent has de-facto semantics today. This series deliberately
-> changes that, and inverts the relationship between DT and kernel (as the
-> describption in the DT would now depend on the configuration of the
-> kernel).
+The Tegra210 has a 2nd level interrupt controller located in a separate
+power domain to the main GIC interrupt controller and hence requires
+runtime-pm support.
 
-dma-coherent's semantics are not very well defined - just grep for it
-in Documention/devicetree/ and you'll find several different wordings
-for what this property means.
+Add a platform driver for the GICs that require runtime-pm and make the
+necessary changes to the genirq and irqdomain core to support IRQ chips
+that require runtime-pm.
 
-Anyway, my point here is that all of these merely say that the hardware
-is coherent in _some regard_ - it doesn't specify under what conditions
-DMA coherency is guaranteed by the hardware.  It happens that on ARM,
-most platforms give that guarantee when using inner shared mappings.  If
-we were to use some other sharing, or disable sharing altogether (eg, by
-disabling SMP support) then all these platforms would immediately break.
+This series is based upon Marc Z's irq/irqchip-v4.7-rc1 branch [0].
 
-In other words, DMA coherence today already depends on the kernel's setup
-of the page tables corresponding to the requirements of the hardware.
+Changes since V4:
+- Removed header file drivers/irqchip/irq-gic.h.
+- Avoid exporting gic_handle_cascade_irq entry point.
+- Renamed of_gic_init() to gic_of_init_child() to distinguish it from the
+  existing gic_of_int().
+- Corrected preprocessor directive for CONFIG_ARM_GIC_PM.
 
-Keystone II is just slightly different - and as I understand it, TI
-followed one of the early specifications that ARM Ltd produced.  That
-specification may have contained errors, but unfortunately, we now have
-a situation where there is hardware out there which followed in good
-faith.
+Changes since V3:
+- Split the series into two, placing the clean-up/fixes patches into
+  another series [1]. The remaining patches in this series are for
+  adding runtime-pm support for irqchips and adding a platform driver
+  of second level GICs.
+- Dropped the patch to prevent early init of GICs if 'clocks' or
+  'power-domains' properties are present and re-added the patch to add
+  the compatibilty string for the Tegra210 AGIC.
 
-So, it seems to me to be entirely reasonable that Keystone II should
-mark devices with the "dma-coherent" property - just the same way as
-every other platform does.  It also seems to be entirely appropriate for
-a platform to remove this property if it determines that the conditions
-for DMA coherency are not met - in order to save the users data from
-corruption.
+Changes since V2:
+- Corrected RPM support for irqchips in genirq core as pointed out by
+  Kevin Hilman.
+- Corrected patch to save the irq type when mapping the interrupt.
+- Dropped changes to DT binding documentation and added patch to prevent
+  early init of GICs if the 'clocks' and/or 'power-domains' DT
+  properties are present (as we have discussed).
+- Moved platform driver code into it's own source file.
+- Separate changes for preparing for the platform driver into 3 patches
+  in an attempt to make it more readable!
+- Added fix for checking an interrupt descriptor is valid during IRQ
+  setup.
 
-TI Keystone II is not the only platform with issues here: there are
-Marvell Armada platforms out there which have DMA coherence, but are
-uniprocessor, we don't set the shared bit (which they require for
-DMA coherence) and so we omit the dma-coherent property from the
-device tree at the moment.  And they're inner-shared coherent.  We
-just don't set the page tables up so that they can work.
+Changes since V1:
+- Updated GIC to only WARN and not return an error if configuring a PPI
+  fails but will still return an error if an SPI fails (per discussion
+  with Marc).
+- Dropped change to mask sense bits for GIC-v3 (as this is not
+  necessary)
+- Split patch to avoid setting interrupt type when mapping the IRQ into
+  two patches per TGLX's feedback.
+- Changed name of irqchip device structure to "parent_device"
+- Moved call to irq_chip_pm_get() outside of chip_bus_lock().
+- Dropped patch to remove clock names from GIC DT documentation and
+  added AGIC clock names.
+- Update GIC platform driver to look-up clocks names from static list.
 
-So, I think to require a whole new property is absurd.  The existing
-property means "if the rest of the system is appropriately configured,
-this device can be dma-coherent".  So, what I think we need is a way
-to communicate whether the rest of the system has been appropriately
-configured, so the property can be attached to devices which meet the
-criteria, but the arch/platform level can signal whether the conditions
-for device DMA coherence have been met.  That's not a DT property,
-that's a matter of how the kernel has setup the system.
+[0] http://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/irqchip-4.7-rc1
+[1] http://marc.info/?l=linux-tegra&m=146289329915585&w=2
+
+Jon Hunter (9):
+  irqdomain: Fix handling of type settings for existing mappings
+  genirq: Look-up trigger type if not specified by caller
+  irqdomain: Don't set type when mapping an IRQ
+  genirq: Add runtime power management support for IRQ chips
+  irqchip/gic: Isolate early GIC initialisation code
+  irqchip/gic: Add helper function for chip initialisation
+  irqchip/gic: Prepare for adding platform driver
+  dt-bindings: arm-gic: Add documentation for Tegra210 AGIC
+  irqchip/gic: Add platform driver for non-root GICs that require RPM
+
+ .../bindings/interrupt-controller/arm,gic.txt      |   3 +-
+ drivers/irqchip/Kconfig                            |   6 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-gic-common.c                   |   4 +-
+ drivers/irqchip/irq-gic-pm.c                       | 184 +++++++++++++++++++++
+ drivers/irqchip/irq-gic.c                          | 133 ++++++++++-----
+ include/linux/irq.h                                |   4 +
+ include/linux/irqchip/arm-gic.h                    |  11 ++
+ include/linux/irqdomain.h                          |   3 +
+ kernel/irq/chip.c                                  |  35 ++++
+ kernel/irq/internals.h                             |   1 +
+ kernel/irq/irqdomain.c                             |  58 ++++++-
+ kernel/irq/manage.c                                |  38 ++++-
+ 13 files changed, 429 insertions(+), 52 deletions(-)
+ create mode 100644 drivers/irqchip/irq-gic-pm.c
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
