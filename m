@@ -1,54 +1,74 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 7/7] phy: Add Northstar2 PCI Phy support
-Date: Mon, 6 Jun 2016 11:42:12 -0700
-Message-ID: <5755C404.3080502@gmail.com>
-References: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
- <1465216900-11755-8-git-send-email-pramod.kumar@broadcom.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 00/22] of: Introduce of_match_device()
+Date: Mon, 6 Jun 2016 11:50:47 -0700
+Message-ID: <5755C607.8050602@gmail.com>
+References: <20160606083204.19760-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465216900-11755-8-git-send-email-pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2016 05:41 AM, Pramod Kumar wrote:
-> Add PCI Phy support for Broadcom Northstar2 SoCs.  This driver uses the
-> interface from the iproc mdio mux driver to enable the devices
-> respective phys.
+On 06/06/16 01:31, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/phy/Kconfig            |   8 +++
->  drivers/phy/Makefile           |   2 +-
->  drivers/phy/phy-bcm-ns2-pcie.c | 115 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 124 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/phy/phy-bcm-ns2-pcie.c
+> This series of patches introduces a common implementation of a function
+> that can be used in iterators (such as the bus_for_each_dev() or the
+> driver_for_each_device() functions) and that compare's a device's device
+> tree node with the passed in data. Numerous drivers and subsystems have
+> their own variant of this function, so a lot of duplication can be
+> removed by making use of the common implementation.
 > 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index b869b98..01fb93b 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -434,4 +434,12 @@ config PHY_CYGNUS_PCIE
->  
->  source "drivers/phy/tegra/Kconfig"
->  
-> +config PHY_NS2_PCIE
-> +	tristate "Broadcom Northstar2 PCIe PHY driver"
-> +	depends on OF && MDIO_BUS_MUX_BCM_IPROC
-> +	select GENERIC_PHY
-> +	default ARCH_BCM_IPROC
+> One thing that slightly bugs me about this is that it can't be used with
+> users of class_for_each_device() or class_find_device() because they get
+> passed a callback that takes a const void * rather than a void * for the
+> device tree node. I had at some point investigated to turn the remainder
+> of the iterators into taking const void *, but there are some drivers in
+> the kernel that want to modify the data passed to them, so it isn't easy
+> to switch.
+> 
+> An alternative would be to turn the const void * into void * for all the
+> callbacks of this sort, so that we can use a single set throughout the
+> tree, but I'm not sure how welcome that would be. I can give that a shot
+> if people think it worth, though.
+> 
+> Greg, any thoughts on this?
+> 
+> I've also kept the list of recipients very short, to get early feedback
+> and buy-in from Rob and Frank on the common implementation. I expect the
+> naming to allow for some good bike-shedding.
 
-Are not you missing a dependency on PHYLIB too to provide
-mdio_module_register() etc. (at least make it build)?
+Common implementation looks fine to me.
 
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+My shot at bike-shedding is to make the function name reflect the argument
+names of bus_find_device() and driver_find_device().  That would suggest
+of_node_match_data().  Or if one wanted to be more concise, of_node_match()
+or of_match_node().
+
+But of_match_node() is already in wide use (for something else entirely).
+
+And drivers/regulator/core.c is the one existing version of of_node_match():
+
+  static int of_node_match(struct device *dev, const void *data)
+  {
+          return dev->of_node == data;
+  }
+
+This is an example of the 'const void *data' vs 'void *data' that you
+mentioned, because this of_node_match() is used for class_find_device().
+of_node_match() could be used since only one current usage of the
+name would have to be changed to some other name.
+
+So that brings me back to of_node_match_data() being my preference
+because of_node_match() is entirely too similar to of_match_node(),
+which seems like it would lead to confusion when I am reading code.
+Then maybe a variant on that name with a 'const void *data' argument.
+Like the longer than I would like of_node_match_const_data().
+
+< snip >
+
+-Frank
