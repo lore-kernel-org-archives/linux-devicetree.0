@@ -1,29 +1,49 @@
-From: Chris Brand <chris.brand@broadcom.com>
-Subject: Re: [PATCH v2 1/6] power: Introduce Broadcom kona reset driver
-Date: Mon, 6 Jun 2016 09:42:03 -0700
-Message-ID: <CAMsMSK8ZX=nmJs9d2txRsk2gLa0duy3Qpp805ztYzow=OiTB8w@mail.gmail.com>
-References: <1463002582-6875-1-git-send-email-chris.brand@broadcom.com>
-	<1463002582-6875-2-git-send-email-chris.brand@broadcom.com>
-	<57409633.8060605@gmail.com>
-	<20160603023853.GD8921@earth>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160603023853.GD8921@earth>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-arm-kernel@lists.infradead.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: [PATCH] of: fix autoloading due to broken modalias with no 'compatible'
+Date: Mon,  6 Jun 2016 18:48:38 +0200
+Message-ID: <1465231718-2577-1-git-send-email-wsa@the-dreams.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Andreas Schwab <schwab-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 2, 2016 at 7:38 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> Feel free to queue it via arm-soc with
->
-> Acked-By: Sebastian Reichel <sre@kernel.org>
->
-> If I didn't overlook it, it's missing DT documentation, though.
+Because of an improper dereference, a stray 'C' character was output to
+the modalias when no 'compatible' was specified. This is the case for
+some old PowerMac drivers which only set the 'name' property. Fix it to
+let them match again.
 
-Thanks, Sebastian. Because this is effectively a move of code from
-arch/arm rather than new code, there's already dt documentation in
-Documentation/devicetree/bindings/reset/brcm,bcm21664-resetmgr.txt
+Reported-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Tested-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Andreas Schwab <schwab-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Fixes: 6543becf26fff6 ("mod/file2alias: make modalias generation safe for cross compiling")
+---
 
-Chris
+I think it makes sense if this goes in via ppc (with stable tag added).
+D'accord?
+
+ scripts/mod/file2alias.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index a9155077feefb9..fec75786f75bbb 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -384,7 +384,7 @@ static void do_of_entry_multi(void *symval, struct module *mod)
+ 	len = sprintf(alias, "of:N%sT%s", (*name)[0] ? *name : "*",
+ 		      (*type)[0] ? *type : "*");
+ 
+-	if (compatible[0])
++	if ((*compatible)[0])
+ 		sprintf(&alias[len], "%sC%s", (*type)[0] ? "*" : "",
+ 			*compatible);
+ 
+-- 
+2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
