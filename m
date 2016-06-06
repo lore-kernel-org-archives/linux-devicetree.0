@@ -1,41 +1,171 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 7/9] ARM: bcm2835: Add devicetree for the Raspberry Pi 3.
-Date: Mon, 06 Jun 2016 09:28:55 +0200
-Message-ID: <3265668.gGTUMSyXWi@wuerfel>
-References: <1464934708-24769-1-git-send-email-kraxel@redhat.com> <CAL_JsqL2RgTLq9R3v4LDiV6Wa7totbzJBgmzVDgUv_keoS52vA@mail.gmail.com> <1465197612.24775.190.camel@redhat.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun6i: Add pmic / regulator nodes to Mele
+ A1000G quad dts
+Date: Mon, 6 Jun 2016 15:33:17 +0800
+Message-ID: <CAGb2v67_EVVLLczFY5cFUmBe8R3--=s+d=HNW6rRK5DrhdV1+g@mail.gmail.com>
+References: <1465133880-22921-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v67Jo6MO7bp4JdV4hXrB4T60z4=ROkvAvE1i7dhAXk_UtQ@mail.gmail.com> <0a42bc82-83f2-80ce-93d4-a85c5ce69e24@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465197612.24775.190.camel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, "open list:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0a42bc82-83f2-80ce-93d4-a85c5ce69e24-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 6, 2016 9:20:12 AM CEST Gerd Hoffmann wrote:
-> On Fr, 2016-06-03 at 11:17 -0500, Rob Herring wrote:
-> > On Fri, Jun 3, 2016 at 5:39 AM, Gerd Hoffmann <kraxel@redhat.com> wrote:
-> > >   Hi,
-> > >
-> > >> I tried
-> > >>
-> > >> subdir-y += ../../../arm64/boot/dts/broadcom
-> > >
-> > > Hmm, works for me too now, probably had a typo somewhere.
-> > 
-> > What directory does the dtb end up in? Because as it was, it ended up
-> > in arch/arm64/boot/dts/broadcom. I'm not sure all this hackery is
-> > worth it if the dtb doesn't end up in arch/arm/boot/dts/.
-> 
-> With the 2/7 patch at the start of this subthread the dtb ends up in
-> arch/arm64/boot/dts/broadcom for both arm and arm64 builds.
-> 
-> make "dtbs_install" places it in /boot/dtbs/$version/ for arm builds and
-> in /boot/dtbs/$version/broadcom/ for arm64 builds.
+On Mon, Jun 6, 2016 at 3:23 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+>
+> On 06-06-16 09:12, Chen-Yu Tsai wrote:
+>>
+>> On Sun, Jun 5, 2016 at 9:37 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>
+>>> Add pmic / regulator nodes to Mele A1000G quad dts.
+>>>
+>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts | 88
+>>> +++++++++++++++++++++++-
+>>>  1 file changed, 87 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+>>> b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+>>> index e063dab..9782113 100644
+>>> --- a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+>>> +++ b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+>>> @@ -72,6 +72,10 @@
+>>>         };
+>>>  };
+>>>
+>>> +&cpu0 {
+>>> +       cpu-supply = <&reg_dcdc3>;
+>>> +};
+>>> +
+>>>  &ehci0 {
+>>>         status = "okay";
+>>>  };
+>>> @@ -85,6 +89,7 @@
+>>>         pinctrl-0 = <&gmac_pins_mii_a>;
+>>>         phy = <&phy1>;
+>>>         phy-mode = "mii";
+>>> +       phy-supply = <&reg_dldo1>;
+>>>         status = "okay";
+>>>
+>>>         phy1: ethernet-phy@1 {
+>>> @@ -101,13 +106,26 @@
+>>>  &mmc0 {
+>>>         pinctrl-names = "default";
+>>>         pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_m9>;
+>>> -       vmmc-supply = <&reg_vcc3v3>;
+>>> +       vmmc-supply = <&reg_dcdc1>;
+>>>         bus-width = <4>;
+>>>         cd-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
+>>>         cd-inverted;
+>>>         status = "okay";
+>>>  };
+>>>
+>>> +&p2wi {
+>>> +       status = "okay";
+>>> +
+>>> +       axp22x: pmic@68 {
+>>> +               compatible = "x-powers,axp221";
+>>> +               reg = <0x68>;
+>>> +               interrupt-parent = <&nmi_intc>;
+>>> +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>>> +       };
+>>> +};
+>>> +
+>>> +#include "axp22x.dtsi"
+>>> +
+>>>  &pio {
+>>>         led_pins_m9: led_pins@0 {
+>>>                 allwinner,pins = "PH13";
+>>> @@ -131,6 +149,73 @@
+>>>         };
+>>>  };
+>>>
+>>> +&reg_aldo1 {
+>>> +       regulator-min-microvolt = <3300000>;
+>>> +       regulator-max-microvolt = <3300000>;
+>>> +       regulator-name = "vcc-wifi";
+>>> +};
+>>> +
+>>> +&reg_aldo3 {
+>>> +       regulator-always-on;
+>>> +       regulator-min-microvolt = <2700000>;
+>>> +       regulator-max-microvolt = <3300000>;
+>>> +       regulator-name = "avcc";
+>>> +};
+>>> +
+>>> +&reg_dc5ldo {
+>>> +       regulator-always-on;
+>>> +       regulator-min-microvolt = <700000>;
+>>> +       regulator-max-microvolt = <1320000>;
+>>> +       regulator-name = "vdd-cpus"; /* This is an educated guess */
+>>> +};
+>>> +
+>>> +&reg_dcdc1 {
+>>> +       regulator-always-on;
+>>> +       regulator-min-microvolt = <3300000>;
+>>> +       regulator-max-microvolt = <3300000>;
+>>> +       regulator-name = "vcc-3v3";
+>>> +};
+>>> +
+>>> +&reg_dcdc2 {
+>>> +       regulator-min-microvolt = <700000>;
+>>> +       regulator-max-microvolt = <1320000>;
+>>> +       regulator-name = "vdd-gpu";
+>>> +};
+>>> +
+>>> +&reg_dcdc3 {
+>>> +       regulator-always-on;
+>>> +       regulator-min-microvolt = <700000>;
+>>> +       regulator-max-microvolt = <1320000>;
+>>> +       regulator-name = "vdd-cpu";
+>>> +};
+>>> +
+>>> +&reg_dcdc4 {
+>>> +       regulator-always-on;
+>>> +       regulator-min-microvolt = <700000>;
+>>> +       regulator-max-microvolt = <1320000>;
+>>> +       regulator-name = "vdd-sys-dll";
+>>> +};
+>>> +
+>>> +&reg_dcdc5 {
+>>> +       regulator-always-on;
+>>> +       regulator-min-microvolt = <1500000>;
+>>> +       regulator-max-microvolt = <1500000>;
+>>> +       regulator-name = "vcc-dram";
+>>> +};
+>>> +
+>>> +&reg_dldo1 {
+>>> +       regulator-min-microvolt = <3300000>;
+>>> +       regulator-max-microvolt = <3300000>;
+>>> +       regulator-name = "vcc-ethernet-phy";
+>>> +};
+>>> +
+>>> +&reg_dldo4 {
+>>> +       regulator-always-on;
+>>
+>>
+>> Why not tie this to the usbphy? Same for the other patch.
+>
+>
+> Because both reg_usb1_vbus and reg_dldo4 need to be on
+> for the hub attached to usb1 to work, and I can list
+> only one usb1_vbus-supply.
 
-Ok, let's stay with that for now then, and solve it better when we
-need to do more of the same. Are you aware of any other boards using
-bcm2837?
+Understood. We'll have to wait for the generic pwrseq stuff for
+a proper description of this.
 
-	Arnd
+For now,
+
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+for both patches.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
