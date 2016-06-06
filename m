@@ -1,87 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 20/32] dt-bindings: Add binding for brcm,bcm2835-sdhost.
-Date: Mon, 6 Jun 2016 08:12:43 -0500
-Message-ID: <20160606131243.GA8629@rob-hp-laptop>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com>
- <1464817421-8519-21-git-send-email-kraxel@redhat.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Add jdi panel vendor
+Date: Mon, 6 Jun 2016 08:13:24 -0500
+Message-ID: <20160606131324.GA10338@rob-hp-laptop>
+References: <1464834905-25407-1-git-send-email-simhavcs@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464817421-8519-21-git-send-email-kraxel@redhat.com>
+In-Reply-To: <1464834905-25407-1-git-send-email-simhavcs@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: linux-rpi-kernel@lists.infradead.org, Eric Anholt <eric@anholt.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Vinay Simha BN <simhavcs@gmail.com>
+Cc: Archit Taneja <archit.taneja@gmail.com>, John Stultz <john.stultz@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Ralf Baechle <ralf@linux-mips.org>, Jonathan Cameron <jic23@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 11:43:29PM +0200, Gerd Hoffmann wrote:
-> From: Eric Anholt <eric@anholt.net>
+On Thu, Jun 02, 2016 at 08:05:02AM +0530, Vinay Simha BN wrote:
+> Japan Display Inc.
 > 
-> This is the other SD controller on the platform, which can be swapped
-> to the role of SD card host using pin muxing.
-> 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
+> Cc: Archit Taneja <archit.taneja@gmail.com>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
 > ---
->  .../devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt |  3 +++
->  .../bindings/mmc/brcm,bcm2835-sdhost.txt           | 24 ++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-> index 59476fb..3cc74e2 100644
-> --- a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-> @@ -15,4 +15,7 @@ sdhci: sdhci {
->  	interrupts = <2 30>;
->  	clocks = <&clk_mmc>;
->  	bus-width = <4>;
-> +	dmas = <&dma 13>,
-> +	       <&dma 13>;
-> +	dma-names = "tx", "rx";
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-This looks unrelated. Plus SDHCI implies internal DMA master generally, 
-so is external DMA really supported?
-
->  };
-> diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-> new file mode 100644
-> index 0000000..074992c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-> @@ -0,0 +1,24 @@
-> +Broadcom BCM2835 SDHOST controller
-> +
-> +This file documents differences between the core properties described
-> +by mmc.txt and the properties that represent the BCM2835 controller.
-> +
-> +Required properties:
-> +- compatible: Should be "brcm,bcm2835-sdhci".
-
-sdhost?
-
-> +- clocks: The clock feeding the SDHOST controller.
-
-reg, interrupts missing.
-
-> +
-> +Optional properties:
-> +- dmas: DMA channels for read and write.
-> +          See Documentation/devicetree/bindings/dma/dma.txt for details
-
-dma-names?
-
-> +
-> +Example:
-> +
-> +sdhost: sdhost@7e202000 {
-> +	compatible = "brcm,bcm2835-sdhost";
-> +	reg = <0x7e202000 0x100>;
-> +	interrupts = <2 24>;
-> +	clocks = <&clocks BCM2835_CLOCK_VPU>;
-> +	dmas = <&dma 13>,
-> +	       <&dma 13>;
-> +	dma-names = "tx", "rx";
-> +};
-> -- 
-> 1.8.3.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
