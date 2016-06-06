@@ -1,91 +1,231 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/7] mtd: nand: Add Hynix H27UBG8T2BTR-BC to
- nand_ids table
-Date: Mon, 6 Jun 2016 22:59:03 +0300
-Message-ID: <20160606225903.264abc01647eb1528cc226bd@gmail.com>
-References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
-	<1465208664-9366-6-git-send-email-mamlinav@gmail.com>
-	<20160606205549.1ecd6fdb@bbrezillon>
-Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] arm64: dts: apm: Use lowercase consistently for hex
+ constants
+Date: Mon, 06 Jun 2016 15:17:56 -0500
+Message-ID: <20160606201756.4978.58010.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIITLGXXICRUBFGQCTEE-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160606205549.1ecd6fdb@bbrezillon>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Duc Dang <dhdang@apm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 6 Jun 2016 20:55:49 +0200
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+The convention in these files is to use lowercase for "0x" prefixes and for
+the hex constants themselves, but a few changes didn't follow that
+convention, which makes the file annoying to read.
 
-> On Mon,  6 Jun 2016 13:24:22 +0300
-> Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
-> > Add the full description of the Hynix H27UBG8T2BTR-BC NAND chip in the
-> > nand_ids table so that we can later use the NAND ECC infos and ONFI timings
-> > mode in controller drivers.
-> 
-> Still hoping to get this series [1] merged in 4.8, but if that's
-> not the case, I'll apply your patch.
-> 
-> BTW, that would be great if you could test it on your platforms.
-> 
+Use lowercase consistently for the hex constants.  No functional change
+intended.
 
-It seems that Hynix-specific initialization code can't handle H27UBG8T2BTR-BC
-chip:
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ .../devicetree/bindings/net/apm-xgene-enet.txt     |    4 +-
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi         |   40 ++++++++++----------
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   36 +++++++++---------
+ 3 files changed, 40 insertions(+), 40 deletions(-)
 
-[    0.886153] nand: Could not find valid ONFI parameter page; aborting
-[    0.892665] nand: device found, Manufacturer ID: 0xad, Chip ID: 0xd7
-[    0.899025] nand: Hynix 1c03000.nand
-[    0.902596] nand: bus width 8 instead 16 bit
-[    0.906858] nand: No NAND device found
-[    0.910620] sunxi_nand 1c03000.nand: failed to init nand chips
-[    0.916528] sunxi_nand: probe of 1c03000.nand failed with error -22
-
-> 
-> Regards,
-> 
-> Boris
-> 
-> [1]https://lkml.org/lkml/2016/5/27/264
-> 
-> > 
-> > Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  drivers/mtd/nand/nand_ids.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/mtd/nand/nand_ids.c b/drivers/mtd/nand/nand_ids.c
-> > index ccc05f5..ccdc773 100644
-> > --- a/drivers/mtd/nand/nand_ids.c
-> > +++ b/drivers/mtd/nand/nand_ids.c
-> > @@ -52,6 +52,10 @@ struct nand_flash_dev nand_flash_ids[] = {
-> >  		{ .id = {0xad, 0xde, 0x94, 0xda, 0x74, 0xc4} },
-> >  		  SZ_8K, SZ_8K, SZ_2M, NAND_NEED_SCRAMBLING, 6, 640,
-> >  		  NAND_ECC_INFO(40, SZ_1K), 4 },
-> > +	{"H27UBG8T2BTR-BC 32G 3.3V 8-bit",
-> > +		{ .id = {0xad, 0xd7, 0x94, 0xda, 0x74, 0xc3} },
-> > +		  SZ_8K, SZ_4K, SZ_2M, NAND_NEED_SCRAMBLING, 6, 640,
-> > +		  NAND_ECC_INFO(40, SZ_1K), 0 },
-> >  
-> >  	LEGACY_ID_NAND("NAND 4MiB 5V 8-bit",   0x6B, 4, SZ_8K, SP_OPTIONS),
-> >  	LEGACY_ID_NAND("NAND 4MiB 3,3V 8-bit", 0xE3, 4, SZ_8K, SP_OPTIONS),
-> 
-> 
-> 
-> -- 
-> Boris Brezillon, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
-
--- 
-Thanks and regards,
-Aleksei Mamlin
+diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+index 05f705e3..e41b2d5 100644
+--- a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
++++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+@@ -59,8 +59,8 @@ Example:
+ 		compatible = "apm,xgene-enet";
+ 		status = "disabled";
+ 		reg = <0x0 0x17020000 0x0 0xd100>,
+-		      <0x0 0X17030000 0x0 0X400>,
+-		      <0x0 0X10000000 0x0 0X200>;
++		      <0x0 0x17030000 0x0 0x400>,
++		      <0x0 0x10000000 0x0 0x200>;
+ 		reg-names = "enet_csr", "ring_csr", "ring_cmd";
+ 		interrupts = <0x0 0x3c 0x4>;
+ 		port-id = <0>;
+diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+index c569f76..9773687 100644
+--- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+@@ -106,9 +106,9 @@
+ 		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
+ 		ranges = <0 0 0 0x79000000 0x0 0x800000>; /* MSI Range */
+ 		reg = <0x0 0x78090000 0x0 0x10000>,	/* GIC Dist */
+-		      <0x0 0x780A0000 0x0 0x20000>,	/* GIC CPU */
+-		      <0x0 0x780C0000 0x0 0x10000>,	/* GIC VCPU Control */
+-		      <0x0 0x780E0000 0x0 0x20000>;	/* GIC VCPU */
++		      <0x0 0x780a0000 0x0 0x20000>,	/* GIC CPU */
++		      <0x0 0x780c0000 0x0 0x10000>,	/* GIC VCPU Control */
++		      <0x0 0x780e0000 0x0 0x20000>;	/* GIC VCPU */
+ 		v2m0: v2m@0x00000 {
+ 			compatible = "arm,gic-v2m-frame";
+ 			msi-controller;
+@@ -159,35 +159,35 @@
+ 			msi-controller;
+ 			reg = <0x0 0x90000 0x0 0x1000>;
+ 		};
+-		v2m10: v2m@0xA0000 {
++		v2m10: v2m@0xa0000 {
+ 			compatible = "arm,gic-v2m-frame";
+ 			msi-controller;
+-			reg = <0x0 0xA0000 0x0 0x1000>;
++			reg = <0x0 0xa0000 0x0 0x1000>;
+ 		};
+-		v2m11: v2m@0xB0000 {
++		v2m11: v2m@0xb0000 {
+ 			compatible = "arm,gic-v2m-frame";
+ 			msi-controller;
+-			reg = <0x0 0xB0000 0x0 0x1000>;
++			reg = <0x0 0xb0000 0x0 0x1000>;
+ 		};
+-		v2m12: v2m@0xC0000 {
++		v2m12: v2m@0xc0000 {
+ 			compatible = "arm,gic-v2m-frame";
+ 			msi-controller;
+-			reg = <0x0 0xC0000 0x0 0x1000>;
++			reg = <0x0 0xc0000 0x0 0x1000>;
+ 		};
+-		v2m13: v2m@0xD0000 {
++		v2m13: v2m@0xd0000 {
+ 			compatible = "arm,gic-v2m-frame";
+ 			msi-controller;
+-			reg = <0x0 0xD0000 0x0 0x1000>;
++			reg = <0x0 0xd0000 0x0 0x1000>;
+ 		};
+-		v2m14: v2m@0xE0000 {
++		v2m14: v2m@0xe0000 {
+ 			compatible = "arm,gic-v2m-frame";
+ 			msi-controller;
+-			reg = <0x0 0xE0000 0x0 0x1000>;
++			reg = <0x0 0xe0000 0x0 0x1000>;
+ 		};
+-		v2m15: v2m@0xF0000 {
++		v2m15: v2m@0xf0000 {
+ 			compatible = "arm,gic-v2m-frame";
+ 			msi-controller;
+-			reg = <0x0 0xF0000 0x0 0x1000>;
++			reg = <0x0 0xf0000 0x0 0x1000>;
+ 		};
+ 	};
+ 
+@@ -629,8 +629,8 @@
+ 			compatible = "apm,xgene2-sgenet";
+ 			status = "disabled";
+ 			reg = <0x0 0x1f610000 0x0 0x10000>,
+-			      <0x0 0x1f600000 0x0 0Xd100>,
+-			      <0x0 0x20000000 0x0 0X20000>;
++			      <0x0 0x1f600000 0x0 0xd100>,
++			      <0x0 0x20000000 0x0 0x20000>;
+ 			interrupts = <0 96 4>,
+ 				     <0 97 4>;
+ 			dma-coherent;
+@@ -643,8 +643,8 @@
+ 			compatible = "apm,xgene2-xgenet";
+ 			status = "disabled";
+ 			reg = <0x0 0x1f620000 0x0 0x10000>,
+-			      <0x0 0x1f600000 0x0 0Xd100>,
+-			      <0x0 0x20000000 0x0 0X220000>;
++			      <0x0 0x1f600000 0x0 0xd100>,
++			      <0x0 0x20000000 0x0 0x220000>;
+ 			interrupts = <0 108 4>,
+ 				     <0 109 4>,
+ 				     <0 110 4>,
+@@ -684,7 +684,7 @@
+ 			#size-cells = <0>;
+ 			compatible = "snps,designware-i2c";
+ 			reg = <0x0 0x10640000 0x0 0x1000>;
+-			interrupts = <0 0x3A 0x4>;
++			interrupts = <0 0x3a 0x4>;
+ 			clocks = <&i2c4clk 0>;
+ 			bus_num = <4>;
+ 		};
+diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+index 5147d76..e0e8d2a 100644
+--- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+@@ -204,7 +204,7 @@
+ 				#clock-cells = <1>;
+ 				clocks = <&socplldiv2 0>;
+ 				clock-names = "qmlclk";
+-				reg = <0x0 0x1703C000 0x0 0x1000>;
++				reg = <0x0 0x1703c000 0x0 0x1000>;
+ 				reg-names = "csr-reg";
+ 				clock-output-names = "qmlclk";
+ 			};
+@@ -226,7 +226,7 @@
+ 				compatible = "apm,xgene-device-clock";
+ 				#clock-cells = <1>;
+ 				clocks = <&ethclk 0>;
+-				reg = <0x0 0x1702C000 0x0 0x1000>;
++				reg = <0x0 0x1702c000 0x0 0x1000>;
+ 				reg-names = "csr-reg";
+ 				clock-output-names = "menetclk";
+ 			};
+@@ -925,8 +925,8 @@
+ 			compatible = "apm,xgene-enet";
+ 			status = "disabled";
+ 			reg = <0x0 0x17020000 0x0 0xd100>,
+-			      <0x0 0X17030000 0x0 0Xc300>,
+-			      <0x0 0X10000000 0x0 0X200>;
++			      <0x0 0x17030000 0x0 0xc300>,
++			      <0x0 0x10000000 0x0 0x200>;
+ 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
+ 			interrupts = <0x0 0x3c 0x4>;
+ 			dma-coherent;
+@@ -951,11 +951,11 @@
+ 			compatible = "apm,xgene1-sgenet";
+ 			status = "disabled";
+ 			reg = <0x0 0x1f210000 0x0 0xd100>,
+-			      <0x0 0x1f200000 0x0 0Xc300>,
+-			      <0x0 0x1B000000 0x0 0X200>;
++			      <0x0 0x1f200000 0x0 0xc300>,
++			      <0x0 0x1b000000 0x0 0x200>;
+ 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
+-			interrupts = <0x0 0xA0 0x4>,
+-				     <0x0 0xA1 0x4>;
++			interrupts = <0x0 0xa0 0x4>,
++				     <0x0 0xa1 0x4>;
+ 			dma-coherent;
+ 			clocks = <&sge0clk 0>;
+ 			local-mac-address = [00 00 00 00 00 00];
+@@ -966,11 +966,11 @@
+ 			compatible = "apm,xgene1-sgenet";
+ 			status = "disabled";
+ 			reg = <0x0 0x1f210030 0x0 0xd100>,
+-			      <0x0 0x1f200000 0x0 0Xc300>,
+-			      <0x0 0x1B000000 0x0 0X8000>;
++			      <0x0 0x1f200000 0x0 0xc300>,
++			      <0x0 0x1b000000 0x0 0x8000>;
+ 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
+-			interrupts = <0x0 0xAC 0x4>,
+-				     <0x0 0xAD 0x4>;
++			interrupts = <0x0 0xac 0x4>,
++				     <0x0 0xad 0x4>;
+ 			port-id = <1>;
+ 			dma-coherent;
+ 			clocks = <&sge1clk 0>;
+@@ -982,8 +982,8 @@
+ 			compatible = "apm,xgene1-xgenet";
+ 			status = "disabled";
+ 			reg = <0x0 0x1f610000 0x0 0xd100>,
+-			      <0x0 0x1f600000 0x0 0Xc300>,
+-			      <0x0 0x18000000 0x0 0X200>;
++			      <0x0 0x1f600000 0x0 0xc300>,
++			      <0x0 0x18000000 0x0 0x200>;
+ 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
+ 			interrupts = <0x0 0x60 0x4>,
+ 				     <0x0 0x61 0x4>,
+@@ -1005,11 +1005,11 @@
+ 			compatible = "apm,xgene1-xgenet";
+ 			status = "disabled";
+ 			reg = <0x0 0x1f620000 0x0 0xd100>,
+-			      <0x0 0x1f600000 0x0 0Xc300>,
+-			      <0x0 0x18000000 0x0 0X8000>;
++			      <0x0 0x1f600000 0x0 0xc300>,
++			      <0x0 0x18000000 0x0 0x8000>;
+ 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
+-			interrupts = <0x0 0x6C 0x4>,
+-				     <0x0 0x6D 0x4>;
++			interrupts = <0x0 0x6c 0x4>,
++				     <0x0 0x6d 0x4>;
+ 			port-id = <1>;
+ 			dma-coherent;
+ 			clocks = <&xge1clk 0>;
