@@ -1,109 +1,41 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] arm64/numa: add nid check for memory block
-Date: Mon, 6 Jun 2016 09:43:53 +0800
-Message-ID: <5754D559.2030109@huawei.com>
-References: <1464834491-12024-1-git-send-email-thunder.leizhen@huawei.com>
- <1464834491-12024-4-git-send-email-thunder.leizhen@huawei.com>
- <20160603095229.GH9915@arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] arm64: dts: r8a7796: Add SYSC PM Domains
+Date: Mon, 6 Jun 2016 10:53:02 +0900
+Message-ID: <20160606015301.GB2317@verge.net.au>
+References: <1464685726-21611-1-git-send-email-geert+renesas@glider.be>
+ <20160606013359.GE4859@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160603095229.GH9915-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160606013359.GE4859@verge.net.au>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016/6/3 17:52, Will Deacon wrote:
-> On Thu, Jun 02, 2016 at 10:28:09AM +0800, Zhen Lei wrote:
->> Use the same tactic to cpu and numa-distance nodes.
+On Mon, Jun 06, 2016 at 10:33:59AM +0900, Simon Horman wrote:
+> On Tue, May 31, 2016 at 11:08:43AM +0200, Geert Uytterhoeven wrote:
+> > 	Hi Simon, Magnus,
+> > 
+> > This patch series adds support for the power areas exposed by the System
+> > Controller on the Renesas R-Car M3-W SoC to the DTS.
+> > 
+> > This series is against Simon's "[PATCH v3 0/3] arm64: Add Renesas
+> > R8A7796 SoC support".  It has a build and runtime dependency on my series
+> > "[PATCH v2 0/3] soc: renesas: rcar-sysc: Add support for R-Car M3-W power
+> > areas".
+> > 
+> > For your convenience, I've pushed this series to the
+> > topic/r8a7796-sysc-dt-v1 branch of
+> > https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git.
+> > This has been tested on r8a7796/salvator-x.
 > 
-> Sorry, I don't understand... :/
+> Thanks, I have tentatively queued this up.
 
-In function of_numa_parse_cpu_nodes:
-for_each_child_of_node(cpus, np) {
-	...
-	r = of_property_read_u32(np, "numa-node-id", &nid);
-	...
-	if (nid >= MAX_NUMNODES)									//check nid
-			pr_warn("NUMA: Node id %u exceeds maximum value\n", nid);			//print warning info
-	...
+Bother, I spoke to soon.
 
-
-In function numa_set_distance:
-	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||					//check nid
-			from < 0 || to < 0) {
-		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",	//print warning info
-			    from, to, distance);
-		return;
-	}
-
-Both these two functions will check that whether nid(configured in dts, the subnodes of
-cpus and distance-map) is right or not. So memory@ should also be checked.
-
-
-	memory@c00000 {
-		device_type = "memory";
-		reg = <0x0 0xc00000 0x0 0x80000000>;
-		/* node 0 */
-		numa-node-id = <0>;				//have not been checked yet.
-	};							//suppose I configued a wrong nid, it will not print any warning info
-
-	cpus {
-		#address-cells = <2>;
-		#size-cells = <0>;
-
-		cpu@0 {
-			device_type = "cpu";
-			compatible =  "arm,armv8";
-			reg = <0x0 0x0>;
-			enable-method = "psci";
-			/* node 0 */
-			numa-node-id = <0>;			//checked in of_numa_parse_cpu_nodes
-		};
-
-	distance-map {
-		compatible = "numa-distance-map-v1";
-		distance-matrix = <0 0 10>,			//checked in of_numa_parse_distance_map_v1 --> numa_set_distance
-				  <0 1 20>,
-				  <1 1 10>;
-	};
-
-> 
-> Will
-> 
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm64/mm/numa.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> index c7fe3ec..2601660 100644
->> --- a/arch/arm64/mm/numa.c
->> +++ b/arch/arm64/mm/numa.c
->> @@ -141,6 +141,11 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
->>  {
->>  	int ret;
->>
->> +	if (nid >= MAX_NUMNODES) {
->> +		pr_warn("NUMA: Node id %u exceeds maximum value\n", nid);
->> +		return -EINVAL;
->> +	}
->> +
->>  	ret = memblock_set_node(start, (end - start), &memblock.memory, nid);
->>  	if (ret < 0) {
->>  		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
->> --
->> 2.5.0
->>
->>
-> 
-> .
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There is a compile-time dependency on 8a7796-cpg-mssr.h in the basic
+support for r8a7796 which this series depends on.  So "[PATCH 0/4] clk:
+renesas: cpg-mssr: Add support for R-Car M3-W" needs to be present. I have
+deferred these patches pending that. 
