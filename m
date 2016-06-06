@@ -1,54 +1,61 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 05/22] net: cpsw-phy-sel: Use of_device_match()
-Date: Mon,  6 Jun 2016 10:31:47 +0200
-Message-ID: <20160606083204.19760-6-thierry.reding@gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 01/22] of: Implement of_match_device()
+Date: Mon,  6 Jun 2016 10:31:43 +0200
+Message-ID: <20160606083204.19760-2-thierry.reding@gmail.com>
 References: <20160606083204.19760-1-thierry.reding@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160606083204.19760-1-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-This driver uses bus_find_device() to go through every platform device
-and match using the driver and device tree node. It's more efficient to
-use driver_find_device() to iterate over all devices associated with a
-particular driver, in which case the matching is reduced to the device
-tree node and can be done using the common implementation.
+Many drivers open-code a variant of this function to look up the device
+representing a given device tree node. Provide a common implementation
+that can be reused by all drivers to avoid duplication.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/net/ethernet/ti/cpsw-phy-sel.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/drm_mipi_dsi.c | 5 -----
+ include/linux/of_device.h      | 5 +++++
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw-phy-sel.c b/drivers/net/ethernet/ti/cpsw-phy-sel.c
-index c3e85acfdc70..bb0de7744681 100644
---- a/drivers/net/ethernet/ti/cpsw-phy-sel.c
-+++ b/drivers/net/ethernet/ti/cpsw-phy-sel.c
-@@ -143,12 +143,6 @@ static void cpsw_gmii_sel_dra7xx(struct cpsw_phy_sel_priv *priv,
- }
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index f5d80839a90c..37f95f3b2dd2 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -77,11 +77,6 @@ static struct bus_type mipi_dsi_bus_type = {
+ 	.pm = &mipi_dsi_device_pm_ops,
+ };
  
- static struct platform_driver cpsw_phy_sel_driver;
--static int match(struct device *dev, void *data)
+-static int of_device_match(struct device *dev, void *data)
 -{
--	struct device_node *node = (struct device_node *)data;
--	return dev->of_node == node &&
--		dev->driver == &cpsw_phy_sel_driver.driver;
+-	return dev->of_node == data;
 -}
+-
+ /**
+  * of_find_mipi_dsi_device_by_node() - find the MIPI DSI device matching a
+  *    device tree node
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index cc7dd687a89d..ada83eac2ae2 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -102,4 +102,9 @@ static inline void of_dma_configure(struct device *dev, struct device_node *np)
+ {}
+ #endif /* CONFIG_OF */
  
- void cpsw_phy_sel(struct device *dev, phy_interface_t phy_mode, int slave)
- {
-@@ -161,7 +155,8 @@ void cpsw_phy_sel(struct device *dev, phy_interface_t phy_mode, int slave)
- 		return;
- 	}
- 
--	dev = bus_find_device(&platform_bus_type, NULL, node, match);
-+	dev = driver_find_device(&cpsw_phy_sel_driver.driver, NULL, node,
-+				 of_device_match);
- 	priv = dev_get_drvdata(dev);
- 
- 	priv->cpsw_phy_sel(priv, phy_mode, slave);
++static inline int of_device_match(struct device *dev, void *data)
++{
++	return dev->of_node == data;
++}
++
+ #endif /* _LINUX_OF_DEVICE_H */
 -- 
 2.8.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
