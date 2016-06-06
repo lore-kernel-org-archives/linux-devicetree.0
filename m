@@ -1,118 +1,115 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] Documentation: bindings: add DT documentation for
- Rockchip USB2PHY
-Date: Mon, 6 Jun 2016 12:27:54 +0100
-Message-ID: <20160606112754.GE6831@leverpostej>
-References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com>
- <1465204804-31161-2-git-send-email-frank.wang@rock-chips.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
+Date: Mon, 6 Jun 2016 12:42:56 +0100
+Message-ID: <20160606114256.GF6831@leverpostej>
+References: <1465183229-24147-1-git-send-email-wmills@ti.com>
+ <1465183229-24147-5-git-send-email-wmills@ti.com>
+ <20160606085627.GA6831@leverpostej>
+ <5480709.cGbSehIKrE@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465204804-31161-2-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+In-Reply-To: <5480709.cGbSehIKrE@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bill Mills <wmills@ti.com>, rmk+kernel@armlinux.org.uk, t-kristo@ti.com, ssantosh@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, r-woodruff2@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 05:20:03PM +0800, Frank Wang wrote:
-> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
+On Mon, Jun 06, 2016 at 11:09:07AM +0200, Arnd Bergmann wrote:
+> On Monday, June 6, 2016 9:56:27 AM CEST Mark Rutland wrote:
+> > [adding devicetree]
+> > 
+> > On Sun, Jun 05, 2016 at 11:20:29PM -0400, Bill Mills wrote:
+> > > Keystone2 can do DMA coherency but only if:
+> > > 1) DDR3A DMA buffers are in high physical addresses (0x8_0000_0000)
+> > >     (DDR3B does not have this constraint)
+> > > 2) Memory is marked outer shared
+> > > 3) DMA Master marks transactions as outer shared
+> > >     (This is taken care of in bootloader)
+> > > 
+> > > Use outer shared instead of inner shared.
+> > > This choice is done at early init time and uses the attr_mod facility
+> > > 
+> > > If the kernel is not configured for LPAE and using high PA, or if the
+> > > switch to outer shared fails, then we fail to meet this criteria.
+> > > Under any of these conditions we veto any dma-coherent attributes in
+> > > the DTB.
+> > 
+> > I very much do not like this. As I previously mentioned [1],
+> > dma-coherent has de-facto semantics today. This series deliberately
+> > changes that, and inverts the relationship between DT and kernel (as the
+> > describption in the DT would now depend on the configuration of the
+> > kernel).
+> > 
+> > I would prefer that we have a separate property (e.g.
+> > "dma-outer-coherent") to describe when a device can be coherent with
+> > Normal, Outer Shareable, Inner Write-Back, Outer Write-Back memory.
+> > Then the kernel can figure out whether or not device can be used
+> > coherently, depending on how it is configured.
 > 
-> Changes in v3:
->  - Added 'clocks' and 'clock-names' optional properties.
->  - Specified 'otg-port' and 'host-port' as the sub-node name.
+> I share your concern, but I don't think the dma-outer-coherent attribute
+> would be a good solution either.
 > 
-> Changes in v2:
->  - Changed vbus_host optional property from gpio to regulator.
->  - Specified vbus_otg-supply optional property.
->  - Specified otg_id and otg_bvalid property.
-> 
->  .../bindings/phy/phy-rockchip-inno-usb2.txt        |   60 ++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> new file mode 100644
-> index 0000000..0b4bbbb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> @@ -0,0 +1,60 @@
-> +ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
-> +
-> +Required properties (phy (parent) node):
-> + - compatible : should be one of the listed compatibles:
-> +	* "rockchip,rk3366-usb2phy"
-> +	* "rockchip,rk3399-usb2phy"
-> + - #clock-cells : should be 0.
-> + - clock-output-names : specify the 480m output clock name.
-> +
-> +Optional properties:
-> + - clocks : phandle + phy specifier pair, for the input clock of phy.
-> + - clock-names : input clock name of phy, must be "phyclk".
-> + - vbus_host-supply : phandle to a regulator that supplies host vbus.
-> + - vbus_otg-supply : phandle to a regulator that supplies otg vbus.
+> The problem really is that keystone is a platform that is sometimes
+> coherent, depending purely on what kernel we run, and not at all on
+> anything we can describe in devicetree, and I don't see any good way
+> to capture the behavior of the hardware in generic DT bindings.
 
-Nit: s/_/-/ here.
+I think that above doesn't quite capture the situation:
 
-Otherwise the rest of this looks generally fine, though I'm confused as
-to how you address the programming interface(s), given none are
-described.
+Some DMA masters can be cache-coherent (only) with Outer Shareable
+transactions. That is a property we could capture inthe DT (e.g.
+dma-outer-coherent), and is independent of the kernel configuration.
+
+Whether or not the devices are coherent with the kernel's chosen memory
+attributes certainly depends on the kernel configuration, but that is
+not what we capture in the DT.
+
+> So far, the assumption has been:
+> 
+> - when running a non-LPAE kernel, keystone is not coherent, and we
+>   must ignore both the dma-coherent properties in devices and the
+>   dma-ranges properties in bus nodes.
+
+I wasn't able to spot if/where that was enforced. Is it possible to boot
+Keystone UP, !LPAE?
+
+> - when running an LPAE kernel, keystone is coherent, and we must
+>   respect both of those.
+
+Similarly this has not been enforced either way. Currently I cannot see
+how devices with dma-coherent could possibly work with Keystone.
+
+I think we also need to be clear as to what we mean by "keystone is
+coherent". With LPAE, CPUs can be coherent with each other, so long as
+the appropriate physical addresses are used (with the magic to handle
+that).
+
+Devices being cache-coherent with CPUs is already something we manage
+per-device.
+
+> My interpretation of Bill's description above is that we now have
+> an additional requirement that at least I was not aware of before,
+> regarding the outer-sharable attribute. I don't think there is
+> much value in making this a boot-time option, since everyone would
+> want to run this platform in a cache-coherent way if at all possible.
+>
+> We already have special hacks to detect the case of keystone running
+> in LPAE mode, in order to do the special rewrite-all-page-tables
+> hack at boot time for relocating the physical address, and we could
+> use the same hack to change the page table attributes.
+> 
+> The question is how to communicate the requirement for outer-sharable
+> for a platform. If we think it's a safe assumption that there will
+> not be future 32-bit platforms with this requirement (or maybe one
+> or two more at most), we could leave it in the special keystone hack.
+> Alternatively, a DT property in an appropriate node could indicate
+> that a particular platform requires it.
+
+As above, I think this must be specified per-device, following the usual
+manner in which we describe Inner Shareable coherency using
+dma-coherent.
 
 Thanks,
 Mark.
-
-> +
-> +Required nodes : a sub-node is required for each port the phy provides.
-> +		 The sub-node name is used to identify host or otg port,
-> +		 and shall be the following entries:
-> +	* "otg-port" : the name of otg port.
-> +	* "host-port" : the name of host port.
-> +
-> +Required properties (port (child) node):
-> + - #phy-cells : must be 0. See ./phy-bindings.txt for details.
-> + - interrupts : specify an interrupt for each entry in interrupt-names.
-> + - interrupt-names : a list which shall be the following entries:
-> +	* "otg_id" : for the otg id interrupt.
-> +	* "otg_bvalid" : for the otg vbus interrupt.
-> +	* "linestate" : for the host/otg linestate interrupt.
-> +
-> +Example:
-> +
-> +grf: syscon@ff770000 {
-> +	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +...
-> +
-> +	u2phy: usb2-phy {
-> +		compatible = "rockchip,rk3366-usb2phy";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "sclk_otgphy0_480m";
-> +
-> +		u2phy_otg: otg-port {
-> +			#phy-cells = <0>;
-> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "otg_id", "otg_bvalid", "linestate";
-> +			status = "okay";
-> +		};
-> +
-> +		u2phy_host: host-port {
-> +			#phy-cells = <0>;
-> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "linestate";
-> +			status = "okay";
-> +		};
-> +	};
-> +};
-> -- 
-> 1.7.9.5
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
