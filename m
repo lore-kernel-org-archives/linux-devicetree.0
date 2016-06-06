@@ -1,7 +1,7 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 08/22] spi: Use of_device_match()
-Date: Mon,  6 Jun 2016 10:31:50 +0200
-Message-ID: <20160606083204.19760-9-thierry.reding@gmail.com>
+Subject: [PATCH 05/22] net: cpsw-phy-sel: Use of_device_match()
+Date: Mon,  6 Jun 2016 10:31:47 +0200
+Message-ID: <20160606083204.19760-6-thierry.reding@gmail.com>
 References: <20160606083204.19760-1-thierry.reding@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
@@ -12,34 +12,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Use the common implementation rather than the SPI-private variant.
+This driver uses bus_find_device() to go through every platform device
+and match using the driver and device tree node. It's more efficient to
+use driver_find_device() to iterate over all devices associated with a
+particular driver, in which case the matching is reduced to the device
+tree node and can be done using the common implementation.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/spi/spi.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/net/ethernet/ti/cpsw-phy-sel.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 77e6e45951f4..df0d800b19f0 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3019,16 +3019,11 @@ EXPORT_SYMBOL_GPL(spi_write_then_read);
- /*-------------------------------------------------------------------------*/
- 
- #if IS_ENABLED(CONFIG_OF_DYNAMIC)
--static int __spi_of_device_match(struct device *dev, void *data)
--{
--	return dev->of_node == data;
--}
--
- /* must call put_device() when done with returned spi_device device */
- static struct spi_device *of_find_spi_device_by_node(struct device_node *node)
- {
- 	struct device *dev = bus_find_device(&spi_bus_type, NULL, node,
--						__spi_of_device_match);
-+					     of_device_match);
- 	return dev ? to_spi_device(dev) : NULL;
+diff --git a/drivers/net/ethernet/ti/cpsw-phy-sel.c b/drivers/net/ethernet/ti/cpsw-phy-sel.c
+index c3e85acfdc70..bb0de7744681 100644
+--- a/drivers/net/ethernet/ti/cpsw-phy-sel.c
++++ b/drivers/net/ethernet/ti/cpsw-phy-sel.c
+@@ -143,12 +143,6 @@ static void cpsw_gmii_sel_dra7xx(struct cpsw_phy_sel_priv *priv,
  }
  
+ static struct platform_driver cpsw_phy_sel_driver;
+-static int match(struct device *dev, void *data)
+-{
+-	struct device_node *node = (struct device_node *)data;
+-	return dev->of_node == node &&
+-		dev->driver == &cpsw_phy_sel_driver.driver;
+-}
+ 
+ void cpsw_phy_sel(struct device *dev, phy_interface_t phy_mode, int slave)
+ {
+@@ -161,7 +155,8 @@ void cpsw_phy_sel(struct device *dev, phy_interface_t phy_mode, int slave)
+ 		return;
+ 	}
+ 
+-	dev = bus_find_device(&platform_bus_type, NULL, node, match);
++	dev = driver_find_device(&cpsw_phy_sel_driver.driver, NULL, node,
++				 of_device_match);
+ 	priv = dev_get_drvdata(dev);
+ 
+ 	priv->cpsw_phy_sel(priv, phy_mode, slave);
 -- 
 2.8.3
