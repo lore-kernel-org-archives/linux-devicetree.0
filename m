@@ -1,50 +1,23 @@
-From: William Mills <wmills@ti.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
 Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
-Date: Mon, 6 Jun 2016 08:19:05 -0400
-Message-ID: <57556A39.2000505@ti.com>
+Date: Mon, 6 Jun 2016 13:32:10 +0100
+Message-ID: <20160606123210.GL1041@n2100.armlinux.org.uk>
 References: <1465183229-24147-1-git-send-email-wmills@ti.com>
  <1465183229-24147-5-git-send-email-wmills@ti.com>
  <20160606085627.GA6831@leverpostej>
  <20160606114321.GJ1041@n2100.armlinux.org.uk>
  <20160606115918.GG6831@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20160606115918.GG6831@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: t-kristo@ti.com, ssantosh@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, r-woodruff2@ti.com, devicetree@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Bill Mills <wmills@ti.com>, t-kristo@ti.com, ssantosh@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, r-woodruff2@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/06/2016 07:59 AM, Mark Rutland wrote:
-> On Mon, Jun 06, 2016 at 12:43:21PM +0100, Russell King - ARM Linux wrote:
->> On Mon, Jun 06, 2016 at 09:56:27AM +0100, Mark Rutland wrote:
->>> I very much do not like this. As I previously mentioned [1],
->>> dma-coherent has de-facto semantics today. This series deliberately
->>> changes that, and inverts the relationship between DT and kernel (as the
->>> describption in the DT would now depend on the configuration of the
->>> kernel).
->>
->> dma-coherent's semantics are not very well defined - just grep for it
->> in Documention/devicetree/ and you'll find several different wordings
->> for what this property means.
-> 
-> Indeed. This is the tip of the iceberg w.r.t. under-specification of
-> memory attribute usage.
-> 
->> Anyway, my point here is that all of these merely say that the hardware
->> is coherent in _some regard_ - it doesn't specify under what conditions
->> DMA coherency is guaranteed by the hardware.  It happens that on ARM,
->> most platforms give that guarantee when using inner shared mappings.  If
->> we were to use some other sharing, or disable sharing altogether (eg, by
->> disabling SMP support) then all these platforms would immediately break.
->>
->> In other words, DMA coherence today already depends on the kernel's setup
->> of the page tables corresponding to the requirements of the hardware.
-> 
+On Mon, Jun 06, 2016 at 12:59:18PM +0100, Mark Rutland wrote:
 > I agree that whether or not devices are coherent in practice depends on
 > the kernel's configuration. The flip side, as you point out, is that
 > devices are coherent when a specific set of attributes are used.
@@ -53,43 +26,49 @@ On 06/06/2016 07:59 AM, Mark Rutland wrote:
 > Inner Shareable, Inner WB Cacheable, Outer WB Cacheable", then
 > dma-coherent consistently describes the same thing, rather than
 > depending on the configuration of the OS.
->
-
-Even w/o inner / outer it seems to me it is under specified.
-What about a system where main DDR memory is DMA coherent but an on chip
-SRAM needs manual flush/invalidate?  Right now dma coherency is all or
-nothing.  In the above case you would need to ensure that the device
-never tried to use that SRAM for dma transactions even though the device
-is perfectly capable with the right hand-holding.  Alternatively you
-could use the SRAM but penalize the normal case of DDR.
-
+> 
 > DT is a datastructure provided to the kernel, potentially without deep
 > internal knowledge of that kernel configuration. Having a consistent
 > rule that is independent of the kernel configuration seems worth aiming
 > for.
-> 
-> A dma-outer-coherent property would allow us to accurately describe the
-> keystone case in the same way, independent of kernel configuration.
-> 
->> Keystone II is just slightly different - and as I understand it, TI
->> followed one of the early specifications that ARM Ltd produced.  That
->> specification may have contained errors, but unfortunately, we now have
->> a situation where there is hardware out there which followed in good
->> faith.
-> 
-> To be clear, I am not arguing against supporting keystone. I just wish
-> to avoid muddying the waters further w.r.t. the semantics of
-> dma-coherent, which I believe can be salvaged and made consistent.
-> 
-> Clearly, those semantics are the point of contention here.
->
 
-To me this seems like a choice between embracing outer-shared or
-treating it like a quirk of some early armv7 devices.  With ARM's
-current recommendations to use inner-shared for everything in many
-contexts (like ARM servers etc), I was assuming you would want the latter.
+I think you've missed the point.  dma-coherent is _already_ dependent on
+the kernel configuration.  "Having a consistent rule that is independent
+of the kernel configuration" is already an impossibility, as I illustrated
+in my previous message concerning Marvell Armada SoCs, and you also said
+in your preceding paragraph!
 
-Thanks for looking.  This is not the patch that I expected to generate
-the most discussion.  :)
+For example, if you clear the shared bit in the page tables on non-LPAE
+SoCs, devices are no longer coherent.
 
--- Bill
+DMA coherence on ARM _is_ already tightly linked with the kernel
+configuration.  You already can't get away from that, so I think you
+should give up trying to argue that point. :)
+
+Whether devices are DMA coherent is a combination of two things:
+ * is the device connected to a coherent bus.
+ * is the system setup to allow coherency on that bus to work.
+
+We capture the first through the dma-coherent property, which is clearly
+a per-device property.  We ignore the second because we assume everyone
+is going to configure the CPU side correctly.  That's untrue today, and
+it's untrue not only because of Keystone II, but also because of other
+SoCs as well which pre-date Keystone II.  We currently miss out on
+considering that, because if we ignore it, we get something that works
+for most platforms.
+
+I don't see that adding a dma-outer-coherent property helps this - it's
+muddying the waters somewhat - and it's also forcing additional complexity
+into places where we shouldn't have it.  We would need to parse two
+properties in the DMA API code, and then combine it with knowledge as
+to how the system page tables have been setup.  If they've been setup
+as inner sharable, then dma-coherent identifies whether the device is
+coherent.  If they've been setup as outer sharable, then
+dma-outer-coherent specifies that and dma-coherent is meaningless.
+
+Sounds like a recipe for confusion.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
