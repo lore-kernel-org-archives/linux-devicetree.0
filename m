@@ -1,74 +1,95 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 00/22] of: Introduce of_match_device()
-Date: Mon, 6 Jun 2016 11:50:47 -0700
-Message-ID: <5755C607.8050602@gmail.com>
-References: <20160606083204.19760-1-thierry.reding@gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: dts: sun4i: Enable NAND on
+ Marsboard A10
+Date: Mon, 6 Jun 2016 20:50:54 +0200
+Message-ID: <20160606205054.0f7f02b5@bbrezillon>
+References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
+	<1465208664-9366-7-git-send-email-mamlinav@gmail.com>
+Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCK63FO5TUHRBEEM265AKGQE2VKXUUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1465208664-9366-7-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/16 01:31, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
+On Mon,  6 Jun 2016 13:24:23 +0300
+Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> Enable the NFC and describe the NAND flash connected to this controller.
 > 
-> This series of patches introduces a common implementation of a function
-> that can be used in iterators (such as the bus_for_each_dev() or the
-> driver_for_each_device() functions) and that compare's a device's device
-> tree node with the passed in data. Numerous drivers and subsystems have
-> their own variant of this function, so a lot of duplication can be
-> removed by making use of the common implementation.
+> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+> ---
+>  arch/arm/boot/dts/sun4i-a10-marsboard.dts | 41 +++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
 > 
-> One thing that slightly bugs me about this is that it can't be used with
-> users of class_for_each_device() or class_find_device() because they get
-> passed a callback that takes a const void * rather than a void * for the
-> device tree node. I had at some point investigated to turn the remainder
-> of the iterators into taking const void *, but there are some drivers in
-> the kernel that want to modify the data passed to them, so it isn't easy
-> to switch.
-> 
-> An alternative would be to turn the const void * into void * for all the
-> callbacks of this sort, so that we can use a single set throughout the
-> tree, but I'm not sure how welcome that would be. I can give that a shot
-> if people think it worth, though.
-> 
-> Greg, any thoughts on this?
-> 
-> I've also kept the list of recipients very short, to get early feedback
-> and buy-in from Rob and Frank on the common implementation. I expect the
-> naming to allow for some good bike-shedding.
+> diff --git a/arch/arm/boot/dts/sun4i-a10-marsboard.dts b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
+> index 8e50723..ea6e2d5 100644
+> --- a/arch/arm/boot/dts/sun4i-a10-marsboard.dts
+> +++ b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
+> @@ -150,6 +150,47 @@
+>  	status = "okay";
+>  };
+>  
+> +&nfc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&nand_pins_a>, <&nand_cs0_pins_a>, <&nand_rb0_pins_a>;
+> +	status = "okay";
+> +
+> +	nand@0 {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		reg = <0>;
+> +		allwinner,rb = <0>;
+> +
+> +		nand-ecc-mode = "hw";
+> +		nand-on-flash-bbt;
+> +
+> +		boot0@0 {
+> +			label = "boot0";
+> +			reg = /bits/ 64 <0x0 0x200000>;
+> +		};
+> +
+> +		boot0-rescue@200000 {
+> +			label = "boot0-rescue";
+> +			reg = /bits/ 64 <0x200000 0x200000>;
+> +		};
+> +
+> +		uboot@400000 {
+> +			label = "uboot";
+> +			reg = /bits/ 64 <0x400000 0x200000>;
+> +		};
+> +
+> +		uboot-rescue@600000 {
+> +			label = "uboot-rescue";
+> +			reg = /bits/ 64 <0x600000 0x200000>;
+> +		};
+> +
+> +		main@800000 {
+> +			label = "main";
+> +			reg = /bits/ 64 <0x800000 0xff800000>;
+> +		};
+> +	};
+> +};
+> +
+>  &ohci0 {
+>  	status = "okay";
+>  };
 
-Common implementation looks fine to me.
 
-My shot at bike-shedding is to make the function name reflect the argument
-names of bus_find_device() and driver_find_device().  That would suggest
-of_node_match_data().  Or if one wanted to be more concise, of_node_match()
-or of_match_node().
 
-But of_match_node() is already in wide use (for something else entirely).
-
-And drivers/regulator/core.c is the one existing version of of_node_match():
-
-  static int of_node_match(struct device *dev, const void *data)
-  {
-          return dev->of_node == data;
-  }
-
-This is an example of the 'const void *data' vs 'void *data' that you
-mentioned, because this of_node_match() is used for class_find_device().
-of_node_match() could be used since only one current usage of the
-name would have to be changed to some other name.
-
-So that brings me back to of_node_match_data() being my preference
-because of_node_match() is entirely too similar to of_match_node(),
-which seems like it would lead to confusion when I am reading code.
-Then maybe a variant on that name with a 'const void *data' argument.
-Like the longer than I would like of_node_match_const_data().
-
-< snip >
-
--Frank
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
