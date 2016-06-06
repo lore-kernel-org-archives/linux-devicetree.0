@@ -1,93 +1,452 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 2/3] Documentation: add DT bindings for ARM SCPI power domains
-Date: Mon,  6 Jun 2016 16:53:58 +0100
-Message-ID: <1465228439-13457-3-git-send-email-sudeep.holla@arm.com>
-References: <1465228439-13457-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465228439-13457-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Jon Medhurst <tixy@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/3] arm64: dts: juno: add coresight support
+Date: Mon,  6 Jun 2016 16:59:23 +0100
+Message-ID: <1465228765-14038-2-git-send-email-sudeep.holla@arm.com>
+References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465228765-14038-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The System Control Processor (SCP) provides peripheral devices with
-power domains that can be enabled and disabled viathe System Control
-and Power Interface (SCPI) Message Protocol. Add bindings to allow
-probing of these device power domians.
+Most of the debug-related components on Juno are located in the coreSight
+subsystem while others are located in the Cortex-Axx clusters, the SCP
+subsystem, and in the main system.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Each core in the two processor clusters contain an Embedded Trace
+Macrocell(ETM) which generates real-time trace information that trace
+tools can use and an ATB trace output that is sent to a funnel before
+going to the CoreSight subsystem.
+
+The trace output signals combine with two trace expansions using another
+funnel and fed into the Embedded Trace FIFO(ETF0).
+
+The output trace data stream of the funnel is then replicated before it
+is sent to either the:
+- Trace Port Interface Unit(TPIU), that sends it out using the trace port.
+- ETR that can write the trace data to memory located in the application
+  memory space
+
+Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/arm,scpi.txt | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 296 +++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/arm/juno-r1.dts    |  24 +++
+ arch/arm64/boot/dts/arm/juno-r2.dts    |  24 +++
+ arch/arm64/boot/dts/arm/juno.dts       |  24 +++
+ 4 files changed, 368 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-index 313dabdc14f9..7141670d649b 100644
---- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
-+++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-@@ -87,10 +87,33 @@ SCPI provides an API to access the various sensors on the SoC.
- 			 implementation for the IDs to use. For Juno
- 			 R0 and Juno R1 refer to [3].
-
-+Power domain bindings for the power domains based on SCPI Message Protocol
-+------------------------------------------------------------
-+
-+This binding uses the generic power domain binding[4].
-+
-+PM domain providers
-+===================
-+
-+Required properties:
-+ - #power-domain-cells : Should be 1. Contains the device or the power
-+			 domain ID value used by SCPI commands.
-+ - num-domains: Total number of power domains provided by SCPI. This is
-+		needed as the SCPI message protocol lacks a mechanism to
-+		query this information runtime.
-+
-+PM domain consumers
-+===================
-+
-+Required properties:
-+ - power-domains : A phandle and PM domain specifier as defined by bindings of
-+                   the power controller specified by phandle.
-+
- [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
- [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
- [2] Documentation/devicetree/bindings/thermal/thermal.txt
- [3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
-+[4] Documentation/devicetree/bindings/power/power_domain.txt
-
- Example:
-
-@@ -144,6 +167,12 @@ scpi_protocol: scpi@2e000000 {
- 		compatible = "arm,scpi-sensors";
- 		#thermal-sensor-cells = <1>;
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index dee2386d3b9b..90a8710f7032 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -56,6 +56,302 @@
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
  	};
+
++	/*
++	 * Juno TRMs specify the size for these coresight components as 64K.
++	 * The actual size is just 4K though 64K is reserved. Access to the
++	 * unmapped reserved region results in a DECERR response.
++	 */
++	etf@20010000 {
++		compatible = "arm,coresight-tmc", "arm,primecell";
++		reg = <0 0x20010000 0 0x1000>;
 +
-+	scpi_devpd: scpi-power-domains {
-+		compatible = "arm,scpi-power-domains";
-+		num-domains = <2>;
-+		#power-domain-cells = <1>;
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* input port */
++			port@0 {
++				reg = <0>;
++				etf_in_port: endpoint {
++					slave-mode;
++					remote-endpoint = <&main_funnel_out_port>;
++				};
++			};
++
++			/* output port */
++			port@1 {
++				reg = <0>;
++				etf_out_port: endpoint {
++					remote-endpoint = <&replicator_in_port0>;
++				};
++			};
++		};
 +	};
- };
-
- cpu@0 {
-@@ -156,6 +185,7 @@ hdlcd@7ff60000 {
- 	...
- 	reg = <0 0x7ff60000 0 0x1000>;
- 	clocks = <&scpi_clk 4>;
-+	power-domains = <&scpi_devpd 1>;
- };
-
- thermal-zones {
-@@ -186,3 +216,7 @@ The thermal-sensors property in the soc_thermal node uses the
- temperature sensor provided by SCP firmware to setup a thermal
- zone. The ID "3" is the sensor identifier for the temperature sensor
- as used by the firmware.
 +
-+The num-domains property in scpi-power-domains domain specifies that
-+SCPI provides 2 power domains. The hdlcd node uses the power domain with
-+domain ID 1.
++	tpiu@20030000 {
++		compatible = "arm,coresight-tpiu", "arm,primecell";
++		reg = <0 0x20030000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		port {
++			tpiu_in_port: endpoint {
++				slave-mode;
++				remote-endpoint = <&replicator_out_port0>;
++			};
++		};
++	};
++
++	main_funnel@20040000 {
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0 0x20040000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				main_funnel_out_port: endpoint {
++					remote-endpoint = <&etf_in_port>;
++				};
++			};
++
++			port@1 {
++				reg = <0>;
++				main_funnel_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&cluster0_funnel_out_port>;
++				};
++			};
++
++			port@2 {
++				reg = <1>;
++				main_funnel_in_port1: endpoint {
++					slave-mode;
++					remote-endpoint = <&cluster1_funnel_out_port>;
++				};
++			};
++
++		};
++	};
++
++	etr@20070000 {
++		compatible = "arm,coresight-tmc", "arm,primecell";
++		reg = <0 0x20070000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		port {
++			etr_in_port: endpoint {
++				slave-mode;
++				remote-endpoint = <&replicator_out_port1>;
++			};
++		};
++	};
++
++	coresight-replicator {
++		/* non-configurable replicators don't show up on the
++		 * AMBA bus.  As such no need to add "arm,primecell".
++		 */
++		compatible = "arm,coresight-replicator";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* replicator output ports */
++			port@0 {
++				reg = <0>;
++				replicator_out_port0: endpoint {
++					remote-endpoint = <&tpiu_in_port>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				replicator_out_port1: endpoint {
++					remote-endpoint = <&etr_in_port>;
++				};
++			};
++
++			/* replicator input port */
++			port@2 {
++				reg = <0>;
++				replicator_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&etf_out_port>;
++				};
++			};
++		};
++	};
++
++	cluster0_funnel@220c0000 {
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0 0x220c0000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				cluster0_funnel_out_port: endpoint {
++					remote-endpoint = <&main_funnel_in_port0>;
++				};
++			};
++
++			port@1 {
++				reg = <0>;
++				cluster0_funnel_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&cluster0_etm0_out_port>;
++				};
++			};
++
++			port@2 {
++				reg = <1>;
++				cluster0_funnel_in_port1: endpoint {
++					slave-mode;
++					remote-endpoint = <&cluster0_etm1_out_port>;
++				};
++			};
++		};
++	};
++
++	cluster1_funnel@230c0000 {
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0 0x230c0000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				cluster1_funnel_out_port: endpoint {
++					remote-endpoint = <&main_funnel_in_port1>;
++				};
++			};
++
++			port@1 {
++				reg = <0>;
++				cluster1_funnel_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&cluster1_etm0_out_port>;
++				};
++			};
++
++			port@2 {
++				reg = <1>;
++				cluster1_funnel_in_port1: endpoint {
++					slave-mode;
++					remote-endpoint = <&cluster1_etm1_out_port>;
++				};
++			};
++			port@3 {
++				reg = <2>;
++				cluster1_funnel_in_port2: endpoint {
++					slave-mode;
++					remote-endpoint = <&cluster1_etm2_out_port>;
++				};
++			};
++			port@4 {
++				reg = <3>;
++				cluster1_funnel_in_port3: endpoint {
++					slave-mode;
++					remote-endpoint = <&cluster1_etm3_out_port>;
++				};
++			};
++		};
++	};
++
++	etm0: etm@22040000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x22040000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		port {
++			cluster0_etm0_out_port: endpoint {
++				remote-endpoint = <&cluster0_funnel_in_port0>;
++			};
++		};
++	};
++
++	etm1: etm@22140000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x22140000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		port {
++			cluster0_etm1_out_port: endpoint {
++				remote-endpoint = <&cluster0_funnel_in_port1>;
++			};
++		};
++	};
++
++	etm2: etm@23040000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x23040000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		port {
++			cluster1_etm0_out_port: endpoint {
++				remote-endpoint = <&cluster1_funnel_in_port0>;
++			};
++		};
++	};
++
++	etm3: etm@23140000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x23140000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		port {
++			cluster1_etm1_out_port: endpoint {
++				remote-endpoint = <&cluster1_funnel_in_port1>;
++			};
++		};
++	};
++
++	etm4: etm@23240000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x23240000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		port {
++			cluster1_etm2_out_port: endpoint {
++				remote-endpoint = <&cluster1_funnel_in_port2>;
++			};
++		};
++	};
++
++	etm5: etm@23340000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0 0x23340000 0 0x1000>;
++
++		clocks = <&soc_smc50mhz>;
++		clock-names = "apb_pclk";
++		port {
++			cluster1_etm3_out_port: endpoint {
++				remote-endpoint = <&cluster1_funnel_in_port3>;
++			};
++		};
++	};
++
+ 	sram: sram@2e000000 {
+ 		compatible = "arm,juno-sram-ns", "mmio-sram";
+ 		reg = <0x0 0x2e000000 0x0 0x8000>;
+diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
+index d95d9e7e2dc0..f4f8f54f8b85 100644
+--- a/arch/arm64/boot/dts/arm/juno-r1.dts
++++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+@@ -181,3 +181,27 @@
+ &pcie_ctlr {
+ 	status = "okay";
+ };
++
++&etm0 {
++	cpu = <&A57_0>;
++};
++
++&etm1 {
++	cpu = <&A57_1>;
++};
++
++&etm2 {
++	cpu = <&A53_0>;
++};
++
++&etm3 {
++	cpu = <&A53_1>;
++};
++
++&etm4 {
++	cpu = <&A53_2>;
++};
++
++&etm5 {
++	cpu = <&A53_3>;
++};
+diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
+index 88ecd6182b67..d903e545b64c 100644
+--- a/arch/arm64/boot/dts/arm/juno-r2.dts
++++ b/arch/arm64/boot/dts/arm/juno-r2.dts
+@@ -181,3 +181,27 @@
+ &pcie_ctlr {
+ 	status = "okay";
+ };
++
++&etm0 {
++	cpu = <&A72_0>;
++};
++
++&etm1 {
++	cpu = <&A72_1>;
++};
++
++&etm2 {
++	cpu = <&A53_0>;
++};
++
++&etm3 {
++	cpu = <&A53_1>;
++};
++
++&etm4 {
++	cpu = <&A53_2>;
++};
++
++&etm5 {
++	cpu = <&A53_3>;
++};
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index dcfcf15a17f5..a7270eff6939 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -173,3 +173,27 @@
+
+ 	#include "juno-base.dtsi"
+ };
++
++&etm0 {
++	cpu = <&A57_0>;
++};
++
++&etm1 {
++	cpu = <&A57_1>;
++};
++
++&etm2 {
++	cpu = <&A53_0>;
++};
++
++&etm3 {
++	cpu = <&A53_1>;
++};
++
++&etm4 {
++	cpu = <&A53_2>;
++};
++
++&etm5 {
++	cpu = <&A53_3>;
++};
+--
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
