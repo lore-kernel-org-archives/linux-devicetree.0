@@ -1,7 +1,7 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 14/22] drm/etnaviv: Use of_device_match()
-Date: Mon,  6 Jun 2016 10:31:56 +0200
-Message-ID: <20160606083204.19760-15-thierry.reding@gmail.com>
+Subject: [PATCH 12/22] drm/hdlcd: Use of_device_match()
+Date: Mon,  6 Jun 2016 10:31:54 +0200
+Message-ID: <20160606083204.19760-13-thierry.reding@gmail.com>
 References: <20160606083204.19760-1-thierry.reding@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
@@ -16,45 +16,41 @@ Use the common implementation rather than the driver-private variant.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_drv.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/arm/hdlcd_drv.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 3d4f56df8359..187523110d58 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -15,6 +15,7 @@
-  */
- 
+diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
+index 3422ca23cfaf..4fa93123802b 100644
+--- a/drivers/gpu/drm/arm/hdlcd_drv.c
++++ b/drivers/gpu/drm/arm/hdlcd_drv.c
+@@ -14,6 +14,7 @@
+ #include <linux/clk.h>
  #include <linux/component.h>
+ #include <linux/list.h>
 +#include <linux/of_device.h>
- #include <linux/of_platform.h>
- 
- #include "etnaviv_drv.h"
-@@ -606,13 +607,6 @@ static const struct component_master_ops etnaviv_master_ops = {
- 	.unbind = etnaviv_unbind,
+ #include <linux/of_graph.h>
+ #include <linux/of_reserved_mem.h>
+ #include <linux/pm_runtime.h>
+@@ -429,11 +430,6 @@ static const struct component_master_ops hdlcd_master_ops = {
+ 	.unbind		= hdlcd_drm_unbind,
  };
  
 -static int compare_of(struct device *dev, void *data)
 -{
--	struct device_node *np = data;
--
--	return dev->of_node == np;
+-	return dev->of_node == data;
 -}
 -
- static int compare_str(struct device *dev, void *data)
+ static void release_of(struct device *dev, void *data)
  {
- 	return !strcmp(dev_name(dev), data);
-@@ -635,8 +629,8 @@ static int etnaviv_pdev_probe(struct platform_device *pdev)
- 			if (!core_node)
- 				break;
+ 	of_node_put(data);
+@@ -466,7 +462,7 @@ static int hdlcd_probe(struct platform_device *pdev)
+ 	}
  
--			component_match_add(&pdev->dev, &match, compare_of,
--					    core_node);
-+			component_match_add(&pdev->dev, &match,
-+					    of_device_match, core_node);
- 			of_node_put(core_node);
- 		}
- 	} else if (dev->platform_data) {
+ 	component_match_add_release(&pdev->dev, &match, release_of,
+-				    compare_of, port);
++				    of_device_match, port);
+ 
+ 	return component_master_add_with_match(&pdev->dev, &hdlcd_master_ops,
+ 					       match);
 -- 
 2.8.3
