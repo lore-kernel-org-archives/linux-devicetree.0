@@ -1,44 +1,62 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/5] regulator: rn5t618: add RN5T567 PMIC support
-Date: Mon, 6 Jun 2016 18:35:39 +0100
-Message-ID: <20160606173539.GC7510@sirena.org.uk>
-References: <20160605001749.4062-1-stefan@agner.ch>
- <20160605001749.4062-5-stefan@agner.ch>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v4 05/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ driver header file
+Date: Mon, 6 Jun 2016 18:40:37 +0100
+Message-ID: <20160606174037.GJ9912@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
+ <1464192412-16386-7-git-send-email-peter.griffin@linaro.org>
+ <20160606043618.GV16910@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160605001749.4062-5-stefan@agner.ch>
+In-Reply-To: <20160606043618.GV16910@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: lee.jones@linaro.org, lgirdwood@gmail.com, khilman@baylibre.com, carlo@caione.org, b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vinod,
 
---5G06lTa6Jq83wMTw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for reviewing.
 
-On Sat, Jun 04, 2016 at 05:17:47PM -0700, Stefan Agner wrote:
-> Extend the driver to support Ricoh RN5T567. Support the additional
-> DCDC and slightly different voltage range of LDORTC1.
+On Mon, 06 Jun 2016, Vinod Koul wrote:
 
-Acked-by: Mark Brown <broonie@kernel.org>
+> On Wed, May 25, 2016 at 05:06:39PM +0100, Peter Griffin wrote:
+> 
+> > +/*
+> > + * request control bits
+> > + */
+> > +#define REQ_CTRL_NUM_OPS_MASK		GENMASK(31, 24)
+> > +#define REQ_CTRL_NUM_OPS(n)		(REQ_CTRL_NUM_OPS_MASK & ((n) << 24))
+> > +#define REQ_CTRL_INITIATOR_MASK		BIT(22)
+> > +#define	REQ_CTRL_INIT0			(0x0 << 22)
+> > +#define	REQ_CTRL_INIT1			(0x1 << 22)
+> 
+> pls keep spaces or tabs, not both :(
 
---5G06lTa6Jq83wMTw
-Content-Type: application/pgp-signature; name="signature.asc"
+Will fix in v5.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> 
+> > +#define REQ_CTRL_INC_ADDR_ON		BIT(21)
+> > +#define REQ_CTRL_DATA_SWAP_ON		BIT(17)
+> > +#define REQ_CTRL_WNR			BIT(14)
+> > +#define REQ_CTRL_OPCODE_MASK		GENMASK(7, 4)
+> > +#define REQ_CTRL_OPCODE_LD_ST1		(0x0 << 4)
+> > +#define REQ_CTRL_OPCODE_LD_ST2		(0x1 << 4)
+> > +#define REQ_CTRL_OPCODE_LD_ST4		(0x2 << 4)
+> > +#define REQ_CTRL_OPCODE_LD_ST8		(0x3 << 4)
+> > +#define REQ_CTRL_OPCODE_LD_ST16		(0x4 << 4)
+> > +#define REQ_CTRL_OPCODE_LD_ST32		(0x5 << 4)
+> > +#define REQ_CTRL_OPCODE_LD_ST64		(0x6 << 4)
+> > +#define REQ_CTRL_HOLDOFF_MASK		GENMASK(2, 0)
+> > +#define REQ_CTRL_HOLDOFF(n)		((n) & REQ_CTRL_HOLDOFF_MASK)
+> 
+> Everything here is FDMA_ so why not these as well
+> 
+Everything apart from this and NODE_CTRL_*. I will add FDMA_ prefix to all in
+v5.
 
-iQEcBAEBCAAGBQJXVbRqAAoJECTWi3JdVIfQF+kH/R46SMdj+rp7v1WxGq/RM7e8
-myEW6bNGG0v4l+qv9NhyTVH3ZI5QNHXJ53tiK3uJKARlACJuV4sZUU7iIS5t7t5x
-Av5f48nVuiVWm7tYbcK8OaIBbG/F0UHc9Na7b9Q0BVRMEqBswqruXGYJ5pNdsJbM
-r81WjzDh9hhUlTK7jmkkbpdL6WnVTCquzg/xO0JObFNDzfZG8bzaoLSWsbj7+xUh
-SEeDdKqaLEtC6jlsQGBVj8OvbhywSMRmnHjgkcyZrcvqEMclxN1+eYiWaYauAeKV
-Rh4SRoXBje29yss5guiZhnLt+mleoWioDGqeSGIIPd770yGZjz92Bd1iCLGgUA4=
-=FPLD
------END PGP SIGNATURE-----
+regards,
 
---5G06lTa6Jq83wMTw--
+Peter.
