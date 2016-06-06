@@ -1,61 +1,53 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 10/14] regulator: pwm: Switch to the atomic PWM API
-Date: Mon, 6 Jun 2016 11:44:59 +0530
-Message-ID: <575514E3.7050802@nvidia.com>
-References: <1464942192-25967-1-git-send-email-boris.brezillon@free-electrons.com>	<1464942192-25967-11-git-send-email-boris.brezillon@free-electrons.com>	<20160603205028.GH124478@google.com> <20160604082848.0b897b14@bbrezillon>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH RFT 4/4] ARM: dts: imx28-tx28: fix dtc warning
+Date: Mon, 6 Jun 2016 08:33:01 +0200
+Message-ID: <20160606083301.679ad9f5@ipc1.ka-ro>
+References: <1465134747-13536-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20160604082848.0b897b14@bbrezillon>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Brian Norris <briannorris@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465134747-13536-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On Saturday 04 June 2016 11:58 AM, Boris Brezillon wrote:
-> On Fri, 3 Jun 2016 13:50:28 -0700
-> Brian Norris <briannorris@chromium.org> wrote:
+On Sun,  5 Jun 2016 13:52:27 +0000 Stefan Wahren wrote:
+> This fixes the following dtc warning by removing the unnecessary unit=
+:
+>=20
+> Warning (unit_address_vs_reg): Node /matrix-keypad@0 has a unit name,
+> but no reg property
+>=20
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx28-tx28.dts |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx=
+28-tx28.dts
+> index fd20e99..0ebbc83 100644
+> --- a/arch/arm/boot/dts/imx28-tx28.dts
+> +++ b/arch/arm/boot/dts/imx28-tx28.dts
+> @@ -173,7 +173,7 @@
+>  		default-brightness-level =3D <50>;
+>  	};
+> =20
+> -	matrix_keypad: matrix-keypad@0 {
+> +	matrix_keypad: matrix-keypad {
+>  		compatible =3D "gpio-matrix-keypad";
+>  		col-gpios =3D <
+>  			&gpio5 0 GPIO_ACTIVE_HIGH
 >
->> + Laxman
->>
->> Hi,
->>
->> On Fri, Jun 03, 2016 at 10:23:08AM +0200, Boris Brezillon wrote:
->>> -	 * calculation loss.
->>> -	 */
->>> -	req_period = req_diff * pargs.period;
->>> -	div_u64_rem(req_period, diff, &rem);
->>> -	if (!rem) {
->>> -		do_div(req_period, diff);
->>> -		duty_pulse = (unsigned int)req_period;
->>> -	} else {
->>> -		duty_pulse = (pargs.period / 100) * ((req_diff * 100) / diff);
->>> -	}
->>> +	/* We pass diff as the scale to get a uV precision. */
->>> +	pwm_set_relative_duty_cycle(&pstate, req_diff, diff);
->> Notably, you're dropping much of Laxman's commit fd786fb0276a ("regulator:
->> pwm: Try to avoid voltage error in duty cycle calculation"), but I
->> believe the DIV_ROUND_CLOSEST_ULL() in pwm_set_relative_duty_cycle()
->> solves his problem better.
-> Oops, forgot to comment on that in the commit message. Indeed, the use
-> of pwm_set_relative_duty_cycle() solves the problem Laxman was seeing.
->
-Yaah, the issue which I was seeing and had fix will be resolved with 
-this also.
-I wanted to do req_diff * period first before any scaling/division.
-
-Function pwm_set_relative_duty_cycle() does the same,  and hence it is fine.
-
-state->duty_cycle = DIV_ROUND_CLOSEST_ULL((u64)val * state->period,
-+                          scale);
+Acked-By: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 
 
-
-Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
-
-
-
-Thanks,
-Laxman
+Lothar Wa=C3=9Fmann
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
