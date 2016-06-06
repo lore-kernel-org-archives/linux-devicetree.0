@@ -1,120 +1,125 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add a startup delay for fixed
- regulator enabled phys
-Date: Mon, 6 Jun 2016 11:45:08 +0200
-Message-ID: <7cc8f600-0068-204c-db8c-bf7015f6d729@redhat.com>
-References: <1465037919-8497-1-git-send-email-hdegoede@redhat.com>
- <CAGb2v67a4GaaN6-c=m-d5JSsDaP8og_R57SqrLrGKbKiW2Czew@mail.gmail.com>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/7] ARM: dts: sun7i: Add A20 NAND controller
+ pin definitions
+Date: Mon,  6 Jun 2016 13:24:20 +0300
+Message-ID: <1465208664-9366-4-git-send-email-mamlinav@gmail.com>
+References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
+Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v67a4GaaN6-c=m-d5JSsDaP8og_R57SqrLrGKbKiW2Czew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCENVD7YAEIPZHWVXICRUBHYMJYXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1465208664-9366-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-On 06-06-16 11:32, Chen-Yu Tsai wrote:
-> Hi,
->
-> On Sat, Jun 4, 2016 at 6:58 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> It seems that recent kernels have a shorter timeout when scanning for
->> ethernet phys causing us to hit a timeout on boards where the phy's
->> regulator gets enabled just before scanning, which leads to non working
->> ethernet.
->>
->> A 10ms startup delay seems to be enough to fix it, this commit adds a
->> 20ms startup delay just to be safe.
->
-> I couldn't find any power sequencing information on the RTL8201CP,
-> which is what I assume these boards are using.
->
-> The RTL8211E does mention after power ramp up, there's a 20ms
-> delay before the core is ready.
->
-> If 20ms works for you, I've nothing against it though. Just putting the
-> information out there.
+Define the NAND controller pin configs.
 
-Some of them are using the icplus IP101A phy. As said 10 ms works in my
-testing and I've bumped it to 20 to add some safety margin.
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 80 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
 
-Regards,
-
-Hans
-
-
->
->> This has been tested on a sun4i-a10-a1000 and sun5i-a10s-wobo-i5 board,
->> both of which have non-working ethernet on recent kernels without this
->> fix.
->>
->> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v2:
->> -Add Cc stable
->> ---
->>  arch/arm/boot/dts/sun4i-a10-a1000.dts      | 1 +
->>  arch/arm/boot/dts/sun4i-a10-hackberry.dts  | 1 +
->>  arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts | 1 +
->>  arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts   | 1 +
->>  4 files changed, 4 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
->> index c92a1ae..fa70b8f 100644
->> --- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
->> +++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
->> @@ -84,6 +84,7 @@
->>                 regulator-name = "emac-3v3";
->>                 regulator-min-microvolt = <3300000>;
->>                 regulator-max-microvolt = <3300000>;
->> +               startup-delay-us = <20000>;
->>                 enable-active-high;
->>                 gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>;
->>         };
->> diff --git a/arch/arm/boot/dts/sun4i-a10-hackberry.dts b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
->> index 2b17c51..6de83a6 100644
->> --- a/arch/arm/boot/dts/sun4i-a10-hackberry.dts
->> +++ b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
->> @@ -66,6 +66,7 @@
->>                 regulator-name = "emac-3v3";
->>                 regulator-min-microvolt = <3300000>;
->>                 regulator-max-microvolt = <3300000>;
->> +               startup-delay-us = <20000>;
->>                 enable-active-high;
->>                 gpio = <&pio 7 19 GPIO_ACTIVE_HIGH>;
->>         };
->> diff --git a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
->> index 7afc7a6..e28f080 100644
->> --- a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
->> +++ b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
->> @@ -80,6 +80,7 @@
->>                 regulator-name = "emac-3v3";
->>                 regulator-min-microvolt = <3300000>;
->>                 regulator-max-microvolt = <3300000>;
->> +               startup-delay-us = <20000>;
->>                 enable-active-high;
->>                 gpio = <&pio 7 19 GPIO_ACTIVE_HIGH>;   /* PH19 */
->>         };
->> diff --git a/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts b/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
->> index 52d18ca..b5de75f 100644
->> --- a/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
->> +++ b/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
->> @@ -79,6 +79,7 @@
->>                 regulator-name = "emac-3v3";
->>                 regulator-min-microvolt = <3300000>;
->>                 regulator-max-microvolt = <3300000>;
->> +               startup-delay-us = <20000>;
->>                 enable-active-high;
->>                 gpio = <&pio 0 2 GPIO_ACTIVE_HIGH>;
->>         };
->> --
->> 2.7.4
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 82e28c3..915979f 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1328,6 +1328,86 @@
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ 			};
++
++			nand_pins_a: nand_base0@0 {
++				allwinner,pins = "PC0", "PC1", "PC2",
++						"PC5", "PC8", "PC9", "PC10",
++						"PC11", "PC12", "PC13", "PC14",
++						"PC15", "PC16";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_cs0_pins_a: nand_cs@0 {
++				allwinner,pins = "PC4";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_cs1_pins_a: nand_cs@1 {
++				allwinner,pins = "PC3";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_cs2_pins_a: nand_cs@2 {
++				allwinner,pins = "PC17";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_cs3_pins_a: nand_cs@3 {
++				allwinner,pins = "PC18";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_cs4_pins_a: nand_cs@4 {
++				allwinner,pins = "PC19";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_cs5_pins_a: nand_cs@5 {
++				allwinner,pins = "PC20";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_cs6_pins_a: nand_cs@6 {
++				allwinner,pins = "PC21";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_cs7_pins_a: nand_cs@7 {
++				allwinner,pins = "PC22";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_rb0_pins_a: nand_rb@0 {
++				allwinner,pins = "PC6";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			nand_rb1_pins_a: nand_rb@1 {
++				allwinner,pins = "PC7";
++				allwinner,function = "nand0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
+ 		};
+ 
+ 		timer@01c20c00 {
+-- 
+2.7.3
