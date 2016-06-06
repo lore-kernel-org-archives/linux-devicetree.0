@@ -1,194 +1,106 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 7/9] irqchip/gic: Prepare for adding platform driver
-Date: Mon, 6 Jun 2016 09:24:13 +0100
-Message-ID: <5755332D.5010506@nvidia.com>
-References: <1463066372-13115-1-git-send-email-jonathanh@nvidia.com>
- <1463066372-13115-8-git-send-email-jonathanh@nvidia.com>
- <20160604110638.6aa47123@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160604110638.6aa47123-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/22] of: Introduce of_match_device()
+Date: Mon,  6 Jun 2016 10:31:42 +0200
+Message-ID: <20160606083204.19760-1-thierry.reding@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-On 04/06/16 11:06, Marc Zyngier wrote:
-> On Thu, 12 May 2016 16:19:30 +0100
-> Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> 
->> To support GICs that require runtime power management, it is necessary
->> to add a platform driver, so that the probing of the chip can be
->> deferred if resources, such as a power-domain, is not yet available.
->>
->> To prepare for adding a platform driver:
->>  1. Drop the __init section from the gic_dist_config() so this can be
->>     re-used by the platform driver.
->>  2. Add prototypes for functions required by the platform driver to a
->>     local header file so they can be re-used.
->>
->> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/irqchip/irq-gic-common.c |  4 ++--
->>  drivers/irqchip/irq-gic.c        | 18 ++++++++++--------
->>  drivers/irqchip/irq-gic.h        | 28 ++++++++++++++++++++++++++++
->>  3 files changed, 40 insertions(+), 10 deletions(-)
->>  create mode 100644 drivers/irqchip/irq-gic.h
->>
->> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
->> index 97c0028e8388..c510cbd264b1 100644
->> --- a/drivers/irqchip/irq-gic-common.c
->> +++ b/drivers/irqchip/irq-gic-common.c
->> @@ -77,8 +77,8 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
->>  	return ret;
->>  }
->>  
->> -void __init gic_dist_config(void __iomem *base, int gic_irqs,
->> -			    void (*sync_access)(void))
->> +void gic_dist_config(void __iomem *base, int gic_irqs,
->> +		     void (*sync_access)(void))
->>  {
->>  	unsigned int i;
->>  
->> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
->> index e043a19631b1..9f8ab124898b 100644
->> --- a/drivers/irqchip/irq-gic.c
->> +++ b/drivers/irqchip/irq-gic.c
->> @@ -48,6 +48,7 @@
->>  #include <asm/smp_plat.h>
->>  #include <asm/virt.h>
->>  
->> +#include "irq-gic.h"
->>  #include "irq-gic-common.h"
->>  
->>  #ifdef CONFIG_ARM64
->> @@ -363,7 +364,7 @@ static void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
->>  	} while (1);
->>  }
->>  
->> -static void gic_handle_cascade_irq(struct irq_desc *desc)
->> +void gic_handle_cascade_irq(struct irq_desc *desc)
->>  {
->>  	struct gic_chip_data *chip_data = irq_desc_get_handler_data(desc);
->>  	struct irq_chip *chip = irq_desc_get_chip(desc);
->> @@ -447,7 +448,7 @@ static void gic_cpu_if_up(struct gic_chip_data *gic)
->>  }
->>  
->>  
->> -static void __init gic_dist_init(struct gic_chip_data *gic)
->> +static void gic_dist_init(struct gic_chip_data *gic)
->>  {
->>  	unsigned int i;
->>  	u32 cpumask;
->> @@ -532,7 +533,7 @@ int gic_cpu_if_down(unsigned int gic_nr)
->>   * this function, no interrupts will be delivered by the GIC, and another
->>   * platform-specific wakeup source must be enabled.
->>   */
->> -static void gic_dist_save(struct gic_chip_data *gic)
->> +void gic_dist_save(struct gic_chip_data *gic)
->>  {
->>  	unsigned int gic_irqs;
->>  	void __iomem *dist_base;
->> @@ -571,7 +572,7 @@ static void gic_dist_save(struct gic_chip_data *gic)
->>   * handled normally, but any edge interrupts that occured will not be seen by
->>   * the GIC and need to be handled by the platform-specific wakeup source.
->>   */
->> -static void gic_dist_restore(struct gic_chip_data *gic)
->> +void gic_dist_restore(struct gic_chip_data *gic)
->>  {
->>  	unsigned int gic_irqs;
->>  	unsigned int i;
->> @@ -617,7 +618,7 @@ static void gic_dist_restore(struct gic_chip_data *gic)
->>  	writel_relaxed(GICD_ENABLE, dist_base + GIC_DIST_CTRL);
->>  }
->>  
->> -static void gic_cpu_save(struct gic_chip_data *gic)
->> +void gic_cpu_save(struct gic_chip_data *gic)
->>  {
->>  	int i;
->>  	u32 *ptr;
->> @@ -647,7 +648,7 @@ static void gic_cpu_save(struct gic_chip_data *gic)
->>  
->>  }
->>  
->> -static void gic_cpu_restore(struct gic_chip_data *gic)
->> +void gic_cpu_restore(struct gic_chip_data *gic)
->>  {
->>  	int i;
->>  	u32 *ptr;
->> @@ -724,7 +725,7 @@ static struct notifier_block gic_notifier_block = {
->>  	.notifier_call = gic_notifier,
->>  };
->>  
->> -static int __init gic_pm_init(struct gic_chip_data *gic)
->> +static int gic_pm_init(struct gic_chip_data *gic)
->>  {
->>  	gic->saved_ppi_enable = __alloc_percpu(DIV_ROUND_UP(32, 32) * 4,
->>  		sizeof(u32));
->> @@ -754,7 +755,7 @@ free_ppi_enable:
->>  	return -ENOMEM;
->>  }
->>  #else
->> -static int __init gic_pm_init(struct gic_chip_data *gic)
->> +static int gic_pm_init(struct gic_chip_data *gic)
->>  {
->>  	return 0;
->>  }
->> @@ -1178,6 +1179,7 @@ static int __init __gic_init_bases(struct gic_chip_data *gic,
->>  		set_smp_cross_call(gic_raise_softirq);
->>  		register_cpu_notifier(&gic_cpu_notifier);
->>  #endif
->> +
->>  		set_handle_irq(gic_handle_irq);
->>  		if (static_key_true(&supports_deactivate))
->>  			pr_info("GIC: Using split EOI/Deactivate mode\n");
->> diff --git a/drivers/irqchip/irq-gic.h b/drivers/irqchip/irq-gic.h
->> new file mode 100644
->> index 000000000000..646e92614b2c
->> --- /dev/null
->> +++ b/drivers/irqchip/irq-gic.h
->> @@ -0,0 +1,28 @@
->> +/*
->> + * Copyright (C) 2016 NVIDIA CORPORATION, All Rights Reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#ifndef _IRQ_GIC_H
->> +#define _IRQ_GIC_H
->> +
->> +struct gic_chip_data;
->> +
->> +void gic_cpu_save(struct gic_chip_data *gic);
->> +void gic_cpu_restore(struct gic_chip_data *gic);
->> +void gic_dist_save(struct gic_chip_data *gic);
->> +void gic_dist_restore(struct gic_chip_data *gic);
->> +void gic_handle_cascade_irq(struct irq_desc *desc);
->> +
->> +#endif /* _IRQ_GIC_H */
-> 
-> Any reason why all of this is not part of include/irqchip/arm-gic.h
-> instead of creating yet another include file?
+This series of patches introduces a common implementation of a function
+that can be used in iterators (such as the bus_for_each_dev() or the
+driver_for_each_device() functions) and that compare's a device's device
+tree node with the passed in data. Numerous drivers and subsystems have
+their own variant of this function, so a lot of duplication can be
+removed by making use of the common implementation.
 
-No not really, I can definitely move to that header and avoid adding
-this one.
+One thing that slightly bugs me about this is that it can't be used with
+users of class_for_each_device() or class_find_device() because they get
+passed a callback that takes a const void * rather than a void * for the
+device tree node. I had at some point investigated to turn the remainder
+of the iterators into taking const void *, but there are some drivers in
+the kernel that want to modify the data passed to them, so it isn't easy
+to switch.
 
-Cheers
-Jon
+An alternative would be to turn the const void * into void * for all the
+callbacks of this sort, so that we can use a single set throughout the
+tree, but I'm not sure how welcome that would be. I can give that a shot
+if people think it worth, though.
 
+Greg, any thoughts on this?
+
+I've also kept the list of recipients very short, to get early feedback
+and buy-in from Rob and Frank on the common implementation. I expect the
+naming to allow for some good bike-shedding.
+
+Russell, I've Cc'ed you explicitly on this because last dozen or so
+patches touch users of component helpers and you've been busy working on
+those lately. I wanted to give you a heads up on this and am looking for
+your feedback on where you think this would fit in.
+
+Merging this might get a little complicated, but I think it'd be easiest
+to take it all through the DT tree. Perhaps we can hold off on the final
+DRM and IOMMU patches since they are based on stuff currently in linux-
+next only, and defer those to v4.9?
+
+Thierry
+
+Thierry Reding (22):
+  of: Implement of_match_device()
+  amba: tegra-ahb: Use of_device_match()
+  coresight: Use of_device_match()
+  i2c: core: Use of_device_match()
+  net: cpsw-phy-sel: Use of_device_match()
+  nvmem: core: Use of_device_match()
+  of/platform: Use of_device_match()
+  spi: Use of_device_match()
+  of: mdio: Use of_device_match()
+  usb: phy: am335x-control: Use of_device_match()
+  usb: phy: isp1301: Use of_device_match()
+  drm/hdlcd: Use of_device_match()
+  drm/armada: Use of_device_match()
+  drm/etnaviv: Use of_device_match()
+  drm/hisilicon: Use of_device_match()
+  drm/mediatek: Use of_device_match()
+  drm/msm: Use of_device_match()
+  drm/rockchip: Use of_device_match()
+  drm/sti: Use of_device_match()
+  drm/sun4i: Use of_device_match()
+  drm/tilcdc: Use of_device_match()
+  iommu/mediatek: Use of_device_match()
+
+ drivers/amba/tegra-ahb.c                        | 11 ++---------
+ drivers/gpu/drm/arm/hdlcd_drv.c                 |  8 ++------
+ drivers/gpu/drm/armada/armada_drv.c             |  8 ++------
+ drivers/gpu/drm/drm_mipi_dsi.c                  |  5 -----
+ drivers/gpu/drm/etnaviv/etnaviv_drv.c           | 12 +++---------
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c |  8 ++------
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c          |  8 ++------
+ drivers/gpu/drm/msm/msm_drv.c                   | 13 +++----------
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c     | 12 +++---------
+ drivers/gpu/drm/sti/sti_drv.c                   |  8 ++------
+ drivers/gpu/drm/sun4i/sun4i_drv.c               | 12 ++----------
+ drivers/gpu/drm/tilcdc/tilcdc_external.c        |  8 ++------
+ drivers/hwtracing/coresight/of_coresight.c      | 10 +++-------
+ drivers/i2c/i2c-core.c                          |  9 ++-------
+ drivers/iommu/mtk_iommu.c                       |  8 ++------
+ drivers/net/ethernet/ti/cpsw-phy-sel.c          |  9 ++-------
+ drivers/nvmem/core.c                            |  8 ++------
+ drivers/of/of_mdio.c                            |  9 ++-------
+ drivers/of/platform.c                           |  7 +------
+ drivers/spi/spi.c                               |  7 +------
+ drivers/usb/phy/phy-am335x-control.c            | 10 +++-------
+ drivers/usb/phy/phy-isp1301.c                   | 13 ++++---------
+ include/linux/of_device.h                       |  5 +++++
+ 23 files changed, 52 insertions(+), 156 deletions(-)
 
 -- 
-nvpublic
+2.8.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
