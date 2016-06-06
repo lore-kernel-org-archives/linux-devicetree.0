@@ -1,64 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] Add OV5647 device tree documentation
-Date: Mon, 6 Jun 2016 09:38:37 -0500
-Message-ID: <20160606143837.GA22997@rob-hp-laptop>
-References: <cover.1464966020.git.roliveir@synopsys.com>
- <4221809485a46dbf12b883a8207784553fd776a3.1464966020.git.roliveir@synopsys.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH 00/18]  Add support for FDMA DMA controller and xp70
+ rproc found on STi chipsets
+Date: Mon, 6 Jun 2016 16:09:01 +0100
+Message-ID: <20160606150901.GH9912@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1464192412-16386-1-git-send-email-peter.griffin@linaro.org>
+ <20160606050148.GX16910@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4221809485a46dbf12b883a8207784553fd776a3.1464966020.git.roliveir@synopsys.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, mchehab@osg.samsung.com, CARLOS.PALMINHA@synopsys.com
+In-Reply-To: <20160606050148.GX16910@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, ohad@wizery.com, bjorn.andersson@linaro.org, arnd@arndb.de, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2016 at 06:36:40PM +0100, Ramiro Oliveira wrote:
-> From: roliveir <roliveir@synopsys.com>
+Hi Vinod,
+
+On Mon, 06 Jun 2016, Vinod Koul wrote:
+
+> On Wed, May 25, 2016 at 05:06:33PM +0100, Peter Griffin wrote:
+> > 
+> > Peter Griffin (18):
+> >   dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding
+> >     documentation
+> >   dmaengine: st_fdma:  Add STMicroelectronics FDMA driver header file
+> >   dmaengine: st_fdma: Add STMicroelectronics FDMA engine driver support
+> >   dmaengine: st_fdma: Add xp70 firmware loading mechanism.
+> >   dmaengine: st_fdma: Add fdma suspend and resume callbacks.
 > 
-> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
-> ---
->  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> new file mode 100644
-> index 0000000..5e4aa49
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> @@ -0,0 +1,19 @@
-> +Omnivision OV5657 raw image sensor
+> I do not see the latter two patches in this series. Something is missed here
+> from cover to actual patches which is bit bizarre as one tends to generate
+> patches and cover together
 
-Still 5657?
+Sorry I accidentally sent two cover letters as part of this series. The v4
+one is here https://lkml.org/lkml/2016/5/25/451.
 
-> +---------------------------------
-> +
-> +OV5657 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> +and CCI (I2C compatible) control bus.
-> +
-> +Required properties:
-> +
-> +- compatible	: "ov5647";
+regards,
 
-Needs vendor prefix?
-
-> +- reg		: I2C slave address of the sensor;
-
-What happened to the clocks property. I'm pretty sure the driver always 
-needs to know the input clock freq.
-
-> +
-> +The common video interfaces bindings (see video-interfaces.txt) should be
-> +used to specify link to the image data receiver. The OV5647 device
-> +node should contain one 'port' child node with an 'endpoint' subnode.
-> +
-> +Following properties are valid for the endpoint node:
-> +
-> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-> +  video-interfaces.txt.  The sensor supports only two data lanes.
-> -- 
-> 2.8.1
-> 
-> 
+Peter.
