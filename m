@@ -1,105 +1,173 @@
-From: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner sun8i-emac
-Date: Mon, 6 Jun 2016 20:10:54 +0200
-Message-ID: <5755BCAE.6060307@gmail.com>
-References: <1464947790-22991-1-git-send-email-clabbe.montjoie@gmail.com>
- <1464947790-22991-4-git-send-email-clabbe.montjoie@gmail.com>
- <20160606141438.GA9510@rob-hp-laptop>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 2/2] aer: add support aer interrupt with none
+ MSI/MSI-X/INTx mode
+Date: Mon, 6 Jun 2016 13:10:49 -0500
+Message-ID: <20160606181049.GA15171@localhost>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+ <20160602034828.GA10240@localhost>
+ <VI1PR0401MB1709E215DCE264B2C27B3DAB92580@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+ <20160602135546.GA8262@localhost>
+ <575052B8.3090203@ti.com>
+ <20160603040952.GA17904@localhost>
+ <5751BEDF.3040300@ti.com>
+ <20160604034852.GA15143@localhost>
+ <DB5PR0401MB1702AF829693255DFC347448925C0@DB5PR0401MB1702.eurprd04.prod.outlook.com>
+ <57558248.4010502@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBMPZ225AKGQE2XICMCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160606141438.GA9510@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <57558248.4010502@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Po Liu <po.liu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 06/06/2016 16:14, Rob Herring a =C3=A9crit :
-> On Fri, Jun 03, 2016 at 11:56:28AM +0200, LABBE Corentin wrote:
->> This patch adds documentation for Device-Tree bindings for the
->> Allwinner sun8i-emac driver.
->>
->> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../bindings/net/allwinner,sun8i-emac.txt          | 64 +++++++++++++++=
-+++++++
->>  1 file changed, 64 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8=
-i-emac.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.=
-txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
->> new file mode 100644
->> index 0000000..cf71a71
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
->> @@ -0,0 +1,64 @@
->> +* Allwinner sun8i EMAC ethernet controller
->> +
->> +Required properties:
->> +- compatible: "allwinner,sun8i-a83t-emac", "allwinner,sun8i-h3-emac",
->> +		or "allwinner,sun50i-a64-emac"
->> +- reg: address and length of the register sets for the device.
->> +- reg-names: should be "emac" and "syscon", matching the register sets
->=20
-> Is syscon shared with other devices? Your example only has 1 reg=20
-> address.
->=20
+On Mon, Jun 06, 2016 at 10:01:44AM -0400, Murali Karicheri wrote:
+> On 06/06/2016 03:32 AM, Po Liu wrote:
+> > Hi Bjorn,
+> > I confirm we met same problem with KeyStone base on DesignWare design.
+> > 
+> > 
+> > Best regards,
+> > Liu Po
+> > 
+> >>  -----Original Message-----
+> >>  From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> >>  Sent: Saturday, June 04, 2016 11:49 AM
+> >>  To: Murali Karicheri
+> >>  Cc: Po Liu; linux-pci@vger.kernel.org; linux-arm-
+> >>  kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> >>  devicetree@vger.kernel.org; Arnd Bergmann; Roy Zang; Marc Zyngier;
+> >>  Stuart Yoder; Yang-Leo Li; Minghuan Lian; Bjorn Helgaas; Shawn Guo;
+> >>  Mingkai Hu; Rob Herring
+> >>  Subject: Re: [PATCH 2/2] aer: add support aer interrupt with none
+> >>  MSI/MSI-X/INTx mode
+> >>  
+> >>  On Fri, Jun 03, 2016 at 01:31:11PM -0400, Murali Karicheri wrote:
+> >>  > Po,
+> >>  >
+> >>  > Sorry to hijack your discussion, but the problem seems to be same for
+> >>  > Keystone PCI controller which is also designware (old version) based.
+> >>  >
+> >>  > On 06/03/2016 12:09 AM, Bjorn Helgaas wrote:
+> >>  > > On Thu, Jun 02, 2016 at 11:37:28AM -0400, Murali Karicheri wrote:
+> >>  > >> On 06/02/2016 09:55 AM, Bjorn Helgaas wrote:
+> >>  > >>> On Thu, Jun 02, 2016 at 05:01:19AM +0000, Po Liu wrote:
+> >>  > >>>>>  -----Original Message-----
+> >>  > >>>>>  From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> >>  > >>>>>  Sent: Thursday, June 02, 2016 11:48 AM
+> >>  > >>>>>  To: Po Liu
+> >>  > >>>>>  Cc: linux-pci@vger.kernel.org;
+> >>  > >>>>> linux-arm-kernel@lists.infradead.org;
+> >>  > >>>>>  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Arnd
+> >>  > >>>>> Bergmann;  Roy Zang; Marc Zyngier; Stuart Yoder; Yang-Leo Li;
+> >>  > >>>>> Minghuan Lian; Bjorn  Helgaas; Shawn Guo; Mingkai Hu; Rob
+> >>  > >>>>> Herring
+> >>  > >>>>>  Subject: Re: [PATCH 2/2] aer: add support aer interrupt with
+> >>  > >>>>> none  MSI/MSI-X/INTx mode
+> >>  > >>>>>
+> >>  > >>>>>  [+cc Rob]
+> >>  > >>>>>
+> >>  > >>>>>  Hi Po,
+> >>  > >>>>>
+> >>  > >>>>>  On Thu, May 26, 2016 at 02:00:06PM +0800, Po Liu wrote:
+> >>  > >>>>>  > On some platforms, root port doesn't support MSI/MSI-X/INTx
+> >>  in RC mode.
+> >>  > >>>>>  > When chip support the aer interrupt with none MSI/MSI-X/INTx
+> >>  > >>>>> mode,  > maybe there is interrupt line for aer pme etc. Search
+> >>  > >>>>> the interrupt  > number in the fdt file.
+> >>  > >>>>>
+> >>  > >>>>>  My understanding is that AER interrupt signaling can be done
+> >>  > >>>>> via INTx,  MSI, or MSI-X (PCIe spec r3.0, sec 6.2.4.1.2).
+> >>  > >>>>> Apparently your device  doesn't support MSI or MSI-X.  Are you
+> >>  > >>>>> saying it doesn't support INTx  either?  How is the interrupt
+> >>  you're requesting here different from INTx?
+> >>  > >>>>
+> >>  > >>>> Layerscape use none of MSI or MSI-X or INTx to indicate the
+> >>  > >>>> devices or root error in RC mode. But use an independent SPI
+> >>  > >>>> interrupt(arm interrupt controller) line.
+> >>  > >>>
+> >>  > >>> The Root Port is a PCI device and should follow the normal PCI
+> >>  > >>> rules for interrupts.  As far as I understand, that means it
+> >>  > >>> should use MSI, MSI-X, or INTx.  If your Root Port doesn't use MSI
+> >>  > >>> or MSI-X, it should use INTx, the PCI_INTERRUPT_PIN register
+> >>  > >>> should tell us which (INTA/ INTB/etc.), and
+> >>  PCI_COMMAND_INTX_DISABLE should work to disable it.
+> >>  > >>> That's all from the PCI point of view, of course.
+> >>  > >>
+> >>  > >> I am faced with the same issue on Keystone PCI hardware and it has
+> >>  > >> been on my TODO list  for quite some time. Keystone PCI hardware
+> >>  > >> also doesn't use MSI or MSI-X or INTx for reporting errors received
+> >>  > >> at the root port, but use a platform interrupt instead (not
+> >>  > >> complaint to PCI standard as per PCI base spec). So I would need
+> >>  > >> similar change to have the error interrupt passed to the aer
+> >>  > >> driver. So there are hardware out there like Keystone which
+> >>  requires to support this through platform IRQ.
+> >>  > >
+> >>  > > This is not a new area of the spec, and it's hard for me to believe
+> >>  > > that these two new PCIe controllers are both broken the same way
+> >>  > > (although I guess both are DesignWare-based, so maybe this is the
+> >>  > > same underlying problem in both cases?).  I think it's more likely
+> >>  > > that we just haven't figured out the right way to describe this in
+> >>  the DT.
+> >>  >
+> >>  > Keystone is using an older version of the designware IP and it
+> >>  > implements all of the interrupts in the application register space
+> >>  > unlike other newer version of the hardware. So I assume, the version
+> >>  > used on Layerscape is also an older version and the both have same
+> >>  > issue in terms of non standard platform interrupt used for error
+> >>  reporting.
+> >>  >
+> >>  > > I assume you have a Root Port with an AER capability, no MSI
+> >>  > > capability, and no MSI-X capability, right?
+> >>  >
+> >>  > Has AER capability and both MSI and INTx (legacy) capability
+> >>  >
+> >>  > > What does its Interrupt
+> >>  > > Pin register contain?  If it's zero, it doesn't use INTx either, so
+> >>  > > according to the spec it should generate no interrupts.
+> >>  > >
+> >>  > At address offset 0x3C by default has a value of 1, but it is writable
+> >>  > by software. So default is INTx A.
+> >>  
+> >>  0x3c is the Interrupt *Line*, which is read/write.  The Interrupt
+> >>  *Pin* is at 0x3d and should be read-only.
+> >>  
+> 
+> You are right. But default is 1 at this address.
+> 
+> >>  Does your Keystone driver support MSI?  If so, since your Root Port
+> >>  supports MSI, I would think we would use that by default, and the INTx
+> >>  stuff wouldn't even matter.
+> > 
+> > Layerscape is also shows "Both message signaled interrupts (MSI) and legacy INTx are supported."
+> > But both of them not work for AER interrupt when devices or root port report aer error.
+> > But another GIC interrupt line do.
+> 
+> Same with Keystone. Even though both MSI and INTx are supported
+> error interrupt at root port is reported on a different interrupt
+> line than MSI/INTx. So for Power Management event interrupt is also
+> different line.
 
-The example is bad, emac and syscon are two distinct regspaces.
-I will correct the example.
+I'm looking at the "Error Message Controls" diagram in the PCIe spec
+r3.0, sec 6.2.6.  Does this hardware fit into the platform-specific
+"System Error" case there?  Do the Root Control enable bits (in the
+PCIe Capability) control this interrupt?  If so, maybe this makes more
+sense than I thought.
 
->> +- interrupts: interrupt for the device
->> +- clocks: A phandle to the reference clock for this device
->> +- clock-names: should be "ahb"
->> +- resets: A phandle to the reset control for this device
->> +- reset-names: should be "ahb"
->> +- phy-mode: See ethernet.txt
->> +- phy or phy-handle: See ethernet.txt
->> +- #address-cells: shall be 1
->> +- #size-cells: shall be 0
->> +
->> +"allwinner,sun8i-h3-emac" also requires:
->> +- clocks: an extra phandle to the reference clock for the EPHY
->> +- clock-names: an extra "ephy" entry matching the clocks property
->> +- resets: an extra phandle to the reset control for the EPHY
->> +- resets-names: an extra "ephy" entry matching the resets property
->> +
->> +See ethernet.txt in the same directory for generic bindings for etherne=
-t
->> +controllers.
->> +
->> +The device node referenced by "phy" or "phy-handle" should be a child n=
-ode
->> +of this node. See phy.txt for the generic PHY bindings.
->> +
->> +Optional properties:
->> +- phy-supply: phandle to a regulator if the PHY needs one
->> +- phy-io-supply: phandle to a regulator if the PHY needs a another one =
-for I/O.
->> +		 This is sometimes found with RGMII PHYs, which use a second
->> +		 regulator for the lower I/O voltage.
->=20
-> These should go in the phy's node.
->=20
+We have to assume both notification paths work (the normal
+INTx/MSI/MSI-X AER interrupts as well as the platform-specific System
+Errors), so if we add support for System Errors, it should be
+structured so we prefer INTx/MSI/MSI-X, and only fall back to System
+Errors if they don't work.  AER would have to know which path it's
+using so aer_enable_rootport() can disable the other one (currently it
+always disables System Errors).
 
-In fact, I forgot to remove them, since for the moment, the driver sent do =
-not have any regulator support.
+Then you'd have to add quirks to mark MSI/MSI-X/INTx as being broken
+on your devices to force the fallback to System Errors.
 
-Thanks
+How much would this screw up other PCIe services (PME, hotplug, VC,
+etc)?  Does MSI work for them?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Bjorn
