@@ -1,115 +1,75 @@
-From: Mark Rutland <mark.rutland@arm.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
-Date: Mon, 6 Jun 2016 12:42:56 +0100
-Message-ID: <20160606114256.GF6831@leverpostej>
+Date: Mon, 6 Jun 2016 12:43:21 +0100
+Message-ID: <20160606114321.GJ1041@n2100.armlinux.org.uk>
 References: <1465183229-24147-1-git-send-email-wmills@ti.com>
  <1465183229-24147-5-git-send-email-wmills@ti.com>
  <20160606085627.GA6831@leverpostej>
- <5480709.cGbSehIKrE@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5480709.cGbSehIKrE@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bill Mills <wmills@ti.com>, rmk+kernel@armlinux.org.uk, t-kristo@ti.com, ssantosh@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, r-woodruff2@ti.com, devicetree@vger.kernel.org
+In-Reply-To: <20160606085627.GA6831@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Bill Mills <wmills-l0cyMroinI0@public.gmane.org>, t-kristo-l0cyMroinI0@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, r-woodruff2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 11:09:07AM +0200, Arnd Bergmann wrote:
-> On Monday, June 6, 2016 9:56:27 AM CEST Mark Rutland wrote:
-> > [adding devicetree]
-> > 
-> > On Sun, Jun 05, 2016 at 11:20:29PM -0400, Bill Mills wrote:
-> > > Keystone2 can do DMA coherency but only if:
-> > > 1) DDR3A DMA buffers are in high physical addresses (0x8_0000_0000)
-> > >     (DDR3B does not have this constraint)
-> > > 2) Memory is marked outer shared
-> > > 3) DMA Master marks transactions as outer shared
-> > >     (This is taken care of in bootloader)
-> > > 
-> > > Use outer shared instead of inner shared.
-> > > This choice is done at early init time and uses the attr_mod facility
-> > > 
-> > > If the kernel is not configured for LPAE and using high PA, or if the
-> > > switch to outer shared fails, then we fail to meet this criteria.
-> > > Under any of these conditions we veto any dma-coherent attributes in
-> > > the DTB.
-> > 
-> > I very much do not like this. As I previously mentioned [1],
-> > dma-coherent has de-facto semantics today. This series deliberately
-> > changes that, and inverts the relationship between DT and kernel (as the
-> > describption in the DT would now depend on the configuration of the
-> > kernel).
-> > 
-> > I would prefer that we have a separate property (e.g.
-> > "dma-outer-coherent") to describe when a device can be coherent with
-> > Normal, Outer Shareable, Inner Write-Back, Outer Write-Back memory.
-> > Then the kernel can figure out whether or not device can be used
-> > coherently, depending on how it is configured.
-> 
-> I share your concern, but I don't think the dma-outer-coherent attribute
-> would be a good solution either.
-> 
-> The problem really is that keystone is a platform that is sometimes
-> coherent, depending purely on what kernel we run, and not at all on
-> anything we can describe in devicetree, and I don't see any good way
-> to capture the behavior of the hardware in generic DT bindings.
+On Mon, Jun 06, 2016 at 09:56:27AM +0100, Mark Rutland wrote:
+> I very much do not like this. As I previously mentioned [1],
+> dma-coherent has de-facto semantics today. This series deliberately
+> changes that, and inverts the relationship between DT and kernel (as the
+> describption in the DT would now depend on the configuration of the
+> kernel).
 
-I think that above doesn't quite capture the situation:
+dma-coherent's semantics are not very well defined - just grep for it
+in Documention/devicetree/ and you'll find several different wordings
+for what this property means.
 
-Some DMA masters can be cache-coherent (only) with Outer Shareable
-transactions. That is a property we could capture inthe DT (e.g.
-dma-outer-coherent), and is independent of the kernel configuration.
+Anyway, my point here is that all of these merely say that the hardware
+is coherent in _some regard_ - it doesn't specify under what conditions
+DMA coherency is guaranteed by the hardware.  It happens that on ARM,
+most platforms give that guarantee when using inner shared mappings.  If
+we were to use some other sharing, or disable sharing altogether (eg, by
+disabling SMP support) then all these platforms would immediately break.
 
-Whether or not the devices are coherent with the kernel's chosen memory
-attributes certainly depends on the kernel configuration, but that is
-not what we capture in the DT.
+In other words, DMA coherence today already depends on the kernel's setup
+of the page tables corresponding to the requirements of the hardware.
 
-> So far, the assumption has been:
-> 
-> - when running a non-LPAE kernel, keystone is not coherent, and we
->   must ignore both the dma-coherent properties in devices and the
->   dma-ranges properties in bus nodes.
+Keystone II is just slightly different - and as I understand it, TI
+followed one of the early specifications that ARM Ltd produced.  That
+specification may have contained errors, but unfortunately, we now have
+a situation where there is hardware out there which followed in good
+faith.
 
-I wasn't able to spot if/where that was enforced. Is it possible to boot
-Keystone UP, !LPAE?
+So, it seems to me to be entirely reasonable that Keystone II should
+mark devices with the "dma-coherent" property - just the same way as
+every other platform does.  It also seems to be entirely appropriate for
+a platform to remove this property if it determines that the conditions
+for DMA coherency are not met - in order to save the users data from
+corruption.
 
-> - when running an LPAE kernel, keystone is coherent, and we must
->   respect both of those.
+TI Keystone II is not the only platform with issues here: there are
+Marvell Armada platforms out there which have DMA coherence, but are
+uniprocessor, we don't set the shared bit (which they require for
+DMA coherence) and so we omit the dma-coherent property from the
+device tree at the moment.  And they're inner-shared coherent.  We
+just don't set the page tables up so that they can work.
 
-Similarly this has not been enforced either way. Currently I cannot see
-how devices with dma-coherent could possibly work with Keystone.
+So, I think to require a whole new property is absurd.  The existing
+property means "if the rest of the system is appropriately configured,
+this device can be dma-coherent".  So, what I think we need is a way
+to communicate whether the rest of the system has been appropriately
+configured, so the property can be attached to devices which meet the
+criteria, but the arch/platform level can signal whether the conditions
+for device DMA coherence have been met.  That's not a DT property,
+that's a matter of how the kernel has setup the system.
 
-I think we also need to be clear as to what we mean by "keystone is
-coherent". With LPAE, CPUs can be coherent with each other, so long as
-the appropriate physical addresses are used (with the magic to handle
-that).
-
-Devices being cache-coherent with CPUs is already something we manage
-per-device.
-
-> My interpretation of Bill's description above is that we now have
-> an additional requirement that at least I was not aware of before,
-> regarding the outer-sharable attribute. I don't think there is
-> much value in making this a boot-time option, since everyone would
-> want to run this platform in a cache-coherent way if at all possible.
->
-> We already have special hacks to detect the case of keystone running
-> in LPAE mode, in order to do the special rewrite-all-page-tables
-> hack at boot time for relocating the physical address, and we could
-> use the same hack to change the page table attributes.
-> 
-> The question is how to communicate the requirement for outer-sharable
-> for a platform. If we think it's a safe assumption that there will
-> not be future 32-bit platforms with this requirement (or maybe one
-> or two more at most), we could leave it in the special keystone hack.
-> Alternatively, a DT property in an appropriate node could indicate
-> that a particular platform requires it.
-
-As above, I think this must be specified per-device, following the usual
-manner in which we describe Inner Shareable coherency using
-dma-coherent.
-
-Thanks,
-Mark.
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
