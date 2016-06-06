@@ -1,7 +1,7 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 17/22] drm/msm: Use of_device_match()
-Date: Mon,  6 Jun 2016 10:31:59 +0200
-Message-ID: <20160606083204.19760-18-thierry.reding@gmail.com>
+Subject: [PATCH 19/22] drm/sti: Use of_device_match()
+Date: Mon,  6 Jun 2016 10:32:01 +0200
+Message-ID: <20160606083204.19760-20-thierry.reding@gmail.com>
 References: <20160606083204.19760-1-thierry.reding@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160606083204.19760-1-thierry.reding@gmail.com>
@@ -16,30 +16,25 @@ Use the common implementation rather than the driver-private variant.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/sti/sti_drv.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 1f7de47d817e..554d0b4f1e9b 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -15,6 +15,8 @@
-  * this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
+diff --git a/drivers/gpu/drm/sti/sti_drv.c b/drivers/gpu/drm/sti/sti_drv.c
+index 4ee6fa4f1beb..d0ea8c3b8e3c 100644
+--- a/drivers/gpu/drm/sti/sti_drv.c
++++ b/drivers/gpu/drm/sti/sti_drv.c
+@@ -10,6 +10,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
 +#include <linux/of_device.h>
-+
- #include "msm_drv.h"
- #include "msm_debugfs.h"
- #include "msm_fence.h"
-@@ -796,15 +798,6 @@ static const struct dev_pm_ops msm_pm_ops = {
-  * Componentized driver support:
-  */
+ #include <linux/of_platform.h>
  
--/*
-- * NOTE: duplication of the same code as exynos or imx (or probably any other).
-- * so probably some room for some helpers
-- */
+ #include <drm/drm_atomic.h>
+@@ -341,11 +342,6 @@ static struct drm_driver sti_driver = {
+ 	.minor = DRIVER_MINOR,
+ };
+ 
 -static int compare_of(struct device *dev, void *data)
 -{
 -	return dev->of_node == data;
@@ -48,14 +43,14 @@ index 1f7de47d817e..554d0b4f1e9b 100644
  static void release_of(struct device *dev, void *data)
  {
  	of_node_put(data);
-@@ -824,7 +817,7 @@ static int add_components(struct device *dev, struct component_match **matchptr,
- 			break;
+@@ -381,7 +377,7 @@ static int sti_platform_probe(struct platform_device *pdev)
  
- 		component_match_add_release(dev, matchptr, release_of,
--					    compare_of, node);
-+					    of_device_match, node);
+ 	while (child_np) {
+ 		component_match_add_release(dev, &match, release_of,
+-					    compare_of, child_np);
++					    of_device_match, child_np);
+ 		child_np = of_get_next_available_child(node, child_np);
  	}
  
- 	return 0;
 -- 
 2.8.3
