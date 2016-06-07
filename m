@@ -1,11 +1,14 @@
 From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 0/2] Add a new Rockchip usb2 phy driver
-Date: Tue,  7 Jun 2016 17:15:52 +0800
-Message-ID: <1465290954-15852-1-git-send-email-frank.wang@rock-chips.com>
+Subject: [PATCH v4 1/2] Documentation: bindings: add DT documentation for
+ Rockchip USB2PHY
+Date: Tue,  7 Jun 2016 17:15:53 +0800
+Message-ID: <1465290954-15852-2-git-send-email-frank.wang@rock-chips.com>
+References: <1465290954-15852-1-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1465290954-15852-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -19,37 +22,92 @@ To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvP
 Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The newer SoCs (rk3366, rk3399) of Rock-chip take a different usb-phy
-IP block than rk3288 and before, and most of phy-related registers are
-also different from the past, so a new phy driver is required necessarily.
-
-These series patches add phy-rockchip-inno-usb2.c and the corresponding
-documentation.
+Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
 Changes in v4:
  - Used 'phy-supply' instead of 'vbus_*-supply'.
 
 Changes in v3:
- - Supplemented some hardware-description into the devicetree bindings.
- - Resolved the mapping defect between fixed value in driver and the property
-   in devicetree.
- - Code cleanup.
+ - Added 'clocks' and 'clock-names' optional properties.
+ - Specified 'otg-port' and 'host-port' as the sub-node name.
 
 Changes in v2:
- - Specified more hardware-description into the devicetree bindings.
- - Optimized some process of driver.
+ - Changed vbus_host optional property from gpio to regulator.
+ - Specified vbus_otg-supply optional property.
+ - Specified otg_id and otg_bvalid property.
 
-Frank Wang (2):
-  Documentation: bindings: add DT documentation for Rockchip USB2PHY
-  phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
-
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |   62 ++
- drivers/phy/Kconfig                                |    7 +
- drivers/phy/Makefile                               |    1 +
- drivers/phy/phy-rockchip-inno-usb2.c               |  614 ++++++++++++++++++++
- 4 files changed, 684 insertions(+)
+ .../bindings/phy/phy-rockchip-inno-usb2.txt        |   62 ++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
- create mode 100644 drivers/phy/phy-rockchip-inno-usb2.c
 
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+new file mode 100644
+index 0000000..3465980
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+@@ -0,0 +1,62 @@
++ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
++
++Required properties (phy (parent) node):
++ - compatible : should be one of the listed compatibles:
++	* "rockchip,rk3366-usb2phy"
++	* "rockchip,rk3399-usb2phy"
++ - #clock-cells : should be 0.
++ - clock-output-names : specify the 480m output clock name.
++
++Optional properties:
++ - clocks : phandle + phy specifier pair, for the input clock of phy.
++ - clock-names : input clock name of phy, must be "phyclk".
++
++Required nodes : a sub-node is required for each port the phy provides.
++		 The sub-node name is used to identify host or otg port,
++		 and shall be the following entries:
++	* "otg-port" : the name of otg port.
++	* "host-port" : the name of host port.
++
++Required properties (port (child) node):
++ - #phy-cells : must be 0. See ./phy-bindings.txt for details.
++ - interrupts : specify an interrupt for each entry in interrupt-names.
++ - interrupt-names : a list which shall be the following entries:
++	* "otg_id" : for the otg id interrupt.
++	* "otg_bvalid" : for the otg vbus interrupt.
++	* "linestate" : for the host/otg linestate interrupt.
++
++Optional properties:
++ - phy-supply : phandle to a regulator that provides power to VBUS.
++		See ./phy-bindings.txt for details.
++
++Example:
++
++grf: syscon@ff770000 {
++	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++...
++
++	u2phy: usb2-phy {
++		compatible = "rockchip,rk3366-usb2phy";
++		#clock-cells = <0>;
++		clock-output-names = "sclk_otgphy0_480m";
++
++		u2phy_otg: otg-port {
++			#phy-cells = <0>;
++			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "otg_id", "otg_bvalid", "linestate";
++			status = "okay";
++		};
++
++		u2phy_host: host-port {
++			#phy-cells = <0>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "linestate";
++			status = "okay";
++		};
++	};
++};
 -- 
 1.7.9.5
