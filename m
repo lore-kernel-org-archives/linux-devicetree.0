@@ -1,70 +1,102 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: RE: [PATCH v4 7/7] phy: Add Northstar2 PCI Phy support
-Date: Tue, 7 Jun 2016 17:55:55 +0530
-Message-ID: <6ed8bf6ba5de670588715d55ca42d631@mail.gmail.com>
-References: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
- <1465216900-11755-8-git-send-email-pramod.kumar@broadcom.com> <5755C404.3080502@gmail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
+Date: Tue, 7 Jun 2016 13:32:48 +0100
+Message-ID: <20160607123248.GO1041@n2100.armlinux.org.uk>
+References: <1465183229-24147-1-git-send-email-wmills@ti.com>
+ <1465183229-24147-5-git-send-email-wmills@ti.com>
+ <20160606085627.GA6831@leverpostej>
+ <20160606114321.GJ1041@n2100.armlinux.org.uk>
+ <20160606115918.GG6831@leverpostej>
+ <20160606123210.GL1041@n2100.armlinux.org.uk>
+ <20160607100142.GA2633@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5755C404.3080502@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20160607100142.GA2633@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Jon Mason <jonmason@broadcom.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Bill Mills <wmills@ti.com>, t-kristo@ti.com, ssantosh@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, r-woodruff2@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+On Tue, Jun 07, 2016 at 11:01:43AM +0100, Mark Rutland wrote:
+> So, if we codify the dma-coherent semantics as only matching the working
+> case today, then it becomes consistent and independent of kernel
+> configuration, and we can add properties to cater for the other cases,
+> independent of kernel configuration.
 
-> -----Original Message-----
-> From: Florian Fainelli [mailto:f.fainelli@gmail.com]
-> Sent: 07 June 2016 00:12
-> To: Pramod Kumar; Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell;
-> Kumar Gala; Catalin Marinas; Will Deacon; Kishon Vijay Abraham I; David S.
-> Miller
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; bcm-
-> kernel-feedback-list@broadcom.com; linux-kernel@vger.kernel.org;
-> netdev@vger.kernel.org; Jon Mason
-> Subject: Re: [PATCH v4 7/7] phy: Add Northstar2 PCI Phy support
->
-> On 06/06/2016 05:41 AM, Pramod Kumar wrote:
-> > Add PCI Phy support for Broadcom Northstar2 SoCs.  This driver uses
-> > the interface from the iproc mdio mux driver to enable the devices
-> > respective phys.
-> >
-> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> > Signed-off-by: Jon Mason <jonmason@broadcom.com>
-> > Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> > ---
-> >  drivers/phy/Kconfig            |   8 +++
-> >  drivers/phy/Makefile           |   2 +-
-> >  drivers/phy/phy-bcm-ns2-pcie.c | 115
-> > +++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 124 insertions(+), 1 deletion(-)  create mode 100644
-> > drivers/phy/phy-bcm-ns2-pcie.c
-> >
-> > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig index
-> > b869b98..01fb93b 100644
-> > --- a/drivers/phy/Kconfig
-> > +++ b/drivers/phy/Kconfig
-> > @@ -434,4 +434,12 @@ config PHY_CYGNUS_PCIE
-> >
-> >  source "drivers/phy/tegra/Kconfig"
-> >
-> > +config PHY_NS2_PCIE
-> > +	tristate "Broadcom Northstar2 PCIe PHY driver"
-> > +	depends on OF && MDIO_BUS_MUX_BCM_IPROC
-> > +	select GENERIC_PHY
-> > +	default ARCH_BCM_IPROC
->
-> Are not you missing a dependency on PHYLIB too to provide
-> mdio_module_register() etc. (at least make it build)?
->
+That's where our points of view differ.  You claim that it becomes
+independent of the kernel configuration.  I'm saying that's total
+rubbish, because it's dependent on the kernel setting the CPU page
+tables up as it does today.
 
-This depends on MDIO_BUS_MUX_BCM_IPROC which itself depends on PHYLIB. Hence
-I don't think We need to take care of this here.
+If we set them up differently, then it doesn't work so well.  This
+is evidenced by Marvell Armada uniprocessor platforms, where they
+are DMA coherent provided that the S bit is set.  However, because
+they are uniprocessor platforms, the kernel sets the page tables up
+with the S bit clear.  That means that the kernel configures the
+system in a way which results in it being non-coherent.
 
-> --
-> Florian
+So here, we have an example of why your position is actually incorrect.
+dma-coherent does *not* give a "consistent and independent of kernel
+configuration" property - it's inherently tied to how the kernel has
+setup the page tables.
 
-Regards,
-Pramod
+So, dma-coherent is coherent _provided_ the kernel sets the page tables
+up as we currently expect it to - the S bit set on non-LPAE systems, on
+LPAE systems, inner-sharable.  If we deviate from that, (eg by clearing
+the S bit on non-LPAE systems) we end up with a non-coherent system,
+even if dma-coherent is specified.
+
+The Keystone II case is no different - Keystone II is coherent if the
+correct conditions are met with the CPU page tables.  The only difference
+is that it's a slightly different set of conditions.
+
+> > For example, if you clear the shared bit in the page tables on non-LPAE
+> > SoCs, devices are no longer coherent.
+> 
+> Yes. This is a problem, but one that we already face. If we clarified
+> the semantics as above, we would know that the device is simply not
+> coherent.
+
+How?  We would need to introduce some flag which is passed from the
+architecture code into the OF code to disable the effect of dma-coherent,
+making of_dma_is_coherent() return false if the S bit is clear.
+
+> > Whether devices are DMA coherent is a combination of two things:
+> >  * is the device connected to a coherent bus.
+> >  * is the system setup to allow coherency on that bus to work.
+> > 
+> > We capture the first through the dma-coherent property, which is clearly
+> > a per-device property.  We ignore the second because we assume everyone
+> > is going to configure the CPU side correctly.  That's untrue today, and
+> > it's untrue not only because of Keystone II, but also because of other
+> > SoCs as well which pre-date Keystone II.  We currently miss out on
+> > considering that, because if we ignore it, we get something that works
+> > for most platforms.
+> > 
+> > I don't see that adding a dma-outer-coherent property helps this - it's
+> > muddying the waters somewhat - and it's also forcing additional complexity
+> > into places where we shouldn't have it.  We would need to parse two
+> > properties in the DMA API code, and then combine it with knowledge as
+> > to how the system page tables have been setup.  If they've been setup
+> > as inner sharable, then dma-coherent identifies whether the device is
+> > coherent.  If they've been setup as outer sharable, then
+> > dma-outer-coherent specifies that and dma-coherent is meaningless.
+> 
+> I think that at minimum, the attributes devices require needs to be
+> describe to the kernel, rather than being something we hope just
+> happened to match.
+
+Yuck.  Seriously?  What happens when we have two devices which have
+different required attributes for the CPU mapping?  Should architecture
+code have to parse the entire DT tree to work out what attributes each
+device needs, and try to then work out how the CPU page tables should
+be setup?
+
+I really don't think that's a good idea.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
