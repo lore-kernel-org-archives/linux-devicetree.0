@@ -1,50 +1,55 @@
-From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v4 00/14] fix some type infos and bugs for arm64/of numa
-Date: Tue, 7 Jun 2016 16:08:04 +0800
-Message-ID: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 06/14] of_numa: Use of_get_next_parent to simplify code
+Date: Tue, 7 Jun 2016 16:08:10 +0800
+Message-ID: <1465286898-13828-7-git-send-email-thunder.leizhen@huawei.com>
+References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465286898-13828-1-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-v3 -> v4:
-1. Packed three patches of Kefeng Wang, patch6-8.
-2. Add 6 new patches(9-15) to enhance the numa on arm64.
+From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 
-v2 -> v3:
-1. Adjust patch2 and patch5 according to Matthias Brugger's advice, to make the
-   patches looks more well. The final code have no change. 
+Use of_get_next_parent() instead of open-code.
 
-v1 -> v2:
-1. Base on https://lkml.org/lkml/2016/5/24/679
-2. Rewrote of_numa_parse_memory_nodes according to Rob Herring's advice. So that it looks more clear.
-3. Rewrote patch 5 because some scenes were not considered before.
+Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ drivers/of/of_numa.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Kefeng Wang (3):
-  of_numa: Use of_get_next_parent to simplify code
-  of_numa: Use pr_fmt()
-  arm64: numa: Use pr_fmt()
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index 3157130..ed7bd22 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -153,8 +153,6 @@ int of_node_to_nid(struct device_node *device)
+ 	np = of_node_get(device);
 
-Zhen Lei (11):
-  of/numa: remove a duplicated pr_debug information
-  of/numa: fix a memory@ node can only contains one memory block
-  arm64/numa: add nid check for memory block
-  of/numa: remove a duplicated warning
-  arm64/numa: avoid inconsistent information to be printed
-  arm64/numa: support HAVE_SETUP_PER_CPU_AREA
-  arm64/numa: define numa_distance as array to simplify code
-  arm64/numa: support HAVE_MEMORYLESS_NODES
-  arm64/numa: remove some useless code
-  of/numa: remove the constraint on the distances of node pairs
-  Documentation: remove the constraint on the distances of node pairs
+ 	while (np) {
+-		struct device_node *parent;
+-
+ 		r = of_property_read_u32(np, "numa-node-id", &nid);
+ 		/*
+ 		 * -EINVAL indicates the property was not found, and
+@@ -165,9 +163,7 @@ int of_node_to_nid(struct device_node *device)
+ 		if (r != -EINVAL)
+ 			break;
 
- Documentation/devicetree/bindings/numa.txt |   1 -
- arch/arm64/Kconfig                         |  12 ++
- arch/arm64/include/asm/numa.h              |   1 -
- arch/arm64/kernel/smp.c                    |   1 +
- arch/arm64/mm/numa.c                       | 228 ++++++++++++++++-------------
- drivers/of/of_numa.c                       |  87 +++++------
- 6 files changed, 180 insertions(+), 150 deletions(-)
+-		parent = of_get_parent(np);
+-		of_node_put(np);
+-		np = parent;
++		np = of_get_next_parent(np);
+ 	}
+ 	if (np && r)
+ 		pr_warn("NUMA: Invalid \"numa-node-id\" property in node %s\n",
+--
+2.5.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
