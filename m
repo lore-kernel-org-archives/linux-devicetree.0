@@ -1,50 +1,79 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] Add R8A7794/SILK sound DT support
-Date: Tue, 7 Jun 2016 09:37:36 +0900
-Message-ID: <20160607003736.GB20591@verge.net.au>
-References: <2378837.cigT3tNQPe@wasted.cogentembedded.com>
- <7d19e749-8264-9004-64f4-aefabda699c6@cogentembedded.com>
- <b77ad169-c9d1-4d67-0973-fc9639ddb613@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b77ad169-c9d1-4d67-0973-fc9639ddb613-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] ARM: dts: msm8916: Update reserved-memory
+Date: Mon,  6 Jun 2016 17:57:24 -0700
+Message-ID: <1465261044-2762-2-git-send-email-bjorn.andersson@linaro.org>
+References: <1465261044-2762-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465261044-2762-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 09:11:17PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 05/13/2016 12:16 AM, Sergei Shtylyov wrote:
-> 
-> >>   Here's the set of 6 patches against Simon Horman's 'renesas.git' repo,
-> >>'renesas-devel-20160509-v4.6-rc7' tag. I'm adding the sound device tree support
-> >>for the R8A7794 SoC based SILK board.
-> >>
-> >>[1/6] ARM: dts: r8a7794: add audio clocks
-> >>[2/6] ARM: dts: r8a7794: add MSTP5 clocks
-> >>[3/6] ARM: dts: r8a7794: add MSTP10 clocks
-> >>[4/6] ARM: dts: r8a7794: add Audio-DMAC support
-> >>[5/6] ARM: dts: r8a7794: add sound support
-> >>[6/6] ARM: dts: silk: add sound support
-> >
-> >   Oops, forgot to mention that patch #5 depends on the R-Car sound patch
-> >posted yesterday in order to get interpreted as intended (it uses a disabled
-> >SRC node).
-> 
->   Simon, that patch has already hit Linus' tree but this series seems to be
-> stuck. Please merge!
+Update reserved-memory in accordance with memory the detailed memory map
+for 8916, so that we will be able to reference the firmware memory
+regions.
 
-Hi Sergei,
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 41 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 38 insertions(+), 3 deletions(-)
 
-there seem to be some outstanding review comments for v3 of this patchset.
-Could you address them and repost?
-
-Thanks!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 96812007850e..3ca609a11648 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -42,13 +42,48 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
+-		reserve_aligned@86000000 {
+-			reg = <0x0 0x86000000 0x0 0x0300000>;
++		tz-apps@86000000 {
++			reg = <0x0 0x86000000 0x0 0x300000>;
+ 			no-map;
+ 		};
+ 
+ 		smem_mem: smem_region@86300000 {
+-			reg = <0x0 0x86300000 0x0 0x0100000>;
++			reg = <0x0 0x86300000 0x0 0x100000>;
++			no-map;
++		};
++
++		hypervisor@86400000 {
++			reg = <0x0 0x86400000 0x0 0x100000>;
++			no-map;
++		};
++
++		tz@86500000 {
++			reg = <0x0 0x86500000 0x0 0x180000>;
++			no-map;
++		};
++
++		reserved@8668000 {
++			reg = <0x0 0x86680000 0x0 0x80000>;
++			no-map;
++		};
++
++		rmtfs@86700000 {
++			reg = <0x0 0x86700000 0x0 0xe0000>;
++			no-map;
++		};
++
++		rfsa@867e00000 {
++			reg = <0x0 0x867e0000 0x0 0x20000>;
++			no-map;
++		};
++
++		mpss@86800000 {
++			reg = <0x0 0x86800000 0x0 0x2b00000>;
++			no-map;
++		};
++
++		wcnss@89300000 {
++			reg = <0x0 0x89300000 0x0 0x600000>;
+ 			no-map;
+ 		};
+ 	};
+-- 
+2.5.0
