@@ -1,168 +1,89 @@
-From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 10/14] arm64/numa: define numa_distance as array to simplify code
-Date: Tue, 7 Jun 2016 16:08:14 +0800
-Message-ID: <1465286898-13828-11-git-send-email-thunder.leizhen@huawei.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v4 02/14] of/numa: fix a memory@ node can only contains one
+ memory block
+Date: Tue, 7 Jun 2016 16:08:06 +0800
+Message-ID: <1465286898-13828-3-git-send-email-thunder.leizhen@huawei.com>
 References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465286898-13828-1-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Xinwei Hu <huxinwei@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-1. MAX_NUMNODES is base on CONFIG_NODES_SHIFT, the default value of the
-   latter is very small now.
-2. Suppose the default value of MAX_NUMNODES is enlarged to 64, so the
-   size of numa_distance is 4K, it's still acceptable if run the Image
-   on other processors.
-3. It will make function __node_distance quicker than before.
+For a normal memory@ devicetree node, its reg property can contains more
+memory blocks.
 
-Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Because we don't known how many memory blocks maybe contained, so we try
+from index=0, increase 1 until error returned(the end).
+
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/arm64/include/asm/numa.h |  1 -
- arch/arm64/mm/numa.c          | 74 +++----------------------------------------
- 2 files changed, 5 insertions(+), 70 deletions(-)
+ drivers/of/of_numa.c | 29 ++++++++++-------------------
+ 1 file changed, 10 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
-index 600887e..9b6cc38 100644
---- a/arch/arm64/include/asm/numa.h
-+++ b/arch/arm64/include/asm/numa.h
-@@ -32,7 +32,6 @@ static inline const struct cpumask *cpumask_of_node(int node)
- void __init arm64_numa_init(void);
- int __init numa_add_memblk(int nodeid, u64 start, u64 end);
- void __init numa_set_distance(int from, int to, int distance);
--void __init numa_free_distance(void);
- void __init early_map_cpu_to_node(unsigned int cpu, int nid);
- void numa_store_cpu_info(unsigned int cpu);
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index fb71b4e..7b3fbdc 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -63,13 +63,9 @@ static int __init of_numa_parse_memory_nodes(void)
+ 	struct device_node *np = NULL;
+ 	struct resource rsrc;
+ 	u32 nid;
+-	int r = 0;
+-
+-	for (;;) {
+-		np = of_find_node_by_type(np, "memory");
+-		if (!np)
+-			break;
++	int i, r;
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 99401aa..df5c842 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -32,8 +32,7 @@ EXPORT_SYMBOL(node_data);
- nodemask_t numa_nodes_parsed __initdata;
- static int cpu_to_node_map[NR_CPUS] = { [0 ... NR_CPUS-1] = NUMA_NO_NODE };
++	for_each_node_by_type(np, "memory") {
+ 		r = of_property_read_u32(np, "numa-node-id", &nid);
+ 		if (r == -EINVAL)
+ 			/*
+@@ -78,23 +74,18 @@ static int __init of_numa_parse_memory_nodes(void)
+ 			 * "numa-node-id" property
+ 			 */
+ 			continue;
+-		else if (r)
+-			/* some other error */
+-			break;
 
--static int numa_distance_cnt;
--static u8 *numa_distance;
-+static u8 numa_distance[MAX_NUMNODES][MAX_NUMNODES];
- static bool numa_off;
+-		r = of_address_to_resource(np, 0, &rsrc);
+-		if (r) {
+-			pr_err("NUMA: bad reg property in memory node\n");
+-			break;
+-		}
++		for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
++			r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
 
- static __init int numa_parse_early_param(char *opt)
-@@ -247,59 +246,6 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
- }
-
- /**
-- * numa_free_distance
-- *
-- * The current table is freed.
-- */
--void __init numa_free_distance(void)
--{
--	size_t size;
--
--	if (!numa_distance)
--		return;
--
--	size = numa_distance_cnt * numa_distance_cnt *
--		sizeof(numa_distance[0]);
--
--	memblock_free(__pa(numa_distance), size);
--	numa_distance_cnt = 0;
--	numa_distance = NULL;
--}
--
--/**
-- *
-- * Create a new NUMA distance table.
-- *
-- */
--static int __init numa_alloc_distance(void)
--{
--	size_t size;
--	u64 phys;
--	int i, j;
--
--	size = nr_node_ids * nr_node_ids * sizeof(numa_distance[0]);
--	phys = memblock_find_in_range(0, PFN_PHYS(max_pfn),
--				      size, PAGE_SIZE);
--	if (WARN_ON(!phys))
--		return -ENOMEM;
--
--	memblock_reserve(phys, size);
--
--	numa_distance = __va(phys);
--	numa_distance_cnt = nr_node_ids;
--
--	/* fill with the default distances */
--	for (i = 0; i < numa_distance_cnt; i++)
--		for (j = 0; j < numa_distance_cnt; j++)
--			numa_distance[i * numa_distance_cnt + j] = i == j ?
--				LOCAL_DISTANCE : REMOTE_DISTANCE;
--
--	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
--
--	return 0;
--}
--
--/**
-  * numa_set_distance - Set inter node NUMA distance from node to node.
-  * @from: the 'from' node to set distance
-  * @to: the 'to'  node to set distance
-@@ -314,12 +260,7 @@ static int __init numa_alloc_distance(void)
-  */
- void __init numa_set_distance(int from, int to, int distance)
- {
--	if (!numa_distance) {
--		pr_warn_once("Warning: distance table not allocated yet\n");
--		return;
--	}
--
--	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
-+	if (from >= MAX_NUMNODES || to >= MAX_NUMNODES ||
- 			from < 0 || to < 0) {
- 		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
- 			    from, to, distance);
-@@ -333,7 +274,7 @@ void __init numa_set_distance(int from, int to, int distance)
- 		return;
+-		r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
+-		if (r)
+-			break;
++		if (!i || r) {
++			of_node_put(np);
++			pr_err("NUMA: bad property in memory node\n");
++			return r ? : -EINVAL;
++		}
  	}
+-	of_node_put(np);
 
--	numa_distance[from * numa_distance_cnt + to] = distance;
-+	numa_distance[from][to] = distance;
+-	return r;
++	return 0;
  }
 
- /**
-@@ -341,9 +282,9 @@ void __init numa_set_distance(int from, int to, int distance)
-  */
- int __node_distance(int from, int to)
- {
--	if (from >= numa_distance_cnt || to >= numa_distance_cnt)
-+	if (from >= MAX_NUMNODES || to >= MAX_NUMNODES)
- 		return from == to ? LOCAL_DISTANCE : REMOTE_DISTANCE;
--	return numa_distance[from * numa_distance_cnt + to];
-+	return numa_distance[from][to];
- }
- EXPORT_SYMBOL(__node_distance);
-
-@@ -383,11 +324,6 @@ static int __init numa_init(int (*init_func)(void))
- 	nodes_clear(numa_nodes_parsed);
- 	nodes_clear(node_possible_map);
- 	nodes_clear(node_online_map);
--	numa_free_distance();
--
--	ret = numa_alloc_distance();
--	if (ret < 0)
--		return ret;
-
- 	ret = init_func();
- 	if (ret < 0)
+ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
 --
 2.5.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
