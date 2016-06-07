@@ -1,604 +1,150 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Subject: Re: [PATCH v3 1/1] net: ethernet: Add TSE PCS support to
- dwmac-socfpga
-Date: Tue, 7 Jun 2016 10:30:16 +0200
-Message-ID: <ab65dd4e-830a-c774-c8fa-1adfb3be1a69@st.com>
-References: <1465268516-31480-1-git-send-email-thloh@altera.com>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 11/14] arm64/numa: support HAVE_MEMORYLESS_NODES
+Date: Tue, 7 Jun 2016 14:01:55 +0530
+Message-ID: <CAFpQJXVaYT5N3GUCFDnUL8OYOuuSSV4QfC8cXL2ecB=1TN57jQ@mail.gmail.com>
+References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com> <1465286898-13828-12-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465268516-31480-1-git-send-email-thloh@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thloh@altera.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465286898-13828-12-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello
+On Tue, Jun 7, 2016 at 1:38 PM, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> Some numa nodes may have no memory. For example:
+> 1. cpu0 on node0
+> 2. cpu1 on node1
+> 3. device0 access the momory from node0 and node1 take the same time.
 
-On 6/7/2016 5:01 AM, thloh@altera.com wrote:
-> From: Tien Hock Loh <thloh@altera.com>
+i am wondering, if access to both nodes is same, then why you need numa.
+the example you are quoting is against the basic principle of "numa"
+what is device0 here? cpu?
 >
-> This adds support for TSE PCS that uses SGMII adapter when the phy-mode of
-> the dwmac is set to sgmii
+> So, we can not simply classify device0 to node0 or node1, but we can
+> define a node2 which distances to node0 and node1 are the same.
 >
-> Signed-off-by: Tien Hock Loh <thloh@altera.com>
->
+> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
-> v2:
-> - Refactored the TSE PCS out from the dwmac-socfpga.c file
-> - Added binding documentation for TSE PCS sgmii adapter
-> v3:
-> - Added missing license header for new source files
-> - Updated tse_pcs.h include headers
-> - Standardize if statements
-> ---
->  .../devicetree/bindings/net/socfpga-dwmac.txt      |   4 +
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
->  .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 140 +++++++++--
->  drivers/net/ethernet/stmicro/stmmac/tse_pcs.c      | 261 +++++++++++++++++++++
->  drivers/net/ethernet/stmicro/stmmac/tse_pcs.h      |  36 +++
->  5 files changed, 419 insertions(+), 24 deletions(-)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/tse_pcs.c
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/tse_pcs.h
-
-I just wonder if it could make sense to rename the
-tse_pcs.[hc] files or creating a sub-directory for altera devel.
-It seems that tse_pcs.[hc] are common files but this support
-is for Altera.
-Anyway, I let you decide and I also ask you to update the stmmac.txt
-file.
-
-> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> index 3a9d679..2bc39f1 100644
-> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> @@ -15,6 +15,8 @@ Required properties:
->  Optional properties:
->  altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
->  		DWMAC controller is connected emac splitter.
-> +phy-mode: The phy mode the ethernet operates in
-> +altr,sgmii_to_sgmii_converter: phandle to the TSE SGMII converter
+>  arch/arm64/Kconfig      |  4 ++++
+>  arch/arm64/kernel/smp.c |  1 +
+>  arch/arm64/mm/numa.c    | 43 +++++++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 46 insertions(+), 2 deletions(-)
 >
->  Example:
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 05c1bf1..5904a62 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -581,6 +581,10 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
+>         def_bool y
+>         depends on NUMA
 >
-> @@ -28,4 +30,6 @@ gmac0: ethernet@ff700000 {
->  	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
->  	clocks = <&emac_0_clk>;
->  	clock-names = "stmmaceth";
-> +	phy-mode = "sgmii";
-> +	altr,gmii_to_sgmii_converter = <&sgmii_1_gmii_to_sgmii_converter_0>;
->  };
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-> index 73c2715..29c1dee 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-> @@ -6,7 +6,7 @@ stmmac-objs:= stmmac_main.o stmmac_ethtool.o stmmac_mdio.o ring_mode.o	\
->
->  obj-$(CONFIG_STMMAC_PLATFORM) += stmmac-platform.o
->  stmmac-platform-objs:= stmmac_platform.o dwmac-meson.o dwmac-sunxi.o	\
-> -		       dwmac-sti.o dwmac-socfpga.o dwmac-rk.o
-> +		       dwmac-sti.o dwmac-socfpga.o dwmac-rk.o tse_pcs.o
->
->  obj-$(CONFIG_STMMAC_PCI) += stmmac-pci.o
->  stmmac-pci-objs:= stmmac_pci.o
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-> index 3f9588e..88fba4e 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-> @@ -27,6 +27,8 @@
->  #include "stmmac.h"
->  #include "stmmac_platform.h"
->
-> +#include "tse_pcs.h"
+> +config HAVE_MEMORYLESS_NODES
+> +       def_bool y
+> +       depends on NUMA
 > +
->  #define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII 0x0
->  #define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII 0x1
->  #define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RMII 0x2
-> @@ -47,48 +49,60 @@ struct socfpga_dwmac {
->  	struct regmap *sys_mgr_base_addr;
->  	struct reset_control *stmmac_rst;
->  	void __iomem *splitter_base;
-> +	struct tse_pcs pcs;
->  };
+>  source kernel/Kconfig.preempt
+>  source kernel/Kconfig.hz
 >
->  static void socfpga_dwmac_fix_mac_speed(void *priv, unsigned int speed)
->  {
->  	struct socfpga_dwmac *dwmac = (struct socfpga_dwmac *)priv;
->  	void __iomem *splitter_base = dwmac->splitter_base;
-> +	void __iomem *tse_pcs_base = dwmac->pcs.tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base = dwmac->pcs.sgmii_adapter_base;
-> +	struct device *dev = dwmac->dev;
-> +	struct net_device *ndev = dev_get_drvdata(dev);
-> +	struct phy_device *phy_dev = ndev->phydev;
->  	u32 val;
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index d099306..9e15297 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -620,6 +620,7 @@ static void __init of_parse_and_init_cpus(void)
+>                         }
 >
-> -	if (!splitter_base)
-> -		return;
-> -
-> -	val = readl(splitter_base + EMAC_SPLITTER_CTRL_REG);
-> -	val &= ~EMAC_SPLITTER_CTRL_SPEED_MASK;
-> -
-> -	switch (speed) {
-> -	case 1000:
-> -		val |= EMAC_SPLITTER_CTRL_SPEED_1000;
-> -		break;
-> -	case 100:
-> -		val |= EMAC_SPLITTER_CTRL_SPEED_100;
-> -		break;
-> -	case 10:
-> -		val |= EMAC_SPLITTER_CTRL_SPEED_10;
-> -		break;
-> -	default:
-> -		return;
-> +	if (splitter_base) {
-> +		val = readl(splitter_base + EMAC_SPLITTER_CTRL_REG);
-> +		val &= ~EMAC_SPLITTER_CTRL_SPEED_MASK;
+>                         bootcpu_valid = true;
+> +                       early_map_cpu_to_node(0, of_node_to_nid(dn));
+>
+>                         /*
+>                          * cpu_logical_map has already been
+> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> index df5c842..d73b0a0 100644
+> --- a/arch/arm64/mm/numa.c
+> +++ b/arch/arm64/mm/numa.c
+> @@ -128,6 +128,14 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
+>                 nid = 0;
+>
+>         cpu_to_node_map[cpu] = nid;
 > +
-> +		switch (speed) {
-> +		case 1000:
-> +			val |= EMAC_SPLITTER_CTRL_SPEED_1000;
-> +			break;
-> +		case 100:
-> +			val |= EMAC_SPLITTER_CTRL_SPEED_100;
-> +			break;
-> +		case 10:
-> +			val |= EMAC_SPLITTER_CTRL_SPEED_10;
-> +			break;
-> +		default:
-> +			return;
-> +		}
-> +		writel(val, splitter_base + EMAC_SPLITTER_CTRL_REG);
->  	}
->
-> -	writel(val, splitter_base + EMAC_SPLITTER_CTRL_REG);
-> +	if ((tse_pcs_base) && (sgmii_adapter_base))
-> +		tse_pcs_fix_mac_speed(&dwmac->pcs, phy_dev, speed);
+> +       /*
+> +        * We should set the numa node of cpu0 as soon as possible, because it
+> +        * has already been set up online before. cpu_to_node(0) will soon be
+> +        * called.
+> +        */
+> +       if (!cpu)
+> +               set_cpu_numa_node(cpu, nid);
 >  }
 >
-> -static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *dev)
-> +static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac,
-> +				    struct device *dev)
->  {
->  	struct device_node *np = dev->of_node;
->  	struct regmap *sys_mgr_base_addr;
->  	u32 reg_offset, reg_shift;
-> -	int ret;
-> -	struct device_node *np_splitter;
-> +	int ret, index;
-> +	struct device_node *np_splitter = NULL;
-> +	struct device_node *np_sgmii_adapter = NULL;
-> +
->  	struct resource res_splitter;
-> +	struct resource res_tse_pcs;
-> +	struct resource res_sgmii_adapter;
->
->  	dwmac->stmmac_rst = devm_reset_control_get(dev,
-> -						  STMMAC_RESOURCE_NAME);
-> +						   STMMAC_RESOURCE_NAME);
->  	if (IS_ERR(dwmac->stmmac_rst)) {
->  		dev_info(dev, "Could not get reset control!\n");
->  		if (PTR_ERR(dwmac->stmmac_rst) == -EPROBE_DEFER)
-> @@ -99,6 +113,7 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
->  	dwmac->interface = of_get_phy_mode(np);
->
->  	sys_mgr_base_addr = syscon_regmap_lookup_by_phandle(np, "altr,sysmgr-syscon");
-> +
->  	if (IS_ERR(sys_mgr_base_addr)) {
->  		dev_info(dev, "No sysmgr-syscon node found\n");
->  		return PTR_ERR(sys_mgr_base_addr);
-> @@ -130,6 +145,74 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
->  		}
->  	}
->
-> +	np_sgmii_adapter = of_parse_phandle(np,
-> +					    "altr,gmii_to_sgmii_converter", 0);
-> +	if (np_sgmii_adapter) {
-> +		index = of_property_match_string(np_sgmii_adapter, "reg-names",
-> +						 "hps_emac_interface_splitter_avalon_slave");
-> +
-> +		if (index >= 0) {
-> +			if (of_address_to_resource(np_sgmii_adapter, index,
-> +						   &res_splitter)) {
-> +				dev_err(dev, "%s: ERROR: missing emac splitter address\n",
-> +					__func__);
-> +				return -EINVAL;
-> +			}
-> +
-> +			dwmac->splitter_base = devm_ioremap_resource(
-> +				dev, &res_splitter);
-> +
-> +			if (IS_ERR(dwmac->splitter_base)) {
-> +				dev_err(dev, "%s: ERROR: failed mapping emac splitter\n",
-> +					__func__);
-> +				return PTR_ERR(dwmac->splitter_base);
-> +			}
-> +		}
-> +
-> +		index = of_property_match_string(np_sgmii_adapter, "reg-names",
-> +						 "gmii_to_sgmii_adapter_avalon_slave");
-> +
-> +		if (index >= 0) {
-> +			if (of_address_to_resource(np_sgmii_adapter, index,
-> +						   &res_sgmii_adapter)) {
-> +				dev_err(dev,
-> +					"%s: ERROR: failed mapping adapter\n",
-> +					__func__);
-> +				return -EINVAL;
-> +			}
-> +
-> +			dwmac->pcs.sgmii_adapter_base =
-> +			devm_ioremap_resource(dev, &res_sgmii_adapter);
-> +
-> +			if (IS_ERR(dwmac->pcs.sgmii_adapter_base)) {
-> +				dev_err(dev, "%s: failed to mapping adapter\n",
-> +					__func__);
-> +				return PTR_ERR(dwmac->pcs.sgmii_adapter_base);
-> +			}
-> +		}
-> +
-> +		index = of_property_match_string(np_sgmii_adapter, "reg-names",
-> +						 "eth_tse_control_port");
-
-reg-names looks to be specific and mandatory, IMO they should be
-documented in the binding.
-
-> +
-> +		if (index >= 0) {
-> +			if (of_address_to_resource(np_sgmii_adapter, index,
-> +						   &res_tse_pcs)) {
-> +				dev_err(dev,
-> +					"%s: ERROR: failed mapping tse control port\n",
-> +					__func__);
-> +				return -EINVAL;
-> +			}
-> +
-> +			dwmac->pcs.tse_pcs_base = devm_ioremap_resource(
-> +			dev, &res_tse_pcs);
-
-can you check with indentation (scripts/Lindent)?
-
-
-> +
-> +			if (IS_ERR(dwmac->pcs.tse_pcs_base)) {
-> +				dev_err(dev, "%s: ERROR: failed mapping tse control port\n",
-> +					__func__);
-> +				return PTR_ERR(dwmac->pcs.sgmii_adapter_base);
-> +			}
-> +		}
-> +	}
->  	dwmac->reg_offset = reg_offset;
->  	dwmac->reg_shift = reg_shift;
->  	dwmac->sys_mgr_base_addr = sys_mgr_base_addr;
-> @@ -153,6 +236,7 @@ static int socfpga_dwmac_setup(struct socfpga_dwmac *dwmac)
->  		break;
->  	case PHY_INTERFACE_MODE_MII:
->  	case PHY_INTERFACE_MODE_GMII:
-> +	case PHY_INTERFACE_MODE_SGMII:
->  		val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII;
->  		break;
->  	default:
-> @@ -172,6 +256,10 @@ static int socfpga_dwmac_setup(struct socfpga_dwmac *dwmac)
->  	ctrl |= val << reg_shift;
->
->  	regmap_write(sys_mgr_base_addr, reg_offset, ctrl);
-> +
-> +	if (phymode == PHY_INTERFACE_MODE_SGMII)
-> +		tse_pcs_init(dwmac->pcs.tse_pcs_base, &dwmac->pcs);
-> +
->  	return 0;
+>  #ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
+> @@ -215,6 +223,35 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>         return ret;
 >  }
 >
-> @@ -191,6 +279,12 @@ static void *socfpga_dwmac_probe(struct platform_device *pdev)
->  		return ERR_PTR(ret);
->  	}
+> +static u64 __init alloc_node_data_from_nearest_node(int nid, const size_t size)
+> +{
+> +       int i, best_nid, distance;
+> +       u64 pa;
+> +       DECLARE_BITMAP(nodes_map, MAX_NUMNODES);
+> +
+> +       bitmap_zero(nodes_map, MAX_NUMNODES);
+> +       bitmap_set(nodes_map, nid, 1);
+> +
+> +find_nearest_node:
+> +       best_nid = NUMA_NO_NODE;
+> +       distance = INT_MAX;
+> +
+> +       for_each_clear_bit(i, nodes_map, MAX_NUMNODES)
+> +               if (numa_distance[nid][i] < distance) {
+> +                       best_nid = i;
+> +                       distance = numa_distance[nid][i];
+> +               }
+> +
+> +       pa = memblock_alloc_nid(size, SMP_CACHE_BYTES, best_nid);
+> +       if (!pa) {
+> +               BUG_ON(best_nid == NUMA_NO_NODE);
+> +               bitmap_set(nodes_map, best_nid, 1);
+> +               goto find_nearest_node;
+> +       }
+> +
+> +       return pa;
+> +}
+> +
+>  /**
+>   * Initialize NODE_DATA for a node on the local memory
+>   */
+> @@ -228,7 +265,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>         pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+>                 nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
 >
-> +	ret = socfpga_dwmac_setup(dwmac);
-> +	if (ret) {
-> +		dev_err(dev, "couldn't setup SoC glue (%d)\n", ret);
-> +		return ERR_PTR(ret);
-> +	}
-> +
->  	return dwmac;
->  }
+> -       nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+> +       nd_pa = memblock_alloc_nid(nd_size, SMP_CACHE_BYTES, nid);
+> +       if (!nd_pa)
+> +               nd_pa = alloc_node_data_from_nearest_node(nid, nd_size);
+>         nd = __va(nd_pa);
 >
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/tse_pcs.c b/drivers/net/ethernet/stmicro/stmmac/tse_pcs.c
-> new file mode 100644
-> index 0000000..1989bd1
-> --- /dev/null
-> +++ b/drivers/net/ethernet/stmicro/stmmac/tse_pcs.c
-> @@ -0,0 +1,261 @@
-> +/* Copyright Altera Corporation (C) 2016. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License, version 2,
-> + * as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + *
-> + * Author: Tien Hock Loh <thloh@altera.com>
-> + */
-> +
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_net.h>
-> +#include <linux/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/stmmac.h>
-> +
-> +#include "stmmac.h"
-> +#include "stmmac_platform.h"
-> +#include "tse_pcs.h"
-> +
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII 0x0
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII 0x1
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RMII 0x2
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_WIDTH 2
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_MASK 0x00000003
-> +
-> +#define EMAC_SPLITTER_CTRL_REG			0x0
-> +#define EMAC_SPLITTER_CTRL_SPEED_MASK		0x3
-> +#define EMAC_SPLITTER_CTRL_SPEED_10		0x2
-> +#define EMAC_SPLITTER_CTRL_SPEED_100		0x3
-> +#define EMAC_SPLITTER_CTRL_SPEED_1000		0x0
-
-pls use BIT and GENMASK.
-
-...
-
-> +static void config_tx_buffer(u16 data, void __iomem *base)
-> +{
-> +	writew(data, base + SGMII_ADAPTER_CTRL_REG);
-> +}
-
-hmm, is this function really necessary?  I think you can use
-directly writew or maybe writew_relaxed.
-
-> +
-> +static void tse_pcs_reset(void __iomem *base, struct tse_pcs *pcs)
-> +{
-> +	int counter = 0;
-> +	u16 val;
-> +
-> +	val = readw(base + TSE_PCS_CONTROL_REG);
-> +	val |= TSE_PCS_SW_RST_MASK;
-> +	writew(val, base + TSE_PCS_CONTROL_REG);
-> +
-> +	while (counter < TSE_PCS_SW_RESET_TIMEOUT) {
-> +		val = readw(base + TSE_PCS_CONTROL_REG);
-> +		val &= TSE_PCS_SW_RST_MASK;
-> +		if (val == 0)
-> +			break;
-> +		counter++;
-> +		udelay(1);
-> +	}
-> +	if (counter >= TSE_PCS_SW_RESET_TIMEOUT)
-> +		dev_err(pcs->dev, "PCS could not get out of sw reset\n");
-> +}
-> +
-
-maybe this should return an error to stop the init if reset is NOK.
-
-
-> +void tse_pcs_init(void __iomem *base, struct tse_pcs *pcs)
-> +{
-> +	writew(0x0001, base + TSE_PCS_IF_MODE_REG);
-> +
-> +	writew(TSE_PCS_SGMII_LINK_TIMER_0, base + TSE_PCS_LINK_TIMER_0_REG);
-> +	writew(TSE_PCS_SGMII_LINK_TIMER_1, base + TSE_PCS_LINK_TIMER_1_REG);
-> +
-> +	tse_pcs_reset(base, pcs);
-> +	config_tx_buffer(SGMII_ADAPTER_ENABLE,
-> +			 pcs->sgmii_adapter_base);
-> +}
-> +
-> +static void pcs_link_timer_callback(unsigned long data)
-> +{
-> +	u16 val = 0;
-> +
-> +	struct tse_pcs *pcs = (struct tse_pcs *)data;
-> +	void __iomem *tse_pcs_base = pcs->tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base = pcs->sgmii_adapter_base;
-> +
-> +	val = readw(tse_pcs_base + TSE_PCS_STATUS_REG);
-> +	val &=  TSE_PCS_STATUS_LINK_MASK;
-> +
-> +	if (val != 0) {
-> +		dev_dbg(pcs->dev, "Adapter: Link is established\n");
-> +		config_tx_buffer(SGMII_ADAPTER_ENABLE, sgmii_adapter_base);
-> +	} else {
-> +		mod_timer(&pcs->link_timer, jiffies +
-> +				msecs_to_jiffies(LINK_TIMER));
-> +	}
-> +}
-> +
-> +static void auto_nego_timer_callback(unsigned long data)
-> +{
-> +	u16 val = 0;
-> +	u16 speed = 0;
-> +	u16 duplex = 0;
-> +
-> +	struct tse_pcs *pcs = (struct tse_pcs *)data;
-> +	void __iomem *tse_pcs_base = pcs->tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base = pcs->sgmii_adapter_base;
-> +
-> +	val = readw(tse_pcs_base + TSE_PCS_STATUS_REG);
-> +	val &=  TSE_PCS_STATUS_AN_COMPLETED_MASK;
-> +
-> +	if (val != 0) {
-> +		dev_dbg(pcs->dev, "Adapter: Auto Negotiation is completed\n");
-> +		val = readw(tse_pcs_base + TSE_PCS_PARTNER_ABILITY_REG);
-> +		speed = val & TSE_PCS_PARTNER_SPEED_MASK;
-> +		duplex = val & TSE_PCS_PARTNER_DUPLEX_MASK;
-> +
-> +		if (speed == TSE_PCS_PARTNER_SPEED_10 &&
-> +		    duplex == TSE_PCS_PARTNER_DUPLEX_FULL)
-> +			dev_dbg(pcs->dev,
-> +				"Adapter: Link Partner is Up - 10/Full\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_100 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_FULL)
-> +			dev_dbg(pcs->dev,
-> +				"Adapter: Link Partner is Up - 100/Full\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_1000 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_FULL)
-> +			dev_dbg(pcs->dev,
-> +				"Adapter: Link Partner is Up - 1000/Full\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_10 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_HALF)
-> +			dev_err(pcs->dev,
-> +				"Adapter does not support Half Duplex\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_100 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_HALF)
-> +			dev_err(pcs->dev,
-> +				"Adapter does not support Half Duplex\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_1000 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_HALF)
-> +			dev_err(pcs->dev,
-> +				"Adapter does not support Half Duplex\n");
-> +		else
-> +			dev_err(pcs->dev,
-> +				"Adapter: Invalid Partner Speed and Duplex\n");
-
-ANE is completed but speed or duplex is NOK. Any failure to signalling?
-I see that you then enable the adpter in any case.
-
-Maybe we could try to restart ANE again or force it (reducing the speed)
-I wonder what happens if, for some reason, there is some hw problem. In
-that case the timer is always running signalling an invalid Parter
-speed. Anyway, this is jus a question... I expect that this error will
-always point us to a problem to debug further (if occurs).
-
-> +
-> +		config_tx_buffer(SGMII_ADAPTER_ENABLE, sgmii_adapter_base);
-> +	} else {
-> +		val = readw(tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +		val |= TSE_PCS_CONTROL_RESTART_AN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +
-> +		tse_pcs_reset(tse_pcs_base, pcs);
-> +		mod_timer(&pcs->an_timer, jiffies +
-> +			  msecs_to_jiffies(AUTONEGO_TIMER));
-> +	}
-> +}
-> +
-> +void tse_pcs_fix_mac_speed(struct tse_pcs *pcs, struct phy_device *phy_dev,
-> +			   unsigned int speed)
-> +{
-> +	void __iomem *tse_pcs_base = pcs->tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base = pcs->sgmii_adapter_base;
-> +	u32 val;
-> +
-> +	config_tx_buffer(SGMII_ADAPTER_DISABLE, sgmii_adapter_base);
-> +
-> +	if (phy_dev->autoneg == AUTONEG_ENABLE) {
-> +		val = readw(tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +		val |= TSE_PCS_CONTROL_AN_EN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +
-> +		val = readw(tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +		val |= TSE_PCS_USE_SGMII_AN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +
-> +		val = readw(tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +		val |= TSE_PCS_CONTROL_RESTART_AN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +
-> +		tse_pcs_reset(tse_pcs_base, pcs);
-
-why do you need to reset here?
-
-> +
-> +		setup_timer(&pcs->an_timer,
-> +			    auto_nego_timer_callback,
-> +			    (unsigned long)pcs);
-> +		mod_timer(&pcs->an_timer, jiffies +
-> +			  msecs_to_jiffies(AUTONEGO_TIMER));
-> +	} else if (phy_dev->autoneg == AUTONEG_DISABLE) {
-> +		val = readw(tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +		val &= ~TSE_PCS_CONTROL_AN_EN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +
-> +		val = readw(tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +		val &= ~TSE_PCS_USE_SGMII_AN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +
-> +		val = readw(tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +		val &= ~TSE_PCS_SGMII_SPEED_MASK;
-> +
-> +		switch (speed) {
-> +		case 1000:
-> +			val |= TSE_PCS_SGMII_SPEED_1000;
-> +			break;
-> +		case 100:
-> +			val |= TSE_PCS_SGMII_SPEED_100;
-> +			break;
-> +		case 10:
-> +			val |= TSE_PCS_SGMII_SPEED_10;
-> +			break;
-> +		default:
-> +			return;
-> +		}
-> +		writew(val, tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +
-> +		tse_pcs_reset(tse_pcs_base, pcs);
-> +
-> +		setup_timer(&pcs->link_timer,
-> +			    pcs_link_timer_callback,
-> +					(unsigned long)pcs);
-> +		mod_timer(&pcs->link_timer, jiffies +
-> +			  msecs_to_jiffies(LINK_TIMER));
-
-I wonder if we can have just one timer to manage ANE and LINK.
-
-> +	}
-> +}
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/tse_pcs.h b/drivers/net/ethernet/stmicro/stmmac/tse_pcs.h
-> new file mode 100644
-> index 0000000..e3d4511
-> --- /dev/null
-> +++ b/drivers/net/ethernet/stmicro/stmmac/tse_pcs.h
-> @@ -0,0 +1,36 @@
-> +/* Copyright Altera Corporation (C) 2016. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License, version 2,
-> + * as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + *
-> + * Author: Tien Hock Loh <thloh@altera.com>
-> + */
-> +
-> +#ifndef __TSE_PCS_H__
-> +#define __TSE_PCS_H__
-> +
-> +#include <linux/phy.h>
-> +#include <linux/timer.h>
-> +
-> +struct tse_pcs {
-> +	struct device *dev;
-> +	void __iomem *tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base;
-> +	struct timer_list an_timer;
-> +	struct timer_list link_timer;
-> +};
-> +
-> +void tse_pcs_init(void __iomem *base, struct tse_pcs *pcs);
-> +void tse_pcs_fix_mac_speed(struct tse_pcs *pcs, struct phy_device *phy_dev,
-> +			   unsigned int speed);
-> +
-> +#endif /* __TSE_PCS_H__ */
+>         /* report and initialize */
+> @@ -238,7 +277,7 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>         if (tnid != nid)
+>                 pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
 >
+> -       node_data[nid] = nd;
+> +       NODE_DATA(nid) = nd;
+>         memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+>         NODE_DATA(nid)->node_id = nid;
+>         NODE_DATA(nid)->node_start_pfn = start_pfn;
+> --
+> 2.5.0
+>
+>
+Ganapat
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
