@@ -1,157 +1,49 @@
 From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH v3 09/10] ARM: bcm2835: dt: Add the ethernet to the device trees
-Date: Tue,  7 Jun 2016 13:05:47 +0200
-Message-ID: <1465297548-17182-10-git-send-email-kraxel@redhat.com>
+Subject: [PATCH v3 06/10] dt-bindings: Add root properties for Raspberry Pi 3
+Date: Tue,  7 Jun 2016 13:05:44 +0200
+Message-ID: <1465297548-17182-7-git-send-email-kraxel@redhat.com>
 References: <1465297548-17182-1-git-send-email-kraxel@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1465297548-17182-1-git-send-email-kraxel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lee Jones <lee@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Eric Anholt <eric@anholt.net>
 
-The hub and the ethernet in its port 1 are hardwired on the board.
-
-Compared to the adapters that can be plugged into the USB ports, this
-one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
-has the MAC address for this adapter in its ROM, accessible from its
-firmware.
-
-U-Boot can read out the address and set the local-mac-address property of the
-node with "ethernet" alias. Let's add the node so that U-Boot can do its
-business.
-
-Model B rev2 and Model B+ entries were verified by me, the hierarchy and
-pid/vid pair for the Version 2 was provided by Peter Chen. Original
-Model B is a blind shot, though very likely correct.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Eric Anholt <eric@anholt.net>
 Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts    |  1 +
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts    |  1 +
- arch/arm/boot/dts/bcm2835-rpi-b.dts         |  1 +
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts       |  1 +
- arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi | 19 +++++++++++++++++++
- arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi | 19 +++++++++++++++++++
- arch/arm/boot/dts/bcm283x.dtsi              |  2 ++
- 7 files changed, 44 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
- create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+ Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index 57d313b..d5fdb8e 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+index 11d3056..6ffe087 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+@@ -30,6 +30,10 @@ Raspberry Pi 2 Model B
+ Required root node properties:
+ compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
  
- / {
- 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index cf2774e..bfc4bd9 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9512.dtsi"
- 
- / {
- 	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-index 8b15f9c..0371bb7 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9512.dtsi"
- 
- / {
- 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-index c4743f4..29e1cfe 100644
---- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2836.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
- 
- / {
- 	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
-diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
-new file mode 100644
-index 0000000..12c981e
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
-@@ -0,0 +1,19 @@
-+/ {
-+	aliases {
-+		ethernet = &ethernet;
-+	};
-+};
++Raspberry Pi 3 Model B
++Required root node properties:
++compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
 +
-+&usb {
-+	usb1@1 {
-+		compatible = "usb424,9512";
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: usbether@1 {
-+			compatible = "usb424,ec00";
-+			reg = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
-new file mode 100644
-index 0000000..3f0a56e
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
-@@ -0,0 +1,19 @@
-+/ {
-+	aliases {
-+		ethernet = &ethernet;
-+	};
-+};
-+
-+&usb {
-+	usb1@1 {
-+		compatible = "usb424,9514";
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: usbether@1 {
-+			compatible = "usb424,ec00";
-+			reg = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 10b27b9..b982522 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -287,6 +287,8 @@
- 			compatible = "brcm,bcm2835-usb";
- 			reg = <0x7e980000 0x10000>;
- 			interrupts = <1 9>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		v3d: v3d@7ec00000 {
+ Raspberry Pi Compute Module
+ Required root node properties:
+ compatible = "raspberrypi,compute-module", "brcm,bcm2835";
 -- 
 1.8.3.1
