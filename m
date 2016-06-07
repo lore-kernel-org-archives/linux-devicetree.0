@@ -1,49 +1,96 @@
-From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 04/14] of/numa: remove a duplicated warning
-Date: Tue, 7 Jun 2016 16:08:08 +0800
-Message-ID: <1465286898-13828-5-git-send-email-thunder.leizhen@huawei.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v4 07/14] of_numa: Use pr_fmt()
+Date: Tue, 7 Jun 2016 16:08:11 +0800
+Message-ID: <1465286898-13828-8-git-send-email-thunder.leizhen@huawei.com>
 References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465286898-13828-1-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Kefeng Wang <wangkefeng.wang@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-This warning has been printed in of_numa_parse_cpu_nodes before.
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Use pr_fmt to prefix kernel output.
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- drivers/of/of_numa.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/of/of_numa.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index 7b3fbdc..3157130 100644
+index ed7bd22..019738f 100644
 --- a/drivers/of/of_numa.c
 +++ b/drivers/of/of_numa.c
-@@ -174,13 +174,8 @@ int of_node_to_nid(struct device_node *device)
- 			np->name);
- 	of_node_put(np);
+@@ -16,6 +16,8 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 
--	if (!r) {
--		if (nid >= MAX_NUMNODES)
++#define pr_fmt(fmt) "OF: NUMA: " fmt
++
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/nodemask.h>
+@@ -49,10 +51,9 @@ static void __init of_numa_parse_cpu_nodes(void)
+ 		if (r)
+ 			continue;
+
+-		pr_debug("NUMA: CPU on %u\n", nid);
++		pr_debug("CPU on %u\n", nid);
+ 		if (nid >= MAX_NUMNODES)
 -			pr_warn("NUMA: Node id %u exceeds maximum value\n",
 -				nid);
--		else
--			return nid;
--	}
-+	if (!r)
-+		return nid;
++			pr_warn("Node id %u exceeds maximum value\n", nid);
+ 		else
+ 			node_set(nid, numa_nodes_parsed);
+ 	}
+@@ -80,7 +81,7 @@ static int __init of_numa_parse_memory_nodes(void)
 
- 	return NUMA_NO_NODE;
- }
---
-2.5.0
+ 		if (!i || r) {
+ 			of_node_put(np);
+-			pr_err("NUMA: bad property in memory node\n");
++			pr_err("bad property in memory node\n");
+ 			return r ? : -EINVAL;
+ 		}
+ 	}
+@@ -94,17 +95,17 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 	int entry_count;
+ 	int i;
 
+-	pr_info("NUMA: parsing numa-distance-map-v1\n");
++	pr_info("parsing numa-distance-map-v1\n");
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ 	matrix = of_get_property(map, "distance-matrix", NULL);
+ 	if (!matrix) {
+-		pr_err("NUMA: No distance-matrix property in distance-map\n");
++		pr_err("No distance-matrix property in distance-map\n");
+ 		return -EINVAL;
+ 	}
+
+ 	entry_count = of_property_count_u32_elems(map, "distance-matrix");
+ 	if (entry_count <= 0) {
+-		pr_err("NUMA: Invalid distance-matrix\n");
++		pr_err("Invalid distance-matrix\n");
+ 		return -EINVAL;
+ 	}
+
+@@ -119,7 +120,7 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 		matrix++;
+
+ 		numa_set_distance(nodea, nodeb, distance);
+-		pr_debug("NUMA:  distance[node%d -> node%d] = %d\n",
++		pr_debug("distance[node%d -> node%d] = %d\n",
+ 			 nodea, nodeb, distance);
+
+ 		/* Set default distance of node B->A same as A->B */
+@@ -166,7 +167,7 @@ int of_node_to_nid(struct device_node *device)
+ 		np = of_get_next_parent(np);
+ 	}
+ 	if (np && r)
+-		pr_warn("NUMA: Invalid \"numa-node-id\" property in node %s\n",
++		pr_warn("Invalid \"numa-node-id\" property in node %s\n",
+ 			np->name);
+ 	of_node_put(np);
