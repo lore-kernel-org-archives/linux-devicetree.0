@@ -1,62 +1,48 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 0/2] ARM: dts: sun9i: drop sunxi-common-regulators.dtsi
-Date: Tue, 7 Jun 2016 22:49:27 +0200
-Message-ID: <20160607204927.GD14179@lukather>
-References: <1464936651-25911-1-git-send-email-wens@csie.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
+Date: Tue, 7 Jun 2016 23:58:45 +0300
+Message-ID: <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
+ <20160601005751.GG20527@verge.net.au>
+ <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
+ <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZJcv+A0YCCLh2VIg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464936651-25911-1-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/07/2016 10:13 AM, Geert Uytterhoeven wrote:
 
---ZJcv+A0YCCLh2VIg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On Fri, Jun 03, 2016 at 02:50:49PM +0800, Chen-Yu Tsai wrote:
-> Hi Maxime,
->=20
-> These are the remaining 2 patches from the AXP809 series.
->=20
-> Changes since v2:
->=20
->   - Drop sunxi-common-regulators.dtsi instead of disabling dummy regulato=
-rs.
+>>> And that the system behaves sanely on suspend/resume.
+>>
+>>    I'd be thankful if you told me how to test that. :-)
+>
+> System suspend:
+>
+>     echo mem > /sys/power/state
 
-Applied both, thanks!
-Maxime
+    Oh. I know that one! :-)
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> System resume: You're gonna need a "wakeup-source" in your DTS, e.g. gpio-keys.
+> Serial should work too, echo "enabled" to the corresponding wakeup
+> file in /sys first.
 
---ZJcv+A0YCCLh2VIg
-Content-Type: application/pgp-signature; name="signature.asc"
+    I'm afraid I couldn't find that file. All I saw were RPM controls...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> In case of issues, try "echo 0 > /sys/module/printk/parameters/console_suspend".
 
-iQIcBAEBAgAGBQJXVzNXAAoJEBx+YmzsjxAgM9EP/1YUjnUaHVLm6GwBC21tbv/c
-aHbxRHe9kW+T+E/SJHI3WiMvkd25+w/7w04bPoQVohqK8VK9IvliZvhsGevo4MoV
-Vf4Geju1iMKtZeCpRzBf7lR5e6XE1UqT7GiraEB7ejac845/HNYszlskO7U0H647
-K/ar70nVZqDglBhE7SZvu3vnPYbOliLpIFN4IY84/r1WMJSWXT/DAkhudOb3p7xI
-r84388tyx+HkfREPMHe6nO6ORufsnw4Yofipou9yomh0wSDBgQI+JJyFds40FIVw
-uSsbp07WlyIxWbZIUOx4E9QAZiGD07NNj/GQEXc2/NT57HCBPgJZE+Nrz0WlABGJ
-JJ0wLKEzbj4JKocmmlwjbuGc34fhYzzR4EaEyb1S1Dgll6SmDcbzu6f9pjHTCfB2
-75ZqbWS5Y/SFQH751MCA9ywMZGMc97SPbtnBc6dT3UNE9OI4eyVVXncUKbq949n6
-R+0G/UeGWQZ1kEpvmTVvu7sS6lhBJJ1sH2B/eJ9UZXabyLxHv7CsJGv0FetM3Q8Y
-68sk4gpo99PrJO530Qa7OJgjRAUe5M06PASSgQxTrUgj4XbCM49IrQJDCjuuKUhV
-++a9vZdS3GTW6RKuUtfUdOzeyEIg6QJeTMBt5rdSXjUQxiOczezw4WZv5bC0FJL2
-6yM3v7dtVJ1tDcv352uW
-=C7px
------END PGP SIGNATURE-----
+    There's no problems suspending, it's the resuming that's a problem for me.
 
---ZJcv+A0YCCLh2VIg--
+> Good luck!
+
+    As usual, there was no luck. :-)
+
+WBR, Sergei
