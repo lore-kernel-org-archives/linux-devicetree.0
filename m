@@ -1,55 +1,52 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 03/15] clk: sunxi-ng: Add fractional lib
-Date: Tue,  7 Jun 2016 22:41:42 +0200
-Message-ID: <20160607204154.31967-4-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 06/15] clk: sunxi-ng: Add mux clock support
+Date: Tue,  7 Jun 2016 22:41:45 +0200
+Message-ID: <20160607204154.31967-7-maxime.ripard@free-electrons.com>
 References: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Andre Przywara <andre.przywara@arm.com>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Some clocks can be switched to a mode called fractional that have two fixed
-output rate you can choose from.
+Some clocks in the Allwinner SoCs clocks unit are just muxes.
 
-Add a small library to deal with those clocks.
+However, those muxes might also be found in some other complicated clocks
+that would benefit from the code in there to deal with "advanced" features,
+like pre-dividers.
+
+Introduce a set of helpers to reduce the code duplication in such cases.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
 ---
- drivers/clk/sunxi-ng/Makefile   |   2 +
- drivers/clk/sunxi-ng/ccu_frac.c | 110 ++++++++++++++++++++++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu_frac.h |  53 +++++++++++++++++++
- 3 files changed, 165 insertions(+)
- create mode 100644 drivers/clk/sunxi-ng/ccu_frac.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_frac.h
+Changes from v1:
+  - Moved the ccu_mux.h header introduction from the first patch to this
+    one
+---
+ drivers/clk/sunxi-ng/Makefile  |   1 +
+ drivers/clk/sunxi-ng/ccu_mux.c | 187 +++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu_mux.h |  92 ++++++++++++++++++++
+ 3 files changed, 280 insertions(+)
+ create mode 100644 drivers/clk/sunxi-ng/ccu_mux.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu_mux.h
 
 diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
-index bd3461b0f38c..4585443b3771 100644
+index 608b332e0b1f..99133df3f7ab 100644
 --- a/drivers/clk/sunxi-ng/Makefile
 +++ b/drivers/clk/sunxi-ng/Makefile
-@@ -1,2 +1,4 @@
- obj-y += ccu_common.o
- obj-y += ccu_reset.o
-+
-+obj-y += ccu_frac.o
-diff --git a/drivers/clk/sunxi-ng/ccu_frac.c b/drivers/clk/sunxi-ng/ccu_frac.c
+@@ -5,3 +5,4 @@ obj-y += ccu_frac.o
+ 
+ obj-y += ccu_fixed_factor.o
+ obj-y += ccu_gate.o
++obj-y += ccu_mux.o
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
 new file mode 100644
-index 000000000000..5c4b10cd15b5
+index 000000000000..58fc36e7dcce
 --- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu_frac.c
-@@ -0,0 +1,110 @@
++++ b/drivers/clk/sunxi-ng/ccu_mux.c
+@@ -0,0 +1,187 @@
 +/*
 + * Copyright (C) 2016 Maxime Ripard
 + * Maxime Ripard <maxime.ripard@free-electrons.com>
@@ -61,163 +58,279 @@ index 000000000000..5c4b10cd15b5
 + */
 +
 +#include <linux/clk-provider.h>
-+#include <linux/spinlock.h>
 +
-+#include "ccu_frac.h"
++#include "ccu_gate.h"
++#include "ccu_mux.h"
 +
-+bool ccu_frac_helper_is_enabled(struct ccu_common *common,
-+				struct _ccu_frac *cf)
++void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
++					     struct ccu_mux_internal *cm,
++					     int parent_index,
++					     unsigned long *parent_rate)
 +{
-+	if (!(common->features & CCU_FEATURE_FRACTIONAL))
-+		return false;
-+
-+	return !(readl(common->base + common->reg) & cf->enable);
-+}
-+
-+void ccu_frac_helper_enable(struct ccu_common *common,
-+			    struct _ccu_frac *cf)
-+{
-+	unsigned long flags;
++	u8 prediv = 1;
 +	u32 reg;
 +
-+	if (!(common->features & CCU_FEATURE_FRACTIONAL))
++	if (!((common->features & CCU_FEATURE_FIXED_PREDIV) ||
++	      (common->features & CCU_FEATURE_VARIABLE_PREDIV)))
 +		return;
 +
-+	spin_lock_irqsave(common->lock, flags);
 +	reg = readl(common->base + common->reg);
-+	writel(reg & ~cf->enable, common->base + common->reg);
-+	spin_unlock_irqrestore(common->lock, flags);
++	if (parent_index < 0) {
++		parent_index = reg >> cm->shift;
++		parent_index &= (1 << cm->width) - 1;
++	}
++
++	if (common->features & CCU_FEATURE_FIXED_PREDIV)
++		if (parent_index == cm->fixed_prediv.index)
++			prediv = cm->fixed_prediv.div;
++
++	if (common->features & CCU_FEATURE_VARIABLE_PREDIV)
++		if (parent_index == cm->variable_prediv.index) {
++			u8 div;
++
++			div = reg >> cm->variable_prediv.shift;
++			div &= (1 << cm->variable_prediv.width) - 1;
++			prediv = div + 1;
++		}
++
++	*parent_rate = *parent_rate / prediv;
 +}
 +
-+void ccu_frac_helper_disable(struct ccu_common *common,
-+			     struct _ccu_frac *cf)
++int ccu_mux_helper_determine_rate(struct ccu_common *common,
++				  struct ccu_mux_internal *cm,
++				  struct clk_rate_request *req,
++				  unsigned long (*round)(struct ccu_mux_internal *,
++							 unsigned long,
++							 unsigned long,
++							 void *),
++				  void *data)
++{
++	unsigned long best_parent_rate = 0, best_rate = 0;
++	struct clk_hw *best_parent, *hw = &common->hw;
++	unsigned int i;
++
++	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
++		unsigned long tmp_rate, parent_rate;
++		struct clk_hw *parent;
++
++		parent = clk_hw_get_parent_by_index(hw, i);
++		if (!parent)
++			continue;
++
++		parent_rate = clk_hw_get_rate(parent);
++		ccu_mux_helper_adjust_parent_for_prediv(common, cm, i,
++							&parent_rate);
++
++		tmp_rate = round(cm, clk_hw_get_rate(parent), req->rate, data);
++		if (tmp_rate == req->rate) {
++			best_parent = parent;
++			best_parent_rate = parent_rate;
++			best_rate = tmp_rate;
++			goto out;
++		}
++
++		if ((req->rate - tmp_rate) < (req->rate - best_rate)) {
++			best_rate = tmp_rate;
++			best_parent_rate = parent_rate;
++			best_parent = parent;
++		}
++	}
++
++	if (best_rate == 0)
++		return -EINVAL;
++
++out:
++	req->best_parent_hw = best_parent;
++	req->best_parent_rate = best_parent_rate;
++	req->rate = best_rate;
++	return 0;
++}
++
++u8 ccu_mux_helper_get_parent(struct ccu_common *common,
++			     struct ccu_mux_internal *cm)
++{
++	u32 reg;
++	u8 parent;
++
++	reg = readl(common->base + common->reg);
++	parent = reg >> cm->shift;
++	parent &= (1 << cm->width) - 1;
++
++	return parent;
++}
++
++int ccu_mux_helper_set_parent(struct ccu_common *common,
++			      struct ccu_mux_internal *cm,
++			      u8 index)
 +{
 +	unsigned long flags;
 +	u32 reg;
 +
-+	if (!(common->features & CCU_FEATURE_FRACTIONAL))
-+		return;
-+
 +	spin_lock_irqsave(common->lock, flags);
-+	reg = readl(common->base + common->reg);
-+	writel(reg | cf->enable, common->base + common->reg);
-+	spin_unlock_irqrestore(common->lock, flags);
-+}
-+
-+bool ccu_frac_helper_has_rate(struct ccu_common *common,
-+			      struct _ccu_frac *cf,
-+			      unsigned long rate)
-+{
-+	if (!(common->features & CCU_FEATURE_FRACTIONAL))
-+		return false;
-+
-+	return (cf->rates[0] == rate) || (cf->rates[1] == rate);
-+}
-+
-+unsigned long ccu_frac_helper_read_rate(struct ccu_common *common,
-+					struct _ccu_frac *cf)
-+{
-+	u32 reg;
-+
-+	printk("%s: Read fractional\n", clk_hw_get_name(&common->hw));
-+
-+	if (!(common->features & CCU_FEATURE_FRACTIONAL))
-+		return 0;
-+
-+	printk("%s: clock is fractional (rates %lu and %lu)\n",
-+	       clk_hw_get_name(&common->hw), cf->rates[0], cf->rates[1]);
 +
 +	reg = readl(common->base + common->reg);
++	reg &= ~GENMASK(cm->width + cm->shift - 1, cm->shift);
++	writel(reg | (index << cm->shift), common->base + common->reg);
 +
-+	printk("%s: clock reg is 0x%x (select is 0x%x)\n",
-+	       clk_hw_get_name(&common->hw), reg, cf->select);
-+
-+	return (reg & cf->select) ? cf->rates[1] : cf->rates[0];
-+}
-+
-+int ccu_frac_helper_set_rate(struct ccu_common *common,
-+			     struct _ccu_frac *cf,
-+			     unsigned long rate)
-+{
-+	unsigned long flags;
-+	u32 reg, sel;
-+
-+	if (!(common->features & CCU_FEATURE_FRACTIONAL))
-+		return -EINVAL;
-+
-+	if (cf->rates[0] == rate)
-+		sel = 0;
-+	else if (cf->rates[1] == rate)
-+		sel = cf->select;
-+	else
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(common->lock, flags);
-+	reg = readl(common->base + common->reg);
-+	reg &= ~cf->select;
-+	writel(reg | sel, common->base + common->reg);
 +	spin_unlock_irqrestore(common->lock, flags);
 +
 +	return 0;
 +}
-diff --git a/drivers/clk/sunxi-ng/ccu_frac.h b/drivers/clk/sunxi-ng/ccu_frac.h
-new file mode 100644
-index 000000000000..e4c670b1cdfe
---- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu_frac.h
-@@ -0,0 +1,53 @@
-+/*
-+ * Copyright (c) 2016 Maxime Ripard. All rights reserved.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
 +
-+#ifndef _CCU_FRAC_H_
-+#define _CCU_FRAC_H_
++static void ccu_mux_disable(struct clk_hw *hw)
++{
++	struct ccu_mux *cm = hw_to_ccu_mux(hw);
++
++	return ccu_gate_helper_disable(&cm->common, cm->enable);
++}
++
++static int ccu_mux_enable(struct clk_hw *hw)
++{
++	struct ccu_mux *cm = hw_to_ccu_mux(hw);
++
++	return ccu_gate_helper_enable(&cm->common, cm->enable);
++}
++
++static int ccu_mux_is_enabled(struct clk_hw *hw)
++{
++	struct ccu_mux *cm = hw_to_ccu_mux(hw);
++
++	return ccu_gate_helper_is_enabled(&cm->common, cm->enable);
++}
++
++static u8 ccu_mux_get_parent(struct clk_hw *hw)
++{
++	struct ccu_mux *cm = hw_to_ccu_mux(hw);
++
++	return ccu_mux_helper_get_parent(&cm->common, &cm->mux);
++}
++
++static int ccu_mux_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct ccu_mux *cm = hw_to_ccu_mux(hw);
++
++	return ccu_mux_helper_set_parent(&cm->common, &cm->mux, index);
++}
++
++static unsigned long ccu_mux_recalc_rate(struct clk_hw *hw,
++					 unsigned long parent_rate)
++{
++	struct ccu_mux *cm = hw_to_ccu_mux(hw);
++
++	ccu_mux_helper_adjust_parent_for_prediv(&cm->common, &cm->mux, -1,
++						&parent_rate);
++
++	return parent_rate;
++}
++
++const struct clk_ops ccu_mux_ops = {
++	.disable	= ccu_mux_disable,
++	.enable		= ccu_mux_enable,
++	.is_enabled	= ccu_mux_is_enabled,
++
++	.get_parent	= ccu_mux_get_parent,
++	.set_parent	= ccu_mux_set_parent,
++
++	.determine_rate	= __clk_mux_determine_rate,
++	.recalc_rate	= ccu_mux_recalc_rate,
++};
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
+new file mode 100644
+index 000000000000..c85707f80f68
+--- /dev/null
++++ b/drivers/clk/sunxi-ng/ccu_mux.h
+@@ -0,0 +1,92 @@
++#ifndef _CCU_MUX_H_
++#define _CCU_MUX_H_
 +
 +#include <linux/clk-provider.h>
 +
 +#include "ccu_common.h"
 +
-+struct _ccu_frac {
-+	u32		enable;
-+	u32		select;
++struct ccu_mux_internal {
++	u8	shift;
++	u8	width;
 +
-+	unsigned long	rates[2];
++	struct {
++		u8	index;
++		u8	div;
++	} fixed_prediv;
++
++	struct {
++		u8	index;
++		u8	shift;
++		u8	width;
++	} variable_prediv;
 +};
 +
-+#define _SUNXI_CCU_FRAC(_enable, _select, _rate1, _rate2)		\
-+	{								\
-+		.enable	= _enable,					\
-+		.select	= _select,					\
-+		.rates = { _rate1, _rate2 },				\
++#define SUNXI_CLK_MUX(_shift, _width)	\
++	{					\
++		.shift	= _shift,		\
++		.width	= _width,		\
 +	}
 +
-+bool ccu_frac_helper_is_enabled(struct ccu_common *common,
-+				struct _ccu_frac *cf);
-+void ccu_frac_helper_enable(struct ccu_common *common,
-+			    struct _ccu_frac *cf);
-+void ccu_frac_helper_disable(struct ccu_common *common,
-+			     struct _ccu_frac *cf);
++struct ccu_mux {
++	u16			reg;
++	u32			enable;
 +
-+bool ccu_frac_helper_has_rate(struct ccu_common *common,
-+			      struct _ccu_frac *cf,
-+			      unsigned long rate);
++	struct ccu_mux_internal	mux;
++	struct ccu_common	common;
++};
 +
-+unsigned long ccu_frac_helper_read_rate(struct ccu_common *common,
-+					struct _ccu_frac *cf);
++#define SUNXI_CCU_MUX(_struct, _name, _parents, _reg, _shift, _width, _flags) \
++	struct ccu_mux _struct = {					\
++		.mux	= SUNXI_CLK_MUX(_shift, _width),		\
++		.common	= {						\
++			.reg		= _reg,				\
++			.hw.init	= SUNXI_HW_INIT_PARENTS(_name,	\
++								_parents, \
++								&ccu_mux_ops, \
++								_flags), \
++		}							\
++	}
 +
-+int ccu_frac_helper_set_rate(struct ccu_common *common,
-+			     struct _ccu_frac *cf,
-+			     unsigned long rate);
++#define SUNXI_CCU_MUX_WITH_GATE(_struct, _name, _parents, _reg,		\
++				_shift, _width, _gate, _flags)		\
++	struct ccu_mux _struct = {					\
++		.enable	= _gate,					\
++		.mux	= SUNXI_CLK_MUX(_shift, _width),		\
++		.common	= {						\
++			.reg		= _reg,				\
++			.features	= CCU_FEATURE_GATE,		\
++			.hw.init	= SUNXI_HW_INIT_PARENTS(_name,	\
++								_parents, \
++								&ccu_mux_ops, \
++								_flags), \
++		}							\
++	}
 +
-+#endif /* _CCU_FRAC_H_ */
++static inline struct ccu_mux *hw_to_ccu_mux(struct clk_hw *hw)
++{
++	struct ccu_common *common = hw_to_ccu_common(hw);
++
++	return container_of(common, struct ccu_mux, common);
++}
++
++extern const struct clk_ops ccu_mux_ops;
++
++void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
++					     struct ccu_mux_internal *cm,
++					     int parent_index,
++					     unsigned long *parent_rate);
++int ccu_mux_helper_determine_rate(struct ccu_common *common,
++				  struct ccu_mux_internal *cm,
++				  struct clk_rate_request *req,
++				  unsigned long (*round)(struct ccu_mux_internal *,
++							 unsigned long,
++							 unsigned long,
++							 void *),
++				  void *data);
++u8 ccu_mux_helper_get_parent(struct ccu_common *common,
++			     struct ccu_mux_internal *cm);
++int ccu_mux_helper_set_parent(struct ccu_common *common,
++			      struct ccu_mux_internal *cm,
++			      u8 index);
++
++#endif /* _CCU_MUX_H_ */
 -- 
 2.8.3
