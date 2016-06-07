@@ -1,64 +1,154 @@
-From: Hans Verkuil <hansverk@cisco.com>
-Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
-Date: Wed, 8 Jun 2016 07:13:02 +0900
-Message-ID: <575746EE.3030706@cisco.com>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
- <20160607112235.475c2e4c@recife.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160607112235.475c2e4c@recife.lan>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, PoChun.Lin@mediatek.com, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Pawel Osciak <posciak@chromium.org>, linux-media@vger.kernel.org
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: [PATCH 1/2] ARM: dts: NSP: Add XMC board support
+Date: Tue,  7 Jun 2016 18:28:06 -0400
+Message-ID: <1465338487-14932-2-git-send-email-jon.mason@broadcom.com>
+References: <1465338487-14932-1-git-send-email-jon.mason@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465338487-14932-1-git-send-email-jon.mason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Jon Mason <jonmason@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Jon Mason <jonmason@broadcom.com>
 
+The BCM958525XMC board is a smaller form factor typically used as
+controller boards for switches.  This smaller board has less devices
+pinned out, so only a few need be populated in the device tree.
 
-On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:
-> Em Mon, 30 May 2016 20:29:14 +0800
-> Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
->
->> ==============
->>   Introduction
->> ==============
->>
->> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
->> Mediatek Video Codec is able to handle video decoding of in a range of formats.
->>
->> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
->> V4L2_PIX_FMT_MT21 format.
->>
->> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
->> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
->> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
->>
->> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
->>
->> [1]https://patchwork.linuxtv.org/patch/33734/
->> [2]https://chromium-review.googlesource.com/#/c/245241/
->
-> Hmm... I'm not seeing the firmware for this driver at the
-> linux-firmware tree:
-> 	https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
->
-> Nor I'm seeing any pull request for them. Did you send it?
-> I'll only merge the driver upstream after seeing such pull request.
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+---
+ arch/arm/boot/dts/Makefile         |   1 +
+ arch/arm/boot/dts/bcm958525xmc.dts | 109 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 110 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm958525xmc.dts
 
-Mauro, are you confusing the decoder and encoder driver? I haven't thoroughly reviewed the decoder driver
-yet, so there is no pull request for the decoder driver.
-
-The only pull request I made was for the encoder driver.
-
-Regards,
-
-	Hans
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 2afa97e..3626be8 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -97,6 +97,7 @@ dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
+ 	bcm28155-ap.dtb \
+ 	bcm21664-garnet.dtb
+ dtb-$(CONFIG_ARCH_BCM_NSP) += \
++	bcm958525xmc.dtb \
+ 	bcm958625hr.dtb \
+ 	bcm958625k.dtb
+ dtb-$(CONFIG_ARCH_BERLIN) += \
+diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
+new file mode 100644
+index 0000000..d257e83
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm958525xmc.dts
+@@ -0,0 +1,109 @@
++/*
++ *  BSD LICENSE
++ *
++ *  Copyright(c) 2016 Broadcom.  All rights reserved.
++ *
++ *  Redistribution and use in source and binary forms, with or without
++ *  modification, are permitted provided that the following conditions
++ *  are met:
++ *
++ *    * Redistributions of source code must retain the above copyright
++ *      notice, this list of conditions and the following disclaimer.
++ *    * Redistributions in binary form must reproduce the above copyright
++ *      notice, this list of conditions and the following disclaimer in
++ *      the documentation and/or other materials provided with the
++ *      distribution.
++ *    * Neither the name of Broadcom Corporation nor the names of its
++ *      contributors may be used to endorse or promote products derived
++ *      from this software without specific prior written permission.
++ *
++ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/dts-v1/;
++
++#include "bcm-nsp.dtsi"
++
++/ {
++	model = "NorthStar Plus XMC (BCM958525xmc)";
++	compatible = "brcm,bcm58525", "brcm,nsp";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&nand {
++	nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-on-flash-bbt;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		nand-ecc-strength = <24>;
++		nand-ecc-step-size = <1024>;
++
++		brcm,nand-oob-sector-size = <27>;
++
++		partition@0 {
++			label = "nboot";
++			reg = <0x00000000 0x00200000>;
++			read-only;
++		};
++		partition@200000 {
++			label = "nenv";
++			reg = <0x00200000 0x00400000>;
++		};
++		partition@600000 {
++			label = "nsystem";
++			reg = <0x00600000 0x00a00000>;
++		};
++		partition@1000000 {
++			label = "nrootfs";
++			reg = <0x01000000 0x03000000>;
++		};
++		partition@4000000 {
++			label = "ncustfs";
++			reg = <0x04000000 0x3c000000>;
++		};
++	};
++};
++
++/* XHCI, SATA, MMC, and Ethernet support needed to be complete */
++
++&uart0 {
++	status = "okay";
++};
++
++&pcie0 {
++	status = "okay";
++};
++
++&pcie1 {
++	status = "okay";
++};
++
++&pinctrl {
++	pinctrl-names = "default";
++	pinctrl-0 = <&nand_sel>;
++	nand_sel: nand_sel {
++		function = "nand";
++		groups = "nand_grp";
++	};
++};
+-- 
+1.9.1
