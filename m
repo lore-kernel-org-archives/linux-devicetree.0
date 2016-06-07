@@ -1,106 +1,60 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH V3 1/2] thermal: max77620: Add DT binding doc for thermal
- driver
-Date: Tue, 7 Jun 2016 09:25:36 +0530
-Message-ID: <575645B8.5090709@ti.com>
-References: <1465213467-23518-1-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1465213467-23518-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, edubezval@gmail.com, rui.zhang@intel.com, robh+dt@kernel.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH v2 0/4] clocksource: rockchip/timer: Support rktimer for rk3399
+Date: Tue,  7 Jun 2016 12:54:29 +0800
+Message-ID: <1465275273-22076-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, Heiko Stuebner <heiko@sntech.de>
+Cc: dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, cf@rock-chips.com, huangtao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This series patches had been tested on rockchip inside kernel.
+In order to support the rk3399 SoC timer and turn off interrupts and IPIs to
+save power in idle.
+Okay, it still works bootup on rk3288/other SoCs, even though many socs hasn't used
+the broadcast timer.
+
+History version:
+v1:
+https://lkml.org/lkml/2016/5/25/186
+
+Easy to test for my borad.
+localhost / # cat /proc/interrupts
+CPU0       CPU1       CPU2       CPU3       CPU4       CPU5
+1:          0          0          0          0          0          0     GICv3  29 Edge      arch_timer
+...
+5:          0          0          0          0          0          0     GICv3 113 Level     rk_timer
+..
+
+localhost / # cat /proc/timer_list | grep event_handler
+get "event_handler:  hrtimer_interrupt"
+event_handler:  tick_handle_oneshot_broadcast
+event_handler:  hrtimer_interrupt
+
+That should work for my board.
 
 
-On Monday 06 June 2016 05:14 PM, Laxman Dewangan wrote:
-> Maxim Semiconductor MAX77620 supports alarm interrupts when
-> its die temperature crosses 120C and 140C. These threshold
-> temperatures are not configurable.
->
-> Add DT binding document to details out the DT property related
-> to MAX77620 thermal functionality.
->
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
->   .../bindings/thermal/thermal-max77620.txt          | 64 ++++++++++++++++++++++
->   1 file changed, 64 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-max77620.txt
->
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal-max77620.txt b/Documentation/devicetree/bindings/thermal/thermal-max77620.txt
-> new file mode 100644
-> index 0000000..5a500d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/thermal-max77620.txt
-> @@ -0,0 +1,64 @@
-> +Thermal driver for MAX77620 Power management IC from Maxim Semiconductor.
-> +
-> +Maxim Semiconductor MAX77620 supports alarm interrupts when its
-> +die temperature crosses 120C and 140C. These threshold temperatures
-> +are not configurable. Device does not provide the real temperature
-> +of die other than just indicating whether temperature is above or
-> +below threshold level.
-> +
-> +Required properties:
-> +-------------------
-> +#thermal-sensor-cells:	Please refer <devicetree/bindings/thermal/thermal.txt>
-> +			for more details.
-> +			The value must be 0.
-> +
-> +For more details, please refer generic thermal DT binding document
-> +<devicetree/bindings/thermal/thermal.txt>.
-> +
-> +Please refer <devicetree/bindings/mfd/max77620.txt> for mfd DT binding
-> +document for the MAX77620.
-> +
-> +Example:
-> +--------
-> +#include <dt-bindings/mfd/max77620.h>
-> +#include <dt-bindings/thermal/thermal.h>
-> +...
-> +
-> +i2c@7000d000 {
-> +	spmic: max77620@3c {
-> +		compatible = "maxim,max77620";
-> +		:::::
-> +		#thermal-sensor-cells = <0>;
-> +		:::
-> +	};
-> +};
-> +
-> +cool_dev: cool-dev {
-> +	compatible = "cooling-dev";
-> +	#cooling-cells = <2>;
-> +};
-> +
-> +thermal-zones {
-> +	PMIC-Die {
-> +		polling-delay = <0>;
-> +		polling-delay-passive = <0>;
-> +		thermal-sensors = <&spmic>;
-> +
-> +		trips {
-> +			die_temp_thresh: hot-die {
-> +				temperature = <120000>;
-> +				type = "active";
-> +				hysteresis = <0>;
-> +			};
-> +		};
+Changes in v2:
+- Add the Rob' Ack.
+- s/cpu_all_mask/cpu_possible_mask/, As Daniel comments on
+  https://patchwork.kernel.org/patch/9135053/.
+- As the Daniel suggests on https://patchwork.kernel.org/patch/9135061/,
+  That will be better for the rockchip timer driver.
+- %s/ARM64/arm64.
 
-What about 140C? Isn't that a critical trip point?
+Huang Tao (2):
+  dt-bindings: document rk3399 rk-timer bindings
+  arm64: dts: rockchip: add rktimer device node for rk3399
 
-> +
-> +		cooling-maps {
-> +			map0 {
-> +				trip = <&die_temp_thresh>;
-> +				cooling-device = <&cool_dev THERMAL_NO_LIMIT
-> +						  THERMAL_NO_LIMIT>;
-> +				contribution = <100>;
-> +			};
-> +		};
-> +	};
-> +};
->
+Huang, Tao (2):
+  clocksource: rockchip: add dynamic irq flag to the timer
+  clocksource: rockchip: add support for rk3399 SoC
+
+ ...chip,rk3288-timer.txt => rockchip,rk-timer.txt} |  6 ++--
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  8 +++++
+ drivers/clocksource/rockchip_timer.c               | 36 +++++++++++++++++-----
+ 3 files changed, 41 insertions(+), 9 deletions(-)
+ rename Documentation/devicetree/bindings/timer/{rockchip,rk3288-timer.txt => rockchip,rk-timer.txt} (75%)
+
+-- 
+1.9.1
