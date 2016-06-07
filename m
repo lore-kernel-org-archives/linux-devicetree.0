@@ -1,163 +1,134 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH v4 11/14] arm64/numa: support HAVE_MEMORYLESS_NODES
-Date: Tue, 7 Jun 2016 20:57:42 +0800
-Message-ID: <5756C4C6.7060706@huawei.com>
-References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
- <1465286898-13828-12-git-send-email-thunder.leizhen@huawei.com>
- <CAFpQJXVaYT5N3GUCFDnUL8OYOuuSSV4QfC8cXL2ecB=1TN57jQ@mail.gmail.com>
+From: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] phy: rockchip-inno-usb2: add a new driver for
+ Rockchip usb2phy
+Date: Tue, 7 Jun 2016 06:19:45 -0700
+Message-ID: <CABXOdTexRR80Omoryr1e-R=tOYE9cq54Z3f2XU_qPCAJFeT8Yg@mail.gmail.com>
+References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com>
+ <1465204804-31161-3-git-send-email-frank.wang@rock-chips.com>
+ <3404512.IukckmNc6l@diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFpQJXVaYT5N3GUCFDnUL8OYOuuSSV4QfC8cXL2ecB=1TN57jQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Xinwei Hu <huxinwei@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <3404512.IukckmNc6l@diego>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, kishon-l0cyMroinI0@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016/6/7 16:31, Ganapatrao Kulkarni wrote:
-> On Tue, Jun 7, 2016 at 1:38 PM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
->> Some numa nodes may have no memory. For example:
->> 1. cpu0 on node0
->> 2. cpu1 on node1
->> 3. device0 access the momory from node0 and node1 take the same time.
-> 
-> i am wondering, if access to both nodes is same, then why you need numa.
-> the example you are quoting is against the basic principle of "numa"
-> what is device0 here? cpu?
-The device0 can also be a cpu. I drew a simple diagram:
-
-  cpu0     cpu1        cpu2/device0
-    |        |              |
-    |        |              |
-   DDR0     DDR1    No DIMM slots or no DIMM plugged
- (node0)  (node1)         (node2)
-
->>
->> So, we can not simply classify device0 to node0 or node1, but we can
->> define a node2 which distances to node0 and node1 are the same.
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  arch/arm64/Kconfig      |  4 ++++
->>  arch/arm64/kernel/smp.c |  1 +
->>  arch/arm64/mm/numa.c    | 43 +++++++++++++++++++++++++++++++++++++++++--
->>  3 files changed, 46 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 05c1bf1..5904a62 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -581,6 +581,10 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
->>         def_bool y
->>         depends on NUMA
->>
->> +config HAVE_MEMORYLESS_NODES
->> +       def_bool y
->> +       depends on NUMA
->> +
->>  source kernel/Kconfig.preempt
->>  source kernel/Kconfig.hz
->>
->> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
->> index d099306..9e15297 100644
->> --- a/arch/arm64/kernel/smp.c
->> +++ b/arch/arm64/kernel/smp.c
->> @@ -620,6 +620,7 @@ static void __init of_parse_and_init_cpus(void)
->>                         }
->>
->>                         bootcpu_valid = true;
->> +                       early_map_cpu_to_node(0, of_node_to_nid(dn));
->>
->>                         /*
->>                          * cpu_logical_map has already been
->> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> index df5c842..d73b0a0 100644
->> --- a/arch/arm64/mm/numa.c
->> +++ b/arch/arm64/mm/numa.c
->> @@ -128,6 +128,14 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
->>                 nid = 0;
->>
->>         cpu_to_node_map[cpu] = nid;
->> +
->> +       /*
->> +        * We should set the numa node of cpu0 as soon as possible, because it
->> +        * has already been set up online before. cpu_to_node(0) will soon be
->> +        * called.
->> +        */
->> +       if (!cpu)
->> +               set_cpu_numa_node(cpu, nid);
->>  }
->>
->>  #ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
->> @@ -215,6 +223,35 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
->>         return ret;
->>  }
->>
->> +static u64 __init alloc_node_data_from_nearest_node(int nid, const size_t size)
->> +{
->> +       int i, best_nid, distance;
->> +       u64 pa;
->> +       DECLARE_BITMAP(nodes_map, MAX_NUMNODES);
->> +
->> +       bitmap_zero(nodes_map, MAX_NUMNODES);
->> +       bitmap_set(nodes_map, nid, 1);
->> +
->> +find_nearest_node:
->> +       best_nid = NUMA_NO_NODE;
->> +       distance = INT_MAX;
->> +
->> +       for_each_clear_bit(i, nodes_map, MAX_NUMNODES)
->> +               if (numa_distance[nid][i] < distance) {
->> +                       best_nid = i;
->> +                       distance = numa_distance[nid][i];
->> +               }
->> +
->> +       pa = memblock_alloc_nid(size, SMP_CACHE_BYTES, best_nid);
->> +       if (!pa) {
->> +               BUG_ON(best_nid == NUMA_NO_NODE);
->> +               bitmap_set(nodes_map, best_nid, 1);
->> +               goto find_nearest_node;
->> +       }
->> +
->> +       return pa;
->> +}
->> +
->>  /**
->>   * Initialize NODE_DATA for a node on the local memory
->>   */
->> @@ -228,7 +265,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
->>         pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
->>                 nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
->>
->> -       nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
->> +       nd_pa = memblock_alloc_nid(nd_size, SMP_CACHE_BYTES, nid);
->> +       if (!nd_pa)
->> +               nd_pa = alloc_node_data_from_nearest_node(nid, nd_size);
->>         nd = __va(nd_pa);
->>
->>         /* report and initialize */
->> @@ -238,7 +277,7 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
->>         if (tnid != nid)
->>                 pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
->>
->> -       node_data[nid] = nd;
->> +       NODE_DATA(nid) = nd;
->>         memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
->>         NODE_DATA(nid)->node_id = nid;
->>         NODE_DATA(nid)->node_start_pfn = start_pfn;
->> --
->> 2.5.0
->>
->>
-> Ganapat
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> .
-> 
+T24gVHVlLCBKdW4gNywgMjAxNiBhdCAyOjU0IEFNLCBIZWlrbyBTdMO8Ym5lciA8aGVpa29Ac250
+ZWNoLmRlPiB3cm90ZToKPiBIaSBGcmFuaywKPgo+IEFtIE1vbnRhZywgNi4gSnVuaSAyMDE2LCAx
+NzoyMDowNCBzY2hyaWViIEZyYW5rIFdhbmc6Cj4+IFRoZSBuZXdlciBTb0NzIChyazMzNjYsIHJr
+MzM5OSkgdGFrZSBhIGRpZmZlcmVudCB1c2ItcGh5IElQIGJsb2NrCj4+IHRoYW4gcmszMjg4IGFu
+ZCBiZWZvcmUsIGFuZCBtb3N0IG9mIHBoeS1yZWxhdGVkIHJlZ2lzdGVycyBhcmUgYWxzbwo+PiBk
+aWZmZXJlbnQgZnJvbSB0aGUgcGFzdCwgc28gYSBuZXcgcGh5IGRyaXZlciBpcyByZXF1aXJlZCBu
+ZWNlc3NhcmlseS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogRnJhbmsgV2FuZyA8ZnJhbmsud2FuZ0By
+b2NrLWNoaXBzLmNvbT4KPj4gLS0tCj4KPiBbLi4uXQo+Cj4+ICtzdGF0aWMgaW50IHJvY2tjaGlw
+X3VzYjJwaHlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4gK3sKPj4gKyAg
+ICAgc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsKPj4gKyAgICAgc3RydWN0IGRldmlj
+ZV9ub2RlICpucCA9IGRldi0+b2Zfbm9kZTsKPj4gKyAgICAgc3RydWN0IGRldmljZV9ub2RlICpj
+aGlsZF9ucDsKPj4gKyAgICAgc3RydWN0IHBoeV9wcm92aWRlciAqcHJvdmlkZXI7Cj4+ICsgICAg
+IHN0cnVjdCByb2NrY2hpcF91c2IycGh5ICpycGh5Owo+PiArICAgICBjb25zdCBzdHJ1Y3Qgb2Zf
+ZGV2aWNlX2lkICptYXRjaDsKPj4gKyAgICAgaW50IGluZGV4LCByZXQ7Cj4+ICsKPj4gKyAgICAg
+cnBoeSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqcnBoeSksIEdGUF9LRVJORUwpOwo+PiAr
+ICAgICBpZiAoIXJwaHkpCj4+ICsgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4+ICsKPj4g
+KyAgICAgbWF0Y2ggPSBvZl9tYXRjaF9kZXZpY2UoZGV2LT5kcml2ZXItPm9mX21hdGNoX3RhYmxl
+LCBkZXYpOwo+PiArICAgICBpZiAoIW1hdGNoIHx8ICFtYXRjaC0+ZGF0YSkgewo+PiArICAgICAg
+ICAgICAgIGRldl9lcnIoZGV2LCAicGh5IGNvbmZpZ3MgYXJlIG5vdCBhc3NpZ25lZCFcbiIpOwo+
+PiArICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOwo+PiArICAgICB9Cj4+ICsKPj4gKyAgICAg
+aWYgKCFkZXYtPnBhcmVudCB8fCAhZGV2LT5wYXJlbnQtPm9mX25vZGUpCj4+ICsgICAgICAgICAg
+ICAgcmV0dXJuIC1FSU5WQUw7Cj4+ICsKPj4gKyAgICAgcnBoeS0+Z3JmID0gc3lzY29uX25vZGVf
+dG9fcmVnbWFwKGRldi0+cGFyZW50LT5vZl9ub2RlKTsKPj4gKyAgICAgaWYgKElTX0VSUihycGh5
+LT5ncmYpKQo+PiArICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKHJwaHktPmdyZik7Cj4+ICsK
+Pj4gKyAgICAgcnBoeS0+ZGV2ID0gZGV2Owo+PiArICAgICBycGh5LT5waHlfY2ZnID0gbWF0Y2gt
+PmRhdGE7Cj4+ICsgICAgIHBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIHJwaHkpOwo+PiArCj4+
+ICsgICAgIHJldCA9IHJvY2tjaGlwX3VzYjJwaHlfY2xrNDgwbV9yZWdpc3RlcihycGh5KTsKPj4g
+KyAgICAgaWYgKHJldCkgewo+PiArICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiZmFpbGVkIHRv
+IHJlZ2lzdGVyIDQ4MG0gb3V0cHV0IGNsb2NrXG4iKTsKPj4gKyAgICAgICAgICAgICByZXR1cm4g
+cmV0Owo+PiArICAgICB9Cj4+ICsKPj4gKyAgICAgcnBoeS0+dmJ1c19ob3N0ID0gZGV2bV9yZWd1
+bGF0b3JfZ2V0X29wdGlvbmFsKGRldiwgInZidXNfaG9zdCIpOwo+PiArICAgICBpZiAoSVNfRVJS
+KHJwaHktPnZidXNfaG9zdCkpIHsKPj4gKyAgICAgICAgICAgICByZXQgPSBQVFJfRVJSKHJwaHkt
+PnZidXNfaG9zdCk7Cj4+ICsgICAgICAgICAgICAgaWYgKHJldCA9PSAtRVBST0JFX0RFRkVSKQo+
+PiArICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsKPj4gKwo+PiArICAgICAgICAgICAg
+IGRldl9pbmZvKGRldiwgInZidXNfaG9zdCByZWd1bGF0b3IgaXMgbm90IGFzc2lnbmVkIVxuIik7
+Cj4+ICsgICAgICAgICAgICAgcnBoeS0+dmJ1c19ob3N0ID0gTlVMTDsKPj4gKyAgICAgfSBlbHNl
+IHsKPj4gKyAgICAgICAgICAgICByZXQgPSByZWd1bGF0b3JfZW5hYmxlKHJwaHktPnZidXNfaG9z
+dCk7Cj4+ICsgICAgICAgICAgICAgaWYgKHJldCkKPj4gKyAgICAgICAgICAgICAgICAgICAgIHJl
+dHVybiByZXQ7Cj4+ICsgICAgIH0KPj4gKwo+PiArICAgICBpbmRleCA9IDA7Cj4+ICsgICAgIGZv
+cl9lYWNoX2F2YWlsYWJsZV9jaGlsZF9vZl9ub2RlKG5wLCBjaGlsZF9ucCkgewo+PiArICAgICAg
+ICAgICAgIHN0cnVjdCByb2NrY2hpcF91c2IycGh5X3BvcnQgKnJwb3J0ID0gJnJwaHktPnBvcnRz
+W2luZGV4XTsKPj4gKyAgICAgICAgICAgICBzdHJ1Y3QgcGh5ICpwaHk7Cj4+ICsKPj4gKyAgICAg
+ICAgICAgICBwaHkgPSBkZXZtX3BoeV9jcmVhdGUoZGV2LCBjaGlsZF9ucCwgJnJvY2tjaGlwX3Vz
+YjJwaHlfb3BzKTsKPj4gKyAgICAgICAgICAgICBpZiAoSVNfRVJSKHBoeSkpIHsKPj4gKyAgICAg
+ICAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGNyZWF0ZSBwaHlcbiIpOwo+
+PiArICAgICAgICAgICAgICAgICAgICAgcmV0ID0gUFRSX0VSUihwaHkpOwo+PiArICAgICAgICAg
+ICAgICAgICAgICAgZ290byBwdXRfY2hpbGQ7Cj4+ICsgICAgICAgICAgICAgfQo+PiArCj4+ICsg
+ICAgICAgICAgICAgcnBvcnQtPnBoeSA9IHBoeTsKPj4gKwo+PiArICAgICAgICAgICAgIC8qIGlu
+aXRpYWxpemUgb3RnL2hvc3QgcG9ydCBzZXBhcmF0ZWx5ICovCj4+ICsgICAgICAgICAgICAgaWYg
+KCFvZl9ub2RlX2NtcChjaGlsZF9ucC0+bmFtZSwgImhvc3QtcG9ydCIpKSB7Cj4+ICsgICAgICAg
+ICAgICAgICAgICAgICByZXQgPSByb2NrY2hpcF91c2IycGh5X2hvc3RfcG9ydF9pbml0KHJwaHks
+IHJwb3J0LAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjaGlsZF9ucCk7Cj4+ICsgICAgICAgICAgICAgICAgICAgICBpZiAocmV0
+KQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBnb3RvIHB1dF9jaGlsZDsKPj4gKyAg
+ICAgICAgICAgICB9Cj4+ICsKPj4gKyAgICAgICAgICAgICBwaHlfc2V0X2RydmRhdGEocnBvcnQt
+PnBoeSwgcnBvcnQpOwo+PiArCj4+ICsgICAgICAgICAgICAgLyogdG8gcHJldmVudCBvdXQgb2Yg
+Ym91bmRhcnkgKi8KPj4gKyAgICAgICAgICAgICBpZiAoKytpbmRleCA+PSBycGh5LT5waHlfY2Zn
+LT5udW1fcG9ydHMpCj4+ICsgICAgICAgICAgICAgICAgICAgICBicmVhazsKPj4gKyAgICAgfQo+
+PiArCj4+ICsgICAgIHByb3ZpZGVyID0gZGV2bV9vZl9waHlfcHJvdmlkZXJfcmVnaXN0ZXIoZGV2
+LCBvZl9waHlfc2ltcGxlX3hsYXRlKTsKPj4gKyAgICAgcmV0dXJuIFBUUl9FUlJfT1JfWkVSTyhw
+cm92aWRlcik7Cj4+ICsKPj4gK3B1dF9jaGlsZDoKPj4gKyAgICAgb2Zfbm9kZV9wdXQoY2hpbGRf
+bnApOwo+PiArICAgICByZXR1cm4gcmV0Owo+PiArfQo+PiArCj4+ICtzdGF0aWMgY29uc3Qgc3Ry
+dWN0IHJvY2tjaGlwX3VzYjJwaHlfY2ZnIHJrMzM2Nl9waHlfY2ZncyA9IHsKPj4gKyAgICAgLm51
+bV9wb3J0cyAgICAgID0gMiwKPj4gKyAgICAgLmNsa291dF9jdGwgICAgID0geyAweDA3MjQsIDE1
+LCAxNSwgMSwgMCB9LAo+PiArICAgICAucG9ydF9jZmdzICAgICAgPSB7Cj4+ICsgICAgICAgICAg
+ICAgW1VTQjJQSFlfUE9SVF9IT1NUXSA9IHsKPj4gKyAgICAgICAgICAgICAgICAgICAgIC5waHlf
+c3VzICAgICAgICA9IHsgMHgwNzI4LCAxNSwgMCwgMCwgMHgxZDEgfSwKPj4gKyAgICAgICAgICAg
+ICAgICAgICAgIC5sc19kZXRfZW4gICAgICA9IHsgMHgwNjgwLCA0LCA0LCAwLCAxIH0sCj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAubHNfZGV0X3N0ICAgICAgPSB7IDB4MDY5MCwgNCwgNCwgMCwg
+MSB9LAo+PiArICAgICAgICAgICAgICAgICAgICAgLmxzX2RldF9jbHIgICAgID0geyAweDA2YTAs
+IDQsIDQsIDAsIDEgfSwKPj4gKyAgICAgICAgICAgICAgICAgICAgIC51dG1pX2xzICAgICAgICA9
+IHsgMHgwNDljLCAxNCwgMTMsIDAsIDEgfSwKPj4gKyAgICAgICAgICAgICAgICAgICAgIC51dG1p
+X2hzdGRldCAgICA9IHsgMHgwNDljLCAxMiwgMTIsIDAsIDEgfQo+PiArICAgICAgICAgICAgIH0K
+Pj4gKyAgICAgfSwKPj4gK307Cj4KPiBJIGFsc28gcmVhbGl6ZWQgdGhhdCB0aGUgcmszMzk5IGhh
+cyB0d28gb2YgdGhvc2UgcGh5LWJsb2Nrcywgc28gSSB0aGluayB3ZSdsbAo+IG5lZWQgdG8gYWRh
+cHQgeW91ciBkYXRhIHN0b3JhZ2UgbWVjaGFuaXNtIGEgdGlueSBiaXQuIE1heWJlIHNvbWV0aGlu
+ZyBsaWtlCj4gdGhlIGZvbGxvd2luZzoKPgo+IEluIHRoZSBkdHM6Cj4KPiBncmY6IHN5c2NvbkBm
+Zjc3MDAwMCB7Cj4gICAgICAgIGNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMzY2LWdyZiIsICJz
+eXNjb24iLCAic2ltcGxlLW1mZCI7Cj4gICAgICAgICAuLi4KPiAgICAgICAgdTJwaHk6IHVzYjIt
+cGh5QDcwMCB7Cj4gICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzNjYt
+dXNiMnBoeSI7Cj4gICAgICAgICAgICAgICAgIHJlZyA9IDwweDcwMCAweDJjPjsKPiAgICAgICAg
+ICAgICAgICAgLi4uCj4gICAgICAgIH07Cj4gfTsKPgo+IEluIHRoZSBkcml2ZXIKPgo+IHN0YXRp
+YyBjb25zdCBzdHJ1Y3Qgcm9ja2NoaXBfdXNiMnBoeV9jZmcgcmszMzY2X3BoeV9jZmdzW10gPSB7
+Cj4gICAgICAgICB7Cj4gICAgICAgICAgICAgICAgIC5yZWcgPSAweDcwMCwKPiAgICAgICAgICAg
+ICAgICAgLm51bV9wb3J0cyAgICAgID0gMiwKPiAgICAgICAgICAgICAgICAgLmNsa291dF9jdGwg
+ICAgID0geyAweDA3MjQsIDE1LCAxNSwgMSwgMCB9LAo+ICAgICAgICAgICAgICAgICAucG9ydF9j
+ZmdzICAgICAgPSB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgW1VTQjJQSFlfUE9SVF9IT1NU
+XSA9IHsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC5waHlfc3VzICAgICAgICA9
+IHsgMHgwNzI4LCAxNSwgMCwgMCwgMHgxZDEgfSwKPiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIC4uLgo+ICAgICAgICAgICAgICAgICAgICAgICAgIH0KPiAgICAgICAgICAgICAgICAg
+fSwKPiAgICAgICAgIH0sCj4gfTsKPgo+IGFuZCBpbiBfcHJvYmUgdGhlbiBzaW1wbHkgdXNlIHRo
+ZSBjb3JyZWN0IGFycmF5IGVudHJ5IG1hdGNoaW5nIHRoZSBkdHMgcmVnCj4gcHJvcGVydHkuCj4K
+PiBPbiB0aGUgcmszMzk5IHRoaXMgd291bGQgdGhlbiBwcm9iYWJseSBiZQo+Cj4gICAgICAgIHUy
+cGh5MDogcGh5QGU0NTAgewo+ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicm9ja2NoaXAs
+cmszMzY2LXVzYjJwaHkiOwo+ICAgICAgICAgICAgICAgICByZWcgPSA8MHhlNDUwIDB4MTA+Owo+
+ICAgICAgICAgICAgICAgICAuLi4KPiAgICAgICAgIH07Cj4KPiAgICAgICAgdTJwaHkxOiBwaHlA
+ZTQ2MCB7Cj4gICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzNjYtdXNi
+MnBoeSI7Cj4gICAgICAgICAgICAgICAgIHJlZyA9IDwweGU0NjAgMHgxMD47Cj4gICAgICAgICAg
+ICAgICAgIC4uLgo+ICAgICAgICAgfTsKPgo+Cj4gVGhpcyBpcyBzbGlnaHRseSBzaW1pbGFyIHRv
+IHdoYXQgd2UgZG8gd2l0aCB0aGUgZW1tYy1waHkuIEJ1dCBhbHNvIGFzIHRoZQo+IHVzYnBoeXMg
+ZGlmZmVyIGluIGEgbG90IG9mIHdheSwgdGhpcyBpcyByZWFsbHkgb25seSB1c2VkIHRvIG1hdGNo
+IHRvIHRoZSBkYXRhCj4gYmxvY2suCj4KPiBUaGlzIG9ubHkgYWZmZWN0cyB0aGUgbWF0Y2gtZGF0
+YSBzZWxlY3Rpb24gYW5kIHRoZSByZXN0IG9mIHRoZSBkcml2ZXIgZG9lcyBub3QKPiBuZWVkIHRv
+IGJlIGNoYW5nZWQgZm9yIHRoaXMuCj4KCldvdWxkIHRoaXMgcmVwbGFjZSB0aGUgaG9zdC1wb3J0
+IHByb3BlcnR5ID8KClRoYW5rcywKR3VlbnRlcgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJv
+Y2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
