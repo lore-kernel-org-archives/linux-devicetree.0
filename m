@@ -1,181 +1,239 @@
-From: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Subject: Re: [PATCH v4 11/14] arm64/numa: support HAVE_MEMORYLESS_NODES
-Date: Tue, 7 Jun 2016 19:31:31 +0530
-Message-ID: <CAFpQJXUe_eBBR5dBXOGXMCKmbd3n3TUYzFpDNewjVom-iu+3yg@mail.gmail.com>
-References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
- <1465286898-13828-12-git-send-email-thunder.leizhen@huawei.com>
- <CAFpQJXVaYT5N3GUCFDnUL8OYOuuSSV4QfC8cXL2ecB=1TN57jQ@mail.gmail.com> <5756C4C6.7060706@huawei.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
+Date: Tue, 07 Jun 2016 16:12:29 +0200
+Message-ID: <1622841.pIRHF5Sh6p@diego>
+References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com> <3404512.IukckmNc6l@diego> <CABXOdTexRR80Omoryr1e-R=tOYE9cq54Z3f2XU_qPCAJFeT8Yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5756C4C6.7060706@huawei.com>
+In-Reply-To: <CABXOdTexRR80Omoryr1e-R=tOYE9cq54Z3f2XU_qPCAJFeT8Yg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Xinwei Hu <huxinwei@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
+To: Guenter Roeck <groeck@google.com>
+Cc: Frank Wang <frank.wang@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Guenter Roeck <groeck@chromium.org>, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, huangtao@rock-chips.com, william.wu@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 7, 2016 at 6:27 PM, Leizhen (ThunderTown)
-<thunder.leizhen@huawei.com> wrote:
->
->
-> On 2016/6/7 16:31, Ganapatrao Kulkarni wrote:
->> On Tue, Jun 7, 2016 at 1:38 PM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
->>> Some numa nodes may have no memory. For example:
->>> 1. cpu0 on node0
->>> 2. cpu1 on node1
->>> 3. device0 access the momory from node0 and node1 take the same time.
->>
->> i am wondering, if access to both nodes is same, then why you need numa.
->> the example you are quoting is against the basic principle of "numa"
->> what is device0 here? cpu?
-> The device0 can also be a cpu. I drew a simple diagram:
->
->   cpu0     cpu1        cpu2/device0
->     |        |              |
->     |        |              |
->    DDR0     DDR1    No DIMM slots or no DIMM plugged
->  (node0)  (node1)         (node2)
->
+Hi Guenter,
 
-thanks for the clarification. your example is for 3 node system, where
-third node is memory less node.
-do you see any issue in supporting this topology with existing code?
-I think, this use case should be supported with present code.
+Am Dienstag, 7. Juni 2016, 06:19:45 schrieb Guenter Roeck:
+> On Tue, Jun 7, 2016 at 2:54 AM, Heiko St=FCbner <heiko@sntech.de> wro=
+te:
+> > Hi Frank,
+> >=20
+> > Am Montag, 6. Juni 2016, 17:20:04 schrieb Frank Wang:
+> >> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+> >> than rk3288 and before, and most of phy-related registers are also
+> >> different from the past, so a new phy driver is required necessari=
+ly.
+> >>=20
+> >> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+> >> ---
+> >=20
+> > [...]
+> >=20
+> >> +static int rockchip_usb2phy_probe(struct platform_device *pdev)
+> >> +{
+> >> +     struct device *dev =3D &pdev->dev;
+> >> +     struct device_node *np =3D dev->of_node;
+> >> +     struct device_node *child_np;
+> >> +     struct phy_provider *provider;
+> >> +     struct rockchip_usb2phy *rphy;
+> >> +     const struct of_device_id *match;
+> >> +     int index, ret;
+> >> +
+> >> +     rphy =3D devm_kzalloc(dev, sizeof(*rphy), GFP_KERNEL);
+> >> +     if (!rphy)
+> >> +             return -ENOMEM;
+> >> +
+> >> +     match =3D of_match_device(dev->driver->of_match_table, dev);
+> >> +     if (!match || !match->data) {
+> >> +             dev_err(dev, "phy configs are not assigned!\n");
+> >> +             return -EINVAL;
+> >> +     }
+> >> +
+> >> +     if (!dev->parent || !dev->parent->of_node)
+> >> +             return -EINVAL;
+> >> +
+> >> +     rphy->grf =3D syscon_node_to_regmap(dev->parent->of_node);
+> >> +     if (IS_ERR(rphy->grf))
+> >> +             return PTR_ERR(rphy->grf);
+> >> +
+> >> +     rphy->dev =3D dev;
+> >> +     rphy->phy_cfg =3D match->data;
+> >> +     platform_set_drvdata(pdev, rphy);
+> >> +
+> >> +     ret =3D rockchip_usb2phy_clk480m_register(rphy);
+> >> +     if (ret) {
+> >> +             dev_err(dev, "failed to register 480m output clock\n=
+");
+> >> +             return ret;
+> >> +     }
+> >> +
+> >> +     rphy->vbus_host =3D devm_regulator_get_optional(dev, "vbus_h=
+ost");
+> >> +     if (IS_ERR(rphy->vbus_host)) {
+> >> +             ret =3D PTR_ERR(rphy->vbus_host);
+> >> +             if (ret =3D=3D -EPROBE_DEFER)
+> >> +                     return ret;
+> >> +
+> >> +             dev_info(dev, "vbus_host regulator is not assigned!\=
+n");
+> >> +             rphy->vbus_host =3D NULL;
+> >> +     } else {
+> >> +             ret =3D regulator_enable(rphy->vbus_host);
+> >> +             if (ret)
+> >> +                     return ret;
+> >> +     }
+> >> +
+> >> +     index =3D 0;
+> >> +     for_each_available_child_of_node(np, child_np) {
+> >> +             struct rockchip_usb2phy_port *rport =3D &rphy->ports=
+[index];
+> >> +             struct phy *phy;
+> >> +
+> >> +             phy =3D devm_phy_create(dev, child_np,
+> >> &rockchip_usb2phy_ops);
+> >> +             if (IS_ERR(phy)) {
+> >> +                     dev_err(dev, "failed to create phy\n");
+> >> +                     ret =3D PTR_ERR(phy);
+> >> +                     goto put_child;
+> >> +             }
+> >> +
+> >> +             rport->phy =3D phy;
+> >> +
+> >> +             /* initialize otg/host port separately */
+> >> +             if (!of_node_cmp(child_np->name, "host-port")) {
+> >> +                     ret =3D rockchip_usb2phy_host_port_init(rphy=
+, rport,
+> >> +                                                           child_=
+np);
+> >> +                     if (ret)
+> >> +                             goto put_child;
+> >> +             }
+> >> +
+> >> +             phy_set_drvdata(rport->phy, rport);
+> >> +
+> >> +             /* to prevent out of boundary */
+> >> +             if (++index >=3D rphy->phy_cfg->num_ports)
+> >> +                     break;
+> >> +     }
+> >> +
+> >> +     provider =3D devm_of_phy_provider_register(dev, of_phy_simpl=
+e_xlate);
+> >> +     return PTR_ERR_OR_ZERO(provider);
+> >> +
+> >> +put_child:
+> >> +     of_node_put(child_np);
+> >> +     return ret;
+> >> +}
+> >> +
+> >> +static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs =3D {
+> >> +     .num_ports      =3D 2,
+> >> +     .clkout_ctl     =3D { 0x0724, 15, 15, 1, 0 },
+> >> +     .port_cfgs      =3D {
+> >> +             [USB2PHY_PORT_HOST] =3D {
+> >> +                     .phy_sus        =3D { 0x0728, 15, 0, 0, 0x1d=
+1 },
+> >> +                     .ls_det_en      =3D { 0x0680, 4, 4, 0, 1 },
+> >> +                     .ls_det_st      =3D { 0x0690, 4, 4, 0, 1 },
+> >> +                     .ls_det_clr     =3D { 0x06a0, 4, 4, 0, 1 },
+> >> +                     .utmi_ls        =3D { 0x049c, 14, 13, 0, 1 }=
+,
+> >> +                     .utmi_hstdet    =3D { 0x049c, 12, 12, 0, 1 }
+> >> +             }
+> >> +     },
+> >> +};
+> >=20
+> > I also realized that the rk3399 has two of those phy-blocks, so I t=
+hink
+> > we'll need to adapt your data storage mechanism a tiny bit. Maybe
+> > something like the following:
+> >=20
+> > In the dts:
+> >=20
+> > grf: syscon@ff770000 {
+> >=20
+> >        compatible =3D "rockchip,rk3366-grf", "syscon", "simple-mfd"=
+;
+> >       =20
+> >         ...
+> >       =20
+> >        u2phy: usb2-phy@700 {
+> >       =20
+> >                compatible =3D "rockchip,rk3366-usb2phy";
+> >               =20
+> >                 reg =3D <0x700 0x2c>;
+> >                 ...
+> >       =20
+> >        };
+> >=20
+> > };
+> >=20
+> > In the driver
+> >=20
+> > static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs[] =3D {
+> >=20
+> >         {
+> >        =20
+> >                 .reg =3D 0x700,
+> >                 .num_ports      =3D 2,
+> >                 .clkout_ctl     =3D { 0x0724, 15, 15, 1, 0 },
+> >                 .port_cfgs      =3D {
+> >                =20
+> >                         [USB2PHY_PORT_HOST] =3D {
+> >                        =20
+> >                                 .phy_sus        =3D { 0x0728, 15, 0=
+, 0,
+> >                                 0x1d1 },
+> >                                 ...
+> >                        =20
+> >                         }
+> >                =20
+> >                 },
+> >        =20
+> >         },
+> >=20
+> > };
+> >=20
+> > and in _probe then simply use the correct array entry matching the =
+dts reg
+> > property.
+> >=20
+> > On the rk3399 this would then probably be
+> >=20
+> >        u2phy0: phy@e450 {
+> >       =20
+> >                compatible =3D "rockchip,rk3366-usb2phy";
+> >               =20
+> >                 reg =3D <0xe450 0x10>;
+> >                 ...
+> >        =20
+> >         };
+> >       =20
+> >        u2phy1: phy@e460 {
+> >       =20
+> >                compatible =3D "rockchip,rk3366-usb2phy";
+> >               =20
+> >                 reg =3D <0xe460 0x10>;
+> >                 ...
+> >        =20
+> >         };
+> >=20
+> > This is slightly similar to what we do with the emmc-phy. But also =
+as the
+> > usbphys differ in a lot of way, this is really only used to match t=
+o the
+> > data block.
+> >=20
+> > This only affects the match-data selection and the rest of the driv=
+er does
+> > not need to be changed for this.
+>=20
+> Would this replace the host-port property ?
 
->>>
->>> So, we can not simply classify device0 to node0 or node1, but we can
->>> define a node2 which distances to node0 and node1 are the same.
->>>
->>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->>> ---
->>>  arch/arm64/Kconfig      |  4 ++++
->>>  arch/arm64/kernel/smp.c |  1 +
->>>  arch/arm64/mm/numa.c    | 43 +++++++++++++++++++++++++++++++++++++++++--
->>>  3 files changed, 46 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->>> index 05c1bf1..5904a62 100644
->>> --- a/arch/arm64/Kconfig
->>> +++ b/arch/arm64/Kconfig
->>> @@ -581,6 +581,10 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
->>>         def_bool y
->>>         depends on NUMA
->>>
->>> +config HAVE_MEMORYLESS_NODES
->>> +       def_bool y
->>> +       depends on NUMA
->>> +
->>>  source kernel/Kconfig.preempt
->>>  source kernel/Kconfig.hz
->>>
->>> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
->>> index d099306..9e15297 100644
->>> --- a/arch/arm64/kernel/smp.c
->>> +++ b/arch/arm64/kernel/smp.c
->>> @@ -620,6 +620,7 @@ static void __init of_parse_and_init_cpus(void)
->>>                         }
->>>
->>>                         bootcpu_valid = true;
->>> +                       early_map_cpu_to_node(0, of_node_to_nid(dn));
->>>
->>>                         /*
->>>                          * cpu_logical_map has already been
->>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->>> index df5c842..d73b0a0 100644
->>> --- a/arch/arm64/mm/numa.c
->>> +++ b/arch/arm64/mm/numa.c
->>> @@ -128,6 +128,14 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
->>>                 nid = 0;
->>>
->>>         cpu_to_node_map[cpu] = nid;
->>> +
->>> +       /*
->>> +        * We should set the numa node of cpu0 as soon as possible, because it
->>> +        * has already been set up online before. cpu_to_node(0) will soon be
->>> +        * called.
->>> +        */
->>> +       if (!cpu)
->>> +               set_cpu_numa_node(cpu, nid);
->>>  }
->>>
->>>  #ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
->>> @@ -215,6 +223,35 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
->>>         return ret;
->>>  }
->>>
->>> +static u64 __init alloc_node_data_from_nearest_node(int nid, const size_t size)
->>> +{
->>> +       int i, best_nid, distance;
->>> +       u64 pa;
->>> +       DECLARE_BITMAP(nodes_map, MAX_NUMNODES);
->>> +
->>> +       bitmap_zero(nodes_map, MAX_NUMNODES);
->>> +       bitmap_set(nodes_map, nid, 1);
->>> +
->>> +find_nearest_node:
->>> +       best_nid = NUMA_NO_NODE;
->>> +       distance = INT_MAX;
->>> +
->>> +       for_each_clear_bit(i, nodes_map, MAX_NUMNODES)
->>> +               if (numa_distance[nid][i] < distance) {
->>> +                       best_nid = i;
->>> +                       distance = numa_distance[nid][i];
->>> +               }
->>> +
->>> +       pa = memblock_alloc_nid(size, SMP_CACHE_BYTES, best_nid);
->>> +       if (!pa) {
->>> +               BUG_ON(best_nid == NUMA_NO_NODE);
->>> +               bitmap_set(nodes_map, best_nid, 1);
->>> +               goto find_nearest_node;
->>> +       }
->>> +
->>> +       return pa;
->>> +}
->>> +
+nope ... each phy-block has two ports (host + otg). Franks rk3366 has o=
+ne phy-
+block while the rk3399 has two phy blocks (with two ports on each).
 
-why do we need this function in arch specific code.
-dont you think common code will take care of this? when you define
-HAVE_MEMORYLESS_NODES
 
->>>  /**
->>>   * Initialize NODE_DATA for a node on the local memory
->>>   */
->>> @@ -228,7 +265,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
->>>         pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
->>>                 nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
->>>
->>> -       nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
-
-this function try to allocate from a nid, if fails, it allocates from
-node 0(local node).
-this is ok for memory less node i guess.
-
->>> +       nd_pa = memblock_alloc_nid(nd_size, SMP_CACHE_BYTES, nid);
->>> +       if (!nd_pa)
->>> +               nd_pa = alloc_node_data_from_nearest_node(nid, nd_size);
->>>         nd = __va(nd_pa);
->>>
->>>         /* report and initialize */
->>> @@ -238,7 +277,7 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
->>>         if (tnid != nid)
->>>                 pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
->>>
->>> -       node_data[nid] = nd;
->>> +       NODE_DATA(nid) = nd;
->>>         memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
->>>         NODE_DATA(nid)->node_id = nid;
->>>         NODE_DATA(nid)->node_start_pfn = start_pfn;
->>> --
->>> 2.5.0
->>>
->>>
->> Ganapat
->>>
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->> .
->>
->
+Heiko
