@@ -1,52 +1,48 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 4/4] arm64: dts: rockchip: add rktimer device node for rk3399
-Date: Tue,  7 Jun 2016 12:54:33 +0800
-Message-ID: <1465275273-22076-5-git-send-email-wxt@rock-chips.com>
-References: <1465275273-22076-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465275273-22076-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, Heiko Stuebner <heiko@sntech.de>
-Cc: dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, cf@rock-chips.com, huangtao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Brian Norris <briannorris@chromium.org>, Shawn Lin <shawn.lin@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jianqun Xu <jay.xu@rock-chips.com>, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v5 1/2] drm/bridge: Add sii902x driver
+Date: Tue, 7 Jun 2016 07:31:59 +0200
+Message-ID: <20160607073159.20541da1@bbrezillon>
+References: <1464879601-30569-1-git-send-email-boris.brezillon@free-electrons.com>
+ <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA@mail.gmail.com>
+ <20160603120238.76dc9380@bbrezillon>
+ <HE1PR04MB10516B0A27EEBFDA8019C1A1EC5D0@HE1PR04MB1051.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <HE1PR04MB10516B0A27EEBFDA8019C1A1EC5D0@HE1PR04MB1051.eurprd04.prod.outlook.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Meng Yi <meng.yi@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Huan Wang <alison.wang@nxp.com>, Emil Velikov <emil.l.velikov@gmail.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Huang Tao <huangtao@rock-chips.com>
-
-Select rktimer0 as broadcast timer.
-
-Signed-off-by: Huang Tao <huangtao@rock-chips.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Tested-by: Jianqun Xu <jay.xu@rock-chips.com>
-
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
----
-
-Changes in v2:
-- %s/ARM64/arm64.
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index d331e80..f0d1935 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -542,6 +542,14 @@
- 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
-+	rktimer: rktimer@ff850000 {
-+		compatible = "rockchip,rk3399-timer";
-+		reg = <0x0 0xff850000 0x0 0x1000>;
-+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru PCLK_TIMER0>, <&cru SCLK_TIMER00>;
-+		clock-names = "pclk", "timer";
-+	};
-+
- 	spdif: spdif@ff870000 {
- 		compatible = "rockchip,rk3399-spdif";
- 		reg = <0x0 0xff870000 0x0 0x1000>;
--- 
-1.9.1
+SGkgTWVuZywKCk9uIFR1ZSwgNyBKdW4gMjAxNiAwMjo0MDo1NiArMDAwMApNZW5nIFlpIDxtZW5n
+LnlpQG54cC5jb20+IHdyb3RlOgoKPiBIaSBCb3JpcywKPiAKPiBTb3JyeSBmb3IgcmVwbHkgbGF0
+ZSwgSSB3YXMgb24gUFRPLiBBbmQgYW5vdGhlciBQVE8gb24gIEp1bmUgOX4xMSwgMjAxNi5VVEMr
+OAo+IAo+ID4gIAo+ID4gPiA+ICsgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlKHNpaTkwMngtPnJlc2V0
+X2dwaW8sIDEpOwo+ID4gPiA+ICsKPiA+ID4gPiArICAgICAgIG1zbGVlcCgxMDApOyAgCj4gPiA+
+IE91Y2ggdGhhdCBpcyBzb21lIGp1aWN5IG51bWJlci4gQ2FuIHdlIGdldCBhIGNvbW1lbnQgd2l0
+aAo+ID4gPiByZWFzb25pbmcvb3JpZ2luIG9mIGl0ID8gIAo+ID4gCj4gPiBBcyBhbHJlYWR5IGV4
+cGxhaW5lZCB0byBNYXhpbWUsIEkganVzdCBkb24ndCBrbm93IHdoeSB0aGlzIGlzIG5lZWRlZCwg
+c2ltcGx5Cj4gPiBiZWNhdXNlIEkgZG9uJ3QgaGF2ZSBhY2Nlc3MgdG8gdGhlIGRhdGFzaGVldCBh
+bmQgSSBqdXN0IGJhc2VkIG15Cj4gPiBpbXBsZW1lbnRhdGlvbiBvbiBhbm90aGVyIGRyaXZlci4K
+PiA+IEkgY2FuIGFkZCBhIGNvbW1lbnQgc3RhdGluZyB0aGF0IHRoaXMgd2FzIGV4dHJhY3RlZCBm
+cm9tIGFub3RoZXIKPiA+IGltcGxlbWVudGF0aW9uLCBidXQgd2l0aCBubyBleHBsYW5hdGlvbiBv
+biB3aHkgdGhpcyBpcyBuZWVkZWQuCj4gPiAKPiA+IE1lbmcsIGRvIHlvdSBoYXZlIGFueSBpbmZv
+cm1hdGlvbiBhYm91dCBzdGFydHVwLXRpbWUsIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQ/Cj4gPiAg
+IAo+IAo+IEkgaGFkIGNoZWNrZWQgdGhlIGRhdGFzaGVldCBvZiBzaWk5MDIyYSwgd2hpY2ggc2Fp
+ZCB0aGUgTWluIG9mIFRSRVNFVCBpcyAxMDAgzrxzLCBhbmQgTWF4IGlzIG5vdCBzcGVjaWZpZWQu
+CgpPaCwgdGhhbmtzIGEgbG90LiB0cmVzZXQtbWluIGlzIGV4YWN0bHkgd2hhdCBJIG5lZWRlZC4K
+ClJlZ2FyZHMsCgpCb3JpcwoKLS0gCkJvcmlzIEJyZXppbGxvbiwgRnJlZSBFbGVjdHJvbnMKRW1i
+ZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMu
+Y29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
