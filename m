@@ -1,42 +1,56 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 07/15] clk: sunxi-ng: Add phase clock support
-Date: Tue,  7 Jun 2016 22:41:46 +0200
-Message-ID: <20160607204154.31967-8-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 05/15] clk: sunxi-ng: Add gate clock support
+Date: Tue,  7 Jun 2016 22:41:44 +0200
+Message-ID: <20160607204154.31967-6-maxime.ripard@free-electrons.com>
 References: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Andre Przywara <andre.przywara@arm.com>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the clocks in the CCU that introduce a phase shift from
-their parent clock.
+Some clocks in the Allwinner SoCs clocks unit are just simple gates. Add
+support for those clocks.
+
+Since it's a feature that can also be found in more complex clocks, provide
+a bunch of helpers that can be reused later on.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/clk/sunxi-ng/Makefile    |   1 +
- drivers/clk/sunxi-ng/ccu_phase.c | 126 +++++++++++++++++++++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu_phase.h |  50 ++++++++++++++++
- 3 files changed, 177 insertions(+)
- create mode 100644 drivers/clk/sunxi-ng/ccu_phase.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_phase.h
+ drivers/clk/sunxi-ng/Makefile   |  1 +
+ drivers/clk/sunxi-ng/ccu_gate.c | 82 +++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu_gate.h | 53 ++++++++++++++++++++++++++
+ 3 files changed, 136 insertions(+)
+ create mode 100644 drivers/clk/sunxi-ng/ccu_gate.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu_gate.h
 
 diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
-index 99133df3f7ab..c47cbd309d59 100644
+index c59cf2ea509b..608b332e0b1f 100644
 --- a/drivers/clk/sunxi-ng/Makefile
 +++ b/drivers/clk/sunxi-ng/Makefile
-@@ -6,3 +6,4 @@ obj-y += ccu_frac.o
+@@ -4,3 +4,4 @@ obj-y += ccu_reset.o
+ obj-y += ccu_frac.o
+ 
  obj-y += ccu_fixed_factor.o
- obj-y += ccu_gate.o
- obj-y += ccu_mux.o
-+obj-y += ccu_phase.o
-diff --git a/drivers/clk/sunxi-ng/ccu_phase.c b/drivers/clk/sunxi-ng/ccu_phase.c
++obj-y += ccu_gate.o
+diff --git a/drivers/clk/sunxi-ng/ccu_gate.c b/drivers/clk/sunxi-ng/ccu_gate.c
 new file mode 100644
-index 000000000000..400c58ad72fd
+index 000000000000..1e98f8a33ac3
 --- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu_phase.c
-@@ -0,0 +1,126 @@
++++ b/drivers/clk/sunxi-ng/ccu_gate.c
+@@ -0,0 +1,82 @@
 +/*
 + * Copyright (C) 2016 Maxime Ripard
 + * Maxime Ripard <maxime.ripard@free-electrons.com>
@@ -48,127 +62,83 @@ index 000000000000..400c58ad72fd
 + */
 +
 +#include <linux/clk-provider.h>
-+#include <linux/spinlock.h>
 +
-+#include "ccu_phase.h"
++#include "ccu_gate.h"
 +
-+static int ccu_phase_get_phase(struct clk_hw *hw)
++void ccu_gate_helper_disable(struct ccu_common *common, u32 gate)
 +{
-+	struct ccu_phase *phase = hw_to_ccu_phase(hw);
-+	struct clk_hw *parent, *grandparent;
-+	unsigned int parent_rate, grandparent_rate;
-+	u16 step, parent_div;
-+	u32 reg;
-+	u8 delay;
-+
-+	reg = readl(phase->common.base + phase->common.reg);
-+	delay = (reg >> phase->shift);
-+	delay &= (1 << phase->width) - 1;
-+
-+	if (!delay)
-+		return 180;
-+
-+	/* Get our parent clock, it's the one that can adjust its rate */
-+	parent = clk_hw_get_parent(hw);
-+	if (!parent)
-+		return -EINVAL;
-+
-+	/* And its rate */
-+	parent_rate = clk_hw_get_rate(parent);
-+	if (!parent_rate)
-+		return -EINVAL;
-+
-+	/* Now, get our parent's parent (most likely some PLL) */
-+	grandparent = clk_hw_get_parent(parent);
-+	if (!grandparent)
-+		return -EINVAL;
-+
-+	/* And its rate */
-+	grandparent_rate = clk_hw_get_rate(grandparent);
-+	if (!grandparent_rate)
-+		return -EINVAL;
-+
-+	/* Get our parent clock divider */
-+	parent_div = grandparent_rate / parent_rate;
-+
-+	step = DIV_ROUND_CLOSEST(360, parent_div);
-+	return delay * step;
-+}
-+
-+static int ccu_phase_set_phase(struct clk_hw *hw, int degrees)
-+{
-+	struct ccu_phase *phase = hw_to_ccu_phase(hw);
-+	struct clk_hw *parent, *grandparent;
-+	unsigned int parent_rate, grandparent_rate;
 +	unsigned long flags;
 +	u32 reg;
-+	u8 delay;
 +
-+	/* Get our parent clock, it's the one that can adjust its rate */
-+	parent = clk_hw_get_parent(hw);
-+	if (!parent)
-+		return -EINVAL;
++	if (!(common->features & CCU_FEATURE_GATE))
++		return;
 +
-+	/* And its rate */
-+	parent_rate = clk_hw_get_rate(parent);
-+	if (!parent_rate)
-+		return -EINVAL;
++	spin_lock_irqsave(common->lock, flags);
 +
-+	/* Now, get our parent's parent (most likely some PLL) */
-+	grandparent = clk_hw_get_parent(parent);
-+	if (!grandparent)
-+		return -EINVAL;
++	reg = readl(common->base + common->reg);
++	writel(reg & ~gate, common->base + common->reg);
 +
-+	/* And its rate */
-+	grandparent_rate = clk_hw_get_rate(grandparent);
-+	if (!grandparent_rate)
-+		return -EINVAL;
++	spin_unlock_irqrestore(common->lock, flags);
++}
 +
-+	if (degrees != 180) {
-+		u16 step, parent_div;
++static void ccu_gate_disable(struct clk_hw *hw)
++{
++	struct ccu_gate *cg = hw_to_ccu_gate(hw);
 +
-+		/* Get our parent divider */
-+		parent_div = grandparent_rate / parent_rate;
++	return ccu_gate_helper_disable(&cg->common, cg->enable);
++}
 +
-+		/*
-+		 * We can only outphase the clocks by multiple of the
-+		 * PLL's period.
-+		 *
-+		 * Since our parent clock is only a divider, and the
-+		 * formula to get the outphasing in degrees is deg =
-+		 * 360 * delta / period
-+		 *
-+		 * If we simplify this formula, we can see that the
-+		 * only thing that we're concerned about is the number
-+		 * of period we want to outphase our clock from, and
-+		 * the divider set by our parent clock.
-+		 */
-+		step = DIV_ROUND_CLOSEST(360, parent_div);
-+		delay = DIV_ROUND_CLOSEST(degrees, step);
-+	} else {
-+		delay = 0;
-+	}
++int ccu_gate_helper_enable(struct ccu_common *common, u32 gate)
++{
++	unsigned long flags;
++	u32 reg;
 +
-+	spin_lock_irqsave(phase->common.lock, flags);
-+	reg = readl(phase->common.base + phase->common.reg);
-+	reg &= ~GENMASK(phase->width + phase->shift - 1, phase->shift);
-+	writel(reg | (delay << phase->shift),
-+	       phase->common.base + phase->common.reg);
-+	spin_unlock_irqrestore(phase->common.lock, flags);
++	if (!(common->features & CCU_FEATURE_GATE))
++		return 0;
++
++	spin_lock_irqsave(common->lock, flags);
++
++	reg = readl(common->base + common->reg);
++	writel(reg | gate, common->base + common->reg);
++
++	spin_unlock_irqrestore(common->lock, flags);
 +
 +	return 0;
 +}
 +
-+const struct clk_ops ccu_phase_ops = {
-+	.get_phase	= ccu_phase_get_phase,
-+	.set_phase	= ccu_phase_set_phase,
++static int ccu_gate_enable(struct clk_hw *hw)
++{
++	struct ccu_gate *cg = hw_to_ccu_gate(hw);
++
++	return ccu_gate_helper_enable(&cg->common, cg->enable);
++}
++
++int ccu_gate_helper_is_enabled(struct ccu_common *common, u32 gate)
++{
++	if (!(common->features & CCU_FEATURE_GATE))
++		return 1;
++
++	return readl(common->base + common->reg) & gate;
++}
++
++static int ccu_gate_is_enabled(struct clk_hw *hw)
++{
++	struct ccu_gate *cg = hw_to_ccu_gate(hw);
++
++	return ccu_gate_helper_is_enabled(&cg->common, cg->enable);
++}
++
++const struct clk_ops ccu_gate_ops = {
++	.disable	= ccu_gate_disable,
++	.enable		= ccu_gate_enable,
++	.is_enabled	= ccu_gate_is_enabled,
 +};
-diff --git a/drivers/clk/sunxi-ng/ccu_phase.h b/drivers/clk/sunxi-ng/ccu_phase.h
+diff --git a/drivers/clk/sunxi-ng/ccu_gate.h b/drivers/clk/sunxi-ng/ccu_gate.h
 new file mode 100644
-index 000000000000..e28b4e58a819
+index 000000000000..8e15fa17bcc1
 --- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu_phase.h
-@@ -0,0 +1,50 @@
++++ b/drivers/clk/sunxi-ng/ccu_gate.h
+@@ -0,0 +1,53 @@
 +/*
 + * Copyright (c) 2016 Maxime Ripard. All rights reserved.
 + *
@@ -182,42 +152,45 @@ index 000000000000..e28b4e58a819
 + * GNU General Public License for more details.
 + */
 +
-+#ifndef _CCU_PHASE_H_
-+#define _CCU_PHASE_H_
++#ifndef _CCU_GATE_H_
++#define _CCU_GATE_H_
 +
 +#include <linux/clk-provider.h>
 +
 +#include "ccu_common.h"
 +
-+struct ccu_phase {
-+	u8			shift;
-+	u8			width;
++struct ccu_gate {
++	u32			enable;
 +
 +	struct ccu_common	common;
 +};
 +
-+#define SUNXI_CCU_PHASE(_struct, _name, _parent, _reg, _shift, _width, _flags) \
-+	struct ccu_phase _struct = {					\
-+		.shift	= _shift,					\
-+		.width	= _width,					\
++#define SUNXI_CCU_GATE(_struct, _name, _parent, _reg, _gate, _flags)	\
++	struct ccu_gate _struct = {					\
++		.enable	= _gate,					\
 +		.common	= {						\
 +			.reg		= _reg,				\
++			.features	= CCU_FEATURE_GATE,		\
 +			.hw.init	= SUNXI_HW_INIT(_name,		\
 +							_parent,	\
-+							&ccu_phase_ops,	\
++							&ccu_gate_ops,	\
 +							_flags),	\
 +		}							\
 +	}
 +
-+static inline struct ccu_phase *hw_to_ccu_phase(struct clk_hw *hw)
++static inline struct ccu_gate *hw_to_ccu_gate(struct clk_hw *hw)
 +{
 +	struct ccu_common *common = hw_to_ccu_common(hw);
 +
-+	return container_of(common, struct ccu_phase, common);
++	return container_of(common, struct ccu_gate, common);
 +}
 +
-+extern const struct clk_ops ccu_phase_ops;
++void ccu_gate_helper_disable(struct ccu_common *common, u32 gate);
++int ccu_gate_helper_enable(struct ccu_common *common, u32 gate);
++int ccu_gate_helper_is_enabled(struct ccu_common *common, u32 gate);
 +
-+#endif /* _CCU_PHASE_H_ */
++extern const struct clk_ops ccu_gate_ops;
++
++#endif /* _CCU_GATE_H_ */
 -- 
 2.8.3
