@@ -1,234 +1,209 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6q: extend support for the cm-fx6
-Date: Tue, 7 Jun 2016 11:45:55 +0200
-Message-ID: <7b69d8e9d4114f3c8ead120ea2cc4057@rwthex-s1-b.rwth-ad.de>
-References: <709d6b3d522f4fcb8112830e0426dbb3@rwthex-s1-b.rwth-ad.de>
- <1463994191.2370.3.camel@pengutronix.de> <5746B8C4.6020406@compulab.co.il>
- <1464256217.14453.10.camel@pengutronix.de> <5746DFE2.9040903@compulab.co.il>
- <d083d0308abd48efbd4b6042e1f9c470@rwthex-s2-a.rwth-ad.de>
- <d0329c33bee14d6e8be8abef607dce3e@rwthex-s1-b.rwth-ad.de>
- <57551CF6.2020602@compulab.co.il>
- <b73122716e714ea0b853cc2f3d19664c@rwthex-s1-b.rwth-ad.de>
- <5d1bc50e59f749db8f825f5cb7e2438d@rwthex-w2-a.rwth-ad.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
+Date: Tue, 07 Jun 2016 11:54:38 +0200
+Message-ID: <3404512.IukckmNc6l@diego>
+References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com> <1465204804-31161-3-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5d1bc50e59f749db8f825f5cb7e2438d-cBaz+nnMw1+1MzRH+ruthl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465204804-31161-3-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wang <frank.wang@rock-chips.com>
+Cc: dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Igor,
+Hi Frank,
 
-On 06/07/2016 10:38 AM, Igor Grinberg wrote:
-> Hi Christopher,
+Am Montag, 6. Juni 2016, 17:20:04 schrieb Frank Wang:
+> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+> than rk3288 and before, and most of phy-related registers are also
+> different from the past, so a new phy driver is required necessarily.
 > 
-> On 06/06/2016 01:37 PM, Christopher Spinrath wrote:
->> Hi Igor,
->>
->> On 06/06/2016 08:49 AM, Igor Grinberg wrote:
->>> Hi Christopher,
->>>
->>> On 06/05/2016 08:32 PM, Christopher Spinrath wrote:
->>>> Hi Igor,
->>>>
->>>> On 06/05/2016 06:43 PM, Igor Grinberg wrote:
->>>>> Hi Christopher,
->>>>>
->>>>> On 05/26/2016 02:37 PM, Igor Grinberg wrote:
->>>>>> On 05/26/2016 12:50 PM, Lucas Stach wrote:
->>>>>>> Hi Igor,
->>>>>>>
->>>>>>> Am Donnerstag, den 26.05.2016, 11:50 +0300 schrieb Igor Grinberg:
->>>>>>>> Hi Lucas,
->>>>>>>>
->>>>>>>> Thanks for reviewing the patch(es).
->>>>>>>>
->>>>>>>> On 05/23/2016 12:03 PM, Lucas Stach wrote:
->>>>>>>>> Am Montag, den 23.05.2016, 00:47 +0200 schrieb
->>>>>>>>> christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org:
->>>>>>>>>> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
->>>>>>>>
->>>>>>>> [...]
->>>>>>>>
->>>>>>>>>> +&ecspi1 {
->>>>>>>>>> +	fsl,spi-num-chipselects = <2>;
->>>>>>>>>> +	cs-gpios = <&gpio2 30 0>, <&gpio3 19 0>;
->>>>>>>>>> +	pinctrl-names = "default";
->>>>>>>>>> +	pinctrl-0 = <&pinctrl_ecspi1>;
->>>>>>>>>> +	status = "okay";
->>>>>>>>>> +
->>>>>>>>>> +	flash: m25p80@0 {
->>>>>>>>>> +		#address-cells = <1>;
->>>>>>>>>> +		#size-cells = <1>;
->>>>>>>>>> +		compatible = "st,m25p", "jedec,spi-nor";
->>>>>>>>>> +		spi-max-frequency = <20000000>;
->>>>>>>>>> +		reg = <0>;
->>>>>>>>>> +
->>>>>>>>>> +		partition@0 {
->>>>>>>>>> +			label = "uboot";
->>>>>>>>>> +			reg = <0x0 0xc0000>;
->>>>>>>>>> +		};
->>>>>>>>>> +
->>>>>>>>>> +		partition@c0000 {
->>>>>>>>>> +			label = "uboot environment";
->>>>>>>>>> +			reg = <0xc0000 0x40000>;
->>>>>>>>>> +		};
->>>>>>>>>> +
->>>>>>>>>> +		partition@100000 {
->>>>>>>>>> +			label = "reserved";
->>>>>>>>>> +			reg = <0x100000 0x100000>;
->>>>>>>>>> +		};
->>>>>>>>>
->>>>>>>>> Partition layouts don't belong in the upstream DT, as it a device
->>>>>>>>> configuration thing. Please kep them in the bootloader/firmware and make
->>>>>>>>> this one pass the partition layout to the kernel.
->>>>>>>>
->>>>>>>> I don't completely agree with this.
->>>>>>>> We have lots of partition layouts in the upstream DT.
->>>>>>>
->>>>>>> No, we don't. At least not for the i.MX6. There are some for the earlier
->>>>>>> i.MX boards, but IMO it's wrong to put device configuration into the
->>>>>>> upstream DT. Let's not start doing this again.
->>>>>>
->>>>>> Why not?
->>>>>> For i.MX6 there are 2 boards that have the partitioning scheme.
->>>>>> I'm not considering this a device configuration, but rather
->>>>>> a default partitioning layout/scheme.
->>>>>> Current case is for the firmware storage device that is not likely
->>>>>> to change.
->>>>>> Moreover, a DT is not really a part of the kernel, but lays along the kernel
->>>>>> sources for convenience and simplicity (at least IIRC as it was decided
->>>>>> about 5 years ago). It is more a part of the firmware for a device, than
->>>>>> an upstream kernel source code.
->>>>>> I think it is only a meter of time when Linus will decide that he does not
->>>>>> want it inside the kernel anymore...
->>>>>>
->>>>>>>
->>>>>>>> Moreover, this is the default layout and changing it, will
->>>>>>>> result in incompatibilities and also might result in device "bricking".
->>>>>>>> Those can be changed from the boot loader in case you need those
->>>>>>>> the other way around.
->>>>>>>> Another question of mine is, why should you?
->>>>>>>>
->>>>>>> Partition layout is device configuration, which is governed by the
->>>>>>> device firmware.
->>>>>>
->>>>>> Yet again, DT is a part of device firmware.
->>>>>> Moreover, the firmware (in that case U-Boot), can be configured
->>>>>> using the very same DT code, so not having this in, might force
->>>>>> various w/a and hacks.
->>>>>>
->>>>>>> By not having the partition layout in the upstream DT
->>>>>>> people are forced to set it from the firmware, which is exactly the
->>>>>>> right thing to do, weather or not you plan to change it at any time.
->>>>>>
->>>>>> I might be ignorant, sorry for that.
->>>>>> Why? Why is it right and why would you want to force people to do that?
->>>>>>
->>>>>>
->>>>>
->>>>> No answer?
->>>>> I think it is worth keeping this as a default firmware layout.
->>>>>
->>>>
->>>> I was not happy removing the layout at first, too. However, they are
->>>> added rarely (at least recently) and the binding documentation [1]
->>>> states that they shall only be added if there are "strong conventions".
->>>
->>> Well, not exactly, it says:
->>>
->>> "Partitions can be represented by sub-nodes of an mtd device. This can be used
->>> on platforms which have strong conventions about which portions of a flash are
->>> used for what purposes, but which don't use an on-flash partition table such
->>> as RedBoot."
->>>
->>> In my understanding, "can" is _not_ exactly "shall only".
->>>
->>
->> Definitely, "state" was the wrong word here - sorry about that. But it's
->> how I interpret the documentation. It is the only one I have seen that
->> specifies an allowed use case. So for me it is more like "deny all,
->> allow ...".
-> 
-> That moves the discussion to what "strong conventions" are?
-> But you have already removed the layout, so this is meaningless.
+> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+> ---
 
-Yes, as I said I want to have the non controversial stuff in first.
-Afterwards, we can submit more controversial patches (per feature).
+[...]
 
->>
->>>>
->>>> Moreover, it is really easy to pass the layout via firmware/u-boot.
->>>> Unfortunately, the u-boot provided by CompuLab does not have the
->>>> mtdparts commands built-in but the layout can be passed via cmdline as
->>>> well. This seems more flexible to me (and I consider this to be good).
->>>
->>> That means you need a different version of U-Boot if you want to use
->>> an upstream kernel, or you need to play the bootargs games, or just leave
->>> it a "black box".
->>> So currently, from the three options above, the "black box" is chosen, right?
->>> That's a pity, because I'd like things to be open...
->>>
->>
->> Well, It wouldn't be the first ARM device where the newest/upstream
->> u-boot is required. Actually, you already have to use the newest version
->> if you want to use the igb ethernet.
-> 
-> You mean, igb in U-Boot, right?
-> Unless I'm missing something, it should work just fine in Linux with
-> the same U-Boot Compulab provides.
-> 
-I mean in U-Boot and Linux (and with "newest U-Boot" I refer to the one
-provided by CompuLab; as far as I know there is no upstream U-Boot
-support for the Utilite). Although it seems to work "by accident". The
-custom CompuLab code fails to put the mac address in the devicetree but
-stores it in the correct environment variable such that the upstream
-U-Boot magic can take over.
+> +static int rockchip_usb2phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *child_np;
+> +	struct phy_provider *provider;
+> +	struct rockchip_usb2phy *rphy;
+> +	const struct of_device_id *match;
+> +	int index, ret;
+> +
+> +	rphy = devm_kzalloc(dev, sizeof(*rphy), GFP_KERNEL);
+> +	if (!rphy)
+> +		return -ENOMEM;
+> +
+> +	match = of_match_device(dev->driver->of_match_table, dev);
+> +	if (!match || !match->data) {
+> +		dev_err(dev, "phy configs are not assigned!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!dev->parent || !dev->parent->of_node)
+> +		return -EINVAL;
+> +
+> +	rphy->grf = syscon_node_to_regmap(dev->parent->of_node);
+> +	if (IS_ERR(rphy->grf))
+> +		return PTR_ERR(rphy->grf);
+> +
+> +	rphy->dev = dev;
+> +	rphy->phy_cfg = match->data;
+> +	platform_set_drvdata(pdev, rphy);
+> +
+> +	ret = rockchip_usb2phy_clk480m_register(rphy);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register 480m output clock\n");
+> +		return ret;
+> +	}
+> +
+> +	rphy->vbus_host = devm_regulator_get_optional(dev, "vbus_host");
+> +	if (IS_ERR(rphy->vbus_host)) {
+> +		ret = PTR_ERR(rphy->vbus_host);
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +
+> +		dev_info(dev, "vbus_host regulator is not assigned!\n");
+> +		rphy->vbus_host = NULL;
+> +	} else {
+> +		ret = regulator_enable(rphy->vbus_host);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	index = 0;
+> +	for_each_available_child_of_node(np, child_np) {
+> +		struct rockchip_usb2phy_port *rport = &rphy->ports[index];
+> +		struct phy *phy;
+> +
+> +		phy = devm_phy_create(dev, child_np, &rockchip_usb2phy_ops);
+> +		if (IS_ERR(phy)) {
+> +			dev_err(dev, "failed to create phy\n");
+> +			ret = PTR_ERR(phy);
+> +			goto put_child;
+> +		}
+> +
+> +		rport->phy = phy;
+> +
+> +		/* initialize otg/host port separately */
+> +		if (!of_node_cmp(child_np->name, "host-port")) {
+> +			ret = rockchip_usb2phy_host_port_init(rphy, rport,
+> +							      child_np);
+> +			if (ret)
+> +				goto put_child;
+> +		}
+> +
+> +		phy_set_drvdata(rport->phy, rport);
+> +
+> +		/* to prevent out of boundary */
+> +		if (++index >= rphy->phy_cfg->num_ports)
+> +			break;
+> +	}
+> +
+> +	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	return PTR_ERR_OR_ZERO(provider);
+> +
+> +put_child:
+> +	of_node_put(child_np);
+> +	return ret;
+> +}
+> +
+> +static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs = {
+> +	.num_ports	= 2,
+> +	.clkout_ctl	= { 0x0724, 15, 15, 1, 0 },
+> +	.port_cfgs	= {
+> +		[USB2PHY_PORT_HOST] = {
+> +			.phy_sus	= { 0x0728, 15, 0, 0, 0x1d1 },
+> +			.ls_det_en	= { 0x0680, 4, 4, 0, 1 },
+> +			.ls_det_st	= { 0x0690, 4, 4, 0, 1 },
+> +			.ls_det_clr	= { 0x06a0, 4, 4, 0, 1 },
+> +			.utmi_ls	= { 0x049c, 14, 13, 0, 1 },
+> +			.utmi_hstdet	= { 0x049c, 12, 12, 0, 1 }
+> +		}
+> +	},
+> +};
 
-Anyway, are there any U-Boot updates scheduled (by CompuLab)? And is
-there a way to contribute/discuss changes?
+I also realized that the rk3399 has two of those phy-blocks, so I think we'll 
+need to adapt your data storage mechanism a tiny bit. Maybe something like
+the following:
 
->>
->> Currently, IMO the most convenient way (for distributions) would be to
->> ship a boot.scr file changing the bootargs (which is not a "black box"
->> but a configuration file people are used to). If you don't want to mess
->> with bootargs/cmdline it is also possible to add the partition table via
->> boot.scr (or on-flash environment) with the fdt command; in this case it
->> wouldn't even be hidden in the u-boot binary (and no u-boot upgrade is
->> required to implement this).
-> 
-> That is exactly what I said: "to play the bootargs games".
-> 
->>
->> But yes, if someone wants to use the upstream kernel the boot.scr has to
->> be there; but IMO this is something distributions/people providing
->> binary files have to take care about. People using their own kernel
->> should take into account that they have to provide a bootloader config.
-> 
-> Yep. While if we provide the default layout in DT, all the above would be
-> unnecessary.
-> 
+In the dts:
 
-On the other hand, it will be very hard to change it afterwards. Maybe
-someone wants to upstream the U-Boot support and they insist on a
-different partition layout (e.g. uboot-failsafe) ...
-I never got why people decided to go without a on-device partition table
-for most raw flash chips. It is a pity that it has to be hard coded in
-the firmware/kernel/whatever.
+grf: syscon@ff770000 {
+       compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
+	...
+       u2phy: usb2-phy@700 {
+               compatible = "rockchip,rk3366-usb2phy";
+		reg = <0x700 0x2c>;
+		...
+       };
+};
 
-> So, if one will neither use the latest U-Boot, nor play the bootargs
-> games, the flash will stay a kind of "black box" - and that's a pity.
-> 
+In the driver
 
-As I stated before, IMHO using the latest U-Boot is no problem and is
-already required (for full support).
+static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs[] = {
+	{
+		.reg = 0x700,
+		.num_ports	= 2,
+		.clkout_ctl	= { 0x0724, 15, 15, 1, 0 },
+		.port_cfgs	= {
+			[USB2PHY_PORT_HOST] = {
+				.phy_sus	= { 0x0728, 15, 0, 0, 0x1d1 },
+				...
+			}
+		},
+	},
+};
 
-Cheers,
-Christopher
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+and in _probe then simply use the correct array entry matching the dts reg 
+property.
+
+On the rk3399 this would then probably be
+
+       u2phy0: phy@e450 {
+               compatible = "rockchip,rk3366-usb2phy";
+		reg = <0xe450 0x10>;
+		...
+	};
+
+       u2phy1: phy@e460 {
+               compatible = "rockchip,rk3366-usb2phy";
+		reg = <0xe460 0x10>;
+		...
+	};
+
+
+This is slightly similar to what we do with the emmc-phy. But also as the 
+usbphys differ in a lot of way, this is really only used to match to the data 
+block.
+
+This only affects the match-data selection and the rest of the driver does not 
+need to be changed for this.
+
+
+Heiko
+
+
+> +static const struct of_device_id rockchip_usb2phy_dt_match[] = {
+> +	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, rockchip_usb2phy_dt_match);
+> +
+> +static struct platform_driver rockchip_usb2phy_driver = {
+> +	.probe		= rockchip_usb2phy_probe,
+> +	.driver		= {
+> +		.name	= "rockchip-usb2phy",
+> +		.of_match_table = rockchip_usb2phy_dt_match,
+> +	},
+> +};
+> +module_platform_driver(rockchip_usb2phy_driver);
+> +
+> +MODULE_AUTHOR("Frank Wang <frank.wang@rock-chips.com>");
+> +MODULE_DESCRIPTION("Rockchip USB2.0 PHY driver");
+> +MODULE_LICENSE("GPL v2");
