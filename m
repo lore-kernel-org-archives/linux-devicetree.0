@@ -1,209 +1,126 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
-Date: Tue, 07 Jun 2016 11:54:38 +0200
-Message-ID: <3404512.IukckmNc6l@diego>
-References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com> <1465204804-31161-3-git-send-email-frank.wang@rock-chips.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
+Date: Tue, 7 Jun 2016 11:01:43 +0100
+Message-ID: <20160607100142.GA2633@leverpostej>
+References: <1465183229-24147-1-git-send-email-wmills@ti.com>
+ <1465183229-24147-5-git-send-email-wmills@ti.com>
+ <20160606085627.GA6831@leverpostej>
+ <20160606114321.GJ1041@n2100.armlinux.org.uk>
+ <20160606115918.GG6831@leverpostej>
+ <20160606123210.GL1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465204804-31161-3-git-send-email-frank.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wang <frank.wang@rock-chips.com>
-Cc: dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160606123210.GL1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Bill Mills <wmills-l0cyMroinI0@public.gmane.org>, t-kristo-l0cyMroinI0@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, r-woodruff2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
-
-Am Montag, 6. Juni 2016, 17:20:04 schrieb Frank Wang:
-> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
-> than rk3288 and before, and most of phy-related registers are also
-> different from the past, so a new phy driver is required necessarily.
+On Mon, Jun 06, 2016 at 01:32:10PM +0100, Russell King - ARM Linux wrote:
+> On Mon, Jun 06, 2016 at 12:59:18PM +0100, Mark Rutland wrote:
+> > I agree that whether or not devices are coherent in practice depends on
+> > the kernel's configuration. The flip side, as you point out, is that
+> > devices are coherent when a specific set of attributes are used.
+> > 
+> > i.e. that if you read dma-coherent as meaning "coherent iff Normal,
+> > Inner Shareable, Inner WB Cacheable, Outer WB Cacheable", then
+> > dma-coherent consistently describes the same thing, rather than
+> > depending on the configuration of the OS.
+> > 
+> > DT is a datastructure provided to the kernel, potentially without deep
+> > internal knowledge of that kernel configuration. Having a consistent
+> > rule that is independent of the kernel configuration seems worth aiming
+> > for.
 > 
-> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
-> ---
+> I think you've missed the point.  dma-coherent is _already_ dependent on
+> the kernel configuration. 
 
-[...]
+I understood this point. Please, allow me to clarify below, as I've
+evidently not done a good job so far.
 
-> +static int rockchip_usb2phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct device_node *child_np;
-> +	struct phy_provider *provider;
-> +	struct rockchip_usb2phy *rphy;
-> +	const struct of_device_id *match;
-> +	int index, ret;
-> +
-> +	rphy = devm_kzalloc(dev, sizeof(*rphy), GFP_KERNEL);
-> +	if (!rphy)
-> +		return -ENOMEM;
-> +
-> +	match = of_match_device(dev->driver->of_match_table, dev);
-> +	if (!match || !match->data) {
-> +		dev_err(dev, "phy configs are not assigned!\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!dev->parent || !dev->parent->of_node)
-> +		return -EINVAL;
-> +
-> +	rphy->grf = syscon_node_to_regmap(dev->parent->of_node);
-> +	if (IS_ERR(rphy->grf))
-> +		return PTR_ERR(rphy->grf);
-> +
-> +	rphy->dev = dev;
-> +	rphy->phy_cfg = match->data;
-> +	platform_set_drvdata(pdev, rphy);
-> +
-> +	ret = rockchip_usb2phy_clk480m_register(rphy);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register 480m output clock\n");
-> +		return ret;
-> +	}
-> +
-> +	rphy->vbus_host = devm_regulator_get_optional(dev, "vbus_host");
-> +	if (IS_ERR(rphy->vbus_host)) {
-> +		ret = PTR_ERR(rphy->vbus_host);
-> +		if (ret == -EPROBE_DEFER)
-> +			return ret;
-> +
-> +		dev_info(dev, "vbus_host regulator is not assigned!\n");
-> +		rphy->vbus_host = NULL;
-> +	} else {
-> +		ret = regulator_enable(rphy->vbus_host);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	index = 0;
-> +	for_each_available_child_of_node(np, child_np) {
-> +		struct rockchip_usb2phy_port *rport = &rphy->ports[index];
-> +		struct phy *phy;
-> +
-> +		phy = devm_phy_create(dev, child_np, &rockchip_usb2phy_ops);
-> +		if (IS_ERR(phy)) {
-> +			dev_err(dev, "failed to create phy\n");
-> +			ret = PTR_ERR(phy);
-> +			goto put_child;
-> +		}
-> +
-> +		rport->phy = phy;
-> +
-> +		/* initialize otg/host port separately */
-> +		if (!of_node_cmp(child_np->name, "host-port")) {
-> +			ret = rockchip_usb2phy_host_port_init(rphy, rport,
-> +							      child_np);
-> +			if (ret)
-> +				goto put_child;
-> +		}
-> +
-> +		phy_set_drvdata(rport->phy, rport);
-> +
-> +		/* to prevent out of boundary */
-> +		if (++index >= rphy->phy_cfg->num_ports)
-> +			break;
-> +	}
-> +
-> +	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	return PTR_ERR_OR_ZERO(provider);
-> +
-> +put_child:
-> +	of_node_put(child_np);
-> +	return ret;
-> +}
-> +
-> +static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs = {
-> +	.num_ports	= 2,
-> +	.clkout_ctl	= { 0x0724, 15, 15, 1, 0 },
-> +	.port_cfgs	= {
-> +		[USB2PHY_PORT_HOST] = {
-> +			.phy_sus	= { 0x0728, 15, 0, 0, 0x1d1 },
-> +			.ls_det_en	= { 0x0680, 4, 4, 0, 1 },
-> +			.ls_det_st	= { 0x0690, 4, 4, 0, 1 },
-> +			.ls_det_clr	= { 0x06a0, 4, 4, 0, 1 },
-> +			.utmi_ls	= { 0x049c, 14, 13, 0, 1 },
-> +			.utmi_hstdet	= { 0x049c, 12, 12, 0, 1 }
-> +		}
-> +	},
-> +};
+> "Having a consistent rule that is independent of the kernel
+> configuration" is already an impossibility, as I illustrated in my
+> previous message concerning Marvell Armada SoCs, and you also said in
+> your preceding paragraph!
 
-I also realized that the rk3399 has two of those phy-blocks, so I think we'll 
-need to adapt your data storage mechanism a tiny bit. Maybe something like
-the following:
+That's not quite what I said. What I said was that whether or not you
+end up with coherency depends on the kernel's configuration. That's why
+I pointed out that in practice, the only cases that work with today's
+mainline kernels are this for which the devices which are coherent with
+the kernel's usual memory attributes in an SMP configuration.
 
-In the dts:
+If you grep for dma-coherent in arch/arm/boot/dts, you'll find that
+appears in:
 
-grf: syscon@ff770000 {
-       compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
-	...
-       u2phy: usb2-phy@700 {
-               compatible = "rockchip,rk3366-usb2phy";
-		reg = <0x700 0x2c>;
-		...
-       };
-};
+arch/arm/boot/dts/artpec6.dtsi
+arch/arm/boot/dts/ecx-common.dtsi
+arch/arm/boot/dts/ls1021a.dtsi
 
-In the driver
+Which are all SMP Cortex-{A7,A9,A15} platforms, and:
 
-static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs[] = {
-	{
-		.reg = 0x700,
-		.num_ports	= 2,
-		.clkout_ctl	= { 0x0724, 15, 15, 1, 0 },
-		.port_cfgs	= {
-			[USB2PHY_PORT_HOST] = {
-				.phy_sus	= { 0x0728, 15, 0, 0, 0x1d1 },
-				...
-			}
-		},
-	},
-};
+arch/arm/boot/dts/k2e.dtsi
+arch/arm/boot/dts/k2e-netcp.dtsi
+arch/arm/boot/dts/k2hk-netcp.dtsi
+arch/arm/boot/dts/k2l-netcp.dtsi
+arch/arm/boot/dts/keystone.dtsi
 
-and in _probe then simply use the correct array entry matching the dts reg 
-property.
+For which, as far as I am aware, the dma-coherent property does not
+yield coherency with a mainline kernel, due to the requirement of Outer
+Shareable attributes.
 
-On the rk3399 this would then probably be
+So, if we codify the dma-coherent semantics as only matching the working
+case today, then it becomes consistent and independent of kernel
+configuration, and we can add properties to cater for the other cases,
+independent of kernel configuration.
 
-       u2phy0: phy@e450 {
-               compatible = "rockchip,rk3366-usb2phy";
-		reg = <0xe450 0x10>;
-		...
-	};
+> For example, if you clear the shared bit in the page tables on non-LPAE
+> SoCs, devices are no longer coherent.
 
-       u2phy1: phy@e460 {
-               compatible = "rockchip,rk3366-usb2phy";
-		reg = <0xe460 0x10>;
-		...
-	};
+Yes. This is a problem, but one that we already face. If we clarified
+the semantics as above, we would know that the device is simply not
+coherent.
 
+> DMA coherence on ARM _is_ already tightly linked with the kernel
+> configuration.  You already can't get away from that, so I think you
+> should give up trying to argue that point. :)
 
-This is slightly similar to what we do with the emmc-phy. But also as the 
-usbphys differ in a lot of way, this is really only used to match to the data 
-block.
+I hope that I've clarified my position w.r.t. coherence vs specification
+thereof. :)
 
-This only affects the match-data selection and the rest of the driver does not 
-need to be changed for this.
+> Whether devices are DMA coherent is a combination of two things:
+>  * is the device connected to a coherent bus.
+>  * is the system setup to allow coherency on that bus to work.
+> 
+> We capture the first through the dma-coherent property, which is clearly
+> a per-device property.  We ignore the second because we assume everyone
+> is going to configure the CPU side correctly.  That's untrue today, and
+> it's untrue not only because of Keystone II, but also because of other
+> SoCs as well which pre-date Keystone II.  We currently miss out on
+> considering that, because if we ignore it, we get something that works
+> for most platforms.
+> 
+> I don't see that adding a dma-outer-coherent property helps this - it's
+> muddying the waters somewhat - and it's also forcing additional complexity
+> into places where we shouldn't have it.  We would need to parse two
+> properties in the DMA API code, and then combine it with knowledge as
+> to how the system page tables have been setup.  If they've been setup
+> as inner sharable, then dma-coherent identifies whether the device is
+> coherent.  If they've been setup as outer sharable, then
+> dma-outer-coherent specifies that and dma-coherent is meaningless.
 
+I think that at minimum, the attributes devices require needs to be
+describe to the kernel, rather than being something we hope just
+happened to match.
 
-Heiko
+> Sounds like a recipe for confusion.
 
+Unfortunately, I think everything in this area leads to confusion. :(
 
-> +static const struct of_device_id rockchip_usb2phy_dt_match[] = {
-> +	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, rockchip_usb2phy_dt_match);
-> +
-> +static struct platform_driver rockchip_usb2phy_driver = {
-> +	.probe		= rockchip_usb2phy_probe,
-> +	.driver		= {
-> +		.name	= "rockchip-usb2phy",
-> +		.of_match_table = rockchip_usb2phy_dt_match,
-> +	},
-> +};
-> +module_platform_driver(rockchip_usb2phy_driver);
-> +
-> +MODULE_AUTHOR("Frank Wang <frank.wang@rock-chips.com>");
-> +MODULE_DESCRIPTION("Rockchip USB2.0 PHY driver");
-> +MODULE_LICENSE("GPL v2");
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
