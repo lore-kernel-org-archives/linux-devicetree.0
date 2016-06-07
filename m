@@ -1,177 +1,66 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v10 2/2] dmaengine: Add Xilinx zynqmp dma engine driver
- support
-Date: Tue, 7 Jun 2016 12:38:41 +0530
-Message-ID: <20160607070841.GJ16910@localhost>
-References: <1464765839-29018-1-git-send-email-appanad@xilinx.com>
- <1464765839-29018-2-git-send-email-appanad@xilinx.com>
+From: Liu Gang <Gang.Liu@nxp.com>
+Subject: [PATCH] arm64: dts: ls1043a: Add 'dma-coherent' for ls1043a PCI nodes
+Date: Tue, 7 Jun 2016 14:55:46 +0800
+Message-ID: <1465282546-28256-2-git-send-email-Gang.Liu@nxp.com>
+References: <1465282546-28256-1-git-send-email-Gang.Liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464765839-29018-2-git-send-email-appanad@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, svemula@xilinx.com, anirudh@xilinx.com, punnaia@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1465282546-28256-1-git-send-email-Gang.Liu@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, shawnguo@kernel.org, robh@kernel.org
+Cc: minghuan.lian@nxp.com, Liu Gang <Gang.Liu@nxp.com>, leoyang.li@nxp.com, mingkai.hu@nxp.com, scott.wood@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 01, 2016 at 12:53:59PM +0530, Kedareswara rao Appana wrote:
-> +config XILINX_ZYNQMP_DMA
-> +	tristate "Xilinx ZynqMP DMA Engine"
-> +	depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
-> +	select DMA_ENGINE
-> +	help
-> +	  Enable support for Xilinx ZynqMP DMA controller.
+The 'dma-coherent' indicates that the hardware IP block can ensure
+the coherency of the data transferred from/to the IP block. This
+can avoid the software cache flush/invalid actions, and improve
+the performance significantly.
 
-Kconfig and makefile is sorted alphabetically, pls update this
+The PCI IP block of ls1043a has this capability, so adding this
+feature to improve the PCI performance.
 
-> +#include <linux/bitops.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/dma/xilinx_dma.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/dmapool.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_dma.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/slab.h>
-> +#include <linux/clk.h>
-> +#include <linux/io-64-nonatomic-lo-hi.h>
+Signed-off-by: Liu Gang <Gang.Liu@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-do you really need so many headers?
-
-> +static inline void zynqmp_dma_writeq(struct zynqmp_dma_chan *chan, u32 reg,
-> +				     u64 value)
-> +{
-> +#if defined(CONFIG_PHYS_ADDR_T_64BIT)
-> +	writeq(value, chan->regs + reg);
-> +#else
-> +	lo_hi_writeq(value, chan->regs + reg);
-> +#endif
-
-why do you need this? can you explain..
-
-> +static inline bool zynqmp_dma_chan_is_idle(struct zynqmp_dma_chan *chan)
-> +{
-> +	return chan->idle;
-> +
-
-empty line not required
-
-
-> +static void zynqmp_dma_desc_config_eod(struct zynqmp_dma_chan *chan, void *desc)
-
-eod? 80 line?
-
-
-> +	val = 0;
-> +	if (chan->config.has_sg)
-> +		val |= ZYNQMP_DMA_POINT_TYPE_SG;
-
-why not val = and get rid of assign to 0 above
-
-> +	writel(val, chan->regs + ZYNQMP_DMA_CTRL0);
-
-okay why write 0 for no sg mode?
-
-> +
-> +	val = 0;
-> +	if (chan->is_dmacoherent) {
-> +		val |= ZYNQMP_DMA_AXCOHRNT;
-> +		val = (val & ~ZYNQMP_DMA_AXCACHE) |
-> +			(ZYNQMP_DMA_AXCACHE_VAL << ZYNQMP_DMA_AXCACHE_OFST);
-> +	}
-> +	writel(val, chan->regs + ZYNQMP_DMA_DSCR_ATTR);
-
-same comments here too
-
-> +	spin_lock_bh(&chan->lock);
-> +	desc = list_first_entry(&chan->free_list, struct zynqmp_dma_desc_sw,
-> +				 node);
-
-how about:
-
-	desc = list_first_entry(&chan->free_list,
-			struct zynqmp_dma_desc_sw, node);
-
-> +	chan->desc_free_cnt++;
-> +	list_add_tail(&sdesc->node, &chan->free_list);
-> +	list_for_each_entry_safe(child, next, &sdesc->tx_list, node) {
-> +		chan->desc_free_cnt++;
-> +		INIT_LIST_HEAD(&child->tx_list);
-> +		list_move_tail(&child->node, &chan->free_list);
-> +	}
-> +	INIT_LIST_HEAD(&sdesc->tx_list);
-
-why are you initializing list in free?
-
-> +static int zynqmp_dma_alloc_chan_resources(struct dma_chan *dchan)
-> +{
-> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
-> +	struct zynqmp_dma_desc_sw *desc;
-> +	int i;
-> +
-> +	chan->sw_desc_pool = kzalloc(sizeof(*desc) * ZYNQMP_DMA_NUM_DESCS,
-> +				     GFP_KERNEL);
-> +	if (!chan->sw_desc_pool)
-> +		return -ENOMEM;
-
-empty line here pls
-
-> +static enum dma_status zynqmp_dma_tx_status(struct dma_chan *dchan,
-> +				      dma_cookie_t cookie,
-> +				      struct dma_tx_state *txstate)
-> +{
-> +	return dma_cookie_status(dchan, cookie, txstate);
-
-why do you need this wrapper, assign dma_cookie_status as your status
-callback.
-
-> +int zynqmp_dma_channel_set_config(struct dma_chan *dchan,
-> +				  struct zynqmp_dma_config *cfg)
-> +{
-> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
-> +
-> +	chan->config.ovrfetch = cfg->ovrfetch;
-> +	chan->config.has_sg = cfg->has_sg;
-
-is this HW capability? if so why would anyone not like to use it!
-
-> +	chan->config.ratectrl = cfg->ratectrl;
-> +	chan->config.src_issue = cfg->src_issue;
-> +	chan->config.src_burst_len = cfg->src_burst_len;
-> +	chan->config.dst_burst_len = cfg->dst_burst_len;
-
-can you describe these parameters?
-
-How would a client know how to configure them?
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(zynqmp_dma_channel_set_config);
-
-Not _GPL?
-
-> +	chan->bus_width = ZYNQMP_DMA_BUS_WIDTH_64;
-> +	chan->config.src_issue = ZYNQMP_DMA_SRC_ISSUE_RST_VAL;
-> +	chan->config.dst_burst_len = ZYNQMP_DMA_AWLEN_RST_VAL;
-> +	chan->config.src_burst_len = ZYNQMP_DMA_ARLEN_RST_VAL;
-> +	err = of_property_read_u32(node, "xlnx,bus-width", &chan->bus_width);
-> +	if ((err < 0) && ((chan->bus_width != ZYNQMP_DMA_BUS_WIDTH_64) ||
-> +			  (chan->bus_width != ZYNQMP_DMA_BUS_WIDTH_128))) {
-> +		dev_err(zdev->dev, "invalid bus-width value");
-> +		return err;
-> +	}
-> +
-> +	chan->bus_width = chan->bus_width / 8;
-
-?
-
-why not update it once?
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index de0323b..21a30f7 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -479,6 +479,7 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
++			dma-coherent;
+ 			num-lanes = <4>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
+@@ -503,6 +504,7 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
++			dma-coherent;
+ 			num-lanes = <2>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
+@@ -527,6 +529,7 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
++			dma-coherent;
+ 			num-lanes = <2>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x50 0x00010000 0x0 0x00010000   /* downstream I/O */
 -- 
-~Vinod
+2.1.0.27.g96db324
