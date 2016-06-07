@@ -1,48 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
-Date: Tue, 7 Jun 2016 23:58:45 +0300
-Message-ID: <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
- <20160601005751.GG20527@verge.net.au>
- <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
- <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 2/2] gpio: Support cascaded GPIO chip lookup for OF
+Date: Tue, 7 Jun 2016 16:00:53 -0500
+Message-ID: <CAL_JsqLi4=6v-8B8eF-H1iQGa+3Zh=rzAWbCAJubnLNEitPaLQ@mail.gmail.com>
+References: <1464985616-11821-1-git-send-email-pantelis.antoniou@konsulko.com> <1464985616-11821-3-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464985616-11821-3-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2016 10:13 AM, Geert Uytterhoeven wrote:
++Mark R
 
-[...]
+On Fri, Jun 3, 2016 at 3:26 PM, Pantelis Antoniou
+<pantelis.antoniou@konsulko.com> wrote:
+> In certain cases it makes sense to create cascaded GPIO which
+> are not real GPIOs, merely point to the real backend GPIO chip.
 
->>> And that the system behaves sanely on suspend/resume.
->>
->>    I'd be thankful if you told me how to test that. :-)
+In what cases? Make it clear what this is for. Connectors of course,
+but are there any other use cases you have in mind.
+
+> In order to support this, cascaded of_xlate lookup need to be
+> performed.
 >
-> System suspend:
+> For example let's take a connector that we want to abstract
+> having two GPIO pins from different GPIO controllers, connector
+> pin #0 connected to gpioA controller with offset 10 and gpioB
+> with 4.
+
+A connector's GPIO number may or may not be related to connector pins.
+
+> In pseudo DT form this is analogous to:
 >
->     echo mem > /sys/power/state
+>         gpioA: gpioa@80000 {
+>                 compatible = "foocorp,gpio";
+>                 ...
+>         };
+>
+>         gpioB: gpiob@80800 {
+>                 compatible = "foocorp,gpio";
+>                 ....
+>         };
+>
+>         gpioC: controller_gpio {
+>                 compatible = "cascaded-gpio";
 
-    Oh. I know that one! :-)
+This compatible is kind of meaningless. I'd expect this to be a
+connector compatible.
 
-> System resume: You're gonna need a "wakeup-source" in your DTS, e.g. gpio-keys.
-> Serial should work too, echo "enabled" to the corresponding wakeup
-> file in /sys first.
+>                 gpios = <&gpioA 10>, <&gpioB 5>;
 
-    I'm afraid I couldn't find that file. All I saw were RPM controls...
+As we discussed at ELC, I think this should be modeled after
+interrupt-map property like this:
 
-> In case of issues, try "echo 0 > /sys/module/printk/parameters/console_suspend".
+gpio-map = <0 0 &soc_gpio 10 0>, <1 0 &soc_gpio 5 0>;
+gpio-map-mask = <0xff 0>;
 
-    There's no problems suspending, it's the resuming that's a problem for me.
+This is more flexible, a known pattern, and allows remapping of flag cells.
 
-> Good luck!
+Also, we will likely have interrupt capable GPIOs, so they are going
+to need interrupt-map anyway.
 
-    As usual, there was no luck. :-)
-
-WBR, Sergei
+Rob
