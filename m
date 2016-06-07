@@ -1,46 +1,129 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: Re: [PATCH v3] ASoC: rockchip: Add machine driver for
-	MAX98357A/RT5514/DA7219
-Date: Tue, 07 Jun 2016 20:47:01 +0800
-Message-ID: <5756C245.7010001@rock-chips.com>
-References: <1464267742-15312-1-git-send-email-zhengxing@rock-chips.com>
- <20160601144542.GA3835@rob-hp-laptop> <5751912C.6080904@rock-chips.com>
- <20160606235026.GP7510@sirena.org.uk> <5756363F.40208@rock-chips.com>
- <20160607104711.GR7510@sirena.org.uk> <5756B22F.9000105@rock-chips.com>
- <20160607120647.GV7510@sirena.org.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
+Date: Tue, 7 Jun 2016 13:55:05 +0100
+Message-ID: <20160607125505.GE2633@leverpostej>
+References: <1465183229-24147-1-git-send-email-wmills@ti.com>
+ <1465183229-24147-5-git-send-email-wmills@ti.com>
+ <20160606085627.GA6831@leverpostej>
+ <20160606114321.GJ1041@n2100.armlinux.org.uk>
+ <20160606115918.GG6831@leverpostej>
+ <20160606123210.GL1041@n2100.armlinux.org.uk>
+ <20160607100142.GA2633@leverpostej>
+ <20160607123248.GO1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160607120647.GV7510@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, dianders@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160607123248.GO1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Bill Mills <wmills-l0cyMroinI0@public.gmane.org>, t-kristo-l0cyMroinI0@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, r-woodruff2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywKCk9uIDIwMTblubQwNuaciDA35pelIDIwOjA2LCBNYXJrIEJyb3duIHdyb3RlOgo+
-IE9LLCB0aGVuIHRoZSBvcmlnaW5hbCBuYW1lIHByb2JhYmx5IG1ha2VzIHNvbWUgc2Vuc2UgdGhv
-dWdoIHJlYWxseQo+IHRoYXQncyBzdWNoIGFuIHVudXN1YWwgZGVzaWduIHRoYXQganVzdCBuYW1p
-bmcgaXQgYWZ0ZXIgdGhlIHNwZWNpZmljCj4gYm9hcmQgbWlnaHQgYmUgYmV0dGVyLCBpdCdzIG5v
-dCBsaWtlbHkgdG8gc2VlIGFueSByZXVzZSBJJ2QgZ3Vlc3MuClRoZXJlIGFyZSBub3Qgb25seSBv
-bmUgdHlwZSBvZiBib2FyZCB3aXRoIHRoaXMgYXVkaW8gY29ubmVjdGlvbiwgc28gSSAKdGhpbmsg
-d2UgZG9uJ3QgbmVlZCB0byBhZGQgc3BlY2lmaWMgYm9hcmQgbmFtZS4KClRoZXJlZm9yZSwgSSBp
-bnRlbmQgdG8gcmVjb3ZlciBvcmlnaW5hbCBuYW1lIAoocmszMzk5X21heDk4MzU3YV9ydDU1MTRf
-ZGE3MjE5LmMpLCBhbmQgZGVzY3JpcHRpb24gbGlrZSB0aGlzOgpzb3VuZCB7CiAgICAgY29tcGF0
-aWJsZSA9ICJyb2NrY2hpcCxyazMzOTktbWF4OTgzNTdhLXJ0NTUxNC1kYTcyMTkiOwogICAgIHJv
-Y2tjaGlwLGNwdSA9IDwmaTJzMCAmaTJzMCAmaTJzMD47ICAgICAgICAgICAgICAgLy8gbm90ZSAo
-d2lsbCBub3QgCmJlIHNlbnQgdG8gdXBzdHJlYW0pOiBJbiBmdXR1cmUsIHdlIG1heSB1c2UgdGhl
-IGkyczEgb3IgaTJzMi4uLgogICAgIHJvY2tjaGlwLGNvZGVjID0gPCZtYXg5ODM1N2EgJmhlYWRz
-ZXRjb2RlYyAmY29kZWM+Owp9OwoKQ291bGQgeW91IHBsZWFzZSBhZ3JlZSB0byBkbyB0aGlzPwoK
-VGhhbmtzLgoKLS0gCi0gWGluZyBaaGVuZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxz
-YS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlz
-dGluZm8vYWxzYS1kZXZlbAo=
+On Tue, Jun 07, 2016 at 01:32:48PM +0100, Russell King - ARM Linux wrote:
+> On Tue, Jun 07, 2016 at 11:01:43AM +0100, Mark Rutland wrote:
+> > So, if we codify the dma-coherent semantics as only matching the working
+> > case today, then it becomes consistent and independent of kernel
+> > configuration, and we can add properties to cater for the other cases,
+> > independent of kernel configuration.
+> 
+> That's where our points of view differ.  You claim that it becomes
+> independent of the kernel configuration.  I'm saying that's total
+> rubbish, because it's dependent on the kernel setting the CPU page
+> tables up as it does today.
+
+The key point is that *description* of the requirements for coherency
+becomes independent of kernel configuration. Yes, whether or not a
+kernel can support those depends on the configuration.
+
+> If we set them up differently, then it doesn't work so well.  This
+> is evidenced by Marvell Armada uniprocessor platforms, where they
+> are DMA coherent provided that the S bit is set.  However, because
+> they are uniprocessor platforms, the kernel sets the page tables up
+> with the S bit clear.  That means that the kernel configures the
+> system in a way which results in it being non-coherent.
+> 
+> So here, we have an example of why your position is actually incorrect.
+> dma-coherent does *not* give a "consistent and independent of kernel
+> configuration" property - it's inherently tied to how the kernel has
+> setup the page tables.
+
+Sorry, but that is not quite what I said.
+
+I said that if you read dma-coherent as specifying *the requirements*
+for coherency (i.e. "coherent iff Normal, Inner Shareable, Inner WB
+Cacheable, Outer WB Cacheable"), rather than specifying that there is
+coherency given some unspecified requirements, then it is possible to
+use it in a manner which is consistent and independent of kernel
+configuration. If the kernel uses memory attributes that don't meet
+those requirements, it can know that the device cannot be used in a
+coherent manner.
+
+If we take that stance, then we can cater for other requirements (e.g.
+Outer Shareable on Keystone) by having properties to specify those
+requirements (e.g. dma-outer-coherent). The tricky part is how the
+kernel decides how best to use that information, but that is a problem
+regardless.
+
+> > > For example, if you clear the shared bit in the page tables on non-LPAE
+> > > SoCs, devices are no longer coherent.
+> > 
+> > Yes. This is a problem, but one that we already face. If we clarified
+> > the semantics as above, we would know that the device is simply not
+> > coherent.
+> 
+> How?  We would need to introduce some flag which is passed from the
+> architecture code into the OF code to disable the effect of dma-coherent,
+> making of_dma_is_coherent() return false if the S bit is clear.
+
+Yes, we would need to either alter the OF code, or some code which makes
+use of this. Surely it's possible to have this logic in an arch
+callback?
+
+> > > Whether devices are DMA coherent is a combination of two things:
+> > >  * is the device connected to a coherent bus.
+> > >  * is the system setup to allow coherency on that bus to work.
+> > > 
+> > > We capture the first through the dma-coherent property, which is clearly
+> > > a per-device property.  We ignore the second because we assume everyone
+> > > is going to configure the CPU side correctly.  That's untrue today, and
+> > > it's untrue not only because of Keystone II, but also because of other
+> > > SoCs as well which pre-date Keystone II.  We currently miss out on
+> > > considering that, because if we ignore it, we get something that works
+> > > for most platforms.
+> > > 
+> > > I don't see that adding a dma-outer-coherent property helps this - it's
+> > > muddying the waters somewhat - and it's also forcing additional complexity
+> > > into places where we shouldn't have it.  We would need to parse two
+> > > properties in the DMA API code, and then combine it with knowledge as
+> > > to how the system page tables have been setup.  If they've been setup
+> > > as inner sharable, then dma-coherent identifies whether the device is
+> > > coherent.  If they've been setup as outer sharable, then
+> > > dma-outer-coherent specifies that and dma-coherent is meaningless.
+> > 
+> > I think that at minimum, the attributes devices require needs to be
+> > describe to the kernel, rather than being something we hope just
+> > happened to match.
+> 
+> Yuck.  Seriously?  What happens when we have two devices which have
+> different required attributes for the CPU mapping?  Should architecture
+> code have to parse the entire DT tree to work out what attributes each
+> device needs, and try to then work out how the CPU page tables should
+> be setup?
+
+No, we do not necessarily have to try to dynamically handle every
+possible case, especially as the vastly common case is the one I called
+out above.
+
+For those boards where we're going to have some code special-casing
+those regardless, automatically deciding to have the kernel use the
+preferred set of attributes is fine. However, to do this I don't think
+we should provide board+kernel specific semantics to dma-coherent, and
+should at least precisely specify the coherency requirements.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
