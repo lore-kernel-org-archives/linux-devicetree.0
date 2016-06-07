@@ -1,50 +1,108 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: rsnd: adg :: AUDIO-CLKOUTn can synchronizes with
- L/R clock.
-Date: Tue, 7 Jun 2016 11:54:18 +0100
-Message-ID: <20160607105418.GS7510@sirena.org.uk>
-References: <87oa7dtti3.wl%kuninori.morimoto.gx@renesas.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V4 1/2] thermal: max77620: Add DT binding doc for thermal driver
+Date: Tue, 7 Jun 2016 16:22:33 +0530
+Message-ID: <1465296754-13186-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dQ2XShfnd5GHxhN7"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87oa7dtti3.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Simon <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: edubezval@gmail.com, rui.zhang@intel.com, robh+dt@kernel.org, Keerthy <a0393675@ti.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+Maxim Semiconductor MAX77620 supports alarm interrupts when
+its die temperature crosses 120C and 140C. These threshold
+temperatures are not configurable.
 
---dQ2XShfnd5GHxhN7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add DT binding document to details out the DT property related
+to MAX77620 thermal functionality.
 
-On Tue, Jun 07, 2016 at 06:21:33AM +0000, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->=20
-> AUDIO-CLKOUTn can synchronizes with L/R clock, and Salvator board
-> needs it. Otherwise, specific frequency sound will be noisy.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
-Why would a user not want these clocks to be synchronous?  A lot of
-CODECs will at least have better performance if their master clock is
-synchronous to the audio clocks so it'd be a better default, is there an
-advantage to not doing it?
+---
+Changes from V3:
+Added example node for the critical trips also as critical.
+Also change the warning as "hot" type.
 
---dQ2XShfnd5GHxhN7
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/thermal/thermal-max77620.txt          | 70 ++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-max77620.txt
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXVqfZAAoJECTWi3JdVIfQ9+UH/AtRat4T1p40EOeIbRog5Uta
-xxm9vf67ONbc7epr5eLRLcyVp06sy/X5cuRVw1wQwNg1nPKcn83JiAId073TnSQD
-sFCd0DOy3t75+7GgLCg2USnEXPADfTRLdwraacJR+YgSSNVyiVPJFIbRbnYRU8wn
-zOhT3lY7ab6R3CkYfI7MpBf4072eirPoUgCccahIQsyVLS1okV3/310mmdovn6HQ
-lL1Mu8yJsgUgP5oadZZt/eh2kqLXLxqM5jrjagWoU785dpSRcRekO4Fbk+0hbkkZ
-hS/4DIX5pzITUA3J7jFfRRp8cGuEIv4MiN37o5G3kSAzlE8tqcjoltZJH8Bogt8=
-=6wW0
------END PGP SIGNATURE-----
-
---dQ2XShfnd5GHxhN7--
+diff --git a/Documentation/devicetree/bindings/thermal/thermal-max77620.txt b/Documentation/devicetree/bindings/thermal/thermal-max77620.txt
+new file mode 100644
+index 0000000..323a3b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/thermal-max77620.txt
+@@ -0,0 +1,70 @@
++Thermal driver for MAX77620 Power management IC from Maxim Semiconductor.
++
++Maxim Semiconductor MAX77620 supports alarm interrupts when its
++die temperature crosses 120C and 140C. These threshold temperatures
++are not configurable. Device does not provide the real temperature
++of die other than just indicating whether temperature is above or
++below threshold level.
++
++Required properties:
++-------------------
++#thermal-sensor-cells:	Please refer <devicetree/bindings/thermal/thermal.txt>
++			for more details.
++			The value must be 0.
++
++For more details, please refer generic thermal DT binding document
++<devicetree/bindings/thermal/thermal.txt>.
++
++Please refer <devicetree/bindings/mfd/max77620.txt> for mfd DT binding
++document for the MAX77620.
++
++Example:
++--------
++#include <dt-bindings/mfd/max77620.h>
++#include <dt-bindings/thermal/thermal.h>
++...
++
++i2c@7000d000 {
++	spmic: max77620@3c {
++		compatible = "maxim,max77620";
++		:::::
++		#thermal-sensor-cells = <0>;
++		:::
++	};
++};
++
++cool_dev: cool-dev {
++	compatible = "cooling-dev";
++	#cooling-cells = <2>;
++};
++
++thermal-zones {
++	PMIC-Die {
++		polling-delay = <0>;
++		polling-delay-passive = <0>;
++		thermal-sensors = <&spmic>;
++
++		trips {
++			pmic_die_warn_temp_thresh: hot-die {
++				temperature = <120000>;
++				type = "hot";
++				hysteresis = <0>;
++			};
++
++			pmic_die_cirt_temp_thresh: cirtical-die {
++				temperature = <140000>;
++				type = "critical";
++				hysteresis = <0>;
++			};
++		};
++
++		cooling-maps {
++			map0 {
++				trip = <&pmic_die_warn_temp_thresh>;
++				cooling-device = <&cool_dev THERMAL_NO_LIMIT
++						  THERMAL_NO_LIMIT>;
++				contribution = <100>;
++			};
++		};
++	};
++};
+-- 
+2.1.4
