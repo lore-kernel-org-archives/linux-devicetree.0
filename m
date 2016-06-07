@@ -1,33 +1,61 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v4 14/14] Documentation: remove the constraint on the distances of node pairs
-Date: Tue, 7 Jun 2016 16:08:18 +0800
-Message-ID: <1465286898-13828-15-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v4 05/14] arm64/numa: avoid inconsistent information to be
+ printed
+Date: Tue, 7 Jun 2016 16:08:09 +0800
+Message-ID: <1465286898-13828-6-git-send-email-thunder.leizhen@huawei.com>
 References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Xinwei Hu <huxinwei@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Update documentation. This limit is unneccessary.
+numa_init(of_numa_init) may returned error because of numa configuration
+error. So "No NUMA configuration found" is inaccurate. In fact, specific
+configuration error information should be immediately printed by the
+testing branch.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- Documentation/devicetree/bindings/numa.txt | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/mm/numa.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
-index 21b3505..c0ea4a7 100644
---- a/Documentation/devicetree/bindings/numa.txt
-+++ b/Documentation/devicetree/bindings/numa.txt
-@@ -48,7 +48,6 @@ distance (memory latency) between all numa nodes.
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 2601660..1b9622c 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -338,8 +338,10 @@ static int __init numa_init(int (*init_func)(void))
+ 	if (ret < 0)
+ 		return ret;
 
-   Note:
- 	1. Each entry represents distance from first node to second node.
--	The distances are equal in either direction.
- 	2. The distance from a node to self (local distance) is represented
- 	with value 10 and all internode distance should be represented with
- 	a value greater than 10.
+-	if (nodes_empty(numa_nodes_parsed))
++	if (nodes_empty(numa_nodes_parsed)) {
++		pr_info("No NUMA configuration found\n");
+ 		return -EINVAL;
++	}
+
+ 	ret = numa_register_nodes();
+ 	if (ret < 0)
+@@ -370,8 +372,6 @@ static int __init dummy_numa_init(void)
+
+ 	if (numa_off)
+ 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+-	else
+-		pr_info("No NUMA configuration found\n");
+ 	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+ 	       0LLU, PFN_PHYS(max_pfn) - 1);
+
+--
+2.5.0
