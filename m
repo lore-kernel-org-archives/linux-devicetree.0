@@ -1,59 +1,51 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] mfd: twl6040: Handle mclk used for HPPLL and optional
- internal clock source
-Date: Tue, 7 Jun 2016 12:23:02 +0300
-Message-ID: <b8e0eb46-8697-ef02-eef4-2d3fe8136707@ti.com>
-References: <1462965209-6955-1-git-send-email-peter.ujfalusi@ti.com>
- <20160516150231.GA5527@rob-hp-laptop>
- <7d5e3117-a014-0107-bf75-775401834e02@ti.com> <20160607091739.GD18047@dell>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 06/12] power: pwrseq: simple: Add support for regulator
+ and generic property
+Date: Tue, 07 Jun 2016 11:29:02 +0200
+Message-ID: <575693DE.2010603@samsung.com>
+References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
+ <1464768141-25420-7-git-send-email-k.kozlowski@samsung.com>
+ <20160603020218.GA19436@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160607091739.GD18047@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20160603020218.GA19436@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/16 12:17, Lee Jones wrote:
-> On Tue, 07 Jun 2016, Peter Ujfalusi wrote:
->=20
->> Lee,
->>
->> On 05/16/16 18:02, Rob Herring wrote:
->>> On Wed, May 11, 2016 at 02:13:29PM +0300, Peter Ujfalusi wrote:
->>>> On some boards, like omap5-uevm the MCLK is gated by default and i=
-n order
->>>> to be able to use the High performance modes of twl6040 it need to=
- be
->>>> enabled by SW.
->>>> Add support for handling the MCLK source clock via CCF.
->>>> At the same time lover the print priority of the notification that=
- the 32K
->>>> clock is not proveded so it is not going to be handled by the driv=
-er.
->>>>
->>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/mfd/twl6040.txt |  4 +--
->>>
->>> Acked-by: Rob Herring <robh@kernel.org>
->>
->> Can you take a look at this patch if it is OK to pick?
->=20
-> Yes, when I get around to it.
->=20
-> I currently have 75 patch review to conduct in my inbox.  Some of the=
-m
-> are quite large and complex.  They will be seen to in the order they
-> were sent, and you just bumped this patch to "sent today". ;)
+On 06/03/2016 04:02 AM, Rob Herring wrote:
+>>  Optional properties:
+>>  - reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
+>> @@ -16,6 +22,7 @@ Optional properties:
+>>    See ../clocks/clock-bindings.txt for details.
+>>  - clock-names : Must include the following entry:
+>>    "ext_clock" (External clock provided to the card).
+>> +- ext-supply : External regulator supply
+> 
+> What happens when there are 2 supplies?
+> 
+> I'd prefer the name not be genericish and use the real supply names. 
+> Then the power seq code should just turn on all supplies it finds. If 
+> the order or timing to turn on matters, then sorry, no generic sequence.
 
-I'm sorry for this. I did not intended to interfere with your workflow.=
- I will
-be more patient next time, it is hard to know if I should bump the thre=
-ad or
-resend or wait.
+I think the generic part for regulators might be a problem. Regulator
+API requires a name for the supply... it cannot get "something" or
+"everything".
 
-Sorry again,
-P=C3=A9ter
+The driver could attach itself to any kind of node (where power-sequence
+property exists) so the supply name depends on the bindings of device
+(not bindings of power sequence driver).
+
+The power sequence driver could however iterate over child properties
+and get the names of all supplies. It is a little bit ugly...
+
+Best regards,
+Krzysztof
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
