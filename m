@@ -1,115 +1,83 @@
-From: Songjun Wu <songjun.wu@atmel.com>
-Subject: [PATCH v4 2/2] [media] atmel-isc: DT binding for Image Sensor Controller driver
-Date: Tue, 7 Jun 2016 15:11:53 +0800
-Message-ID: <1465283513-30224-3-git-send-email-songjun.wu@atmel.com>
-References: <1465283513-30224-1-git-send-email-songjun.wu@atmel.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] Documentation: bindings: add DT documentation for
+ Rockchip USB2PHY
+Date: Tue, 7 Jun 2016 13:15:12 +0530
+Message-ID: <57567B88.7000607@ti.com>
+References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com>
+ <1465204804-31161-2-git-send-email-frank.wang@rock-chips.com>
+ <20160606112754.GE6831@leverpostej> <7083100.uVXA4CkAgE@diego>
+ <2b3e9b0b-f17e-063b-6eb0-2390bd87901b@rock-chips.com>
+ <9a34e448-2b4d-4797-2e6b-c7a36c03b597@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465283513-30224-1-git-send-email-songjun.wu@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: laurent.pinchart@ideasonboard.com, nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, robh@kernel.org
-Cc: Songjun Wu <songjun.wu@atmel.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <9a34e448-2b4d-4797-2e6b-c7a36c03b597-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DT binding documentation for ISC driver.
-
-Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
----
-
-Changes in v4:
-- Remove the isc clock nodes.
-
-Changes in v3:
-- Remove the 'atmel,sensor-preferred'.
-- Modify the isc clock node according to the Rob's remarks.
-
-Changes in v2:
-- Remove the unit address of the endpoint.
-- Add the unit address to the clock node.
-- Avoid using underscores in node names.
-- Drop the "0x" in the unit address of the i2c node.
-- Modify the description of 'atmel,sensor-preferred'.
-- Add the description for the ISC internal clock.
-
- .../devicetree/bindings/media/atmel-isc.txt        | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-
-diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
-new file mode 100644
-index 0000000..3f83524
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-@@ -0,0 +1,69 @@
-+Atmel Image Sensor Controller (ISC)
-+----------------------------------------------
-+
-+Required properties for ISC:
-+- compatible
-+	Must be "atmel,sama5d2-isc".
-+- reg
-+	Physical base address and length of the registers set for the device.
-+- interrupts
-+	Should contain IRQ line for the ISC.
-+- clocks
-+	List of clock specifiers, corresponding to entries in
-+	the clock-names property;
-+	Please refer to clock-bindings.txt.
-+- clock-names
-+	Required elements: "hclock".
-+- #clock-cells
-+	Should be 0.
-+- clock-output-names
-+	Should contain the name of the clock driving the sensor master clock.
-+- pinctrl-names, pinctrl-0
-+	Please refer to pinctrl-bindings.txt.
-+
-+
-+ISC supports a single port node with parallel bus. It should contain one
-+'port' child node with child 'endpoint' node. Please refer to the bindings
-+defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+isc: isc@f0008000 {
-+	compatible = "atmel,sama5d2-isc";
-+	reg = <0xf0008000 0x4000>;
-+	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
-+	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-+	clock-names = "hclock";
-+	#clock-cells = <0>;
-+	clock-output-names = "isc-mck";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		isc_0: endpoint {
-+			remote-endpoint = <&ov7740_0>;
-+			hsync-active = <1>;
-+			vsync-active = <0>;
-+			pclk-sample = <1>;
-+		};
-+	};
-+
-+
-+};
-+
-+i2c1: i2c@fc028000 {
-+	ov7740: camera@21 {
-+	compatible = "ovti,ov7740";
-+	reg = <0x21>;
-+
-+	clocks = <&isc>;
-+	clock-names = "xvclk";
-+	assigned-clocks = <&isc>;
-+	assigned-clock-rates = <24000000>;
-+
-+	port {
-+		ov7740_0: endpoint {
-+			remote-endpoint = <&isc_0>;
-+		};
-+	};
-+};
--- 
-2.7.4
+SGksCgpPbiBUdWVzZGF5IDA3IEp1bmUgMjAxNiAwOTowMSBBTSwgRnJhbmsgV2FuZyB3cm90ZToK
+PiBIaSBIZWlrbywKPiAKPiBPbiAyMDE2LzYvNyAxMDo1OSwgRnJhbmsgV2FuZyB3cm90ZToKPj4g
+SGkgSGVpa28gJiBNYXJrLAo+Pgo+PiBPbiAyMDE2LzYvNiAyMDozMywgSGVpa28gU3TDvGJuZXIg
+d3JvdGU6Cj4+PiBBbSBNb250YWcsIDYuIEp1bmkgMjAxNiwgMTI6Mjc6NTQgc2NocmllYiBNYXJr
+IFJ1dGxhbmQ6Cj4+Pj4gT24gTW9uLCBKdW4gMDYsIDIwMTYgYXQgMDU6MjA6MDNQTSArMDgwMCwg
+RnJhbmsgV2FuZyB3cm90ZToKPj4+Pj4gU2lnbmVkLW9mZi1ieTogRnJhbmsgV2FuZyA8ZnJhbmsu
+d2FuZ0Byb2NrLWNoaXBzLmNvbT4KPj4+Pj4gLS0tCj4+Pj4+Cj4+Pj4+IENoYW5nZXMgaW4gdjM6
+Cj4+Pj4+ICAgLSBBZGRlZCAnY2xvY2tzJyBhbmQgJ2Nsb2NrLW5hbWVzJyBvcHRpb25hbCBwcm9w
+ZXJ0aWVzLgo+Pj4+PiAgIC0gU3BlY2lmaWVkICdvdGctcG9ydCcgYW5kICdob3N0LXBvcnQnIGFz
+IHRoZSBzdWItbm9kZSBuYW1lLgo+Pj4+Pgo+Pj4+PiBDaGFuZ2VzIGluIHYyOgo+Pj4+PiAgIC0g
+Q2hhbmdlZCB2YnVzX2hvc3Qgb3B0aW9uYWwgcHJvcGVydHkgZnJvbSBncGlvIHRvIHJlZ3VsYXRv
+ci4KPj4+Pj4gICAtIFNwZWNpZmllZCB2YnVzX290Zy1zdXBwbHkgb3B0aW9uYWwgcHJvcGVydHku
+Cj4+Pj4+ICAgLSBTcGVjaWZpZWQgb3RnX2lkIGFuZCBvdGdfYnZhbGlkIHByb3BlcnR5Lgo+Pj4+
+PiAgICAgLi4uL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtaW5uby11c2IyLnR4dCAgICAgICAg
+fCA2MAo+Pj4+PiAgICsrKysrKysrKysrKysrKysrKysrIDEgZmlsZSBjaGFuZ2VkLCA2MCBpbnNl
+cnRpb25zKCspCj4+Pj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4+Pj4+IERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXJvY2tjaGlwLWlubm8tdXNiMi50eHQ+Cj4+Pj4+
+IGRpZmYgLS1naXQKPj4+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5
+L3BoeS1yb2NrY2hpcC1pbm5vLXVzYjIudHh0Cj4+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtaW5uby11c2IyLnR4dCBuZXcKPj4+Pj4gZmls
+ZSBtb2RlIDEwMDY0NAo+Pj4+PiBpbmRleCAwMDAwMDAwLi4wYjRiYmJiCj4+Pj4+IC0tLSAvZGV2
+L251bGwKPj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9w
+aHktcm9ja2NoaXAtaW5uby11c2IyLnR4dAo+Pj4+PiBAQCAtMCwwICsxLDYwIEBACj4+Pj4+ICtS
+T0NLQ0hJUCBVU0IyLjAgUEhZIFdJVEggSU5OTyBJUCBCTE9DSwo+Pj4+PiArCj4+Pj4+ICtSZXF1
+aXJlZCBwcm9wZXJ0aWVzIChwaHkgKHBhcmVudCkgbm9kZSk6Cj4+Pj4+ICsgLSBjb21wYXRpYmxl
+IDogc2hvdWxkIGJlIG9uZSBvZiB0aGUgbGlzdGVkIGNvbXBhdGlibGVzOgo+Pj4+PiArICAgICog
+InJvY2tjaGlwLHJrMzM2Ni11c2IycGh5Igo+Pj4+PiArICAgICogInJvY2tjaGlwLHJrMzM5OS11
+c2IycGh5Igo+Pj4+PiArIC0gI2Nsb2NrLWNlbGxzIDogc2hvdWxkIGJlIDAuCj4+Pj4+ICsgLSBj
+bG9jay1vdXRwdXQtbmFtZXMgOiBzcGVjaWZ5IHRoZSA0ODBtIG91dHB1dCBjbG9jayBuYW1lLgo+
+Pj4+PiArCj4+Pj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+Pj4+PiArIC0gY2xvY2tzIDogcGhh
+bmRsZSArIHBoeSBzcGVjaWZpZXIgcGFpciwgZm9yIHRoZSBpbnB1dCBjbG9jayBvZiBwaHkuCj4+
+Pj4+ICsgLSBjbG9jay1uYW1lcyA6IGlucHV0IGNsb2NrIG5hbWUgb2YgcGh5LCBtdXN0IGJlICJw
+aHljbGsiLgo+Pj4+PiArIC0gdmJ1c19ob3N0LXN1cHBseSA6IHBoYW5kbGUgdG8gYSByZWd1bGF0
+b3IgdGhhdCBzdXBwbGllcyBob3N0IHZidXMuCj4+Pj4+ICsgLSB2YnVzX290Zy1zdXBwbHkgOiBw
+aGFuZGxlIHRvIGEgcmVndWxhdG9yIHRoYXQgc3VwcGxpZXMgb3RnIHZidXMuCj4+Pj4gTml0OiBz
+L18vLS8gaGVyZS4KPj4+IFNvbWV0aGluZyBJIG9ubHkgc3R1bWJsZWQgb3ZlciB5ZXN0ZXJkYXkg
+Zm9yIHRoZSBmaXJzdCB0aW1lIG9uIG15IHJrMzI4OC0KPj4+IHBvcG1ldGFsOiBUaGUgcGh5IHN1
+Ym5vZGVzIHNlZW0gdG8gYmUgYWJsZSB0byB1c2UgYSBnZW5lcmljIHBoeS1zdXBwbHkKPj4+IHBy
+b3BlcnR5IGZyb20gaW5zaWRlIHRoZSBwaHktY29yZSBpdHNlbGYsIHNlZToKPj4+Cj4+PiBodHRw
+czovL2dpdGh1Yi5jb20vbW1pbmQvbGludXgtcm9ja2NoaXAvY29tbWl0LzkzNzM5ZjUyMWZjNjVm
+NDQ1MjRiMDBjOWFhZjZkYjQ2YmNhOTRlMDIjZGlmZi1kZGYzZTQ1ZWJiNzUzZDZkZWJmNTcwMjIw
+MDNhMWE1N1I1OTcKPj4+Cj4+Pgo+Pj4gZm9yIG15IFdJUCBjb2RlIGZvciB0aGF0IG90aGVyIGJv
+YXJkLgo+Pj4KPj4KPj4gQWgsIGdvb2QgY29tbWVudHMhIEkgd2lsbCB0cnkgbGF0ZXIsIGlmIGl0
+IGlzIHByYWN0aWNhYmxlLCBJIHNoYWxsIGNvcnJlY3QgaXQKPj4gaW50byB0aGUgbmV4dCBwYXRj
+aGVzIChwYXRjaCB2NCkuCj4+Cj4gCj4gSSBhbSBzb3JyeSB0byB0ZWxsIHlvdSB0aGF0IHNlZW1z
+IHVud29ya2FibGUsIGJlY2F1c2Ugd2UgaGF2ZSB0d28gc3ViLW5vZGVzCj4gKHBoeS1wb3J0cykg
+aW4gb25lIHBhcmVudC1ub2RlIChwaHkpLAo+IHdoYXQgaXMgbW9yZSwgdGhlICdwaHktc3VwcGx5
+JyBwcm9wZXJ0eSBjYW4gb25seSBwdXQgaW50byBwYXJlbnQtbm9kZSwgSQo+IGJlbGlldmUgaXQg
+Y2FuIG5vdCBiZSBkaWZmZXJlbnRpYXRlZCB0eXBlcyBvZiBwb3J0cy4KCidwaHktc3VwcGx5JyBp
+cyBhIHByb3BlcnR5IG9mIHRoZSBwaHkgbm9kZSBhbmQgbm90IHRoZSAncGh5LXByb3ZpZGVyJyBu
+b2RlLiBTbwpJTU8gdGhpcyBzaG91bGQgd29yay4gV2hhdCBwcm9ibGVtIGRvIHlvdSBzZWU/CgpU
+aGFua3MKS2lzaG9uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LXJvY2tjaGlwCg==
