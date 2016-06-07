@@ -1,86 +1,53 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv2] backlight: pwm_bl: disable PWM when 'duty_cycle' is zero
-Date: Tue,  7 Jun 2016 12:13:49 +0200
-Message-ID: <1465294429-8570-1-git-send-email-LW@KARO-electronics.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 0/6] Add R8A7794/SILK sound DT support
+Date: Tue, 7 Jun 2016 13:31:07 +0300
+Message-ID: <56af1dfd-45cc-fc55-0d8f-8a01a98a9499@cogentembedded.com>
+References: <2378837.cigT3tNQPe@wasted.cogentembedded.com>
+ <7d19e749-8264-9004-64f4-aefabda699c6@cogentembedded.com>
+ <b77ad169-c9d1-4d67-0973-fc9639ddb613@cogentembedded.com>
+ <20160607003736.GB20591@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160607003736.GB20591@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-'brightness' is usually an index into a table of duty_cycle values,
-where the value at index 0 may well be non-zero
-(tegra30-apalis-eval.dts and tegra30-colibri-eval-v3.dts are real-life
-examples).
-Thus brightness =3D=3D 0 does not necessarily mean that the PWM output
-will be inactive.
-Check for 'duty_cycle =3D=3D 0' rather than 'brightness =3D=3D 0' to de=
-cide
-whether to disable the PWM.
+Hello.
 
-Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
----
-Changes wrt. v1:
-  - update binding docs to reflect the change
+On 6/7/2016 3:37 AM, Simon Horman wrote:
 
- .../devicetree/bindings/leds/backlight/pwm-backlight.txt         | 9 +=
-+++++---
- drivers/video/backlight/pwm_bl.c                                 | 4 +=
-+--
- 2 files changed, 8 insertions(+), 5 deletions(-)
+>>>>   Here's the set of 6 patches against Simon Horman's 'renesas.git' repo,
+>>>> 'renesas-devel-20160509-v4.6-rc7' tag. I'm adding the sound device tree support
+>>>> for the R8A7794 SoC based SILK board.
+>>>>
+>>>> [1/6] ARM: dts: r8a7794: add audio clocks
+>>>> [2/6] ARM: dts: r8a7794: add MSTP5 clocks
+>>>> [3/6] ARM: dts: r8a7794: add MSTP10 clocks
+>>>> [4/6] ARM: dts: r8a7794: add Audio-DMAC support
+>>>> [5/6] ARM: dts: r8a7794: add sound support
+>>>> [6/6] ARM: dts: silk: add sound support
+>>>
+>>>   Oops, forgot to mention that patch #5 depends on the R-Car sound patch
+>>> posted yesterday in order to get interpreted as intended (it uses a disabled
+>>> SRC node).
+>>
+>>   Simon, that patch has already hit Linus' tree but this series seems to be
+>> stuck. Please merge!
+>
+> Hi Sergei,
+>
+> there seem to be some outstanding review comments for v3 of this patchset.
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backl=
-ight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlig=
-ht.txt
-index 764db86..95fa8a9 100644
---- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.tx=
-t
-+++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.tx=
-t
-@@ -4,10 +4,13 @@ Required properties:
-   - compatible: "pwm-backlight"
-   - pwms: OF device-tree PWM specification (see PWM binding[0])
-   - brightness-levels: Array of distinct brightness levels. Typically =
-these
--      are in the range from 0 to 255, but any range starting at 0 will=
- do.
-+      are in the range from 0 to 255, but any range will do.
-       The actual brightness level (PWM duty cycle) will be interpolate=
-d
--      from these values. 0 means a 0% duty cycle (darkest/off), while =
-the
--      last value in the array represents a 100% duty cycle (brightest)=
-=2E
-+      from these values. 0 means a 0% duty cycle, while the highest va=
-lue in
-+      the array represents a 100% duty cycle.
-+      The range may be in reverse order (starting with the maximum dut=
-y cycle
-+      value) to create a PWM signal with the 100% duty cycle represent=
-ing
-+      minimum and 0% duty cycle maximum brigthness.
-   - default-brightness-level: the default brightness level (index into=
- the
-       array defined by the "brightness-levels" property)
-   - power-supply: regulator for supply voltage
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight=
-/pwm_bl.c
-index b2b366b..80b2b52 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -103,8 +103,8 @@ static int pwm_backlight_update_status(struct backl=
-ight_device *bl)
- 	if (pb->notify)
- 		brightness =3D pb->notify(pb->dev, brightness);
-=20
--	if (brightness > 0) {
--		duty_cycle =3D compute_duty_cycle(pb, brightness);
-+	duty_cycle =3D compute_duty_cycle(pb, brightness);
-+	if (duty_cycle > 0) {
- 		pwm_config(pb->pwm, duty_cycle, pb->period);
- 		pwm_backlight_power_on(pb, brightness);
- 	} else
---=20
-2.1.4
+    Indeed, seeing them now. Sorry for bothering you...
+
+> Could you address them and repost?
+
+    I will. :-)
+
+> Thanks!
+
+MBR, Sergei
