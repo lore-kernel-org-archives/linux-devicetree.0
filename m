@@ -1,71 +1,70 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 1/3] Documentation: dtb: xgene: Add hwmon dts binding documentation
-Date: Tue, 7 Jun 2016 22:50:12 +0530
-Message-ID: <CABb+yY3uFrknEU65aBCw7G+dfnDdqGTZ_sctktx03GM9b86xaA@mail.gmail.com>
-References: <1463415447-29903-1-git-send-email-hotran@apm.com>
- <1463415447-29903-2-git-send-email-hotran@apm.com> <20160523203044.GA17450@rob-hp-laptop>
- <CAFHUOYyYt8pE6sggezCR=TFcsimcjakbYmcWFtpLyQ3Et_gZaA@mail.gmail.com>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/7] ARM: dts: sun7i: Add NFC node to
+ Allwinner A20 SoC
+Date: Tue, 7 Jun 2016 20:21:55 +0300
+Message-ID: <20160607202155.a86cec11c48fc6c89b280eda@gmail.com>
+References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
+	<1465208664-9366-5-git-send-email-mamlinav@gmail.com>
+Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAFHUOYyYt8pE6sggezCR=TFcsimcjakbYmcWFtpLyQ3Et_gZaA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Hoan Tran <hotran@apm.com>
-Cc: Rob Herring <robh@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Loc Ho <lho@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>
+Return-path: <linux-sunxi+bncBCENVD7YAEILNBO4XICRUBGFUS6GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1465208664-9366-5-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 24, 2016 at 6:31 AM, Hoan Tran <hotran@apm.com> wrote:
-> Hi Rob,
->
-> Thanks for your review !
->
-> On Mon, May 23, 2016 at 1:30 PM, Rob Herring <robh@kernel.org> wrote:
->>
->> On Mon, May 16, 2016 at 09:17:25AM -0700, Hoan Tran wrote:
->> > This patch adds the APM X-Gene hwmon device tree node documentation.
->> >
->> > Signed-off-by: Hoan Tran <hotran@apm.com>
->> > ---
->> >  .../devicetree/bindings/hwmon/apm-xgene-hwmon.txt          | 14 ++++++++++++++
->> >  1 file changed, 14 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
->> > new file mode 100644
->> > index 0000000..49a482e
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
->> > @@ -0,0 +1,14 @@
->> > +APM X-Gene hwmon driver
->> > +
->> > +Hwmon driver accesses sensors over the "SLIMpro" mailbox.
->>
->> DT bindings describe h/w, not driver data.
-> How about this description: "APM X-Gene SOC sensors are accessed over
-> the "SLIMpro" mailbox" ?
->> I'm not sure this belongs in
->> DT and perhaps the devices for the mailbox should be created by the
->> mailbox driver.
-> I don't think the current mailbox supports it.
->>
->> > +
->> > +Required properties :
->> > + - compatible : should be "apm,xgene-slimpro-hwmon"
->> > + - mboxes : use the label reference for the mailbox as the first parameter.
->> > +         The second parameter is the channel number.
->>
->> When do you expect this to be different mailbox numbers?
-> No, this number is not changed. This "mboxes" property is used and
-> required by mailbox.c when hwmon driver requests a mailbox channel
->
-I think that's inaccurate.
+On Mon,  6 Jun 2016 13:24:21 +0300
+Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-The h/w and the firmware combined is the "platform" from Linux POV.
-Channels are physical resources provided by a mailbox controller.
-Currently the firmware listens on Channel-7 but some future revision
-might switch to, say, Channel-9.  Or say the same firmware on next
-revision of h/w may have to switch to Channel-3 because it has only 4
-channels. So I see the mailbox channel number as a hardware property
-just like an IRQ (which very often change with SoC iterations).
+> From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
+> Add NAND Flash controller node definition to the A20 SoC.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+> index 915979f..e473570 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -826,6 +826,17 @@
+>  			#size-cells = <0>;
+>  		};
+>  
+> +		nfc: nand@01c03000 {
+> +			compatible = "allwinner,sun4i-a10-nand";
+> +			reg = <0x01c03000 0x1000>;
+> +			interrupts = <37>;
 
-Cheers.
+Should be
+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+
+> +			clocks = <&ahb_gates 13>, <&nand_clk>;
+> +			clock-names = "ahb", "mod";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+>  		emac: ethernet@01c0b000 {
+>  			compatible = "allwinner,sun4i-a10-emac";
+>  			reg = <0x01c0b000 0x1000>;
+> -- 
+> 2.7.3
+> 
+
+
+-- 
+Thanks and regards,
+Aleksei Mamlin
