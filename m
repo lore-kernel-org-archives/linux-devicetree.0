@@ -1,93 +1,66 @@
-From: Hongtao Jia <hongtao.jia@nxp.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIDEvN10gZHQtYmluZGluZ3M6IFVwZGF0ZSBRb3JJUSBU?=
- =?gb2312?Q?MU_thermal_bindings?=
-Date: Tue, 7 Jun 2016 02:26:51 +0000
-Message-ID: <AM4PR0401MB1843CB326ACB958AA8FE64F8EB5D0@AM4PR0401MB1843.eurprd04.prod.outlook.com>
-References: <1464937059-19349-1-git-send-email-hongtao.jia@nxp.com>
- <20160606134708.GA27357@rob-hp-laptop>
+From: Horng-Shyang Liao <hs.liao@mediatek.com>
+Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
+Date: Tue, 7 Jun 2016 10:45:22 +0800
+Message-ID: <1465267522.15317.0.camel@mtksdaap41>
+References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
+	 <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
+	 <574C5CBF.7060002@gmail.com> <1464683762.14604.59.camel@mtksdaap41>
+	 <574DEE40.9010008@gmail.com> <1464775020.11122.40.camel@mtksdaap41>
+	 <574FF264.7050209@gmail.com> <1464934356.15175.31.camel@mtksdaap41>
+	 <57516774.5080008@gmail.com>
+	 <CABb+yY2aOncqM-fOiq_ZBink0Fth6Drd30ZMe3-bXNkodW2dVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160606134708.GA27357@rob-hp-laptop>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Scott Wood <scott.wood@nxp.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABb+yY2aOncqM-fOiq_ZBink0Fth6Drd30ZMe3-bXNkodW2dVA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>De
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0t08q8/tStvP4tLS0tLQ0KPiC3orz+yMs6IFJvYiBIZXJyaW5nIFttYWlsdG86cm9i
-aEBrZXJuZWwub3JnXQ0KPiC3osvNyrG85DogTW9uZGF5LCBKdW5lIDA2LCAyMDE2IDk6NDcgUE0N
-Cj4gytW8/sjLOiBIb25ndGFvIEppYSA8aG9uZ3Rhby5qaWFAbnhwLmNvbT4NCj4gs63LzTogZWR1
-YmV6dmFsQGdtYWlsLmNvbTsgcnVpLnpoYW5nQGludGVsLmNvbTsgZ2FsYWtAY29kZWF1cm9yYS5v
-cmc7DQo+IFNjb3R0IFdvb2QgPHNjb3R0Lndvb2RAbnhwLmNvbT47IHNoYXduZ3VvQGtlcm5lbC5v
-cmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMu
-b3psYWJzLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiDW
-98ziOiBSZTogW1BBVENIIDEvN10gZHQtYmluZGluZ3M6IFVwZGF0ZSBRb3JJUSBUTVUgdGhlcm1h
-bCBiaW5kaW5ncw0KPiANCj4gT24gRnJpLCBKdW4gMDMsIDIwMTYgYXQgMDI6NTc6MzNQTSArMDgw
-MCwgSmlhIEhvbmd0YW8gd3JvdGU6DQo+ID4gRm9yIGRpZmZlcmVudCB0eXBlcyBvZiBTb0MgdGhl
-IHNlbnNvciBpZCBhbmQgZW5kaWFubmVzcyBtYXkgdmFyeS4NCj4gPiAiI3RoZXJtYWwtc2Vuc29y
-LWNlbGxzIiBpcyB1c2VkIHRvIHByb3ZpZGUgc2Vuc29yIGlkIGluZm9ybWF0aW9uLg0KPiA+ICJs
-aXR0bGUtZW5kaWFuIiBwcm9wZXJ0eSBpcyB0byB0ZWxsIHRoZSBlbmRpYW5uZXNzIG9mIFRNVS4N
-Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEppYSBIb25ndGFvIDxob25ndGFvLmppYUBueHAuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRo
-ZXJtYWwudHh0ICAgICB8IDE5ICsrKysrKysrKysrKystLS0NCj4gLS0tDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRo
-ZXJtYWwudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwv
-cW9yaXEtdGhlcm1hbC50eHQNCj4gPiBpbmRleCA2NjIyM2Q1Li44ZWVlZjgwIDEwMDY0NA0KPiA+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRo
-ZXJtYWwudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Ro
-ZXJtYWwvcW9yaXEtdGhlcm1hbC50eHQNCj4gPiBAQCAtMSwyMiArMSwyOCBAQA0KPiA+ICAqIFRo
-ZXJtYWwgTW9uaXRvcmluZyBVbml0IChUTVUpIG9uIEZyZWVzY2FsZSBRb3JJUSBTb0NzDQo+ID4N
-Cj4gPiAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAtLSBjb21wYXRpYmxlIDogTXVzdCBpbmNs
-dWRlICJmc2wscW9yaXEtdG11Ii4gVGhlIHZlcnNpb24gb2YgdGhlIGRldmljZSBpcw0KPiA+ICst
-IGNvbXBhdGlibGU6IE11c3QgaW5jbHVkZSAiZnNsLHFvcmlxLXRtdSIuIFRoZSB2ZXJzaW9uIG9m
-IHRoZSBkZXZpY2UgaXMNCj4gDQo+IFBsZWFzZSBzcGxpdCBmdW5jdGlvbmFsIGNoYW5nZXMgZnJv
-bSBmb3JtYXR0aW5nIGNoYW5nZXMuIFRoaXMgb25lIHNlZW1zDQo+IHByZXR0eSBwb2ludGxlc3Mu
-DQoNCkkgd2lsbCByZW1vdmUgZm9ybWF0dGluZyBjaGFuZ2VzIGluIHRoZSBuZXh0IHZlcnNpb24u
-DQpUaGFua3MuDQoNCj4gDQo+ID4gIAlkZXRlcm1pbmVkIGJ5IHRoZSBUTVUgSVAgQmxvY2sgUmV2
-aXNpb24gUmVnaXN0ZXIgKElQQlJSMCkgYXQNCj4gPiAgCW9mZnNldCAweDBCRjguDQo+ID4gLQlU
-YWJsZSBvZiBjb3JyZXNwb25kZW5jZXMgYmV0d2VlbiBJUEJSUjAgdmFsdWVzIGFuZCBleGFtcGxl
-ICBjaGlwczoNCj4gPiArCVRhYmxlIG9mIGNvcnJlc3BvbmRlbmNlcyBiZXR3ZWVuIElQQlJSMCB2
-YWx1ZXMgYW5kIGV4YW1wbGUgY2hpcHM6DQo+ID4gIAkJVmFsdWUgICAgICAgICAgIERldmljZQ0K
-PiA+ICAJCS0tLS0tLS0tLS0gICAgICAtLS0tLQ0KPiA+ICAJCTB4MDE5MDAxMDIgICAgICBUMTA0
-MA0KPiA+IC0tIHJlZyA6IEFkZHJlc3MgcmFuZ2Ugb2YgVE1VIHJlZ2lzdGVycy4NCj4gPiAtLSBp
-bnRlcnJ1cHRzIDogQ29udGFpbnMgdGhlIGludGVycnVwdCBmb3IgVE1VLg0KPiA+IC0tIGZzbCx0
-bXUtcmFuZ2UgOiBUaGUgdmFsdWVzIHRvIGJlIHByb2dyYW1tZWQgaW50byBUVFJuQ1IsIGFzIHNw
-ZWNpZmllZCBieQ0KPiA+ICstIHJlZzogQWRkcmVzcyByYW5nZSBvZiBUTVUgcmVnaXN0ZXJzLg0K
-PiA+ICstIGludGVycnVwdHM6IENvbnRhaW5zIHRoZSBpbnRlcnJ1cHQgZm9yIFRNVS4NCj4gPiAr
-LSBmc2wsdG11LXJhbmdlOiBUaGUgdmFsdWVzIHRvIGJlIHByb2dyYW1tZWQgaW50byBUVFJuQ1Is
-IGFzIHNwZWNpZmllZCBieQ0KPiA+ICAJdGhlIFNvQyByZWZlcmVuY2UgbWFudWFsLiBUaGUgZmly
-c3QgY2VsbCBpcyBUVFIwQ1IsIHRoZSBzZWNvbmQgaXMNCj4gPiAgCVRUUjFDUiwgZXRjLg0KPiA+
-IC0tIGZzbCx0bXUtY2FsaWJyYXRpb24gOiBBIGxpc3Qgb2YgY2VsbCBwYWlycyBjb250YWluaW5n
-IHRlbXBlcmF0dXJlDQo+ID4gKy0gZnNsLHRtdS1jYWxpYnJhdGlvbjogQSBsaXN0IG9mIGNlbGwg
-cGFpcnMgY29udGFpbmluZyB0ZW1wZXJhdHVyZQ0KPiA+ICAJY2FsaWJyYXRpb24gZGF0YSwgYXMg
-c3BlY2lmaWVkIGJ5IHRoZSBTb0MgcmVmZXJlbmNlIG1hbnVhbC4NCj4gPiAgCVRoZSBmaXJzdCBj
-ZWxsIG9mIGVhY2ggcGFpciBpcyB0aGUgdmFsdWUgdG8gYmUgd3JpdHRlbiB0byBUVENGR1IsDQo+
-ID4gIAlhbmQgdGhlIHNlY29uZCBpcyB0aGUgdmFsdWUgdG8gYmUgd3JpdHRlbiB0byBUU0NGR1Iu
-DQo+ID4gKy0gI3RoZXJtYWwtc2Vuc29yLWNlbGxzOiBNdXN0IGJlIDEuIFRoZSBzZW5zb3Igc3Bl
-Y2lmaWVyIGlzIHRoZSBtb25pdG9yaW5nDQo+ID4gKwlzaXRlIElELCBhbmQgcmVwcmVzZW50cyB0
-aGUgIm4iIGluIFRSSVRTUm4gYW5kIFRSQVRTUm4uDQo+ID4gKw0KPiA+ICtPcHRpb25hbCBwcm9w
-ZXJ0eToNCj4gPiArLSBsaXR0bGUtZW5kaWFuOiBJZiBwcmVzZW50LCB0aGUgVE1VIHJlZ2lzdGVy
-cyBhcmUgbGl0dGxlIGVuZGlhbi4gIElmIGFic2VudCwNCj4gPiArCXRoZSBkZWZhdWx0IGlzIGJp
-ZyBlbmRpYW4uDQo+ID4NCj4gPiAgRXhhbXBsZToNCj4gPg0KPiA+IEBAIC02MCw0ICs2Niw1IEBA
-IHRtdUBmMDAwMCB7DQo+ID4NCj4gPiAgCQkJICAgICAgIDB4MDAwMzAwMDAgMHgwMDAwMDAxMg0K
-PiA+ICAJCQkgICAgICAgMHgwMDAzMDAwMSAweDAwMDAwMDFkPjsNCj4gPiArCSN0aGVybWFsLXNl
-bnNvci1jZWxscyA9IDwxPjsNCj4gPiAgfTsNCj4gPiAtLQ0KPiA+IDIuMS4wLjI3Lmc5NmRiMzI0
-DQo+ID4NCj4gPg0KPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fDQo+ID4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gPiBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwNCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, 2016-06-03 at 18:41 +0530, Jassi Brar wrote:
+> On Fri, Jun 3, 2016 at 4:48 PM, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> > On 03/06/16 08:12, Horng-Shyang Liao wrote:
+> >> On Thu, 2016-06-02 at 10:46 +0200, Matthias Brugger wrote:
+> 
+> >>> I keep thinking about how to get rid of the two data structures,
+> >>> task_busy_list and the task_release_wq. We need the latter for the only
+> >>> sake of getting a timeout.
+> >>>
+> >>> Did you have a look on how the mailbox framework handles this?
+> >>> By the way, what is the reason to not implement the whole driver as a
+> >>> mailbox controller? For me, this driver looks like a good fit.
+> >>
+> >>
+> >> CMDQ needs to encode commands for GCE hardware. We think this behavior
+> >> should be put in CMDQ driver, and client just call CMDQ functions.
+> >> Therefore, if we want to use mailbox framework, cmdq_rec must be
+> >> mailbox client, and the others must be mailbox controller.
+> >>
+> >
+> > You mean the functions to fill the cmdq_rec and execute it?
+> > I think this should be part of the driver.
+> >
+> > Jassi, can you have a look on the interface this driver exports [0].
+> > They are needed to actually create the message which will be send.
+> > Could something like this be part of a mailbox driver?
+> >
+> > [0] https://patchwork.kernel.org/patch/9140221/
+> >
+> Packet creating/parsing should not be a part of controller driver. As
+> the log of this patch says, today it is used for only display but in
+> future it could work with other h/w as well, so it makes sense to have
+> mailbox api do the message queuing, the controller driver do the
+> send/receive and client drivers implement display and other h/w
+> specific packaging of data (protocol handling).
+> 
+> So yes, I think this could use mailbox api.
+> 
+> Cheers.
+
+I will try to rewrite CMDQ driver by mailbox framework and discuss with
+you if I encounter other problems.
+
+Thanks,
+HS
