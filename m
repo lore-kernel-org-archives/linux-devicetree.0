@@ -1,185 +1,102 @@
-From: Ricard Wanderlof <ricard.wanderlof@axis.com>
-Subject: Re: [PATCH 1/4] of: Add device tree bindings for Evatronix
-Date: Tue, 7 Jun 2016 17:01:41 +0200
-Message-ID: <alpine.DEB.2.02.1606060757180.23377@lnxricardw1.se.axis.com>
-References: <alpine.DEB.2.02.1606020946500.19416@lnxricardw1.se.axis.com> <20160603162207.0688c9e6@bbrezillon>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH V6 0/9] Add support for Tegra210 AGIC
+Date: Tue, 7 Jun 2016 16:12:25 +0100
+Message-ID: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160603162207.0688c9e6@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, Linux mtd <linux-mtd@lists.infradead.org>, linux-kernel@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+The Tegra210 has a 2nd level interrupt controller located in a separate
+power domain to the main GIC interrupt controller and hence requires
+runtime-pm support.
 
-Hi Boris,
+Add a platform driver for the GICs that require runtime-pm and make the
+necessary changes to the genirq and irqdomain core to support IRQ chips
+that require runtime-pm.
 
-=46irst of all, thanks for reviewing this.
+This series is based upon Marc Z's irq/irqchip-v4.7-rc1 branch [0].
 
-On Fri, 3 Jun 2016, Boris Brezillon wrote:
+Changes since V5:
+- Add call to pm_runtime_put_noidle() if irq-chip pm_runtime_get_sync()
+  fails.
+- Removed unnecessary whitespace that was added incorrectly.
 
-> > +
-> > +Optional properties:
-> > +- nand-on-flash-bbt: See nand.txt.
-> > +- #address-cells, #size-cells: See partition.txt.
-> > +- evatronix,use-bank-select : Use controller bank select function =
-to access
-> > +			      multiple chips, rather than chip enable.
->=20
-> You mean, using a dedicated logic to control the CS lines rather than=
- a
-> GPIO (controlled by the SW using gpio_set_value())?
+Changes since V4:
+- Removed header file drivers/irqchip/irq-gic.h.
+- Avoid exporting gic_handle_cascade_irq entry point.
+- Renamed of_gic_init() to gic_of_init_child() to distinguish it from the
+  existing gic_of_int().
+- Corrected preprocessor directive for CONFIG_ARM_GIC_PM.
 
-No. In the SoC on which this has been developed, the nand flash control=
-ler=20
-has dedicated I/O pins for all its functions.
+Changes since V3:
+- Split the series into two, placing the clean-up/fixes patches into
+  another series [1]. The remaining patches in this series are for
+  adding runtime-pm support for irqchips and adding a platform driver
+  of second level GICs.
+- Dropped the patch to prevent early init of GICs if 'clocks' or
+  'power-domains' properties are present and re-added the patch to add
+  the compatibilty string for the Tegra210 AGIC.
 
-The controller has the concept of 'banks' vs. 'devices'. Essentially, a=
-=20
-'bank' is a group of multiple chips of the same geometry etc, and the=20
-controller can send commands in parallel to all devices in the same ban=
-k.=20
-In contrast, different 'banks' can have completely different devices, b=
-ut=20
-all devices must be idle before the controller can switch 'banks'.
+Changes since V2:
+- Corrected RPM support for irqchips in genirq core as pointed out by
+  Kevin Hilman.
+- Corrected patch to save the irq type when mapping the interrupt.
+- Dropped changes to DT binding documentation and added patch to prevent
+  early init of GICs if the 'clocks' and/or 'power-domains' DT
+  properties are present (as we have discussed).
+- Moved platform driver code into it's own source file.
+- Separate changes for preparing for the platform driver into 3 patches
+  in an attempt to make it more readable!
+- Added fix for checking an interrupt descriptor is valid during IRQ
+  setup.
 
-The usecase for the former would be to increase performance and the lat=
-ter=20
-case would be if there were for instance one small NAND flash for progr=
-am=20
-storage and a large one for data.
+Changes since V1:
+- Updated GIC to only WARN and not return an error if configuring a PPI
+  fails but will still return an error if an SPI fails (per discussion
+  with Marc).
+- Dropped change to mask sense bits for GIC-v3 (as this is not
+  necessary)
+- Split patch to avoid setting interrupt type when mapping the IRQ into
+  two patches per TGLX's feedback.
+- Changed name of irqchip device structure to "parent_device"
+- Moved call to irq_chip_pm_get() outside of chip_bus_lock().
+- Dropped patch to remove clock names from GIC DT documentation and
+  added AGIC clock names.
+- Update GIC platform driver to look-up clocks names from static list.
 
-The IP that the driver was tested on has two available chip selects, an=
-d=20
-the DT property controls whether they refer to two devices in the same=20
-bank vs. two separate banks.
+[0] http://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/irqchip-4.7-rc1
+[1] http://marc.info/?l=linux-tegra&m=146289329915585&w=2
 
-> BTW, you seem to support controlling several CS using the same
-> controller, which means you'll have to specify which CS the NAND chip
-> is connected to (see [1]).
+Jon Hunter (9):
+  irqdomain: Fix handling of type settings for existing mappings
+  genirq: Look-up trigger type if not specified by caller
+  irqdomain: Don't set type when mapping an IRQ
+  genirq: Add runtime power management support for IRQ chips
+  irqchip/gic: Isolate early GIC initialisation code
+  irqchip/gic: Add helper function for chip initialisation
+  irqchip/gic: Prepare for adding platform driver
+  dt-bindings: arm-gic: Add documentation for Tegra210 AGIC
+  irqchip/gic: Add platform driver for non-root GICs that require RPM
 
-That is true. The driver as it stands currently only supports a single =
-CS,=20
-however, the IP as configured in the SoC in question can handle two CS=20
-lines. My plan is to initially provide support for only the single-CS=20
-case (there are places in the code where I felt it practical to prepare=
-=20
-for the multiple-CS case though).
+ .../bindings/interrupt-controller/arm,gic.txt      |   3 +-
+ drivers/irqchip/Kconfig                            |   6 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-gic-common.c                   |   4 +-
+ drivers/irqchip/irq-gic-pm.c                       | 184 +++++++++++++++++++++
+ drivers/irqchip/irq-gic.c                          | 132 ++++++++++-----
+ include/linux/irq.h                                |   4 +
+ include/linux/irqchip/arm-gic.h                    |  11 ++
+ include/linux/irqdomain.h                          |   3 +
+ kernel/irq/chip.c                                  |  40 +++++
+ kernel/irq/internals.h                             |   1 +
+ kernel/irq/irqdomain.c                             |  58 ++++++-
+ kernel/irq/manage.c                                |  38 ++++-
+ 13 files changed, 433 insertions(+), 52 deletions(-)
+ create mode 100644 drivers/irqchip/irq-gic-pm.c
 
-As such, I realize that the previously mentioned property=20
-(evatronix,use-bank-select) won't really have any meaning in the single=
--CS=20
-case, so perhaps it should be omitted at this point completely, and add=
-ed=20
-in the future when it is really needed?
-
-> > +- evatronix,rb-wired-and: Assume ready/busy signal from all flash =
-chips are
-> > +			  connected using a wired-AND topology rather than
-> > +			  individually.
->=20
-> Hm, is that really required? If the R/B line is shared among several
-> NAND chips, it should be transparent, you just have to specific which
-> chip is connected to which GPIO (or dedicated R/B pin).
-
-=46or the SoC in question, the wired-and vs individual R/B lines was a=20
-choice made during the chip design, which is why I exported this choice=
- as=20
-a DT property, as it reflects a hardware choice done outside the IP but=
-=20
-inside the SoC.
-
-I didn't really want to have the added flexibility (and complexity) of=20
-being able to use any R/B line for any connected flash chip. It seems a=
-n=20
-unnecessary complication for the driver without much gain.
-
-But it would certainly be doable, as the R/B stuff is handled completel=
-y=20
-in software. One would still need a new property that the child nand no=
-des=20
-can use to select the R/B line (e.g. evatronix,rb-line). (In the=20
-configuration we have, as with the CS lines, the R/B line has its own=20
-dedicated pin, so it's not a GPIO). So it would still require a DT=20
-property to manage it.
-
-Again, this property doesn't really have any meaning in the single-CS=20
-case, so should I omit it completely?
-
-> > +- evatronix,timings: Seven 32-bit values for initializing the TIME=
-_SEQ_0,
-> > +		     TIME_SEQ_1, TIMINGS_ASYN, TIME_GEN_SEQ_0, TIME_GEN_SEQ_1,
-> > +		     TIME_GEN_SEQ_2 and TIME_GEN_SEQ_3 registers, respectively.
->=20
->=20
-> Can this be extracted from the timing mode exposed by the NAND chip.
-> IMO it shouldn't be defined in the DT.
-
-I agree, Ideally one would like to read timing parameters from the NAND=
-=20
-chip (ONFi or JEDEC parameter pages) and determine all the controller I=
-P=20
-timings from that. There are a couple of reasons I haven't gone that=20
-route.
-
-Mainly, the reason is that the part of the timing settings are influenc=
-ed=20
-by delays within the SoC which are not part of the controller itself, t=
-hus=20
-they cannot be part of the driver code and must come from somewhere els=
-e.
-
-The other reason is that the resulting calculations would be rather=20
-complex to express, given the general case of different controller=20
-operating frequencies, different types of parameter pages (ONFi vs.=20
-JEDEC), and a number of settable timing modes (ONFi mode 0, 1, 2, ...).=
- It=20
-would be a nightmare to test and probably even worse to make future=20
-changes. At some point, the resulting register values will have to be=20
-analyzed manually anyway to verify them, checking them against the timi=
-ngs=20
-for the nand flash chips in question, so one might as well put those=20
-values into the configuration to start with.
-
-One route to go would be to have a number of 'timings' parameters in th=
-e=20
-=2Edtsi file for the SoC in question, where the register values are def=
-ined=20
-for different timing modes. The board (.dts) file could then either sel=
-ect=20
-one of the .dtsi-defined timing modes, or it could be selected=20
-automatically for those cases where it would be possible (i.e. ONFi tim=
-ing=20
-modes).
-
-> > +	/* ONFi mode 0 timing, assuming 100 MHz clock. */
-> > +	/* Order is TIME_SEQ_0, TIME_SEQ_1, TIMINGS_ASYN,
-> > +	 * TIME_GEN_SEQ_0, _1, _2, _3 */
-> > +	evatronix,timings =3D <0x0d151533 0x000b0515 0x00000046
-> > +			     0x00150000 0x00000000 0x00000005 0x00000015>;
-> > +	nand-ecc-mode =3D "hw";
-> > +	nand-ecc-algo =3D "bch";
-> > +	nand-on-flash-bbt;
-> > +	nand-ecc-strength =3D <8>;
-> > +	nand-ecc-step-size =3D <512>;
-> > +	evatronix,use-bank-select;
-> > +	evatronix,rb-wired-and;
-> > +};
->=20
-> We recently added more constraints on the 'NAND controller/NAND chip'
-> representation in the DT [1].
-> You should rework your binding (and your code) to match these
-> constraints, even if you controller is only able to interface with a
-> single NAND chip.
-
-Just so I'm clear on this: what you're referring to here is that the=20
-generic mtd properties (nand-*) are now per chip rather than per=20
-controller? I will have to rework this.
-
-/Ricard
---=20
-Ricard Wolf Wanderl=F6f                           ricardw(at)axis.com
-Axis Communications AB, Lund, Sweden            www.axis.com
-Phone +46 46 272 2016                           Fax +46 46 13 61 30
+-- 
+2.1.4
