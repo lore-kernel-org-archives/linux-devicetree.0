@@ -1,83 +1,136 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] Documentation: bindings: add DT documentation for
- Rockchip USB2PHY
-Date: Tue, 7 Jun 2016 13:15:12 +0530
-Message-ID: <57567B88.7000607@ti.com>
-References: <1465204804-31161-1-git-send-email-frank.wang@rock-chips.com>
- <1465204804-31161-2-git-send-email-frank.wang@rock-chips.com>
- <20160606112754.GE6831@leverpostej> <7083100.uVXA4CkAgE@diego>
- <2b3e9b0b-f17e-063b-6eb0-2390bd87901b@rock-chips.com>
- <9a34e448-2b4d-4797-2e6b-c7a36c03b597@rock-chips.com>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH V3 1/2] thermal: max77620: Add DT binding doc for thermal
+ driver
+Date: Tue, 7 Jun 2016 13:17:20 +0530
+Message-ID: <57567C08.8060200@ti.com>
+References: <1465213467-23518-1-git-send-email-ldewangan@nvidia.com>
+ <575645B8.5090709@ti.com> <57566BDF.3090100@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <9a34e448-2b4d-4797-2e6b-c7a36c03b597-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57566BDF.3090100@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, edubezval@gmail.com, rui.zhang@intel.com, robh+dt@kernel.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWVzZGF5IDA3IEp1bmUgMjAxNiAwOTowMSBBTSwgRnJhbmsgV2FuZyB3cm90ZToK
-PiBIaSBIZWlrbywKPiAKPiBPbiAyMDE2LzYvNyAxMDo1OSwgRnJhbmsgV2FuZyB3cm90ZToKPj4g
-SGkgSGVpa28gJiBNYXJrLAo+Pgo+PiBPbiAyMDE2LzYvNiAyMDozMywgSGVpa28gU3TDvGJuZXIg
-d3JvdGU6Cj4+PiBBbSBNb250YWcsIDYuIEp1bmkgMjAxNiwgMTI6Mjc6NTQgc2NocmllYiBNYXJr
-IFJ1dGxhbmQ6Cj4+Pj4gT24gTW9uLCBKdW4gMDYsIDIwMTYgYXQgMDU6MjA6MDNQTSArMDgwMCwg
-RnJhbmsgV2FuZyB3cm90ZToKPj4+Pj4gU2lnbmVkLW9mZi1ieTogRnJhbmsgV2FuZyA8ZnJhbmsu
-d2FuZ0Byb2NrLWNoaXBzLmNvbT4KPj4+Pj4gLS0tCj4+Pj4+Cj4+Pj4+IENoYW5nZXMgaW4gdjM6
-Cj4+Pj4+ICAgLSBBZGRlZCAnY2xvY2tzJyBhbmQgJ2Nsb2NrLW5hbWVzJyBvcHRpb25hbCBwcm9w
-ZXJ0aWVzLgo+Pj4+PiAgIC0gU3BlY2lmaWVkICdvdGctcG9ydCcgYW5kICdob3N0LXBvcnQnIGFz
-IHRoZSBzdWItbm9kZSBuYW1lLgo+Pj4+Pgo+Pj4+PiBDaGFuZ2VzIGluIHYyOgo+Pj4+PiAgIC0g
-Q2hhbmdlZCB2YnVzX2hvc3Qgb3B0aW9uYWwgcHJvcGVydHkgZnJvbSBncGlvIHRvIHJlZ3VsYXRv
-ci4KPj4+Pj4gICAtIFNwZWNpZmllZCB2YnVzX290Zy1zdXBwbHkgb3B0aW9uYWwgcHJvcGVydHku
-Cj4+Pj4+ICAgLSBTcGVjaWZpZWQgb3RnX2lkIGFuZCBvdGdfYnZhbGlkIHByb3BlcnR5Lgo+Pj4+
-PiAgICAgLi4uL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtaW5uby11c2IyLnR4dCAgICAgICAg
-fCA2MAo+Pj4+PiAgICsrKysrKysrKysrKysrKysrKysrIDEgZmlsZSBjaGFuZ2VkLCA2MCBpbnNl
-cnRpb25zKCspCj4+Pj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4+Pj4+IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXJvY2tjaGlwLWlubm8tdXNiMi50eHQ+Cj4+Pj4+
-IGRpZmYgLS1naXQKPj4+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5
-L3BoeS1yb2NrY2hpcC1pbm5vLXVzYjIudHh0Cj4+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtaW5uby11c2IyLnR4dCBuZXcKPj4+Pj4gZmls
-ZSBtb2RlIDEwMDY0NAo+Pj4+PiBpbmRleCAwMDAwMDAwLi4wYjRiYmJiCj4+Pj4+IC0tLSAvZGV2
-L251bGwKPj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9w
-aHktcm9ja2NoaXAtaW5uby11c2IyLnR4dAo+Pj4+PiBAQCAtMCwwICsxLDYwIEBACj4+Pj4+ICtS
-T0NLQ0hJUCBVU0IyLjAgUEhZIFdJVEggSU5OTyBJUCBCTE9DSwo+Pj4+PiArCj4+Pj4+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzIChwaHkgKHBhcmVudCkgbm9kZSk6Cj4+Pj4+ICsgLSBjb21wYXRpYmxl
-IDogc2hvdWxkIGJlIG9uZSBvZiB0aGUgbGlzdGVkIGNvbXBhdGlibGVzOgo+Pj4+PiArICAgICog
-InJvY2tjaGlwLHJrMzM2Ni11c2IycGh5Igo+Pj4+PiArICAgICogInJvY2tjaGlwLHJrMzM5OS11
-c2IycGh5Igo+Pj4+PiArIC0gI2Nsb2NrLWNlbGxzIDogc2hvdWxkIGJlIDAuCj4+Pj4+ICsgLSBj
-bG9jay1vdXRwdXQtbmFtZXMgOiBzcGVjaWZ5IHRoZSA0ODBtIG91dHB1dCBjbG9jayBuYW1lLgo+
-Pj4+PiArCj4+Pj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+Pj4+PiArIC0gY2xvY2tzIDogcGhh
-bmRsZSArIHBoeSBzcGVjaWZpZXIgcGFpciwgZm9yIHRoZSBpbnB1dCBjbG9jayBvZiBwaHkuCj4+
-Pj4+ICsgLSBjbG9jay1uYW1lcyA6IGlucHV0IGNsb2NrIG5hbWUgb2YgcGh5LCBtdXN0IGJlICJw
-aHljbGsiLgo+Pj4+PiArIC0gdmJ1c19ob3N0LXN1cHBseSA6IHBoYW5kbGUgdG8gYSByZWd1bGF0
-b3IgdGhhdCBzdXBwbGllcyBob3N0IHZidXMuCj4+Pj4+ICsgLSB2YnVzX290Zy1zdXBwbHkgOiBw
-aGFuZGxlIHRvIGEgcmVndWxhdG9yIHRoYXQgc3VwcGxpZXMgb3RnIHZidXMuCj4+Pj4gTml0OiBz
-L18vLS8gaGVyZS4KPj4+IFNvbWV0aGluZyBJIG9ubHkgc3R1bWJsZWQgb3ZlciB5ZXN0ZXJkYXkg
-Zm9yIHRoZSBmaXJzdCB0aW1lIG9uIG15IHJrMzI4OC0KPj4+IHBvcG1ldGFsOiBUaGUgcGh5IHN1
-Ym5vZGVzIHNlZW0gdG8gYmUgYWJsZSB0byB1c2UgYSBnZW5lcmljIHBoeS1zdXBwbHkKPj4+IHBy
-b3BlcnR5IGZyb20gaW5zaWRlIHRoZSBwaHktY29yZSBpdHNlbGYsIHNlZToKPj4+Cj4+PiBodHRw
-czovL2dpdGh1Yi5jb20vbW1pbmQvbGludXgtcm9ja2NoaXAvY29tbWl0LzkzNzM5ZjUyMWZjNjVm
-NDQ1MjRiMDBjOWFhZjZkYjQ2YmNhOTRlMDIjZGlmZi1kZGYzZTQ1ZWJiNzUzZDZkZWJmNTcwMjIw
-MDNhMWE1N1I1OTcKPj4+Cj4+Pgo+Pj4gZm9yIG15IFdJUCBjb2RlIGZvciB0aGF0IG90aGVyIGJv
-YXJkLgo+Pj4KPj4KPj4gQWgsIGdvb2QgY29tbWVudHMhIEkgd2lsbCB0cnkgbGF0ZXIsIGlmIGl0
-IGlzIHByYWN0aWNhYmxlLCBJIHNoYWxsIGNvcnJlY3QgaXQKPj4gaW50byB0aGUgbmV4dCBwYXRj
-aGVzIChwYXRjaCB2NCkuCj4+Cj4gCj4gSSBhbSBzb3JyeSB0byB0ZWxsIHlvdSB0aGF0IHNlZW1z
-IHVud29ya2FibGUsIGJlY2F1c2Ugd2UgaGF2ZSB0d28gc3ViLW5vZGVzCj4gKHBoeS1wb3J0cykg
-aW4gb25lIHBhcmVudC1ub2RlIChwaHkpLAo+IHdoYXQgaXMgbW9yZSwgdGhlICdwaHktc3VwcGx5
-JyBwcm9wZXJ0eSBjYW4gb25seSBwdXQgaW50byBwYXJlbnQtbm9kZSwgSQo+IGJlbGlldmUgaXQg
-Y2FuIG5vdCBiZSBkaWZmZXJlbnRpYXRlZCB0eXBlcyBvZiBwb3J0cy4KCidwaHktc3VwcGx5JyBp
-cyBhIHByb3BlcnR5IG9mIHRoZSBwaHkgbm9kZSBhbmQgbm90IHRoZSAncGh5LXByb3ZpZGVyJyBu
-b2RlLiBTbwpJTU8gdGhpcyBzaG91bGQgd29yay4gV2hhdCBwcm9ibGVtIGRvIHlvdSBzZWU/CgpU
-aGFua3MKS2lzaG9uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LXJvY2tjaGlwCg==
+
+
+On Tuesday 07 June 2016 12:08 PM, Laxman Dewangan wrote:
+>
+> On Tuesday 07 June 2016 09:25 AM, Keerthy wrote:
+>>
+>>
+>> On Monday 06 June 2016 05:14 PM, Laxman Dewangan wrote:
+>>> Maxim Semiconductor MAX77620 supports alarm interrupts when
+>>> its die temperature crosses 120C and 140C. These threshold
+>>> temperatures are not configurable.
+>>>
+>>> Add DT binding document to details out the DT property related
+>>> to MAX77620 thermal functionality.
+>>>
+>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>>> ---
+>>>   .../bindings/thermal/thermal-max77620.txt          | 64
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 64 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/thermal/thermal-max77620.txt
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/thermal/thermal-max77620.txt
+>>> b/Documentation/devicetree/bindings/thermal/thermal-max77620.txt
+>>> new file mode 100644
+>>> index 0000000..5a500d5
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/thermal/thermal-max77620.txt
+>>> @@ -0,0 +1,64 @@
+>>> +Thermal driver for MAX77620 Power management IC from Maxim
+>>> Semiconductor.
+>>> +
+>>> +Maxim Semiconductor MAX77620 supports alarm interrupts when its
+>>> +die temperature crosses 120C and 140C. These threshold temperatures
+>>> +are not configurable. Device does not provide the real temperature
+>>> +of die other than just indicating whether temperature is above or
+>>> +below threshold level.
+>>> +
+>>> +Required properties:
+>>> +-------------------
+>>> +#thermal-sensor-cells:    Please refer
+>>> <devicetree/bindings/thermal/thermal.txt>
+>>> +            for more details.
+>>> +            The value must be 0.
+>>> +
+>>> +For more details, please refer generic thermal DT binding document
+>>> +<devicetree/bindings/thermal/thermal.txt>.
+>>> +
+>>> +Please refer <devicetree/bindings/mfd/max77620.txt> for mfd DT binding
+>>> +document for the MAX77620.
+>>> +
+>>> +Example:
+>>> +--------
+>>> +#include <dt-bindings/mfd/max77620.h>
+>>> +#include <dt-bindings/thermal/thermal.h>
+>>> +...
+>>> +
+>>> +i2c@7000d000 {
+>>> +    spmic: max77620@3c {
+>>> +        compatible = "maxim,max77620";
+>>> +        :::::
+>>> +        #thermal-sensor-cells = <0>;
+>>> +        :::
+>>> +    };
+>>> +};
+>>> +
+>>> +cool_dev: cool-dev {
+>>> +    compatible = "cooling-dev";
+>>> +    #cooling-cells = <2>;
+>>> +};
+>>> +
+>>> +thermal-zones {
+>>> +    PMIC-Die {
+>>> +        polling-delay = <0>;
+>>> +        polling-delay-passive = <0>;
+>>> +        thermal-sensors = <&spmic>;
+>>> +
+>>> +        trips {
+>>> +            die_temp_thresh: hot-die {
+>>> +                temperature = <120000>;
+>>> +                type = "active";
+>>> +                hysteresis = <0>;
+>>> +            };
+>>> +        };
+>>
+>> What about 140C? Isn't that a critical trip point?
+>
+> Yes, it is there and it can be populated/extended on the same way and
+> handled.
+>
+> This is just an example.
+
+Yes i understand that. My question was more w.r.t different types of 
+critical points. As i can see 120C is an active trip point.
+
+140C will be a critical trip point and system will have to be shutdown 
+right? IMHO you can add that to the example as well since its pretty 
+different than the above active trip point.
+
+- Keerthy
+
+>
+>
+>>
+>>> +
+>>> +        cooling-maps {
+>>> +            map0 {
+>>> +                trip = <&die_temp_thresh>;
+>>> +                cooling-device = <&cool_dev THERMAL_NO_LIMIT
+>>> +                          THERMAL_NO_LIMIT>;
+>>> +                contribution = <100>;
+>>> +            };
+>>> +        };
+>>> +    };
+>>> +};
+>>>
+>
