@@ -1,66 +1,75 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 2/2] gpio: Support cascaded GPIO chip lookup for OF
-Date: Tue, 7 Jun 2016 16:00:53 -0500
-Message-ID: <CAL_JsqLi4=6v-8B8eF-H1iQGa+3Zh=rzAWbCAJubnLNEitPaLQ@mail.gmail.com>
-References: <1464985616-11821-1-git-send-email-pantelis.antoniou@konsulko.com> <1464985616-11821-3-git-send-email-pantelis.antoniou@konsulko.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun4i: The blue led on the Mele A1000 is a
+ power led
+Date: Tue, 7 Jun 2016 23:24:19 +0200
+Message-ID: <20160607212419.GE14179@lukather>
+References: <1465129393-22379-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464985616-11821-3-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IU5/I01NYhRvwH70"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1465129393-22379-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+Mark R
 
-On Fri, Jun 3, 2016 at 3:26 PM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
-> In certain cases it makes sense to create cascaded GPIO which
-> are not real GPIOs, merely point to the real backend GPIO chip.
+--IU5/I01NYhRvwH70
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In what cases? Make it clear what this is for. Connectors of course,
-but are there any other use cases you have in mind.
+On Sun, Jun 05, 2016 at 02:23:11PM +0200, Hans de Goede wrote:
+> The blue led on the Mele A1000 is wired to light up as soon as the board
+> has powered (it will be on while the gpio is still in input / floating
+> mode), also its location on the top-set box clearly signals "power led".
+>=20
+> Until now we've been treating this as a generic usr function led, which
+> means that when you plug power into the top-set box, the power-led lights
+> and then turns off as soon as the kernel loads, which looks wrong.
 
-> In order to support this, cascaded of_xlate lookup need to be
-> performed.
->
-> For example let's take a connector that we want to abstract
-> having two GPIO pins from different GPIO controllers, connector
-> pin #0 connected to gpioA controller with offset 10 and gpioB
-> with 4.
+I'm not sure I understand the relationship between usr vs pwr led and
+the fact that it's disabled.
 
-A connector's GPIO number may or may not be related to connector pins.
+> This renames the led from a1000:blue:usr to a1000:blue:pwr and marks
+> it as default on, fixing this.
 
-> In pseudo DT form this is analogous to:
->
->         gpioA: gpioa@80000 {
->                 compatible = "foocorp,gpio";
->                 ...
->         };
->
->         gpioB: gpiob@80800 {
->                 compatible = "foocorp,gpio";
->                 ....
->         };
->
->         gpioC: controller_gpio {
->                 compatible = "cascaded-gpio";
+however, the default on might. Is it just a confusing commit log, or
+am I overlooking something?
 
-This compatible is kind of meaningless. I'd expect this to be a
-connector compatible.
+thanks,
+Maxime
 
->                 gpios = <&gpioA 10>, <&gpioB 5>;
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-As we discussed at ELC, I think this should be modeled after
-interrupt-map property like this:
+--IU5/I01NYhRvwH70
+Content-Type: application/pgp-signature; name="signature.asc"
 
-gpio-map = <0 0 &soc_gpio 10 0>, <1 0 &soc_gpio 5 0>;
-gpio-map-mask = <0xff 0>;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-This is more flexible, a known pattern, and allows remapping of flag cells.
+iQIcBAEBAgAGBQJXVzuDAAoJEBx+YmzsjxAg1RUP/0f4pLc1bLRT0N8t6VdYiBxy
+VZsBmH5KirAdTzMeUlWfQiltrD70cppOTWh/AELuG7xbNnikChWU/oTRBoEyQeSj
+1BkZixnDGgxHr00hfrejsb/V4aJdhnlopJoZ2WFhPbsnrqwGOnReP7bACJKh4E2m
+il99jZRPZ1+It+nalgrzAu6wjCZpITEIPaHCijRA01T3t4u4FCy8o+BnG1+y4NIk
+y3jXctCpg223CMAbD2ndJ4KcdkxOSjWqqp8XtZ5HX4MutLUR9ox27VcJo+kv/jdG
+Ooajyl6AcujiHoDBKnfqbU8ZSEVxjvxd1TTp9zVqoda0AcfMUoZyedbA7kmHU2Sl
+PFnKQ400Lxg6xcBxyWwl1ICu1ddMrkuK8YSgytjbmIw2XICCZEFQECjlnMZMFCJi
+UVCm0B6co1Brjgnr8+x2fxGwEQ14rEvg5hZ8nNMKbazOpbcpT4pg1jMKfUIlxD5W
+ZawbClPN5pXOfh80pBYD5mCc5/wo7d71/lPyq38at5dS9w8Sl8n3HH4EnGReYC7h
+5Eg5RLrT/Il3yFrFKr5uGbsRfZhylcAtgKMoh3XRFsgL7f5cazHPnzCjt3iDUMqd
+GumPJmHLg/vk99TfdqNpLTqh0LIbL6vw90S9/N2V7BN2KUmBakrBoHAKb156FDKJ
+29FxAgAuREJ14f/nzBWW
+=JlPa
+-----END PGP SIGNATURE-----
 
-Also, we will likely have interrupt capable GPIOs, so they are going
-to need interrupt-map anyway.
-
-Rob
+--IU5/I01NYhRvwH70--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
