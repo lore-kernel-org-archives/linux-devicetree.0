@@ -1,49 +1,34 @@
 From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH v3 06/10] dt-bindings: Add root properties for Raspberry Pi 3
-Date: Tue,  7 Jun 2016 13:05:44 +0200
-Message-ID: <1465297548-17182-7-git-send-email-kraxel@redhat.com>
+Subject: [PATCH v3 08/10] ARM: bcm2835: Add devicetree for the Raspberry Pi 3, for arm (32)
+Date: Tue,  7 Jun 2016 13:05:46 +0200
+Message-ID: <1465297548-17182-9-git-send-email-kraxel@redhat.com>
 References: <1465297548-17182-1-git-send-email-kraxel@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1465297548-17182-1-git-send-email-kraxel@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lee Jones <lee@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, open list <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Cc: Gerd Hoffmann <kraxel@redhat.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric@anholt.net>
-
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-index 11d3056..6ffe087 100644
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-@@ -30,6 +30,10 @@ Raspberry Pi 2 Model B
- Required root node properties:
- compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
- 
-+Raspberry Pi 3 Model B
-+Required root node properties:
-+compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
-+
- Raspberry Pi Compute Module
- Required root node properties:
- compatible = "raspberrypi,compute-module", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 06b6c2d..71e2d36 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -66,7 +66,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2835-rpi-b-rev2.dtb \
+ 	bcm2835-rpi-b-plus.dtb \
+ 	bcm2835-rpi-a-plus.dtb \
+-	bcm2836-rpi-2-b.dtb
++	bcm2836-rpi-2-b.dtb \
++	../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dtb
+ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm4708-asus-rt-ac56u.dtb \
+ 	bcm4708-asus-rt-ac68u.dtb \
 -- 
 1.8.3.1
