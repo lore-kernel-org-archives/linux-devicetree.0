@@ -1,7 +1,7 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v4 08/14] arm64: numa: Use pr_fmt()
-Date: Tue, 7 Jun 2016 16:08:12 +0800
-Message-ID: <1465286898-13828-9-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v4 12/14] arm64/numa: remove some useless code
+Date: Tue, 7 Jun 2016 16:08:16 +0800
+Message-ID: <1465286898-13828-13-git-send-email-thunder.leizhen@huawei.com>
 References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,157 +18,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Xinwei Hu <huxinwei@huawei.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
+Cc: Xinwei Hu <huxinwei@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+1. Currently only cpu0 set on cpu_possible_mask and percpu areas have not
+   been initialized.
+2. No reason to limit cpu0 must belongs to node0.
 
-Use pr_fmt to prefix kernel output, and remove duplicated msg
-of NUMA turned off.
-
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/arm64/mm/numa.c | 42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ arch/arm64/mm/numa.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 1b9622c..8be5ba3 100644
+index d73b0a0..92b1692 100644
 --- a/arch/arm64/mm/numa.c
 +++ b/arch/arm64/mm/numa.c
-@@ -17,6 +17,8 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+@@ -93,7 +93,6 @@ void numa_clear_node(unsigned int cpu)
   */
-
-+#define pr_fmt(fmt) "numa: " fmt
-+
- #include <linux/acpi.h>
- #include <linux/bootmem.h>
- #include <linux/memblock.h>
-@@ -36,10 +38,9 @@ static __init int numa_parse_early_param(char *opt)
+ static void __init setup_node_to_cpumask_map(void)
  {
- 	if (!opt)
- 		return -EINVAL;
--	if (!strncmp(opt, "off", 3)) {
--		pr_info("%s\n", "NUMA turned off");
-+	if (!strncmp(opt, "off", 3))
- 		numa_off = true;
--	}
-+
- 	return 0;
- }
- early_param("numa", numa_parse_early_param);
-@@ -108,7 +109,7 @@ static void __init setup_node_to_cpumask_map(void)
- 		set_cpu_numa_node(cpu, NUMA_NO_NODE);
+-	unsigned int cpu;
+ 	int node;
 
+ 	/* setup nr_node_ids if not done yet */
+@@ -106,9 +105,6 @@ static void __init setup_node_to_cpumask_map(void)
+ 		cpumask_clear(node_to_cpumask_map[node]);
+ 	}
+
+-	for_each_possible_cpu(cpu)
+-		set_cpu_numa_node(cpu, NUMA_NO_NODE);
+-
  	/* cpumask_of_node() will now work */
--	pr_debug("NUMA: Node to cpumask map for %d nodes\n", nr_node_ids);
-+	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
+ 	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
  }
+@@ -379,10 +375,6 @@ static int __init numa_init(int (*init_func)(void))
 
- /*
-@@ -142,19 +143,19 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
- 	int ret;
+ 	setup_node_to_cpumask_map();
 
- 	if (nid >= MAX_NUMNODES) {
--		pr_warn("NUMA: Node id %u exceeds maximum value\n", nid);
-+		pr_warn("Node id %u exceeds maximum value\n", nid);
- 		return -EINVAL;
- 	}
-
- 	ret = memblock_set_node(start, (end - start), &memblock.memory, nid);
- 	if (ret < 0) {
--		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
-+		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
- 			start, (end - 1), nid);
- 		return ret;
- 	}
-
- 	node_set(nid, numa_nodes_parsed);
--	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
-+	pr_info("Adding memblock [0x%llx - 0x%llx] on node %d\n",
- 			start, (end - 1), nid);
- 	return ret;
- }
-@@ -169,19 +170,18 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
- 	void *nd;
- 	int tnid;
-
--	pr_info("NUMA: Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
--			nid, start_pfn << PAGE_SHIFT,
--			(end_pfn << PAGE_SHIFT) - 1);
-+	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
-+		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
-
- 	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
- 	nd = __va(nd_pa);
-
- 	/* report and initialize */
--	pr_info("NUMA: NODE_DATA [mem %#010Lx-%#010Lx]\n",
-+	pr_info("  NODE_DATA [mem %#010Lx-%#010Lx]\n",
- 		nd_pa, nd_pa + nd_size - 1);
- 	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
- 	if (tnid != nid)
--		pr_info("NUMA: NODE_DATA(%d) on node %d\n", nid, tnid);
-+		pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
-
- 	node_data[nid] = nd;
- 	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
-@@ -238,8 +238,7 @@ static int __init numa_alloc_distance(void)
- 			numa_distance[i * numa_distance_cnt + j] = i == j ?
- 				LOCAL_DISTANCE : REMOTE_DISTANCE;
-
--	pr_debug("NUMA: Initialized distance table, cnt=%d\n",
--			numa_distance_cnt);
-+	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
-
+-	/* init boot processor */
+-	cpu_to_node_map[0] = 0;
+-	map_cpu_to_node(0, 0);
+-
  	return 0;
  }
-@@ -260,20 +259,20 @@ static int __init numa_alloc_distance(void)
- void __init numa_set_distance(int from, int to, int distance)
- {
- 	if (!numa_distance) {
--		pr_warn_once("NUMA: Warning: distance table not allocated yet\n");
-+		pr_warn_once("Warning: distance table not allocated yet\n");
- 		return;
- 	}
 
- 	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
- 			from < 0 || to < 0) {
--		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
-+		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
- 			    from, to, distance);
- 		return;
- 	}
-
- 	if ((u8)distance != distance ||
- 	    (from == to && distance != LOCAL_DISTANCE)) {
--		pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
-+		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
- 			     from, to, distance);
- 		return;
- 	}
-@@ -300,7 +299,7 @@ static int __init numa_register_nodes(void)
- 	/* Check that valid nid is set to memblks */
- 	for_each_memblock(memory, mblk)
- 		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
--			pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
-+			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
- 				mblk->nid, mblk->base,
- 				mblk->base + mblk->size - 1);
- 			return -EINVAL;
-@@ -371,9 +370,10 @@ static int __init dummy_numa_init(void)
- 	struct memblock_region *mblk;
-
- 	if (numa_off)
--		pr_info("NUMA disabled\n"); /* Forced off on command line. */
--	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
--	       0LLU, PFN_PHYS(max_pfn) - 1);
-+		pr_warn("NUMA turned off by user\n"); /* Forced off on command line. */
-+
-+	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
-+	        0LLU, PFN_PHYS(max_pfn) - 1);
-
- 	for_each_memblock(memory, mblk) {
- 		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
 --
 2.5.0
