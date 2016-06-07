@@ -1,47 +1,53 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 1/2] ARM: dts: exynos: Fix port nodes names for Exynos5250
- Snow board
-Date: Tue, 7 Jun 2016 09:49:33 +0100
-Message-ID: <57568A9D.7080804@arm.com>
-References: <1465244684-23612-1-git-send-email-javier@osg.samsung.com>
- <1465244684-23612-2-git-send-email-javier@osg.samsung.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] mfd: twl6040: Handle mclk used for HPPLL and optional
+ internal clock source
+Date: Tue, 7 Jun 2016 11:54:57 +0300
+Message-ID: <7d5e3117-a014-0107-bf75-775401834e02@ti.com>
+References: <1462965209-6955-1-git-send-email-peter.ujfalusi@ti.com>
+ <20160516150231.GA5527@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1465244684-23612-2-git-send-email-javier@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160516150231.GA5527@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/16 21:24, Javier Martinez Canillas wrote:
-> Commit 5c9cbade0629 ("ARM: dts: exynos: Fix DTC unit name warnings in
-> Exynos5250") fixed all the DTC warnings about mismatchs between unit
-> names and reg properties in Exynos5250 boards DTS.
-> 
-> But unfortunately it also added a regression on the Exynos5250 Snow
-> Chromebook when changing the port node names since the OF graph logic
-> expects the port nodes to be always named 'port'.
-> 
-> The Documentation/devicetree/bindings/graph.txt binding document says
-> that when there is more than one port, '#address-cells', '#size-cells'
-> and 'reg' properties should be used to number the port nodes.
-> 
-> Fixes: 5c9cbade0629 ("ARM: dts: exynos: Fix DTC unit name warnings in Exynos5250")
-> Reported-by: Marc Zyngier <marc.zyngier@arm.com>
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Lee,
 
-I've tested this on top of -rc1, and it indeed fixes the display
-initialization I was seeing. It then dies in a horrible way, but that's
-a separate bug.
+On 05/16/16 18:02, Rob Herring wrote:
+> On Wed, May 11, 2016 at 02:13:29PM +0300, Peter Ujfalusi wrote:
+>> On some boards, like omap5-uevm the MCLK is gated by default and in =
+order
+>> to be able to use the High performance modes of twl6040 it need to b=
+e
+>> enabled by SW.
+>> Add support for handling the MCLK source clock via CCF.
+>> At the same time lover the print priority of the notification that t=
+he 32K
+>> clock is not proveded so it is not going to be handled by the driver=
+=2E
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/twl6040.txt |  4 +--
+>=20
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-So for this patch:
+Can you take a look at this patch if it is OK to pick?
 
-Tested-by: Marc Zyngier <marc.zyngier@arm.com>
+>>  drivers/mfd/twl6040.c                             | 34 ++++++++++++=
++++++------
+>>  include/linux/mfd/twl6040.h                       |  3 +-
+>>  3 files changed, 29 insertions(+), 12 deletions(-)
+
 
 Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
