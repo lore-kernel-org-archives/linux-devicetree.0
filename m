@@ -1,181 +1,322 @@
-From: "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] ASoC: cs35l33: Add device tree bindings file for
- cs35l33
-Date: Tue, 7 Jun 2016 20:20:42 +0000
-Message-ID: <D37C96A8.1478A%Paul.Handrigan@cirrus.com>
-References: <D37C5AC9.14770%Paul.Handrigan@cirrus.com>
+From: <tthayer@opensource.altera.com>
+Subject: [PATCHv2 2/5] EDAC, altera: ECC Manager IRQ controller support
+Date: Tue, 7 Jun 2016 15:35:57 -0500
+Message-ID: <1465331757-10227-1-git-send-email-tthayer@opensource.altera.com>
+References: <1464193783-5071-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <D37C5AC9.14770%Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Content-ID: <51BF2BBAED35DB48BA64E9DA133D9D04-BNO7SilVNoKakBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1464193783-5071-3-git-send-email-tthayer@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Thor Thayer <tthayer@opensource.altera.com>
 
+To better support child devices, the ECC manager needs to be
+implemented as an IRQ controller.
 
-On 6/7/16, 11:10 AM, "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org> wrote:
+Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+---
+v2  Update with cleanup/improvements from maintainer.
+---
+ drivers/edac/altera_edac.c |  161 +++++++++++++++++++++++++++++++++-----------
+ drivers/edac/altera_edac.h |    5 +-
+ 2 files changed, 124 insertions(+), 42 deletions(-)
 
->
->
->On 6/7/16, 8:55 AM, "Rob Herring" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
->>On Fri, Jun 03, 2016 at 03:11:48PM -0500, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
->>wrote:
->>> From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
->>> 
->>> Add device tree bindings file for the cs35l33 8V boosted
->>> class D amplifier.
->>> 
->>> Signed-off-by: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/sound/cs35l33.txt          | 114
->>>+++++++++++++++++++++
->>>  1 file changed, 114 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/sound/cs35l33.txt
->>> 
->>> diff --git a/Documentation/devicetree/bindings/sound/cs35l33.txt
->>>b/Documentation/devicetree/bindings/sound/cs35l33.txt
->>> new file mode 100644
->>> index 0000000..01fa8fd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/sound/cs35l33.txt
->>> @@ -0,0 +1,114 @@
->>> +CS35L33 Speaker Amplifier
->>> +
->>> +Required properties:
->>> +
->>> +  - compatible : "cirrus,cs35l33"
->>> +
->>> +  - reg : the I2C address of the device for I2C
->>> +
->>> +  - VA-supply, VP-supply : power supplies for the device,
->>> +    as covered in
->>> +    Documentation/devicetree/bindings/regulator/regulator.txt.
->>> +
->>> +Optional properties:
->>> +
->>> +  - reset-gpios : gpio used to reset the amplifier
->>> +
->>> +  - interrupt-parent : Specifies the phandle of the interrupt
->>>controller to
->>> +    which the IRQs from CS35L33 are delivered to.
->>> + -  interrupts : IRQ line info CS35L33.
->>> +    (See 
->>>Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->>> +    for further information relating to interrupt properties)
->>> +
->>> +  - boost-ctl : Booster voltage use to supply the amp. If the value is
->>> +    0, then VBST = VP. If greater than 0, the boost voltage will be
->>>3300mV with
->>> +    a value of 1 and will increase at a step size of 100mV until a
->>>maximum of
->>> +    8000mV.
->>> +
->>> +  - ramp-rate : On power up, it affects the time from when the power
->>> +    up sequence begins to the time the audio reaches a full-scale
->>>output.
->>> +    On power down, it affects the time from when the power-down
->>>sequence
->>> +    begins to when the amplifier disables the PWM outputs. If this
->>>property
->>> +    is not set then soft ramping will be disabled and ramp time would
->>>be
->>> +    20ms. If this property is set to 0,1,2,3 then ramp times would be
->>>40ms,
->>> +    60ms,100ms,175ms respectively for 48KHz sample rate.
->>> +
->>> +  - boost-ipk : The maximum current allowed for the boost converter.
->>> +    The range starts at 1850mA (0xF0) and goes to a maximum of 3600mA
->>>(0xE0)
->>> +    with a step size of 15.625mA. The default is 2500mA (0x90).
->>
->>This is still not in microamps. In other words, instead of 0xF0, use
->>1850000.
->
->OK, I will change this. However, 1850mA would be 1.85A as what we would
->want.  1850000mA is
->1850A.  So, we would want a value of 1850 instead of 0xF0.
-
-Sorry, I got this wrong.  Will set to uA.
->>
->>Similar comment for any other properties where this would make sense.
->>
->>> +
->>> +  - hg-algo : Parameters for internal Class H/G algorithm that
->>> +    controls the amplifier supplies.
->>> +
->>> +  - mem-depth : Memory depth for the Class H/G algorithm measured in
->>>LRCLK
->>> +    cycles. If this property is set to 0, 1, 2, or 3 then the memory
->>>depths
->>> +    will be 1, 4, 8, 16 LRCLK cycles.  The default is 16 LRCLK cycles.
->>> +
->>> +    release-rate : The number of consecutive LRCLK periods before
->>>allowing
->>> +    release condition tracking updates. The number of LRCLK periods
->>>start
->>> +    at 3 to a maximum of 255.
->>> +
->>> +  - ldo-thld : Configures the signal threshold at which the PWM output
->>>stage
->>> +    enters LDO operation. Starts as a default value of 50mV for a
->>>value of 1
->>> +    and increases with a step size of 50mV to a maximum of 750mV
->>>(value of
->>> +    0xF).
->>> +
->>> +  - ldo-path-disable : This is a boolean property. If present, the H/G
->>> +    algorithm uses the max detection path.  If not present, the LDO
->>> +    detection path is used.
->>> +
->>> +  - ldo-entry-delay : The LDO entry delay in milliseconds before the
->>>H/G
->>> +    algorithm switches to the LDO voltage.  This property can be set
->>>to values
->>> +    from 0 to 7 for delays of 5ms, 10ms, 50ms, 100ms, 200ms, 500ms,
->>>1000ms.
->>> +    The default is 100ms.
->>> +
->>> +  - vp-hg-auto : This is a boolean property.  When set, class H/G VPhg
->>> +    automatic updating is enabled.
->>> +
->>> +  - vp-hg :  Class H/G algorithm VPhg.  Controls the H/G algorithm's
->>> +    reference to the VP voltage for when to start generating a boosted
->>>VBST.
->>> +    The reference voltage starts at 3000mV with a value of 0x3 and is
->>>increased
->>> +    by 100mV per step to a maximum of 5500mV.
->>> +
->>> +  - vp-hg-rate : The rate (number of LRCLK periods) at which the VPhg
->>>is
->>> +    allowed to increase to a higher voltage when using VPhg automatic
->>> +    tracking. This property can be set to values from 0 to 3 with
->>>rates of 128
->>> +    periods, 2048 periods, 32768 periods, and 524288 periods.
->>> +    The default is 32768 periods.
->>> +
->>> +  - vp-hg-va : VA calculation reference for automatic VPhg tracking
->>>using VPMON.
->>> +    This property can be set to values from 0 to 6 starting at 1800mV
->>>with a
->>> +    step size of 50mV up to a maximum value of 1750mV.  Default is
->>>1800mV.
->>
->>As I said on the last version, all these non-common properties need
->>vendor prefixes.
->
->Sorry, I will add in the vendor prefixes.
->
->>
->>Rob
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 5b4d223..573c68d 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -22,9 +22,11 @@
+ #include <linux/edac.h>
+ #include <linux/genalloc.h>
+ #include <linux/interrupt.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+@@ -882,22 +884,26 @@ static void ocram_free_mem(void *p, size_t size, void *other)
+ 	gen_pool_free((struct gen_pool *)other, (u32)p, size);
+ }
+ 
+-static irqreturn_t altr_edac_a10_ecc_irq(struct altr_edac_device_dev *dci,
+-					 bool sberr)
++static irqreturn_t altr_edac_a10_ecc_irq(int irq, void *dev_id)
+ {
++	struct altr_edac_device_dev *dci = dev_id;
+ 	void __iomem  *base = dci->base;
+ 
+-	if (sberr) {
++	if (irq == dci->sb_irq) {
+ 		writel(ALTR_A10_ECC_SERRPENA,
+ 		       base + ALTR_A10_ECC_INTSTAT_OFST);
+ 		edac_device_handle_ce(dci->edac_dev, 0, 0, dci->edac_dev_name);
+-	} else {
++		return IRQ_HANDLED;
++	} else if (irq == dci->db_irq) {
+ 		writel(ALTR_A10_ECC_DERRPENA,
+ 		       base + ALTR_A10_ECC_INTSTAT_OFST);
+ 		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
+ 		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
++		return IRQ_HANDLED;
++	} else {
++		WARN_ON(1);
+ 	}
+-	return IRQ_HANDLED;
++	return IRQ_NONE;
+ }
+ 
+ const struct edac_device_prv_data ocramecc_data = {
+@@ -988,22 +994,27 @@ static int altr_l2_check_deps(struct altr_edac_device_dev *device)
+ 	return -ENODEV;
+ }
+ 
+-static irqreturn_t altr_edac_a10_l2_irq(struct altr_edac_device_dev *dci,
+-					bool sberr)
++static irqreturn_t altr_edac_a10_l2_irq(int irq, void *dev_id)
+ {
+-	if (sberr) {
++	struct altr_edac_device_dev *dci = dev_id;
++
++	if (irq == dci->sb_irq) {
+ 		regmap_write(dci->edac->ecc_mgr_map,
+ 			     A10_SYSGMR_MPU_CLEAR_L2_ECC_OFST,
+ 			     A10_SYSGMR_MPU_CLEAR_L2_ECC_SB);
+ 		edac_device_handle_ce(dci->edac_dev, 0, 0, dci->edac_dev_name);
+-	} else {
++		return IRQ_HANDLED;
++	} else if (irq == dci->db_irq) {
+ 		regmap_write(dci->edac->ecc_mgr_map,
+ 			     A10_SYSGMR_MPU_CLEAR_L2_ECC_OFST,
+ 			     A10_SYSGMR_MPU_CLEAR_L2_ECC_MB);
+ 		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
+ 		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
++		return IRQ_HANDLED;
++	} else {
++		WARN_ON(1);
+ 	}
+-	return IRQ_HANDLED;
++	return IRQ_NONE;
+ }
+ 
+ const struct edac_device_prv_data l2ecc_data = {
+@@ -1075,28 +1086,28 @@ static ssize_t altr_edac_a10_device_trig(struct file *file,
+ 	return count;
+ }
+ 
+-static irqreturn_t altr_edac_a10_irq_handler(int irq, void *dev_id)
++static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ {
+-	irqreturn_t rc = IRQ_NONE;
+-	struct altr_arria10_edac *edac = dev_id;
+-	struct altr_edac_device_dev *dci;
+-	int irq_status;
+-	bool sberr = (irq == edac->sb_irq) ? 1 : 0;
+-	int sm_offset = sberr ? A10_SYSMGR_ECC_INTSTAT_SERR_OFST :
+-				A10_SYSMGR_ECC_INTSTAT_DERR_OFST;
++	int dberr, bit, sm_offset, irq_status;
++	struct altr_arria10_edac *edac = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	int irq = irq_desc_get_irq(desc);
++
++	dberr = (irq == edac->db_irq) ? 1 : 0;
++	sm_offset = dberr ? A10_SYSMGR_ECC_INTSTAT_DERR_OFST :
++			    A10_SYSMGR_ECC_INTSTAT_SERR_OFST;
++
++	chained_irq_enter(chip, desc);
+ 
+ 	regmap_read(edac->ecc_mgr_map, sm_offset, &irq_status);
+ 
+-	if ((irq != edac->sb_irq) && (irq != edac->db_irq)) {
+-		WARN_ON(1);
+-	} else {
+-		list_for_each_entry(dci, &edac->a10_ecc_devices, next) {
+-			if (irq_status & dci->data->irq_status_mask)
+-				rc = dci->data->ecc_irq_handler(dci, sberr);
+-		}
++	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
++		irq = irq_linear_revmap(edac->domain, dberr * 32 + bit);
++		if (irq)
++			generic_handle_irq(irq);
+ 	}
+ 
+-	return rc;
++	chained_irq_exit(chip, desc);
+ }
+ 
+ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
+@@ -1168,6 +1179,34 @@ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
+ 			goto err_release_group1;
+ 	}
+ 
++	altdev->sb_irq = irq_of_parse_and_map(np, 0);
++	if (!altdev->sb_irq) {
++		edac_printk(KERN_ERR, EDAC_DEVICE, "Error allocating SBIRQ\n");
++		rc = -ENODEV;
++		goto err_release_group1;
++	}
++	rc = devm_request_irq(edac->dev, altdev->sb_irq,
++			      prv->ecc_irq_handler,
++			      IRQF_SHARED, ecc_name, altdev);
++	if (rc) {
++		edac_printk(KERN_ERR, EDAC_DEVICE, "No DBERR IRQ resource\n");
++		goto err_release_group1;
++	}
++
++	altdev->db_irq = irq_of_parse_and_map(np, 1);
++	if (!altdev->db_irq) {
++		edac_printk(KERN_ERR, EDAC_DEVICE, "Error allocating DBIRQ\n");
++		rc = -ENODEV;
++		goto err_release_group1;
++	}
++	rc = devm_request_irq(edac->dev, altdev->db_irq,
++			      prv->ecc_irq_handler,
++			      IRQF_SHARED, ecc_name, altdev);
++	if (rc) {
++		edac_printk(KERN_ERR, EDAC_DEVICE, "No DBERR IRQ resource\n");
++		goto err_release_group1;
++	}
++
+ 	rc = edac_device_add_device(dci);
+ 	if (rc) {
+ 		dev_err(edac->dev, "edac_device_add_device failed\n");
+@@ -1186,7 +1225,6 @@ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
+ err_release_group1:
+ 	edac_device_free_ctl_info(dci);
+ err_release_group:
+-	edac_printk(KERN_ALERT, EDAC_DEVICE, "%s: %d\n", __func__, __LINE__);
+ 	devres_release_group(edac->dev, NULL);
+ 	edac_printk(KERN_ERR, EDAC_DEVICE,
+ 		    "%s:Error setting up EDAC device: %d\n", ecc_name, rc);
+@@ -1194,11 +1232,43 @@ err_release_group:
+ 	return rc;
+ }
+ 
++static void a10_eccmgr_irq_mask(struct irq_data *d)
++{
++	struct altr_arria10_edac *edac = irq_data_get_irq_chip_data(d);
++
++	regmap_write(edac->ecc_mgr_map,	A10_SYSMGR_ECC_INTMASK_SET_OFST,
++		     BIT(d->hwirq));
++}
++
++static void a10_eccmgr_irq_unmask(struct irq_data *d)
++{
++	struct altr_arria10_edac *edac = irq_data_get_irq_chip_data(d);
++
++	regmap_write(edac->ecc_mgr_map,	A10_SYSMGR_ECC_INTMASK_CLR_OFST,
++		     BIT(d->hwirq));
++}
++
++static int a10_eccmgr_irqdomain_map(struct irq_domain *d, unsigned int irq,
++				    irq_hw_number_t hwirq)
++{
++	struct altr_arria10_edac *edac = d->host_data;
++
++	irq_set_chip_and_handler(irq, &edac->irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, edac);
++	irq_set_noprobe(irq);
++
++	return 0;
++}
++
++struct irq_domain_ops a10_eccmgr_ic_ops = {
++	.map = a10_eccmgr_irqdomain_map,
++	.xlate = irq_domain_xlate_twocell,
++};
++
+ static int altr_edac_a10_probe(struct platform_device *pdev)
+ {
+ 	struct altr_arria10_edac *edac;
+ 	struct device_node *child;
+-	int rc;
+ 
+ 	edac = devm_kzalloc(&pdev->dev, sizeof(*edac), GFP_KERNEL);
+ 	if (!edac)
+@@ -1216,23 +1286,34 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+ 		return PTR_ERR(edac->ecc_mgr_map);
+ 	}
+ 
++	edac->irq_chip.name = pdev->dev.of_node->name;
++	edac->irq_chip.irq_mask = a10_eccmgr_irq_mask;
++	edac->irq_chip.irq_unmask = a10_eccmgr_irq_unmask;
++	edac->domain = irq_domain_add_linear(pdev->dev.of_node, 64,
++					     &a10_eccmgr_ic_ops, edac);
++	if (!edac->domain) {
++		dev_err(&pdev->dev, "Error adding IRQ domain\n");
++		return -ENOMEM;
++	}
++
+ 	edac->sb_irq = platform_get_irq(pdev, 0);
+-	rc = devm_request_irq(&pdev->dev, edac->sb_irq,
+-			      altr_edac_a10_irq_handler,
+-			      IRQF_SHARED, dev_name(&pdev->dev), edac);
+-	if (rc) {
+-		edac_printk(KERN_ERR, EDAC_DEVICE, "No SBERR IRQ resource\n");
+-		return rc;
++	if (edac->sb_irq < 0) {
++		dev_err(&pdev->dev, "No SBERR IRQ resource\n");
++		return edac->sb_irq;
+ 	}
+ 
++	irq_set_chained_handler_and_data(edac->sb_irq,
++					 altr_edac_a10_irq_handler,
++					 edac);
++
+ 	edac->db_irq = platform_get_irq(pdev, 1);
+-	rc = devm_request_irq(&pdev->dev, edac->db_irq,
+-			      altr_edac_a10_irq_handler,
+-			      IRQF_SHARED, dev_name(&pdev->dev), edac);
+-	if (rc) {
+-		edac_printk(KERN_ERR, EDAC_DEVICE, "No DBERR IRQ resource\n");
+-		return rc;
++	if (edac->db_irq < 0) {
++		dev_err(&pdev->dev, "No DBERR IRQ resource\n");
++		return edac->db_irq;
+ 	}
++	irq_set_chained_handler_and_data(edac->db_irq,
++					 altr_edac_a10_irq_handler,
++					 edac);
+ 
+ 	for_each_child_of_node(pdev->dev.of_node, child) {
+ 		if (!of_device_is_available(child))
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index 42090f3..62b0fa0 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -295,8 +295,7 @@ struct edac_device_prv_data {
+ 	int ce_set_mask;
+ 	int ue_set_mask;
+ 	int set_err_ofst;
+-	irqreturn_t (*ecc_irq_handler)(struct altr_edac_device_dev *dci,
+-				       bool sb);
++	irqreturn_t (*ecc_irq_handler)(int irq, void *dev_id);
+ 	int trig_alloc_sz;
+ 	const struct file_operations *inject_fops;
+ };
+@@ -320,6 +319,8 @@ struct altr_arria10_edac {
+ 	struct regmap		*ecc_mgr_map;
+ 	int sb_irq;
+ 	int db_irq;
++	struct irq_domain	*domain;
++	struct irq_chip		irq_chip;
+ 	struct list_head	a10_ecc_devices;
+ };
+ 
+-- 
+1.7.9.5
