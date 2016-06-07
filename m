@@ -1,47 +1,45 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 00/12] usb/mmc/power: Generic power sequence (and fix
- USB/LAN when TFTP booting)
-Date: Tue, 07 Jun 2016 08:03:55 +0200
-Message-ID: <575663CB.3070600@samsung.com>
-References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
- <2034186.JKeBi87zYl@diego>
+From: "Li, Yong B" <yong.b.li@intel.com>
+Subject: RE: [PATCH] ARM: dts: am335x-boneblack: add i2c1 DT entry
+Date: Tue, 7 Jun 2016 06:14:33 +0000
+Message-ID: <BCE6BEBCDDF4B84E891D2320CBF96F1D3F9FD673@SHSMSX101.ccr.corp.intel.com>
+References: <1464853310-8738-1-git-send-email-yong.b.li@intel.com>
+ <CAOCHtYib9YxckneM-j0Gk1YE=MnvAwAhvDjEDEuFJbH6W3EcWA@mail.gmail.com>
+ <20160602173932.GF5995@atomide.com>
+ <CAOCHtYiWYrwSidHnKv4siFT-wU=tt5-YeDTwbM022ZTxdPFYYA@mail.gmail.com>
+ <20160602175635.GG5995@atomide.com>
+ <BCE6BEBCDDF4B84E891D2320CBF96F1D3F9FB1EC@SHSMSX101.ccr.corp.intel.com>
+ <20160607060004.GD22406@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <2034186.JKeBi87zYl@diego>
+In-Reply-To: <20160607060004.GD22406@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: hzpeterchen@gmail.com, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.or, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Robert Nelson <robertcnelson@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux kernel <linux-kernel@vger.kernel.org>, "sdliyong@gmail.com" <sdliyong@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2016 10:43 PM, Heiko St=FCbner wrote:
-> Hi,
->=20
-> Am Mittwoch, 1. Juni 2016, 10:02:09 schrieb Krzysztof Kozlowski:
->> My third approach for a USB power sequence which fixes usb3503+lan
->> on Odroid U3 board if it was initialized by bootloader
->> (e.g. for TFTP boot).
->=20
-> I was just tackling a similar bringup problem regarding an embedded u=
-sb hub=20
-> and usb-sata bridge and stumbled upon this series.
->=20
-> While on my (rockchip-)boards it's always "just" a reset pin that nee=
-ds=20
-> handling, this series looks like it would solve exactly that problem =
-in a very=20
-> nice way.
->=20
-> So while I cannot provide any meaningful insight right now, it would =
-be cool=20
-> if you could keep me in the loop, as I'm really looking forward to th=
-is series=20
-> progressing.
->=20
+Thanks Tony.
 
-Sure, good to know that this problem affects more people. I do not feel
-such alone anymore. ;)
+I checked the DTS/overlays using linux-yocto-4.1 kernel(Ostro OS). It seems to me that the kernel/u-boot do not include the latest overlay support patch. And I also tested the latest Debian 8.4 using BBB boards, the I2C1 does not work too. This patch is the simplest solution for I2C1/I2C2 in linux-yocto-4.1.
 
-Best regards,
-Krzysztof
+Thanks,
+Yong
+-----Original Message-----
+From: Tony Lindgren [mailto:tony@atomide.com] 
+Sent: Tuesday, June 7, 2016 2:00 PM
+To: Li, Yong B <yong.b.li@intel.com>
+Cc: Robert Nelson <robertcnelson@gmail.com>; Benoit Cousson <bcousson@baylibre.com>; Rob Herring <robh+dt@kernel.org>; Pawel Moll <pawel.moll@arm.com>; Mark Rutland <mark.rutland@arm.com>; Ian Campbell <ijc+devicetree@hellion.org.uk>; Kumar Gala <galak@codeaurora.org>; Russell King <linux@arm.linux.org.uk>; linux-omap@vger.kernel.org; devicetree <devicetree@vger.kernel.org>; linux-arm-kernel@lists.infradead.org; linux kernel <linux-kernel@vger.kernel.org>; sdliyong@gmail.com
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack: add i2c1 DT entry
+
+* Li, Yong B <yong.b.li@intel.com> [160602 22:49]:
+> Hi Tony,
+> 
+> I can submit a V2 version about the "disabled", or just drop this patch?
+
+Probably best to wait on this one until we know how it can be enabled without manually editing the dts file. I'm still hoping u-boot could enable it based on some environment variable..
+
+Regards,
+
+Tony
