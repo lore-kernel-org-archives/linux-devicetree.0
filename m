@@ -1,70 +1,75 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [PATCH v10 3/4] tee: add OP-TEE driver
-Date: Tue, 7 Jun 2016 13:55:11 +0200
-Message-ID: <20160607115509.GA31907@ermac>
-References: <1464784888-19854-1-git-send-email-jens.wiklander@linaro.org>
- <1464784888-19854-4-git-send-email-jens.wiklander@linaro.org>
- <5755F005.3050104@ti.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 1/2] ARM64: config: Enable PMIC MAX77620 for Tegra 2180 platform
+Date: Tue, 7 Jun 2016 17:14:56 +0530
+Message-ID: <1465299897-2491-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5755F005.3050104@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Viro <viro@ZenIV.linux.org.uk>, Andreas Dannenberg <dannenberg@ti.com>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>
+To: thierry.reding@gmail.com, swarren@wwwdotorg.org, will.deacon@arm.com, robh+dt@kernel.org
+Cc: gnurou@gmail.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arnd@arndb.de, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 04:49:57PM -0500, Nishanth Menon wrote:
-> On 06/01/2016 07:41 AM, Jens Wiklander wrote:
-> [...]
-> > diff --git a/drivers/tee/Makefile b/drivers/tee/Makefile
-> > index 60d2dab..53f3c76 100644
-> > --- a/drivers/tee/Makefile
-> > +++ b/drivers/tee/Makefile
-> > @@ -1,3 +1,4 @@
-> >  obj-y += tee.o
-> >  obj-y += tee_shm.o
-> >  obj-y += tee_shm_pool.o
-> > +obj-$(CONFIG_OPTEE) += optee/
-> > diff --git a/drivers/tee/optee/Kconfig b/drivers/tee/optee/Kconfig
-> > new file mode 100644
-> > index 0000000..a7a8b71
-> > --- /dev/null
-> > +++ b/drivers/tee/optee/Kconfig
-> > @@ -0,0 +1,8 @@
-> > +# OP-TEE Trusted Execution Environment Configuration
-> > +config OPTEE
-> > +	tristate "OP-TEE"
-> > +	default n
-> You should'nt need this.
+NVIDIA's Tegra210 Jetson platform (P2180) uses the following
+components:
+	MAX77620 as system PMIC.
+	PCA9539 as I2C GPIO bus expander
 
-I'll fix.
+Enable the configs for PCA9539 GPIOs and Interrupt support and
+MAX77620 MFD/GPIO/Pincontrol/Regulators.
 
-> 
-> > +	depends on HAVE_ARM_SMCCC
-> 
-> HAVE_ARM_SMCCC might depend on OPTEE secure support in place, right? I
-> wonder if setsup any constraints for having a single zImage for OPTEE
-> and non-OPTEE systems, I think not.. just wondering.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V1:
+- Rebase change and added PCA also in the enable list.
 
-No, HAVE_ARM_SMCCC indicates just the presence of the arm_smccc_smc()
-and arm_smccc_hvc() assembly functions. They are used by PSCI
-independent of any TEE driver also.
+ arch/arm64/configs/defconfig | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> 
-> Further, at this patch, smatch[1] complains:
-> > +drivers/tee/optee/core.c:488 optee_probe() error: we previously assumed 'optee' could be null (see line 444) 
-
-Sorry, I'll fix.
-
-> 
-> Checkpatch --strict complains:
-> 
-> > +CHECK: Alignment should match open parenthesis
-> > +#878: FILE: drivers/tee/optee/core.c:333:
-> > ++static struct tee_shm_pool *optee_config_shm_ioremap(struct device *dev,
-> > ++                      optee_invoke_fn *invoke_fn,
-
-Fixing this warning would make it less readable in my opinion, I'd
-rather keep it as it is if you don't mind.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 0bd559a..f634ccb 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -185,6 +185,7 @@ CONFIG_SPI_QUP=y
+ CONFIG_SPI_SPIDEV=m
+ CONFIG_SPMI=y
+ CONFIG_PINCTRL_SINGLE=y
++CONFIG_PINCTRL_MAX77620=y
+ CONFIG_PINCTRL_MSM8916=y
+ CONFIG_PINCTRL_QCOM_SPMI_PMIC=y
+ CONFIG_GPIO_SYSFS=y
+@@ -192,6 +193,9 @@ CONFIG_GPIO_DWAPB=y
+ CONFIG_GPIO_PL061=y
+ CONFIG_GPIO_RCAR=y
+ CONFIG_GPIO_XGENE=y
++CONFIG_GPIO_PCA953X=y
++CONFIG_GPIO_PCA953X_IRQ=y
++CONFIG_GPIO_MAX77620=y
+ CONFIG_POWER_RESET_MSM=y
+ CONFIG_POWER_RESET_XGENE=y
+ CONFIG_POWER_RESET_SYSCON=y
+@@ -202,12 +206,14 @@ CONFIG_THERMAL_EMULATION=y
+ CONFIG_EXYNOS_THERMAL=y
+ CONFIG_WATCHDOG=y
+ CONFIG_RENESAS_WDT=y
++CONFIG_MFD_MAX77620=y
+ CONFIG_MFD_SPMI_PMIC=y
+ CONFIG_MFD_SEC_CORE=y
+ CONFIG_MFD_HI655X_PMIC=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_HI655X=y
++CONFIG_REGULATOR_MAX77620=y
+ CONFIG_REGULATOR_QCOM_SMD_RPM=y
+ CONFIG_REGULATOR_QCOM_SPMI=y
+ CONFIG_REGULATOR_S2MPS11=y
+@@ -262,6 +268,7 @@ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ CONFIG_LEDS_TRIGGER_CPU=y
+ CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_MAX77686=y
+ CONFIG_RTC_DRV_S5M=y
+ CONFIG_RTC_DRV_DS3232=y
+ CONFIG_RTC_DRV_EFI=y
+-- 
+2.1.4
