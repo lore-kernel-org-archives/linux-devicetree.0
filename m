@@ -1,70 +1,67 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/7] ARM: dts: sun7i: Add NFC node to
- Allwinner A20 SoC
-Date: Tue, 7 Jun 2016 20:21:55 +0300
-Message-ID: <20160607202155.a86cec11c48fc6c89b280eda@gmail.com>
-References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
-	<1465208664-9366-5-git-send-email-mamlinav@gmail.com>
-Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 03/14] pwm: rockchip: Fix period and duty_cycle
+ approximation
+Date: Tue, 7 Jun 2016 10:25:22 -0700
+Message-ID: <20160607172522.GA130037@google.com>
+References: <1464942192-25967-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1464942192-25967-4-git-send-email-boris.brezillon@free-electrons.com>
+ <20160603200326.GA124478@google.com>
+ <20160604081955.47393878@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEILNBO4XICRUBGFUS6GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1465208664-9366-5-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160604081955.47393878@bbrezillon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  6 Jun 2016 13:24:21 +0300
-Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Sat, Jun 04, 2016 at 08:19:55AM +0200, Boris Brezillon wrote:
+> On Fri, 3 Jun 2016 13:03:26 -0700
+> Brian Norris <briannorris@chromium.org> wrote:
 > 
-> Add NAND Flash controller node definition to the A20 SoC.
+> > On Fri, Jun 03, 2016 at 10:23:01AM +0200, Boris Brezillon wrote:
+> > > The current implementation always round down the duty and period
+> > > values, while it would be better to round them to the closest integer.  
+> > 
+> > Agreed. As I noted to you elsewhere, not having this change can cause
+> > problems where doing a series of pwm_get_state() / modify /
+> > pwm_apply_state() will propagate rounding errors, which will change the
+> > period unexpectedly. e.g., I have an expected period of 3.333 us and a
+> > clk rate of 112.666667 MHz -- the clock frequency doesn't divide evenly,
+> > so the period (stashed in nanoseconds) shrinks when we convert to the
+> > register value and back, as follows:
+> > 
+> >  pwm_apply_state(): register = period * 112666667 / 1000000000;
+> >  pwm_get_state(): period = register * 1000000000 / 112666667;
+> > 
+> > or in other words:
+> > 
+> >  period = period * 112666667 / 1000000000 * 1000000000 / 112666667;
+> > 
+> > which yields a sequence like:
+> > 
+> >  3333 -> 3328
+> >  3328 -> 3319
+> >  3319 -> 3310
+> >  3310 -> 3301
+> >  3301 -> 3292
+> >  3292 -> ... (etc) ...
+> > 
+> > With this patch, we'd see instead:
+> > 
+> >  period = div_round_closest(period * 112666667, 1000000000) * 1000000000 / 112666667;
+> > 
+> > which yields a stable sequence:
+> > 
+> >  3333 -> 3337
+> >  3337 -> 3337
+> >  3337 -> ... (etc) ...
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-> index 915979f..e473570 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -826,6 +826,17 @@
->  			#size-cells = <0>;
->  		};
->  
-> +		nfc: nand@01c03000 {
-> +			compatible = "allwinner,sun4i-a10-nand";
-> +			reg = <0x01c03000 0x1000>;
-> +			interrupts = <37>;
+> Woh! Thanks for the detailed explanation. Do you want me to put that in
+> a comment explaining why we're using DIV_ROUND_CLOSEST_ULL()?
 
-Should be
-			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+If you'd like, feel free to add some of this to your v2 description.
 
-> +			clocks = <&ahb_gates 13>, <&nand_clk>;
-> +			clock-names = "ahb", "mod";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->  		emac: ethernet@01c0b000 {
->  			compatible = "allwinner,sun4i-a10-emac";
->  			reg = <0x01c0b000 0x1000>;
-> -- 
-> 2.7.3
-> 
-
-
--- 
-Thanks and regards,
-Aleksei Mamlin
+Brian
