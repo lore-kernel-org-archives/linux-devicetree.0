@@ -1,129 +1,163 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC v2 4/4] ARM: keystone: dma-coherent with safe fallback
-Date: Tue, 7 Jun 2016 13:55:05 +0100
-Message-ID: <20160607125505.GE2633@leverpostej>
-References: <1465183229-24147-1-git-send-email-wmills@ti.com>
- <1465183229-24147-5-git-send-email-wmills@ti.com>
- <20160606085627.GA6831@leverpostej>
- <20160606114321.GJ1041@n2100.armlinux.org.uk>
- <20160606115918.GG6831@leverpostej>
- <20160606123210.GL1041@n2100.armlinux.org.uk>
- <20160607100142.GA2633@leverpostej>
- <20160607123248.GO1041@n2100.armlinux.org.uk>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Subject: Re: [PATCH v4 11/14] arm64/numa: support HAVE_MEMORYLESS_NODES
+Date: Tue, 7 Jun 2016 20:57:42 +0800
+Message-ID: <5756C4C6.7060706@huawei.com>
+References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+ <1465286898-13828-12-git-send-email-thunder.leizhen@huawei.com>
+ <CAFpQJXVaYT5N3GUCFDnUL8OYOuuSSV4QfC8cXL2ecB=1TN57jQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160607123248.GO1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Bill Mills <wmills-l0cyMroinI0@public.gmane.org>, t-kristo-l0cyMroinI0@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, r-woodruff2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFpQJXVaYT5N3GUCFDnUL8OYOuuSSV4QfC8cXL2ecB=1TN57jQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Xinwei Hu <huxinwei@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 01:32:48PM +0100, Russell King - ARM Linux wrote:
-> On Tue, Jun 07, 2016 at 11:01:43AM +0100, Mark Rutland wrote:
-> > So, if we codify the dma-coherent semantics as only matching the working
-> > case today, then it becomes consistent and independent of kernel
-> > configuration, and we can add properties to cater for the other cases,
-> > independent of kernel configuration.
+
+
+On 2016/6/7 16:31, Ganapatrao Kulkarni wrote:
+> On Tue, Jun 7, 2016 at 1:38 PM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
+>> Some numa nodes may have no memory. For example:
+>> 1. cpu0 on node0
+>> 2. cpu1 on node1
+>> 3. device0 access the momory from node0 and node1 take the same time.
 > 
-> That's where our points of view differ.  You claim that it becomes
-> independent of the kernel configuration.  I'm saying that's total
-> rubbish, because it's dependent on the kernel setting the CPU page
-> tables up as it does today.
+> i am wondering, if access to both nodes is same, then why you need numa.
+> the example you are quoting is against the basic principle of "numa"
+> what is device0 here? cpu?
+The device0 can also be a cpu. I drew a simple diagram:
 
-The key point is that *description* of the requirements for coherency
-becomes independent of kernel configuration. Yes, whether or not a
-kernel can support those depends on the configuration.
+  cpu0     cpu1        cpu2/device0
+    |        |              |
+    |        |              |
+   DDR0     DDR1    No DIMM slots or no DIMM plugged
+ (node0)  (node1)         (node2)
 
-> If we set them up differently, then it doesn't work so well.  This
-> is evidenced by Marvell Armada uniprocessor platforms, where they
-> are DMA coherent provided that the S bit is set.  However, because
-> they are uniprocessor platforms, the kernel sets the page tables up
-> with the S bit clear.  That means that the kernel configures the
-> system in a way which results in it being non-coherent.
+>>
+>> So, we can not simply classify device0 to node0 or node1, but we can
+>> define a node2 which distances to node0 and node1 are the same.
+>>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> ---
+>>  arch/arm64/Kconfig      |  4 ++++
+>>  arch/arm64/kernel/smp.c |  1 +
+>>  arch/arm64/mm/numa.c    | 43 +++++++++++++++++++++++++++++++++++++++++--
+>>  3 files changed, 46 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 05c1bf1..5904a62 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -581,6 +581,10 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
+>>         def_bool y
+>>         depends on NUMA
+>>
+>> +config HAVE_MEMORYLESS_NODES
+>> +       def_bool y
+>> +       depends on NUMA
+>> +
+>>  source kernel/Kconfig.preempt
+>>  source kernel/Kconfig.hz
+>>
+>> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+>> index d099306..9e15297 100644
+>> --- a/arch/arm64/kernel/smp.c
+>> +++ b/arch/arm64/kernel/smp.c
+>> @@ -620,6 +620,7 @@ static void __init of_parse_and_init_cpus(void)
+>>                         }
+>>
+>>                         bootcpu_valid = true;
+>> +                       early_map_cpu_to_node(0, of_node_to_nid(dn));
+>>
+>>                         /*
+>>                          * cpu_logical_map has already been
+>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+>> index df5c842..d73b0a0 100644
+>> --- a/arch/arm64/mm/numa.c
+>> +++ b/arch/arm64/mm/numa.c
+>> @@ -128,6 +128,14 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
+>>                 nid = 0;
+>>
+>>         cpu_to_node_map[cpu] = nid;
+>> +
+>> +       /*
+>> +        * We should set the numa node of cpu0 as soon as possible, because it
+>> +        * has already been set up online before. cpu_to_node(0) will soon be
+>> +        * called.
+>> +        */
+>> +       if (!cpu)
+>> +               set_cpu_numa_node(cpu, nid);
+>>  }
+>>
+>>  #ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
+>> @@ -215,6 +223,35 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>>         return ret;
+>>  }
+>>
+>> +static u64 __init alloc_node_data_from_nearest_node(int nid, const size_t size)
+>> +{
+>> +       int i, best_nid, distance;
+>> +       u64 pa;
+>> +       DECLARE_BITMAP(nodes_map, MAX_NUMNODES);
+>> +
+>> +       bitmap_zero(nodes_map, MAX_NUMNODES);
+>> +       bitmap_set(nodes_map, nid, 1);
+>> +
+>> +find_nearest_node:
+>> +       best_nid = NUMA_NO_NODE;
+>> +       distance = INT_MAX;
+>> +
+>> +       for_each_clear_bit(i, nodes_map, MAX_NUMNODES)
+>> +               if (numa_distance[nid][i] < distance) {
+>> +                       best_nid = i;
+>> +                       distance = numa_distance[nid][i];
+>> +               }
+>> +
+>> +       pa = memblock_alloc_nid(size, SMP_CACHE_BYTES, best_nid);
+>> +       if (!pa) {
+>> +               BUG_ON(best_nid == NUMA_NO_NODE);
+>> +               bitmap_set(nodes_map, best_nid, 1);
+>> +               goto find_nearest_node;
+>> +       }
+>> +
+>> +       return pa;
+>> +}
+>> +
+>>  /**
+>>   * Initialize NODE_DATA for a node on the local memory
+>>   */
+>> @@ -228,7 +265,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>>         pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+>>                 nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
+>>
+>> -       nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+>> +       nd_pa = memblock_alloc_nid(nd_size, SMP_CACHE_BYTES, nid);
+>> +       if (!nd_pa)
+>> +               nd_pa = alloc_node_data_from_nearest_node(nid, nd_size);
+>>         nd = __va(nd_pa);
+>>
+>>         /* report and initialize */
+>> @@ -238,7 +277,7 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>>         if (tnid != nid)
+>>                 pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
+>>
+>> -       node_data[nid] = nd;
+>> +       NODE_DATA(nid) = nd;
+>>         memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+>>         NODE_DATA(nid)->node_id = nid;
+>>         NODE_DATA(nid)->node_start_pfn = start_pfn;
+>> --
+>> 2.5.0
+>>
+>>
+> Ganapat
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> So here, we have an example of why your position is actually incorrect.
-> dma-coherent does *not* give a "consistent and independent of kernel
-> configuration" property - it's inherently tied to how the kernel has
-> setup the page tables.
-
-Sorry, but that is not quite what I said.
-
-I said that if you read dma-coherent as specifying *the requirements*
-for coherency (i.e. "coherent iff Normal, Inner Shareable, Inner WB
-Cacheable, Outer WB Cacheable"), rather than specifying that there is
-coherency given some unspecified requirements, then it is possible to
-use it in a manner which is consistent and independent of kernel
-configuration. If the kernel uses memory attributes that don't meet
-those requirements, it can know that the device cannot be used in a
-coherent manner.
-
-If we take that stance, then we can cater for other requirements (e.g.
-Outer Shareable on Keystone) by having properties to specify those
-requirements (e.g. dma-outer-coherent). The tricky part is how the
-kernel decides how best to use that information, but that is a problem
-regardless.
-
-> > > For example, if you clear the shared bit in the page tables on non-LPAE
-> > > SoCs, devices are no longer coherent.
-> > 
-> > Yes. This is a problem, but one that we already face. If we clarified
-> > the semantics as above, we would know that the device is simply not
-> > coherent.
+> .
 > 
-> How?  We would need to introduce some flag which is passed from the
-> architecture code into the OF code to disable the effect of dma-coherent,
-> making of_dma_is_coherent() return false if the S bit is clear.
-
-Yes, we would need to either alter the OF code, or some code which makes
-use of this. Surely it's possible to have this logic in an arch
-callback?
-
-> > > Whether devices are DMA coherent is a combination of two things:
-> > >  * is the device connected to a coherent bus.
-> > >  * is the system setup to allow coherency on that bus to work.
-> > > 
-> > > We capture the first through the dma-coherent property, which is clearly
-> > > a per-device property.  We ignore the second because we assume everyone
-> > > is going to configure the CPU side correctly.  That's untrue today, and
-> > > it's untrue not only because of Keystone II, but also because of other
-> > > SoCs as well which pre-date Keystone II.  We currently miss out on
-> > > considering that, because if we ignore it, we get something that works
-> > > for most platforms.
-> > > 
-> > > I don't see that adding a dma-outer-coherent property helps this - it's
-> > > muddying the waters somewhat - and it's also forcing additional complexity
-> > > into places where we shouldn't have it.  We would need to parse two
-> > > properties in the DMA API code, and then combine it with knowledge as
-> > > to how the system page tables have been setup.  If they've been setup
-> > > as inner sharable, then dma-coherent identifies whether the device is
-> > > coherent.  If they've been setup as outer sharable, then
-> > > dma-outer-coherent specifies that and dma-coherent is meaningless.
-> > 
-> > I think that at minimum, the attributes devices require needs to be
-> > describe to the kernel, rather than being something we hope just
-> > happened to match.
-> 
-> Yuck.  Seriously?  What happens when we have two devices which have
-> different required attributes for the CPU mapping?  Should architecture
-> code have to parse the entire DT tree to work out what attributes each
-> device needs, and try to then work out how the CPU page tables should
-> be setup?
-
-No, we do not necessarily have to try to dynamically handle every
-possible case, especially as the vastly common case is the one I called
-out above.
-
-For those boards where we're going to have some code special-casing
-those regardless, automatically deciding to have the kernel use the
-preferred set of attributes is fine. However, to do this I don't think
-we should provide board+kernel specific semantics to dma-coherent, and
-should at least precisely specify the coherency requirements.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
