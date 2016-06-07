@@ -1,42 +1,95 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v5 03/18] MAINTAINERS: Add st slim core rproc driver to STi section.
-Date: Tue,  7 Jun 2016 17:18:57 +0100
-Message-ID: <1465316352-20691-4-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v5 07/18] ARM: STi: DT: STiH407: Add FDMA driver dt nodes.
+Date: Tue,  7 Jun 2016 17:19:01 +0100
+Message-ID: <1465316352-20691-8-git-send-email-peter.griffin@linaro.org>
 References: <1465316352-20691-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1465316352-20691-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, vinod.koul@intel.com, bjorn.andersson@linaro.org, arnaud.pouliquen@st.com, arnd@arndb.de
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: peter.griffin@linaro.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the slim core rproc driver to the STi section
-of the MAINTAINERS file.
+These nodes are required to get the fdma driver working
+on STiH407 based silicon.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 52 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ed42cb6..8f16983 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1712,6 +1712,7 @@ F:	drivers/phy/phy-stih407-usb.c
- F:	drivers/phy/phy-stih41x-usb.c
- F:	drivers/pinctrl/pinctrl-st.c
- F:	drivers/remoteproc/st_remoteproc.c
-+F:	drivers/remoteproc/st_slim_rproc.c
- F:	drivers/reset/sti/
- F:	drivers/rtc/rtc-st-lpc.c
- F:	drivers/tty/serial/st-asc.c
-@@ -1720,6 +1721,7 @@ F:	drivers/usb/host/ehci-st.c
- F:	drivers/usb/host/ohci-st.c
- F:	drivers/watchdog/st_lpc_wdt.c
- F:	drivers/ata/ahci_st.c
-+F:	include/linux/remoteproc/st_slim_rproc.h
- 
- ARM/STM32 ARCHITECTURE
- M:	Maxime Coquelin <mcoquelin.stm32@gmail.com>
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index c47c664..017d670 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -822,5 +822,57 @@
+ 			clock-frequency	= <600000000>;
+ 			st,syscfg	= <&syscfg_core 0x224>;
+ 		};
++
++		/* fdma audio */
++		fdma0: dma-controller@8e20000 {
++			compatible = "st,stih407-fdma-mpe31-11", "st,slim-rproc";
++			reg = <0x8e20000 0x8000>,
++			      <0x8e30000 0x3000>,
++			      <0x8e37000 0x1000>,
++			      <0x8e38000 0x8000>;
++			reg-names = "slimcore", "dmem", "peripherals", "imem";
++			clocks = <&clk_s_c0_flexgen CLK_FDMA>,
++				 <&clk_s_c0_flexgen CLK_EXT2F_A9>,
++				 <&clk_s_c0_flexgen CLK_EXT2F_A9>,
++				 <&clk_s_c0_flexgen CLK_EXT2F_A9>;
++			interrupts = <GIC_SPI 5 IRQ_TYPE_NONE>;
++			dma-channels = <16>;
++			#dma-cells = <3>;
++		};
++
++		/* fdma app */
++		fdma1: dma-controller@8e40000 {
++			compatible = "st,stih407-fdma-mpe31-12", "st,slim-rproc";
++			reg = <0x8e40000 0x8000>,
++			      <0x8e50000 0x3000>,
++			      <0x8e57000 0x1000>,
++			      <0x8e58000 0x8000>;
++			reg-names = "slimcore", "dmem", "peripherals", "imem";
++			clocks = <&clk_s_c0_flexgen CLK_FDMA>,
++				<&clk_s_c0_flexgen CLK_TX_ICN_DMU>,
++				<&clk_s_c0_flexgen CLK_TX_ICN_DMU>,
++				<&clk_s_c0_flexgen CLK_EXT2F_A9>;
++
++			interrupts = <GIC_SPI 7 IRQ_TYPE_NONE>;
++			dma-channels = <16>;
++			#dma-cells = <3>;
++		};
++
++		/* fdma free running */
++		fdma2: dma-controller@8e60000 {
++			compatible = "st,stih407-fdma-mpe31-13", "st,slim-rproc";
++			reg = <0x8e60000 0x8000>,
++			      <0x8e70000 0x3000>,
++			      <0x8e77000 0x1000>,
++			      <0x8e78000 0x8000>;
++			reg-names = "slimcore", "dmem", "peripherals", "imem";
++			interrupts = <GIC_SPI 9 IRQ_TYPE_NONE>;
++			dma-channels = <16>;
++			#dma-cells = <3>;
++			clocks = <&clk_s_c0_flexgen CLK_FDMA>,
++				<&clk_s_c0_flexgen CLK_EXT2F_A9>,
++				<&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>,
++				<&clk_s_c0_flexgen CLK_EXT2F_A9>;
++		};
+ 	};
+ };
 -- 
 1.9.1
