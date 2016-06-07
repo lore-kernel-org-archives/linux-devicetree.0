@@ -1,153 +1,46 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH v4 12/14] arm64/numa: remove some useless code
-Date: Tue, 7 Jun 2016 20:42:21 +0800
-Message-ID: <5756C12D.4030608@huawei.com>
-References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
- <1465286898-13828-13-git-send-email-thunder.leizhen@huawei.com>
- <CAFpQJXU+YFCkEawQZYFWSayYgi4c5=N2H8mxzz2XhVbSbTeBMQ@mail.gmail.com>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: Re: [PATCH v3] ASoC: rockchip: Add machine driver for
+	MAX98357A/RT5514/DA7219
+Date: Tue, 07 Jun 2016 20:47:01 +0800
+Message-ID: <5756C245.7010001@rock-chips.com>
+References: <1464267742-15312-1-git-send-email-zhengxing@rock-chips.com>
+ <20160601144542.GA3835@rob-hp-laptop> <5751912C.6080904@rock-chips.com>
+ <20160606235026.GP7510@sirena.org.uk> <5756363F.40208@rock-chips.com>
+ <20160607104711.GR7510@sirena.org.uk> <5756B22F.9000105@rock-chips.com>
+ <20160607120647.GV7510@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFpQJXU+YFCkEawQZYFWSayYgi4c5=N2H8mxzz2XhVbSbTeBMQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Xinwei Hu <huxinwei@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160607120647.GV7510@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, dianders@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016/6/7 16:28, Ganapatrao Kulkarni wrote:
-> On Tue, Jun 7, 2016 at 1:38 PM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
->> 1. Currently only cpu0 set on cpu_possible_mask and percpu areas have not
->>    been initialized.
->> 2. No reason to limit cpu0 must belongs to node0.
-> 
-> even smp init assumes cpu0/boot processor.
-Yes, we define boot cpu as cpu0. But we can not force cpu0 must belongs to node0.
-For example, we use the same Image and dtb run on two boards. On the first board,
-BIOS choose cpu-A as boot cpu. But on the other board, BIOS may choose CPU-B as
-boot cpu. Although this case is difficult to appear, but we can not sure that it
-will not appear.
-
-> is this patch tested on any hardware?
-Yes, I tested it on our D02 board.
-
-> can you describe your testing hardware?
-Althoug D02 only contains one hardware numa node. But the implementation of numa
-software is hardware independent, so I define some logical numa nodes. For example:
-treat each core as a numa node, and subdivide momory.
-
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  arch/arm64/mm/numa.c | 8 --------
->>  1 file changed, 8 deletions(-)
->>
->> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> index d73b0a0..92b1692 100644
->> --- a/arch/arm64/mm/numa.c
->> +++ b/arch/arm64/mm/numa.c
->> @@ -93,7 +93,6 @@ void numa_clear_node(unsigned int cpu)
->>   */
->>  static void __init setup_node_to_cpumask_map(void)
->>  {
->> -       unsigned int cpu;
->>         int node;
->>
->>         /* setup nr_node_ids if not done yet */
->> @@ -106,9 +105,6 @@ static void __init setup_node_to_cpumask_map(void)
->>                 cpumask_clear(node_to_cpumask_map[node]);
->>         }
->>
->> -       for_each_possible_cpu(cpu)
->> -               set_cpu_numa_node(cpu, NUMA_NO_NODE);
->> -
-> 
-> do you see this init of setting node id to NUMA_NO_NODE  for each cpu
-> happening any where else?
-I have used below code to verify my judgement, it's only "cpu=0" printed.
-
-for_each_possible_cpu(cpu)
-	pr_info("setup_node_to_cpumask_map: cpu=%d\n", cpu);
-
-Actually, the execution sequence is as below:
-1. setup_arch
-   1) bootmem_init();   -->arm64_numa_init
-   2) smp_init_cpus();	-->smp_cpu_setup --> set_cpu_possible(cpu, true);
-
-So that, the above deleted code only set cpu0 to NUMA_NO_NODE. And the below
-deleted code set cpu0 to nid0. In fact, the default value of cpu_to_node(0)
-is also zero. So I said these code take no effect.
-
-> otherwise, better to have initialised node id/NUMA_NO_NODE to every
-> cpu otherwise default  node id will be shown as zero
-> which is not correct.
-> 
->>         /* cpumask_of_node() will now work */
->>         pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
->>  }
->> @@ -379,10 +375,6 @@ static int __init numa_init(int (*init_func)(void))
->>
->>         setup_node_to_cpumask_map();
->>
->> -       /* init boot processor */
->> -       cpu_to_node_map[0] = 0;
->> -       map_cpu_to_node(0, 0);
->> -
-> 
-> otherwise, how you set numa info for cpu0/boot-processor?
-I have done it in the previous patch.
-
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index d099306..9e15297 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -620,6 +620,7 @@ static void __init of_parse_and_init_cpus(void)
- 			}
-
- 			bootcpu_valid = true;
-+			early_map_cpu_to_node(0, of_node_to_nid(dn));
-
- 			/*
- 			 * cpu_logical_map has already been
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index df5c842..d73b0a0 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -128,6 +128,14 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
- 		nid = 0;
-
- 	cpu_to_node_map[cpu] = nid;
-+
-+	/*
-+	 * We should set the numa node of cpu0 as soon as possible, because it
-+	 * has already been set up online before. cpu_to_node(0) will soon be
-+	 * called.
-+	 */
-+	if (!cpu)
-+		set_cpu_numa_node(cpu, nid);
- }
-
-> 
-> thanks
-> Ganapat
->>         return 0;
->>  }
->>
->> --
->> 2.5.0
->>
->>
->>
-> 
-> thanks
-> ganapat
-> 
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> .
-> 
+SGkgTWFyaywKCk9uIDIwMTblubQwNuaciDA35pelIDIwOjA2LCBNYXJrIEJyb3duIHdyb3RlOgo+
+IE9LLCB0aGVuIHRoZSBvcmlnaW5hbCBuYW1lIHByb2JhYmx5IG1ha2VzIHNvbWUgc2Vuc2UgdGhv
+dWdoIHJlYWxseQo+IHRoYXQncyBzdWNoIGFuIHVudXN1YWwgZGVzaWduIHRoYXQganVzdCBuYW1p
+bmcgaXQgYWZ0ZXIgdGhlIHNwZWNpZmljCj4gYm9hcmQgbWlnaHQgYmUgYmV0dGVyLCBpdCdzIG5v
+dCBsaWtlbHkgdG8gc2VlIGFueSByZXVzZSBJJ2QgZ3Vlc3MuClRoZXJlIGFyZSBub3Qgb25seSBv
+bmUgdHlwZSBvZiBib2FyZCB3aXRoIHRoaXMgYXVkaW8gY29ubmVjdGlvbiwgc28gSSAKdGhpbmsg
+d2UgZG9uJ3QgbmVlZCB0byBhZGQgc3BlY2lmaWMgYm9hcmQgbmFtZS4KClRoZXJlZm9yZSwgSSBp
+bnRlbmQgdG8gcmVjb3ZlciBvcmlnaW5hbCBuYW1lIAoocmszMzk5X21heDk4MzU3YV9ydDU1MTRf
+ZGE3MjE5LmMpLCBhbmQgZGVzY3JpcHRpb24gbGlrZSB0aGlzOgpzb3VuZCB7CiAgICAgY29tcGF0
+aWJsZSA9ICJyb2NrY2hpcCxyazMzOTktbWF4OTgzNTdhLXJ0NTUxNC1kYTcyMTkiOwogICAgIHJv
+Y2tjaGlwLGNwdSA9IDwmaTJzMCAmaTJzMCAmaTJzMD47ICAgICAgICAgICAgICAgLy8gbm90ZSAo
+d2lsbCBub3QgCmJlIHNlbnQgdG8gdXBzdHJlYW0pOiBJbiBmdXR1cmUsIHdlIG1heSB1c2UgdGhl
+IGkyczEgb3IgaTJzMi4uLgogICAgIHJvY2tjaGlwLGNvZGVjID0gPCZtYXg5ODM1N2EgJmhlYWRz
+ZXRjb2RlYyAmY29kZWM+Owp9OwoKQ291bGQgeW91IHBsZWFzZSBhZ3JlZSB0byBkbyB0aGlzPwoK
+VGhhbmtzLgoKLS0gCi0gWGluZyBaaGVuZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxz
+YS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlz
+dGluZm8vYWxzYS1kZXZlbAo=
