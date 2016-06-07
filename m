@@ -1,80 +1,44 @@
-From: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH 3/7] Input: synaptics-rmi4: Add dribble and palm gesture
- parameters to devicetree
-Date: Tue, 7 Jun 2016 12:11:47 -0700
-Message-ID: <57571C73.4080209@synaptics.com>
-References: <1464979228-2497-1-git-send-email-aduggan@synaptics.com>
- <20160603185720.GA5204@leverpostej>
+From: Chris Brand <chris.brand@broadcom.com>
+Subject: Re: [PATCH v2 1/6] power: Introduce Broadcom kona reset driver
+Date: Tue, 7 Jun 2016 12:40:41 -0700
+Message-ID: <CAMsMSK9X2ME=nyBhD4q8MvdYrqe7h+SmVstD++1OfBn-uvuSHA@mail.gmail.com>
+References: <1463002582-6875-1-git-send-email-chris.brand@broadcom.com>
+	<1463002582-6875-2-git-send-email-chris.brand@broadcom.com>
+	<57409633.8060605@gmail.com>
+	<20160603023853.GD8921@earth>
+	<CAMsMSK8ZX=nmJs9d2txRsk2gLa0duy3Qpp805ztYzow=OiTB8w@mail.gmail.com>
+	<20160607015017.GA25073@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160603185720.GA5204@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Vincent Huang <vincent.huang-8LB1SX4YFO85ffrT631h+Q@public.gmane.org>, Nick Dyer <nick.dyer-8YpZQSjhsQH10XsdtD+oqA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160607015017.GA25073@earth>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-arm-kernel@lists.infradead.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-Thanks for reviewing.
-
-On 06/03/2016 11:57 AM, Mark Rutland wrote:
-> On Fri, Jun 03, 2016 at 11:40:28AM -0700, Andrew Duggan wrote:
->> Signed-off-by: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
->> ---
->>   .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt       |  5 +++++
->>   drivers/input/rmi4/rmi_2d_sensor.c                         | 14 ++++++++++++++
->>   2 files changed, 19 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->> index f2c30c8..822df11 100644
->> --- a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->> @@ -37,6 +37,11 @@ Optional Properties:
->>   				disable reporing absolute position data.
->>   - syna,rezero-wait-ms: Time in miliseconds to wait after issuing a rezero
->>   				command.
->> +- syna,dribble: Control reporting of dribble packets. Values are 0 for
->> +		default, 1 for explicitly disable, 2 for explicitly enable.
-> This sounds like a driver option one might choose at runtime, not a
-> fixed hardware/integration property.
+On Mon, Jun 6, 2016 at 6:50 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> Hi,
 >
-> Why does this belong in the DT?
+> On Mon, Jun 06, 2016 at 09:42:03AM -0700, Chris Brand wrote:
+>> On Thu, Jun 2, 2016 at 7:38 PM, Sebastian Reichel <sre@kernel.org> wrote:
+>> > Feel free to queue it via arm-soc with
+>> >
+>> > Acked-By: Sebastian Reichel <sre@kernel.org>
+>> >
+>> > If I didn't overlook it, it's missing DT documentation, though.
+>>
+>> Thanks, Sebastian. Because this is effectively a move of code from
+>> arch/arm rather than new code, there's already dt documentation in
+>> Documentation/devicetree/bindings/reset/brcm,bcm21664-resetmgr.txt
+>
+> Ok. That directory is usually used for periphal reset controller.
+> Board/System reset controllers are usually documented in
+> .../bindings/power/reset (following kernel strucuture
+> [drivers/reset and drivers/power/reset]).
+>
+> -- Sebastian
 
-My intention is to enable or disable these properties on a platform 
-basis. Dribble packets could be enabled on platforms which have issues 
-reliably reporting data. Dribble packets report multiple finger lift 
-events when a finger leaves the touchpad. The default will be to disable 
-them, but if a platform does not reliably report data (examples we have 
-observed are issues with the I2C controller) then the additional finger 
-lift events could avoid fingers from becoming "stuck" when the host does 
-not receive a finger lift event.
+Would you like me to send a separate patch to move that file ?
 
->> +- syna,palm_detect: Control reporting of the palm detect gesture. Values
->> +			are 0 for default, 1 for explicitly disable, 2 for
->> +			explicitly enable.
-> Likewise, same question here.
-
-Similarly, this property was added to disable this functionality on a 
-particular platform where it was causing interference.
-
-Since there properties are set in firmware which is generally configured 
-per platform I went ahead and added them to the device tree bindings.
-
-> Additionally, please use '-', not '_' in property names.
-
-Sorry, Rob gave me similar feedback for previous properties. But, I must 
-have forgotten when making this change. I can fix this if we decide to 
-keep these properties in devicetree.
-
-Thanks,
-Andrew
-
-> Thanks,
-> Mark.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chris
