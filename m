@@ -1,96 +1,70 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] ASoC: rockchip: Add machine driver for
- MAX98357A/RT5514/DA7219
-Date: Tue, 7 Jun 2016 13:06:47 +0100
-Message-ID: <20160607120647.GV7510@sirena.org.uk>
-References: <1464267742-15312-1-git-send-email-zhengxing@rock-chips.com>
- <20160601144542.GA3835@rob-hp-laptop>
- <5751912C.6080904@rock-chips.com>
- <20160606235026.GP7510@sirena.org.uk>
- <5756363F.40208@rock-chips.com>
- <20160607104711.GR7510@sirena.org.uk>
- <5756B22F.9000105@rock-chips.com>
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Subject: RE: [PATCH v4 7/7] phy: Add Northstar2 PCI Phy support
+Date: Tue, 7 Jun 2016 17:55:55 +0530
+Message-ID: <6ed8bf6ba5de670588715d55ca42d631@mail.gmail.com>
+References: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
+ <1465216900-11755-8-git-send-email-pramod.kumar@broadcom.com> <5755C404.3080502@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7451869198014087814=="
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <5756B22F.9000105-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5755C404.3080502@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Jon Mason <jonmason@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Florian,
 
---===============7451869198014087814==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="SidV/bKy1CyabPX8"
-Content-Disposition: inline
+> -----Original Message-----
+> From: Florian Fainelli [mailto:f.fainelli@gmail.com]
+> Sent: 07 June 2016 00:12
+> To: Pramod Kumar; Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell;
+> Kumar Gala; Catalin Marinas; Will Deacon; Kishon Vijay Abraham I; David S.
+> Miller
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; bcm-
+> kernel-feedback-list@broadcom.com; linux-kernel@vger.kernel.org;
+> netdev@vger.kernel.org; Jon Mason
+> Subject: Re: [PATCH v4 7/7] phy: Add Northstar2 PCI Phy support
+>
+> On 06/06/2016 05:41 AM, Pramod Kumar wrote:
+> > Add PCI Phy support for Broadcom Northstar2 SoCs.  This driver uses
+> > the interface from the iproc mdio mux driver to enable the devices
+> > respective phys.
+> >
+> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > Signed-off-by: Jon Mason <jonmason@broadcom.com>
+> > Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+> > ---
+> >  drivers/phy/Kconfig            |   8 +++
+> >  drivers/phy/Makefile           |   2 +-
+> >  drivers/phy/phy-bcm-ns2-pcie.c | 115
+> > +++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 124 insertions(+), 1 deletion(-)  create mode 100644
+> > drivers/phy/phy-bcm-ns2-pcie.c
+> >
+> > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig index
+> > b869b98..01fb93b 100644
+> > --- a/drivers/phy/Kconfig
+> > +++ b/drivers/phy/Kconfig
+> > @@ -434,4 +434,12 @@ config PHY_CYGNUS_PCIE
+> >
+> >  source "drivers/phy/tegra/Kconfig"
+> >
+> > +config PHY_NS2_PCIE
+> > +	tristate "Broadcom Northstar2 PCIe PHY driver"
+> > +	depends on OF && MDIO_BUS_MUX_BCM_IPROC
+> > +	select GENERIC_PHY
+> > +	default ARCH_BCM_IPROC
+>
+> Are not you missing a dependency on PHYLIB too to provide
+> mdio_module_register() etc. (at least make it build)?
+>
 
+This depends on MDIO_BUS_MUX_BCM_IPROC which itself depends on PHYLIB. Hence
+I don't think We need to take care of this here.
 
---SidV/bKy1CyabPX8
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> --
+> Florian
 
-On Tue, Jun 07, 2016 at 07:38:23PM +0800, Xing Zheng wrote:
-> On 2016=E5=B9=B406=E6=9C=8807=E6=97=A5 18:47, Mark Brown wrote:
-
-> > No, that'd be one card with all three CODECs on the same board which I'm
-> > guessing isn't the intention?
-
-> Yes, because on our board, the audio connection by hardware really is suc=
-h:
->                   |-- max98357a
-> i2s0 <=3D=3D> |-- rt5514
->                   | -- da7219
-
-> We do need to support max98357a / rt5514 / da7219 via i2s0 on the same bo=
-ard
-> for RK3399.
-
-> I remember that it will be failed if we register card with i2s0 more time=
-s.
-> Therefore, I chose this mothod that create 3 dai-links on one machine
-> driver.
-
-OK, then the original name probably makes some sense though really
-that's such an unusual design that just naming it after the specific
-board might be better, it's not likely to see any reuse I'd guess.
-
---SidV/bKy1CyabPX8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXVrjWAAoJECTWi3JdVIfQmlwH/321+pXBIgMXijx++JtXsHvZ
-msdn9EAlBD+fCxF3ggxJkNP2xv4O8C/3njIzV3dDYqp9MaJfkXWn14DSip3uELkO
-NRiTpM1UshR0wLirCmgiSjmxtyTVC9yLVtkRVYVYJMwMlauPpoNh52ssq5LvM+de
-wvv3CvC9JaRX1OmiM/jTAkBjaJVZL8O9ttfbbgJKjX6Wq1gaPKM9QyFEPFwasjC3
-ci5RNIfi32Ar6wWmMCGdzLiNAvj5jsslw3JXV6Jpb3bdU7yzAWCjXDEan4iQKTsB
-LyUEkjM3oAQOkF2Zulv+cOgQIAm9MCNkUksMuBxT2jg4cb/dlvVK6Qe3Z7g08U4=
-=LMu1
------END PGP SIGNATURE-----
-
---SidV/bKy1CyabPX8--
-
-
---===============7451869198014087814==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linux-rockchip mailing list
-Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
---===============7451869198014087814==--
+Regards,
+Pramod
