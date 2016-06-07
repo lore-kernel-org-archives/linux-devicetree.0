@@ -1,50 +1,233 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 06/12] power: pwrseq: simple: Add support for regulator
- and generic property
-Date: Tue, 07 Jun 2016 11:29:02 +0200
-Message-ID: <575693DE.2010603@samsung.com>
-References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
- <1464768141-25420-7-git-send-email-k.kozlowski@samsung.com>
- <20160603020218.GA19436@rob-hp-laptop>
+From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6q: extend support for the cm-fx6
+Date: Tue, 7 Jun 2016 11:45:55 +0200
+Message-ID: <7b69d8e9d4114f3c8ead120ea2cc4057@rwthex-s1-b.rwth-ad.de>
+References: <709d6b3d522f4fcb8112830e0426dbb3@rwthex-s1-b.rwth-ad.de>
+ <1463994191.2370.3.camel@pengutronix.de> <5746B8C4.6020406@compulab.co.il>
+ <1464256217.14453.10.camel@pengutronix.de> <5746DFE2.9040903@compulab.co.il>
+ <d083d0308abd48efbd4b6042e1f9c470@rwthex-s2-a.rwth-ad.de>
+ <d0329c33bee14d6e8be8abef607dce3e@rwthex-s1-b.rwth-ad.de>
+ <57551CF6.2020602@compulab.co.il>
+ <b73122716e714ea0b853cc2f3d19664c@rwthex-s1-b.rwth-ad.de>
+ <5d1bc50e59f749db8f825f5cb7e2438d@rwthex-w2-a.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20160603020218.GA19436@rob-hp-laptop>
+In-Reply-To: <5d1bc50e59f749db8f825f5cb7e2438d-cBaz+nnMw1+1MzRH+ruthl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2016 04:02 AM, Rob Herring wrote:
->>  Optional properties:
->>  - reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
->> @@ -16,6 +22,7 @@ Optional properties:
->>    See ../clocks/clock-bindings.txt for details.
->>  - clock-names : Must include the following entry:
->>    "ext_clock" (External clock provided to the card).
->> +- ext-supply : External regulator supply
+Hi Igor,
+
+On 06/07/2016 10:38 AM, Igor Grinberg wrote:
+> Hi Christopher,
 > 
-> What happens when there are 2 supplies?
+> On 06/06/2016 01:37 PM, Christopher Spinrath wrote:
+>> Hi Igor,
+>>
+>> On 06/06/2016 08:49 AM, Igor Grinberg wrote:
+>>> Hi Christopher,
+>>>
+>>> On 06/05/2016 08:32 PM, Christopher Spinrath wrote:
+>>>> Hi Igor,
+>>>>
+>>>> On 06/05/2016 06:43 PM, Igor Grinberg wrote:
+>>>>> Hi Christopher,
+>>>>>
+>>>>> On 05/26/2016 02:37 PM, Igor Grinberg wrote:
+>>>>>> On 05/26/2016 12:50 PM, Lucas Stach wrote:
+>>>>>>> Hi Igor,
+>>>>>>>
+>>>>>>> Am Donnerstag, den 26.05.2016, 11:50 +0300 schrieb Igor Grinberg:
+>>>>>>>> Hi Lucas,
+>>>>>>>>
+>>>>>>>> Thanks for reviewing the patch(es).
+>>>>>>>>
+>>>>>>>> On 05/23/2016 12:03 PM, Lucas Stach wrote:
+>>>>>>>>> Am Montag, den 23.05.2016, 00:47 +0200 schrieb
+>>>>>>>>> christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org:
+>>>>>>>>>> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+>>>>>>>>
+>>>>>>>> [...]
+>>>>>>>>
+>>>>>>>>>> +&ecspi1 {
+>>>>>>>>>> +	fsl,spi-num-chipselects = <2>;
+>>>>>>>>>> +	cs-gpios = <&gpio2 30 0>, <&gpio3 19 0>;
+>>>>>>>>>> +	pinctrl-names = "default";
+>>>>>>>>>> +	pinctrl-0 = <&pinctrl_ecspi1>;
+>>>>>>>>>> +	status = "okay";
+>>>>>>>>>> +
+>>>>>>>>>> +	flash: m25p80@0 {
+>>>>>>>>>> +		#address-cells = <1>;
+>>>>>>>>>> +		#size-cells = <1>;
+>>>>>>>>>> +		compatible = "st,m25p", "jedec,spi-nor";
+>>>>>>>>>> +		spi-max-frequency = <20000000>;
+>>>>>>>>>> +		reg = <0>;
+>>>>>>>>>> +
+>>>>>>>>>> +		partition@0 {
+>>>>>>>>>> +			label = "uboot";
+>>>>>>>>>> +			reg = <0x0 0xc0000>;
+>>>>>>>>>> +		};
+>>>>>>>>>> +
+>>>>>>>>>> +		partition@c0000 {
+>>>>>>>>>> +			label = "uboot environment";
+>>>>>>>>>> +			reg = <0xc0000 0x40000>;
+>>>>>>>>>> +		};
+>>>>>>>>>> +
+>>>>>>>>>> +		partition@100000 {
+>>>>>>>>>> +			label = "reserved";
+>>>>>>>>>> +			reg = <0x100000 0x100000>;
+>>>>>>>>>> +		};
+>>>>>>>>>
+>>>>>>>>> Partition layouts don't belong in the upstream DT, as it a device
+>>>>>>>>> configuration thing. Please kep them in the bootloader/firmware and make
+>>>>>>>>> this one pass the partition layout to the kernel.
+>>>>>>>>
+>>>>>>>> I don't completely agree with this.
+>>>>>>>> We have lots of partition layouts in the upstream DT.
+>>>>>>>
+>>>>>>> No, we don't. At least not for the i.MX6. There are some for the earlier
+>>>>>>> i.MX boards, but IMO it's wrong to put device configuration into the
+>>>>>>> upstream DT. Let's not start doing this again.
+>>>>>>
+>>>>>> Why not?
+>>>>>> For i.MX6 there are 2 boards that have the partitioning scheme.
+>>>>>> I'm not considering this a device configuration, but rather
+>>>>>> a default partitioning layout/scheme.
+>>>>>> Current case is for the firmware storage device that is not likely
+>>>>>> to change.
+>>>>>> Moreover, a DT is not really a part of the kernel, but lays along the kernel
+>>>>>> sources for convenience and simplicity (at least IIRC as it was decided
+>>>>>> about 5 years ago). It is more a part of the firmware for a device, than
+>>>>>> an upstream kernel source code.
+>>>>>> I think it is only a meter of time when Linus will decide that he does not
+>>>>>> want it inside the kernel anymore...
+>>>>>>
+>>>>>>>
+>>>>>>>> Moreover, this is the default layout and changing it, will
+>>>>>>>> result in incompatibilities and also might result in device "bricking".
+>>>>>>>> Those can be changed from the boot loader in case you need those
+>>>>>>>> the other way around.
+>>>>>>>> Another question of mine is, why should you?
+>>>>>>>>
+>>>>>>> Partition layout is device configuration, which is governed by the
+>>>>>>> device firmware.
+>>>>>>
+>>>>>> Yet again, DT is a part of device firmware.
+>>>>>> Moreover, the firmware (in that case U-Boot), can be configured
+>>>>>> using the very same DT code, so not having this in, might force
+>>>>>> various w/a and hacks.
+>>>>>>
+>>>>>>> By not having the partition layout in the upstream DT
+>>>>>>> people are forced to set it from the firmware, which is exactly the
+>>>>>>> right thing to do, weather or not you plan to change it at any time.
+>>>>>>
+>>>>>> I might be ignorant, sorry for that.
+>>>>>> Why? Why is it right and why would you want to force people to do that?
+>>>>>>
+>>>>>>
+>>>>>
+>>>>> No answer?
+>>>>> I think it is worth keeping this as a default firmware layout.
+>>>>>
+>>>>
+>>>> I was not happy removing the layout at first, too. However, they are
+>>>> added rarely (at least recently) and the binding documentation [1]
+>>>> states that they shall only be added if there are "strong conventions".
+>>>
+>>> Well, not exactly, it says:
+>>>
+>>> "Partitions can be represented by sub-nodes of an mtd device. This can be used
+>>> on platforms which have strong conventions about which portions of a flash are
+>>> used for what purposes, but which don't use an on-flash partition table such
+>>> as RedBoot."
+>>>
+>>> In my understanding, "can" is _not_ exactly "shall only".
+>>>
+>>
+>> Definitely, "state" was the wrong word here - sorry about that. But it's
+>> how I interpret the documentation. It is the only one I have seen that
+>> specifies an allowed use case. So for me it is more like "deny all,
+>> allow ...".
 > 
-> I'd prefer the name not be genericish and use the real supply names. 
-> Then the power seq code should just turn on all supplies it finds. If 
-> the order or timing to turn on matters, then sorry, no generic sequence.
+> That moves the discussion to what "strong conventions" are?
+> But you have already removed the layout, so this is meaningless.
 
-I think the generic part for regulators might be a problem. Regulator
-API requires a name for the supply... it cannot get "something" or
-"everything".
+Yes, as I said I want to have the non controversial stuff in first.
+Afterwards, we can submit more controversial patches (per feature).
 
-The driver could attach itself to any kind of node (where power-sequence
-property exists) so the supply name depends on the bindings of device
-(not bindings of power sequence driver).
+>>
+>>>>
+>>>> Moreover, it is really easy to pass the layout via firmware/u-boot.
+>>>> Unfortunately, the u-boot provided by CompuLab does not have the
+>>>> mtdparts commands built-in but the layout can be passed via cmdline as
+>>>> well. This seems more flexible to me (and I consider this to be good).
+>>>
+>>> That means you need a different version of U-Boot if you want to use
+>>> an upstream kernel, or you need to play the bootargs games, or just leave
+>>> it a "black box".
+>>> So currently, from the three options above, the "black box" is chosen, right?
+>>> That's a pity, because I'd like things to be open...
+>>>
+>>
+>> Well, It wouldn't be the first ARM device where the newest/upstream
+>> u-boot is required. Actually, you already have to use the newest version
+>> if you want to use the igb ethernet.
+> 
+> You mean, igb in U-Boot, right?
+> Unless I'm missing something, it should work just fine in Linux with
+> the same U-Boot Compulab provides.
+> 
+I mean in U-Boot and Linux (and with "newest U-Boot" I refer to the one
+provided by CompuLab; as far as I know there is no upstream U-Boot
+support for the Utilite). Although it seems to work "by accident". The
+custom CompuLab code fails to put the mac address in the devicetree but
+stores it in the correct environment variable such that the upstream
+U-Boot magic can take over.
 
-The power sequence driver could however iterate over child properties
-and get the names of all supplies. It is a little bit ugly...
+Anyway, are there any U-Boot updates scheduled (by CompuLab)? And is
+there a way to contribute/discuss changes?
 
-Best regards,
-Krzysztof
+>>
+>> Currently, IMO the most convenient way (for distributions) would be to
+>> ship a boot.scr file changing the bootargs (which is not a "black box"
+>> but a configuration file people are used to). If you don't want to mess
+>> with bootargs/cmdline it is also possible to add the partition table via
+>> boot.scr (or on-flash environment) with the fdt command; in this case it
+>> wouldn't even be hidden in the u-boot binary (and no u-boot upgrade is
+>> required to implement this).
+> 
+> That is exactly what I said: "to play the bootargs games".
+> 
+>>
+>> But yes, if someone wants to use the upstream kernel the boot.scr has to
+>> be there; but IMO this is something distributions/people providing
+>> binary files have to take care about. People using their own kernel
+>> should take into account that they have to provide a bootloader config.
+> 
+> Yep. While if we provide the default layout in DT, all the above would be
+> unnecessary.
+> 
 
+On the other hand, it will be very hard to change it afterwards. Maybe
+someone wants to upstream the U-Boot support and they insist on a
+different partition layout (e.g. uboot-failsafe) ...
+I never got why people decided to go without a on-device partition table
+for most raw flash chips. It is a pity that it has to be hard coded in
+the firmware/kernel/whatever.
+
+> So, if one will neither use the latest U-Boot, nor play the bootargs
+> games, the flash will stay a kind of "black box" - and that's a pity.
+> 
+
+As I stated before, IMHO using the latest U-Boot is no problem and is
+already required (for full support).
+
+Cheers,
+Christopher
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
