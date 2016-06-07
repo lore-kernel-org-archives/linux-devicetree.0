@@ -1,31 +1,88 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v4 00/14] fix some type infos and bugs for arm64/of numa
-Date: Tue, 7 Jun 2016 14:58:53 +0100
-Message-ID: <20160607135852.GA20477@arm.com>
-References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v2 2/2] Documentation: DT: cpsw: remove rx_descs property
+Date: Tue,  7 Jun 2016 16:59:36 +0300
+Message-ID: <1465307976-12235-3-git-send-email-ivan.khoronzhuk@linaro.org>
+References: <1465307976-12235-1-git-send-email-ivan.khoronzhuk@linaro.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1465307976-12235-1-git-send-email-ivan.khoronzhuk@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: mugunthanvnm@ti.com, linux-kernel@vger.kernel.org
+Cc: grygorii.strashko@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 04:08:04PM +0800, Zhen Lei wrote:
-> v3 -> v4:
-> 1. Packed three patches of Kefeng Wang, patch6-8.
-> 2. Add 6 new patches(9-15) to enhance the numa on arm64.
-> 
-> v2 -> v3:
-> 1. Adjust patch2 and patch5 according to Matthias Brugger's advice, to make the
->    patches looks more well. The final code have no change. 
-> 
-> v1 -> v2:
-> 1. Base on https://lkml.org/lkml/2016/5/24/679
+There is no reason to hold s/w dependent parameter in device tree.
+Even more, there is no reason in this parameter because davinici_cpdma
+driver splits pool of descriptors equally between tx and rx channels
+anyway.
 
-If you want bug fixes to land in 4.7, you'll need to base them on a
-mainline kernel.
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+---
+ Documentation/devicetree/bindings/net/cpsw.txt | 1 -
+ arch/arm/boot/dts/am33xx.dtsi                  | 1 -
+ arch/arm/boot/dts/am4372.dtsi                  | 1 -
+ arch/arm/boot/dts/dm814x.dtsi                  | 1 -
+ arch/arm/boot/dts/dra7.dtsi                    | 1 -
+ 5 files changed, 5 deletions(-)
 
-Will
+diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+index 0ae0649..5ad439f 100644
+--- a/Documentation/devicetree/bindings/net/cpsw.txt
++++ b/Documentation/devicetree/bindings/net/cpsw.txt
+@@ -15,7 +15,6 @@ Required properties:
+ - cpdma_channels 	: Specifies number of channels in CPDMA
+ - ale_entries		: Specifies No of entries ALE can hold
+ - bd_ram_size		: Specifies internal descriptor RAM size
+-- rx_descs		: Specifies number of Rx descriptors
+ - mac_control		: Specifies Default MAC control register content
+ 			  for the specific platform
+ - slaves		: Specifies number for slaves
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 52be48b..702126f 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -766,7 +766,6 @@
+ 			ale_entries = <1024>;
+ 			bd_ram_size = <0x2000>;
+ 			no_bd_ram = <0>;
+-			rx_descs = <64>;
+ 			mac_control = <0x20>;
+ 			slaves = <2>;
+ 			active_slave = <0>;
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 12fcde4..a10fa7f 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -626,7 +626,6 @@
+ 			ale_entries = <1024>;
+ 			bd_ram_size = <0x2000>;
+ 			no_bd_ram = <0>;
+-			rx_descs = <64>;
+ 			mac_control = <0x20>;
+ 			slaves = <2>;
+ 			active_slave = <0>;
+diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
+index d4537dc..f23cae0c 100644
+--- a/arch/arm/boot/dts/dm814x.dtsi
++++ b/arch/arm/boot/dts/dm814x.dtsi
+@@ -509,7 +509,6 @@
+ 			ale_entries = <1024>;
+ 			bd_ram_size = <0x2000>;
+ 			no_bd_ram = <0>;
+-			rx_descs = <64>;
+ 			mac_control = <0x20>;
+ 			slaves = <2>;
+ 			active_slave = <0>;
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index e007401..b7ddc64 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -1626,7 +1626,6 @@
+ 			ale_entries = <1024>;
+ 			bd_ram_size = <0x2000>;
+ 			no_bd_ram = <0>;
+-			rx_descs = <64>;
+ 			mac_control = <0x20>;
+ 			slaves = <2>;
+ 			active_slave = <0>;
+-- 
+1.9.1
