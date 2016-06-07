@@ -1,11 +1,17 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] ARM: dts: msm8916: Add smsm and smp2p nodes
-Date: Mon,  6 Jun 2016 17:57:23 -0700
-Message-ID: <1465261044-2762-1-git-send-email-bjorn.andersson@linaro.org>
+From: Fugang Duan <fugang.duan@nxp.com>
+Subject: RE: [PATCH v2 1/2] ARM: imx6: disable deeper idle states when FEC is
+ active w/o HW workaround
+Date: Tue, 7 Jun 2016 01:40:31 +0000
+Message-ID: <VI1PR0401MB1855A6AE5F80BB73579D7093FF5D0@VI1PR0401MB1855.eurprd04.prod.outlook.com>
+References: <1464971480-9203-1-git-send-email-l.stach@pengutronix.de>
+ <VI1PR0401MB1855AA40FA576AF677A68E6FFF5C0@VI1PR0401MB1855.eurprd04.prod.outlook.com>
+ <87a8iypoib.fsf@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87a8iypoib.fsf@gmail.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,110 +21,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Holger Schurig <holgerschurig@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the smsm and smp2p nodes for the hexagon and wcnss
-cores.
+From: Holger Schurig <holgerschurig@gmail.com> Sent: Monday, June 06, 2016 7:04 PM
+> To: Fugang Duan <fugang.duan@nxp.com>; Lucas Stach
+> <l.stach@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>
+> Cc: devicetree@vger.kernel.org; netdev@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; kernel@pengutronix.de; patchwork-
+> lst@pengutronix.de
+> Subject: RE: [PATCH v2 1/2] ARM: imx6: disable deeper idle states when FEC is
+> active w/o HW workaround
+> 
+> > You just config the gpio irq like below patches:
+> > bc20a5d6da71 (ARM: dts: imx6qdl-sabreauto: use GPIO_6 for FEC
+> > interrupt.) 6261c4c8f13e (ARM: dts: imx6qdl-sabrelite: use GPIO_6 for
+> > FEC interrupt.)
+> 
+> But this is per-board, e.g. not board-agnostic??!?!   Some board might
+> have uses GPIO6 for other things and rendered it unusable for this ...
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 82 +++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+NXP HW reference design guide include this that reserve GPIO6 for FEC.  
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 3ca609a11648..30c448909727 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -620,6 +620,88 @@
- 			};
- 		};
- 	};
-+
-+	hexagon-smp2p {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <435>, <428>;
-+
-+		interrupts = <0 27 IRQ_TYPE_EDGE_RISING>;
-+
-+		qcom,ipc = <&apcs 8 14>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <1>;
-+
-+		hexagon_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+
-+			#qcom,state-cells = <1>;
-+		};
-+
-+		hexagon_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
-+	wcnss-smp2p {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <451>, <431>;
-+
-+		interrupts = <0 143 IRQ_TYPE_EDGE_RISING>;
-+
-+		qcom,ipc = <&apcs 8 18>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <4>;
-+
-+		wcnss_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+
-+			#qcom,state-cells = <1>;
-+		};
-+
-+		wcnss_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
-+	smsm {
-+		compatible = "qcom,smsm";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		qcom,ipc-1 = <&apcs 0 13>;
-+		qcom,ipc-6 = <&apcs 0 19>;
-+
-+		apps_smsm: apps@0 {
-+			reg = <0>;
-+
-+			#qcom,state-cells = <1>;
-+		};
-+
-+		hexagon_smsm: hexagon@1 {
-+			reg = <1>;
-+			interrupts = <0 26 IRQ_TYPE_EDGE_RISING>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		wcnss_smsm: wcnss@6 {
-+			reg = <6>;
-+			interrupts = <0 144 IRQ_TYPE_EDGE_RISING>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
- };
- 
- #include "msm8916-pins.dtsi"
--- 
-2.5.0
+The patch is fine for me, but I think it is unnecessary. 
