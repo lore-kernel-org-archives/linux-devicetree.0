@@ -1,38 +1,36 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun5i-a10s-wobo-i5: Enable ldo4 too
-Date: Tue, 7 Jun 2016 22:44:51 +0200
-Message-ID: <20160607204451.GC14179@lukather>
-References: <1464977440-23441-1-git-send-email-hdegoede@redhat.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 0/2] ARM: dts: sun9i: drop sunxi-common-regulators.dtsi
+Date: Tue, 7 Jun 2016 22:49:27 +0200
+Message-ID: <20160607204927.GD14179@lukather>
+References: <1464936651-25911-1-git-send-email-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="ZJcv+A0YCCLh2VIg"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1464977440-23441-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464936651-25911-1-git-send-email-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---5G06lTa6Jq83wMTw
+--ZJcv+A0YCCLh2VIg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 03, 2016 at 08:10:40PM +0200, Hans de Goede wrote:
-> It seems that the wifi chip is powered by both ldo3 and ldo4 tied
-> together and that using only one results in the wifi-chip dropping of
-> the USB bus sometimes.
+On Fri, Jun 03, 2016 at 02:50:49PM +0800, Chen-Yu Tsai wrote:
+> Hi Maxime,
 >=20
-> Ideally we would have a proper way of modelling this (this is being
-> worked on), but currently we do not. This is not an issue since we need
-> to keep these regulators always-on anyways, due to these boards
-> crashing when ldo3/4 get turned back on after having been turned off.
+> These are the remaining 2 patches from the AXP809 series.
 >=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Changes since v2:
+>=20
+>   - Drop sunxi-common-regulators.dtsi instead of disabling dummy regulato=
+rs.
 
-Applied, thanks!
+Applied both, thanks!
 Maxime
 
 --=20
@@ -40,29 +38,25 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---5G06lTa6Jq83wMTw
+--ZJcv+A0YCCLh2VIg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXVzJDAAoJEBx+YmzsjxAg69oP/2/aQqa/v2dEXU4uk+UmRFJR
-BhEhGKT2jT+RBFSjdZNAQEB36w1z5iq4KubZL4XYIlGnSLixDPiWtt987whzGDge
-8VP+WMuPtU4rR2ixp6FbNuOtrT8W7YY0zGJ8DZ+hqw45nJu3UOZfAOJXGkaQLRrD
-YCa14Adbid99DdNHoguZK+o9LxBSCxFSELHvAy64dDkjNwGZlB5huzkG/6BdpsVt
-IjNrPJx1XtNF70ypguMYfgNrSnM++lpkrto7Xk69CjHknfw8Qnibmjuosns4K1BP
-rv+QgD5CSVOymsA/SILwo6Y8e6r+m116iBfoaTM8sUB+X4FNy1P7IUqSwLymdrhx
-YRGbfdXlK/T2+VMCRIZ/WII8RSX57vnx+1X1Q+xgEKvmOyv+X5kLGPRV1XBhpISe
-Hb31v5XaJCC2bavutCgiDKsb5sGEbeeA58un1BXQxwiAY1PSO/o7TL8NVTxk3Z+/
-2O+vgyDnRfhMQkL7sdkDqyb3IppiUI0N428LsHNI+SaJxj9Jh7Zvs1VY8zhu4wiN
-Muh/U3U0i7yYMuM10d+PMbWIyzzlcr5aA7tXNYQNSAKhit0NT9LLH8MCQ6J9zBiN
-0AmHKsO6NWzdZ3S2Cg4A8PcR1ue/XZd9mcbVYG92CHJhX12lFtzUUZzax+LcGybt
-4nW5YJvorkawtv6R5tRv
-=Vu3J
+iQIcBAEBAgAGBQJXVzNXAAoJEBx+YmzsjxAgM9EP/1YUjnUaHVLm6GwBC21tbv/c
+aHbxRHe9kW+T+E/SJHI3WiMvkd25+w/7w04bPoQVohqK8VK9IvliZvhsGevo4MoV
+Vf4Geju1iMKtZeCpRzBf7lR5e6XE1UqT7GiraEB7ejac845/HNYszlskO7U0H647
+K/ar70nVZqDglBhE7SZvu3vnPYbOliLpIFN4IY84/r1WMJSWXT/DAkhudOb3p7xI
+r84388tyx+HkfREPMHe6nO6ORufsnw4Yofipou9yomh0wSDBgQI+JJyFds40FIVw
+uSsbp07WlyIxWbZIUOx4E9QAZiGD07NNj/GQEXc2/NT57HCBPgJZE+Nrz0WlABGJ
+JJ0wLKEzbj4JKocmmlwjbuGc34fhYzzR4EaEyb1S1Dgll6SmDcbzu6f9pjHTCfB2
+75ZqbWS5Y/SFQH751MCA9ywMZGMc97SPbtnBc6dT3UNE9OI4eyVVXncUKbq949n6
+R+0G/UeGWQZ1kEpvmTVvu7sS6lhBJJ1sH2B/eJ9UZXabyLxHv7CsJGv0FetM3Q8Y
+68sk4gpo99PrJO530Qa7OJgjRAUe5M06PASSgQxTrUgj4XbCM49IrQJDCjuuKUhV
+++a9vZdS3GTW6RKuUtfUdOzeyEIg6QJeTMBt5rdSXjUQxiOczezw4WZv5bC0FJL2
+6yM3v7dtVJ1tDcv352uW
+=C7px
 -----END PGP SIGNATURE-----
 
---5G06lTa6Jq83wMTw--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ZJcv+A0YCCLh2VIg--
