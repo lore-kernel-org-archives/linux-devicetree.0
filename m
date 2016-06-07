@@ -1,119 +1,87 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/3] Documentation: add DT bindings for ARM SCPI power
- domains
-Date: Tue, 7 Jun 2016 14:22:24 +0100
-Message-ID: <20160607132223.GG2633@leverpostej>
-References: <1465228439-13457-1-git-send-email-sudeep.holla@arm.com>
- <1465228439-13457-3-git-send-email-sudeep.holla@arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] ASoC: rockchip: Add machine driver for
+ MAX98357A/RT5514/DA7219
+Date: Tue, 7 Jun 2016 14:32:47 +0100
+Message-ID: <20160607133247.GY7510@sirena.org.uk>
+References: <1464267742-15312-1-git-send-email-zhengxing@rock-chips.com>
+ <20160601144542.GA3835@rob-hp-laptop>
+ <5751912C.6080904@rock-chips.com>
+ <20160606235026.GP7510@sirena.org.uk>
+ <5756363F.40208@rock-chips.com>
+ <20160607104711.GR7510@sirena.org.uk>
+ <5756B22F.9000105@rock-chips.com>
+ <20160607120647.GV7510@sirena.org.uk>
+ <5756C245.7010001@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465228439-13457-3-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, Jon Medhurst <tixy@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1940332582863428333=="
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <5756C245.7010001-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 04:53:58PM +0100, Sudeep Holla wrote:
-> The System Control Processor (SCP) provides peripheral devices with
-> power domains that can be enabled and disabled viathe System Control
-> and Power Interface (SCPI) Message Protocol. Add bindings to allow
-> probing of these device power domians.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/arm,scpi.txt | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> index 313dabdc14f9..7141670d649b 100644
-> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> @@ -87,10 +87,33 @@ SCPI provides an API to access the various sensors on the SoC.
->  			 implementation for the IDs to use. For Juno
->  			 R0 and Juno R1 refer to [3].
-> 
-> +Power domain bindings for the power domains based on SCPI Message Protocol
-> +------------------------------------------------------------
-> +
-> +This binding uses the generic power domain binding[4].
-> +
-> +PM domain providers
-> +===================
-> +
-> +Required properties:
-> + - #power-domain-cells : Should be 1. Contains the device or the power
-> +			 domain ID value used by SCPI commands.
-> + - num-domains: Total number of power domains provided by SCPI. This is
-> +		needed as the SCPI message protocol lacks a mechanism to
-> +		query this information runtime.
-                                      ^
-I guess there should be an 'at' here.
 
-Are domain IDs zero-based and definitely non-sparse?
+--===============1940332582863428333==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="I2k41U2G4dq8LTBU"
+Content-Disposition: inline
 
-What exactly does this matter for? Just for validation at parsing time,
-or is this strictly required for correctness?
 
-If we send a command with an invalid domain ID, would the FW reliably
-report an error that we can recover from?
+--I2k41U2G4dq8LTBU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Otherwise, this looks ok. I'd just like to make sure I've understood
-correctly.
+On Tue, Jun 07, 2016 at 08:47:01PM +0800, Xing Zheng wrote:
+> On 2016=E5=B9=B406=E6=9C=8807=E6=97=A5 20:06, Mark Brown wrote:
 
-Thanks,
-Mark.
+> > OK, then the original name probably makes some sense though really
+> > that's such an unusual design that just naming it after the specific
+> > board might be better, it's not likely to see any reuse I'd guess.
 
-> +
-> +PM domain consumers
-> +===================
-> +
-> +Required properties:
-> + - power-domains : A phandle and PM domain specifier as defined by bindings of
-> +                   the power controller specified by phandle.
-> +
->  [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
->  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->  [2] Documentation/devicetree/bindings/thermal/thermal.txt
->  [3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
-> +[4] Documentation/devicetree/bindings/power/power_domain.txt
-> 
->  Example:
-> 
-> @@ -144,6 +167,12 @@ scpi_protocol: scpi@2e000000 {
->  		compatible = "arm,scpi-sensors";
->  		#thermal-sensor-cells = <1>;
->  	};
-> +
-> +	scpi_devpd: scpi-power-domains {
-> +		compatible = "arm,scpi-power-domains";
-> +		num-domains = <2>;
-> +		#power-domain-cells = <1>;
-> +	};
->  };
-> 
->  cpu@0 {
-> @@ -156,6 +185,7 @@ hdlcd@7ff60000 {
->  	...
->  	reg = <0 0x7ff60000 0 0x1000>;
->  	clocks = <&scpi_clk 4>;
-> +	power-domains = <&scpi_devpd 1>;
->  };
-> 
->  thermal-zones {
-> @@ -186,3 +216,7 @@ The thermal-sensors property in the soc_thermal node uses the
->  temperature sensor provided by SCP firmware to setup a thermal
->  zone. The ID "3" is the sensor identifier for the temperature sensor
->  as used by the firmware.
-> +
-> +The num-domains property in scpi-power-domains domain specifies that
-> +SCPI provides 2 power domains. The hdlcd node uses the power domain with
-> +domain ID 1.
-> --
-> 2.7.4
-> 
+> There are not only one type of board with this audio connection, so I thi=
+nk
+> we don't need to add specific board name.
+
+I imagine they're all variants on a single reference design though?  The
+name is unweildy.
+
+--I2k41U2G4dq8LTBU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXVsz+AAoJECTWi3JdVIfQvrAH/jCA/w75f3AhXzKepbheH5MQ
+4epbfT4l2k0Zx7NIl5WmnPFhG7C3RFQHpB0G3SDEoY7aNqVspQRw6fQq9feTauiQ
+xWMt33X6tqHOhgN0VSgcM67N9M84nwNaZM5OoOuNopNCZ9AgMNNScjsmGuRSUrxC
+1h7hY25Cfo3ujwWfgBzeBJ2V8LIL6c5K3IwVHVMW7cHWc8lv6JgfozmyiW53xzR8
+sr3YB0VxbCv95YVUIzzZ+iZ6ZCbkq+WI504urBzWfp8eLbrqtZRbF2TonPL++1KY
+sr7y5DscZMpRnizggOXpGJ/cLiXUo39vAkd3BpR5Ok7o5J5FvjeleTGPVmnlRGY=
+=GnOD
+-----END PGP SIGNATURE-----
+
+--I2k41U2G4dq8LTBU--
+
+
+--===============1940332582863428333==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linux-rockchip mailing list
+Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+--===============1940332582863428333==--
