@@ -1,173 +1,179 @@
-From: "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] ASoC: cs35l33: Add device tree bindings file for
- cs35l33
-Date: Tue, 7 Jun 2016 16:10:33 +0000
-Message-ID: <D37C5AC9.14770%Paul.Handrigan@cirrus.com>
-References: <20160607135541.GA25212@rob-hp-laptop>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v5 00/18] Add support for FDMA DMA controller and slim core
+ rproc found on STi chipsets
+Date: Tue,  7 Jun 2016 17:18:54 +0100
+Message-ID: <1465316352-20691-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160607135541.GA25212@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <1CBCF9642DC12347B6762AA52A00AB48-BNO7SilVNoKakBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, vinod.koul@intel.com, bjorn.andersson@linaro.org, arnaud.pouliquen@st.com, arnd@arndb.de
+Cc: peter.griffin@linaro.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Vinod, Bjorn, Maxime, Patrice,
 
+This patchset adds support for the Flexible Direct Memory Access (FDMA) core
+found on STi chipsets from STMicroelectronics. The FDMA is a slim core CPU
+with a dedicated firmware. It is a general purpose DMA controller supporting
+16 independent channels and data can be moved from memory to memory or between
+memory and paced latency critical real time targets.
 
-On 6/7/16, 8:55 AM, "Rob Herring" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+After some discussion with the DT maintainers I've removed the firmware
+name from DT, and now generate the name based on the compatible string.
+This is in keeping with how most other kernel drivers request firmware, and avoids
+a new DT firmware name or fdma id binding.
 
->On Fri, Jun 03, 2016 at 03:11:48PM -0500, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org wrote:
->> From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
->> 
->> Add device tree bindings file for the cs35l33 8V boosted
->> class D amplifier.
->> 
->> Signed-off-by: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/sound/cs35l33.txt          | 114
->>+++++++++++++++++++++
->>  1 file changed, 114 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/sound/cs35l33.txt
->> 
->> diff --git a/Documentation/devicetree/bindings/sound/cs35l33.txt
->>b/Documentation/devicetree/bindings/sound/cs35l33.txt
->> new file mode 100644
->> index 0000000..01fa8fd
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/cs35l33.txt
->> @@ -0,0 +1,114 @@
->> +CS35L33 Speaker Amplifier
->> +
->> +Required properties:
->> +
->> +  - compatible : "cirrus,cs35l33"
->> +
->> +  - reg : the I2C address of the device for I2C
->> +
->> +  - VA-supply, VP-supply : power supplies for the device,
->> +    as covered in
->> +    Documentation/devicetree/bindings/regulator/regulator.txt.
->> +
->> +Optional properties:
->> +
->> +  - reset-gpios : gpio used to reset the amplifier
->> +
->> +  - interrupt-parent : Specifies the phandle of the interrupt
->>controller to
->> +    which the IRQs from CS35L33 are delivered to.
->> + -  interrupts : IRQ line info CS35L33.
->> +    (See 
->>Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> +    for further information relating to interrupt properties)
->> +
->> +  - boost-ctl : Booster voltage use to supply the amp. If the value is
->> +    0, then VBST = VP. If greater than 0, the boost voltage will be
->>3300mV with
->> +    a value of 1 and will increase at a step size of 100mV until a
->>maximum of
->> +    8000mV.
->> +
->> +  - ramp-rate : On power up, it affects the time from when the power
->> +    up sequence begins to the time the audio reaches a full-scale
->>output.
->> +    On power down, it affects the time from when the power-down
->>sequence
->> +    begins to when the amplifier disables the PWM outputs. If this
->>property
->> +    is not set then soft ramping will be disabled and ramp time would
->>be
->> +    20ms. If this property is set to 0,1,2,3 then ramp times would be
->>40ms,
->> +    60ms,100ms,175ms respectively for 48KHz sample rate.
->> +
->> +  - boost-ipk : The maximum current allowed for the boost converter.
->> +    The range starts at 1850mA (0xF0) and goes to a maximum of 3600mA
->>(0xE0)
->> +    with a step size of 15.625mA. The default is 2500mA (0x90).
->
->This is still not in microamps. In other words, instead of 0xF0, use
->1850000.
+I've also dropped the dma xbar support for the moment, as I believe it should be
+re-worked based on some of the xbar API's that TI recently added. As requested
+I've also split it into smaller patches to help with a faster review.
 
-OK, I will change this. However, 1850mA would be 1.85A as what we would
-want.  1850000mA is
-1850A.  So, we would want a value of 1850 instead of 0xF0.
->
->Similar comment for any other properties where this would make sense.
->
->> +
->> +  - hg-algo : Parameters for internal Class H/G algorithm that
->> +    controls the amplifier supplies.
->> +
->> +  - mem-depth : Memory depth for the Class H/G algorithm measured in
->>LRCLK
->> +    cycles. If this property is set to 0, 1, 2, or 3 then the memory
->>depths
->> +    will be 1, 4, 8, 16 LRCLK cycles.  The default is 16 LRCLK cycles.
->> +
->> +    release-rate : The number of consecutive LRCLK periods before
->>allowing
->> +    release condition tracking updates. The number of LRCLK periods
->>start
->> +    at 3 to a maximum of 255.
->> +
->> +  - ldo-thld : Configures the signal threshold at which the PWM output
->>stage
->> +    enters LDO operation. Starts as a default value of 50mV for a
->>value of 1
->> +    and increases with a step size of 50mV to a maximum of 750mV
->>(value of
->> +    0xF).
->> +
->> +  - ldo-path-disable : This is a boolean property. If present, the H/G
->> +    algorithm uses the max detection path.  If not present, the LDO
->> +    detection path is used.
->> +
->> +  - ldo-entry-delay : The LDO entry delay in milliseconds before the
->>H/G
->> +    algorithm switches to the LDO voltage.  This property can be set
->>to values
->> +    from 0 to 7 for delays of 5ms, 10ms, 50ms, 100ms, 200ms, 500ms,
->>1000ms.
->> +    The default is 100ms.
->> +
->> +  - vp-hg-auto : This is a boolean property.  When set, class H/G VPhg
->> +    automatic updating is enabled.
->> +
->> +  - vp-hg :  Class H/G algorithm VPhg.  Controls the H/G algorithm's
->> +    reference to the VP voltage for when to start generating a boosted
->>VBST.
->> +    The reference voltage starts at 3000mV with a value of 0x3 and is
->>increased
->> +    by 100mV per step to a maximum of 5500mV.
->> +
->> +  - vp-hg-rate : The rate (number of LRCLK periods) at which the VPhg
->>is
->> +    allowed to increase to a higher voltage when using VPhg automatic
->> +    tracking. This property can be set to values from 0 to 3 with
->>rates of 128
->> +    periods, 2048 periods, 32768 periods, and 524288 periods.
->> +    The default is 32768 periods.
->> +
->> +  - vp-hg-va : VA calculation reference for automatic VPhg tracking
->>using VPMON.
->> +    This property can be set to values from 0 to 6 starting at 1800mV
->>with a
->> +    step size of 50mV up to a maximum value of 1750mV.  Default is
->>1800mV.
->
->As I said on the last version, all these non-common properties need
->vendor prefixes.
+V3 also included some updates to the ASoC st,sti-asoc-card.txt DT documentation
+to make the doc align with the driver code. This is kept as part of this series
+for completeness and so any further changes to the ASoC dt nodes in this series
+move in lockstep with the documentation. However these is no strict dependency
+on this update with the rest of the series. It also includes DT patches for
+Maximes/ Patrices STi DT tree to enable ASoC on STiH407/10 based platforms using
+the fdma driver.
 
-Sorry, I will add in the vendor prefixes.
+v4 includes a new slim core rproc driver for loading the slim elf firmware. This
+enables us to use the generic rproc elf loading code. This has deliberately not
+been implemented as a platform_driver, to avoid having to have double mappings of
+I/O memory from two device drivers, and also to ensure that the DT node reflects
+the actual hardware rather than Linux subsystems. The slim core is the basis
+for various pieces of IP in STi chipsets and the intention is that other drivers
+(e.g. demux) can also be migrated over to using the slim rproc for their
+elf firmware loading and start/stop control.
 
->
->Rob
+v5 includes various updates from Bjorn related to the slim rproc implementation.
+It also includes a patch to make rsc_table optional in remoteproc_core and various
+other cleanups and review feedback from Vinod to do with the actual fdma
+implementation. It also fixes a regression introduced in v4 when all drivers are
+built-in spotted by Aranud.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+
+Peter.
+
+Changes since v4:
+ - Make rsc table optional in remoteproc (Peter)
+ - Various fixups to STi audio DT nodes (Arnaud)
+ - Bulk rename of xp70 to slim (Peter)
+ - Update my email to @linaro.org (Lee)
+ - rebase on v4.7-rc2 (Peter)
+ - Don't make ST_SLIM_REMOTEPROC user selectable (Bjorn)
+ - -EPROBE_DEFER if rproc_boot fails when allocating DMA channel (Arnaud / Peter)
+ - Drop some unnecessary headers (Vinod / Bjorn)
+ - Change to writel now we have several mappings (Bjorn)
+ - Remove io_res, rproc, and some unused structure fields / #define (Bjorn)
+ - put clks in error path, also put clks before rproc_put() (Bjorn)
+ - Make enum less generic (Bjorn)
+ - Make slim_rproc_alloc() return a st_slim_rproc reference (Bjorn)
+ - Alphabetical naming in Kconfig & Makefile (Vinod)
+ - Add FDMA prefix to REQ_CTRL* (Vinod)
+ - Print ret on some error paths (Vinod)
+ - Add some acked-by (Peter)
+
+Changes since v3:
+ - Remove elf loading code from fdma driver (Vinod)
+ - Remove fdma_ prefix for clock names (Arnd)
+ - Make _xlate use dma_get_any_channel rather than request_channel (Arnd)
+ - Make a common function for _prep_ routines (Vinod)
+ - Make driver depend on COMPILE_TEST (Arnd)
+ - Remove unnecessary st_fdma_filter_fn (Arnd)
+ - Enable FDMA as a module (Arnd)
+ - Drop fdma_ clock prefix (Arnd)
+ - Fix description as well as example for st, prefix (Arnd)
+ - Remove string concatenation from fdma register macros to ease grep'ability (Arnd)
+ - Add a XP70 rproc driver for ELF firmware loading and start/stop control (Peter)
+ - Add myself as a author of the driver (Peter)
+
+Changes since v2:
+ - Change to dma-controller (Arnd)
+ - Remove platform data header file and simplifiy code (Arnd)
+ - Remove FW_LOADER_USER_HELPER_FALLBACK and rework firmware loading to device config (Vinod)
+ - Use SET_RUNTIME_PM_OPS helpers (Vinod)
+ - Remove fdma-id dt prop and use compatibles to generate different fdma firmware names (Arnd / Lee)
+ - Add sti-asoc-card DT nodes and pinmux config for uniperif player & reader (Peter)
+ - Update sti-asoc-card DT binding documentation (Peter)
+ - Enable STi audio drivers in multi_v7_defconfig (Peter)
+
+Changes since v1:
+ - split into smaller patches for easier / faster review (Vinod)
+ - new fill_hw_mode() with common code (Vinod)
+ - new config_reqctrl() called from *_prep() instead of device_config cb (Vinod)
+ - fdma-xbar support removed (Peter)
+ - rework firmware name mechanism so fwname isn't in DT (Peter / Lee)
+ - st_fdma_seg_to_mem can be static (Paul)
+ - EXPORT_SYMBOL st_fdma_filter_fn not required (Paul)
+ - s/channel/channels (vinod)
+ - better describe "Must be <3>" (vinod)
+ - sizeof(*ehdr) (vinod)
+ - print values on error debug (vinod)
+ - empty line (Vinod)
+ - Update to -EIO (Vinod)
+ - Make st_fdma tristate (Paul)
+ - Remove __exit tag from .remove (Maxime)
+ - Update MAINTAINERS rule to fdma* (Lee)
+ - Unit address should match reg property (Lee)
+
+Peter Griffin (18):
+  remoteproc: make rsc table support optional
+  remoteproc: st_slim_rproc: add a slimcore rproc driver
+  MAINTAINERS: Add st slim core rproc driver to STi section.
+  dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding
+    documentation
+  dmaengine: st_fdma: Add STMicroelectronics FDMA driver header file
+  dmaengine: st_fdma: Add STMicroelectronics FDMA engine driver support
+  ARM: STi: DT: STiH407: Add FDMA driver dt nodes.
+  MAINTAINERS: Add FDMA driver files to STi section.
+  ARM: multi_v7_defconfig: Enable STi FDMA driver
+  ASoC: sti: Update DT example to match the driver code
+  ARM: multi_v7_defconfig: Enable STi and simple-card drivers.
+  ARM: DT: STiH407: Add i2s_out pinctrl configuration
+  ARM: DT: STiH407: Add i2s_in pinctrl configuration
+  ARM: DT: STiH407: Add spdif_out pinctrl config
+  ARM: STi: DT: STiH407: Add sti-sasg-codec dt node
+  ARM: STi: DT: STiH407: Add uniperif player dt nodes
+  ARM: STi: DT: STiH407: Add uniperif reader dt nodes
+  ARM: DT: STi: stihxxx-b2120: Add DT nodes for STi audio card
+
+ Documentation/devicetree/bindings/dma/st_fdma.txt  |  87 ++
+ .../devicetree/bindings/sound/st,sti-asoc-card.txt |  20 +-
+ MAINTAINERS                                        |   3 +
+ arch/arm/boot/dts/stih407-family.dtsi              | 161 ++++
+ arch/arm/boot/dts/stih407-pinctrl.dtsi             |  55 ++
+ arch/arm/boot/dts/stihxxx-b2120.dtsi               |  45 ++
+ arch/arm/configs/multi_v7_defconfig                |   4 +
+ drivers/dma/Kconfig                                |  14 +-
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/st_fdma.c                              | 880 +++++++++++++++++++++
+ drivers/dma/st_fdma.h                              | 244 ++++++
+ drivers/remoteproc/Kconfig                         |   8 +
+ drivers/remoteproc/Makefile                        |   1 +
+ drivers/remoteproc/da8xx_remoteproc.c              |   1 +
+ drivers/remoteproc/remoteproc_core.c               |  87 +-
+ drivers/remoteproc/st_remoteproc.c                 |   2 +
+ drivers/remoteproc/st_slim_rproc.c                 | 338 ++++++++
+ drivers/remoteproc/ste_modem_rproc.c               |   2 +
+ drivers/remoteproc/wkup_m3_rproc.c                 |   1 +
+ include/linux/remoteproc.h                         |   1 +
+ include/linux/remoteproc/st_slim_rproc.h           |  53 ++
+ 21 files changed, 1964 insertions(+), 44 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/st_fdma.txt
+ create mode 100644 drivers/dma/st_fdma.c
+ create mode 100644 drivers/dma/st_fdma.h
+ create mode 100644 drivers/remoteproc/st_slim_rproc.c
+ create mode 100644 include/linux/remoteproc/st_slim_rproc.h
+
+-- 
+1.9.1
