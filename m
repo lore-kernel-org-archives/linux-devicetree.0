@@ -1,105 +1,69 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver
- for TI INA3221
-Date: Tue, 7 Jun 2016 15:30:58 -0700
-Message-ID: <20160607223058.GA20120@roeck-us.net>
-References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com>
- <1464784454-7988-2-git-send-email-ldewangan@nvidia.com>
- <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org>
- <5751863E.907@roeck-us.net>
- <575190A9.2090906@nvidia.com>
- <57519FA3.9010208@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 0/11] Changes to support 150 MHz eMMC on rk3399
+Date: Tue,  7 Jun 2016 15:44:33 -0700
+Message-ID: <1465339484-969-1-git-send-email-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57519FA3.9010208@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>
+To: ulf.hansson@linaro.org, kishon@ti.com, Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org
+Cc: shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, zhengxing@rock-chips.com, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, jay.xu@rock-chips.com, wxt@rock-chips.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, soren.brinkmann@xilinx.com, linux-kernel@vger.kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2016 at 10:17:55AM -0500, Andrew F. Davis wrote:
-> On 06/03/2016 09:14 AM, Laxman Dewangan wrote:
-> > 
-> > On Friday 03 June 2016 06:59 PM, Guenter Roeck wrote:
-> >> On 06/03/2016 03:06 AM, Jonathan Cameron wrote:
-> >>> On 01/06/16 13:34, Laxman Dewangan wrote:
-> >>>> The INA3221 is a three-channel, high-side current and bus voltage
-> >>>> monitor
-> >>>> with an I2C interface from Texas Instruments. The INA3221 monitors both
-> >>>> shunt voltage drops and bus supply voltages in addition to having
-> >>>> programmable conversion times and averaging modes for these signals.
-> >>>> The INA3221 offers both critical and warning alerts to detect multiple
-> >>>> programmable out-of-range conditions for each channel.
-> >>>>
-> >>>> Add support for INA3221 SW driver via IIO ADC interface. The device is
-> >>>> register as iio-device and provides interface for voltage/current
-> >>>> and power
-> >>>> monitor. Also provide interface for setting oneshot/continuous mode and
-> >>>> critical/warning threshold for the shunt voltage drop.
-> >>>>
-> >>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> >>> Hi Laxman,
-> >>>
-> >>> As ever with any driver lying on the border of IIO and hwmon, please
-> >>> include
-> >>> a short justification of why you need an IIO driver and also cc the
-> >>> hwmon list + maintainers. (cc'd on this reply).
-> >>>
-> >>> I simply won't take a driver where the hwmon maintainers aren't happy.
-> >>> As it stands I'm not seeing obvious reasons in the code for why this
-> >>> should be an IIO device.
-> >>>
-> >>
-> >> Me not either.
-> >>
-> >> I have a hwmon driver for the same chip pending from Andrew Davis (TI)
-> >> which I am just about to accept. We had directed Andrew back in April
-> >> to write a hwmon driver for the chip, which he did.
-> >>
-> > 
-> > Thanks Guenter,  I found the series
-> > 
-> > [PATCH v2 0/2] Add support for INA3221 Triple Current/Voltage Monitors
-> > Looks fine to me. I can use the hwmon.
-> > 
-> 
-> If you search even further back you can see I originally went with an
-> IIO driver as well, comparing the IIO and hwmon version for the simple
-> use cases I needed the hwmod version turned out much simpler, so it was
-> probably the right framework for now.
-> 
-> > 
-> > However, some of the stuff from my patch are not there which I will add
-> > later once original patch applied:
-> > - Dynamic mode changes for continuous and one-shot from sysfs.
-> > - In one shot, when try to read voltage data, do conversion and then read.
-> > 
-> 
-> My attempt is rather minimal, to be honest I like your stab at this
-> driver better in some ways, especially relating to DT putting each
-> channel in its own node with labels, I think this is a bit more clean
-> and will be more extendable if/when new multi-channel monitor chips are
-> made.
-> 
-> > Not sure whether exporting the following will help or not. Can you
-> > please confirm?
-> > - Oversampling time i.e. average sample
-> > - conversion time for bus voltage and shunt voltage if default is not
-> > suited for system.
-> > 
-> > 
-> 
-> These can always be added as needed, but the DT changes are not as easy.
-> I would like it if this got in this cycle but if you think something
-> will be needed to help your improvements, that can not be added
-> incrementally, it would probably be best to get them into the initial DT
-> binding doc now.
-> 
-Andrew,
+The theme of this series of patches is to try to allow running the eMMC
+at 150 MHz on the rk3399 SoC, though the changes should still be correct
+and have merit on their own.  The motivation for running at 150 MHz is
+that doing so improves signal integrity and (with some eMMC devices)
+doesn't affect throughput.
 
-with this, the hwmon driver is pretty much on hold. What do you want me to do ?
-Should I wait for DT updates ?
+These patches have been structured to keep things as separate as
+possible, but nevertheless there are still some dependencies between
+patches.  It probably makes the most sense for all of the non-device
+tree patches to go through a single tree.  If others agree, perhaps the
+most sane would be to get Acks from PHY maintainers and then to land the
+patches in the MMC tree.  Device tree patches should be able to be
+landed separately and the worst what would happen is a warning in the
+kernel log if you have the code without the device tree.
 
-Guenter
+The code patches are based on Ulf's mmc-next, then 4 patches that are
+outstanding / ready to land.  Specifically:
+- https://patchwork.kernel.org/patch/9086501/
+  phy: rockchip-emmc: give DLL some extra time to be ready
+- https://patchwork.kernel.org/patch/9093681/
+  phy: rockchip-emmc: configure frequency range and drive impedance
+- https://patchwork.kernel.org/patch/9086511/
+  phy: rockchip-emmc: configure default output tap delay
+- https://patchwork.kernel.org/patch/9086531/
+  phy: rockchip-emmc: reindent the register definitions
+
+The device tree patches are based on Heiko's v4.8-armsoc/dts64.
+
+If requested, I could repost my series with the outstanding code patches
+or I could try folding those patches into mine.  Since those patches
+aren't in 4.7-rc1 presumably they would also make sense to take through
+the MMC tree if others agree.
+
+
+Douglas Anderson (11):
+  phy: rockchip-emmc: Increase lock time allowance
+  mmc: sdhci-of-arasan: Always power the PHY off/on when clock changes
+  Documentation: mmc: sdhci-of-arasan: Add soc-ctl-syscon for corecfg
+    regs
+  mmc: sdhci-of-arasan: Properly set corecfg_baseclkfreq on rk3399
+  arm64: dts: rockchip: Add soc-ctl-syscon to sdhci for rk3399
+  Documentation: mmc: sdhci-of-arasan: Add ability to export card clock
+  mmc: sdhci-of-arasan: Add ability to export card clock
+  Documentation: phy: Let the rockchip eMMC PHY get an exported card
+    clock
+  phy: rockchip-emmc: Set phyctrl_frqsel based on card clock
+  phy: rockchip-emmc: Minor code cleanup in
+    rockchip_emmc_phy_power_off()
+  arm64: dts: rockchip: Provide emmcclk to PHY for rk3399
+
+ .../devicetree/bindings/mmc/arasan,sdhci.txt       |  35 ++-
+ .../devicetree/bindings/phy/rockchip-emmc-phy.txt  |   7 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   5 +
+ drivers/mmc/host/sdhci-of-arasan.c                 | 333 +++++++++++++++++++--
+ drivers/phy/phy-rockchip-emmc.c                    | 107 +++++--
+ 5 files changed, 427 insertions(+), 60 deletions(-)
+
+-- 
+2.8.0.rc3.226.g39d4020
