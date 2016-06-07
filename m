@@ -1,57 +1,52 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 1/4] dt-bindings: document rk3399 rk-timer bindings
-Date: Tue,  7 Jun 2016 12:54:30 +0800
-Message-ID: <1465275273-22076-2-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v2 4/4] arm64: dts: rockchip: add rktimer device node for rk3399
+Date: Tue,  7 Jun 2016 12:54:33 +0800
+Message-ID: <1465275273-22076-5-git-send-email-wxt@rock-chips.com>
 References: <1465275273-22076-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1465275273-22076-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: daniel.lezcano@linaro.org, Heiko Stuebner <heiko@sntech.de>
-Cc: dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, cf@rock-chips.com, huangtao@rock-chips.com, Rob Herring <robh+dt@kernel.org>, Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, cf@rock-chips.com, huangtao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Brian Norris <briannorris@chromium.org>, Shawn Lin <shawn.lin@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jianqun Xu <jay.xu@rock-chips.com>, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Huang Tao <huangtao@rock-chips.com>
 
-Add compatible string for rk3399 because which timer is a little
-different from older SoCs. So rename the file name from
-rockchip,rk3288-timer.txt to rockchip,rk-timer.txt.
-Clarify rockchip,rk3288-timer supported SoCs.
+Select rktimer0 as broadcast timer.
 
 Signed-off-by: Huang Tao <huangtao@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Tested-by: Jianqun Xu <jay.xu@rock-chips.com>
 
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 ---
 
 Changes in v2:
-- Add the Rob' Ack.
+- %s/ARM64/arm64.
 
- .../timer/{rockchip,rk3288-timer.txt => rockchip,rk-timer.txt}      | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/timer/{rockchip,rk3288-timer.txt => rockchip,rk-timer.txt} (75%)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-similarity index 75%
-rename from Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
-rename to Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-index 87f0b00..a41b184 100644
---- a/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-@@ -1,7 +1,9 @@
--Rockchip rk3288 timer
-+Rockchip rk timer
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index d331e80..f0d1935 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -542,6 +542,14 @@
+ 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
  
- Required properties:
--- compatible: shall be "rockchip,rk3288-timer"
-+- compatible: shall be one of:
-+  "rockchip,rk3288-timer" - for rk3066, rk3036, rk3188, rk322x, rk3288, rk3368
-+  "rockchip,rk3399-timer" - for rk3399
- - reg: base address of the timer register starting with TIMERS CONTROL register
- - interrupts: should contain the interrupts for Timer0
- - clocks : must contain an entry for each entry in clock-names
++	rktimer: rktimer@ff850000 {
++		compatible = "rockchip,rk3399-timer";
++		reg = <0x0 0xff850000 0x0 0x1000>;
++		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru PCLK_TIMER0>, <&cru SCLK_TIMER00>;
++		clock-names = "pclk", "timer";
++	};
++
+ 	spdif: spdif@ff870000 {
+ 		compatible = "rockchip,rk3399-spdif";
+ 		reg = <0x0 0xff870000 0x0 0x1000>;
 -- 
 1.9.1
