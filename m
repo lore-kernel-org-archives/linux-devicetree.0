@@ -1,70 +1,64 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add a startup delay for fixed
- regulator enabled phys
-Date: Tue, 7 Jun 2016 23:26:15 +0200
-Message-ID: <20160607212615.GG14179@lukather>
-References: <1465037919-8497-1-git-send-email-hdegoede@redhat.com>
+From: Hans Verkuil <hansverk@cisco.com>
+Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
+Date: Wed, 8 Jun 2016 07:13:02 +0900
+Message-ID: <575746EE.3030706@cisco.com>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+ <20160607112235.475c2e4c@recife.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="L1c6L/cjZjI9d0Eq"
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465037919-8497-1-git-send-email-hdegoede@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160607112235.475c2e4c@recife.lan>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Tiffany Lin <tiffany.lin@mediatek.com>
+Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, PoChun.Lin@mediatek.com, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Pawel Osciak <posciak@chromium.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---L1c6L/cjZjI9d0Eq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 04, 2016 at 12:58:39PM +0200, Hans de Goede wrote:
-> It seems that recent kernels have a shorter timeout when scanning for
-> ethernet phys causing us to hit a timeout on boards where the phy's
-> regulator gets enabled just before scanning, which leads to non working
-> ethernet.
->=20
-> A 10ms startup delay seems to be enough to fix it, this commit adds a
-> 20ms startup delay just to be safe.
->=20
-> This has been tested on a sun4i-a10-a1000 and sun5i-a10s-wobo-i5 board,
-> both of which have non-working ethernet on recent kernels without this
-> fix.
->=20
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:
+> Em Mon, 30 May 2016 20:29:14 +0800
+> Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
+>
+>> ==============
+>>   Introduction
+>> ==============
+>>
+>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+>> Mediatek Video Codec is able to handle video decoding of in a range of formats.
+>>
+>> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
+>> V4L2_PIX_FMT_MT21 format.
+>>
+>> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
+>> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
+>> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
+>>
+>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
+>>
+>> [1]https://patchwork.linuxtv.org/patch/33734/
+>> [2]https://chromium-review.googlesource.com/#/c/245241/
+>
+> Hmm... I'm not seeing the firmware for this driver at the
+> linux-firmware tree:
+> 	https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
+>
+> Nor I'm seeing any pull request for them. Did you send it?
+> I'll only merge the driver upstream after seeing such pull request.
 
-Applied, thanks!
+Mauro, are you confusing the decoder and encoder driver? I haven't thoroughly reviewed the decoder driver
+yet, so there is no pull request for the decoder driver.
 
-Maxime
+The only pull request I made was for the encoder driver.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Regards,
 
---L1c6L/cjZjI9d0Eq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXVzv2AAoJEBx+YmzsjxAgUnYP/itG1o0SAPebloKCTv/VzcLb
-KBcgTWbvz/8WwvMbd5t7E1R4gkz8Rva683Bg/OTihBGgvEsXk31ZUL1lIsRb5kwr
-2yIRgZ+568tI6CQ+dKLkFhVYZszE0lirMvpScXsnI5wX3H273Mo3wzniF/lsE89i
-QorcBrHQsWRFJPEaEvVwgLTrlboTsvDy3OYPieeQ/Bf5zxmWou0LUVDbpzswHanl
-18FnpQLPNIAAVJ1PCfGE9d7adpdDMh6TB5I2/xFBp2MoALpRygzloQOrkyoRsRyt
-OH1y9AX/ivYDCOdLY2+gJW/7auZ9POB4SC5i/3hTMmsHm1sey7JpjOFRxxSETKFT
-I8kmUIKDvWt8+I+ObqkvBSZWPnx6Z9BAWoSIizAD1SGmYXmyJS68M3t8N20Xa369
-NP0NlHVVjfHmImRVneAqplcBpCsydJtUU+ZnD89SusQTO/lz1wmdOPkk58b83hG+
-+Mn9aEW4mf+7P/0hn0xYoxxApryEBtQZovfK4iLCjqbi8RScat7RDYFfQJysbuD/
-kh60vNJAYDuxvQ6DI4aVVWeAB1tzeO1HdqV4OiUNIUZivZbhtXTpqiQJJye4dcTD
-EDbqexClhDxIG4hJ8OsY405AD8c3W/inayANrDlz9GCJRBxn+V/zYFEM4Wtt08lb
-AMpWM3gm2xRWLkglPDvp
-=x2qF
------END PGP SIGNATURE-----
-
---L1c6L/cjZjI9d0Eq--
+	Hans
