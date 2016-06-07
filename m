@@ -1,45 +1,32 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: Re: [PATCH v3] ASoC: rockchip: Add machine driver for
-	MAX98357A/RT5514/DA7219
-Date: Tue, 07 Jun 2016 21:48:42 +0800
-Message-ID: <5756D0BA.7060702@rock-chips.com>
-References: <1464267742-15312-1-git-send-email-zhengxing@rock-chips.com>
- <20160601144542.GA3835@rob-hp-laptop> <5751912C.6080904@rock-chips.com>
- <20160606235026.GP7510@sirena.org.uk> <5756363F.40208@rock-chips.com>
- <20160607104711.GR7510@sirena.org.uk> <5756B22F.9000105@rock-chips.com>
- <20160607120647.GV7510@sirena.org.uk> <5756C245.7010001@rock-chips.com>
- <20160607133247.GY7510@sirena.org.uk>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/3] fbdev: ssd1307fb: Make reset-gpios optional property
+Date: Tue, 7 Jun 2016 16:51:11 +0300
+Message-ID: <cover.1465303439.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160607133247.GY7510@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, dianders@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywKCk9uIDIwMTblubQwNuaciDA35pelIDIxOjMyLCBNYXJrIEJyb3duIHdyb3RlOgo+
-IE9uIFR1ZSwgSnVuIDA3LCAyMDE2IGF0IDA4OjQ3OjAxUE0gKzA4MDAsIFhpbmcgWmhlbmcgd3Jv
-dGU6Cj4+IE9uIDIwMTblubQwNuaciDA35pelIDIwOjA2LCBNYXJrIEJyb3duIHdyb3RlOgo+Pj4g
-T0ssIHRoZW4gdGhlIG9yaWdpbmFsIG5hbWUgcHJvYmFibHkgbWFrZXMgc29tZSBzZW5zZSB0aG91
-Z2ggcmVhbGx5Cj4+PiB0aGF0J3Mgc3VjaCBhbiB1bnVzdWFsIGRlc2lnbiB0aGF0IGp1c3QgbmFt
-aW5nIGl0IGFmdGVyIHRoZSBzcGVjaWZpYwo+Pj4gYm9hcmQgbWlnaHQgYmUgYmV0dGVyLCBpdCdz
-IG5vdCBsaWtlbHkgdG8gc2VlIGFueSByZXVzZSBJJ2QgZ3Vlc3MuCj4+IFRoZXJlIGFyZSBub3Qg
-b25seSBvbmUgdHlwZSBvZiBib2FyZCB3aXRoIHRoaXMgYXVkaW8gY29ubmVjdGlvbiwgc28gSSB0
-aGluawo+PiB3ZSBkb24ndCBuZWVkIHRvIGFkZCBzcGVjaWZpYyBib2FyZCBuYW1lLgo+IEkgaW1h
-Z2luZSB0aGV5J3JlIGFsbCB2YXJpYW50cyBvbiBhIHNpbmdsZSByZWZlcmVuY2UgZGVzaWduIHRo
-b3VnaD8gIFRoZQo+IG5hbWUgaXMgdW53ZWlsZHkuClllcywgdGhleSBhcmUgYmFzZWQgb24gYSBz
-aW5nbGUgcmVmZXJlbmNlIGRlc2lnbiB3aGljaCBpcyBjYWxsZWQgZ3J1LCBzbyAKY291bGQgSSB1
-c2UgdGhlIG5hbWUgInJrMzM5OS1ncnUtc291bmQiPwoKVGhhbmtzLgoKLS0gCi0gWGluZyBaaGVu
-ZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2Et
-ZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFp
-bG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+Use gpiod for reset-gpios property and make it optional. Also removes
+the nerver implemented reset-active-low property from the devicetree
+binding document. The default gpio binding should be enough.
+
+Jyri Sarha (3):
+  fbdev: ssd1307fb: Start to use gpiod API for reset gpio
+  fbdev: ssd1307fb: Remove reset-active-low from the DT binding document
+  fbdev: ssd1307fb: Make reset gpio devicetree property optional
+
+ .../devicetree/bindings/display/ssd1307fb.txt      |  4 +--
+ drivers/video/fbdev/ssd1307fb.c                    | 38 ++++++++++------------
+ 2 files changed, 20 insertions(+), 22 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
