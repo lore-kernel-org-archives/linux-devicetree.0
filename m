@@ -1,7 +1,7 @@
 From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/3] fbdev: ssd1307fb: Remove reset-active-low from the DT binding document
-Date: Tue, 7 Jun 2016 16:51:13 +0300
-Message-ID: <fc99babab77bbf9fcbe34fc82d7e2a18f9a1e464.1465303439.git.jsarha@ti.com>
+Subject: [PATCH 3/3] fbdev: ssd1307fb: Make reset gpio devicetree property optional
+Date: Tue, 7 Jun 2016 16:51:14 +0300
+Message-ID: <2901318f99dbcdea2dcaff4aedc2797fd809b572.1465303439.git.jsarha@ti.com>
 References: <cover.1465303439.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,37 +12,83 @@ To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove reset-active-low from the devicetree binding document. The actual
-implementation has never been there in the driver code and there is no
-reason to add it because the gpiod API supports gpio flags, including
-GPIO_ACTIVE_LOW, directly trough its own devicetree binding.
+Make reset gpio devicetree property optional. Depending on the board
+designing there may not be a dedicated gpio for resetting the
+display. Without a proper reset there may be some junk in the display
+memory at probe time, so in such a case the display memory is cleared
+before turning it on. The devicetree binding document is also updated.
 
 Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 ---
- Documentation/devicetree/bindings/display/ssd1307fb.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/display/ssd1307fb.txt         |  4 ++--
+ drivers/video/fbdev/ssd1307fb.c                       | 19 +++++++++++++------
+ 2 files changed, 15 insertions(+), 8 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b/Documentation/devicetree/bindings/display/ssd1307fb.txt
-index eb31ed4..4aee67f 100644
+index 4aee67f..6617df6 100644
 --- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
 +++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
 @@ -8,14 +8,14 @@ Required properties:
           0x3c or 0x3d
    - pwm: Should contain the pwm to use according to the OF device tree PWM
           specification [0]. Only required for the ssd1307.
--  - reset-gpios: Should contain the GPIO used to reset the OLED display
-+  - reset-gpios: Should contain the GPIO used to reset the OLED display. See
-+                 Documentation/devicetree/bindings/gpio/gpio.txt for details.
+-  - reset-gpios: Should contain the GPIO used to reset the OLED display. See
+-                 Documentation/devicetree/bindings/gpio/gpio.txt for details.
    - solomon,height: Height in pixel of the screen driven by the controller
    - solomon,width: Width in pixel of the screen driven by the controller
    - solomon,page-offset: Offset of pages (band of 8 pixels) that the screen is
      mapped to.
  
  Optional properties:
--  - reset-active-low: Is the reset gpio is active on physical low?
++  - reset-gpios: The GPIO used to reset the OLED display, if available. See
++                 Documentation/devicetree/bindings/gpio/gpio.txt for details.
    - solomon,segment-no-remap: Display needs normal (non-inverted) data column
                                to segment mapping
    - solomon,com-seq: Display uses sequential COM pin configuration
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index b27912c..891dfe1 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -439,6 +439,10 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* Clear the screen if we could not give reset at probe time */
++	if (!par->reset)
++		ssd1307fb_update_display(par);
++
+ 	/* Turn on the display */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_DISPLAY_ON);
+ 	if (ret < 0)
+@@ -562,7 +566,8 @@ static int ssd1307fb_probe(struct i2c_client *client,
+ 	par->device_info = (struct ssd1307fb_deviceinfo *)of_match_device(
+ 			ssd1307fb_of_match, &client->dev)->data;
+ 
+-	par->reset = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_LOW);
++	par->reset = devm_gpiod_get_optional(&client->dev, "reset",
++					     GPIOD_OUT_LOW);
+ 	if (IS_ERR(par->reset)) {
+ 		dev_err(&client->dev, "failed to get reset gpio: %ld\n",
+ 			PTR_ERR(par->reset));
+@@ -646,11 +651,13 @@ static int ssd1307fb_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, info);
+ 
+-	/* Reset the screen */
+-	gpiod_set_value(par->reset, 0);
+-	udelay(4);
+-	gpiod_set_value(par->reset, 1);
+-	udelay(4);
++	if (par->reset) {
++		/* Reset the screen */
++		gpiod_set_value(par->reset, 0);
++		udelay(4);
++		gpiod_set_value(par->reset, 1);
++		udelay(4);
++	}
+ 
+ 	ret = ssd1307fb_init(par);
+ 	if (ret)
 -- 
 1.9.1
 
