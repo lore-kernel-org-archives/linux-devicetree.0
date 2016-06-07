@@ -1,88 +1,62 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v5 10/18] ASoC: sti: Update DT example to match the driver code
-Date: Tue,  7 Jun 2016 17:19:04 +0100
-Message-ID: <1465316352-20691-11-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 12/18] ARM: DT: STiH407: Add i2s_out pinctrl configuration
+Date: Tue,  7 Jun 2016 17:19:06 +0100
+Message-ID: <1465316352-20691-13-git-send-email-peter.griffin@linaro.org>
 References: <1465316352-20691-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465316352-20691-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, vinod.koul@intel.com, bjorn.andersson@linaro.org, arnaud.pouliquen@st.com, arnd@arndb.de
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, broonie@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465316352-20691-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-uniperiph-id, version and mode are ST specific bindings and
-need the 'st,' prefix. Update the examples, as otherwise copying
-them yields a runtime error parsing the DT node.
+This patch adds the pinctrl config for the i2s_out pins
+used by the uniperif player IP.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: arnaud.pouliquen@st.com
-Cc: broonie@kernel.org
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/sound/st,sti-asoc-card.txt   | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-index 4d9a83d..16bcdfb 100644
---- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-+++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-@@ -33,11 +33,11 @@ Required properties:
- 	"tx" for "st,sti-uni-player" compatibility
- 	"rx" for "st,sti-uni-reader" compatibility
+diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+index a538ae5..0fb5c8a 100644
+--- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+@@ -1067,6 +1067,29 @@
+ 				};
+ 			};
  
--  - version: IP version integrated in SOC.
-+  - st,version: IP version integrated in SOC.
- 
-   - dai-name: DAI name that describes the IP.
- 
--  - IP mode: IP working mode depending on associated codec.
-+  - st,mode: IP working mode depending on associated codec.
- 	"HDMI" connected to HDMI codec and support IEC HDMI formats (player only).
- 	"SPDIF" connected to SPDIF codec and support SPDIF formats (player only).
- 	"PCM" PCM standard mode for I2S or TDM bus.
-@@ -47,7 +47,7 @@ Required properties ("st,sti-uni-player" compatibility only):
-   - clocks: CPU_DAI IP clock source, listed in the same order than the
- 	    CPU_DAI properties.
- 
--  - uniperiph-id: internal SOC IP instance ID.
-+  - st,uniperiph-id: internal SOC IP instance ID.
- 
- Optional properties:
-   - pinctrl-0: defined for CPU_DAI@1 and CPU_DAI@4 to describe I2S PIOs for
-@@ -84,9 +84,9 @@ Example:
- 		dmas = <&fdma0 4 0 1>;
- 		dai-name = "Uni Player #2 (DAC)";
- 		dma-names = "tx";
--		uniperiph-id = <2>;
--		version = <5>;
--		mode = "PCM";
-+		st,uniperiph-id = <2>;
-+		st,version = <5>;
-+		st,mode = "PCM";
- 	};
- 
- 	sti_uni_player3: sti-uni-player@3 {
-@@ -100,9 +100,9 @@ Example:
- 		dmas = <&fdma0 7 0 1>;
- 		dma-names = "tx";
- 		dai-name = "Uni Player #3 (SPDIF)";
--		uniperiph-id = <3>;
--		version = <5>;
--		mode = "SPDIF";
-+		st,uniperiph-id = <3>;
-+		st,version = <5>;
-+		st,mode = "SPDIF";
- 	};
- 
- 	sti_uni_reader1: sti-uni-reader@1 {
-@@ -115,7 +115,7 @@ Example:
- 		dmas = <&fdma0 6 0 1>;
- 		dma-names = "rx";
- 		dai-name = "Uni Reader #1 (HDMI RX)";
--		version = <3>;
-+		st,version = <3>;
- 		st,mode = "PCM";
- 	};
- 
++			i2s_out {
++				pinctrl_i2s_8ch_out: i2s_8ch_out{
++					st,pins {
++						mclk = <&pio33 5 ALT1 OUT>;
++						lrclk = <&pio33 7 ALT1 OUT>;
++						sclk = <&pio33 6 ALT1 OUT>;
++						data0 = <&pio33 4 ALT1 OUT>;
++						data1 = <&pio34 0 ALT1 OUT>;
++						data2 = <&pio34 1 ALT1 OUT>;
++						data3 = <&pio34 2 ALT1 OUT>;
++					};
++				};
++
++				pinctrl_i2s_2ch_out: i2s_2ch_out{
++					st,pins {
++						mclk = <&pio33 5 ALT1 OUT>;
++						lrclk = <&pio33 7 ALT1 OUT>;
++						sclk = <&pio33 6 ALT1 OUT>;
++						data0 = <&pio33 4 ALT1 OUT>;
++					};
++				};
++			};
++
+ 			serial3 {
+ 				pinctrl_serial3: serial3-0 {
+ 					st,pins {
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
