@@ -1,58 +1,45 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v5 13/18] ARM: DT: STiH407: Add i2s_in pinctrl configuration
-Date: Tue,  7 Jun 2016 17:19:07 +0100
-Message-ID: <1465316352-20691-14-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 15/18] ARM: STi: DT: STiH407: Add sti-sasg-codec dt node
+Date: Tue,  7 Jun 2016 17:19:09 +0100
+Message-ID: <1465316352-20691-16-git-send-email-peter.griffin@linaro.org>
 References: <1465316352-20691-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465316352-20691-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, vinod.koul@intel.com, bjorn.andersson@linaro.org, arnaud.pouliquen@st.com, arnd@arndb.de
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465316352-20691-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the pinctrl config for the i2s_in pins
-used by the uniperif reader IP.
+This patch adds the dt node for the internal audio
+codec IP.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index 0fb5c8a..537db7e 100644
---- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -1090,6 +1090,30 @@
- 				};
- 			};
- 
-+			i2s_in {
-+				pinctrl_i2s_8ch_in: i2s_8ch_in{
-+					st,pins {
-+						mclk = <&pio32 5 ALT1 IN>;
-+						lrclk = <&pio32 7 ALT1 IN>;
-+						sclk = <&pio32 6 ALT1 IN>;
-+						data0 = <&pio32 4 ALT1 IN>;
-+						data1 = <&pio33 0 ALT1 IN>;
-+						data2 = <&pio33 1 ALT1 IN>;
-+						data3 = <&pio33 2 ALT1 IN>;
-+						data4 = <&pio33 3 ALT1 IN>;
-+					};
-+				};
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 017d670..3d74bc2 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -874,5 +874,12 @@
+ 				<&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>,
+ 				<&clk_s_c0_flexgen CLK_EXT2F_A9>;
+ 		};
 +
-+				pinctrl_i2s_2ch_in: i2s_2ch_in{
-+					st,pins {
-+						mclk = <&pio32 5 ALT1 IN>;
-+						lrclk = <&pio32 7 ALT1 IN>;
-+						sclk = <&pio32 6 ALT1 IN>;
-+						data0 = <&pio32 4 ALT1 IN>;
-+					};
-+				};
-+			};
-+
- 			serial3 {
- 				pinctrl_serial3: serial3-0 {
- 					st,pins {
++		sti_sasg_codec: sti-sasg-codec {
++			compatible = "st,stih407-sas-codec";
++			#sound-dai-cells = <1>;
++			status = "disabled";
++			st,syscfg = <&syscfg_core>;
++		};
+ 	};
+ };
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
