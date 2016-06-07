@@ -1,48 +1,104 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v5 1/2] drm/bridge: Add sii902x driver
-Date: Tue, 7 Jun 2016 07:31:59 +0200
-Message-ID: <20160607073159.20541da1@bbrezillon>
-References: <1464879601-30569-1-git-send-email-boris.brezillon@free-electrons.com>
- <CACvgo51VRL=Ewbvx-sbwfLoPm00rDUEJ3mvk8Rc0T4WKC=UThA@mail.gmail.com>
- <20160603120238.76dc9380@bbrezillon>
- <HE1PR04MB10516B0A27EEBFDA8019C1A1EC5D0@HE1PR04MB1051.eurprd04.prod.outlook.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/7] mtd: nand: Add Hynix H27UBG8T2BTR-BC to
+ nand_ids table
+Date: Tue, 7 Jun 2016 07:48:09 +0200
+Message-ID: <20160607074809.5c18b4b2@bbrezillon>
+References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
+	<1465208664-9366-6-git-send-email-mamlinav@gmail.com>
+	<20160606205549.1ecd6fdb@bbrezillon>
+	<20160606225903.264abc01647eb1528cc226bd@gmail.com>
+	<20160606223138.3c2032ee@bbrezillon>
+	<20160607000645.5d1f428b40406a5db7cbe285@gmail.com>
+Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <HE1PR04MB10516B0A27EEBFDA8019C1A1EC5D0@HE1PR04MB1051.eurprd04.prod.outlook.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Meng Yi <meng.yi@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Huan Wang <alison.wang@nxp.com>, Emil Velikov <emil.l.velikov@gmail.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCK63FO5TUHRBJWA3G5AKGQEW34GE6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160607000645.5d1f428b40406a5db7cbe285-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWVuZywKCk9uIFR1ZSwgNyBKdW4gMjAxNiAwMjo0MDo1NiArMDAwMApNZW5nIFlpIDxtZW5n
-LnlpQG54cC5jb20+IHdyb3RlOgoKPiBIaSBCb3JpcywKPiAKPiBTb3JyeSBmb3IgcmVwbHkgbGF0
-ZSwgSSB3YXMgb24gUFRPLiBBbmQgYW5vdGhlciBQVE8gb24gIEp1bmUgOX4xMSwgMjAxNi5VVEMr
-OAo+IAo+ID4gIAo+ID4gPiA+ICsgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlKHNpaTkwMngtPnJlc2V0
-X2dwaW8sIDEpOwo+ID4gPiA+ICsKPiA+ID4gPiArICAgICAgIG1zbGVlcCgxMDApOyAgCj4gPiA+
-IE91Y2ggdGhhdCBpcyBzb21lIGp1aWN5IG51bWJlci4gQ2FuIHdlIGdldCBhIGNvbW1lbnQgd2l0
-aAo+ID4gPiByZWFzb25pbmcvb3JpZ2luIG9mIGl0ID8gIAo+ID4gCj4gPiBBcyBhbHJlYWR5IGV4
-cGxhaW5lZCB0byBNYXhpbWUsIEkganVzdCBkb24ndCBrbm93IHdoeSB0aGlzIGlzIG5lZWRlZCwg
-c2ltcGx5Cj4gPiBiZWNhdXNlIEkgZG9uJ3QgaGF2ZSBhY2Nlc3MgdG8gdGhlIGRhdGFzaGVldCBh
-bmQgSSBqdXN0IGJhc2VkIG15Cj4gPiBpbXBsZW1lbnRhdGlvbiBvbiBhbm90aGVyIGRyaXZlci4K
-PiA+IEkgY2FuIGFkZCBhIGNvbW1lbnQgc3RhdGluZyB0aGF0IHRoaXMgd2FzIGV4dHJhY3RlZCBm
-cm9tIGFub3RoZXIKPiA+IGltcGxlbWVudGF0aW9uLCBidXQgd2l0aCBubyBleHBsYW5hdGlvbiBv
-biB3aHkgdGhpcyBpcyBuZWVkZWQuCj4gPiAKPiA+IE1lbmcsIGRvIHlvdSBoYXZlIGFueSBpbmZv
-cm1hdGlvbiBhYm91dCBzdGFydHVwLXRpbWUsIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQ/Cj4gPiAg
-IAo+IAo+IEkgaGFkIGNoZWNrZWQgdGhlIGRhdGFzaGVldCBvZiBzaWk5MDIyYSwgd2hpY2ggc2Fp
-ZCB0aGUgTWluIG9mIFRSRVNFVCBpcyAxMDAgzrxzLCBhbmQgTWF4IGlzIG5vdCBzcGVjaWZpZWQu
-CgpPaCwgdGhhbmtzIGEgbG90LiB0cmVzZXQtbWluIGlzIGV4YWN0bHkgd2hhdCBJIG5lZWRlZC4K
-ClJlZ2FyZHMsCgpCb3JpcwoKLS0gCkJvcmlzIEJyZXppbGxvbiwgRnJlZSBFbGVjdHJvbnMKRW1i
-ZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMu
-Y29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, 7 Jun 2016 00:06:45 +0300
+Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> On Mon, 6 Jun 2016 22:31:38 +0200
+> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > On Mon, 6 Jun 2016 22:59:03 +0300
+> > Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >   
+> > > On Mon, 6 Jun 2016 20:55:49 +0200
+> > > Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > >   
+> > > > On Mon,  6 Jun 2016 13:24:22 +0300
+> > > > Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > >     
+> > > > > Add the full description of the Hynix H27UBG8T2BTR-BC NAND chip in the
+> > > > > nand_ids table so that we can later use the NAND ECC infos and ONFI timings
+> > > > > mode in controller drivers.    
+> > > > 
+> > > > Still hoping to get this series [1] merged in 4.8, but if that's
+> > > > not the case, I'll apply your patch.
+> > > > 
+> > > > BTW, that would be great if you could test it on your platforms.
+> > > >     
+> > > 
+> > > It seems that Hynix-specific initialization code can't handle H27UBG8T2BTR-BC
+> > > chip:
+> > > 
+> > > [    0.886153] nand: Could not find valid ONFI parameter page; aborting
+> > > [    0.892665] nand: device found, Manufacturer ID: 0xad, Chip ID: 0xd7
+> > > [    0.899025] nand: Hynix 1c03000.nand
+> > > [    0.902596] nand: bus width 8 instead 16 bit
+> > > [    0.906858] nand: No NAND device found
+> > > [    0.910620] sunxi_nand 1c03000.nand: failed to init nand chips
+> > > [    0.916528] sunxi_nand: probe of 1c03000.nand failed with error -22  
+> > 
+> > Can you try this patch? It should fix the problem [1].
+> > 
+> > [1]http://code.bulix.org/6hjww1-100494
+> >   
+> 
+> Yes, it fixes problem. What about ONFI parameter page? Should it be ignored?
+
+It should be ignored: your NAND is not 'ONFI compatible', the datasheet
+just says that it supports the' ONFI command set', which is not the
+same :).
+The trace you're seeing here is just notifying that the core failed to
+detect an ONFI NAND, which is expected in your case.
+
+> [    0.886068] nand: Could not find valid ONFI parameter page; aborting
+> [    0.892571] nand: device found, Manufacturer ID: 0xad, Chip ID: 0xd7
+> [    0.898917] nand: Hynix NAND 4GiB 3,3V 8-bit
+> [    0.903198] nand: 4096 MiB, MLC, erase size: 2048 KiB, page size: 8192, OOB size: 640
+> [    0.911908] Bad block table found at page 524032, version 0x01
+> [    0.918534] Bad block table found at page 523776, version 0x01
+> [    0.972112] 5 ofpart partitions found on MTD device 1c03000.nand
+> [    0.978116] Creating 5 MTD partitions on "1c03000.nand":
+> [    0.983477] 0x000000000000-0x000000200000 : "boot0"
+> [    0.988803] 0x000000200000-0x000000400000 : "boot0-rescue"
+> [    0.994692] 0x000000400000-0x000000600000 : "uboot"
+> [    0.999944] 0x000000600000-0x000000800000 : "uboot-rescue"
+> [    1.005763] 0x000000800000-0x000100000000 : "main"
+> 
+> > 
+> > -- 
+> > Boris Brezillon, Free Electrons
+> > Embedded Linux and Kernel engineering
+> > http://free-electrons.com  
+> 
+> 
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
