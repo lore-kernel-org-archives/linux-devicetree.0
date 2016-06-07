@@ -1,7 +1,7 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v4 07/14] of_numa: Use pr_fmt()
-Date: Tue, 7 Jun 2016 16:08:11 +0800
-Message-ID: <1465286898-13828-8-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v4 13/14] of/numa: remove the constraint on the distances of node pairs
+Date: Tue, 7 Jun 2016 16:08:17 +0800
+Message-ID: <1465286898-13828-14-git-send-email-thunder.leizhen@huawei.com>
 References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,88 +9,66 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+At present, the distances must equal in both direction for each node
+pairs. For example: the distance of node B->A must the same to A->B.
+But we really don't have to do this.
 
-Use pr_fmt to prefix kernel output.
+End up fill default distances as below:
+1. If both direction specified, keep no change.
+2. If only one direction specified, assign it to the other direction.
+3. If none of the two direction specified, both are assigned to
+   REMOTE_DISTANCE.
 
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/of/of_numa.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/of/of_numa.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index ed7bd22..019738f 100644
+index 019738f..ce782f9 100644
 --- a/drivers/of/of_numa.c
 +++ b/drivers/of/of_numa.c
-@@ -16,6 +16,8 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
-
-+#define pr_fmt(fmt) "OF: NUMA: " fmt
-+
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/nodemask.h>
-@@ -49,10 +51,9 @@ static void __init of_numa_parse_cpu_nodes(void)
- 		if (r)
- 			continue;
-
--		pr_debug("NUMA: CPU on %u\n", nid);
-+		pr_debug("CPU on %u\n", nid);
- 		if (nid >= MAX_NUMNODES)
--			pr_warn("NUMA: Node id %u exceeds maximum value\n",
--				nid);
-+			pr_warn("Node id %u exceeds maximum value\n", nid);
- 		else
- 			node_set(nid, numa_nodes_parsed);
- 	}
-@@ -80,7 +81,7 @@ static int __init of_numa_parse_memory_nodes(void)
-
- 		if (!i || r) {
- 			of_node_put(np);
--			pr_err("NUMA: bad property in memory node\n");
-+			pr_err("bad property in memory node\n");
- 			return r ? : -EINVAL;
- 		}
- 	}
-@@ -94,17 +95,17 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
- 	int entry_count;
- 	int i;
-
--	pr_info("NUMA: parsing numa-distance-map-v1\n");
-+	pr_info("parsing numa-distance-map-v1\n");
-
- 	matrix = of_get_property(map, "distance-matrix", NULL);
- 	if (!matrix) {
--		pr_err("NUMA: No distance-matrix property in distance-map\n");
-+		pr_err("No distance-matrix property in distance-map\n");
- 		return -EINVAL;
- 	}
-
- 	entry_count = of_property_count_u32_elems(map, "distance-matrix");
- 	if (entry_count <= 0) {
--		pr_err("NUMA: Invalid distance-matrix\n");
-+		pr_err("Invalid distance-matrix\n");
- 		return -EINVAL;
- 	}
-
-@@ -119,7 +120,7 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
- 		matrix++;
-
+@@ -122,15 +122,25 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
  		numa_set_distance(nodea, nodeb, distance);
--		pr_debug("NUMA:  distance[node%d -> node%d] = %d\n",
-+		pr_debug("distance[node%d -> node%d] = %d\n",
+ 		pr_debug("distance[node%d -> node%d] = %d\n",
  			 nodea, nodeb, distance);
-
- 		/* Set default distance of node B->A same as A->B */
-@@ -166,7 +167,7 @@ int of_node_to_nid(struct device_node *device)
- 		np = of_get_next_parent(np);
+-
+-		/* Set default distance of node B->A same as A->B */
+-		if (nodeb > nodea)
+-			numa_set_distance(nodeb, nodea, distance);
  	}
- 	if (np && r)
--		pr_warn("NUMA: Invalid \"numa-node-id\" property in node %s\n",
-+		pr_warn("Invalid \"numa-node-id\" property in node %s\n",
- 			np->name);
+
+ 	return 0;
+ }
+
++static void __init fill_default_distances(void)
++{
++	int i, j;
++
++	for (i = 0; i < nr_node_ids; i++)
++		for (j = 0; j < nr_node_ids; j++)
++			if (i == j)
++				numa_set_distance(i, j, LOCAL_DISTANCE);
++			else if (!node_distance(i, j))
++				numa_set_distance(i, j,
++				    node_distance(j, i) ? : REMOTE_DISTANCE);
++
++}
++
+ static int __init of_numa_parse_distance_map(void)
+ {
+ 	int ret = 0;
+@@ -140,8 +150,10 @@ static int __init of_numa_parse_distance_map(void)
+ 				     "numa-distance-map-v1");
+ 	if (np)
+ 		ret = of_numa_parse_distance_map_v1(np);
+-
  	of_node_put(np);
++
++	fill_default_distances();
++
+ 	return ret;
+ }
