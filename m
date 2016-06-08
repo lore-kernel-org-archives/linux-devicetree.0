@@ -1,56 +1,67 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v2 6/6] drm/panel: simple: Add support for Sharp LQ123P1JX31
- 2400x1600 panel
-Date: Wed,  8 Jun 2016 19:52:48 +0800
-Message-ID: <1465386768-27947-1-git-send-email-ykk@rock-chips.com>
-References: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v9 03/14] usb: hcd.h: Add OTG to HCD interface
+Date: Wed, 8 Jun 2016 15:04:57 +0300
+Message-ID: <575809E9.7010409@ti.com>
+References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+ <1465376626-30122-4-git-send-email-rogerq@ti.com>
+ <5bc321c0-fb36-7a4a-d054-ee73b12822d4@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5bc321c0-fb36-7a4a-d054-ee73b12822d4@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, peter.chen@freescale.com
+Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFNoYXJwIExRMTIzUDFKWDMxIGlzIGFuIDEyLjMiLCAyNDAweDE2MDAgVEZULUxDRCBwYW5l
-bCBjb25uZWN0ZWQKdXNpbmcgZURQIGludGVyZmFjZXMuCgpTaWduZWQtb2ZmLWJ5OiBZYWtpciBZ
-YW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Ci0tLQpDaGFuZ2VzIGluIHYyOgotIEFkZCBkZXRhaWwg
-dGltaW5nIG9mIFNoYXJwIExRMTIzUDFKWDMxIHBhbmVsIGluIHYyCgogZHJpdmVycy9ncHUvZHJt
-L3BhbmVsL3BhbmVsLXNpbXBsZS5jIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysKIDEg
-ZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNp
-bXBsZS5jCmluZGV4IDA2N2E1YzQuLjM4YjY2NjAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
-c2ltcGxlLmMKQEAgLTEzMTQsNiArMTMxNCwyOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVs
-X2Rlc2Mgc2Ftc3VuZ19sdG4xNDBhdDI5XzMwMSA9IHsKIAl9LAogfTsKIAorc3RhdGljIGNvbnN0
-IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIHNoYXJwX2xxMTIzcDFqeDMxX21vZGUgPSB7CisJLmNs
-b2NrID0gMjUyNzUwLAorCS5oZGlzcGxheSA9IDI0MDAsCisJLmhzeW5jX3N0YXJ0ID0gMjQwMCAr
-IDQ4LAorCS5oc3luY19lbmQgPSAyNDAwICsgNDggKyAzMiwKKwkuaHRvdGFsID0gMjQwMCArIDQ4
-ICsgMzIgKyA4MCwKKwkudmRpc3BsYXkgPSAxNjAwLAorCS52c3luY19zdGFydCA9IDE2MDAgKyAz
-LAorCS52c3luY19lbmQgPSAxNjAwICsgMyArIDEwLAorCS52dG90YWwgPSAxNjAwICsgMyArIDEw
-ICsgMzMsCisJLnZyZWZyZXNoID0gNjAsCisJLmZsYWdzID0gRFJNX01PREVfRkxBR19OVlNZTkMg
-fCBEUk1fTU9ERV9GTEFHX05IU1lOQywKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxf
-ZGVzYyBzaGFycF9scTEyM3AxangzMSA9IHsKKwkubW9kZXMgPSAmc2hhcnBfbHExMjNwMWp4MzFf
-bW9kZSwKKwkubnVtX21vZGVzID0gMSwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMjQwMCwKKwkJ
-LmhlaWdodCA9IDE2MDAsCisJfSwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3Bs
-YXlfbW9kZSBzaGVsbHlfc2NhMDcwMTBfYmZuX2xubl9tb2RlID0gewogCS5jbG9jayA9IDMzMzAw
-LAogCS5oZGlzcGxheSA9IDgwMCwKQEAgLTE1MzcsNiArMTU2MCw5IEBAIHN0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21wYXRpYmxl
-ID0gInNhbXN1bmcsbHRuMTQwYXQyOS0zMDEiLAogCQkuZGF0YSA9ICZzYW1zdW5nX2x0bjE0MGF0
-MjlfMzAxLAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAic2hhcnAsbHExMjNwMWp4MzEiLAorCQku
-ZGF0YSA9ICZzaGFycF9scTEyM3AxangzMSwKKwl9LCB7CiAJCS5jb21wYXRpYmxlID0gInNoZWxs
-eSxzY2EwNzAxMC1iZm4tbG5uIiwKIAkJLmRhdGEgPSAmc2hlbGx5X3NjYTA3MDEwX2Jmbl9sbm4s
-CiAJfSwgewotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+Hi,
+
+On 08/06/16 14:39, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 6/8/2016 12:03 PM, Roger Quadros wrote:
+> 
+>> The OTG core will use struct otg_hcd_ops to interface
+>> with the HCD controller.
+> 
+>    Host controller driver (HCD) controller? Maybe just HC? :-)
+
+OK.
+
+> 
+>> The main purpose of this interface is to avoid directly
+>> calling HCD APIs from the OTG core as they
+>> wouldn't be defined in the built-in symbol table if
+>> CONFIG_USB is m.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Acked-by: Peter Chen <peter.chen@nxp.com>
+>> ---
+>>  include/linux/usb/hcd.h | 24 ++++++++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>
+>> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+>> index 66fc137..7914bed 100644
+>> --- a/include/linux/usb/hcd.h
+>> +++ b/include/linux/usb/hcd.h
+>> @@ -400,6 +400,30 @@ struct hc_driver {
+>>
+>>  };
+>>
+>> +/**
+>> + * struct otg_hcd_ops - Interface between OTG core and HCD
+>> + *
+>> + * Provided by the HCD core to allow the OTG core to interface with the HCD
+>> + *
+>> + * @add: function to add the HCD
+>> + * @remove: function to remove the HCD
+>> + * @usb_bus_start_enum: function to immediately start bus enumeration
+>> + * @usb_control_msg: function to build and send of a control urb
+> 
+>    That "of" is not needed. And it's URB.
+
+Right.
+> 
+> [...]
+> 
