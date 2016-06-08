@@ -1,44 +1,53 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 1/6] dt-bindings: add LG LP097QX1-SPA1 panel binding
-Date: Wed,  8 Jun 2016 19:52:07 +0800
-Message-ID: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v2 2/6] drm/panel: simple: Add support for LG LP097QX1-SPA1
+ 2048x1536 panel
+Date: Wed,  8 Jun 2016 19:52:33 +0800
+Message-ID: <1465386753-27730-1-git-send-email-ykk@rock-chips.com>
+References: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-The LG LP097QX1-SPA1 is an 9.7", 2048x1536 (QXGA) TFT-LCD panel
-connected using eDP interfaces.
-
-Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Changes in v2:
-- Add Rob's acked for dt-bindings of LG LP097QX1-SPA1 panel
-
- .../devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt         | 7 +++++++
- 1 file changed, 7 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt b/Documentation/devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt
-new file mode 100644
-index 0000000..4214151
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt
-@@ -0,0 +1,7 @@
-+LG 9.7" (2048x1536 pixels) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "lg,lp097qx1-spa1"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
--- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIExHIExQMDk3UVgxLVNQQTEgaXMgYW4gOS43IiwgMjA0OHgxNTM2IChRWEdBKSBURlQtTENE
+IHBhbmVsCmNvbm5lY3RlZCB1c2luZyBlRFAgaW50ZXJmYWNlcy4KClNpZ25lZC1vZmYtYnk6IFlh
+a2lyIFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KLS0tCkNoYW5nZXMgaW4gdjI6IE5vbmUKCiBk
+cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgfCAyNSArKysrKysrKysrKysrKysr
+KysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9wYW5lbC1zaW1wbGUuYwppbmRleCAzYTdiZGYxLi40MTAyMGUxIDEwMDY0NAotLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBAIC0xMDQwLDYgKzEwNDAsMjggQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBwYW5lbF9kZXNjIGxnX2xwMTIwdXAxID0gewogCX0sCiB9OwogCitzdGF0aWMgY29u
+c3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgbGdfbHAwOTdxeDFfc3BhMV9tb2RlID0geworCS5j
+bG9jayA9IDIwNTIxMCwKKwkuaGRpc3BsYXkgPSAyMDQ4LAorCS5oc3luY19zdGFydCA9IDIwNDgg
+KyAxNTAsCisJLmhzeW5jX2VuZCA9IDIwNDggKyAxNTAgKyA1LAorCS5odG90YWwgPSAyMDQ4ICsg
+MTUwICsgNSArIDUsCisJLnZkaXNwbGF5ID0gMTUzNiwKKwkudnN5bmNfc3RhcnQgPSAxNTM2ICsg
+MywKKwkudnN5bmNfZW5kID0gMTUzNiArIDMgKyAxLAorCS52dG90YWwgPSAxNTM2ICsgMyArIDEg
+KyA5LAorCS52cmVmcmVzaCA9IDYwLAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9k
+ZXNjIGxnX2xwMDk3cXgxX3NwYTEgPSB7CisJLm1vZGVzID0gJmxnX2xwMDk3cXgxX3NwYTFfbW9k
+ZSwKKwkubnVtX21vZGVzID0gMSwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMjA0OCwKKwkJLmhl
+aWdodCA9IDE1MzYsCisJfSwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlf
+bW9kZSBsZ19scDEyOXFlX21vZGUgPSB7CiAJLmNsb2NrID0gMjg1MjUwLAogCS5oZGlzcGxheSA9
+IDI1NjAsCkBAIC0xNDYwLDYgKzE0ODIsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rldmlj
+ZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCQkuY29tcGF0aWJsZSA9ICJsZyxscDEyMHVw
+MSIsCiAJCS5kYXRhID0gJmxnX2xwMTIwdXAxLAogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAibGcs
+bHAwOTdxeDEtc3BhMSIsCisJCS5kYXRhID0gJmxnX2xwMDk3cXgxX3NwYTEsCisJfSwgewogCQku
+Y29tcGF0aWJsZSA9ICJsZyxscDEyOXFlIiwKIAkJLmRhdGEgPSAmbGdfbHAxMjlxZSwKIAl9LCB7
+Ci0tIAoxLjkuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
