@@ -1,127 +1,84 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 09/20] pwm: sti: Rename channel => device
-Date: Wed,  8 Jun 2016 10:21:24 +0100
-Message-ID: <20160608092135.21184-10-lee.jones@linaro.org>
-References: <20160608092135.21184-1-lee.jones@linaro.org>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt doc for Rockchip
+ PCIe controller
+Date: Wed, 8 Jun 2016 17:31:25 +0800
+Message-ID: <6c2e795a-710d-081c-baa5-31ecb13b1d56@rock-chips.com>
+References: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
+ <5757E430.7020804@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160608092135.21184-1-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: linux-pwm@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org, patrice.chotard@st.com, robh+dt@kernel.org, thierry.reding@gmail.com, Lee Jones <lee.jones@linaro.org>, maxime.coquelin@st.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <5757E430.7020804-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is to bring the terminology used in the STi PWM driver more
-into line with the PWM subsystem.
-
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/pwm/pwm-sti.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 92abbd5..3dae127 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -21,7 +21,7 @@
- #include <linux/slab.h>
- #include <linux/time.h>
- 
--#define STI_DS_REG(ch)	(4 * (ch))	/* Channel's Duty Cycle register */
-+#define STI_DS_REG(ch)	(4 * (ch))	/* Device's Duty Cycle register */
- #define STI_PWMCR	0x50		/* Control/Config register */
- #define STI_INTEN	0x54		/* Interrupt Enable/Disable register */
- #define PWM_PRESCALE_LOW_MASK		0x0f
-@@ -40,7 +40,7 @@ enum {
- 
- struct sti_pwm_compat_data {
- 	const struct reg_field *reg_fields;
--	unsigned int num_chan;
-+	unsigned int num_devs;
- 	unsigned int max_pwm_cnt;
- 	unsigned int max_prescale;
- };
-@@ -130,13 +130,13 @@ static int sti_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	/* Allow configuration changes if one of the
- 	 * following conditions satisfy.
--	 * 1. No channels have been configured.
--	 * 2. Only one channel has been configured and the new request
--	 *    is for the same channel.
--	 * 3. Only one channel has been configured and the new request is
--	 *    for a new channel and period of the new channel is same as
-+	 * 1. No devices have been configured.
-+	 * 2. Only one device has been configured and the new request
-+	 *    is for the same device.
-+	 * 3. Only one device has been configured and the new request is
-+	 *    for a new device and period of the new device is same as
- 	 *    the current configured period.
--	 * 4. More than one channels are configured and period of the new
-+	 * 4. More than one devices are configured and period of the new
- 	 *    requestis the same as the current period.
- 	 */
- 	if (!ncfg ||
-@@ -201,7 +201,7 @@ static int sti_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	int ret = 0;
- 
- 	/*
--	 * Since we have a common enable for all PWM channels,
-+	 * Since we have a common enable for all PWM devices,
- 	 * do not enable if already enabled.
- 	 */
- 	mutex_lock(&pc->sti_pwm_lock);
-@@ -259,11 +259,11 @@ static int sti_pwm_probe_dt(struct sti_pwm_chip *pc)
- 	const struct reg_field *reg_fields;
- 	struct device_node *np = dev->of_node;
- 	struct sti_pwm_compat_data *cdata = pc->cdata;
--	u32 num_chan;
-+	u32 num_devs;
- 
--	of_property_read_u32(np, "st,pwm-num-chan", &num_chan);
--	if (num_chan)
--		cdata->num_chan = num_chan;
-+	of_property_read_u32(np, "st,pwm-num-devs", &num_devs);
-+	if (num_devs)
-+		cdata->num_devs = num_devs;
- 
- 	reg_fields = cdata->reg_fields;
- 
-@@ -330,7 +330,7 @@ static int sti_pwm_probe(struct platform_device *pdev)
- 	cdata->reg_fields   = &sti_pwm_regfields[0];
- 	cdata->max_prescale = 0xff;
- 	cdata->max_pwm_cnt  = 255;
--	cdata->num_chan     = 1;
-+	cdata->num_devs     = 1;
- 
- 	pc->cdata = cdata;
- 	pc->dev = dev;
-@@ -362,7 +362,7 @@ static int sti_pwm_probe(struct platform_device *pdev)
- 	pc->chip.dev = dev;
- 	pc->chip.ops = &sti_pwm_ops;
- 	pc->chip.base = -1;
--	pc->chip.npwm = pc->cdata->num_chan;
-+	pc->chip.npwm = pc->cdata->num_devs;
- 	pc->chip.can_sleep = true;
- 
- 	ret = pwmchip_add(&pc->chip);
-@@ -381,7 +381,7 @@ static int sti_pwm_remove(struct platform_device *pdev)
- 	struct sti_pwm_chip *pc = platform_get_drvdata(pdev);
- 	unsigned int i;
- 
--	for (i = 0; i < pc->cdata->num_chan; i++)
-+	for (i = 0; i < pc->cdata->num_devs; i++)
- 		pwm_disable(&pc->chip.pwms[i]);
- 
- 	clk_unprepare(pc->clk);
--- 
-2.8.3
+SGkgTWFyYywKCuWcqCAyMDE2LTYtOCAxNzoyNCwgTWFyYyBaeW5naWVyIOWGmemBkzoKPiBPbiAw
+OC8wNi8xNiAwOTowNSwgU2hhd24gTGluIHdyb3RlOgo+PiBUaGlzIHBhdGNoIGFkZHMgYSBiaW5k
+aW5nIHRoYXQgZGVzY3JpYmVzIHRoZSBSb2NrY2hpcCBQQ0llIGNvbnRyb2xsZXIKPj4gZm91bmQg
+b24gUm9ja2NoaXAgU29DcyBQQ0llIGludGVyZmFjZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogU2hh
+d24gTGluIDxzaGF3bi5saW5Acm9jay1jaGlwcy5jb20+Cj4+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2Vz
+IGluIHYyOgo+PiAtIGZpeCBsb3RzIGNsay9yZXNldCBzdHVmZiBzdWdnZXN0ZWQgYnkgSGVpa28K
+Pj4gLSByZW1vdmUgbXNpLXBhcmVudCBhbmQgYWRkIG1zaS1tYXAgc3VnZ2VzdGVkIGJ5IE1hcmMK
+Pj4gLSBkcm9wIHBoeSByZWxhdGVkIHN0dWZmCj4+IC0gc29tZSBvdGhlcnMgbWlub3IgZml4ZXMK
+Pj4KPj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yb2NrY2hpcC1wY2llLnR4dCAgICAg
+IHwgODYgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDg2IGluc2Vy
+dGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcGNpL3JvY2tjaGlwLXBjaWUudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3JvY2tjaGlwLXBjaWUudHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yb2NrY2hpcC1wY2llLnR4dAo+PiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5lYjkyZTI5Cj4+IC0tLSAvZGV2L251
+bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yb2NrY2hp
+cC1wY2llLnR4dAo+PiBAQCAtMCwwICsxLDg2IEBACj4+ICsqIFJvY2tjaGlwIEFYSSBQQ0llIFJv
+b3QgUG9ydCBCcmlkZ2UgRFQgZGVzY3JpcHRpb24KPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGll
+czoKPj4gKy0gI2FkZHJlc3MtY2VsbHM6IEFkZHJlc3MgcmVwcmVzZW50YXRpb24gZm9yIHJvb3Qg
+cG9ydHMsIHNldCB0byA8Mz4KPj4gKy0gI3NpemUtY2VsbHM6IFNpemUgcmVwcmVzZW50YXRpb24g
+Zm9yIHJvb3QgcG9ydHMsIHNldCB0byA8Mj4KPj4gKy0gI2ludGVycnVwdC1jZWxsczogc3BlY2lm
+aWVzIHRoZSBudW1iZXIgb2YgY2VsbHMgbmVlZGVkIHRvIGVuY29kZSBhbgo+PiArCQlpbnRlcnJ1
+cHQgc291cmNlLiBUaGUgdmFsdWUgbXVzdCBiZSAxLgo+PiArLSBjb21wYXRpYmxlOiBTaG91bGQg
+Y29udGFpbiAicm9ja2NoaXAscmszMzk5LXBjaWUiCj4+ICstIHJlZzogVHdvIHJlZ2lzdGVyIHJh
+bmdlcyBhcyBsaXN0ZWQgaW4gdGhlIHJlZy1uYW1lcyBwcm9wZXJ0eQo+PiArLSByZWctbmFtZXM6
+IE11c3QgaW5jbHVkZSB0aGUgZm9sbG93aW5nIG5hbWVzCj4+ICsJLSAiYXhpLWJhc2UiCj4+ICsJ
+LSAiYXBiLWJhc2UiCj4+ICstIGNsb2NrczogTXVzdCBjb250YWluIGFuIGVudHJ5IGZvciBlYWNo
+IGVudHJ5IGluIGNsb2NrLW5hbWVzLgo+PiArCQlTZWUgLi4vY2xvY2tzL2Nsb2NrLWJpbmRpbmdz
+LnR4dCBmb3IgZGV0YWlscy4KPj4gKy0gY2xvY2stbmFtZXM6IE11c3QgaW5jbHVkZSB0aGUgZm9s
+bG93aW5nIGVudHJpZXM6Cj4+ICsJLSAiYWNsayIKPj4gKwktICJhY2xrLXBlcmYiCj4+ICsJLSAi
+aGNsayIKPj4gKwktICJwbSIKPj4gKy0gcGh5czogRnJvbSBQSFkgYmluZGluZ3M6IFBoYW5kbGUg
+Zm9yIHRoZSBHZW5lcmljIFBIWSBmb3IgUENJZS4KPj4gKy0gcGh5LW5hbWVzOiAgTVVTVCBiZSAi
+cGNpZS1waHkiLgo+PiArLSBpbnRlcnJ1cHRzOiBUaHJlZSBpbnRlcnJ1cHQgZW50cmllcyBtdXN0
+IGJlIHNwZWNpZmllZC4KPj4gKy0gaW50ZXJydXB0LW5hbWVzOiBNdXN0IGluY2x1ZGUgdGhlIGZv
+bGxvd2luZyBuYW1lcwo+PiArCS0gInN5cyIKPj4gKwktICJsZWdhY3kiCj4+ICsJLSAiY2xpZW50
+Igo+PiArLSByZXNldHM6IE11c3QgY29udGFpbiBmaXZlIGVudHJpZXMgZm9yIGVhY2ggZW50cnkg
+aW4gcmVzZXQtbmFtZXMuCj4+ICsJICAgU2VlIC4uL3Jlc2V0L3Jlc2V0LnR4dCBmb3IgZGV0YWls
+cy4KPj4gKy0gcmVzZXQtbmFtZXM6IE11c3QgaW5jbHVkZSB0aGUgZm9sbG93aW5nIG5hbWVzCj4+
+ICsJLSAiY29yZSIKPj4gKwktICJtZ210Igo+PiArCS0gIm1nbXQtc3RpY2t5Igo+PiArCS0gInBp
+cGUiCj4+ICstIHBpbmN0cmwtbmFtZXMgOiBUaGUgcGluIGNvbnRyb2wgc3RhdGUgbmFtZXMKPj4g
+Ky0gcGluY3RybC0wOiBUaGUgImRlZmF1bHQiIHBpbmN0cmwgc3RhdGUKPj4gKy0gaW50ZXJydXB0
+LW1hcC1tYXNrIGFuZCBpbnRlcnJ1cHQtbWFwOiBzdGFuZGFyZCBQQ0kgcHJvcGVydGllcwo+PiAr
+LSBpbnRlcnJ1cHQtY29udHJvbGxlcjogaWRlbnRpZmllcyB0aGUgbm9kZSBhcyBhbiBpbnRlcnJ1
+cHQgY29udHJvbGxlcgo+PiArCj4+ICtPcHRpb25hbCBQcm9wZXJ0eToKPj4gKy0gZXAtZ3Bpb3M6
+IGNvbnRhaW4gdGhlIGVudHJ5IGZvciBwcmUtcmVzZXQgZ3Bpbwo+PiArLSBudW0tbGFuZXM6IG51
+bWJlciBvZiBsYW5lcyB0byB1c2UKPj4gKy0gdnBjaWUzdjMtc3VwcGx5OiBUaGUgcGhhbmRsZSB0
+byB0aGUgMy4zdiByZWd1bGF0b3IgdG8gdXNlIGZvciBwY2llLiBJZiB0aGlzCj4+ICsgIGlzIHNw
+ZWNpZmllZCB3ZSdsbCBkZWZlciBwcm9iZSB1bnRpbCB3ZSBjYW4gZmluZCB0aGlzIHJlZ3VsYXRv
+ci4KPj4gKy0gdnBjaWUxdjgtc3VwcGx5OiBUaGUgcGhhbmRsZSB0byB0aGUgMS44diByZWd1bGF0
+b3IgdG8gdXNlIGZvciBwY2llLiBJZiB0aGlzCj4+ICsgIGlzIHNwZWNpZmllZCB3ZSdsbCBkZWZl
+ciBwcm9iZSB1bnRpbCB3ZSBjYW4gZmluZCB0aGlzIHJlZ3VsYXRvci4KPj4gKy0gdnBjaWUwdjkt
+c3VwcGx5OiBUaGUgcGhhbmRsZSB0byB0aGUgMC45diByZWd1bGF0b3IgdG8gdXNlIGZvciBwY2ll
+LiBJZiB0aGlzCj4+ICsgIGlzIHNwZWNpZmllZCB3ZSdsbCBkZWZlciBwcm9iZSB1bnRpbCB3ZSBj
+YW4gZmluZCB0aGlzIHJlZ3VsYXRvci4KPgo+IFBsZWFzZSBkbyBub3QgZGVzY3JpYmUgdGhlIGJl
+aGF2aW91ciBvZiB0aGUgZHJpdmVyIGhlcmUuCgpva2F5LCBJIHdpbGwgZml4IGl0LgoKVGhhbmtz
+LgoKPgo+IFRoYW5rcywKPgo+IAlNLgo+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tj
+aGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
