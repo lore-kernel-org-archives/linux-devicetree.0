@@ -1,38 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] Documentation: bindings: add DT documentation for
- Rockchip USB2PHY
-Date: Wed, 8 Jun 2016 15:04:19 -0500
-Message-ID: <20160608200419.GA12468@rob-hp-laptop>
-References: <1465290954-15852-1-git-send-email-frank.wang@rock-chips.com>
- <1465290954-15852-2-git-send-email-frank.wang@rock-chips.com>
+Subject: Re: [PATCHv2] backlight: pwm_bl: disable PWM when 'duty_cycle' is
+ zero
+Date: Wed, 8 Jun 2016 15:06:43 -0500
+Message-ID: <20160608200643.GA13510@rob-hp-laptop>
+References: <1465294429-8570-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465290954-15852-2-git-send-email-frank.wang@rock-chips.com>
+In-Reply-To: <1465294429-8570-1-git-send-email-LW@KARO-electronics.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wang <frank.wang@rock-chips.com>
-Cc: heiko@sntech.de, dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 05:15:53PM +0800, Frank Wang wrote:
-> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+On Tue, Jun 07, 2016 at 12:13:49PM +0200, Lothar Wa=DFmann wrote:
+> 'brightness' is usually an index into a table of duty_cycle values,
+> where the value at index 0 may well be non-zero
+> (tegra30-apalis-eval.dts and tegra30-colibri-eval-v3.dts are real-lif=
+e
+> examples).
+> Thus brightness =3D=3D 0 does not necessarily mean that the PWM outpu=
+t
+> will be inactive.
+> Check for 'duty_cycle =3D=3D 0' rather than 'brightness =3D=3D 0' to =
+decide
+> whether to disable the PWM.
+>=20
+> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
 > ---
-> 
-> Changes in v4:
->  - Used 'phy-supply' instead of 'vbus_*-supply'.
-> 
-> Changes in v3:
->  - Added 'clocks' and 'clock-names' optional properties.
->  - Specified 'otg-port' and 'host-port' as the sub-node name.
-> 
-> Changes in v2:
->  - Changed vbus_host optional property from gpio to regulator.
->  - Specified vbus_otg-supply optional property.
->  - Specified otg_id and otg_bvalid property.
-> 
->  .../bindings/phy/phy-rockchip-inno-usb2.txt        |   62 ++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> Changes wrt. v1:
+>   - update binding docs to reflect the change
+>=20
+>  .../devicetree/bindings/leds/backlight/pwm-backlight.txt         | 9=
+ ++++++---
+>  drivers/video/backlight/pwm_bl.c                                 | 4=
+ ++--
+>  2 files changed, 8 insertions(+), 5 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
