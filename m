@@ -1,95 +1,155 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Wed, 8 Jun 2016 10:24:00 +0100
-Message-ID: <5757E430.7020804@arm.com>
-References: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v3 16/20] pwm: sti: Add support for PWM Capture IRQs
+Date: Wed,  8 Jun 2016 10:21:31 +0100
+Message-ID: <20160608092135.21184-17-lee.jones@linaro.org>
+References: <20160608092135.21184-1-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
+In-Reply-To: <20160608092135.21184-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, thierry.reding@gmail.com, robh+dt@kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/06/16 09:05, Shawn Lin wrote:
-> This patch adds a binding that describes the Rockchip PCIe controller
-> found on Rockchip SoCs PCIe interface.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - fix lots clk/reset stuff suggested by Heiko
-> - remove msi-parent and add msi-map suggested by Marc
-> - drop phy related stuff
-> - some others minor fixes
-> 
->  .../devicetree/bindings/pci/rockchip-pcie.txt      | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> new file mode 100644
-> index 0000000..eb92e29
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> @@ -0,0 +1,86 @@
-> +* Rockchip AXI PCIe Root Port Bridge DT description
-> +
-> +Required properties:
-> +- #address-cells: Address representation for root ports, set to <3>
-> +- #size-cells: Size representation for root ports, set to <2>
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +		interrupt source. The value must be 1.
-> +- compatible: Should contain "rockchip,rk3399-pcie"
-> +- reg: Two register ranges as listed in the reg-names property
-> +- reg-names: Must include the following names
-> +	- "axi-base"
-> +	- "apb-base"
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +		See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +	- "aclk"
-> +	- "aclk-perf"
-> +	- "hclk"
-> +	- "pm"
-> +- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
-> +- phy-names:  MUST be "pcie-phy".
-> +- interrupts: Three interrupt entries must be specified.
-> +- interrupt-names: Must include the following names
-> +	- "sys"
-> +	- "legacy"
-> +	- "client"
-> +- resets: Must contain five entries for each entry in reset-names.
-> +	   See ../reset/reset.txt for details.
-> +- reset-names: Must include the following names
-> +	- "core"
-> +	- "mgmt"
-> +	- "mgmt-sticky"
-> +	- "pipe"
-> +- pinctrl-names : The pin control state names
-> +- pinctrl-0: The "default" pinctrl state
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +
-> +Optional Property:
-> +- ep-gpios: contain the entry for pre-reset gpio
-> +- num-lanes: number of lanes to use
-> +- vpcie3v3-supply: The phandle to the 3.3v regulator to use for pcie. If this
-> +  is specified we'll defer probe until we can find this regulator.
-> +- vpcie1v8-supply: The phandle to the 1.8v regulator to use for pcie. If this
-> +  is specified we'll defer probe until we can find this regulator.
-> +- vpcie0v9-supply: The phandle to the 0.9v regulator to use for pcie. If this
-> +  is specified we'll defer probe until we can find this regulator.
+Here we're requesting the PWM Capture IRQ and supplying the
+handler which will be called in the event of an IRQ fire to
+handle it.
 
-Please do not describe the behaviour of the driver here.
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/pwm/pwm-sti.c | 92 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 91 insertions(+), 1 deletion(-)
 
-Thanks,
-
-	M.
+diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
+index 9d597bb..2230afb 100644
+--- a/drivers/pwm/pwm-sti.c
++++ b/drivers/pwm/pwm-sti.c
+@@ -91,7 +91,9 @@ struct sti_pwm_chip {
+ 	struct regmap_field *prescale_low;
+ 	struct regmap_field *prescale_high;
+ 	struct regmap_field *pwm_out_en;
++	struct regmap_field *pwm_cpt_en;
+ 	struct regmap_field *pwm_cpt_int_en;
++	struct regmap_field *pwm_cpt_int_stat;
+ 	struct pwm_chip chip;
+ 	struct pwm_device *cur;
+ 	unsigned long configured;
+@@ -311,6 +313,76 @@ static const struct pwm_ops sti_pwm_ops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static irqreturn_t sti_pwm_interrupt(int irq, void *data)
++{
++	struct sti_pwm_chip *pc = data;
++	struct device *dev = pc->dev;
++	struct sti_cpt_ddata *ddata;
++	int devicenum;
++	unsigned int cpt_int_stat;
++	unsigned int reg;
++	int ret = IRQ_NONE;
++
++	ret = regmap_field_read(pc->pwm_cpt_int_stat, &cpt_int_stat);
++	if (ret)
++		return ret;
++
++	while (cpt_int_stat) {
++		devicenum = ffs(cpt_int_stat) - 1;
++
++		ddata = pwm_get_chip_data(&pc->chip.pwms[devicenum]);
++
++		/*
++		 * Capture input:
++		 *    _______                   _______
++		 *   |       |                 |       |
++		 * __|       |_________________|       |________
++		 *   ^0      ^1                ^2
++		 *
++		 * Capture start by the first available rising edge
++		 * When a capture event occurs, capture value (CPT_VALx)
++		 * is stored, index incremented, capture edge changed.
++		 *
++		 * After the capture, if the index > 1, we have collected
++		 * the necessary data so we signal the thread waiting for it
++		 * and disable the capture by setting capture edge to none
++		 *
++		 */
++
++		regmap_read(pc->regmap,
++			    PWM_CPT_VAL(devicenum),
++			    &ddata->snapshot[ddata->index]);
++
++		switch (ddata->index) {
++		case 0:
++		case 1:
++			regmap_read(pc->regmap, PWM_CPT_EDGE(devicenum), &reg);
++			reg ^= PWM_CPT_EDGE_MASK;
++			regmap_write(pc->regmap, PWM_CPT_EDGE(devicenum), reg);
++
++			ddata->index++;
++			break;
++		case 2:
++			regmap_write(pc->regmap,
++				     PWM_CPT_EDGE(devicenum),
++				     CPT_EDGE_DISABLED);
++			wake_up(&ddata->wait);
++			break;
++		default:
++			dev_err(dev, "Internal error\n");
++		}
++
++		cpt_int_stat &= ~BIT_MASK(devicenum);
++
++		ret = IRQ_HANDLED;
++	}
++
++	/* Just ACK everything */
++	regmap_write(pc->regmap, PWM_INT_ACK, PWM_INT_ACK_MASK);
++
++	return ret;
++}
++
+ static int sti_pwm_probe_dt(struct sti_pwm_chip *pc)
+ {
+ 	struct device *dev = pc->dev;
+@@ -351,6 +423,11 @@ static int sti_pwm_probe_dt(struct sti_pwm_chip *pc)
+ 	if (IS_ERR(pc->pwm_cpt_int_en))
+ 		return PTR_ERR(pc->pwm_cpt_int_en);
+ 
++	pc->pwm_cpt_int_stat = devm_regmap_field_alloc(dev, pc->regmap,
++						reg_fields[PWM_CPT_INT_STAT]);
++	if (PTR_ERR_OR_ZERO(pc->pwm_cpt_int_stat))
++		return PTR_ERR(pc->pwm_cpt_int_stat);
++
+ 	return 0;
+ }
+ 
+@@ -367,7 +444,7 @@ static int sti_pwm_probe(struct platform_device *pdev)
+ 	struct sti_pwm_chip *pc;
+ 	struct resource *res;
+ 	unsigned int devnum;
+-	int ret;
++	int irq, ret;
+ 
+ 	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+ 	if (!pc)
+@@ -388,6 +465,19 @@ static int sti_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pc->regmap))
+ 		return PTR_ERR(pc->regmap);
+ 
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(&pdev->dev, "Failed to obtain IRQ\n");
++		return irq;
++	}
++
++	ret = devm_request_irq(&pdev->dev, irq, sti_pwm_interrupt,
++			       0, pdev->name, pc);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Failed to request IRQ\n");
++		return ret;
++	}
++
+ 	/*
+ 	 * Setup PWM data with default values: some values could be replaced
+ 	 * with specific ones provided from Device Tree.
 -- 
-Jazz is not dead. It just smells funny...
+2.8.3
