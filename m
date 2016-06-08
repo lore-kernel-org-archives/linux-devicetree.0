@@ -1,112 +1,78 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver for
- TI INA3221
-Date: Wed, 8 Jun 2016 10:04:14 -0500
-Message-ID: <575833EE.60009@ti.com>
-References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com>
- <1464784454-7988-2-git-send-email-ldewangan@nvidia.com>
- <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org> <5751863E.907@roeck-us.net>
- <575190A9.2090906@nvidia.com> <57519FA3.9010208@ti.com>
- <20160607223058.GA20120@roeck-us.net>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [RESEND PATCH 2/3] mtd: nand: Support maximizing ECC when using
+ software BCH
+Date: Wed,  8 Jun 2016 17:04:23 +0200
+Message-ID: <1465398264-8202-3-git-send-email-boris.brezillon@free-electrons.com>
+References: <1465398264-8202-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20160607223058.GA20120@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1465398264-8202-1-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2016 05:30 PM, Guenter Roeck wrote:
-> On Fri, Jun 03, 2016 at 10:17:55AM -0500, Andrew F. Davis wrote:
->> On 06/03/2016 09:14 AM, Laxman Dewangan wrote:
->>>
->>> On Friday 03 June 2016 06:59 PM, Guenter Roeck wrote:
->>>> On 06/03/2016 03:06 AM, Jonathan Cameron wrote:
->>>>> On 01/06/16 13:34, Laxman Dewangan wrote:
->>>>>> The INA3221 is a three-channel, high-side current and bus voltage
->>>>>> monitor
->>>>>> with an I2C interface from Texas Instruments. The INA3221 monitors both
->>>>>> shunt voltage drops and bus supply voltages in addition to having
->>>>>> programmable conversion times and averaging modes for these signals.
->>>>>> The INA3221 offers both critical and warning alerts to detect multiple
->>>>>> programmable out-of-range conditions for each channel.
->>>>>>
->>>>>> Add support for INA3221 SW driver via IIO ADC interface. The device is
->>>>>> register as iio-device and provides interface for voltage/current
->>>>>> and power
->>>>>> monitor. Also provide interface for setting oneshot/continuous mode and
->>>>>> critical/warning threshold for the shunt voltage drop.
->>>>>>
->>>>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->>>>> Hi Laxman,
->>>>>
->>>>> As ever with any driver lying on the border of IIO and hwmon, please
->>>>> include
->>>>> a short justification of why you need an IIO driver and also cc the
->>>>> hwmon list + maintainers. (cc'd on this reply).
->>>>>
->>>>> I simply won't take a driver where the hwmon maintainers aren't happy.
->>>>> As it stands I'm not seeing obvious reasons in the code for why this
->>>>> should be an IIO device.
->>>>>
->>>>
->>>> Me not either.
->>>>
->>>> I have a hwmon driver for the same chip pending from Andrew Davis (TI)
->>>> which I am just about to accept. We had directed Andrew back in April
->>>> to write a hwmon driver for the chip, which he did.
->>>>
->>>
->>> Thanks Guenter,  I found the series
->>>
->>> [PATCH v2 0/2] Add support for INA3221 Triple Current/Voltage Monitors
->>> Looks fine to me. I can use the hwmon.
->>>
->>
->> If you search even further back you can see I originally went with an
->> IIO driver as well, comparing the IIO and hwmon version for the simple
->> use cases I needed the hwmod version turned out much simpler, so it was
->> probably the right framework for now.
->>
->>>
->>> However, some of the stuff from my patch are not there which I will add
->>> later once original patch applied:
->>> - Dynamic mode changes for continuous and one-shot from sysfs.
->>> - In one shot, when try to read voltage data, do conversion and then read.
->>>
->>
->> My attempt is rather minimal, to be honest I like your stab at this
->> driver better in some ways, especially relating to DT putting each
->> channel in its own node with labels, I think this is a bit more clean
->> and will be more extendable if/when new multi-channel monitor chips are
->> made.
->>
->>> Not sure whether exporting the following will help or not. Can you
->>> please confirm?
->>> - Oversampling time i.e. average sample
->>> - conversion time for bus voltage and shunt voltage if default is not
->>> suited for system.
->>>
->>>
->>
->> These can always be added as needed, but the DT changes are not as easy.
->> I would like it if this got in this cycle but if you think something
->> will be needed to help your improvements, that can not be added
->> incrementally, it would probably be best to get them into the initial DT
->> binding doc now.
->>
-> Andrew,
-> 
-> with this, the hwmon driver is pretty much on hold. What do you want me to do ?
-> Should I wait for DT updates ?
-> 
+Add support for ECC maximization when software BCH with
+nand_ooblayout_lp_ops layout is used.
+Other cases should be handled by the NAND controller driver.
 
-If Laxman would like to commit to making these changes I do not problem
-waiting a bit to get this right the first time.
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+---
+ drivers/mtd/nand/nand_base.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-If we don't hear back soon then I'd just take it as is and anything
-needing to be fixed can be later.
+diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
+index d374129..ca4f53d 100644
+--- a/drivers/mtd/nand/nand_base.c
++++ b/drivers/mtd/nand/nand_base.c
+@@ -4224,6 +4224,7 @@ static int nand_set_ecc_soft_ops(struct mtd_info *mtd)
+ 		ecc->write_page_raw = nand_write_page_raw;
+ 		ecc->read_oob = nand_read_oob_std;
+ 		ecc->write_oob = nand_write_oob_std;
++
+ 		/*
+ 		* Board driver should supply ecc.size and ecc.strength
+ 		* values to select how many bits are correctable.
+@@ -4246,6 +4247,25 @@ static int nand_set_ecc_soft_ops(struct mtd_info *mtd)
+ 			}
+ 
+ 			mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
++
++		}
++
++		/*
++		 * We can only maximize ECC config when the default layout is
++		 * used, otherwise we don't know how many bytes can really be
++		 * used.
++		 */
++		if (mtd->ooblayout == &nand_ooblayout_lp_ops &&
++		    ecc->options & NAND_ECC_MAXIMIZE) {
++			int steps, bytes;
++
++			/* Always prefer 1k blocks over 512bytes ones */
++			ecc->size = 1024;
++			steps = mtd->writesize / ecc->size;
++
++			/* Reserve 2 bytes for the BBM */
++			bytes = (mtd->oobsize - 2) / steps;
++			ecc->strength = bytes * 8 / fls(8 * ecc->size);
+ 		}
+ 
+ 		/* See nand_bch_init() for details. */
+-- 
+2.7.4
 
-Andrew
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
