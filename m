@@ -1,105 +1,85 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/2] Documentation: mfd: LP873X: Add information for
- the mfd and regulator drivers
-Date: Wed, 8 Jun 2016 16:51:36 +0100
-Message-ID: <20160608155136.GC14888@dell>
-References: <1463111290-12377-1-git-send-email-j-keerthy@ti.com>
- <1463111290-12377-2-git-send-email-j-keerthy@ti.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] drivers/of: Fix depth for sub-tree blob in
+ unflatten_dt_nodes()
+Date: Wed, 8 Jun 2016 11:53:26 -0400
+Message-ID: <828431f1-5b74-8aef-c229-7b7469e685ba@nvidia.com>
+References: <1465368654-24170-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1463111290-12377-2-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: broonie@kernel.org, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465368654-24170-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew.donnellan-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 May 2016, Keerthy wrote:
-
-> Add information for the mfd and regulator drivers.
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+On 6/8/2016 2:50 AM, Gavin Shan wrote:
+> The function is unflattening device sub-tree blob if @dad passed to
+> the function is valid. Currently, this functionality is used by PPC
+> PowerNV PCI hotplug driver only. There are possibly multiple nodes
+> in the first level of depth, fdt_next_node() bails immediately when
+> @depth becomes negative before the second device node can be probed
+> successfully. It leads to the device nodes except the first one won't
+> be unflattened successfully.
+> 
+> This fixes the issue by setting the initial depth (@inital_depth) to
+> 1 when this function is called to unflatten device sub-tree blob. No
+> logic changes when this function is used to unflatten non-sub-tree
+> blob.
+> 
+> Cc: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Fixes: 78c44d910 ("drivers/of: Fix depth when unflattening devicetree")
+> Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 > ---
->=20
-> Changes in v3:
->=20
->   * Changed the example node lable to pmic from lp8733.
->=20
->  Documentation/devicetree/bindings/mfd/lp873x.txt | 55 ++++++++++++++=
-++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/lp873x.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt b/Docum=
-entation/devicetree/bindings/mfd/lp873x.txt
-> new file mode 100644
-> index 0000000..8f3ef0d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
-> @@ -0,0 +1,55 @@
-> +TI LP3943 MFD driver
+>  drivers/of/fdt.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 14f2f8c..9d70316 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -395,7 +395,7 @@ static int unflatten_dt_nodes(const void *blob,
+>  			      struct device_node **nodepp)
+>  {
+>  	struct device_node *root;
+> -	int offset = 0, depth = 0;
+> +	int offset = 0, depth = 0, initial_depth = 0;
+>  #define FDT_MAX_DEPTH	64
+>  	unsigned int fpsizes[FDT_MAX_DEPTH];
+>  	struct device_node *nps[FDT_MAX_DEPTH];
+> @@ -408,8 +408,19 @@ static int unflatten_dt_nodes(const void *blob,
+>  	root = dad;
+>  	fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
+>  	nps[depth] = dad;
 > +
-> +Required properties:
-> +  - compatible: "ti,lp8732", "ti,lp8733"
-> +  - reg: I2C slave address.
+> +	/*
+> +	 * We're unflattening device sub-tree if @dad is valid. There are
+> +	 * possibly multiple nodes in the first level of depth. We need
+> +	 * set @depth to 1 to make fdt_next_node() happy as it bails
+> +	 * immediately when negative @depth is found. Otherwise, the device
+> +	 * nodes except the first one won't be unflattened successfully.
+> +	 */
+> +	if (dad)
+> +		depth = initial_depth = 1;
 > +
-> +For the lp873x regulator properties please refer to:
-> +../bindings/regulator/lp873x.txt
+>  	for (offset = 0;
+> -	     offset >= 0 && depth >= 0;
+> +	     offset >= 0 && depth >= initial_depth;
+>  	     offset = fdt_next_node(blob, offset, &depth)) {
+>  		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
+>  			continue;
+> 
 
-What else does the LP3943 consist of apart from regulators?
+I tested this and it seems to be working fine for me.
 
-> +Example:
-> +
-> +pmic: lp8733@60 {
-> +	compatible =3D "ti,lp8733";
-> +	reg =3D <0x60>;
-> +
-> +	regulators {
-> +		lp8733_buck0: buck0 {
-> +			regulator-name =3D "lp8733-buck0";
-> +			regulator-min-microvolt =3D <800000>;
-> +			regulator-max-microvolt =3D <1400000>;
-> +			regulator-min-microamp =3D <1500000>;
-> +			regulator-max-microamp =3D <4000000>;
-> +			regulator-ramp-delay =3D <10000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		lp8733_buck1: buck1 {
-> +			regulator-name =3D "lp8733-buck1";
-> +			regulator-min-microvolt =3D <800000>;
-> +			regulator-max-microvolt =3D <1400000>;
-> +			regulator-min-microamp =3D <1500000>;
-> +			regulator-max-microamp =3D <4000000>;
-> +			regulator-ramp-delay =3D <10000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		lp8733_ldo0: ldo0 {
-> +			regulator-name =3D "lp8733-ldo0";
-> +			regulator-min-microvolt =3D <800000>;
-> +			regulator-max-microvolt =3D <3000000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		lp8733_ldo1: ldo1 {
-> +			regulator-name =3D "lp8733-ldo1";
-> +			regulator-min-microvolt =3D <800000>;
-> +			regulator-max-microvolt =3D <3000000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> +};
+Tested-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-rhyland
+
+-- 
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
