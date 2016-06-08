@@ -1,270 +1,66 @@
-From: Igor Grinberg <grinberg@compulab.co.il>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6q: extend support for the cm-fx6
-Date: Wed, 8 Jun 2016 11:11:35 +0300
-Message-ID: <5757D337.1060900@compulab.co.il>
-References: <709d6b3d522f4fcb8112830e0426dbb3@rwthex-s1-b.rwth-ad.de>
- <1463994191.2370.3.camel@pengutronix.de> <5746B8C4.6020406@compulab.co.il>
- <1464256217.14453.10.camel@pengutronix.de> <5746DFE2.9040903@compulab.co.il>
- <d083d0308abd48efbd4b6042e1f9c470@rwthex-s2-a.rwth-ad.de>
- <d0329c33bee14d6e8be8abef607dce3e@rwthex-s1-b.rwth-ad.de>
- <57551CF6.2020602@compulab.co.il>
- <b73122716e714ea0b853cc2f3d19664c@rwthex-s1-b.rwth-ad.de>
- <5d1bc50e59f749db8f825f5cb7e2438d@rwthex-w2-a.rwth-ad.de>
- <7b69d8e9d4114f3c8ead120ea2cc4057@rwthex-s1-b.rwth-ad.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7b69d8e9d4114f3c8ead120ea2cc4057@rwthex-s1-b.rwth-ad.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [RFC PATCH 0/4] Introduce new caps to improve the card's init sequence
+Date: Wed,  8 Jun 2016 16:19:56 +0800
+Message-ID: <1465373996-2485-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christopher,
 
-On 06/07/2016 12:45 PM, Christopher Spinrath wrote:
-> Hi Igor,
-> 
-> On 06/07/2016 10:38 AM, Igor Grinberg wrote:
->> Hi Christopher,
->>
->> On 06/06/2016 01:37 PM, Christopher Spinrath wrote:
->>> Hi Igor,
->>>
->>> On 06/06/2016 08:49 AM, Igor Grinberg wrote:
->>>> Hi Christopher,
->>>>
->>>> On 06/05/2016 08:32 PM, Christopher Spinrath wrote:
->>>>> Hi Igor,
->>>>>
->>>>> On 06/05/2016 06:43 PM, Igor Grinberg wrote:
->>>>>> Hi Christopher,
->>>>>>
->>>>>> On 05/26/2016 02:37 PM, Igor Grinberg wrote:
->>>>>>> On 05/26/2016 12:50 PM, Lucas Stach wrote:
->>>>>>>> Hi Igor,
->>>>>>>>
->>>>>>>> Am Donnerstag, den 26.05.2016, 11:50 +0300 schrieb Igor Grinberg:
->>>>>>>>> Hi Lucas,
->>>>>>>>>
->>>>>>>>> Thanks for reviewing the patch(es).
->>>>>>>>>
->>>>>>>>> On 05/23/2016 12:03 PM, Lucas Stach wrote:
->>>>>>>>>> Am Montag, den 23.05.2016, 00:47 +0200 schrieb
->>>>>>>>>> christopher.spinrath@rwth-aachen.de:
->>>>>>>>>>> From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
->>>>>>>>>
->>>>>>>>> [...]
->>>>>>>>>
->>>>>>>>>>> +&ecspi1 {
->>>>>>>>>>> +	fsl,spi-num-chipselects = <2>;
->>>>>>>>>>> +	cs-gpios = <&gpio2 30 0>, <&gpio3 19 0>;
->>>>>>>>>>> +	pinctrl-names = "default";
->>>>>>>>>>> +	pinctrl-0 = <&pinctrl_ecspi1>;
->>>>>>>>>>> +	status = "okay";
->>>>>>>>>>> +
->>>>>>>>>>> +	flash: m25p80@0 {
->>>>>>>>>>> +		#address-cells = <1>;
->>>>>>>>>>> +		#size-cells = <1>;
->>>>>>>>>>> +		compatible = "st,m25p", "jedec,spi-nor";
->>>>>>>>>>> +		spi-max-frequency = <20000000>;
->>>>>>>>>>> +		reg = <0>;
->>>>>>>>>>> +
->>>>>>>>>>> +		partition@0 {
->>>>>>>>>>> +			label = "uboot";
->>>>>>>>>>> +			reg = <0x0 0xc0000>;
->>>>>>>>>>> +		};
->>>>>>>>>>> +
->>>>>>>>>>> +		partition@c0000 {
->>>>>>>>>>> +			label = "uboot environment";
->>>>>>>>>>> +			reg = <0xc0000 0x40000>;
->>>>>>>>>>> +		};
->>>>>>>>>>> +
->>>>>>>>>>> +		partition@100000 {
->>>>>>>>>>> +			label = "reserved";
->>>>>>>>>>> +			reg = <0x100000 0x100000>;
->>>>>>>>>>> +		};
->>>>>>>>>>
->>>>>>>>>> Partition layouts don't belong in the upstream DT, as it a device
->>>>>>>>>> configuration thing. Please kep them in the bootloader/firmware and make
->>>>>>>>>> this one pass the partition layout to the kernel.
->>>>>>>>>
->>>>>>>>> I don't completely agree with this.
->>>>>>>>> We have lots of partition layouts in the upstream DT.
->>>>>>>>
->>>>>>>> No, we don't. At least not for the i.MX6. There are some for the earlier
->>>>>>>> i.MX boards, but IMO it's wrong to put device configuration into the
->>>>>>>> upstream DT. Let's not start doing this again.
->>>>>>>
->>>>>>> Why not?
->>>>>>> For i.MX6 there are 2 boards that have the partitioning scheme.
->>>>>>> I'm not considering this a device configuration, but rather
->>>>>>> a default partitioning layout/scheme.
->>>>>>> Current case is for the firmware storage device that is not likely
->>>>>>> to change.
->>>>>>> Moreover, a DT is not really a part of the kernel, but lays along the kernel
->>>>>>> sources for convenience and simplicity (at least IIRC as it was decided
->>>>>>> about 5 years ago). It is more a part of the firmware for a device, than
->>>>>>> an upstream kernel source code.
->>>>>>> I think it is only a meter of time when Linus will decide that he does not
->>>>>>> want it inside the kernel anymore...
->>>>>>>
->>>>>>>>
->>>>>>>>> Moreover, this is the default layout and changing it, will
->>>>>>>>> result in incompatibilities and also might result in device "bricking".
->>>>>>>>> Those can be changed from the boot loader in case you need those
->>>>>>>>> the other way around.
->>>>>>>>> Another question of mine is, why should you?
->>>>>>>>>
->>>>>>>> Partition layout is device configuration, which is governed by the
->>>>>>>> device firmware.
->>>>>>>
->>>>>>> Yet again, DT is a part of device firmware.
->>>>>>> Moreover, the firmware (in that case U-Boot), can be configured
->>>>>>> using the very same DT code, so not having this in, might force
->>>>>>> various w/a and hacks.
->>>>>>>
->>>>>>>> By not having the partition layout in the upstream DT
->>>>>>>> people are forced to set it from the firmware, which is exactly the
->>>>>>>> right thing to do, weather or not you plan to change it at any time.
->>>>>>>
->>>>>>> I might be ignorant, sorry for that.
->>>>>>> Why? Why is it right and why would you want to force people to do that?
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> No answer?
->>>>>> I think it is worth keeping this as a default firmware layout.
->>>>>>
->>>>>
->>>>> I was not happy removing the layout at first, too. However, they are
->>>>> added rarely (at least recently) and the binding documentation [1]
->>>>> states that they shall only be added if there are "strong conventions".
->>>>
->>>> Well, not exactly, it says:
->>>>
->>>> "Partitions can be represented by sub-nodes of an mtd device. This can be used
->>>> on platforms which have strong conventions about which portions of a flash are
->>>> used for what purposes, but which don't use an on-flash partition table such
->>>> as RedBoot."
->>>>
->>>> In my understanding, "can" is _not_ exactly "shall only".
->>>>
->>>
->>> Definitely, "state" was the wrong word here - sorry about that. But it's
->>> how I interpret the documentation. It is the only one I have seen that
->>> specifies an allowed use case. So for me it is more like "deny all,
->>> allow ...".
->>
->> That moves the discussion to what "strong conventions" are?
->> But you have already removed the layout, so this is meaningless.
-> 
-> Yes, as I said I want to have the non controversial stuff in first.
-> Afterwards, we can submit more controversial patches (per feature).
-> 
->>>
->>>>>
->>>>> Moreover, it is really easy to pass the layout via firmware/u-boot.
->>>>> Unfortunately, the u-boot provided by CompuLab does not have the
->>>>> mtdparts commands built-in but the layout can be passed via cmdline as
->>>>> well. This seems more flexible to me (and I consider this to be good).
->>>>
->>>> That means you need a different version of U-Boot if you want to use
->>>> an upstream kernel, or you need to play the bootargs games, or just leave
->>>> it a "black box".
->>>> So currently, from the three options above, the "black box" is chosen, right?
->>>> That's a pity, because I'd like things to be open...
->>>>
->>>
->>> Well, It wouldn't be the first ARM device where the newest/upstream
->>> u-boot is required. Actually, you already have to use the newest version
->>> if you want to use the igb ethernet.
->>
->> You mean, igb in U-Boot, right?
->> Unless I'm missing something, it should work just fine in Linux with
->> the same U-Boot Compulab provides.
->>
-> I mean in U-Boot and Linux (and with "newest U-Boot" I refer to the one
-> provided by CompuLab; as far as I know there is no upstream U-Boot
-> support for the Utilite).
+Hi all,
 
-Not exactly...
-board/compulab/cm_fx6 is the one.
-That is off topic for this list, so we'd better go off list on this.
+This patchset is gonna improve the card's init sequence
+by exposing some caps to DT.
 
-> Although it seems to work "by accident".
+The basic idea is to skip sending specific init cmd inspired
+by Carlo Caione's commit[0].
 
-:-) no accidents here...
+To make it possible, I firstly expose Carlo's MMC_CAP2_NO_SDIO
+to DT and extend two new caps for similar usage of sd and mmc.
+We probably need it because for most of the boards, each of the
+slots should have a specific function when designed. It's impossible
+for one slot which can either to be used as eMMC or a SD card for a
+given board. The same for SDIO case.
 
-> The
-> custom CompuLab code fails to put the mac address in the devicetree but
-> stores it in the correct environment variable such that the upstream
-> U-Boot magic can take over.
+We could have two ways to improve it
+A) Skip sending specific commands if knowing we don't support
+the specific card type.
+B) Allow sending specific commands if knowing we do support
+the specific card type.
 
-Interesting... off list.
+A) and B) shouldn't have difference, but I take A) as the final
+one as it looks more consistent with Carlo's way, which does not
+seem to break anything as possible.
 
-> 
-> Anyway, are there any U-Boot updates scheduled (by CompuLab)? And is
-> there a way to contribute/discuss changes?
+The only roadblock for this patchset to be landed should be the
+improvement we gain from it. Theoretically sdio-card doesn't get
+improvment as it's already in the first place to be attached.
+But considering the sd and (e)MMC case, we should gain more benifit
+from it.
 
-Of course. You have my email.
+>From the test, we can save nearly 2ms for attaching emmc against the
+original 8ms. And we gain more than 30us improvement for sd card for
+each insert.
 
-> 
->>>
->>> Currently, IMO the most convenient way (for distributions) would be to
->>> ship a boot.scr file changing the bootargs (which is not a "black box"
->>> but a configuration file people are used to). If you don't want to mess
->>> with bootargs/cmdline it is also possible to add the partition table via
->>> boot.scr (or on-flash environment) with the fdt command; in this case it
->>> wouldn't even be hidden in the u-boot binary (and no u-boot upgrade is
->>> required to implement this).
->>
->> That is exactly what I said: "to play the bootargs games".
->>
->>>
->>> But yes, if someone wants to use the upstream kernel the boot.scr has to
->>> be there; but IMO this is something distributions/people providing
->>> binary files have to take care about. People using their own kernel
->>> should take into account that they have to provide a bootloader config.
->>
->> Yep. While if we provide the default layout in DT, all the above would be
->> unnecessary.
->>
-> 
-> On the other hand, it will be very hard to change it afterwards. Maybe
-> someone wants to upstream the U-Boot support and they insist on a
-> different partition layout (e.g. uboot-failsafe) ...
+[0]: http://permalink.gmane.org/gmane.linux.kernel.mmc/34774
 
-U-Boot support is upstream already since v2014.10.
 
-> I never got why people decided to go without a on-device partition table
-> for most raw flash chips. It is a pity that it has to be hard coded in
-> the firmware/kernel/whatever.
 
-Right. I agree completely. I guess there are some historical reasons
-back to the MTD subsystem 'invention'.
+Shawn Lin (4):
+  Documentation: mmc: add description for new caps
+  mmc: core: expose MMC_CAP2_NO_SDIO to dt-binding
+  mmc: core: add cap-no-sd and cap-no-mmc properties
+  mmc: core: improve initialization flow
 
-> 
->> So, if one will neither use the latest U-Boot, nor play the bootargs
->> games, the flash will stay a kind of "black box" - and that's a pity.
->>
-> 
-> As I stated before, IMHO using the latest U-Boot is no problem and is
-> already required (for full support).
-> 
-> Cheers,
-> Christopher
-> 
+ Documentation/devicetree/bindings/mmc/mmc.txt |  3 +++
+ drivers/mmc/core/core.c                       | 10 +++++-----
+ drivers/mmc/core/host.c                       |  6 ++++++
+ include/linux/mmc/host.h                      |  2 ++
+ 4 files changed, 16 insertions(+), 5 deletions(-)
 
 -- 
-Regards,
-Igor.
+2.3.7
+
+
