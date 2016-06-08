@@ -1,111 +1,105 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver
- for TI INA3221
-Date: Wed, 8 Jun 2016 21:07:58 +0530
-Message-ID: <57583BD6.90208@nvidia.com>
-References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com> <1464784454-7988-2-git-send-email-ldewangan@nvidia.com> <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org> <5751863E.907@roeck-us.net> <575190A9.2090906@nvidia.com> <57519FA3.9010208@ti.com> <20160607223058.GA20120@roeck-us.net> <575833EE.60009@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/2] Documentation: mfd: LP873X: Add information for
+ the mfd and regulator drivers
+Date: Wed, 8 Jun 2016 16:51:36 +0100
+Message-ID: <20160608155136.GC14888@dell>
+References: <1463111290-12377-1-git-send-email-j-keerthy@ti.com>
+ <1463111290-12377-2-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <575833EE.60009@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1463111290-12377-2-git-send-email-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: Jonathan Cameron <jic23@kernel.org>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>
+To: Keerthy <j-keerthy@ti.com>
+Cc: broonie@kernel.org, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 13 May 2016, Keerthy wrote:
 
-On Wednesday 08 June 2016 08:34 PM, Andrew F. Davis wrote:
-> On 06/07/2016 05:30 PM, Guenter Roeck wrote:
->> On Fri, Jun 03, 2016 at 10:17:55AM -0500, Andrew F. Davis wrote:
->>> On 06/03/2016 09:14 AM, Laxman Dewangan wrote:
->>>> On Friday 03 June 2016 06:59 PM, Guenter Roeck wrote:
->>>>> On 06/03/2016 03:06 AM, Jonathan Cameron wrote:
->>>>>> On 01/06/16 13:34, Laxman Dewangan wrote:
->>>>>>> The INA3221 is a three-channel, high-side current and bus voltage
->>>>>>> monitor
->>>>>>> with an I2C interface from Texas Instruments. The INA3221 monitors both
->>>>>>> shunt voltage drops and bus supply voltages in addition to having
->>>>>>> programmable conversion times and averaging modes for these signals.
->>>>>>> The INA3221 offers both critical and warning alerts to detect multiple
->>>>>>> programmable out-of-range conditions for each channel.
->>>>>>>
->>>>>>> Add support for INA3221 SW driver via IIO ADC interface. The device is
->>>>>>> register as iio-device and provides interface for voltage/current
->>>>>>> and power
->>>>>>> monitor. Also provide interface for setting oneshot/continuous mode and
->>>>>>> critical/warning threshold for the shunt voltage drop.
->>>>>>>
->>>>>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->>>>>> Hi Laxman,
->>>>>>
->>>>>> As ever with any driver lying on the border of IIO and hwmon, please
->>>>>> include
->>>>>> a short justification of why you need an IIO driver and also cc the
->>>>>> hwmon list + maintainers. (cc'd on this reply).
->>>>>>
->>>>>> I simply won't take a driver where the hwmon maintainers aren't happy.
->>>>>> As it stands I'm not seeing obvious reasons in the code for why this
->>>>>> should be an IIO device.
->>>>>>
->>>>> Me not either.
->>>>>
->>>>> I have a hwmon driver for the same chip pending from Andrew Davis (TI)
->>>>> which I am just about to accept. We had directed Andrew back in April
->>>>> to write a hwmon driver for the chip, which he did.
->>>>>
->>>> Thanks Guenter,  I found the series
->>>>
->>>> [PATCH v2 0/2] Add support for INA3221 Triple Current/Voltage Monitors
->>>> Looks fine to me. I can use the hwmon.
->>>>
->>> If you search even further back you can see I originally went with an
->>> IIO driver as well, comparing the IIO and hwmon version for the simple
->>> use cases I needed the hwmod version turned out much simpler, so it was
->>> probably the right framework for now.
->>>
->>>> However, some of the stuff from my patch are not there which I will add
->>>> later once original patch applied:
->>>> - Dynamic mode changes for continuous and one-shot from sysfs.
->>>> - In one shot, when try to read voltage data, do conversion and then read.
->>>>
->>> My attempt is rather minimal, to be honest I like your stab at this
->>> driver better in some ways, especially relating to DT putting each
->>> channel in its own node with labels, I think this is a bit more clean
->>> and will be more extendable if/when new multi-channel monitor chips are
->>> made.
->>>
->>>> Not sure whether exporting the following will help or not. Can you
->>>> please confirm?
->>>> - Oversampling time i.e. average sample
->>>> - conversion time for bus voltage and shunt voltage if default is not
->>>> suited for system.
->>>>
->>>>
->>> These can always be added as needed, but the DT changes are not as easy.
->>> I would like it if this got in this cycle but if you think something
->>> will be needed to help your improvements, that can not be added
->>> incrementally, it would probably be best to get them into the initial DT
->>> binding doc now.
->>>
->> Andrew,
->>
->> with this, the hwmon driver is pretty much on hold. What do you want me to do ?
->> Should I wait for DT updates ?
->>
-> If Laxman would like to commit to making these changes I do not problem
-> waiting a bit to get this right the first time.
->
-> If we don't hear back soon then I'd just take it as is and anything
-> needing to be fixed can be later.
->
->
+> Add information for the mfd and regulator drivers.
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>=20
+> Changes in v3:
+>=20
+>   * Changed the example node lable to pmic from lp8733.
+>=20
+>  Documentation/devicetree/bindings/mfd/lp873x.txt | 55 ++++++++++++++=
+++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/lp873x.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt b/Docum=
+entation/devicetree/bindings/mfd/lp873x.txt
+> new file mode 100644
+> index 0000000..8f3ef0d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
+> @@ -0,0 +1,55 @@
+> +TI LP3943 MFD driver
+> +
+> +Required properties:
+> +  - compatible: "ti,lp8732", "ti,lp8733"
+> +  - reg: I2C slave address.
+> +
+> +For the lp873x regulator properties please refer to:
+> +../bindings/regulator/lp873x.txt
 
-I will be able to post the patch tomorrow.
-I think this series can be applied and then on top of it, I will post 
-the dt changes and other my changes.
+What else does the LP3943 consist of apart from regulators?
 
-As this is new driver and no one using now, it will be fine to have dt 
-changes if everything complete in one cycle.
+> +Example:
+> +
+> +pmic: lp8733@60 {
+> +	compatible =3D "ti,lp8733";
+> +	reg =3D <0x60>;
+> +
+> +	regulators {
+> +		lp8733_buck0: buck0 {
+> +			regulator-name =3D "lp8733-buck0";
+> +			regulator-min-microvolt =3D <800000>;
+> +			regulator-max-microvolt =3D <1400000>;
+> +			regulator-min-microamp =3D <1500000>;
+> +			regulator-max-microamp =3D <4000000>;
+> +			regulator-ramp-delay =3D <10000>;
+> +			regulator-always-on;
+> +			regulator-boot-on;
+> +		};
+> +
+> +		lp8733_buck1: buck1 {
+> +			regulator-name =3D "lp8733-buck1";
+> +			regulator-min-microvolt =3D <800000>;
+> +			regulator-max-microvolt =3D <1400000>;
+> +			regulator-min-microamp =3D <1500000>;
+> +			regulator-max-microamp =3D <4000000>;
+> +			regulator-ramp-delay =3D <10000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +
+> +		lp8733_ldo0: ldo0 {
+> +			regulator-name =3D "lp8733-ldo0";
+> +			regulator-min-microvolt =3D <800000>;
+> +			regulator-max-microvolt =3D <3000000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +
+> +		lp8733_ldo1: ldo1 {
+> +			regulator-name =3D "lp8733-ldo1";
+> +			regulator-min-microvolt =3D <800000>;
+> +			regulator-max-microvolt =3D <3000000>;
+> +			regulator-always-on;
+> +			regulator-boot-on;
+> +		};
+> +	};
+> +};
 
-I will work from the tree on which this applied to post my patches.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
