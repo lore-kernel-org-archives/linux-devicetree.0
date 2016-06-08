@@ -1,169 +1,69 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
-Date: Wed, 8 Jun 2016 12:45:54 +0200
-Message-ID: <5757F762.4020908@gmail.com>
-References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
- <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
- <574C5CBF.7060002@gmail.com> <1464683762.14604.59.camel@mtksdaap41>
- <574DEE40.9010008@gmail.com> <1464775020.11122.40.camel@mtksdaap41>
- <574FF264.7050209@gmail.com> <1464934356.15175.31.camel@mtksdaap41>
- <57516774.5080008@gmail.com> <1464956037.16029.8.camel@mtksdaap41>
- <575181E5.6090603@gmail.com> <5756FD73.3050607@gmail.com>
- <1465364427.9963.13.camel@mtksdaap41>
+From: Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [PATCH] of: reserved_mem: restore old behavior when no region is
+ defined
+Date: Wed, 8 Jun 2016 11:49:19 +0100
+Message-ID: <20160608104919.GI1165@e106497-lin.cambridge.arm.com>
+References: <20160607143425.GE1165@e106497-lin.cambridge.arm.com>
+ <1465368713-17866-1-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465364427.9963.13.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465368713-17866-1-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kamil Debski <k.debski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 08, 2016 at 08:51:53AM +0200, Marek Szyprowski wrote:
+> Change return value back to -ENODEV when no region is defined for giv=
+en
+> device. This restores old behavior of this function, as some drivers =
+rely
+> on such error code.
+>=20
+> Reported-by: Liviu Dudau <liviu.dudau@arm.com>
+> Fixes: 59ce4039727ef40 ("of: reserved_mem: add support for using more=
+ than
+>        one region for given device")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
+Reviewed-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-On 08/06/16 07:40, Horng-Shyang Liao wrote:
-> Hi Matthias,
->
-> On Tue, 2016-06-07 at 18:59 +0200, Matthias Brugger wrote:
->>
->> On 03/06/16 15:11, Matthias Brugger wrote:
->>>
->>>
->> [...]
->>
->>>>>>>>>>>> +
->>>>>>>>>>>> +            smp_mb(); /* modify jump before enable thread */
->>>>>>>>>>>> +        }
->>>>>>>>>>>> +
->>>>>>>>>>>> +        cmdq_thread_writel(thread, task->pa_base +
->>>>>>>>>>>> task->command_size,
->>>>>>>>>>>> +                   CMDQ_THR_END_ADDR);
->>>>>>>>>>>> +        cmdq_thread_resume(thread);
->>>>>>>>>>>> +    }
->>>>>>>>>>>> +    list_move_tail(&task->list_entry, &thread->task_busy_list);
->>>>>>>>>>>> +    spin_unlock_irqrestore(&cmdq->exec_lock, flags);
->>>>>>>>>>>> +}
->>>>>>>>>>>> +
->>>>>>>>>>>> +static void cmdq_handle_error_done(struct cmdq *cmdq,
->>>>>>>>>>>> +                   struct cmdq_thread *thread, u32 irq_flag)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +    struct cmdq_task *task, *tmp, *curr_task = NULL;
->>>>>>>>>>>> +    u32 curr_pa;
->>>>>>>>>>>> +    struct cmdq_cb_data cmdq_cb_data;
->>>>>>>>>>>> +    bool err;
->>>>>>>>>>>> +
->>>>>>>>>>>> +    if (irq_flag & CMDQ_THR_IRQ_ERROR)
->>>>>>>>>>>> +        err = true;
->>>>>>>>>>>> +    else if (irq_flag & CMDQ_THR_IRQ_DONE)
->>>>>>>>>>>> +        err = false;
->>>>>>>>>>>> +    else
->>>>>>>>>>>> +        return;
->>>>>>>>>>>> +
->>>>>>>>>>>> +    curr_pa = cmdq_thread_readl(thread, CMDQ_THR_CURR_ADDR);
->>>>>>>>>>>> +
->>>>>>>>>>>> +    list_for_each_entry_safe(task, tmp, &thread->task_busy_list,
->>>>>>>>>>>> +                 list_entry) {
->>>>>>>>>>>> +        if (curr_pa >= task->pa_base &&
->>>>>>>>>>>> +            curr_pa < (task->pa_base + task->command_size))
->>>>>>>>>>>
->>>>>>>>>>> What are you checking here? It seems as if you make some implcit
->>>>>>>>>>> assumptions about pa_base and the order of execution of
->>>>>>>>>>> commands in the
->>>>>>>>>>> thread. Is it save to do so? Does dma_alloc_coherent give any
->>>>>>>>>>> guarantees
->>>>>>>>>>> about dma_handle?
->>>>>>>>>>
->>>>>>>>>> 1. Check what is the current running task in this GCE thread.
->>>>>>>>>> 2. Yes.
->>>>>>>>>> 3. Yes, CMDQ doesn't use iommu, so physical address is continuous.
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> Yes, physical addresses might be continous, but AFAIK there is no
->>>>>>>>> guarantee that the dma_handle address is steadily growing, when
->>>>>>>>> calling
->>>>>>>>> dma_alloc_coherent. And if I understand the code correctly, you
->>>>>>>>> use this
->>>>>>>>> assumption to decide if the task picked from task_busy_list is
->>>>>>>>> currently
->>>>>>>>> executing. So I think this mecanism is not working.
->>>>>>>>
->>>>>>>> I don't use dma_handle address, and just use physical addresses.
->>>>>>>>     From CPU's point of view, tasks are linked by the busy list.
->>>>>>>>     From GCE's point of view, tasks are linked by the JUMP command.
->>>>>>>>
->>>>>>>>> In which cases does the HW thread raise an interrupt.
->>>>>>>>> In case of error. When does CMDQ_THR_IRQ_DONE get raised?
->>>>>>>>
->>>>>>>> GCE will raise interrupt if any task is done or error.
->>>>>>>> However, GCE is fast, so CPU may get multiple done tasks
->>>>>>>> when it is running ISR.
->>>>>>>>
->>>>>>>> In case of error, that GCE thread will pause and raise interrupt.
->>>>>>>> So, CPU may get multiple done tasks and one error task.
->>>>>>>>
->>>>>>>
->>>>>>> I think we should reimplement the ISR mechanism. Can't we just read
->>>>>>> CURR_IRQ_STATUS and THR_IRQ_STATUS in the handler and leave
->>>>>>> cmdq_handle_error_done to the thread_fn? You will need to pass
->>>>>>> information from the handler to thread_fn, but that shouldn't be an
->>>>>>> issue. AFAIK interrupts are disabled in the handler, so we should stay
->>>>>>> there as short as possible. Traversing task_busy_list is expensive, so
->>>>>>> we need to do it in a thread context.
->>>>>>
->>>>>> Actually, our initial implementation is similar to your suggestion,
->>>>>> but display needs CMDQ to return callback function very precisely,
->>>>>> else display will drop frame.
->>>>>> For display, CMDQ interrupt will be raised every 16 ~ 17 ms,
->>>>>> and CMDQ needs to call callback function in ISR.
->>>>>> If we defer callback to workqueue, the time interval may be larger than
->>>>>> 32 ms.sometimes.
->>>>>>
->>>>>
->>>>> I think the problem is, that you implemented the workqueue as a ordered
->>>>> workqueue, so there is no parallel processing. I'm still not sure why
->>>>> you need the workqueue to be ordered. Can you please explain.
->>>>
->>>> The order should be kept.
->>>> Let me use mouse cursor as an example.
->>>> If task 1 means move mouse cursor to point A, task 2 means point B,
->>>> and task 3 means point C, our expected result is A -> B -> C.
->>>> If the order is not kept, the result could become A -> C -> B.
->>>>
->>>
->>> Got it, thanks for the clarification.
->>>
->>
->> I think a way to get rid of the workqueue is to use a timer, which gets
->> programmed to the time a timeout in the first task in the busy list
->> would happen. Everytime we update the busy list (e.g. because of task
->> got finished by the thread), we update the timer. When the timer
->> triggers, which hopefully won't happen too often, we return timeout on
->> the busy list elements, until the time is lower then the actual time.
->>
->> At least with this we can reduce the data structures in this driver and
->> make it more lightweight.
->
->  From my understanding, your proposed method can handle timeout case.
->
-> However, the workqueue is also in charge of releasing tasks.
-> Do you take releasing tasks into consideration by using the proposed
-> timer method?
-> Furthermore, I think the code will become more complex if we also use
-> timer to implement releasing tasks.
->
+> ---
+>  drivers/of/of_reserved_mem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_me=
+m.c
+> index 3cf129f..06af99f 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -334,7 +334,7 @@ int of_reserved_mem_device_init_by_idx(struct dev=
+ice *dev,
+> =20
+>  	target =3D of_parse_phandle(np, "memory-region", idx);
+>  	if (!target)
+> -		return -EINVAL;
+> +		return -ENODEV;
+> =20
+>  	rmem =3D __find_rmem(target);
+>  	of_node_put(target);
+> --=20
+> 1.9.2
+>=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-Can't we call
-         clk_disable_unprepare(cmdq->clock);
-         cmdq_task_release(task);
-after invoking the callback?
-Regrading the clock, wouldn't it be easier to handle the clock 
-enable/disable depending on the state of task_busy_list? I suppose we 
-can't as we would need to check the task_busy_list of all threads, right?
-
-Regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
