@@ -1,78 +1,88 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] musb: sunxi: Simplify dr_mode handling
-Date: Wed, 8 Jun 2016 12:23:25 +0200
-Message-ID: <20160608102325.GI14179@lukather>
-References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
- <1465138776-6003-4-git-send-email-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NzX0AQGjRQPusK/O"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465138776-6003-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: [PATCH v5 7/7] dt-bindings: drm/bridge: Update bindings for ADV7533
+Date: Wed,  8 Jun 2016 15:57:53 +0530
+Message-ID: <1465381673-32471-8-git-send-email-architt@codeaurora.org>
+References: <1463395270-3100-1-git-send-email-architt@codeaurora.org>
+ <1465381673-32471-1-git-send-email-architt@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1465381673-32471-1-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, treding@nvidia.com, laurent.pinchart@ideasonboard.com, xinliang.liu@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, srinivas.kandagatla@linaro.org, lars@metafoo.de, amit.kucheria@linaro.org, robdclark@gmail.com, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add description of ADV7533. Add the required and optional properties that
+are specific to it.
 
---NzX0AQGjRQPusK/O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: devicetree@vger.kernel.org
 
-Hi,
+Acked-by: Rob Herring <robh@kernel.org>
 
-On Sun, Jun 05, 2016 at 04:59:36PM +0200, Hans de Goede wrote:
-> phy-sun4i-usb now has proper dr_mode handling, it always registers an
-> extcon, and sends a notify with the mode (even when in peripheral- /
-> host-only mode) at least once.
->=20
-> So we can simply the sunxi musb glue by always registering its extcon
-> notifier and relying on sunxi_musb_work() to enable vbus when in
-> host-only mode.
->=20
-> This also enables host- and peripheral-only mode with vbus monitoring.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Archit Taneja <architt@codeaurora.org>
+---
+ .../bindings/display/bridge/adi,adv7511.txt        | 26 +++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-It's been a bit painful to track all the patches needed so that it
-applies properly, but I've finally been able to test it on a Sinlinx
-SinA33 with peripheral-only mUSB, and it works like a charm.
-
-You can add my Tested-by.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---NzX0AQGjRQPusK/O
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXV/IdAAoJEBx+YmzsjxAg9zEP/jAf8F90573009BWlQOaNlld
-Atdr/E5TH7ars9fFM7RuQ7Nd5c07FjjTc5idiWNrlDR3Jfw+CAf/KrKvkpi16dFe
-0G++l8RWo5FxKfLl4GLCfpk683QBKn1SrX0Jcj7lkBmbJdOJQgPiz0sNXrGBdzjU
-ReQtA1eClVXFPRhfQSmtTx6I0xZlf7Z/md77Rq3Zzzik8Yt3IEfFJY2BcvD/p54V
-pwS6TnkouXRpciU8jcMuvlgDKVjhwXadOeMbcIsjD3yqp2+3g9BKJ2AWn6calrC3
-bk/Oj35GvrC6uOhAC2DRv0VXhpi6ic4L1Yo8bUoGWWVEkzNtCe0+3a78gxC3NHjK
-4nLDuAWyehcQUvCkN1PYsk+VnwsAM31teume4HjtgCoIRkn1Tpf+cIVYXwjCCfhL
-fb/hJBav/hrzSqgo/5I6dXRC5wJcJ71JHRcSaLCZi4FD7R0eJbHuAMG87TF4g2wN
-Wbj93gyPzcRiQkLfXv6Cb0GG9K5ubieCF8C0ivpg8ns/NHW/M3GkvGjZiaO0W7N4
-acps91ocNfiRaVo9NW8i5FEVNmct07Yq/34S45Tzti2AycuGVk4uoOUc7iM29gSM
-YsqbKPetw8whX5mqR58GZgV/pEmLLzYgVZn8XSpH7G08ZwXyWolG1GXIbxhhUhVg
-j0HXibXTbuavYNccRmES
-=d6ry
------END PGP SIGNATURE-----
-
---NzX0AQGjRQPusK/O--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+index 96c25ee..6532a59 100644
+--- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
++++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+@@ -1,13 +1,19 @@
+-Analog Device ADV7511(W)/13 HDMI Encoders
++Analog Device ADV7511(W)/13/33 HDMI Encoders
+ -----------------------------------------
+ 
+-The ADV7511, ADV7511W and ADV7513 are HDMI audio and video transmitters
++The ADV7511, ADV7511W, ADV7513 and ADV7533 are HDMI audio and video transmitters
+ compatible with HDMI 1.4 and DVI 1.0. They support color space conversion,
+-S/PDIF, CEC and HDCP.
++S/PDIF, CEC and HDCP. ADV7533 supports the DSI interface for input pixels, while
++the others support RGB interface.
+ 
+ Required properties:
+ 
+-- compatible: Should be one of "adi,adv7511", "adi,adv7511w" or "adi,adv7513"
++- compatible: Should be one of:
++		"adi,adv7511"
++		"adi,adv7511w"
++		"adi,adv7513"
++		"adi,adv7533"
++
+ - reg: I2C slave address
+ 
+ The ADV7511 supports a large number of input data formats that differ by their
+@@ -32,6 +38,11 @@ The following input format properties are required except in "rgb 1x" and
+ - adi,input-justification: The input bit justification ("left", "evenly",
+   "right").
+ 
++The following properties are required for ADV7533:
++
++- adi,dsi-lanes: Number of DSI data lanes connected to the DSI host. It should
++  be one of 1, 2, 3 or 4.
++
+ Optional properties:
+ 
+ - interrupts: Specifier for the ADV7511 interrupt
+@@ -42,13 +53,18 @@ Optional properties:
+ - adi,embedded-sync: The input uses synchronization signals embedded in the
+   data stream (similar to BT.656). Defaults to separate H/V synchronization
+   signals.
++- adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
++  generator. The chip will rely on the sync signals in the DSI data lanes,
++  rather than generate its own timings for HDMI output.
+ 
+ Required nodes:
+ 
+ The ADV7511 has two video ports. Their connections are modelled using the OF
+ graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+ 
+-- Video port 0 for the RGB or YUV input
++- Video port 0 for the RGB, YUV or DSI input. In the case of ADV7533, the
++  remote endpoint phandle should be a reference to a valid mipi_dsi_host device
++  node.
+ - Video port 1 for the HDMI output
+ 
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
