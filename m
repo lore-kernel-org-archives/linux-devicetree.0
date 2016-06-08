@@ -1,194 +1,137 @@
-Return-Path: <rob.rice@broadcom.com>
 MIME-Version: 1.0
-In-Reply-To: <576017C7.50609@arm.com>
-References: <1465912965-35500-1-git-send-email-rob.rice@broadcom.com>
-	<1465912965-35500-2-git-send-email-rob.rice@broadcom.com>
-	<576017C7.50609@arm.com>
-Date: Thu, 16 Jun 2016 09:50:23 -0400
-Message-ID: <CAG4BRpnP_qqffLF9X+RusNQGnrtARap9HmK4RE4_jSVfO5juGQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND 1/3] dt-bindings: add bindings documentation for
- PDC driver.
-From: Rob Rice <rob.rice@broadcom.com>
-Content-Type: multipart/alternative; boundary=001a113f231c0716e80535658533
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Anup Patel <anup.patel@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Rice <rrice@broadcom.com>
+In-Reply-To: <591EAFD4-F40B-4729-B0E7-EB3AC735FF2E@konsulko.com>
+References: <1464985616-11821-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1464985616-11821-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<CAL_JsqLi4=6v-8B8eF-H1iQGa+3Zh=rzAWbCAJubnLNEitPaLQ@mail.gmail.com>
+	<8F93AE08-B340-481B-A5B3-F42227D9D729@konsulko.com>
+	<CAL_Jsq+Z9NrvkZa0x4ZjC_POn96h1yQxXbrHsrMQ-MtvjWKWzQ@mail.gmail.com>
+	<591EAFD4-F40B-4729-B0E7-EB3AC735FF2E@konsulko.com>
+Date: Wed, 8 Jun 2016 13:45:13 -0500
+Message-ID: <CAL_JsqL3XuoeSRZZ0t6uOq1CrOY_1ny9wvMmi4T+YW2b3LGrag@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: Support cascaded GPIO chip lookup for OF
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a113f231c0716e80535658533
-Content-Type: text/plain; charset=UTF-8
-
-On Tue, Jun 14, 2016 at 10:42 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-
+On Wed, Jun 8, 2016 at 10:32 AM, Pantelis Antoniou <pantelis.antoniou@konsu=
+lko.com> wrote:
+> Hi Rob,
 >
->
-> On 14/06/16 15:02, Rob Rice wrote:
->
->> From: Rob Rice <rrice@broadcom.com>
+>> On Jun 8, 2016, at 18:18 , Rob Herring <robherring2@gmail.com> wrote:
 >>
->> Add the device tree binding documentation for the PDC hardware
->> in Broadcom iProc SoCs.
+>> On Wed, Jun 8, 2016 at 8:41 AM, Pantelis Antoniou
+>> <pantelis.antoniou@konsulko.com> wrote:
+>>> Hi Rob,
+>>>
+>>>> On Jun 8, 2016, at 00:00 , Rob Herring <robherring2@gmail.com> wrote:
+>>>>
+>>>> +Mark R
+>>>>
+>>>> On Fri, Jun 3, 2016 at 3:26 PM, Pantelis Antoniou
+>>>> <pantelis.antoniou@konsulko.com> wrote:
+>>>>> In certain cases it makes sense to create cascaded GPIO which
+>>>>> are not real GPIOs, merely point to the real backend GPIO chip.
+>>>>
+>>>> In what cases? Make it clear what this is for. Connectors of course,
+>>>> but are there any other use cases you have in mind.
+>>>>
+>>>
+>>> Connectors is one obvious use-case. In fact even when there is no
+>>> connector but there is an obvious interface abstraction point you
+>>> might want to use it.
+>>>
+>>> For instance a SoC package may have a number of different GPIO
+>>> controllers (that may or may not use the same IP block). You could
+>>> abstract all the gpio controllers away in a single GPIO controller
+>>> block.
 >>
->> Signed-off-by: Rob Rice <rob.rice@broadcom.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->> Reviewed-by: Anup Patel <anup.patel@broadcom.com>
->> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->> ---
->>   .../bindings/mailbox/brcm,iproc-pdc-mbox.txt       | 23
->> ++++++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
->>
->> diff --git
->> a/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
->> b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
->> new file mode 100644
->> index 0000000..411ccf4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
->> @@ -0,0 +1,23 @@
->> +The PDC driver manages data transfer to and from various offload engines
->> +on some Broadcom SoCs. An SoC may have multiple PDC hardware blocks.
->> There is
->> +one device tree entry per block.
->> +
->> +Required properties:
->> +- compatible : Should be "brcm,iproc-pdc-mbox".
->> +- reg: Should contain PDC registers location and length.
->> +- interrupts: Should contain the IRQ line for the PDC.
->> +- #mbox-cells: 1
->> +- brcm,rx-status-len: Length of metadata preceding received frames, in
->> bytes.
->> +
+>> There had better be some good reason besides just wanting to make a
+>> single virtual controller.
 >>
 >
-> Ideally the metadata is more associated with the software protocol built
-> on top of the mailbox controller.
->
-> Is this metadata added by the hardware ?
->
-> Otherwise it's better to make it part of the protocol rather than the
-> associating with the controller.
->
+> The reason is to forward a gpio reference to a real h/w gpio device
+> while not having to expose said real gpio device details.
 
-Yes, in fact this metadata is added by the PDC hardware itself. So it seems
-correct for the DT property to be on the controller. (There can be other
-metadata associated with the specific protocol (e.g., crypto engine), but
-that is accounted for elsewhere.)
+That's not a reason.
 
+[...]
 
-> +Optional properties:
->> +- brcm,use-bcm-hdr:  present if a BCM header precedes each frame.
->> +
+>>>>>       gpioC: controller_gpio {
+>>>>>               compatible =3D "cascaded-gpio";
+>>>>
+>>>> This compatible is kind of meaningless. I'd expect this to be a
+>>>> connector compatible.
+>>>>
+>>>
+>>> No, because this gpio patch is completely independent of the
+>>> existence of a connector.
+>>
+>> My point is that "cascaded-gpio" is not something used to parse the
+>> binding and will never be an accepted compatible string. I know it is
+>> an example, but you should make that obvious like foocorp is.
 >>
 >
-> Same here.
+> It doesn=E2=80=99t parse the binding; the xlate method of a driver does.
 
+The GPIO core should be doing the xlate by default just like we have defaul=
+t 1 and 2 cell xlate for interrupts.
 
-Same answer.
+Another point, with just "gpios" that is already
 
 >
+>>>>>               gpios =3D <&gpioA 10>, <&gpioB 5>;
+>>>>
+>>>> As we discussed at ELC, I think this should be modeled after
+>>>> interrupt-map property like this:
+>>>>
+>>>> gpio-map =3D <0 0 &soc_gpio 10 0>, <1 0 &soc_gpio 5 0>;
+>>>> gpio-map-mask =3D <0xff 0>;
+>>>>
+>>>> This is more flexible, a known pattern, and allows remapping of flag c=
+ells.
+>>>>
+>>>
+>>> It=E2=80=99s just syntactic sugar. It can work either way.
+>>>
+>>>> Also, we will likely have interrupt capable GPIOs, so they are going
+>>>> to need interrupt-map anyway.
+>>>>
+>>>
+>>> Devices that use interrupts usually convert the GPIO to an interrupt an=
+d use it.
+>>> Since the xlat op will return the real GPIO spec the interrupt conversi=
+on will work.
+>>>
+>>> Bare interrupt lines are sort-of out of fashion nowadays I think. I=E2=
+=80=99m eager to be
+>>> proven wrong though with a recent portable expansion board that uses th=
+em.
+>>
+>> Uh, no! Practically every gpio controller is also an interrupt
+>> controller (in DT) and devices pretty much always see just an
+>> interrupt line. Just go look at all the I2C devices with an interrupt
+>> line. Unless devices have some special needs to control the gpio, we
+>> always use interrupts. Expansion boards may be dealing with the GPIO
+>> simply because that is the only option for userspace drivers.
+>>
 >
-> --
-> Regards,
-> Sudeep
->
+> Looking into a list of 54 capes for the beaglebone I can only find a sing=
+le
+> one that uses an interrupt instead of a gpio, and that can easily be conv=
+erted
+> to using the gpio.
 
---001a113f231c0716e80535658533
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+What downstream is using is not an argument. For upstream they are going to=
+ have to change when they get reviewed...
 
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Tue, Jun 14, 2016 at 10:42 AM, Sudeep Holla <span dir=3D"ltr">&lt;<a=
- href=3D"mailto:sudeep.holla@arm.com" target=3D"_blank">sudeep.holla@arm.co=
-m</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margi=
-n:0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204=
-);border-left-style:solid;padding-left:1ex"><br>
-<br>
-On 14/06/16 15:02, Rob Rice wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left-width:1px;border-left-color:rgb(204,204,204);border-left-style:solid;p=
-adding-left:1ex">
-From: Rob Rice &lt;<a href=3D"mailto:rrice@broadcom.com" target=3D"_blank">=
-rrice@broadcom.com</a>&gt;<br>
-<br>
-Add the device tree binding documentation for the PDC hardware<br>
-in Broadcom iProc SoCs.<br>
-<br>
-Signed-off-by: Rob Rice &lt;<a href=3D"mailto:rob.rice@broadcom.com" target=
-=3D"_blank">rob.rice@broadcom.com</a>&gt;<br>
-Acked-by: Rob Herring &lt;<a href=3D"mailto:robh@kernel.org" target=3D"_bla=
-nk">robh@kernel.org</a>&gt;<br>
-Reviewed-by: Ray Jui &lt;<a href=3D"mailto:ray.jui@broadcom.com" target=3D"=
-_blank">ray.jui@broadcom.com</a>&gt;<br>
-Reviewed-by: Anup Patel &lt;<a href=3D"mailto:anup.patel@broadcom.com" targ=
-et=3D"_blank">anup.patel@broadcom.com</a>&gt;<br>
-Reviewed-by: Scott Branden &lt;<a href=3D"mailto:scott.branden@broadcom.com=
-" target=3D"_blank">scott.branden@broadcom.com</a>&gt;<br>
----<br>
-=C2=A0 .../bindings/mailbox/brcm,iproc-pdc-mbox.txt=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0| 23 ++++++++++++++++++++++<br>
-=C2=A0 1 file changed, 23 insertions(+)<br>
-=C2=A0 create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,ip=
-roc-pdc-mbox.txt<br>
-<br>
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.=
-txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt<br>
-new file mode 100644<br>
-index 0000000..411ccf4<br>
---- /dev/null<br>
-+++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt<br>
-@@ -0,0 +1,23 @@<br>
-+The PDC driver manages data transfer to and from various offload engines<b=
-r>
-+on some Broadcom SoCs. An SoC may have multiple PDC hardware blocks. There=
- is<br>
-+one device tree entry per block.<br>
-+<br>
-+Required properties:<br>
-+- compatible : Should be &quot;brcm,iproc-pdc-mbox&quot;.<br>
-+- reg: Should contain PDC registers location and length.<br>
-+- interrupts: Should contain the IRQ line for the PDC.<br>
-+- #mbox-cells: 1<br>
-+- brcm,rx-status-len: Length of metadata preceding received frames, in byt=
-es.<br>
-+<br>
-</blockquote>
-<br>
-Ideally the metadata is more associated with the software protocol built<br=
->
-on top of the mailbox controller.<br>
-<br>
-Is this metadata added by the hardware ?<br>
-<br>
-Otherwise it&#39;s better to make it part of the protocol rather than the<b=
-r>
-associating with the controller.<br></blockquote><div><br></div><div><span =
-style=3D"font-size:12.8px">Yes, in fact this metadata is added by the PDC h=
-ardware itself. So it seems correct for the DT property to be on the contro=
-ller. (There can be other metadata associated with the specific protocol (e=
-.g., crypto engine), but that is accounted for elsewhere.)</span></div><div=
-><span style=3D"font-size:12.8px"><br></span></div><blockquote class=3D"gma=
-il_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-le=
-ft-color:rgb(204,204,204);border-left-style:solid;padding-left:1ex">
-<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left-width:1px;border-left-color:rgb(204,204,204);border-left-style:solid;p=
-adding-left:1ex">
-+Optional properties:<br>
-+- brcm,use-bcm-hdr:=C2=A0 present if a BCM header precedes each frame.<br>
-+<br>
-</blockquote>
-<br>
-Same here.</blockquote><div><br></div><div>Same answer.=C2=A0</div><blockqu=
-ote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-wid=
-th:1px;border-left-color:rgb(204,204,204);border-left-style:solid;padding-l=
-eft:1ex"><span class=3D""><font color=3D"#888888"><br>
-<br>
--- <br>
-Regards,<br>
-Sudeep<br>
-</font></span></blockquote></div><br></div></div>
+> The IRQ forwarding case is easier than the GPIO one TBH. The IRQ parsing =
+core
+> can handle complex cases so adding a new one won=E2=80=99t be a big deal.
 
---001a113f231c0716e80535658533--
+Yes, when the infrastructure has already been done it is easier. But from a=
+ binding perspective I dow
+
+Rob
