@@ -1,59 +1,75 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] musb: sunxi: Simplify dr_mode handling
-Date: Wed, 8 Jun 2016 12:30:20 +0200
-Message-ID: <08af737c-f1f1-0966-0eca-24d4daa7423b@redhat.com>
-References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
- <1465138776-6003-4-git-send-email-hdegoede@redhat.com>
- <20160608102325.GI14179@lukather>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM: at91/dt: sama5d2: Use new compatible for
+ ohci node
+Date: Wed, 8 Jun 2016 12:33:00 +0200
+Message-ID: <20160608103300.GE2466@piout.net>
+References: <1465359311-14544-1-git-send-email-wenyou.yang@atmel.com>
+ <1465359311-14544-3-git-send-email-wenyou.yang@atmel.com>
+ <5757EE13.1080107@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160608102325.GI14179@lukather>
+Content-Disposition: inline
+In-Reply-To: <5757EE13.1080107-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 08/06/2016 at 12:06:11 +0200, Nicolas Ferre wrote :
+> Le 08/06/2016 06:15, Wenyou Yang a =E9crit :
+> > Use compatible "atmel,sama5d2-ohci" to be capable of suspending
+> > ports while sleep to save the power consumption.
+> >=20
+> > Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > ---
+> >=20
+> > Changes in v3: None
+> > Changes in v2:
+> >  - Use the new compatible for ohci-node.
+> >=20
+> >  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sam=
+a5d2.dtsi
+> > index 78996bd..03d6724 100644
+> > --- a/arch/arm/boot/dts/sama5d2.dtsi
+> > +++ b/arch/arm/boot/dts/sama5d2.dtsi
+> > @@ -232,7 +232,7 @@
+> >  		};
+> > =20
+> >  		usb1: ohci@00400000 {
+> > -			compatible =3D "atmel,at91rm9200-ohci", "usb-ohci";
+> > +			compatible =3D "atmel,sama5d2-ohci", "usb-ohci";
+>=20
+> We must change this to:
+> +			compatible =3D "atmel,sama5d2-ohci", "atmel,at91rm9200-ohci", "us=
+b-ohci";
+>=20
+> To make it independent from the one that may reach Mainline through t=
+he USB git tree.
+>=20
 
-On 08-06-16 12:23, Maxime Ripard wrote:
-> Hi,
->
-> On Sun, Jun 05, 2016 at 04:59:36PM +0200, Hans de Goede wrote:
->> phy-sun4i-usb now has proper dr_mode handling, it always registers an
->> extcon, and sends a notify with the mode (even when in peripheral- /
->> host-only mode) at least once.
->>
->> So we can simply the sunxi musb glue by always registering its extcon
->> notifier and relying on sunxi_musb_work() to enable vbus when in
->> host-only mode.
->>
->> This also enables host- and peripheral-only mode with vbus monitoring.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->
-> It's been a bit painful to track all the patches needed so that it
-> applies properly, but I've finally been able to test it on a Sinlinx
-> SinA33 with peripheral-only mUSB, and it works like a charm.
->
-> You can add my Tested-by.
+Well, like discussed, I'd say that a new compatible is not needed as we
+already know on which chip we are running depending on the SFR that we
+can lookup. My concern was only to avoid calling a function
+unnecessarily on !sama5d2 platforms.
+>=20
+> >  			reg =3D <0x00400000 0x100000>;
+> >  			interrupts =3D <41 IRQ_TYPE_LEVEL_HIGH 2>;
+> >  			clocks =3D <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
+> >=20
+>=20
+> Bye,
+> --=20
+> Nicolas Ferre
 
-Great, thanks for testing.
-
-This is the board which has an otg connector with vbus not connected,
-right? Yet it does have a functional id-pin, right ?
-
-In that case you should be able to put it in dual-role mode (only
-specify the id-pin in the phy dts node, no vbus / vbus-monitoring)
-and then it _should_ work in host mode if you use a powered hub.
-
-I'm fine with putting in peripheral-only mode, but as said
-dual-role might work with a powered hub.
-
-Regards,
-
-Hans
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
