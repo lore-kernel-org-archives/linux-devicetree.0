@@ -1,133 +1,130 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Wed, 8 Jun 2016 23:57:53 +0200
-Message-ID: <20160608235753.46e73078@bbrezillon>
-References: <1465283513-30224-1-git-send-email-songjun.wu@atmel.com>
-	<1465283513-30224-3-git-send-email-songjun.wu@atmel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Enable NAND on Wexler TAB7200
+Date: Thu, 9 Jun 2016 00:03:14 +0200
+Message-ID: <20160608220314.GL14179@lukather>
+References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
+ <1465208664-9366-8-git-send-email-mamlinav@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="96dIhm/ZjrNld+BP"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465283513-30224-3-git-send-email-songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1465208664-9366-8-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 7 Jun 2016 15:11:53 +0800
-Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
 
-> DT binding documentation for ISC driver.
-> 
-> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+--96dIhm/ZjrNld+BP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Jun 06, 2016 at 01:24:24PM +0300, Aleksei Mamlin wrote:
+> Enable the NFC and describe the NAND flash connected to this controller.
+>=20
+> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> 
-> Changes in v4:
-> - Remove the isc clock nodes.
-> 
-> Changes in v3:
-> - Remove the 'atmel,sensor-preferred'.
-> - Modify the isc clock node according to the Rob's remarks.
-> 
-> Changes in v2:
-> - Remove the unit address of the endpoint.
-> - Add the unit address to the clock node.
-> - Avoid using underscores in node names.
-> - Drop the "0x" in the unit address of the i2c node.
-> - Modify the description of 'atmel,sensor-preferred'.
-> - Add the description for the ISC internal clock.
-> 
->  .../devicetree/bindings/media/atmel-isc.txt        | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> new file mode 100644
-> index 0000000..3f83524
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> @@ -0,0 +1,69 @@
-> +Atmel Image Sensor Controller (ISC)
-> +----------------------------------------------
+>  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 41 ++++++++++++++++++++=
+++++++
+>  1 file changed, 41 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/bo=
+ot/dts/sun7i-a20-wexler-tab7200.dts
+> index 2f6b21a..42aff91 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> @@ -159,6 +159,47 @@
+>  	status =3D "okay";
+>  };
+> =20
+> +&nfc {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&nand_pins_a>, <&nand_cs0_pins_a>, <&nand_rb0_pins_a>;
+> +	status =3D "okay";
 > +
-> +Required properties for ISC:
-> +- compatible
-> +	Must be "atmel,sama5d2-isc".
-> +- reg
-> +	Physical base address and length of the registers set for the device.
-> +- interrupts
-> +	Should contain IRQ line for the ISC.
-> +- clocks
-> +	List of clock specifiers, corresponding to entries in
-> +	the clock-names property;
-> +	Please refer to clock-bindings.txt.
-> +- clock-names
-> +	Required elements: "hclock".
-> +- #clock-cells
-> +	Should be 0.
-> +- clock-output-names
-> +	Should contain the name of the clock driving the sensor master clock.
-> +- pinctrl-names, pinctrl-0
-> +	Please refer to pinctrl-bindings.txt.
+> +	nand@0 {
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <2>;
+> +		reg =3D <0>;
+> +		allwinner,rb =3D <0>;
 > +
+> +		nand-ecc-mode =3D "hw";
+> +		nand-on-flash-bbt;
 > +
-> +ISC supports a single port node with parallel bus. It should contain one
-> +'port' child node with child 'endpoint' node. Please refer to the bindings
-> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +isc: isc@f0008000 {
-> +	compatible = "atmel,sama5d2-isc";
-> +	reg = <0xf0008000 0x4000>;
-> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
-> +	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-> +	clock-names = "hclock";
-
-You have 3 clocks here and only one name. Are you sure this example is
-actually working?
-
-> +	#clock-cells = <0>;
-> +	clock-output-names = "isc-mck";
-> +
-> +	port {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		isc_0: endpoint {
-> +			remote-endpoint = <&ov7740_0>;
-> +			hsync-active = <1>;
-> +			vsync-active = <0>;
-> +			pclk-sample = <1>;
+> +		boot0@0 {
+> +			label =3D "boot0";
+> +			reg =3D /bits/ 64 <0x0 0x200000>;
 > +		};
-> +	};
 > +
+> +		boot0-rescue@200000 {
+> +			label =3D "boot0-rescue";
+> +			reg =3D /bits/ 64 <0x200000 0x200000>;
+> +		};
 > +
-> +};
+> +		uboot@400000 {
+> +			label =3D "uboot";
+> +			reg =3D /bits/ 64 <0x400000 0x200000>;
+> +		};
 > +
-> +i2c1: i2c@fc028000 {
-> +	ov7740: camera@21 {
-> +	compatible = "ovti,ov7740";
-> +	reg = <0x21>;
+> +		uboot-rescue@600000 {
+> +			label =3D "uboot-rescue";
+> +			reg =3D /bits/ 64 <0x600000 0x200000>;
+> +		};
 > +
-> +	clocks = <&isc>;
-> +	clock-names = "xvclk";
-> +	assigned-clocks = <&isc>;
-> +	assigned-clock-rates = <24000000>;
-> +
-> +	port {
-> +		ov7740_0: endpoint {
-> +			remote-endpoint = <&isc_0>;
+> +		main@800000 {
+> +			label =3D "main";
+> +			reg =3D /bits/ 64 <0x800000 0xff800000>;
 > +		};
 > +	};
 > +};
 
+This feels a bit premature. The two boards you're using have an MLC
+NAND which is not supported yet. Until there's proper MLC support in
+the kernel, I'm not sure we want to enable that for end-users when we
+know that things will get wrong.
 
+However, after discussing this with Boris, I appreciate that we don't
+have any example available because of this policy for people that want
+to opt-in anyway.
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
+What we could do is to still mark the status as disabled in the DTS,
+with a big fat warning as comment just before, so that it requires
+user action, and that user will have been warned.
+
+Would that work for you?
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
+
+--96dIhm/ZjrNld+BP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXWJYhAAoJEBx+YmzsjxAgLfQP/0HPkxn+J+NzmjBHQdmguO8X
+xax0/uJehyI1Q18Y/OT/IkXvMjFn+Fvll++oYEFWJw2/ZcHiIBdROYPsU+ffjzVW
+btemYklOjucqwtde+nk17YoC7phbi4rlBrNdjR+lNNiWFfXgQ8cqho7trz7w8IyI
+5/b+wFAOaBgu3Guy3sUeNsdMzQuAhbfMags0qs+Br5N7hQPo7NqQVpQES3EZkzZh
+QhcvZ3qH/IQ/1MM2iKu2dVEQIydj3ljUY4nILAadpp4rvkJf/PgamhikeSwvmJNL
+8NVlPGMyU8qIzUM2b9Gptr5eszwmYpKX5VJ5Xv3lLwQ8z72Qpo99p6AiAJcDrbSG
+Md25Lns3ffO2S9eD07mltOjGhs+GdvAuBPtKWkF7F5uyaeOGPrcliy+HGvJC13d8
+I1DaSOOkZgjRORpehUBr5k/UKGnflzuzTKW8txK7zzzbgzNswYpYGe6F+/AdRgvh
+aFbH5hYAT189CMU9ZDkVjUEWxhy2Tye0BT/z6CRSxrqNtsStXrrLrWlLZR7DdyiX
+NbmgDLeO0ttQfr3y1azFrD9bo8PiSeAjdCj8OMuiRSYNwRltfrgmjVPb9fhK9b77
+1HHYI7jhIFYGFUotHzC208tr45dKEbrev14SoOAM8S4iAWOL/B/SXd51gC9Y4+jj
+fyx3o5d+TvYG5E5MH9qY
+=EKDT
+-----END PGP SIGNATURE-----
+
+--96dIhm/ZjrNld+BP--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
