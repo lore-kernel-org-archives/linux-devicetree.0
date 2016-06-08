@@ -1,66 +1,112 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [RESEND PATCH 3/3] mtd: nand: sunxi: Support ECC maximization
-Date: Wed,  8 Jun 2016 17:04:24 +0200
-Message-ID: <1465398264-8202-4-git-send-email-boris.brezillon@free-electrons.com>
-References: <1465398264-8202-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465398264-8202-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 2/3] iio: adc: ina3221: Add support for IIO ADC driver for
+ TI INA3221
+Date: Wed, 8 Jun 2016 10:04:14 -0500
+Message-ID: <575833EE.60009@ti.com>
+References: <1464784454-7988-1-git-send-email-ldewangan@nvidia.com>
+ <1464784454-7988-2-git-send-email-ldewangan@nvidia.com>
+ <44e28639-67b6-7586-5e6d-c0180ccded79@kernel.org> <5751863E.907@roeck-us.net>
+ <575190A9.2090906@nvidia.com> <57519FA3.9010208@ti.com>
+ <20160607223058.GA20120@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20160607223058.GA20120@roeck-us.net>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, robh+dt@kernel.org, corbet@lwn.net, lars@metafoo.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, linux-hwmon@vger.kernel.org, Jean Delvare <khali@linux-fr.org>
 List-Id: devicetree@vger.kernel.org
 
-Setup the maximum ECC config when NAND_ECC_MAXIMIZE is set.
+On 06/07/2016 05:30 PM, Guenter Roeck wrote:
+> On Fri, Jun 03, 2016 at 10:17:55AM -0500, Andrew F. Davis wrote:
+>> On 06/03/2016 09:14 AM, Laxman Dewangan wrote:
+>>>
+>>> On Friday 03 June 2016 06:59 PM, Guenter Roeck wrote:
+>>>> On 06/03/2016 03:06 AM, Jonathan Cameron wrote:
+>>>>> On 01/06/16 13:34, Laxman Dewangan wrote:
+>>>>>> The INA3221 is a three-channel, high-side current and bus voltage
+>>>>>> monitor
+>>>>>> with an I2C interface from Texas Instruments. The INA3221 monitors both
+>>>>>> shunt voltage drops and bus supply voltages in addition to having
+>>>>>> programmable conversion times and averaging modes for these signals.
+>>>>>> The INA3221 offers both critical and warning alerts to detect multiple
+>>>>>> programmable out-of-range conditions for each channel.
+>>>>>>
+>>>>>> Add support for INA3221 SW driver via IIO ADC interface. The device is
+>>>>>> register as iio-device and provides interface for voltage/current
+>>>>>> and power
+>>>>>> monitor. Also provide interface for setting oneshot/continuous mode and
+>>>>>> critical/warning threshold for the shunt voltage drop.
+>>>>>>
+>>>>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>>>>> Hi Laxman,
+>>>>>
+>>>>> As ever with any driver lying on the border of IIO and hwmon, please
+>>>>> include
+>>>>> a short justification of why you need an IIO driver and also cc the
+>>>>> hwmon list + maintainers. (cc'd on this reply).
+>>>>>
+>>>>> I simply won't take a driver where the hwmon maintainers aren't happy.
+>>>>> As it stands I'm not seeing obvious reasons in the code for why this
+>>>>> should be an IIO device.
+>>>>>
+>>>>
+>>>> Me not either.
+>>>>
+>>>> I have a hwmon driver for the same chip pending from Andrew Davis (TI)
+>>>> which I am just about to accept. We had directed Andrew back in April
+>>>> to write a hwmon driver for the chip, which he did.
+>>>>
+>>>
+>>> Thanks Guenter,  I found the series
+>>>
+>>> [PATCH v2 0/2] Add support for INA3221 Triple Current/Voltage Monitors
+>>> Looks fine to me. I can use the hwmon.
+>>>
+>>
+>> If you search even further back you can see I originally went with an
+>> IIO driver as well, comparing the IIO and hwmon version for the simple
+>> use cases I needed the hwmod version turned out much simpler, so it was
+>> probably the right framework for now.
+>>
+>>>
+>>> However, some of the stuff from my patch are not there which I will add
+>>> later once original patch applied:
+>>> - Dynamic mode changes for continuous and one-shot from sysfs.
+>>> - In one shot, when try to read voltage data, do conversion and then read.
+>>>
+>>
+>> My attempt is rather minimal, to be honest I like your stab at this
+>> driver better in some ways, especially relating to DT putting each
+>> channel in its own node with labels, I think this is a bit more clean
+>> and will be more extendable if/when new multi-channel monitor chips are
+>> made.
+>>
+>>> Not sure whether exporting the following will help or not. Can you
+>>> please confirm?
+>>> - Oversampling time i.e. average sample
+>>> - conversion time for bus voltage and shunt voltage if default is not
+>>> suited for system.
+>>>
+>>>
+>>
+>> These can always be added as needed, but the DT changes are not as easy.
+>> I would like it if this got in this cycle but if you think something
+>> will be needed to help your improvements, that can not be added
+>> incrementally, it would probably be best to get them into the initial DT
+>> binding doc now.
+>>
+> Andrew,
+> 
+> with this, the hwmon driver is pretty much on hold. What do you want me to do ?
+> Should I wait for DT updates ?
+> 
 
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/mtd/nand/sunxi_nand.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+If Laxman would like to commit to making these changes I do not problem
+waiting a bit to get this right the first time.
 
-diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunxi_nand.c
-index 8dfcb65..21dad0b 100644
---- a/drivers/mtd/nand/sunxi_nand.c
-+++ b/drivers/mtd/nand/sunxi_nand.c
-@@ -1814,6 +1814,35 @@ static int sunxi_nand_hw_common_ecc_ctrl_init(struct mtd_info *mtd,
- 	if (!data)
- 		return -ENOMEM;
- 
-+	if (ecc->options & NAND_ECC_MAXIMIZE) {
-+		int bytes;
-+
-+		ecc->size = 1024;
-+		nsectors = mtd->writesize / ecc->size;
-+
-+		/* Reserve 2 bytes for the BBM */
-+		bytes = (mtd->oobsize - 2) / nsectors;
-+
-+		/* 4 non-ECC bytes are added before each ECC bytes section */
-+		bytes -= 4;
-+
-+		/* and bytes has to be even. */
-+		if (bytes % 2)
-+			bytes--;
-+
-+		ecc->strength = bytes * 8 / fls(8 * ecc->size);
-+
-+		for (i = 0; i < ARRAY_SIZE(strengths); i++) {
-+			if (strengths[i] > ecc->strength)
-+				break;
-+		}
-+
-+		if (!i)
-+			ecc->strength = 0;
-+		else
-+			ecc->strength = strengths[i - 1];
-+	}
-+
- 	if (ecc->size != 512 && ecc->size != 1024)
- 		return -EINVAL;
- 
--- 
-2.7.4
+If we don't hear back soon then I'd just take it as is and anything
+needing to be fixed can be later.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andrew
