@@ -1,81 +1,45 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [RESEND PATCH 1/3] mtd: nand: Add an option to maximize the ECC strength
-Date: Wed,  8 Jun 2016 17:04:22 +0200
-Message-ID: <1465398264-8202-2-git-send-email-boris.brezillon@free-electrons.com>
-References: <1465398264-8202-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465398264-8202-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v9 11/14] usb: otg: use dev_dbg() instead of VDBG()
+Date: Wed, 08 Jun 2016 08:10:40 -0700
+Message-ID: <1465398640.25087.50.camel@perches.com>
+References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+	 <1465376626-30122-12-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465376626-30122-12-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The generic NAND DT bindings allows one to tweak the ECC strength and
-step size to their need. It can be used to lower the ECC strength to
-match a bootloader/firmware config, but might also be used to get a better
-reliability.
+On Wed, 2016-06-08 at 12:03 +0300, Roger Quadros wrote:
+> Now that we have a device reference in struct usb_otg
+> let's use dev_dbg() for debug messages.
 
-In the latter case, the user might want to use the maximum ECC strength
-without having to explicitly calculate the exact value (this value not
-only depends on the OOB size, but also on the NAND controller, and can
-be tricky to extract).
+dev_vdbg vs dev_dbg
 
-Add a generic 'nand-ecc-maximize' DT property and the associated
-NAND_ECC_MAXIMIZE flag, to let ECC controller drivers select the best
-ECC strength and step-size on their own.
+The patch subject and commit message don't match the code changes.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
----
- Documentation/devicetree/bindings/mtd/nand.txt | 9 +++++++++
- drivers/mtd/nand/nand_base.c                   | 3 +++
- include/linux/mtd/nand.h                       | 1 +
- 3 files changed, 13 insertions(+)
+> diff --git a/drivers/usb/common/usb-otg-fsm.c b/drivers/usb/common/us=
+b-otg-fsm.c
+[]
+> @@ -44,8 +37,9 @@ static int otg_set_protocol(struct otg_fsm *fsm, in=
+t protocol)
+> =A0	int ret =3D 0;
+> =A0
+> =A0	if (fsm->protocol !=3D protocol) {
+> -		VDBG("Changing role fsm->protocol=3D %d; new protocol=3D %d\n",
+> -			fsm->protocol, protocol);
+> +		dev_vdbg(otg->dev,
+> +			=A0"Changing role fsm->protocol=3D %d; new protocol=3D %d\n",
+> +			=A0fsm->protocol, protocol);
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
-index 3733300..b056016 100644
---- a/Documentation/devicetree/bindings/mtd/nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -35,6 +35,15 @@ Optional NAND chip properties:
- - nand-ecc-step-size: integer representing the number of data bytes
- 		      that are covered by a single ECC step.
- 
-+- nand-ecc-maximize: boolean used to specify that you want to maximize ECC
-+		     strength. The maximum ECC strength is both controller and
-+		     chip dependent. The controller side has to select the ECC
-+		     config providing the best strength and taking the OOB area
-+		     size constraint into account.
-+		     This is particularly useful when only the in-band area is
-+		     used by the upper layers, and you want to make your NAND
-+		     as reliable as possible.
-+
- The ECC strength and ECC step size properties define the correction capability
- of a controller. Together, they say a controller can correct "{strength} bit
- errors per {size} bytes".
-diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
-index 0b0dc29..d374129 100644
---- a/drivers/mtd/nand/nand_base.c
-+++ b/drivers/mtd/nand/nand_base.c
-@@ -4113,6 +4113,9 @@ static int nand_dt_init(struct nand_chip *chip)
- 	if (ecc_step > 0)
- 		chip->ecc.size = ecc_step;
- 
-+	if (of_property_read_bool(dn, "nand-ecc-maximize"))
-+		chip->ecc.options |= NAND_ECC_MAXIMIZE;
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-index fbe8e16..737b00d 100644
---- a/include/linux/mtd/nand.h
-+++ b/include/linux/mtd/nand.h
-@@ -141,6 +141,7 @@ enum nand_ecc_algo {
-  * pages and you want to rely on the default implementation.
-  */
- #define NAND_ECC_GENERIC_ERASED_CHECK	BIT(0)
-+#define NAND_ECC_MAXIMIZE		BIT(1)
- 
- /* Bit mask for flags passed to do_nand_read_ecc */
- #define NAND_GET_DEVICE		0x80
--- 
-2.7.4
+etc...
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
