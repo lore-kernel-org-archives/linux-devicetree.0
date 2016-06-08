@@ -1,55 +1,71 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v7 2/2] drm/bridge: Add sii902x DT bindings doc
-Date: Wed,  8 Jun 2016 14:30:11 +0200
-Message-ID: <1465389011-11877-2-git-send-email-boris.brezillon@free-electrons.com>
-References: <1465389011-11877-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 08/14] usb: otg: add OTG/dual-role core
+Date: Wed, 8 Jun 2016 20:42:04 +0800
+Message-ID: <20160608124204.GB10029@shlinux2>
+References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+ <1465376626-30122-9-git-send-email-rogerq@ti.com>
+ <20160608095336.GA4444@shlinux2>
+ <5757EF7A.20604@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465389011-11877-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Meng Yi <meng.yi@nxp.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Emil Velikov <emil.l.velikov@gmail.com>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5757EF7A.20604-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIFNpaTkwMjIgRFQgYmluZGluZ3MgZGVzY3JpcHRpb24uCgpTaWduZWQtb2ZmLWJ5OiBCb3Jp
-cyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+CkFja2VkLWJ5
-OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KQ2hhbmdlcyBzaW5jZSB2NjoKLSBt
-YWtlICdyZXNldC1ncGlvcycgb3B0aW9uYWwKCkNoYW5nZXMgc2luY2UgdjE6Ci0gcmVuYW1lIGRv
-YyBmaWxlCi0gcy9zaWw5MDIvc2lpOTAyLwotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3NpaTkwMngudHh0IHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwogMSBm
-aWxlIGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQKCmRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
-Z2Uvc2lpOTAyeC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9icmlkZ2Uvc2lpOTAyeC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4u
-NTZhM2U2OAotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dApAQCAtMCwwICsxLDM1IEBACitzaWk5MDJ4
-IEhETUkgYnJpZGdlIGJpbmRpbmdzCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CisJLSBjb21wYXRp
-YmxlOiAic2lsLHNpaTkwMjIiCisJLSByZWc6IGkyYyBhZGRyZXNzIG9mIHRoZSBicmlkZ2UKKwor
-T3B0aW9uYWwgcHJvcGVydGllczoKKwktIGludGVycnVwdHMtZXh0ZW5kZWQgb3IgaW50ZXJydXB0
-LXBhcmVudCArIGludGVycnVwdHM6IGRlc2NyaWJlCisJICB0aGUgaW50ZXJydXB0IGxpbmUgdXNl
-ZCB0byBpbmZvcm0gdGhlIGhvc3QgYWJvdXQgaG90cGx1ZyBldmVudHMuCisJLSByZXNldC1ncGlv
-czogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBSU1RfTiBwaW4uCisKK09w
-dGlvbmFsIHN1Ym5vZGVzOgorCS0gdmlkZW8gaW5wdXQ6IHRoaXMgc3Vibm9kZSBjYW4gY29udGFp
-biBhIHZpZGVvIGlucHV0IHBvcnQgbm9kZQorCSAgdG8gY29ubmVjdCB0aGUgYnJpZGdlIHRvIGEg
-ZGlzcGxheSBjb250cm9sbGVyIG91dHB1dCAoU2VlIHRoaXMKKwkgIGRvY3VtZW50YXRpb24gWzFd
-KS4KKworWzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8t
-aW50ZXJmYWNlcy50eHQKKworRXhhbXBsZToKKwloZG1pLWJyaWRnZUAzOSB7CisJCWNvbXBhdGli
-bGUgPSAic2lsLHNpaTkwMjIiOworCQlyZWcgPSA8MHgzOT47CisJCXJlc2V0LWdwaW9zID0gPCZw
-aW9BIDEgMD47CisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUt
-Y2VsbHMgPSA8MD47CisKKwkJCXBvcnRAMCB7CisJCQkJcmVnID0gPDA+OworCQkJCWJyaWRnZV9p
-bjogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRjX291dD47CisJCQkJfTsK
-KwkJCX07CisJCX07CisJfTsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Jun 08, 2016 at 01:12:10PM +0300, Roger Quadros wrote:
+> Hi,
+> 
+> On 08/06/16 12:53, Peter Chen wrote:
+> > On Wed, Jun 08, 2016 at 12:03:40PM +0300, Roger Quadros wrote:
+> >> +int usb_otg_unregister(struct device *dev)
+> >> +{
+> >> +	struct usb_otg *otg;
+> >> +
+> >> +	mutex_lock(&otg_list_mutex);
+> >> +	otg = usb_otg_get_data(dev);
+> >> +	if (!otg) {
+> >> +		dev_err(dev, "otg: %s: device not in otg list\n",
+> >> +			__func__);
+> >> +		mutex_unlock(&otg_list_mutex);
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >> +	/* prevent unregister till both host & gadget have unregistered */
+> >> +	if (otg->host || otg->gadget) {
+> >> +		dev_err(dev, "otg: %s: host/gadget still registered\n",
+> >> +			__func__);
+> > 
+> > You need to call mutex_unlock here
+> 
+> Indeed. good catch.
+> > 
+> >> +
+> >> +int usb_otg_gadget_ready(struct usb_gadget *gadget, bool ready)
+> >> +{
+> > 
+> > What this API is for? Why need it in this version?
+> 
+> we moved gadget to otg registration from udc_bind_to_driver() to usb_add_gadget_udc_release().
+> This means there is a window when gadget function driver (e.g. g_zero) is not loaded.
+> We don't want to start the gadget controller in that window.
+> 
+> usb_otg_gadget_ready() is used by gadget core to notify the otg core when the function driver
+> is ready or not-ready.
+> 
+
+Why you need to move this from gadget's probe to udc's probe? Currently,
+the sequence of gadget and udc's probe is random, but udc_bind_to_driver
+is called when udc is ready.
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
