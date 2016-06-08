@@ -1,228 +1,122 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 06/12] ARM: dts: r8a7792: initial SoC device tree
-Date: Thu, 09 Jun 2016 00:17:59 +0300
-Message-ID: <1788169.FUQDsLAmXg@wasted.cogentembedded.com>
-References: <12536856.AsKMEpuejQ@wasted.cogentembedded.com>
+From: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX settings
+Date: Wed, 08 Jun 2016 17:27:04 -0400
+Message-ID: <57588DA8.4050000@timesys.com>
+References: <20160318211936.GA4158@rob-hp-laptop> <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com> <20160323043638.GA18462@peterchendt> <56F2D43D.1040404@timesys.com> <56F2DDB7.7070700@timesys.com> <20160324022117.GA5301@peterchendt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <12536856.AsKMEpuejQ@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160324022117.GA5301@peterchendt>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The initial R8A7792 SoC device tree including CPU cores, GIC, timer, SYSC,
-and the required  clock descriptions.
+On 03/23/2016 10:21 PM, Peter Chen wrote:
+> On Wed, Mar 23, 2016 at 02:17:27PM -0400, Jaret Cantu wrote:
+>> On 03/23/2016 01:37 PM, Jaret Cantu wrote:
+>>> On 03/23/2016 12:36 AM, Peter Chen wrote:
+>>>> On Mon, Mar 21, 2016 at 12:32:27PM -0400, Jaret Cantu wrote:
+>>>>> The TX settings can be calibrated for particular hardware.  The
+>>>>> phy is reset by Linux, so this cannot be handled by the bootloader.
+>>>>>
+>>>>> The TRM mentions that the maximum resistance should be used for the
+>>>>> DN/DP calibration in order to pass USB certification.
+>>>>>
+>>>>> The values for the TX registers are poorly described in the TRM.
+>>>>> The meanings of the register values were taken from another
+>>>>> Freescale-provided document:
+>>>>> https://community.freescale.com/message/566147#comment-566912
+>>>>>
+>>>>> Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+>>>>> ---
+>>>>> v3. Added unit suffix (-ohms) to tx-cal-45-d*
+>>>>>
+>>>>> v2. Copying devicetree list
+>>>>>      Removed prettifying extra whitespace
+>>>>>      Removed unnecessary register rewrite on resume
+>>>>>      Use min and max constants for clarity
+>>>>>
+>>>>>   .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
+>>>>>   drivers/usb/phy/phy-mxs-usb.c                      |   58
+>>>>> ++++++++++++++++++++
+>>>>>   2 files changed, 68 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+>>>>> b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+>>>>> index 379b84a..1d25b04 100644
+>>>>> --- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+>>>>> +++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+>>>>> @@ -12,6 +12,16 @@ Required properties:
+>>>>>   - interrupts: Should contain phy interrupt
+>>>>>   - fsl,anatop: phandle for anatop register, it is only for imx6 SoC
+>>>>> series
+>>>>>
+>>>>> +
+>>>>> +    if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
+>>>>> +        val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
+>>>>> +        /* scale to 4-bit value */
+>>>>> +        val = (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
+>>>>> +            / (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
+>>>>> +        mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
+>>>>> +        mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
+>>>>> +    }
+>>>>> +
+>>>>
+>>>> I have tested "tx-d-cal", but it seems incorrect according to the xls you
+>>>> have provided, would you please check it again or am I wrong?
+>>>
+>>> Gah! You're right. Some of the D_CAL values need to be rounded up to
+>>> match the xls.  And even then, the value for 86 still doesn't play nice.
+>>>   I was really hoping to avoid using a table for these values.
+>>>
+>>> The TXCALDP/DN values use a much simpler 1-to-1 scale across the 16
+>>> possible register values and so are unaffected by a similar issue.  I
+>>> rechecked their numbers just to be sure.
+>>
+>> The solution looks to be to scale D_CAL starting from 80 instead of
+>> 79.  If you look at the xls listing, the jump from 79 to 83 is the
+>> only time two adjacent register values result in a change greater
+>> than 2% or 3%.
+>>
+>> This will result in some code ugliness as the minimum allowed
+>> percentage (79), per the Freescale document, and the point at which
+>> we are scaling the percentage values to register values (80) are
+>> different.
+>>
+>> And, as mentioned before, the values will also have to be rounded up.
+>>
+>> This quick shell code confirms that these sorts of calculations
+>> match up with the values in the spreadsheet:
+>>
+>> for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79; do
+>> echo "$d="$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) ));
+>> d=$((d+1)); done
+>>
+>>
+>> I can't find any formula which would hit all of those same
+>> percentages without rounding up.
+>>
+>
+> Then, we had to use table for it. Besides, IC team confirms the default
+> value and the step for TXCAL45DP/DN are changed at next generation SoCs,
+> so I am wondering how we describe it at binding doc.
+>
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Which next gen SoC would this be?  The MX7?  The documentation for the 
+USB PHY in that reference manual is even sparser than the one for the 
+MX6 in regards to these register values.
 
----
-Changes in version 3:
-- moved the fixed factor clocks under the "soc" node;
-- added back the CPU1 node, adjusted the changelog.
+The MX7 manual does still mention that HW_USBPHY_TX_TXCAL45DP and 
+HW_USBPHY_TX_TXCAL45DN should both be set to zero, but there is no 
+listing as to the location of these registers, let alone their 
+defaults/step values.
 
-Changes in version 2:
-- explicitly included the IRQ header;
-- removed the CPU1 node;
-- removed the audio and PCIe bus clocks;
-- removed the SDH, SD0, and SD1 CPG clocks;
-- added RCAN and ADSP CPG clocks;
-- removed the PLL1/2, Z2, ZS, I, B, P, CL, M2, RCLK, OSCCLK, ZB3, ZB3D2, DDR,
-  and MP fixed factor clocks;
-- fixed up the parent and divisor for the CP fixed factor clock;
-- swapped  the SYS-DMAC0/1 clocks;
-- removed  all gated clocks except the [H]SCIF, IRQC, and SYS-DMAC ones;
-- created  the "soc" subnode, moving the SoC  device  nodes there;
-- removed  the "clocks" node, moving its fixed clock  subnodes to the root and
-  the MSTP subnodes into the "soc" node.
-
- arch/arm/boot/dts/r8a7792.dtsi |  180 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 180 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
-===================================================================
---- /dev/null
-+++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-@@ -0,0 +1,180 @@
-+/*
-+ * Device Tree Source for the r8a7792 SoC
-+ *
-+ * Copyright (C) 2016 Cogent Embedded Inc.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include <dt-bindings/clock/r8a7792-clock.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/r8a7792-sysc.h>
-+
-+/ {
-+	compatible = "renesas,r8a7792";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <0>;
-+			clock-frequency = <1000000000>;
-+			clocks = <&cpg_clocks R8A7792_CLK_Z>;
-+			power-domains = <&sysc R8A7792_PD_CA15_CPU0>;
-+			next-level-cache = <&L2_CA15>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <1>;
-+			clock-frequency = <1000000000>;
-+			power-domains = <&sysc R8A7792_PD_CA15_CPU1>;
-+			next-level-cache = <&L2_CA15>;
-+		};
-+
-+		L2_CA15: cache-controller@0 {
-+			compatible = "cache";
-+			reg = <0>;
-+			cache-unified;
-+			cache-level = <2>;
-+			power-domains = <&sysc R8A7792_PD_CA15_SCU>;
-+		};
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		gic: interrupt-controller@f1001000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0 0xf1001000 0 0x1000>,
-+			      <0 0xf1002000 0 0x1000>,
-+			      <0 0xf1004000 0 0x2000>,
-+			      <0 0xf1006000 0 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_HIGH)>;
-+		};
-+
-+		timer {
-+			compatible = "arm,armv7-timer";
-+			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_LOW)>;
-+		};
-+
-+		sysc: system-controller@e6180000 {
-+			compatible = "renesas,r8a7792-sysc";
-+			reg = <0 0xe6180000 0 0x0200>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		/* Special CPG clocks */
-+		cpg_clocks: cpg_clocks@e6150000 {
-+			compatible = "renesas,r8a7792-cpg-clocks",
-+				     "renesas,rcar-gen2-cpg-clocks";
-+			reg = <0 0xe6150000 0 0x1000>;
-+			clocks = <&extal_clk>;
-+			#clock-cells = <1>;
-+			clock-output-names = "main", "pll0", "pll1", "pll3",
-+					     "lb", "qspi", "z", "rcan", "adsp";
-+			#power-domain-cells = <0>;
-+		};
-+
-+		/* Fixed factor clocks */
-+		zs_clk: zs {
-+			compatible = "fixed-factor-clock";
-+			clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-+			#clock-cells = <0>;
-+			clock-div = <6>;
-+			clock-mult = <1>;
-+		};
-+		p_clk: p {
-+		compatible = "fixed-factor-clock";
-+			clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-+			#clock-cells = <0>;
-+			clock-div = <24>;
-+			clock-mult = <1>;
-+		};
-+		cp_clk: cp {
-+			compatible = "fixed-factor-clock";
-+			clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-+			#clock-cells = <0>;
-+			clock-div = <3>;
-+			clock-mult = <1>;
-+		};
-+
-+		/* Gate clocks */
-+		mstp2_clks: mstp2_clks@e6150138 {
-+			compatible = "renesas,r8a7792-mstp-clocks",
-+				     "renesas,cpg-mstp-clocks";
-+			reg = <0 0xe6150138 0 4>, <0 0xe6150040 0 4>;
-+			clocks = <&zs_clk>, <&zs_clk>;
-+			#clock-cells = <1>;
-+			clock-indices = <
-+				R8A7792_CLK_SYS_DMAC1 R8A7792_CLK_SYS_DMAC0
-+			>;
-+			clock-output-names = "sys-dmac1", "sys-dmac0";
-+		};
-+		mstp4_clks: mstp4_clks@e6150140 {
-+			compatible = "renesas,r8a7792-mstp-clocks",
-+				     "renesas,cpg-mstp-clocks";
-+			reg = <0 0xe6150140 0 4>, <0 0xe615004c 0 4>;
-+			clocks = <&cp_clk>;
-+			#clock-cells = <1>;
-+			clock-indices = <R8A7792_CLK_IRQC>;
-+			clock-output-names = "irqc";
-+		};
-+		mstp7_clks: mstp7_clks@e615014c {
-+			compatible = "renesas,r8a7792-mstp-clocks",
-+				     "renesas,cpg-mstp-clocks";
-+			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
-+			clocks = <&zs_clk>, <&zs_clk>, <&p_clk>, <&p_clk>,
-+				 <&p_clk>, <&p_clk>;
-+			#clock-cells = <1>;
-+			clock-indices = <
-+				R8A7792_CLK_HSCIF1 R8A7792_CLK_HSCIF0
-+				R8A7792_CLK_SCIF3 R8A7792_CLK_SCIF2
-+				R8A7792_CLK_SCIF1 R8A7792_CLK_SCIF0
-+			>;
-+			clock-output-names = "hscif1", "hscif0", "scif3",
-+					     "scif2", "scif1", "scif0",
-+					     "du1", "du0";
-+		};
-+	};
-+
-+	/* External root clock */
-+	extal_clk: extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
-+	};
-+
-+	/* External SCIF clock */
-+	scif_clk: scif {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
-+	};
-+};
+Do you know where we could get the default and step values for the TXCAL 
+registers on the new SoC?  This information had to come from a Freescale 
+community thread for the MX6 since it wasn't defined clearly elsewhere.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
