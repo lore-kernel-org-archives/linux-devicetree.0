@@ -1,69 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: rsnd: adg :: AUDIO-CLKOUTn can synchronizes with
- L/R clock.
-Date: Wed, 8 Jun 2016 16:14:59 +0100
-Message-ID: <20160608151459.GL7510@sirena.org.uk>
-References: <87oa7dtti3.wl%kuninori.morimoto.gx@renesas.com>
- <20160607105418.GS7510@sirena.org.uk>
- <87eg88jzt3.wl%kuninori.morimoto.gx@renesas.com>
+From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun5i: Move display blocks to sun5i.dtsi
+Date: Wed, 08 Jun 2016 17:28:08 +0200
+Message-ID: <87oa7bd7jr.fsf@dell.be.48ers.dk>
+References: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
+	<1465063524-4925-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ibe32dcbQs37CEZO"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87eg88jzt3.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Simon <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465063524-4925-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> (Hans de
+	Goede's message of "Sat, 4 Jun 2016 20:05:24 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+>>>>> "Hans" == Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
 
---ibe32dcbQs37CEZO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ > All sun5i models share, the same die, so the display-engine is
 
-On Wed, Jun 08, 2016 at 12:27:48AM +0000, Kuninori Morimoto wrote:
+Drop comma after share.
 
-> > Why would a user not want these clocks to be synchronous?  A lot of
-> > CODECs will at least have better performance if their master clock is
-> > synchronous to the audio clocks so it'd be a better default, is there an
-> > advantage to not doing it?
+> identical, except for which outputs / encoders all available.
 
-> I'm now confusing. We can set system clock on audio card, for example
-> simple-card case, it is called as "system-clock-frequency".
-> In my understanding, this "system clock" and above "master clock" are sam=
-e clock.
-> but "system clock" is fixed rate (=3D not related to audio clock in many =
-cases).
-> Because of this, some codec doesn't request synchronous between
-> master clock <-> audio clock, but, some codec requests synchronous it.
-> Am I wrong ??
+s/all/are/
 
-A lot of CODECs can to varying degrees tolerate this but it will tend to
-show up in performance numbers, it's often not immediately obvious just
-=66rom a listening test.  Usually those that don't mind have a FLL or PLL
-they're using to generate the actual audio master clock at a useful rate
-for dividing down, or sometimes fancy digital logic to match things
-up.
+ > All models support parallel / lvds lcd panels, the R8 and A10s also
+ > support tv-out and the A10s also supports HDMI out.
 
-It's not a problem to have this configurable, I'm just thinking it might
-be better to have the default be the other way around so that we default
-to synchronous but can turn that off if it's required.
+ > This commit prepares for enabling display blocks on A10s boards,
+ > but it also is a bug-fix for A10s boards, because before this commit
+ > the simplefb nodes for A10s where not listing the recently added
 
---ibe32dcbQs37CEZO
-Content-Type: application/pgp-signature; name="signature.asc"
+s/where/were/
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ > pll3 as clock, causing the display to go block when the kernel
 
-iQEcBAEBCAAGBQJXWDZyAAoJECTWi3JdVIfQxTMH/jBwVgzlvL2W/XfD1S/DPk/Y
-Ij+BqlfC5VHuJ55beOJXJfsi5FQowuyJHWxpUwkFOy6xSCeuWlqUvkhov1GfxO2/
-2kq6IYxN/JiYA8l9fk6vjfzK9X+iMh6T9Xuzdki8eC+GRdNkQBuRiAfEDNVcokch
-RN7W7nNq4gRqF9D6LVvuNhvCMF2DsNxzuaclM1+d+BQJqjNsd2HgXU0WdsZT9n/z
-OYPR6Utje2I0IpsFo5xUq/lMa9yq0X0pCoL8rjEs3WO6WwVuKb1Akjk02Ba9QA9A
-VLAbI7CkIkgRNr4RAca2YHEIcfWZjheiJ9uOglMPI/gT/G6v27JulZC2215HQr0=
-=T038
------END PGP SIGNATURE-----
+s/block/black/
 
---ibe32dcbQs37CEZO--
+-- 
+Bye, Peter Korsgaard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
