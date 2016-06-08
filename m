@@ -1,50 +1,41 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v6 1/2] drm/bridge: Add sii902x driver
-Date: Wed, 8 Jun 2016 10:39:11 +0100
-Message-ID: <CACvgo51drsxyZA1YdDx=2x-idq8CKQkJYyPyywhHrGTTjnOzJA@mail.gmail.com>
-References: <1465300763-19386-1-git-send-email-boris.brezillon@free-electrons.com>
+From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] iommu/mediatek: Do not call of_node_put in mtk_iommu_of_xlate
+Date: Wed, 8 Jun 2016 17:50:44 +0800
+Message-ID: <1465379444-14719-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465300763-19386-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Meng Yi <meng.yi@nxp.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
+Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsCgpPbiA3IEp1bmUgMjAxNiBhdCAxMjo1OSwgQm9yaXMgQnJlemlsbG9uCjxib3Jp
-cy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKPiBBZGQgYmFzaWMgc3VwcG9y
-dCBmb3IgdGhlIHNpaTkwMnggUkdCIC0+IEhETUkgYnJpZGdlLgo+IFRoaXMgZHJpdmVyIGRvZXMg
-bm90IHN1cHBvcnQgYXVkaW8gb3V0cHV0IHlldC4KPgo+IFNpZ25lZC1vZmYtYnk6IEJvcmlzIEJy
-ZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiBUZXN0ZWQtYnk6
-IE5pY29sYXMgRmVycmUgPG5pY29sYXMuZmVycmVAYXRtZWwuY29tPgo+IC0tLQo+IEhlbGxvLAo+
-Cj4gVGhpcyBwYXRjaCBpcyBvbmx5IGFkZGluZyBiYXNpYyBzdXBwb3J0IGZvciB0aGUgc2lpOTAy
-MiBjaGlwLgo+IEFzIHN0YXRlZCBpbiB0aGUgY29tbWl0IGxvZywgdGhlcmUncyBubyBhdWRpbyBz
-dXBwb3J0LCBidXQgdGhlCj4gZHJpdmVyIGFsc28gaGFyZGNvZGVzIGEgbG90IG9mIHRoaW5ncyAo
-bGlrZSB0aGUgUkdCIGlucHV0IGZvcm1hdCB0bwo+IHVzZSkuCj4KPiBCZXN0IFJlZ2FyZHMsCj4K
-PiBCb3Jpcwo+Cj4gQ2hhbmdlcyBpbiB2NjoKPiAtIHVzZSBIRE1JX0lORk9GUkFNRV9TSVpFKEFW
-SSkKPiAtIGZpeCByZXNldF9ncGlvIGluaXRpYWxpemF0aW9uCkknbSBhZnJhaWQgdGhhdCB0aGlz
-IG9uZSBpcyBzdGlsbCBidXN0ZWQgOi0oIFNlZSBiZWxvdwoKCj4gKyAgICAgICBzaWk5MDJ4LT5y
-ZXNldF9ncGlvID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoZGV2LCAicmVzZXQiLAo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdQSU9EX09V
-VF9MT1cpOwpEb2N1bWVudGF0aW9uIHN0YXRlcyByZXF1aXJlZCwgYWJvdmUgd2UgdXNlIG9wdGlv
-bmFsLgoKPiArICAgICAgIGlmIChJU19FUlIoc2lpOTAyeC0+cmVzZXRfZ3BpbykpIHsKZGV2bV9n
-cGlvZF9nZXRfb3B0aW9uYWwgcmV0dXJucyBOVUxMIG9uIGVycm9yLCB5ZXQgd2UgdXNlIElTX0VS
-Ui4KCj4gKyAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHJldHJpZXZlL3Jl
-cXVlc3QgcmVzZXQgZ3BpbzogJWxkXG4iLAo+ICsgICAgICAgICAgICAgICAgICAgICAgIFBUUl9F
-UlIoc2lpOTAyeC0+cmVzZXRfZ3BpbykpOwo+ICsgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VS
-UihzaWk5MDJ4LT5yZXNldF9ncGlvKTsKSWYgdGhlIGdwaW8gaXMgdHJ1bHkgb3B0aW9uYWwgd2Ug
-c2hvdWxkbid0IHJldHVybiBoZXJlLiBBbHRlcm5hdGl2ZWx5CnRoZSByZXNldF9ncGlvIE5VTEwg
-Y2hlY2sgaW4gc2lpOTAyeF9yZXNldCgpIGNhbiBnby4KClJlZ2FyZHMsCkVtaWwKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+The device_node will be released in of_iommu_configure, it may be double
+released if call of_node_put in mtk_iommu_of_xlate.
+
+Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/iommu/mtk_iommu.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index c3043d8..493bd3e 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -455,7 +455,6 @@ static int mtk_iommu_of_xlate(struct device *dev, struct of_phandle_args *args)
+ 	if (!dev->archdata.iommu) {
+ 		/* Get the m4u device */
+ 		m4updev = of_find_device_by_node(args->np);
+-		of_node_put(args->np);
+ 		if (WARN_ON(!m4updev))
+ 			return -EINVAL;
+ 
+-- 
+1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
