@@ -1,167 +1,94 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/7] ARM: dts: sun4i: Add A10 NAND controller pin
- definitions
-Date: Thu, 9 Jun 2016 00:04:54 +0200
-Message-ID: <20160608220454.GM14179@lukather>
-References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
- <1465208664-9366-2-git-send-email-mamlinav@gmail.com>
+From: Stephan Linz <linz@li-pro.net>
+Subject: [PATCH v3 2/7] leds: documentation: 'ide-disk' to 'disk-activity'
+Date: Thu,  9 Jun 2016 00:29:37 +0200
+Message-ID: <20160608223000.433-2-linz@li-pro.net>
+References: <20160608223000.433-1-linz@li-pro.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8G1nIWD3RY794FAy"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465208664-9366-2-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160608223000.433-1-linz@li-pro.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-ide@vger.kernel.org
+Cc: Stephan Linz <linz@li-pro.net>, Joseph Jezak <josejx@gentoo.org>, Nico Macrionitis <acrux@cruxppc.org>, =?UTF-8?q?J=C3=B6rg=20Sommer?= <joerg@alea.gnuu.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Cc: Joseph Jezak <josejx@gentoo.org>
+Cc: Nico Macrionitis <acrux@cruxppc.org>
+Cc: J=C3=B6rg Sommer <joerg@alea.gnuu.de>
+Signed-off-by: Stephan Linz <linz@li-pro.net>
+---
+ Documentation/devicetree/bindings/leds/common.txt    | 2 +-
+ Documentation/devicetree/bindings/leds/leds-gpio.txt | 2 +-
+ Documentation/laptops/asus-laptop.txt                | 2 +-
+ Documentation/leds/leds-class.txt                    | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
---8G1nIWD3RY794FAy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Jun 06, 2016 at 01:24:18PM +0300, Aleksei Mamlin wrote:
-> From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->=20
-> Define the NAND controller pin configs.
->=20
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun4i-a10.dtsi | 80 ++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 80 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a=
-10.dtsi
-> index a9c3190..146a08db 100644
-> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> @@ -1144,6 +1144,86 @@
->  				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
->  				allwinner,pull =3D <SUN4I_PINCTRL_PULL_UP>;
->  			};
-> +
-> +			nand_pins_a: nand_base0@0 {
-> +				allwinner,pins =3D "PC0", "PC1", "PC2",
-> +						"PC5", "PC8", "PC9", "PC10",
-> +						"PC11", "PC12", "PC13", "PC14",
-> +						"PC15", "PC16";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_cs0_pins_a: nand_cs@0 {
-> +				allwinner,pins =3D "PC4";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_cs1_pins_a: nand_cs@1 {
-> +				allwinner,pins =3D "PC3";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_cs2_pins_a: nand_cs@2 {
-> +				allwinner,pins =3D "PC17";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_cs3_pins_a: nand_cs@3 {
-> +				allwinner,pins =3D "PC18";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_cs4_pins_a: nand_cs@4 {
-> +				allwinner,pins =3D "PC19";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_cs5_pins_a: nand_cs@5 {
-> +				allwinner,pins =3D "PC20";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_cs6_pins_a: nand_cs@6 {
-> +				allwinner,pins =3D "PC21";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_cs7_pins_a: nand_cs@7 {
-> +				allwinner,pins =3D "PC22";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_rb0_pins_a: nand_rb@0 {
-> +				allwinner,pins =3D "PC6";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-> +			nand_rb1_pins_a: nand_rb@1 {
-> +				allwinner,pins =3D "PC7";
-> +				allwinner,function =3D "nand0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-
-We usually enable only the pin groups that are actually used by some
-board to avoid bloating the DT too much.
-
-And the nodes should be sorted alphabetically.
-
-Thanks!
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Docume=
+ntation/devicetree/bindings/leds/common.txt
+index af10678..1e97169 100644
+--- a/Documentation/devicetree/bindings/leds/common.txt
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -26,7 +26,7 @@ Optional properties for child nodes:
+      "default-on" - LED will turn on (but for leds-gpio see "default-s=
+tate"
+ 		    property in Documentation/devicetree/bindings/gpio/led.txt)
+      "heartbeat" - LED "double" flashes at a load average based rate
+-     "ide-disk" - LED indicates disk activity
++     "disk-activity" - LED indicates disk activity
+      "timer" - LED flashes at a fixed, configurable rate
+=20
+ - led-max-microamp : Maximum LED supply current in microamperes. This =
+property
+diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.txt b/Doc=
+umentation/devicetree/bindings/leds/leds-gpio.txt
+index cbbeb18..e166053 100644
+--- a/Documentation/devicetree/bindings/leds/leds-gpio.txt
++++ b/Documentation/devicetree/bindings/leds/leds-gpio.txt
+@@ -35,7 +35,7 @@ leds {
+ 	hdd {
+ 		label =3D "IDE Activity";
+ 		gpios =3D <&mcu_pio 0 GPIO_ACTIVE_LOW>;
+-		linux,default-trigger =3D "ide-disk";
++		linux,default-trigger =3D "disk-activity";
+ 	};
+=20
+ 	fault {
+diff --git a/Documentation/laptops/asus-laptop.txt b/Documentation/lapt=
+ops/asus-laptop.txt
+index 79a1bc6..5f28587 100644
+--- a/Documentation/laptops/asus-laptop.txt
++++ b/Documentation/laptops/asus-laptop.txt
+@@ -72,7 +72,7 @@ LEDs
+     echo 1 >  /sys/class/leds/asus::mail/brightness
+   will switch the mail LED on.
+   You can also know if they are on/off by reading their content and us=
+e
+-  kernel triggers like ide-disk or heartbeat.
++  kernel triggers like disk-activity or heartbeat.
+=20
+ Backlight
+ ---------
+diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/led=
+s-class.txt
+index d406d98..44c1bcf 100644
+--- a/Documentation/leds/leds-class.txt
++++ b/Documentation/leds/leds-class.txt
+@@ -11,7 +11,7 @@ brightness support so will just be turned on for non-=
+zero brightness settings.
+ The class also introduces the optional concept of an LED trigger. A tr=
+igger
+ is a kernel based source of led events. Triggers can either be simple =
+or
+ complex. A simple trigger isn't configurable and is designed to slot i=
+nto
+-existing subsystems with minimal additional code. Examples are the ide=
+-disk,
++existing subsystems with minimal additional code. Examples are the dis=
+k-activity,
+ nand-disk and sharpsl-charge triggers. With led triggers disabled, the=
+ code
+ optimises away.
+=20
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---8G1nIWD3RY794FAy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXWJaGAAoJEBx+YmzsjxAgPkgP/jr1IX8RRP/zWarTJyKVuwpr
-RSaHDLA9uyWRuWVEzsg5zvHWVklmXiEViHRyHuLKJ/bP3TN/Q3GItliD1LNF/BdI
-BIjIsSKV7TA+TDFJHjwqv8IyynFgrzHvg02z5hjJEDi61vCqYwJ+ZgH4c9Mjm1QU
-t4yf9BQZitvXbXAAMVN9p4+9XYhhFiAUPncWSHevxQkqrr/3kRfvfNjCD681iGUN
-nbifotorcvc8v/6kLbgTU7NcnENdG6vXCa67yxipLchHlB8zk07OE0vpJqdrVSKW
-oTQH/sFXBy1NbZ59KcWzoQE7h5ZwQCJlszk2DzZH9Gio4AgCGAlyVzqD2cMYhcWl
-TbMCUb7jPahrz/4nljfG3q+V0lDEA7uODq2c+wy+bjIcyJ1cbieTwy0a6aZXEI7j
-NKfBkdroSFq7cTLWESI93tLrt3/+17F42Wk9DCZFIkVdILDEBFww9q/sg/xGHqma
-WUYyT69Cylc6qdtF5hwNfICxFRR3KLlqsK4Pz3SLsXsb73eq/TzGgHCuyibmxjw3
-uj8pOgiX+S2TDZ0kMJR+GumS8OUtw3r+9P5PVrJ4b3Vyq+/+FK1Uhy1IBE/jRLPj
-Ix889cflc25cWjuZO2sO6DD9HBWSxQpozEUus8R1M0MYu7fGvVr+Scjl+LlFVNal
-Xh4clefwlaLwkqi4fn9S
-=tLVn
------END PGP SIGNATURE-----
-
---8G1nIWD3RY794FAy--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.8.4
