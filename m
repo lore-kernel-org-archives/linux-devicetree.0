@@ -1,92 +1,65 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: Re: [PATCH v2 0/2] net: ethernet: ti: cpsw: delete rx_descs property
-Date: Wed, 8 Jun 2016 17:06:08 +0300
-Message-ID: <57582650.5010409@linaro.org>
-References: <1465307976-12235-1-git-send-email-ivan.khoronzhuk@linaro.org>
- <5756E7A8.6090703@ti.com> <57582535.5020608@linaro.org>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Using DT overlays for adding virtual hardware
+Date: Wed, 8 Jun 2016 16:16:32 +0200
+Message-ID: <575828C0.5000008@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <57582535.5020608@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Schuyler Patton <spatton@ti.com>, mugunthanvnm@ti.com, linux-kernel@vger.kernel.org
-Cc: grygorii.strashko@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <jailhouse-dev+bncBCJI7SMNV4NBBQ6R4C5AKGQEF5KZD6Y@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: devicetree <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jailhouse <jailhouse-dev@googlegroups.com>, =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@denx.de>, Antonios Motakis <antonios.motakis@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
+already started the discussion off-list with Pantelis, but it's better
+done in public:
 
-On 08.06.16 17:01, Ivan Khoronzhuk wrote:
-> Hi Schuyer,
->
-> On 07.06.16 18:26, Schuyler Patton wrote:
->> Hi,
->>
->> On 06/07/2016 08:59 AM, Ivan Khoronzhuk wrote:
->>> There is no reason in rx_descs property because davinici_cpdma
->>> driver splits pool of descriptors equally between tx and rx channels.
->>> So, this patch series makes driver to use available number of
->>> descriptors for rx channels.
->>
->> I agree with the idea of consolidating how the descriptors are defined because of
->> the two variable components, number and size of the pool can be confusing to
->> end users. I would like to request to change how it is being proposed here.
->>
->> I think the number of descriptors should be left in the device tree source file as
->> is and remove the BD size variable and have the driver calculate the size of the
->> pool necessary to support the descriptor request. From an user perspective it is
->> easier I think to be able to list the number of descriptors necessary vs. the size
->> of the pool.
->>
->> Since the patch series points out how it is used so in the driver so to make that
->> consistent is perhaps change rx_descs to total_descs.
->>
->> Regards,
->> Schuyler
->
-> The DT entry for cpsw doesn't have property for size of the pool.
-> It contains only BD ram size, if you mean this. The size of the pool is
-> software decision. Current version of DT entry contain only rx desc number.
-> That is not correct, as it depends on the size of the descriptor, which is also
-> h/w parameter. The DT entry has to describe only h/w part and shouldn't contain
-> driver implementation details, and I'm looking on it from this perspective.
->
-> Besides, rx_descs describes only rx number of descriptors, that are taken from
-> the same pool as tx descriptors, and setting rx desc to some new value doesn't
-> mean that rest of them are freed for tx. Also, I'm going to send series that
-> adds multi channel support to the driver, and in this case, splitting of the
-> pool will be more sophisticated than now, after what setting those parameters
-> for user (he should do this via device tree) can be even more confusing. But,
-should -> shouldn't
+I'm currently exploring ways to make Linux recognize dynamically added
+virtual hardware when running under the Jailhouse hypervisor [1]. We
+need to load drivers for inter-partition communication devices that only
+appear after Jailhouse started (which is done from within Linux, i.e.
+long after boot) or when a partition was added later on. Probably, we
+will simply add a virtual PCI host bridge on systems without physical
+PCI and let the IPC device be explored that way (already works on x86).
+Still, that leaves us with hotplug and unplug on hypervisor activation
+and deactivation.
 
-> as it's supposed, it's software decision that shouldn't leak to the DT.
->
->
->>>
->>> Based on master branch
->>>
->>> Since v1:
->>> - separate device tree and driver patches
->>> - return number of rx buffers from cpdma driver
->>>
->>> Ivan Khoronzhuk (2):
->>>    net: ethernet: ti: cpsw: remove rx_descs property
->>>    Documentation: DT: cpsw: remove rx_descs property
->>>
->>>   Documentation/devicetree/bindings/net/cpsw.txt |  1 -
->>>   arch/arm/boot/dts/am33xx.dtsi                  |  1 -
->>>   arch/arm/boot/dts/am4372.dtsi                  |  1 -
->>>   arch/arm/boot/dts/dm814x.dtsi                  |  1 -
->>>   arch/arm/boot/dts/dra7.dtsi                    |  1 -
->>>   drivers/net/ethernet/ti/cpsw.c                 | 13 +++----------
->>>   drivers/net/ethernet/ti/cpsw.h                 |  1 -
->>>   drivers/net/ethernet/ti/davinci_cpdma.c        |  6 ++++++
->>>   drivers/net/ethernet/ti/davinci_cpdma.h        |  1 +
->>>   9 files changed, 10 insertions(+), 16 deletions(-)
->>>
->>
->
+Inspired by how FPGA bitstream loaders and the caps/hats for BeagleBones
+and RasPis work, I thought of using device tree overlays for this.
+However, it seems there are still some gaps in upstream Linux /wrt
+overlays. So I would like to find out what already works and what may
+need further patches.
+
+The plan (open for suggestions) is as follows:
+
+- have an overlay template for a virtual platform device
+- compile it into the Jailhouse loader kernel module
+- adjust key parameters (e.g. register base addresses) after
+  instantiating a device (of_update_property?)
+- push modified dt into of_overlay_create
+
+To my understanding, the last step will trigger driver probing which
+will cause the device being activated (provided the driver is available,
+of course).
+
+I played with the fragment from
+Documentation/devicetree/overlay-notes.txt, but already that failed
+because the in-kernel dtc does not support /plugin/ yet, right? (Why
+not, btw?) What else do I need to patch/update to make the above work?
+Or are the simpler ways to achieve what we need?
+
+Thanks,
+Jan
+
+[1] https://github.com/siemens/jailhouse
 
 -- 
-Regards,
-Ivan Khoronzhuk
+Siemens AG, Corporate Technology, CT RDA ITP SES-DE
+Corporate Competence Center Embedded Linux
