@@ -1,244 +1,72 @@
-From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: dts: juno: add arm,primecell-periphid override
-Date: Wed, 8 Jun 2016 17:05:17 +0100
-Message-ID: <20160608160517.GQ1165@e106497-lin.cambridge.arm.com>
-References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
- <1465228765-14038-3-git-send-email-sudeep.holla@arm.com>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: [RFC v3 0/5] MT2701 DRM support
+Date: Thu, 9 Jun 2016 00:03:40 +0800
+Message-ID: <1465401825-43642-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465228765-14038-3-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 04:59:24PM +0100, Sudeep Holla wrote:
-> The Linux AMBA framework probes the peripheral ids when adding the am=
-ba
-> devices very early on the boot. Generally they are on APB bus and jus=
-t
-> require APB clocks to be on even when most of the core logic of the I=
-P
-> is powered down.
->=20
-> However on Juno, the entire debugsys domain needs to be ON to access
-> those CID/PID registers and hence broken by design. Accessing those
-> while debugsys power domain is off will lead to the bridge stalling t=
-he
-> transactions instead of returning the slave error.
->=20
-> Since keeping the power domain on by default affects the core power(b=
-y
-> preventing cores entering deeper idle states), it's not feasible
-> solution. Instead we can provide arm,primecell-periphid override in t=
-he
-> device tree that prevents accessing the device early in the boot.
->=20
-> However the power domains can be enabled whenever required using runt=
-ime
-> PM and associated power domains.
->=20
-> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-
-Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/arm/juno-base.dtsi | 13 +++++++++++++
->  arch/arm64/boot/dts/arm/juno-r1.dts    |  6 ++++++
->  arch/arm64/boot/dts/arm/juno-r2.dts    |  6 ++++++
->  arch/arm64/boot/dts/arm/juno.dts       |  6 ++++++
->  4 files changed, 31 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot=
-/dts/arm/juno-base.dtsi
-> index 90a8710f7032..49fa55cdc977 100644
-> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> @@ -63,6 +63,14 @@
->  	 */
->  	etf@20010000 {
->  		compatible =3D "arm,coresight-tmc", "arm,primecell";
-> +		/*
-> +		 * The primecell peripheral id is explicitly specified here with
-> +		 * the actual hardware value. It's not any override. It's
-> +		 * required to workaround an errata to avoid bus stalls early
-> +		 * in the boot when AMBA primecell ids are probed before the
-> +		 * actual power domain can be enabled using SCPI.
-> +		 */
-> +		arm,primecell-periphid =3D <0x001bb961>;
->  		reg =3D <0 0x20010000 0 0x1000>;
->=20
->  		clocks =3D <&soc_smc50mhz>;
-> @@ -92,6 +100,7 @@
->=20
->  	tpiu@20030000 {
->  		compatible =3D "arm,coresight-tpiu", "arm,primecell";
-> +		arm,primecell-periphid =3D <0x004bb912>;
->  		reg =3D <0 0x20030000 0 0x1000>;
->=20
->  		clocks =3D <&soc_smc50mhz>;
-> @@ -106,6 +115,7 @@
->=20
->  	main_funnel@20040000 {
->  		compatible =3D "arm,coresight-funnel", "arm,primecell";
-> +		arm,primecell-periphid =3D <0x002bb908>;
->  		reg =3D <0 0x20040000 0 0x1000>;
->=20
->  		clocks =3D <&soc_smc50mhz>;
-> @@ -142,6 +152,7 @@
->=20
->  	etr@20070000 {
->  		compatible =3D "arm,coresight-tmc", "arm,primecell";
-> +		arm,primecell-periphid =3D <0x001bb961>;
->  		reg =3D <0 0x20070000 0 0x1000>;
->=20
->  		clocks =3D <&soc_smc50mhz>;
-> @@ -192,6 +203,7 @@
->=20
->  	cluster0_funnel@220c0000 {
->  		compatible =3D "arm,coresight-funnel", "arm,primecell";
-> +		arm,primecell-periphid =3D <0x002bb908>;
->  		reg =3D <0 0x220c0000 0 0x1000>;
->=20
->  		clocks =3D <&soc_smc50mhz>;
-> @@ -227,6 +239,7 @@
->=20
->  	cluster1_funnel@230c0000 {
->  		compatible =3D "arm,coresight-funnel", "arm,primecell";
-> +		arm,primecell-periphid =3D <0x002bb908>;
->  		reg =3D <0 0x230c0000 0 0x1000>;
->=20
->  		clocks =3D <&soc_smc50mhz>;
-> diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dt=
-s/arm/juno-r1.dts
-> index f4f8f54f8b85..c3c9fdff49bf 100644
-> --- a/arch/arm64/boot/dts/arm/juno-r1.dts
-> +++ b/arch/arm64/boot/dts/arm/juno-r1.dts
-> @@ -184,24 +184,30 @@
->=20
->  &etm0 {
->  	cpu =3D <&A57_0>;
-> +	arm,primecell-periphid =3D <0x002bb95e>;
->  };
->=20
->  &etm1 {
->  	cpu =3D <&A57_1>;
-> +	arm,primecell-periphid =3D <0x002bb95e>;
->  };
->=20
->  &etm2 {
->  	cpu =3D <&A53_0>;
-> +	arm,primecell-periphid =3D <0x003bb95d>;
->  };
->=20
->  &etm3 {
->  	cpu =3D <&A53_1>;
-> +	arm,primecell-periphid =3D <0x003bb95d>;
->  };
->=20
->  &etm4 {
->  	cpu =3D <&A53_2>;
-> +	arm,primecell-periphid =3D <0x003bb95d>;
->  };
->=20
->  &etm5 {
->  	cpu =3D <&A53_3>;
-> +	arm,primecell-periphid =3D <0x003bb95d>;
->  };
-> diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dt=
-s/arm/juno-r2.dts
-> index d903e545b64c..c672c978f89d 100644
-> --- a/arch/arm64/boot/dts/arm/juno-r2.dts
-> +++ b/arch/arm64/boot/dts/arm/juno-r2.dts
-> @@ -184,24 +184,30 @@
->=20
->  &etm0 {
->  	cpu =3D <&A72_0>;
-> +	arm,primecell-periphid =3D <0x000bb95a>;
->  };
->=20
->  &etm1 {
->  	cpu =3D <&A72_1>;
-> +	arm,primecell-periphid =3D <0x000bb95a>;
->  };
->=20
->  &etm2 {
->  	cpu =3D <&A53_0>;
-> +	arm,primecell-periphid =3D <0x003bb95d>;
->  };
->=20
->  &etm3 {
->  	cpu =3D <&A53_1>;
-> +	arm,primecell-periphid =3D <0x003bb95d>;
->  };
->=20
->  &etm4 {
->  	cpu =3D <&A53_2>;
-> +	arm,primecell-periphid =3D <0x003bb95d>;
->  };
->=20
->  &etm5 {
->  	cpu =3D <&A53_3>;
-> +	arm,primecell-periphid =3D <0x003bb95d>;
->  };
-> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/a=
-rm/juno.dts
-> index a7270eff6939..0528e47e66d1 100644
-> --- a/arch/arm64/boot/dts/arm/juno.dts
-> +++ b/arch/arm64/boot/dts/arm/juno.dts
-> @@ -176,24 +176,30 @@
->=20
->  &etm0 {
->  	cpu =3D <&A57_0>;
-> +	arm,primecell-periphid =3D <0x000bb95e>;
->  };
->=20
->  &etm1 {
->  	cpu =3D <&A57_1>;
-> +	arm,primecell-periphid =3D <0x000bb95e>;
->  };
->=20
->  &etm2 {
->  	cpu =3D <&A53_0>;
-> +	arm,primecell-periphid =3D <0x000bb95d>;
->  };
->=20
->  &etm3 {
->  	cpu =3D <&A53_1>;
-> +	arm,primecell-periphid =3D <0x000bb95d>;
->  };
->=20
->  &etm4 {
->  	cpu =3D <&A53_2>;
-> +	arm,primecell-periphid =3D <0x000bb95d>;
->  };
->=20
->  &etm5 {
->  	cpu =3D <&A53_3>;
-> +	arm,primecell-periphid =3D <0x000bb95d>;
->  };
-> --
-> 2.7.4
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBpcyBNVDI3MDEgRFJNIHN1cHBvcnQgUkZDIHYzLCBiYXNlZCBvbiA0LjctcmMxLgpNb3N0
+IGNvZGVzIGFyZSB0aGUgc2FtZSwgZXhjZXB0IHNvbWUgcmVnaXN0ZXIgY2hhbmdlZC4KCkZvciBl
+eGFtcGxlOgogLSBESVNQX09WTCBhZGRyZXNzIG9mZnNldCBjaGFuZ2VkLCBjb2xvciBmb3JtYXQg
+ZGVmaW5pdGlvbiBjaGFuZ2VkLgogLSBESVNQX1JETUEgZmlmbyBzaXplIGNoYW5nZWQuCiAtIERJ
+U1BfQ09MT1Igb2Zmc2V0IGNoYW5nZWQuCgpXZSBhZGQgYSBuZXcgY29tcG9uZW50IERJU1BfQkxT
+LCBhbmQgdGhlIGNvbm5lY3Rpb24gc2V0dGluZ3MgYXJlIHVwZGF0ZWQuCkFuZCB3ZSBoYXZlIHNo
+YWRvdyByZWdpc3RlciBzdXBwb3J0IGluIE1UMjcwMS4KCkNoYW5nZXMgc2luY2UgdjI6Ci0gUmVu
+YW1lIG10a19kZHBfbXV4X3NlbCB0byBtdGtfZGRwX3NvdXRfc2VsCi0gVXBkYXRlIG10MjcwMV9t
+dGtfZGRwX2V4dCBjb21wb25lbnRzCi0gQ2hhbmdlZCB0byBwcmVmaXggbmFtaW5nCi0gUmVvcmRl
+ciB0aGUgcGF0Y2ggc2VyaWVzCi0gVXNlIG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgpIHRvIGdl
+dCBkcml2ZXIgcHJpdmF0ZSBkYXRhCi0gVXNlIGlvcG9sbCBtYWNyb3MgdG8gaW1wbGVtZW50IG10
+a19kaXNwX211dGV4X2FjcXVpcmUoKQotIFJlbW92ZWQgZW1wdHkgZGV2aWNlIHRyZWUgbm9kZXMK
+CkNoYW5nZXMgc2luY2UgdjE6Ci0gUmVtb3ZlZCBCTFMgYmluZGluZ3MgYW5kIGNvZGVzLCB3aGlj
+aCBiZWxvbmcgdG8gcHdtIGRyaXZlcgotIE1vdmVkIG10a19kaXNwX211dGV4X2FjcXVpcmUoKSBq
+dXN0IGJlZm9yZSBtdGtfY3J0Y19kZHBfY29uZmlnKCkKLSBTcGxpdCBwYXRjaCBpbnRvIHNtYWxs
+ZXIgcGFydHMKLSBBZGRlZCBjb25zdCBrZXl3b3JkIHRvIGNvbnN0YW50IHN0cnVjdHVyZQotIFJl
+bW92ZWQgY29kZXMgZm9yIHNwZWNpYWwgbWVtb3J5IGFsaWduCgpUaGUgUkZDIGRlcGVuZHMgb24g
+dGhlIGZvbGxvd2luZyBwYXRjaDoKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC84
+ODMyNDQxLyAoImR0LWJpbmRpbmdzOiBBUk06IE1lZGlhdGVrOiBEb2N1bWVudCBiaW5kaW5ncyBm
+b3IgTVQyNzAxIiksCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTE0MDQ4Ny8g
+KCJkdC1iaW5kaW5nczogcHdtOiBBZGQgTWVkaWFUZWsgZGlzcGxheSBQV00gYmluZGluZ3MiKSwK
+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MTM3OTE5LyAoImR0LWJpbmRpbmdz
+OiBtZWRpYXRlazogYWRkIGRlc2NyaXB0aW9ucyBmb3IgbWVkaWF0ZWsgbXQyNzAxIGlvbW11IGFu
+ZCBzbWkiKSwKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MTM3OTIzLyAoImlv
+bW11L21lZGlhdGVrOiBtb3ZlIHRoZSBjb21tb24gc3RydWN0IGludG8gaGVhZGVyIGZpbGUiKSwK
+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MTM3OTIxLyAoIm1lbW9yeS9tZWRp
+YXRlazogYWRkIHN1cHBvcnQgZm9yIG10MjcwMSIpLApodHRwczovL3BhdGNod29yay5rZXJuZWwu
+b3JnL3BhdGNoLzkxMzc5MjcvICgiaW9tbXUvbWVkaWF0ZWs6IGFkZCBzdXBwb3J0IGZvciBtdGsg
+aW9tbXUgZ2VuZXJhdGlvbiBvbmUgSFciKSwKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC85MTM3OTMxLyAoIkFSTTogZHRzOiBtdDI3MDE6IGFkZCBpb21tdS9zbWkgZHRzaSBub2Rl
+IGZvciBtdDI3MDEiKSwKClRoYW5rcywKeXQuc2hlbgoKWVQgU2hlbiAoNSk6CiAgZHJtL21lZGlh
+dGVrOiByZW5hbWUgbWFjcm9zLCBhZGQgY2hpcCBwcmVmaXgKICBkcm0vbWVkaWF0ZWs6IGFkZCAq
+ZHJpdmVyX2RhdGEgZm9yIGRpZmZlcmVudCBoYXJkd2FyZSBzZXR0aW5ncwogIGRybS9tZWRpYXRl
+azogYWRkIHNoYWRvdyByZWdpc3RlciBzdXBwb3J0CiAgZHJtL21lZGlhdGVrOiBhZGQgc3VwcG9y
+dCBmb3IgTWVkaWF0ZWsgU29DIE1UMjcwMQogIGFybTogZHRzOiBtdDI3MDE6IEFkZCBkaXNwbGF5
+IHN1YnN5c3RlbSByZWxhdGVkIG5vZGVzIGZvciBNVDI3MDEKCiBhcmNoL2FybS9ib290L2R0cy9t
+dDI3MDEuZHRzaSAgICAgICAgICAgICAgIHwgIDEwNiArKysrKysrKysrKysrKysrKysrKysKIGRy
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAgfCAgIDMyICsrKysrLS0K
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgICAgfCAgIDE3ICsrKy0K
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyAgICAgfCAgIDc1ICsrKysr
+KysrKy0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICB8
+ICAxMzUgKysrKysrKysrKysrKysrKysrKystLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kZHAuaCAgICAgIHwgICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kZHBfY29tcC5jIHwgICAzNSArKysrKy0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kZHBfY29tcC5oIHwgICAxNSArKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2Rydi5jICAgICAgfCAgIDU3ICsrKysrKysrKy0tCiBkcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9kcnYuaCAgICAgIHwgICAgOSArKwogMTAgZmlsZXMgY2hhbmdlZCwg
+Mzk1IGluc2VydGlvbnMoKyksIDg4IGRlbGV0aW9ucygtKQoKLS0gCjEuNy45LjUKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
