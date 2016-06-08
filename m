@@ -1,45 +1,59 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun5i: Move display blocks to sun5i.dtsi
-Date: Wed, 08 Jun 2016 17:28:08 +0200
-Message-ID: <87oa7bd7jr.fsf@dell.be.48ers.dk>
-References: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
-	<1465063524-4925-2-git-send-email-hdegoede@redhat.com>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: Using DT overlays for adding virtual hardware
+Date: Wed, 8 Jun 2016 17:27:26 +0200
+Message-ID: <5758395E.4000508@siemens.com>
+References: <575828C0.5000008@siemens.com>
+ <20160608151745.GB13355@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465063524-4925-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> (Hans de
-	Goede's message of "Sat, 4 Jun 2016 20:05:24 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <jailhouse-dev+bncBCJI7SMNV4NBBYXS4C5AKGQEKOUYLJY@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <20160608151745.GB13355@leverpostej>
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jailhouse <jailhouse-dev@googlegroups.com>, =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@denx.de>, Antonios Motakis <antonios.motakis@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Hans" == Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
+On 2016-06-08 17:17, Mark Rutland wrote:
+> On Wed, Jun 08, 2016 at 04:16:32PM +0200, Jan Kiszka wrote:
+>> Hi all,
+>>
+>> already started the discussion off-list with Pantelis, but it's better
+>> done in public:
+>>
+>> I'm currently exploring ways to make Linux recognize dynamically added
+>> virtual hardware when running under the Jailhouse hypervisor [1]. We
+>> need to load drivers for inter-partition communication devices that only
+>> appear after Jailhouse started (which is done from within Linux, i.e.
+>> long after boot) or when a partition was added later on. Probably, we
+>> will simply add a virtual PCI host bridge on systems without physical
+>> PCI and let the IPC device be explored that way (already works on x86).
+>> Still, that leaves us with hotplug and unplug on hypervisor activation
+>> and deactivation.
+> 
+> If I've understood correctly you want to use overlays to inject the
+> virtual PCI host bridge?
+> 
+> Given that you know precisely what you want to inject, I'm not sure I
+> see the value of using an overlay. 
+> 
+> Is there some reason you can't just create a device without having to go
+> via an intermediate step? As I understand it, Xen does that for (some)
+> virtual devices provided to Dom0 and DomU.
 
- > All sun5i models share, the same die, so the display-engine is
+I don't want to write yet another virtual driver but ideally reuse
+pci-host-generic. Possibly a dumb question, but bow can I make Linux
+instantiate a device node compatible with that driver and with the
+desired resources? That's what made me think of overlays.
 
-Drop comma after share.
-
-> identical, except for which outputs / encoders all available.
-
-s/all/are/
-
- > All models support parallel / lvds lcd panels, the R8 and A10s also
- > support tv-out and the A10s also supports HDMI out.
-
- > This commit prepares for enabling display blocks on A10s boards,
- > but it also is a bug-fix for A10s boards, because before this commit
- > the simplefb nodes for A10s where not listing the recently added
-
-s/where/were/
-
- > pll3 as clock, causing the display to go block when the kernel
-
-s/block/black/
+Thanks,
+Jan
 
 -- 
-Bye, Peter Korsgaard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Siemens AG, Corporate Technology, CT RDA ITP SES-DE
+Corporate Competence Center Embedded Linux
