@@ -1,32 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] Documentation: DT: cpsw: remove rx_descs property
-Date: Wed, 8 Jun 2016 15:11:38 -0500
-Message-ID: <20160608201138.GA17007@rob-hp-laptop>
-References: <1465307976-12235-1-git-send-email-ivan.khoronzhuk@linaro.org>
- <1465307976-12235-3-git-send-email-ivan.khoronzhuk@linaro.org>
+Subject: Re: [PATCH 03/11] Documentation: mmc: sdhci-of-arasan: Add
+ soc-ctl-syscon for corecfg regs
+Date: Wed, 8 Jun 2016 15:17:29 -0500
+Message-ID: <20160608201729.GA17782@rob-hp-laptop>
+References: <1465339484-969-1-git-send-email-dianders@chromium.org>
+ <1465339484-969-4-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465307976-12235-3-git-send-email-ivan.khoronzhuk@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc: mugunthanvnm@ti.com, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org
+In-Reply-To: <1465339484-969-4-git-send-email-dianders@chromium.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: ulf.hansson@linaro.org, kishon@ti.com, Heiko Stuebner <heiko@sntech.de>, shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 04:59:36PM +0300, Ivan Khoronzhuk wrote:
-> There is no reason to hold s/w dependent parameter in device tree.
-> Even more, there is no reason in this parameter because davinici_cpdma
-> driver splits pool of descriptors equally between tx and rx channels
-> anyway.
+On Tue, Jun 07, 2016 at 03:44:36PM -0700, Douglas Anderson wrote:
+> As can be seen in Arasan's datasheet [1] there are several "corecfg"
+> settings in their SDHCI IP Block that are supposed to be controlled by
+> software.  Although the datasheet referenced is a bit vague about how to
+> access corecfg, in Figure 5 you can see that for Arasan's PHY (a
+> separate component than their SDHCI component) they describe the
+> "phyctrl" registers as being "FROM SOC CTL REG", implying that it's up
+> to the licensee of the Arasan IP block to implement these registers.  It
+> seems sane to assume that the "corecfg" registers in their SDHCI IP
+> block works in a similar way for all licensees of the IP Block.
 > 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> Device tree has a model that allows a device to get a reference to
+> random registers located elsewhere in the SoC: sysctl.  Let's leverage
+> this model and allow adding a sysctl reference to access the control
+> registers for the Arasan SDHCI PHYs.
+> 
+> Having a reference to the control registers doesn't do much for us on
+> its own since the Arasan spec doesn't specify how these corecfg values
+> are laid out in memory.  In the SDHCI driver we'll need a map detailing
+> where each corecfg can be found in each implementation.  This map can be
+> found using the primary compatible string of the SDHCI device.  In that
+> spirit, document that existing rk3399 device trees already have a
+> specific compatible string, though up to now they've always been relying
+> on the driver supporting the generic.
+> 
+> Note that since existing devices seem to work fairly well as-is, we'll
+> list the syscon reference as "optional", but it's likely that we'll run
+> into much fewer problems if we can actually set the proper values in the
+> syscon, so it is strongly suggested that any SoCs where we have a map to
+> set the corecfg also include a reference to the syscon.
+> 
+> [1]: https://arasan.com/wp-content/media/eMMC-5-1-Total-Solution_Rev-1-3.pdf
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  Documentation/devicetree/bindings/net/cpsw.txt | 1 -
->  arch/arm/boot/dts/am33xx.dtsi                  | 1 -
->  arch/arm/boot/dts/am4372.dtsi                  | 1 -
->  arch/arm/boot/dts/dm814x.dtsi                  | 1 -
->  arch/arm/boot/dts/dra7.dtsi                    | 1 -
->  5 files changed, 5 deletions(-)
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt       | 27 ++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
