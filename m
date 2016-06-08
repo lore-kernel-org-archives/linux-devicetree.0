@@ -1,83 +1,236 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [v1 PATCH 1/4] Documentation: bindings: add dt doc for Rockchip
- USB Type-C PHY
-Date: Wed, 8 Jun 2016 09:38:33 +0800
-Message-ID: <57577719.9020400@rock-chips.com>
-References: <1464966911-18949-1-git-send-email-zyw@rock-chips.com>
- <1464966911-18949-2-git-send-email-zyw@rock-chips.com>
- <20160606142738.GA12472@rob-hp-laptop> <57561653.9060404@rock-chips.com>
- <CAL_Jsq+7fNuL3N24uh+F_VgGU0RBGUn_nwRA3_cFBseaobpqDw@mail.gmail.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Subject: Re: [PATCH v4 11/14] arm64/numa: support HAVE_MEMORYLESS_NODES
+Date: Wed, 8 Jun 2016 10:16:36 +0800
+Message-ID: <57578004.4050203@huawei.com>
+References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+ <1465286898-13828-12-git-send-email-thunder.leizhen@huawei.com>
+ <CAFpQJXVaYT5N3GUCFDnUL8OYOuuSSV4QfC8cXL2ecB=1TN57jQ@mail.gmail.com>
+ <5756C4C6.7060706@huawei.com>
+ <CAFpQJXUe_eBBR5dBXOGXMCKmbd3n3TUYzFpDNewjVom-iu+3yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+7fNuL3N24uh+F_VgGU0RBGUn_nwRA3_cFBseaobpqDw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, =?UTF-8?B?5aea5pm65oOF?= <yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFpQJXUe_eBBR5dBXOGXMCKmbd3n3TUYzFpDNewjVom-iu+3yg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, David Daney <david.daney@cavium.com>, Catalin Marinas <catalin.marinas@arm.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Rob Herring <robh+dt@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
 
-On 06/07/2016 09:46 PM, Rob Herring wrote:
-> On Mon, Jun 6, 2016 at 7:33 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->> Hi Rob
+
+On 2016/6/7 22:01, Ganapatrao Kulkarni wrote:
+> On Tue, Jun 7, 2016 at 6:27 PM, Leizhen (ThunderTown)
+> <thunder.leizhen@huawei.com> wrote:
 >>
 >>
->> On 06/06/2016 10:27 PM, Rob Herring wrote:
->>> On Fri, Jun 03, 2016 at 11:15:08PM +0800, Chris Zhong wrote:
->>>> This patch adds a binding that describes the Rockchip USB Type-C PHY
->>>> for rk3399
+>> On 2016/6/7 16:31, Ganapatrao Kulkarni wrote:
+>>> On Tue, Jun 7, 2016 at 1:38 PM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
+>>>> Some numa nodes may have no memory. For example:
+>>>> 1. cpu0 on node0
+>>>> 2. cpu1 on node1
+>>>> 3. device0 access the momory from node0 and node1 take the same time.
+>>>
+>>> i am wondering, if access to both nodes is same, then why you need numa.
+>>> the example you are quoting is against the basic principle of "numa"
+>>> what is device0 here? cpu?
+>> The device0 can also be a cpu. I drew a simple diagram:
+>>
+>>   cpu0     cpu1        cpu2/device0
+>>     |        |              |
+>>     |        |              |
+>>    DDR0     DDR1    No DIMM slots or no DIMM plugged
+>>  (node0)  (node1)         (node2)
+>>
+> 
+> thanks for the clarification. your example is for 3 node system, where
+> third node is memory less node.
+> do you see any issue in supporting this topology with existing code?
+If opened HAVE_MEMORYLESS_NODES, it will pick the nearest node for the cpus on
+memoryless node.
+
+For example, in include/linux/topology.h
+#ifdef CONFIG_HAVE_MEMORYLESS_NODES
+...
+static inline int cpu_to_mem(int cpu)
+{
+	return per_cpu(_numa_mem_, cpu);
+}
+...
+#else
+...
+static inline int cpu_to_mem(int cpu)
+{
+	return cpu_to_node(cpu);
+}
+...
+#endif
+
+> I think, this use case should be supported with present code.
+> 
 >>>>
->>>> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>> So, we can not simply classify device0 to node0 or node1, but we can
+>>>> define a node2 which distances to node0 and node1 are the same.
 >>>>
+>>>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 >>>> ---
+>>>>  arch/arm64/Kconfig      |  4 ++++
+>>>>  arch/arm64/kernel/smp.c |  1 +
+>>>>  arch/arm64/mm/numa.c    | 43 +++++++++++++++++++++++++++++++++++++++++--
+>>>>  3 files changed, 46 insertions(+), 2 deletions(-)
 >>>>
->>>> Changes in v1:
->>>> - add extcon node description
->>>> - move the registers in phy driver
->>>> - remove the suffix of reset
+>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>>> index 05c1bf1..5904a62 100644
+>>>> --- a/arch/arm64/Kconfig
+>>>> +++ b/arch/arm64/Kconfig
+>>>> @@ -581,6 +581,10 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
+>>>>         def_bool y
+>>>>         depends on NUMA
 >>>>
->>>>    .../devicetree/bindings/phy/phy-rockchip-typec.txt | 46
->>>> ++++++++++++++++++++++
->>>>    1 file changed, 46 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>>> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>>> new file mode 100644
->>>> index 0000000..964e0f7
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>>> @@ -0,0 +1,46 @@
->>>> +* ROCKCHIP type-c PHY
->>>> +---------------------
+>>>> +config HAVE_MEMORYLESS_NODES
+>>>> +       def_bool y
+>>>> +       depends on NUMA
 >>>> +
->>>> +Required properties:
->>>> + - compatible: should be "rockchip,rk3399-typec-phy0" or
->>>> +                        "rockchip,rk3399-typec-phy1"
->>> What's the difference between 0 and 1? If it is to handle the register
->>> offsets you have in the previous version and the phy blocks are
->>> identical, then the compatible strings should be the same.
->> yes, the registers are different between 0 and 1, and there is a grf
->> register(0x6268) for switch the phy 0 and phy 1
-> But GRF is in a separate block and not part of the phy, right?
->
-> Rob
-The GRF is not a single function block, it contain many registers to 
-control other block.
-For Type-c phy, the type-c orientation, phy select, and some phy status 
-registers are embedded in GRF
-So the GRF is registered for a syscon driver, the phy driver call regmap 
-to access the registers.
+>>>>  source kernel/Kconfig.preempt
+>>>>  source kernel/Kconfig.hz
+>>>>
+>>>> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+>>>> index d099306..9e15297 100644
+>>>> --- a/arch/arm64/kernel/smp.c
+>>>> +++ b/arch/arm64/kernel/smp.c
+>>>> @@ -620,6 +620,7 @@ static void __init of_parse_and_init_cpus(void)
+>>>>                         }
+>>>>
+>>>>                         bootcpu_valid = true;
+>>>> +                       early_map_cpu_to_node(0, of_node_to_nid(dn));
+>>>>
+>>>>                         /*
+>>>>                          * cpu_logical_map has already been
+>>>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+>>>> index df5c842..d73b0a0 100644
+>>>> --- a/arch/arm64/mm/numa.c
+>>>> +++ b/arch/arm64/mm/numa.c
+>>>> @@ -128,6 +128,14 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
+>>>>                 nid = 0;
+>>>>
+>>>>         cpu_to_node_map[cpu] = nid;
+>>>> +
+>>>> +       /*
+>>>> +        * We should set the numa node of cpu0 as soon as possible, because it
+>>>> +        * has already been set up online before. cpu_to_node(0) will soon be
+>>>> +        * called.
+>>>> +        */
+>>>> +       if (!cpu)
+>>>> +               set_cpu_numa_node(cpu, nid);
+>>>>  }
+>>>>
+>>>>  #ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
+>>>> @@ -215,6 +223,35 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>>>>         return ret;
+>>>>  }
+>>>>
+>>>> +static u64 __init alloc_node_data_from_nearest_node(int nid, const size_t size)
+>>>> +{
+>>>> +       int i, best_nid, distance;
+>>>> +       u64 pa;
+>>>> +       DECLARE_BITMAP(nodes_map, MAX_NUMNODES);
+>>>> +
+>>>> +       bitmap_zero(nodes_map, MAX_NUMNODES);
+>>>> +       bitmap_set(nodes_map, nid, 1);
+>>>> +
+>>>> +find_nearest_node:
+>>>> +       best_nid = NUMA_NO_NODE;
+>>>> +       distance = INT_MAX;
+>>>> +
+>>>> +       for_each_clear_bit(i, nodes_map, MAX_NUMNODES)
+>>>> +               if (numa_distance[nid][i] < distance) {
+>>>> +                       best_nid = i;
+>>>> +                       distance = numa_distance[nid][i];
+>>>> +               }
+>>>> +
+>>>> +       pa = memblock_alloc_nid(size, SMP_CACHE_BYTES, best_nid);
+>>>> +       if (!pa) {
+>>>> +               BUG_ON(best_nid == NUMA_NO_NODE);
+>>>> +               bitmap_set(nodes_map, best_nid, 1);
+>>>> +               goto find_nearest_node;
+>>>> +       }
+>>>> +
+>>>> +       return pa;
+>>>> +}
+>>>> +
+> 
+> why do we need this function in arch specific code.
+I also considered put these code(include HAVE_SETUP_PER_CPU_AREA) into drivers/of/of_numa.c,
+but if I do that, it will make acpi numa dependent on of numa.
 
->
->
->
+> dont you think common code will take care of this? when you define
+> HAVE_MEMORYLESS_NODES
 
+I have searched CONFIG_HAVE_MEMORYLESS_NODES in *.c, but did not find the relevant content.
+So maybe other ARCHs also missed this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>>>>  /**
+>>>>   * Initialize NODE_DATA for a node on the local memory
+>>>>   */
+>>>> @@ -228,7 +265,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>>>>         pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+>>>>                 nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
+>>>>
+>>>> -       nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+> 
+> this function try to allocate from a nid, if fails, it allocates from
+> node 0(local node).
+> this is ok for memory less node i guess.
+Yes, the function is OK, but the performance is not.
+
+Suppose there are 3 nodes:
+1. cpu0 on node0, cpu1 on node1, cpu2 on node2.
+2. cpu2 access the memory on node1 take 1us, but access the memory on node1 take 5us.
+   That is, distance[2,1] is shorter than distance[2,0].
+3. And node2 is a memoryless node.
+
+So if NODE_DATA(2) allocated from node0, it will take more time than allocted from node1 at run time.
+Because NODE_DATA will be accessed at run time.
+
+> 
+>>>> +       nd_pa = memblock_alloc_nid(nd_size, SMP_CACHE_BYTES, nid);
+>>>> +       if (!nd_pa)
+>>>> +               nd_pa = alloc_node_data_from_nearest_node(nid, nd_size);
+>>>>         nd = __va(nd_pa);
+>>>>
+>>>>         /* report and initialize */
+>>>> @@ -238,7 +277,7 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>>>>         if (tnid != nid)
+>>>>                 pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
+>>>>
+>>>> -       node_data[nid] = nd;
+>>>> +       NODE_DATA(nid) = nd;
+>>>>         memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+>>>>         NODE_DATA(nid)->node_id = nid;
+>>>>         NODE_DATA(nid)->node_start_pfn = start_pfn;
+>>>> --
+>>>> 2.5.0
+>>>>
+>>>>
+>>> Ganapat
+>>>>
+>>>> _______________________________________________
+>>>> linux-arm-kernel mailing list
+>>>> linux-arm-kernel@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>
+>>> .
+>>>
+>>
+> 
+> .
+> 
