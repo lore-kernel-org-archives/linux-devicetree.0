@@ -1,250 +1,90 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [RFC v4 4/7] extcon: usb-gpio: Add support for VBUS detection
-Date: Wed, 08 Jun 2016 15:48:03 +0200
-Message-ID: <1465393686-16644-5-git-send-email-k.kozlowski@samsung.com>
-References: <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] net: ethernet: ti: cpsw: delete rx_descs property
+Date: Wed, 8 Jun 2016 17:01:25 +0300
+Message-ID: <57582535.5020608@linaro.org>
+References: <1465307976-12235-1-git-send-email-ivan.khoronzhuk@linaro.org>
+ <5756E7A8.6090703@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, balbi@ti.com, kishon@ti.com, Peter Chen <peter.chen@freescale.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, rogerq@ti.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5756E7A8.6090703-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>, mugunthanvnm-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add VBUS pin detection support to extcon-usb-gpio driver for boards
-which have both VBUS and ID pins, or only one of them.
+Hi Schuyer,
 
-The logic behind reporting USB and USB-HOST extcon cables is not
-affected. The driver however will report extcon changes for USB-VBUS and
-USB-ID.
+On 07.06.16 18:26, Schuyler Patton wrote:
+> Hi,
+>
+> On 06/07/2016 08:59 AM, Ivan Khoronzhuk wrote:
+>> There is no reason in rx_descs property because davinici_cpdma
+>> driver splits pool of descriptors equally between tx and rx channels.
+>> So, this patch series makes driver to use available number of
+>> descriptors for rx channels.
+>
+> I agree with the idea of consolidating how the descriptors are defined because of
+> the two variable components, number and size of the pool can be confusing to
+> end users. I would like to request to change how it is being proposed here.
+>
+> I think the number of descriptors should be left in the device tree source file as
+> is and remove the BD size variable and have the driver calculate the size of the
+> pool necessary to support the descriptor request. From an user perspective it is
+> easier I think to be able to list the number of descriptors necessary vs. the size
+> of the pool.
+>
+> Since the patch series points out how it is used so in the driver so to make that
+> consistent is perhaps change rx_descs to total_descs.
+>
+> Regards,
+> Schuyler
 
-Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+The DT entry for cpsw doesn't have property for size of the pool.
+It contains only BD ram size, if you mean this. The size of the pool is
+software decision. Current version of DT entry contain only rx desc number.
+That is not correct, as it depends on the size of the descriptor, which is also
+h/w parameter. The DT entry has to describe only h/w part and shouldn't contain
+driver implementation details, and I'm looking on it from this perspective.
 
----
+Besides, rx_descs describes only rx number of descriptors, that are taken from
+the same pool as tx descriptors, and setting rx desc to some new value doesn't
+mean that rest of them are freed for tx. Also, I'm going to send series that
+adds multi channel support to the driver, and in this case, splitting of the
+pool will be more sophisticated than now, after what setting those parameters
+for user (he should do this via device tree) can be even more confusing. But,
+as it's supposed, it's software decision that shouldn't leak to the DT.
 
-Some parts base on old Robert's patchset.
----
- drivers/extcon/extcon-usb-gpio.c | 125 +++++++++++++++++++++++++++++++--------
- 1 file changed, 99 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
-index a36aab007022..85b8a0ce5731 100644
---- a/drivers/extcon/extcon-usb-gpio.c
-+++ b/drivers/extcon/extcon-usb-gpio.c
-@@ -35,7 +35,9 @@ struct usb_extcon_info {
- 	struct extcon_dev *edev;
- 
- 	struct gpio_desc *id_gpiod;
-+	struct gpio_desc *vbus_gpiod;
- 	int id_irq;
-+	int vbus_irq;
- 
- 	unsigned long debounce_jiffies;
- 	struct delayed_work wq_detcable;
-@@ -44,6 +46,8 @@ struct usb_extcon_info {
- static const unsigned int usb_extcon_cable[] = {
- 	EXTCON_USB,
- 	EXTCON_USB_HOST,
-+	EXTCON_USB_ID,
-+	EXTCON_USB_VBUS,
- 	EXTCON_NONE,
- };
- 
-@@ -55,7 +59,8 @@ static void usb_extcon_detect_cable(struct work_struct *work)
- 						    wq_detcable);
- 
- 	/* check ID and update cable state */
--	id = gpiod_get_value_cansleep(info->id_gpiod);
-+	id = info->id_gpiod ? gpiod_get_value_cansleep(info->id_gpiod) : 1;
-+
- 	if (id) {
- 		/*
- 		 * ID = 1 means USB HOST cable detached.
-@@ -73,6 +78,14 @@ static void usb_extcon_detect_cable(struct work_struct *work)
- 		extcon_set_cable_state_(info->edev, EXTCON_USB, false);
- 		extcon_set_cable_state_(info->edev, EXTCON_USB_HOST, true);
- 	}
-+
-+	if (info->id_gpiod)
-+		extcon_set_cable_state_(info->edev, EXTCON_USB_ID, id);
-+	if (info->vbus_gpiod) {
-+		int vbus = gpiod_get_value_cansleep(info->vbus_gpiod);
-+
-+		extcon_set_cable_state_(info->edev, EXTCON_USB_VBUS, vbus);
-+	}
- }
- 
- static irqreturn_t usb_irq_handler(int irq, void *dev_id)
-@@ -100,9 +113,11 @@ static int usb_extcon_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	info->dev = dev;
--	info->id_gpiod = devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
--	if (IS_ERR(info->id_gpiod)) {
--		dev_err(dev, "failed to get ID GPIO\n");
-+	info->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id", GPIOD_IN);
-+	info->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus",
-+						   GPIOD_IN);
-+	if (!info->id_gpiod && !info->vbus_gpiod) {
-+		dev_err(dev, "failed to get GPIOs\n");
- 		return PTR_ERR(info->id_gpiod);
- 	}
- 
-@@ -118,27 +133,54 @@ static int usb_extcon_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ret = gpiod_set_debounce(info->id_gpiod,
--				 USB_GPIO_DEBOUNCE_MS * 1000);
-+	if (info->id_gpiod)
-+		ret = gpiod_set_debounce(info->id_gpiod,
-+			USB_GPIO_DEBOUNCE_MS * 1000);
-+	if (!ret && info->vbus_gpiod) {
-+		ret = gpiod_set_debounce(info->vbus_gpiod,
-+			USB_GPIO_DEBOUNCE_MS * 1000);
-+		if (ret < 0 && info->id_gpiod)
-+			gpiod_set_debounce(info->vbus_gpiod, 0);
-+	}
- 	if (ret < 0)
- 		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
- 
- 	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
- 
--	info->id_irq = gpiod_to_irq(info->id_gpiod);
--	if (info->id_irq < 0) {
--		dev_err(dev, "failed to get ID IRQ\n");
--		return info->id_irq;
-+	if (info->id_gpiod) {
-+		info->id_irq = gpiod_to_irq(info->id_gpiod);
-+		if (info->id_irq < 0) {
-+			dev_err(dev, "failed to get ID IRQ\n");
-+			return info->id_irq;
-+		}
-+		ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
-+						usb_irq_handler,
-+						IRQF_TRIGGER_RISING |
-+						IRQF_TRIGGER_FALLING |
-+						IRQF_ONESHOT,
-+						pdev->name, info);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to request handler for ID IRQ\n");
-+			return ret;
-+		}
- 	}
- 
--	ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
--					usb_irq_handler,
--					IRQF_TRIGGER_RISING |
--					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
--					pdev->name, info);
--	if (ret < 0) {
--		dev_err(dev, "failed to request handler for ID IRQ\n");
--		return ret;
-+	if (info->vbus_gpiod) {
-+		info->vbus_irq = gpiod_to_irq(info->vbus_gpiod);
-+		if (info->vbus_irq < 0) {
-+			dev_err(dev, "failed to get VBUS IRQ\n");
-+			return info->vbus_irq;
-+		}
-+		ret = devm_request_threaded_irq(dev, info->vbus_irq, NULL,
-+						usb_irq_handler,
-+						IRQF_TRIGGER_RISING |
-+						IRQF_TRIGGER_FALLING |
-+						IRQF_ONESHOT,
-+						pdev->name, info);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to request handler for VBUS IRQ\n");
-+			return ret;
-+		}
- 	}
- 
- 	platform_set_drvdata(pdev, info);
-@@ -166,9 +208,16 @@ static int usb_extcon_suspend(struct device *dev)
- 	int ret = 0;
- 
- 	if (device_may_wakeup(dev)) {
--		ret = enable_irq_wake(info->id_irq);
--		if (ret)
--			return ret;
-+		if (info->id_gpiod) {
-+			ret = enable_irq_wake(info->id_irq);
-+			if (ret)
-+				return ret;
-+		}
-+		if (info->vbus_gpiod) {
-+			ret = enable_irq_wake(info->vbus_irq);
-+			if (ret)
-+				goto err;
-+		}
- 	}
- 
- 	/*
-@@ -176,8 +225,16 @@ static int usb_extcon_suspend(struct device *dev)
- 	 * as GPIOs used behind I2C subsystem might not be
- 	 * accessible until resume completes. So disable IRQ.
- 	 */
--	disable_irq(info->id_irq);
-+	if (info->id_gpiod)
-+		disable_irq(info->id_irq);
-+	if (info->vbus_gpiod)
-+		disable_irq(info->vbus_irq);
-+
-+	return ret;
- 
-+err:
-+	if (info->id_gpiod)
-+		disable_irq_wake(info->id_irq);
- 	return ret;
- }
- 
-@@ -187,17 +244,33 @@ static int usb_extcon_resume(struct device *dev)
- 	int ret = 0;
- 
- 	if (device_may_wakeup(dev)) {
--		ret = disable_irq_wake(info->id_irq);
--		if (ret)
--			return ret;
-+		if (info->id_gpiod) {
-+			ret = disable_irq_wake(info->id_irq);
-+			if (ret)
-+				return ret;
-+		}
-+		if (info->vbus_gpiod) {
-+			ret = disable_irq_wake(info->vbus_irq);
-+			if (ret)
-+				goto err;
-+		}
- 	}
- 
--	enable_irq(info->id_irq);
-+	if (info->id_gpiod)
-+		enable_irq(info->id_irq);
-+	if (info->vbus_gpiod)
-+		enable_irq(info->vbus_irq);
-+
- 	if (!device_may_wakeup(dev))
- 		queue_delayed_work(system_power_efficient_wq,
- 				   &info->wq_detcable, 0);
- 
- 	return ret;
-+
-+err:
-+	if (info->id_gpiod)
-+		enable_irq_wake(info->id_irq);
-+	return ret;
- }
- #endif
- 
+>>
+>> Based on master branch
+>>
+>> Since v1:
+>> - separate device tree and driver patches
+>> - return number of rx buffers from cpdma driver
+>>
+>> Ivan Khoronzhuk (2):
+>>    net: ethernet: ti: cpsw: remove rx_descs property
+>>    Documentation: DT: cpsw: remove rx_descs property
+>>
+>>   Documentation/devicetree/bindings/net/cpsw.txt |  1 -
+>>   arch/arm/boot/dts/am33xx.dtsi                  |  1 -
+>>   arch/arm/boot/dts/am4372.dtsi                  |  1 -
+>>   arch/arm/boot/dts/dm814x.dtsi                  |  1 -
+>>   arch/arm/boot/dts/dra7.dtsi                    |  1 -
+>>   drivers/net/ethernet/ti/cpsw.c                 | 13 +++----------
+>>   drivers/net/ethernet/ti/cpsw.h                 |  1 -
+>>   drivers/net/ethernet/ti/davinci_cpdma.c        |  6 ++++++
+>>   drivers/net/ethernet/ti/davinci_cpdma.h        |  1 +
+>>   9 files changed, 10 insertions(+), 16 deletions(-)
+>>
+>
+
 -- 
-1.9.1
+Regards,
+Ivan Khoronzhuk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
