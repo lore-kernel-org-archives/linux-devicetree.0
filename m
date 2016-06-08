@@ -1,71 +1,74 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] drivers/of: Fix depth for sub-tree blob in unflatten_dt_nodes()
-Date: Wed,  8 Jun 2016 16:50:54 +1000
-Message-ID: <1465368654-24170-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew.donnellan-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 05/11] ARM: dts: r8a7792: initial SoC device tree
+Date: Wed, 8 Jun 2016 09:05:54 +0200
+Message-ID: <CAMuHMdUMQZGg_hy0WOgwJMZhDCsKt-XJvnX0tq6i=92qubOAUg@mail.gmail.com>
+References: <3446154.oZ24315zaL@wasted.cogentembedded.com> <2268000.l71DRbJSRE@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2268000.l71DRbJSRE@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The function is unflattening device sub-tree blob if @dad passed to
-the function is valid. Currently, this functionality is used by PPC
-PowerNV PCI hotplug driver only. There are possibly multiple nodes
-in the first level of depth, fdt_next_node() bails immediately when
-@depth becomes negative before the second device node can be probed
-successfully. It leads to the device nodes except the first one won't
-be unflattened successfully.
+Hi Sergei,
 
-This fixes the issue by setting the initial depth (@inital_depth) to
-1 when this function is called to unflatten device sub-tree blob. No
-logic changes when this function is used to unflatten non-sub-tree
-blob.
+On Fri, Jun 3, 2016 at 11:26 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> The initial R8A7792 SoC device tree including CPU core, GIC, timer, SYSC,
+> and the required  clock descriptions.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+> Changes in version 2:
 
-Cc: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Fixes: 78c44d910 ("drivers/of: Fix depth when unflattening devicetree")
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
----
- drivers/of/fdt.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+> - created  the "soc" subnode, moving the SoC  device  nodes there;
+> - removed  the "clocks" node, moving its fixed clock  subnodes to the root and
+>   the MSTP subnodes into the "soc" node.
+>
+>  arch/arm/boot/dts/r8a7792.dtsi |  171 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 171 insertions(+)
+>
+> Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
+> ===================================================================
+> --- /dev/null
+> +++ renesas/arch/arm/boot/dts/r8a7792.dtsi
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 14f2f8c..9d70316 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -395,7 +395,7 @@ static int unflatten_dt_nodes(const void *blob,
- 			      struct device_node **nodepp)
- {
- 	struct device_node *root;
--	int offset = 0, depth = 0;
-+	int offset = 0, depth = 0, initial_depth = 0;
- #define FDT_MAX_DEPTH	64
- 	unsigned int fpsizes[FDT_MAX_DEPTH];
- 	struct device_node *nps[FDT_MAX_DEPTH];
-@@ -408,8 +408,19 @@ static int unflatten_dt_nodes(const void *blob,
- 	root = dad;
- 	fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
- 	nps[depth] = dad;
-+
-+	/*
-+	 * We're unflattening device sub-tree if @dad is valid. There are
-+	 * possibly multiple nodes in the first level of depth. We need
-+	 * set @depth to 1 to make fdt_next_node() happy as it bails
-+	 * immediately when negative @depth is found. Otherwise, the device
-+	 * nodes except the first one won't be unflattened successfully.
-+	 */
-+	if (dad)
-+		depth = initial_depth = 1;
-+
- 	for (offset = 0;
--	     offset >= 0 && depth >= 0;
-+	     offset >= 0 && depth >= initial_depth;
- 	     offset = fdt_next_node(blob, offset, &depth)) {
- 		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
- 			continue;
--- 
-2.1.0
+> +       /* Fixed factor clocks */
+> +       zs_clk: zs {
+> +               compatible = "fixed-factor-clock";
+> +               clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
+> +               #clock-cells = <0>;
+> +               clock-div = <6>;
+> +               clock-mult = <1>;
+> +       };
+> +       p_clk: p {
+> +               compatible = "fixed-factor-clock";
+> +               clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
+> +               #clock-cells = <0>;
+> +               clock-div = <24>;
+> +               clock-mult = <1>;
+> +       };
+> +       cp_clk: cp {
+> +               compatible = "fixed-factor-clock";
+> +               clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
+> +               #clock-cells = <0>;
+> +               clock-div = <3>;
+> +               clock-mult = <1>;
+> +       };
+
+I think the above 3 fixed factor clocks should be children of the "soc" node,
+as they're generated on-SoC.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
