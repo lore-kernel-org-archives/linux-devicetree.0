@@ -1,62 +1,44 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v9 12/14] usb: hcd: Adapt to OTG core
-Date: Wed, 8 Jun 2016 14:42:32 +0300
-Message-ID: <22442eeb-e927-d7ac-52c6-3aebd2106837@cogentembedded.com>
-References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
- <1465376626-30122-13-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465376626-30122-13-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, peter.chen@freescale.com
-Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 1/6] dt-bindings: add LG LP097QX1-SPA1 panel binding
+Date: Wed,  8 Jun 2016 19:52:07 +0800
+Message-ID: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/8/2016 12:03 PM, Roger Quadros wrote:
+The LG LP097QX1-SPA1 is an 9.7", 2048x1536 (QXGA) TFT-LCD panel
+connected using eDP interfaces.
 
-> Introduce usb_otg_add/remove_hcd() for use by host
-> controllers that are part of OTG/dual-role port.
->
-> Non Device tree platforms can use the otg_dev argument
-> to specify the OTG controller device. If otg_dev is NULL
-> then the device tree node's otg-controller property is used to
-> get the otg_dev device.
->
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Acked-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  drivers/usb/core/hcd.c  | 55 +++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/usb/hcd.h |  4 ++++
->  2 files changed, 59 insertions(+)
->
-> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> index ae6c76d..c6f4155 100644
-> --- a/drivers/usb/core/hcd.c
-> +++ b/drivers/usb/core/hcd.c
-[...]
-> @@ -3025,6 +3030,56 @@ void usb_remove_hcd(struct usb_hcd *hcd)
->  }
->  EXPORT_SYMBOL_GPL(usb_remove_hcd);
->
-> +static struct otg_hcd_ops otg_hcd_intf = {
-> +	.add = usb_add_hcd,
-> +	.remove = usb_remove_hcd,
-> +	.usb_bus_start_enum = usb_bus_start_enum,
-> +	.usb_control_msg = usb_control_msg,
-> +	.usb_hub_find_child = usb_hub_find_child,
-> +};
-> +
-> +/**
-> + * usb_otg_add_hcd - Register the HCD with OTG core.
-> + * @hcd: the usb_hcd structure to initialize
-> + * @irqnum: Interrupt line to allocate
-> + * @irqflags: Interrupt type flags
-> + * @otg_dev: OTG controller device managing this HCD
+Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes in v2:
+- Add Rob's acked for dt-bindings of LG LP097QX1-SPA1 panel
 
-    Device managing a driver? That's interesting. :-)
+ .../devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt         | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt
 
-[...]
+diff --git a/Documentation/devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt b/Documentation/devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt
+new file mode 100644
+index 0000000..4214151
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt
+@@ -0,0 +1,7 @@
++LG 9.7" (2048x1536 pixels) TFT LCD panel
++
++Required properties:
++- compatible: should be "lg,lp097qx1-spa1"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+-- 
+1.9.1
 
-MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
