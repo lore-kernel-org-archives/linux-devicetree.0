@@ -1,72 +1,72 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports while USB
- suspend
-Date: Wed, 8 Jun 2016 22:38:10 +0200
-Message-ID: <20160608203810.GF2466@piout.net>
-References: <1465359311-14544-1-git-send-email-wenyou.yang@atmel.com>
- <1465359311-14544-2-git-send-email-wenyou.yang@atmel.com>
- <20160608202651.GA23604@rob-hp-laptop>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: bindings: add dt documentation for Rockchip PCIe PHY
+Date: Wed, 08 Jun 2016 22:40:19 +0200
+Message-ID: <1524911.R4OXTTYFIK@diego>
+References: <1465370708-23619-1-git-send-email-shawn.lin@rock-chips.com> <20160608202900.GA25662@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160608202651.GA23604@rob-hp-laptop>
+In-Reply-To: <20160608202900.GA25662@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/06/2016 at 15:26:51 -0500, Rob Herring wrote :
-> On Wed, Jun 08, 2016 at 12:15:10PM +0800, Wenyou Yang wrote:
-> > In order to the save power consumption, as a workaround, suspend
-> > forcibly the USB PORTA/B/C via set the SUSPEND_A/B/C bits of OHCI
-> > Interrupt Configuration Register in the SFRs while OHCI USB suspend.
+Am Mittwoch, 8. Juni 2016, 15:29:00 schrieb Rob Herring:
+> gOn Wed, Jun 08, 2016 at 03:25:08PM +0800, Shawn Lin wrote:
+> > This patch adds a binding that describes the Rockchip PCIe PHY
+> > found on Rockchip SoCs PCIe interface.
 > > 
-> > This suspend operation must be done before the USB clock is disabled,
-> > resume after the USB clock is enabled.
-> > 
-> > Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > > ---
 > > 
-> > Changes in v3:
-> >  - Change the compatible description for more precise.
-> > 
-> > Changes in v2:
-> >  - Add compatible to support forcibly suspend the ports.
-> >  - Add soc/at91/at91_sfr.h to accommodate the defines.
-> >  - Add error checking for .sfr_regmap.
-> >  - Remove unnecessary regmap_read() statement.
-> > 
-> >  .../devicetree/bindings/usb/atmel-usb.txt          |  6 +-
-> >  drivers/usb/host/ohci-at91.c                       | 80 +++++++++++++++++++++-
-> >  include/soc/at91/at91_sfr.h                        | 29 ++++++++
-> >  3 files changed, 112 insertions(+), 3 deletions(-)
-> >  create mode 100644 include/soc/at91/at91_sfr.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-> > index 5883b73..888deaa 100644
-> > --- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
-> > +++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-> > @@ -3,8 +3,10 @@ Atmel SOC USB controllers
-> >  OHCI
-> >  
-> >  Required properties:
-> > - - compatible: Should be "atmel,at91rm9200-ohci" for USB controllers
-> > -   used in host mode.
-> > + - compatible: Should be one of the following
-> > +	       "atmel,at91rm9200-ohci" for USB controllers used in host mode.
-> > +	       "atmel,sama5d2-ohci" for USB controllers used in host mode
-> > +	       on SAMA5D2 which can force to suspend.
+> >  .../devicetree/bindings/phy/rockchip-pcie-phy.txt  | 22
+> >  ++++++++++++++++++++++ 1 file changed, 22 insertions(+)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt> 
+> > diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+> > b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt new file
+> > mode 100644
+> > index 0000000..ba8c406
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+> > @@ -0,0 +1,22 @@
+> > +Rockchip PCIE PHY
+> > +-----------------------
+> > +
+> > +Required properties:
+> > + - compatible: rockchip,rk3399-pcie-phy
+> > + - #phy-cells: must be 0
+> > +
+> > +Example:
+> > +
+> > +grf: syscon@ff770000 {
+> > +	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +
+> > +	...
+> > +
+> > +	pcie_phy: phy@e220 {
 > 
-> Guess I wasn't clear enough before. Drop "which can force to suspend".
-> 
+> unit-address needs a reg property or drop the unit address. I'd do the
+> former if there's a register range you can describe here.
 
-Well, my point is that we don't need a new compatible anyway.
+Hmm, I think I'd suggest going the other way - call the node pcie-phy .
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+While the General Register Files do contain some specific address ranges (like 
+for the emmc phy, or some performance monitor things), the register at 0xe220 
+is a shared register (GRF_SOC_CON8), containing both i2s and pcie setting 
+bits.
+
+Specifying register ranges suggests some form of exclusivity to me - which is 
+just great for things like the emmc phy that has an actual range, but for a 
+device being controlled from some shared register.
+
+
+Heiko
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
