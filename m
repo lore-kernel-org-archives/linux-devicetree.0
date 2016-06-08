@@ -1,68 +1,135 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] PCI: layerscape: Add 'dma-coherent' property
-Date: Wed, 8 Jun 2016 14:54:43 -0500
-Message-ID: <20160608195443.GA7766@rob-hp-laptop>
-References: <1465282546-28256-1-git-send-email-Gang.Liu@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] [media] atmel-isc: DT binding for Image Sensor
+ Controller driver
+Date: Wed, 8 Jun 2016 15:00:52 -0500
+Message-ID: <20160608200052.GA8515@rob-hp-laptop>
+References: <1465283513-30224-1-git-send-email-songjun.wu@atmel.com>
+ <1465283513-30224-3-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1465282546-28256-1-git-send-email-Gang.Liu@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liu Gang <Gang.Liu@nxp.com>
-Cc: devicetree@vger.kernel.org, leoyang.li@nxp.com, minghuan.lian@nxp.com, linux-arm-kernel@lists.infradead.org, scott.wood@nxp.com, shawnguo@kernel.org, mingkai.hu@nxp.com
+In-Reply-To: <1465283513-30224-3-git-send-email-songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 02:55:45PM +0800, Liu Gang wrote:
-> Add 'dma-coherent' description for PCI nodes.
+On Tue, Jun 07, 2016 at 03:11:53PM +0800, Songjun Wu wrote:
+> DT binding documentation for ISC driver.
 > 
-> The 'dma-coherent' indicates that the hardware IP block can ensure
-> the coherency of the data transferred from/to the IP block. This
-> can avoid the software cache flush/invalid actions, and improve
-> the performance significantly.
-> 
-> The PCI IP block of ls1043a has this capability, so adding
-> this feature to improve the PCI performance.
-> 
-> Signed-off-by: Liu Gang <Gang.Liu@nxp.com>
+> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-
-Acked-by: Rob Herring <robh@kernel.org>
-
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> index ef683b2..41e9f55 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -24,6 +24,9 @@ Required properties:
->    The first entry must be a link to the SCFG device node
->    The second entry must be '0' or '1' based on physical PCIe controller index.
->    This is used to get SCFG PEXN registers
-> +- dma-coherent: Indicates that the hardware IP block can ensure the coherency
-> +  of the data transferred from/to the IP block. This can avoid the software
-> +  cache flush/invalid actions, and improve the performance significantly.
->  
->  Example:
->  
-> @@ -38,6 +41,7 @@ Example:
->  		#address-cells = <3>;
->  		#size-cells = <2>;
->  		device_type = "pci";
-> +		dma-coherent;
->  		num-lanes = <4>;
->  		bus-range = <0x0 0xff>;
->  		ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
+> Changes in v4:
+> - Remove the isc clock nodes.
+> 
+> Changes in v3:
+> - Remove the 'atmel,sensor-preferred'.
+> - Modify the isc clock node according to the Rob's remarks.
+> 
+> Changes in v2:
+> - Remove the unit address of the endpoint.
+> - Add the unit address to the clock node.
+> - Avoid using underscores in node names.
+> - Drop the "0x" in the unit address of the i2c node.
+> - Modify the description of 'atmel,sensor-preferred'.
+> - Add the description for the ISC internal clock.
+> 
+>  .../devicetree/bindings/media/atmel-isc.txt        | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+
+Almost there...
+
+> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> new file mode 100644
+> index 0000000..3f83524
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> @@ -0,0 +1,69 @@
+> +Atmel Image Sensor Controller (ISC)
+> +----------------------------------------------
+> +
+> +Required properties for ISC:
+> +- compatible
+> +	Must be "atmel,sama5d2-isc".
+> +- reg
+> +	Physical base address and length of the registers set for the device.
+> +- interrupts
+> +	Should contain IRQ line for the ISC.
+> +- clocks
+> +	List of clock specifiers, corresponding to entries in
+> +	the clock-names property;
+> +	Please refer to clock-bindings.txt.
+> +- clock-names
+> +	Required elements: "hclock".
+> +- #clock-cells
+> +	Should be 0.
+> +- clock-output-names
+> +	Should contain the name of the clock driving the sensor master clock.
+> +- pinctrl-names, pinctrl-0
+> +	Please refer to pinctrl-bindings.txt.
+
+Required, but not in your example.
+
+> +
+> +
+> +ISC supports a single port node with parallel bus. It should contain one
+> +'port' child node with child 'endpoint' node. Please refer to the bindings
+> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +isc: isc@f0008000 {
+> +	compatible = "atmel,sama5d2-isc";
+> +	reg = <0xf0008000 0x4000>;
+> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
+> +	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
+> +	clock-names = "hclock";
+> +	#clock-cells = <0>;
+> +	clock-output-names = "isc-mck";
+> +
+> +	port {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+
+These 2 you can drop.
+
+> +
+> +		isc_0: endpoint {
+> +			remote-endpoint = <&ov7740_0>;
+> +			hsync-active = <1>;
+> +			vsync-active = <0>;
+> +			pclk-sample = <1>;
+> +		};
+> +	};
+> +
+> +
+> +};
+> +
+> +i2c1: i2c@fc028000 {
+> +	ov7740: camera@21 {
+> +	compatible = "ovti,ov7740";
+
+Fix the indentation.
+
+> +	reg = <0x21>;
+> +
+> +	clocks = <&isc>;
+> +	clock-names = "xvclk";
+> +	assigned-clocks = <&isc>;
+> +	assigned-clock-rates = <24000000>;
+> +
+> +	port {
+> +		ov7740_0: endpoint {
+> +			remote-endpoint = <&isc_0>;
+> +		};
+> +	};
+> +};
 > -- 
-> 2.1.0.27.g96db324
+> 2.7.4
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
