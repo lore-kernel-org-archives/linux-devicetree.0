@@ -1,59 +1,250 @@
-From: "Li, Yong B" <yong.b.li@intel.com>
-Subject: RE: [PATCH] ARM: dts: am335x-boneblack: add i2c1 DT entry
-Date: Wed, 8 Jun 2016 07:11:03 +0000
-Message-ID: <BCE6BEBCDDF4B84E891D2320CBF96F1D3FA02917@SHSMSX101.ccr.corp.intel.com>
-References: <1464853310-8738-1-git-send-email-yong.b.li@intel.com>
- <CAOCHtYib9YxckneM-j0Gk1YE=MnvAwAhvDjEDEuFJbH6W3EcWA@mail.gmail.com>
- <20160602173932.GF5995@atomide.com>
- <CAOCHtYiWYrwSidHnKv4siFT-wU=tt5-YeDTwbM022ZTxdPFYYA@mail.gmail.com>
- <20160602175635.GG5995@atomide.com>
- <BCE6BEBCDDF4B84E891D2320CBF96F1D3F9FB1EC@SHSMSX101.ccr.corp.intel.com>
- <20160607060004.GD22406@atomide.com>
- <BCE6BEBCDDF4B84E891D2320CBF96F1D3F9FD673@SHSMSX101.ccr.corp.intel.com>
- <CAOCHtYhBSS+D-BQH28FO+RxyzvDg-yeX+6nvLu11G3TNkF7ELg@mail.gmail.com>
+From: weiqing kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] pwm: Add MediaTek MT2701 display PWM driver support
+Date: Wed, 8 Jun 2016 15:21:18 +0800
+Message-ID: <1465370478.5209.30.camel@mhfsdcap03>
+References: <1464597712-5399-1-git-send-email-weiqing.kong@mediatek.com>
+	 <1464597712-5399-3-git-send-email-weiqing.kong@mediatek.com>
+	 <5751A3DD.7020402@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOCHtYhBSS+D-BQH28FO+RxyzvDg-yeX+6nvLu11G3TNkF7ELg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Nelson <robertcnelson@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux kernel <linux-kernel@vger.kernel.org>, "sdliyong@gmail.com" <sdliyong@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5751A3DD.7020402-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIFJvYmVydCENCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IFJvYmVy
-dCBOZWxzb24gW21haWx0bzpyb2JlcnRjbmVsc29uQGdtYWlsLmNvbV0gDQpTZW50OiBXZWRuZXNk
-YXksIEp1bmUgOCwgMjAxNiAxOjE1IEFNDQpUbzogTGksIFlvbmcgQiA8eW9uZy5iLmxpQGludGVs
-LmNvbT4NCkNjOiBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPjsgQmVub2l0IENvdXNz
-b24gPGJjb3Vzc29uQGJheWxpYnJlLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5v
-cmc+OyBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsu
-cnV0bGFuZEBhcm0uY29tPjsgSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9y
-Zy51az47IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsgUnVzc2VsbCBLaW5nIDxs
-aW51eEBhcm0ubGludXgub3JnLnVrPjsgbGludXgtb21hcEB2Z2VyLmtlcm5lbC5vcmc7IGRldmlj
-ZXRyZWUgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBsaW51eCBrZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc+OyBzZGxpeW9uZ0BnbWFpbC5jb207IFBhbnRlbGlzIEFudG9uaW91IDxwYW50ZWxpcy5hbnRv
-bmlvdUBrb25zdWxrby5jb20+DQpTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czogYW0zMzV4
-LWJvbmVibGFjazogYWRkIGkyYzEgRFQgZW50cnkNCg0KT24gVHVlLCBKdW4gNywgMjAxNiBhdCAx
-OjE0IEFNLCBMaSwgWW9uZyBCIDx5b25nLmIubGlAaW50ZWwuY29tPiB3cm90ZToNCj4gVGhhbmtz
-IFRvbnkuDQo+DQo+IEkgY2hlY2tlZCB0aGUgRFRTL292ZXJsYXlzIHVzaW5nIGxpbnV4LXlvY3Rv
-LTQuMSBrZXJuZWwoT3N0cm8gT1MpLiBJdCBzZWVtcyB0byBtZSB0aGF0IHRoZSBrZXJuZWwvdS1i
-b290IGRvIG5vdCBpbmNsdWRlIHRoZSBsYXRlc3Qgb3ZlcmxheSBzdXBwb3J0IHBhdGNoLiBBbmQg
-SSBhbHNvIHRlc3RlZCB0aGUgbGF0ZXN0IERlYmlhbiA4LjQgdXNpbmcgQkJCIGJvYXJkcywgdGhl
-IEkyQzEgZG9lcyBub3Qgd29yayB0b28uIFRoaXMgcGF0Y2ggaXMgdGhlIHNpbXBsZXN0IHNvbHV0
-aW9uIGZvciBJMkMxL0kyQzIgaW4gbGludXgteW9jdG8tNC4xLg0KDQpwcywgeW91ciBwYXRjaCBp
-cyBhbHNvIGJyb2tlbiwgeW91IGRpZG4ndCBldmVuIG11eCB0aGUgcGlucywgc28gaTJjMSBkb2Vz
-bid0IHdvcmsgZm9yIHlvdSBhbnl3YXlzLiA7KQ0KDQpwaW5jdHJsLTAgPSA8JmkyYzJfcGlucz47
-IC0+IHBpbmN0cmwtMCA9IDwmaTJjMV9waW5zPjsNCg0KT3B0aW9uIDE6DQoNCldpdGggdGhlIGxh
-dGVzdCBCQkIgaW1hZ2Uncywgd2UgdXRpbGl6ZSAiY2FwZV91bml2ZXJzYWwiLCB0aHVzIHlvdSBj
-YW4gZW5hYmxlIEkyQzEgdmlhOg0KDQpyb290QGJlYWdsZWJvbmU6fiMgY29uZmlnLXBpbiAtbCBQ
-OS4xNw0KZGVmYXVsdCBncGlvIGdwaW9fcHUgZ3Bpb19wZCBzcGkgaTJjIHB3bQ0KDQpyb290QGJl
-YWdsZWJvbmU6fiMgY29uZmlnLXBpbiAtbCBQOS4xOA0KZGVmYXVsdCBncGlvIGdwaW9fcHUgZ3Bp
-b19wZCBzcGkgaTJjIHB3bQ0KDQpyb290QGJlYWdsZWJvbmU6fiMgY29uZmlnLXBpbiBQOS4xNyBp
-MmMNCg0Kcm9vdEBiZWFnbGVib25lOn4jIGNvbmZpZy1waW4gUDkuMTggaTJjDQoNCk9wdGlvbiAy
-LCBmb3IgdGhlIEJCLUkyQzEgb3ZlcmxheToNCg0KYWRkDQoNCmNhcGVfZW5hYmxlPWJvbmVfY2Fw
-ZW1nci5lbmFibGVfcGFydG5vPUJCLUkyQzENCg0KT3B0aW9uIDMsIHdhaXQgZm9yIFBhbnRlbGlz
-J3Mgc29sdXRpb24uLi4gOykNCg0KaHR0cDovL2NvbW1lbnRzLmdtYW5lLm9yZy9nbWFuZS5saW51
-eC5rZXJuZWwvMjIzNDY2Mg0KDQpSZWdhcmRzLA0KDQotLQ0KUm9iZXJ0IE5lbHNvbg0KaHR0cHM6
-Ly9yY24tZWUuY29tLw0K
+On Fri, 2016-06-03 at 17:35 +0200, Matthias Brugger wrote:
+> 
+> On 30/05/16 10:41, Weiqing Kong wrote:
+> > Use the mtk_pwm_data struction to define different registers
+> > and add MT2701 specific register operations, such as MT2701
+> > doesn't have commit register, needs to disable double buffer
+> > before writing register, and needs to select manual mode
+> > and use PWM_PERIOD/PWM_HIGH_WIDTH.
+> >
+> > Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   drivers/pwm/pwm-mtk-disp.c | 89 +++++++++++++++++++++++++++++++++++++---------
+> >   1 file changed, 72 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+> > index 0ad3385..03b9c9e 100644
+> > --- a/drivers/pwm/pwm-mtk-disp.c
+> > +++ b/drivers/pwm/pwm-mtk-disp.c
+> > @@ -18,33 +18,44 @@
+> >   #include <linux/io.h>
+> >   #include <linux/module.h>
+> >   #include <linux/of.h>
+> > +#include <linux/of_device.h>
+> >   #include <linux/platform_device.h>
+> >   #include <linux/pwm.h>
+> >   #include <linux/slab.h>
+> >
+> >   #define DISP_PWM_EN		0x00
+> > -#define PWM_ENABLE_MASK		BIT(0)
+> >
+> >   #define DISP_PWM_COMMIT		0x08
+> >   #define PWM_COMMIT_MASK		BIT(0)
+> >
+> > -#define DISP_PWM_CON_0		0x10
+> >   #define PWM_CLKDIV_SHIFT	16
+> >   #define PWM_CLKDIV_MAX		0x3ff
+> >   #define PWM_CLKDIV_MASK		(PWM_CLKDIV_MAX << PWM_CLKDIV_SHIFT)
+> >
+> > -#define DISP_PWM_CON_1		0x14
+> >   #define PWM_PERIOD_BIT_WIDTH	12
+> >   #define PWM_PERIOD_MASK		((1 << PWM_PERIOD_BIT_WIDTH) - 1)
+> >
+> >   #define PWM_HIGH_WIDTH_SHIFT	16
+> >   #define PWM_HIGH_WIDTH_MASK	(0x1fff << PWM_HIGH_WIDTH_SHIFT)
+> >
+> > +#define MT2701_PWM_MANUAL_SEL_MASK	BIT(1)
+> > +#define MT2701_PWM_BLS_DEBUG		0xb0
+> 
+> Do we need to set magic 0x3 in the debug register? If so, this should be 
+> part of mtk_pwm_data, just as con0_sel.
+
+Do you mean that add bls_debug into struct mtk_pwm_data,
+and set 0x3 in mt2701 data, 0x0 in mt8173 data?
+
+> 
+> > +#define MT2701_PWM_BLS_DEBUG_MASK	0x3
+> > +
+> > +struct mtk_pwm_data {
+> > +	unsigned int enable_bit;
+> > +	unsigned int con0;
+> > +	unsigned int con0_sel;
+> > +	unsigned int con1;
+> > +	bool have_commit_reg;
+> > +};
+> > +
+> >   struct mtk_disp_pwm {
+> >   	struct pwm_chip chip;
+> >   	struct clk *clk_main;
+> >   	struct clk *clk_mm;
+> >   	void __iomem *base;
+> > +	const struct mtk_pwm_data *data;
+> 
+> Couldn't that just be the offset for the commit register and set it to 
+> 0x0 if the commit register is not present. Right now, we suppose the 
+> DISP_PWM_EN is at offset 0x0, so this should not be a problem.
+> 
+
+Do you mean that replace have_commit_reg with commit_reg_offset?
+just like this?
+bool have_commit_reg;
+->
+unsigned int commit_reg_offset;
+and set commit_reg_offset 0x0 in mt2701, 0x1 in mt8173?
+
+> >   };
+> >
+> >   static inline struct mtk_disp_pwm *to_mtk_disp_pwm(struct pwm_chip *chip)
+> > @@ -106,12 +117,18 @@ static int mtk_disp_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> >   		return err;
+> >   	}
+> >
+> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_CON_0, PWM_CLKDIV_MASK,
+> > +	mtk_disp_pwm_update_bits(mdp, mdp->data->con0,
+> > +				 PWM_CLKDIV_MASK,
+> >   				 clk_div << PWM_CLKDIV_SHIFT);
+> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_CON_1,
+> > -				 PWM_PERIOD_MASK | PWM_HIGH_WIDTH_MASK, value);
+> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT, PWM_COMMIT_MASK, 1);
+> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT, PWM_COMMIT_MASK, 0);
+> > +	mtk_disp_pwm_update_bits(mdp, mdp->data->con1,
+> > +				 PWM_PERIOD_MASK | PWM_HIGH_WIDTH_MASK,
+> > +				 value);
+> > +	if (mdp->data->have_commit_reg) {
+> > +		mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT,
+> > +					 PWM_COMMIT_MASK, 0x1);
+> > +		mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT,
+> > +					 PWM_COMMIT_MASK, 0x0);
+> 
+> should be renamed to MT8173_PWM_COMMIT_MASK, although I'm not really a 
+> friend of mixing up SoC specific defines with a Soc specific 
+> mtk_disp_pwm structure.
+> 
+> Regards,
+> Matthias
+
+ok, I will modify it as you said. thanks for you suggestion.
+
+> 
+> > +	}
+> >
+> >   	clk_disable(mdp->clk_mm);
+> >   	clk_disable(mdp->clk_main);
+> > @@ -134,7 +151,9 @@ static int mtk_disp_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >   		return err;
+> >   	}
+> >
+> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN, PWM_ENABLE_MASK, 1);
+> > +	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
+> > +				 mdp->data->enable_bit,
+> > +				 mdp->data->enable_bit);
+> >
+> >   	return 0;
+> >   }
+> > @@ -143,7 +162,8 @@ static void mtk_disp_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >   {
+> >   	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
+> >
+> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN, PWM_ENABLE_MASK, 0);
+> > +	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
+> > +				 mdp->data->enable_bit, 0x0);
+> >
+> >   	clk_disable(mdp->clk_mm);
+> >   	clk_disable(mdp->clk_main);
+> > @@ -156,12 +176,41 @@ static const struct pwm_ops mtk_disp_pwm_ops = {
+> >   	.owner = THIS_MODULE,
+> >   };
+> >
+> > +static const struct mtk_pwm_data mt8173_pwm_data = {
+> > +	.enable_bit = BIT(0),
+> > +	.con0 = 0x10,
+> > +	.con0_sel = 0x0,
+> > +	.con1 = 0x14,
+> > +	.have_commit_reg = true,
+> > +};
+> > +
+> > +static const struct mtk_pwm_data mt2701_pwm_data = {
+> > +	.enable_bit = BIT(16),
+> > +	.con0 = 0xa8,
+> > +	.con0_sel = 0x2,
+> > +	.con1 = 0xac,
+> > +	.have_commit_reg = false,
+> > +};
+> > +
+> > +static const struct of_device_id mtk_disp_pwm_of_match[] = {
+> > +	{ .compatible = "mediatek,mt2701-disp-bls", .data = &mt2701_pwm_data},
+> > +	{ .compatible = "mediatek,mt6595-disp-pwm", .data = &mt8173_pwm_data},
+> > +	{ .compatible = "mediatek,mt8173-disp-pwm", .data = &mt8173_pwm_data},
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, mtk_disp_pwm_of_match);
+> > +
+> >   static int mtk_disp_pwm_probe(struct platform_device *pdev)
+> >   {
+> > +	const struct of_device_id *id;
+> >   	struct mtk_disp_pwm *mdp;
+> >   	struct resource *r;
+> >   	int ret;
+> >
+> > +	id = of_match_device(mtk_disp_pwm_of_match, &pdev->dev);
+> > +	if (!id)
+> > +		return -EINVAL;
+> > +
+> >   	mdp = devm_kzalloc(&pdev->dev, sizeof(*mdp), GFP_KERNEL);
+> >   	if (!mdp)
+> >   		return -ENOMEM;
+> > @@ -191,6 +240,7 @@ static int mtk_disp_pwm_probe(struct platform_device *pdev)
+> >   	mdp->chip.ops = &mtk_disp_pwm_ops;
+> >   	mdp->chip.base = -1;
+> >   	mdp->chip.npwm = 1;
+> > +	mdp->data = id->data;
+> >
+> >   	ret = pwmchip_add(&mdp->chip);
+> >   	if (ret < 0) {
+> > @@ -200,6 +250,18 @@ static int mtk_disp_pwm_probe(struct platform_device *pdev)
+> >
+> >   	platform_set_drvdata(pdev, mdp);
+> >
+> > +	/*
+> > +	 * For MT2701, disable double buffer before writing register
+> > +	 * and select manual mode and use PWM_PERIOD/PWM_HIGH_WIDTH.
+> > +	 */
+> > +	if (!mdp->data->have_commit_reg) {
+> > +		mtk_disp_pwm_update_bits(mdp, MT2701_PWM_BLS_DEBUG,
+> > +					 MT2701_PWM_BLS_DEBUG_MASK, 0x3);
+> > +		mtk_disp_pwm_update_bits(mdp, mdp->data->con0,
+> > +					 MT2701_PWM_MANUAL_SEL_MASK,
+> > +					 mdp->data->con0_sel);
+> > +	}
+> > +
+> >   	return 0;
+> >
+> >   disable_clk_mm:
+> > @@ -221,13 +283,6 @@ static int mtk_disp_pwm_remove(struct platform_device *pdev)
+> >   	return ret;
+> >   }
+> >
+> > -static const struct of_device_id mtk_disp_pwm_of_match[] = {
+> > -	{ .compatible = "mediatek,mt8173-disp-pwm" },
+> > -	{ .compatible = "mediatek,mt6595-disp-pwm" },
+> > -	{ }
+> > -};
+> > -MODULE_DEVICE_TABLE(of, mtk_disp_pwm_of_match);
+> > -
+> >   static struct platform_driver mtk_disp_pwm_driver = {
+> >   	.driver = {
+> >   		.name = "mediatek-disp-pwm",
+> >
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
