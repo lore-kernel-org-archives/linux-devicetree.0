@@ -1,61 +1,64 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v6 1/2] drm/bridge: Add sii902x driver
-Date: Wed, 8 Jun 2016 12:06:09 +0200
-Message-ID: <20160608120609.1e3f8e43@bbrezillon>
-References: <1465300763-19386-1-git-send-email-boris.brezillon@free-electrons.com>
- <CACvgo51drsxyZA1YdDx=2x-idq8CKQkJYyPyywhHrGTTjnOzJA@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM: at91/dt: sama5d2: Use new compatible for ohci
+ node
+Date: Wed, 8 Jun 2016 12:06:11 +0200
+Message-ID: <5757EE13.1080107@atmel.com>
+References: <1465359311-14544-1-git-send-email-wenyou.yang@atmel.com>
+ <1465359311-14544-3-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACvgo51drsxyZA1YdDx=2x-idq8CKQkJYyPyywhHrGTTjnOzJA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Meng Yi <meng.yi@nxp.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465359311-14544-3-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCA4IEp1biAyMDE2IDEwOjM5OjExICswMTAwCkVtaWwgVmVsaWtvdiA8ZW1pbC5sLnZl
-bGlrb3ZAZ21haWwuY29tPiB3cm90ZToKCj4gSGkgQm9yaXMsCj4gCj4gT24gNyBKdW5lIDIwMTYg
-YXQgMTI6NTksIEJvcmlzIEJyZXppbGxvbgo+IDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJv
-bnMuY29tPiB3cm90ZToKPiA+IEFkZCBiYXNpYyBzdXBwb3J0IGZvciB0aGUgc2lpOTAyeCBSR0Ig
-LT4gSERNSSBicmlkZ2UuCj4gPiBUaGlzIGRyaXZlciBkb2VzIG5vdCBzdXBwb3J0IGF1ZGlvIG91
-dHB1dCB5ZXQuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5i
-cmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4gVGVzdGVkLWJ5OiBOaWNvbGFzIEZlcnJl
-IDxuaWNvbGFzLmZlcnJlQGF0bWVsLmNvbT4KPiA+IC0tLQo+ID4gSGVsbG8sCj4gPgo+ID4gVGhp
-cyBwYXRjaCBpcyBvbmx5IGFkZGluZyBiYXNpYyBzdXBwb3J0IGZvciB0aGUgc2lpOTAyMiBjaGlw
-Lgo+ID4gQXMgc3RhdGVkIGluIHRoZSBjb21taXQgbG9nLCB0aGVyZSdzIG5vIGF1ZGlvIHN1cHBv
-cnQsIGJ1dCB0aGUKPiA+IGRyaXZlciBhbHNvIGhhcmRjb2RlcyBhIGxvdCBvZiB0aGluZ3MgKGxp
-a2UgdGhlIFJHQiBpbnB1dCBmb3JtYXQgdG8KPiA+IHVzZSkuCj4gPgo+ID4gQmVzdCBSZWdhcmRz
-LAo+ID4KPiA+IEJvcmlzCj4gPgo+ID4gQ2hhbmdlcyBpbiB2NjoKPiA+IC0gdXNlIEhETUlfSU5G
-T0ZSQU1FX1NJWkUoQVZJKQo+ID4gLSBmaXggcmVzZXRfZ3BpbyBpbml0aWFsaXphdGlvbiAgCj4g
-SSdtIGFmcmFpZCB0aGF0IHRoaXMgb25lIGlzIHN0aWxsIGJ1c3RlZCA6LSggU2VlIGJlbG93Cj4g
-Cj4gCj4gPiArICAgICAgIHNpaTkwMngtPnJlc2V0X2dwaW8gPSBkZXZtX2dwaW9kX2dldF9vcHRp
-b25hbChkZXYsICJyZXNldCIsCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBHUElPRF9PVVRfTE9XKTsgIAo+IERvY3VtZW50YXRpb24gc3Rh
-dGVzIHJlcXVpcmVkLCBhYm92ZSB3ZSB1c2Ugb3B0aW9uYWwuCgpBcmdoISBGb3Jnb3QgdG8gdXBk
-YXRlIHRoZSBkb2N1bWVudGF0aW9uLgoKPiAKPiA+ICsgICAgICAgaWYgKElTX0VSUihzaWk5MDJ4
-LT5yZXNldF9ncGlvKSkgeyAgCj4gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwgcmV0dXJucyBOVUxM
-IG9uIGVycm9yLCB5ZXQgd2UgdXNlIElTX0VSUi4KCkl0IHJldHVybnMgTlVMTCBvciBhIHZhbGlk
-IHBvaW50ZXIgb24gc3VjY2VzcywgYW5kIGFuIGVyci1wdHIgb3RoZXJ3aXNlLgpIZXJlIE5VTEwg
-aXMgYSB2YWxpZCB2YWx1ZSwgc2luY2UgdGhlIEdQSU8gaXMgb3B0aW9uYWwsIGFuZCB0aGUgcmVz
-ZXQKZnVuY3Rpb24gaXMganVzdCBhIE5PUCBpbiB0aGlzIGNhc2UuCgo+IAo+ID4gKyAgICAgICAg
-ICAgICAgIGRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHJldHJpZXZlL3JlcXVlc3QgcmVzZXQgZ3Bp
-bzogJWxkXG4iLAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgUFRSX0VSUihzaWk5MDJ4LT5y
-ZXNldF9ncGlvKSk7Cj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoc2lpOTAyeC0+
-cmVzZXRfZ3Bpbyk7ICAKPiBJZiB0aGUgZ3BpbyBpcyB0cnVseSBvcHRpb25hbCB3ZSBzaG91bGRu
-J3QgcmV0dXJuIGhlcmUuIEFsdGVybmF0aXZlbHkKPiB0aGUgcmVzZXRfZ3BpbyBOVUxMIGNoZWNr
-IGluIHNpaTkwMnhfcmVzZXQoKSBjYW4gZ28uCgpObywgaWYgdGhlIEdQSU8gaXMgbm90IGRlZmlu
-ZWQgaW4gdGhlIERULCBOVUxMIGlzIHJldHVybmVkIGFuZCB3ZSBuZXZlcgpyZWFjaCB0aGlzIHBs
-YWNlLgoKCi0tIApCb3JpcyBCcmV6aWxsb24sIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4
-IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Le 08/06/2016 06:15, Wenyou Yang a =E9crit :
+> Use compatible "atmel,sama5d2-ohci" to be capable of suspending
+> ports while sleep to save the power consumption.
+>=20
+> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>=20
+> Changes in v3: None
+> Changes in v2:
+>  - Use the new compatible for ohci-node.
+>=20
+>  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5=
+d2.dtsi
+> index 78996bd..03d6724 100644
+> --- a/arch/arm/boot/dts/sama5d2.dtsi
+> +++ b/arch/arm/boot/dts/sama5d2.dtsi
+> @@ -232,7 +232,7 @@
+>  		};
+> =20
+>  		usb1: ohci@00400000 {
+> -			compatible =3D "atmel,at91rm9200-ohci", "usb-ohci";
+> +			compatible =3D "atmel,sama5d2-ohci", "usb-ohci";
+
+We must change this to:
++			compatible =3D "atmel,sama5d2-ohci", "atmel,at91rm9200-ohci", "usb-=
+ohci";
+
+To make it independent from the one that may reach Mainline through the=
+ USB git tree.
+
+
+>  			reg =3D <0x00400000 0x100000>;
+>  			interrupts =3D <41 IRQ_TYPE_LEVEL_HIGH 2>;
+>  			clocks =3D <&uhphs_clk>, <&uhphs_clk>, <&uhpck>;
+>=20
+
+Bye,
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
