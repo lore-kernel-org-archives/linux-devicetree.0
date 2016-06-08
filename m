@@ -1,58 +1,58 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv2 2/5] EDAC, altera: ECC Manager IRQ controller support
-Date: Wed, 8 Jun 2016 08:49:45 -0500
-Message-ID: <57582279.60400@opensource.altera.com>
-References: <1464193783-5071-3-git-send-email-tthayer@opensource.altera.com>
- <1465331757-10227-1-git-send-email-tthayer@opensource.altera.com>
- <20160608090005.GB26590@pd.tnic>
-Reply-To: <tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160608090005.GB26590@pd.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [RFC v4 0/7] extcon: usb-gpio: fixes and improvements
+Date: Wed, 08 Jun 2016 15:47:59 +0200
+Message-ID: <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: rogerq@ti.com, Peter Chen <peter.chen@freescale.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, balbi@ti.com, kishon@ti.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
 
-On 06/08/2016 04:00 AM, Borislav Petkov wrote:
-> On Tue, Jun 07, 2016 at 03:35:57PM -0500, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> To better support child devices, the ECC manager needs to be
->> implemented as an IRQ controller.
->>
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> ---
->> v2  Update with cleanup/improvements from maintainer.
->> ---
+Some time ago, Robert tried to add VBUS detection to extcon-usb-gpio
+driver [1].  There was a discussion about patch #2 ("extcon: usb-gpio:
+add support for VBUS detection").
 
-<snip>
+The final conclusion was that Chanwoo will add VBUS/ID notifiers [2].
+That unfortunately never happened so this patchset is a follow up.
 
->> +	} else {
->> +		WARN_ON(1);
->>   	}
->> -	return IRQ_HANDLED;
->> +	return IRQ_NONE;
->>   }
->
-> Simplified a bit more while applying. Ok?
->
->
-Yes, yours is cleaner, Thanks!
+1. Add VBUS/ID cable state notifiers to extcon, so USB controllers
+   could use it.
+2. Add VBUS detection to extcon-usb-gpio driver.
 
-<snip>
+Some parts are based on old Robert's work, some are new, some are
+reworked.
 
-> +		return IRQ_HANDLED;
->   	}
-> -	return IRQ_HANDLED;
-> +
-> +	WARN_ON(1);
-> +
-> +	return IRQ_NONE;
->   }
-<snip>
 
+Best regards,
+Krzysztof
+
+
+[1] http://thread.gmane.org/gmane.linux.kernel/1923192/focus=1923193
+[2] http://thread.gmane.org/gmane.linux.kernel/1923192/focus=1941152
+
+
+Krzysztof Kozlowski (5):
+  Revert "extcon: usb-gpio: switch to use pm wakeirq apis"
+  extcon: Add raw VBUS and ID cable states
+  extcon: usb-gpio: Add support for VBUS detection
+  ARM: exynos_defconfig: Enable EXTCON_USB_GPIO for Odroid XU3 USB OTG
+  ARM: dts: exynos: Add extcon-usb-gpio node for Odroid XU3
+
+Robert Baldyga (2):
+  Documentation: extcon: usb-gpio: update usb-gpio binding description
+  extcon: usb-gpio: make debounce value configurable in devicetree
+
+ .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  28 ++++-
+ arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |  21 ++++
+ arch/arm/boot/dts/exynos5422-odroidxu3.dts         |  21 ++++
+ arch/arm/configs/exynos_defconfig                  |   1 +
+ drivers/extcon/extcon-usb-gpio.c                   | 138 +++++++++++++++++----
+ drivers/extcon/extcon.c                            |   3 +
+ include/linux/extcon.h                             |   8 +-
+ 7 files changed, 190 insertions(+), 30 deletions(-)
+
+-- 
+1.9.1
