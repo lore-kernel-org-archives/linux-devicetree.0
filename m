@@ -1,68 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: bindings: add dt documentation for
- Rockchip PCIe PHY
-Date: Wed, 8 Jun 2016 15:29:00 -0500
-Message-ID: <20160608202900.GA25662@rob-hp-laptop>
-References: <1465370708-23619-1-git-send-email-shawn.lin@rock-chips.com>
+From: Scott Wood <scott.wood@nxp.com>
+Subject: Re: [PATCH] arm64: dts: ls1043a: Add 'dma-coherent' for ls1043a PCI
+ nodes
+Date: Wed, 8 Jun 2016 20:31:18 +0000
+Message-ID: <DB5PR0401MB192810622C64C85F08C281D9915E0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
+References: <1465282546-28256-1-git-send-email-Gang.Liu@nxp.com>
+ <1465282546-28256-2-git-send-email-Gang.Liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465370708-23619-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gang Liu <gang.liu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh@kernel.org" <robh@kernel.org>
+Cc: Minghuan Lian <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-gOn Wed, Jun 08, 2016 at 03:25:08PM +0800, Shawn Lin wrote:
-> This patch adds a binding that describes the Rockchip PCIe PHY
-> found on Rockchip SoCs PCIe interface.
+On 06/07/2016 02:06 AM, Liu Gang wrote:
+> The 'dma-coherent' indicates that the hardware IP block can ensure
+> the coherency of the data transferred from/to the IP block. This
+> can avoid the software cache flush/invalid actions, and improve
+> the performance significantly.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> The PCI IP block of ls1043a has this capability, so adding this
+> feature to improve the PCI performance.
+> 
+> Signed-off-by: Liu Gang <Gang.Liu@nxp.com>
 > ---
-> 
->  .../devicetree/bindings/phy/rockchip-pcie-phy.txt  | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-> new file mode 100644
-> index 0000000..ba8c406
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-> @@ -0,0 +1,22 @@
-> +Rockchip PCIE PHY
-> +-----------------------
-> +
-> +Required properties:
-> + - compatible: rockchip,rk3399-pcie-phy
-> + - #phy-cells: must be 0
-> +
-> +Example:
-> +
-> +grf: syscon@ff770000 {
-> +	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	...
-> +
-> +	pcie_phy: phy@e220 {
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
 
-unit-address needs a reg property or drop the unit address. I'd do the 
-former if there's a register range you can describe here.
+Why not ls2080a as well?
+What about non-PCI devices?
 
+Pretty much everything on these chips should be coherent as long as it's
+properly configured.
 
-> +		compatible = "rockchip,rk3399-pcie-phy";
-> +		#phy-cells = <0>;
-> +	};
-> +};
-> +
-> -- 
-> 2.3.7
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Scott
