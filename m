@@ -1,250 +1,318 @@
-From: weiqing kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] pwm: Add MediaTek MT2701 display PWM driver support
-Date: Wed, 8 Jun 2016 15:21:18 +0800
-Message-ID: <1465370478.5209.30.camel@mhfsdcap03>
-References: <1464597712-5399-1-git-send-email-weiqing.kong@mediatek.com>
-	 <1464597712-5399-3-git-send-email-weiqing.kong@mediatek.com>
-	 <5751A3DD.7020402@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v8 1/3] DTBO magic and dtbo format options
+Date: Wed, 8 Jun 2016 16:51:00 +1000
+Message-ID: <20160608065100.GA9226@voom.fritz.box>
+References: <1464889642-28080-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1464889642-28080-2-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5751A3DD.7020402-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="azskX66S5GHWoEK7"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1464889642-28080-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-06-03 at 17:35 +0200, Matthias Brugger wrote:
-> 
-> On 30/05/16 10:41, Weiqing Kong wrote:
-> > Use the mtk_pwm_data struction to define different registers
-> > and add MT2701 specific register operations, such as MT2701
-> > doesn't have commit register, needs to disable double buffer
-> > before writing register, and needs to select manual mode
-> > and use PWM_PERIOD/PWM_HIGH_WIDTH.
-> >
-> > Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   drivers/pwm/pwm-mtk-disp.c | 89 +++++++++++++++++++++++++++++++++++++---------
-> >   1 file changed, 72 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-> > index 0ad3385..03b9c9e 100644
-> > --- a/drivers/pwm/pwm-mtk-disp.c
-> > +++ b/drivers/pwm/pwm-mtk-disp.c
-> > @@ -18,33 +18,44 @@
-> >   #include <linux/io.h>
-> >   #include <linux/module.h>
-> >   #include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >   #include <linux/platform_device.h>
-> >   #include <linux/pwm.h>
-> >   #include <linux/slab.h>
-> >
-> >   #define DISP_PWM_EN		0x00
-> > -#define PWM_ENABLE_MASK		BIT(0)
-> >
-> >   #define DISP_PWM_COMMIT		0x08
-> >   #define PWM_COMMIT_MASK		BIT(0)
-> >
-> > -#define DISP_PWM_CON_0		0x10
-> >   #define PWM_CLKDIV_SHIFT	16
-> >   #define PWM_CLKDIV_MAX		0x3ff
-> >   #define PWM_CLKDIV_MASK		(PWM_CLKDIV_MAX << PWM_CLKDIV_SHIFT)
-> >
-> > -#define DISP_PWM_CON_1		0x14
-> >   #define PWM_PERIOD_BIT_WIDTH	12
-> >   #define PWM_PERIOD_MASK		((1 << PWM_PERIOD_BIT_WIDTH) - 1)
-> >
-> >   #define PWM_HIGH_WIDTH_SHIFT	16
-> >   #define PWM_HIGH_WIDTH_MASK	(0x1fff << PWM_HIGH_WIDTH_SHIFT)
-> >
-> > +#define MT2701_PWM_MANUAL_SEL_MASK	BIT(1)
-> > +#define MT2701_PWM_BLS_DEBUG		0xb0
-> 
-> Do we need to set magic 0x3 in the debug register? If so, this should be 
-> part of mtk_pwm_data, just as con0_sel.
 
-Do you mean that add bls_debug into struct mtk_pwm_data,
-and set 0x3 in mt2701 data, 0x0 in mt8173 data?
+--azskX66S5GHWoEK7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > +#define MT2701_PWM_BLS_DEBUG_MASK	0x3
-> > +
-> > +struct mtk_pwm_data {
-> > +	unsigned int enable_bit;
-> > +	unsigned int con0;
-> > +	unsigned int con0_sel;
-> > +	unsigned int con1;
-> > +	bool have_commit_reg;
-> > +};
-> > +
-> >   struct mtk_disp_pwm {
-> >   	struct pwm_chip chip;
-> >   	struct clk *clk_main;
-> >   	struct clk *clk_mm;
-> >   	void __iomem *base;
-> > +	const struct mtk_pwm_data *data;
-> 
-> Couldn't that just be the offset for the commit register and set it to 
-> 0x0 if the commit register is not present. Right now, we suppose the 
-> DISP_PWM_EN is at offset 0x0, so this should not be a problem.
-> 
+On Thu, Jun 02, 2016 at 08:47:20PM +0300, Pantelis Antoniou wrote:
+> Introduce a new magic number for dynamic plugin objects,
+> which is enabled by selecting dtbo/input output options.
+>=20
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
-Do you mean that replace have_commit_reg with commit_reg_offset?
-just like this?
-bool have_commit_reg;
-->
-unsigned int commit_reg_offset;
-and set commit_reg_offset 0x0 in mt2701, 0x1 in mt8173?
+So, I don't think we should need an explicit -I dtbo or -O dtbo.
+Instead we should be able to autoselect the right magic number based
+on the presence of the /plugin/ flag.  In the other direction we
+should be able to set the equivalent of the /plugin/ flag based on the
+magic number.
 
-> >   };
-> >
-> >   static inline struct mtk_disp_pwm *to_mtk_disp_pwm(struct pwm_chip *chip)
-> > @@ -106,12 +117,18 @@ static int mtk_disp_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> >   		return err;
-> >   	}
-> >
-> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_CON_0, PWM_CLKDIV_MASK,
-> > +	mtk_disp_pwm_update_bits(mdp, mdp->data->con0,
-> > +				 PWM_CLKDIV_MASK,
-> >   				 clk_div << PWM_CLKDIV_SHIFT);
-> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_CON_1,
-> > -				 PWM_PERIOD_MASK | PWM_HIGH_WIDTH_MASK, value);
-> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT, PWM_COMMIT_MASK, 1);
-> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT, PWM_COMMIT_MASK, 0);
-> > +	mtk_disp_pwm_update_bits(mdp, mdp->data->con1,
-> > +				 PWM_PERIOD_MASK | PWM_HIGH_WIDTH_MASK,
-> > +				 value);
-> > +	if (mdp->data->have_commit_reg) {
-> > +		mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT,
-> > +					 PWM_COMMIT_MASK, 0x1);
-> > +		mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT,
-> > +					 PWM_COMMIT_MASK, 0x0);
-> 
-> should be renamed to MT8173_PWM_COMMIT_MASK, although I'm not really a 
-> friend of mixing up SoC specific defines with a Soc specific 
-> mtk_disp_pwm structure.
-> 
-> Regards,
-> Matthias
+> ---
+>  Documentation/manual.txt |  8 ++++++++
+>  dtc.c                    | 14 +++++++++++---
+>  dtc.h                    |  4 ++--
+>  fdtdump.c                |  2 +-
+>  flattree.c               | 11 ++++++-----
+>  libfdt/fdt.c             |  2 +-
+>  libfdt/fdt.h             |  3 ++-
+>  tests/mangle-layout.c    |  7 ++++---
+>  8 files changed, 35 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/Documentation/manual.txt b/Documentation/manual.txt
+> index 398de32..6d2811b 100644
+> --- a/Documentation/manual.txt
+> +++ b/Documentation/manual.txt
+> @@ -60,6 +60,9 @@ The currently supported Input Formats are:
+>      - "dtb": "blob" format.  A flattened device-tree block with
+>          header in one binary blob.
+> =20
+> +    - "dtbo" : "blob" format. Identical with "dtb" but meant
+> +        for use with dynamic-device tree objects.
+> +
+>      - "dts": "source" format.  A text file containing a "source"
+>          for a device-tree.
+> =20
+> @@ -71,6 +74,8 @@ The currently supported Output Formats are:
+> =20
+>       - "dtb": "blob" format
+> =20
+> +     - "dtbo": "blob" format - for dynamic device tree objects/overlays
+> +
+>       - "dts": "source" format
+> =20
+>       - "asm": assembly language file.  A file that can be sourced
+> @@ -78,6 +83,9 @@ The currently supported Output Formats are:
+>          then simply be added to your Makefile.  Additionally, the
+>          assembly file exports some symbols that can be used.
+> =20
+> +     - "asmo": assembly language file for dynamic device tree objects/ov=
+erlays.
+> +        Identical to "asm" for most purposes.
+> +
+> =20
+>  3) Command Line
+> =20
+> diff --git a/dtc.c b/dtc.c
+> index 1c1f88f..43ba19d 100644
+> --- a/dtc.c
+> +++ b/dtc.c
+> @@ -127,6 +127,8 @@ static const char *guess_type_by_name(const char *fna=
+me, const char *fallback)
+>  		return "dts";
+>  	if (!strcasecmp(s, ".dtb"))
+>  		return "dtb";
+> +	if (!strcasecmp(s, ".dtbo"))
+> +		return "dtbo";
+>  	return fallback;
+>  }
+> =20
+> @@ -157,6 +159,8 @@ static const char *guess_input_format(const char *fna=
+me, const char *fallback)
+>  	magic =3D fdt32_to_cpu(magic);
+>  	if (magic =3D=3D FDT_MAGIC)
+>  		return "dtb";
+> +	if (magic =3D=3D FDT_MAGIC_DTBO)
+> +		return "dtbo";
+> =20
+>  	return guess_type_by_name(fname, fallback);
+>  }
+> @@ -285,7 +289,7 @@ int main(int argc, char *argv[])
+>  		dti =3D dt_from_source(arg);
+>  	else if (streq(inform, "fs"))
+>  		dti =3D dt_from_fs(arg);
+> -	else if(streq(inform, "dtb"))
+> +	else if (streq(inform, "dtb") || streq(inform, "dtbo"))
+>  		dti =3D dt_from_blob(arg);
+>  	else
+>  		die("Unknown input format \"%s\"\n", inform);
+> @@ -319,9 +323,13 @@ int main(int argc, char *argv[])
+>  	if (streq(outform, "dts")) {
+>  		dt_to_source(outf, dti);
+>  	} else if (streq(outform, "dtb")) {
+> -		dt_to_blob(outf, dti, outversion);
+> +		dt_to_blob(outf, dti, FDT_MAGIC, outversion);
+> +	} else if (streq(outform, "dtbo")) {
+> +		dt_to_blob(outf, dti, FDT_MAGIC_DTBO, outversion);
+>  	} else if (streq(outform, "asm")) {
+> -		dt_to_asm(outf, dti, outversion);
+> +		dt_to_asm(outf, dti, FDT_MAGIC, outversion);
+> +	} else if (streq(outform, "asmo")) {
+> +		dt_to_asm(outf, dti, FDT_MAGIC_DTBO, outversion);
+>  	} else if (streq(outform, "null")) {
+>  		/* do nothing */
+>  	} else {
+> diff --git a/dtc.h b/dtc.h
+> index 040f8d4..fa66dca 100644
+> --- a/dtc.h
+> +++ b/dtc.h
+> @@ -266,8 +266,8 @@ void process_checks(bool force, struct dt_info *dti);
+> =20
+>  /* Flattened trees */
+> =20
+> -void dt_to_blob(FILE *f, struct dt_info *dti, int version);
+> -void dt_to_asm(FILE *f, struct dt_info *dti, int version);
+> +void dt_to_blob(FILE *f, struct dt_info *dti, fdt32_t magic, int version=
+);
+> +void dt_to_asm(FILE *f, struct dt_info *dti, fdt32_t magic, int version);
+> =20
+>  struct dt_info *dt_from_blob(const char *fname);
+> =20
+> diff --git a/fdtdump.c b/fdtdump.c
+> index 95a6a20..fa5a050 100644
+> --- a/fdtdump.c
+> +++ b/fdtdump.c
+> @@ -199,7 +199,7 @@ int main(int argc, char *argv[])
+>  			p =3D memchr(p, smagic[0], endp - p - 4);
+>  			if (!p)
+>  				break;
+> -			if (fdt_magic(p) =3D=3D FDT_MAGIC) {
+> +			if (fdt_magic(p) =3D=3D FDT_MAGIC || fdt_magic(p) =3D=3D FDT_MAGIC_DT=
+BO) {
+>  				/* try and validate the main struct */
+>  				off_t this_len =3D endp - p;
+>  				fdt32_t max_version =3D 17;
+> diff --git a/flattree.c b/flattree.c
+> index 45fcb04..59bdc7d 100644
+> --- a/flattree.c
+> +++ b/flattree.c
+> @@ -335,6 +335,7 @@ static struct data flatten_reserve_list(struct reserv=
+e_info *reservelist,
+>  }
+> =20
+>  static void make_fdt_header(struct fdt_header *fdt,
+> +			    fdt32_t magic,
+>  			    struct version_info *vi,
+>  			    int reservesize, int dtsize, int strsize,
+>  			    int boot_cpuid_phys)
+> @@ -345,7 +346,7 @@ static void make_fdt_header(struct fdt_header *fdt,
+> =20
+>  	memset(fdt, 0xff, sizeof(*fdt));
+> =20
+> -	fdt->magic =3D cpu_to_fdt32(FDT_MAGIC);
+> +	fdt->magic =3D cpu_to_fdt32(magic);
+>  	fdt->version =3D cpu_to_fdt32(vi->version);
+>  	fdt->last_comp_version =3D cpu_to_fdt32(vi->last_comp_version);
+> =20
+> @@ -366,7 +367,7 @@ static void make_fdt_header(struct fdt_header *fdt,
+>  		fdt->size_dt_struct =3D cpu_to_fdt32(dtsize);
+>  }
+> =20
+> -void dt_to_blob(FILE *f, struct dt_info *dti, int version)
+> +void dt_to_blob(FILE *f, struct dt_info *dti, fdt32_t magic, int version)
+>  {
+>  	struct version_info *vi =3D NULL;
+>  	int i;
+> @@ -390,7 +391,7 @@ void dt_to_blob(FILE *f, struct dt_info *dti, int ver=
+sion)
+>  	reservebuf =3D flatten_reserve_list(dti->reservelist, vi);
+> =20
+>  	/* Make header */
+> -	make_fdt_header(&fdt, vi, reservebuf.len, dtbuf.len, strbuf.len,
+> +	make_fdt_header(&fdt, magic, vi, reservebuf.len, dtbuf.len, strbuf.len,
+>  			dti->boot_cpuid_phys);
+> =20
+>  	/*
+> @@ -460,7 +461,7 @@ static void dump_stringtable_asm(FILE *f, struct data=
+ strbuf)
+>  	}
+>  }
+> =20
+> -void dt_to_asm(FILE *f, struct dt_info *dti, int version)
+> +void dt_to_asm(FILE *f, struct dt_info *dti, fdt32_t magic, int version)
+>  {
+>  	struct version_info *vi =3D NULL;
+>  	int i;
+> @@ -832,7 +833,7 @@ struct dt_info *dt_from_blob(const char *fname)
+>  	}
+> =20
+>  	magic =3D fdt32_to_cpu(magic);
+> -	if (magic !=3D FDT_MAGIC)
+> +	if (magic !=3D FDT_MAGIC && magic !=3D FDT_MAGIC_DTBO)
+>  		die("Blob has incorrect magic number\n");
+> =20
+>  	rc =3D fread(&totalsize, sizeof(totalsize), 1, f);
+> diff --git a/libfdt/fdt.c b/libfdt/fdt.c
+> index 22286a1..28d422c 100644
+> --- a/libfdt/fdt.c
+> +++ b/libfdt/fdt.c
+> @@ -57,7 +57,7 @@
+> =20
+>  int fdt_check_header(const void *fdt)
+>  {
+> -	if (fdt_magic(fdt) =3D=3D FDT_MAGIC) {
+> +	if (fdt_magic(fdt) =3D=3D FDT_MAGIC || fdt_magic(fdt) =3D=3D FDT_MAGIC_=
+DTBO) {
+>  		/* Complete tree */
+>  		if (fdt_version(fdt) < FDT_FIRST_SUPPORTED_VERSION)
+>  			return -FDT_ERR_BADVERSION;
+> diff --git a/libfdt/fdt.h b/libfdt/fdt.h
+> index 526aedb..493cd55 100644
+> --- a/libfdt/fdt.h
+> +++ b/libfdt/fdt.h
+> @@ -55,7 +55,7 @@
+>  #ifndef __ASSEMBLY__
+> =20
+>  struct fdt_header {
+> -	fdt32_t magic;			 /* magic word FDT_MAGIC */
+> +	fdt32_t magic;			 /* magic word FDT_MAGIC[|_DTBO] */
+>  	fdt32_t totalsize;		 /* total size of DT block */
+>  	fdt32_t off_dt_struct;		 /* offset to structure */
+>  	fdt32_t off_dt_strings;		 /* offset to strings */
+> @@ -93,6 +93,7 @@ struct fdt_property {
+>  #endif /* !__ASSEMBLY */
+> =20
+>  #define FDT_MAGIC	0xd00dfeed	/* 4: version, 4: total size */
+> +#define FDT_MAGIC_DTBO	0xd00dfdb0	/* DTBO magic */
+>  #define FDT_TAGSIZE	sizeof(fdt32_t)
+> =20
+>  #define FDT_BEGIN_NODE	0x1		/* Start node: full name */
+> diff --git a/tests/mangle-layout.c b/tests/mangle-layout.c
+> index a76e51e..d29ebc6 100644
+> --- a/tests/mangle-layout.c
+> +++ b/tests/mangle-layout.c
+> @@ -42,7 +42,8 @@ static void expand_buf(struct bufstate *buf, int newsiz=
+e)
+>  	buf->size =3D newsize;
+>  }
+> =20
+> -static void new_header(struct bufstate *buf, int version, const void *fd=
+t)
+> +static void new_header(struct bufstate *buf, fdt32_t magic, int version,
+> +		       const void *fdt)
+>  {
+>  	int hdrsize;
+> =20
+> @@ -56,7 +57,7 @@ static void new_header(struct bufstate *buf, int versio=
+n, const void *fdt)
+>  	expand_buf(buf, hdrsize);
+>  	memset(buf->buf, 0, hdrsize);
+> =20
+> -	fdt_set_magic(buf->buf, FDT_MAGIC);
+> +	fdt_set_magic(buf->buf, magic);
+>  	fdt_set_version(buf->buf, version);
+>  	fdt_set_last_comp_version(buf->buf, 16);
+>  	fdt_set_boot_cpuid_phys(buf->buf, fdt_boot_cpuid_phys(fdt));
+> @@ -145,7 +146,7 @@ int main(int argc, char *argv[])
+>  	if (fdt_version(fdt) < 17)
+>  		CONFIG("Input tree must be v17");
+> =20
+> -	new_header(&buf, version, fdt);
+> +	new_header(&buf, FDT_MAGIC, version, fdt);
+> =20
+>  	while (*blockorder) {
+>  		add_block(&buf, version, *blockorder, fdt);
 
-ok, I will modify it as you said. thanks for you suggestion.
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-> 
-> > +	}
-> >
-> >   	clk_disable(mdp->clk_mm);
-> >   	clk_disable(mdp->clk_main);
-> > @@ -134,7 +151,9 @@ static int mtk_disp_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-> >   		return err;
-> >   	}
-> >
-> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN, PWM_ENABLE_MASK, 1);
-> > +	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
-> > +				 mdp->data->enable_bit,
-> > +				 mdp->data->enable_bit);
-> >
-> >   	return 0;
-> >   }
-> > @@ -143,7 +162,8 @@ static void mtk_disp_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-> >   {
-> >   	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
-> >
-> > -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN, PWM_ENABLE_MASK, 0);
-> > +	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
-> > +				 mdp->data->enable_bit, 0x0);
-> >
-> >   	clk_disable(mdp->clk_mm);
-> >   	clk_disable(mdp->clk_main);
-> > @@ -156,12 +176,41 @@ static const struct pwm_ops mtk_disp_pwm_ops = {
-> >   	.owner = THIS_MODULE,
-> >   };
-> >
-> > +static const struct mtk_pwm_data mt8173_pwm_data = {
-> > +	.enable_bit = BIT(0),
-> > +	.con0 = 0x10,
-> > +	.con0_sel = 0x0,
-> > +	.con1 = 0x14,
-> > +	.have_commit_reg = true,
-> > +};
-> > +
-> > +static const struct mtk_pwm_data mt2701_pwm_data = {
-> > +	.enable_bit = BIT(16),
-> > +	.con0 = 0xa8,
-> > +	.con0_sel = 0x2,
-> > +	.con1 = 0xac,
-> > +	.have_commit_reg = false,
-> > +};
-> > +
-> > +static const struct of_device_id mtk_disp_pwm_of_match[] = {
-> > +	{ .compatible = "mediatek,mt2701-disp-bls", .data = &mt2701_pwm_data},
-> > +	{ .compatible = "mediatek,mt6595-disp-pwm", .data = &mt8173_pwm_data},
-> > +	{ .compatible = "mediatek,mt8173-disp-pwm", .data = &mt8173_pwm_data},
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mtk_disp_pwm_of_match);
-> > +
-> >   static int mtk_disp_pwm_probe(struct platform_device *pdev)
-> >   {
-> > +	const struct of_device_id *id;
-> >   	struct mtk_disp_pwm *mdp;
-> >   	struct resource *r;
-> >   	int ret;
-> >
-> > +	id = of_match_device(mtk_disp_pwm_of_match, &pdev->dev);
-> > +	if (!id)
-> > +		return -EINVAL;
-> > +
-> >   	mdp = devm_kzalloc(&pdev->dev, sizeof(*mdp), GFP_KERNEL);
-> >   	if (!mdp)
-> >   		return -ENOMEM;
-> > @@ -191,6 +240,7 @@ static int mtk_disp_pwm_probe(struct platform_device *pdev)
-> >   	mdp->chip.ops = &mtk_disp_pwm_ops;
-> >   	mdp->chip.base = -1;
-> >   	mdp->chip.npwm = 1;
-> > +	mdp->data = id->data;
-> >
-> >   	ret = pwmchip_add(&mdp->chip);
-> >   	if (ret < 0) {
-> > @@ -200,6 +250,18 @@ static int mtk_disp_pwm_probe(struct platform_device *pdev)
-> >
-> >   	platform_set_drvdata(pdev, mdp);
-> >
-> > +	/*
-> > +	 * For MT2701, disable double buffer before writing register
-> > +	 * and select manual mode and use PWM_PERIOD/PWM_HIGH_WIDTH.
-> > +	 */
-> > +	if (!mdp->data->have_commit_reg) {
-> > +		mtk_disp_pwm_update_bits(mdp, MT2701_PWM_BLS_DEBUG,
-> > +					 MT2701_PWM_BLS_DEBUG_MASK, 0x3);
-> > +		mtk_disp_pwm_update_bits(mdp, mdp->data->con0,
-> > +					 MT2701_PWM_MANUAL_SEL_MASK,
-> > +					 mdp->data->con0_sel);
-> > +	}
-> > +
-> >   	return 0;
-> >
-> >   disable_clk_mm:
-> > @@ -221,13 +283,6 @@ static int mtk_disp_pwm_remove(struct platform_device *pdev)
-> >   	return ret;
-> >   }
-> >
-> > -static const struct of_device_id mtk_disp_pwm_of_match[] = {
-> > -	{ .compatible = "mediatek,mt8173-disp-pwm" },
-> > -	{ .compatible = "mediatek,mt6595-disp-pwm" },
-> > -	{ }
-> > -};
-> > -MODULE_DEVICE_TABLE(of, mtk_disp_pwm_of_match);
-> > -
-> >   static struct platform_driver mtk_disp_pwm_driver = {
-> >   	.driver = {
-> >   		.name = "mediatek-disp-pwm",
-> >
+--azskX66S5GHWoEK7
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJXV8BUAAoJEGw4ysog2bOS2uQP/iqCs8+tz9fDWpu67i6A6Vft
+DyK1ackXH56T9DXqSjgT4R0W12SYirlPXedQ96QEPdBjRCGJvc9/+GD7lZWrl8ZC
+YeAGhYt534C1QXTdKbhJ5tV6zoe5/PTNrxEamBvCjU/k2phRpv9+/yanqKxrbIdC
+Q6Fe3p+4bRRF6XlBmFYUGganHjkGWIYVEy6qqEBbC2xenBviXgBesBI0InSIYlHl
+ZhH6VnN6a80+4H9RHZZB3dW6iKg8ZcyqErnVgAu9+8BO3CNSLOZpiETyg/L/kGzZ
+8BYoAqocY+2sH+Pxm2o/SANfrRv/xE/Jb2bYhDtXF4M881eCXesGIWEDAzbq1FoI
+2LtVrianign7fVhkkEO3kbDpjBkFld77sAWBs8ONUJ4agKg8NznUUItbDSJ7tLeB
+IVqGDUR0nILINBIOprF9PpQ/unr30UXeah0xYP+8zGP4h8zegjvPUKdsFClTKTv5
+GDLfiKr39KJZhdhNBld0SeiIr5+LOm+GlZw1UXm2EWsNscA7X7b49A3WdTRCmAJG
+a2b4E8ZK8TBEm57Ghzb1+AdXCCKiFKVc7Ft4ou9lO7SAW9AOb7q7L9OlI0ZbKUNW
+iqhbVA70a6cfjeCOE5qXGXu5uIJHidgRi+N3PM8sS5B3baENhgnQIUDD3SdO/1Jk
+XElWCzpesmVfwln7xhOu
+=Qm1Z
+-----END PGP SIGNATURE-----
+
+--azskX66S5GHWoEK7--
