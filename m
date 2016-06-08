@@ -1,39 +1,49 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] drivers: of: Fix of_pci.h header guard
-Date: Wed, 8 Jun 2016 08:19:40 -0500
-Message-ID: <20160608131940.GA8455@rob-hp-laptop>
-References: <cf20413cea1895fd005bf27460fe649000c09e02.1465321392.git.robin.murphy@arm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun4i: The blue led on the Mele A1000 is a
+ power led
+Date: Wed, 8 Jun 2016 15:23:31 +0200
+Message-ID: <0acb666e-3fa7-fb10-4c0d-1d7990f9eaa6@redhat.com>
+References: <1465129393-22379-1-git-send-email-hdegoede@redhat.com>
+ <20160607212419.GE14179@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cf20413cea1895fd005bf27460fe649000c09e02.1465321392.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20160607212419.GE14179@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 06:44:48PM +0100, Robin Murphy wrote:
-> The compilation of of_pci.c is governed by CONFIG_OF_PCI, but the
-> corresponding declarations in of_pci.h are inconsistently guarded by
-> CONFIG_OF, with the result that if CONFIG_PCI is disabled for an OF
-> platform, the dangling external declarations are still active and the
-> inline stub definitions not. So far this has managed to go unnoticed
-> since it happens that the only references to these functions are from
-> code which itself depends on CONFIG_PCI or CONFIG_OF_PCI.
-> 
-> Fix this with the appropriate config guard so that any new callers
-> outside PCI-specific code don't start unexpectedly breaking under
-> certain configs.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
->  include/linux/of_pci.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-Applied, thanks.
+On 07-06-16 23:24, Maxime Ripard wrote:
+> On Sun, Jun 05, 2016 at 02:23:11PM +0200, Hans de Goede wrote:
+>> The blue led on the Mele A1000 is wired to light up as soon as the board
+>> has powered (it will be on while the gpio is still in input / floating
+>> mode), also its location on the top-set box clearly signals "power led".
+>>
+>> Until now we've been treating this as a generic usr function led, which
+>> means that when you plug power into the top-set box, the power-led lights
+>> and then turns off as soon as the kernel loads, which looks wrong.
+>
+> I'm not sure I understand the relationship between usr vs pwr led and
+> the fact that it's disabled.
 
-Rob
+There is no relation, other then that pwr leds typically have
+default-state = "on"; set whereas usr leds do not.
+
+>> This renames the led from a1000:blue:usr to a1000:blue:pwr and marks
+>> it as default on, fixing this.
+>
+> however, the default on might. Is it just a confusing commit log, or
+> am I overlooking something?
+
+Just a slightly confusing commit log.
+
+Regards,
+
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
