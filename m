@@ -1,89 +1,166 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: [RFC v3 1/5] drm/mediatek: rename macros, add chip prefix
-Date: Thu, 9 Jun 2016 00:03:41 +0800
-Message-ID: <1465401825-43642-2-git-send-email-yt.shen@mediatek.com>
-References: <1465401825-43642-1-git-send-email-yt.shen@mediatek.com>
+From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: juno: add SCPI power domains for device
+ power management
+Date: Wed, 8 Jun 2016 17:05:33 +0100
+Message-ID: <20160608160532.GR1165@e106497-lin.cambridge.arm.com>
+References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
+ <1465228765-14038-4-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465401825-43642-1-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1465228765-14038-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIE1UODE3MyBwcmVmaXggZm9yIGhhcmR3YXJlIHJlbGF0ZWQgbWFjcm9zLgoKU2lnbmVkLW9m
-Zi1ieTogWVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwLmMgfCAgIDYwICsrKysrKysrKysrKysrKystLS0tLS0tLS0t
-LS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25zKC0p
-CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwppbmRleCAxN2JhOTM1Li4yZmM0
-MzIxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwor
-KysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwpAQCAtMzYsMjEgKzM2
-LDIxIEBACiAjZGVmaW5lIERJU1BfUkVHX01VVEVYX01PRChuKQkoMHgyYyArIDB4MjAgKiAobikp
-CiAjZGVmaW5lIERJU1BfUkVHX01VVEVYX1NPRihuKQkoMHgzMCArIDB4MjAgKiAobikpCiAKLSNk
-ZWZpbmUgTVVURVhfTU9EX0RJU1BfT1ZMMAkJQklUKDExKQotI2RlZmluZSBNVVRFWF9NT0RfRElT
-UF9PVkwxCQlCSVQoMTIpCi0jZGVmaW5lIE1VVEVYX01PRF9ESVNQX1JETUEwCQlCSVQoMTMpCi0j
-ZGVmaW5lIE1VVEVYX01PRF9ESVNQX1JETUExCQlCSVQoMTQpCi0jZGVmaW5lIE1VVEVYX01PRF9E
-SVNQX1JETUEyCQlCSVQoMTUpCi0jZGVmaW5lIE1VVEVYX01PRF9ESVNQX1dETUEwCQlCSVQoMTYp
-Ci0jZGVmaW5lIE1VVEVYX01PRF9ESVNQX1dETUExCQlCSVQoMTcpCi0jZGVmaW5lIE1VVEVYX01P
-RF9ESVNQX0NPTE9SMAkJQklUKDE4KQotI2RlZmluZSBNVVRFWF9NT0RfRElTUF9DT0xPUjEJCUJJ
-VCgxOSkKLSNkZWZpbmUgTVVURVhfTU9EX0RJU1BfQUFMCQlCSVQoMjApCi0jZGVmaW5lIE1VVEVY
-X01PRF9ESVNQX0dBTU1BCQlCSVQoMjEpCi0jZGVmaW5lIE1VVEVYX01PRF9ESVNQX1VGT0UJCUJJ
-VCgyMikKLSNkZWZpbmUgTVVURVhfTU9EX0RJU1BfUFdNMAkJQklUKDIzKQotI2RlZmluZSBNVVRF
-WF9NT0RfRElTUF9QV00xCQlCSVQoMjQpCi0jZGVmaW5lIE1VVEVYX01PRF9ESVNQX09ECQlCSVQo
-MjUpCisjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9PVkwwCQlCSVQoMTEpCisjZGVmaW5l
-IE1UODE3M19NVVRFWF9NT0RfRElTUF9PVkwxCQlCSVQoMTIpCisjZGVmaW5lIE1UODE3M19NVVRF
-WF9NT0RfRElTUF9SRE1BMAkJQklUKDEzKQorI2RlZmluZSBNVDgxNzNfTVVURVhfTU9EX0RJU1Bf
-UkRNQTEJCUJJVCgxNCkKKyNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX1JETUEyCQlCSVQo
-MTUpCisjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9XRE1BMAkJQklUKDE2KQorI2RlZmlu
-ZSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfV0RNQTEJCUJJVCgxNykKKyNkZWZpbmUgTVQ4MTczX01V
-VEVYX01PRF9ESVNQX0NPTE9SMAkJQklUKDE4KQorI2RlZmluZSBNVDgxNzNfTVVURVhfTU9EX0RJ
-U1BfQ09MT1IxCQlCSVQoMTkpCisjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9BQUwJCUJJ
-VCgyMCkKKyNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX0dBTU1BCQlCSVQoMjEpCisjZGVm
-aW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9VRk9FCQlCSVQoMjIpCisjZGVmaW5lIE1UODE3M19N
-VVRFWF9NT0RfRElTUF9QV00wCQlCSVQoMjMpCisjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElT
-UF9QV00xCQlCSVQoMjQpCisjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9PRAkJQklUKDI1
-KQogCiAjZGVmaW5lIE1VVEVYX1NPRl9TSU5HTEVfTU9ERQkJMAogI2RlZmluZSBNVVRFWF9TT0Zf
-RFNJMAkJCTEKQEAgLTgwLDIxICs4MCwyMSBAQCBzdHJ1Y3QgbXRrX2RkcCB7CiB9OwogCiBzdGF0
-aWMgY29uc3QgdW5zaWduZWQgaW50IG11dGV4X21vZFtERFBfQ09NUE9ORU5UX0lEX01BWF0gPSB7
-Ci0JW0REUF9DT01QT05FTlRfQUFMXSA9IE1VVEVYX01PRF9ESVNQX0FBTCwKLQlbRERQX0NPTVBP
-TkVOVF9DT0xPUjBdID0gTVVURVhfTU9EX0RJU1BfQ09MT1IwLAotCVtERFBfQ09NUE9ORU5UX0NP
-TE9SMV0gPSBNVVRFWF9NT0RfRElTUF9DT0xPUjEsCi0JW0REUF9DT01QT05FTlRfR0FNTUFdID0g
-TVVURVhfTU9EX0RJU1BfR0FNTUEsCi0JW0REUF9DT01QT05FTlRfT0RdID0gTVVURVhfTU9EX0RJ
-U1BfT0QsCi0JW0REUF9DT01QT05FTlRfT1ZMMF0gPSBNVVRFWF9NT0RfRElTUF9PVkwwLAotCVtE
-RFBfQ09NUE9ORU5UX09WTDFdID0gTVVURVhfTU9EX0RJU1BfT1ZMMSwKLQlbRERQX0NPTVBPTkVO
-VF9QV00wXSA9IE1VVEVYX01PRF9ESVNQX1BXTTAsCi0JW0REUF9DT01QT05FTlRfUFdNMV0gPSBN
-VVRFWF9NT0RfRElTUF9QV00xLAotCVtERFBfQ09NUE9ORU5UX1JETUEwXSA9IE1VVEVYX01PRF9E
-SVNQX1JETUEwLAotCVtERFBfQ09NUE9ORU5UX1JETUExXSA9IE1VVEVYX01PRF9ESVNQX1JETUEx
-LAotCVtERFBfQ09NUE9ORU5UX1JETUEyXSA9IE1VVEVYX01PRF9ESVNQX1JETUEyLAotCVtERFBf
-Q09NUE9ORU5UX1VGT0VdID0gTVVURVhfTU9EX0RJU1BfVUZPRSwKLQlbRERQX0NPTVBPTkVOVF9X
-RE1BMF0gPSBNVVRFWF9NT0RfRElTUF9XRE1BMCwKLQlbRERQX0NPTVBPTkVOVF9XRE1BMV0gPSBN
-VVRFWF9NT0RfRElTUF9XRE1BMSwKKwlbRERQX0NPTVBPTkVOVF9BQUxdID0gTVQ4MTczX01VVEVY
-X01PRF9ESVNQX0FBTCwKKwlbRERQX0NPTVBPTkVOVF9DT0xPUjBdID0gTVQ4MTczX01VVEVYX01P
-RF9ESVNQX0NPTE9SMCwKKwlbRERQX0NPTVBPTkVOVF9DT0xPUjFdID0gTVQ4MTczX01VVEVYX01P
-RF9ESVNQX0NPTE9SMSwKKwlbRERQX0NPTVBPTkVOVF9HQU1NQV0gPSBNVDgxNzNfTVVURVhfTU9E
-X0RJU1BfR0FNTUEsCisJW0REUF9DT01QT05FTlRfT0RdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQ
-X09ELAorCVtERFBfQ09NUE9ORU5UX09WTDBdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX09WTDAs
-CisJW0REUF9DT01QT05FTlRfT1ZMMV0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfT1ZMMSwKKwlb
-RERQX0NPTVBPTkVOVF9QV00wXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9QV00wLAorCVtERFBf
-Q09NUE9ORU5UX1BXTTFdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX1BXTTEsCisJW0REUF9DT01Q
-T05FTlRfUkRNQTBdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX1JETUEwLAorCVtERFBfQ09NUE9O
-RU5UX1JETUExXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9SRE1BMSwKKwlbRERQX0NPTVBPTkVO
-VF9SRE1BMl0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfUkRNQTIsCisJW0REUF9DT01QT05FTlRf
-VUZPRV0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfVUZPRSwKKwlbRERQX0NPTVBPTkVOVF9XRE1B
-MF0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfV0RNQTAsCisJW0REUF9DT01QT05FTlRfV0RNQTFd
-ID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX1dETUExLAogfTsKIAogc3RhdGljIHVuc2lnbmVkIGlu
-dCBtdGtfZGRwX21vdXRfZW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAotLSAKMS43LjkuNQoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Jun 06, 2016 at 04:59:25PM +0100, Sudeep Holla wrote:
+> This patch adds power domain information to coresight devices using
+> SCPI power domains.
+>=20
+> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+
+Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/arm/juno-base.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot=
+/dts/arm/juno-base.dtsi
+> index 49fa55cdc977..ef054094d5a8 100644
+> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+> @@ -75,6 +75,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		ports {
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <0>;
+> @@ -105,6 +106,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		port {
+>  			tpiu_in_port: endpoint {
+>  				slave-mode;
+> @@ -120,6 +122,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		ports {
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <0>;
+> @@ -157,6 +160,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		port {
+>  			etr_in_port: endpoint {
+>  				slave-mode;
+> @@ -208,6 +212,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		ports {
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <0>;
+> @@ -244,6 +249,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		ports {
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <0>;
+> @@ -293,6 +299,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		port {
+>  			cluster0_etm0_out_port: endpoint {
+>  				remote-endpoint =3D <&cluster0_funnel_in_port0>;
+> @@ -306,6 +313,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		port {
+>  			cluster0_etm1_out_port: endpoint {
+>  				remote-endpoint =3D <&cluster0_funnel_in_port1>;
+> @@ -319,6 +327,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		port {
+>  			cluster1_etm0_out_port: endpoint {
+>  				remote-endpoint =3D <&cluster1_funnel_in_port0>;
+> @@ -332,6 +341,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		port {
+>  			cluster1_etm1_out_port: endpoint {
+>  				remote-endpoint =3D <&cluster1_funnel_in_port1>;
+> @@ -345,6 +355,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		port {
+>  			cluster1_etm2_out_port: endpoint {
+>  				remote-endpoint =3D <&cluster1_funnel_in_port2>;
+> @@ -358,6 +369,7 @@
+>=20
+>  		clocks =3D <&soc_smc50mhz>;
+>  		clock-names =3D "apb_pclk";
+> +		power-domains =3D <&scpi_devpd 0>;
+>  		port {
+>  			cluster1_etm3_out_port: endpoint {
+>  				remote-endpoint =3D <&cluster1_funnel_in_port3>;
+> @@ -428,6 +440,12 @@
+>  			};
+>  		};
+>=20
+> +		scpi_devpd: scpi-power-domains {
+> +			compatible =3D "arm,scpi-power-domains";
+> +			num-domains =3D <2>;
+> +			#power-domain-cells =3D <1>;
+> +		};
+> +
+>  		scpi_sensors0: sensors {
+>  			compatible =3D "arm,scpi-sensors";
+>  			#thermal-sensor-cells =3D <1>;
+> --
+> 2.7.4
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
