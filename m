@@ -1,61 +1,83 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 resend 1/2] ehci-platform: Add support for controllers
- with multiple reset lines
-Date: Wed, 8 Jun 2016 18:52:30 +0200
-Message-ID: <20236f14-549e-5acc-3f95-90db44b1f49d@redhat.com>
-References: <1464880446-5919-1-git-send-email-hdegoede@redhat.com>
- <1464880446-5919-2-git-send-email-hdegoede@redhat.com>
- <20160608052216.GA7766@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] ehci-platform: Add support for shared reset controllers
+Date: Wed,  8 Jun 2016 18:54:40 +0200
+Message-ID: <1465404880-28374-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160608052216.GA7766-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add support for shared platform controllers by using
+devm_reset_control_get_shared_by_index instead of
+of_reset_control_get_by_index.
 
-On 08-06-16 07:22, Greg Kroah-Hartman wrote:
-> On Thu, Jun 02, 2016 at 05:14:05PM +0200, Hans de Goede wrote:
->> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
->>
->> At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
->> reset lines, the controller will not initialize while the reset for
->> its companion is still asserted, which means we need to de-assert
->> 2 resets for the controller to work.
->>
->> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v2:
->> -Use the new reset_control_[de]assert_shared reset-controller functions
->> ---
->>  Documentation/devicetree/bindings/usb/usb-ehci.txt |  2 +-
->>  drivers/usb/host/ehci-platform.c                   | 41 ++++++++++++----------
->>  2 files changed, 24 insertions(+), 19 deletions(-)
->
-> This patch doesn't apply to my usb-testing branch at all, what went
-> wrong?
+Note we use the devm function because there is no
+of_reset_control_get_shared_by_index, this also leads
+to a nice cleanup of the cleanup code.
 
-You merged this patch:
+This brings the ehci-platform reset handling code inline
+with ohci-platform.
 
-https://git.kernel.org/cgit/linux/kernel/git/gregkh/usb.git/commit/?id=d0e08b0077f49e209bc90305ddf1ca434ac6cc0e
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/usb/host/ehci-platform.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-Which does almost the same, except that it only supports dedicated reset
-controllers and not shared reset controllers.
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index bc33f45..6816b8c 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -236,8 +236,8 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 	}
+ 
+ 	for (rst = 0; rst < EHCI_MAX_RSTS; rst++) {
+-		priv->rsts[rst] = of_reset_control_get_by_index(
+-					dev->dev.of_node, rst);
++		priv->rsts[rst] = devm_reset_control_get_shared_by_index(
++					&dev->dev, rst);
+ 		if (IS_ERR(priv->rsts[rst])) {
+ 			err = PTR_ERR(priv->rsts[rst]);
+ 			if (err == -EPROBE_DEFER)
+@@ -247,10 +247,8 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 		}
+ 
+ 		err = reset_control_deassert(priv->rsts[rst]);
+-		if (err) {
+-			reset_control_put(priv->rsts[rst]);
++		if (err)
+ 			goto err_reset;
+-		}
+ 	}
+ 
+ 	if (pdata->big_endian_desc)
+@@ -307,10 +305,8 @@ err_power:
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
+ err_reset:
+-	while (--rst >= 0) {
++	while (--rst >= 0)
+ 		reset_control_assert(priv->rsts[rst]);
+-		reset_control_put(priv->rsts[rst]);
+-	}
+ err_put_clks:
+ 	while (--clk >= 0)
+ 		clk_put(priv->clks[clk]);
+@@ -335,10 +331,8 @@ static int ehci_platform_remove(struct platform_device *dev)
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
+ 
+-	for (rst = 0; rst < EHCI_MAX_RSTS && priv->rsts[rst]; rst++) {
++	for (rst = 0; rst < EHCI_MAX_RSTS && priv->rsts[rst]; rst++)
+ 		reset_control_assert(priv->rsts[rst]);
+-		reset_control_put(priv->rsts[rst]);
+-	}
+ 
+ 	for (clk = 0; clk < EHCI_MAX_CLKS && priv->clks[clk]; clk++)
+ 		clk_put(priv->clks[clk]);
+-- 
+2.7.4
 
-I'll send a new patch which changes things to add support for shared
-reset controllers.
-
-This will also bring the ehci-platform reset handling code inline
-with ohci-platform again.
-
-Regards,
-
-Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
