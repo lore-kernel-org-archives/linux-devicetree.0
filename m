@@ -1,73 +1,43 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mfd: axp20x: Add a 500ms delay at the end of
- axp20x_power_off
-Date: Wed, 8 Jun 2016 16:42:06 +0100
-Message-ID: <20160608154206.GA14888@dell>
-References: <1465134648-27113-1-git-send-email-hdegoede@redhat.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v10 0/8] add i2c driver supported for rk3399
+Date: Wed, 08 Jun 2016 17:47:38 +0200
+Message-ID: <2239664.BKqQWGCl8U@diego>
+References: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465134648-27113-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de
+Cc: David Wu <david.wu@rock-chips.com>, robh+dt@kernel.org, dianders@chromium.org, andy.shevchenko@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, briannorris@google.com, davidriley@google.com, huangtao@rock-chips.com, hl@rock-chips.com, xjq@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 05 Jun 2016, Hans de Goede wrote:
+Hi Wolfram,
 
-> The kernel expects the power_off function to not return, and if it do=
-es
-> it panics. At a slight delay after the i2c write which turns off powe=
-r
-> through the pmic, to give capacitors etc. some time to drain.
->=20
-> Without this the kernel lives on long enough after the poweroff to
-> print the following on the serial console on my Mele A1000G quad:
->=20
-> [  248.583588] reboot: Power down
-> [  248.600490] Kernel pa
->=20
-> With the delay the start of printing "Kernel panic" is gone.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/mfd/axp20x.c | 4 ++++
->  1 file changed, 4 insertions(+)
+Am Montag, 16. Mai 2016, 21:57:35 schrieb David Wu:
+> There are three points differert from others:
+>  - new method to caculate i2c timings for rk3399
+>  - pclk and function clk are separated at rk3399
+>  - add fast-plus mode supported for rk3399
 
-Applied, thanks.
+this series looks pretty nice now and it seems most everybody is happy with it 
+by now. Do you still have it in your inbox to look at, or should David resend 
+it again?
 
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 6364dab..fd80b09 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -17,6 +17,7 @@
->   */
-> =20
->  #include <linux/err.h>
-> +#include <linux/delay.h>
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> @@ -677,6 +678,9 @@ static void axp20x_power_off(void)
-> =20
->  	regmap_write(axp20x_pm_power_off->regmap, AXP20X_OFF_CTRL,
->  		     AXP20X_OFF);
-> +
-> +	/* Give capacitors etc. time to drain to avoid kernel panic msg. */
-> +	msleep(500);
->  }
-> =20
->  int axp20x_match_device(struct axp20x_dev *axp20x)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Heiko
+
+> David Wu (8):
+>   i2c: rk3x: add documentation to fields in "struct rk3x_i2c"
+>   i2c: rk3x: use struct "rk3x_i2c_calced_timings"
+>   i2c: rk3x: Remove redundant rk3x_i2c_clean_ipd()
+>   i2c: rk3x: Change SoC data to not use array
+>   i2c: rk3x: Move spec timing data to "static const" structs
+>   dt-bindings: i2c: rk3x: add support for rk3399
+>   i2c: rk3x: add i2c support for rk3399 soc
+>   i2c: rk3x: support fast-mode plus for rk3399
+> 
+>  Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  16 +-
+>  drivers/i2c/busses/i2c-rk3x.c                      | 498
+> +++++++++++++++++---- 2 files changed, 434 insertions(+), 80 deletions(-)
