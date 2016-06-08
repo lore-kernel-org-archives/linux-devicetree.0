@@ -1,165 +1,129 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v14.1 01/17] drm: bridge: analogix/dp: split exynos dp
- driver to bridge directory
-Date: Wed, 8 Jun 2016 10:19:04 -0400
-Message-ID: <ddbe174b-c3f8-be97-1b3f-dcdcf45ffc7f@osg.samsung.com>
-References: <1455534485-1154-1-git-send-email-ykk@rock-chips.com>
- <1455534576-1486-1-git-send-email-ykk@rock-chips.com>
- <1811552.qvsCm7GUs1@diego>
- <417ed48e-74e1-f747-34b9-0d1031a3d862@osg.samsung.com>
- <575774C0.4000900@rock-chips.com> <20160608084419.602f02d2@arm.com>
- <5757F917.2030506@rock-chips.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v5 3/5] mfd: dt-bindings: Add RK818
+ device tree bindings document
+Date: Wed, 8 Jun 2016 15:23:26 +0100
+Message-ID: <20160608142326.GF14888@dell>
+References: <1464850228-17244-1-git-send-email-w.egorov@phytec.de>
+ <1464850228-17244-3-git-send-email-w.egorov@phytec.de>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5757F917.2030506@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, Andy Yan <andy.yan@rock-chips.com>, dri-d
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <rtc-linux+bncBDA7X7F2WUEBBQGU4C5AKGQEXO75IAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1464850228-17244-3-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2016 06:53 AM, Yakir Yang wrote:
-> Marc, Javier
+On Thu, 02 Jun 2016, Wadim Egorov wrote:
+
+> Add device tree bindings documentation for Rockchip's RK818 PMIC.
 >=20
-> On 06/08/2016 03:44 PM, Marc Zyngier wrote:
->> On Wed, 8 Jun 2016 09:28:32 +0800
->> Yakir Yang <ykk@rock-chips.com> wrote:
->>
->>> Hi Javier,
->>>
->>> On 06/08/2016 01:06 AM, Javier Martinez Canillas wrote:
->>>> Hello Yakir,
->>>>
->>>> On 03/17/2016 05:47 PM, Heiko St=FCbner wrote:
->>>>> Split the dp core driver from exynos directory to bridge director=
-y,
->>>>> and rename the core driver to analogix_dp_*, rename the platform
->>>>> code to exynos_dp.
->>>>>
->>>>> Beside the new analogix_dp driver would export six hooks.
->>>>> "analogix_dp_bind()" and "analogix_dp_unbind()"
->>>>> "analogix_dp_suspned()" and "analogix_dp_resume()"
->>>>> "analogix_dp_detect()" and "analogix_dp_get_modes()"
->>>>>
->>>>> The bind/unbind symbols is used for analogix platform driver to c=
-onnect
->>>>> with analogix_dp core driver. And the detect/get_modes is used fo=
-r analogix
->>>>> platform driver to init the connector.
->>>>>
->>>>> They reason why connector need register in helper driver is rockc=
-hip drm
->>>>> haven't implement the atomic API, but Exynos drm have implement i=
-t, so
->>>>> there would need two different connector helper functions, that's=
- why we
->>>>> leave the connector register in helper driver.
->>>>>
->>>>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
->>>>> ---
->>>> Marc reported that his Exynos5250 Snow Chromebook fails to boot wi=
-th v4.7-rc.
->>>>
->>>> I've done a git bisect and tracked down to this commit. The proble=
-m is a NULL
->>>> pointer dereference to connector->dev in drm_mode_create(connector=
-->dev) when
->>>> called from exynos_dp_get_modes(). The error log is at [1].
->>>>
->>>> I'm trying to figure out the issue but wanted to mention in case y=
-ou have any
->>>> hints about what could be the cause. AFAICT the problem is related=
- to the fact
->>>> that drm_connector_init() is called in analogix_dp_bridge_attach()=
- and the
->>>> connector passed as argument is the one in struct analogix_dp_devi=
-ce *dp, but
->>>> later exynos_dp_get_modes() calls drm_mode_create() passing the co=
-nnector in
->>>> struct exynos_dp_device *dp, which has not been previously initial=
-ized.
->>> Agree, this should be the problem, exynos_dp->connector haven't bee=
-n
->>> initialized, driver should make exynos_dp->dp to a connector point,=
- and
->>> record the passing connector in exynos_dp_bridge_attach(), that sho=
-uld
->>> fix this problem.
->>>
->>>
->>> Thanks,
->>> - Yakir
->>>
->>>
->>> diff --git a/drivers/gpu/drm/exynos/exynos_dp.c
->>> b/drivers/gpu/drm/exynos/exynos_dp.c
->>> index 468498e..4c1fb3f 100644
->>> --- a/drivers/gpu/drm/exynos/exynos_dp.c
->>> +++ b/drivers/gpu/drm/exynos/exynos_dp.c
->>> @@ -34,7 +34,7 @@
->>>
->>>    struct exynos_dp_device {
->>>           struct drm_encoder         encoder;
->>> -       struct drm_connector       connector;
->>> +       struct drm_connector       *connector;
->>>           struct drm_bridge          *ptn_bridge;
->>>           struct drm_device          *drm_dev;
->>>           struct device              *dev;
->>> @@ -70,7 +70,7 @@ static int exynos_dp_poweroff(struct
->>> analogix_dp_plat_data *plat_data)
->>>    static int exynos_dp_get_modes(struct analogix_dp_plat_data *pla=
-t_data)
->>>    {
->>>           struct exynos_dp_device *dp =3D to_dp(plat_data);
->>> -       struct drm_connector *connector =3D &dp->connector;
->>> +       struct drm_connector *connector =3D dp->connector;
->>>           struct drm_display_mode *mode;
->>>           int num_modes =3D 0;
->>>
->>> @@ -103,6 +103,7 @@ static int exynos_dp_bridge_attach(struct
->>> analogix_dp_plat_data *plat_data,
->>>           int ret;
->>>
->>>           drm_connector_register(connector);
->>> +       dp->connector =3D connector;
->>>
->>>           /* Pre-empt DP connector creation if there's a bridge */
->>>           if (dp->ptn_bridge) {
->>>
->> I've just tested this change, and in combination with Javier's DT pa=
-tch,
->> my Snow is back to its useful state (I'm writing this email from tha=
-t
->> very Chromebook).
->>
+> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Great. I also tested and the Snow booted but I don't have physical acce=
-ss
-to check if the display was brought correctly, So thanks a lot for test=
-ing.
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
->> Once you make this a proper patch, please add my:
->>
->> Tested-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/rk808.txt | 37 +++++++++++++++++++=
+++++--
+>  1 file changed, 34 insertions(+), 3 deletions(-)
 >=20
-> I guess Javier should be the best one to create this patch, if he hav=
-e no time, i would do it for him. thanks for your report ;)
->
+> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentat=
+ion/devicetree/bindings/mfd/rk808.txt
+> index 4ca6aab..9636ae8 100644
+> --- a/Documentation/devicetree/bindings/mfd/rk808.txt
+> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+> @@ -1,7 +1,11 @@
+> -RK808 Power Management Integrated Circuit
+> +RK8XX Power Management Integrated Circuit
+> +
+> +The rk8xx family current members:
+> +rk808
+> +rk818
+> =20
+>  Required properties:
+> -- compatible: "rockchip,rk808"
+> +- compatible: "rockchip,rk808", "rockchip,rk818"
+>  - reg: I2C slave address
+>  - interrupt-parent: The parent interrupt controller.
+>  - interrupts: the interrupt outputs of the controller.
+> @@ -13,6 +17,8 @@ Optional properties:
+>    default output clock name
+>  - rockchip,system-power-controller: Telling whether or not this pmic is =
+controlling
+>    the system power.
+> +
+> +Optional RK808 properties:
+>  - vcc1-supply:  The input supply for DCDC_REG1
+>  - vcc2-supply:  The input supply for DCDC_REG2
+>  - vcc3-supply:  The input supply for DCDC_REG3
+> @@ -29,7 +35,20 @@ Optional properties:
+>    the gpio controller. If DVS GPIOs aren't present, voltage changes will=
+ happen
+>    very quickly with no slow ramp time.
+> =20
+> -Regulators: All the regulators of RK808 to be instantiated shall be
+> +Optional RK818 properties:
+> +- vcc1-supply:  The input supply for DCDC_REG1
+> +- vcc2-supply:  The input supply for DCDC_REG2
+> +- vcc3-supply:  The input supply for DCDC_REG3
+> +- vcc4-supply:  The input supply for DCDC_REG4
+> +- boost-supply: The input supply for DCDC_BOOST
+> +- vcc6-supply:  The input supply for LDO_REG1 and LDO_REG2
+> +- vcc7-supply:  The input supply for LDO_REG3, LDO_REG5 and LDO_REG7
+> +- vcc8-supply:  The input supply for LDO_REG4, LDO_REG6 and LDO_REG8
+> +- vcc9-supply:  The input supply for LDO_REG9 and SWITCH_REG
+> +- h_5v-supply:  The input supply for HDMI_SWITCH
+> +- usb-supply:   The input supply for OTG_SWITCH
+> +
+> +Regulators: All the regulators of RK8XX to be instantiated shall be
+>  listed in a child node named 'regulators'. Each regulator is represented
+>  by a child node of the 'regulators' node.
+> =20
+> @@ -48,6 +67,18 @@ number as described in RK808 datasheet.
+>  	- SWITCH_REGn
+>  		- valid values for n are 1 to 2
+> =20
+> +Following regulators of the RK818 PMIC block are supported. Note that
+> +the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC =
+or LDO
+> +number as described in RK818 datasheet.
+> +
+> +	- DCDC_REGn
+> +		- valid values for n are 1 to 4.
+> +	- LDO_REGn
+> +		- valid values for n are 1 to 9.
+> +	- SWITCH_REG
+> +	- HDMI_SWITCH
+> +	- OTG_SWITCH
+> +
+>  Standard regulator bindings are used inside regulator subnodes. Check
+>    Documentation/devicetree/bindings/regulator/regulator.txt
+>  for more details
 
-Done.
-
-> - Yakir
->=20
->> to it.
->>
->> Thanks a lot to you and Javier for tracking this down!
->>
-
-Thanks to you for reporting all the issues!
-
-Best regards,
 --=20
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+---=20
+You received this message because you are subscribed to the Google Groups "=
+rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
