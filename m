@@ -1,75 +1,484 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: Using DT overlays for adding virtual hardware
-Date: Wed, 8 Jun 2016 18:57:37 +0300
-Message-ID: <28BC1AEC-6A7D-4A97-82F4-5670E884C41D@konsulko.com>
-References: <575828C0.5000008@siemens.com> <20160608151745.GB13355@leverpostej>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <jailhouse-dev+bncBCV5BG4UVENBB5MA4G5AKGQESMFFCQA@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <20160608151745.GB13355@leverpostej>
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jailhouse <jailhouse-dev@googlegroups.com>, =?utf-8?Q?M=C3=A5ns_Rullg=C3=A5rd?= <mans@denx.de>, Antonios Motakis <antonios.motakis@huawei.com>
+From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm64: dts: juno: add coresight support
+Date: Wed, 8 Jun 2016 17:04:49 +0100
+Message-ID: <20160608160449.GP1165@e106497-lin.cambridge.arm.com>
+References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
+ <1465228765-14038-2-git-send-email-sudeep.holla@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1465228765-14038-2-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-> On Jun 8, 2016, at 18:17 , Mark Rutland <mark.rutland@arm.com> wrote:
+On Mon, Jun 06, 2016 at 04:59:23PM +0100, Sudeep Holla wrote:
+> Most of the debug-related components on Juno are located in the coreS=
+ight
+> subsystem while others are located in the Cortex-Axx clusters, the SC=
+P
+> subsystem, and in the main system.
 >=20
-> On Wed, Jun 08, 2016 at 04:16:32PM +0200, Jan Kiszka wrote:
->> Hi all,
->>=20
->> already started the discussion off-list with Pantelis, but it's better
->> done in public:
->>=20
->> I'm currently exploring ways to make Linux recognize dynamically added
->> virtual hardware when running under the Jailhouse hypervisor [1]. We
->> need to load drivers for inter-partition communication devices that only
->> appear after Jailhouse started (which is done from within Linux, i.e.
->> long after boot) or when a partition was added later on. Probably, we
->> will simply add a virtual PCI host bridge on systems without physical
->> PCI and let the IPC device be explored that way (already works on x86).
->> Still, that leaves us with hotplug and unplug on hypervisor activation
->> and deactivation.
+> Each core in the two processor clusters contain an Embedded Trace
+> Macrocell(ETM) which generates real-time trace information that trace
+> tools can use and an ATB trace output that is sent to a funnel before
+> going to the CoreSight subsystem.
 >=20
-> If I've understood correctly you want to use overlays to inject the
-> virtual PCI host bridge?
+> The trace output signals combine with two trace expansions using anot=
+her
+> funnel and fed into the Embedded Trace FIFO(ETF0).
 >=20
-> Given that you know precisely what you want to inject, I'm not sure I
-> see the value of using an overlay.=20
+> The output trace data stream of the funnel is then replicated before =
+it
+> is sent to either the:
+> - Trace Port Interface Unit(TPIU), that sends it out using the trace =
+port.
+> - ETR that can write the trace data to memory located in the applicat=
+ion
+>   memory space
 >=20
-> Is there some reason you can't just create a device without having to go
-> via an intermediate step? As I understand it, Xen does that for (some)
-> virtual devices provided to Dom0 and DomU.
+> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+
+Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/arm/juno-base.dtsi | 296 +++++++++++++++++++++++=
+++++++++++
+>  arch/arm64/boot/dts/arm/juno-r1.dts    |  24 +++
+>  arch/arm64/boot/dts/arm/juno-r2.dts    |  24 +++
+>  arch/arm64/boot/dts/arm/juno.dts       |  24 +++
+>  4 files changed, 368 insertions(+)
 >=20
-
-As far as I understand it PCI is just one of the cases. You could conceivab=
-ly
-inject any kind of virtio device like serial/storage networking etc.
-
-The question is since overlays exist and do work, why should he do anything=
- else
-besides using them? I doubt he=E2=80=99s interested in writing yet another =
-driver for
-something that already exists and works.
-
-> Thanks,
-> Mark.
-
-Regards
-
-=E2=80=94 Pantelis
+> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot=
+/dts/arm/juno-base.dtsi
+> index dee2386d3b9b..90a8710f7032 100644
+> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+> @@ -56,6 +56,302 @@
+>  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
+>  	};
+>=20
+> +	/*
+> +	 * Juno TRMs specify the size for these coresight components as 64K=
+=2E
+> +	 * The actual size is just 4K though 64K is reserved. Access to the
+> +	 * unmapped reserved region results in a DECERR response.
+> +	 */
+> +	etf@20010000 {
+> +		compatible =3D "arm,coresight-tmc", "arm,primecell";
+> +		reg =3D <0 0x20010000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		ports {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			/* input port */
+> +			port@0 {
+> +				reg =3D <0>;
+> +				etf_in_port: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&main_funnel_out_port>;
+> +				};
+> +			};
+> +
+> +			/* output port */
+> +			port@1 {
+> +				reg =3D <0>;
+> +				etf_out_port: endpoint {
+> +					remote-endpoint =3D <&replicator_in_port0>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	tpiu@20030000 {
+> +		compatible =3D "arm,coresight-tpiu", "arm,primecell";
+> +		reg =3D <0 0x20030000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		port {
+> +			tpiu_in_port: endpoint {
+> +				slave-mode;
+> +				remote-endpoint =3D <&replicator_out_port0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	main_funnel@20040000 {
+> +		compatible =3D "arm,coresight-funnel", "arm,primecell";
+> +		reg =3D <0 0x20040000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		ports {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			port@0 {
+> +				reg =3D <0>;
+> +				main_funnel_out_port: endpoint {
+> +					remote-endpoint =3D <&etf_in_port>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg =3D <0>;
+> +				main_funnel_in_port0: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&cluster0_funnel_out_port>;
+> +				};
+> +			};
+> +
+> +			port@2 {
+> +				reg =3D <1>;
+> +				main_funnel_in_port1: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&cluster1_funnel_out_port>;
+> +				};
+> +			};
+> +
+> +		};
+> +	};
+> +
+> +	etr@20070000 {
+> +		compatible =3D "arm,coresight-tmc", "arm,primecell";
+> +		reg =3D <0 0x20070000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		port {
+> +			etr_in_port: endpoint {
+> +				slave-mode;
+> +				remote-endpoint =3D <&replicator_out_port1>;
+> +			};
+> +		};
+> +	};
+> +
+> +	coresight-replicator {
+> +		/* non-configurable replicators don't show up on the
+> +		 * AMBA bus.  As such no need to add "arm,primecell".
+> +		 */
+> +		compatible =3D "arm,coresight-replicator";
+> +
+> +		ports {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			/* replicator output ports */
+> +			port@0 {
+> +				reg =3D <0>;
+> +				replicator_out_port0: endpoint {
+> +					remote-endpoint =3D <&tpiu_in_port>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg =3D <1>;
+> +				replicator_out_port1: endpoint {
+> +					remote-endpoint =3D <&etr_in_port>;
+> +				};
+> +			};
+> +
+> +			/* replicator input port */
+> +			port@2 {
+> +				reg =3D <0>;
+> +				replicator_in_port0: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&etf_out_port>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	cluster0_funnel@220c0000 {
+> +		compatible =3D "arm,coresight-funnel", "arm,primecell";
+> +		reg =3D <0 0x220c0000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		ports {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			port@0 {
+> +				reg =3D <0>;
+> +				cluster0_funnel_out_port: endpoint {
+> +					remote-endpoint =3D <&main_funnel_in_port0>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg =3D <0>;
+> +				cluster0_funnel_in_port0: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&cluster0_etm0_out_port>;
+> +				};
+> +			};
+> +
+> +			port@2 {
+> +				reg =3D <1>;
+> +				cluster0_funnel_in_port1: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&cluster0_etm1_out_port>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	cluster1_funnel@230c0000 {
+> +		compatible =3D "arm,coresight-funnel", "arm,primecell";
+> +		reg =3D <0 0x230c0000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		ports {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			port@0 {
+> +				reg =3D <0>;
+> +				cluster1_funnel_out_port: endpoint {
+> +					remote-endpoint =3D <&main_funnel_in_port1>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg =3D <0>;
+> +				cluster1_funnel_in_port0: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&cluster1_etm0_out_port>;
+> +				};
+> +			};
+> +
+> +			port@2 {
+> +				reg =3D <1>;
+> +				cluster1_funnel_in_port1: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&cluster1_etm1_out_port>;
+> +				};
+> +			};
+> +			port@3 {
+> +				reg =3D <2>;
+> +				cluster1_funnel_in_port2: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&cluster1_etm2_out_port>;
+> +				};
+> +			};
+> +			port@4 {
+> +				reg =3D <3>;
+> +				cluster1_funnel_in_port3: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =3D <&cluster1_etm3_out_port>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm0: etm@22040000 {
+> +		compatible =3D "arm,coresight-etm4x", "arm,primecell";
+> +		reg =3D <0 0x22040000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		port {
+> +			cluster0_etm0_out_port: endpoint {
+> +				remote-endpoint =3D <&cluster0_funnel_in_port0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	etm1: etm@22140000 {
+> +		compatible =3D "arm,coresight-etm4x", "arm,primecell";
+> +		reg =3D <0 0x22140000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		port {
+> +			cluster0_etm1_out_port: endpoint {
+> +				remote-endpoint =3D <&cluster0_funnel_in_port1>;
+> +			};
+> +		};
+> +	};
+> +
+> +	etm2: etm@23040000 {
+> +		compatible =3D "arm,coresight-etm4x", "arm,primecell";
+> +		reg =3D <0 0x23040000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		port {
+> +			cluster1_etm0_out_port: endpoint {
+> +				remote-endpoint =3D <&cluster1_funnel_in_port0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	etm3: etm@23140000 {
+> +		compatible =3D "arm,coresight-etm4x", "arm,primecell";
+> +		reg =3D <0 0x23140000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		port {
+> +			cluster1_etm1_out_port: endpoint {
+> +				remote-endpoint =3D <&cluster1_funnel_in_port1>;
+> +			};
+> +		};
+> +	};
+> +
+> +	etm4: etm@23240000 {
+> +		compatible =3D "arm,coresight-etm4x", "arm,primecell";
+> +		reg =3D <0 0x23240000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		port {
+> +			cluster1_etm2_out_port: endpoint {
+> +				remote-endpoint =3D <&cluster1_funnel_in_port2>;
+> +			};
+> +		};
+> +	};
+> +
+> +	etm5: etm@23340000 {
+> +		compatible =3D "arm,coresight-etm4x", "arm,primecell";
+> +		reg =3D <0 0x23340000 0 0x1000>;
+> +
+> +		clocks =3D <&soc_smc50mhz>;
+> +		clock-names =3D "apb_pclk";
+> +		port {
+> +			cluster1_etm3_out_port: endpoint {
+> +				remote-endpoint =3D <&cluster1_funnel_in_port3>;
+> +			};
+> +		};
+> +	};
+> +
+>  	sram: sram@2e000000 {
+>  		compatible =3D "arm,juno-sram-ns", "mmio-sram";
+>  		reg =3D <0x0 0x2e000000 0x0 0x8000>;
+> diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dt=
+s/arm/juno-r1.dts
+> index d95d9e7e2dc0..f4f8f54f8b85 100644
+> --- a/arch/arm64/boot/dts/arm/juno-r1.dts
+> +++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+> @@ -181,3 +181,27 @@
+>  &pcie_ctlr {
+>  	status =3D "okay";
+>  };
+> +
+> +&etm0 {
+> +	cpu =3D <&A57_0>;
+> +};
+> +
+> +&etm1 {
+> +	cpu =3D <&A57_1>;
+> +};
+> +
+> +&etm2 {
+> +	cpu =3D <&A53_0>;
+> +};
+> +
+> +&etm3 {
+> +	cpu =3D <&A53_1>;
+> +};
+> +
+> +&etm4 {
+> +	cpu =3D <&A53_2>;
+> +};
+> +
+> +&etm5 {
+> +	cpu =3D <&A53_3>;
+> +};
+> diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dt=
+s/arm/juno-r2.dts
+> index 88ecd6182b67..d903e545b64c 100644
+> --- a/arch/arm64/boot/dts/arm/juno-r2.dts
+> +++ b/arch/arm64/boot/dts/arm/juno-r2.dts
+> @@ -181,3 +181,27 @@
+>  &pcie_ctlr {
+>  	status =3D "okay";
+>  };
+> +
+> +&etm0 {
+> +	cpu =3D <&A72_0>;
+> +};
+> +
+> +&etm1 {
+> +	cpu =3D <&A72_1>;
+> +};
+> +
+> +&etm2 {
+> +	cpu =3D <&A53_0>;
+> +};
+> +
+> +&etm3 {
+> +	cpu =3D <&A53_1>;
+> +};
+> +
+> +&etm4 {
+> +	cpu =3D <&A53_2>;
+> +};
+> +
+> +&etm5 {
+> +	cpu =3D <&A53_3>;
+> +};
+> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/a=
+rm/juno.dts
+> index dcfcf15a17f5..a7270eff6939 100644
+> --- a/arch/arm64/boot/dts/arm/juno.dts
+> +++ b/arch/arm64/boot/dts/arm/juno.dts
+> @@ -173,3 +173,27 @@
+>=20
+>  	#include "juno-base.dtsi"
+>  };
+> +
+> +&etm0 {
+> +	cpu =3D <&A57_0>;
+> +};
+> +
+> +&etm1 {
+> +	cpu =3D <&A57_1>;
+> +};
+> +
+> +&etm2 {
+> +	cpu =3D <&A53_0>;
+> +};
+> +
+> +&etm3 {
+> +	cpu =3D <&A53_1>;
+> +};
+> +
+> +&etm4 {
+> +	cpu =3D <&A53_2>;
+> +};
+> +
+> +&etm5 {
+> +	cpu =3D <&A53_3>;
+> +};
+> --
+> 2.7.4
+>=20
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-Jailhouse" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to jailhouse-dev+unsubscribe@googlegroups.com.
-For more options, visit https://groups.google.com/d/optout.
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
