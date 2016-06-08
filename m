@@ -1,146 +1,40 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v14.1 01/17] drm: bridge: analogix/dp: split exynos dp
- driver to bridge directory
-Date: Wed, 8 Jun 2016 18:53:11 +0800
-Message-ID: <5757F917.2030506@rock-chips.com>
-References: <1455534485-1154-1-git-send-email-ykk@rock-chips.com>
- <1455534576-1486-1-git-send-email-ykk@rock-chips.com>
- <1811552.qvsCm7GUs1@diego>
- <417ed48e-74e1-f747-34b9-0d1031a3d862@osg.samsung.com>
- <575774C0.4000900@rock-chips.com> <20160608084419.602f02d2@arm.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] of: fix autoloading due to broken modalias with no
+ 'compatible'
+Date: Wed, 08 Jun 2016 21:14:02 +1000
+Message-ID: <1465384442.13854.2.camel@ellerman.id.au>
+References: <1465231718-2577-1-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20160608084419.602f02d2@arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@g
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465231718-2577-1-git-send-email-wsa@the-dreams.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, linuxppc-dev@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, Andreas Schwab <schwab@linux-m68k.org>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Marc, Javier
+On Mon, 2016-06-06 at 18:48 +0200, Wolfram Sang wrote:
+> Because of an improper dereference, a stray 'C' character was output to
+> the modalias when no 'compatible' was specified. This is the case for
+> some old PowerMac drivers which only set the 'name' property. Fix it to
+> let them match again.
+> 
+> Reported-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Andreas Schwab <schwab@linux-m68k.org>
+> Fixes: 6543becf26fff6 ("mod/file2alias: make modalias generation safe for cross compiling")
+> ---
+> 
+> I think it makes sense if this goes in via ppc (with stable tag added).
+> D'accord?
 
-On 06/08/2016 03:44 PM, Marc Zyngier wrote:
-> On Wed, 8 Jun 2016 09:28:32 +0800
-> Yakir Yang <ykk@rock-chips.com> wrote:
->
->> Hi Javier,
->>
->> On 06/08/2016 01:06 AM, Javier Martinez Canillas wrote:
->>> Hello Yakir,
->>>
->>> On 03/17/2016 05:47 PM, Heiko St=FCbner wrote:
->>>> Split the dp core driver from exynos directory to bridge directory=
-,
->>>> and rename the core driver to analogix_dp_*, rename the platform
->>>> code to exynos_dp.
->>>>
->>>> Beside the new analogix_dp driver would export six hooks.
->>>> "analogix_dp_bind()" and "analogix_dp_unbind()"
->>>> "analogix_dp_suspned()" and "analogix_dp_resume()"
->>>> "analogix_dp_detect()" and "analogix_dp_get_modes()"
->>>>
->>>> The bind/unbind symbols is used for analogix platform driver to co=
-nnect
->>>> with analogix_dp core driver. And the detect/get_modes is used for=
- analogix
->>>> platform driver to init the connector.
->>>>
->>>> They reason why connector need register in helper driver is rockch=
-ip drm
->>>> haven't implement the atomic API, but Exynos drm have implement it=
-, so
->>>> there would need two different connector helper functions, that's =
-why we
->>>> leave the connector register in helper driver.
->>>>
->>>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
->>>> ---
->>> Marc reported that his Exynos5250 Snow Chromebook fails to boot wit=
-h v4.7-rc.
->>>
->>> I've done a git bisect and tracked down to this commit. The problem=
- is a NULL
->>> pointer dereference to connector->dev in drm_mode_create(connector-=
->dev) when
->>> called from exynos_dp_get_modes(). The error log is at [1].
->>>
->>> I'm trying to figure out the issue but wanted to mention in case yo=
-u have any
->>> hints about what could be the cause. AFAICT the problem is related =
-to the fact
->>> that drm_connector_init() is called in analogix_dp_bridge_attach() =
-and the
->>> connector passed as argument is the one in struct analogix_dp_devic=
-e *dp, but
->>> later exynos_dp_get_modes() calls drm_mode_create() passing the con=
-nector in
->>> struct exynos_dp_device *dp, which has not been previously initiali=
-zed.
->> Agree, this should be the problem, exynos_dp->connector haven't been
->> initialized, driver should make exynos_dp->dp to a connector point, =
-and
->> record the passing connector in exynos_dp_bridge_attach(), that shou=
-ld
->> fix this problem.
->>
->>
->> Thanks,
->> - Yakir
->>
->>
->> diff --git a/drivers/gpu/drm/exynos/exynos_dp.c
->> b/drivers/gpu/drm/exynos/exynos_dp.c
->> index 468498e..4c1fb3f 100644
->> --- a/drivers/gpu/drm/exynos/exynos_dp.c
->> +++ b/drivers/gpu/drm/exynos/exynos_dp.c
->> @@ -34,7 +34,7 @@
->>
->>    struct exynos_dp_device {
->>           struct drm_encoder         encoder;
->> -       struct drm_connector       connector;
->> +       struct drm_connector       *connector;
->>           struct drm_bridge          *ptn_bridge;
->>           struct drm_device          *drm_dev;
->>           struct device              *dev;
->> @@ -70,7 +70,7 @@ static int exynos_dp_poweroff(struct
->> analogix_dp_plat_data *plat_data)
->>    static int exynos_dp_get_modes(struct analogix_dp_plat_data *plat=
-_data)
->>    {
->>           struct exynos_dp_device *dp =3D to_dp(plat_data);
->> -       struct drm_connector *connector =3D &dp->connector;
->> +       struct drm_connector *connector =3D dp->connector;
->>           struct drm_display_mode *mode;
->>           int num_modes =3D 0;
->>
->> @@ -103,6 +103,7 @@ static int exynos_dp_bridge_attach(struct
->> analogix_dp_plat_data *plat_data,
->>           int ret;
->>
->>           drm_connector_register(connector);
->> +       dp->connector =3D connector;
->>
->>           /* Pre-empt DP connector creation if there's a bridge */
->>           if (dp->ptn_bridge) {
->>
-> I've just tested this change, and in combination with Javier's DT pat=
-ch,
-> my Snow is back to its useful state (I'm writing this email from that
-> very Chromebook).
->
-> Once you make this a proper patch, please add my:
->
-> Tested-by: Marc Zyngier <marc.zyngier@arm.com>
+Sure, I've grabbed it.
 
-I guess Javier should be the best one to create this patch, if he have=20
-no time, i would do it for him. thanks for your report ;)
+I added:
 
-- Yakir
+    Cc: stable@vger.kernel.org # v3.9+
 
-> to it.
->
-> Thanks a lot to you and Javier for tracking this down!
->
-> 	M.
+cheers
