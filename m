@@ -1,39 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of: reserved_mem: restore old behavior when no region is
- defined
-Date: Wed, 8 Jun 2016 08:05:56 -0500
-Message-ID: <CAL_JsqKNpx09UFkGB0n9W0GkAv8OVUdRN8cYriau83SdD6xnuw@mail.gmail.com>
-References: <20160607143425.GE1165@e106497-lin.cambridge.arm.com>
- <1465368713-17866-1-git-send-email-m.szyprowski@samsung.com>
+From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Add OV5647 device tree documentation
+Date: Wed, 8 Jun 2016 14:18:10 +0100
+Message-ID: <2b6eec93-78d6-2d53-054f-13ffd9dbc636@synopsys.com>
+References: <cover.1464966020.git.roliveir@synopsys.com>
+ <4221809485a46dbf12b883a8207784553fd776a3.1464966020.git.roliveir@synopsys.com>
+ <20160606143837.GA22997@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465368713-17866-1-git-send-email-m.szyprowski@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Liviu Dudau <liviu.dudau@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160606143837.GA22997@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gOCwgMjAxNiBhdCAxOjUxIEFNLCBNYXJlayBTenlwcm93c2tpCjxtLnN6eXBy
-b3dza2lAc2Ftc3VuZy5jb20+IHdyb3RlOgo+IENoYW5nZSByZXR1cm4gdmFsdWUgYmFjayB0byAt
-RU5PREVWIHdoZW4gbm8gcmVnaW9uIGlzIGRlZmluZWQgZm9yIGdpdmVuCj4gZGV2aWNlLiBUaGlz
-IHJlc3RvcmVzIG9sZCBiZWhhdmlvciBvZiB0aGlzIGZ1bmN0aW9uLCBhcyBzb21lIGRyaXZlcnMg
-cmVseQo+IG9uIHN1Y2ggZXJyb3IgY29kZS4KPgo+IFJlcG9ydGVkLWJ5OiBMaXZpdSBEdWRhdSA8
-bGl2aXUuZHVkYXVAYXJtLmNvbT4KPiBGaXhlczogNTljZTQwMzk3MjdlZjQwICgib2Y6IHJlc2Vy
-dmVkX21lbTogYWRkIHN1cHBvcnQgZm9yIHVzaW5nIG1vcmUgdGhhbgo+ICAgICAgICBvbmUgcmVn
-aW9uIGZvciBnaXZlbiBkZXZpY2UiKQo+IFNpZ25lZC1vZmYtYnk6IE1hcmVrIFN6eXByb3dza2kg
-PG0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9vZi9vZl9yZXNlcnZl
-ZF9tZW0uYyB8IDIgKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
-aW9uKC0pCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On 06-06-2016 15:38, Rob Herring wrote:
+> On Fri, Jun 03, 2016 at 06:36:40PM +0100, Ramiro Oliveira wrote:
+>> From: roliveir <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>>
+>> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>> new file mode 100644
+>> index 0000000..5e4aa49
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>> @@ -0,0 +1,19 @@
+>> +Omnivision OV5657 raw image sensor
+> Still 5657?
+Sorry, I thought I had changed it.
+>> +---------------------------------
+>> +
+>> +OV5657 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+>> +and CCI (I2C compatible) control bus.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible	: "ov5647";
+> Needs vendor prefix?
+I'll add the ovti prefix
+>> +- reg		: I2C slave address of the sensor;
+> What happened to the clocks property. I'm pretty sure the driver always 
+> needs to know the input clock freq.
+I've seen some drivers that don't make any reference to clock freq, but I can
+add it, if you think it's necessary.
+>> +
+>> +The common video interfaces bindings (see video-interfaces.txt) should be
+>> +used to specify link to the image data receiver. The OV5647 device
+>> +node should contain one 'port' child node with an 'endpoint' subnode.
+>> +
+>> +Following properties are valid for the endpoint node:
+>> +
+>> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
+>> +  video-interfaces.txt.  The sensor supports only two data lanes.
+>> -- 
+>> 2.8.1
+>>
+>>
+Regards,
+Ramiro
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
