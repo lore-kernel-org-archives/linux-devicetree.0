@@ -1,81 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [v1 PATCH 1/4] Documentation: bindings: add dt doc for Rockchip
- USB Type-C PHY
-Date: Wed, 8 Jun 2016 14:14:06 -0500
-Message-ID: <20160608191406.GA16940@rob-hp-laptop>
-References: <1464966911-18949-1-git-send-email-zyw@rock-chips.com>
- <1464966911-18949-2-git-send-email-zyw@rock-chips.com>
- <20160606142738.GA12472@rob-hp-laptop>
- <57561653.9060404@rock-chips.com>
- <CAL_Jsq+7fNuL3N24uh+F_VgGU0RBGUn_nwRA3_cFBseaobpqDw@mail.gmail.com>
- <57577719.9020400@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57577719.9020400@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Doug Anderson <dianders@chromium.org>, Tomasz Figa <tfiga@chromium.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, =?utf-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] docs: Move brcm,bcm21664-resetmgr.txt
+Date: Wed,  8 Jun 2016 12:16:44 -0700
+Message-ID: <1465413404-28468-1-git-send-email-chris.brand@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 08, 2016 at 09:38:33AM +0800, Chris Zhong wrote:
-> Hi Rob
-> 
-> On 06/07/2016 09:46 PM, Rob Herring wrote:
-> >On Mon, Jun 6, 2016 at 7:33 PM, Chris Zhong <zyw@rock-chips.com> wrote:
-> >>Hi Rob
-> >>
-> >>
-> >>On 06/06/2016 10:27 PM, Rob Herring wrote:
-> >>>On Fri, Jun 03, 2016 at 11:15:08PM +0800, Chris Zhong wrote:
-> >>>>This patch adds a binding that describes the Rockchip USB Type-C PHY
-> >>>>for rk3399
-> >>>>
-> >>>>Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-> >>>>
-> >>>>---
-> >>>>
-> >>>>Changes in v1:
-> >>>>- add extcon node description
-> >>>>- move the registers in phy driver
-> >>>>- remove the suffix of reset
-> >>>>
-> >>>>   .../devicetree/bindings/phy/phy-rockchip-typec.txt | 46
-> >>>>++++++++++++++++++++++
-> >>>>   1 file changed, 46 insertions(+)
-> >>>>   create mode 100644
-> >>>>Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> >>>>
-> >>>>diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> >>>>b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> >>>>new file mode 100644
-> >>>>index 0000000..964e0f7
-> >>>>--- /dev/null
-> >>>>+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> >>>>@@ -0,0 +1,46 @@
-> >>>>+* ROCKCHIP type-c PHY
-> >>>>+---------------------
-> >>>>+
-> >>>>+Required properties:
-> >>>>+ - compatible: should be "rockchip,rk3399-typec-phy0" or
-> >>>>+                        "rockchip,rk3399-typec-phy1"
-> >>>What's the difference between 0 and 1? If it is to handle the register
-> >>>offsets you have in the previous version and the phy blocks are
-> >>>identical, then the compatible strings should be the same.
-> >>yes, the registers are different between 0 and 1, and there is a grf
-> >>register(0x6268) for switch the phy 0 and phy 1
-> >But GRF is in a separate block and not part of the phy, right?
-> >
-> >Rob
-> The GRF is not a single function block, it contain many registers to control
-> other block.
-> For Type-c phy, the type-c orientation, phy select, and some phy status
-> registers are embedded in GRF
-> So the GRF is registered for a syscon driver, the phy driver call regmap to
-> access the registers.
+Sebastian pointed out that .../bindings/reset is usually used for
+peripheral reset controllers, whereas .../bindings/power/reset is
+used for Board/System reset controllers.
 
-Right, so different compatible strings is wrong here. Keep it more like 
-you had it before.
+Reported-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/{ => power}/reset/brcm,bcm21664-resetmgr.txt      | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/{ => power}/reset/brcm,bcm21664-resetmgr.txt (100%)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm21664-resetmgr.txt b/Documentation/devicetree/bindings/power/reset/brcm,bcm21664-resetmgr.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/reset/brcm,bcm21664-resetmgr.txt
+rename to Documentation/devicetree/bindings/power/reset/brcm,bcm21664-resetmgr.txt
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
