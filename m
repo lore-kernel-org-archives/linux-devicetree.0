@@ -1,45 +1,49 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v9 11/14] usb: otg: use dev_dbg() instead of VDBG()
-Date: Wed, 08 Jun 2016 08:10:40 -0700
-Message-ID: <1465398640.25087.50.camel@perches.com>
-References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
-	 <1465376626-30122-12-git-send-email-rogerq@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: Using DT overlays for adding virtual hardware
+Date: Wed, 8 Jun 2016 16:17:46 +0100
+Message-ID: <20160608151745.GB13355@leverpostej>
+References: <575828C0.5000008@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465376626-30122-12-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <jailhouse-dev+bncBDRMFBMIXEGBBLXO4C5AKGQERFYL76Y@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+Content-Disposition: inline
+In-Reply-To: <575828C0.5000008@siemens.com>
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jailhouse <jailhouse-dev@googlegroups.com>, =?utf-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@denx.de>, Antonios Motakis <antonios.motakis@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-06-08 at 12:03 +0300, Roger Quadros wrote:
-> Now that we have a device reference in struct usb_otg
-> let's use dev_dbg() for debug messages.
+On Wed, Jun 08, 2016 at 04:16:32PM +0200, Jan Kiszka wrote:
+> Hi all,
+> 
+> already started the discussion off-list with Pantelis, but it's better
+> done in public:
+> 
+> I'm currently exploring ways to make Linux recognize dynamically added
+> virtual hardware when running under the Jailhouse hypervisor [1]. We
+> need to load drivers for inter-partition communication devices that only
+> appear after Jailhouse started (which is done from within Linux, i.e.
+> long after boot) or when a partition was added later on. Probably, we
+> will simply add a virtual PCI host bridge on systems without physical
+> PCI and let the IPC device be explored that way (already works on x86).
+> Still, that leaves us with hotplug and unplug on hypervisor activation
+> and deactivation.
 
-dev_vdbg vs dev_dbg
+If I've understood correctly you want to use overlays to inject the
+virtual PCI host bridge?
 
-The patch subject and commit message don't match the code changes.
+Given that you know precisely what you want to inject, I'm not sure I
+see the value of using an overlay. 
 
-> diff --git a/drivers/usb/common/usb-otg-fsm.c b/drivers/usb/common/us=
-b-otg-fsm.c
-[]
-> @@ -44,8 +37,9 @@ static int otg_set_protocol(struct otg_fsm *fsm, in=
-t protocol)
-> =A0	int ret =3D 0;
-> =A0
-> =A0	if (fsm->protocol !=3D protocol) {
-> -		VDBG("Changing role fsm->protocol=3D %d; new protocol=3D %d\n",
-> -			fsm->protocol, protocol);
-> +		dev_vdbg(otg->dev,
-> +			=A0"Changing role fsm->protocol=3D %d; new protocol=3D %d\n",
-> +			=A0fsm->protocol, protocol);
+Is there some reason you can't just create a device without having to go
+via an intermediate step? As I understand it, Xen does that for (some)
+virtual devices provided to Dom0 and DomU.
 
-etc...
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
