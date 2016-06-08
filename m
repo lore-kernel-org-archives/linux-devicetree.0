@@ -1,314 +1,396 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 1/3] DTBO magic and dtbo format options
-Date: Wed, 8 Jun 2016 11:30:43 +0300
-Message-ID: <91D401B5-5C8F-4AEB-918C-1BF0BCCCC9D8@konsulko.com>
-References: <1464889642-28080-1-git-send-email-pantelis.antoniou@konsulko.com> <1464889642-28080-2-git-send-email-pantelis.antoniou@konsulko.com> <20160608065100.GA9226@voom.fritz.box>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv2 2/5] EDAC, altera: ECC Manager IRQ controller support
+Date: Wed, 8 Jun 2016 11:00:05 +0200
+Message-ID: <20160608090005.GB26590@pd.tnic>
+References: <1464193783-5071-3-git-send-email-tthayer@opensource.altera.com>
+ <1465331757-10227-1-git-send-email-tthayer@opensource.altera.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160608065100.GA9226-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465331757-10227-1-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 07, 2016 at 03:35:57PM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> To better support child devices, the ECC manager needs to be
+> implemented as an IRQ controller.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v2  Update with cleanup/improvements from maintainer.
+> ---
+>  drivers/edac/altera_edac.c |  161 +++++++++++++++++++++++++++++++++-----------
+>  drivers/edac/altera_edac.h |    5 +-
+>  2 files changed, 124 insertions(+), 42 deletions(-)
+> 
+> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+> index 5b4d223..573c68d 100644
+> --- a/drivers/edac/altera_edac.c
+> +++ b/drivers/edac/altera_edac.c
+> @@ -22,9 +22,11 @@
+>  #include <linux/edac.h>
+>  #include <linux/genalloc.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/irqchip/chained_irq.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+> @@ -882,22 +884,26 @@ static void ocram_free_mem(void *p, size_t size, void *other)
+>  	gen_pool_free((struct gen_pool *)other, (u32)p, size);
+>  }
+>  
+> -static irqreturn_t altr_edac_a10_ecc_irq(struct altr_edac_device_dev *dci,
+> -					 bool sberr)
+> +static irqreturn_t altr_edac_a10_ecc_irq(int irq, void *dev_id)
+>  {
+> +	struct altr_edac_device_dev *dci = dev_id;
+>  	void __iomem  *base = dci->base;
+>  
+> -	if (sberr) {
+> +	if (irq == dci->sb_irq) {
+>  		writel(ALTR_A10_ECC_SERRPENA,
+>  		       base + ALTR_A10_ECC_INTSTAT_OFST);
+>  		edac_device_handle_ce(dci->edac_dev, 0, 0, dci->edac_dev_name);
+> -	} else {
+> +		return IRQ_HANDLED;
+> +	} else if (irq == dci->db_irq) {
+>  		writel(ALTR_A10_ECC_DERRPENA,
+>  		       base + ALTR_A10_ECC_INTSTAT_OFST);
+>  		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
+>  		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
+> +		return IRQ_HANDLED;
+> +	} else {
+> +		WARN_ON(1);
+>  	}
+> -	return IRQ_HANDLED;
+> +	return IRQ_NONE;
+>  }
 
-> On Jun 8, 2016, at 09:51 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>=
- wrote:
->=20
-> On Thu, Jun 02, 2016 at 08:47:20PM +0300, Pantelis Antoniou wrote:
->> Introduce a new magic number for dynamic plugin objects,
->> which is enabled by selecting dtbo/input output options.
->>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->=20
-> So, I don't think we should need an explicit -I dtbo or -O dtbo.
-> Instead we should be able to autoselect the right magic number based
-> on the presence of the /plugin/ flag.  In the other direction we
-> should be able to set the equivalent of the /plugin/ flag based on th=
-e
-> magic number.
->=20
+Simplified a bit more while applying. Ok?
 
-Sure but this will break everything since nothing can grok the differen=
-t
-magic number. Not the kernel unflattener nor any bootloader.
 
-We need an option to keep the old magic number for compatibility.
+---
+From: Thor Thayer <tthayer@opensource.altera.com>
+Date: Tue, 7 Jun 2016 15:35:57 -0500
+Subject: [PATCH] EDAC, altera: ECC Manager IRQ controller support
 
->> ---
->> Documentation/manual.txt |  8 ++++++++
->> dtc.c                    | 14 +++++++++++---
->> dtc.h                    |  4 ++--
->> fdtdump.c                |  2 +-
->> flattree.c               | 11 ++++++-----
->> libfdt/fdt.c             |  2 +-
->> libfdt/fdt.h             |  3 ++-
->> tests/mangle-layout.c    |  7 ++++---
->> 8 files changed, 35 insertions(+), 16 deletions(-)
->>=20
->> diff --git a/Documentation/manual.txt b/Documentation/manual.txt
->> index 398de32..6d2811b 100644
->> --- a/Documentation/manual.txt
->> +++ b/Documentation/manual.txt
->> @@ -60,6 +60,9 @@ The currently supported Input Formats are:
->>     - "dtb": "blob" format.  A flattened device-tree block with
->>         header in one binary blob.
->>=20
->> +    - "dtbo" : "blob" format. Identical with "dtb" but meant
->> +        for use with dynamic-device tree objects.
->> +
->>     - "dts": "source" format.  A text file containing a "source"
->>         for a device-tree.
->>=20
->> @@ -71,6 +74,8 @@ The currently supported Output Formats are:
->>=20
->>      - "dtb": "blob" format
->>=20
->> +     - "dtbo": "blob" format - for dynamic device tree objects/over=
-lays
->> +
->>      - "dts": "source" format
->>=20
->>      - "asm": assembly language file.  A file that can be sourced
->> @@ -78,6 +83,9 @@ The currently supported Output Formats are:
->>         then simply be added to your Makefile.  Additionally, the
->>         assembly file exports some symbols that can be used.
->>=20
->> +     - "asmo": assembly language file for dynamic device tree objec=
-ts/overlays.
->> +        Identical to "asm" for most purposes.
->> +
->>=20
->> 3) Command Line
->>=20
->> diff --git a/dtc.c b/dtc.c
->> index 1c1f88f..43ba19d 100644
->> --- a/dtc.c
->> +++ b/dtc.c
->> @@ -127,6 +127,8 @@ static const char *guess_type_by_name(const char=
- *fname, const char *fallback)
->> 		return "dts";
->> 	if (!strcasecmp(s, ".dtb"))
->> 		return "dtb";
->> +	if (!strcasecmp(s, ".dtbo"))
->> +		return "dtbo";
->> 	return fallback;
->> }
->>=20
->> @@ -157,6 +159,8 @@ static const char *guess_input_format(const char=
- *fname, const char *fallback)
->> 	magic =3D fdt32_to_cpu(magic);
->> 	if (magic =3D=3D FDT_MAGIC)
->> 		return "dtb";
->> +	if (magic =3D=3D FDT_MAGIC_DTBO)
->> +		return "dtbo";
->>=20
->> 	return guess_type_by_name(fname, fallback);
->> }
->> @@ -285,7 +289,7 @@ int main(int argc, char *argv[])
->> 		dti =3D dt_from_source(arg);
->> 	else if (streq(inform, "fs"))
->> 		dti =3D dt_from_fs(arg);
->> -	else if(streq(inform, "dtb"))
->> +	else if (streq(inform, "dtb") || streq(inform, "dtbo"))
->> 		dti =3D dt_from_blob(arg);
->> 	else
->> 		die("Unknown input format \"%s\"\n", inform);
->> @@ -319,9 +323,13 @@ int main(int argc, char *argv[])
->> 	if (streq(outform, "dts")) {
->> 		dt_to_source(outf, dti);
->> 	} else if (streq(outform, "dtb")) {
->> -		dt_to_blob(outf, dti, outversion);
->> +		dt_to_blob(outf, dti, FDT_MAGIC, outversion);
->> +	} else if (streq(outform, "dtbo")) {
->> +		dt_to_blob(outf, dti, FDT_MAGIC_DTBO, outversion);
->> 	} else if (streq(outform, "asm")) {
->> -		dt_to_asm(outf, dti, outversion);
->> +		dt_to_asm(outf, dti, FDT_MAGIC, outversion);
->> +	} else if (streq(outform, "asmo")) {
->> +		dt_to_asm(outf, dti, FDT_MAGIC_DTBO, outversion);
->> 	} else if (streq(outform, "null")) {
->> 		/* do nothing */
->> 	} else {
->> diff --git a/dtc.h b/dtc.h
->> index 040f8d4..fa66dca 100644
->> --- a/dtc.h
->> +++ b/dtc.h
->> @@ -266,8 +266,8 @@ void process_checks(bool force, struct dt_info *=
-dti);
->>=20
->> /* Flattened trees */
->>=20
->> -void dt_to_blob(FILE *f, struct dt_info *dti, int version);
->> -void dt_to_asm(FILE *f, struct dt_info *dti, int version);
->> +void dt_to_blob(FILE *f, struct dt_info *dti, fdt32_t magic, int ve=
-rsion);
->> +void dt_to_asm(FILE *f, struct dt_info *dti, fdt32_t magic, int ver=
-sion);
->>=20
->> struct dt_info *dt_from_blob(const char *fname);
->>=20
->> diff --git a/fdtdump.c b/fdtdump.c
->> index 95a6a20..fa5a050 100644
->> --- a/fdtdump.c
->> +++ b/fdtdump.c
->> @@ -199,7 +199,7 @@ int main(int argc, char *argv[])
->> 			p =3D memchr(p, smagic[0], endp - p - 4);
->> 			if (!p)
->> 				break;
->> -			if (fdt_magic(p) =3D=3D FDT_MAGIC) {
->> +			if (fdt_magic(p) =3D=3D FDT_MAGIC || fdt_magic(p) =3D=3D FDT_MAG=
-IC_DTBO) {
->> 				/* try and validate the main struct */
->> 				off_t this_len =3D endp - p;
->> 				fdt32_t max_version =3D 17;
->> diff --git a/flattree.c b/flattree.c
->> index 45fcb04..59bdc7d 100644
->> --- a/flattree.c
->> +++ b/flattree.c
->> @@ -335,6 +335,7 @@ static struct data flatten_reserve_list(struct r=
-eserve_info *reservelist,
->> }
->>=20
->> static void make_fdt_header(struct fdt_header *fdt,
->> +			    fdt32_t magic,
->> 			    struct version_info *vi,
->> 			    int reservesize, int dtsize, int strsize,
->> 			    int boot_cpuid_phys)
->> @@ -345,7 +346,7 @@ static void make_fdt_header(struct fdt_header *f=
-dt,
->>=20
->> 	memset(fdt, 0xff, sizeof(*fdt));
->>=20
->> -	fdt->magic =3D cpu_to_fdt32(FDT_MAGIC);
->> +	fdt->magic =3D cpu_to_fdt32(magic);
->> 	fdt->version =3D cpu_to_fdt32(vi->version);
->> 	fdt->last_comp_version =3D cpu_to_fdt32(vi->last_comp_version);
->>=20
->> @@ -366,7 +367,7 @@ static void make_fdt_header(struct fdt_header *f=
-dt,
->> 		fdt->size_dt_struct =3D cpu_to_fdt32(dtsize);
->> }
->>=20
->> -void dt_to_blob(FILE *f, struct dt_info *dti, int version)
->> +void dt_to_blob(FILE *f, struct dt_info *dti, fdt32_t magic, int ve=
-rsion)
->> {
->> 	struct version_info *vi =3D NULL;
->> 	int i;
->> @@ -390,7 +391,7 @@ void dt_to_blob(FILE *f, struct dt_info *dti, in=
-t version)
->> 	reservebuf =3D flatten_reserve_list(dti->reservelist, vi);
->>=20
->> 	/* Make header */
->> -	make_fdt_header(&fdt, vi, reservebuf.len, dtbuf.len, strbuf.len,
->> +	make_fdt_header(&fdt, magic, vi, reservebuf.len, dtbuf.len, strbuf=
-=2Elen,
->> 			dti->boot_cpuid_phys);
->>=20
->> 	/*
->> @@ -460,7 +461,7 @@ static void dump_stringtable_asm(FILE *f, struct=
- data strbuf)
->> 	}
->> }
->>=20
->> -void dt_to_asm(FILE *f, struct dt_info *dti, int version)
->> +void dt_to_asm(FILE *f, struct dt_info *dti, fdt32_t magic, int ver=
-sion)
->> {
->> 	struct version_info *vi =3D NULL;
->> 	int i;
->> @@ -832,7 +833,7 @@ struct dt_info *dt_from_blob(const char *fname)
->> 	}
->>=20
->> 	magic =3D fdt32_to_cpu(magic);
->> -	if (magic !=3D FDT_MAGIC)
->> +	if (magic !=3D FDT_MAGIC && magic !=3D FDT_MAGIC_DTBO)
->> 		die("Blob has incorrect magic number\n");
->>=20
->> 	rc =3D fread(&totalsize, sizeof(totalsize), 1, f);
->> diff --git a/libfdt/fdt.c b/libfdt/fdt.c
->> index 22286a1..28d422c 100644
->> --- a/libfdt/fdt.c
->> +++ b/libfdt/fdt.c
->> @@ -57,7 +57,7 @@
->>=20
->> int fdt_check_header(const void *fdt)
->> {
->> -	if (fdt_magic(fdt) =3D=3D FDT_MAGIC) {
->> +	if (fdt_magic(fdt) =3D=3D FDT_MAGIC || fdt_magic(fdt) =3D=3D FDT_M=
-AGIC_DTBO) {
->> 		/* Complete tree */
->> 		if (fdt_version(fdt) < FDT_FIRST_SUPPORTED_VERSION)
->> 			return -FDT_ERR_BADVERSION;
->> diff --git a/libfdt/fdt.h b/libfdt/fdt.h
->> index 526aedb..493cd55 100644
->> --- a/libfdt/fdt.h
->> +++ b/libfdt/fdt.h
->> @@ -55,7 +55,7 @@
->> #ifndef __ASSEMBLY__
->>=20
->> struct fdt_header {
->> -	fdt32_t magic;			 /* magic word FDT_MAGIC */
->> +	fdt32_t magic;			 /* magic word FDT_MAGIC[|_DTBO] */
->> 	fdt32_t totalsize;		 /* total size of DT block */
->> 	fdt32_t off_dt_struct;		 /* offset to structure */
->> 	fdt32_t off_dt_strings;		 /* offset to strings */
->> @@ -93,6 +93,7 @@ struct fdt_property {
->> #endif /* !__ASSEMBLY */
->>=20
->> #define FDT_MAGIC	0xd00dfeed	/* 4: version, 4: total size */
->> +#define FDT_MAGIC_DTBO	0xd00dfdb0	/* DTBO magic */
->> #define FDT_TAGSIZE	sizeof(fdt32_t)
->>=20
->> #define FDT_BEGIN_NODE	0x1		/* Start node: full name */
->> diff --git a/tests/mangle-layout.c b/tests/mangle-layout.c
->> index a76e51e..d29ebc6 100644
->> --- a/tests/mangle-layout.c
->> +++ b/tests/mangle-layout.c
->> @@ -42,7 +42,8 @@ static void expand_buf(struct bufstate *buf, int n=
-ewsize)
->> 	buf->size =3D newsize;
->> }
->>=20
->> -static void new_header(struct bufstate *buf, int version, const voi=
-d *fdt)
->> +static void new_header(struct bufstate *buf, fdt32_t magic, int ver=
-sion,
->> +		       const void *fdt)
->> {
->> 	int hdrsize;
->>=20
->> @@ -56,7 +57,7 @@ static void new_header(struct bufstate *buf, int v=
-ersion, const void *fdt)
->> 	expand_buf(buf, hdrsize);
->> 	memset(buf->buf, 0, hdrsize);
->>=20
->> -	fdt_set_magic(buf->buf, FDT_MAGIC);
->> +	fdt_set_magic(buf->buf, magic);
->> 	fdt_set_version(buf->buf, version);
->> 	fdt_set_last_comp_version(buf->buf, 16);
->> 	fdt_set_boot_cpuid_phys(buf->buf, fdt_boot_cpuid_phys(fdt));
->> @@ -145,7 +146,7 @@ int main(int argc, char *argv[])
->> 	if (fdt_version(fdt) < 17)
->> 		CONFIG("Input tree must be v17");
->>=20
->> -	new_header(&buf, version, fdt);
->> +	new_header(&buf, FDT_MAGIC, version, fdt);
->>=20
->> 	while (*blockorder) {
->> 		add_block(&buf, version, *blockorder, fdt);
->=20
+To better support child devices, the ECC manager needs to be
+implemented as an IRQ controller.
 
-Regards
+Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: http://lkml.kernel.org/r/1465331757-10227-1-git-send-email-tthayer@opensource.altera.com
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ drivers/edac/altera_edac.c | 167 ++++++++++++++++++++++++++++++++++-----------
+ drivers/edac/altera_edac.h |   5 +-
+ 2 files changed, 130 insertions(+), 42 deletions(-)
 
-=E2=80=94 Pantelis
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index ff74c5b7781a..6f5d586fa0a0 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -22,9 +22,11 @@
+ #include <linux/edac.h>
+ #include <linux/genalloc.h>
+ #include <linux/interrupt.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+@@ -880,22 +882,29 @@ static void ocram_free_mem(void *p, size_t size, void *other)
+ 	gen_pool_free((struct gen_pool *)other, (u32)p, size);
+ }
+ 
+-static irqreturn_t altr_edac_a10_ecc_irq(struct altr_edac_device_dev *dci,
+-					 bool sberr)
++static irqreturn_t altr_edac_a10_ecc_irq(int irq, void *dev_id)
+ {
++	struct altr_edac_device_dev *dci = dev_id;
+ 	void __iomem  *base = dci->base;
+ 
+-	if (sberr) {
++	if (irq == dci->sb_irq) {
+ 		writel(ALTR_A10_ECC_SERRPENA,
+ 		       base + ALTR_A10_ECC_INTSTAT_OFST);
+ 		edac_device_handle_ce(dci->edac_dev, 0, 0, dci->edac_dev_name);
+-	} else {
++
++		return IRQ_HANDLED;
++	} else if (irq == dci->db_irq) {
+ 		writel(ALTR_A10_ECC_DERRPENA,
+ 		       base + ALTR_A10_ECC_INTSTAT_OFST);
+ 		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
+ 		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
++
++		return IRQ_HANDLED;
+ 	}
+-	return IRQ_HANDLED;
++
++	WARN_ON(1);
++
++	return IRQ_NONE;
+ }
+ 
+ const struct edac_device_prv_data ocramecc_data = {
+@@ -986,22 +995,30 @@ static int altr_l2_check_deps(struct altr_edac_device_dev *device)
+ 	return -ENODEV;
+ }
+ 
+-static irqreturn_t altr_edac_a10_l2_irq(struct altr_edac_device_dev *dci,
+-					bool sberr)
++static irqreturn_t altr_edac_a10_l2_irq(int irq, void *dev_id)
+ {
+-	if (sberr) {
++	struct altr_edac_device_dev *dci = dev_id;
++
++	if (irq == dci->sb_irq) {
+ 		regmap_write(dci->edac->ecc_mgr_map,
+ 			     A10_SYSGMR_MPU_CLEAR_L2_ECC_OFST,
+ 			     A10_SYSGMR_MPU_CLEAR_L2_ECC_SB);
+ 		edac_device_handle_ce(dci->edac_dev, 0, 0, dci->edac_dev_name);
+-	} else {
++
++		return IRQ_HANDLED;
++	} else if (irq == dci->db_irq) {
+ 		regmap_write(dci->edac->ecc_mgr_map,
+ 			     A10_SYSGMR_MPU_CLEAR_L2_ECC_OFST,
+ 			     A10_SYSGMR_MPU_CLEAR_L2_ECC_MB);
+ 		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
+ 		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
++
++		return IRQ_HANDLED;
+ 	}
+-	return IRQ_HANDLED;
++
++	WARN_ON(1);
++
++	return IRQ_NONE;
+ }
+ 
+ const struct edac_device_prv_data l2ecc_data = {
+@@ -1084,28 +1101,28 @@ static ssize_t altr_edac_a10_device_trig(struct file *file,
+ 	return count;
+ }
+ 
+-static irqreturn_t altr_edac_a10_irq_handler(int irq, void *dev_id)
++static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ {
+-	irqreturn_t rc = IRQ_NONE;
+-	struct altr_arria10_edac *edac = dev_id;
+-	struct altr_edac_device_dev *dci;
+-	int irq_status;
+-	bool sberr = (irq == edac->sb_irq) ? 1 : 0;
+-	int sm_offset = sberr ? A10_SYSMGR_ECC_INTSTAT_SERR_OFST :
+-				A10_SYSMGR_ECC_INTSTAT_DERR_OFST;
++	int dberr, bit, sm_offset, irq_status;
++	struct altr_arria10_edac *edac = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	int irq = irq_desc_get_irq(desc);
++
++	dberr = (irq == edac->db_irq) ? 1 : 0;
++	sm_offset = dberr ? A10_SYSMGR_ECC_INTSTAT_DERR_OFST :
++			    A10_SYSMGR_ECC_INTSTAT_SERR_OFST;
++
++	chained_irq_enter(chip, desc);
+ 
+ 	regmap_read(edac->ecc_mgr_map, sm_offset, &irq_status);
+ 
+-	if ((irq != edac->sb_irq) && (irq != edac->db_irq)) {
+-		WARN_ON(1);
+-	} else {
+-		list_for_each_entry(dci, &edac->a10_ecc_devices, next) {
+-			if (irq_status & dci->data->irq_status_mask)
+-				rc = dci->data->ecc_irq_handler(dci, sberr);
+-		}
++	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
++		irq = irq_linear_revmap(edac->domain, dberr * 32 + bit);
++		if (irq)
++			generic_handle_irq(irq);
+ 	}
+ 
+-	return rc;
++	chained_irq_exit(chip, desc);
+ }
+ 
+ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
+@@ -1177,6 +1194,34 @@ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
+ 			goto err_release_group1;
+ 	}
+ 
++	altdev->sb_irq = irq_of_parse_and_map(np, 0);
++	if (!altdev->sb_irq) {
++		edac_printk(KERN_ERR, EDAC_DEVICE, "Error allocating SBIRQ\n");
++		rc = -ENODEV;
++		goto err_release_group1;
++	}
++	rc = devm_request_irq(edac->dev, altdev->sb_irq,
++			      prv->ecc_irq_handler,
++			      IRQF_SHARED, ecc_name, altdev);
++	if (rc) {
++		edac_printk(KERN_ERR, EDAC_DEVICE, "No DBERR IRQ resource\n");
++		goto err_release_group1;
++	}
++
++	altdev->db_irq = irq_of_parse_and_map(np, 1);
++	if (!altdev->db_irq) {
++		edac_printk(KERN_ERR, EDAC_DEVICE, "Error allocating DBIRQ\n");
++		rc = -ENODEV;
++		goto err_release_group1;
++	}
++	rc = devm_request_irq(edac->dev, altdev->db_irq,
++			      prv->ecc_irq_handler,
++			      IRQF_SHARED, ecc_name, altdev);
++	if (rc) {
++		edac_printk(KERN_ERR, EDAC_DEVICE, "No DBERR IRQ resource\n");
++		goto err_release_group1;
++	}
++
+ 	rc = edac_device_add_device(dci);
+ 	if (rc) {
+ 		dev_err(edac->dev, "edac_device_add_device failed\n");
+@@ -1195,7 +1240,6 @@ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
+ err_release_group1:
+ 	edac_device_free_ctl_info(dci);
+ err_release_group:
+-	edac_printk(KERN_ALERT, EDAC_DEVICE, "%s: %d\n", __func__, __LINE__);
+ 	devres_release_group(edac->dev, NULL);
+ 	edac_printk(KERN_ERR, EDAC_DEVICE,
+ 		    "%s:Error setting up EDAC device: %d\n", ecc_name, rc);
+@@ -1203,11 +1247,43 @@ err_release_group:
+ 	return rc;
+ }
+ 
++static void a10_eccmgr_irq_mask(struct irq_data *d)
++{
++	struct altr_arria10_edac *edac = irq_data_get_irq_chip_data(d);
++
++	regmap_write(edac->ecc_mgr_map,	A10_SYSMGR_ECC_INTMASK_SET_OFST,
++		     BIT(d->hwirq));
++}
++
++static void a10_eccmgr_irq_unmask(struct irq_data *d)
++{
++	struct altr_arria10_edac *edac = irq_data_get_irq_chip_data(d);
++
++	regmap_write(edac->ecc_mgr_map,	A10_SYSMGR_ECC_INTMASK_CLR_OFST,
++		     BIT(d->hwirq));
++}
++
++static int a10_eccmgr_irqdomain_map(struct irq_domain *d, unsigned int irq,
++				    irq_hw_number_t hwirq)
++{
++	struct altr_arria10_edac *edac = d->host_data;
++
++	irq_set_chip_and_handler(irq, &edac->irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, edac);
++	irq_set_noprobe(irq);
++
++	return 0;
++}
++
++struct irq_domain_ops a10_eccmgr_ic_ops = {
++	.map = a10_eccmgr_irqdomain_map,
++	.xlate = irq_domain_xlate_twocell,
++};
++
+ static int altr_edac_a10_probe(struct platform_device *pdev)
+ {
+ 	struct altr_arria10_edac *edac;
+ 	struct device_node *child;
+-	int rc;
+ 
+ 	edac = devm_kzalloc(&pdev->dev, sizeof(*edac), GFP_KERNEL);
+ 	if (!edac)
+@@ -1225,23 +1301,34 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+ 		return PTR_ERR(edac->ecc_mgr_map);
+ 	}
+ 
++	edac->irq_chip.name = pdev->dev.of_node->name;
++	edac->irq_chip.irq_mask = a10_eccmgr_irq_mask;
++	edac->irq_chip.irq_unmask = a10_eccmgr_irq_unmask;
++	edac->domain = irq_domain_add_linear(pdev->dev.of_node, 64,
++					     &a10_eccmgr_ic_ops, edac);
++	if (!edac->domain) {
++		dev_err(&pdev->dev, "Error adding IRQ domain\n");
++		return -ENOMEM;
++	}
++
+ 	edac->sb_irq = platform_get_irq(pdev, 0);
+-	rc = devm_request_irq(&pdev->dev, edac->sb_irq,
+-			      altr_edac_a10_irq_handler,
+-			      IRQF_SHARED, dev_name(&pdev->dev), edac);
+-	if (rc) {
+-		edac_printk(KERN_ERR, EDAC_DEVICE, "No SBERR IRQ resource\n");
+-		return rc;
++	if (edac->sb_irq < 0) {
++		dev_err(&pdev->dev, "No SBERR IRQ resource\n");
++		return edac->sb_irq;
+ 	}
+ 
++	irq_set_chained_handler_and_data(edac->sb_irq,
++					 altr_edac_a10_irq_handler,
++					 edac);
++
+ 	edac->db_irq = platform_get_irq(pdev, 1);
+-	rc = devm_request_irq(&pdev->dev, edac->db_irq,
+-			      altr_edac_a10_irq_handler,
+-			      IRQF_SHARED, dev_name(&pdev->dev), edac);
+-	if (rc) {
+-		edac_printk(KERN_ERR, EDAC_DEVICE, "No DBERR IRQ resource\n");
+-		return rc;
++	if (edac->db_irq < 0) {
++		dev_err(&pdev->dev, "No DBERR IRQ resource\n");
++		return edac->db_irq;
+ 	}
++	irq_set_chained_handler_and_data(edac->db_irq,
++					 altr_edac_a10_irq_handler,
++					 edac);
+ 
+ 	for_each_child_of_node(pdev->dev.of_node, child) {
+ 		if (!of_device_is_available(child))
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index 42090f36ba6e..62b0fa010f95 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -295,8 +295,7 @@ struct edac_device_prv_data {
+ 	int ce_set_mask;
+ 	int ue_set_mask;
+ 	int set_err_ofst;
+-	irqreturn_t (*ecc_irq_handler)(struct altr_edac_device_dev *dci,
+-				       bool sb);
++	irqreturn_t (*ecc_irq_handler)(int irq, void *dev_id);
+ 	int trig_alloc_sz;
+ 	const struct file_operations *inject_fops;
+ };
+@@ -320,6 +319,8 @@ struct altr_arria10_edac {
+ 	struct regmap		*ecc_mgr_map;
+ 	int sb_irq;
+ 	int db_irq;
++	struct irq_domain	*domain;
++	struct irq_chip		irq_chip;
+ 	struct list_head	a10_ecc_devices;
+ };
+ 
+-- 
+2.7.3
 
-> --=20
-> David Gibson			| I'll have my music baroque, and my code
-> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _o=
-ther_
-> 				| _way_ _around_!
-> http://www.ozlabs.org/~dgibson
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
