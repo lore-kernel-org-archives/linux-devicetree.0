@@ -1,42 +1,109 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2] backlight: pwm_bl: disable PWM when 'duty_cycle' is
- zero
-Date: Wed, 8 Jun 2016 15:06:43 -0500
-Message-ID: <20160608200643.GA13510@rob-hp-laptop>
-References: <1465294429-8570-1-git-send-email-LW@KARO-electronics.de>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ehci-platform: Add support for shared reset controllers
+Date: Wed, 8 Jun 2016 22:07:57 +0200
+Message-ID: <2aef5d1f-6bc8-3acd-543a-8bb0f87702a2@redhat.com>
+References: <Pine.LNX.4.44L0.1606081346340.2191-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465294429-8570-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1606081346340.2191-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 12:13:49PM +0200, Lothar Wa=DFmann wrote:
-> 'brightness' is usually an index into a table of duty_cycle values,
-> where the value at index 0 may well be non-zero
-> (tegra30-apalis-eval.dts and tegra30-colibri-eval-v3.dts are real-lif=
-e
-> examples).
-> Thus brightness =3D=3D 0 does not necessarily mean that the PWM outpu=
-t
-> will be inactive.
-> Check for 'duty_cycle =3D=3D 0' rather than 'brightness =3D=3D 0' to =
-decide
-> whether to disable the PWM.
->=20
-> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
-> ---
-> Changes wrt. v1:
->   - update binding docs to reflect the change
->=20
->  .../devicetree/bindings/leds/backlight/pwm-backlight.txt         | 9=
- ++++++---
->  drivers/video/backlight/pwm_bl.c                                 | 4=
- ++--
->  2 files changed, 8 insertions(+), 5 deletions(-)
+Hi,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 08-06-16 19:47, Alan Stern wrote:
+> On Wed, 8 Jun 2016, Hans de Goede wrote:
+>
+>> Add support for shared platform controllers by using
+>> devm_reset_control_get_shared_by_index instead of
+>> of_reset_control_get_by_index.
+>>
+>> Note we use the devm function because there is no
+>> of_reset_control_get_shared_by_index, this also leads
+>> to a nice cleanup of the cleanup code.
+>>
+>> This brings the ehci-platform reset handling code inline
+>> with ohci-platform.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>
+> This is just the difference between what Greg has merged and what you
+> wanted to add, right?  If so, then
+
+Right.
+
+Regards,
+
+Hans
+
+
+>
+> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+>
+> Alan Stern
+>
+>>  drivers/usb/host/ehci-platform.c | 16 +++++-----------
+>>  1 file changed, 5 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+>> index bc33f45..6816b8c 100644
+>> --- a/drivers/usb/host/ehci-platform.c
+>> +++ b/drivers/usb/host/ehci-platform.c
+>> @@ -236,8 +236,8 @@ static int ehci_platform_probe(struct platform_device *dev)
+>>  	}
+>>
+>>  	for (rst = 0; rst < EHCI_MAX_RSTS; rst++) {
+>> -		priv->rsts[rst] = of_reset_control_get_by_index(
+>> -					dev->dev.of_node, rst);
+>> +		priv->rsts[rst] = devm_reset_control_get_shared_by_index(
+>> +					&dev->dev, rst);
+>>  		if (IS_ERR(priv->rsts[rst])) {
+>>  			err = PTR_ERR(priv->rsts[rst]);
+>>  			if (err == -EPROBE_DEFER)
+>> @@ -247,10 +247,8 @@ static int ehci_platform_probe(struct platform_device *dev)
+>>  		}
+>>
+>>  		err = reset_control_deassert(priv->rsts[rst]);
+>> -		if (err) {
+>> -			reset_control_put(priv->rsts[rst]);
+>> +		if (err)
+>>  			goto err_reset;
+>> -		}
+>>  	}
+>>
+>>  	if (pdata->big_endian_desc)
+>> @@ -307,10 +305,8 @@ err_power:
+>>  	if (pdata->power_off)
+>>  		pdata->power_off(dev);
+>>  err_reset:
+>> -	while (--rst >= 0) {
+>> +	while (--rst >= 0)
+>>  		reset_control_assert(priv->rsts[rst]);
+>> -		reset_control_put(priv->rsts[rst]);
+>> -	}
+>>  err_put_clks:
+>>  	while (--clk >= 0)
+>>  		clk_put(priv->clks[clk]);
+>> @@ -335,10 +331,8 @@ static int ehci_platform_remove(struct platform_device *dev)
+>>  	if (pdata->power_off)
+>>  		pdata->power_off(dev);
+>>
+>> -	for (rst = 0; rst < EHCI_MAX_RSTS && priv->rsts[rst]; rst++) {
+>> +	for (rst = 0; rst < EHCI_MAX_RSTS && priv->rsts[rst]; rst++)
+>>  		reset_control_assert(priv->rsts[rst]);
+>> -		reset_control_put(priv->rsts[rst]);
+>> -	}
+>>
+>>  	for (clk = 0; clk < EHCI_MAX_CLKS && priv->clks[clk]; clk++)
+>>  		clk_put(priv->clks[clk]);
+>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
