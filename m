@@ -1,73 +1,43 @@
-From: weiqing kong <weiqing.kong@mediatek.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: Add MediaTek display PWM bindings
-Date: Wed, 8 Jun 2016 14:48:52 +0800
-Message-ID: <1465368532.5209.15.camel@mhfsdcap03>
-References: <1464597712-5399-1-git-send-email-weiqing.kong@mediatek.com>
-	 <1464597712-5399-2-git-send-email-weiqing.kong@mediatek.com>
-	 <20160602224550.GA19256@rob-hp-laptop> <1464936349.5209.9.camel@mhfsdcap03>
-	 <57519C59.5040107@gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH] of: reserved_mem: restore old behavior when no region is
+ defined
+Date: Wed, 08 Jun 2016 08:51:53 +0200
+Message-ID: <1465368713-17866-1-git-send-email-m.szyprowski@samsung.com>
+References: <20160607143425.GE1165@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57519C59.5040107@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20160607143425.GE1165@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Kamil Debski <k.debski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Liviu Dudau <liviu.dudau@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-06-03 at 17:03 +0200, Matthias Brugger wrote:
-> 
-> On 03/06/16 08:45, weiqing kong wrote:
-> > On Thu, 2016-06-02 at 17:45 -0500, Rob Herring wrote:
-> >> On Mon, May 30, 2016 at 04:41:50PM +0800, Weiqing Kong wrote:
-> >>> Add MT2701 compatible string.
-> >>>
-> >>> Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
-> >>> ---
-> >>>   Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt | 5 +++--
-> >>>   1 file changed, 3 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> >>> index f8f59ba..f2f2fa9 100644
-> >>> --- a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> >>> +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> >>> @@ -1,9 +1,10 @@
-> >>>   MediaTek display PWM controller
-> >>>
-> >>>   Required properties:
-> >>> - - compatible: should be "mediatek,<name>-disp-pwm":
-> >>> -   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
-> >>> + - compatible: should be like these:
-> >>> +   - "mediatek,mt2701-disp-bls": found on mt2701 SoC.
-> >>
-> >> Why bls instead of pwm?
-> >
-> > In mt6595/mt8173, we have a hardware module named pwm.
-> > In mt2701, we have bls hardware module which includes disp pwm function,
-> > so we named it mt2701-disp-bls rather than mt2701-disp-pwm in order to
-> > match with hardware spec.
-> > thanks.
-> >
-> 
->  From what I understand pwm module and disp pwm in mt6589/mt8173 is 
-> independent from the disp pwm. Actually the disp pwm in mt6589 is part 
-> of the bls module, so this should me mediatek,mt2701-disp-pwm as well
-> 
-> Thanks,
-> Matthias
-> 
-
-ok, I will modify it into mediatek,mt2701-disp-pwm. 
-
-> >>
-> >>>      - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
-> >>> +   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
-> >>>    - reg: physical base address and length of the controller's registers.
-> >>>    - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
-> >>>      the cell format.
-> >>> --
-> >>> 1.8.1.1.dirty
-> >>>
-> >
-> >
+Q2hhbmdlIHJldHVybiB2YWx1ZSBiYWNrIHRvIC1FTk9ERVYgd2hlbiBubyByZWdpb24gaXMgZGVm
+aW5lZCBmb3IgZ2l2ZW4KZGV2aWNlLiBUaGlzIHJlc3RvcmVzIG9sZCBiZWhhdmlvciBvZiB0aGlz
+IGZ1bmN0aW9uLCBhcyBzb21lIGRyaXZlcnMgcmVseQpvbiBzdWNoIGVycm9yIGNvZGUuCgpSZXBv
+cnRlZC1ieTogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+CkZpeGVzOiA1OWNlNDAz
+OTcyN2VmNDAgKCJvZjogcmVzZXJ2ZWRfbWVtOiBhZGQgc3VwcG9ydCBmb3IgdXNpbmcgbW9yZSB0
+aGFuCiAgICAgICBvbmUgcmVnaW9uIGZvciBnaXZlbiBkZXZpY2UiKQpTaWduZWQtb2ZmLWJ5OiBN
+YXJlayBTenlwcm93c2tpIDxtLnN6eXByb3dza2lAc2Ftc3VuZy5jb20+Ci0tLQogZHJpdmVycy9v
+Zi9vZl9yZXNlcnZlZF9tZW0uYyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
+KSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2Yvb2ZfcmVzZXJ2ZWRfbWVt
+LmMgYi9kcml2ZXJzL29mL29mX3Jlc2VydmVkX21lbS5jCmluZGV4IDNjZjEyOWYuLjA2YWY5OWYg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvb2Yvb2ZfcmVzZXJ2ZWRfbWVtLmMKKysrIGIvZHJpdmVycy9v
+Zi9vZl9yZXNlcnZlZF9tZW0uYwpAQCAtMzM0LDcgKzMzNCw3IEBAIGludCBvZl9yZXNlcnZlZF9t
+ZW1fZGV2aWNlX2luaXRfYnlfaWR4KHN0cnVjdCBkZXZpY2UgKmRldiwKIAogCXRhcmdldCA9IG9m
+X3BhcnNlX3BoYW5kbGUobnAsICJtZW1vcnktcmVnaW9uIiwgaWR4KTsKIAlpZiAoIXRhcmdldCkK
+LQkJcmV0dXJuIC1FSU5WQUw7CisJCXJldHVybiAtRU5PREVWOwogCiAJcm1lbSA9IF9fZmluZF9y
+bWVtKHRhcmdldCk7CiAJb2Zfbm9kZV9wdXQodGFyZ2V0KTsKLS0gCjEuOS4yCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
