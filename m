@@ -1,166 +1,124 @@
-From: Stephan Linz <linz@li-pro.net>
-Subject: [PATCH v3 3/7] powerpc: use the new LED disk activity trigger
-Date: Thu,  9 Jun 2016 00:29:38 +0200
-Message-ID: <20160608223000.433-3-linz@li-pro.net>
-References: <20160608223000.433-1-linz@li-pro.net>
+From: Schuyler Patton <spatton@ti.com>
+Subject: Re: [PATCH v2 0/2] net: ethernet: ti: cpsw: delete rx_descs property
+Date: Wed, 8 Jun 2016 18:11:33 -0500
+Message-ID: <5758A625.3090707@ti.com>
+References: <1465307976-12235-1-git-send-email-ivan.khoronzhuk@linaro.org>
+ <5756E7A8.6090703@ti.com> <57582535.5020608@linaro.org>
+ <57582650.5010409@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160608223000.433-1-linz@li-pro.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-ide@vger.kernel.org
-Cc: Stephan Linz <linz@li-pro.net>, Joseph Jezak <josejx@gentoo.org>, Nico Macrionitis <acrux@cruxppc.org>, =?UTF-8?q?J=C3=B6rg=20Sommer?= <joerg@alea.gnuu.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57582650.5010409@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, mugunthanvnm@ti.com, linux-kernel@vger.kernel.org
+Cc: grygorii.strashko@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-- dts: rename 'ide-disk' to 'disk-activity'
-- defconfig: rename 'ADB_PMU_LED_IDE' to 'ADB_PMU_LED_DISK'
 
-Cc: Joseph Jezak <josejx@gentoo.org>
-Cc: Nico Macrionitis <acrux@cruxppc.org>
-Cc: J=C3=B6rg Sommer <joerg@alea.gnuu.de>
-Signed-off-by: Stephan Linz <linz@li-pro.net>
----
- arch/powerpc/boot/dts/mpc8315erdb.dts |  2 +-
- arch/powerpc/boot/dts/mpc8377_rdb.dts |  2 +-
- arch/powerpc/boot/dts/mpc8378_rdb.dts |  2 +-
- arch/powerpc/boot/dts/mpc8379_rdb.dts |  2 +-
- arch/powerpc/configs/pmac32_defconfig |  2 +-
- arch/powerpc/configs/ppc6xx_defconfig |  2 +-
- drivers/macintosh/Kconfig             | 13 ++++++-------
- drivers/macintosh/via-pmu-led.c       |  4 ++--
- 8 files changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/mpc8315erdb.dts b/arch/powerpc/boot/=
-dts/mpc8315erdb.dts
-index 4354684..ca5139e 100644
---- a/arch/powerpc/boot/dts/mpc8315erdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8315erdb.dts
-@@ -472,7 +472,7 @@
-=20
- 		hdd {
- 			gpios =3D <&mcu_pio 1 0>;
--			linux,default-trigger =3D "ide-disk";
-+			linux,default-trigger =3D "disk-activity";
- 		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/mpc8377_rdb.dts b/arch/powerpc/boot/=
-dts/mpc8377_rdb.dts
-index 2b4b653..e326139 100644
---- a/arch/powerpc/boot/dts/mpc8377_rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8377_rdb.dts
-@@ -496,7 +496,7 @@
-=20
- 		hdd {
- 			gpios =3D <&mcu_pio 1 0>;
--			linux,default-trigger =3D "ide-disk";
-+			linux,default-trigger =3D "disk-activity";
- 		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/mpc8378_rdb.dts b/arch/powerpc/boot/=
-dts/mpc8378_rdb.dts
-index 74b6a53..71842fc 100644
---- a/arch/powerpc/boot/dts/mpc8378_rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8378_rdb.dts
-@@ -480,7 +480,7 @@
-=20
- 		hdd {
- 			gpios =3D <&mcu_pio 1 0>;
--			linux,default-trigger =3D "ide-disk";
-+			linux,default-trigger =3D "disk-activity";
- 		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/mpc8379_rdb.dts b/arch/powerpc/boot/=
-dts/mpc8379_rdb.dts
-index 3b5cbac..e442a29 100644
---- a/arch/powerpc/boot/dts/mpc8379_rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8379_rdb.dts
-@@ -446,7 +446,7 @@
-=20
- 		hdd {
- 			gpios =3D <&mcu_pio 1 0>;
--			linux,default-trigger =3D "ide-disk";
-+			linux,default-trigger =3D "disk-activity";
- 		};
- 	};
- };
-diff --git a/arch/powerpc/configs/pmac32_defconfig b/arch/powerpc/confi=
-gs/pmac32_defconfig
-index ea8705f..3f6c9a6 100644
---- a/arch/powerpc/configs/pmac32_defconfig
-+++ b/arch/powerpc/configs/pmac32_defconfig
-@@ -158,7 +158,7 @@ CONFIG_ADB=3Dy
- CONFIG_ADB_CUDA=3Dy
- CONFIG_ADB_PMU=3Dy
- CONFIG_ADB_PMU_LED=3Dy
--CONFIG_ADB_PMU_LED_IDE=3Dy
-+CONFIG_ADB_PMU_LED_DISK=3Dy
- CONFIG_PMAC_APM_EMU=3Dm
- CONFIG_PMAC_MEDIABAY=3Dy
- CONFIG_PMAC_BACKLIGHT=3Dy
-diff --git a/arch/powerpc/configs/ppc6xx_defconfig b/arch/powerpc/confi=
-gs/ppc6xx_defconfig
-index 99ccbeba..1dde0be 100644
---- a/arch/powerpc/configs/ppc6xx_defconfig
-+++ b/arch/powerpc/configs/ppc6xx_defconfig
-@@ -442,7 +442,7 @@ CONFIG_ADB=3Dy
- CONFIG_ADB_CUDA=3Dy
- CONFIG_ADB_PMU=3Dy
- CONFIG_ADB_PMU_LED=3Dy
--CONFIG_ADB_PMU_LED_IDE=3Dy
-+CONFIG_ADB_PMU_LED_DISK=3Dy
- CONFIG_PMAC_APM_EMU=3Dy
- CONFIG_PMAC_MEDIABAY=3Dy
- CONFIG_PMAC_BACKLIGHT=3Dy
-diff --git a/drivers/macintosh/Kconfig b/drivers/macintosh/Kconfig
-index 3e8b29e..d28690f 100644
---- a/drivers/macintosh/Kconfig
-+++ b/drivers/macintosh/Kconfig
-@@ -96,19 +96,18 @@ config ADB_PMU_LED
- 	  Support the front LED on Power/iBooks as a generic LED that can
- 	  be triggered by any of the supported triggers. To get the
- 	  behaviour of the old CONFIG_BLK_DEV_IDE_PMAC_BLINK, select this
--	  and the ide-disk LED trigger and configure appropriately through
--	  sysfs.
-+	  and the disk LED trigger and configure appropriately through sysfs.
-=20
--config ADB_PMU_LED_IDE
--	bool "Use front LED as IDE LED by default"
-+config ADB_PMU_LED_DISK
-+	bool "Use front LED as DISK LED by default"
- 	depends on ADB_PMU_LED
- 	depends on LEDS_CLASS
- 	depends on IDE_GD_ATA
- 	select LEDS_TRIGGERS
--	select LEDS_TRIGGER_IDE_DISK
-+	select LEDS_TRIGGER_DISK
- 	help
--	  This option makes the front LED default to the IDE trigger
--	  so that it blinks on IDE activity.
-+	  This option makes the front LED default to the disk trigger
-+	  so that it blinks on disk activity.
-=20
- config PMAC_SMU
- 	bool "Support for SMU  based PowerMacs"
-diff --git a/drivers/macintosh/via-pmu-led.c b/drivers/macintosh/via-pm=
-u-led.c
-index 19c3718..ae067ab 100644
---- a/drivers/macintosh/via-pmu-led.c
-+++ b/drivers/macintosh/via-pmu-led.c
-@@ -73,8 +73,8 @@ static void pmu_led_set(struct led_classdev *led_cdev=
-,
-=20
- static struct led_classdev pmu_led =3D {
- 	.name =3D "pmu-led::front",
--#ifdef CONFIG_ADB_PMU_LED_IDE
--	.default_trigger =3D "ide-disk",
-+#ifdef CONFIG_ADB_PMU_LED_DISK
-+	.default_trigger =3D "disk-activity",
- #endif
- 	.brightness_set =3D pmu_led_set,
- };
---=20
-2.8.4
+On 06/08/2016 09:06 AM, Ivan Khoronzhuk wrote:
+>
+>
+> On 08.06.16 17:01, Ivan Khoronzhuk wrote:
+>> Hi Schuyer,
+>>
+>> On 07.06.16 18:26, Schuyler Patton wrote:
+>>> Hi,
+>>>
+>>> On 06/07/2016 08:59 AM, Ivan Khoronzhuk wrote:
+>>>> There is no reason in rx_descs property because davinici_cpdma
+>>>> driver splits pool of descriptors equally between tx and rx channels.
+>>>> So, this patch series makes driver to use available number of
+>>>> descriptors for rx channels.
+>>>
+>>> I agree with the idea of consolidating how the descriptors are 
+>>> defined because of
+>>> the two variable components, number and size of the pool can be 
+>>> confusing to
+>>> end users. I would like to request to change how it is being 
+>>> proposed here.
+>>>
+>>> I think the number of descriptors should be left in the device tree 
+>>> source file as
+>>> is and remove the BD size variable and have the driver calculate the 
+>>> size of the
+>>> pool necessary to support the descriptor request. From an user 
+>>> perspective it is
+>>> easier I think to be able to list the number of descriptors 
+>>> necessary vs. the size
+>>> of the pool.
+>>>
+>>> Since the patch series points out how it is used so in the driver so 
+>>> to make that
+>>> consistent is perhaps change rx_descs to total_descs.
+>>>
+>>> Regards,
+>>> Schuyler
+>>
+>> The DT entry for cpsw doesn't have property for size of the pool.
+>> It contains only BD ram size, if you mean this. The size of the pool is
+>> software decision. Current version of DT entry contain only rx desc 
+>> number.
+>> That is not correct, as it depends on the size of the descriptor, 
+>> which is also
+>> h/w parameter. The DT entry has to describe only h/w part and 
+>> shouldn't contain
+>> driver implementation details, and I'm looking on it from this 
+>> perspective.
+>>
+>> Besides, rx_descs describes only rx number of descriptors, that are 
+>> taken from
+>> the same pool as tx descriptors, and setting rx desc to some new 
+>> value doesn't
+>> mean that rest of them are freed for tx. Also, I'm going to send 
+>> series that
+>> adds multi channel support to the driver, and in this case, splitting 
+>> of the
+>> pool will be more sophisticated than now, after what setting those 
+>> parameters
+>> for user (he should do this via device tree) can be even more 
+>> confusing. But,
+> should -> shouldn't
+>
+>> as it's supposed, it's software decision that shouldn't leak to the DT.
+
+If this rx-desc field is removed how will the number of descriptors be set?
+
+This field has been used to increase the number of descriptors so high
+volume short packets are not dropped due to descriptor exhaustion. The 
+current
+default number of 64 rx descriptors is too low for gigabit networks. 
+Some users
+have a strong requirement for zero loss of UDP packets setting this 
+field to a
+larger number and setting the descriptors off-chip was a means to solve
+the problem.
+
+>>
+>>
+>>>>
+>>>> Based on master branch
+>>>>
+>>>> Since v1:
+>>>> - separate device tree and driver patches
+>>>> - return number of rx buffers from cpdma driver
+>>>>
+>>>> Ivan Khoronzhuk (2):
+>>>>    net: ethernet: ti: cpsw: remove rx_descs property
+>>>>    Documentation: DT: cpsw: remove rx_descs property
+>>>>
+>>>>   Documentation/devicetree/bindings/net/cpsw.txt |  1 -
+>>>>   arch/arm/boot/dts/am33xx.dtsi                  |  1 -
+>>>>   arch/arm/boot/dts/am4372.dtsi                  |  1 -
+>>>>   arch/arm/boot/dts/dm814x.dtsi                  |  1 -
+>>>>   arch/arm/boot/dts/dra7.dtsi                    |  1 -
+>>>>   drivers/net/ethernet/ti/cpsw.c                 | 13 +++----------
+>>>>   drivers/net/ethernet/ti/cpsw.h                 |  1 -
+>>>>   drivers/net/ethernet/ti/davinci_cpdma.c        |  6 ++++++
+>>>>   drivers/net/ethernet/ti/davinci_cpdma.h        |  1 +
+>>>>   9 files changed, 10 insertions(+), 16 deletions(-)
+>>>>
+>>>
+>>
+>
