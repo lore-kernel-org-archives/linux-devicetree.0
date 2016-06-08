@@ -1,43 +1,66 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v10 0/8] add i2c driver supported for rk3399
-Date: Wed, 08 Jun 2016 17:47:38 +0200
-Message-ID: <2239664.BKqQWGCl8U@diego>
-References: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/8] mfd: tps65218: Use mfd_add_devices instead of
+ of_platform_populate
+Date: Wed, 8 Jun 2016 16:50:25 +0100
+Message-ID: <20160608155025.GB14888@dell>
+References: <1462945691-904-1-git-send-email-j-keerthy@ti.com>
+ <1462945691-904-4-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: wsa@the-dreams.de
-Cc: David Wu <david.wu@rock-chips.com>, robh+dt@kernel.org, dianders@chromium.org, andy.shevchenko@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, briannorris@google.com, davidriley@google.com, huangtao@rock-chips.com, hl@rock-chips.com, xjq@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1462945691-904-4-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: broonie@kernel.org, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nikita@compulab.co.il, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Wed, 11 May 2016, Keerthy wrote:
 
-Am Montag, 16. Mai 2016, 21:57:35 schrieb David Wu:
-> There are three points differert from others:
->  - new method to caculate i2c timings for rk3399
->  - pclk and function clk are separated at rk3399
->  - add fast-plus mode supported for rk3399
+> mfd_add_devices enables parsing device tree nodes without compatibles
+> for child nodes. Replace of_platform_populate with mfd_add_devices.
+>=20
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  drivers/mfd/tps65218.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+> index f20a531..b8b3a58 100644
+> --- a/drivers/mfd/tps65218.c
+> +++ b/drivers/mfd/tps65218.c
+> @@ -33,6 +33,10 @@
+> =20
+>  #define TPS65218_PASSWORD_REGS_UNLOCK   0x7D
+> =20
+> +static const struct mfd_cell tps65218_cells[] =3D {
+> +	{ .name =3D "tps65218-regulator", },
+> +};
 
-this series looks pretty nice now and it seems most everybody is happy with it 
-by now. Do you still have it in your inbox to look at, or should David resend 
-it again?
+What other devices does the TPS65218 consist of?
 
+>  /**
+>   * tps65218_reg_write: Write a single tps65218 register.
+>   *
+> @@ -236,8 +240,10 @@ static int tps65218_probe(struct i2c_client *cli=
+ent,
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> -	ret =3D of_platform_populate(client->dev.of_node, NULL, NULL,
+> -				   &client->dev);
+> +	ret =3D mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cel=
+ls,
+> +			      ARRAY_SIZE(tps65218_cells), NULL, 0,
+> +			      regmap_irq_get_domain(tps->irq_data));
+> +
+>  	if (ret < 0)
+>  		goto err_irq;
+> =20
 
-Heiko
-
-> David Wu (8):
->   i2c: rk3x: add documentation to fields in "struct rk3x_i2c"
->   i2c: rk3x: use struct "rk3x_i2c_calced_timings"
->   i2c: rk3x: Remove redundant rk3x_i2c_clean_ipd()
->   i2c: rk3x: Change SoC data to not use array
->   i2c: rk3x: Move spec timing data to "static const" structs
->   dt-bindings: i2c: rk3x: add support for rk3399
->   i2c: rk3x: add i2c support for rk3399 soc
->   i2c: rk3x: support fast-mode plus for rk3399
-> 
->  Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  16 +-
->  drivers/i2c/busses/i2c-rk3x.c                      | 498
-> +++++++++++++++++---- 2 files changed, 434 insertions(+), 80 deletions(-)
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
