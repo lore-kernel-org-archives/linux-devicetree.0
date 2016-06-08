@@ -1,51 +1,113 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH] serial/bcm63xx_uart: use correct alias naming
-Date: Wed,  8 Jun 2016 12:08:43 +0200
-Message-ID: <1465380523-7385-1-git-send-email-jogo@openwrt.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v9 08/14] usb: otg: add OTG/dual-role core
+Date: Wed, 8 Jun 2016 13:12:10 +0300
+Message-ID: <5757EF7A.20604@ti.com>
+References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+ <1465376626-30122-9-git-send-email-rogerq@ti.com>
+ <20160608095336.GA4444@shlinux2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160608095336.GA4444@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The bcm63xx_uart driver uses the of alias for determing its id. Recent
-changes in dts files changed the expected 'uartX' to the recommended
-'serialX', breaking serial output. Fix this by checking for a 'serialX'
-alias as well.
+Hi,
 
-Fixes: e3b992d028f8 ("MIPS: BMIPS: Improve BCM6328 device tree")
-Fixes: 2d52ee82b475 ("MIPS: BMIPS: Improve BCM6368 device tree")
-Fixes: 7537d273e2f3 ("MIPS: BMIPS: Add device tree example for BCM6358")
-Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
+On 08/06/16 12:53, Peter Chen wrote:
+> On Wed, Jun 08, 2016 at 12:03:40PM +0300, Roger Quadros wrote:
+>> +int usb_otg_unregister(struct device *dev)
+>> +{
+>> +	struct usb_otg *otg;
+>> +
+>> +	mutex_lock(&otg_list_mutex);
+>> +	otg = usb_otg_get_data(dev);
+>> +	if (!otg) {
+>> +		dev_err(dev, "otg: %s: device not in otg list\n",
+>> +			__func__);
+>> +		mutex_unlock(&otg_list_mutex);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* prevent unregister till both host & gadget have unregistered */
+>> +	if (otg->host || otg->gadget) {
+>> +		dev_err(dev, "otg: %s: host/gadget still registered\n",
+>> +			__func__);
+> 
+> You need to call mutex_unlock here
 
-Based on 4.7-rc2, which is the current head of tty-next.
+Indeed. good catch.
+> 
+>> +
+>> +int usb_otg_gadget_ready(struct usb_gadget *gadget, bool ready)
+>> +{
+> 
+> What this API is for? Why need it in this version?
 
- drivers/tty/serial/bcm63xx_uart.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+we moved gadget to otg registration from udc_bind_to_driver() to usb_add_gadget_udc_release().
+This means there is a window when gadget function driver (e.g. g_zero) is not loaded.
+We don't want to start the gadget controller in that window.
 
-diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
-index c28e5c24..5108fab 100644
---- a/drivers/tty/serial/bcm63xx_uart.c
-+++ b/drivers/tty/serial/bcm63xx_uart.c
-@@ -813,8 +813,12 @@ static int bcm_uart_probe(struct platform_device *pdev)
- 	struct clk *clk;
- 	int ret;
- 
--	if (pdev->dev.of_node)
--		pdev->id = of_alias_get_id(pdev->dev.of_node, "uart");
-+	if (pdev->dev.of_node) {
-+		pdev->id = of_alias_get_id(pdev->dev.of_node, "serial");
-+
-+		if (pdev->id < 0)
-+			pdev->id = of_alias_get_id(pdev->dev.of_node, "uart");
-+	}
- 
- 	if (pdev->id < 0 || pdev->id >= BCM63XX_NR_UARTS)
- 		return -EINVAL;
--- 
-2.1.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+usb_otg_gadget_ready() is used by gadget core to notify the otg core when the function driver
+is ready or not-ready.
+
+> 
+>> +	struct usb_otg *otg;
+>> +	struct device *gadget_dev = &gadget->dev;
+>> +	struct device *otg_dev = gadget->otg_dev;
+>> +
+>> +	if (!otg_dev)
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&otg_list_mutex);
+>> +	otg = usb_otg_get_data(otg_dev);
+>> +	mutex_unlock(&otg_list_mutex);
+>> +	if (!otg) {
+>> +		dev_err(gadget_dev,
+>> +			"otg: gadget %s wasn't registered with otg\n",
+>> +			dev_name(&gadget->dev));
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	mutex_lock(&otg->fsm.lock);
+>> +	if (otg->gadget != gadget) {
+>> +		mutex_unlock(&otg->fsm.lock);
+>> +		dev_err(otg_dev, "otg: gadget %s wasn't registered with otg\n",
+>> +			dev_name(&gadget->dev));
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* Start/stop FSM & gadget */
+>> +	otg->gadget_ready = ready;
+>> +	if (ready)
+>> +		usb_otg_start_fsm(otg);
+>> +	else
+>> +		usb_otg_stop_fsm(otg);
+>> +
+>> +	dev_dbg(otg_dev, "otg: gadget %s %sready\n", dev_name(&gadget->dev),
+>> +		ready ? "" : "not ");
+>> +
+>> +	mutex_unlock(&otg->fsm.lock);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(usb_otg_gadget_ready);
+>> +
+>> --- a/include/linux/usb/otg.h
+>> +++ b/include/linux/usb/otg.h
+>> @@ -10,10 +10,70 @@
+>>  #define __LINUX_USB_OTG_H
+>>  
+>>  #include <linux/phy/phy.h>
+>> -#include <linux/usb/phy.h>
+>> -#include <linux/usb/otg-fsm.h>
+>> +#include <linux/device.h>
+>> +#include <linux/hrtimer.h>
+>> +#include <linux/ktime.h>
+> 
+> The above two timer header files are not needed.
+
+You had pointed this out earlier, but I missed it. Sorry.
