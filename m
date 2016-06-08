@@ -1,76 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] arm64: dts: apm: Use lowercase consistently for hex
- constants
-Date: Wed, 8 Jun 2016 14:48:28 -0500
-Message-ID: <20160608194828.GA2398@rob-hp-laptop>
-References: <20160606201756.4978.58010.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+Subject: Re: [PATCH v4 1/2] dt: binding: Add Qualcomm WCNSS control binding
+Date: Wed, 8 Jun 2016 14:50:08 -0500
+Message-ID: <20160608195008.GA4874@rob-hp-laptop>
+References: <1465256804-27281-1-git-send-email-bjorn.andersson@linaro.org>
+ <1465257500-28176-1-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160606201756.4978.58010.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+In-Reply-To: <1465257500-28176-1-git-send-email-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Duc Dang <dhdang@apm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 03:17:56PM -0500, Bjorn Helgaas wrote:
-> The convention in these files is to use lowercase for "0x" prefixes and for
-> the hex constants themselves, but a few changes didn't follow that
-> convention, which makes the file annoying to read.
+On Mon, Jun 06, 2016 at 04:58:19PM -0700, Bjorn Andersson wrote:
+> This binding describes the control interface for the Qualcomm WCNSS.
 > 
-> Use lowercase consistently for the hex constants.  No functional change
-> intended.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  .../devicetree/bindings/net/apm-xgene-enet.txt     |    4 +-
->  arch/arm64/boot/dts/apm/apm-shadowcat.dtsi         |   40 ++++++++++----------
->  arch/arm64/boot/dts/apm/apm-storm.dtsi             |   36 +++++++++---------
->  3 files changed, 40 insertions(+), 40 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> index 05f705e3..e41b2d5 100644
-> --- a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> +++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> @@ -59,8 +59,8 @@ Example:
->  		compatible = "apm,xgene-enet";
->  		status = "disabled";
->  		reg = <0x0 0x17020000 0x0 0xd100>,
-> -		      <0x0 0X17030000 0x0 0X400>,
-> -		      <0x0 0X10000000 0x0 0X200>;
-> +		      <0x0 0x17030000 0x0 0x400>,
-> +		      <0x0 0x10000000 0x0 0x200>;
->  		reg-names = "enet_csr", "ring_csr", "ring_cmd";
->  		interrupts = <0x0 0x3c 0x4>;
->  		port-id = <0>;
-> diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-> index c569f76..9773687 100644
-> --- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-> +++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-> @@ -106,9 +106,9 @@
->  		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
->  		ranges = <0 0 0 0x79000000 0x0 0x800000>; /* MSI Range */
->  		reg = <0x0 0x78090000 0x0 0x10000>,	/* GIC Dist */
-> -		      <0x0 0x780A0000 0x0 0x20000>,	/* GIC CPU */
-> -		      <0x0 0x780C0000 0x0 0x10000>,	/* GIC VCPU Control */
-> -		      <0x0 0x780E0000 0x0 0x20000>;	/* GIC VCPU */
-> +		      <0x0 0x780a0000 0x0 0x20000>,	/* GIC CPU */
-> +		      <0x0 0x780c0000 0x0 0x10000>,	/* GIC VCPU Control */
-> +		      <0x0 0x780e0000 0x0 0x20000>;	/* GIC VCPU */
->  		v2m0: v2m@0x00000 {
+> Changes since v3:
+> - Included missed fixup of the smem-state properties
+> 
+> Changes since v2:
+> - Fixup some misstakes in the document pointed out by Rob
+> 
+> Changes since v1:
+> - Introduce reference to wcnss block node for register block definition
+> - Use wcnss block node compatible for hw version detection (riva vs pronto)
+> - Clean up compatible name for bt node
+> 
+>  .../devicetree/bindings/soc/qcom/qcom,wcnss.txt    | 116 +++++++++++++++++++++
+>  1 file changed, 116 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
 
-Unit addresses should not have '0x' or leading 0s.
-
->  			compatible = "arm,gic-v2m-frame";
->  			msi-controller;
-> @@ -159,35 +159,35 @@
->  			msi-controller;
->  			reg = <0x0 0x90000 0x0 0x1000>;
->  		};
-> -		v2m10: v2m@0xA0000 {
-> +		v2m10: v2m@0xa0000 {
-
-and here...
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
