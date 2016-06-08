@@ -1,94 +1,134 @@
 From: Stephan Linz <linz@li-pro.net>
-Subject: [PATCH v3 2/7] leds: documentation: 'ide-disk' to 'disk-activity'
-Date: Thu,  9 Jun 2016 00:29:37 +0200
-Message-ID: <20160608223000.433-2-linz@li-pro.net>
+Subject: [PATCH v3 4/7] arm: use the new LED disk activity trigger
+Date: Thu,  9 Jun 2016 00:29:39 +0200
+Message-ID: <20160608223000.433-4-linz@li-pro.net>
 References: <20160608223000.433-1-linz@li-pro.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160608223000.433-1-linz@li-pro.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-leds@vger.kernel.org, linux-ide@vger.kernel.org
-Cc: Stephan Linz <linz@li-pro.net>, Joseph Jezak <josejx@gentoo.org>, Nico Macrionitis <acrux@cruxppc.org>, =?UTF-8?q?J=C3=B6rg=20Sommer?= <joerg@alea.gnuu.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Stephan Linz <linz@li-pro.net>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Joseph Jezak <josejx@gentoo.org>
-Cc: Nico Macrionitis <acrux@cruxppc.org>
-Cc: J=C3=B6rg Sommer <joerg@alea.gnuu.de>
+- dts: rename 'ide-disk' to 'disk-activity'
+- platform: rename 'ide-disk' to 'disk-activity'
+- defconfig: rename 'LEDS_TRIGGER_IDE_DISK' to 'LEDS_TRIGGER_DISK'
+
 Signed-off-by: Stephan Linz <linz@li-pro.net>
 ---
- Documentation/devicetree/bindings/leds/common.txt    | 2 +-
- Documentation/devicetree/bindings/leds/leds-gpio.txt | 2 +-
- Documentation/laptops/asus-laptop.txt                | 2 +-
- Documentation/leds/leds-class.txt                    | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/am57xx-beagle-x15.dts  | 2 +-
+ arch/arm/boot/dts/kirkwood-ns2lite.dts   | 2 +-
+ arch/arm/boot/dts/kirkwood-topkick.dts   | 2 +-
+ arch/arm/configs/collie_defconfig        | 2 +-
+ arch/arm/configs/ixp4xx_defconfig        | 2 +-
+ arch/arm/mach-davinci/board-dm644x-evm.c | 2 +-
+ arch/arm/mach-omap1/board-osk.c          | 2 +-
+ arch/arm/mach-pxa/spitz.c                | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Docume=
-ntation/devicetree/bindings/leds/common.txt
-index af10678..1e97169 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -26,7 +26,7 @@ Optional properties for child nodes:
-      "default-on" - LED will turn on (but for leds-gpio see "default-s=
-tate"
- 		    property in Documentation/devicetree/bindings/gpio/led.txt)
-      "heartbeat" - LED "double" flashes at a load average based rate
--     "ide-disk" - LED indicates disk activity
-+     "disk-activity" - LED indicates disk activity
-      "timer" - LED flashes at a fixed, configurable rate
-=20
- - led-max-microamp : Maximum LED supply current in microamperes. This =
-property
-diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.txt b/Doc=
-umentation/devicetree/bindings/leds/leds-gpio.txt
-index cbbeb18..e166053 100644
---- a/Documentation/devicetree/bindings/leds/leds-gpio.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-gpio.txt
-@@ -35,7 +35,7 @@ leds {
- 	hdd {
- 		label =3D "IDE Activity";
- 		gpios =3D <&mcu_pio 0 GPIO_ACTIVE_LOW>;
--		linux,default-trigger =3D "ide-disk";
-+		linux,default-trigger =3D "disk-activity";
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+index 81d6c30..c4d04c5 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+@@ -86,7 +86,7 @@
+ 		led@3 {
+ 			label = "beagle-x15:usr3";
+ 			gpios = <&gpio7 15 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "ide-disk";
++			linux,default-trigger = "disk-activity";
+ 			default-state = "off";
+ 		};
  	};
-=20
- 	fault {
-diff --git a/Documentation/laptops/asus-laptop.txt b/Documentation/lapt=
-ops/asus-laptop.txt
-index 79a1bc6..5f28587 100644
---- a/Documentation/laptops/asus-laptop.txt
-+++ b/Documentation/laptops/asus-laptop.txt
-@@ -72,7 +72,7 @@ LEDs
-     echo 1 >  /sys/class/leds/asus::mail/brightness
-   will switch the mail LED on.
-   You can also know if they are on/off by reading their content and us=
-e
--  kernel triggers like ide-disk or heartbeat.
-+  kernel triggers like disk-activity or heartbeat.
-=20
- Backlight
- ---------
-diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/led=
-s-class.txt
-index d406d98..44c1bcf 100644
---- a/Documentation/leds/leds-class.txt
-+++ b/Documentation/leds/leds-class.txt
-@@ -11,7 +11,7 @@ brightness support so will just be turned on for non-=
-zero brightness settings.
- The class also introduces the optional concept of an LED trigger. A tr=
-igger
- is a kernel based source of led events. Triggers can either be simple =
-or
- complex. A simple trigger isn't configurable and is designed to slot i=
-nto
--existing subsystems with minimal additional code. Examples are the ide=
--disk,
-+existing subsystems with minimal additional code. Examples are the dis=
-k-activity,
- nand-disk and sharpsl-charge triggers. With led triggers disabled, the=
- code
- optimises away.
-=20
---=20
+diff --git a/arch/arm/boot/dts/kirkwood-ns2lite.dts b/arch/arm/boot/dts/kirkwood-ns2lite.dts
+index 1f2ca60..2c661ad 100644
+--- a/arch/arm/boot/dts/kirkwood-ns2lite.dts
++++ b/arch/arm/boot/dts/kirkwood-ns2lite.dts
+@@ -26,7 +26,7 @@
+ 		blue-sata {
+ 			label = "ns2:blue:sata";
+ 			gpios = <&gpio0 30 GPIO_ACTIVE_LOW>;
+-			linux,default-trigger = "ide-disk";
++			linux,default-trigger = "disk-activity";
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/kirkwood-topkick.dts b/arch/arm/boot/dts/kirkwood-topkick.dts
+index f5c8c0d..1e9a721 100644
+--- a/arch/arm/boot/dts/kirkwood-topkick.dts
++++ b/arch/arm/boot/dts/kirkwood-topkick.dts
+@@ -129,7 +129,7 @@
+ 		disk {
+ 			label = "topkick:yellow:disk";
+ 			gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
+-			linux,default-trigger = "ide-disk";
++			linux,default-trigger = "disk-activity";
+ 		};
+ 		system2 {
+ 			label = "topkick:red:system";
+diff --git a/arch/arm/configs/collie_defconfig b/arch/arm/configs/collie_defconfig
+index 6c56ad0..52dbad5 100644
+--- a/arch/arm/configs/collie_defconfig
++++ b/arch/arm/configs/collie_defconfig
+@@ -76,7 +76,7 @@ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_LOCOMO=y
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_TIMER=y
+-CONFIG_LEDS_TRIGGER_IDE_DISK=y
++CONFIG_LEDS_TRIGGER_DISK=y
+ # CONFIG_DNOTIFY is not set
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
+diff --git a/arch/arm/configs/ixp4xx_defconfig b/arch/arm/configs/ixp4xx_defconfig
+index 24636cf..cf4918a 100644
+--- a/arch/arm/configs/ixp4xx_defconfig
++++ b/arch/arm/configs/ixp4xx_defconfig
+@@ -180,7 +180,7 @@ CONFIG_LEDS_FSG=y
+ CONFIG_LEDS_GPIO=y
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_TIMER=y
+-CONFIG_LEDS_TRIGGER_IDE_DISK=y
++CONFIG_LEDS_TRIGGER_DISK=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_ISL1208=y
+diff --git a/arch/arm/mach-davinci/board-dm644x-evm.c b/arch/arm/mach-davinci/board-dm644x-evm.c
+index 68cc099..ab47b8e 100644
+--- a/arch/arm/mach-davinci/board-dm644x-evm.c
++++ b/arch/arm/mach-davinci/board-dm644x-evm.c
+@@ -288,7 +288,7 @@ static struct gpio_led evm_leds[] = {
+ 	{ .name = "DS2", .active_low = 1,
+ 		.default_trigger = "mmc0", },
+ 	{ .name = "DS1", .active_low = 1,
+-		.default_trigger = "ide-disk", },
++		.default_trigger = "disk-activity", },
+ };
+ 
+ static const struct gpio_led_platform_data evm_led_data = {
+diff --git a/arch/arm/mach-omap1/board-osk.c b/arch/arm/mach-omap1/board-osk.c
+index 209aecb..4dfb995 100644
+--- a/arch/arm/mach-omap1/board-osk.c
++++ b/arch/arm/mach-omap1/board-osk.c
+@@ -172,7 +172,7 @@ static struct gpio_led tps_leds[] = {
+ 	 * Also, D9 requires non-battery power.
+ 	 */
+ 	{ .gpio = OSK_TPS_GPIO_LED_D9, .name = "d9",
+-			.default_trigger = "ide-disk", },
++			.default_trigger = "disk-activity", },
+ 	{ .gpio = OSK_TPS_GPIO_LED_D2, .name = "d2", },
+ 	{ .gpio = OSK_TPS_GPIO_LED_D3, .name = "d3", .active_low = 1,
+ 			.default_trigger = "heartbeat", },
+diff --git a/arch/arm/mach-pxa/spitz.c b/arch/arm/mach-pxa/spitz.c
+index bd7cd8b..1080580 100644
+--- a/arch/arm/mach-pxa/spitz.c
++++ b/arch/arm/mach-pxa/spitz.c
+@@ -464,7 +464,7 @@ static struct gpio_led spitz_gpio_leds[] = {
+ 	},
+ 	{
+ 		.name			= "spitz:green:hddactivity",
+-		.default_trigger	= "ide-disk",
++		.default_trigger	= "disk-activity",
+ 		.gpio			= SPITZ_GPIO_LED_GREEN,
+ 	},
+ };
+-- 
 2.8.4
