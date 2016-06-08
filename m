@@ -1,36 +1,61 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] drivers/of: Fix depth for sub-tree blob in unflatten_dt_nodes()
-Date: Wed, 8 Jun 2016 11:46:41 -0500
-Message-ID: <CAL_Jsq+D86LbGTiDbokSGNMownTMDteji_NmJNxz4AqTYMpJhw@mail.gmail.com>
-References: <1465368654-24170-1-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 resend 1/2] ehci-platform: Add support for controllers
+ with multiple reset lines
+Date: Wed, 8 Jun 2016 18:52:30 +0200
+Message-ID: <20236f14-549e-5acc-3f95-90db44b1f49d@redhat.com>
+References: <1464880446-5919-1-git-send-email-hdegoede@redhat.com>
+ <1464880446-5919-2-git-send-email-hdegoede@redhat.com>
+ <20160608052216.GA7766@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465368654-24170-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20160608052216.GA7766-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andrew.donnellan-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 8, 2016 at 1:50 AM, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
-> The function is unflattening device sub-tree blob if @dad passed to
-> the function is valid. Currently, this functionality is used by PPC
-> PowerNV PCI hotplug driver only. There are possibly multiple nodes
-> in the first level of depth, fdt_next_node() bails immediately when
-> @depth becomes negative before the second device node can be probed
-> successfully. It leads to the device nodes except the first one won't
-> be unflattened successfully.
+Hi,
+
+On 08-06-16 07:22, Greg Kroah-Hartman wrote:
+> On Thu, Jun 02, 2016 at 05:14:05PM +0200, Hans de Goede wrote:
+>> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+>>
+>> At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
+>> reset lines, the controller will not initialize while the reset for
+>> its companion is still asserted, which means we need to de-assert
+>> 2 resets for the controller to work.
+>>
+>> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Changes in v2:
+>> -Use the new reset_control_[de]assert_shared reset-controller functions
+>> ---
+>>  Documentation/devicetree/bindings/usb/usb-ehci.txt |  2 +-
+>>  drivers/usb/host/ehci-platform.c                   | 41 ++++++++++++----------
+>>  2 files changed, 24 insertions(+), 19 deletions(-)
 >
-> This fixes the issue by setting the initial depth (@inital_depth) to
-> 1 when this function is called to unflatten device sub-tree blob. No
-> logic changes when this function is used to unflatten non-sub-tree
-> blob.
+> This patch doesn't apply to my usb-testing branch at all, what went
+> wrong?
 
-Does this affect anything besides your PCI hotplug stuff? I'd think
-overlays/changesets would be broken, but the unittests aren't failing
-that I recall.
+You merged this patch:
 
-Rob
+https://git.kernel.org/cgit/linux/kernel/git/gregkh/usb.git/commit/?id=d0e08b0077f49e209bc90305ddf1ca434ac6cc0e
+
+Which does almost the same, except that it only supports dedicated reset
+controllers and not shared reset controllers.
+
+I'll send a new patch which changes things to add support for shared
+reset controllers.
+
+This will also bring the ehci-platform reset handling code inline
+with ohci-platform again.
+
+Regards,
+
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
