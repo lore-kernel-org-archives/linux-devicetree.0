@@ -1,56 +1,58 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH][RESEND v2] of: add missing const for of_parse_phandle_with_args()
- in !CONFIG_OF
-Date: Wed, 8 Jun 2016 08:42:49 -0500
-Message-ID: <CAL_JsqJObynzqD1Ezo+7=cP8TPDnd1MDLYyoeE8At9mGsY1tFw@mail.gmail.com>
-References: <87mvnfkkps.wl%kuninori.morimoto.gx@renesas.com> <87r3cf7z5a.wl%kuninori.morimoto.gx@renesas.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv2 2/5] EDAC, altera: ECC Manager IRQ controller support
+Date: Wed, 8 Jun 2016 08:49:45 -0500
+Message-ID: <57582279.60400@opensource.altera.com>
+References: <1464193783-5071-3-git-send-email-tthayer@opensource.altera.com>
+ <1465331757-10227-1-git-send-email-tthayer@opensource.altera.com>
+ <20160608090005.GB26590@pd.tnic>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87r3cf7z5a.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160608090005.GB26590@pd.tnic>
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 2, 2016 at 10:09 PM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->
-> Hi Rob
->
-> Should I re-send this patch ?
-> It still no response...
 
-Sorry, for the delay. Now applied.
 
-Rob
-
->
->> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On 06/08/2016 04:00 AM, Borislav Petkov wrote:
+> On Tue, Jun 07, 2016 at 03:35:57PM -0500, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
 >>
->> commit 93c667ca2598bd84f1bd3f2fa176af69707699fe
->> ("of: *node argument to of_parse_phandle_with_args should be const")
->> changed to const for struct device node *np,
->> but it cares CONFIG_OF case only, !CONFIG_OF case need it too.
+>> To better support child devices, the ECC manager needs to be
+>> implemented as an IRQ controller.
 >>
->> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 >> ---
->>  include/linux/of.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index 7fcb681..4f2ce1b 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -585,7 +585,7 @@ static inline struct device_node *of_parse_phandle(const struct device_node *np,
->>       return NULL;
->>  }
->>
->> -static inline int of_parse_phandle_with_args(struct device_node *np,
->> +static inline int of_parse_phandle_with_args(const struct device_node *np,
->>                                            const char *list_name,
->>                                            const char *cells_name,
->>                                            int index,
->> --
->> 1.9.1
->>
+>> v2  Update with cleanup/improvements from maintainer.
+>> ---
+
+<snip>
+
+>> +	} else {
+>> +		WARN_ON(1);
+>>   	}
+>> -	return IRQ_HANDLED;
+>> +	return IRQ_NONE;
+>>   }
+>
+> Simplified a bit more while applying. Ok?
+>
+>
+Yes, yours is cleaner, Thanks!
+
+<snip>
+
+> +		return IRQ_HANDLED;
+>   	}
+> -	return IRQ_HANDLED;
+> +
+> +	WARN_ON(1);
+> +
+> +	return IRQ_NONE;
+>   }
+<snip>
+
