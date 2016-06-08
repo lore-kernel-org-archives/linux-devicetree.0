@@ -1,59 +1,30 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] net: ethernet: Add TSE PCS support to
- dwmac-socfpga
-Date: Wed, 8 Jun 2016 14:52:01 -0500
-Message-ID: <20160608195201.GA5838@rob-hp-laptop>
-References: <1465268516-31480-1-git-send-email-thloh@altera.com>
+Subject: Re: [PATCH V2 1/7] dt-bindings: Update QorIQ TMU thermal bindings
+Date: Wed, 8 Jun 2016 14:52:41 -0500
+Message-ID: <20160608195241.GA6805@rob-hp-laptop>
+References: <1465270054-31512-1-git-send-email-hongtao.jia@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1465268516-31480-1-git-send-email-thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1465270054-31512-1-git-send-email-hongtao.jia-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+Cc: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 08:01:56PM -0700, thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> From: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+On Tue, Jun 07, 2016 at 11:27:34AM +0800, Jia Hongtao wrote:
+> For different types of SoC the sensor id and endianness may vary.
+> "#thermal-sensor-cells" is used to provide sensor id information.
+> "little-endian" property is to tell the endianness of TMU.
 > 
-> This adds support for TSE PCS that uses SGMII adapter when the phy-mode of
-> the dwmac is set to sgmii
-> 
-> Signed-off-by: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> 
+> Signed-off-by: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
 > ---
-> v2:
-> - Refactored the TSE PCS out from the dwmac-socfpga.c file
-> - Added binding documentation for TSE PCS sgmii adapter
-> v3:
-> - Added missing license header for new source files
-> - Updated tse_pcs.h include headers
-> - Standardize if statements
-> ---
->  .../devicetree/bindings/net/socfpga-dwmac.txt      |   4 +
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
->  .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 140 +++++++++--
->  drivers/net/ethernet/stmicro/stmmac/tse_pcs.c      | 261 +++++++++++++++++++++
->  drivers/net/ethernet/stmicro/stmmac/tse_pcs.h      |  36 +++
->  5 files changed, 419 insertions(+), 24 deletions(-)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/tse_pcs.c
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/tse_pcs.h
+> Changes for V2:
+> * Remove formatting chnages.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> index 3a9d679..2bc39f1 100644
-> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> @@ -15,6 +15,8 @@ Required properties:
->  Optional properties:
->  altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
->  		DWMAC controller is connected emac splitter.
-> +phy-mode: The phy mode the ethernet operates in
-> +altr,sgmii_to_sgmii_converter: phandle to the TSE SGMII converter
-
-Use '-' rather than '_'.
-
-With that, for the binding:
+>  Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
