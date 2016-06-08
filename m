@@ -1,35 +1,38 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH] of: reserved_mem: restore old behavior when no region is
- defined
-Date: Wed, 08 Jun 2016 09:35:05 +0200
-Message-ID: <5757CAA9.6000001@samsung.com>
-References: <20160607143425.GE1165@e106497-lin.cambridge.arm.com>
- <1465368713-17866-1-git-send-email-m.szyprowski@samsung.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/7] Input: synaptics-rmi4: Add dribble and palm gesture
+ parameters to devicetree
+Date: Wed, 8 Jun 2016 09:39:14 +0200
+Message-ID: <CACRpkdYSJ4E1cQk0PPj=D2DMs1d+5J9oFAAi=kmZvF72t1RH6g@mail.gmail.com>
+References: <1464979228-2497-1-git-send-email-aduggan@synaptics.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1465368713-17866-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kamil Debski <k.debski@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1464979228-2497-1-git-send-email-aduggan@synaptics.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Andrew Duggan <aduggan@synaptics.com>
+Cc: Linux Input <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Nick Dyer <nick.dyer@itdev.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2016 08:51 AM, Marek Szyprowski wrote:
-> Change return value back to -ENODEV when no region is defined for given
-> device. This restores old behavior of this function, as some drivers rely
-> on such error code.
-> 
-> Reported-by: Liviu Dudau <liviu.dudau@arm.com>
-> Fixes: 59ce4039727ef40 ("of: reserved_mem: add support for using more than
->        one region for given device")
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On Fri, Jun 3, 2016 at 8:40 PM, Andrew Duggan <aduggan@synaptics.com> wrote:
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
 
-I think this needs to be added to the media tree, where the original
-patch it fixes was applied.
+> +- syna,dribble: Control reporting of dribble packets. Values are 0 for
+> +               default, 1 for explicitly disable, 2 for explicitly enable.
+> +- syna,palm_detect: Control reporting of the palm detect gesture. Values
+> +                       are 0 for default, 1 for explicitly disable, 2 for
+> +                       explicitly enable.
 
--- 
-Thanks,
-Sylwester
+I think these belong in the device tree, but you should add four bool
+props instead:
+
+syna,dribble-disable;
+syna,dribble-enable;
+syna,palm-detect-disable;
+syna,palm-detect-enable;
+
+Those are way easier for the human authoring the device tree to
+cope with than the opaque parameters.
+
+Yours,
+Linus Walleij
