@@ -1,74 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 20/20] dt-bindings: pwm: sti: Update DT bindings with
- recent changes
-Date: Wed, 8 Jun 2016 15:51:52 -0500
-Message-ID: <20160608205152.GA5511@rob-hp-laptop>
-References: <20160608092135.21184-1-lee.jones@linaro.org>
- <20160608092135.21184-21-lee.jones@linaro.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 06/11] Documentation: mmc: sdhci-of-arasan: Add ability to
+ export card clock
+Date: Wed, 8 Jun 2016 13:52:20 -0700
+Message-ID: <CAD=FV=WX_bu-dmALkSmPPrWeatfjJND3M59GJoVEr6bv0vLq9Q@mail.gmail.com>
+References: <1465339484-969-1-git-send-email-dianders@chromium.org>
+ <1465339484-969-7-git-send-email-dianders@chromium.org> <20160608201923.GA20683@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160608092135.21184-21-lee.jones@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160608201923.GA20683@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 08, 2016 at 10:21:35AM +0100, Lee Jones wrote:
-> We're renaming the 'st,pwm-num-chan' binding to 'st,pwm-num-devs' to
-> be more inline with the naming conventions of the subsystem.  Where
-> we used to treat each line as a channel, the PWM convention is to
-> describe them as devices.
+Rob,
 
-That's all linux implementation details and you are breaking 
-compatibility.
+On Wed, Jun 8, 2016 at 1:19 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Jun 07, 2016 at 03:44:39PM -0700, Douglas Anderson wrote:
+>> Some SD/eMMC PHYs (like the PHY from Arasan that is designed to work
+>> with arasan,sdhci-5.1) need to know the card clock in order to function
+>> properly.  Let's expose this clock using a standard device tree
+>> mechanism so that the PHY can get access to and query the card clock.
+>
+> Need to know the clock freq or need the clock? The former doesn't need
+> to be in DT.
 
-> The second documentation adaption entails adding support for PWM
-> capture devices.  A new clock is required as well as an IRQ line.
-> We're also adding a new property similar to the one described
-> above, but for capture channels.  Typically, there will be less
-> capture channels than PWM-out, since all channels have the latter
-> capability, but only some have capture support.
+The PHY needs to know the card clock frequency.  This clock clock
+frequency is known nowhere else in the system except the SDHCI driver
+since the SDHCI component takes its input clock and applies some
+dividers to get the card clock.  In silicon, the SDHCI component and
+the PHY are separate and there is a physical clock signal going from
+the SDHCI component to the PHY component, so modeling this as a clock
+in in the device tree seems sane, doesn't it?
 
-Humm, sounds like all of this should be implied from compatible strings.
-
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-st.txt | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-st.txt b/Documentation/devicetree/bindings/pwm/pwm-st.txt
-> index 84d2fb8..b09f3a4 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-st.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-st.txt
-> @@ -13,13 +13,14 @@ Required parameters:
->  - pinctrl-0: 		List of phandles pointing to pin configuration nodes
->  			for PWM module.
->  			For Pinctrl properties, please refer to [1].
-> -- clock-names: 		Set to "pwm".
-> +- clock-names: 		Valid entries are "pwm" and/or "capture".
->  - clocks: 		phandle of the clock used by the PWM module.
->  			For Clk properties, please refer to [2].
-> +- interrupts:		IRQ for the Capture device
->  
->  Optional properties:
-> -- st,pwm-num-chan:	Number of available channels. If not passed, the driver
-> -			will consider single channel by default.
-> +- st,pwm-num-devs:	Number of available PWM channels.  Default is 0.
-> +- st,capture-num-devs:	Number of available Capture channels.  Default is 0.
->  
->  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -37,5 +38,6 @@ pwm1: pwm@fe510000 {
->  		     &pinctrl_pwm1_chan3_default>;
->  	clocks = <&clk_sysin>;
->  	clock-names = "pwm";
-> -	st,pwm-num-chan = <4>;
-> +	st,pwm-num-devs = <4>;
-> +	st,capture-num-devs = <2>;
->  };
-> -- 
-> 2.8.3
-> 
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
