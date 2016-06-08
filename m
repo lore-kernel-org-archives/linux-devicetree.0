@@ -1,65 +1,133 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] mfd: add Ricoh RN5T567 PMIC support
-Date: Wed, 08 Jun 2016 14:47:49 -0700
-Message-ID: <b4713d7dadd2572eb66ad6b836a72e82@agner.ch>
-References: <20160608010429.19618-1-stefan@agner.ch>
- <20160608010429.19618-3-stefan@agner.ch>
- <20160608202257.GA22463@rob-hp-laptop>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] [media] atmel-isc: DT binding for Image Sensor
+ Controller driver
+Date: Wed, 8 Jun 2016 23:57:53 +0200
+Message-ID: <20160608235753.46e73078@bbrezillon>
+References: <1465283513-30224-1-git-send-email-songjun.wu@atmel.com>
+	<1465283513-30224-3-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160608202257.GA22463@rob-hp-laptop>
+In-Reply-To: <1465283513-30224-3-git-send-email-songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, max.oss.09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-06-08 13:22, Rob Herring wrote:
-> On Tue, Jun 07, 2016 at 06:04:26PM -0700, Stefan Agner wrote:
->> The Ricoh RN5T567 is from the same family as the Ricoh RN5T618 is,
->> the differences are:
->>
->> + DCDC4
->> + Slightly different output voltage/currents
->> + 32kHz Output
->> - ADC/Charger capabilities
->>
->> Reviewed-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mfd/rn5t618.txt | 19 ++++++++++-------
->>  drivers/mfd/Kconfig                               |  7 +++---
->>  drivers/mfd/rn5t618.c                             | 26 +++++++++++++++++------
->>  include/linux/mfd/rn5t618.h                       | 12 +++++++++++
->>  4 files changed, 46 insertions(+), 18 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/rn5t618.txt b/Documentation/devicetree/bindings/mfd/rn5t618.txt
->> index 937785a..5b493ed 100644
->> --- a/Documentation/devicetree/bindings/mfd/rn5t618.txt
->> +++ b/Documentation/devicetree/bindings/mfd/rn5t618.txt
->> @@ -1,18 +1,21 @@
->> -* Ricoh RN5T618 PMIC
->> +* Ricoh RN5T567/RN5T618 PMIC
->>
->> -Ricoh RN5T618 is a power management IC which integrates 3 step-down
->> -DCDC converters, 7 low-dropout regulators, a Li-ion battery charger,
->> -fuel gauge, ADC, GPIOs and a watchdog timer. It can be controlled
->> -through a I2C interface.
->> +Ricoh RN5T567/RN5T618 is a power management IC family which integrates
->> +3 to 5 step-down DCDC converters, 7 low-dropout regulators, GPIOs and
+On Tue, 7 Jun 2016 15:11:53 +0800
+Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+
+> DT binding documentation for ISC driver.
 > 
-> I count 4?
+> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+> Changes in v4:
+> - Remove the isc clock nodes.
+> 
+> Changes in v3:
+> - Remove the 'atmel,sensor-preferred'.
+> - Modify the isc clock node according to the Rob's remarks.
+> 
+> Changes in v2:
+> - Remove the unit address of the endpoint.
+> - Add the unit address to the clock node.
+> - Avoid using underscores in node names.
+> - Drop the "0x" in the unit address of the i2c node.
+> - Modify the description of 'atmel,sensor-preferred'.
+> - Add the description for the ISC internal clock.
+> 
+>  .../devicetree/bindings/media/atmel-isc.txt        | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> new file mode 100644
+> index 0000000..3f83524
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+> @@ -0,0 +1,69 @@
+> +Atmel Image Sensor Controller (ISC)
+> +----------------------------------------------
+> +
+> +Required properties for ISC:
+> +- compatible
+> +	Must be "atmel,sama5d2-isc".
+> +- reg
+> +	Physical base address and length of the registers set for the device.
+> +- interrupts
+> +	Should contain IRQ line for the ISC.
+> +- clocks
+> +	List of clock specifiers, corresponding to entries in
+> +	the clock-names property;
+> +	Please refer to clock-bindings.txt.
+> +- clock-names
+> +	Required elements: "hclock".
+> +- #clock-cells
+> +	Should be 0.
+> +- clock-output-names
+> +	Should contain the name of the clock driving the sensor master clock.
+> +- pinctrl-names, pinctrl-0
+> +	Please refer to pinctrl-bindings.txt.
+> +
+> +
+> +ISC supports a single port node with parallel bus. It should contain one
+> +'port' child node with child 'endpoint' node. Please refer to the bindings
+> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +isc: isc@f0008000 {
+> +	compatible = "atmel,sama5d2-isc";
+> +	reg = <0xf0008000 0x4000>;
+> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
+> +	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
+> +	clock-names = "hclock";
 
-There is actually a third PMIC in this family RC5T619 which has 5, that
-is where the number comes from. But that PMIC also has 12 LDO's so the
-numbers are a bit a mix and much right now...
+You have 3 clocks here and only one name. Are you sure this example is
+actually working?
 
-If I have to amend something anyway, I will fix that. Otherwise I look
-at it as a preparation for the one which adds RC5T619 support :-)
+> +	#clock-cells = <0>;
+> +	clock-output-names = "isc-mck";
+> +
+> +	port {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		isc_0: endpoint {
+> +			remote-endpoint = <&ov7740_0>;
+> +			hsync-active = <1>;
+> +			vsync-active = <0>;
+> +			pclk-sample = <1>;
+> +		};
+> +	};
+> +
+> +
+> +};
+> +
+> +i2c1: i2c@fc028000 {
+> +	ov7740: camera@21 {
+> +	compatible = "ovti,ov7740";
+> +	reg = <0x21>;
+> +
+> +	clocks = <&isc>;
+> +	clock-names = "xvclk";
+> +	assigned-clocks = <&isc>;
+> +	assigned-clock-rates = <24000000>;
+> +
+> +	port {
+> +		ov7740_0: endpoint {
+> +			remote-endpoint = <&isc_0>;
+> +		};
+> +	};
+> +};
 
---
-Stefan
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
