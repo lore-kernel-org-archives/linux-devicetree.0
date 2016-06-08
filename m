@@ -1,454 +1,263 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH v4] ASoC: rockchip: Add machine driver for
-	RK3399 GRU Boards
-Date: Wed,  8 Jun 2016 19:14:24 +0800
-Message-ID: <1465384464-22395-1-git-send-email-zhengxing@rock-chips.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] pwm: Add MediaTek MT2701 display PWM driver support
+Date: Wed, 8 Jun 2016 13:22:55 +0200
+Message-ID: <5758000F.7050503@gmail.com>
+References: <1464597712-5399-1-git-send-email-weiqing.kong@mediatek.com>
+ <1464597712-5399-3-git-send-email-weiqing.kong@mediatek.com>
+ <5751A3DD.7020402@gmail.com> <1465370478.5209.30.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Xing Zheng <zhengxing@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, dianders@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, heiko@sntech.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465370478.5209.30.camel@mhfsdcap03>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: weiqing kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Because we need to support the multiple codecs (MAX98357A/RT5514/DA7219)
-on the RK3399 GRU boards, this patch can help us to support these codecs.
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
----
 
-Changes in v4:
-- the compatible name needs to be based on a single reference design,
-  and the name of the board is called "GRU"
-- use one i2sX card "rockchip,cpu = <&i2s0>" instead of array that is
-  based on GRU
-- rename DOC to rockchip,rk3399-gru-sound.txt
-- rename compatible to rockchip,rk3399-gru-sound
-- rename source code to rk3399_gru_sound.c
+On 08/06/16 09:21, weiqing kong wrote:
+> On Fri, 2016-06-03 at 17:35 +0200, Matthias Brugger wrote:
+>>
+>> On 30/05/16 10:41, Weiqing Kong wrote:
+>>> Use the mtk_pwm_data struction to define different registers
+>>> and add MT2701 specific register operations, such as MT2701
+>>> doesn't have commit register, needs to disable double buffer
+>>> before writing register, and needs to select manual mode
+>>> and use PWM_PERIOD/PWM_HIGH_WIDTH.
+>>>
+>>> Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>    drivers/pwm/pwm-mtk-disp.c | 89 +++++++++++++++++++++++++++++++++++++---------
+>>>    1 file changed, 72 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+>>> index 0ad3385..03b9c9e 100644
+>>> --- a/drivers/pwm/pwm-mtk-disp.c
+>>> +++ b/drivers/pwm/pwm-mtk-disp.c
+>>> @@ -18,33 +18,44 @@
+>>>    #include <linux/io.h>
+>>>    #include <linux/module.h>
+>>>    #include <linux/of.h>
+>>> +#include <linux/of_device.h>
+>>>    #include <linux/platform_device.h>
+>>>    #include <linux/pwm.h>
+>>>    #include <linux/slab.h>
+>>>
+>>>    #define DISP_PWM_EN		0x00
+>>> -#define PWM_ENABLE_MASK		BIT(0)
+>>>
+>>>    #define DISP_PWM_COMMIT		0x08
+>>>    #define PWM_COMMIT_MASK		BIT(0)
+>>>
+>>> -#define DISP_PWM_CON_0		0x10
+>>>    #define PWM_CLKDIV_SHIFT	16
+>>>    #define PWM_CLKDIV_MAX		0x3ff
+>>>    #define PWM_CLKDIV_MASK		(PWM_CLKDIV_MAX << PWM_CLKDIV_SHIFT)
+>>>
+>>> -#define DISP_PWM_CON_1		0x14
+>>>    #define PWM_PERIOD_BIT_WIDTH	12
+>>>    #define PWM_PERIOD_MASK		((1 << PWM_PERIOD_BIT_WIDTH) - 1)
+>>>
+>>>    #define PWM_HIGH_WIDTH_SHIFT	16
+>>>    #define PWM_HIGH_WIDTH_MASK	(0x1fff << PWM_HIGH_WIDTH_SHIFT)
+>>>
+>>> +#define MT2701_PWM_MANUAL_SEL_MASK	BIT(1)
+>>> +#define MT2701_PWM_BLS_DEBUG		0xb0
+>>
+>> Do we need to set magic 0x3 in the debug register? If so, this should be
+>> part of mtk_pwm_data, just as con0_sel.
+>
+> Do you mean that add bls_debug into struct mtk_pwm_data,
+> and set 0x3 in mt2701 data, 0x0 in mt8173 data?
+>
 
-Changes in v3:
-- rename DOC to rockchip,rk3399-max98357a-rt5514-da7219.txt
-- rename compatible to rockchip,rk3399-max98357a-rt5514-da7219
-- rename source code to rk3399_max98357a_rt5514_da7219.c
+Yes.
 
-Changes in v2:
-- use the FS 256 to set mclks of the max98357a and rt5514 danamically
-- add more sample rate for da7219
+>>
+>>> +#define MT2701_PWM_BLS_DEBUG_MASK	0x3
+>>> +
+>>> +struct mtk_pwm_data {
+>>> +	unsigned int enable_bit;
+>>> +	unsigned int con0;
+>>> +	unsigned int con0_sel;
+>>> +	unsigned int con1;
+>>> +	bool have_commit_reg;
+>>> +};
+>>> +
+>>>    struct mtk_disp_pwm {
+>>>    	struct pwm_chip chip;
+>>>    	struct clk *clk_main;
+>>>    	struct clk *clk_mm;
+>>>    	void __iomem *base;
+>>> +	const struct mtk_pwm_data *data;
+>>
+>> Couldn't that just be the offset for the commit register and set it to
+>> 0x0 if the commit register is not present. Right now, we suppose the
+>> DISP_PWM_EN is at offset 0x0, so this should not be a problem.
+>>
+>
+> Do you mean that replace have_commit_reg with commit_reg_offset?
+> just like this?
+> bool have_commit_reg;
+> ->
+> unsigned int commit_reg_offset;
+> and set commit_reg_offset 0x0 in mt2701, 0x1 in mt8173?
+>
 
- .../bindings/sound/rockchip,rk3399-gru-sound.txt   |   15 +
- sound/soc/rockchip/Kconfig                         |   11 +
- sound/soc/rockchip/Makefile                        |    2 +
- sound/soc/rockchip/rk3399_gru_sound.c              |  339 ++++++++++++++++++++
- 4 files changed, 367 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
- create mode 100644 sound/soc/rockchip/rk3399_gru_sound.c
+No, you can set comit_reg_offset to the value of DISP_PWM_COMMIT for 
+mt8173 and 0x0 for mt2701. Then you can get rid of DISP_PWM_COMMIT.
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-new file mode 100644
-index 0000000..f19b6c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -0,0 +1,15 @@
-+ROCKCHIP with MAX98357A/RT5514/DA7219 codecs on GRU boards
-+
-+Required properties:
-+- compatible: "rockchip,rk3399-gru-sound"
-+- rockchip,cpu: The phandle of the Rockchip I2S controller that's
-+  connected to the codecs
-+- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-+
-+Example:
-+
-+sound {
-+	compatible = "rockchip,rk3399-gru-sound";
-+	rockchip,cpu = <&i2s0>;
-+	rockchip,codec = <&max98357a &rt5514 &da7219>;
-+};
-diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
-index f1e0c70..c15dcc8 100644
---- a/sound/soc/rockchip/Kconfig
-+++ b/sound/soc/rockchip/Kconfig
-@@ -41,3 +41,14 @@ config SND_SOC_ROCKCHIP_RT5645
- 	help
- 	  Say Y or M here if you want to add support for SoC audio on Rockchip
- 	  boards using the RT5645/RT5650 codec, such as Veyron.
-+
-+config SND_SOC_RK3399_GRU_SOUND
-+	tristate "ASoC support multiple codecs for Rockchip RK3399 GRU boards"
-+	depends on SND_SOC_ROCKCHIP && GPIOLIB
-+	select SND_SOC_ROCKCHIP_I2S
-+	select SND_SOC_MAX98357A
-+	select SND_SOC_RT5514
-+	select SND_SOC_DA7219
-+	help
-+	  Say Y or M here if you want to add support multiple codecs for SoC
-+	  audio on Rockchip RK3399 GRU boards.
-diff --git a/sound/soc/rockchip/Makefile b/sound/soc/rockchip/Makefile
-index c0bf560..84e5c7c 100644
---- a/sound/soc/rockchip/Makefile
-+++ b/sound/soc/rockchip/Makefile
-@@ -7,6 +7,8 @@ obj-$(CONFIG_SND_SOC_ROCKCHIP_SPDIF) += snd-soc-rockchip-spdif.o
- 
- snd-soc-rockchip-max98090-objs := rockchip_max98090.o
- snd-soc-rockchip-rt5645-objs := rockchip_rt5645.o
-+snd-soc-rk3399-gru-sound-objs := rk3399_gru_sound.o
- 
- obj-$(CONFIG_SND_SOC_ROCKCHIP_MAX98090) += snd-soc-rockchip-max98090.o
- obj-$(CONFIG_SND_SOC_ROCKCHIP_RT5645) += snd-soc-rockchip-rt5645.o
-+obj-$(CONFIG_SND_SOC_RK3399_GRU_SOUND) += snd-soc-rk3399-gru-sound.o
-diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-new file mode 100644
-index 0000000..cc9b943
---- /dev/null
-+++ b/sound/soc/rockchip/rk3399_gru_sound.c
-@@ -0,0 +1,339 @@
-+/*
-+ * Rockchip machine ASoC driver for boards using MAX98357A/RT5514/DA7219
-+ *
-+ * Copyright (c) 2016, ROCKCHIP CORPORATION.  All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/delay.h>
-+#include <linux/spi/spi.h>
-+#include <sound/core.h>
-+#include <sound/jack.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include "rockchip_i2s.h"
-+#include "../codecs/da7219.h"
-+#include "../codecs/da7219-aad.h"
-+#include "../codecs/rt5514.h"
-+
-+#define DRV_NAME "rk3399-gru-sound"
-+
-+#define SOUND_FS	256
-+
-+static struct snd_soc_jack rockchip_sound_jack;
-+
-+static const struct snd_soc_dapm_widget rockchip_dapm_widgets[] = {
-+	SND_SOC_DAPM_HP("Headphones", NULL),
-+	SND_SOC_DAPM_SPK("Speakers", NULL),
-+	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-+	SND_SOC_DAPM_MIC("Int Mic", NULL),
-+};
-+
-+static const struct snd_soc_dapm_route rockchip_dapm_routes[] = {
-+	/* Input Lines */
-+	{"MIC", NULL, "Headset Mic"},
-+	{"DMIC1L", NULL, "Int Mic"},
-+	{"DMIC1R", NULL, "Int Mic"},
-+
-+	/* Output Lines */
-+	{"Headphones", NULL, "HPL"},
-+	{"Headphones", NULL, "HPR"},
-+	{"Speakers", NULL, "Speakers"},
-+};
-+
-+static const struct snd_kcontrol_new rockchip_controls[] = {
-+	SOC_DAPM_PIN_SWITCH("Headphones"),
-+	SOC_DAPM_PIN_SWITCH("Speakers"),
-+	SOC_DAPM_PIN_SWITCH("Headset Mic"),
-+	SOC_DAPM_PIN_SWITCH("Int Mic"),
-+};
-+
-+static int rockchip_sound_max98357a_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dapm_context *dapm = &rtd->card->dapm;
-+	unsigned int mclk;
-+	int ret;
-+
-+	snd_soc_dapm_disable_pin(dapm, "Headphones");
-+	snd_soc_dapm_enable_pin(dapm, "Speakers");
-+	snd_soc_dapm_sync(dapm);
-+
-+	/* max98357a supports these sample rates */
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+	case 48000:
-+	case 96000:
-+		mclk = params_rate(params) * SOUND_FS;
-+		break;
-+	default:
-+		dev_err(rtd->card->dev, "%s() doesn't support this sample rate: %d\n",
-+				__func__, params_rate(params));
-+		return -EINVAL;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(rtd->cpu_dai, 0, mclk, 0);
-+	if (ret) {
-+		dev_err(rtd->card->dev, "%s() error setting sysclk to %u: %d\n",
-+				__func__, mclk, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_sound_rt5514_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	struct snd_soc_dapm_context *dapm = &rtd->card->dapm;
-+	unsigned int mclk;
-+	int ret;
-+
-+	snd_soc_dapm_disable_pin(dapm, "Headset Mic");
-+	snd_soc_dapm_enable_pin(dapm, "Int Mic");
-+	snd_soc_dapm_sync(dapm);
-+
-+	mclk = params_rate(params) * SOUND_FS;
-+
-+	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
-+				     SND_SOC_CLOCK_OUT);
-+	if (ret < 0) {
-+		dev_err(rtd->card->dev, "Can't set cpu clock out %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(codec_dai, RT5514_SCLK_S_MCLK,
-+				     mclk, SND_SOC_CLOCK_IN);
-+	if (ret) {
-+		dev_err(rtd->card->dev, "%s() error setting sysclk to %u: %d\n",
-+				__func__, params_rate(params) * 512, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_sound_da7219_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	struct snd_soc_dapm_context *dapm = &rtd->card->dapm;
-+	int mclk, ret;
-+
-+	snd_soc_dapm_disable_pin(dapm, "Speakers");
-+	snd_soc_dapm_disable_pin(dapm, "Int Mic");
-+	snd_soc_dapm_enable_pin(dapm, "Headphones");
-+	snd_soc_dapm_enable_pin(dapm, "Headset Mic");
-+	snd_soc_dapm_sync(dapm);
-+
-+	/* in bypass mode, the mclk has to be one of the frequencies below */
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+	case 24000:
-+	case 32000:
-+	case 48000:
-+	case 64000:
-+	case 96000:
-+		mclk = 12288000;
-+		break;
-+	case 11025:
-+	case 22050:
-+	case 44100:
-+	case 88200:
-+		mclk = 11289600;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
-+				     SND_SOC_CLOCK_OUT);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Can't set cpu clock out %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
-+				     SND_SOC_CLOCK_IN);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Can't set codec clock in %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_pll(codec_dai, 0, DA7219_SYSCLK_MCLK, 0, 0);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Can't set pll sysclk mclk %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_sound_da7219_init(struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct snd_soc_codec *codec = rtd->codec_dais[0]->codec;
-+	int ret;
-+
-+	/* Enable Headset and 4 Buttons Jack detection */
-+	ret = snd_soc_card_jack_new(rtd->card, "Headset Jack",
-+				    SND_JACK_HEADSET |
-+				    SND_JACK_BTN_0 | SND_JACK_BTN_1 |
-+				    SND_JACK_BTN_2 | SND_JACK_BTN_3,
-+				    &rockchip_sound_jack, NULL, 0);
-+
-+	if (ret) {
-+		dev_err(rtd->card->dev, "New Headset Jack failed! (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	da7219_aad_jack_det(codec, &rockchip_sound_jack);
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_ops rockchip_sound_max98357a_ops = {
-+	.hw_params = rockchip_sound_max98357a_hw_params,
-+};
-+
-+static struct snd_soc_ops rockchip_sound_rt5514_ops = {
-+	.hw_params = rockchip_sound_rt5514_hw_params,
-+};
-+
-+static struct snd_soc_ops rockchip_sound_da7219_ops = {
-+	.hw_params = rockchip_sound_da7219_hw_params,
-+};
-+
-+enum {
-+	DAILINK_MAX98357A,
-+	DAILINK_RT5514,
-+	DAILINK_DA7219,
-+};
-+
-+static struct snd_soc_dai_link rockchip_dailinks[] = {
-+	[DAILINK_MAX98357A] = {
-+		.name = "MAX98357A",
-+		.stream_name = "MAX98357A PCM",
-+		.codec_dai_name = "HiFi",
-+		.ops = &rockchip_sound_max98357a_ops,
-+		/* set max98357a as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
-+	[DAILINK_RT5514] = {
-+		.name = "RT5514",
-+		.stream_name = "RT5514 PCM",
-+		.codec_dai_name = "rt5514-aif1",
-+		.ops = &rockchip_sound_rt5514_ops,
-+		/* set rt5514 as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
-+	[DAILINK_DA7219] = {
-+		.name = "DA7219",
-+		.stream_name = "DA7219 PCM",
-+		.codec_dai_name = "da7219-hifi",
-+		.init = rockchip_sound_da7219_init,
-+		.ops = &rockchip_sound_da7219_ops,
-+		/* set da7219 as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
-+};
-+
-+static struct snd_soc_card rockchip_sound_card = {
-+	.name = "rk3399-gru-sound",
-+	.owner = THIS_MODULE,
-+	.dai_link = rockchip_dailinks,
-+	.num_links =  ARRAY_SIZE(rockchip_dailinks),
-+	.dapm_widgets = rockchip_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(rockchip_dapm_widgets),
-+	.dapm_routes = rockchip_dapm_routes,
-+	.num_dapm_routes = ARRAY_SIZE(rockchip_dapm_routes),
-+	.controls = rockchip_controls,
-+	.num_controls = ARRAY_SIZE(rockchip_controls),
-+};
-+
-+static int rockchip_sound_probe(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = &rockchip_sound_card;
-+	struct device_node *cpu_node;
-+	int i, ret;
-+
-+	cpu_node = of_parse_phandle(pdev->dev.of_node, "rockchip,cpu", 0);
-+	if (!cpu_node) {
-+		dev_err(&pdev->dev, "Property 'rockchip,cpu' missing or invalid\n");
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < card->num_links; i++) {
-+		rockchip_dailinks[i].platform_of_node = cpu_node;
-+		rockchip_dailinks[i].cpu_of_node = cpu_node;
-+
-+		rockchip_dailinks[i].codec_of_node =
-+			of_parse_phandle(pdev->dev.of_node, "rockchip,codec", i);
-+		if (!rockchip_dailinks[i].codec_of_node) {
-+			dev_err(&pdev->dev,
-+				"Property[%d] 'rockchip,codec' missing or invalid\n", i);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	card->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, card);
-+
-+	ret = devm_snd_soc_register_card(&pdev->dev, card);
-+	if (ret)
-+		dev_err(&pdev->dev, "%s snd_soc_register_card fail %d\n",
-+			__func__, ret);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id rockchip_sound_of_match[] = {
-+	{ .compatible = "rockchip,rk3399-gru-sound", },
-+	{},
-+};
-+
-+static struct platform_driver rockchip_sound_driver = {
-+	.probe = rockchip_sound_probe,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = rockchip_sound_of_match,
-+#ifdef CONFIG_PM
-+		.pm = &snd_soc_pm_ops,
-+#endif
-+	},
-+};
-+
-+module_platform_driver(rockchip_sound_driver);
-+
-+MODULE_AUTHOR("Xing Zheng <zhengxing@rock-chips.com>");
-+MODULE_DESCRIPTION("Rockchip ASoC Machine Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_DEVICE_TABLE(of, rockchip_sound_of_match);
--- 
-1.7.9.5
+Regards,
+Matthias
+
+>>>    };
+>>>
+>>>    static inline struct mtk_disp_pwm *to_mtk_disp_pwm(struct pwm_chip *chip)
+>>> @@ -106,12 +117,18 @@ static int mtk_disp_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>>>    		return err;
+>>>    	}
+>>>
+>>> -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_CON_0, PWM_CLKDIV_MASK,
+>>> +	mtk_disp_pwm_update_bits(mdp, mdp->data->con0,
+>>> +				 PWM_CLKDIV_MASK,
+>>>    				 clk_div << PWM_CLKDIV_SHIFT);
+>>> -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_CON_1,
+>>> -				 PWM_PERIOD_MASK | PWM_HIGH_WIDTH_MASK, value);
+>>> -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT, PWM_COMMIT_MASK, 1);
+>>> -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT, PWM_COMMIT_MASK, 0);
+>>> +	mtk_disp_pwm_update_bits(mdp, mdp->data->con1,
+>>> +				 PWM_PERIOD_MASK | PWM_HIGH_WIDTH_MASK,
+>>> +				 value);
+>>> +	if (mdp->data->have_commit_reg) {
+>>> +		mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT,
+>>> +					 PWM_COMMIT_MASK, 0x1);
+>>> +		mtk_disp_pwm_update_bits(mdp, DISP_PWM_COMMIT,
+>>> +					 PWM_COMMIT_MASK, 0x0);
+>>
+>> should be renamed to MT8173_PWM_COMMIT_MASK, although I'm not really a
+>> friend of mixing up SoC specific defines with a Soc specific
+>> mtk_disp_pwm structure.
+>>
+>> Regards,
+>> Matthias
+>
+> ok, I will modify it as you said. thanks for you suggestion.
+>
+>>
+>>> +	}
+>>>
+>>>    	clk_disable(mdp->clk_mm);
+>>>    	clk_disable(mdp->clk_main);
+>>> @@ -134,7 +151,9 @@ static int mtk_disp_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+>>>    		return err;
+>>>    	}
+>>>
+>>> -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN, PWM_ENABLE_MASK, 1);
+>>> +	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
+>>> +				 mdp->data->enable_bit,
+>>> +				 mdp->data->enable_bit);
+>>>
+>>>    	return 0;
+>>>    }
+>>> @@ -143,7 +162,8 @@ static void mtk_disp_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>>>    {
+>>>    	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
+>>>
+>>> -	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN, PWM_ENABLE_MASK, 0);
+>>> +	mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
+>>> +				 mdp->data->enable_bit, 0x0);
+>>>
+>>>    	clk_disable(mdp->clk_mm);
+>>>    	clk_disable(mdp->clk_main);
+>>> @@ -156,12 +176,41 @@ static const struct pwm_ops mtk_disp_pwm_ops = {
+>>>    	.owner = THIS_MODULE,
+>>>    };
+>>>
+>>> +static const struct mtk_pwm_data mt8173_pwm_data = {
+>>> +	.enable_bit = BIT(0),
+>>> +	.con0 = 0x10,
+>>> +	.con0_sel = 0x0,
+>>> +	.con1 = 0x14,
+>>> +	.have_commit_reg = true,
+>>> +};
+>>> +
+>>> +static const struct mtk_pwm_data mt2701_pwm_data = {
+>>> +	.enable_bit = BIT(16),
+>>> +	.con0 = 0xa8,
+>>> +	.con0_sel = 0x2,
+>>> +	.con1 = 0xac,
+>>> +	.have_commit_reg = false,
+>>> +};
+>>> +
+>>> +static const struct of_device_id mtk_disp_pwm_of_match[] = {
+>>> +	{ .compatible = "mediatek,mt2701-disp-bls", .data = &mt2701_pwm_data},
+>>> +	{ .compatible = "mediatek,mt6595-disp-pwm", .data = &mt8173_pwm_data},
+>>> +	{ .compatible = "mediatek,mt8173-disp-pwm", .data = &mt8173_pwm_data},
+>>> +	{ }
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, mtk_disp_pwm_of_match);
+>>> +
+>>>    static int mtk_disp_pwm_probe(struct platform_device *pdev)
+>>>    {
+>>> +	const struct of_device_id *id;
+>>>    	struct mtk_disp_pwm *mdp;
+>>>    	struct resource *r;
+>>>    	int ret;
+>>>
+>>> +	id = of_match_device(mtk_disp_pwm_of_match, &pdev->dev);
+>>> +	if (!id)
+>>> +		return -EINVAL;
+>>> +
+>>>    	mdp = devm_kzalloc(&pdev->dev, sizeof(*mdp), GFP_KERNEL);
+>>>    	if (!mdp)
+>>>    		return -ENOMEM;
+>>> @@ -191,6 +240,7 @@ static int mtk_disp_pwm_probe(struct platform_device *pdev)
+>>>    	mdp->chip.ops = &mtk_disp_pwm_ops;
+>>>    	mdp->chip.base = -1;
+>>>    	mdp->chip.npwm = 1;
+>>> +	mdp->data = id->data;
+>>>
+>>>    	ret = pwmchip_add(&mdp->chip);
+>>>    	if (ret < 0) {
+>>> @@ -200,6 +250,18 @@ static int mtk_disp_pwm_probe(struct platform_device *pdev)
+>>>
+>>>    	platform_set_drvdata(pdev, mdp);
+>>>
+>>> +	/*
+>>> +	 * For MT2701, disable double buffer before writing register
+>>> +	 * and select manual mode and use PWM_PERIOD/PWM_HIGH_WIDTH.
+>>> +	 */
+>>> +	if (!mdp->data->have_commit_reg) {
+>>> +		mtk_disp_pwm_update_bits(mdp, MT2701_PWM_BLS_DEBUG,
+>>> +					 MT2701_PWM_BLS_DEBUG_MASK, 0x3);
+>>> +		mtk_disp_pwm_update_bits(mdp, mdp->data->con0,
+>>> +					 MT2701_PWM_MANUAL_SEL_MASK,
+>>> +					 mdp->data->con0_sel);
+>>> +	}
+>>> +
+>>>    	return 0;
+>>>
+>>>    disable_clk_mm:
+>>> @@ -221,13 +283,6 @@ static int mtk_disp_pwm_remove(struct platform_device *pdev)
+>>>    	return ret;
+>>>    }
+>>>
+>>> -static const struct of_device_id mtk_disp_pwm_of_match[] = {
+>>> -	{ .compatible = "mediatek,mt8173-disp-pwm" },
+>>> -	{ .compatible = "mediatek,mt6595-disp-pwm" },
+>>> -	{ }
+>>> -};
+>>> -MODULE_DEVICE_TABLE(of, mtk_disp_pwm_of_match);
+>>> -
+>>>    static struct platform_driver mtk_disp_pwm_driver = {
+>>>    	.driver = {
+>>>    		.name = "mediatek-disp-pwm",
+>>>
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
