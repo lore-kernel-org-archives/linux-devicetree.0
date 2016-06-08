@@ -1,216 +1,141 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 05/13] pwm: rockchip: Add support for atomic update
-Date: Wed,  8 Jun 2016 18:34:40 +0200
-Message-ID: <1465403688-17098-6-git-send-email-boris.brezillon@free-electrons.com>
-References: <1465403688-17098-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: Using DT overlays for adding virtual hardware
+Date: Wed, 8 Jun 2016 18:39:08 +0200
+Message-ID: <57584A2C.4030507@siemens.com>
+References: <575828C0.5000008@siemens.com>
+ <20160608151745.GB13355@leverpostej>
+ <28BC1AEC-6A7D-4A97-82F4-5670E884C41D@konsulko.com>
+ <20160608162343.GD13355@leverpostej>
+ <999B1CFF-C204-4C19-AE76-AF9DB54E51E4@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1465403688-17098-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <jailhouse-dev+bncBCJI7SMNV4NBBMEU4G5AKGQEBPJGDGA@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <999B1CFF-C204-4C19-AE76-AF9DB54E51E4@konsulko.com>
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jailhouse <jailhouse-dev@googlegroups.com>, =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@denx.de>, Antonios Motakis <antonios.motakis@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Implement the ->apply() function to add support for atomic update.
+On 2016-06-08 18:31, Pantelis Antoniou wrote:
+> Hi Mark,
+>=20
+>> On Jun 8, 2016, at 19:23 , Mark Rutland <mark.rutland@arm.com> wrote:
+>>
+>> On Wed, Jun 08, 2016 at 06:57:37PM +0300, Pantelis Antoniou wrote:
+>>> Hi Mark,
+>>>
+>>>> On Jun 8, 2016, at 18:17 , Mark Rutland <mark.rutland@arm.com> wrote:
+>>>>
+>>>> On Wed, Jun 08, 2016 at 04:16:32PM +0200, Jan Kiszka wrote:
+>>>>> Hi all,
+>>>>>
+>>>>> already started the discussion off-list with Pantelis, but it's bette=
+r
+>>>>> done in public:
+>>>>>
+>>>>> I'm currently exploring ways to make Linux recognize dynamically adde=
+d
+>>>>> virtual hardware when running under the Jailhouse hypervisor [1]. We
+>>>>> need to load drivers for inter-partition communication devices that o=
+nly
+>>>>> appear after Jailhouse started (which is done from within Linux, i.e.
+>>>>> long after boot) or when a partition was added later on. Probably, we
+>>>>> will simply add a virtual PCI host bridge on systems without physical
+>>>>> PCI and let the IPC device be explored that way (already works on x86=
+).
+>>>>> Still, that leaves us with hotplug and unplug on hypervisor activatio=
+n
+>>>>> and deactivation.
+>>>>
+>>>> If I've understood correctly you want to use overlays to inject the
+>>>> virtual PCI host bridge?
+>>>>
+>>>> Given that you know precisely what you want to inject, I'm not sure I
+>>>> see the value of using an overlay.=20
+>>>>
+>>>> Is there some reason you can't just create a device without having to =
+go
+>>>> via an intermediate step? As I understand it, Xen does that for (some)
+>>>> virtual devices provided to Dom0 and DomU.
+>>>
+>>> As far as I understand it PCI is just one of the cases. You could conce=
+ivably
+>>> inject any kind of virtio device like serial/storage networking etc.
+>>
+>> Sure, but we already have PCI transport for virtio devices, and per the
+>> above PCI is the transport used on x86, so I assume that the devices we
+>> really care about are going to be PCI anyhow.
+>>
+>=20
+> PCI on VMs is a hack, it=E2=80=99s all emulated.
+>=20
+> We=E2=80=99re using it as crutch because it=E2=80=99s ubiquitous and is c=
+apable
+> of probing, but it comes with a considerable amount of baggage.
+> Jailhouse is a particular kind of a hypervisor where it is intended for
+> safety critical applications and designed to be certified as such.
+> The less amount of code it contains the better, and much easier to certif=
+y.=20
 
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/pwm/pwm-rockchip.c | 84 ++++++++++++++++++++++++----------------------
- 1 file changed, 43 insertions(+), 41 deletions(-)
+That's true, but we already have to live with PCI on x86, thus the code
+is there, and it's more and more present on ARM[64] as well.
 
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index dd8ca86..ef89df1 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -47,10 +47,12 @@ struct rockchip_pwm_regs {
- struct rockchip_pwm_data {
- 	struct rockchip_pwm_regs regs;
- 	unsigned int prescaler;
-+	bool supports_polarity;
- 	const struct pwm_ops *ops;
- 
- 	void (*set_enable)(struct pwm_chip *chip,
--			   struct pwm_device *pwm, bool enable);
-+			   struct pwm_device *pwm, bool enable,
-+			   enum pwm_polarity polarity);
- 	void (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
- 			  struct pwm_state *state);
- };
-@@ -61,7 +63,8 @@ static inline struct rockchip_pwm_chip *to_rockchip_pwm_chip(struct pwm_chip *c)
- }
- 
- static void rockchip_pwm_set_enable_v1(struct pwm_chip *chip,
--				       struct pwm_device *pwm, bool enable)
-+				       struct pwm_device *pwm, bool enable,
-+				       enum pwm_polarity polarity)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
- 	u32 enable_conf = PWM_CTRL_OUTPUT_EN | PWM_CTRL_TIMER_EN;
-@@ -91,14 +94,15 @@ static void rockchip_pwm_get_state_v1(struct pwm_chip *chip,
- }
- 
- static void rockchip_pwm_set_enable_v2(struct pwm_chip *chip,
--				       struct pwm_device *pwm, bool enable)
-+				       struct pwm_device *pwm, bool enable,
-+				       enum pwm_polarity polarity)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
- 	u32 enable_conf = PWM_OUTPUT_LEFT | PWM_LP_DISABLE | PWM_ENABLE |
- 			  PWM_CONTINUOUS;
- 	u32 val;
- 
--	if (pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED)
-+	if (polarity == PWM_POLARITY_INVERSED)
- 		enable_conf |= PWM_DUTY_NEGATIVE | PWM_INACTIVE_POSITIVE;
- 	else
- 		enable_conf |= PWM_DUTY_POSITIVE | PWM_INACTIVE_NEGATIVE;
-@@ -166,7 +170,6 @@ static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
- 	unsigned long period, duty;
- 	u64 clk_rate, div;
--	int ret;
- 
- 	clk_rate = clk_get_rate(pc->clk);
- 
-@@ -182,69 +185,66 @@ static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	div = clk_rate * duty_ns;
- 	duty = DIV_ROUND_CLOSEST_ULL(div, pc->data->prescaler * NSEC_PER_SEC);
- 
--	ret = clk_enable(pc->clk);
--	if (ret)
--		return ret;
--
- 	writel(period, pc->base + pc->data->regs.period);
- 	writel(duty, pc->base + pc->data->regs.duty);
--	writel(0, pc->base + pc->data->regs.cntr);
--
--	clk_disable(pc->clk);
--
--	return 0;
--}
--
--static int rockchip_pwm_set_polarity(struct pwm_chip *chip,
--				     struct pwm_device *pwm,
--				     enum pwm_polarity polarity)
--{
--	/*
--	 * No action needed here because pwm->polarity will be set by the core
--	 * and the core will only change polarity when the PWM is not enabled.
--	 * We'll handle things in set_enable().
--	 */
- 
- 	return 0;
- }
- 
--static int rockchip_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+static int rockchip_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
-+	struct pwm_state curstate;
-+	bool enabled;
- 	int ret;
- 
-+	pwm_get_state(pwm, &curstate);
-+	enabled = curstate.enabled;
-+
- 	ret = clk_enable(pc->clk);
- 	if (ret)
- 		return ret;
- 
--	pc->data->set_enable(chip, pwm, true);
-+	if (state->polarity != curstate.polarity && enabled) {
-+		pc->data->set_enable(chip, pwm, false, state->polarity);
-+		enabled = false;
-+	}
- 
--	return 0;
--}
-+	ret = rockchip_pwm_config(chip, pwm, state->duty_cycle, state->period);
-+	if (ret) {
-+		if (enabled != curstate.enabled)
-+			pc->data->set_enable(chip, pwm, !enabled,
-+					     state->polarity);
- 
--static void rockchip_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
-+		goto out;
-+	}
-+
-+	if (state->enabled != enabled)
-+		pc->data->set_enable(chip, pwm, state->enabled,
-+				     state->polarity);
- 
--	pc->data->set_enable(chip, pwm, false);
-+	/*
-+	 * Update the state with the real hardware, which can differ a bit
-+	 * because of period/duty_cycle approximation.
-+	 */
-+	rockchip_pwm_get_state(chip, pwm, state);
- 
-+out:
- 	clk_disable(pc->clk);
-+
-+	return ret;
- }
- 
- static const struct pwm_ops rockchip_pwm_ops_v1 = {
- 	.get_state = rockchip_pwm_get_state,
--	.config = rockchip_pwm_config,
--	.enable = rockchip_pwm_enable,
--	.disable = rockchip_pwm_disable,
-+	.apply = rockchip_pwm_apply,
- 	.owner = THIS_MODULE,
- };
- 
- static const struct pwm_ops rockchip_pwm_ops_v2 = {
- 	.get_state = rockchip_pwm_get_state,
--	.config = rockchip_pwm_config,
--	.set_polarity = rockchip_pwm_set_polarity,
--	.enable = rockchip_pwm_enable,
--	.disable = rockchip_pwm_disable,
-+	.apply = rockchip_pwm_apply,
- 	.owner = THIS_MODULE,
- };
- 
-@@ -269,6 +269,7 @@ static const struct rockchip_pwm_data pwm_data_v2 = {
- 		.ctrl = 0x0c,
- 	},
- 	.prescaler = 1,
-+	.supports_polarity = true,
- 	.ops = &rockchip_pwm_ops_v2,
- 	.set_enable = rockchip_pwm_set_enable_v2,
- 	.get_state = rockchip_pwm_get_state_v2,
-@@ -282,6 +283,7 @@ static const struct rockchip_pwm_data pwm_data_vop = {
- 		.ctrl = 0x00,
- 	},
- 	.prescaler = 1,
-+	.supports_polarity = true,
- 	.ops = &rockchip_pwm_ops_v2,
- 	.set_enable = rockchip_pwm_set_enable_v2,
- 	.get_state = rockchip_pwm_get_state_v2,
-@@ -331,7 +333,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 	pc->chip.base = -1;
- 	pc->chip.npwm = 1;
- 
--	if (pc->data->ops->set_polarity) {
-+	if (pc->data->supports_polarity) {
- 		pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 		pc->chip.of_pwm_n_cells = 3;
- 	}
--- 
-2.7.4
+We are trying hard to make it simple, primarily for the hypervisor, and
+if it is simpler to plug a trivial virtual PCI bridge than to emulate
+individual platform IPC devices - also fine.
+
+>=20
+>>> The question is since overlays exist and do work, why should he do anyt=
+hing else
+>>> besides using them?
+>>
+>> For one thing, they only work with DT, and there are ACPI ARM server
+>> platforms out there, for which people may wish to use jailhouse. Tying
+>> this to DT is not necessarily the best idea.
+>>
+>=20
+> I just don=E2=80=99t see how an ACPI based hypervisor can ever be certifi=
+ed for
+> safety critical applications. It might be possible but it should be
+> an enormous undertaking; perhaps a subset without AML, but then again
+> can you even boot an ACPI box without it?
+
+ACPI is out of scope for us. We will probably continue to feed the
+hypervisor with static platform information, generated in advance and
+validated. Can be DT-based one day, but even that is more complex to
+parse than our current structures.
+
+But does ACPI usually mean that the kernel no longer has DT support and
+would not be able to handle any overlay? That could be a killer.
+
+>=20
+> DT is safer since it contains state only.
+>=20
+>> To be clear, I'm not arguing *against* overlays as such, just making
+>> sure that we're not prematurely choosing a solution just becasue it's
+>> the one we're aware of.
+
+I'm open for any suggestion that is simple. Maybe we can extend a
+trivial existing pci host driver (like pci-host-generic) to work also
+without DT overlays - also fine, at least from Jailhose POV. However,
+any unneeded kernel patch is even better.
+
+Jan
+
+--=20
+Siemens AG, Corporate Technology, CT RDA ITP SES-DE
+Corporate Competence Center Embedded Linux
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+Jailhouse" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to jailhouse-dev+unsubscribe@googlegroups.com.
+For more options, visit https://groups.google.com/d/optout.
