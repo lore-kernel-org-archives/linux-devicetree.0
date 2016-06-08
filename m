@@ -1,74 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 05/11] ARM: dts: r8a7792: initial SoC device tree
-Date: Wed, 8 Jun 2016 09:05:54 +0200
-Message-ID: <CAMuHMdUMQZGg_hy0WOgwJMZhDCsKt-XJvnX0tq6i=92qubOAUg@mail.gmail.com>
-References: <3446154.oZ24315zaL@wasted.cogentembedded.com> <2268000.l71DRbJSRE@wasted.cogentembedded.com>
+From: "Li, Yong B" <yong.b.li@intel.com>
+Subject: RE: [PATCH] ARM: dts: am335x-boneblack: add i2c1 DT entry
+Date: Wed, 8 Jun 2016 07:11:03 +0000
+Message-ID: <BCE6BEBCDDF4B84E891D2320CBF96F1D3FA02917@SHSMSX101.ccr.corp.intel.com>
+References: <1464853310-8738-1-git-send-email-yong.b.li@intel.com>
+ <CAOCHtYib9YxckneM-j0Gk1YE=MnvAwAhvDjEDEuFJbH6W3EcWA@mail.gmail.com>
+ <20160602173932.GF5995@atomide.com>
+ <CAOCHtYiWYrwSidHnKv4siFT-wU=tt5-YeDTwbM022ZTxdPFYYA@mail.gmail.com>
+ <20160602175635.GG5995@atomide.com>
+ <BCE6BEBCDDF4B84E891D2320CBF96F1D3F9FB1EC@SHSMSX101.ccr.corp.intel.com>
+ <20160607060004.GD22406@atomide.com>
+ <BCE6BEBCDDF4B84E891D2320CBF96F1D3F9FD673@SHSMSX101.ccr.corp.intel.com>
+ <CAOCHtYhBSS+D-BQH28FO+RxyzvDg-yeX+6nvLu11G3TNkF7ELg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2268000.l71DRbJSRE@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOCHtYhBSS+D-BQH28FO+RxyzvDg-yeX+6nvLu11G3TNkF7ELg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux kernel <linux-kernel@vger.kernel.org>, "sdliyong@gmail.com" <sdliyong@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Fri, Jun 3, 2016 at 11:26 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> The initial R8A7792 SoC device tree including CPU core, GIC, timer, SYSC,
-> and the required  clock descriptions.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
-> Changes in version 2:
-
-> - created  the "soc" subnode, moving the SoC  device  nodes there;
-> - removed  the "clocks" node, moving its fixed clock  subnodes to the root and
->   the MSTP subnodes into the "soc" node.
->
->  arch/arm/boot/dts/r8a7792.dtsi |  171 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 171 insertions(+)
->
-> Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
-> ===================================================================
-> --- /dev/null
-> +++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-
-> +       /* Fixed factor clocks */
-> +       zs_clk: zs {
-> +               compatible = "fixed-factor-clock";
-> +               clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-> +               #clock-cells = <0>;
-> +               clock-div = <6>;
-> +               clock-mult = <1>;
-> +       };
-> +       p_clk: p {
-> +               compatible = "fixed-factor-clock";
-> +               clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-> +               #clock-cells = <0>;
-> +               clock-div = <24>;
-> +               clock-mult = <1>;
-> +       };
-> +       cp_clk: cp {
-> +               compatible = "fixed-factor-clock";
-> +               clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-> +               #clock-cells = <0>;
-> +               clock-div = <3>;
-> +               clock-mult = <1>;
-> +       };
-
-I think the above 3 fixed factor clocks should be children of the "soc" node,
-as they're generated on-SoC.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+VGhhbmtzIFJvYmVydCENCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IFJvYmVy
+dCBOZWxzb24gW21haWx0bzpyb2JlcnRjbmVsc29uQGdtYWlsLmNvbV0gDQpTZW50OiBXZWRuZXNk
+YXksIEp1bmUgOCwgMjAxNiAxOjE1IEFNDQpUbzogTGksIFlvbmcgQiA8eW9uZy5iLmxpQGludGVs
+LmNvbT4NCkNjOiBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPjsgQmVub2l0IENvdXNz
+b24gPGJjb3Vzc29uQGJheWxpYnJlLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5v
+cmc+OyBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsu
+cnV0bGFuZEBhcm0uY29tPjsgSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9y
+Zy51az47IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsgUnVzc2VsbCBLaW5nIDxs
+aW51eEBhcm0ubGludXgub3JnLnVrPjsgbGludXgtb21hcEB2Z2VyLmtlcm5lbC5vcmc7IGRldmlj
+ZXRyZWUgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBsaW51eCBrZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc+OyBzZGxpeW9uZ0BnbWFpbC5jb207IFBhbnRlbGlzIEFudG9uaW91IDxwYW50ZWxpcy5hbnRv
+bmlvdUBrb25zdWxrby5jb20+DQpTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czogYW0zMzV4
+LWJvbmVibGFjazogYWRkIGkyYzEgRFQgZW50cnkNCg0KT24gVHVlLCBKdW4gNywgMjAxNiBhdCAx
+OjE0IEFNLCBMaSwgWW9uZyBCIDx5b25nLmIubGlAaW50ZWwuY29tPiB3cm90ZToNCj4gVGhhbmtz
+IFRvbnkuDQo+DQo+IEkgY2hlY2tlZCB0aGUgRFRTL292ZXJsYXlzIHVzaW5nIGxpbnV4LXlvY3Rv
+LTQuMSBrZXJuZWwoT3N0cm8gT1MpLiBJdCBzZWVtcyB0byBtZSB0aGF0IHRoZSBrZXJuZWwvdS1i
+b290IGRvIG5vdCBpbmNsdWRlIHRoZSBsYXRlc3Qgb3ZlcmxheSBzdXBwb3J0IHBhdGNoLiBBbmQg
+SSBhbHNvIHRlc3RlZCB0aGUgbGF0ZXN0IERlYmlhbiA4LjQgdXNpbmcgQkJCIGJvYXJkcywgdGhl
+IEkyQzEgZG9lcyBub3Qgd29yayB0b28uIFRoaXMgcGF0Y2ggaXMgdGhlIHNpbXBsZXN0IHNvbHV0
+aW9uIGZvciBJMkMxL0kyQzIgaW4gbGludXgteW9jdG8tNC4xLg0KDQpwcywgeW91ciBwYXRjaCBp
+cyBhbHNvIGJyb2tlbiwgeW91IGRpZG4ndCBldmVuIG11eCB0aGUgcGlucywgc28gaTJjMSBkb2Vz
+bid0IHdvcmsgZm9yIHlvdSBhbnl3YXlzLiA7KQ0KDQpwaW5jdHJsLTAgPSA8JmkyYzJfcGlucz47
+IC0+IHBpbmN0cmwtMCA9IDwmaTJjMV9waW5zPjsNCg0KT3B0aW9uIDE6DQoNCldpdGggdGhlIGxh
+dGVzdCBCQkIgaW1hZ2Uncywgd2UgdXRpbGl6ZSAiY2FwZV91bml2ZXJzYWwiLCB0aHVzIHlvdSBj
+YW4gZW5hYmxlIEkyQzEgdmlhOg0KDQpyb290QGJlYWdsZWJvbmU6fiMgY29uZmlnLXBpbiAtbCBQ
+OS4xNw0KZGVmYXVsdCBncGlvIGdwaW9fcHUgZ3Bpb19wZCBzcGkgaTJjIHB3bQ0KDQpyb290QGJl
+YWdsZWJvbmU6fiMgY29uZmlnLXBpbiAtbCBQOS4xOA0KZGVmYXVsdCBncGlvIGdwaW9fcHUgZ3Bp
+b19wZCBzcGkgaTJjIHB3bQ0KDQpyb290QGJlYWdsZWJvbmU6fiMgY29uZmlnLXBpbiBQOS4xNyBp
+MmMNCg0Kcm9vdEBiZWFnbGVib25lOn4jIGNvbmZpZy1waW4gUDkuMTggaTJjDQoNCk9wdGlvbiAy
+LCBmb3IgdGhlIEJCLUkyQzEgb3ZlcmxheToNCg0KYWRkDQoNCmNhcGVfZW5hYmxlPWJvbmVfY2Fw
+ZW1nci5lbmFibGVfcGFydG5vPUJCLUkyQzENCg0KT3B0aW9uIDMsIHdhaXQgZm9yIFBhbnRlbGlz
+J3Mgc29sdXRpb24uLi4gOykNCg0KaHR0cDovL2NvbW1lbnRzLmdtYW5lLm9yZy9nbWFuZS5saW51
+eC5rZXJuZWwvMjIzNDY2Mg0KDQpSZWdhcmRzLA0KDQotLQ0KUm9iZXJ0IE5lbHNvbg0KaHR0cHM6
+Ly9yY24tZWUuY29tLw0K
