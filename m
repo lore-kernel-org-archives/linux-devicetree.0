@@ -1,28 +1,74 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 1/4] Documentation: mmc: add description for new caps
-Date: Wed, 8 Jun 2016 15:48:48 -0500
-Message-ID: <20160608204848.GA3368@rob-hp-laptop>
-References: <1465373996-2485-1-git-send-email-shawn.lin@rock-chips.com>
- <1465374021-2526-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v3 20/20] dt-bindings: pwm: sti: Update DT bindings with
+ recent changes
+Date: Wed, 8 Jun 2016 15:51:52 -0500
+Message-ID: <20160608205152.GA5511@rob-hp-laptop>
+References: <20160608092135.21184-1-lee.jones@linaro.org>
+ <20160608092135.21184-21-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465374021-2526-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20160608092135.21184-21-lee.jones@linaro.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 08, 2016 at 04:20:21PM +0800, Shawn Lin wrote:
-> Let's add some basic description for cap-no-sdio,
-> cap-no-sd and cap-no-mmc.
+On Wed, Jun 08, 2016 at 10:21:35AM +0100, Lee Jones wrote:
+> We're renaming the 'st,pwm-num-chan' binding to 'st,pwm-num-devs' to
+> be more inline with the naming conventions of the subsystem.  Where
+> we used to treat each line as a channel, the PWM convention is to
+> describe them as devices.
 
-This doesn't say why.
+That's all linux implementation details and you are breaking 
+compatibility.
 
-If you know what is there, then there's a better way to do this. Look at 
-the child nodes because chances are if you have something soldered down 
-like SDIO or eMMC, then you have a child node already for resets, 
-regulators, etc.
+> The second documentation adaption entails adding support for PWM
+> capture devices.  A new clock is required as well as an IRQ line.
+> We're also adding a new property similar to the one described
+> above, but for capture channels.  Typically, there will be less
+> capture channels than PWM-out, since all channels have the latter
+> capability, but only some have capture support.
 
-Rob
+Humm, sounds like all of this should be implied from compatible strings.
+
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-st.txt | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-st.txt b/Documentation/devicetree/bindings/pwm/pwm-st.txt
+> index 84d2fb8..b09f3a4 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-st.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-st.txt
+> @@ -13,13 +13,14 @@ Required parameters:
+>  - pinctrl-0: 		List of phandles pointing to pin configuration nodes
+>  			for PWM module.
+>  			For Pinctrl properties, please refer to [1].
+> -- clock-names: 		Set to "pwm".
+> +- clock-names: 		Valid entries are "pwm" and/or "capture".
+>  - clocks: 		phandle of the clock used by the PWM module.
+>  			For Clk properties, please refer to [2].
+> +- interrupts:		IRQ for the Capture device
+>  
+>  Optional properties:
+> -- st,pwm-num-chan:	Number of available channels. If not passed, the driver
+> -			will consider single channel by default.
+> +- st,pwm-num-devs:	Number of available PWM channels.  Default is 0.
+> +- st,capture-num-devs:	Number of available Capture channels.  Default is 0.
+>  
+>  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> @@ -37,5 +38,6 @@ pwm1: pwm@fe510000 {
+>  		     &pinctrl_pwm1_chan3_default>;
+>  	clocks = <&clk_sysin>;
+>  	clock-names = "pwm";
+> -	st,pwm-num-chan = <4>;
+> +	st,pwm-num-devs = <4>;
+> +	st,capture-num-devs = <2>;
+>  };
+> -- 
+> 2.8.3
+> 
