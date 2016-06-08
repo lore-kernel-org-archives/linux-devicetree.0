@@ -1,82 +1,39 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 04/13] pwm: rockchip: Avoid glitches on already running PWMs
-Date: Wed,  8 Jun 2016 18:34:39 +0200
-Message-ID: <1465403688-17098-5-git-send-email-boris.brezillon@free-electrons.com>
-References: <1465403688-17098-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 6/6] drm/panel: simple: Add support for Sharp
+ LQ123P1JX31 2400x1600 panel
+Date: Wed, 8 Jun 2016 09:35:50 -0700
+Message-ID: <CAD=FV=V2RF+Wr_6PfoV1EVr1djauZASC=vEsYCaXvRtjd523KQ@mail.gmail.com>
+References: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
+ <1465386768-27947-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1465403688-17098-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1465386768-27947-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The current logic will disable the PWM clk even if the PWM was left
-enabled by the bootloader (because it's controlling a critical device
-like a regulator for example).
-Keep the PWM clk enabled if the PWM is enabled to avoid any glitches.
-
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/pwm/pwm-rockchip.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index c72b419..dd8ca86 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -319,7 +319,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pc->clk))
- 		return PTR_ERR(pc->clk);
- 
--	ret = clk_prepare(pc->clk);
-+	ret = clk_prepare_enable(pc->clk);
- 	if (ret)
- 		return ret;
- 
-@@ -342,6 +342,10 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
- 	}
- 
-+	/* Keep the PWM clk enabled if the PWM appears to be up and running. */
-+	if (!pwm_is_enabled(pc->chip.pwms))
-+		clk_disable(pc->clk);
-+
- 	return ret;
- }
- 
-@@ -349,6 +353,20 @@ static int rockchip_pwm_remove(struct platform_device *pdev)
- {
- 	struct rockchip_pwm_chip *pc = platform_get_drvdata(pdev);
- 
-+	/*
-+	 * Disable the PWM clk before unpreparing it if the PWM device is still
-+	 * running. This should only happen when the last PWM user left it
-+	 * enabled, or when nobody requested a PWM that was previously enabled
-+	 * by the bootloader.
-+	 *
-+	 * FIXME: Maybe the core should disable all PWM devices in
-+	 * pwmchip_remove(). In this case we'd only have to call
-+	 * clk_unprepare() after pwmchip_remove().
-+	 *
-+	 */
-+	if (pwm_is_enabled(pc->chip.pwms))
-+		clk_disable(pc->clk);
-+
- 	clk_unprepare(pc->clk);
- 
- 	return pwmchip_remove(&pc->chip);
--- 
-2.7.4
+WWFraXIsCgpPbiBXZWQsIEp1biA4LCAyMDE2IGF0IDQ6NTIgQU0sIFlha2lyIFlhbmcgPHlra0By
+b2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4gVGhlIFNoYXJwIExRMTIzUDFKWDMxIGlzIGFuIDEyLjMi
+LCAyNDAweDE2MDAgVEZULUxDRCBwYW5lbCBjb25uZWN0ZWQKPiB1c2luZyBlRFAgaW50ZXJmYWNl
+cy4KPgo+IFNpZ25lZC1vZmYtYnk6IFlha2lyIFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KPiAt
+LS0KPiBDaGFuZ2VzIGluIHYyOgo+IC0gQWRkIGRldGFpbCB0aW1pbmcgb2YgU2hhcnAgTFExMjNQ
+MUpYMzEgcGFuZWwgaW4gdjIKPgo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxl
+LmMgfCAyNiArKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMjYg
+aW5zZXJ0aW9ucygrKQoKTG9va3MgZ29vZCB0byBtZS4gIFZhbHVlcyBpbiB0aGUgdGFibGUgbWF0
+Y2ggdGhlIEVESUQgSSBzZWUgZnJvbSB0aGlzCnBhbmVsIGFuZCBldmVyeXRoaW5nIGVsc2UgbG9v
+a3MgdG8gYmUgaW4gb3JkZXIuCgpSZXZpZXdlZC1ieTogRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNA
+Y2hyb21pdW0ub3JnPgpUZXN0ZWQtYnk6IERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVt
+Lm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
