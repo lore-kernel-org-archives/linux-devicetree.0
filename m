@@ -1,43 +1,71 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH] of: reserved_mem: restore old behavior when no region is
- defined
-Date: Wed, 08 Jun 2016 08:51:53 +0200
-Message-ID: <1465368713-17866-1-git-send-email-m.szyprowski@samsung.com>
-References: <20160607143425.GE1165@e106497-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20160607143425.GE1165@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Kamil Debski <k.debski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Liviu Dudau <liviu.dudau@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] drivers/of: Fix depth for sub-tree blob in unflatten_dt_nodes()
+Date: Wed,  8 Jun 2016 16:50:54 +1000
+Message-ID: <1465368654-24170-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew.donnellan-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Q2hhbmdlIHJldHVybiB2YWx1ZSBiYWNrIHRvIC1FTk9ERVYgd2hlbiBubyByZWdpb24gaXMgZGVm
-aW5lZCBmb3IgZ2l2ZW4KZGV2aWNlLiBUaGlzIHJlc3RvcmVzIG9sZCBiZWhhdmlvciBvZiB0aGlz
-IGZ1bmN0aW9uLCBhcyBzb21lIGRyaXZlcnMgcmVseQpvbiBzdWNoIGVycm9yIGNvZGUuCgpSZXBv
-cnRlZC1ieTogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+CkZpeGVzOiA1OWNlNDAz
-OTcyN2VmNDAgKCJvZjogcmVzZXJ2ZWRfbWVtOiBhZGQgc3VwcG9ydCBmb3IgdXNpbmcgbW9yZSB0
-aGFuCiAgICAgICBvbmUgcmVnaW9uIGZvciBnaXZlbiBkZXZpY2UiKQpTaWduZWQtb2ZmLWJ5OiBN
-YXJlayBTenlwcm93c2tpIDxtLnN6eXByb3dza2lAc2Ftc3VuZy5jb20+Ci0tLQogZHJpdmVycy9v
-Zi9vZl9yZXNlcnZlZF9tZW0uYyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
-KSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2Yvb2ZfcmVzZXJ2ZWRfbWVt
-LmMgYi9kcml2ZXJzL29mL29mX3Jlc2VydmVkX21lbS5jCmluZGV4IDNjZjEyOWYuLjA2YWY5OWYg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvb2Yvb2ZfcmVzZXJ2ZWRfbWVtLmMKKysrIGIvZHJpdmVycy9v
-Zi9vZl9yZXNlcnZlZF9tZW0uYwpAQCAtMzM0LDcgKzMzNCw3IEBAIGludCBvZl9yZXNlcnZlZF9t
-ZW1fZGV2aWNlX2luaXRfYnlfaWR4KHN0cnVjdCBkZXZpY2UgKmRldiwKIAogCXRhcmdldCA9IG9m
-X3BhcnNlX3BoYW5kbGUobnAsICJtZW1vcnktcmVnaW9uIiwgaWR4KTsKIAlpZiAoIXRhcmdldCkK
-LQkJcmV0dXJuIC1FSU5WQUw7CisJCXJldHVybiAtRU5PREVWOwogCiAJcm1lbSA9IF9fZmluZF9y
-bWVtKHRhcmdldCk7CiAJb2Zfbm9kZV9wdXQodGFyZ2V0KTsKLS0gCjEuOS4yCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+The function is unflattening device sub-tree blob if @dad passed to
+the function is valid. Currently, this functionality is used by PPC
+PowerNV PCI hotplug driver only. There are possibly multiple nodes
+in the first level of depth, fdt_next_node() bails immediately when
+@depth becomes negative before the second device node can be probed
+successfully. It leads to the device nodes except the first one won't
+be unflattened successfully.
+
+This fixes the issue by setting the initial depth (@inital_depth) to
+1 when this function is called to unflatten device sub-tree blob. No
+logic changes when this function is used to unflatten non-sub-tree
+blob.
+
+Cc: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Fixes: 78c44d910 ("drivers/of: Fix depth when unflattening devicetree")
+Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+---
+ drivers/of/fdt.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 14f2f8c..9d70316 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -395,7 +395,7 @@ static int unflatten_dt_nodes(const void *blob,
+ 			      struct device_node **nodepp)
+ {
+ 	struct device_node *root;
+-	int offset = 0, depth = 0;
++	int offset = 0, depth = 0, initial_depth = 0;
+ #define FDT_MAX_DEPTH	64
+ 	unsigned int fpsizes[FDT_MAX_DEPTH];
+ 	struct device_node *nps[FDT_MAX_DEPTH];
+@@ -408,8 +408,19 @@ static int unflatten_dt_nodes(const void *blob,
+ 	root = dad;
+ 	fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
+ 	nps[depth] = dad;
++
++	/*
++	 * We're unflattening device sub-tree if @dad is valid. There are
++	 * possibly multiple nodes in the first level of depth. We need
++	 * set @depth to 1 to make fdt_next_node() happy as it bails
++	 * immediately when negative @depth is found. Otherwise, the device
++	 * nodes except the first one won't be unflattened successfully.
++	 */
++	if (dad)
++		depth = initial_depth = 1;
++
+ 	for (offset = 0;
+-	     offset >= 0 && depth >= 0;
++	     offset >= 0 && depth >= initial_depth;
+ 	     offset = fdt_next_node(blob, offset, &depth)) {
+ 		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
+ 			continue;
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
