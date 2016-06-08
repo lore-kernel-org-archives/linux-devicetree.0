@@ -1,62 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 06/11] Documentation: mmc: sdhci-of-arasan: Add ability
- to export card clock
-Date: Wed, 8 Jun 2016 15:19:23 -0500
-Message-ID: <20160608201923.GA20683@rob-hp-laptop>
-References: <1465339484-969-1-git-send-email-dianders@chromium.org>
- <1465339484-969-7-git-send-email-dianders@chromium.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] mfd: add Ricoh RN5T567 PMIC support
+Date: Wed, 8 Jun 2016 15:22:57 -0500
+Message-ID: <20160608202257.GA22463@rob-hp-laptop>
+References: <20160608010429.19618-1-stefan@agner.ch>
+ <20160608010429.19618-3-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1465339484-969-7-git-send-email-dianders@chromium.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: ulf.hansson@linaro.org, kishon@ti.com, Heiko Stuebner <heiko@sntech.de>, shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20160608010429.19618-3-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, max.oss.09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 03:44:39PM -0700, Douglas Anderson wrote:
-> Some SD/eMMC PHYs (like the PHY from Arasan that is designed to work
-> with arasan,sdhci-5.1) need to know the card clock in order to function
-> properly.  Let's expose this clock using a standard device tree
-> mechanism so that the PHY can get access to and query the card clock.
-
-Need to know the clock freq or need the clock? The former doesn't need 
-to be in DT.
-
+On Tue, Jun 07, 2016 at 06:04:26PM -0700, Stefan Agner wrote:
+> The Ricoh RN5T567 is from the same family as the Ricoh RN5T618 is,
+> the differences are:
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> + DCDC4
+> + Slightly different output voltage/currents
+> + 32kHz Output
+> - ADC/Charger capabilities
+> 
+> Reviewed-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  Documentation/devicetree/bindings/mfd/rn5t618.txt | 19 ++++++++++-------
+>  drivers/mfd/Kconfig                               |  7 +++---
+>  drivers/mfd/rn5t618.c                             | 26 +++++++++++++++++------
+>  include/linux/mfd/rn5t618.h                       | 12 +++++++++++
+>  4 files changed, 46 insertions(+), 18 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> index b67e623ca1ff..074d03e630ec 100644
-> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> @@ -30,6 +30,12 @@ Optional Properties:
->    - arasan,soc-ctl-syscon: A phandle to a syscon device (see ../mfd/syscon.txt)
->      used to access core corecfg registers.  Offsets of registers in this
->      syscon are determined based on the main compatible string for the device.
-> +  - clock-output-names: If specified, this will be the name of the card clock
-> +    which will be exposed by this device.  Required if #clock-cells is
-> +    specified.
-> +  - #clock-cells: If specified this should be the value <0>.  With this property
-> +    in place we will export a clock representing the Card Clock.  This clock
-> +    is expected to be consumed by our PHY.  You must also specify
+> diff --git a/Documentation/devicetree/bindings/mfd/rn5t618.txt b/Documentation/devicetree/bindings/mfd/rn5t618.txt
+> index 937785a..5b493ed 100644
+> --- a/Documentation/devicetree/bindings/mfd/rn5t618.txt
+> +++ b/Documentation/devicetree/bindings/mfd/rn5t618.txt
+> @@ -1,18 +1,21 @@
+> -* Ricoh RN5T618 PMIC
+> +* Ricoh RN5T567/RN5T618 PMIC
 >  
->  Example:
->  	sdhci@e0100000 {
-> @@ -61,7 +67,9 @@ Example:
->  		arasan,soc-ctl-syscon = <&grf>;
->  		assigned-clocks = <&cru SCLK_EMMC>;
->  		assigned-clock-rates = <200000000>;
-> +		clock-output-names = "emmc_cardclock";
->  		phys = <&emmc_phy>;
->  		phy-names = "phy_arasan";
-> +		#clock-cells = <0>;
->  		status = "disabled";
->  	};
-> -- 
-> 2.8.0.rc3.226.g39d4020
-> 
+> -Ricoh RN5T618 is a power management IC which integrates 3 step-down
+> -DCDC converters, 7 low-dropout regulators, a Li-ion battery charger,
+> -fuel gauge, ADC, GPIOs and a watchdog timer. It can be controlled
+> -through a I2C interface.
+> +Ricoh RN5T567/RN5T618 is a power management IC family which integrates
+> +3 to 5 step-down DCDC converters, 7 low-dropout regulators, GPIOs and
+
+I count 4?
+
+Otherwise, for the binding:
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
