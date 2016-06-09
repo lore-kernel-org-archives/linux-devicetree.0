@@ -1,103 +1,132 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFC v4 4/7] extcon: usb-gpio: Add support for VBUS detection
-Date: Thu, 09 Jun 2016 10:43:04 +0200
-Message-ID: <57592C18.8020609@samsung.com>
-References: <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
- <1465393686-16644-5-git-send-email-k.kozlowski@samsung.com>
- <57592B02.2070609@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/4] clk: renesas: Add r8a7796 CPG Core Clock Definitions
+Date: Thu, 9 Jun 2016 10:54:57 +0200
+Message-ID: <CAMuHMdVBu-ecbisZWfx0uKMx=M0zjT+u=j-uF=85_gaDt2u7Jg@mail.gmail.com>
+References: <1464625737-6646-1-git-send-email-geert+renesas@glider.be>
+ <1464625737-6646-3-git-send-email-geert+renesas@glider.be>
+ <574C6C16.3020703@gmail.com> <6b57d59f-d17b-a6c3-41d5-e975db544adc@de.bosch.com>
+ <CAMuHMdWByGTDcG62qTg5N69FACx4FiuVuRrF_woyFAoNOpbjSw@mail.gmail.com>
+ <77a45dc7-59f0-23fc-f30d-b3daab34d689@de.bosch.com> <CAMuHMdW6kTMQoVO15Eve2Er5pfSiEc4LkwvQ72WU1LmdSK+CxQ@mail.gmail.com>
+ <94042cf8-5364-8426-a5de-b83fe291fee1@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <57592B02.2070609@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Peter Chen <peter.chen@freescale.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, balbi@kernel.com, kishon@ti.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <94042cf8-5364-8426-a5de-b83fe291fee1@de.bosch.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk <linux-clk@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/2016 10:38 AM, Roger Quadros wrote:
-> Hi,
-> 
-> On 08/06/16 16:48, Krzysztof Kozlowski wrote:
->> Add VBUS pin detection support to extcon-usb-gpio driver for boards
->> which have both VBUS and ID pins, or only one of them.
->>
->> The logic behind reporting USB and USB-HOST extcon cables is not
->> affected. The driver however will report extcon changes for USB-VBUS and
->> USB-ID.
->>
->> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>
->> ---
->>
->> Some parts base on old Robert's patchset.
->> ---
->>  drivers/extcon/extcon-usb-gpio.c | 125 +++++++++++++++++++++++++++++++--------
->>  1 file changed, 99 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
->> index a36aab007022..85b8a0ce5731 100644
->> --- a/drivers/extcon/extcon-usb-gpio.c
->> +++ b/drivers/extcon/extcon-usb-gpio.c
->> @@ -35,7 +35,9 @@ struct usb_extcon_info {
->>  	struct extcon_dev *edev;
->>  
->>  	struct gpio_desc *id_gpiod;
->> +	struct gpio_desc *vbus_gpiod;
->>  	int id_irq;
->> +	int vbus_irq;
->>  
->>  	unsigned long debounce_jiffies;
->>  	struct delayed_work wq_detcable;
->> @@ -44,6 +46,8 @@ struct usb_extcon_info {
->>  static const unsigned int usb_extcon_cable[] = {
->>  	EXTCON_USB,
->>  	EXTCON_USB_HOST,
->> +	EXTCON_USB_ID,
->> +	EXTCON_USB_VBUS,
->>  	EXTCON_NONE,
->>  };
->>  
->> @@ -55,7 +59,8 @@ static void usb_extcon_detect_cable(struct work_struct *work)
->>  						    wq_detcable);
->>  
->>  	/* check ID and update cable state */
->> -	id = gpiod_get_value_cansleep(info->id_gpiod);
->> +	id = info->id_gpiod ? gpiod_get_value_cansleep(info->id_gpiod) : 1;
->> +
->>  	if (id) {
->>  		/*
->>  		 * ID = 1 means USB HOST cable detached.
->> @@ -73,6 +78,14 @@ static void usb_extcon_detect_cable(struct work_struct *work)
->>  		extcon_set_cable_state_(info->edev, EXTCON_USB, false);
->>  		extcon_set_cable_state_(info->edev, EXTCON_USB_HOST, true);
->>  	}
->> +
->> +	if (info->id_gpiod)
->> +		extcon_set_cable_state_(info->edev, EXTCON_USB_ID, id);
->> +	if (info->vbus_gpiod) {
->> +		int vbus = gpiod_get_value_cansleep(info->vbus_gpiod);
->> +
->> +		extcon_set_cable_state_(info->edev, EXTCON_USB_VBUS, vbus);
->> +	}
-> 
-> What happens if either id_gpiod or vbus_gpiod is present?
-> 
-> As per the DT binding document
-> "In general we have three cases:
-> 1. If VBUS and ID gpios are present we pass them as is
-> USB-HOST = !ID, USB = VBUS
-> 2. If only VBUS gpio is present we assume that ID pin is always High.
-> USB-HOST = false, USB = VBUS.
-> 3. If only ID pin is available we infer the VBUS pin states based on ID.
-> USB-HOST = !ID, USB = ID"
-> 
-> So do you want to be consistent and infer VBUS and ID states based on the other?
+Hi Dirk,
 
-Right, I couldn't make up my mind whether I want to change/improve
-existing logic or just add VBUS/ID raw notifying. Finally I left
-original code for USB/USB-HOST cables alone.
+On Thu, Jun 9, 2016 at 10:31 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
+> On 07.06.2016 10:17, Geert Uytterhoeven wrote:
+>> On Tue, Jun 7, 2016 at 9:53 AM, Dirk Behme <dirk.behme@de.bosch.com>
+>> wrote:
+>>>
+>>> I think I just want to discuss if we have a clever idea to further
+>>> improve
+>>> one detail. That is, if we have a clever idea to avoid the copy & paste
+>>> between the family members using anything like a hierarchical way of
+>>> defining the clocks in r8a779x-cpg-mssr.h.
+>>>
+>>>> Given the small amount of work needed to bootstrap r8a7796, I
+>>>> think they still hold on their promises.
+>>>
+>>> Well, regarding the r8a779x-cpg-mssr.h the small amount of work needed
+>>> isn't
+>>> a really good argument if you are good with cp & sed for the copy & paste
+>>> done ;)
+>>
+>> They're not really created by cp & sed, as they must match the table in
+>> the
+>> datasheet (the latter may have been created by copy & paste though :-)
+>>
+>>> What I fear we end up the way we are doing the copy & paste
+>>> r8a779x-cpg-mssr.h is having 5 or 6 or even more of these files, all >
+>>> 90%
+>>> identical. And once you have to change anything, you either have to
+>>> change
+>>> all these files. Or you miss anything, ending up with subtle bugs when
+>>> one
+>>> SoC does behave differently than an other one.
+>>
+>> The point is these files are stable ABI: no single value can be changed.
+>> No value can be reused. Only new values can be appended at the bottom
+>> (if a newer revision of the datasheet documents more clocks than the old
+>>  version, which happens from time to time).
+>>
+>> IMHO a hierarchical way of defining the clocks has more opportunity of
+>> accidentally referring to a clock that doesn't exist on a particular SoC.
+>>
+>> Furthermore, r8a779x-cpg-mssr.h is not a good name to be part of a DT
+>> binding,
+>> due to the wildcard.
+>> A future SoC may will match r8a779x and even be called (R-Car
+>> <something>3?),
+>> while using a completely different CPG block.
+>
+> Just to give an example about what we are talking, I've done [1] below. This
+> should just be an *example*, though. I'm sure that we might need a more
+> clever way.
 
-Best regards,
-Krzysztof
+Thanks, it matches with what I had in mind what you wanted to do ;-)
+
+> --- a/include/dt-bindings/clock/r8a7796-cpg-mssr.h
+> +++ b/include/dt-bindings/clock/r8a7796-cpg-mssr.h
+
+> +#include <dt-bindings/clock/rcar3-cpg-mssr.h>
+
+> +#define R8A7796_CLK_ZB3D4              47
+> +#define R8A7796_CLK_S0D2               48
+> +#define R8A7796_CLK_S0D3               49
+> +#define R8A7796_CLK_S0D6               50
+> +#define R8A7796_CLK_S0D8               51
+> +#define R8A7796_CLK_S0D12              53
+
+This means on M3-W, clocks may have different prefixes:
+  - RCAR3_CLK_* if they are defined as common R-Car Gen3 clocks,
+  - R8A7796_CLK_* if they are defined as M3-W-specific clocks.
+
+Not such a big issue, it that can be worked around using
+
+    #define R8A7796_CLK_Z RCAR3_CLK_Z
+    [...]
+
+> +++ b/include/dt-bindings/clock/rcar3-cpg-mssr.h
+> @@ -0,0 +1,63 @@
+> +/*
+> + * Copyright (C) 2015 Renesas Electronics Corp.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +#ifndef __DT_BINDINGS_CLOCK_RCAR3_CPG_MSSR_H__
+> +#define __DT_BINDINGS_CLOCK_RCAR3_CPG_MSSR_H__
+> +
+> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +
+> +/* RCar3 CPG Core Clocks */
+> +#define RCAR3_CLK_Z            0
+> +#define RCAR3_CLK_Z2           1
+> +#define RCAR3_CLK_ZR           2
+> +#define RCAR3_CLK_ZG           3
+> +#define RCAR3_CLK_ZTR          4
+> +#define RCAR3_CLK_ZTRD2                5
+
+While this approach allows to add SoC-specific clocks to the family-specific
+base list, it does not allow to remove family-specific clocks that are not
+present on unknown future species of the family.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
