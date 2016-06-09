@@ -1,99 +1,132 @@
-From: Mychaela Falconia <mychaela.falconia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4] mtd: nand: Add support for Evatronix NANDFLASH-CTRL
-Date: Thu, 9 Jun 2016 11:35:53 -0800
-Message-ID: <CA+uuBqaRv2f8K-Q2ZLQY8tq6idq8XCDMV21SYM5XCWc4FVV90g@mail.gmail.com>
-References: <alpine.DEB.2.02.1606020948070.19416@lnxricardw1.se.axis.com>
- <20160603165909.09f27ee0@bbrezillon> <alpine.DEB.2.02.1606071702220.19416@lnxricardw1.se.axis.com>
- <CA+uuBqb4fG4nK7atrF7XOQ=ip2SfKrxU+KXqD3W+PA_ZA7cS3g@mail.gmail.com> <20160609200128.5b7a6e29@bbrezillon>
+From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] USB: Fix of_usb_get_dr_mode_by_phy with a shared
+ phy block
+Date: Thu, 9 Jun 2016 14:49:36 -0500
+Message-ID: <20160609194936.GB2167@uda0271908>
+References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
+ <20160609143004.GA2167@uda0271908>
+ <9a05c16a-e8a2-02b7-c093-1131e27bcdd4@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160609200128.5b7a6e29@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, Linux mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9a05c16a-e8a2-02b7-c093-1131e27bcdd4-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/9/16, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> I also agree on this aspect. Though what you consider an evolution with
-> these 'high-level' controllers is in my opinion a regression.
->
-> By supporting only a subset of what NAND chips actually support, and
-> preventing any raw access, you just limit the compatibility of the NAND
-> controller with rather old NAND chips. For example, your controller
-> cannot deal with MLC/TLC NANDs because it just can't send the private
-> commands required to have reliable support for these NANDs.
+Hi,
 
-I am not the one who designed the controller IP, so please don't shoot
-the messenger. I fully agree that it would have been much safer if
-they just bothered to add a couple of registers to their IP that
-provide a raw bypass directly to the NAND interface pins - and it
-would have been trivial to do so, adding just a few transistors to the
-silicon - but apparently the IP vendor chose not to. I agree that it
-was a poor decision on their part, but as Linux geeks we don't get the
-power to change the IP we got hired to write drivers for.
+On Thu, Jun 09, 2016 at 04:51:45PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 09-06-16 16:30, Bin Liu wrote:
+> >Hi,
+> >
+> >On Sun, Jun 05, 2016 at 04:59:33PM +0200, Hans de Goede wrote:
+> >>Some SoCs have a single phy-hw-block with multiple phys, this is
+> >>modelled by a single phy dts node, so we end up with multiple
+> >>controller nodes with a phys property pointing to the phy-node
+> >>of the otg-phy.
+> >>
+> >>Only one of these controllers typically is an otg controller, yet we
+> >>were checking the first controller who uses a phy from the block and
+> >>then end up looking for a dr_mode property in e.g. the ehci controller.
+> >>
+> >>This commit fixes this by adding an arg0 parameter to
+> >>of_usb_get_dr_mode_by_phy and make of_usb_get_dr_mode_by_phy
+> >>check that this matches the phandle args[0] value when looking for
+> >>the otg controller.
+> >>
+> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>---
+> >>Changes in v2:
+> >>-Add a args0 parameter instead of looking for nodes with a dr_mode property
+> >>Changes in v3:
+> >>-No changes
+> >>---
+> >> drivers/usb/common/common.c  | 31 ++++++++++++++++++-------------
+> >> drivers/usb/phy/phy-am335x.c |  2 +-
+> >> include/linux/usb/of.h       |  4 ++--
+> >> 3 files changed, 21 insertions(+), 16 deletions(-)
+> >
+> >This breaks am335x.
+> >
+> >[   17.433166] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
+> >for /ocp/usb@47400000/usb-phy@47401300
+> >[   17.443627] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
+> >for /ocp/usb@47400000/usb-phy@47401b00
+> >[   17.454005] am335x-phy-driver 47401300.usb-phy: dr_mode 0
+> >[   17.460518] 47401300.usb-phy supply vcc not found, using dummy
+> >regulator
+> >[   17.469685] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
+> >for /ocp/usb@47400000/usb-phy@47401300
+> >[   17.479998] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
+> >for /ocp/usb@47400000/usb-phy@47401b00
+> >[   17.490342] am335x-phy-driver 47401b00.usb-phy: dr_mode 0
+> 
+> That is weird, quoting: drivers/phy/phy-core.c: _of_phy_get():
+> 
+>         ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
+>                 index, &args);
+>         if (ret)
+>                 return ERR_PTR(-ENODEV);
+> 
+> So if #phy-cells is not defined, then the phy core should not
+> be able to work with the dts files in question at all.
 
-As for private commands which the IP does not know about, there is a
-way to send them, but it is not a truly raw way. With FTNANDC024 if
-you need to send a private command to the NAND, you have to write some
-custom FTNANDC024 microcode for it. The datasheet explains how to
-write your own microcode, and the IP includes a small SRAM where you
-can put your own microcode in addition to the mask ROM with the
-standard microcode. But this provision still would not allow a
-low-level driver implementation: there is still no way to implement a
-driver function that just sends any arbitrary command opcode without
-caring what it is, instead you would have to write a different special
-microcode routine for each non-standard command you need to support,
-and naturally the microcode SRAM has a finite size.
+am335x phy does not use phy framework, so those phy core api is not
+called.
 
-> I understand this constraint, and I know some controllers are really
-> like this, but before deciding to move those controllers to some
-> 'high-level NAND' framework, I'd like to make sure they are really not
-> providing this raw interface.
+> 
+> All my patch does is make the way of_usb_get_dr_mode_by_phy parses
+> phy-handles be identical to how phy-core.c does it.
+> 
+> I see that the usb0_phy node in arch/arm/boot/dts/am33xx.dtsi
+> indeed lacks a "#phy-cells = <0>;" line.
+> 
+> Quoting: Documentation/devicetree/bindings/phy/phy-bindings.txt
+> 
+> PHY device node
+> ===============
+> 
+> Required Properties:
+> #phy-cells:     Number of cells in a PHY specifier;  The meaning of all those
+>                 cells is defined by the binding for the phy node. The PHY
+>                 provider can use the values in cells to find the appropriate
+>                 PHY.
+> 
+> So not having #phy-cells defined for a phy-node clearly is a bug.
 
-I would be glad to share the datasheet for the controller I am working
-with, so you can verify with your own eyes that it does not provide
-any truly raw interface - but I don't have a place to post it. If you
-like, I can send it to you as an off-list email attachment (1775641
-bytes), and you can then repost it somewhere for others to see.
+am335x phy does not follow the bindings in phy/, but usb/phy/.
 
-> I've been told many times that NAND controllers were not supporting raw
-> accesses (disabling the ECC engine when accessing the NAND), and most
-> of the time it was false, but the developers just didn't care about
-> supporting this feature, and things like that make the whole subsystem
-> unmaintainable.
+> 
+> A patch like the following should fix this:
+> 
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index 52be48b..c4ff788d 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -557,6 +557,7 @@
+>  			};
+> 
+>  			usb0_phy: usb-phy@47401300 {
+> +				#phy-cells = <0>;
 
-With FTNANDC024 the closest you can get to a raw read are the
-following two features:
+This seems to be ok, but this patch would break the dt backward compatible.
 
-1. You can disable the ECC engine and read the first "data size" bytes
-of the page raw, but it does not get you the OOB area. For example, on
-the Micron SLC chip I am working with currently, the raw page size is
-4096+224 bytes, but the FTNANDC024 can only read the 4096 "data" bytes
-this way, and not the remaining 224.
+>  				compatible = "ti,am335x-usb-phy";
+>  				reg = <0x47401300 0x100>;
+>  				reg-names = "phy";
+> 
+> Regards,
+> 
+> Hans
 
-2. There is a "byte read" command that performs a truly raw read of
-any range of bytes (any column address) within a page, but it can only
-read a maximum of 32 bytes per operation.
-
-If I wanted to do a truly raw dump of a full NAND page with my
-controller and NAND chip (like I did when I wanted to reverse-engineer
-their hardware BCH implementation), I would have to issue one read
-command to get the first 4096 bytes, then another 7 "byte read"
-commands to get the remaining 224 bytes. 8 read commands in total to
-get a raw dump of one full NAND page, and each of those 8 FTNANDC024
-read commands internally involves sending a new Read Page command to
-the physical NAND - thus any read disturbs are invoked 8 times per
-page instead of once.
-
-It's even worse with raw writes - if I wanted to do a raw write of a
-full NAND page, I would have to do it in 8 separate write commands
-just like with the raw read. I assume that the NAND chip won't like it
-at all, as it would get 8 separate Page Program commands for the same
-page with different column addresses.
-
-M~
+Regards,
+-Bin.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
