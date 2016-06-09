@@ -1,30 +1,45 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] drivers: of: add definition of early_init_dt_alloc_reserved_memory_arch
-Date: Thu, 9 Jun 2016 17:24:12 -0500
-Message-ID: <CAL_JsqLC8Mq=O_qYG7m_Uvh3EEUxU1aWPtViUxKGAnqA8r_5Lw@mail.gmail.com>
-References: <1465468714-4982-1-git-send-email-ben.dooks@codethink.co.uk>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 0/2] pci: host: Broadcom STB PCIE RC controller support
+Date: Thu, 9 Jun 2016 17:31:10 -0500
+Message-ID: <20160609223110.GA19309@localhost>
+References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465468714-4982-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, bhelgaas@google.com, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 9, 2016 at 5:38 AM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
-> The function early_init_dt_alloc_reserved_memory_arch is defined
-> in drivers/of/of_reserved_mem.c but is not declared in any of the
-> header files. Add the declaration of this to avoid the warning:
->
-> drivers/of/of_reserved_mem.c:31:19: warning: symbol 'early_init_dt_alloc_reserved_memory_arch' was not declared. Should it be static?
->
-> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+On Thu, May 05, 2016 at 12:14:58PM -0700, Florian Fainelli wrote:
+> Hi all,
+> 
+> This patch series adds support for Broadcom STB SoC's PCIe root complex driver.
+> 
+> This was primarily tested on BCM7445 (ARM) and BCM7435 (MIPS).
+> 
+> Jim is the original author, and I picked up our downstream 4.1 driver and
+> updated it to utilize the non-ARM hw_pci functions as well as made some
+> stylistic changes.
+> 
+> Thanks!
+> 
+> Jim Quinlan (2):
+>   Documentation: DT: bindings: Add Broadcom STB PCIe bindings
+>   pci: host: Add Broadcom STB PCIE RC controller
 
-Dropped the extern and applied. Thanks.
+Hi Florian,
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There was some discussion about these patches, so I assume you'll post
+a new version addressing that.  When you do, can you include
+/proc/iomem and /proc/ioports contents?
+
+I'm looking to avoid problems like this:
+http://lkml.kernel.org/r/20160606230537.20936.2892.stgit@bhelgaas-glaptop2.roam.corp.google.com
+
+Also, it will save me time if you take note of this:
+http://lkml.kernel.org/r/20160607231326.GA4759@localhost
+
+Bjorn
