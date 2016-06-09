@@ -1,70 +1,60 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/1] ARM: dts: sunxi: Fix simplefb not working in 4.7-rc1
-Date: Thu, 9 Jun 2016 09:46:43 +0200
-Message-ID: <20160609074643.GA5242@lukather>
-References: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v10 0/8] add i2c driver supported for rk3399
+Date: Thu, 9 Jun 2016 09:47:53 +0200
+Message-ID: <20160609074752.GA3720@katana>
+References: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
+ <2239664.BKqQWGCl8U@diego>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
+	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1465063524-4925-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <2239664.BKqQWGCl8U@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, davidriley-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---8t9RHnE3ZwKMSgU+
+--qDbXVdCdHGoSgWSk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Hans,
 
-On Sat, Jun 04, 2016 at 08:05:23PM +0200, Hans de Goede wrote:
-> Hi Maxime,
->=20
-> While testing 4.7-rc1 / linux-sunxi/sunxi-next on a A10s I noticed that
-> hdmi out is no longer working (screen goes black when the kernel turns
-> of unused clocks).
->=20
-> This is caused by the dtsi for sun4i / sun5i / sun7i based boards now
-> listing pll3, without pll3 being added to the clocks list for the
-> simplefb nodes.
+> this series looks pretty nice now and it seems most everybody is happy wi=
+th it=20
+> by now. Do you still have it in your inbox to look at, or should David re=
+send=20
+> it again?
 
-Why not do just that then? It's more appropriate for a fix imho.
+I use patchwork (as stated in MAINTAINERS), so nothing gets lost as long
+as it is send to the i2c-list. As long as it still applies, no need to
+resend. This series does have priority, thanks to the tags given.
 
-Thanks! (and sorry for the breakage)
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---8t9RHnE3ZwKMSgU+
+--qDbXVdCdHGoSgWSk
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXWR7iAAoJEBx+YmzsjxAgENAP/RTmRPBoSUlm7T+dJ4QZZ2FN
-1mX3+HA8wlUYiu9WCH93kuByqd8yPAzjL7+c1/mx0IL8XQyGRf/TlC6CAfxaaA72
-gbG+RoL5dgwJqlnPNsgv4aN4032gIUGE60u8ISck8BDcpGvRdQ8ebOeStMKFdEuK
-VeIX6E/csLI61K/Ly4MCWo/9tLm97vnMGtILZC6f3JKjNgZJ/CqAp0Bid1GvKvm7
-CUUYcvjLHxboo4RrlKO1CYOdoMdX2VJ9s1bIY/AKx2tD9uBpZbdgrvQJXOYAbpEl
-H/xYxZkYvP3x+cZgq8H7zJwpD6HKyT5bW9kGAJT2AWsLAQU8PlSaqc25BQYl+22D
-0Ery+LUq6i25PX76YvCTrchPmQCaXJuLg+H7Xkc31R6J9Q4PsJaQiZGbvTs/rcrl
-/a8O1ZEzeM2iPcLHqgDEpr1YXjAco6ydAHjPyvEVOHKI7XiMXtmzyT76rU6qPxeO
-0PA3q9/jI+ueqzIDuOqP24fecXN2IXtISyirHdc5FgvOadIOj3QGOUV6ZO5Q2/et
-jB60TodWJd/gshtctkPr2LoS0VgN6vqd7FRT6jLil1cOLd84rSE/6WO4O6Y03mmp
-9YqyQ62QOk9w7DyWZ8fpxXF9bGaomDjwZqfpU2DFny0VK2eiT8HsQhd6/0l86yO0
-iGYx+trRdQO7z/MSYf/a
-=MLVv
+iQIcBAEBAgAGBQJXWR8oAAoJEBQN5MwUoCm2+1QP/j0OBZBqdB8sCKU1k0DYm4rY
+pn2dcTdWNs8HM0i489jtWbfxotXTVz9EZi7p0E7zNns4z4LfD3E0aBrrtSlwz74h
+61wJ/BVtidfMNU1pcaT1tqJLLQN8K3jbSsdl+A83BjnxNoJGQXtVwwR/2dTXMcaJ
+4SQ/GTbyxseT9huXCD+95DoXZuf7FpswZT6sdE7Z5XCcQb8bFQ33vQ7spLf5kSKt
+TpUuVCfn5vH3TUCPxwKu2kYk+XAtX19SVTZ4rggBW0VclAnPq7gOC/KChHnxtp9b
+rcFhogTut3UYs57k6WwrXN9cJG/38MFhNAX04FL+dkUSNibIXPXqtiCQNBkhJpS5
+vmA2kqtBOyS+1LH5ssxJD6qJYpJ4b8I/JaCZUjDZmmr72Gyg1rFNGo+TeDO8Qq9y
+HVMe9JBwBrm+5WY31kJaIvHvSvF8q4kqJnxcTlREAz62BL55m/dI6LVLgTJ3y4k+
+KFmxIe+L43vqlZjEPYhJ+Q9WsQW0/Bx9vZWkAzRCMMvfd9CLYqCsYGA6DN20P8OP
+aVJEJ0disxQJe0hHNMnvtKpAO68jOGJnTR99bH50XemV9TgABUffd7rGvdlCyfC3
+b7No5A3jXLv5W4wzqiqtSdGR11ZqgQdR/prcjvODAjzF/SEUwm7ERXXMZHzlZKBd
+0WvlfebdK1lNO0QxJ+DH
+=0XPj
 -----END PGP SIGNATURE-----
 
---8t9RHnE3ZwKMSgU+--
+--qDbXVdCdHGoSgWSk--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
