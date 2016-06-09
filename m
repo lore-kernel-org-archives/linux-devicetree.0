@@ -1,145 +1,232 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 01/12] ARM: shmobile: r8a7792: add clock index macros
-Date: Fri, 10 Jun 2016 00:31:56 +0300
-Message-ID: <4491799.qY5RE8eaAd@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v4 06/12] ARM: dts: r8a7792: initial SoC device tree
+Date: Fri, 10 Jun 2016 00:41:10 +0300
+Message-ID: <2935290.QhIdlclvX3@wasted.cogentembedded.com>
 References: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1879394.3zBGLpF2nv-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add macros usable by the device tree sources to reference the R8A7792
-clocks  by index.
+The initial R8A7792 SoC device tree including CPU cores, GIC, timer, SYSC,
+and the required  clock descriptions.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
 Changes in version 4:
-- added Geert's tag.
+- fixed the CP clock divisor;
+- indented the P clock's "compatible" prop correctly;
+- removed leftover DU0/1 clock names from the MSTP7 clock node.
+
+Changes in version 3:
+- moved the fixed factor clocks under the "soc" node;
+- added back the CPU1 node, adjusted the changelog.
 
 Changes in version 2:
-- removed the SDH, SD0, and SD1 clocks;
-- added RCAN and ADSP clock indeces;
-- fixed SYS-DMAC0/1 clock indeces.
+- explicitly included the IRQ header;
+- removed the CPU1 node;
+- removed the audio and PCIe bus clocks;
+- removed the SDH, SD0, and SD1 CPG clocks;
+- added RCAN and ADSP CPG clocks;
+- removed the PLL1/2, Z2, ZS, I, B, P, CL, M2, RCLK, OSCCLK, ZB3, ZB3D2, DDR,
+  and MP fixed factor clocks;
+- fixed up the parent and divisor for the CP fixed factor clock;
+- swapped  the SYS-DMAC0/1 clocks;
+- removed  all gated clocks except the [H]SCIF, IRQC, and SYS-DMAC ones;
+- created  the "soc" subnode, moving the SoC  device  nodes there;
+- removed  the "clocks" node, moving its fixed clock  subnodes to the root and
+  the MSTP subnodes into the "soc" node.
 
- include/dt-bindings/clock/r8a7792-clock.h |  103 ++++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
+ arch/arm/boot/dts/r8a7792.dtsi |  179 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 179 insertions(+)
 
-Index: renesas/include/dt-bindings/clock/r8a7792-clock.h
+Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
 ===================================================================
 --- /dev/null
-+++ renesas/include/dt-bindings/clock/r8a7792-clock.h
-@@ -0,0 +1,103 @@
++++ renesas/arch/arm/boot/dts/r8a7792.dtsi
+@@ -0,0 +1,179 @@
 +/*
-+ * Copyright (C) 2016 Cogent Embedded, Inc.
++ * Device Tree Source for the r8a7792 SoC
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * Copyright (C) 2016 Cogent Embedded Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
 + */
 +
-+#ifndef __DT_BINDINGS_CLOCK_R8A7792_H__
-+#define __DT_BINDINGS_CLOCK_R8A7792_H__
++#include <dt-bindings/clock/r8a7792-clock.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/power/r8a7792-sysc.h>
 +
-+/* CPG */
-+#define R8A7792_CLK_MAIN		0
-+#define R8A7792_CLK_PLL0		1
-+#define R8A7792_CLK_PLL1		2
-+#define R8A7792_CLK_PLL3		3
-+#define R8A7792_CLK_LB			4
-+#define R8A7792_CLK_QSPI		5
-+#define R8A7792_CLK_Z			6
-+#define R8A7792_CLK_RCAN		7
-+#define R8A7792_CLK_ADSP		8
++/ {
++	compatible = "renesas,r8a7792";
++	#address-cells = <2>;
++	#size-cells = <2>;
 +
-+/* MSTP0 */
-+#define R8A7792_CLK_MSIOF0		0
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+/* MSTP1 */
-+#define R8A7792_CLK_TMU1		11
-+#define R8A7792_CLK_TMU3		21
-+#define R8A7792_CLK_TMU2		22
-+#define R8A7792_CLK_CMT0		24
-+#define R8A7792_CLK_TMU0		25
-+#define R8A7792_CLK_VSP1DU1		27
-+#define R8A7792_CLK_VSP1DU0		28
-+#define R8A7792_CLK_VSP1_SY		31
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <0>;
++			clock-frequency = <1000000000>;
++			clocks = <&cpg_clocks R8A7792_CLK_Z>;
++			power-domains = <&sysc R8A7792_PD_CA15_CPU0>;
++			next-level-cache = <&L2_CA15>;
++		};
 +
-+/* MSTP2 */
-+#define R8A7792_CLK_MSIOF1		8
-+#define R8A7792_CLK_SYS_DMAC1		18
-+#define R8A7792_CLK_SYS_DMAC0		19
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <1>;
++			clock-frequency = <1000000000>;
++			power-domains = <&sysc R8A7792_PD_CA15_CPU1>;
++			next-level-cache = <&L2_CA15>;
++		};
 +
-+/* MSTP3 */
-+#define R8A7792_CLK_TPU0		4
-+#define R8A7792_CLK_SDHI0		14
-+#define R8A7792_CLK_CMT1		29
++		L2_CA15: cache-controller@0 {
++			compatible = "cache";
++			reg = <0>;
++			cache-unified;
++			cache-level = <2>;
++			power-domains = <&sysc R8A7792_PD_CA15_SCU>;
++		};
++	};
 +
-+/* MSTP4 */
-+#define R8A7792_CLK_IRQC		7
++	soc {
++		compatible = "simple-bus";
++		interrupt-parent = <&gic>;
 +
-+/* MSTP5 */
-+#define R8A7792_CLK_AUDIO_DMAC0		2
-+#define R8A7792_CLK_THERMAL		22
-+#define R8A7792_CLK_PWM			23
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
-+/* MSTP7 */
-+#define R8A7792_CLK_HSCIF1		16
-+#define R8A7792_CLK_HSCIF0		17
-+#define R8A7792_CLK_SCIF3		18
-+#define R8A7792_CLK_SCIF2		19
-+#define R8A7792_CLK_SCIF1		20
-+#define R8A7792_CLK_SCIF0		21
-+#define R8A7792_CLK_DU1			23
-+#define R8A7792_CLK_DU0			24
++		gic: interrupt-controller@f1001000 {
++			compatible = "arm,gic-400";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0 0xf1001000 0 0x1000>,
++			      <0 0xf1002000 0 0x1000>,
++			      <0 0xf1004000 0 0x2000>,
++			      <0 0xf1006000 0 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_HIGH)>;
++		};
 +
-+/* MSTP8 */
-+#define R8A7792_CLK_VIN5		4
-+#define R8A7792_CLK_VIN4		5
-+#define R8A7792_CLK_VIN3		8
-+#define R8A7792_CLK_VIN2		9
-+#define R8A7792_CLK_VIN1		10
-+#define R8A7792_CLK_VIN0		11
-+#define R8A7792_CLK_ETHERAVB		12
++		timer {
++			compatible = "arm,armv7-timer";
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
++				      IRQ_TYPE_LEVEL_LOW)>;
++		};
 +
-+/* MSTP9 */
-+#define R8A7792_CLK_GPIO7		4
-+#define R8A7792_CLK_GPIO6		5
-+#define R8A7792_CLK_GPIO5		7
-+#define R8A7792_CLK_GPIO4		8
-+#define R8A7792_CLK_GPIO3		9
-+#define R8A7792_CLK_GPIO2		10
-+#define R8A7792_CLK_GPIO1		11
-+#define R8A7792_CLK_GPIO0		12
-+#define R8A7792_CLK_GPIO11		13
-+#define R8A7792_CLK_GPIO10		14
-+#define R8A7792_CLK_CAN1		15
-+#define R8A7792_CLK_CAN0		16
-+#define R8A7792_CLK_QSPI_MOD		17
-+#define R8A7792_CLK_GPIO9		19
-+#define R8A7792_CLK_GPIO8		21
-+#define R8A7792_CLK_I2C5		25
-+#define R8A7792_CLK_IICDVFS		26
-+#define R8A7792_CLK_I2C4		27
-+#define R8A7792_CLK_I2C3		28
-+#define R8A7792_CLK_I2C2		29
-+#define R8A7792_CLK_I2C1		30
-+#define R8A7792_CLK_I2C0		31
++		sysc: system-controller@e6180000 {
++			compatible = "renesas,r8a7792-sysc";
++			reg = <0 0xe6180000 0 0x0200>;
++			#power-domain-cells = <1>;
++		};
 +
-+/* MSTP10 */
-+#define R8A7792_CLK_SSI_ALL		5
-+#define R8A7792_CLK_SSI4		11
-+#define R8A7792_CLK_SSI3		12
++		/* Special CPG clocks */
++		cpg_clocks: cpg_clocks@e6150000 {
++			compatible = "renesas,r8a7792-cpg-clocks",
++				     "renesas,rcar-gen2-cpg-clocks";
++			reg = <0 0xe6150000 0 0x1000>;
++			clocks = <&extal_clk>;
++			#clock-cells = <1>;
++			clock-output-names = "main", "pll0", "pll1", "pll3",
++					     "lb", "qspi", "z", "rcan", "adsp";
++			#power-domain-cells = <0>;
++		};
 +
-+#endif /* __DT_BINDINGS_CLOCK_R8A7792_H__ */
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++		/* Fixed factor clocks */
++		zs_clk: zs {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <6>;
++			clock-mult = <1>;
++		};
++		p_clk: p {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <24>;
++			clock-mult = <1>;
++		};
++		cp_clk: cp {
++			compatible = "fixed-factor-clock";
++			clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
++			#clock-cells = <0>;
++			clock-div = <48>;
++			clock-mult = <1>;
++		};
++
++		/* Gate clocks */
++		mstp2_clks: mstp2_clks@e6150138 {
++			compatible = "renesas,r8a7792-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150138 0 4>, <0 0xe6150040 0 4>;
++			clocks = <&zs_clk>, <&zs_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7792_CLK_SYS_DMAC1 R8A7792_CLK_SYS_DMAC0
++			>;
++			clock-output-names = "sys-dmac1", "sys-dmac0";
++		};
++		mstp4_clks: mstp4_clks@e6150140 {
++			compatible = "renesas,r8a7792-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150140 0 4>, <0 0xe615004c 0 4>;
++			clocks = <&cp_clk>;
++			#clock-cells = <1>;
++			clock-indices = <R8A7792_CLK_IRQC>;
++			clock-output-names = "irqc";
++		};
++		mstp7_clks: mstp7_clks@e615014c {
++			compatible = "renesas,r8a7792-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
++			clocks = <&zs_clk>, <&zs_clk>, <&p_clk>, <&p_clk>,
++				 <&p_clk>, <&p_clk>;
++			#clock-cells = <1>;
++			clock-indices = <
++				R8A7792_CLK_HSCIF1 R8A7792_CLK_HSCIF0
++				R8A7792_CLK_SCIF3 R8A7792_CLK_SCIF2
++				R8A7792_CLK_SCIF1 R8A7792_CLK_SCIF0
++			>;
++			clock-output-names = "hscif1", "hscif0", "scif3",
++					     "scif2", "scif1", "scif0";
++		};
++	};
++
++	/* External root clock */
++	extal_clk: extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	/* External SCIF clock */
++	scif_clk: scif {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++};
