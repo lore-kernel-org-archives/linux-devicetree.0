@@ -1,132 +1,72 @@
-From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] USB: Fix of_usb_get_dr_mode_by_phy with a shared
- phy block
-Date: Thu, 9 Jun 2016 14:49:36 -0500
-Message-ID: <20160609194936.GB2167@uda0271908>
-References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
- <20160609143004.GA2167@uda0271908>
- <9a05c16a-e8a2-02b7-c093-1131e27bcdd4@redhat.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 1/2] NET: PHY: Add PHY LED control binding.
+Date: Thu, 9 Jun 2016 22:13:28 +0200
+Message-ID: <cf8ba323-5d15-b5b6-fe7c-9f9a7da2c18a@hauke-m.de>
+References: <1465163150-21429-1-git-send-email-hauke@hauke-m.de>
+ <1465163150-21429-2-git-send-email-hauke@hauke-m.de>
+ <20160608193008.GA20738@rob-hp-laptop> <3869397.kzojzy3Xzu@ws-stein>
+ <f1e22176-d30a-be66-a4ea-dd0666775597@phrozen.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <9a05c16a-e8a2-02b7-c093-1131e27bcdd4-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f1e22176-d30a-be66-a4ea-dd0666775597-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, openwrt-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eckert.florian-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.langer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 06/09/2016 08:12 AM, John Crispin wrote:
+> 
+> 
+> On 09/06/2016 08:06, Alexander Stein wrote:
+>> On Wednesday 08 June 2016 14:30:08, Rob Herring wrote:
+>>>> diff --git a/Documentation/devicetree/bindings/phy/phy-leds.txt
+>>>> b/Documentation/devicetree/bindings/phy/phy-leds.txt new file mode 100644
+>>>> index 0000000..1a35e3d
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/phy/phy-leds.txt
+>>>> @@ -0,0 +1,52 @@
+>>>> +LED configuration for Ethernet phys
+>>>> +
+>>>> +All these properties are optional, not all properties are supported by
+>>>> +all PHYs. When more then one property name is define for one LED the
+>>>> +order they get applied is device depended.
+>>>> +Property names:
+>>>> +	led-const-on: conditions the LED should be constant on
+>>>> +	led-pulse: condition the LED should be pulsed on
+>>>> +	led-blink-slow: condition the LED should slowly blink
+>>>
+>>> How slow is slow?
+>>
+>> This depends on the MMD.INTERNAL.LEDCH.SBF setting which is 2 Hz by default.
+>>
+>>>> +	led-blink-fast: condition the LED should fast blink
+>>>
+>>> How fast is fast?
+>>
+>> This depends on the MMD.INTERNAL.LEDCH.FBF setting which is 16 Hz by default.
+>>
+>> Both can be set independently to 2, 4, 8 or 16 Hz.
+>>
+> 
+> and both are intel/lantiq implementation specific and hence should not
+> be part of a generic led-phy binding.
 
-On Thu, Jun 09, 2016 at 04:51:45PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 09-06-16 16:30, Bin Liu wrote:
-> >Hi,
-> >
-> >On Sun, Jun 05, 2016 at 04:59:33PM +0200, Hans de Goede wrote:
-> >>Some SoCs have a single phy-hw-block with multiple phys, this is
-> >>modelled by a single phy dts node, so we end up with multiple
-> >>controller nodes with a phys property pointing to the phy-node
-> >>of the otg-phy.
-> >>
-> >>Only one of these controllers typically is an otg controller, yet we
-> >>were checking the first controller who uses a phy from the block and
-> >>then end up looking for a dr_mode property in e.g. the ehci controller.
-> >>
-> >>This commit fixes this by adding an arg0 parameter to
-> >>of_usb_get_dr_mode_by_phy and make of_usb_get_dr_mode_by_phy
-> >>check that this matches the phandle args[0] value when looking for
-> >>the otg controller.
-> >>
-> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>---
-> >>Changes in v2:
-> >>-Add a args0 parameter instead of looking for nodes with a dr_mode property
-> >>Changes in v3:
-> >>-No changes
-> >>---
-> >> drivers/usb/common/common.c  | 31 ++++++++++++++++++-------------
-> >> drivers/usb/phy/phy-am335x.c |  2 +-
-> >> include/linux/usb/of.h       |  4 ++--
-> >> 3 files changed, 21 insertions(+), 16 deletions(-)
-> >
-> >This breaks am335x.
-> >
-> >[   17.433166] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
-> >for /ocp/usb@47400000/usb-phy@47401300
-> >[   17.443627] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
-> >for /ocp/usb@47400000/usb-phy@47401b00
-> >[   17.454005] am335x-phy-driver 47401300.usb-phy: dr_mode 0
-> >[   17.460518] 47401300.usb-phy supply vcc not found, using dummy
-> >regulator
-> >[   17.469685] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
-> >for /ocp/usb@47400000/usb-phy@47401300
-> >[   17.479998] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
-> >for /ocp/usb@47400000/usb-phy@47401b00
-> >[   17.490342] am335x-phy-driver 47401b00.usb-phy: dr_mode 0
-> 
-> That is weird, quoting: drivers/phy/phy-core.c: _of_phy_get():
-> 
->         ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
->                 index, &args);
->         if (ret)
->                 return ERR_PTR(-ENODEV);
-> 
-> So if #phy-cells is not defined, then the phy core should not
-> be able to work with the dts files in question at all.
+Ok, I can remove them, I think the constant on and the pulse are used by
+many Ethernet PHYs.
 
-am335x phy does not use phy framework, so those phy core api is not
-called.
+> imho these leds should be exposed via a led driver and the configurtion
+> should be exposed via a led driver specific trigger, in the same manner
+> in which wireless macs do it.
 
-> 
-> All my patch does is make the way of_usb_get_dr_mode_by_phy parses
-> phy-handles be identical to how phy-core.c does it.
-> 
-> I see that the usb0_phy node in arch/arm/boot/dts/am33xx.dtsi
-> indeed lacks a "#phy-cells = <0>;" line.
-> 
-> Quoting: Documentation/devicetree/bindings/phy/phy-bindings.txt
-> 
-> PHY device node
-> ===============
-> 
-> Required Properties:
-> #phy-cells:     Number of cells in a PHY specifier;  The meaning of all those
->                 cells is defined by the binding for the phy node. The PHY
->                 provider can use the values in cells to find the appropriate
->                 PHY.
-> 
-> So not having #phy-cells defined for a phy-node clearly is a bug.
+Where is a good example on how this is done?
+Is this then also triggered by the hardware or does the software has to
+trigger it?
 
-am335x phy does not follow the bindings in phy/, but usb/phy/.
+Hauke
 
-> 
-> A patch like the following should fix this:
-> 
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 52be48b..c4ff788d 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -557,6 +557,7 @@
->  			};
-> 
->  			usb0_phy: usb-phy@47401300 {
-> +				#phy-cells = <0>;
-
-This seems to be ok, but this patch would break the dt backward compatible.
-
->  				compatible = "ti,am335x-usb-phy";
->  				reg = <0x47401300 0x100>;
->  				reg-names = "phy";
-> 
-> Regards,
-> 
-> Hans
-
-Regards,
--Bin.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
