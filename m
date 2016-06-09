@@ -1,63 +1,140 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 06/12] power: pwrseq: simple: Add support for regulator
- and generic property
-Date: Thu, 9 Jun 2016 10:34:06 +0800
-Message-ID: <CAGb2v66OO0QJ75=hLnRukhXWdX7HgSy0LDakdZ_jxFRCHTUuJw@mail.gmail.com>
-References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
- <1464768141-25420-7-git-send-email-k.kozlowski@samsung.com>
- <20160603020218.GA19436@rob-hp-laptop> <575693DE.2010603@samsung.com> <20160608190333.GA5126@rob-hp-laptop>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX settings
+Date: Thu, 9 Jun 2016 10:41:26 +0800
+Message-ID: <CAL411-of2Phqx18LBaGt6FMg5DxaJesRYvrRzsfSNyJRopsUZQ@mail.gmail.com>
+References: <20160318211936.GA4158@rob-hp-laptop> <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com>
+ <20160323043638.GA18462@peterchendt> <56F2D43D.1040404@timesys.com>
+ <56F2DDB7.7070700@timesys.com> <20160324022117.GA5301@peterchendt> <57588DA8.4050000@timesys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160608190333.GA5126@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb <linux-usb@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, hzpeterchen@gmail.co
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57588DA8.4050000-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-On Thu, Jun 9, 2016 at 3:03 AM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Jun 07, 2016 at 11:29:02AM +0200, Krzysztof Kozlowski wrote:
->> On 06/03/2016 04:02 AM, Rob Herring wrote:
->> >>  Optional properties:
->> >>  - reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
->> >> @@ -16,6 +22,7 @@ Optional properties:
->> >>    See ../clocks/clock-bindings.txt for details.
->> >>  - clock-names : Must include the following entry:
->> >>    "ext_clock" (External clock provided to the card).
->> >> +- ext-supply : External regulator supply
->> >
->> > What happens when there are 2 supplies?
->> >
->> > I'd prefer the name not be genericish and use the real supply names.
->> > Then the power seq code should just turn on all supplies it finds. If
->> > the order or timing to turn on matters, then sorry, no generic sequence.
+On Thu, Jun 9, 2016 at 5:27 AM, Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 03/23/2016 10:21 PM, Peter Chen wrote:
 >>
->> I think the generic part for regulators might be a problem. Regulator
->> API requires a name for the supply... it cannot get "something" or
->> "everything".
->
-> That's the downside of variable property names...
->
->> The driver could attach itself to any kind of node (where power-sequence
->> property exists) so the supply name depends on the bindings of device
->> (not bindings of power sequence driver).
+>> On Wed, Mar 23, 2016 at 02:17:27PM -0400, Jaret Cantu wrote:
+>>>
+>>> On 03/23/2016 01:37 PM, Jaret Cantu wrote:
+>>>>
+>>>> On 03/23/2016 12:36 AM, Peter Chen wrote:
+>>>>>
+>>>>> On Mon, Mar 21, 2016 at 12:32:27PM -0400, Jaret Cantu wrote:
+>>>>>>
+>>>>>> The TX settings can be calibrated for particular hardware.  The
+>>>>>> phy is reset by Linux, so this cannot be handled by the bootloader.
+>>>>>>
+>>>>>> The TRM mentions that the maximum resistance should be used for the
+>>>>>> DN/DP calibration in order to pass USB certification.
+>>>>>>
+>>>>>> The values for the TX registers are poorly described in the TRM.
+>>>>>> The meanings of the register values were taken from another
+>>>>>> Freescale-provided document:
+>>>>>> https://community.freescale.com/message/566147#comment-566912
+>>>>>>
+>>>>>> Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+>>>>>> ---
+>>>>>> v3. Added unit suffix (-ohms) to tx-cal-45-d*
+>>>>>>
+>>>>>> v2. Copying devicetree list
+>>>>>>      Removed prettifying extra whitespace
+>>>>>>      Removed unnecessary register rewrite on resume
+>>>>>>      Use min and max constants for clarity
+>>>>>>
+>>>>>>   .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
+>>>>>>   drivers/usb/phy/phy-mxs-usb.c                      |   58
+>>>>>> ++++++++++++++++++++
+>>>>>>   2 files changed, 68 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+>>>>>> b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+>>>>>> index 379b84a..1d25b04 100644
+>>>>>> --- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+>>>>>> @@ -12,6 +12,16 @@ Required properties:
+>>>>>>   - interrupts: Should contain phy interrupt
+>>>>>>   - fsl,anatop: phandle for anatop register, it is only for imx6 SoC
+>>>>>> series
+>>>>>>
+>>>>>> +
+>>>>>> +    if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
+>>>>>> +        val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
+>>>>>> +        /* scale to 4-bit value */
+>>>>>> +        val = (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
+>>>>>> +            / (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
+>>>>>> +        mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
+>>>>>> +        mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
+>>>>>> +    }
+>>>>>> +
+>>>>>
+>>>>>
+>>>>> I have tested "tx-d-cal", but it seems incorrect according to the xls
+>>>>> you
+>>>>> have provided, would you please check it again or am I wrong?
+>>>>
+>>>>
+>>>> Gah! You're right. Some of the D_CAL values need to be rounded up to
+>>>> match the xls.  And even then, the value for 86 still doesn't play nice.
+>>>>   I was really hoping to avoid using a table for these values.
+>>>>
+>>>> The TXCALDP/DN values use a much simpler 1-to-1 scale across the 16
+>>>> possible register values and so are unaffected by a similar issue.  I
+>>>> rechecked their numbers just to be sure.
+>>>
+>>>
+>>> The solution looks to be to scale D_CAL starting from 80 instead of
+>>> 79.  If you look at the xls listing, the jump from 79 to 83 is the
+>>> only time two adjacent register values result in a change greater
+>>> than 2% or 3%.
+>>>
+>>> This will result in some code ugliness as the minimum allowed
+>>> percentage (79), per the Freescale document, and the point at which
+>>> we are scaling the percentage values to register values (80) are
+>>> different.
+>>>
+>>> And, as mentioned before, the values will also have to be rounded up.
+>>>
+>>> This quick shell code confirms that these sorts of calculations
+>>> match up with the values in the spreadsheet:
+>>>
+>>> for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79; do
+>>> echo "$d="$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) ));
+>>> d=$((d+1)); done
+>>>
+>>>
+>>> I can't find any formula which would hit all of those same
+>>> percentages without rounding up.
+>>>
 >>
->> The power sequence driver could however iterate over child properties
->> and get the names of all supplies. It is a little bit ugly...
+>> Then, we had to use table for it. Besides, IC team confirms the default
+>> value and the step for TXCAL45DP/DN are changed at next generation SoCs,
+>> so I am wondering how we describe it at binding doc.
+>>
 >
-> Yes. Like this, right?
+> Which next gen SoC would this be?  The MX7?  The documentation for the USB
+> PHY in that reference manual is even sparser than the one for the MX6 in
+> regards to these register values.
 >
-> for_each_property_of_node(np, pp) {
->         if (!strstr(pp->name, "-supply"))
->                 continue;
->         // found supply
-> }
->
-> The uglyness can always be improved with a function to do this parsing.
 
-There's already a version of this in simplefb. Maybe it's time to move
-this to a common function?
+Here, I mean i.mx8
 
-ChenYu
+> The MX7 manual does still mention that HW_USBPHY_TX_TXCAL45DP and
+> HW_USBPHY_TX_TXCAL45DN should both be set to zero, but there is no listing
+> as to the location of these registers, let alone their defaults/step values.
+>
+> Do you know where we could get the default and step values for the TXCAL
+> registers on the new SoC?  This information had to come from a Freescale
+> community thread for the MX6 since it wasn't defined clearly elsewhere.
+
+In theory, these information should be listed at SoC reference manual.
+
+BR,
+Peter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
