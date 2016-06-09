@@ -1,956 +1,478 @@
-From: Kevin Tsai <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 1/1] iio: light: Added CM36672 Proximity Sensor Driver.
-Date: Thu,  9 Jun 2016 02:00:45 -0700
-Message-ID: <1465462845-1571-1-git-send-email-capellamicro@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Tsai <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/4] mtd: nand: Add support for Evatronix NANDFLASH-CTRL
+Date: Thu, 9 Jun 2016 11:08:14 +0200
+Message-ID: <20160609110814.78823ef3@bbrezillon>
+References: <alpine.DEB.2.02.1606020948070.19416@lnxricardw1.se.axis.com>
+	<20160603165909.09f27ee0@bbrezillon>
+	<alpine.DEB.2.02.1606071702220.19416@lnxricardw1.se.axis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1606071702220.19416-0r+fHKsYbBpkgkEezDIDgepEb+yt5a1K@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, Linux mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Added Vishay Capella CM36672 Proximity Sensor IIO driver.  Support both
-ACPI and Device Tree.
+On Thu, 9 Jun 2016 10:19:51 +0200
+Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org> wrote:
 
-Signed-off-by: Kevin Tsai <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-V2:
-Thanks commends from Peter Meerwald-Stadler, Jonathan Cameron, and Linux
-Walleij.  Updated for the following:
- - Remove unused defines.
- - Rewrite event registration.
- - Remove direct register values in the device tree.
- - Rewrite by regmap API.
- - Remove irq module parameter.
- - Correct cm36672_remove().
+> Hi Boris,
+> 
+> Again, thanks for reviewing this.
+> 
+> On Fri, 3 Jun 2016, Boris Brezillon wrote:
+> 
+> > >  drivers/mtd/nand/Kconfig          |    6 +
+> > >  drivers/mtd/nand/Makefile         |    1 +
+> > >  drivers/mtd/nand/evatronix_nand.c | 1909 +++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 1916 insertions(+)
+> > >  create mode 100644 drivers/mtd/nand/evatronix_nand.c  
+> > 
+> > Please run checkpatch.pl and fix all the ERRORS and WARNINGS.  
+> 
+> I did run checkpatch.pl (at least the one in the mtd l2 tree), and there 
+> should be no outstanding errors. Some of the warnings are related to lines 
+> that are more than 80 characters which contain printouts which I don't 
+> want to split as it makes them hard to grep for.
+> 
+> There is a warning regarding the KConfig entry though, which seems to 
+> indicate that the description is missing - perhaps it just means that the 
+> help text is too short (although it's not shorter than many other NAND 
+> drivers in the same file)?
+> 
+> There are a couple of BUG()s though which are all of the type 'things that 
+> shouldn't happen' (e.g.. an enum having a value outside its range), so 
+> there's no real way to recover, however, one could always return early 
+> from the function in question and hope for the best.
+> 
+> I see now that there's a comment on an overly long line in the commit 
+> message that I've missed, as is a function call that's one character over 
+> the 80 character limit.
+> 
+> I usually consider checkpatch.pl to be of guidence rather than a sentinel 
+> when it comes to warnings, but if you want a '0 warnings' approach I can 
+> certainly accomplish that.
 
- .../devicetree/bindings/iio/light/cm36672.txt      |  37 +
- MAINTAINERS                                        |   4 +-
- drivers/iio/light/Kconfig                          |  11 +
- drivers/iio/light/Makefile                         |   1 +
- drivers/iio/light/cm36672.c                        | 820 +++++++++++++++++++++
- 5 files changed, 871 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/light/cm36672.txt
- create mode 100644 drivers/iio/light/cm36672.c
+Well, I'm not asking to fix all 80 chars warnings, but I see a lot of
+warnings and errors in there [1], and I'm pretty sure most of them can
+be addressed in a sane way.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/cm36672.txt b/Documentation/devicetree/bindings/iio/light/cm36672.txt
-new file mode 100644
-index 0000000..9681d2c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/cm36672.txt
-@@ -0,0 +1,37 @@
-+* Vishay Capella CM36672 I2C Proximity sensor
-+
-+Required properties:
-+- compatible: must be capella,cm36672"
-+- reg: the I2C slave address, usually 0x60
-+- interrupts: interrupt mapping for GPIO IRQ
-+
-+Optional properties:
-+- interrupt-parent: interrupt controller
-+- interrupts: interrupt mapping for GPIO IRQ
-+- cm36672,prx_led_current: LED current, must be one of the following values:
-+    - 0: 50mA
-+    - 1: 75mA
-+    - 2: 100mA
-+    - 3: 120mA
-+    - 4: 140mA
-+    - 5: 160mA
-+    - 6: 180mA
-+    - 7: 200mA
-+- cm36672,prx_hd: width of proximity sensor output data, must be one of the
-+  following values:
-+    - 0: 12-bit
-+    - 1: 16-bit
-+
-+Example:
-+
-+    cm36672@60 {
-+        compatible = "capella,cm36672";
-+        reg = <0x60>;
-+        interrupt-parent = <&gpio0>;
-+        interrupts = <30 0>;
-+
-+        /* cm36672-specific properties */
-+        cm36672,prx_led_current = <2>;
-+        cm36672,prx_hd = <1>;
-+    };
-+
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ed42cb6..9618af4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2822,10 +2822,10 @@ F:	security/commoncap.c
- F:	kernel/capability.c
- 
- CAPELLA MICROSYSTEMS LIGHT SENSOR DRIVER
--M:	Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-+M:	Kevin Tsai <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- S:	Maintained
- F:	drivers/iio/light/cm*
--F:	Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+F:	Documentation/devicetree/bindings/iio/light/cm*
- 
- CAVIUM LIQUIDIO NETWORK DRIVER
- M:     Derek Chickles <derek.chickles-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index 7c566f5..cb5052a 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -127,6 +127,17 @@ config CM36651
- 	 To compile this driver as a module, choose M here:
- 	 the module will be called cm36651.
- 
-+config CM36672
-+	depends on I2C
-+	tristate "CM36672 driver"
-+	help
-+	 Say Y here if you use cm36672.
-+	 This option enables proximity sensors using Vishay
-+	 Capella cm36672 device driver.
-+
-+	 To compile this driver as a module, choose M here:
-+	 the module will be called cm36672.
-+
- config GP2AP020A00F
- 	tristate "Sharp GP2AP020A00F Proximity/ALS sensor"
- 	depends on I2C
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index 6f2a3c6..b155425 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_CM32181)		+= cm32181.o
- obj-$(CONFIG_CM3232)		+= cm3232.o
- obj-$(CONFIG_CM3323)		+= cm3323.o
- obj-$(CONFIG_CM36651)		+= cm36651.o
-+obj-$(CONFIG_CM36672)		+= cm36672.o
- obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
- obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
- obj-$(CONFIG_HID_SENSOR_PROX)	+= hid-sensor-prox.o
-diff --git a/drivers/iio/light/cm36672.c b/drivers/iio/light/cm36672.c
-new file mode 100644
-index 0000000..975629f
---- /dev/null
-+++ b/drivers/iio/light/cm36672.c
-@@ -0,0 +1,820 @@
-+/*
-+ * CM36672 Proximity Sensor
-+ *
-+ * Copyright (C) 2014-2016 Vishay Capella
-+ * Author: Kevin Tsai <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2, as published
-+ * by the Free Software Foundation.
-+ *
-+ * IIO driver for CM36672 (7-bit I2C slave address 0x60).
-+ */
-+#include <linux/kernel.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/regmap.h>
-+#include <linux/gpio.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/events.h>
-+
-+#ifdef CONFIG_ACPI
-+#include <linux/acpi.h>
-+#endif
-+
-+#define CM36672_DRIVER_NAME		"cm36672"
-+#define CM36672_REGMAP_NAME		"cm36672_regmap"
-+
-+/* Sensor registers */
-+#define CM36672_ADDR_PRX_CONF		0x03
-+#define CM36672_ADDR_PRX_CONF3		0x04
-+#define CM36672_ADDR_PRX_THDL		0x06
-+#define CM36672_ADDR_PRX_THDH		0x07
-+#define CM36672_REGS_NUM		0x08
-+/* Read only registers */
-+#define CM36672_ADDR_PRX		0x08
-+#define CM36672_ADDR_STATUS		0x0B
-+
-+/* PRX_CONF */
-+#define CM36672_PRX_HD_SHIFT		11
-+#define CM36672_PRX_HD			(1 << CM36672_PRX_HD_SHIFT)
-+
-+/* PRX_CONF: interrupt */
-+#define CM36672_PRX_INT_THDH		BIT(8)
-+#define CM36672_PRX_INT_THDL		BIT(9)
-+#define CM36672_PRX_INT_MASK		(CM36672_PRX_INT_THDH |	\
-+					CM36672_PRX_INT_THDL)
-+
-+/* PRX_CONF: persistence */
-+#define CM36672_PRX_PERS_MASK		(BIT(4) | BIT(5))
-+#define CM36672_PRX_PERS_SHIFT		4
-+#define CM36672_PRX_PERS_DISABLE	0
-+#define CM36672_PRX_PERS_2		(1 << CM36672_PRX_PERS_SHIFT)
-+#define CM36672_PRX_PERS_3		(2 << CM36672_PRX_PERS_SHIFT)
-+#define CM36672_PRX_PERS_4		(3 << CM36672_PRX_PERS_SHIFT)
-+
-+/* PRX_CONF: integration time */
-+#define CM36672_PRX_IT_MASK		(BIT(1) | BIT(2) | BIT(3))
-+#define CM36672_PRX_IT_SHIFT		1
-+#define CM36672_PRX_IT_1T		0
-+#define CM36672_PRX_IT_1_5T		(1 << CM36672_PRX_IT_SHIFT)
-+#define CM36672_PRX_IT_2T		(2 << CM36672_PRX_IT_SHIFT)
-+#define CM36672_PRX_IT_2_5T		(3 << CM36672_PRX_IT_SHIFT)
-+#define CM36672_PRX_IT_3T		(4 << CM36672_PRX_IT_SHIFT)
-+#define CM36672_PRX_IT_3_5T		(5 << CM36672_PRX_IT_SHIFT)
-+#define CM36672_PRX_IT_4T		(6 << CM36672_PRX_IT_SHIFT)
-+#define CM36672_PRX_IT_8T		(7 << CM36672_PRX_IT_SHIFT)
-+
-+/* PRX_CONF3 */
-+#define CM36672_PRX_LED_I_MASK		(BIT(8) | BIT(9) | BIT(10))
-+#define CM36672_PRX_LED_I_SHIFT		8
-+#define CM36672_PRX_LED_I_50MA		0
-+#define CM36672_PRX_LED_I_75MA		(1 << CM36672_PRX_LED_I_SHIFT)
-+#define CM36672_PRX_LED_I_100MA		(2 << CM36672_PRX_LED_I_SHIFT)
-+#define CM36672_PRX_LED_I_120MA		(3 << CM36672_PRX_LED_I_SHIFT)
-+#define CM36672_PRX_LED_I_140MA		(4 << CM36672_PRX_LED_I_SHIFT)
-+#define CM36672_PRX_LED_I_160MA		(5 << CM36672_PRX_LED_I_SHIFT)
-+#define CM36672_PRX_LED_I_180MA		(6 << CM36672_PRX_LED_I_SHIFT)
-+#define CM36672_PRX_LED_I_200MA		(7 << CM36672_PRX_LED_I_SHIFT)
-+
-+/* INT_FLAG */
-+#define CM36672_INT_PRX_CLOSE		BIT(9)
-+#define CM36672_INT_PRX_AWAY		BIT(8)
-+
-+struct cm36672_it_scale {
-+	u8 it;
-+	int val;
-+	int val2;
-+};
-+
-+static const struct cm36672_it_scale cm36672_prx_it_scales[] = {
-+	{0, 0, 100},	/* 0.00010 */
-+	{1, 0, 150},	/* 0.00015 */
-+	{2, 0, 200},	/* 0.00020 */
-+	{3, 0, 250},	/* 0.00025 */
-+	{4, 0, 300},	/* 0.00030 */
-+	{5, 0, 350},	/* 0.00035 */
-+	{6, 0, 400},	/* 0.00040 */
-+	{7, 0, 800},	/* 0.00080 */
-+};
-+
-+#define CM36672_PRX_INT_TIME_AVAIL			\
-+	"0.000100 0.000150 0.000200 0.000250 "		\
-+	"0.000300 0.000350 0.000400 0.000800"
-+
-+static const u16 cm36672_regs_default[] = {
-+	0x0001,
-+	0x0000,
-+	0x0000,
-+	CM36672_PRX_INT_THDH | CM36672_PRX_INT_THDL |
-+	CM36672_PRX_IT_2T | CM36672_PRX_PERS_3,
-+	CM36672_PRX_LED_I_100MA,
-+	0x0000,
-+	0x0005,
-+	0x000A,
-+};
-+
-+struct cm36672_chip {
-+	const struct cm36672_platform_data *pdata;
-+	struct i2c_client *client;
-+	struct mutex lock;
-+
-+	/* regmap fields */
-+	struct regmap *regmap;
-+	struct regmap_field *reg_prx_int_hi;
-+	struct regmap_field *reg_prx_int_lo;
-+	struct regmap_field *reg_prx_it;
-+
-+	u16 regs[CM36672_REGS_NUM];
-+};
-+
-+static const struct reg_field cm36672_reg_field_prx_int_hi =
-+				REG_FIELD(CM36672_ADDR_PRX_CONF, 8, 8);
-+static const struct reg_field cm36672_reg_field_prx_int_lo =
-+				REG_FIELD(CM36672_ADDR_PRX_CONF, 9, 9);
-+static const struct reg_field cm36672_reg_field_prx_it =
-+				REG_FIELD(CM36672_ADDR_PRX_CONF, 1, 3);
-+
-+#ifdef CONFIG_OF
-+static void cm36672_mod_u16(u16 *reg, u16 mask, u8 shift, u16 val)
-+{
-+	*reg &= ~mask;
-+	*reg |= (u16)(val << shift);
-+}
-+
-+static void cm36672_parse_dt(struct cm36672_chip *chip)
-+{
-+	struct device_node *dn = chip->client->dev.of_node;
-+	u32 temp_val;
-+
-+	if (!of_property_read_u32(dn, "cm36672,prx_led_current",
-+				&temp_val))
-+		cm36672_mod_u16(&chip->regs[CM36672_ADDR_PRX_CONF3],
-+				CM36672_PRX_LED_I_MASK,
-+				CM36672_PRX_LED_I_SHIFT,
-+				(u16)temp_val);
-+
-+	if (!of_property_read_u32(dn, "cm36672,prx_hd", &temp_val))
-+		cm36672_mod_u16(&chip->regs[CM36672_ADDR_PRX_CONF],
-+				CM36672_PRX_HD, CM36672_PRX_HD_SHIFT,
-+				(u16)temp_val);
-+}
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+/**
-+ * cm36672_acpi_get_cpm_info() - Get CPM object from ACPI
-+ * @client:	pointer of struct i2c_client.
-+ * @obj_name:	pointer of ACPI object name.
-+ * @count:	maximum size of return array.
-+ * @vals:	pointer of array for return elements.
-+ *
-+ * Convert ACPI CPM table to array. Special thanks to Srinivas Pandruvada's
-+ * help to implement this routine.
-+ *
-+ * Return: -ENODEV for fail. Otherwise the number of elements.
-+ */
-+static int cm36672_acpi_get_cpm_info(struct i2c_client *client, char *obj_name,
-+							int count, u64 *vals)
-+{
-+	acpi_handle handle;
-+	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
-+	int i;
-+	acpi_status status;
-+	union acpi_object *cpm;
-+
-+	handle = ACPI_HANDLE(&client->dev);
-+	if (!handle)
-+		return -ENODEV;
-+
-+	status = acpi_evaluate_object(handle, obj_name, NULL, &buffer);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&client->dev, "object %s not found\n", obj_name);
-+		return -ENODEV;
-+	}
-+
-+	cpm = buffer.pointer;
-+	for (i = 0; i < cpm->package.count && i < count; ++i) {
-+		union acpi_object *elem;
-+
-+		elem = &(cpm->package.elements[i]);
-+		vals[i] = elem->integer.value;
-+	}
-+
-+	kfree(buffer.pointer);
-+
-+	return i;
-+}
-+
-+static void cm36672_parse_acpi(struct cm36672_chip *chip)
-+{
-+	struct i2c_client *client = chip->client;
-+	int cpm_elem_count, i;
-+	u64 cpm_elems[20];
-+
-+	cpm_elem_count = cm36672_acpi_get_cpm_info(client, "CPM0",
-+				ARRAY_SIZE(cpm_elems), cpm_elems);
-+
-+	if (cpm_elem_count > 0) {
-+		int header_num = 3;
-+		int regs_bmp = cpm_elems[2];
-+		int reg_num = cpm_elem_count - header_num;
-+
-+		if (reg_num > CM36672_REGS_NUM)
-+			reg_num = CM36672_REGS_NUM;
-+		for (i = 0; i < reg_num; i++)
-+			if (regs_bmp & (1 << i))
-+				chip->regs[i] = cpm_elems[header_num + i];
-+	}
-+}
-+
-+#endif
-+
-+static int cm36672_regfield_init(struct cm36672_chip *chip)
-+{
-+	struct device *dev = &chip->client->dev;
-+	struct regmap *regmap = chip->regmap;
-+
-+	chip->reg_prx_int_lo = devm_regmap_field_alloc(dev, regmap,
-+					cm36672_reg_field_prx_int_lo);
-+	if (IS_ERR(chip->reg_prx_int_lo)) {
-+		dev_err(dev, "%s: reg_prx_int_lo init failed\n", __func__);
-+		return PTR_ERR(chip->reg_prx_int_lo);
-+	}
-+
-+	chip->reg_prx_int_hi = devm_regmap_field_alloc(dev, regmap,
-+					cm36672_reg_field_prx_int_hi);
-+	if (IS_ERR(chip->reg_prx_int_hi)) {
-+		dev_err(dev, "%s: reg_prx_int_hi init failed\n", __func__);
-+		return PTR_ERR(chip->reg_prx_int_hi);
-+	}
-+
-+	chip->reg_prx_it = devm_regmap_field_alloc(dev, regmap,
-+					cm36672_reg_field_prx_it);
-+	if (IS_ERR(chip->reg_prx_it)) {
-+		dev_err(dev, "%s: reg_prx_it init failed\n", __func__);
-+		return PTR_ERR(chip->reg_prx_it);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * cm36672_setup_reg() - Initialize sensor to default values.
-+ * @chip:	pointer of struct cm36672_chip
-+ *
-+ * Return: 0 for success; otherwise an error code.
-+ */
-+static int cm36672_setup_reg(struct cm36672_chip *chip)
-+{
-+	int i, reg, ret;
-+	u16 prx_conf;
-+
-+	memcpy((char *)&chip->regs, (char *)&cm36672_regs_default,
-+		sizeof(cm36672_regs_default));
-+
-+#ifdef CONFIG_OF
-+	if (chip->client->dev.of_node)
-+		cm36672_parse_dt(chip);
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+	if (ACPI_HANDLE(&chip->client->dev))
-+		cm36672_parse_acpi(chip);
-+#endif
-+
-+	/* Store regs[CM36672_ADDR_PRX_CONF] */
-+	prx_conf = chip->regs[CM36672_ADDR_PRX_CONF];
-+
-+	/* Disable INT when initialize registers */
-+	chip->regs[CM36672_ADDR_PRX_CONF] &= ~CM36672_PRX_INT_THDH;
-+	chip->regs[CM36672_ADDR_PRX_CONF] &= ~CM36672_PRX_INT_THDL;
-+
-+	for (i = 0; i < CM36672_REGS_NUM; i++) {
-+		ret = regmap_write(chip->regmap, i, chip->regs[i]);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* Restore regs[CM36672_ADDR_PRX_CONF] */
-+	chip->regs[CM36672_ADDR_PRX_CONF] = prx_conf;
-+
-+	/* Force to clear flags */
-+	ret = regmap_read(chip->regmap, CM36672_ADDR_STATUS, &reg);
-+	if (ret < 0) {
-+		dev_err(&chip->client->dev,
-+			"%s: Failed to read Status register, err= %d\n",
-+			__func__, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * cm36672_irq_handler() - Interrupt handling routine.
-+ * @irq:	irq number
-+ * @private:	pointer of void
-+ *
-+ * Return: IRQ_HANDLED.
-+ */
-+static irqreturn_t cm36672_irq_handler(int irq, void *private)
-+{
-+	struct iio_dev *indio_dev = private;
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+	s64 timestamp = iio_get_time_ns();
-+	int ret, status;
-+
-+	ret = regmap_read(chip->regmap, CM36672_ADDR_STATUS, &status);
-+	if (ret < 0)
-+		return IRQ_HANDLED;
-+
-+	if (status & CM36672_INT_PRX_CLOSE)
-+		iio_push_event(indio_dev,
-+				IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
-+						IIO_EV_TYPE_THRESH,
-+						IIO_EV_DIR_RISING),
-+				timestamp);
-+
-+	if (status & CM36672_INT_PRX_AWAY)
-+		iio_push_event(indio_dev,
-+				IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
-+						IIO_EV_TYPE_THRESH,
-+						IIO_EV_DIR_FALLING),
-+				timestamp);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/**
-+ * cm36672_read_prx_it() - Get the current proximity integration time.
-+ * @chip:	point of struct cm36672_chip
-+ * @val:	point of the integer part of integration time
-+ * @val2:	point of the micro part of integration time
-+ *
-+ * Return: IIO_VAL_INT_PLUS_MICRO for success; otherwise an error code.
-+ */
-+static int cm36672_read_prx_it(struct cm36672_chip *chip, int *val, int *val2)
-+{
-+	int ret, index;
-+
-+	ret = regmap_field_read(chip->reg_prx_it, &index);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (index < 0 || index >= ARRAY_SIZE(cm36672_prx_it_scales))
-+		return -EINVAL;
-+
-+	*val = cm36672_prx_it_scales[index].val;
-+	*val2 = cm36672_prx_it_scales[index].val2;
-+
-+	return IIO_VAL_INT_PLUS_MICRO;
-+}
-+
-+/**
-+ * cm36672_write_prx_it() - Set the proximity integration time.
-+ * @chip:	point of struct cm36672_chip
-+ * @val:	the integer part of integration time
-+ * @val2:	the micro part of integration time
-+ *
-+ * Return: 0 for success; otherwise an error code.
-+ */
-+static int cm36672_write_prx_it(struct cm36672_chip *chip, int val, int val2)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(cm36672_prx_it_scales); i++)
-+		if (val == cm36672_prx_it_scales[i].val &&
-+				val2 == cm36672_prx_it_scales[i].val2)
-+			return regmap_field_write(chip->reg_prx_it, i);
-+
-+	return -EINVAL;
-+}
-+
-+/**
-+ * cm36672_prx_read() - Read from proximity sensor.
-+ * @indio_dev:	point of struct iio_dev
-+ * @chan:	point of struct iio_chan_spec
-+ * @val:	point of integer
-+ * @val2:	point of integer
-+ * @mask:	iio_chan_info_enum
-+ *
-+ * Return: IIO_VAL type for success; otherwise an error code.
-+ */
-+static int cm36672_prx_read(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (chan->type != IIO_PROXIMITY)
-+		return -EINVAL;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_INT_TIME:
-+		return cm36672_read_prx_it(chip, val, val2);
-+	case IIO_CHAN_INFO_RAW:
-+		ret = regmap_read(chip->regmap, CM36672_ADDR_PRX, val);
-+		if (ret < 0)
-+			return ret;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+/**
-+ * cm36672_prx_write() - Write to proximity sensor.
-+ * @indio_dev:	point of struct iio_dev
-+ * @chan:	point of struct iio_chan_spec
-+ * @val:	integer for integer part
-+ * @val2:	integer for micro part
-+ * @mask:	iio_chan_info_enum
-+ *
-+ * Return: Equal or great than 0 for success; otherwise an error code.
-+ */
-+static int cm36672_prx_write(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int val, int val2, long mask)
-+{
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_INT_TIME:
-+		return cm36672_write_prx_it(chip, val, val2);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int cm36672_read_event(struct iio_dev *indio_dev,
-+			const struct iio_chan_spec *chan,
-+			enum iio_event_type type,
-+			enum iio_event_direction dir,
-+			enum iio_event_info info,
-+			int *val, int *val2)
-+{
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+	int ret = -EINVAL;
-+
-+	if (info != IIO_EV_INFO_VALUE)
-+		return -EINVAL;
-+
-+	if (chan->type == IIO_PROXIMITY) {
-+		*val2 = 0;
-+		if (dir == IIO_EV_DIR_RISING)
-+			ret = regmap_read(chip->regmap, CM36672_ADDR_PRX_THDH,
-+					val);
-+		else if (dir == IIO_EV_DIR_FALLING)
-+			ret = regmap_read(chip->regmap, CM36672_ADDR_PRX_THDL,
-+					val);
-+	}
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static int cm36672_write_event(struct iio_dev *indio_dev,
-+			const struct iio_chan_spec *chan,
-+			enum iio_event_type type,
-+			enum iio_event_direction dir,
-+			enum iio_event_info info,
-+			int val, int val2)
-+{
-+	int reg, ret = 0;
-+	int value, max;
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+
-+	if (info != IIO_EV_INFO_VALUE)
-+		return -EINVAL;
-+
-+	if (chan->type == IIO_PROXIMITY) {
-+		ret = regmap_read(chip->regmap, CM36672_ADDR_PRX_CONF, &value);
-+		max = (value & CM36672_PRX_HD) ? 65535:4095;
-+		if (val < 0 || val > max)
-+			return -EINVAL;
-+		if (dir == IIO_EV_DIR_RISING)
-+			reg = CM36672_ADDR_PRX_THDH;
-+		else if (dir == IIO_EV_DIR_FALLING)
-+			reg = CM36672_ADDR_PRX_THDL;
-+		else
-+			return -EINVAL;
-+
-+		ret = regmap_write(chip->regmap, reg, val);
-+		if (ret < 0)
-+			return ret;
-+	} else
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int cm36672_read_event_config(struct iio_dev *indio_dev,
-+			const struct iio_chan_spec *chan,
-+			enum iio_event_type type,
-+			enum iio_event_direction dir)
-+{
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+	int ret, state;
-+
-+	if (chan->type == IIO_PROXIMITY) {
-+		if (dir == IIO_EV_DIR_RISING)
-+			ret = regmap_field_read(chip->reg_prx_int_hi, &state);
-+		else if (dir == IIO_EV_DIR_FALLING)
-+			ret = regmap_field_read(chip->reg_prx_int_lo, &state);
-+		else
-+			return -EINVAL;
-+
-+		if (ret)
-+			return ret;
-+
-+		return state;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int cm36672_write_event_config(struct iio_dev *indio_dev,
-+			const struct iio_chan_spec *chan,
-+			enum iio_event_type type,
-+			enum iio_event_direction dir,
-+			int state)
-+{
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (chan->type == IIO_PROXIMITY) {
-+		if (dir == IIO_EV_DIR_RISING)
-+			ret = regmap_field_write(chip->reg_prx_int_hi, state);
-+		else if (dir == IIO_EV_DIR_FALLING)
-+			ret = regmap_field_write(chip->reg_prx_int_lo, state);
-+		else
-+			return -EINVAL;
-+
-+		if (ret)
-+			return ret;
-+
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct iio_event_spec cm36672_prx_event_spec[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-+				BIT(IIO_EV_INFO_ENABLE),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_FALLING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-+				BIT(IIO_EV_INFO_ENABLE),
-+	},
-+};
-+
-+static const struct iio_chan_spec cm36672_channels[] = {
-+	{
-+		.type = IIO_PROXIMITY,
-+		.info_mask_separate =
-+			BIT(IIO_CHAN_INFO_RAW),
-+			BIT(IIO_CHAN_INFO_INT_TIME),
-+		.channel = 0,
-+		.indexed = 0,
-+		.scan_index = -1,
-+		.event_spec = cm36672_prx_event_spec,
-+		.num_event_specs = ARRAY_SIZE(cm36672_prx_event_spec),
-+	},
-+};
-+
-+static bool cm36672_is_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	if (reg <= CM36672_ADDR_PRX_THDH)
-+		return true;
-+	return false;
-+}
-+
-+static IIO_CONST_ATTR(in_proximity_integration_time_available,
-+		CM36672_PRX_INT_TIME_AVAIL);
-+
-+static struct attribute *cm36672_attributes[] = {
-+	&iio_const_attr_in_proximity_integration_time_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group cm36672_attribute_group = {
-+	.attrs = cm36672_attributes
-+};
-+
-+static const struct iio_info cm36672_info = {
-+	.driver_module		= THIS_MODULE,
-+	.read_raw		= &cm36672_prx_read,
-+	.write_raw		= &cm36672_prx_write,
-+	.attrs			= &cm36672_attribute_group,
-+	.read_event_value	= cm36672_read_event,
-+	.write_event_value	= cm36672_write_event,
-+	.read_event_config	= cm36672_read_event_config,
-+	.write_event_config	= cm36672_write_event_config,
-+};
-+
-+static const struct iio_info cm36672_info_no_irq = {
-+	.driver_module		= THIS_MODULE,
-+	.read_raw		= &cm36672_prx_read,
-+	.write_raw		= &cm36672_prx_write,
-+	.attrs			= &cm36672_attribute_group,
-+};
-+
-+static const struct regmap_config cm36672_regmap_config = {
-+	.name = CM36672_REGMAP_NAME,
-+	.reg_bits = 8,
-+	.val_bits = 16,
-+	.writeable_reg = cm36672_is_writeable_reg,
-+	.use_single_rw = true,
-+	.val_format_endian = REGMAP_ENDIAN_LITTLE,
-+};
-+
-+static int cm36672_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct cm36672_chip *chip;
-+	struct iio_dev *indio_dev;
-+	struct regmap *regmap;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*chip));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	regmap = devm_regmap_init_i2c(client, &cm36672_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&client->dev, "%s: regmap initialize failed\n",
-+			__func__);
-+		return PTR_ERR(regmap);
-+	}
-+
-+	chip = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	chip->client = client;
-+	chip->regmap = regmap;
-+
-+	mutex_init(&chip->lock);
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->channels = cm36672_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(cm36672_channels);
-+	indio_dev->name = CM36672_DRIVER_NAME;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ret = cm36672_regfield_init(chip);
-+	if (ret) {
-+		dev_err(&client->dev, "%s: regfield init failed\n", __func__);
-+		return ret;
-+	}
-+
-+	ret = cm36672_setup_reg(chip);
-+	if (ret) {
-+		dev_err(&client->dev, "%s: register setup failed\n", __func__);
-+		return ret;
-+	}
-+
-+	if (client->irq) {
-+		indio_dev->info = &cm36672_info;
-+
-+		ret = request_threaded_irq(client->irq, NULL,
-+					cm36672_irq_handler,
-+					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					"cm36672", indio_dev);
-+		if (ret) {
-+			dev_err(&client->dev,
-+				"%s: request irq failed\n",
-+				__func__);
-+			return ret;
-+		}
-+
-+		/* Enable interrupt if default request*/
-+		if (chip->regs[CM36672_ADDR_PRX_CONF] & CM36672_PRX_INT_MASK) {
-+			ret = regmap_write(chip->regmap, CM36672_ADDR_PRX_CONF,
-+					chip->regs[CM36672_ADDR_PRX_CONF]);
-+			if (ret) {
-+				dev_err(&client->dev,
-+					"%s: enable interrupt failed\n",
-+					__func__);
-+				return ret;
-+			}
-+		}
-+	} else
-+		indio_dev->info = &cm36672_info_no_irq;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"%s: registering device failed\n",
-+			__func__);
-+		if (client->irq)
-+			free_irq(client->irq, indio_dev);
-+	}
-+
-+	return 0;
-+}
-+
-+static int cm36672_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	regmap_update_bits(chip->regmap, CM36672_ADDR_PRX_CONF, 1, 1);
-+	if (client->irq)
-+		free_irq(client->irq, indio_dev);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id cm36672_id[] = {
-+	{ "cm36672", 0 },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, cm36672_id);
-+
-+static const struct of_device_id cm36672_of_match[] = {
-+	{ .compatible = "capella,cm36672" },
-+	{ }
-+};
-+
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id cm36672_acpi_match[] = {
-+	{ "CPLM6672", 0},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(acpi, cm36672_acpi_match);
-+#endif
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int cm36672_suspend(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+	struct i2c_client *client = chip->client;
-+	int i, ret;
-+
-+	for (i = 0; i < CM36672_REGS_NUM; i++) {
-+		ret = i2c_smbus_read_word_data(client, i);
-+		if (ret < 0)
-+			return ret;
-+		chip->regs[i] = ret;
-+	}
-+
-+	return regmap_update_bits(chip->regmap, CM36672_ADDR_PRX_CONF, 1, 1);
-+}
-+
-+static int cm36672_resume(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct cm36672_chip *chip = iio_priv(indio_dev);
-+	struct i2c_client *client = chip->client;
-+	int i, ret;
-+
-+	for (i = 0; i < CM36672_REGS_NUM; i++) {
-+		ret = i2c_smbus_write_word_data(client, i, chip->regs[i]);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return regmap_update_bits(chip->regmap, CM36672_ADDR_PRX_CONF, 1, 0);
-+}
-+
-+static const struct dev_pm_ops cm36672_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(cm36672_suspend, cm36672_resume)};
-+#endif
-+
-+static struct i2c_driver cm36672_driver = {
-+	.driver = {
-+		.name	= CM36672_DRIVER_NAME,
-+		.owner	= THIS_MODULE,
-+		.of_match_table = cm36672_of_match,
-+#ifdef CONFIG_ACPI
-+		.acpi_match_table = ACPI_PTR(cm36672_acpi_match),
-+#endif
-+#ifdef CONFIG_PM_SLEEP
-+		.pm	= &cm36672_pm_ops,
-+#endif
-+	},
-+	.id_table	= cm36672_id,
-+	.probe		= cm36672_probe,
-+	.remove		= cm36672_remove,
-+};
-+
-+module_i2c_driver(cm36672_driver);
-+
-+MODULE_AUTHOR("Kevin Tsai <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("CM36672 proximity sensor driver");
-+MODULE_LICENSE("GPL v2");
+> 
+> > > +#include <asm/dma.h>
+> > > +#include <linux/bitops.h> /* for ffs() */
+> > > +#include <linux/io.h>
+> > > +#include <linux/dma-mapping.h>
+> > > +#include <linux/err.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/slab.h>
+> > > +#include <linux/mtd/mtd.h>
+> > > +#include <linux/mtd/nand.h>
+> > > +#include <linux/mtd/concat.h>
+> > > +#include <linux/mtd/partitions.h>
+> > > +#include <linux/version.h>  
+> > 
+> > You seem to include a lot of things, and even asm headers. Please make
+> > sure you really need them.  
+> 
+> Ok, will do.
+> 
+> > > +/* Some of this could potentially be moved to DT, but it represents stuff
+> > > + * that is either untested, only used for debugging, or things we really
+> > > + * don't want anyone to change, so we keep it here until a clear use case
+> > > + * emerges.
+> > > + */
+> > > +
+> > > +#undef NFC_DMA64BIT /* NFC hardware support for 64-bit DMA transfers */
+> > > +
+> > > +#undef POLLED_XFERS /* Use polled rather than interrupt based transfers */
+> > > +
+> > > +#undef CLEAR_DMA_BUF_AFTER_WRITE /* Useful for debugging */  
+> > 
+> > Then simply drop the code in those sections and add it back when it's
+> > been tested.  
+> 
+> NFC_DMA64BIT is untested so I'll take it out.
+> 
+> CLEAR_DMA_BUF_AFTER_WRITE is useful when debugging (and tested), and 
+> POLLED_XFERS is also tested but normally only used for debugging (if for 
+> instance there's a problem with interrupts). I don't really like to throw 
+> out code that's useful because it's unnecessary work to have to put it in 
+> again when the need arises. I could change the wording in the comment to 
+> make it clearer though (especially after having removed NFC_DMA64BIT) if 
+> that is enough?
+> 
+> The rationale for leaving this code in is that it can help bring up a new 
+> unknown system with this IP, because I consider the most likely re-use of 
+> this driver to be for someone who is developing a new SoC, as it seems 
+> rather uncommon in commercially available chips.
+
+That's not how it works. Either you provide a sane way to activate
+these options (using Kconfig entries), or your drop dead-code sections.
+
+I understand that debugging is important to you, but adding hundreds
+lines of unused code is also hurting readability, so I keep thinking
+that these options should either be removed (with the associated code
+sections) or exposed as Kconfig options.
+
+> 
+> > > +/* DMA buffer for page transfers. */
+> > > +#define DMA_BUF_SIZE (8192 + 640) /* main + spare for 8k page flash */  
+> > 
+> > This should clearly be dynamic.  
+> 
+> 8k pages are the largest the controller can handle, and there's only a 
+> single DMA buffer for the controller, so it's a very small amount of 
+> memory, and I didn't feel it worth the complexity to reduce the size just 
+> because a smaller paged flash was encountered. The driver uses the DMA 
+> buffer to read the ID data so it needs a buffer anyway before the page 
+> size has been determined. But if you feel it's important I can rework it - 
+> there would have to be two buffers, one smaller one for reading the ID and 
+> a larger one subsequently allocated for page data.
+
+If you reject all NAND above 8k + 640 oob bytes I'm fine with this
+fixed size.
+
+> 
+> > > +
+> > > +/* Debugging */
+> > > +
+> > > +#define MTD_TRACE(FORMAT, ...) pr_debug("%s: " FORMAT, __func__, ## __VA_ARGS__)  
+> > 
+> > Hm, I'm not a big fan of those custom pr_debug() macros, but if you
+> > really wan to keep it you shouldn't prefix it with MTD_.  
+> 
+> Ok. I was thinking about replacing it with pr_debug straight off, but saw 
+> that there were other drivers with custom debug macros so I left it in. 
+> I'll replace it with pr_debug then.
+> 
+> > Reading at the code I see a lot of MTD_TRACE() calls, while I'm not
+> > against debug traces, it seems to me that you've kept traces you used
+> > while developing/debugging your implementation. Can you clean it up and
+> > keep only the relevant ones.  
+> 
+> It's true that the debug traces were initially created during driver 
+> development, however I have gone through the debug printouts and consider 
+> the ones remaining to be relevant, especially if one is trying to debug a 
+> new previously untested system with this IP. Was there any particular 
+> one(s) you were thinking of?
+
+I don't have any example, there just seem to be a lot of them. I'll
+have a closer look.
+
+> 
+> > > +	MAKE_COMMAND(_SEQ_14, INPUT_SEL_SIU, DATA_SEL_FIFO, \
+> > > +		NAND_BLOCK_ERASE, NAND_BLOCK_ERASE_END, _DONT_CARE)
+> > > +
+> > > +/* Assembled values for putting into GEN_SEQ_CTRL register */
+> > > +
+> > > +/* General command sequence specification for 4 cycle PAGE_READ command */
+> > > +#define GEN_SEQ_CTRL_READ_PAGE_4CYCLE \
+> > > +	MAKE_GEN_CMD(1, 0, 1, 0,	/* enable command 0 and 2 phases */ \
+> > > +		     2, 2,		/* col A0 2 cycles, row A0 2 cycles */ \
+> > > +		     0, 0,		/* col A1, row A1 not used */ \
+> > > +		     1,			/* data phase enabled */ \
+> > > +		     _BUSY_0,		/* busy0 phase enabled */ \
+> > > +		     0,			/* immediate cmd execution disabled */ \
+> > > +		     _DONT_CARE)	/* command 3 code not needed */
+> > > +
+> > > +/* General command sequence specification for 4 cycle PAGE_PROGRAM command */
+> > > +#define GEN_SEQ_CTRL_WRITE_PAGE_4CYCLE \
+> > > +	MAKE_GEN_CMD(1, 1, 0, 0,	/* enable command 0 and 1 phases */ \
+> > > +		     2, 2,		/* col A0 2 cycles, row A0 2 cycles */ \
+> > > +		     0, 0,		/* col A1, row A1 not used */ \
+> > > +		     1,			/* data phase enabled */ \
+> > > +		     _BUSY_1,		/* busy1 phase enabled */ \
+> > > +		     0,			/* immediate cmd execution disabled */ \
+> > > +		     _DONT_CARE)	/* command 3 code not needed */  
+> > 
+> > I think I already commented on that last time a driver for the same IP 
+> > was submitted by Oleksij.  
+> 
+> (Just to clarify: this doesn't have any bearing on this particular issue, 
+> but the SoC Oleksij submitted a driver for used a rather different 
+> (probably older) version of the same IP. The only documentation I saw for 
+> that SoC was the IP register map, and there were several differences in 
+> not only the register addresses but also the available registers and bit 
+> fields, and it did not look like one was a subset of the other. So it 
+> looked more like the IP vendor had done an at least partial rewrite of the 
+> internal logic between the two versions.)
+> 
+> > I'm pretty sure you can implement ->cmd_ctrl() and rely on the default
+> > cmdfunc() logic instead of manually converting those high-level NAND
+> > commands into your own model (which seems to match pretty much the  
+> > ->cmd_ctrl() model, where you can get the number of address and command  
+> > cycles).
+> > 
+> > Maybe I'm wrong, but I think it's worth a try, and if it works, it
+> > would greatly simplify the driver.  
+> 
+> It's not so much trying as reading the manual for the IP. :-)
+> 
+> The problem here is that the ->cmd_ctrl() logic assumes that you can pass 
+> single bytes transparently via the IP and also directly control the state 
+> of the ALE and CLE lines, as well as set up data transfers independently 
+> of that, none of which is not possible with this IP. Instead, the IP 
+> offers a number of fixed interface sequences, some more programmable than 
+> others, a subset of which are used in this driver, which do all the heavy 
+> lifting. There is for instance no sequence which just writes or reads data 
+> to or from the flash, there's always at least a command write (CLE) 
+> included.
+> 
+> (The command definitions in the macro sections are more or less direct 
+> translations from a table and section in the IP manual describing how to 
+> accomplish various functions.)
+> 
+> If there had been a transparent mode I would certainly have gone that 
+> route, at least initially, rather than mess about with all this controller 
+> specific stuff. I think that's why Oleksij arrived at a similar solution 
+> (or possibly he used a non-Linux driver as a starting point).
+> 
+> The designers of this IP apparantly did not have Linux in mind when they 
+> designed the controller, since it does all the low level stuff 
+> autonomously (in the right IP configuration it can even remap flash blocks 
+> transparently), with no way of intervening. For instance, when doing 
+> hardware ECC, the OOB data is not available anywhere to the user, and if 
+> one wants to actually read it a separate OOB write needs to be done. I 
+> think the target market for the IP is really a general real time OS where 
+> there is no NAND driver available, and you just want to fire off a single 
+> high level command, wait for an interrupt, and have your data waiting for 
+> you.
+> 
+> This latter property is actually advantageous in Linux too as the driver 
+> doesn't have to do bit- and byte-banging against the NAND flash. I'm not 
+> sure what the gain in overhead is in practice, but at any rate there's not 
+> much of a choice.
+
+Just to be clear, you don't have to toggle the pins each time
+->cmd_ctrl() is called, you can cache the operations and launch it once
+it says it's dones (don't remember the flag).
+
+Now, I agree that it's not perfect, and it would certainly be better to
+have the whole thing packed together (including the data transfer
+size). I'm working on it ;).
+
+What made me think using ->cmd_ctrl() would be simpler it the fact that
+you're extracting address and cmd cycles from the cmd type, and this is
+something ->cmd_ctrl() is already providing (see what's done here [2]).
+
+> 
+> > > +/* Information common to all chips, including the NANDFLASH-CTRL IP */
+> > > +struct nfc_info {  
+> > 
+> > Should inherit from nand_hw_ctrl (see the sunxi_nand driver)...
+> >   
+> > > +	void __iomem *regbase;
+> > > +	struct device *dev;
+> > > +	struct nand_hw_control *controller;  
+> > 
+> > ... and not point to it.  
+> 
+> Ok. I'm a bit unsure what you mean by 'inherit' though; in the sunxi 
+> driver the struct nand_hw_controller is contained within the struct 
+> sunxi_nfc, in my case there's a pointer to a single instance of a 
+> nand_hw_control. I agree that my approach is wasteful on a dynamic 
+> allocation and I have no problems changing it, but conceptually there's 
+> not much of a difference.
+
+There's a huge different. By embedding the nand_hw_control struct into
+your nfc_info object you allow things like:
+
+static int get_nfc(struct nand_chip *chip)
+{
+	return container_of(chip->controller, struct nfc_info,
+			    controller);
+}
+
+This way you can retrieve the nfc_info object attached to the nand_chip.
+
+> 
+> > > +
+> > > +/* What we tell mtd is an mtd_info actually is a complete chip_info */
+> > > +#define TO_CHIP_INFO(mtd) ((struct chip_info *)(mtd_to_nand(mtd)))  
+> > 
+> > Ouch! Please, don't do that, container_of() is here for a good reason.
+> > And prefer static inline functions over macros for this kind of things.
+> > 
+> > static inline struct chip_info *mtd_to_chip_info(struct mtd_info *mtd)
+> > {
+> > 	return container_of(mtd_to_nand(mtd), struct chip_info, chip);
+> > }  
+> 
+> Ok. Will change.
+> 
+> > > +
+> > > +/* This is a global pointer, as we only support one single instance of the NFC.
+> > > + * For multiple instances, we would need to add nfc_info as a parameter to
+> > > + * several functions, as well as adding it as a member of the chip_info struct.
+> > > + * Since most likely a system would only have one NFC instance, we don't
+> > > + * go all the way implementing that feature now.
+> > > + */
+> > > +static struct nfc_info *nfc_info;  
+> > 
+> > Come on! Don't be so lazy, do the right thing.  
+> 
+> It's not a question of laziness, it was a conscious decision: why add 
+> unnecessary bloat and complexity for a case that probably will never 
+> occur? I can certainly change it if you think it's worth while of course.
+
+It is. And you're okay bloating the code with dead-code, but not with
+implementing this in order to avoid singletons when it clearly
+shouldn't be?
+
+> 
+> > > +
+> > > +/* The timing setup is expected to come via DT. We keep some default timings
+> > > + * here for reference, based on a 100 MHz reference clock.
+> > > + */
+> > > +
+> > > +static const struct nfc_timings default_mode0_pll_enabled = {
+> > > +	0x0d151533, 0x000b0515, 0x00000046,
+> > > +	0x00150000, 0x00000000, 0x00000005, 0x00000015 };  
+> > 
+> > Can you explain those magic values?  
+> 
+> Not really, the problem is that the agreement we have with the IP vendor 
+> is that we may not disclose any documentation, outside of what is 
+> absolutely necessary to write working code.
+> 
+> A rationale is that anyone else wanting to use the driver will either be 
+> designing their own SoC in which case they will have access to the 
+> relevant documentation, or if they're using a SoC from someone else, the 
+> SoC vendor will have to provide that information in order for the chip to 
+> be useful anyway.
+
+Hm, so I'll have a new table like that for each new SoC using this IP?
+I must say I don't like the idea, but let's address the other aspects
+first.
+
+> 
+> > > +
+> > > +/**** Utility routines. */  
+> > 
+> > Please use regular comments: /* */  
+> 
+> Ugh. Yes, sorry.
+> 
+> > > +
+> > > +/* Count the number of 0's in buff up to a max of max_bits */
+> > > +/* Used to determine how many bitflips there are in an allegedly erased block */
+> > > +static int count_zero_bits(uint8_t *buff, int size, int max_bits)
+> > > +{
+> > > +	int k, zero_bits = 0;
+> > > +
+> > > +	for (k = 0; k < size; k++) {
+> > > +		zero_bits += hweight8(~buff[k]);
+> > > +		if (zero_bits > max_bits)
+> > > +			break;
+> > > +	}
+> > > +
+> > > +	return zero_bits;
+> > > +}  
+> > 
+> > We have an helper for that [1].  
+> 
+> Great, I'll use that. (I don't think it existed when the first version of 
+> this driver was written).
+> 
+> > > +
+> > > +/* Read and write NFC SFR registers */
+> > > +
+> > > +static uint32_t nfc_read(uint reg_offset)
+> > > +{
+> > > +	return readl_relaxed(nfc_info->regbase + reg_offset);
+> > > +}
+> > > +
+> > > +static void nfc_write(uint32_t data, uint reg_offset)
+> > > +{
+> > > +	/* Note: According to NANDFLASH-CTRL Design Specification, rev 1.14,
+> > > +	 * p19, the NFC SFR's can only be written when STATUS.CTRL_STAT is 0.
+> > > +	 * However, this doesn't seem to be an issue in practice.
+> > > +	 */
+> > > +	writel_relaxed(data, nfc_info->regbase  + reg_offset);
+> > > +}  
+> > 
+> > Do you really want to use the _relaxed functions?  
+> 
+> Yes, using _relaxed, together with explicit memory barriers in the DMA 
+> routines has shown a 5% increase in flash read performance on an ARM 
+> system, the reason being that on an ARM system the implicit memory barrier 
+> in the writel() call causes a fairly heavy penalty in terms of flushing 
+> the L2 cache.
+
+Ok, as long as you know what you're doing, I'm fine with it.
+
+> 
+> > > +	res = request_irq(irq, nfc_irq, 0, "evatronix-nand", nfc_info);  
+> > 
+> > devm_?  
+> 
+> Yes, good catch, thanks!
+> 
+> > To be honest, your driver seems really complicated compared to what
+> > it's supposed to do, and I suspect it could be a lot simpler, but
+> > again, maybe I'm wrong.
+> > 
+> > If you didn't try yet, please investigate the ->cmd_ctrl() approach,
+> > and if you did, could you explain why it didn't work out?  
+> 
+> Given that the controller does not have the transparency that the 
+> ->cmd_ctrl() approach requires, as noted above, I can't see how it could   
+> be simplified.
+
+I'm not totally convinced, but I'll have to go through all the macros
+into more details to be sure.
+
+> 
+> I basically need to grab everything needed for a given operation and 
+> interpret it before handing it over to the controller. I considered using 
+> a higher level API, by replacing the default ->cmdfunc() (default 
+> nand_command/nand_command_lp) with a specific version, which would have 
+> avoided the need to interpret the NAND commands arriving via ->cmd_ctrl(), 
+> but that meant duplicating some of the logic in nand_base.c which seemed 
+> like a bad idea.
+
+Yes. As said above, I'm planning to rework the NAND framework to
+support things like:
+
+struct nand_operation {
+	u8 cmds[2];
+	u8 addrs[5];
+	int ncmds;
+	int naddrs;
+	union {
+		void *out;
+		const void *in;
+	};
+	enum nand_op_direction dir;
+}
+
+->exec_op(struct nand_operation *op);
+
+This way the NAND controller would have all the necessary information
+to trigger the whole operation (omitted the ECC info on purpose, to
+make it clearer).
+
+But this is not there yet, and in the meantime, if possible, I'd prefer
+seeing drivers implementing the ->cmd_ctrl() function instead of
+overloading the default ->cmdfunc() implementation.
+
+Regards,
+
+Boris
+
+[1]http://code.bulix.org/eqd4ce-100790
+[2]https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/mtd/nand/sunxi_nand.c?id=refs/tags/v4.7-rc2#n517
+
 -- 
-1.8.3.1
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
