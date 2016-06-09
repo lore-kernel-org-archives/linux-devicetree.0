@@ -1,29 +1,32 @@
-From: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: Keystone: Add pinmuxing support
-Date: Thu, 9 Jun 2016 09:44:07 -0700
-Message-ID: <a325e99e-dfd1-0dea-7d62-449a83fbc236@oracle.com>
-References: <1465485978-27910-1-git-send-email-fcooper@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465485978-27910-1-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kieran Bingham <kieran@ksquared.org.uk>
+Subject: [RESEND PATCH 0/2] arm64: dts: r8a7795: Add FCPF and FDP1 device nodes
+Date: Thu,  9 Jun 2016 17:56:56 +0100
+Message-ID: <1465491418-32752-1-git-send-email-kieran@bingham.xyz>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Kieran Bingham <kieran@ksquared.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 6/9/2016 8:26 AM, Franklin S Cooper Jr wrote:
-> Unlike most Keystone 2 devices, K2G supports pinmuxing of its pins. This
-> patch series enables pinmuxing for Keystone 2 devices.
->
-> Version 2 changes:
-> Rebased on top of linux-next which includes Keerthy patches.
->
-Series applied. Should start showing up in linux-next soon.
+Appologies for the resend, I very cleverly sent this cover letter detailing the
+dependencies only to my e-mail address. And I already know the dependencies!
 
-Regards,
-Santosh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Following two patches are the same, sorry for the noise.
+
+These are dependent upon the FCP bindings from Laurent [0], and the FCPF
+update to those bindings from me [1], and of course the bindings for the
+FDP1 [2] which are all posted separately.
+
+[0] http://www.spinics.net/lists/devicetree/msg123968.html
+[1] https://lkml.org/lkml/2016/6/9/291
+[2] https://lkml.org/lkml/2016/6/9/294
+
+Kieran Bingham (2):
+  arm64: dts: r8a7795: add FCPF device nodes
+  arm64: dts: r8a7795: add FDP1 device nodes
+
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 48 ++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+-- 
+2.7.4
