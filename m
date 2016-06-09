@@ -1,114 +1,81 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] USB: Fix of_usb_get_dr_mode_by_phy with a shared
- phy block
-Date: Thu, 9 Jun 2016 16:51:45 +0200
-Message-ID: <9a05c16a-e8a2-02b7-c093-1131e27bcdd4@redhat.com>
-References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
- <20160609143004.GA2167@uda0271908>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 09/12] mmc: sdhci-xenon: add initial Xenon eMMC driver
+Date: Thu, 09 Jun 2016 16:54:54 +0200
+Message-ID: <87r3c6mmyp.fsf@free-electrons.com>
+References: <201606092223.3kHMu0m3%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160609143004.GA2167@uda0271908>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201606092223.3kHMu0m3%fengguang.wu@intel.com> (kbuild test
+	robot's message of "Thu, 9 Jun 2016 22:20:45 +0800")
+Sender: linux-mmc-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, kbuild-all@01.org, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 09-06-16 16:30, Bin Liu wrote:
+I added Arnd because he seems to have a good knoweldge of the Kconfig
+stuff.
+
+ On jeu., juin 09 2016, kbuild test robot <lkp@intel.com> wrote:
+
 > Hi,
 >
-> On Sun, Jun 05, 2016 at 04:59:33PM +0200, Hans de Goede wrote:
->> Some SoCs have a single phy-hw-block with multiple phys, this is
->> modelled by a single phy dts node, so we end up with multiple
->> controller nodes with a phys property pointing to the phy-node
->> of the otg-phy.
->>
->> Only one of these controllers typically is an otg controller, yet we
->> were checking the first controller who uses a phy from the block and
->> then end up looking for a dr_mode property in e.g. the ehci controller.
->>
->> This commit fixes this by adding an arg0 parameter to
->> of_usb_get_dr_mode_by_phy and make of_usb_get_dr_mode_by_phy
->> check that this matches the phandle args[0] value when looking for
->> the otg controller.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v2:
->> -Add a args0 parameter instead of looking for nodes with a dr_mode property
->> Changes in v3:
->> -No changes
->> ---
->>  drivers/usb/common/common.c  | 31 ++++++++++++++++++-------------
->>  drivers/usb/phy/phy-am335x.c |  2 +-
->>  include/linux/usb/of.h       |  4 ++--
->>  3 files changed, 21 insertions(+), 16 deletions(-)
+> [auto build test ERROR on ulf.hansson-mmc/next]
+> [also build test ERROR on v4.7-rc2 next-20160609]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 >
-> This breaks am335x.
+> url:    https://github.com/0day-ci/linux/commits/Gregory-CLEMENT/Add-SDHCI-Xenon-driver/20160609-151403
+> base:   https://git.linaro.org/people/ulf.hansson/mmc next
+> config: x86_64-allmodconfig (attached as .config)
+> compiler: gcc-6 (Debian 6.1.1-1) 6.1.1 20160430
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
 >
-> [   17.433166] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
-> for /ocp/usb@47400000/usb-phy@47401300
-> [   17.443627] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
-> for /ocp/usb@47400000/usb-phy@47401b00
-> [   17.454005] am335x-phy-driver 47401300.usb-phy: dr_mode 0
-> [   17.460518] 47401300.usb-phy supply vcc not found, using dummy
-> regulator
-> [   17.469685] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
-> for /ocp/usb@47400000/usb-phy@47401300
-> [   17.479998] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
-> for /ocp/usb@47400000/usb-phy@47401b00
-> [   17.490342] am335x-phy-driver 47401b00.usb-phy: dr_mode 0
+> All errors (new ones prefixed by >>):
+>
+>    drivers/built-in.o: In function `sdhci_xenon_remove':
+>>> sdhci-xenon.c:(.text+0x311234): undefined reference to `sdhci_remove_host'
+>>> sdhci-xenon.c:(.text+0x31123c): undefined reference to `sdhci_pltfm_free'
+>    drivers/built-in.o: In function `sdhci_xenon_delay_adj_test':
+>>> sdhci-xenon.c:(.text+0x31213b): undefined reference to `card_alive'
+>    drivers/built-in.o: In function `sdhci_xenon_set_uhs_signaling':
+>>> sdhci-xenon.c:(.text+0x312456): undefined reference to `sdhci_set_uhs_signaling'
+>    drivers/built-in.o: In function `sdhci_xenon_probe':
+>>> sdhci-xenon.c:(.text+0x31258c): undefined reference to `sdhci_pltfm_init'
+>>> sdhci-xenon.c:(.text+0x3125d3): undefined reference to `mmc_of_parse'
+>>> sdhci-xenon.c:(.text+0x312651): undefined reference to `sdhci_get_of_property'
+>>> sdhci-xenon.c:(.text+0x312840): undefined reference to `sdhci_add_host'
+>    sdhci-xenon.c:(.text+0x312904): undefined reference to `sdhci_pltfm_free'
+>    drivers/built-in.o: In function `sdhci_xenon_reset':
+>>> sdhci-xenon.c:(.text+0x313c11): undefined reference to `sdhci_reset'
+>>> drivers/built-in.o:(.data+0x1d7df0): undefined reference to `sdhci_pltfm_pmops'
+>>> drivers/built-in.o:(.data+0x1d7eb0): undefined reference to `sdhci_set_clock'
+>>> drivers/built-in.o:(.data+0x1d7ef0): undefined reference to `sdhci_set_bus_width'
 
-That is weird, quoting: drivers/phy/phy-core.c: _of_phy_get():
+These symbols are part of the drivers/mmc/host/sdhci.c which is build
+when CONFIG_MMC_SDHCI is enabled. However CONFIG_MMC_XENON_SDHCI depends
+on CONFIG_MMC_SDHCI_PLTFM which depends on CONFIG_MMC_SDHCI.
 
-         ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
-                 index, &args);
-         if (ret)
-                 return ERR_PTR(-ENODEV);
+So I wonder how we can have a sition with sdhci-xenon.c built but not
+sdhci.c.
 
-So if #phy-cells is not defined, then the phy core should not
-be able to work with the dts files in question at all.
+Any idea?
 
-All my patch does is make the way of_usb_get_dr_mode_by_phy parses
-phy-handles be identical to how phy-core.c does it.
+Thanks,
 
-I see that the usb0_phy node in arch/arm/boot/dts/am33xx.dtsi
-indeed lacks a "#phy-cells = <0>;" line.
+Gregory
 
-Quoting: Documentation/devicetree/bindings/phy/phy-bindings.txt
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>
 
-PHY device node
-===============
-
-Required Properties:
-#phy-cells:     Number of cells in a PHY specifier;  The meaning of all those
-                 cells is defined by the binding for the phy node. The PHY
-                 provider can use the values in cells to find the appropriate
-                 PHY.
-
-So not having #phy-cells defined for a phy-node clearly is a bug.
-
-A patch like the following should fix this:
-
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 52be48b..c4ff788d 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -557,6 +557,7 @@
-  			};
-
-  			usb0_phy: usb-phy@47401300 {
-+				#phy-cells = <0>;
-  				compatible = "ti,am335x-usb-phy";
-  				reg = <0x47401300 0x100>;
-  				reg-names = "phy";
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
