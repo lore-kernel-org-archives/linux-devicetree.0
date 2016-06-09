@@ -1,276 +1,31 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 00/14] USB OTG/dual-role framework
-Date: Thu, 9 Jun 2016 13:27:25 +0800
-Message-ID: <CAL411-owotvsJVEnbFh5g8yK7YEPnnpBhYx9_tRf6NQET38L+A@mail.gmail.com>
-References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] ARM64: tegra: Add device node for system PMIC MAX77620
+Date: Thu, 9 Jun 2016 14:29:14 +0900
+Message-ID: <CAAVeFuJeVLs7avKgs+YZn_JZ+jeJ9sScEHx6LrQ1aN0QFvhjLA@mail.gmail.com>
+References: <1465299897-2491-1-git-send-email-ldewangan@nvidia.com> <1465299897-2491-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465376626-30122-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465299897-2491-2-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 8, 2016 at 5:03 PM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
-> Hi,
+On Tue, Jun 7, 2016 at 8:44 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> Jetson-TX1 uses the Maxim MAX77620 as system Power management IC.
+> Add device node for the MAX77620 with following details:
+> - Add device max77620 with.
+>         - Add all pins configurations.
+>         - Configure FPS of the device.
+>         - Configure SD/DCDC and LDOs regulators.
+> - populate the bus expander on base board P2597.
+> - Populate all fixed voltage regulators controlled by GPIOs from Tegra,
+>   PMIC and bus expanders.
 >
-> This series centralizes OTG/Dual-role functionality in the kernel.
-> As of now I've got Dual-role functionality working pretty reliably on
-> dra7-evm and am437x-gp-evm.
->
-> DWC3 controller and TI platform related patches will be sent separately.
->
-> Series is based on v4.7-rc1.
->
+> For the different details, jetson-CV device tree files are referred from
+> downstream.
 
-Roger, I will wait your dwc3 and TI patch set since one framework needs
-one user at least, thanks.
+I think Thierry posted a similar change:
 
-Peter
-> Why?:
-> ----
->
-> Currently there is no central location where OTG/dual-role functionality is
-> implemented in the Linux USB stack and every USB controller driver is
-> doing their own thing for OTG/dual-role. We can benefit from code-reuse
-> and simplicity by adding the OTG/dual-role core driver.
->
-> Newer OTG cores support standard host interface (e.g. xHCI) so
-> host and gadget functionality are no longer closely knit like older
-> cores. There needs to be a way to co-ordinate the operation of the
-> host and gadget controllers in dual-role mode. i.e. to stop and start them
-> from a central location. This central location should be the
-> USB OTG/dual-role core.
->
-> Host and gadget controllers might be sharing resources and can't
-> be always running. One has to be stopped for the other to run.
-> This couldn't be done till now but can be done from the OTG core.
->
-> What?:
-> -----
->
-> The OTG/dual-role core consists of a set of APIs that allow
-> registration of OTG controller device and OTG capable host and gadget
-> controllers.
->
-> - The OTG controller driver can provide the OTG capabilities and the
-> Finite State Machine work function via 'struct usb_otg_config'
-> at the time of registration i.e. usb_otg_register();
->
->         struct usb_otg *usb_otg_register(struct device *dev,
->                                          struct usb_otg_config *config);
->         int usb_otg_unregister(struct device *dev);
->         /**
->          * struct usb_otg_config - otg controller configuration
->          * @caps: otg capabilities of the controller
->          * @ops: otg fsm operations
->          * @otg_work: optional custom otg state machine work function
->          */
->         struct usb_otg_config {
->                 struct usb_otg_caps *otg_caps;
->                 struct otg_fsm_ops *fsm_ops;
->                 void (*otg_work)(struct work_struct *work);
->         };
->
-> The dual-role state machine is built-into the OTG core so nothing
-> special needs to be provided if only dual-role functionality is desired.
-> The low level OTG controller driver ops are povided via
-> 'struct otg_fsm_ops *fsm_ops' in the 'struct usb_otg_config'.
->
-> After registration, the OTG core waits for host, gadget controller
-> and the gadget function driver to be registered. Once all resources are
-> available it instantiates the Finite State Machine (FSM).
-> The host/gadget controllers are started/stopped according to the FSM.
->
-> - Host and gadget controllers that are a part of OTG/dual-role port must
-> use the OTG core provided APIs to add/remove the host/gadget.
-> i.e. hosts must use usb_otg_add_hcd() usb_otg_remove_hcd(),,
-> gadgets must use usb_otg_add_gadget_udc() usb_del_gadget_udc().
-> This ensures that the host and gadget controllers are not started till
-> the state machine is ready and the right bus conditions are met.
-> It also allows the host and gadget controllers to provide the OTG
-> controller device to link them together. For Device tree boots
-> the related OTG controller is automatically picked up via the
-> 'otg-controller' property in the Host/Gadget controller nodes.
->
->         int usb_otg_add_hcd(struct usb_hcd *hcd,
->                             unsigned int irqnum, unsigned long irqflags,
->                             struct device *otg_dev);
->         void usb_otg_remove_hcd(struct usb_hcd *hcd);
->
->         int usb_otg_add_gadget_udc(struct device *parent,
->                                    struct usb_gadget *gadget,
->                                    struct device *otg_dev);
->         usb_del_gadget_udc() must be used for removal.
->
->
-> - During the lifetime of the FSM, the OTG controller driver can provide
-> inputs event changes using usb_otg_sync_inputs(). The OTG core will
-> then schedule the FSM work function (or internal dual-role state machine)
-> to update the FSM state. The FSM then calls the OTG controller
-> operations (fsm_ops) as necessary.
->         void usb_otg_sync_inputs(struct usb_otg *otg);
->
-> - The following 2 functions are provided as helpers for use by the
-> OTG controller driver to start/stop the host/gadget controllers.
->         int usb_otg_start_host(struct usb_otg *otg, int on);
->         int usb_otg_start_gadget(struct usb_otg *otg, int on);
->
-> - The following function is provided for use by the USB host stack
-> to sync OTG related events to the OTG state machine.
-> e.g. change in host_bus->b_hnp_enable, gadget->b_hnp_enable
->         int usb_otg_kick_fsm(struct device *otg_device);
->
-> - The following function is provided for use by the USB gadget stack
-> to notify OTG/DRD about gadget function driver being ready/not-ready
->         int usb_otg_gadget_ready(struct usb_gadget *gadget, bool ready)
->
-> Changelog:
-> ---------
-> v9:
-> - In the DT bindings, clearly indicate which properties are for OTG controller
-> and which ones are for host/device controllers
-> - Removed host/gadget wait list from otg core. Use defer probing if host/gadget
-> registers before dual-role/otg controller.
-> - move gadget registering to otg core from udc_bind_to_driver()/usb_gadget_remove_driver()
-> to usb_add_gadget_udc_release()/usb_del_gadget_udc(). This means that we need
-> an additional mechanism to know when the gadget function driver registers.
-> So we add usb_otg_gadget_ready() API to allow gadget to notify otg core about
-> ready/not-ready function driver.
-> - update otg->caps based on capabilities provided by the controller and the
-> device tree overrides.
-> - in usb_drd_work() we must keep calling the drd_statemachine() as long as
-> there is a state change.
-> - updated kconfig so that usbotg can be a module when both host and gadget
-> are modules.
-> - rebased on v4.7-rc1
->
-> v8:
-> - split out start/stop gadget and connect/disconnect operations.
-> - make CONFIG_OTG dpend on CONFIG_USB_GADGET as well apart from CONFIG_USB
-> - use create_freezable_workqueue() for OTG work as per Peter's suggestion.
-> - remove usb-otg.h as we're not initializing any OTG timers.
-> - don't include unnecessary headers in usb-otg.c (i.e. hrtimer.h & ktime.h)
->
-> v7:
-> - added dual-role support for host controllers requiring a companion
-> controller. e.g. EHCI + OHCI.
-> - added of_usb_get_otg() to get the OTG controller device
-> from the USB controller's device node.
-> - addressed review comments.
->
-> v6:
-> - added otg specific APIs for host/gadget registration. behaviour of
-> original host/gadget API remains unchanged. Platform devices can now
-> pass the otg device explicitly while registering host/gadget.
-> - moved hcd specific operations from struct otg_fsm to struct hcd_ops.
-> - made struct usb_otg mandatory for all otg related APIs.
-> - allow otg controller to provide it's own otg_work function so that
-> it can implement it's own state machine.
-> - removed otg fsm and timers from usb-otg.c. Only dual-role state machine
-> is implemented.
-> - vbus is controlled in the dual-role state machine.
-> - PM runtime is used around drd_statemachine().
-> - added otg_dev to xhci platform data to allow platform code to specify
-> the otg controller tied to the xhci host controller.
->
-> v5: Internal version. Not sent to mailing list
->
-> v4:
-> - Added DT support for tying otg-controller to host and gadget
->  controllers. For DT we no longer have the constraint that
->  OTG controller needs to be parent of host and gadget. They can be
->  tied together using the "otg-controller" property.
-> - Relax the requirement for DT case that otg controller must register
->  before host/gadget. We maintain a wait list of host/gadget devices
->  waiting on the otg controller.
-> - Use a single struct usb_otg for otg data.
-> - Don't override host/gadget start/stop APIs. Let the controller
->  drivers do what they want as they know best. Helper API is provided
->  for controller start/stop that controller driver can use.
-> - Introduce struct usb_otg_config to pass the otg capabilities,
->  otg ops and otg timer timeouts during otg controller registration.
-> - rebased on Greg's usb.git/usb-next
->
-> v3:
-> - all otg related definations now in otg.h
-> - single kernel config USB_OTG to enable OTG core and FSM.
-> - resolved symbol dependency issues.
-> - use dev_vdbg instead of VDBG() in usb-otg-fsm.c
-> - rebased on v4.2-rc1
->
-> v2:
-> - Use add/remove_hcd() instead of start/stop_hcd() to enable/disable
->  the host controller
-> - added dual-role-device (DRD) state machine which is a much simpler
->  mode of operation when compared to OTG. Here we don't support fancy
->  OTG features like HNP, SRP, on the fly role-swap. The mode of operation
->  is determined based on ID pin (cable type) and the role doesn't change
->  till the cable type changes.
->
-> --
-> cheers,
-> -roger
->
-> Roger Quadros (13):
->   usb: hcd: Initialize hcd->flags to 0
->   usb: otg-fsm: Prevent build warning "VDBG" redefined
->   usb: hcd.h: Add OTG to HCD interface
->   usb: otg-fsm: use usb_otg wherever possible
->   usb: otg-fsm: move host controller operations into usb_otg->hcd_ops
->   usb: gadget.h: Add OTG to gadget interface
->   usb: otg: get rid of CONFIG_USB_OTG_FSM in favour of CONFIG_USB_OTG
->   usb: otg: add OTG/dual-role core
->   usb: of: add an API to get OTG device from USB controller node
->   usb: otg: use dev_dbg() instead of VDBG()
->   usb: hcd: Adapt to OTG core
->   usb: gadget: udc: adapt to OTG core
->   usb: host: xhci-plat: Add otg device to platform data
->
-> Yoshihiro Shimoda (1):
->   usb: otg: add hcd companion support
->
->  Documentation/devicetree/bindings/usb/generic.txt |   6 +
->  Documentation/usb/chipidea.txt                    |   2 +-
->  drivers/usb/Kconfig                               |  18 +
->  drivers/usb/Makefile                              |   1 +
->  drivers/usb/chipidea/Makefile                     |   2 +-
->  drivers/usb/chipidea/ci.h                         |   3 +-
->  drivers/usb/chipidea/core.c                       |  14 +-
->  drivers/usb/chipidea/debug.c                      |   2 +-
->  drivers/usb/chipidea/otg_fsm.c                    | 176 ++---
->  drivers/usb/chipidea/otg_fsm.h                    |   2 +-
->  drivers/usb/chipidea/udc.c                        |  17 +-
->  drivers/usb/common/Makefile                       |   5 +-
->  drivers/usb/common/common.c                       |  27 +
->  drivers/usb/common/usb-otg-fsm.c                  | 203 +++---
->  drivers/usb/common/usb-otg.c                      | 846 ++++++++++++++++++++++
->  drivers/usb/core/Kconfig                          |  22 -
->  drivers/usb/core/hcd.c                            |  56 ++
->  drivers/usb/gadget/Kconfig                        |   1 +
->  drivers/usb/gadget/udc/udc-core.c                 | 202 +++++-
->  drivers/usb/host/xhci-plat.c                      |  35 +-
->  drivers/usb/phy/Kconfig                           |   2 +-
->  drivers/usb/phy/phy-fsl-usb.c                     | 155 ++--
->  drivers/usb/phy/phy-fsl-usb.h                     |   3 +-
->  include/linux/usb/gadget.h                        |  22 +
->  include/linux/usb/hcd.h                           |  29 +
->  include/linux/usb/of.h                            |   9 +
->  include/linux/usb/otg-fsm.h                       | 154 +---
->  include/linux/usb/otg.h                           | 293 +++++++-
->  include/linux/usb/xhci_pdriver.h                  |   3 +
->  29 files changed, 1848 insertions(+), 462 deletions(-)
->  create mode 100644 drivers/usb/common/usb-otg.c
->
-> --
-> 2.7.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://permalink.gmane.org/gmane.linux.ports.tegra/26815
