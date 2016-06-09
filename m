@@ -1,65 +1,73 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 27/32] gpio: Add support for the FXL6408 GPIO expander.
-Date: Thu, 09 Jun 2016 10:22:27 -0700
-Message-ID: <878tyexooc.fsf@eliezer.anholt.net>
-References: <1464817421-8519-1-git-send-email-kraxel@redhat.com> <1464817421-8519-28-git-send-email-kraxel@redhat.com> <CACRpkdax3AmnprT48zL7J92ddMvLYeRXi9OrQK_JrBT8_zZQoA@mail.gmail.com>
+From: Mychaela Falconia <mychaela.falconia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] mtd: nand: Add support for Evatronix NANDFLASH-CTRL
+Date: Thu, 9 Jun 2016 09:24:19 -0800
+Message-ID: <CA+uuBqb4fG4nK7atrF7XOQ=ip2SfKrxU+KXqD3W+PA_ZA7cS3g@mail.gmail.com>
+References: <alpine.DEB.2.02.1606020948070.19416@lnxricardw1.se.axis.com>
+ <20160603165909.09f27ee0@bbrezillon> <alpine.DEB.2.02.1606071702220.19416@lnxricardw1.se.axis.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdax3AmnprT48zL7J92ddMvLYeRXi9OrQK_JrBT8_zZQoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1606071702220.19416-0r+fHKsYbBpkgkEezDIDgepEb+yt5a1K@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, Linux mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On 6/9/16, Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org> wrote:
+> The designers of this IP apparantly did not have Linux in mind when they
+> designed the controller, since it does all the low level stuff
+> autonomously (in the right IP configuration it can even remap flash blocks
+> transparently), with no way of intervening. For instance, when doing
+> hardware ECC, the OOB data is not available anywhere to the user, and if
+> one wants to actually read it a separate OOB write needs to be done. I
+> think the target market for the IP is really a general real time OS where
+> there is no NAND driver available, and you just want to fire off a single
+> high level command, wait for an interrupt, and have your data waiting for
+> you.
 
-Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+I expect to see more and more newer NAND flash controllers that are
+like this. The one I am working with (FTNANDC024 from Faraday) is like
+this too - very very high-level.
 
-> On Wed, Jun 1, 2016 at 11:43 PM, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> This latter property is actually advantageous in Linux too as the driver
+> doesn't have to do bit- and byte-banging against the NAND flash. I'm not
+> sure what the gain in overhead is in practice, but at any rate there's not
+> much of a choice.
+
+It should be advantageous to any OS that uses the abstractions
+provided by the hardware instead of fighting them. The problem is that
+the Linux MTD system's current idea of what a NAND controller should
+look like is now out of sync with the new hardware realities.
+
+> Given that the controller does not have the transparency that the
+> ->cmd_ctrl() approach requires, as noted above, I can't see how it could
+> be simplified.
 >
->> +#define FXL6408_OUTPUT                 0x05
->> +/* Bits here make the output High-Z, instead of the OUTPUT value. */
->> +#define FXL6408_OUTPUT_HIGH_Z          0x07
-> (...)
->> +       /* Disable High-Z of outputs, so that our OUTPUT updates
->> +        * actually take effect.
->> +        */
->> +       i2c_smbus_write_byte_data(client, FXL6408_OUTPUT_HIGH_Z, 0);
->
-> High-Z is probably the same as open drain right? And if not open drain,
-> it is push-pull.
->
-> So you want to implement .set_single_ended() for configuring the lines in
-> "high-z", i.e. open drain output mode.
+> I basically need to grab everything needed for a given operation and
+> interpret it before handing it over to the controller. I considered using
+> a higher level API, by replacing the default ->cmdfunc() (default
+> nand_command/nand_command_lp) with a specific version, which would have
+> avoided the need to interpret the NAND commands arriving via ->cmd_ctrl(),
+> but that meant duplicating some of the logic in nand_base.c which seemed
+> like a bad idea.
 
-I'll keep this in mind for whenever I end up writing my next GPIO
-driver, but this one is dead for now (not actually usable because of the
-closed firmware).
+For my FTNANDC024 driver I went for an ever more radical approach: I
+decided to forego the "nand" layer in Linux entirely and attach my
+driver directly to the MTD layer. There is very little that
+nand_base.c provides that is useful to a high-level controller whose
+abstractions are "read these logical sectors", "write these logical
+sectors" and "erase these blocks", it is really only useful for the
+simpler NAND controllers that don't do all of the heavy lifting in
+hardware.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+And it is NOT a question of "optimization" - the problem is not that
+going through the paradigm imposed by nand_base.c precludes the use of
+some optional higher-performance features of smart controllers -
+instead the controllers which you and I are working with *require* the
+use of their highly abstracted interfaces, and *do not* provide any
+kind of raw or transparent pass-through mode.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXWaXUAAoJELXWKTbR/J7oXlIP/28c/qu7DAusjvxWdu43Lil3
-N0vb72w2v/VIIMm30+NM0iuEQfm/zHigSsaMCiNm4rhA/wcKU3kdEjT28WBVlP9E
-BnfSdbk3jwqFezkG/tB0BFUpTwQQG86AbZ9svKJYPL2AxJFnzA+wa+SkmlXLeVku
-vHr/l6h4pqDoXggcfmPMBG3Waev7QVsqI9JRGil4C5z4Hiqp/wEyoLeZ2jnwdpQY
-1SVxWDkfJU+yVq5Z4FKUk7YvRxzfekhTC0zxmqkKBueIHflZ6XP/9mb2N+sTTJbR
-3nY7fwDzXDYZQUfarXN5xrAzAKpTC7sMURPLe4f8GkR3RGnpaL2cSp9xeSVN2rlt
-dlajNq1mHf6oWjGkC4JPGk/MFuRygdvyvZMHMF6CdS7l3LW7uKQzWIfjMxQ6I3wb
-/gwZV1QFz5FDLxUuDxbIZlzQ3nFsBK8RYZyfrkIrU6eU7+KH9CCeImgggXIPFOhG
-bhxWO0OYN1G7C5UIkQ5yyIrUZwbcbSt8TfmZGWAcA0w53Sb6bCk+Edt16mP9ANbh
-F9HK4rdL5pzx5FouQv1yQsKqeUQqyZOtpV+oCBgYvnulMBPAVVE6Rs7Q4BnCBJcI
-e7vtjp1nDfwFDUtraCShQh/oN8kWxovw8T7ewaWpruXKyRNIIsDNKCgfg7zYy0lB
-JxuFqUIXHPVKmSi+BZEU
-=PAcr
------END PGP SIGNATURE-----
---=-=-=--
+M~
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
