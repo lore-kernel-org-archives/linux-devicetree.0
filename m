@@ -1,165 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: sun6i: Add pmic / regulator nodes to Mele M9 dts
-Date: Thu,  9 Jun 2016 12:58:18 +0200
-Message-ID: <1465469898-8102-2-git-send-email-hdegoede@redhat.com>
-References: <1465469898-8102-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465469898-8102-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v5 1/5] mfd: RK808: Add RK818 support
+Date: Thu, 9 Jun 2016 12:12:01 +0100
+Message-ID: <20160609111201.GA1388@dell>
+References: <1464850228-17244-1-git-send-email-w.egorov@phytec.de>
+ <20160608141735.GE14888@dell>
+ <5759277D.7090101@phytec.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5759277D.7090101@phytec.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wadim Egorov <w.egorov@phytec.de>
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Add pmic / regulator nodes to Mele M9 dts.
+On Thu, 09 Jun 2016, Wadim Egorov wrote:
+> On 08.06.2016 16:17, Lee Jones wrote:
+> > On Thu, 02 Jun 2016, Wadim Egorov wrote:
+> >
+> >> The RK818 chip is a power management IC for multimedia and handhel=
+d
+> > "Power Management IC (PMIC)"
+> >
+> >> devices. It contains the following components:
+> >>
+> >> - Regulators
+> >> - RTC
+> >> - Clkout
+> > Clocking
+> >
+> >> - battery support
+> > Battery support
+> >
+> >> Both chips RK808 and RK818 are using a similar register map.
+> > "Both RK808 ad RK818 chips"
+> >
+> >> So we can reuse the RTC and Clkout functionality.
+> > Swap '.' for ','.
+> >
+> >> Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
+> >> ---
+> >>  drivers/mfd/Kconfig       |   4 +-
+> >>  drivers/mfd/rk808.c       | 231 +++++++++++++++++++++++++++++++++=
++++++--------
+> >>  include/linux/mfd/rk808.h | 162 ++++++++++++++++++++++++++++++--
+> >>  3 files changed, 350 insertions(+), 47 deletions(-)
 
-Note both reg_usb1_vbus and reg_dldo4 need to be on for the hub attached
-to usb1 to work, and we can list only one usb1_vbus-supply, so dldo4 is
-marked as regulator-always-on.
+[...]
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Add a bit to the commit msg explaining why dldo4 is marked regulator-always-on
----
- arch/arm/boot/dts/sun6i-a31-m9.dts | 88 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 87 insertions(+), 1 deletion(-)
+> >> -struct rk808_reg_data {
+> >> -	int addr;
+> >> -	int mask;
+> >> -	int value;
+> >> -};
+> > Why are you moving this to the header?
+>=20
+> It is now part of the rk808 struct.
 
-diff --git a/arch/arm/boot/dts/sun6i-a31-m9.dts b/arch/arm/boot/dts/sun6i-a31-m9.dts
-index 66d29b8..2d3cd9d 100644
---- a/arch/arm/boot/dts/sun6i-a31-m9.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-m9.dts
-@@ -72,6 +72,10 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc3>;
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -85,6 +89,7 @@
- 	pinctrl-0 = <&gmac_pins_mii_a>;
- 	phy = <&phy1>;
- 	phy-mode = "mii";
-+	phy-supply = <&reg_dldo1>;
- 	status = "okay";
- 
- 	phy1: ethernet-phy@1 {
-@@ -101,13 +106,26 @@
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_m9>;
--	vmmc-supply = <&reg_vcc3v3>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
- 	cd-inverted;
- 	status = "okay";
- };
- 
-+&p2wi {
-+	status = "okay";
-+
-+	axp22x: pmic@68 {
-+		compatible = "x-powers,axp221";
-+		reg = <0x68>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+#include "axp22x.dtsi"
-+
- &pio {
- 	led_pins_m9: led_pins@0 {
- 		allwinner,pins = "PH13";
-@@ -131,6 +149,73 @@
- 	};
- };
- 
-+&reg_aldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <2700000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_dc5ldo {
-+	regulator-always-on;
-+	regulator-min-microvolt = <700000>;
-+	regulator-max-microvolt = <1320000>;
-+	regulator-name = "vdd-cpus"; /* This is an educated guess */
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-3v3";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-min-microvolt = <700000>;
-+	regulator-max-microvolt = <1320000>;
-+	regulator-name = "vdd-gpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <700000>;
-+	regulator-max-microvolt = <1320000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc4 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <700000>;
-+	regulator-max-microvolt = <1320000>;
-+	regulator-name = "vdd-sys-dll";
-+};
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+&reg_dldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-ethernet-phy";
-+};
-+
-+&reg_dldo4 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-usb-hub";
-+};
-+
- &reg_usb1_vbus {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&usb1_vbus_pin_m9>;
-@@ -146,5 +231,6 @@
- 
- &usbphy {
- 	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_aldo1>;
- 	status = "okay";
- };
--- 
-2.7.4
+Why?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
