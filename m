@@ -1,47 +1,34 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: [PATCH v2] Documentation/devicetree: document cavium-pip rx-delay/tx-delay properties
-Date: Thu,  9 Jun 2016 23:37:28 +0300
-Message-ID: <1465504648-15038-1-git-send-email-aaro.koskinen@iki.fi>
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 04/54] MAINTAINERS: Add file patterns for qcom device
+ tree bindings
+Date: Thu, 9 Jun 2016 15:50:12 -0500
+Message-ID: <20160609205012.GM13357@hector.attlocal.net>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+ <1463907991-7916-5-git-send-email-geert@linux-m68k.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463907991-7916-5-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document cavium-pip rx-delay/tx-delay properties. Currently the board
-specific values need to be hardcoded in the platform code, which we
-want to avoid when moving to DT-only booting.
+On Sun, May 22, 2016 at 11:05:41AM +0200, Geert Uytterhoeven wrote:
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
----
+I queued this one up.  Thanks!
 
-	v2: Update the description.
-
-	v1: http://marc.info/?l=devicetree&m=146507906104224&w=2
-
- Documentation/devicetree/bindings/net/cavium-pip.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/cavium-pip.txt b/Documentation/devicetree/bindings/net/cavium-pip.txt
-index 7dbd158..e3b8fe71 100644
---- a/Documentation/devicetree/bindings/net/cavium-pip.txt
-+++ b/Documentation/devicetree/bindings/net/cavium-pip.txt
-@@ -37,6 +37,12 @@ Properties for PIP port which is a child the PIP interface:
- 
- - phy-handle: Optional, see ethernet.txt file in the same directory.
- 
-+- rx-delay: Delay value for RGMII receive clock. Optional. Disabled if 0.
-+  Value range is 1-31, and mapping to the actual delay varies depending on HW.
-+
-+- tx-delay: Delay value for RGMII transmit clock. Optional. Disabled if 0.
-+  Value range is 1-31, and mapping to the actual delay varies depending on HW.
-+
- Example:
- 
- 	pip@11800a0000000 {
--- 
-2.7.2
-
+Andy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
