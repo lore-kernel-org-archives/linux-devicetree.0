@@ -1,59 +1,55 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: TS-4800: add CAN support
-Date: Thu, 9 Jun 2016 21:30:57 +0800
-Message-ID: <20160609133057.GB19473@tiger>
-References: <1463516190-10606-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <1463516190-10606-2-git-send-email-damien.riegel@savoirfairelinux.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andrea Merello <andrea.merello@gmail.com>
+Subject: [PATCH 2/2] drm: Add DT bindings documentation for OpenCores VGA/LCD controller
+Date: Thu,  9 Jun 2016 15:33:19 +0200
+Message-ID: <1465479199-9810-1-git-send-email-andrea.merello@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1463516190-10606-2-git-send-email-damien.riegel@savoirfairelinux.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, kernel@savoirfairelinux.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Francesco Diotalevi <francesco.diotalevi@iit.it>, Claudio Lorini <claudio.lorini@iit.it>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 17, 2016 at 04:16:30PM -0400, Damien Riegel wrote:
-> This enables support for the CAN controller located in the FPGA.
-> 
-> Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
-> ---
->  arch/arm/boot/dts/imx51-ts4800.dts | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
-> index 2c89988..41be82e 100644
-> --- a/arch/arm/boot/dts/imx51-ts4800.dts
-> +++ b/arch/arm/boot/dts/imx51-ts4800.dts
-> @@ -149,6 +149,16 @@
->  		#size-cells = <1>;
->  		ranges = <0 0 0 0x1d000>;
->  
-> +		can@0,1a000 {
-> +			compatible = "technologic,sja1000";
-> +			reg = <0x1a000 0x00000100>;
-> +			interrupt-parent = <&fpga_irqc>;
-> +			interrupts = <1>;
-> +			reg-io-width = <2>;
-> +			nxp,tx-output-config = <0x06>;
-> +			nxp,external-clock-frequency = <24000000>;
-> +		};
-> +
+Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Francesco Diotalevi <francesco.diotalevi@iit.it>
+Cc: Claudio Lorini <claudio.lorini@iit.it>
+---
+ .../bindings/display/opencores,ocdrm.txt           | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/opencores,ocdrm.txt
 
-For nodes under bus node with unit-address (or 'reg' property), it makes
-more sense to sort the nodes in order of unit-address.
-
-Shawn
-
->  		fpga_irqc: fpga_irqc@0,15000 {
->  			compatible = "technologic,ts4800-irqc";
->  			reg = <0x15000 0x1000>;
-> -- 
-> 2.5.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/Documentation/devicetree/bindings/display/opencores,ocdrm.txt b/Documentation/devicetree/bindings/display/opencores,ocdrm.txt
+new file mode 100644
+index 0000000..8d36de5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/opencores,ocdrm.txt
+@@ -0,0 +1,27 @@
++OpenCores VGA/LCD controller
++
++Required properties:
++- compatible: "opencores,ocdrm"
++- reg: Physical base address and length of the controller's registers.
++- clocks: Must contain an entry for the pixelclock generator.
++  See ../clocks/clock-bindings.txt for details.
++
++Required sub-nodes:
++- port: the connection to a DRM bridge.  The connection is modelled
++  using the OF graph bindings specified in
++  Documentation/devicetree/bindings/graph.txt.
++
++Example:
++
++ocdrm@43c10000 {
++	compatible = "opencores,ocfb-drm";
++	reg = <0x43c10000 0x10000>;
++	clocks = <&pix_clock>;
++	ports {
++		port@0 {
++			rgb_out: endpoint {
++				remote-endpoint = <&bridge_in>;
++			};
++		};
++	};
++};
+-- 
+1.9.1
