@@ -1,45 +1,42 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 0/2] pci: host: Broadcom STB PCIE RC controller support
-Date: Thu, 9 Jun 2016 17:31:10 -0500
-Message-ID: <20160609223110.GA19309@localhost>
-References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCHv2] device tree description for AD5820 camera auto-focus
+ coil
+Date: Fri, 10 Jun 2016 01:37:02 +0300
+Message-ID: <20160609223701.GZ26360@valkosipuli.retiisi.org.uk>
+References: <20160524091746.GA14536@amd>
+ <20160525212659.GK26360@valkosipuli.retiisi.org.uk>
+ <20160527205140.GA26767@amd>
+ <20160531212222.GP26360@valkosipuli.retiisi.org.uk>
+ <20160531213437.GA28397@amd>
+ <20160601152439.GQ26360@valkosipuli.retiisi.org.uk>
+ <20160601220840.GA21946@amd>
+ <20160602074544.GR26360@valkosipuli.retiisi.org.uk>
+ <20160602193027.GB7984@amd>
+ <20160607071003.GA11796@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, bhelgaas@google.com, arnd@arndb.de
+In-Reply-To: <20160607071003.GA11796@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, patrikbachan@gmail.com, serge@hallyn.com, linux-media@vger.kernel.org, mchehab@osg.samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 05, 2016 at 12:14:58PM -0700, Florian Fainelli wrote:
-> Hi all,
+On Tue, Jun 07, 2016 at 09:10:04AM +0200, Pavel Machek wrote:
 > 
-> This patch series adds support for Broadcom STB SoC's PCIe root complex driver.
+> Add documentation for ad5820 device tree binding.
 > 
-> This was primarily tested on BCM7445 (ARM) and BCM7435 (MIPS).
-> 
-> Jim is the original author, and I picked up our downstream 4.1 driver and
-> updated it to utilize the non-ARM hw_pci functions as well as made some
-> stylistic changes.
-> 
-> Thanks!
-> 
-> Jim Quinlan (2):
->   Documentation: DT: bindings: Add Broadcom STB PCIe bindings
->   pci: host: Add Broadcom STB PCIE RC controller
+> Signed-off-by: Pavel Machek <pavel@denx.de>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Hi Florian,
+Thanks!
 
-There was some discussion about these patches, so I assume you'll post
-a new version addressing that.  When you do, can you include
-/proc/iomem and /proc/ioports contents?
+I've replaced the patch in my tree, will send a pull req later.
 
-I'm looking to avoid problems like this:
-http://lkml.kernel.org/r/20160606230537.20936.2892.stgit@bhelgaas-glaptop2.roam.corp.google.com
+-- 
+Cheers,
 
-Also, it will save me time if you take note of this:
-http://lkml.kernel.org/r/20160607231326.GA4759@localhost
-
-Bjorn
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
