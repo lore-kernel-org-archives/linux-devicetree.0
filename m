@@ -1,43 +1,27 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] drivers/of: Fix depth for sub-tree blob in unflatten_dt_nodes()
-Date: Thu, 9 Jun 2016 17:23:32 -0500
-Message-ID: <CAL_JsqJByt53joeveDG0Nij+asQCNhkpmj+d4g21EVERsbg58g@mail.gmail.com>
-References: <1465451449-27164-1-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] drivers: of: add definition of early_init_dt_alloc_reserved_memory_arch
+Date: Thu, 9 Jun 2016 17:24:12 -0500
+Message-ID: <CAL_JsqLC8Mq=O_qYG7m_Uvh3EEUxU1aWPtViUxKGAnqA8r_5Lw@mail.gmail.com>
+References: <1465468714-4982-1-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465451449-27164-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1465468714-4982-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andrew.donnellan-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 9, 2016 at 12:50 AM, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
-> The function is unflattening device sub-tree blob if @dad passed to
-> the function is valid. Currently, this functionality is used by PPC
-> PowerNV PCI hotplug driver only. There are possibly multiple nodes
-> in the first level of depth, fdt_next_node() bails immediately when
-> @depth becomes negative before the second device node can be probed
-> successfully. It leads to the device nodes except the first one won't
-> be unflattened successfully.
+On Thu, Jun 9, 2016 at 5:38 AM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
+> The function early_init_dt_alloc_reserved_memory_arch is defined
+> in drivers/of/of_reserved_mem.c but is not declared in any of the
+> header files. Add the declaration of this to avoid the warning:
 >
-> This fixes the issue by setting the initial depth (@inital_depth) to
-> 1 when this function is called to unflatten device sub-tree blob. No
-> logic changes when this function is used to unflatten non-sub-tree
-> blob.
+> drivers/of/of_reserved_mem.c:31:19: warning: symbol 'early_init_dt_alloc_reserved_memory_arch' was not declared. Should it be static?
 >
-> Cc: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Fixes: 78c44d910 ("drivers/of: Fix depth when unflattening devicetree")
-> Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> Tested-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Tested-by: Andrew Donnellan <andrew.donnellan-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v2: Change @depth before initializing @fpsizes[depth] and @nps[depth]
-> ---
->  drivers/of/fdt.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 
-Applied, thanks.
+Dropped the extern and applied. Thanks.
 
 Rob
 --
