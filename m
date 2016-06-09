@@ -1,65 +1,90 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v5 1/5] mfd: RK808: Add RK818 support
-Date: Thu, 9 Jun 2016 12:12:01 +0100
-Message-ID: <20160609111201.GA1388@dell>
-References: <1464850228-17244-1-git-send-email-w.egorov@phytec.de>
- <20160608141735.GE14888@dell>
- <5759277D.7090101@phytec.de>
+Subject: Re: [PATCH v3 20/20] dt-bindings: pwm: sti: Update DT bindings with
+ recent changes
+Date: Thu, 9 Jun 2016 12:41:07 +0100
+Message-ID: <20160609114107.GB1388@dell>
+References: <20160608092135.21184-1-lee.jones@linaro.org>
+ <20160608092135.21184-21-lee.jones@linaro.org>
+ <20160608205152.GA5511@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5759277D.7090101@phytec.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wadim Egorov <w.egorov@phytec.de>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
+In-Reply-To: <20160608205152.GA5511@rob-hp-laptop>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 09 Jun 2016, Wadim Egorov wrote:
-> On 08.06.2016 16:17, Lee Jones wrote:
-> > On Thu, 02 Jun 2016, Wadim Egorov wrote:
-> >
-> >> The RK818 chip is a power management IC for multimedia and handhel=
-d
-> > "Power Management IC (PMIC)"
-> >
-> >> devices. It contains the following components:
-> >>
-> >> - Regulators
-> >> - RTC
-> >> - Clkout
-> > Clocking
-> >
-> >> - battery support
-> > Battery support
-> >
-> >> Both chips RK808 and RK818 are using a similar register map.
-> > "Both RK808 ad RK818 chips"
-> >
-> >> So we can reuse the RTC and Clkout functionality.
-> > Swap '.' for ','.
-> >
-> >> Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
-> >> ---
-> >>  drivers/mfd/Kconfig       |   4 +-
-> >>  drivers/mfd/rk808.c       | 231 +++++++++++++++++++++++++++++++++=
-+++++--------
-> >>  include/linux/mfd/rk808.h | 162 ++++++++++++++++++++++++++++++--
-> >>  3 files changed, 350 insertions(+), 47 deletions(-)
+On Wed, 08 Jun 2016, Rob Herring wrote:
 
-[...]
-
-> >> -struct rk808_reg_data {
-> >> -	int addr;
-> >> -	int mask;
-> >> -	int value;
-> >> -};
-> > Why are you moving this to the header?
+> On Wed, Jun 08, 2016 at 10:21:35AM +0100, Lee Jones wrote:
+> > We're renaming the 'st,pwm-num-chan' binding to 'st,pwm-num-devs' t=
+o
+> > be more inline with the naming conventions of the subsystem.  Where
+> > we used to treat each line as a channel, the PWM convention is to
+> > describe them as devices.
 >=20
-> It is now part of the rk808 struct.
+> That's all linux implementation details and you are breaking=20
+> compatibility.
 
-Why?
+Normally I'd agree with you, but I happen to know that a) this IP is
+currently unused and b) up until this point (and probably beyond), ST
+always ship the DTB with the kernel, so there will be no breakage.
+
+> > The second documentation adaption entails adding support for PWM
+> > capture devices.  A new clock is required as well as an IRQ line.
+> > We're also adding a new property similar to the one described
+> > above, but for capture channels.  Typically, there will be less
+> > capture channels than PWM-out, since all channels have the latter
+> > capability, but only some have capture support.
+>=20
+> Humm, sounds like all of this should be implied from compatible strin=
+gs.
+
+You mean have a bunch of of_machine_is_compatibles() scattered around?
+
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/pwm-st.txt | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-st.txt b/Doc=
+umentation/devicetree/bindings/pwm/pwm-st.txt
+> > index 84d2fb8..b09f3a4 100644
+> > --- a/Documentation/devicetree/bindings/pwm/pwm-st.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-st.txt
+> > @@ -13,13 +13,14 @@ Required parameters:
+> >  - pinctrl-0: 		List of phandles pointing to pin configuration node=
+s
+> >  			for PWM module.
+> >  			For Pinctrl properties, please refer to [1].
+> > -- clock-names: 		Set to "pwm".
+> > +- clock-names: 		Valid entries are "pwm" and/or "capture".
+> >  - clocks: 		phandle of the clock used by the PWM module.
+> >  			For Clk properties, please refer to [2].
+> > +- interrupts:		IRQ for the Capture device
+> > =20
+> >  Optional properties:
+> > -- st,pwm-num-chan:	Number of available channels. If not passed, th=
+e driver
+> > -			will consider single channel by default.
+> > +- st,pwm-num-devs:	Number of available PWM channels.  Default is 0=
+=2E
+> > +- st,capture-num-devs:	Number of available Capture channels.  Defa=
+ult is 0.
+> > =20
+> >  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> >  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > @@ -37,5 +38,6 @@ pwm1: pwm@fe510000 {
+> >  		     &pinctrl_pwm1_chan3_default>;
+> >  	clocks =3D <&clk_sysin>;
+> >  	clock-names =3D "pwm";
+> > -	st,pwm-num-chan =3D <4>;
+> > +	st,pwm-num-devs =3D <4>;
+> > +	st,capture-num-devs =3D <2>;
+> >  };
 
 --=20
 Lee Jones
