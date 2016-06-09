@@ -1,118 +1,35 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 06/12] ARM: dts: r8a7792: initial SoC device tree
-Date: Thu, 9 Jun 2016 12:05:19 +0200
-Message-ID: <CAMuHMdU0e=pS+q8PmXX9gwc6bHv-YdJo4G8nc-EA3NaKMuTrqQ@mail.gmail.com>
-References: <12536856.AsKMEpuejQ@wasted.cogentembedded.com> <1788169.FUQDsLAmXg@wasted.cogentembedded.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v9 00/14] USB OTG/dual-role framework
+Date: Thu, 9 Jun 2016 10:13:17 +0000
+Message-ID: <SG2PR06MB09199D3603C45571DAD47F27D85F0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+ <CAL411-owotvsJVEnbFh5g8yK7YEPnnpBhYx9_tRf6NQET38L+A@mail.gmail.com>
+ <57591B2D.7080403@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1788169.FUQDsLAmXg@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57591B2D.7080403@ti.com>
+Content-Language: ja-JP
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: "balbi@kernel.org" <balbi@kernel.org>, "tony@atomide.com" <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "jun.li@freescale.com" <jun.li@freescale.com>, "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>, "robh@kernel.org" <robh@kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "b-liu@ti.com" <b-liu@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <hzpeterchen@gmail.com>, Peter Chen <peter.chen@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Wed, Jun 8, 2016 at 11:17 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> The initial R8A7792 SoC device tree including CPU cores, GIC, timer, SYSC,
-> and the required  clock descriptions.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
-> Changes in version 3:
-
-Thanks for the update!
-
-> --- /dev/null
-> +++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-> @@ -0,0 +1,180 @@
-> +/*
-> + * Device Tree Source for the r8a7792 SoC
-> + *
-> + * Copyright (C) 2016 Cogent Embedded Inc.
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
-> + */
-> +
-> +#include <dt-bindings/clock/r8a7792-clock.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/r8a7792-sysc.h>
-> +
-> +/ {
-> +       compatible = "renesas,r8a7792";
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-
-This is gonna need
-
-                enable-method = "renesas,apmu";
-
-soon.
-
-> +       soc {
-
-> +               p_clk: p {
-> +               compatible = "fixed-factor-clock";
-
-Missing TAB.
-
-> +                       clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-> +                       #clock-cells = <0>;
-> +                       clock-div = <24>;
-> +                       clock-mult = <1>;
-> +               };
-> +               cp_clk: cp {
-> +                       compatible = "fixed-factor-clock";
-> +                       clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-> +                       #clock-cells = <0>;
-> +                       clock-div = <3>;
-
-48
-
-(did you check /sys/kernel/debug/clk/clk_summary matches Table 7.2c?)
-
-> +                       clock-mult = <1>;
-> +               };
-> +
-> +               /* Gate clocks */
-
-> +               mstp7_clks: mstp7_clks@e615014c {
-> +                       compatible = "renesas,r8a7792-mstp-clocks",
-> +                                    "renesas,cpg-mstp-clocks";
-> +                       reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
-> +                       clocks = <&zs_clk>, <&zs_clk>, <&p_clk>, <&p_clk>,
-> +                                <&p_clk>, <&p_clk>;
-> +                       #clock-cells = <1>;
-> +                       clock-indices = <
-> +                               R8A7792_CLK_HSCIF1 R8A7792_CLK_HSCIF0
-> +                               R8A7792_CLK_SCIF3 R8A7792_CLK_SCIF2
-> +                               R8A7792_CLK_SCIF1 R8A7792_CLK_SCIF0
-> +                       >;
-> +                       clock-output-names = "hscif1", "hscif0", "scif3",
-> +                                            "scif2", "scif1", "scif0",
-> +                                            "du1", "du0";
-
-You forgot to drop "du1" and "du0".
-
-> +               };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgUm9nZXIsDQoNCj4gRnJvbTogUm9nZXIgUXVhZHJvcw0KPiBTZW50OiBUaHVyc2RheSwgSnVu
+ZSAwOSwgMjAxNiA0OjMxIFBNDQo+IA0KPiBQZXRlciAmIFlvc2hpaGlybywNCj4gDQo+IE9uIDA5
+LzA2LzE2IDA4OjI3LCBQZXRlciBDaGVuIHdyb3RlOg0KPiA+IE9uIFdlZCwgSnVuIDgsIDIwMTYg
+YXQgNTowMyBQTSwgUm9nZXIgUXVhZHJvcyA8cm9nZXJxQHRpLmNvbT4gd3JvdGU6DQo+ID4+IEhp
+LA0KPiA+Pg0KPiA+PiBUaGlzIHNlcmllcyBjZW50cmFsaXplcyBPVEcvRHVhbC1yb2xlIGZ1bmN0
+aW9uYWxpdHkgaW4gdGhlIGtlcm5lbC4NCj4gPj4gQXMgb2Ygbm93IEkndmUgZ290IER1YWwtcm9s
+ZSBmdW5jdGlvbmFsaXR5IHdvcmtpbmcgcHJldHR5IHJlbGlhYmx5IG9uDQo+ID4+IGRyYTctZXZt
+IGFuZCBhbTQzN3gtZ3AtZXZtLg0KPiA+Pg0KPiA+PiBEV0MzIGNvbnRyb2xsZXIgYW5kIFRJIHBs
+YXRmb3JtIHJlbGF0ZWQgcGF0Y2hlcyB3aWxsIGJlIHNlbnQgc2VwYXJhdGVseS4NCj4gPj4NCj4g
+Pj4gU2VyaWVzIGlzIGJhc2VkIG9uIHY0LjctcmMxLg0KPiA+Pg0KPiA+DQo+ID4gUm9nZXIsIEkg
+d2lsbCB3YWl0IHlvdXIgZHdjMyBhbmQgVEkgcGF0Y2ggc2V0IHNpbmNlIG9uZSBmcmFtZXdvcmsg
+bmVlZHMNCj4gPiBvbmUgdXNlciBhdCBsZWFzdCwgdGhhbmtzLg0KPiANCj4gU3VyZSBJIHdpbGwg
+cG9zdCB0aGUgZHdjMyBwYXRjaC4NCj4gDQo+IFlvc2hpaGlybywNCj4gDQo+IGNvdWxkIHlvdSBw
+bGVhc2UgcG9zdCB0aGUgcGxhdGZvcm0gc2lkZSBwYXRjaGVzIGZvciB5b3VyIHBsYXRmb3JtDQo+
+IHRoYXQgZW5hYmxlcyBkdWFsLXJvbGUgdXNpbmcgdGhpcyBmcmFtZXdvcms/IFRoYW5rcy4NCg0K
+U3VyZS4gSSB3aWxsIGRvIHRoYXQuDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2Rh
+DQoNCj4gLS0NCj4gY2hlZXJzLA0KPiAtcm9nZXINCg==
