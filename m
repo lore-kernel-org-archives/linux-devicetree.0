@@ -1,77 +1,63 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] drivers/of: Fix depth for sub-tree blob in
- unflatten_dt_nodes()
-Date: Thu, 9 Jun 2016 10:40:07 +1000
-Message-ID: <20160609004007.GA9222@gwshan>
-References: <1465368654-24170-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <CAL_Jsq+D86LbGTiDbokSGNMownTMDteji_NmJNxz4AqTYMpJhw@mail.gmail.com>
-Reply-To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 06/12] power: pwrseq: simple: Add support for regulator
+ and generic property
+Date: Thu, 9 Jun 2016 10:34:06 +0800
+Message-ID: <CAGb2v66OO0QJ75=hLnRukhXWdX7HgSy0LDakdZ_jxFRCHTUuJw@mail.gmail.com>
+References: <1464768141-25420-1-git-send-email-k.kozlowski@samsung.com>
+ <1464768141-25420-7-git-send-email-k.kozlowski@samsung.com>
+ <20160603020218.GA19436@rob-hp-laptop> <575693DE.2010603@samsung.com> <20160608190333.GA5126@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+D86LbGTiDbokSGNMownTMDteji_NmJNxz4AqTYMpJhw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andrew.donnellan-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160608190333.GA5126@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb <linux-usb@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, hzpeterchen@gmail.co
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 08, 2016 at 11:46:41AM -0500, Rob Herring wrote:
->On Wed, Jun 8, 2016 at 1:50 AM, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
->> The function is unflattening device sub-tree blob if @dad passed to
->> the function is valid. Currently, this functionality is used by PPC
->> PowerNV PCI hotplug driver only. There are possibly multiple nodes
->> in the first level of depth, fdt_next_node() bails immediately when
->> @depth becomes negative before the second device node can be probed
->> successfully. It leads to the device nodes except the first one won't
->> be unflattened successfully.
+Hi
+
+On Thu, Jun 9, 2016 at 3:03 AM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Jun 07, 2016 at 11:29:02AM +0200, Krzysztof Kozlowski wrote:
+>> On 06/03/2016 04:02 AM, Rob Herring wrote:
+>> >>  Optional properties:
+>> >>  - reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
+>> >> @@ -16,6 +22,7 @@ Optional properties:
+>> >>    See ../clocks/clock-bindings.txt for details.
+>> >>  - clock-names : Must include the following entry:
+>> >>    "ext_clock" (External clock provided to the card).
+>> >> +- ext-supply : External regulator supply
+>> >
+>> > What happens when there are 2 supplies?
+>> >
+>> > I'd prefer the name not be genericish and use the real supply names.
+>> > Then the power seq code should just turn on all supplies it finds. If
+>> > the order or timing to turn on matters, then sorry, no generic sequence.
 >>
->> This fixes the issue by setting the initial depth (@inital_depth) to
->> 1 when this function is called to unflatten device sub-tree blob. No
->> logic changes when this function is used to unflatten non-sub-tree
->> blob.
+>> I think the generic part for regulators might be a problem. Regulator
+>> API requires a name for the supply... it cannot get "something" or
+>> "everything".
 >
->Does this affect anything besides your PCI hotplug stuff? I'd think
->overlays/changesets would be broken, but the unittests aren't failing
->that I recall.
+> That's the downside of variable property names...
 >
-
-Rob, it affects my PCI hotplug stuff only. There are two paths how
-unflatten_dt_nodes() is called. No valid @dad specified in (A). PCI
-hotplug is the only user specifying valid @dad in (B) and all other
-users have invalid @dad.
-
-          A                          B
-
-   unflatten_device_tree     of_fdt_unflatten_tree
-   __unflatten_device_tree   __unflatten_device_tree
-   unflatten_dt_nodes        unflatten_dt_nodes
-
-With or without this patch, I got same otuput from unittest as below:
-
-### dt-test ### start of unittest - you will see error messages
-/testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
-/testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
-/testcase-data/phandle-tests/consumer-a: could not find phandle
-/testcase-data/phandle-tests/consumer-a: could not find phandle
-/testcase-data/phandle-tests/consumer-a: arguments longer than property
-/testcase-data/phandle-tests/consumer-a: arguments longer than property
-irq: XICS didn't like hwirq-0x1 to VIRQ27 mapping (rc=-22)
-irq: XICS didn't like hwirq-0x1 to VIRQ27 mapping (rc=-22)
-### dt-test ### FAIL of_unittest_platform_populate():782 device deferred probe failed - 0
-overlay_is_topmost: #5 clashes #6 @/testcase-data/overlay-node/test-bus/test-unittest8
-overlay_removal_is_ok: overlay #5 is not topmost
-of_overlay_destroy: removal check failed for overlay #5
-### dt-test ### end of unittest - 147 passed, 1 failed
-
-
->Rob
+>> The driver could attach itself to any kind of node (where power-sequence
+>> property exists) so the supply name depends on the bindings of device
+>> (not bindings of power sequence driver).
+>>
+>> The power sequence driver could however iterate over child properties
+>> and get the names of all supplies. It is a little bit ugly...
 >
+> Yes. Like this, right?
+>
+> for_each_property_of_node(np, pp) {
+>         if (!strstr(pp->name, "-supply"))
+>                 continue;
+>         // found supply
+> }
+>
+> The uglyness can always be improved with a function to do this parsing.
 
-Thanks,
-Gavin
+There's already a version of this in simplefb. Maybe it's time to move
+this to a common function?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
