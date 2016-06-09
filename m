@@ -1,40 +1,119 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFC v4 2/7] Revert
- "extcon: usb-gpio: switch to use pm wakeirq apis"
-Date: Thu, 09 Jun 2016 10:10:38 +0200
-Message-ID: <5759247E.6060901@samsung.com>
-References: <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
- <1465393686-16644-3-git-send-email-k.kozlowski@samsung.com>
- <57592220.9030201@ti.com>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Enable NAND on Wexler TAB7200
+Date: Thu, 9 Jun 2016 11:11:00 +0300
+Message-ID: <20160609111100.38931fbe05fda9be7a355836@gmail.com>
+References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
+	<1465208664-9366-8-git-send-email-mamlinav@gmail.com>
+	<20160608220314.GL14179@lukather>
+Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <57592220.9030201@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Peter Chen <peter.chen@freescale.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Felipe Balbi <balbi@kernel.org>, kishon@ti.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCENVD7YAEIJPSPEXICRUBDHKYSZ4-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160608220314.GL14179@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/2016 10:00 AM, Roger Quadros wrote:
-> -balbi@ti
-> +balbi@kernel
-> 
+On Thu, 9 Jun 2016 00:03:14 +0200
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
 > Hi,
 > 
-> On 08/06/16 16:48, Krzysztof Kozlowski wrote:
->> This reverts commit 8106e404174253639731cc30a44f5b3ab764c5b7.
+> On Mon, Jun 06, 2016 at 01:24:24PM +0300, Aleksei Mamlin wrote:
+> > Enable the NFC and describe the NAND flash connected to this controller.
+> > 
+> > Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 41 ++++++++++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > index 2f6b21a..42aff91 100644
+> > --- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > +++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > @@ -159,6 +159,47 @@
+> >  	status = "okay";
+> >  };
+> >  
+> > +&nfc {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&nand_pins_a>, <&nand_cs0_pins_a>, <&nand_rb0_pins_a>;
+> > +	status = "okay";
+> > +
+> > +	nand@0 {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> > +		reg = <0>;
+> > +		allwinner,rb = <0>;
+> > +
+> > +		nand-ecc-mode = "hw";
+> > +		nand-on-flash-bbt;
+> > +
+> > +		boot0@0 {
+> > +			label = "boot0";
+> > +			reg = /bits/ 64 <0x0 0x200000>;
+> > +		};
+> > +
+> > +		boot0-rescue@200000 {
+> > +			label = "boot0-rescue";
+> > +			reg = /bits/ 64 <0x200000 0x200000>;
+> > +		};
+> > +
+> > +		uboot@400000 {
+> > +			label = "uboot";
+> > +			reg = /bits/ 64 <0x400000 0x200000>;
+> > +		};
+> > +
+> > +		uboot-rescue@600000 {
+> > +			label = "uboot-rescue";
+> > +			reg = /bits/ 64 <0x600000 0x200000>;
+> > +		};
+> > +
+> > +		main@800000 {
+> > +			label = "main";
+> > +			reg = /bits/ 64 <0x800000 0xff800000>;
+> > +		};
+> > +	};
+> > +};
 > 
-> The above commit id is not present in v4.7-rc1 and this patch doesn't apply properly.
-> Can you please rebase this series on v4.7-rc1?
+> This feels a bit premature. The two boards you're using have an MLC
+> NAND which is not supported yet. Until there's proper MLC support in
+> the kernel, I'm not sure we want to enable that for end-users when we
+> know that things will get wrong.
+> 
+> However, after discussing this with Boris, I appreciate that we don't
+> have any example available because of this policy for people that want
+> to opt-in anyway.
+> 
+> What we could do is to still mark the status as disabled in the DTS,
+> with a big fat warning as comment just before, so that it requires
+> user action, and that user will have been warned.
+> 
+> Would that work for you?
+> Maxime
+> 
 
-The commit is present in extcon tree for v4.8. The extcon patches will
-be applied (probably) to that tree so what is the point of rebasing on
-v4.7-rc1?
+Let's drop this two patches with boards dts changes until we get proper MLC
+support in kernel.
 
-Also the point of this particular patch is to show that previous change
-should be just dropped. Don't replace things to complicated devm-like
-functions just to simplify one path in the driver...
+As for examples - I'll update linux-sunxi wiki with how to enable NAND 
+controller and describe NAND chips in DTS. People who want to add NAND support 
+to their boards will be warned that it is risky for now.
 
-Best regards,
-Krzysztof
+>
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
+
+
+-- 
+Thanks and regards,
+Aleksei Mamlin
