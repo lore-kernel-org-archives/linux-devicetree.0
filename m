@@ -1,232 +1,115 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v4 06/12] ARM: dts: r8a7792: initial SoC device tree
-Date: Fri, 10 Jun 2016 00:41:10 +0300
-Message-ID: <2935290.QhIdlclvX3@wasted.cogentembedded.com>
+Subject: [PATCH v4 07/12] ARM: dts: r8a7792: add SYS-DMAC support
+Date: Fri, 10 Jun 2016 00:43:33 +0300
+Message-ID: <2336328.yuWhdAVn4L@wasted.cogentembedded.com>
 References: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Cc: linux@arm.linux.org.uk, magnus.damm@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The initial R8A7792 SoC device tree including CPU cores, GIC, timer, SYSC,
-and the required  clock descriptions.
+Describe SYS-DMAC0/1 in the R8A7792 device tree.
 
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 ---
-Changes in version 4:
-- fixed the CP clock divisor;
-- indented the P clock's "compatible" prop correctly;
-- removed leftover DU0/1 clock names from the MSTP7 clock node.
-
 Changes in version 3:
-- moved the fixed factor clocks under the "soc" node;
-- added back the CPU1 node, adjusted the changelog.
+- refreshed the patch.
 
 Changes in version 2:
-- explicitly included the IRQ header;
-- removed the CPU1 node;
-- removed the audio and PCIe bus clocks;
-- removed the SDH, SD0, and SD1 CPG clocks;
-- added RCAN and ADSP CPG clocks;
-- removed the PLL1/2, Z2, ZS, I, B, P, CL, M2, RCLK, OSCCLK, ZB3, ZB3D2, DDR,
-  and MP fixed factor clocks;
-- fixed up the parent and divisor for the CP fixed factor clock;
-- swapped  the SYS-DMAC0/1 clocks;
-- removed  all gated clocks except the [H]SCIF, IRQC, and SYS-DMAC ones;
-- created  the "soc" subnode, moving the SoC  device  nodes there;
-- removed  the "clocks" node, moving its fixed clock  subnodes to the root and
-  the MSTP subnodes into the "soc" node.
+- resolved reject, indenting the device nodes that are now under the "soc" node;
+- added Simon's ACK and Geert's tag too.
 
- arch/arm/boot/dts/r8a7792.dtsi |  179 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 179 insertions(+)
+ arch/arm/boot/dts/r8a7792.dtsi |   64 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
 Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
 ===================================================================
---- /dev/null
+--- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
 +++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-@@ -0,0 +1,179 @@
-+/*
-+ * Device Tree Source for the r8a7792 SoC
-+ *
-+ * Copyright (C) 2016 Cogent Embedded Inc.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include <dt-bindings/clock/r8a7792-clock.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/r8a7792-sysc.h>
-+
-+/ {
-+	compatible = "renesas,r8a7792";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <0>;
-+			clock-frequency = <1000000000>;
-+			clocks = <&cpg_clocks R8A7792_CLK_Z>;
-+			power-domains = <&sysc R8A7792_PD_CA15_CPU0>;
-+			next-level-cache = <&L2_CA15>;
+@@ -88,6 +88,70 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		dmac0: dma-controller@e6700000 {
++			compatible = "renesas,dmac-r8a7792",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe6700000 0 0x20000>;
++			interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					  "ch0", "ch1", "ch2", "ch3",
++					  "ch4", "ch5", "ch6", "ch7",
++					  "ch8", "ch9", "ch10", "ch11",
++					  "ch12", "ch13", "ch14";
++			clocks = <&mstp2_clks R8A7792_CLK_SYS_DMAC0>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
++			#dma-cells = <1>;
++			dma-channels = <15>;
 +		};
 +
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <1>;
-+			clock-frequency = <1000000000>;
-+			power-domains = <&sysc R8A7792_PD_CA15_CPU1>;
-+			next-level-cache = <&L2_CA15>;
++		dmac1: dma-controller@e6720000 {
++			compatible = "renesas,dmac-r8a7792",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe6720000 0 0x20000>;
++			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					  "ch0", "ch1", "ch2", "ch3",
++					  "ch4", "ch5", "ch6", "ch7",
++					  "ch8", "ch9", "ch10", "ch11",
++					  "ch12", "ch13", "ch14";
++			clocks = <&mstp2_clks R8A7792_CLK_SYS_DMAC1>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
++			#dma-cells = <1>;
++			dma-channels = <15>;
 +		};
 +
-+		L2_CA15: cache-controller@0 {
-+			compatible = "cache";
-+			reg = <0>;
-+			cache-unified;
-+			cache-level = <2>;
-+			power-domains = <&sysc R8A7792_PD_CA15_SCU>;
-+		};
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		gic: interrupt-controller@f1001000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0 0xf1001000 0 0x1000>,
-+			      <0 0xf1002000 0 0x1000>,
-+			      <0 0xf1004000 0 0x2000>,
-+			      <0 0xf1006000 0 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_HIGH)>;
-+		};
-+
-+		timer {
-+			compatible = "arm,armv7-timer";
-+			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-+				      IRQ_TYPE_LEVEL_LOW)>;
-+		};
-+
-+		sysc: system-controller@e6180000 {
-+			compatible = "renesas,r8a7792-sysc";
-+			reg = <0 0xe6180000 0 0x0200>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		/* Special CPG clocks */
-+		cpg_clocks: cpg_clocks@e6150000 {
-+			compatible = "renesas,r8a7792-cpg-clocks",
-+				     "renesas,rcar-gen2-cpg-clocks";
-+			reg = <0 0xe6150000 0 0x1000>;
-+			clocks = <&extal_clk>;
-+			#clock-cells = <1>;
-+			clock-output-names = "main", "pll0", "pll1", "pll3",
-+					     "lb", "qspi", "z", "rcan", "adsp";
-+			#power-domain-cells = <0>;
-+		};
-+
-+		/* Fixed factor clocks */
-+		zs_clk: zs {
-+			compatible = "fixed-factor-clock";
-+			clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-+			#clock-cells = <0>;
-+			clock-div = <6>;
-+			clock-mult = <1>;
-+		};
-+		p_clk: p {
-+			compatible = "fixed-factor-clock";
-+			clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-+			#clock-cells = <0>;
-+			clock-div = <24>;
-+			clock-mult = <1>;
-+		};
-+		cp_clk: cp {
-+			compatible = "fixed-factor-clock";
-+			clocks = <&cpg_clocks R8A7792_CLK_PLL1>;
-+			#clock-cells = <0>;
-+			clock-div = <48>;
-+			clock-mult = <1>;
-+		};
-+
-+		/* Gate clocks */
-+		mstp2_clks: mstp2_clks@e6150138 {
-+			compatible = "renesas,r8a7792-mstp-clocks",
-+				     "renesas,cpg-mstp-clocks";
-+			reg = <0 0xe6150138 0 4>, <0 0xe6150040 0 4>;
-+			clocks = <&zs_clk>, <&zs_clk>;
-+			#clock-cells = <1>;
-+			clock-indices = <
-+				R8A7792_CLK_SYS_DMAC1 R8A7792_CLK_SYS_DMAC0
-+			>;
-+			clock-output-names = "sys-dmac1", "sys-dmac0";
-+		};
-+		mstp4_clks: mstp4_clks@e6150140 {
-+			compatible = "renesas,r8a7792-mstp-clocks",
-+				     "renesas,cpg-mstp-clocks";
-+			reg = <0 0xe6150140 0 4>, <0 0xe615004c 0 4>;
-+			clocks = <&cp_clk>;
-+			#clock-cells = <1>;
-+			clock-indices = <R8A7792_CLK_IRQC>;
-+			clock-output-names = "irqc";
-+		};
-+		mstp7_clks: mstp7_clks@e615014c {
-+			compatible = "renesas,r8a7792-mstp-clocks",
-+				     "renesas,cpg-mstp-clocks";
-+			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
-+			clocks = <&zs_clk>, <&zs_clk>, <&p_clk>, <&p_clk>,
-+				 <&p_clk>, <&p_clk>;
-+			#clock-cells = <1>;
-+			clock-indices = <
-+				R8A7792_CLK_HSCIF1 R8A7792_CLK_HSCIF0
-+				R8A7792_CLK_SCIF3 R8A7792_CLK_SCIF2
-+				R8A7792_CLK_SCIF1 R8A7792_CLK_SCIF0
-+			>;
-+			clock-output-names = "hscif1", "hscif0", "scif3",
-+					     "scif2", "scif1", "scif0";
-+		};
-+	};
-+
-+	/* External root clock */
-+	extal_clk: extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
-+	};
-+
-+	/* External SCIF clock */
-+	scif_clk: scif {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
-+	};
-+};
+ 		/* Special CPG clocks */
+ 		cpg_clocks: cpg_clocks@e6150000 {
+ 			compatible = "renesas,r8a7792-cpg-clocks",
