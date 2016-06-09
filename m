@@ -1,7 +1,7 @@
 From: Kieran Bingham <kieran@ksquared.org.uk>
-Subject: [PATCH 2/2] arm64: dts: r8a7795: add FDP1 device nodes
-Date: Thu,  9 Jun 2016 17:42:49 +0100
-Message-ID: <1465490569-31177-3-git-send-email-kieran@bingham.xyz>
+Subject: [PATCH 1/2] arm64: dts: r8a7795: add FCPF device nodes
+Date: Thu,  9 Jun 2016 17:42:48 +0100
+Message-ID: <1465490569-31177-2-git-send-email-kieran@bingham.xyz>
 References: <1465490569-31177-1-git-send-email-kieran@bingham.xyz>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1465490569-31177-1-git-send-email-kieran@bingham.xyz>
@@ -13,45 +13,41 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob 
 Cc: Kieran Bingham <kieran@ksquared.org.uk>
 List-Id: devicetree@vger.kernel.org
 
+Provide nodes for the FCP devices dedicated to the FDP device channels.
+
 Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index e63e5f29cceb..0c0aa14f7f4d 100644
+index 3285a9286786..e63e5f29cceb 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -1244,5 +1244,32 @@
- 			clocks = <&cpg CPG_MOD 613>;
- 			power-domains = <&sysc R8A7795_PD_A3VP>;
+@@ -1223,5 +1223,26 @@
+ 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+ 			status = "disabled";
  		};
 +
-+		fdp1ch1: fdp1@fe940000 {
-+			compatible = "renesas,r8a7795-fdp1", "renesas,fdp1";
-+			reg = <0 0xfe940000 0 0x2400>;
-+			interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 119>;
++		fcpf0: fcp@fe950000 {
++			compatible = "renesas,r8a7795-fcpf", "renesas,fcpf";
++			reg = <0 0xfe950000 0 0x200>;
++			clocks = <&cpg CPG_MOD 615>;
 +			power-domains = <&sysc R8A7795_PD_A3VP>;
-+			renesas,fcp = <&fcpf0>;
 +		};
 +
-+		fdp1ch2: fdp1@fe944000 {
-+			compatible = "renesas,r8a7795-fdp1", "renesas,fdp1";
-+			reg = <0 0xfe944000 0 0x2400>;
-+			interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 118>;
++		fcpf1: fcp@fe951000 {
++			compatible = "renesas,r8a7795-fcpf", "renesas,fcpf";
++			reg = <0 0xfe951000 0 0x200>;
++			clocks = <&cpg CPG_MOD 614>;
 +			power-domains = <&sysc R8A7795_PD_A3VP>;
-+			renesas,fcp = <&fcpf1>;
 +		};
 +
-+		fdp1ch3: fdp1@fe948000 {
-+			compatible = "renesas,r8a7795-fdp1", "renesas,fdp1";
-+			reg = <0 0xfe948000 0 0x2400>;
-+			interrupts = <GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 117>;
++		fcpf2: fcp@fe952000 {
++			compatible = "renesas,r8a7795-fcpf", "renesas,fcpf";
++			reg = <0 0xfe952000 0 0x200>;
++			clocks = <&cpg CPG_MOD 613>;
 +			power-domains = <&sysc R8A7795_PD_A3VP>;
-+			renesas,fcp = <&fcpf2>;
 +		};
  	};
  };
