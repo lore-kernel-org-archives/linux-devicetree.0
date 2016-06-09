@@ -1,96 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v4 11/12] ARM: dts: blanche: initial device tree
-Date: Fri, 10 Jun 2016 00:49:11 +0300
-Message-ID: <1696555.qxkHIgkrXz@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 10/12] DT: arm: shmobile: document Blanche board
+Date: Fri, 10 Jun 2016 00:47:40 +0300
+Message-ID: <2146434.eRmd3OT4fB@wasted.cogentembedded.com>
 References: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1879394.3zBGLpF2nv-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the initial device  tree for the R8A7792 SoC based Blanche board.
-The board has 2 debug serial ports: SCIF0 and SCIF3; include support for
-them,  so that  the serial console  can  work.
+Document the Blanche device tree bindings, listing it as a supported board.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This allows to use checkpatch.pl to validate .dts files referring to the
+Blanche board.
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 ---
-Changes in version 3:
-- added Renesas Electronics' copyright.
-
 Changes in version 2:
-- added Simon's ACK and Geert's tag too.
+- added Rob's ACK.
 
- arch/arm/boot/dts/Makefile            |    1 
- arch/arm/boot/dts/r8a7792-blanche.dts |   45 ++++++++++++++++++++++++++++++++++
- 2 files changed, 46 insertions(+)
+Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
+ Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
+ 1 file changed, 2 insertions(+)
 
-Index: renesas/arch/arm/boot/dts/Makefile
+Index: renesas/Documentation/devicetree/bindings/arm/shmobile.txt
 ===================================================================
---- renesas.orig/arch/arm/boot/dts/Makefile
-+++ renesas/arch/arm/boot/dts/Makefile
-@@ -638,6 +638,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	r8a7790-lager.dtb \
- 	r8a7791-koelsch.dtb \
- 	r8a7791-porter.dtb \
-+	r8a7792-blanche.dtb \
- 	r8a7793-gose.dtb \
- 	r8a7794-alt.dtb \
- 	r8a7794-silk.dtb \
-Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-===================================================================
---- /dev/null
-+++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-@@ -0,0 +1,45 @@
-+/*
-+ * Device Tree Source for the Blanche board
-+ *
-+ * Copyright (C) 2014 Renesas Electronics Corporation
-+ * Copyright (C) 2016 Cogent  Embedded, Inc.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7792.dtsi"
-+
-+/ {
-+	model = "Blanche";
-+	compatible = "renesas,blanche", "renesas,r8a7792";
-+
-+	aliases {
-+		serial0 = &scif0;
-+		serial1 = &scif3;
-+	};
-+
-+	chosen {
-+		bootargs = "ignore_loglevel";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x40000000>;
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <20000000>;
-+};
-+
-+&scif0 {
-+	status = "okay";
-+};
-+
-+&scif3 {
-+	status = "okay";
-+};
+--- renesas.orig/Documentation/devicetree/bindings/arm/shmobile.txt
++++ renesas/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -39,6 +39,8 @@ Boards:
+     compatible = "renesas,ape6evm", "renesas,r8a73a4"
+   - Atmark Techno Armadillo-800 EVA
+     compatible = "renesas,armadillo800eva"
++  - Blanche (RTP0RC7792SEB00010S)
++    compatible = "renesas,blanche", "renesas,r8a7792"
+   - BOCK-W
+     compatible = "renesas,bockw", "renesas,r8a7778"
+   - Genmai (RTK772100BC00000BR)
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
