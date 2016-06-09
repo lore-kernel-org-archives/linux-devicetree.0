@@ -1,62 +1,168 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v9 13/14] usb: gadget: udc: adapt to OTG core
-Date: Thu, 9 Jun 2016 10:49:13 +0000
-Message-ID: <SG2PR06MB09198DD132E005FFD4F4CAEED85F0@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
- <1465376626-30122-14-git-send-email-rogerq@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun6i: Add pmic / regulator nodes to Mele
+ A1000G quad dts
+Date: Thu, 9 Jun 2016 12:53:52 +0200
+Message-ID: <355dac66-46cc-c6cf-7831-e14ea394ae55@redhat.com>
+References: <1465133880-22921-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v67Jo6MO7bp4JdV4hXrB4T60z4=ROkvAvE1i7dhAXk_UtQ@mail.gmail.com>
+ <0a42bc82-83f2-80ce-93d4-a85c5ce69e24@redhat.com>
+ <20160607212545.GF14179@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465376626-30122-14-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Content-Language: ja-JP
+In-Reply-To: <20160607212545.GF14179@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, "peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "grygorii.strashko-l0cyMroinI0@public.gmane.org" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nsekhar-l0cyMroinI0@public.gmane.org" <nsekhar-l0cyMroinI0@public.gmane.org>, "b-liu-l0cyMroinI0@public.gmane.org" <b-liu-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+HI,
 
-> From: Roger Quadros
-> Sent: Wednesday, June 08, 2016 6:04 PM
-> 
-> The OTG state machine needs a mechanism to start and
-> stop the gadget controller as well as connect/disconnect
-> from the bus. Add usb_gadget_start(), usb_gadget_stop()
-> and usb_gadget_connect_control().
-> 
-> Introduce usb_otg_add_gadget_udc() to allow controller drivers
-> to register a gadget controller that is part of an OTG instance.
-> 
-> Register with OTG core when UDC is added in usb_add_gadget_udc_release()
-> and unregister on usb_del_gadget_udc().
-> 
-> Notify the OTG core when gadget function driver is available on
-> udc_bind_to_driver() and when it is removed in usb_gadget_remove_driver().
-> 
-> We need to unlock the usb_lock mutex before calling
-> usb_otg_register_gadget() else it will cause a circular
-> locking dependency.
-> 
-> Ignore softconnect sysfs control when we're in OTG
-> mode as OTG FSM should care of gadget softconnect using
-> the b_bus_req mechanism.
-> 
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/usb/gadget/udc/udc-core.c | 202 ++++++++++++++++++++++++++++++++++++--
->  include/linux/usb/gadget.h        |   4 +
->  2 files changed, 196 insertions(+), 10 deletions(-)
+On 07-06-16 23:25, Maxime Ripard wrote:
+> On Mon, Jun 06, 2016 at 09:23:36AM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 06-06-16 09:12, Chen-Yu Tsai wrote:
+>>> On Sun, Jun 5, 2016 at 9:37 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> Add pmic / regulator nodes to Mele A1000G quad dts.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>> arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts | 88 +++++++++++++++++++++++-
+>>>> 1 file changed, 87 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+>>>> index e063dab..9782113 100644
+>>>> --- a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+>>>> +++ b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+>>>> @@ -72,6 +72,10 @@
+>>>>        };
+>>>> };
+>>>>
+>>>> +&cpu0 {
+>>>> +       cpu-supply = <&reg_dcdc3>;
+>>>> +};
+>>>> +
+>>>> &ehci0 {
+>>>>        status = "okay";
+>>>> };
+>>>> @@ -85,6 +89,7 @@
+>>>>        pinctrl-0 = <&gmac_pins_mii_a>;
+>>>>        phy = <&phy1>;
+>>>>        phy-mode = "mii";
+>>>> +       phy-supply = <&reg_dldo1>;
+>>>>        status = "okay";
+>>>>
+>>>>        phy1: ethernet-phy@1 {
+>>>> @@ -101,13 +106,26 @@
+>>>> &mmc0 {
+>>>>        pinctrl-names = "default";
+>>>>        pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_m9>;
+>>>> -       vmmc-supply = <&reg_vcc3v3>;
+>>>> +       vmmc-supply = <&reg_dcdc1>;
+>>>>        bus-width = <4>;
+>>>>        cd-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
+>>>>        cd-inverted;
+>>>>        status = "okay";
+>>>> };
+>>>>
+>>>> +&p2wi {
+>>>> +       status = "okay";
+>>>> +
+>>>> +       axp22x: pmic@68 {
+>>>> +               compatible = "x-powers,axp221";
+>>>> +               reg = <0x68>;
+>>>> +               interrupt-parent = <&nmi_intc>;
+>>>> +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>>>> +       };
+>>>> +};
+>>>> +
+>>>> +#include "axp22x.dtsi"
+>>>> +
+>>>> &pio {
+>>>>        led_pins_m9: led_pins@0 {
+>>>>                allwinner,pins = "PH13";
+>>>> @@ -131,6 +149,73 @@
+>>>>        };
+>>>> };
+>>>>
+>>>> +&reg_aldo1 {
+>>>> +       regulator-min-microvolt = <3300000>;
+>>>> +       regulator-max-microvolt = <3300000>;
+>>>> +       regulator-name = "vcc-wifi";
+>>>> +};
+>>>> +
+>>>> +&reg_aldo3 {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <2700000>;
+>>>> +       regulator-max-microvolt = <3300000>;
+>>>> +       regulator-name = "avcc";
+>>>> +};
+>>>> +
+>>>> +&reg_dc5ldo {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <700000>;
+>>>> +       regulator-max-microvolt = <1320000>;
+>>>> +       regulator-name = "vdd-cpus"; /* This is an educated guess */
+>>>> +};
+>>>> +
+>>>> +&reg_dcdc1 {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <3300000>;
+>>>> +       regulator-max-microvolt = <3300000>;
+>>>> +       regulator-name = "vcc-3v3";
+>>>> +};
+>>>> +
+>>>> +&reg_dcdc2 {
+>>>> +       regulator-min-microvolt = <700000>;
+>>>> +       regulator-max-microvolt = <1320000>;
+>>>> +       regulator-name = "vdd-gpu";
+>>>> +};
+>>>> +
+>>>> +&reg_dcdc3 {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <700000>;
+>>>> +       regulator-max-microvolt = <1320000>;
+>>>> +       regulator-name = "vdd-cpu";
+>>>> +};
+>>>> +
+>>>> +&reg_dcdc4 {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <700000>;
+>>>> +       regulator-max-microvolt = <1320000>;
+>>>> +       regulator-name = "vdd-sys-dll";
+>>>> +};
+>>>> +
+>>>> +&reg_dcdc5 {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <1500000>;
+>>>> +       regulator-max-microvolt = <1500000>;
+>>>> +       regulator-name = "vcc-dram";
+>>>> +};
+>>>> +
+>>>> +&reg_dldo1 {
+>>>> +       regulator-min-microvolt = <3300000>;
+>>>> +       regulator-max-microvolt = <3300000>;
+>>>> +       regulator-name = "vcc-ethernet-phy";
+>>>> +};
+>>>> +
+>>>> +&reg_dldo4 {
+>>>> +       regulator-always-on;
+>>>
+>>> Why not tie this to the usbphy? Same for the other patch.
+>>
+>> Because both reg_usb1_vbus and reg_dldo4 need to be on
+>> for the hub attached to usb1 to work, and I can list
+>> only one usb1_vbus-supply.
+>
+> Adding a comment stating that would be great :)
 
-I tried to apply this patch on the Felipe's usb.git / testing/next branch,
-but I couldn't apply because the udc-core.c was renamed to core.c.
-https://git.kernel.org/cgit/linux/kernel/git/balbi/usb.git/commit/?h=testing/next&id=a22b539c7082b6a3046b3a9cebb356a047a2d81d
+Ok I'll send a v2 of both patch with an amended commit msg.
 
-I guess this patch needs rebase for that.
+Regards,
 
-Best regards,
-Yoshihiro Shimoda
-
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
