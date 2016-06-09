@@ -1,89 +1,59 @@
-From: Peter Senna Tschudin <peter.senna@collabora.com>
-Subject: [PATCH V2 3/5] Documentation/devicetree/bindings: b850v3_lvds_dp
-Date: Thu,  9 Jun 2016 18:25:03 +0200
-Message-ID: <59c49951b95b0eb5b34eede6cfce526e72bc2443.1465486875.git.peter.senna@collabora.com>
-References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
- <cover.1465486875.git.peter.senna@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1465486875.git.peter.senna@collabora.com>
-In-Reply-To: <cover.1465486875.git.peter.senna@collabora.com>
-References: <cover.1465486875.git.peter.senna@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: airlied@linux.ie, akpm@linux-foundation.org, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, enric.balletbo@collabora.com, eballetbo@gmail.com, galak@codeaurora.org, gregkh@linuxfoundation.org, heiko@sntech.de, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, martin.donnelly@ge.com, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, pawel.moll@arm.com, peter.senna@collabora.com, peter.senna@gmail.com, p.zabel@pengutronix.de, thierry.reding@gmail.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, shawnguo@kernel.org, tiwai@suse.com, treding@nvidia.com, ykk@rock-chips.com
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
+From: Kieran Bingham <kieran@ksquared.org.uk>
+Subject: [PATCH 2/2] arm64: dts: r8a7795: add FDP1 device nodes
+Date: Thu,  9 Jun 2016 17:42:49 +0100
+Message-ID: <1465490569-31177-3-git-send-email-kieran@bingham.xyz>
+References: <1465490569-31177-1-git-send-email-kieran@bingham.xyz>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1465490569-31177-1-git-send-email-kieran@bingham.xyz>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/RENESAS ARM64
+	ARCHITECTURE" <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
+	AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Kieran Bingham <kieran@ksquared.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Devicetree bindings documentation for the GE B850v3 LVDS/DP++
-display bridge.
-
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
+Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
 ---
-Changes from V1:
- - Replaced '_' by '-' in node names or compatible strings
- - Added missing @73 to the example
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
- .../devicetree/bindings/ge/b850v3_lvds_dp.txt      | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ge/b850v3_lvds_dp.txt
-
-diff --git a/Documentation/devicetree/bindings/ge/b850v3_lvds_dp.txt b/Documentation/devicetree/bindings/ge/b850v3_lvds_dp.txt
-new file mode 100644
-index 0000000..46bbea9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ge/b850v3_lvds_dp.txt
-@@ -0,0 +1,38 @@
-+Driver for GE B850v3 LVDS/DP++ display bridge
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index e63e5f29cceb..0c0aa14f7f4d 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -1244,5 +1244,32 @@
+ 			clocks = <&cpg CPG_MOD 613>;
+ 			power-domains = <&sysc R8A7795_PD_A3VP>;
+ 		};
 +
-+Required properties:
-+  - compatible : should be "ge,b850v3_lvds_dp".
-+  - reg : should contain the address used to ack the interrupts.
-+  - interrupt-parent : should link to the gpio used as interrupt
-+    source on the host.
-+  - interrupts : one interrupt should be described here, as in
-+    <0 IRQ_TYPE_LEVEL_HIGH>.
-+  - edid-reg : should contain the address used to read edid information
-+  - port : should describe the vide signal connection between the host
-+    and the bridge.
-+
-+Example:
-+
-+&mux2_i2c2 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	b850v3-lvds-dp-bridge@73  {
-+		compatible = "ge,b850v3-lvds-dp";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg = <0x73>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		edid-reg = <0x72>;
-+
-+		port@0 {
-+			reg = <0>;
-+			b850v3_dp_bridge_in: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
++		fdp1ch1: fdp1@fe940000 {
++			compatible = "renesas,r8a7795-fdp1", "renesas,fdp1";
++			reg = <0 0xfe940000 0 0x2400>;
++			interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 119>;
++			power-domains = <&sysc R8A7795_PD_A3VP>;
++			renesas,fcp = <&fcpf0>;
 +		};
-+	};
-+};
++
++		fdp1ch2: fdp1@fe944000 {
++			compatible = "renesas,r8a7795-fdp1", "renesas,fdp1";
++			reg = <0 0xfe944000 0 0x2400>;
++			interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 118>;
++			power-domains = <&sysc R8A7795_PD_A3VP>;
++			renesas,fcp = <&fcpf1>;
++		};
++
++		fdp1ch3: fdp1@fe948000 {
++			compatible = "renesas,r8a7795-fdp1", "renesas,fdp1";
++			reg = <0 0xfe948000 0 0x2400>;
++			interrupts = <GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 117>;
++			power-domains = <&sysc R8A7795_PD_A3VP>;
++			renesas,fcp = <&fcpf2>;
++		};
+ 	};
+ };
 -- 
-2.5.5
+2.7.4
