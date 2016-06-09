@@ -1,43 +1,70 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v9 03/14] usb: hcd.h: Add OTG to HCD interface
-Date: Thu, 9 Jun 2016 13:16:44 +0300
-Message-ID: <5201761f-4efa-f941-b05f-e4a2b91c75c0@cogentembedded.com>
-References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
- <1465376626-30122-4-git-send-email-rogerq@ti.com>
- <5bc321c0-fb36-7a4a-d054-ee73b12822d4@cogentembedded.com>
- <575809E9.7010409@ti.com>
- <f5f068ae-c46a-5bad-45e1-f0f9cb5f8592@cogentembedded.com>
- <57591B5E.3050602@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC v4 01/14] regulator: of: Add helper for getting all supplies
+Date: Thu, 9 Jun 2016 11:29:25 +0100
+Message-ID: <20160609102925.GS7510@sirena.org.uk>
+References: <1465465471-28740-1-git-send-email-k.kozlowski@samsung.com>
+ <1465465471-28740-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sCshgy9RPHTe3gCr"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57591B5E.3050602@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1465465471-28740-2-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, peter.chen@freescale.com
-Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Heiko Stuebner <heiko@sntech.de>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org, hzpeterchen@gmail.com, Bartlomiej
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 6/9/2016 10:31 AM, Roger Quadros wrote:
+--sCshgy9RPHTe3gCr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>>>> The OTG core will use struct otg_hcd_ops to interface
->>>>> with the HCD controller.
->>>>
->>>>    Host controller driver (HCD) controller? Maybe just HC? :-)
->>>
->>> OK.
->>
->>    OTOH, my googling has shown that HCD may stand for both HC driver and HC device... The host controller device sounds a bit tautological however...
->
-> Yeah I always meant it to be Host Controller Device :).
+On Thu, Jun 09, 2016 at 11:44:18AM +0200, Krzysztof Kozlowski wrote:
+> Few drivers have a need of getting regulator supplies without knowing
+> their names:
+> 1. The Simple Framebuffer driver works on setup provided by bootloader
+>    (outside of scope of kernel);
+> 2. Generic power sequence driver may be attached to any device node.
+>=20
+> Add a Device Tree helper for parsing "-supply" properties and returning
+> allocated bulk regulator consumers.
 
-    The question here is more what was meant by the previous Linux USB 
-authors. :-)
+I'm still very concerned that this is just an invitation to people to
+write half baked regulator consumers and half baked DTs to go along with
+it, making it a standard API that doesn't have big red flags on it that
+will flag up when "normal" drivers use it is not good.  Right now this
+just looks like a standard API and people are going to just start using
+it.  If we are going to do this perhaps we need a separate header or
+something to help flag this up.
 
-> --
-> cheers,
-> -roger
+In the case of power sequences I'd expect the sequences to perform
+operations on named supplies - the core shouldn't know what the supplies
+are but the thing specifying the sequence should.
 
-MBR, Sergei
+>  drivers/regulator/of_regulator.c       | 86 ++++++++++++++++++++++++++++=
+++++++
+>  include/linux/regulator/of_regulator.h | 13 +++++
+>  2 files changed, 99 insertions(+)
+
+The external interface shouldn't be DT specific, the Intel people are
+busy importing all of DT into ACPI so they'll doubtless want an ACPI
+version.
+
+--sCshgy9RPHTe3gCr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXWUUEAAoJECTWi3JdVIfQEcEH/AtEa8HHkDnNy1eSEmi2KWSH
+eb/X8Sjgcoig7sMk5GckV39Umc+4WXVOxj9OYorOOhJqAat4uaFDzyNlEXx6O4Tx
+c1XWpJpdkDobo8I95Cac2NiG+2qwrRSFfT+RyPD+OkJiU4V+KcsI+xpjkGUK0k1E
+9NoQPOi5c5Psa4wd+d3yzgQXPDdNRGwZEvDc6ok9DDMZSLxDMBqQwVHI3RLp0IGV
+/ebd4oXgPuC6n0HwgC8usjj7MwrL6Z6cwMALbJLw3jNlun4/Hi07ZdjJTNKwJ95Y
+bQ+7gNgLos07NGfr/2XO7oC4EsaRfkK8gCEQT2pEpOnUF9H7x40rM7O4xhOw488=
+=spnK
+-----END PGP SIGNATURE-----
+
+--sCshgy9RPHTe3gCr--
