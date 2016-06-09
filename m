@@ -1,85 +1,33 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v11 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma device tree binding documentation
-Date: Thu, 9 Jun 2016 21:07:46 +0530
-Message-ID: <1465486667-30737-1-git-send-email-appanad@xilinx.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v10 11/14] usb: otg: use dev_dbg() instead of VDBG()
+Date: Thu, 09 Jun 2016 08:43:44 -0700
+Message-ID: <1465487024.25087.72.camel@perches.com>
+References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+	 <1465376626-30122-12-git-send-email-rogerq@ti.com>
+	 <575920D9.7080905@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575920D9.7080905-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Device-tree binding documentation for Xilinx zynqmp dma engine
-used in Zynq UltraScale+ MPSoC.
+On Thu, 2016-06-09 at 10:55 +0300, Roger Quadros wrote:
+> Now that we have a device reference in struct usb_otg
+> let's use dev_vdbg() for debug messages instead of VDBG().
+> 
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> Acked-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+> ---
+> v10:
+> - in the commit message say dev_vdbg() instead of dev_dbg()
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
----
-Changes in v11:
-- None.
-Changes in v10:
-- Added Rob Acked-by in the commit message.
-Changs in v9:
-- Removed include sg runtime configuration parameter
-  from the binding doc as suggested by Lars.
-Changes in v8:
-- Removed all the software runtime configuration parameters
-  from the binding doc as suggested by the Lars.
-Changes in v7:
-- None.
-Changes in v6:
-- Removed desc-axi-cache/dst-axi-cache/src-axi-cache properties
-  from the binding doc as it allow broken combinations when dma-coherent
-  is set as suggested by Rob.
-- Fixed minor comments given by Rob related coding(lower case DT node name).
-Changes in v5:
-- Use dma-coherent flag for coherent transfers as suggested by rob.
-- Removed unnecessary properties from binding doc as suggested by Rob.
-Changes in v4:
-- None
-Changes in v3:
-- None
-Changes in v2:
-- None.
+50% - partial credit, see: patch/email subject.
 
- .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  |   27 ++++++++++++++++++++
- 1 files changed, 27 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-new file mode 100644
-index 0000000..a784cdd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-@@ -0,0 +1,27 @@
-+Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
-+memory to device and device to memory transfers. It also has flow
-+control and rate control support for slave/peripheral dma access.
-+
-+Required properties:
-+- compatible		: Should be "xlnx,zynqmp-dma-1.0"
-+- reg			: Memory map for gdma/adma module access.
-+- interrupt-parent	: Interrupt controller the interrupt is routed through
-+- interrupts		: Should contain DMA channel interrupt.
-+- xlnx,bus-width	: Axi buswidth in bits. Should contain 128 or 64
-+- clock-names		: List of input clocks "clk_main", "clk_apb"
-+			  (see clock bindings for details)
-+
-+Optional properties:
-+- dma-coherent		: Present if dma operations are coherent.
-+
-+Example:
-+++++++++
-+fpd_dma_chan1: dma@fd500000 {
-+	compatible = "xlnx,zynqmp-dma-1.0";
-+	reg = <0x0 0xFD500000 0x1000>;
-+	interrupt-parent = <&gic>;
-+	interrupts = <0 117 4>;
-+	clock-names = "clk_main", "clk_apb";
-+	xlnx,bus-width = <128>;
-+	dma-coherent;
-+};
--- 
-1.7.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
