@@ -1,33 +1,19 @@
 From: Peter Senna Tschudin <peter.senna@collabora.com>
-Subject: [PATCH V2 2/5] dts/imx6q-b850v3: Configure IPU assignment order
-Date: Thu,  9 Jun 2016 18:25:02 +0200
-Message-ID: <b42202e66ab3a82ad134924c12c50ba64b2d92d1.1465486875.git.peter.senna@collabora.com>
+Subject: [PATCH V2 5/5] dts/imx6q-b850v3: Use GE B850v3 LVDS/DP++ Bridge
+Date: Thu,  9 Jun 2016 18:25:05 +0200
+Message-ID: <3c492c8fcbe409536e791f5062e6eb42d06d76fa.1465486875.git.peter.senna@collabora.com>
 References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
  <cover.1465486875.git.peter.senna@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1465486875.git.peter.senna@collabora.com>
 In-Reply-To: <cover.1465486875.git.peter.senna@collabora.com>
 References: <cover.1465486875.git.peter.senna@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: airlied@linux.ie, akpm@linux-foundation.org, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, enric.balletbo@collabora.com, eballetbo@gmail.com, galak@codeaurora.org, gregkh@linuxfoundation.org, heiko@sntech.de, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, martin.donnelly@ge.com, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, pawel.moll@arm.com, peter.senna@collabora.com, peter.senna@gmail.com, p.zabel@pengutronix.de, thierry.reding@gmail.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, shawnguo@kernel.org, tiwai@suse.com, treding@nvidia.com, ykk@rock-chips.com
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-As the IPU has combined limitations across multiple crtcs, and as that
-can't be communicated to userspace at the moment, reorder the crtcs to
-allow support to two Full-HD monitors by avoiding assigning two
-monitors to a single IPU.
+Configures the GE B850v3 LVDS/DP++ bridge on the dts file.
 
 Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc: Philipp Zabel <p.zabel@pengutronix.de>
@@ -36,26 +22,57 @@ Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
 ---
 Changes from V1:
- - New commit message
+ - Replaced '_' by '-' in node names or compatible strings
+ - Added missing @73 to b850v3-lvds-dp-bridge
 
- arch/arm/boot/dts/imx6q-b850v3.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/imx6q-b850v3.dts | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
-index 167f744..88a70de 100644
+index 88a70de..a57dd5b 100644
 --- a/arch/arm/boot/dts/imx6q-b850v3.dts
 +++ b/arch/arm/boot/dts/imx6q-b850v3.dts
-@@ -51,6 +51,11 @@
- 	chosen {
- 		stdout-path = &uart3;
- 	};
+@@ -77,6 +77,13 @@
+ 		fsl,data-mapping = "spwg";
+ 		fsl,data-width = <24>;
+ 		status = "okay";
 +
-+	display-subsystem {
-+		compatible = "fsl,imx-display-subsystem";
-+		ports = <&ipu1_di0>, <&ipu2_di0>, <&ipu1_di1>, <&ipu2_di1>;
-+	};
++		port@4 {
++			reg = <4>;
++			lvds0_out: endpoint {
++				remote-endpoint = <&b850v3_lvds_dp_bridge_in>;
++			};
++		};
+ 	};
  };
  
- &clks {
+@@ -147,3 +154,27 @@
+ 		reg = <0x4a>;
+ 	};
+ };
++
++&mux2_i2c2 {
++	status = "okay";
++	clock-frequency = <100000>;
++
++	b850v3-lvds-dp-bridge@73 {
++		compatible = "ge,b850v3-lvds-dp";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg = <0x73>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++
++		edid-reg = <0x72>;
++
++		port@0 {
++			reg = <0>;
++			b850v3_lvds_dp_bridge_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
++};
 -- 
 2.5.5
