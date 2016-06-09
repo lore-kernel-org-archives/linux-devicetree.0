@@ -1,49 +1,29 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v9 03/14] usb: hcd.h: Add OTG to HCD interface
-Date: Thu, 9 Jun 2016 10:11:13 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1606091008210.1697-100000@iolanthe.rowland.org>
-References: <5201761f-4efa-f941-b05f-e4a2b91c75c0@cogentembedded.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v10 0/8] add i2c driver supported for rk3399
+Date: Thu, 09 Jun 2016 16:12:58 +0200
+Message-ID: <1984217.j9J6dIjr4z@diego>
+References: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com> <2239664.BKqQWGCl8U@diego> <20160609074752.GA3720@katana>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5201761f-4efa-f941-b05f-e4a2b91c75c0-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160609074752.GA3720@katana>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: David Wu <david.wu@rock-chips.com>, robh+dt@kernel.org, dianders@chromium.org, andy.shevchenko@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, briannorris@google.com, davidriley@google.com, huangtao@rock-chips.com, hl@rock-chips.com, xjq@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 9 Jun 2016, Sergei Shtylyov wrote:
-
-> Hello.
+Am Donnerstag, 9. Juni 2016, 09:47:53 schrieb Wolfram Sang:
+> > this series looks pretty nice now and it seems most everybody is happy
+> > with it by now. Do you still have it in your inbox to look at, or should
+> > David resend it again?
 > 
-> On 6/9/2016 10:31 AM, Roger Quadros wrote:
-> 
-> >>>>> The OTG core will use struct otg_hcd_ops to interface
-> >>>>> with the HCD controller.
-> >>>>
-> >>>>    Host controller driver (HCD) controller? Maybe just HC? :-)
-> >>>
-> >>> OK.
-> >>
-> >>    OTOH, my googling has shown that HCD may stand for both HC driver and HC device... The host controller device sounds a bit tautological however...
-> >
-> > Yeah I always meant it to be Host Controller Device :).
-> 
->     The question here is more what was meant by the previous Linux USB 
-> authors. :-)
+> I use patchwork (as stated in MAINTAINERS), so nothing gets lost as long
+> as it is send to the i2c-list. As long as it still applies, no need to
+> resend. This series does have priority, thanks to the tags given.
 
-I have always used "HCD" to mean Host Controller Driver, and I believe 
-that's what other people have done too.
+Just verified that everything still applies against 4.7-rc1 and present boards 
+still have working i2c with this series.
 
-If I want to refer to a Host Controller Device, I would write either
-"HC" or "host controller".
 
-Admittedly, this means that struct usb_hcd has a slightly illogical 
-name.
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Heiko
