@@ -1,109 +1,79 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC v4 4/7] extcon: usb-gpio: Add support for VBUS detection
-Date: Thu, 9 Jun 2016 15:13:41 +0300
-Message-ID: <57595D75.8090301@ti.com>
-References: <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
- <1465393686-16644-5-git-send-email-k.kozlowski@samsung.com>
- <57592B02.2070609@ti.com> <57592C18.8020609@samsung.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 03/12] mmc: tegra: restrict the voltage_switch() callback to the 1.8V case
+Date: Thu, 09 Jun 2016 14:27:16 +0200
+Message-ID: <8737omo8d7.fsf@free-electrons.com>
+References: <1465456218-28354-1-git-send-email-gregory.clement@free-electrons.com>
+	<1465456218-28354-4-git-send-email-gregory.clement@free-electrons.com>
+	<1465466097.18807.7.camel@lynxeye.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <57592C18.8020609@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Peter Chen <peter.chen@freescale.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, balbi@kernel.com, kishon@ti.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1465466097.18807.7.camel@lynxeye.de> (Lucas Stach's message of
+	"Thu, 09 Jun 2016 11:54:57 +0200")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lucas Stach <dev@lynxeye.de>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/16 11:43, Krzysztof Kozlowski wrote:
-> On 06/09/2016 10:38 AM, Roger Quadros wrote:
->> Hi,
->>
->> On 08/06/16 16:48, Krzysztof Kozlowski wrote:
->>> Add VBUS pin detection support to extcon-usb-gpio driver for boards
->>> which have both VBUS and ID pins, or only one of them.
->>>
->>> The logic behind reporting USB and USB-HOST extcon cables is not
->>> affected. The driver however will report extcon changes for USB-VBUS and
->>> USB-ID.
->>>
->>> Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
->>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>>
->>> ---
->>>
->>> Some parts base on old Robert's patchset.
->>> ---
->>>  drivers/extcon/extcon-usb-gpio.c | 125 +++++++++++++++++++++++++++++++--------
->>>  1 file changed, 99 insertions(+), 26 deletions(-)
->>>
->>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
->>> index a36aab007022..85b8a0ce5731 100644
->>> --- a/drivers/extcon/extcon-usb-gpio.c
->>> +++ b/drivers/extcon/extcon-usb-gpio.c
->>> @@ -35,7 +35,9 @@ struct usb_extcon_info {
->>>  	struct extcon_dev *edev;
->>>  
->>>  	struct gpio_desc *id_gpiod;
->>> +	struct gpio_desc *vbus_gpiod;
->>>  	int id_irq;
->>> +	int vbus_irq;
->>>  
->>>  	unsigned long debounce_jiffies;
->>>  	struct delayed_work wq_detcable;
->>> @@ -44,6 +46,8 @@ struct usb_extcon_info {
->>>  static const unsigned int usb_extcon_cable[] = {
->>>  	EXTCON_USB,
->>>  	EXTCON_USB_HOST,
->>> +	EXTCON_USB_ID,
->>> +	EXTCON_USB_VBUS,
->>>  	EXTCON_NONE,
->>>  };
->>>  
->>> @@ -55,7 +59,8 @@ static void usb_extcon_detect_cable(struct work_struct *work)
->>>  						    wq_detcable);
->>>  
->>>  	/* check ID and update cable state */
->>> -	id = gpiod_get_value_cansleep(info->id_gpiod);
->>> +	id = info->id_gpiod ? gpiod_get_value_cansleep(info->id_gpiod) : 1;
->>> +
->>>  	if (id) {
->>>  		/*
->>>  		 * ID = 1 means USB HOST cable detached.
->>> @@ -73,6 +78,14 @@ static void usb_extcon_detect_cable(struct work_struct *work)
->>>  		extcon_set_cable_state_(info->edev, EXTCON_USB, false);
->>>  		extcon_set_cable_state_(info->edev, EXTCON_USB_HOST, true);
->>>  	}
->>> +
->>> +	if (info->id_gpiod)
->>> +		extcon_set_cable_state_(info->edev, EXTCON_USB_ID, id);
->>> +	if (info->vbus_gpiod) {
->>> +		int vbus = gpiod_get_value_cansleep(info->vbus_gpiod);
->>> +
->>> +		extcon_set_cable_state_(info->edev, EXTCON_USB_VBUS, vbus);
->>> +	}
->>
->> What happens if either id_gpiod or vbus_gpiod is present?
->>
->> As per the DT binding document
->> "In general we have three cases:
->> 1. If VBUS and ID gpios are present we pass them as is
->> USB-HOST = !ID, USB = VBUS
->> 2. If only VBUS gpio is present we assume that ID pin is always High.
->> USB-HOST = false, USB = VBUS.
->> 3. If only ID pin is available we infer the VBUS pin states based on ID.
->> USB-HOST = !ID, USB = ID"
->>
->> So do you want to be consistent and infer VBUS and ID states based on the other?
-> 
-> Right, I couldn't make up my mind whether I want to change/improve
-> existing logic or just add VBUS/ID raw notifying. Finally I left
-> original code for USB/USB-HOST cables alone.
-> 
+Hi Lucas,
+=20
+ On jeu., juin 09 2016, Lucas Stach <dev@lynxeye.de> wrote:
 
-I think it is better to stick to raw notifying so nothing needs to be changed.
-If there is some mechanism to get the pin state and if the pin is not available
-it should return error.
+> Am Donnerstag, den 09.06.2016, 09:10 +0200 schrieb Gregory CLEMENT:
+>> Given its name the voltage_switch() should be called for any
+>> voltage. However currently it is only called for the 1.8V case.
+>>=20
+>> That means that the current implementation of the callback could hav=
+e
+>> made this assumption. In order to not adding a regression when the
+>> voltage_switch() function will be called for the other voltage
+>> targets,
+>> this patch ensure that the code of the current callback won't be
+>> executed
+>> for the other case than 1.8V.
+>>=20
+> This isn't necessary, it's fine to re-execute the pad calibration for
+> any voltage switch.
 
-cheers,
--roger
+Thanks for your feedback, so I can remove this patch from the series.
+
+Gregory
+
+>
+> Regards,
+> Lucas
+>
+>> Cc: Lucas Stach <dev@lynxeye.de>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> ---
+>> =C2=A0drivers/mmc/host/sdhci-tegra.c | 4 ++++
+>> =C2=A01 file changed, 4 insertions(+)
+>>=20
+>> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci=
+-
+>> tegra.c
+>> index bcc0de47fe7e..01f58296125e 100644
+>> --- a/drivers/mmc/host/sdhci-tegra.c
+>> +++ b/drivers/mmc/host/sdhci-tegra.c
+>> @@ -302,6 +302,10 @@ static void tegra_sdhci_voltage_switch(struct
+>> sdhci_host *host)
+>> =C2=A0	struct sdhci_tegra *tegra_host =3D
+>> sdhci_pltfm_priv(pltfm_host);
+>> =C2=A0	const struct sdhci_tegra_soc_data *soc_data =3D tegra_host-
+>> >soc_data;
+>> =C2=A0
+>> +	/* initially this function was called only for the 1.8V case
+>> */
+>> +	if (host->mmc->ios.signal_voltage !=3D MMC_SIGNAL_VOLTAGE_180)
+>> +		return;
+>> +
+>> =C2=A0	if (soc_data->nvquirks & NVQUIRK_HAS_PADCALIB)
+>> =C2=A0		tegra_host->pad_calib_required =3D true;
+>> =C2=A0}
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
