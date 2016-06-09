@@ -1,34 +1,63 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v4 00/12] Add R8A7792/Blanche board support
-Date: Fri, 10 Jun 2016 00:29:42 +0300
-Message-ID: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 02/12] ARM: shmobile: r8a7792: add power domain index macros
+Date: Fri, 10 Jun 2016 00:33:32 +0300
+Message-ID: <5668456.Vz9YOUO7ef@wasted.cogentembedded.com>
+References: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1879394.3zBGLpF2nv-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add macros usable by the device tree sources to reference R8A7792 SYSC power
+domains by index.
 
-   Here's the set of 12 patches against Simon Horman's 'renesas.git' repo,
-'renesas-devel-20160606-v4.7-rc2' tag. We add the device tree support for
-the R8A7792-based Blanche board. The R-Car 'clk' driver patch was posted
-separately and 2 'clk' binding patches were split from this series...
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-[01/12] ARM: shmobile: r8a7792: add clock index macros
-[02/12] ARM: shmobile: r8a7792: add power domain index macros
-[03/12] soc: renesas: rcar-sysc: add R8A7792 support
-[04/12] ARM: shmobile: r8a7792: basic SoC support
-[05/12] ARM: shmobile: r8a7792: add SMP support
-[06/12] ARM: dts: r8a7792: initial SoC device tree
-[07/12] ARM: dts: r8a7792: add SYS-DMAC support
-[08/12] ARM: dts: r8a7792: add [H]SCIF support
-[09/12] ARM dts: r8a7792: add IRQC support
-[10/12] DT: arm: shmobile: document Blanche board
-[11/12] ARM: dts: blanche: initial device tree
-[12/12] ARM: dts: blanche: add Ethernet support
+---
+Changes in version 2:
+- added Geert's tag.
 
-WBR, Sergei
+ include/dt-bindings/power/r8a7792-sysc.h |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+Index: renesas/include/dt-bindings/power/r8a7792-sysc.h
+===================================================================
+--- /dev/null
++++ renesas/include/dt-bindings/power/r8a7792-sysc.h
+@@ -0,0 +1,26 @@
++/*
++ * Copyright (C) 2016 Cogent Embedded Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ */
++#ifndef __DT_BINDINGS_POWER_R8A7792_SYSC_H__
++#define __DT_BINDINGS_POWER_R8A7792_SYSC_H__
++
++/*
++ * These power domain indices match the numbers of the interrupt bits
++ * representing the power areas in the various Interrupt Registers
++ * (e.g. SYSCISR, Interrupt Status Register)
++ */
++
++#define R8A7792_PD_CA15_CPU0		0
++#define R8A7792_PD_CA15_CPU1		1
++#define R8A7792_PD_CA15_SCU		12
++#define R8A7792_PD_SGX			20
++#define R8A7792_PD_IMP			24
++
++/* Always-on power area */
++#define R8A7792_PD_ALWAYS_ON		32
++
++#endif /* __DT_BINDINGS_POWER_R8A7792_SYSC_H__ */
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
