@@ -1,104 +1,65 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v3 1/3] dt/bindings: display: Add DT bindings for Mali Display Processors.
-Date: Thu,  9 Jun 2016 17:18:17 +0100
-Message-ID: <1465489099-25628-2-git-send-email-Liviu.Dudau@arm.com>
-References: <1465489099-25628-1-git-send-email-Liviu.Dudau@arm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: sun7i: HDMI and the tv-encoder use tcon
+ ch1 not ch0
+Date: Thu, 9 Jun 2016 18:23:10 +0200
+Message-ID: <20160609162310.GD5242@lukather>
+References: <1465129368-22335-1-git-send-email-hdegoede@redhat.com>
+ <1465129368-22335-2-git-send-email-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Yb+qhiCg54lqZFXW"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465489099-25628-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1465129368-22335-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <David.Brown-5wv7dgnIgG8@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings documentation for the Mali Display Processor. The bindings
-describe the Mali DP500, DP550 and DP650 processors from ARM Ltd.
 
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+--Yb+qhiCg54lqZFXW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/display/arm,malidp.txt     | 65 ++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/arm,malidp.txt
+On Sun, Jun 05, 2016 at 02:22:48PM +0200, Hans de Goede wrote:
+> Update the simplefb nodes for hdmi / tv-encoder out to point to
+> tcon0_ch1 instead of tcon0_ch0 as tcon clock.
+>=20
+> While at it fix the clocks lines being longer then 80 chars.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/display/arm,malidp.txt b/Documentation/devicetree/bindings/display/arm,malidp.txt
-new file mode 100644
-index 0000000..2f78709
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/arm,malidp.txt
-@@ -0,0 +1,65 @@
-+ARM Mali-DP
-+
-+The following bindings apply to a family of Display Processors sold as
-+licensable IP by ARM Ltd. The bindings describe the Mali DP500, DP550 and
-+DP650 processors that offer multiple composition layers, support for
-+rotation and scaling output.
-+
-+Required properties:
-+  - compatible: should be one of
-+	"arm,mali-dp500"
-+	"arm,mali-dp550"
-+	"arm,mali-dp650"
-+    depending on the particular implementation present in the hardware
-+  - reg: Physical base address and size of the block of registers used by
-+    the processor.
-+  - interrupts: Interrupt list, as defined in ../interrupt-controller/interrupts.txt,
-+    interrupt client nodes.
-+  - interrupt-names: name of the engine inside the processor that will
-+    use the corresponding interrupt. Should be one of "DE" or "SE".
-+  - clocks: A list of phandle + clock-specifier pairs, one for each entry
-+    in 'clock-names'
-+  - clock-names: A list of clock names. It should contain:
-+      - "pclk": for the APB interface clock
-+      - "aclk": for the AXI interface clock
-+      - "mclk": for the main processor clock
-+      - "pxlclk": for the pixel clock feeding the output PLL of the processor.
-+  - arm,malidp-output-port-lines: Array of u8 values describing the number
-+    of output lines per channel (R, G and B).
-+
-+Required sub-nodes:
-+  - port: The Mali DP connection to an encoder input port. The connection
-+    is modelled using the OF graph bindings specified in
-+    Documentation/devicetree/bindings/graph.txt
-+
-+Optional properties:
-+  - memory-region: phandle to a node describing memory (see
-+    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
-+    to be used for the framebuffer; if not present, the framebuffer may
-+    be located anywhere in memory.
-+
-+
-+Example:
-+
-+/ {
-+	...
-+
-+	dp0: malidp@6f200000 {
-+		compatible = "arm,mali-dp650";
-+		reg = <0 0x6f200000 0 0x20000>;
-+		memory-region = <&display_reserved>;
-+		interrupts = <0 168 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 168 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "DE", "SE";
-+		clocks = <&oscclk2>, <&fpgaosc0>, <&fpgaosc1>, <&fpgaosc1>;
-+		clock-names = "pxlclk", "mclk", "aclk", "pclk";
-+		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
-+		port {
-+			dp0_output: endpoint {
-+				remote-endpoint = <&tda998x_2_input>;
-+			};
-+		};
-+	};
-+
-+	...
-+};
--- 
-2.8.2
+Fixed the typos (than vs then) and applied, thanks!
+Maxime
 
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--Yb+qhiCg54lqZFXW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXWZfuAAoJEBx+YmzsjxAgf4EP/2PGxLzgLvODe7S/wwT0O4bb
+5TW3K0JCmKFi680+982GTV2WoYr3z02U7d3wnzLW8tEinWt3icgPzgHNoGkvX1TU
+1wGN/OHqTJQ2/x3Lx2u33Ip4L6gmj/SnzUBjSJS/nFsV1Dnfgs0CZFum7uKlBWth
+cVH5GaUyYOB1E2wWsoR3u1BWb/07y5xHo1wm1DSrlJXN4qnPUqYaR0SPMikxMd17
+Gsu1Z1fIWpuKmUv8p7hkYHINtu3wxhhPfjBcKnHSYU08+G2s2nxv3iojFMo4UCab
+zwTpZAzsk/uK2Pcca7iStMsT7GTQl+GAXPr7woRRcTOL1DWbaGR8hGTdKk9hdqpc
+LHlefGB5+eno3yXw3TY4qNmQbBRMBeQfLvPUJArY/rLQzg/Vzg4XI9+9tGu+QrZZ
+egoAQjvVVEVJzef8HiO6TNSjSxTD0hQ92QkDbDtFkmrErtOxP+GJT1eDLgg2r/MT
+DsX5lw/kMWLS5GsL7mUvRg8+3yx9DlW5o36Wcx9dXfbUYGQKBZaw+w0YwaTFZsDP
+r0Ry3uGkx6EFb1iqu1fkU9z8KOxmmnXhOq62fp8WzP25w2GfVNowfiX0vncreCOZ
+cI0Ramp8ysmNJ3jnSTQlEn5JEbkkezqspfAKrwqgekHgln9CVzRsFJIc775DnuRt
+L8jnJbim278p/C7GrcUe
+=48UF
+-----END PGP SIGNATURE-----
+
+--Yb+qhiCg54lqZFXW--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
