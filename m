@@ -1,49 +1,55 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 10/12] DT: arm: shmobile: document Blanche board
-Date: Fri, 10 Jun 2016 00:47:40 +0300
-Message-ID: <2146434.eRmd3OT4fB@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v4 09/12] ARM dts: r8a7792: add IRQC support
+Date: Fri, 10 Jun 2016 00:45:39 +0300
+Message-ID: <3348412.H0MfYcvH4W@wasted.cogentembedded.com>
 References: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1879394.3zBGLpF2nv-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1879394.3zBGLpF2nv@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the Blanche device tree bindings, listing it as a supported board.
+Describe the IRQC interrupt controller in the R8A7792 device tree.
 
-This allows to use checkpatch.pl to validate .dts files referring to the
-Blanche board.
-
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 ---
+Changes in version 3:
+- refreshed the patch.
+
 Changes in version 2:
-- added Rob's ACK.
+- resolved reject, indenting the IRQC node that is now under the "soc" node;
+- added Geert's tag.
 
-Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
- Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/r8a7792.dtsi |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Index: renesas/Documentation/devicetree/bindings/arm/shmobile.txt
+Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
 ===================================================================
---- renesas.orig/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ renesas/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -39,6 +39,8 @@ Boards:
-     compatible = "renesas,ape6evm", "renesas,r8a73a4"
-   - Atmark Techno Armadillo-800 EVA
-     compatible = "renesas,armadillo800eva"
-+  - Blanche (RTP0RC7792SEB00010S)
-+    compatible = "renesas,blanche", "renesas,r8a7792"
-   - BOCK-W
-     compatible = "renesas,bockw", "renesas,r8a7778"
-   - Genmai (RTK772100BC00000BR)
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
++++ renesas/arch/arm/boot/dts/r8a7792.dtsi
+@@ -70,6 +70,19 @@
+ 				      IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
++		irqc: interrupt-controller@e61c0000 {
++			compatible = "renesas,irqc-r8a7792", "renesas,irqc";
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			reg = <0 0xe61c0000 0 0x200>;
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&mstp4_clks R8A7792_CLK_IRQC>;
++			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
++		};
++
+ 		timer {
+ 			compatible = "arm,armv7-timer";
+ 			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
