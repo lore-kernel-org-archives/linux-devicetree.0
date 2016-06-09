@@ -1,46 +1,62 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 Subject: Re: [PATCH 1/2] NET: PHY: Add PHY LED control binding.
-Date: Thu, 09 Jun 2016 08:06:12 +0200
-Message-ID: <3869397.kzojzy3Xzu@ws-stein>
-References: <1465163150-21429-1-git-send-email-hauke@hauke-m.de> <1465163150-21429-2-git-send-email-hauke@hauke-m.de> <20160608193008.GA20738@rob-hp-laptop>
+Date: Thu, 9 Jun 2016 08:12:08 +0200
+Message-ID: <f1e22176-d30a-be66-a4ea-dd0666775597@phrozen.org>
+References: <1465163150-21429-1-git-send-email-hauke@hauke-m.de>
+ <1465163150-21429-2-git-send-email-hauke@hauke-m.de>
+ <20160608193008.GA20738@rob-hp-laptop> <3869397.kzojzy3Xzu@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160608193008.GA20738@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, f.fainelli@gmail.com, netdev@vger.kernel.org, andrew@lunn.ch, john@phrozen.org, openwrt@kresin.me, hauke.mehrtens@intel.com, daniel.schwierzeck@gmail.com, eckert.florian@googlemail.com, devicetree@vger.kernel.org, thomas.langer@intel.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3869397.kzojzy3Xzu@ws-stein>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, openwrt-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eckert.florian-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.langer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 June 2016 14:30:08, Rob Herring wrote:
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-leds.txt
-> > b/Documentation/devicetree/bindings/phy/phy-leds.txt new file mode 100644
-> > index 0000000..1a35e3d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-leds.txt
-> > @@ -0,0 +1,52 @@
-> > +LED configuration for Ethernet phys
-> > +
-> > +All these properties are optional, not all properties are supported by
-> > +all PHYs. When more then one property name is define for one LED the
-> > +order they get applied is device depended.
-> > +Property names:
-> > +	led-const-on: conditions the LED should be constant on
-> > +	led-pulse: condition the LED should be pulsed on
-> > +	led-blink-slow: condition the LED should slowly blink
+
+
+On 09/06/2016 08:06, Alexander Stein wrote:
+> On Wednesday 08 June 2016 14:30:08, Rob Herring wrote:
+>>> diff --git a/Documentation/devicetree/bindings/phy/phy-leds.txt
+>>> b/Documentation/devicetree/bindings/phy/phy-leds.txt new file mode 100644
+>>> index 0000000..1a35e3d
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/phy/phy-leds.txt
+>>> @@ -0,0 +1,52 @@
+>>> +LED configuration for Ethernet phys
+>>> +
+>>> +All these properties are optional, not all properties are supported by
+>>> +all PHYs. When more then one property name is define for one LED the
+>>> +order they get applied is device depended.
+>>> +Property names:
+>>> +	led-const-on: conditions the LED should be constant on
+>>> +	led-pulse: condition the LED should be pulsed on
+>>> +	led-blink-slow: condition the LED should slowly blink
+>>
+>> How slow is slow?
 > 
-> How slow is slow?
-
-This depends on the MMD.INTERNAL.LEDCH.SBF setting which is 2 Hz by default.
-
-> > +	led-blink-fast: condition the LED should fast blink
+> This depends on the MMD.INTERNAL.LEDCH.SBF setting which is 2 Hz by default.
 > 
-> How fast is fast?
+>>> +	led-blink-fast: condition the LED should fast blink
+>>
+>> How fast is fast?
+> 
+> This depends on the MMD.INTERNAL.LEDCH.FBF setting which is 16 Hz by default.
+> 
+> Both can be set independently to 2, 4, 8 or 16 Hz.
+> 
 
-This depends on the MMD.INTERNAL.LEDCH.FBF setting which is 16 Hz by default.
+and both are intel/lantiq implementation specific and hence should not
+be part of a generic led-phy binding.
 
-Both can be set independently to 2, 4, 8 or 16 Hz.
+imho these leds should be exposed via a led driver and the configurtion
+should be exposed via a led driver specific trigger, in the same manner
+in which wireless macs do it.
 
-Best regards,
-Alexander
+	John
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
