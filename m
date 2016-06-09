@@ -1,58 +1,61 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/1] ARM: dts: sunxi: Fix simplefb not working in 4.7-rc1
-Date: Thu, 9 Jun 2016 12:47:36 +0200
-Message-ID: <21258fc0-0250-951b-2ee7-d022fb3c09ac@redhat.com>
-References: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
- <20160609074643.GA5242@lukather>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v9 13/14] usb: gadget: udc: adapt to OTG core
+Date: Thu, 9 Jun 2016 10:49:13 +0000
+Message-ID: <SG2PR06MB09198DD132E005FFD4F4CAEED85F0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+ <1465376626-30122-14-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160609074643.GA5242@lukather>
+In-Reply-To: <1465376626-30122-14-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Content-Language: ja-JP
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, "peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "grygorii.strashko-l0cyMroinI0@public.gmane.org" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "nsekhar-l0cyMroinI0@public.gmane.org" <nsekhar-l0cyMroinI0@public.gmane.org>, "b-liu-l0cyMroinI0@public.gmane.org" <b-liu-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Roger,
 
-On 09-06-16 09:46, Maxime Ripard wrote:
-> Hi Hans,
->
-> On Sat, Jun 04, 2016 at 08:05:23PM +0200, Hans de Goede wrote:
->> Hi Maxime,
->>
->> While testing 4.7-rc1 / linux-sunxi/sunxi-next on a A10s I noticed that
->> hdmi out is no longer working (screen goes black when the kernel turns
->> of unused clocks).
->>
->> This is caused by the dtsi for sun4i / sun5i / sun7i based boards now
->> listing pll3, without pll3 being added to the clocks list for the
->> simplefb nodes.
->
-> Why not do just that then? It's more appropriate for a fix imho.
+> From: Roger Quadros
+> Sent: Wednesday, June 08, 2016 6:04 PM
+> 
+> The OTG state machine needs a mechanism to start and
+> stop the gadget controller as well as connect/disconnect
+> from the bus. Add usb_gadget_start(), usb_gadget_stop()
+> and usb_gadget_connect_control().
+> 
+> Introduce usb_otg_add_gadget_udc() to allow controller drivers
+> to register a gadget controller that is part of an OTG instance.
+> 
+> Register with OTG core when UDC is added in usb_add_gadget_udc_release()
+> and unregister on usb_del_gadget_udc().
+> 
+> Notify the OTG core when gadget function driver is available on
+> udc_bind_to_driver() and when it is removed in usb_gadget_remove_driver().
+> 
+> We need to unlock the usb_lock mutex before calling
+> usb_otg_register_gadget() else it will cause a circular
+> locking dependency.
+> 
+> Ignore softconnect sysfs control when we're in OTG
+> mode as OTG FSM should care of gadget softconnect using
+> the b_bus_req mechanism.
+> 
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/usb/gadget/udc/udc-core.c | 202 ++++++++++++++++++++++++++++++++++++--
+>  include/linux/usb/gadget.h        |   4 +
+>  2 files changed, 196 insertions(+), 10 deletions(-)
 
-You mean just for sun5i-a10s, or for all of sun4i / sun5i-a10s and
-sun7i ?
+I tried to apply this patch on the Felipe's usb.git / testing/next branch,
+but I couldn't apply because the udc-core.c was renamed to core.c.
+https://git.kernel.org/cgit/linux/kernel/git/balbi/usb.git/commit/?h=testing/next&id=a22b539c7082b6a3046b3a9cebb356a047a2d81d
 
-For sun4i and sun7i things are already fixed in next:
+I guess this patch needs rebase for that.
 
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=5a7f2310cc847a73852e70bc720a61ca9bf986a6
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=c79255ca4d7b67cce4eac4dd532e097ce49f3679
-
-It seems best to use those fixes, rather then come up with a separate
-fix for 4.7.
-
-My patch for fixing sun5i-a10s is inline with the 2 above patches,
-which seems best, rather then doing something special for just sun5i-a10s.
-
-I'll send a v2 of this patch with the spelling mistakes pointed out
-by Peter Korsgaard fixed.
-
-Regards,
-
-Hans
-
+Best regards,
+Yoshihiro Shimoda
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
