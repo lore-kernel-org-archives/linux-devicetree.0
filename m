@@ -1,155 +1,80 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v3,5/5] arm64: dts: mediatek: add USB3 DRD driver
-Date: Fri, 10 Jun 2016 15:32:42 +0800
-Message-ID: <1465543962-11678-6-git-send-email-chunfeng.yun@mediatek.com>
-References: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/4] ASoC: sunxi: Add Allwinner A10 Digital Audio driver
+Date: Fri, 10 Jun 2016 09:36:43 +0200
+Message-ID: <20160610073643.GK5242@lukather>
+References: <20160601175430.11625-1-maxime.ripard@free-electrons.com>
+ <20160601175430.11625-3-maxime.ripard@free-electrons.com>
+ <20160602102651.GF2282@sirena.org.uk>
+ <20160609210515.GI5242@lukather>
+ <20160610003755.GC7510@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/jkxxxtAhYIHVDuh"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160610003755.GC7510-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gianfranco-25KmuZRQ+wx0ubjbjo6WXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-USB3 DRD driver is added for MT8173-EVB, and xHCI driver
-becomes its subnode
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts |   46 +++++++++++++++++++++++++--
- arch/arm64/boot/dts/mediatek/mt8173.dtsi    |   28 ++++++++++++----
- 2 files changed, 65 insertions(+), 9 deletions(-)
+--/jkxxxtAhYIHVDuh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index 7453a47..682dfd7 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -34,6 +34,11 @@
- 
- 	chosen { };
- 
-+	extcon_usb: extcon_iddig {
-+		compatible = "linux,extcon-usb-gpio";
-+		id-gpio = <&pio 16 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	usb_p1_vbus: regulator@0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb_vbus";
-@@ -42,6 +47,16 @@
- 		gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	usb_p0_vbus: regulator@1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
- };
- 
- &i2c1 {
-@@ -205,6 +220,20 @@
- 			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
- 		};
- 	};
-+
-+	usb_id_pins_float: usb_iddig_pull_up {
-+		pins_iddig {
-+			pinmux = <MT8173_PIN_16_IDDIG__FUNC_IDDIG>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	usb_id_pins_ground: usb_iddig_pull_down {
-+		pins_iddig {
-+			pinmux = <MT8173_PIN_16_IDDIG__FUNC_IDDIG>;
-+			bias-pull-down;
-+		};
-+	};
- };
- 
- &pwm0 {
-@@ -431,12 +460,25 @@
- 	status = "okay";
- };
- 
-+&ssusb {
-+	vusb33-supply = <&mt6397_vusb_reg>;
-+	vbus-supply = <&usb_p0_vbus>;
-+	extcon = <&extcon_usb>;
-+	dr_mode = "otg";
-+	mediatek,enable-wakeup;
-+	pinctrl-names = "default", "id_float", "id_ground";
-+	pinctrl-0 = <&usb_id_pins_float>;
-+	pinctrl-1 = <&usb_id_pins_float>;
-+	pinctrl-2 = <&usb_id_pins_ground>;
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
- 
--&usb30 {
-+&usb_host {
- 	vusb33-supply = <&mt6397_vusb_reg>;
- 	vbus-supply = <&usb_p1_vbus>;
--	mediatek,wakeup-src = <1>;
-+	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 05f89c4..723ab6e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -608,11 +608,14 @@
- 			status = "disabled";
- 		};
- 
--		usb30: usb@11270000 {
--			compatible = "mediatek,mt8173-xhci";
--			reg = <0 0x11270000 0 0x1000>,
-+		ssusb: usb@11271000 {
-+			compatible = "mediatek,mt8173-mtu3";
-+			reg = <0 0x11271000 0 0x3000>,
- 			      <0 0x11280700 0 0x0100>;
--			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+			reg-names = "mac", "ippc";
-+			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>;
-+			phys = <&phy_port0 PHY_TYPE_USB3>,
-+			       <&phy_port1 PHY_TYPE_USB2>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
- 			clocks = <&topckgen CLK_TOP_USB30_SEL>,
- 				 <&pericfg CLK_PERI_USB0>,
-@@ -620,10 +623,21 @@
- 			clock-names = "sys_ck",
- 				      "wakeup_deb_p0",
- 				      "wakeup_deb_p1";
--			phys = <&phy_port0 PHY_TYPE_USB3>,
--			       <&phy_port1 PHY_TYPE_USB2>;
- 			mediatek,syscon-wakeup = <&pericfg>;
--			status = "okay";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "disabled";
-+
-+			usb_host: xhci@11270000 {
-+				compatible = "mediatek,mt8173-xhci";
-+				reg = <0 0x11270000 0 0x1000>;
-+				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+				clocks = <&topckgen CLK_TOP_USB30_SEL>;
-+				clock-names = "sys_ck";
-+				status = "disabled";
-+			};
- 		};
- 
- 		u3phy: usb-phy@11290000 {
--- 
-1.7.9.5
+Hi Mark,
+
+On Fri, Jun 10, 2016 at 01:37:55AM +0100, Mark Brown wrote:
+> > > > +static int sun4i_i2s_dai_probe(struct snd_soc_dai *dai)
+> > > > +{
+> > > > +	struct sun4i_i2s *i2s =3D snd_soc_dai_get_drvdata(dai);
+>=20
+> > > > +	/* Enable the whole hardware block */
+> > > > +	regmap_write(i2s->regmap, SUN4I_I2S_CTRL_REG,
+> > > > +		     SUN4I_I2S_CTRL_GL_EN);
+>=20
+> > > Runtime PM?  It also seems like this is something that ought to be
+> > > covered in the suspend and resume callbacks.
+>=20
+> > runtime_pm is supported, and uses the regmap cache to keep those
+> > changes.
+>=20
+> No, my point is that I'd expect to see the block powered off on suspend.
+
+It is. The bus clock is disabled, which also puts the IP in reset.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--/jkxxxtAhYIHVDuh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXWm4LAAoJEBx+YmzsjxAgvIwP/A8O8UV4qXeBuFLrSdmJsFYN
+sqoFcjUVTPpR1Cm2wCa6/pHitavmK3t+OOSuRMaKzDhpZLcf8NqJWU6Mx7ueyzNc
+ev2FOkYJDUGWt2hqv7nsVxQLXVh2p+2h+YJ4iGj7JN90/vZVxP4qG8dp/dkTOsSN
+U5sYhTJYH4QwuIrdXoEIffQDS0Koex6SnvdBVyKrJjfydLLTZ8u/+ufKUozDB2hH
+9UvxpocTeyCqpoc4t6XX3+tifzqhHnAwu/apvBCKssKZELN/jI6XS0qOBh/ivQqj
+9QYlfmZbDZaw6LQTJFVYS/oYiUPrqWsLwE763Zn1Imr2/zyksdrltt7bX2ryTuDy
+3LvBChUYdP/5kA4T/hPbbKncHzGO199n4iZRZ52dyOAhKLaD6Kn1bgVW8awyMvIc
+Wra/eH4Xo+EfZATZdcZ99wPYx0SLaLJOSOozgvcL94lBr4xqFzNrCBJnhGcbM7pG
+tdrBfM0Th6YfynXi0SRvyAUNTToXsb/CvFmxeL0SEHSu2MD6Dgu6YNb75Nei8dM6
+tHrB7EJi3sPMYC+nDyRlJQ8YCeeEcEOHGxc303hjXhASFmLhapzxyhxqEWG1sWoB
+UZV/XkePIaVYLOt4fANgQNJr2qMC69UcANhv5rxuPHplarG0boV/AFyJKOoUiUxD
+L8wPhaMJpse7daqKp4vb
+=3P9E
+-----END PGP SIGNATURE-----
+
+--/jkxxxtAhYIHVDuh--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
