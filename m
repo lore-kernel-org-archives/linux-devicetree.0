@@ -1,135 +1,69 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4] USB: Fix of_usb_get_dr_mode_by_phy with a shared phy block
-Date: Fri, 10 Jun 2016 11:46:25 +0200
-Message-ID: <1465551985-3332-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 03/20] clk: sunxi: tcon-ch1: Do not return a negative
+ error in get_parent
+Date: Fri, 10 Jun 2016 11:50:15 +0200
+Message-ID: <20160610095015.GS5242@lukather>
+References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1463402840-17062-4-git-send-email-maxime.ripard@free-electrons.com>
+ <CAGb2v64GxTFnnx40Jy9Cz9e+c+T2j2QcbFznZ4-Lm-tdHFgcXg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mW9eGbZzDIYYWqGs"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64GxTFnnx40Jy9Cz9e+c+T2j2QcbFznZ4-Lm-tdHFgcXg@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Some SoCs have a single phy-hw-block with multiple phys, this is
-modelled by a single phy dts node, so we end up with multiple
-controller nodes with a phys property pointing to the phy-node
-of the otg-phy.
 
-Only one of these controllers typically is an otg controller, yet we
-were checking the first controller who uses a phy from the block and
-then end up looking for a dr_mode property in e.g. the ehci controller.
+--mW9eGbZzDIYYWqGs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This commit fixes this by adding an arg0 parameter to
-of_usb_get_dr_mode_by_phy and make of_usb_get_dr_mode_by_phy
-check that this matches the phandle args[0] value when looking for
-the otg controller.
+On Tue, May 17, 2016 at 12:05:18AM +0800, Chen-Yu Tsai wrote:
+> On Mon, May 16, 2016 at 8:47 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > get_parent is supposed to return an unsigned 8 bit integer, so returning
+> > -EINVAL is a bad idea.
+> >
+> > Remove it.
+> >
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+>=20
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Add a arg0 parameter instead of looking for nodes with a dr_mode property
-Changes in v3:
--No changes
-Changes in v4:
--When arg0 == -1, use of_parse_phandle instead of of_parse_phandle_with_args
- because using of_parse_phandle_with_args breaks phy's which use the usb-phy
- bindings instead of the generic phy bindings
----
- drivers/usb/common/common.c  | 26 ++++++++++++++++++++------
- drivers/usb/phy/phy-am335x.c |  2 +-
- include/linux/usb/of.h       |  4 ++--
- 3 files changed, 23 insertions(+), 9 deletions(-)
+Applied,
 
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index e3d0161..5ef8da6 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -131,15 +131,17 @@ EXPORT_SYMBOL_GPL(usb_get_dr_mode);
-  * of_usb_get_dr_mode_by_phy - Get dual role mode for the controller device
-  * which is associated with the given phy device_node
-  * @np:	Pointer to the given phy device_node
-+ * @arg0: phandle args[0] for phy's with #phy-cells >= 1, or -1 for
-+ *        phys which do not have phy-cells
-  *
-  * In dts a usb controller associates with phy devices.  The function gets
-  * the string from property 'dr_mode' of the controller associated with the
-  * given phy device node, and returns the correspondig enum usb_dr_mode.
-  */
--enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
-+enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *np, int arg0)
- {
- 	struct device_node *controller = NULL;
--	struct device_node *phy;
-+	struct of_phandle_args args;
- 	const char *dr_mode;
- 	int index;
- 	int err;
-@@ -148,12 +150,24 @@ enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
- 		controller = of_find_node_with_property(controller, "phys");
- 		index = 0;
- 		do {
--			phy = of_parse_phandle(controller, "phys", index);
--			of_node_put(phy);
--			if (phy == phy_np)
-+			if (arg0 == -1) {
-+				args.np = of_parse_phandle(controller, "phys",
-+							index);
-+				args.args_count = 0;
-+			} else {
-+				err = of_parse_phandle_with_args(controller,
-+							"phys", "#phy-cells",
-+							index, &args);
-+				if (err)
-+					break;
-+			}
-+
-+			of_node_put(args.np);
-+			if (args.np == np && (args.args_count == 0 ||
-+					      args.args[0] == arg0))
- 				goto finish;
- 			index++;
--		} while (phy);
-+		} while (args.np);
- 	} while (controller);
- 
- finish:
-diff --git a/drivers/usb/phy/phy-am335x.c b/drivers/usb/phy/phy-am335x.c
-index a262a43..7e5aece 100644
---- a/drivers/usb/phy/phy-am335x.c
-+++ b/drivers/usb/phy/phy-am335x.c
-@@ -54,7 +54,7 @@ static int am335x_phy_probe(struct platform_device *pdev)
- 		return am_phy->id;
- 	}
- 
--	am_phy->dr_mode = of_usb_get_dr_mode_by_phy(pdev->dev.of_node);
-+	am_phy->dr_mode = of_usb_get_dr_mode_by_phy(pdev->dev.of_node, -1);
- 
- 	ret = usb_phy_gen_create_phy(dev, &am_phy->usb_phy_gen, NULL);
- 	if (ret)
-diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-index de3237f..5ff9032 100644
---- a/include/linux/usb/of.h
-+++ b/include/linux/usb/of.h
-@@ -12,7 +12,7 @@
- #include <linux/usb/phy.h>
- 
- #if IS_ENABLED(CONFIG_OF)
--enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *phy_np);
-+enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *np, int arg0);
- bool of_usb_host_tpl_support(struct device_node *np);
- int of_usb_update_otg_caps(struct device_node *np,
- 			struct usb_otg_caps *otg_caps);
-@@ -20,7 +20,7 @@ struct device_node *usb_of_get_child_node(struct device_node *parent,
- 			int portnum);
- #else
- static inline enum usb_dr_mode
--of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
-+of_usb_get_dr_mode_by_phy(struct device_node *np, int arg0)
- {
- 	return USB_DR_MODE_UNKNOWN;
- }
--- 
-2.7.4
+Maxime
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--mW9eGbZzDIYYWqGs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXWo1XAAoJEBx+YmzsjxAgHpQQAKdgIoBaRhkQeB9CLb+p1f9Y
+L4X5VcWtUXuCgECawBNs03aTkoWmE4yR12d+4VHqW5UYvAe5852o8Yqm/L7ejp+h
+HhnGRmX3cEzWtN9nTOWIiU+aK4j3iPxQISLxjl0fetmYUQRvSmLiSgUx8eI2gcg0
+5SrbbJkhiRrHfeLASeBJk1nxo88KWgEm/SYwf+DB4+D6JFGo83HcXbw9NriJJFBR
+aFE3z7BDgW2Ur3/N9ku7wdZcVPijWi0YQa5FWiIsNO2WtTv/eraW6dD5KtlhY0aq
+HyUuBBdem76npz3y23PmZf23DgzoMdJRegju3kgso8QFK+uQd3ryumZVMt8htk8Q
+88EqSJfoyZhbV5swMdmBYzuvAkhtBYtTjHl7ZixQegGOB52Vw6Z5zKFSloq4Kav2
+D+tO7TiwR9zi/sA3p/2ZLngr/W78z1ZZ9wkNrXxj9NE631Q472cPyKoEySuuoU5z
+QmgOntgDjI5AEdDFJIMZZALcTSCcDfBpMaHKMdAAqBJdqU5/AFD+4bbtvieCqXHX
+mndIws/3mgbo4D7qqBL0hV0p2eJZ+iFLvR5KEnkXYv5fvSkHT5W2ZmS1gCaKzzHG
+Vr+/EOW8t5jLoCt5awKVgwEArlFo8heGfZaDlhU1zxiXGBm4FzGBsP8L/QKxy5Fw
+SL6eTDJTfgCBF5BoP4EO
+=SRsv
+-----END PGP SIGNATURE-----
+
+--mW9eGbZzDIYYWqGs--
