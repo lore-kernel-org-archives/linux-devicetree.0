@@ -1,41 +1,82 @@
-From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 0/4] dmaengine: vdma: AXI DMAS Enhancments
-Date: Fri, 10 Jun 2016 14:42:30 +0530
-Message-ID: <1465549954-30220-1-git-send-email-appanad@xilinx.com>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [PATCH 4/4] dmaengine: dma: Rename driver and config
+Date: Fri, 10 Jun 2016 14:42:34 +0530
+Message-ID: <1465549954-30220-5-git-send-email-appanad@xilinx.com>
+References: <1465549954-30220-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465549954-30220-1-git-send-email-appanad@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series does the following thing.
----> Add support for AXI DMA Multi-channel DMA mode.
----> Delete AXI DMA binding doc.
----> Rename the driver and update config options.
+In the existing vdma driver support for
+AXI DMA and CDMA got added so the driver is no
+longer VDMA specific.
 
-This patch series is created on top of the patch series
-"dmaengine: Add Xilinx zynqmp dma engine driver support".
+This patch renames the driver and DT binding doc to xilinx_dma
+and updates the Kconfig description for all the DMAS.
 
-Kedareswara rao Appana (4):
-  Documentation: DT: vdma: Update binding doc for multi-channel dma
-    mode
-  dmaengine: vdma: Add support for mulit-channel dma mode
-  Documentation: DT: dma: Delete binding doc for AXI DMA
-  dmaengine: dma: Rename driver and config
-
- .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |   92 ++++++--
- .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt |  107 ---------
- drivers/dma/Kconfig                                |   13 +-
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+ .../dma/xilinx/{xilinx_vdma.txt => xilinx_dma.txt} |    0
+ drivers/dma/Kconfig                                |   13 +++++++++----
  drivers/dma/xilinx/Makefile                        |    2 +-
- drivers/dma/xilinx/{xilinx_vdma.c => xilinx_dma.c} |  242 ++++++++++++++++++--
- include/linux/dma/xilinx_dma.h                     |   18 ++
- 6 files changed, 316 insertions(+), 158 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
- rename drivers/dma/xilinx/{xilinx_vdma.c => xilinx_dma.c} (91%)
+ drivers/dma/xilinx/{xilinx_vdma.c => xilinx_dma.c} |    0
+ 4 files changed, 10 insertions(+), 5 deletions(-)
+ rename Documentation/devicetree/bindings/dma/xilinx/{xilinx_vdma.txt => xilinx_dma.txt} (100%)
+ rename drivers/dma/xilinx/{xilinx_vdma.c => xilinx_dma.c} (100%)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+rename to Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 01a53ed..d7c03b6 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -519,19 +519,24 @@ config XGENE_DMA
+ 	help
+ 	  Enable support for the APM X-Gene SoC DMA engine.
+ 
+-config XILINX_VDMA
+-	tristate "Xilinx AXI VDMA Engine"
++config XILINX_DMA
++	tristate "Xilinx AXI DMAS Engine"
+ 	depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
+ 	select DMA_ENGINE
+ 	help
+-	  Enable support for Xilinx AXI VDMA Soft IP.
++	  Enable support for Xilinx AXI DMAS Soft IP.
+ 
+-	  This engine provides high-bandwidth direct memory access
++	  AXI VDMA engine provides high-bandwidth direct memory access
+ 	  between memory and AXI4-Stream video type target
+ 	  peripherals including peripherals which support AXI4-
+ 	  Stream Video Protocol.  It has two stream interfaces/
+ 	  channels, Memory Mapped to Stream (MM2S) and Stream to
+ 	  Memory Mapped (S2MM) for the data transfers.
++	  AXI CDMA engine provides high-bandwidth direct memory access
++	  between a memory-mapped source address and a memory-mapped
++	  destination address.
++	  AXI DMA engine provides high-bandwidth one dimensional direct
++	  memory access between memory and AXI4-Stream target peripherals.
+ 
+ config XILINX_ZYNQMP_DMA
+ 	tristate "Xilinx ZynqMP DMA Engine"
+diff --git a/drivers/dma/xilinx/Makefile b/drivers/dma/xilinx/Makefile
+index 95469dc..9e91f8f 100644
+--- a/drivers/dma/xilinx/Makefile
++++ b/drivers/dma/xilinx/Makefile
+@@ -1,2 +1,2 @@
+-obj-$(CONFIG_XILINX_VDMA) += xilinx_vdma.o
++obj-$(CONFIG_XILINX_DMA) += xilinx_dma.o
+ obj-$(CONFIG_XILINX_ZYNQMP_DMA) += zynqmp_dma.o
+diff --git a/drivers/dma/xilinx/xilinx_vdma.c b/drivers/dma/xilinx/xilinx_dma.c
+similarity index 100%
+rename from drivers/dma/xilinx/xilinx_vdma.c
+rename to drivers/dma/xilinx/xilinx_dma.c
+-- 
+1.7.1
