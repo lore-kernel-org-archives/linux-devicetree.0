@@ -1,172 +1,78 @@
-From: Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org>
-Subject: Re: [PATCH 1/4] of: Add device tree bindings for Evatronix
-Date: Fri, 10 Jun 2016 18:46:24 +0200
-Message-ID: <alpine.DEB.2.02.1606101803120.30757@lnxricardw1.se.axis.com>
-References: <alpine.DEB.2.02.1606020946500.19416@lnxricardw1.se.axis.com> <20160603162207.0688c9e6@bbrezillon> <alpine.DEB.2.02.1606060757180.23377@lnxricardw1.se.axis.com> <20160608175018.16c88207@bbrezillon> <alpine.DEB.2.02.1606101641050.30757@lnxricardw1.se.axis.com>
- <20160610175454.327f51a2@bbrezillon>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 01/13] pwm: Add new helpers to create/manipulate PWM
+ states
+Date: Fri, 10 Jun 2016 18:47:46 +0200
+Message-ID: <20160610164746.GB8696@ulmo.ba.sec>
+References: <1465403688-17098-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1465403688-17098-2-git-send-email-boris.brezillon@free-electrons.com>
+ <20160610152109.GQ27142@ulmo.ba.sec>
+ <20160610182942.5e7485ff@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160610175454.327f51a2@bbrezillon>
+Content-Disposition: inline
+In-Reply-To: <20160610182942.5e7485ff@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On Fri, 10 Jun 2016, Boris Brezillon wrote:
+--dc+cDN39EJAMEtIO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > The use cases as I see are as follows:
+On Fri, Jun 10, 2016 at 06:29:42PM +0200, Boris Brezillon wrote:
+> On Fri, 10 Jun 2016 17:21:09 +0200, Thierry Reding <thierry.reding@gmail.=
+com> wrote:
+> > On Wed, Jun 08, 2016 at 06:34:36PM +0200, Boris Brezillon wrote:
+[...]
+> > > + * according to your need before calling pwm_apply_state(). =20
 > >=20
-> > a) Two identical chips sharing all but the CS lines, in order to im=
-plement=20
-> > a seemingly-larger address space. (e.g. two 256 Mbit chips implemen=
-ting a=20
-> > 4 GB area). In this case, for certain operations, the controller do=
-es not=20
-> > have to wait for one device to complete before issuing a command to=
-=20
-> > another. I'm not sure how the controller keeps track of the two dev=
-ices=20
-> > though.
+> > Maybe mention that the ->duty_cycle field is explicitly zeroed. Then
+> > again, do we really need it? If users are going to overwrite it anyway,
+> > do we even need to bother? I suppose it makes some sense because the
+> > current duty cycle is stale when the ->period gets set to the value from
+> > args. I think the documentation should mention this in some way.
 >=20
-> I think it's the chip-enable use case, isn't it?
->=20
-> >=20
-> > b) Two different chips with the same connection, which provide disj=
-unct=20
-> > functions, e.g. one (small) flash for program storage and one (larg=
-e) for=20
-> > data.
->=20
-> Then they can't share the CS line (or be actived at the same time), a=
-t
-> least it doesn't make any sense to me.
+> Yes, if we keep the current duty_cycle it can exceed the period value.
+> I'm fine dropping the ->duty_cycle =3D 0 assignment and documenting the
+> behavior.
 
-Sorry if I haven't been clear enough, but in neither case are the CS li=
-nes=20
-shared between the devices. There is still a separate CS for each flash=
-=20
-chip. The question is how the controller handles the CS lines.
+Actually what I was trying to suggest is that we keep the code as-is but
+document the behaviour (and rationale behind it).
 
-Basically, in the general case, the controller can handle a matrix of n=
-and=20
-flash chips. There can be a number of banks, each of which can have a=20
-number of individual CS lines. For the (in this case academic) case of =
-3=20
-banks and 4 chip selects per bank, there would be a total of 3 x 4 =3D =
-12 CS=20
-lines.
+I think it's fine to zero out the value precisely because it could
+become invalid after the function (and there's no other reasonable value
+to set it to). Just wanted to make sure it's all properly documented.
 
-=46or the IP configuration the driver was written for, there are only 2=
- CS=20
-lines, and we can configure if they are to be viewed by the controller =
-as=20
-2 CS lines within the same single bank, or 2 separate banks with one CS=
-=20
-each. This is what the DT property is intended to express. It basically=
-=20
-translates directly into a register write in the IP.
+Thierry
 
-But, as you are driving at below, the bindings should really cover the=20
-more general case, for which a simple use-bank-select property doesn't=20
-really cut it. Since the driver only supports a single CS at the time=20
-being, I'm really proposing to drop it completely, alternatively we cou=
-ld=20
-have two: 'banks' and 'devices-per-bank', which reflect what the genera=
-l=20
-IP case would be able to handle. For the version of the IP in use these=
-=20
-would have the permitted values of 1 and 2, with some combinations bein=
-g=20
-illegal. Unfortunately, the IP configuration cannot be read out (neithe=
-r=20
-the version of it), so it's not possible for the driver to verify the=20
-DT settings against the actual IP configuration. I don't really know ho=
-w=20
-to solve that.
+--dc+cDN39EJAMEtIO
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > > > I didn't really want to have the added flexibility (and complex=
-ity) of=20
-> > > > being able to use any R/B line for any connected flash chip. It=
- seems an=20
-> > > > unnecessary complication for the driver without much gain. =20
-> > >=20
-> > > Not really, at least if you properly separate the chip and contro=
-ller
-> > > objects it's quite easy to deal with, and I'll ask you to do this=
- clean
-> > > separation anyway (even if you say you only have a single chip pe=
-r
-> > > controller) :P. =20
-> >=20
-> > Yes, the separation of chip and controller is needed, but the R/B l=
-ine=20
-> > flexibility requires an additional mapping functionality within the=
-=20
-> > driver. Not rocket science of course, but I can't see much point in=
- it=20
-> > (other than to cover up a potential routing mistake done by a PCB=20
-> > designer).
->=20
-> You seem to argue on all the minor things I'm asking. Honestly, it
-> should be hard or error-prone to do it. And let's say you don't suppo=
-rt
-> it in your driver, you should still think about that when designing
-> your bindings.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Sorry, it's just that over the years I've seen too much code that=20
-introduces various flexibilities just because someone thought it might =
-be=20
-'nice to have at some point' or 'because the hardware supports it', but=
-=20
-which in reality is never used and still must be maintained. Sure, one=20
-small mapping function is certainly not going to break the bank, far fr=
-om=20
-it, but over time the matrix of things that can be configured can grow =
-to=20
-awkward proportions, and often something thought of as a minor issue ca=
-n=20
-turn out to be complex to support in the end. And given a stable API ru=
-le,=20
-it's too late to simplify things once they have been implemented.
+iQIcBAABCAAGBQJXWu8yAAoJEN0jrNd/PrOhZhgQALVk/163hWBe0x7iQpEwsnrc
+3Tfjwfiis9ACiwMsCz18zf0ZHHm3bKPkSm0oFGgJ4CJQRjDyXvv2rGZWKvzXT29p
+deUBwRe8jQ2KgeMlBjPDGEdM8NgCTgd+YB4G985Yb2F1B5xktK6W09c2bE+kCwsn
+X5X2EroaMMqn0L8ErLItNUt+vjkxt5g5S5oagCyZZ11QEklCYnAx+lWTK8aB8xTo
+VM5wcnEucmUZyuIz165QYx2x6oIx3EgdRkULiHuv4Mo4k3aR6yxasSEKBSfznpYv
+o0rMwe4ShZqUHIb/ctnwZ3fhSK9GSy43IIaIW1f6Mq6UHLpMd4p2uZQJzCmNyx/Q
+wp5haH/U6RWeNVUCXsM192O+ml5iwX8tSFGpspZ/oHnR5Y26pmwO2zFVQmO+4cOP
+EdHOgjXSehEq/oNBH0Fx54gQFIdQmbe6SuDrQXi+glzWrb8BSo59rWMovbz+QrXI
+YN8qTtZrzP7gnF0ezNajno+5ekgclfmRXxm0HNJ9nxLxP5zKK39Oit5crKJq0OyQ
+FD1rckyXzMJ71GvrCSpGTu2RWHjT7EppjiLFw4pGrkn5VQuznb2gDOG1odBrWS+p
+9PQg4f5TsLiaNAWWgE1ex5QMv+ApFJ41s3Alkwxo+O/CU4QQJCYFNjgqTfjTu1Er
+D8P2qQNzrRry/fyVMaVj
+=DUCF
+-----END PGP SIGNATURE-----
 
-Of course, the code should not be written in a way to limit future=20
-expansion either.
-
-> > I mean, an IP may be capable of a lot of things, and we don't neces=
-sarily=20
-> > want to implement them all in the driver to start with and have DT=20
-> > propertes for them all do we?
->=20
-> Hm, you should at least take the capabilities you know about into
-> account when defining a new binding, and you already know that some
-> SoCs might decide to expose 2 or more R/B pins, so it should already =
-be
-> designed this way.
-
-Ok. I'll give it some more thought then.
-
-> I'm opposed to the idea of putting information that can be
-> automatically deduced in the DT. For this specific case, the main
-> reason is that a board vendor can decide to use different NAND chips
-> on the same design, and they might not all share the same
-> capabilities (and you don't want to have a dts for each NAND).
-
-Yes, that makes sense of course, but what if someone would want to=20
-override the automatic settings, for whatever reason, using an optional=
- DT=20
-property? I can think of several reasons either way, that's why I'm=20
-asking.
-
-/Ricard
---=20
-Ricard Wolf Wanderl=F6f                           ricardw(at)axis.com
-Axis Communications AB, Lund, Sweden            www.axis.com
-Phone +46 46 272 2016                           Fax +46 46 13 61 30
+--dc+cDN39EJAMEtIO--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
