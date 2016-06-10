@@ -1,43 +1,36 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
-Date: Fri, 10 Jun 2016 22:42:03 +0200
-Message-ID: <CAMuHMdUK=y2kZY1kA97QpCDyUZXFejpXTpO9ZVNQoBfDNoRgfg@mail.gmail.com>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <2539026.OyU5nvpxa6@wasted.cogentembedded.com> <20160601005751.GG20527@verge.net.au>
- <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com> <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
- <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com> <20160610010245.GA10152@verge.net.au>
- <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] serial/bcm63xx_uart: use correct alias naming
+Date: Fri, 10 Jun 2016 13:48:24 -0700
+Message-ID: <575B2798.9000801@gmail.com>
+References: <1465380523-7385-1-git-send-email-jogo@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465380523-7385-1-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On 06/08/2016 03:08 AM, Jonas Gorski wrote:
+> The bcm63xx_uart driver uses the of alias for determing its id. Recent
+> changes in dts files changed the expected 'uartX' to the recommended
+> 'serialX', breaking serial output. Fix this by checking for a 'serialX'
+> alias as well.
+> 
+> Fixes: e3b992d028f8 ("MIPS: BMIPS: Improve BCM6328 device tree")
+> Fixes: 2d52ee82b475 ("MIPS: BMIPS: Improve BCM6368 device tree")
+> Fixes: 7537d273e2f3 ("MIPS: BMIPS: Add device tree example for BCM6358")
+> Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 
-On Fri, Jun 10, 2016 at 9:29 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
->    The only problem I'm seeing (again) is the RCAN clock failing to
-> register:
->
-> rcar_gen2_cpg_clocks_init: failed to register cpg_clocks rcan clock (-12)
->
->    I was going to look at it yesterday but (wrongly) thought it somehow
-> cured itself... I'll look at it now.
+Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The RCAN parent is the second clock in the CPG node's "clocks" property,
-which you didn't provide.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+A future improvement could be to completely get rid of the id and
+instead just dynamically allocate the ports structure.
+-- 
+Florian
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
