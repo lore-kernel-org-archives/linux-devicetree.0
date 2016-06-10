@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 13/19] ARM: dts: gose: Name serial port pfc subnodes after device names
-Date: Fri, 10 Jun 2016 15:00:59 +0200
-Message-ID: <1465563665-2231-14-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 09/19] ARM: dts: koelsch: Name serial port pfc subnodes after device names
+Date: Fri, 10 Jun 2016 15:00:55 +0200
+Message-ID: <1465563665-2231-10-git-send-email-geert+renesas@glider.be>
 References: <1465563665-2231-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1465563665-2231-1-git-send-email-geert+renesas@glider.be>
@@ -18,14 +18,14 @@ either here or in a DT overlay.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7793-gose.dts | 4 ++--
+ arch/arm/boot/dts/r8a7791-koelsch.dts | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index f748360ee85712f1..995e1e0fb1ff4f57 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -320,12 +320,12 @@
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index 20fbc8c36a785bd3..73e5ecf036e1b968 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -332,12 +332,12 @@
  		function = "du";
  	};
  
