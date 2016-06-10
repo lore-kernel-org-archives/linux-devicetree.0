@@ -1,7 +1,7 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v7 3/3] ARM64: dts: amlogic: gxbb: Enable secure monitor
-Date: Fri, 10 Jun 2016 21:44:11 +0200
-Message-ID: <1465587851-24184-4-git-send-email-carlo@caione.org>
+Subject: [PATCH v7 2/3] documentation: Add secure monitor binding documentation
+Date: Fri, 10 Jun 2016 21:44:10 +0200
+Message-ID: <1465587851-24184-3-git-send-email-carlo@caione.org>
 References: <1465587851-24184-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1465587851-24184-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
@@ -12,31 +12,47 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Add the secure monitor node in the Amlogic Meson GXBB DTSI file to
-enable it.
+Add the binding documentation for the Amlogic secure monitor driver.
 
 Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../bindings/firmware/meson/meson_sm.txt           | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 76b3b6d..092f10e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -123,6 +123,12 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		firmware {
-+			sm: secure-monitor {
-+				compatible = "amlogic,meson-gxbb-sm";
-+			};
-+		};
+diff --git a/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+new file mode 100644
+index 0000000..d017675
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+@@ -0,0 +1,27 @@
++* Amlogic Secure Monitor
 +
- 		cbus: cbus@c1100000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xc1100000 0x0 0x100000>;
++In the Amlogic SoCs the Secure Monitor code is used to provide access to the
++NVMEM, enable JTAG, set USB boot, etc...
++
++Required properties for the secure monitor node:
++- compatible: Should be "amlogic,meson-gxbb-sm"
++
++Example:
++
++	firmware {
++		sm: secure-monitor {
++			compatible = "amlogic,meson-gxbb-sm";
++		};
++	};
++
++Example of the node using the secure monitor:
++
++	efuse: efuse {
++		compatible = "amlogic,meson-gxbb-efuse";
++		secure-monitor = <&sm>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		...
++	};
++
 -- 
 2.7.4
 
