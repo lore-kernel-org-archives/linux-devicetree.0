@@ -1,57 +1,53 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
-Date: Fri, 10 Jun 2016 10:02:45 +0900
-Message-ID: <20160610010245.GA10152@verge.net.au>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
- <20160601005751.GG20527@verge.net.au>
- <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
- <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
- <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Tai Nguyen <ttnguyen@apm.com>
+Subject: [PATCH v3 0/4] perf: Add APM X-Gene SoC Performance Monitoring Unit driver
+Date: Thu,  9 Jun 2016 18:24:48 -0700
+Message-ID: <1465521892-31420-1-git-send-email-ttnguyen@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, Tai Nguyen <ttnguyen@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 11:58:45PM +0300, Sergei Shtylyov wrote:
-> On 06/07/2016 10:13 AM, Geert Uytterhoeven wrote:
-> 
-> [...]
-> 
-> >>>And that the system behaves sanely on suspend/resume.
-> >>
-> >>   I'd be thankful if you told me how to test that. :-)
-> >
-> >System suspend:
-> >
-> >    echo mem > /sys/power/state
-> 
->    Oh. I know that one! :-)
-> 
-> >System resume: You're gonna need a "wakeup-source" in your DTS, e.g. gpio-keys.
-> >Serial should work too, echo "enabled" to the corresponding wakeup
-> >file in /sys first.
-> 
->    I'm afraid I couldn't find that file. All I saw were RPM controls...
-> 
-> >In case of issues, try "echo 0 > /sys/module/printk/parameters/console_suspend".
-> 
->    There's no problems suspending, it's the resuming that's a problem for me.
-> 
-> >Good luck!
-> 
->    As usual, there was no luck. :-)
-> 
-> WBR, Sergei
+In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
+are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
+memory controller bridges and memory. These PMU devices are loosely
+architected to follow the same model as the PMU for ARM cores.
 
-Does resume work for UP (i.e. without SMP)?
+Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
+---
 
-How did testing CPU hotplug go? Did it work for all CPUs?
+v3:
+ * Remove index property use in PMU device sub nodes
 
-If things work less well for SMP than UP I am inclined to ask
-you to defer adding SMP support.
+v2:
+ * Use bitmask for event asignned counter mask pmu_dev->cntr_assign_mask
+ * Remove unnecessary spinlocks in perf add/del operations
+ * Remove unnecessary condition checks
+ * Enforce CPU assignment to one CPU for perf operarations
+ * Set the task_ctx_nr to perf_invalid_context for perf driver
+ * Remove irrelevant pt_rregs
+ * Change perf sysfs attributes to be fixed instead of dynamic
+ * Fix checking for an ACPI companion device instead of EFI enable
+ * Add documentation for config/config1 fields format and perf tool example
+
+---
+Tai Nguyen (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC PMU driver
+  Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
+  perf: xgene: Add APM X-Gene SoC Performance Monitoring Unit driver
+  arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
+
+ .../devicetree/bindings/perf/apm-xgene-pmu.txt     |  112 ++
+ Documentation/perf/xgene-pmu.txt                   |   48 +
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   58 +
+ drivers/perf/Kconfig                               |    7 +
+ drivers/perf/Makefile                              |    1 +
+ drivers/perf/xgene_pmu.c                           | 1427 ++++++++++++++++++++
+ 7 files changed, 1661 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+ create mode 100644 Documentation/perf/xgene-pmu.txt
+ create mode 100644 drivers/perf/xgene_pmu.c
+
+-- 
+1.9.1
