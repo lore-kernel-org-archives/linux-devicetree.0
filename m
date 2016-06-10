@@ -1,91 +1,43 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: case sensitivity for devicetree node names
-Date: Fri, 10 Jun 2016 13:05:24 -0700
-Message-ID: <575B1D84.2010703@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
+Date: Fri, 10 Jun 2016 22:42:03 +0200
+Message-ID: <CAMuHMdUK=y2kZY1kA97QpCDyUZXFejpXTpO9ZVNQoBfDNoRgfg@mail.gmail.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2539026.OyU5nvpxa6@wasted.cogentembedded.com> <20160601005751.GG20527@verge.net.au>
+ <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com> <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
+ <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com> <20160610010245.GA10152@verge.net.au>
+ <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-I had assumed that devicetree node names were case sensitive. But a recent
-email thread asserted that they were not, which made me curious.
+Hi Sergei,
 
-dtc treats node names as case sensitive:
+On Fri, Jun 10, 2016 at 9:29 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>    The only problem I'm seeing (again) is the RCAN clock failing to
+> register:
+>
+> rcar_gen2_cpg_clocks_init: failed to register cpg_clocks rcan clock (-12)
+>
+>    I was going to look at it yesterday but (wrongly) thought it somehow
+> cured itself... I'll look at it now.
 
-$ cat test_node_case_1.dts
+The RCAN parent is the second clock in the CPG node's "clocks" property,
+which you didn't provide.
 
-/dts-v1/;
+Gr{oetje,eeting}s,
 
-/ {
-	node-x {
-		prop_a = < 1 >;
-	};
-};
+                        Geert
 
-/ {
-	node-X {
-		prop_a = < 2 >;
-	};
-};
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-$ cat test_node_case_2.dts
-
-/dts-v1/;
-
-/ {
-	node-x {
-		prop_a = < 1 >;
-	};
-};
-
-/ {
-	node-x {
-		prop_a = < 2 >;
-	};
-};
-
-$ dtc -O dts test_node_case_1.dts
-/dts-v1/;
-
-/ {
-
-	node-x {
-		prop_a = <0x1>;
-	};
-
-	node-X {
-		prop_a = <0x2>;
-	};
-};
-
-$ dtc -O dts test_node_case_2.dts
-/dts-v1/;
-
-/ {
-
-	node-x {
-		prop_a = <0x2>;
-	};
-};
-
-
-But the Linux kernel source code defines of_node_cmp() as:
-
-  include/linux/of.h:
-
-  /* Default string compare functions, Allow arch asm/prom.h to override */
-  #if !defined(of_compat_cmp)
-  #define of_node_cmp(s1, s2) strcasecmp((s1), (s2))
-
-arch/sparc/include/asm/prom.h uses strcmp() instead of strcasecmp().
-
-Examples of using of_node_cmp() to check for a node name can be found,
-for example, of_find_node_by_name().
-
-Is case insensitivity for node names a bug in the Linux kernel, or desired
-for some reason?
-
--Frank
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
