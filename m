@@ -1,43 +1,77 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH/RFC v3 02/22] soc: renesas: Add R-Car RST driver
-Date: Fri, 10 Jun 2016 10:38:28 +0200
-Message-ID: <fd389ff9-7863-b848-0e14-ca7241f44f6e@de.bosch.com>
-References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
- <1464808880-343-3-git-send-email-geert+renesas@glider.be>
- <d38d97fb-5b96-0773-abf6-c737b4f2fef1@de.bosch.com>
- <CAMuHMdUX=iAe=51+8JyaKxMBOUA_jJXGK0BTKxRuTXtug_R1Tw@mail.gmail.com>
+From: Sriram Dash <sriram.dash@nxp.com>
+Subject: [PATCH] T4/B4: add aliases for usb nodes
+Date: Fri, 10 Jun 2016 13:36:39 +0530
+Message-ID: <1465545999-22010-1-git-send-email-sriram.dash@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUX=iAe=51+8JyaKxMBOUA_jJXGK0BTKxRuTXtug_R1Tw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: robh@kernel.org, benh@kernel.crashing.org, rajesh.bhagat@nxp.com, Sriram Dash <sriram.dash@freescale.com>, Sriram Dash <sriram.dash@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10.06.2016 09:58, Geert Uytterhoeven wrote:
-> Hi Dirk,
->
-> On Thu, Jun 2, 2016 at 7:42 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
->>> +int __init rcar_rst_read_mode_pins(u32 *mode)
->>
->> Just a style issue: Is the string 'pins' in the function name still
->> relevant? I.e. what's about just 'rcar_rst_read_mode()'?
->
-> I feel "mode" is a too generic word for a public API.
-> It's used a several contexts inside the RST module (secure mode, 64-bit
-> addressing mode, free-running mode, step-up mode).
+From: Sriram Dash <sriram.dash@freescale.com>
 
-What's about
+Add usb aliases for consistency with the other platforms.
 
-rcar_rst_read_mode_monitor()
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@freescale.com>
+Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
+---
+ arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi        | 1 +
+ arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi        | 1 +
+ arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi | 2 +-
+ arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi        | 2 ++
+ 4 files changed, 5 insertions(+), 1 deletion(-)
 
-then?
-
-Taken from the manual ;)
-
-
-Best regards
-
-Dirk
+diff --git a/arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi b/arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi
+index bc3bf93..88d8423 100644
+--- a/arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi
++++ b/arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi
+@@ -51,6 +51,7 @@
+ 		serial2 = &serial2;
+ 		serial3 = &serial3;
+ 		pci0 = &pci0;
++		usb0 = &usb0;
+ 		dma0 = &dma0;
+ 		dma1 = &dma1;
+ 		sdhc = &sdhc;
+diff --git a/arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi b/arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi
+index 8797ce1..f3f968c 100644
+--- a/arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi
++++ b/arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi
+@@ -51,6 +51,7 @@
+ 		serial2 = &serial2;
+ 		serial3 = &serial3;
+ 		pci0 = &pci0;
++		usb0 = &usb0;
+ 		dma0 = &dma0;
+ 		dma1 = &dma1;
+ 		sdhc = &sdhc;
+diff --git a/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi b/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi
+index 29dad72..fcc7e5b 100644
+--- a/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi
+@@ -32,7 +32,7 @@
+  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-usb@210000 {
++usb0: usb@210000 {
+ 	compatible = "fsl-usb2-dr";
+ 	reg = <0x210000 0x1000>;
+ 	#address-cells = <1>;
+diff --git a/arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi
+index 1184a74..038cf8f 100644
+--- a/arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi
+@@ -56,6 +56,8 @@
+ 		pci1 = &pci1;
+ 		pci2 = &pci2;
+ 		pci3 = &pci3;
++		usb0 = &usb0;
++		usb1 = &usb1;
+ 		dma0 = &dma0;
+ 		dma1 = &dma1;
+ 		dma2 = &dma2;
+-- 
+2.6.2.198.g614a2ac
