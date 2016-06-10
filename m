@@ -1,168 +1,34 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH 02/48] ARM: at91: Document new TCB bindings
-Date: Sat, 11 Jun 2016 00:03:05 +0200
-Message-ID: <1465596231-21766-3-git-send-email-alexandre.belloni@free-electrons.com>
-References: <1465596231-21766-1-git-send-email-alexandre.belloni@free-electrons.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1465596231-21766-1-git-send-email-alexandre.belloni@free-electrons.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH V6 4/9] genirq: Add runtime power management support for IRQ chips
+Date: Fri, 10 Jun 2016 15:08:30 -0700
+Message-ID: <m2eg84y9wh.fsf@baylibre.com>
+References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
+	<1465312354-27778-5-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465312354-27778-5-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> (Jon
+	Hunter's message of "Tue, 7 Jun 2016 16:12:29 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The current binding for the TCB is not flexible enough for some use cases
-and prevents proper utilization of all the channels.
+Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> writes:
 
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- .../devicetree/bindings/arm/atmel-at91.txt         | 32 -----------
- .../devicetree/bindings/mfd/atmel-tcb.txt          | 62 ++++++++++++++++++++++
- .../devicetree/bindings/pwm/atmel-tcb-pwm.txt      | 12 +++--
- 3 files changed, 69 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> Some IRQ chips may be located in a power domain outside of the CPU
+> subsystem and hence will require device specific runtime power
+> management. In order to support such IRQ chips, add a pointer for a
+> device structure to the irq_chip structure, and if this pointer is
+> populated by the IRQ chip driver and CONFIG_PM is selected in the kernel
+> configuration, then the pm_runtime_get/put APIs for this chip will be
+> called when an IRQ is requested/freed, respectively.
+>
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-index e1f5ad855f14..3dc758403d03 100644
---- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-@@ -60,38 +60,6 @@ System Timer (ST) required properties:
- Its subnodes can be:
- - watchdog: compatible should be "atmel,at91rm9200-wdt"
- 
--TC/TCLIB Timer required properties:
--- compatible: Should be "atmel,<chip>-tcb".
--  <chip> can be "at91rm9200" or "at91sam9x5"
--- reg: Should contain registers location and length
--- interrupts: Should contain all interrupts for the TC block
--  Note that you can specify several interrupt cells if the TC
--  block has one interrupt per channel.
--- clock-names: tuple listing input clock names.
--	Required elements: "t0_clk", "slow_clk"
--	Optional elements: "t1_clk", "t2_clk"
--- clocks: phandles to input clocks.
--
--Examples:
--
--One interrupt per TC block:
--	tcb0: timer@fff7c000 {
--		compatible = "atmel,at91rm9200-tcb";
--		reg = <0xfff7c000 0x100>;
--		interrupts = <18 4>;
--		clocks = <&tcb0_clk>;
--		clock-names = "t0_clk";
--	};
--
--One interrupt per TC channel in a TC block:
--	tcb1: timer@fffdc000 {
--		compatible = "atmel,at91rm9200-tcb";
--		reg = <0xfffdc000 0x100>;
--		interrupts = <26 4 27 4 28 4>;
--		clocks = <&tcb1_clk>;
--		clock-names = "t0_clk";
--	};
--
- RSTC Reset Controller required properties:
- - compatible: Should be "atmel,<chip>-rstc".
-   <chip> can be "at91sam9260" or "at91sam9g45" or "sama5d3"
-diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-new file mode 100644
-index 000000000000..48196752c78f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-@@ -0,0 +1,62 @@
-+* Device tree bindings for Atmel Timer Counter Blocks
-+- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
-+  <chip> can be "at91rm9200" or "at91sam9x5"
-+- reg: Should contain registers location and length
-+- #address-cells: has to be 1
-+- #size-cells: has to be 0
-+- interrupts: Should contain all interrupts for the TC block
-+  Note that you can specify several interrupt cells if the TC
-+  block has one interrupt per channel.
-+- clock-names: tuple listing input clock names.
-+	Required elements: "t0_clk", "slow_clk"
-+	Optional elements: "t1_clk", "t2_clk"
-+- clocks: phandles to input clocks.
-+
-+The TCB can expose multiple subdevices:
-+ * a clocksource and clockevent device
-+   - compatible: Should be "atmel,tcb-clksrc"
-+   - reg: Should contain the TCB channels to be used. If the
-+     counter width is 16 bits (at91rm9200-tcb), two consecutive
-+     channels are needed. Else, only one channel will be used.
-+
-+ * a clockevent device
-+   - compatible: Should be "atmel,tcb-clkevt"
-+   - reg: Should contain the TCB channel to be used
-+
-+ * a PWM chip: see ../pwm/atmel-tcb-pwm.txt
-+
-+Examples:
-+
-+One interrupt per TC block:
-+	tcb0: timer@fff7c000 {
-+		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0xfff7c000 0x100>;
-+		interrupts = <18 4>;
-+		clocks = <&tcb0_clk>;
-+		clock-names = "t0_clk";
-+
-+		timer@0 {
-+			compatible = "atmel,tcb-clksrc";
-+			reg = <0>, <1>;
-+		};
-+
-+		timer@2 {
-+			compatible = "atmel,tcb-clkevt";
-+			reg = <2>;
-+		};
-+	};
-+
-+One interrupt per TC channel in a TC block:
-+	tcb1: timer@fffdc000 {
-+		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0xfffdc000 0x100>;
-+		interrupts = <26 4>, <27 4>, <28 4>;
-+		clocks = <&tcb1_clk>;
-+		clock-names = "t0_clk";
-+	};
-+
-+
-diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-index 8031148bcf85..ab8fbd5ba184 100644
---- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-@@ -2,15 +2,17 @@ Atmel TCB PWM controller
- 
- Required properties:
- - compatible: should be "atmel,tcb-pwm"
-+- reg: tcb channel to use. Each channel can export 2 PWMs
- - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
-   the cells format. The only third cell flag supported by this binding is
-   PWM_POLARITY_INVERTED.
--- tc-block: The Timer Counter block to use as a PWM chip.
- 
- Example:
- 
--pwm {
--	compatible = "atmel,tcb-pwm";
--	#pwm-cells = <3>;
--	tc-block = <1>;
-+tcb0: timer@f800c000 {
-+	pwm@0 {
-+		compatible = "atmel,tcb-pwm";
-+		reg = <0>;
-+		#pwm-cells = <3>;
-+	};
- };
--- 
-2.8.1
+Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
