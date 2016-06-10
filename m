@@ -1,282 +1,78 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v3 1/1] leds: pca9532: Add device tree binding
-Date: Fri, 10 Jun 2016 09:44:44 +0200
-Message-ID: <575A6FEC.5050704@samsung.com>
-References: <1465531995-15553-1-git-send-email-preid@electromag.com.au>
- <1465531995-15553-2-git-send-email-preid@electromag.com.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC v3 01/22] reset: Add renesas,rst DT bindings
+Date: Fri, 10 Jun 2016 09:52:07 +0200
+Message-ID: <CAMuHMdVVCwhVBzPTRVzU6MFbP_sfQPu_dGx1Ef2urNMD+Eda_g@mail.gmail.com>
+References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+ <1464808880-343-2-git-send-email-geert+renesas@glider.be> <10393056.BKo7UTPXFi@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1465531995-15553-2-git-send-email-preid@electromag.com.au>
-Sender: linux-leds-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <10393056.BKo7UTPXFi@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
+Hi Laurent,
 
-Thanks for the update. See my comments below.
-
-On 06/10/2016 06:13 AM, Phil Reid wrote:
-> This patch adds basic device tree support for the pca9532 LEDs.
+On Thu, Jun 2, 2016 at 11:47 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/reset/renesas,rst.txt
+>> @@ -0,0 +1,35 @@
+>> +DT bindings for the Renesas R-Car Reset Controller
+>> +
+>> +The R-Car Reset Controller provides reset control, and implements the
+>> following
+>> +functions:
+>> +  - Latching of the levels on mode pins when PRESET# is negated,
+>> +  - Mode monitoring register,
+>> +  - Reset control of peripheral devices (on R-Car Gen1),
+>> +  - Watchdog timer (on R-Car Gen1).
+>> +  - Register-based reset control and boot address registers for the various
+>> CPU
+>> +    cores (on R-Car Gen2/Gen3),
+>> +
+>> +
+>> +Required properties:
+>> +  - compatible: Should be
+>> +               - "renesas,<soctype>-reset-wdt" for R-Car Gen1,
+>> +               - "renesas,<soctype>-rst" for R-Car Gen2/Gen3.
+>> +             Examples with soctypes are:
+>> +               - "renesas,r8a7778-reset-wdt" (R-Car M1A)
+>> +               - "renesas,r8a7779-reset-wdt" (R-Car H1)
+>> +               - "renesas,r8a7790-rst" (R-Car H2)
+>> +               - "renesas,r8a7791-rst" (R-Car M2-W)
+>> +               - "renesas,r8a7792-rst" (R-Car V2H
+>> +               - "renesas,r8a7793-rst" (R-Car M2-N)
+>> +               - "renesas,r8a7794-rst" (R-Car E2)
+>> +               - "renesas,r8a7795-rst" (R-Car H3)
+>> +               - "renesas,r8a7796-rst" (R-Car M3-W)
 >
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
->   .../devicetree/bindings/leds/leds-pca9532.txt      | 39 +++++++++++++
->   drivers/leds/leds-pca9532.c                        | 68 ++++++++++++++++++++--
->   include/dt-bindings/leds/leds-pca9532.h            | 18 ++++++
->   include/linux/leds-pca9532.h                       |  9 ++-
->   4 files changed, 125 insertions(+), 9 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
->   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> new file mode 100644
-> index 0000000..d313ba6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> @@ -0,0 +1,39 @@
-> +*NXP - pca9532 PWM LED Driver
-> +
-> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
-> +The PWM support 256 steps.
-> +
-> +Required properties:
-> +	- compatible:
-> +		"nxp,pca9530"
-> +		"nxp,pca9531"
-> +		"nxp,pca9532"
-> +		"nxp,pca9533"
-> +	- reg -  I2C slave address
-> +
-> +Each led is represented as a sub-node of the nxp,pca9530.
-> +
-> +Optional sub-node properties:
-> +	- label: Name for this LED. If omitted, the label is taken from the node name.
+> Any specific reason for such a large indentation ? (I know this is really
+> nitpicking)
 
-Please change it to:
+To align the two paragraphs and lists.
 
-- label: see Documentation/devicetree/bindings/leds/common.txt
+> Apart from that, it's just a bit of a shame we can't have generic compatible
+> strings, but that would require additional DT properties to describe the reset
+> controller features, and I assume that's not a path we want to take.
 
-> +	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
-> +	- linux,default-trigger: Trigger assigned to the LED.
+The reset controller is one of the few blocks that really differs
+between members
+of the same family, due to the relationship with the various CPU cores.
 
-Please change it to:
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-- linux,default-trigger: see 
-Documentation/devicetree/bindings/leds/common.txt
+Thanks!
 
-> +
-> +Example:
-> +  #include <dt-bindings/leds/leds-pca9532.h>
-> +
-> +  leds: pca9530@60 {
-> +    compatible = "nxp,pca9530";
-> +    reg = <0x60>;
-> +
-> +    red-power {
-> +      label = "pca:red:power";
-> +      type = <PCA9532_TYPE_LED>;
-> +    };
-> +    green-power {
-> +      label = "pca:green:power";
-> +      type = <PCA9532_TYPE_LED>;
-> +    };
-> +  };
-> +
-> +For more product information please see the link below:
-> +http://nxp.com/documents/data_sheet/PCA9532.pdf
-> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-> index e3d3b1a..f771549 100644
-> --- a/drivers/leds/leds-pca9532.c
-> +++ b/drivers/leds/leds-pca9532.c
-> @@ -21,6 +21,8 @@
->   #include <linux/workqueue.h>
->   #include <linux/leds-pca9532.h>
->   #include <linux/gpio.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->
->   /* m =  num_leds*/
->   #define PCA9532_REG_INPUT(i)	((i) >> 3)
-> @@ -86,9 +88,22 @@ static const struct pca9532_chip_info pca9532_chip_info_tbl[] = {
->   	},
->   };
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id of_pca9532_leds_match[] = {
-> +	{ .compatible = "nxp,pca9530", .data = (void *)pca9530 },
-> +	{ .compatible = "nxp,pca9531", .data = (void *)pca9531 },
-> +	{ .compatible = "nxp,pca9532", .data = (void *)pca9532 },
-> +	{ .compatible = "nxp,pca9533", .data = (void *)pca9533 },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, of_pca9532_leds_match);
-> +#endif
-> +
->   static struct i2c_driver pca9532_driver = {
->   	.driver = {
->   		.name = "leds-pca953x",
-> +		.of_match_table = of_match_ptr(of_pca9532_leds_match),
->   	},
->   	.probe = pca9532_probe,
->   	.remove = pca9532_remove,
-> @@ -354,6 +369,7 @@ static int pca9532_configure(struct i2c_client *client,
->   			led->state = pled->state;
->   			led->name = pled->name;
->   			led->ldev.name = led->name;
-> +			led->ldev.default_trigger = led->default_trigger;
->   			led->ldev.brightness = LED_OFF;
->   			led->ldev.brightness_set_blocking =
->   						pca9532_set_brightness;
-> @@ -432,15 +448,59 @@ exit:
->   	return err;
->   }
->
-> +struct pca9532_platform_data *pca9532_of_populate_pdata(struct device *dev,
-> +						      struct device_node *np)
-> +{
-> +	struct pca9532_platform_data *pdata;
-> +	struct device_node *child;
-> +	int devid = (int)of_match_device(of_pca9532_leds_match, dev)->data;
+Gr{oetje,eeting}s,
 
-Please at first check the of_match_device() return value:
+                        Geert
 
-         const struct of_device_id *match;
-         int maxleds, devid;
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-         match = of_match_device(of_pca9532_leds_match, dev);
-         if (!match)
-                 return ERR_PTR(-ENODEV);
-
-         devid = (int)match->data;
-         maxleds = pca9532_chip_info_tbl[devid].num_leds;
-
-
-
-> +	int maxleds = pca9532_chip_info_tbl[devid].num_leds;
-> +	int i = 0;
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	for_each_child_of_node(np, child) {
-> +		if (of_property_read_string(child, "label",
-> +					    &pdata->leds[i].name))
-> +			pdata->leds[i].name = child->name;
-> +		of_property_read_u32(child, "type", &pdata->leds[i].type);
-> +		of_property_read_string(child, "linux,default-trigger",
-> +					&pdata->leds[i].default_trigger);
-> +		if (++i >= maxleds) {
-> +			of_node_put(child);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return pdata;
-> +}
-> +
->   static int pca9532_probe(struct i2c_client *client,
->   	const struct i2c_device_id *id)
->   {
-> +	int devid;
->   	struct pca9532_data *data = i2c_get_clientdata(client);
->   	struct pca9532_platform_data *pca9532_pdata =
->   			dev_get_platdata(&client->dev);
-> -
-> -	if (!pca9532_pdata)
-> -		return -EIO;
-> +	struct device_node *np = client->dev.of_node;
-> +
-> +	if (!pca9532_pdata) {
-> +		if (np) {
-> +			pca9532_pdata =
-> +				pca9532_of_populate_pdata(&client->dev, np);
-> +			if (IS_ERR(pca9532_pdata))
-> +				return PTR_ERR(pca9532_pdata);
-> +		} else {
-> +			dev_err(&client->dev, "no platform data\n");
-> +			return -EINVAL;
-> +		}
-> +		devid = (int)of_match_device(
-> +			of_pca9532_leds_match, &client->dev)->data;
-> +	} else {
-> +		devid = id->driver_data;
-> +	}
->
->   	if (!i2c_check_functionality(client->adapter,
->   		I2C_FUNC_SMBUS_BYTE_DATA))
-> @@ -450,7 +510,7 @@ static int pca9532_probe(struct i2c_client *client,
->   	if (!data)
->   		return -ENOMEM;
->
-> -	data->chip_info = &pca9532_chip_info_tbl[id->driver_data];
-> +	data->chip_info = &pca9532_chip_info_tbl[devid];
->
->   	dev_info(&client->dev, "setting platform data\n");
->   	i2c_set_clientdata(client, data);
-> diff --git a/include/dt-bindings/leds/leds-pca9532.h b/include/dt-bindings/leds/leds-pca9532.h
-> new file mode 100644
-> index 0000000..4d917aa
-> --- /dev/null
-> +++ b/include/dt-bindings/leds/leds-pca9532.h
-> @@ -0,0 +1,18 @@
-> +/*
-> + * This header provides constants for pca9532 LED bindings.
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_LEDS_PCA9532_H
-> +#define _DT_BINDINGS_LEDS_PCA9532_H
-> +
-> +#define PCA9532_TYPE_NONE         0
-> +#define PCA9532_TYPE_LED          1
-> +#define PCA9532_TYPE_N2100_BEEP   2
-> +#define PCA9532_TYPE_GPIO         3
-> +#define PCA9532_LED_TIMER2        4
-> +
-> +#endif /* _DT_BINDINGS_LEDS_PCA9532_H */
-> diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
-> index b8d6fff..d215b45 100644
-> --- a/include/linux/leds-pca9532.h
-> +++ b/include/linux/leds-pca9532.h
-> @@ -16,6 +16,7 @@
->
->   #include <linux/leds.h>
->   #include <linux/workqueue.h>
-> +#include <dt-bindings/leds/leds-pca9532.h>
->
->   enum pca9532_state {
->   	PCA9532_OFF  = 0x0,
-> @@ -24,16 +25,14 @@ enum pca9532_state {
->   	PCA9532_PWM1 = 0x3
->   };
->
-> -enum pca9532_type { PCA9532_TYPE_NONE, PCA9532_TYPE_LED,
-> -	PCA9532_TYPE_N2100_BEEP, PCA9532_TYPE_GPIO };
-> -
->   struct pca9532_led {
->   	u8 id;
->   	struct i2c_client *client;
-> -	char *name;
-> +	const char *name;
-> +	const char *default_trigger;
->   	struct led_classdev ldev;
->   	struct work_struct work;
-> -	enum pca9532_type type;
-> +	u32 type;
->   	enum pca9532_state state;
->   };
->
->
-
-
--- 
-Best regards,
-Jacek Anaszewski
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
