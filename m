@@ -1,320 +1,168 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: [PATCH v5 5/7] net: mdio-mux: Add MDIO mux driver for iProc SoCs
-Date: Fri, 10 Jun 2016 11:03:49 +0530
-Message-ID: <1465536831-13023-6-git-send-email-pramod.kumar@broadcom.com>
-References: <1465536831-13023-1-git-send-email-pramod.kumar@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465536831-13023-1-git-send-email-pramod.kumar@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 2/2] dt-binding: remoteproc: Introduce Hexagon loader binding
+Date: Thu,  9 Jun 2016 22:53:00 -0700
+Message-ID: <1465537980-13347-2-git-send-email-bjorn.andersson@linaro.org>
+References: <1465537980-13347-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1465537980-13347-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-iProc based SoCs supports the integrated mdio multiplexer which
-has the bus selection as well as mdio transaction generation logic
-inside.
+This document defines the binding for a component that loads firmware
+and control the life cycle of a self-authenticating Qualcomm Hexagon
+core.
 
-This multiplexer has child buses for PCIe, SATA, USB and ETH. These
-buses could be internal or external to SOC where PHYs are attached.
-These buses could use C-45 or C-22 mdio transaction.
-
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/net/phy/Kconfig              |  11 ++
- drivers/net/phy/Makefile             |   1 +
- drivers/net/phy/mdio-mux-bcm-iproc.c | 248 +++++++++++++++++++++++++++++++++++
- 3 files changed, 260 insertions(+)
- create mode 100644 drivers/net/phy/mdio-mux-bcm-iproc.c
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   | 138 +++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
 
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 6dad9a9..94c0707 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -254,6 +254,17 @@ config MDIO_BUS_MUX_MMIOREG
- 
- 	  Currently, only 8-bit registers are supported.
- 
-+config MDIO_BUS_MUX_BCM_IPROC
-+	tristate "Support for iProc based MDIO bus multiplexers"
-+	depends on OF && OF_MDIO && (ARCH_BCM_IPROC || COMPILE_TEST)
-+	select MDIO_BUS_MUX
-+	default ARCH_BCM_IPROC
-+	help
-+	  This module provides a driver for MDIO bus multiplexers found in
-+	  iProc based Broadcom SoCs. This multiplexer connects one of several
-+	  child MDIO bus to a parent bus. Buses could be internal as well as
-+	  external and selection logic lies inside the same multiplexer.
-+
- config MDIO_BCM_UNIMAC
- 	tristate "Broadcom UniMAC MDIO bus controller"
- 	depends on HAS_IOMEM
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index fcdbb92..f5951d5a 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_AMD_PHY)		+= amd.o
- obj-$(CONFIG_MDIO_BUS_MUX)	+= mdio-mux.o
- obj-$(CONFIG_MDIO_BUS_MUX_GPIO)	+= mdio-mux-gpio.o
- obj-$(CONFIG_MDIO_BUS_MUX_MMIOREG) += mdio-mux-mmioreg.o
-+obj-$(CONFIG_MDIO_BUS_MUX_BCM_IPROC)	+= mdio-mux-bcm-iproc.o
- obj-$(CONFIG_MDIO_SUN4I)	+= mdio-sun4i.o
- obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
- obj-$(CONFIG_MDIO_BCM_UNIMAC)	+= mdio-bcm-unimac.o
-diff --git a/drivers/net/phy/mdio-mux-bcm-iproc.c b/drivers/net/phy/mdio-mux-bcm-iproc.c
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
 new file mode 100644
-index 0000000..0a04125
+index 000000000000..066ddb8d4d2a
 --- /dev/null
-+++ b/drivers/net/phy/mdio-mux-bcm-iproc.c
-@@ -0,0 +1,248 @@
-+/*
-+ * Copyright 2016 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License, version 2, as
-+ * published by the Free Software Foundation (the "GPL").
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License version 2 (GPLv2) for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * version 2 (GPLv2) along with this source code.
-+ */
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+@@ -0,0 +1,138 @@
++Qualcomm Hexagon Peripheral Image Loader
 +
-+#include <linux/platform_device.h>
-+#include <linux/device.h>
-+#include <linux/of_mdio.h>
-+#include <linux/module.h>
-+#include <linux/phy.h>
-+#include <linux/mdio-mux.h>
-+#include <linux/delay.h>
++This document defines the binding for a component that loads and boots firmware
++on the Qualcomm Hexagon core.
 +
-+#define MDIO_PARAM_OFFSET		0x00
-+#define MDIO_PARAM_MIIM_CYCLE		29
-+#define MDIO_PARAM_INTERNAL_SEL		25
-+#define MDIO_PARAM_BUS_ID		22
-+#define MDIO_PARAM_C45_SEL		21
-+#define MDIO_PARAM_PHY_ID		16
-+#define MDIO_PARAM_PHY_DATA		0
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,q6v5-pil"
 +
-+#define MDIO_READ_OFFSET		0x04
-+#define MDIO_READ_DATA_MASK		0xffff
-+#define MDIO_ADDR_OFFSET		0x08
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must specify the base address and size of the qdsp6 and
++		    rmb register blocks
 +
-+#define MDIO_CTRL_OFFSET		0x0C
-+#define MDIO_CTRL_WRITE_OP		0x1
-+#define MDIO_CTRL_READ_OP		0x2
++- reg-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "q6dsp" and "rmb"
 +
-+#define MDIO_STAT_OFFSET		0x10
-+#define MDIO_STAT_DONE			1
++- interrupts-extended:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must list the watchdog, fatal IRQs ready, handover and
++		    stop-ack IRQs
 +
-+#define BUS_MAX_ADDR			32
-+#define EXT_BUS_START_ADDR		16
++- interrupt-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
 +
-+struct iproc_mdiomux_desc {
-+	void *mux_handle;
-+	void __iomem *base;
-+	struct device *dev;
-+	struct mii_bus *mii_bus;
-+};
++- clocks:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the iface, bus and mem clocks to be held on
++		    behalf of the booting of the Hexagon core
 +
-+static int iproc_mdio_wait_for_idle(void __iomem *base, bool result)
-+{
-+	unsigned int timeout = 1000; /* loop for 1s */
-+	u32 val;
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "iface", "bus", "mem"
 +
-+	do {
-+		val = readl(base + MDIO_STAT_OFFSET);
-+		if ((val & MDIO_STAT_DONE) == result)
-+			return 0;
++- resets:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the reset-controller for the modem sub-system
 +
-+		usleep_range(1000, 2000);
-+	} while (timeout--);
++- reset-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "mss_restart"
 +
-+	return -ETIMEDOUT;
-+}
++- cx-supply:
++- mss-supply:
++- mx-supply:
++- pll-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the regulators to be held on behalf of the
++		    booting of the Hexagon core
 +
-+/* start_miim_ops- Program and start MDIO transaction over mdio bus.
-+ * @base: Base address
-+ * @phyid: phyid of the selected bus.
-+ * @reg: register offset to be read/written.
-+ * @val :0 if read op else value to be written in @reg;
-+ * @op: Operation that need to be carried out.
-+ *      MDIO_CTRL_READ_OP: Read transaction.
-+ *      MDIO_CTRL_WRITE_OP: Write transaction.
-+ *
-+ * Return value: Successful Read operation returns read reg values and write
-+ *      operation returns 0. Failure operation returns negative error code.
-+ */
-+static int start_miim_ops(void __iomem *base,
-+			  u16 phyid, u32 reg, u16 val, u32 op)
-+{
-+	u32 param;
-+	int ret;
++- qcom,smem-states:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the smem state for requesting the Hexagon to
++		    shut down
 +
-+	writel(0, base + MDIO_CTRL_OFFSET);
-+	ret = iproc_mdio_wait_for_idle(base, 0);
-+	if (ret)
-+		goto err;
++- qcom,smem-state-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "stop"
 +
-+	param = readl(base + MDIO_PARAM_OFFSET);
-+	param |= phyid << MDIO_PARAM_PHY_ID;
-+	param |= val << MDIO_PARAM_PHY_DATA;
-+	if (reg & MII_ADDR_C45)
-+		param |= BIT(MDIO_PARAM_C45_SEL);
++- qcom,halt-regs:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: a phandle reference to a syscon representing TCSR followed
++		    by the three offsets within syscon for q6, modem and nc
++		    halt registers.
 +
-+	writel(param, base + MDIO_PARAM_OFFSET);
++= SUBNODES:
++The Hexagon node must contain two subnodes, named "mba" and "mpss" representing
++the memory regions used by the Hexagon firmware. Each sub-node must contain:
 +
-+	writel(reg, base + MDIO_ADDR_OFFSET);
++- memory-region:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the reserved-memory for the region
 +
-+	writel(op, base + MDIO_CTRL_OFFSET);
++= EXAMPLE
++The following example describes the resources needed to boot control the
++Hexagon, as it is found on MSM8974 boards.
 +
-+	ret = iproc_mdio_wait_for_idle(base, 1);
-+	if (ret)
-+		goto err;
++	modem-rproc@fc880000 {
++		compatible = "qcom,q6v5-pil";
++		reg = <0xfc880000 0x100>,
++		      <0xfc820000 0x020>;
++		reg-names = "qdsp6_base", "rmb_base";
 +
-+	if (op == MDIO_CTRL_READ_OP)
-+		ret = readl(base + MDIO_READ_OFFSET) & MDIO_READ_DATA_MASK;
-+err:
-+	return ret;
-+}
++		interrupts-extended = <&intc 0 24 1>,
++				      <&modem_smp2p_in 0 0>,
++				      <&modem_smp2p_in 1 0>,
++				      <&modem_smp2p_in 2 0>,
++				      <&modem_smp2p_in 3 0>;
++		interrupt-names = "wdog",
++				  "fatal",
++				  "ready",
++				  "handover",
++				  "stop-ack";
 +
-+static int iproc_mdiomux_read(struct mii_bus *bus, int phyid, int reg)
-+{
-+	struct iproc_mdiomux_desc *md = bus->priv;
-+	int ret;
++		clocks = <&gcc GCC_MSS_Q6_BIMC_AXI_CLK>,
++			 <&gcc GCC_MSS_CFG_AHB_CLK>,
++			 <&gcc GCC_BOOT_ROM_AHB_CLK>;
++		clock-names = "iface", "bus", "mem";
 +
-+	ret = start_miim_ops(md->base, phyid, reg, 0, MDIO_CTRL_READ_OP);
-+	if (ret < 0)
-+		dev_err(&bus->dev, "mdiomux read operation failed!!!");
++		qcom,halt-regs = <&tcsr_mutex_block 0x1180 0x1200 0x1280>;
 +
-+	return ret;
-+}
++		resets = <&gcc GCC_MSS_RESTART>;
++		reset-names = "mss_restart";
 +
-+static int iproc_mdiomux_write(struct mii_bus *bus,
-+			       int phyid, int reg, u16 val)
-+{
-+	struct iproc_mdiomux_desc *md = bus->priv;
-+	int ret;
++		cx-supply = <&pm8841_s2>;
++		mss-supply = <&pm8841_s3>;
++		mx-supply = <&pm8841_s1>;
++		pll-supply = <&pm8941_l12>;
 +
-+	/* Write val at reg offset */
-+	ret = start_miim_ops(md->base, phyid, reg, val, MDIO_CTRL_WRITE_OP);
-+	if (ret < 0)
-+		dev_err(&bus->dev, "mdiomux write operation failed!!!");
++		qcom,smem-states = <&modem_smp2p_out 0>;
++		qcom,smem-state-names = "stop";
 +
-+	return ret;
-+}
++		mba {
++			memory-region = <&mba_region>;
++		};
 +
-+static int mdio_mux_iproc_switch_fn(int current_child, int desired_child,
-+				    void *data)
-+{
-+	struct iproc_mdiomux_desc *md = data;
-+	u32 param, bus_id;
-+	bool bus_dir;
++		mpss {
++			memory-region = <&mpss_region>;
++		};
++	};
 +
-+	/* select bus and its properties */
-+	bus_dir = (desired_child < EXT_BUS_START_ADDR);
-+	bus_id = bus_dir ? desired_child : (desired_child - EXT_BUS_START_ADDR);
-+
-+	param = (bus_dir ? 1 : 0) << MDIO_PARAM_INTERNAL_SEL;
-+	param |= (bus_id << MDIO_PARAM_BUS_ID);
-+
-+	writel(param, md->base + MDIO_PARAM_OFFSET);
-+	return 0;
-+}
-+
-+static int mdio_mux_iproc_probe(struct platform_device *pdev)
-+{
-+	struct iproc_mdiomux_desc *md;
-+	struct mii_bus *bus;
-+	struct resource *res;
-+	int rc;
-+
-+	md = devm_kzalloc(&pdev->dev, sizeof(*md), GFP_KERNEL);
-+	if (!md)
-+		return -ENOMEM;
-+	md->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	md->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(md->base)) {
-+		dev_err(&pdev->dev, "failed to ioremap register\n");
-+		return PTR_ERR(md->base);
-+	}
-+
-+	md->mii_bus = mdiobus_alloc();
-+	if (!md->mii_bus) {
-+		dev_err(&pdev->dev, "mdiomux bus alloc failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	bus = md->mii_bus;
-+	bus->priv = md;
-+	bus->name = "iProc MDIO mux bus";
-+	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-%d", pdev->name, pdev->id);
-+	bus->parent = &pdev->dev;
-+	bus->read = iproc_mdiomux_read;
-+	bus->write = iproc_mdiomux_write;
-+
-+	bus->phy_mask = ~0;
-+	bus->dev.of_node = pdev->dev.of_node;
-+	rc = mdiobus_register(bus);
-+	if (rc) {
-+		dev_err(&pdev->dev, "mdiomux registration failed\n");
-+		goto out;
-+	}
-+
-+	platform_set_drvdata(pdev, md);
-+
-+	rc = mdio_mux_init(md->dev, mdio_mux_iproc_switch_fn,
-+			   &md->mux_handle, md, md->mii_bus);
-+	if (rc) {
-+		dev_info(md->dev, "mdiomux initialization failed\n");
-+		goto out;
-+	}
-+
-+	dev_info(md->dev, "iProc mdiomux registered\n");
-+	return 0;
-+out:
-+	mdiobus_free(bus);
-+	return rc;
-+}
-+
-+static int mdio_mux_iproc_remove(struct platform_device *pdev)
-+{
-+	struct iproc_mdiomux_desc *md = dev_get_platdata(&pdev->dev);
-+
-+	mdio_mux_uninit(md->mux_handle);
-+	mdiobus_unregister(md->mii_bus);
-+	mdiobus_free(md->mii_bus);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mdio_mux_iproc_match[] = {
-+	{
-+		.compatible = "brcm,mdio-mux-iproc",
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mdio_mux_iproc_match);
-+
-+static struct platform_driver mdiomux_iproc_driver = {
-+	.driver = {
-+		.name		= "mdio-mux-iproc",
-+		.of_match_table = mdio_mux_iproc_match,
-+	},
-+	.probe		= mdio_mux_iproc_probe,
-+	.remove		= mdio_mux_iproc_remove,
-+};
-+
-+module_platform_driver(mdiomux_iproc_driver);
-+
-+MODULE_DESCRIPTION("iProc MDIO Mux Bus Driver");
-+MODULE_AUTHOR("Pramod Kumar <pramod.kumar@broadcom.com>");
-+MODULE_LICENSE("GPL v2");
 -- 
-1.9.1
+2.5.0
