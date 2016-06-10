@@ -1,36 +1,69 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] Documentation/devicetree: document cavium-pip
- rx-delay/tx-delay properties
-Date: Fri, 10 Jun 2016 12:50:25 -0500
-Message-ID: <20160610175025.GA23079@rob-hp-laptop>
-References: <1465504648-15038-1-git-send-email-aaro.koskinen@iki.fi>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/6] dt-bindings: add Sharp LQ123P1JX31 panel binding
+Date: Fri, 10 Jun 2016 12:54:48 -0500
+Message-ID: <CAL_JsqKar09sS=7f-=AQLN88BDP8HE7vYmoWV5YGscwj6pY6Tw@mail.gmail.com>
+References: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
+ <1465386765-27867-1-git-send-email-ykk@rock-chips.com>
+ <20160610134217.GA25881@rob-hp-laptop>
+ <CAD=FV=V289pShLFHAAhittPD9SKNuS68RWsArjD+zfp+g6Z4wQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465504648-15038-1-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAD=FV=V289pShLFHAAhittPD9SKNuS68RWsArjD+zfp+g6Z4wQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 09, 2016 at 11:37:28PM +0300, Aaro Koskinen wrote:
-> Document cavium-pip rx-delay/tx-delay properties. Currently the board
-> specific values need to be hardcoded in the platform code, which we
-> want to avoid when moving to DT-only booting.
-> 
-> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-> ---
-> 
-> 	v2: Update the description.
-> 
-> 	v1: http://marc.info/?l=devicetree&m=146507906104224&w=2
-> 
->  Documentation/devicetree/bindings/net/cavium-pip.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgMTE6NDAgQU0sIERvdWcgQW5kZXJzb24gPGRpYW5kZXJz
+QGNocm9taXVtLm9yZz4gd3JvdGU6Cj4gUm9iLAo+Cj4gT24gRnJpLCBKdW4gMTAsIDIwMTYgYXQg
+Njo0MiBBTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4+IE9uIFdlZCwg
+SnVuIDA4LCAyMDE2IGF0IDA3OjUyOjQ1UE0gKzA4MDAsIFlha2lyIFlhbmcgd3JvdGU6Cj4+PiBU
+aGUgU2hhcnAgTFExMjNQMUpYMzEgaXMgYW4gMTIuMyIgMjQwMHgxNjAwIFRGVC1MQ0QgcGFuZWwK
+Pj4+IGNvbm5lY3RlZCB1c2luZyBlRFAgaW50ZXJmYWNlcy4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5
+OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Cj4+PiAtLS0KPj4+IENoYW5nZXMgaW4g
+djI6Cj4+PiAtIEFkZCBkdC1iaW5kaW5ncyBvZiBTaGFycCBMUTEyM1AxSlgzMSBwYW5lbCBpbiB2
+Mgo+Pj4KPj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxx
+MTIzcDFqeDMxLnR4dCAgICAgICAgfCA3ICsrKysrKysKPj4+ICAxIGZpbGUgY2hhbmdlZCwgNyBp
+bnNlcnRpb25zKCspCj4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMTIzcDFqeDMxLnR4dAo+Pj4KPj4+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9zaGFycCxscTEyM3AxangzMS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTEyM3AxangzMS50eHQKPj4+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4+PiBpbmRleCAwMDAwMDAwLi44MTkzOGMwCj4+PiAtLS0gL2Rldi9udWxsCj4+
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9z
+aGFycCxscTEyM3AxangzMS50eHQKPj4+IEBAIC0wLDAgKzEsNyBAQAo+Pj4gK1NoYXJwIDEyLjMi
+ICgyNDAweDE2MDAgcGl4ZWxzKSBURlQgTENEIHBhbmVsCj4+PiArCj4+PiArUmVxdWlyZWQgcHJv
+cGVydGllczoKPj4+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAic2hhcnAsbHExMjNwMWp4MzEs
+Igo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeCj4+IE5l
+ZWQgdG8gZHJvcCB0aGUgY29tbWEuCj4KPiBUaGFua3MgZm9yIGNhdGNoaW5nIQo+Cj4+IE5vIHJl
+Z3VsYXRvcnMgb3IgcmVzZXRzIG9yIHB3bXM/Cj4KPiBDb3VsZCBiZSBtb3JlIGV4cGxpY2l0IEkg
+Z3Vlc3MsIGJ1dCBZYWtpciBkb2VzIHNheToKPgo+PiBUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJs
+ZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4+IGlu
+IHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4KPiBJbiB0aGF0IGRvY3VtZW50
+IGl0IHNob3dzOgo+Cj4gUmVxdWlyZWQgcHJvcGVydGllczoKPiAtIHBvd2VyLXN1cHBseTogcmVn
+dWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCj4KPiBPcHRpb25hbCBwcm9wZXJ0
+aWVzOgo+IC0gZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBm
+b3IgRERDIEVESUQgcHJvYmluZwo+IC0gZW5hYmxlLWdwaW9zOiBHUElPIHBpbiB0byBlbmFibGUg
+b3IgZGlzYWJsZSB0aGUgcGFuZWwKPiAtIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xp
+Z2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKCkFoIHllcywgTk0uCgo+IEluIGdlbmVy
+YWwgWWFraXIncyBiaW5kaW5ncyBkb2N1bWVudCBtYXRjaCBhIGh1Z2UgY2h1bmsgb2YgdGhlIGN1
+cnJlbnQKPiBleGlzdGluZyBiaW5kaW5ncy4gIERvIHRoaXM6Cj4gICBjZCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbAo+ICAgZ3JlcCAtQzIwICJUaGlzIGJp
+bmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwiICoKPgo+IFlvdSdsbCBm
+aW5kIGEgaHVnZSBjaHVuayBvZiBmaWxlcyB3aGljaCBhcmUgcmF0aGVyIGZvcm11bGFpYy4gIEl0
+Cj4gbWlnaHQgbWFrZSBzZW5zZSB0byBqdXN0IGhhdmUgb25lIGZpbGUgYW5kIGEgbGlzdCBvZiBw
+YW5lbHMgd2hpY2ggYXJlCj4gc2ltcGxlIHBhbmVscz8KCklmIHdlJ3JlIGp1c3QgZG9jdW1lbnRp
+bmcgY29tcGF0aWJsZSBzdHJpbmdzLCB0aGVuIG1heWJlIHNvLgoKUm9iCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
