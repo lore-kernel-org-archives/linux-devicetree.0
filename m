@@ -1,47 +1,37 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] net: ethernet: Add TSE PCS support to
- dwmac-socfpga
-Date: Fri, 10 Jun 2016 14:09:54 +0200
-Message-ID: <6ab2c663-5559-5818-5357-6801ff452dfb@st.com>
-References: <1465268516-31480-1-git-send-email-thloh@altera.com>
- <ab65dd4e-830a-c774-c8fa-1adfb3be1a69@st.com>
- <1465451310.4467.21.camel@ubuntu>
- <ac036ba2-c9ce-1fb4-89e3-9af499954907@st.com>
- <1465539145.4467.42.camel@ubuntu>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] of: irq: don't return 0 from of_irq_get()
+Date: Fri, 10 Jun 2016 15:14:40 +0300
+Message-ID: <65e9eb00-ba9a-87c5-1410-8a5da6b42c8f@cogentembedded.com>
+References: <20938812.efaALfQEUn@wasted.cogentembedded.com>
+ <20160603121432.GB8472@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465539145.4467.42.camel@ubuntu>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thloh85-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160603121432.GB8472@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: grant.likely@linaro.org, devicetree@vger.kernel.org, frowand.list@gmail.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Tien Hock
+On 6/3/2016 3:14 PM, Rob Herring wrote:
 
-On 6/10/2016 8:12 AM, Tien Hock Loh wrote:
->>> Yeah the PCS support for TSE is Altera. To avoid confusion, let's rename
->>> > > them, would altr_tse_pcs.[hc] be good? I don't think creating a
->>> > > sub-directory with only 2 files is necessary though.
->> >
->> > ok for two files w/o sub-dir.
->> >
->>> > >
->>> > > I see that stmmac.txt is generic, and other vendor's PCS support
->>> > > documents their specific uses in their own *-dwmac.txt (eg.
->>> > > rockchip-dwmac.txt). Is this not the case?
->> >
->> > yes you can use this name convention. I let you decide.
-> What I meant was we've documented the bindings in socfpga-dwmac.txt for
-> platform specific bindings, and I won't be updating stmmac.txt because
-> that is the generic driver binding. Agree?
+>> of_irq_get() returns 0 iff irq_create_of_mapping() call fails. Returning
+>> both error code  and 0 on failure is a sign of a misdesigned API. Return
+>> -ENXIO instead like one of the callers, platform_get_irq(), does; fix up
+>> the kernel-doc as well...
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> So I think this is done this way because of the variation in NO_IRQ
+> definition across architectures.
 
-ok if you documented all in socfpga-dwmac.txt
+    I remember that NO_IRQ is "considered harmful" by Linus. Actually, I'm nit 
+sure what you mean, could you elaborate on that?
 
-peppe
+> But then again, of_irq_get is
+> relatively new.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Rob
+
+MBR, Sergei
