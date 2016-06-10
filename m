@@ -1,7 +1,7 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v2 04/10] drm/msm/dsi: Modify port parsing
-Date: Fri, 10 Jun 2016 16:16:34 +0530
-Message-ID: <1465555600-25742-5-git-send-email-architt@codeaurora.org>
+Subject: [PATCH v2 06/10] drm/msm/dsi: Use a standard DT binding for data lanes
+Date: Fri, 10 Jun 2016 16:16:36 +0530
+Message-ID: <1465555600-25742-7-git-send-email-architt@codeaurora.org>
 References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
  <1465555600-25742-1-git-send-email-architt@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
@@ -11,46 +11,65 @@ To: robdclark@gmail.com, robh@kernel.org
 Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, heiko@sntech.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The DSI interface is going to have two ports defined in its device node.
-The first port is always going to be the link between the MDP output
-and the input to DSI, the second port is going to be the link between
-the DSI output and the connected panel/bridge:
+A more standard DT binding describing data lanes already exists here:
+Documentation/devicetree/bindings/media/video-interfaces.txt
 
- -----           -----           -------
-| MDP | ------> | DSI | ------> | Panel |
- -----           -----           -------
-        (Port 0)       (Port 1)
+Use this binding instead of "qcom,data-lane-map". One difference
+in the standard binding w.r.t to the existing binding is that it
+provides a logical to physical mapping instead of the other way
+round. Tweak the code to translate the data the way we want it.
 
-Until now, there was only one Port representing the output. Update the
-DSI host driver such that it parses Port #1 for a connected device.
+The MSM DSI DT bindings aren't used anywhere at the moment, so
+it's okay to update this property.
 
 Signed-off-by: Archit Taneja <architt@codeaurora.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index a3e47ad8..4f1335e 100644
+index 4f1335e..e6a8cd1 100644
 --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
 +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -1602,12 +1602,12 @@ static int dsi_host_parse_dt(struct msm_dsi_host *msm_host)
- 	}
+@@ -1543,7 +1543,7 @@ static int dsi_host_parse_lane_data(struct msm_dsi_host *msm_host,
+ 	u32 lane_map[4];
+ 	int ret, i, len, num_lanes;
  
- 	/*
--	 * Get the first endpoint node. In our case, dsi has one output port
--	 * to which the panel is connected. Don't return an error if a port
--	 * isn't defined. It's possible that there is nothing connected to
--	 * the dsi output.
-+	 * Get the endpoint of the output port of the DSI host. In our case,
-+	 * this is mapped to port number with reg = 1. Don't return an error if
-+	 * the remote endpoint isn't defined. It's possible that there is
-+	 * nothing connected to the dsi output.
- 	 */
--	endpoint = of_graph_get_next_endpoint(np, NULL);
-+	endpoint = of_graph_get_endpoint_by_regs(np, 1, -1);
- 	if (!endpoint) {
- 		dev_dbg(dev, "%s: no endpoint\n", __func__);
- 		return 0;
+-	prop = of_find_property(ep, "qcom,data-lane-map", &len);
++	prop = of_find_property(ep, "data-lanes", &len);
+ 	if (!prop) {
+ 		dev_dbg(dev, "failed to find data lane mapping\n");
+ 		return -EINVAL;
+@@ -1558,7 +1558,7 @@ static int dsi_host_parse_lane_data(struct msm_dsi_host *msm_host,
+ 
+ 	msm_host->num_data_lanes = num_lanes;
+ 
+-	ret = of_property_read_u32_array(ep, "qcom,data-lane-map", lane_map,
++	ret = of_property_read_u32_array(ep, "data-lanes", lane_map,
+ 					 num_lanes);
+ 	if (ret) {
+ 		dev_err(dev, "failed to read lane data\n");
+@@ -1573,8 +1573,19 @@ static int dsi_host_parse_lane_data(struct msm_dsi_host *msm_host,
+ 		const int *swap = supported_data_lane_swaps[i];
+ 		int j;
+ 
++		/*
++		 * the data-lanes array we get from DT has a logical->physical
++		 * mapping. The "data lane swap" register field represents
++		 * supported configurations in a physical->logical mapping.
++		 * Translate the DT mapping to what we understand and find a
++		 * configuration that works.
++		 */
+ 		for (j = 0; j < num_lanes; j++) {
+-			if (swap[j] != lane_map[j])
++			if (lane_map[j] < 0 || lane_map[j] > 3)
++				dev_err(dev, "bad physical lane entry %u\n",
++					lane_map[j]);
++
++			if (swap[lane_map[j]] != j)
+ 				break;
+ 		}
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
