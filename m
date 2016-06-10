@@ -1,50 +1,63 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: add Starry KR122EA0SRA panel binding
-Date: Fri, 10 Jun 2016 18:26:03 +0100
-Message-ID: <CACvgo50-R_7wqy0jw+MoWQn_axVJbni7wMF7BXuFX99H7pD1iQ@mail.gmail.com>
-References: <1465578127-30330-1-git-send-email-dianders@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v4 01/14] regulator: of: Add helper for getting all supplies
+Date: Fri, 10 Jun 2016 12:30:56 -0500
+Message-ID: <20160610173056.GA16503@rob-hp-laptop>
+References: <1465465471-28740-1-git-send-email-k.kozlowski@samsung.com>
+ <1465465471-28740-2-git-send-email-k.kozlowski@samsung.com>
+ <20160609102925.GS7510@sirena.org.uk>
+ <5759560A.70107@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465578127-30330-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5759560A.70107@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Heiko Stuebner <heiko@sntech.de>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org, hzpeterchen@gmail.com, Bartlomiej
 List-Id: devicetree@vger.kernel.org
 
-Hi Douglas,
+On Thu, Jun 09, 2016 at 01:42:02PM +0200, Krzysztof Kozlowski wrote:
+> On 06/09/2016 12:29 PM, Mark Brown wrote:
+> > On Thu, Jun 09, 2016 at 11:44:18AM +0200, Krzysztof Kozlowski wrote:
+> >> Few drivers have a need of getting regulator supplies without knowing
+> >> their names:
+> >> 1. The Simple Framebuffer driver works on setup provided by bootloader
+> >>    (outside of scope of kernel);
+> >> 2. Generic power sequence driver may be attached to any device node.
+> >>
+> >> Add a Device Tree helper for parsing "-supply" properties and returning
+> >> allocated bulk regulator consumers.
+> > 
+> > I'm still very concerned that this is just an invitation to people to
+> > write half baked regulator consumers and half baked DTs to go along with
+> > it, making it a standard API that doesn't have big red flags on it that
+> > will flag up when "normal" drivers use it is not good.  Right now this
+> > just looks like a standard API and people are going to just start using
+> > it.  If we are going to do this perhaps we need a separate header or
+> > something to help flag this up.
+> 
+> No problem, I can move it to a special header.  Actually, if you dislike
+> this as an API, it does not have to be in header at all.  I can just
+> duplicate the simplefb code.
+> 
+> > In the case of power sequences I'd expect the sequences to perform
+> > operations on named supplies - the core shouldn't know what the supplies
+> > are but the thing specifying the sequence should.
+> 
+> Hm, so maybe passing names like:
+> 
+> usb3503@08 {
+> 	reset-gpios = <&gpx3 5 GPIO_ACTIVE_HIGH>;
+> 	initial-mode = <1>;
+> 	vdd-supply = <&buck8_reg>;
+> 	foo-supply = <&buck9_reg>;
+> 
+>         power-sequence;
+> 	power-sequence-supplies = "vdd", "foo";
 
-On 10 June 2016 at 18:02, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> The Starry KR122EA0SRA is a 12.2", 1920x1200 TFT-LCD panel connected
-> using eDP interfaces.
->
-> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> Changes in v2:
-> - Proper title (sorry!)
->
->  .../devicetree/bindings/display/panel/starry,kr122ea0sra.txt       | 7 +++++++
->  1 file changed, 7 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/starry,kr122ea0sra.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/starry,kr122ea0sra.txt b/Documentation/devicetree/bindings/display/panel/starry,kr122ea0sra.txt
-> new file mode 100644
-> index 000000000000..1e87fe6078af
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/starry,kr122ea0sra.txt
-> @@ -0,0 +1,7 @@
-> +Starry 12.2" (1920x1200 pixels) TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "starry,kr122ea0sra"
-> +
-I think you want to add 'starry' to the vendors list first [1]. Latest
-linus-next does not seem to have such an entry.
+This alone would be fine as it is just one property, but then what's 
+next? power-sequence-delay, power-sequence-clocks, etc. What if you 
+need to express ordering relationship of supplies, clocks, gpios? We end 
+up with a scripting language in DT and we don't want to have that.
 
-Regards,
-Emil
-[1] Documentation/devicetree/bindings/vendor-prefixes.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
