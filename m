@@ -1,35 +1,32 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] dt-bindings: Add vendor prefix for Starry
-Date: Fri, 10 Jun 2016 11:01:57 -0700
-Message-ID: <1465581717-18497-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: emil.l.velikov@gmail.com, Douglas Anderson <dianders@chromium.org>, treding@nvidia.com, ralf@linux-mips.org, jic23@kernel.org, shawnguo@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] dt-binding: remoteproc: Introduce Hexagon loader
+ binding
+Date: Fri, 10 Jun 2016 13:03:01 -0500
+Message-ID: <20160610180301.GA31816@rob-hp-laptop>
+References: <1465537980-13347-1-git-send-email-bjorn.andersson@linaro.org>
+ <1465537980-13347-2-git-send-email-bjorn.andersson@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465537980-13347-2-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Pawel Moll <pawel.moll@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->From their website:
-    http://www.b001.com.cn/
+On Thu, Jun 09, 2016 at 10:53:00PM -0700, Bjorn Andersson wrote:
+> This document defines the binding for a component that loads firmware
+> and control the life cycle of a self-authenticating Qualcomm Hexagon
+> core.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   | 138 +++++++++++++++++++++
+>  1 file changed, 138 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
 
-Starry appears to be a company involved in LCD panels and related
-components.
+I hope we're getting near the end of complex QCom bindings. This one 
+seems pretty straight forward though.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index d2bce2239769..437d663fbc1c 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -248,6 +248,7 @@ sony	Sony Corporation
- spansion	Spansion Inc.
- sprd	Spreadtrum Communications Inc.
- st	STMicroelectronics
-+starry	Starry Electronic Technology (ShenZhen) Co., LTD
- startek	Startek
- ste	ST-Ericsson
- stericsson	ST-Ericsson
--- 
-2.8.0.rc3.226.g39d4020
+Acked-by: Rob Herring <robh@kernel.org>
