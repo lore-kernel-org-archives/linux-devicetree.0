@@ -1,61 +1,45 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 10/20] pwm: sysfs: Add PWM Capture support
-Date: Fri, 10 Jun 2016 16:04:04 +0200
-Message-ID: <20160610140404.GL27142@ulmo.ba.sec>
-References: <20160608092135.21184-1-lee.jones@linaro.org>
- <20160608092135.21184-11-lee.jones@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/3] mtd: nand: Add an option to maximize the ECC
+ strength
+Date: Fri, 10 Jun 2016 09:04:41 -0500
+Message-ID: <20160610140441.GA4743@rob-hp-laptop>
+References: <1465398264-8202-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1465398264-8202-2-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="f54savKjS/tSNRaU"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160608092135.21184-11-lee.jones@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, robh+dt@kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1465398264-8202-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 08, 2016 at 05:04:22PM +0200, Boris Brezillon wrote:
+> The generic NAND DT bindings allows one to tweak the ECC strength and
+> step size to their need. It can be used to lower the ECC strength to
+> match a bootloader/firmware config, but might also be used to get a better
+> reliability.
+> 
+> In the latter case, the user might want to use the maximum ECC strength
+> without having to explicitly calculate the exact value (this value not
+> only depends on the OOB size, but also on the NAND controller, and can
+> be tricky to extract).
+> 
+> Add a generic 'nand-ecc-maximize' DT property and the associated
+> NAND_ECC_MAXIMIZE flag, to let ECC controller drivers select the best
+> ECC strength and step-size on their own.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mtd/nand.txt | 9 +++++++++
 
---f54savKjS/tSNRaU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-On Wed, Jun 08, 2016 at 10:21:25AM +0100, Lee Jones wrote:
-> Allow a user to read PWM Capture results from /sysfs.
->=20
-> To start a capture and read the result, simply read the file:
->=20
->   $ cat $PWMCHIP/capture
->=20
-> The output format is "<period>:<duty_cycle>".
-
-The format below is "<period> <duty cycle>".
-
-No need to rev the series for this, I can take patches 8 and 10 as-is
-and make those modifications myself.
-
-Thierry
-
---f54savKjS/tSNRaU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXWsjSAAoJEN0jrNd/PrOhpPYP/j7XlVJNWcQPlZkahuPSlNfh
-4/bwlVycw5kxK2CBPwFxmSL28mDoS7dvmdYXrCEGfpBRWgOwNK0xJXDY4XKVOoJf
-caY6LuxFAgovQOZG9CbAPXL2RzpRo8Uef/9VmCn8+y5tzwu99MXgh8KqR20YF80Q
-TrT1c+/Kzb9vXOXWSE+P6Kf2kLAYslDkKks0fmR+vY4Kxf/ALmdyWiYlYOryVo+r
-YsSTSZmP5AjWfjKxOlqNd7LFQNBaNTOhPXsQOnEzvlHttsmWqY+zcIJuCj2KY7Yn
-YEclIGb/QIAm7Ie25QFgr3L+1qnq7MMF+VvMrXaMxpHJI/ZhQvmHlE8oIYMBLPpd
-g8My5U5eeHiaxzhd+2RwzF9ns39om43SYk82G5pNv8PrEw1IT8X8qNfK7zql4inB
-Qfu6tI1JHR28hmBG588BYcz4L29fKhKm5RlZHjn/6BA6iteZjbaiOA7EDwiTR4Qt
-UFy8VMKUR+f2PM6/oVPFMW2v9keysaEAtemSOYcXSHnuQcZaHMJxs36xbUASX7LT
-auaMezxfaatSmh0KTV8tbddjJEHfoDjWM4Gu3akr5rsfa1t0y3g38eC3exRrnaDR
-4khP1pBa7ZVL/c+ak++2Z+6US8GnrCo0jz6XcUFcXEcioSp6wa2fyMM/qVzxs7DD
-fbhIInxqMixWXqkkGRHA
-=8lAP
------END PGP SIGNATURE-----
-
---f54savKjS/tSNRaU--
+>  drivers/mtd/nand/nand_base.c                   | 3 +++
+>  include/linux/mtd/nand.h                       | 1 +
+>  3 files changed, 13 insertions(+)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
