@@ -1,51 +1,81 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: add Starry KR122EA0SRA panel binding
-Date: Fri, 10 Jun 2016 14:43:11 -0400
-Message-ID: <CAF6AEGuonEgNvJhfst+3aZPEOaeGwNnozcYwJq3_Z2S0-7ogSA@mail.gmail.com>
-References: <1465578127-30330-1-git-send-email-dianders@chromium.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 3/4] mfd: axp20x: Add axp20x-usb-power-supply for
+ axp22x pmics
+Date: Fri, 10 Jun 2016 20:47:16 +0200
+Message-ID: <162fe714-9f40-a6c6-d94b-d82d88689b7c@redhat.com>
+References: <1464887936-17020-1-git-send-email-hdegoede@redhat.com>
+ <1464887936-17020-3-git-send-email-hdegoede@redhat.com>
+ <20160610145622.GB7351@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465578127-30330-1-git-send-email-dianders@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160610145622.GB7351@dell>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgMTowMiBQTSwgRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRl
-cnNAY2hyb21pdW0ub3JnPiB3cm90ZToKPiBUaGUgU3RhcnJ5IEtSMTIyRUEwU1JBIGlzIGEgMTIu
-MiIsIDE5MjB4MTIwMCBURlQtTENEIHBhbmVsIGNvbm5lY3RlZAo+IHVzaW5nIGVEUCBpbnRlcmZh
-Y2VzLgoKc28gZHJpdmUtYnkgY29tbWVudC4uLiBidXQgc2hvdWxkbid0IGVEUCBiZSBwcm9iZS1h
-YmxlPyAgTm90IHN1cmUgd2h5CndlIG5lZWQgcGFuZWwgZHJpdmVycyBvciBEVCBiaW5kaW5ncz8K
-CkJSLAotUgoKCj4gU2lnbmVkLW9mZi1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hy
-b21pdW0ub3JnPgo+IC0tLQo+IENoYW5nZXMgaW4gdjI6Cj4gLSBQcm9wZXIgdGl0bGUgKHNvcnJ5
-ISkKPgo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3N0YXJyeSxrcjEy
-MmVhMHNyYS50eHQgICAgICAgfCA3ICsrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0
-aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvc3RhcnJ5LGtyMTIyZWEwc3JhLnR4dAo+Cj4gZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3N0YXJy
-eSxrcjEyMmVhMHNyYS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9zdGFycnksa3IxMjJlYTBzcmEudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQK
-PiBpbmRleCAwMDAwMDAwMDAwMDAuLjFlODdmZTYwNzhhZgo+IC0tLSAvZGV2L251bGwKPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zdGFycnks
-a3IxMjJlYTBzcmEudHh0Cj4gQEAgLTAsMCArMSw3IEBACj4gK1N0YXJyeSAxMi4yIiAoMTkyMHgx
-MjAwIHBpeGVscykgVEZUIExDRCBwYW5lbAo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiAr
-LSBjb21wYXRpYmxlOiBzaG91bGQgYmUgInN0YXJyeSxrcjEyMmVhMHNyYSIKPiArCj4gK1RoaXMg
-YmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGlj
-aCBpcyBzcGVjaWZpZWQKPiAraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4K
-PiAtLQo+IDIuOC4wLnJjMy4yMjYuZzM5ZDQwMjAKPgo+IF9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+Hi,
+
+On 10-06-16 16:56, Lee Jones wrote:
+> On Thu, 02 Jun 2016, Hans de Goede wrote:
+>
+>> Add axp20x-usb-power-supply for axp22x pmics.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> -Change compatible string for axp22x usb-power-supply cell to match v2 of:
+>>  "power: axp20x_usb: Add support for usb power-supply on axp22x pmics"
+>> ---
+>>  drivers/mfd/axp20x.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>
+> Applied, thanks.
+
+Thanks, any chance we can see this show up soonish in :
+
+https://git.kernel.org/cgit/linux/kernel/git/lee/mfd.git/log/?h=for-mfd-next
+
+?
+
+We keep a branch with all the foo-for-next branches relevant for
+sunxi merged in for testing and it would be good to get these in there.
+
+Regards,
+
+Hans
+
+
+
+>
+>> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>> index ca04361..6364dab 100644
+>> --- a/drivers/mfd/axp20x.c
+>> +++ b/drivers/mfd/axp20x.c
+>> @@ -160,6 +160,11 @@ static struct resource axp20x_usb_power_supply_resources[] = {
+>>  	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_NOT_VALID, "VBUS_NOT_VALID"),
+>>  };
+>>
+>> +static struct resource axp22x_usb_power_supply_resources[] = {
+>> +	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
+>> +	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+>> +};
+>> +
+>>  static struct resource axp22x_pek_resources[] = {
+>>  	{
+>>  		.name   = "PEK_DBR",
+>> @@ -527,6 +532,11 @@ static struct mfd_cell axp22x_cells[] = {
+>>  		.resources		= axp22x_pek_resources,
+>>  	}, {
+>>  		.name			= "axp20x-regulator",
+>> +	}, {
+>> +		.name		= "axp20x-usb-power-supply",
+>> +		.of_compatible	= "x-powers,axp221-usb-power-supply",
+>> +		.num_resources	= ARRAY_SIZE(axp22x_usb_power_supply_resources),
+>> +		.resources	= axp22x_usb_power_supply_resources,
+>>  	},
+>>  };
+>>
+>
