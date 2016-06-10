@@ -1,51 +1,57 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 02/10] arm64: dts: marvell: Add xtal clock support for Armada 3700
-Date: Fri, 10 Jun 2016 15:23:30 +0200
-Message-ID: <1465565018-14172-3-git-send-email-gregory.clement@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 05/10] dt-bindings: clock: add DT binding for the Xtal clock on Armada 3700
+Date: Fri, 10 Jun 2016 15:23:33 +0200
+Message-ID: <1465565018-14172-6-git-send-email-gregory.clement@free-electrons.com>
 References: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465565018-14172-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-The configuration of the clock depend of the gpio latch. This information
-is stored in the gpio block registers. That's why the block is shared
-using a syscon node.
+This commit adds the DT binding documentation for the the Xtal clock on
+Armada 3700 used in the Marvell Armada 3700 SoCs.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../bindings/clock/armada3700-xtal-clock.txt       | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 9e2efb882983..7c61e13a16f3 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -105,6 +105,18 @@
- 				status = "disabled";
- 			};
- 
-+			gpio1: gpio@13800 {
-+				compatible = "marvell,mvebu-gpio-3700",
-+				"syscon", "simple-mfd";
-+				reg = <0x13800 0x500>;
+diff --git a/Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt b/Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
+new file mode 100644
+index 000000000000..176c4fe6f0e9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
+@@ -0,0 +1,28 @@
++* Xtal Clock bindings for Marvell Armada 37xx SoCs
 +
-+				xtalclk: xtal-clk {
-+					compatible = "marvell,armada-3700-xtal-clock";
-+					clock-output-names = "xtal";
-+					#clock-cells = <0>;
-+				};
-+			};
++Marvell Armada 37xx SoCs allow to determine the xtal clock frequencies by
++reading the gpio latch register.
 +
- 			usb3: usb@58000 {
- 				compatible = "marvell,armada3700-xhci",
- 				"generic-xhci";
++This node must be a subnode of the node exposing the register address
++of the GPIO block where the gpio latch is located.
++
++Required properties:
++- compatible : shall be one of the following:
++	"marvell,armada-3700-xtal-clock"
++- #clock-cells : from common clock binding; shall be set to 0
++
++Optional properties:
++- clock-output-names : from common clock binding; allows overwrite default clock
++	output names ("xtal")
++
++Example:
++gpio1: gpio@13800 {
++	compatible = "marvell,mvebu-gpio-3700",	"syscon", "simple-mfd";
++	reg = <0x13800 0x1000>;
++
++	xtalclk: xtal-clk {
++		compatible = "marvell,armada-3700-xtal-clock";
++		clock-output-names = "xtal";
++		#clock-cells = <0>;
++	};
++};
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
