@@ -1,154 +1,50 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 7/7] ARM: dts: sun7i: Enable NAND on Wexler TAB7200
-Date: Fri, 10 Jun 2016 10:56:22 +0200
-Message-ID: <20160610085622.GO5242@lukather>
-References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
- <1465208664-9366-8-git-send-email-mamlinav@gmail.com>
- <20160608220314.GL14179@lukather>
- <20160609111100.38931fbe05fda9be7a355836@gmail.com>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports while USB
+ suspend
+Date: Fri, 10 Jun 2016 08:58:41 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A24364101650BA1DB@penmbx01>
+References: <1465359311-14544-2-git-send-email-wenyou.yang@atmel.com>
+ <Pine.LNX.4.44L0.1606081352250.2191-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ssZxAlvqSOvXAj81"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160609111100.38931fbe05fda9be7a355836-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.44L0.1606081352250.2191-100000@iolanthe.rowland.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kernel development list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, USB list <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---ssZxAlvqSOvXAj81
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 09, 2016 at 11:11:00AM +0300, Aleksei Mamlin wrote:
-> On Thu, 9 Jun 2016 00:03:14 +0200
-> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->=20
-> > Hi,
-> >=20
-> > On Mon, Jun 06, 2016 at 01:24:24PM +0300, Aleksei Mamlin wrote:
-> > > Enable the NFC and describe the NAND flash connected to this controll=
-er.
-> > >=20
-> > > Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 41 ++++++++++++++++=
-++++++++++
-> > >  1 file changed, 41 insertions(+)
-> > >=20
-> > > diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/ar=
-m/boot/dts/sun7i-a20-wexler-tab7200.dts
-> > > index 2f6b21a..42aff91 100644
-> > > --- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> > > +++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> > > @@ -159,6 +159,47 @@
-> > >  	status =3D "okay";
-> > >  };
-> > > =20
-> > > +&nfc {
-> > > +	pinctrl-names =3D "default";
-> > > +	pinctrl-0 =3D <&nand_pins_a>, <&nand_cs0_pins_a>, <&nand_rb0_pins_a=
->;
-> > > +	status =3D "okay";
-> > > +
-> > > +	nand@0 {
-> > > +		#address-cells =3D <2>;
-> > > +		#size-cells =3D <2>;
-> > > +		reg =3D <0>;
-> > > +		allwinner,rb =3D <0>;
-> > > +
-> > > +		nand-ecc-mode =3D "hw";
-> > > +		nand-on-flash-bbt;
-> > > +
-> > > +		boot0@0 {
-> > > +			label =3D "boot0";
-> > > +			reg =3D /bits/ 64 <0x0 0x200000>;
-> > > +		};
-> > > +
-> > > +		boot0-rescue@200000 {
-> > > +			label =3D "boot0-rescue";
-> > > +			reg =3D /bits/ 64 <0x200000 0x200000>;
-> > > +		};
-> > > +
-> > > +		uboot@400000 {
-> > > +			label =3D "uboot";
-> > > +			reg =3D /bits/ 64 <0x400000 0x200000>;
-> > > +		};
-> > > +
-> > > +		uboot-rescue@600000 {
-> > > +			label =3D "uboot-rescue";
-> > > +			reg =3D /bits/ 64 <0x600000 0x200000>;
-> > > +		};
-> > > +
-> > > +		main@800000 {
-> > > +			label =3D "main";
-> > > +			reg =3D /bits/ 64 <0x800000 0xff800000>;
-> > > +		};
-> > > +	};
-> > > +};
-> >=20
-> > This feels a bit premature. The two boards you're using have an MLC
-> > NAND which is not supported yet. Until there's proper MLC support in
-> > the kernel, I'm not sure we want to enable that for end-users when we
-> > know that things will get wrong.
-> >=20
-> > However, after discussing this with Boris, I appreciate that we don't
-> > have any example available because of this policy for people that want
-> > to opt-in anyway.
-> >=20
-> > What we could do is to still mark the status as disabled in the DTS,
-> > with a big fat warning as comment just before, so that it requires
-> > user action, and that user will have been warned.
-> >=20
-> > Would that work for you?
-> > Maxime
-> >=20
->=20
-> Let's drop this two patches with boards dts changes until we get proper M=
-LC
-> support in kernel.
->=20
-> As for examples - I'll update linux-sunxi wiki with how to enable NAND=20
-> controller and describe NAND chips in DTS. People who want to add NAND su=
-pport=20
-> to their boards will be warned that it is risky for now.
-
-That works for me too.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---ssZxAlvqSOvXAj81
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXWoC2AAoJEBx+YmzsjxAgItMQAI1qCJ7t9KQ79dMcS83CRhVe
-VwJincLX8P9ie0tdxLbWKh+cTCx/bg0JLSGPCTpcz4z5RMWI1OvVI3puMvNGzzAK
-Dkib/b8qtqfHS80SAa7w2l2GdD09UzXABfv/u0QZknl/mqSQkT/7LN23j5Fjz+JH
-Gd5dAXgxwuryffsBwXEbhMe1qpAYh9Zt0zLmHlpaRGY9N4VH3RNp8UKtVcCbqa+R
-LWRegmizoJ2P93rdSmrTjtmiZemPSa85nxSquxi3Qdgy6Pj2MMKF8tT0W9iyF1Lb
-SGJ7tX3NVk49P+Ikkqj/6mLKOMzgcsOkE+OH/aVNWOwtGjOJ6zFlsKblRWfCq2M6
-Mpghaozx5jtERTd86HR4puQoktYPYoL08sGa6/uwm0SNPHsv8WvISn+Iv85wxaeR
-od9cA6yeL8FHTU5p0U+QGvQIpVsTxVpwTOkiETDTpu50zau7Q1KcRBiWLVphMmTB
-jSbVqf1f8U70ctVNVRrcOrBCPJI9jmEYfvQtTICjIxivZdKQuNh6MGVjva0IG7Sl
-aFZagoOObYjcZDzuCcrXvDIJOmMlL9ky6YgxVjNqHedSwwBxWm4ZK3bKA9ouAANj
-6f0DscN7a4vbC+XOD68mfxXhZys1TgxTOSgwrWOwmWdCmJ07mnK5YpqXMchzJcFy
-Dn+hE+qIep4Rl35PfC3R
-=qEma
------END PGP SIGNATURE-----
-
---ssZxAlvqSOvXAj81--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQWxhbiwgDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWxhbiBT
+dGVybiBbbWFpbHRvOnN0ZXJuQHJvd2xhbmQuaGFydmFyZC5lZHVdDQo+IFNlbnQ6IDIwMTbE6jbU
+wjnI1SAzOjE0DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4g
+Q2M6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBGZXJy
+ZSwgTmljb2xhcw0KPiA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+OyBSb2IgSGVycmluZyA8cm9i
+aCtkdEBrZXJuZWwub3JnPjsgUGF3ZWwgTW9sbA0KPiA8cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFy
+ayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPjsgSWFuIENhbXBiZWxsDQo+IDxpamMrZGV2aWNl
+dHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsN
+Cj4gQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGZyZWUtZWxlY3Ryb25zLmNv
+bT47IEtlcm5lbCBkZXZlbG9wbWVudA0KPiBsaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc7IFVTQiBsaXN0IDxsaW51eC11c2JAdmdlci5rZXJuZWwub3JnPg0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvMl0gdXNiOiBvaGNpLWF0OTE6IEZvcmNpYmx5IHN1
+c3BlbmQgcG9ydHMgd2hpbGUgVVNCDQo+IHN1c3BlbmQNCj4gDQo+IE9uIFdlZCwgOCBKdW4gMjAx
+NiwgV2VueW91IFlhbmcgd3JvdGU6DQo+IA0KPiA+IEluIG9yZGVyIHRvIHRoZSBzYXZlIHBvd2Vy
+IGNvbnN1bXB0aW9uLCBhcyBhIHdvcmthcm91bmQsIHN1c3BlbmQNCj4gPiBmb3JjaWJseSB0aGUg
+VVNCIFBPUlRBL0IvQyB2aWEgc2V0IHRoZSBTVVNQRU5EX0EvQi9DIGJpdHMgb2YgT0hDSQ0KPiA+
+IEludGVycnVwdCBDb25maWd1cmF0aW9uIFJlZ2lzdGVyIGluIHRoZSBTRlJzIHdoaWxlIE9IQ0kg
+VVNCIHN1c3BlbmQuDQo+ID4NCj4gPiBUaGlzIHN1c3BlbmQgb3BlcmF0aW9uIG11c3QgYmUgZG9u
+ZSBiZWZvcmUgdGhlIFVTQiBjbG9jayBpcyBkaXNhYmxlZCwNCj4gPiByZXN1bWUgYWZ0ZXIgdGhl
+IFVTQiBjbG9jayBpcyBlbmFibGVkLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VueW91IFlh
+bmcgPHdlbnlvdS55YW5nQGF0bWVsLmNvbT4NCj4gPiAtLS0NCj4gDQo+IFlvdSBuZXZlciBhbnN3
+ZXJlZCB0aGUgcXVlc3Rpb25zIEkgcG9zdGVkIGZvciB0aGUgZmlyc3QgdmVyc2lvbiBvZiB0aGlz
+DQo+IHBhdGNoOg0KPiANCj4gV2hhdCBkb2VzIHRoaXMgbWVhbj8gIFdoYXQgZG9lcyBzdXNwZW5k
+aW5nIGEgcG9ydCBkbz8gIElzIGl0IHRoZSBzYW1lIGFzIGENCj4gbm9ybWFsIFVTQiBwb3J0IHN1
+c3BlbmQ/DQo+IA0KPiBJZiBpdCBpcyB0aGUgc2FtZSwgd2h5IGRvZXNuJ3QgdGhlIFVTQl9QT1JU
+X0ZFQVRfU1VTUEVORCBzdWJjYXNlIG9mIHRoZQ0KPiBTZXRQb3J0RmVhdHVyZSBjYXNlIGluIG9o
+Y2lfaHViX2NvbnRyb2woKSBhbHJlYWR5IHRha2UgY2FyZSBvZiB0aGlzPw0KDQpJIHJlbWVtYmVy
+ZWQgSSBhbnN3ZXJlZCB5b3VyIHF1ZXN0aW9ucywgaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+cGlwZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNi1NYXkvNDI5MjQ1Lmh0bWwNCg0KTWF5YmUg
+bm90IHZlcnkgY2xlYXIuDQoNCj4gDQo+IEFsYW4gU3Rlcm4NCg0KDQpCZXN0IFJlZ2FyZHMsDQpX
+ZW55b3UgWWFuZw0KDQo=
