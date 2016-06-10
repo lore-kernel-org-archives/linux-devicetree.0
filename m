@@ -1,16 +1,16 @@
-From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v3,2/5] dt-bindings: mt8173-mtu3: add devicetree bindings
-Date: Fri, 10 Jun 2016 12:21:33 +0300
-Message-ID: <878tyd761u.fsf@linux.intel.com>
-References: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com> <1465543962-11678-3-git-send-email-chunfeng.yun@mediatek.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: Add MediaTek USB3 DRD Driver
+Date: Fri, 10 Jun 2016 12:27:11 +0300
+Message-ID: <8760th75sg.fsf@linux.intel.com>
+References: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465543962-11678-3-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 --=-=-=
@@ -20,15 +20,32 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> writes:
-> + - enable-manual-drd : supports manual dual-role switch via sysfs; only =
-used
-> +	when receptacle is TYPE-A and also wants to support dual-role mode.
+Chunfeng Yun <chunfeng.yun@mediatek.com> writes:
+> From 8fdc924cecf0ca14da6e8aba360501e53437e548 Mon Sep 17 00:00:00 2001
+> From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Date: Fri, 10 Jun 2016 15:20:20 +0800
+> Subject: [PATCH 0/5] Add MediaTek USB3 DRD Driver
+>
+> These patches introduce the MediaTek USB3 dual-role controller
+> driver.
+>
+> The driver can be configured as Dual-Role Device (DRD),
+> Peripheral Only and Host Only (xHCI) modes. It works well
+> with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
+> tested on MT8173 platform which only contains USB2.0 device IP,
+> and on MT6290 platform which contains USB3.0 device IP.
+>
+> Change in v3:
+> 1. fix some typo error
+> 2. rename mtu3.txt to mt8173-mtu3.txt
+>
+> Change in v2:
+> 1. modify binding docs according to suggestions
+> 2. modify some comments and remove some dummy blank lines
+> 3. fix memory leakage
 
-sorry, but this manual-drd can't be accepted. You should rely on a DT
-property for this and you shouldn't expose it to sysfs. Use DebugFS for
-that.
-
+I don't see anything inherently wrong with this series. But keep in mind
+I don't have HW to test. I can take the peripheral driver in a few days.
 
 =2D-=20
 balbi
@@ -39,22 +56,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJXWoadAAoJEIaOsuA1yqREbN4P/3KBKT4Tx5OYwi7vf4VcqrBR
-KcBALX/2hzUGzgJBUwvxrSpLfQbUoyHoninp780gLG8/8hZvFQ9TUQybTigkFQcP
-QtLJzndtIrqzlf3DMCFIa5C7xFtgsJrZyz4//2DQKa2MpJR9/+1d9+L7S4AOSeC7
-55rvVu0uTQcL8jAr3FlNcMES7ZMDaoL5fpEo1O/rSvW3ZWZ+h7Ws43USr/xQ2M3L
-T1hU0Q5z10FlawWlhpVow/7Figtk/+9gywdiUPyrcHGQgpGFzlg4Rqyr12EvH4Vi
-zg2+QZsgV9Dfmhgr76quG2wdhNi/6IwooKSDaiEbz8DZHGXEnPkNsFY1a8ls+SBG
-TmEkIWRaV+/b0qd2wcNz8mdo9ULVr0m9Zka/2ABXZse2xFXQAdrTezYvGZ37neEP
-XgiWCD5ozWsdHJE3UqtHw9wUy0J+Xxw41UMMgkTX5Y2xophXovA5E7LiqCXvzDFW
-rPNW0mrabBpGiCw28ykt7chkDogDjYy94L1DMV+7TI1pPke80m9H5JTZBlEJIito
-XfAgfEVuhh0Jx35l9boQPxeuQgOD+3FjdJRQ+6KeQ+7nDU+ACuP7IN6Pb1PRPArj
-+lX6iF6FXoYqg66r6JCekt5ASBlUZzA/KUKXgdqxguWALCc9Z3UUbumf3vfajFbd
-uZKWnHRmRgLguvO3j19b
-=pQfN
+iQIcBAEBCAAGBQJXWofvAAoJEIaOsuA1yqREjfMP/jHqr0YYEw25bawj6Sd0VNSV
+foC62fuiGDyOY508ES04EQjV7Q9lMa2hWfel/l2SMOV+v8bcNrv7qnySAoxt8HN7
++9OCiFN68r3wAqZ6H01YsbOWtSC6b6vIRnTB723AJ20vw2IL+WGhZ3AL+5GzWwtU
+cBWRcuFOh3hNzkI8EGcnNxpCuRZLFHSb4g+Pc010m7oEm9GdnywsHoRYd7XzHwhK
+ALlkjv1wUypHNep1sAOXx9hZL8FxTaov29+a9miu9WWnCM7b90yEJvCd31pxm+zC
+ZjzgJoD8MAEl7lKwNeHBR83km4ZznoLa2PV8Yedu4oTqvWEAVUeL876S1JkxzmMo
+LjrEoIKW7WZYsEGvXlUOu9Kr5XwegkstSFbo47clvxs2WbKyZsRglcsKq8AM3JKW
+mEXhkjgY10I5//Ql0OjGBy8jV1TuPSguROXK3GU9M5F0/+pYGLqmgfjqbuK/3eRq
+kQaiyYmIUA/k5/jEWAHelyAjf6QnPX523TLsfDZsno59+eP4+3aXEXdX8hoKQtvC
+H006W8Apwy4uDdoWG7QVQtinPYpe0mywLLIBC6trjktl1/R2wrqYEyHlk9sCG1Yv
+hYi2Fv2szDH38MiZACCOO+Osu1hAqayjQ5VXCSckraMH0OfYDfzuRWZknAkrCNjg
+GHcg6XeJtQ4pt6etVuXu
+=12Xo
 -----END PGP SIGNATURE-----
 --=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
