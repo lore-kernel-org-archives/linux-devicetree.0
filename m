@@ -1,56 +1,91 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: add Starry KR122EA0SRA panel binding
-Date: Fri, 10 Jun 2016 12:52:41 -0700
-Message-ID: <CAD=FV=XunjDGJYY1+-GPC+hN=kNxLiWbrtZD0_BO1ywerSLhfQ@mail.gmail.com>
-References: <1465578127-30330-1-git-send-email-dianders@chromium.org>
- <CAF6AEGuonEgNvJhfst+3aZPEOaeGwNnozcYwJq3_Z2S0-7ogSA@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: case sensitivity for devicetree node names
+Date: Fri, 10 Jun 2016 13:05:24 -0700
+Message-ID: <575B1D84.2010703@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAF6AEGuonEgNvJhfst+3aZPEOaeGwNnozcYwJq3_Z2S0-7ogSA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Um9iLAoKT24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgMTE6NDMgQU0sIFJvYiBDbGFyayA8cm9iZGNs
-YXJrQGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgMTowMiBQTSwg
-RG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4gVGhlIFN0
-YXJyeSBLUjEyMkVBMFNSQSBpcyBhIDEyLjIiLCAxOTIweDEyMDAgVEZULUxDRCBwYW5lbCBjb25u
-ZWN0ZWQKPj4gdXNpbmcgZURQIGludGVyZmFjZXMuCj4KPiBzbyBkcml2ZS1ieSBjb21tZW50Li4u
-IGJ1dCBzaG91bGRuJ3QgZURQIGJlIHByb2JlLWFibGU/ICBOb3Qgc3VyZSB3aHkKPiB3ZSBuZWVk
-IHBhbmVsIGRyaXZlcnMgb3IgRFQgYmluZGluZ3M/CgpJIHdhcyB3b25kZXJpbmcgYWJvdXQgdGhh
-dCB0b28uICBBcyBmYXIgYXMgSSBjYW4gdGVsbDoKCjEuIFdlIG5lZWQgYSBwYW5lbCBkcml2ZXIg
-YmVjYXVzZSB0aGF0IGFwcGVhcnMgdG8gYmUgd2hhdCBvd25zIGEKcmVmZXJlbmNlIHRvIHRoZSBi
-YWNrbGlnaHQgLyBwYW5lbCBwb3dlciByZWd1bGF0b3IgYW5kIHRoYXQgcGFydCBpcwpub3QgYXV0
-by1wcm9iYWJsZS4KCjIuIEFzIGZhciBhcyBJIGNvdWxkIHRlbGwsIHRoZXJlIGlzIG5vIHdheSB0
-byBkZWNsYXJlIGEgZ2VuZXJpYwoodW5zcGVjaWZpZWQpIHBhbmVsIGluIHRoZSBkZXZpY2UgdHJl
-ZS4gIEV2ZXJ5b25lIHNlZW1zIHRvIGluY2x1ZGUKInNpbXBsZS1wYW5lbCIgaW4gdGhlaXIgY29t
-cGF0aWJsZSBzdHJpbmcgYnV0IGFzIGZhciBhcyBJIGNhbiB0ZWxsCm5vdGhpbmcgaW4gdGhlIGtl
-cm5lbCBsb29rcyBhdCBpdC4KCjMuIEluIHRoZW9yeSwgYWxsIHRoZSBpbmZvIHNwZWNpZmllZCBo
-ZXJlIHNob3VsZCBtYXRjaCB0aGUgRURJRApleGFjdGx5IGFuZCB0aHVzIChhcyB5b3Ugc2FpZCkg
-YmUgcHJvYmFibGUuICBIb3dldmVyLCBpdCBzb3VuZHMgbGlrZQooZm9yIHBvd2VyIHNlcXVlbmNp
-bmcgcmVhc29ucykgdGhlcmUgbWlnaHQgYmUgcmVhc29ucyB3aHkgeW91J2Qgd2FudAp0byBrbm93
-IGV4YWN0bHkgd2hhdCBwYW5lbCB3YXMgcHJlc2VudCBiZWZvcmVoYW5kLiAgWW91IG1pZ2h0IG5l
-ZWQgdG8KcG93ZXIgdGhlIHBhbmVsIGFuZCBiYWNrbGlnaHQgaW4gdmVyeSBzcGVjaWZpYyBzZXF1
-ZW5jZXMsIGZvcgppbnN0YW5jZS4gIEknbSBub3Qgc3VyZSBpdCdzIGFsd2F5cyAxMDAlIHBvc3Np
-YmxlIGluIGFsbCBlbWJlZGRlZApkZXNpZ25zIHRvIHJlYWQgdGhlIEVESUQgYmVmb3JlIHlvdSBr
-bm93IGhvdyB0aGUgc2VxdWVuY2luZyBzaG91bGQKd29yayAoYnV0LCBvZiBjb3Vyc2UsIEknbSBh
-IE5PT0IpLgoKNC4gUmVhZGluZyB0aGUgRURJRCBjYW4gYmUgc2xvdy4gIElmIHlvdSBoYXBwZW4g
-dG8ga25vdyBhbGwgdGhlIGluZm8Kb24gdGhlIHBhbmVsIGJlZm9yZWhhbmQgeW91IGNhbiBzaWdu
-aWZpY2FudGx5IHNwZWVkIHVwIGJvb3Qgc3BlZWQsCm5vdGFibHkgaG93IGZhc3QgeW91IGNhbiBn
-ZXQgc29tZXRoaW5nIG9uIHRoZSBzY3JlZW4uCgoKQW55d2F5LCBtYXliZSBzb21lb25lIGVsc2Ug
-d2hvIGFjdHVhbGx5IGtub3dzIHdoYXQgdGhleSdyZSB0YWxraW5nCmFib3V0IHdpbGwgY2hpbWUg
-aW4uICA7KQoKLURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+I had assumed that devicetree node names were case sensitive. But a recent
+email thread asserted that they were not, which made me curious.
+
+dtc treats node names as case sensitive:
+
+$ cat test_node_case_1.dts
+
+/dts-v1/;
+
+/ {
+	node-x {
+		prop_a = < 1 >;
+	};
+};
+
+/ {
+	node-X {
+		prop_a = < 2 >;
+	};
+};
+
+$ cat test_node_case_2.dts
+
+/dts-v1/;
+
+/ {
+	node-x {
+		prop_a = < 1 >;
+	};
+};
+
+/ {
+	node-x {
+		prop_a = < 2 >;
+	};
+};
+
+$ dtc -O dts test_node_case_1.dts
+/dts-v1/;
+
+/ {
+
+	node-x {
+		prop_a = <0x1>;
+	};
+
+	node-X {
+		prop_a = <0x2>;
+	};
+};
+
+$ dtc -O dts test_node_case_2.dts
+/dts-v1/;
+
+/ {
+
+	node-x {
+		prop_a = <0x2>;
+	};
+};
+
+
+But the Linux kernel source code defines of_node_cmp() as:
+
+  include/linux/of.h:
+
+  /* Default string compare functions, Allow arch asm/prom.h to override */
+  #if !defined(of_compat_cmp)
+  #define of_node_cmp(s1, s2) strcasecmp((s1), (s2))
+
+arch/sparc/include/asm/prom.h uses strcmp() instead of strcasecmp().
+
+Examples of using of_node_cmp() to check for a node name can be found,
+for example, of_find_node_by_name().
+
+Is case insensitivity for node names a bug in the Linux kernel, or desired
+for some reason?
+
+-Frank
