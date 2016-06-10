@@ -1,104 +1,108 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3,1/5] dt-bindings: mt8173-xhci: support host side of dual-role mode
-Date: Fri, 10 Jun 2016 15:32:38 +0800
-Message-ID: <1465543962-11678-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v3,3/5] usb: xhci-mtk: make IPPC register optional
+Date: Fri, 10 Jun 2016 15:32:40 +0800
+Message-ID: <1465543962-11678-4-git-send-email-chunfeng.yun@mediatek.com>
 References: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465543962-11678-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Some resources, such as IPPC register etc, shared with device
-driver are moved into common glue layer when xHCI driver is the
-host side of dual-role mode and they should be changed as optional
-properties if they are required ones before. For clarity, add
-a new part of binding to support host side of dual-role mode.
+Make IPPC register optional to support host side of dual-role mode,
+due to it is moved into common glue layer for simplification.
 
-Additionally add optional properties of pinctrl for host only mode
-
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../devicetree/bindings/usb/mt8173-xhci.txt        |   48 ++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ drivers/usb/host/xhci-mtk.c |   32 +++++++++++++++++++++++++++-----
+ 1 file changed, 27 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-index b3a7ffa..bec2dff 100644
---- a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-@@ -2,6 +2,14 @@ MT8173 xHCI
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 79959f1..dc86832 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -94,6 +94,9 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
+ 	int ret;
+ 	int i;
  
- The device node for Mediatek SOC USB3.0 host controller
++	if (ippc == NULL)
++		return 0;
++
+ 	/* power on host ip */
+ 	value = readl(&ippc->ip_pw_ctr1);
+ 	value &= ~CTRL1_IP_HOST_PDN;
+@@ -139,6 +142,9 @@ static int xhci_mtk_host_disable(struct xhci_hcd_mtk *mtk)
+ 	int ret;
+ 	int i;
  
-+There are two scenarios: the first one only supports xHCI driver;
-+the second one supports dual-role mode, and the host is based on xHCI
-+driver. Take account of backward compatibility, we divide bindings
-+into two parts.
++	if (ippc == NULL)
++		return 0;
 +
-+1st: only supports xHCI driver
-+------------------------------------------------------------------------
-+
- Required properties:
-  - compatible : should contain "mediatek,mt8173-xhci"
-  - reg : specifies physical base address and size of the registers,
-@@ -27,6 +35,9 @@ Optional properties:
- 	control register, it depends on "mediatek,wakeup-src".
-  - vbus-supply : reference to the VBUS regulator;
-  - usb3-lpm-capable : supports USB3.0 LPM
-+ - pinctrl-names : a pinctrl state named "default" must be defined
-+ - pinctrl-0 : pin control group
-+	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
+ 	/* power down all u3 ports */
+ 	for (i = 0; i < mtk->num_u3_ports; i++) {
+ 		value = readl(&ippc->u3_ctrl_p[i]);
+@@ -173,6 +179,9 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
+ 	struct mu3c_ippc_regs __iomem *ippc = mtk->ippc_regs;
+ 	u32 value;
  
- Example:
- usb30: usb@11270000 {
-@@ -49,3 +60,40 @@ usb30: usb@11270000 {
- 	mediatek,syscon-wakeup = <&pericfg>;
- 	mediatek,wakeup-src = <1>;
- };
++	if (ippc == NULL)
++		return 0;
 +
-+2nd: dual-role mode with xHCI driver
-+------------------------------------------------------------------------
+ 	/* reset whole ip */
+ 	value = readl(&ippc->ip_pw_ctr0);
+ 	value |= CTRL0_IP_SW_RST;
+@@ -475,6 +484,7 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
+ /* called during probe() after chip reset completes */
+ static int xhci_mtk_setup(struct usb_hcd *hcd)
+ {
++	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
+ 	struct xhci_hcd_mtk *mtk = hcd_to_mtk(hcd);
+ 	int ret;
+ 
+@@ -482,12 +492,21 @@ static int xhci_mtk_setup(struct usb_hcd *hcd)
+ 		ret = xhci_mtk_ssusb_config(mtk);
+ 		if (ret)
+ 			return ret;
++	}
 +
-+In the case, xhci is added as subnode to mtu3. An example and the DT binding
-+details of mtu3 can be found in:
-+Documentation/devicetree/bindings/usb/mtu3.txt
++	ret = xhci_gen_setup(hcd, xhci_mtk_quirks);
++	if (ret)
++		return ret;
 +
-+Required properties:
-+ - compatible : should contain "mediatek,mt8173-xhci"
-+ - reg : specifies physical base address and size of the registers,
-+	should be only for xHCI IP registers
-+ - interrupts : interrupt used by the host controller
-+ - power-domains : a phandle to USB power domain node to control USB's
-+	mtcmos
-+ - vusb33-supply : regulator of USB avdd3.3v
-+
-+ - clocks : a list of phandle + clock-specifier pairs, one for each
-+	entry in clock-names
-+ - clock-names : must be
-+	"sys_ck": for clock of xHCI MAC
-+
-+Optional properties:
-+ - vbus-supply : reference to the VBUS regulator;
-+ - usb3-lpm-capable : supports USB3.0 LPM
-+
-+Example:
-+usb30: usb@11270000 {
-+	compatible = "mediatek,mt8173-xhci";
-+	reg = <0 0x11270000 0 0x1000>;
-+	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+	clocks = <&topckgen CLK_TOP_USB30_SEL>;
-+	clock-names = "sys_ck";
-+	vusb33-supply = <&mt6397_vusb_reg>;
-+	usb3-lpm-capable;
-+};
++	if (usb_hcd_is_primary_hcd(hcd)) {
++		mtk->num_u3_ports = xhci->num_usb3_ports;
++		mtk->num_u2_ports = xhci->num_usb2_ports;
+ 		ret = xhci_mtk_sch_init(mtk);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+-	return xhci_gen_setup(hcd, xhci_mtk_quirks);
++	return ret;
+ }
+ 
+ static int xhci_mtk_probe(struct platform_device *pdev)
+@@ -595,11 +614,14 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 	hcd->rsrc_start = res->start;
+ 	hcd->rsrc_len = resource_size(res);
+ 
++	mtk->ippc_regs = NULL;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	mtk->ippc_regs = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(mtk->ippc_regs)) {
+-		ret = PTR_ERR(mtk->ippc_regs);
+-		goto put_usb2_hcd;
++	if (res) {	/* ippc register is optional */
++		mtk->ippc_regs = devm_ioremap_resource(dev, res);
++		if (IS_ERR(mtk->ippc_regs)) {
++			ret = PTR_ERR(mtk->ippc_regs);
++			goto put_usb2_hcd;
++		}
+ 	}
+ 
+ 	for (phy_num = 0; phy_num < mtk->num_phys; phy_num++) {
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
