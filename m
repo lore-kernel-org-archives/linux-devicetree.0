@@ -1,143 +1,874 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] USB: Fix of_usb_get_dr_mode_by_phy with a shared
- phy block
-Date: Fri, 10 Jun 2016 11:27:37 +0200
-Message-ID: <764e8d4b-4b8a-6b8a-db34-424efbc8ca93@redhat.com>
-References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
- <20160609143004.GA2167@uda0271908>
- <9a05c16a-e8a2-02b7-c093-1131e27bcdd4@redhat.com>
- <20160609194936.GB2167@uda0271908>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160609194936.GB2167@uda0271908>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: apq8064: rename db600c to SD_600eval
+Date: Fri, 10 Jun 2016 10:34:57 +0100
+Message-ID: <1465551298-21457-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This board has been renamed recently and announced at
+https://eragon.einfochips.com/products/sd-600eval.html
 
-On 09-06-16 21:49, Bin Liu wrote:
-> Hi,
->
-> On Thu, Jun 09, 2016 at 04:51:45PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 09-06-16 16:30, Bin Liu wrote:
->>> Hi,
->>>
->>> On Sun, Jun 05, 2016 at 04:59:33PM +0200, Hans de Goede wrote:
->>>> Some SoCs have a single phy-hw-block with multiple phys, this is
->>>> modelled by a single phy dts node, so we end up with multiple
->>>> controller nodes with a phys property pointing to the phy-node
->>>> of the otg-phy.
->>>>
->>>> Only one of these controllers typically is an otg controller, yet we
->>>> were checking the first controller who uses a phy from the block and
->>>> then end up looking for a dr_mode property in e.g. the ehci controller.
->>>>
->>>> This commit fixes this by adding an arg0 parameter to
->>>> of_usb_get_dr_mode_by_phy and make of_usb_get_dr_mode_by_phy
->>>> check that this matches the phandle args[0] value when looking for
->>>> the otg controller.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>> Changes in v2:
->>>> -Add a args0 parameter instead of looking for nodes with a dr_mode property
->>>> Changes in v3:
->>>> -No changes
->>>> ---
->>>> drivers/usb/common/common.c  | 31 ++++++++++++++++++-------------
->>>> drivers/usb/phy/phy-am335x.c |  2 +-
->>>> include/linux/usb/of.h       |  4 ++--
->>>> 3 files changed, 21 insertions(+), 16 deletions(-)
->>>
->>> This breaks am335x.
->>>
->>> [   17.433166] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
->>> for /ocp/usb@47400000/usb-phy@47401300
->>> [   17.443627] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
->>> for /ocp/usb@47400000/usb-phy@47401b00
->>> [   17.454005] am335x-phy-driver 47401300.usb-phy: dr_mode 0
->>> [   17.460518] 47401300.usb-phy supply vcc not found, using dummy
->>> regulator
->>> [   17.469685] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
->>> for /ocp/usb@47400000/usb-phy@47401300
->>> [   17.479998] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
->>> for /ocp/usb@47400000/usb-phy@47401b00
->>> [   17.490342] am335x-phy-driver 47401b00.usb-phy: dr_mode 0
->>
->> That is weird, quoting: drivers/phy/phy-core.c: _of_phy_get():
->>
->>         ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
->>                 index, &args);
->>         if (ret)
->>                 return ERR_PTR(-ENODEV);
->>
->> So if #phy-cells is not defined, then the phy core should not
->> be able to work with the dts files in question at all.
->
-> am335x phy does not use phy framework, so those phy core api is not
-> called.
->
->>
->> All my patch does is make the way of_usb_get_dr_mode_by_phy parses
->> phy-handles be identical to how phy-core.c does it.
->>
->> I see that the usb0_phy node in arch/arm/boot/dts/am33xx.dtsi
->> indeed lacks a "#phy-cells = <0>;" line.
->>
->> Quoting: Documentation/devicetree/bindings/phy/phy-bindings.txt
->>
->> PHY device node
->> ===============
->>
->> Required Properties:
->> #phy-cells:     Number of cells in a PHY specifier;  The meaning of all those
->>                 cells is defined by the binding for the phy node. The PHY
->>                 provider can use the values in cells to find the appropriate
->>                 PHY.
->>
->> So not having #phy-cells defined for a phy-node clearly is a bug.
->
-> am335x phy does not follow the bindings in phy/, but usb/phy/.
+So rename this board files so that it reflects actual product in market.
 
-Ah, I did not know about those, that explains. I will send a v4 of
-the patch which will keep compatibility with the usb/phy/ bindings
-when the passed in arg0 == -1.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                         |   2 +-
+ .../boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi   |  52 ---
+ arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts    | 349 ---------------------
+ .../dts/qcom-apq8064-arrow-sd-600eval-pins.dtsi    |  52 +++
+ .../arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts | 349 +++++++++++++++++++++
+ 5 files changed, 402 insertions(+), 402 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
+ delete mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
+ create mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval-pins.dtsi
+ create mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
 
-Note I will not be resending patch 2-4, please merge these as they
-are (no changes are needed).
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 488a943..66e182c 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -573,7 +573,7 @@ dtb-$(CONFIG_ARCH_PRIMA2) += \
+ dtb-$(CONFIG_ARCH_OXNAS) += \
+ 	wd-mbwe.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += \
+-	qcom-apq8064-arrow-db600c.dtb \
++	qcom-apq8064-arrow-sd-600eval.dtb \
+ 	qcom-apq8064-cm-qs600.dtb \
+ 	qcom-apq8064-ifc6410.dtb \
+ 	qcom-apq8064-sony-xperia-yuga.dtb \
+diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
+deleted file mode 100644
+index a3efb97..0000000
+--- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
++++ /dev/null
+@@ -1,52 +0,0 @@
+-&tlmm_pinmux {
+-	card_detect: card-detect {
+-		mux {
+-			pins = "gpio26";
+-			function = "gpio";
+-			bias-disable;
+-		};
+-	};
+-
+-	pcie_pins: pcie-pinmux {
+-		mux {
+-			pins = "gpio27";
+-			function = "gpio";
+-		};
+-		conf {
+-			pins = "gpio27";
+-			drive-strength = <12>;
+-			bias-disable;
+-		};
+-	};
+-
+-	user_leds: user-leds {
+-		mux {
+-			pins = "gpio3", "gpio7", "gpio10", "gpio11";
+-			function = "gpio";
+-		};
+-
+-		conf {
+-			pins = "gpio3", "gpio7", "gpio10", "gpio11";
+-			function = "gpio";
+-			output-low;
+-		};
+-	};
+-
+-	magneto_pins: magneto-pins {
+-		mux {
+-			pins = "gpio31", "gpio48";
+-			function = "gpio";
+-			bias-disable;
+-		};
+-	};
+-};
+-
+-&pm8921_mpps {
+-	mpp_leds: mpp-leds {
+-		pinconf {
+-			pins = "mpp7", "mpp8";
+-			function = "digital";
+-			output-low;
+-		};
+-	};
+-};
+diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
+deleted file mode 100644
+index e01b27e..0000000
+--- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
++++ /dev/null
+@@ -1,349 +0,0 @@
+-#include "qcom-apq8064-v2.0.dtsi"
+-#include "qcom-apq8064-arrow-db600c-pins.dtsi"
+-#include <dt-bindings/gpio/gpio.h>
+-
+-/ {
+-	model = "Arrow Electronics, APQ8064 DB600c";
+-	compatible = "arrow,db600c", "qcom,apq8064";
+-
+-	aliases {
+-		serial0 = &gsbi7_serial;
+-		serial1 = &gsbi1_serial;
+-		i2c0 = &gsbi2_i2c;
+-		i2c1 = &gsbi3_i2c;
+-		i2c2 = &gsbi4_i2c;
+-		i2c3 = &gsbi7_i2c;
+-		spi0 = &gsbi5_spi;
+-	};
+-
+-	regulators {
+-		compatible = "simple-bus";
+-		vph: regulator-fixed@1 {
+-			compatible = "regulator-fixed";
+-			regulator-min-microvolt = <4500000>;
+-			regulator-max-microvolt = <4500000>;
+-			regulator-name = "VPH";
+-			regulator-type = "voltage";
+-			regulator-boot-on;
+-		};
+-
+-		/* on board fixed 3.3v supply */
+-		vcc3v3: vcc3v3 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "VCC3V3";
+-			regulator-min-microvolt = <3300000>;
+-			regulator-max-microvolt = <3300000>;
+-			regulator-always-on;
+-		};
+-
+-	};
+-
+-	soc {
+-		rpm@108000 {
+-			regulators {
+-				vdd_s1-supply = <&vph>;
+-				vdd_s2-supply = <&vph>;
+-				vdd_s3-supply = <&vph>;
+-				vdd_s4-supply = <&vph>;
+-				vdd_s5-supply = <&vph>;
+-				vdd_s6-supply = <&vph>;
+-				vdd_s7-supply = <&vph>;
+-				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
+-				vdd_l3_l15_l17-supply = <&vph>;
+-				vdd_l4_l14-supply = <&vph>;
+-				vdd_l5_l8_l16-supply = <&vph>;
+-				vdd_l6_l7-supply = <&vph>;
+-				vdd_l9_l11-supply = <&vph>;
+-				vdd_l10_l22-supply = <&vph>;
+-				vdd_l21_l23_l29-supply = <&vph>;
+-				vdd_l24-supply = <&pm8921_s1>;
+-				vdd_l25-supply = <&pm8921_s1>;
+-				vdd_l26-supply = <&pm8921_s7>;
+-				vdd_l27-supply = <&pm8921_s7>;
+-				vdd_l28-supply = <&pm8921_s7>;
+-				vin_lvs1_3_6-supply = <&pm8921_s4>;
+-				vin_lvs2-supply = <&pm8921_s1>;
+-				vin_lvs4_5_7-supply = <&pm8921_s4>;
+-
+-				s1 {
+-					regulator-always-on;
+-					regulator-min-microvolt = <1225000>;
+-					regulator-max-microvolt = <1225000>;
+-					qcom,switch-mode-frequency = <3200000>;
+-					bias-pull-down;
+-				};
+-
+-				s3 {
+-					regulator-min-microvolt = <1000000>;
+-					regulator-max-microvolt = <1400000>;
+-					qcom,switch-mode-frequency = <4800000>;
+-				};
+-
+-				s4 {
+-					regulator-min-microvolt	= <1800000>;
+-					regulator-max-microvolt	= <1800000>;
+-					qcom,switch-mode-frequency = <3200000>;
+-					bias-pull-down;
+-					regulator-always-on;
+-				};
+-
+-				s7 {
+-					regulator-min-microvolt = <1300000>;
+-					regulator-max-microvolt = <1300000>;
+-					qcom,switch-mode-frequency = <3200000>;
+-				 };
+-
+-				l3 {
+-					regulator-min-microvolt = <3050000>;
+-					regulator-max-microvolt = <3300000>;
+-					bias-pull-down;
+-				};
+-
+-				l4 {
+-					regulator-min-microvolt = <1000000>;
+-					regulator-max-microvolt = <1800000>;
+-					bias-pull-down;
+-				};
+-
+-				l5 {
+-					regulator-min-microvolt = <2750000>;
+-					regulator-max-microvolt = <3000000>;
+-					bias-pull-down;
+-					regulator-boot-on;
+-					regulator-always-on;
+-				};
+-
+-				l6 {
+-					regulator-min-microvolt = <2950000>;
+-					regulator-max-microvolt = <2950000>;
+-					bias-pull-down;
+-				};
+-
+-				l23 {
+-					regulator-min-microvolt = <1700000>;
+-					regulator-max-microvolt = <1900000>;
+-					bias-pull-down;
+-				};
+-
+-				lvs6 {
+-					bias-pull-down;
+-				};
+-
+-				lvs7 {
+-					bias-pull-down;
+-				};
+-			};
+-		};
+-
+-		gsbi@12440000 {
+-			status = "okay";
+-			qcom,mode = <GSBI_PROT_UART_W_FC>;
+-			serial@12450000 {
+-				label = "LS-UART1";
+-				status = "okay";
+-				pinctrl-names = "default";
+-				pinctrl-0 = <&gsbi1_uart_4pins>;
+-			};
+-		};
+-
+-		gsbi@12480000 {
+-			status = "okay";
+-			qcom,mode = <GSBI_PROT_I2C>;
+-			i2c@124a0000 {
+-				/* On Low speed expansion and Sensors */
+-				label = "LS-I2C0";
+-				status = "okay";
+-				lis3mdl_mag@1e {
+-					compatible = "st,lis3mdl-magn";
+-					reg = <0x1e>;
+-					vdd-supply = <&vcc3v3>;
+-					vddio-supply = <&pm8921_s4>;
+-					pinctrl-names = "default";
+-					pinctrl-0 = <&magneto_pins>;
+-					interrupt-parent = <&tlmm_pinmux>;
+-
+-					st,drdy-int-pin = <2>;
+-					interrupts = <48 IRQ_TYPE_EDGE_RISING>, /* DRDY line */
+-						     <31 IRQ_TYPE_EDGE_RISING>; /* INT */
+-				};
+-			};
+-		};
+-
+-		gsbi@16200000 {
+-			status = "okay";
+-			qcom,mode = <GSBI_PROT_I2C>;
+-			i2c@16280000 {
+-			/* On Low speed expansion */
+-				status = "okay";
+-				label = "LS-I2C1";
+-				clock-frequency = <200000>;
+-				eeprom@52 {
+-					compatible = "atmel,24c128";
+-					reg = <0x52>;
+-					pagesize = <64>;
+-				};
+-			};
+-		};
+-
+-		gsbi@16300000 {
+-			status = "okay";
+-			qcom,mode = <GSBI_PROT_I2C>;
+-			i2c@16380000 {
+-				/* On High speed expansion */
+-				label = "HS-CAM-I2C3";
+-				status = "okay";
+-			};
+-		};
+-
+-		gsbi@1a200000 {
+-			status = "okay";
+-			spi@1a280000 {
+-				/* On Low speed expansion */
+-				label = "LS-SPI0";
+-				status = "okay";
+-			};
+-		};
+-
+-		/* DEBUG UART  */
+-		gsbi@16600000 {
+-			status = "okay";
+-			qcom,mode = <GSBI_PROT_I2C_UART>;
+-			serial@16640000 {
+-				label = "LS-UART0";
+-				status = "okay";
+-				pinctrl-names = "default";
+-				pinctrl-0 = <&gsbi7_uart_2pins>;
+-			};
+-
+-			i2c@16680000 {
+-				/* On High speed expansion */
+-				status = "okay";
+-				label = "HS-CAM-I2C2";
+-			};
+-		};
+-
+-		leds {
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&user_leds>, <&mpp_leds>;
+-
+-			compatible = "gpio-leds";
+-
+-			user-led0 {
+-				label = "user0-led";
+-				gpios = <&tlmm_pinmux 3 GPIO_ACTIVE_HIGH>;
+-				linux,default-trigger = "heartbeat";
+-				default-state = "off";
+-			};
+-
+-			user-led1 {
+-				label = "user1-led";
+-				gpios = <&tlmm_pinmux 7 GPIO_ACTIVE_HIGH>;
+-				linux,default-trigger = "mmc0";
+-				default-state = "off";
+-			};
+-
+-			user-led2 {
+-				label = "user2-led";
+-				gpios = <&tlmm_pinmux 10 GPIO_ACTIVE_HIGH>;
+-				linux,default-trigger = "mmc1";
+-				default-state = "off";
+-			};
+-
+-			user-led3 {
+-				label = "user3-led";
+-				gpios = <&tlmm_pinmux 11 GPIO_ACTIVE_HIGH>;
+-				linux,default-trigger = "none";
+-				default-state = "off";
+-			};
+-
+-			wifi-led {
+-				label = "WiFi-led";
+-				gpios = <&pm8921_mpps 7 GPIO_ACTIVE_HIGH>;
+-				default-state = "off";
+-			};
+-
+-			bt-led {
+-				label = "BT-led";
+-				gpios = <&pm8921_mpps 8 GPIO_ACTIVE_HIGH>;
+-				default-state = "off";
+-			};
+-		};
+-
+-		pci@1b500000 {
+-			status = "okay";
+-			vdda-supply = <&pm8921_s3>;
+-			vdda_phy-supply = <&pm8921_lvs6>;
+-			vdda_refclk-supply = <&vcc3v3>;
+-			pinctrl-0 = <&pcie_pins>;
+-			pinctrl-names = "default";
+-			perst-gpio = <&tlmm_pinmux 27 GPIO_ACTIVE_LOW>;
+-		};
+-
+-		phy@1b400000 {
+-			status = "okay";
+-		};
+-
+-		sata@29000000 {
+-			status	= "okay";
+-			target-supply	= <&pm8921_lvs7>;
+-		};
+-
+-		/* OTG */
+-		phy@12500000 {
+-			status		= "okay";
+-			dr_mode		= "peripheral";
+-			vddcx-supply	= <&pm8921_s3>;
+-			v3p3-supply	= <&pm8921_l3>;
+-			v1p8-supply	= <&pm8921_l4>;
+-		};
+-
+-		phy@12520000 {
+-			status		= "okay";
+-			vddcx-supply	= <&pm8921_s3>;
+-			v3p3-supply	= <&pm8921_l3>;
+-			v1p8-supply	= <&pm8921_l23>;
+-		};
+-
+-		phy@12530000 {
+-			status		= "okay";
+-			vddcx-supply	= <&pm8921_s3>;
+-			v3p3-supply	= <&pm8921_l3>;
+-			v1p8-supply	= <&pm8921_l23>;
+-		};
+-
+-		gadget@12500000 {
+-			status = "okay";
+-		};
+-
+-		/* OTG */
+-		usb@12500000 {
+-			status = "okay";
+-		};
+-
+-		usb@12520000 {
+-			status = "okay";
+-		};
+-
+-		usb@12530000 {
+-			status = "okay";
+-		};
+-
+-		amba {
+-			/* eMMC */
+-			sdcc@12400000 {
+-				status = "okay";
+-				vmmc-supply = <&pm8921_l5>;
+-				vqmmc-supply = <&pm8921_s4>;
+-			};
+-
+-			/* External micro SD card */
+-			sdcc@12180000 {
+-				status = "okay";
+-				vmmc-supply = <&pm8921_l6>;
+-				pinctrl-names	= "default";
+-				pinctrl-0	= <&card_detect>;
+-				cd-gpios	= <&tlmm_pinmux 26 GPIO_ACTIVE_HIGH>;
+-			};
+-		};
+-	};
+-};
+diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval-pins.dtsi
+new file mode 100644
+index 0000000..a3efb97
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval-pins.dtsi
+@@ -0,0 +1,52 @@
++&tlmm_pinmux {
++	card_detect: card-detect {
++		mux {
++			pins = "gpio26";
++			function = "gpio";
++			bias-disable;
++		};
++	};
++
++	pcie_pins: pcie-pinmux {
++		mux {
++			pins = "gpio27";
++			function = "gpio";
++		};
++		conf {
++			pins = "gpio27";
++			drive-strength = <12>;
++			bias-disable;
++		};
++	};
++
++	user_leds: user-leds {
++		mux {
++			pins = "gpio3", "gpio7", "gpio10", "gpio11";
++			function = "gpio";
++		};
++
++		conf {
++			pins = "gpio3", "gpio7", "gpio10", "gpio11";
++			function = "gpio";
++			output-low;
++		};
++	};
++
++	magneto_pins: magneto-pins {
++		mux {
++			pins = "gpio31", "gpio48";
++			function = "gpio";
++			bias-disable;
++		};
++	};
++};
++
++&pm8921_mpps {
++	mpp_leds: mpp-leds {
++		pinconf {
++			pins = "mpp7", "mpp8";
++			function = "digital";
++			output-low;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
+new file mode 100644
+index 0000000..7df0108
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
+@@ -0,0 +1,349 @@
++#include "qcom-apq8064-v2.0.dtsi"
++#include "qcom-apq8064-arrow-sd-600eval-pins.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Arrow Electronics, APQ8064 SD_600eval";
++	compatible = "arrow,sd_600eval", "qcom,apq8064";
++
++	aliases {
++		serial0 = &gsbi7_serial;
++		serial1 = &gsbi1_serial;
++		i2c0 = &gsbi2_i2c;
++		i2c1 = &gsbi3_i2c;
++		i2c2 = &gsbi4_i2c;
++		i2c3 = &gsbi7_i2c;
++		spi0 = &gsbi5_spi;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		vph: regulator-fixed@1 {
++			compatible = "regulator-fixed";
++			regulator-min-microvolt = <4500000>;
++			regulator-max-microvolt = <4500000>;
++			regulator-name = "VPH";
++			regulator-type = "voltage";
++			regulator-boot-on;
++		};
++
++		/* on board fixed 3.3v supply */
++		vcc3v3: vcc3v3 {
++			compatible = "regulator-fixed";
++			regulator-name = "VCC3V3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++
++	};
++
++	soc {
++		rpm@108000 {
++			regulators {
++				vdd_s1-supply = <&vph>;
++				vdd_s2-supply = <&vph>;
++				vdd_s3-supply = <&vph>;
++				vdd_s4-supply = <&vph>;
++				vdd_s5-supply = <&vph>;
++				vdd_s6-supply = <&vph>;
++				vdd_s7-supply = <&vph>;
++				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
++				vdd_l3_l15_l17-supply = <&vph>;
++				vdd_l4_l14-supply = <&vph>;
++				vdd_l5_l8_l16-supply = <&vph>;
++				vdd_l6_l7-supply = <&vph>;
++				vdd_l9_l11-supply = <&vph>;
++				vdd_l10_l22-supply = <&vph>;
++				vdd_l21_l23_l29-supply = <&vph>;
++				vdd_l24-supply = <&pm8921_s1>;
++				vdd_l25-supply = <&pm8921_s1>;
++				vdd_l26-supply = <&pm8921_s7>;
++				vdd_l27-supply = <&pm8921_s7>;
++				vdd_l28-supply = <&pm8921_s7>;
++				vin_lvs1_3_6-supply = <&pm8921_s4>;
++				vin_lvs2-supply = <&pm8921_s1>;
++				vin_lvs4_5_7-supply = <&pm8921_s4>;
++
++				s1 {
++					regulator-always-on;
++					regulator-min-microvolt = <1225000>;
++					regulator-max-microvolt = <1225000>;
++					qcom,switch-mode-frequency = <3200000>;
++					bias-pull-down;
++				};
++
++				s3 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1400000>;
++					qcom,switch-mode-frequency = <4800000>;
++				};
++
++				s4 {
++					regulator-min-microvolt	= <1800000>;
++					regulator-max-microvolt	= <1800000>;
++					qcom,switch-mode-frequency = <3200000>;
++					bias-pull-down;
++					regulator-always-on;
++				};
++
++				s7 {
++					regulator-min-microvolt = <1300000>;
++					regulator-max-microvolt = <1300000>;
++					qcom,switch-mode-frequency = <3200000>;
++				 };
++
++				l3 {
++					regulator-min-microvolt = <3050000>;
++					regulator-max-microvolt = <3300000>;
++					bias-pull-down;
++				};
++
++				l4 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1800000>;
++					bias-pull-down;
++				};
++
++				l5 {
++					regulator-min-microvolt = <2750000>;
++					regulator-max-microvolt = <3000000>;
++					bias-pull-down;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				l6 {
++					regulator-min-microvolt = <2950000>;
++					regulator-max-microvolt = <2950000>;
++					bias-pull-down;
++				};
++
++				l23 {
++					regulator-min-microvolt = <1700000>;
++					regulator-max-microvolt = <1900000>;
++					bias-pull-down;
++				};
++
++				lvs6 {
++					bias-pull-down;
++				};
++
++				lvs7 {
++					bias-pull-down;
++				};
++			};
++		};
++
++		gsbi@12440000 {
++			status = "okay";
++			qcom,mode = <GSBI_PROT_UART_W_FC>;
++			serial@12450000 {
++				label = "LS-UART1";
++				status = "okay";
++				pinctrl-names = "default";
++				pinctrl-0 = <&gsbi1_uart_4pins>;
++			};
++		};
++
++		gsbi@12480000 {
++			status = "okay";
++			qcom,mode = <GSBI_PROT_I2C>;
++			i2c@124a0000 {
++				/* On Low speed expansion and Sensors */
++				label = "LS-I2C0";
++				status = "okay";
++				lis3mdl_mag@1e {
++					compatible = "st,lis3mdl-magn";
++					reg = <0x1e>;
++					vdd-supply = <&vcc3v3>;
++					vddio-supply = <&pm8921_s4>;
++					pinctrl-names = "default";
++					pinctrl-0 = <&magneto_pins>;
++					interrupt-parent = <&tlmm_pinmux>;
++
++					st,drdy-int-pin = <2>;
++					interrupts = <48 IRQ_TYPE_EDGE_RISING>, /* DRDY line */
++						     <31 IRQ_TYPE_EDGE_RISING>; /* INT */
++				};
++			};
++		};
++
++		gsbi@16200000 {
++			status = "okay";
++			qcom,mode = <GSBI_PROT_I2C>;
++			i2c@16280000 {
++			/* On Low speed expansion */
++				status = "okay";
++				label = "LS-I2C1";
++				clock-frequency = <200000>;
++				eeprom@52 {
++					compatible = "atmel,24c128";
++					reg = <0x52>;
++					pagesize = <64>;
++				};
++			};
++		};
++
++		gsbi@16300000 {
++			status = "okay";
++			qcom,mode = <GSBI_PROT_I2C>;
++			i2c@16380000 {
++				/* On High speed expansion */
++				label = "HS-CAM-I2C3";
++				status = "okay";
++			};
++		};
++
++		gsbi@1a200000 {
++			status = "okay";
++			spi@1a280000 {
++				/* On Low speed expansion */
++				label = "LS-SPI0";
++				status = "okay";
++			};
++		};
++
++		/* DEBUG UART  */
++		gsbi@16600000 {
++			status = "okay";
++			qcom,mode = <GSBI_PROT_I2C_UART>;
++			serial@16640000 {
++				label = "LS-UART0";
++				status = "okay";
++				pinctrl-names = "default";
++				pinctrl-0 = <&gsbi7_uart_2pins>;
++			};
++
++			i2c@16680000 {
++				/* On High speed expansion */
++				status = "okay";
++				label = "HS-CAM-I2C2";
++			};
++		};
++
++		leds {
++			pinctrl-names = "default";
++			pinctrl-0 = <&user_leds>, <&mpp_leds>;
++
++			compatible = "gpio-leds";
++
++			user-led0 {
++				label = "user0-led";
++				gpios = <&tlmm_pinmux 3 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "heartbeat";
++				default-state = "off";
++			};
++
++			user-led1 {
++				label = "user1-led";
++				gpios = <&tlmm_pinmux 7 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "mmc0";
++				default-state = "off";
++			};
++
++			user-led2 {
++				label = "user2-led";
++				gpios = <&tlmm_pinmux 10 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "mmc1";
++				default-state = "off";
++			};
++
++			user-led3 {
++				label = "user3-led";
++				gpios = <&tlmm_pinmux 11 GPIO_ACTIVE_HIGH>;
++				linux,default-trigger = "none";
++				default-state = "off";
++			};
++
++			wifi-led {
++				label = "WiFi-led";
++				gpios = <&pm8921_mpps 7 GPIO_ACTIVE_HIGH>;
++				default-state = "off";
++			};
++
++			bt-led {
++				label = "BT-led";
++				gpios = <&pm8921_mpps 8 GPIO_ACTIVE_HIGH>;
++				default-state = "off";
++			};
++		};
++
++		pci@1b500000 {
++			status = "okay";
++			vdda-supply = <&pm8921_s3>;
++			vdda_phy-supply = <&pm8921_lvs6>;
++			vdda_refclk-supply = <&vcc3v3>;
++			pinctrl-0 = <&pcie_pins>;
++			pinctrl-names = "default";
++			perst-gpio = <&tlmm_pinmux 27 GPIO_ACTIVE_LOW>;
++		};
++
++		phy@1b400000 {
++			status = "okay";
++		};
++
++		sata@29000000 {
++			status	= "okay";
++			target-supply	= <&pm8921_lvs7>;
++		};
++
++		/* OTG */
++		phy@12500000 {
++			status		= "okay";
++			dr_mode		= "peripheral";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l4>;
++		};
++
++		phy@12520000 {
++			status		= "okay";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l23>;
++		};
++
++		phy@12530000 {
++			status		= "okay";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l23>;
++		};
++
++		gadget@12500000 {
++			status = "okay";
++		};
++
++		/* OTG */
++		usb@12500000 {
++			status = "okay";
++		};
++
++		usb@12520000 {
++			status = "okay";
++		};
++
++		usb@12530000 {
++			status = "okay";
++		};
++
++		amba {
++			/* eMMC */
++			sdcc@12400000 {
++				status = "okay";
++				vmmc-supply = <&pm8921_l5>;
++				vqmmc-supply = <&pm8921_s4>;
++			};
++
++			/* External micro SD card */
++			sdcc@12180000 {
++				status = "okay";
++				vmmc-supply = <&pm8921_l6>;
++				pinctrl-names	= "default";
++				pinctrl-0	= <&card_detect>;
++				cd-gpios	= <&tlmm_pinmux 26 GPIO_ACTIVE_HIGH>;
++			};
++		};
++	};
++};
+-- 
+2.8.3
 
->>
->> A patch like the following should fix this:
->>
->> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
->> index 52be48b..c4ff788d 100644
->> --- a/arch/arm/boot/dts/am33xx.dtsi
->> +++ b/arch/arm/boot/dts/am33xx.dtsi
->> @@ -557,6 +557,7 @@
->>  			};
->>
->>  			usb0_phy: usb-phy@47401300 {
->> +				#phy-cells = <0>;
->
-> This seems to be ok, but this patch would break the dt backward compatible.
-
-I understand, as said above I'll do a new version of the patch preserving
-compatibility.
-
->>  				compatible = "ti,am335x-usb-phy";
->>  				reg = <0x47401300 0x100>;
->>  				reg-names = "phy";
->>
-
-Regards,
-
-Hans
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
