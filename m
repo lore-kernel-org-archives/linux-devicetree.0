@@ -1,90 +1,41 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v3 2/3] drm/arm: Add support for Mali Display Processors
-Date: Fri, 10 Jun 2016 16:33:13 +0200
-Message-ID: <20160610143313.GD3363@phenom.ffwll.local>
-References: <1465489099-25628-1-git-send-email-Liviu.Dudau@arm.com>
- <1465489099-25628-3-git-send-email-Liviu.Dudau@arm.com>
- <20160609185629.GU3363@phenom.ffwll.local>
- <20160610085259.GB1165@e106497-lin.cambridge.arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 10/20] pwm: sysfs: Add PWM Capture support
+Date: Fri, 10 Jun 2016 15:36:27 +0100
+Message-ID: <20160610143627.GD1537@dell>
+References: <20160608092135.21184-1-lee.jones@linaro.org>
+ <20160608092135.21184-11-lee.jones@linaro.org>
+ <20160610140404.GL27142@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160610085259.GB1165@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20160610140404.GL27142@ulmo.ba.sec>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, robh+dt@kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgMDk6NTI6NTlBTSArMDEwMCwgTGl2aXUgRHVkYXUgd3Jv
-dGU6Cj4gT24gVGh1LCBKdW4gMDksIDIwMTYgYXQgMDg6NTY6MjlQTSArMDIwMCwgRGFuaWVsIFZl
-dHRlciB3cm90ZToKPiBJJ20gc2VlaW5nIC0+ZGlzYWJsZSBiZWluZyBjYWxsZWQgYXQgSFBEIGV2
-ZW50IHRpbWUsIHdoaWNoIGlzIHNvb24gYWZ0ZXIgLT5wcm9iZS4KPiAKPiA+IFRoaXMgaXMgdGhl
-IGNhc2Ugd2hlbiBlbmFibGluZyBhIGNydGMgd2hlbiBpdCBpcyBmdWxseQo+ID4gZGlzYWJsZWQu
-IEp1c3QgbWVudGlvbmluZyBpbiBjYXNlIC0+ZW50ZXJfY29uZmlnX21vZGUoKSBpcyBzb21ldGhp
-bmcgdGhhdAo+ID4gbXVzdCBiZSBjYWxsZWQgc3ltbWV0cmljYWxseSB3aXRoIC0+bGVhdmVfY29u
-ZmlnX21vZGUoKS4KPiAKPiAtPmxlYXZlX2NvbmZpZ19tb2RlKCkgc2hvdWxkIGJlIHRoZSBkZWZh
-dWx0IG1vZGUgd2hlbiBIVyBpcyBkaXNhYmxlZCBvciBub3QgYWN0aXZlLAo+IGFuZCB0aGUgcmVz
-ZXQgZGVmYXVsdCB2YWx1ZS4gUmVnYXJkbGVzcyBvZiB0aGF0LCAtPmVudGVyX2NvbmZpZ19tb2Rl
-KCkgY2FuIGJlCj4gY2FsbGVkIGF0IGFueSB0aW1lLCBldmVuIGlmIEhXIGlzIGFscmVhZHkgaW4g
-Y29uZmlnIG1vZGUuCj4gCj4gPiA+ICsKPiA+ID4gKwkvKiBtY2xrIG5lZWRzIHRvIGJlIHNldCB0
-byB0aGUgc2FtZSBvciBoaWdoZXIgcmF0ZSB0aGFuIHB4bGNsayAqLwo+ID4gPiArCWNsa19zZXRf
-cmF0ZShod2Rldi0+bWNsaywgY3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGUuY3J0Y19jbG9jayAq
-IDEwMDApOwo+ID4gPiArCWNsa19zZXRfcmF0ZShod2Rldi0+cHhsY2xrLCBjcnRjLT5zdGF0ZS0+
-YWRqdXN0ZWRfbW9kZS5jcnRjX2Nsb2NrICogMTAwMCk7Cj4gPiA+ICsKPiA+ID4gKwlod2Rldi0+
-bW9kZXNldChod2RldiwgJnZtKTsKPiA+ID4gKwlod2Rldi0+bGVhdmVfY29uZmlnX21vZGUoaHdk
-ZXYpOwo+ID4gPiArfQo+ID4gPiArCj4gPiA+ICtzdGF0aWMgdm9pZCBtYWxpZHBfY3J0Y19kaXNh
-YmxlKHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3QgbWFsaWRw
-X2RybSAqbWFsaWRwID0gY3J0Y190b19tYWxpZHBfZGV2aWNlKGNydGMpOwo+ID4gPiArCXN0cnVj
-dCBtYWxpZHBfaHdfZGV2aWNlICpod2RldiA9IG1hbGlkcC0+ZGV2Owo+ID4gPiArCj4gPiA+ICsJ
-LyoKPiA+ID4gKwkgKiBhdm9pZCBkaXNhYmxpbmcgYWxyZWFkeSBkaXNhYmxlZCBjbG9ja3MgYW5k
-IGhhcmR3YXJlCj4gPiA+ICsJICogKGFzIGlzIHRoZSBjYXNlIGF0IGRldmljZSBwcm9iZSB0aW1l
-KQo+ID4gPiArCSAqLwo+ID4gPiArCWlmIChjcnRjLT5zdGF0ZS0+YWN0aXZlKSB7Cj4gPiAKPiA+
-IENvbW1lbnQgZG9lc24ndCBtYXRjaCBjb2RlLiBDaGVja2luZyBjcnRjLT5zdGF0ZS0+YWN0aXZl
-IGluIC0+ZGlzYWJsZQo+ID4gbG9va3MgYXQgdGhlIF9uZXdfIHN0YXRlLCBub3QgYXQgdGhlIGN1
-cnJlbnQgc3RhdGUgb2YgdGhlIGNydGMuIEF0b21pYwo+ID4gaGVscGVycyBhbHJlYWR5IGd1YXJh
-bnRlZSB5b3UgdGhhdCAtPmRpc2FibGUgaXMgb25seSBjYWxsZWQgd2hlbiB0aGUgQ1JUQwo+ID4g
-aXMgc3RpbGwgb24uIAo+IAo+IEV4Y2VwdCBhdCBwcm9iZSogdGltZSwgd2hlbiB0aGUgZnJhbWV3
-b3JrIGNhbGxzIC0+ZGlzYWJsZSBiZWZvcmUgbW9kZXNldCB0bwo+IG1ha2Ugc3VyZSB0aGF0IHRo
-ZSBoYXJkd2FyZSBpcyBpbiBhIGtub3duIHN0YXRlLiBBbmQgSSdtIG5vdCBzdXJlIGhvdyB0bwo+
-IGNoZWNrIHRoZSBfY3VycmVudF8gc3RhdGUgb2YgdGhlIGNydGMgb3RoZXIgdGhhbiBieSB1c2lu
-ZyBjcnRjLT5zdGF0ZS4KPiAKPiAqIGFjdHVhbGx5LCBpdCBpcyBIUEQgZXZlbnQgYWZ0ZXIgcHJv
-YmUuCgpTdXJwcmlzaW5nLiBBbmQgeW91IGRvbid0IGhhdmUgYSBjYWxsIHRvCmRybV9oZWxwZXJf
-ZGlzYWJsZV91bnVzZWRfZnVuY3Rpb25zLCB3aGljaCBpcyB0aGUgdXN1YWwgY3VscHJpdC4gV2hl
-cmUKZXhhY3RseSBkbyB5b3Ugc2VlIHRoYXQgLT5kaXNhYmxlIGNhbGw/IENhbiB5b3UgcGxzIGNh
-cHR1cmUgYSBiYWNrdHJhY2UKd2l0aCBmdWxsIGRybSBkZWJ1Z2dpbmcgZW5hYmxlZD8KClRoaXMg
-c2hvdWxkbid0IGhhcHBlbiB3aXRoIGF0b21pYyAuLi4KCj4gPiA+ICtzdGF0aWMgdm9pZCBtYWxp
-ZHBfdW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3QgZHJt
-X2RldmljZSAqZHJtID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gPiA+ICsJc3RydWN0IG1hbGlk
-cF9kcm0gKm1hbGlkcCA9IGRybS0+ZGV2X3ByaXZhdGU7Cj4gPiA+ICsJc3RydWN0IG1hbGlkcF9o
-d19kZXZpY2UgKmh3ZGV2ID0gbWFsaWRwLT5kZXY7Cj4gPiA+ICsKPiA+ID4gKwlpZiAobWFsaWRw
-LT5mYmRldikgewo+ID4gPiArCQlkcm1fZmJkZXZfY21hX2ZpbmkobWFsaWRwLT5mYmRldik7Cj4g
-PiA+ICsJCW1hbGlkcC0+ZmJkZXYgPSBOVUxMOwo+ID4gPiArCX0KPiA+ID4gKwlkcm1fa21zX2hl
-bHBlcl9wb2xsX2ZpbmkoZHJtKTsKPiA+ID4gKwltYWxpZHBfc2VfaXJxX2ZpbmkoZHJtKTsKPiA+
-ID4gKwltYWxpZHBfZGVfaXJxX2ZpbmkoZHJtKTsKPiA+ID4gKwlkcm1fdmJsYW5rX2NsZWFudXAo
-ZHJtKTsKPiA+ID4gKwljb21wb25lbnRfdW5iaW5kX2FsbChkZXYsIGRybSk7Cj4gPiA+ICsJZHJt
-X2Rldl91bnJlZ2lzdGVyKGRybSk7Cj4gPiAKPiA+IFVucmVnaXN0ZXIgZmlyc3QsIGFsc28gbmVl
-ZCB0byB1bnJlZ2lzdGVyIGNvbm5lY3RvcnMgdG9vLgo+IAo+IEJhaCwgeW91IGFyZSByaWdodC4g
-RG9lcyB1bnJlZ2lzdGVyIGhhdmUgdG8gY29tZSBldmVuIGJlZm9yZQo+IGRybV9rbXNfaGVscGVy
-X3BvbGxfZmluaSgpID8KCkl0J3MganVzdCBnZW5lcmFsbHkgdGhlIHNhZmVzdCBhcHByb2FjaCB0
-byBmaXJzdCB1bnJlZ2lzdGVyIGV2ZXJ5dGhpbmcsCmFuZCBvbmx5IHRoZW4gc3RhcnQgY2xlYW5p
-bmcgdXAuCgo+IEFzIGZvciB0aGUgY29ubmVjdG9ycywgYmVjYXVzZSBteSBkcml2ZXIgdXNlcyBh
-biBlbmNvZGVyIHRoYXQKPiBpcyBhbHNvIGEgY29tcG9uZW50IHNsYXZlLCBjb21wb25lbnRfW3Vu
-XWJpbmRfYWxsKCkgc2hvdWxkIHRha2UKPiBjYXJlIG9mIFt1bl1yZWdpc3RlcmluZyB0aGF0LgoK
-RS5nLiB0aGlzIHNvdW5kcyB1bnNhZmUsIGJlY2F1c2UgZHJtIGFzc3VtZSB0aGF0IGVuY29kZXIg
-bGlzdHMgYXJlIHN0YXRpYwpvdmVyIHRoZSBsaWZldGltZSBvZiB0aGUgZHJpdmVyLiBZb3Ugc2hv
-dWxkIG1ha2Ugc3VyZSBubyBvbmUgY2FuIGdldCBhdCBpdAphbnkgbW9yZSBmaXJzdCBiZWZvcmUg
-Y2xlYW5pbmcgdXAgYW55IGNvbXBvbmVudHMuCgpDaGVlcnMsIERhbmllbAotLSAKRGFuaWVsIFZl
-dHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3
-bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, 10 Jun 2016, Thierry Reding wrote:
+
+> On Wed, Jun 08, 2016 at 10:21:25AM +0100, Lee Jones wrote:
+> > Allow a user to read PWM Capture results from /sysfs.
+> >=20
+> > To start a capture and read the result, simply read the file:
+> >=20
+> >   $ cat $PWMCHIP/capture
+> >=20
+> > The output format is "<period>:<duty_cycle>".
+>=20
+> The format below is "<period> <duty cycle>".
+>=20
+> No need to rev the series for this, I can take patches 8 and 10 as-is
+> and make those modifications myself.
+
+Ideal, thanks.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
