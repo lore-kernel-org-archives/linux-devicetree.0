@@ -1,36 +1,50 @@
-From: Rajesh Bhagat <rajesh.bhagat@nxp.com>
-Subject: [PATCH 1/3] arm: dts: ls1021a: Add dis_rxdet_inp3_quirk property to USB3 node
-Date: Fri, 10 Jun 2016 11:53:44 +0530
-Message-ID: <1465539826-5519-2-git-send-email-rajesh.bhagat@nxp.com>
-References: <1465539826-5519-1-git-send-email-rajesh.bhagat@nxp.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v9 03/14] usb: hcd.h: Add OTG to HCD interface
+Date: Fri, 10 Jun 2016 10:01:57 +0300
+Message-ID: <575A65E5.6030908@ti.com>
+References: <Pine.LNX.4.44L0.1606091008210.1697-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465539826-5519-1-git-send-email-rajesh.bhagat@nxp.com>
+In-Reply-To: <Pine.LNX.4.44L0.1606091008210.1697-100000@iolanthe.rowland.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: shawnguo@kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sriram.dash@nxp.com, Rajesh Bhagat <rajesh.bhagat@nxp.com>
+To: Alan Stern <stern@rowland.harvard.edu>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add "dis_rxdet_inp3_quirk" boolean property to USB3 node. This property
-is used to disable rx detection in P3 PHY mode.
+On 09/06/16 17:11, Alan Stern wrote:
+> On Thu, 9 Jun 2016, Sergei Shtylyov wrote:
+> 
+>> Hello.
+>>
+>> On 6/9/2016 10:31 AM, Roger Quadros wrote:
+>>
+>>>>>>> The OTG core will use struct otg_hcd_ops to interface
+>>>>>>> with the HCD controller.
+>>>>>>
+>>>>>>    Host controller driver (HCD) controller? Maybe just HC? :-)
+>>>>>
+>>>>> OK.
+>>>>
+>>>>    OTOH, my googling has shown that HCD may stand for both HC driver and HC device... The host controller device sounds a bit tautological however...
+>>>
+>>> Yeah I always meant it to be Host Controller Device :).
+>>
+>>     The question here is more what was meant by the previous Linux USB 
+>> authors. :-)
+> 
+> I have always used "HCD" to mean Host Controller Driver, and I believe 
+> that's what other people have done too.
+> 
+> If I want to refer to a Host Controller Device, I would write either
+> "HC" or "host controller".
+> 
+> Admittedly, this means that struct usb_hcd has a slightly illogical 
+> name.
+> 
 
-Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
----
- arch/arm/boot/dts/ls1021a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+OK, I'll re-spin this series so that HCD means HC driver.
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 5ae8e92..368e219 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -626,6 +626,7 @@
- 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
- 		};
- 
- 		pcie@3400000 {
--- 
-2.6.2.198.g614a2ac
+cheers,
+-roger
