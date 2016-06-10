@@ -1,31 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] soc: qcom: Update properties for smem state referencing
-Date: Fri, 10 Jun 2016 12:58:47 -0500
-Message-ID: <20160610175847.GA31060@rob-hp-laptop>
-References: <1465531882-25967-1-git-send-email-bjorn.andersson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465531882-25967-1-git-send-email-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] dt-bindings: Add vendor prefix for Starry
+Date: Fri, 10 Jun 2016 11:01:57 -0700
+Message-ID: <1465581717-18497-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: emil.l.velikov@gmail.com, Douglas Anderson <dianders@chromium.org>, treding@nvidia.com, ralf@linux-mips.org, jic23@kernel.org, shawnguo@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 09, 2016 at 09:11:22PM -0700, Bjorn Andersson wrote:
-> Update the property names to match device tree bindings, the correct
-> values should be qcom,smem-states and qcom,smem-state-names.
-> 
-> Also update the #qcom,smem-state-cells for consistency, before we merge
-> any users of these properties.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt |  4 ++--
->  Documentation/devicetree/bindings/soc/qcom/qcom,smsm.txt  |  4 ++--
+>From their website:
+    http://www.b001.com.cn/
 
-Acked-by: Rob Herring <robh@kernel.org>
+Starry appears to be a company involved in LCD panels and related
+components.
 
->  drivers/soc/qcom/smem_state.c                             | 12 ++++++------
->  3 files changed, 10 insertions(+), 10 deletions(-)
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index d2bce2239769..437d663fbc1c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -248,6 +248,7 @@ sony	Sony Corporation
+ spansion	Spansion Inc.
+ sprd	Spreadtrum Communications Inc.
+ st	STMicroelectronics
++starry	Starry Electronic Technology (ShenZhen) Co., LTD
+ startek	Startek
+ ste	ST-Ericsson
+ stericsson	ST-Ericsson
+-- 
+2.8.0.rc3.226.g39d4020
