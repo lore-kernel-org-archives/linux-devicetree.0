@@ -1,54 +1,43 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/2] ARM: dts: sd_600eval: Fix eMMC lockup issue
-Date: Fri, 10 Jun 2016 10:34:58 +0100
-Message-ID: <1465551298-21457-2-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1465551298-21457-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465551298-21457-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Parth Pancholi <parth.pancholi@einfochips.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: sunxi: Re-order sun4i and
+ sun7i pinctrl nodes alphabetically
+Date: Fri, 10 Jun 2016 11:36:23 +0200
+Message-ID: <20160610093623.GP5242@lukather>
+References: <1465545919-24270-1-git-send-email-mamlinav@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nWEzmRaGLXxZdI3i"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIMU5K5AKGQEJFYXR6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1465545919-24270-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Parth Pancholi <parth.pancholi@einfochips.com>
 
-This board locks up if we stress test the eMMC, as the regulator s4 is
-unable to supply enough current for all the peripherials attached to it.
-As this supply is wired up to most of the peripherials including DDR,
-it resulted in such lockup.
+--nWEzmRaGLXxZdI3i
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-This patch fixes this issue by setting s4 regulator correctly with
-Auto power mode.
+On Fri, Jun 10, 2016 at 11:05:17AM +0300, Aleksei Mamlin wrote:
+> Hello,
+> 
+> This patchset have no functional changes, only sorting sun4i and sun7i pinctrl
+> nodes in alphabetical order.
 
-Reported-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-[Srinivas Kandagatla: rewrote the change log]
-Tested-by: Girish Sharma <girish.sharma@einfochips.com>
-Signed-off-by: Parth Pancholi <parth.pancholi@einfochips.com>
----
- arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Applied both, thanks!
+Maxime
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
-index 7df0108..39ae2bc 100644
---- a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
-@@ -1,6 +1,7 @@
- #include "qcom-apq8064-v2.0.dtsi"
- #include "qcom-apq8064-arrow-sd-600eval-pins.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/mfd/qcom-rpm.h>
- 
- / {
- 	model = "Arrow Electronics, APQ8064 SD_600eval";
-@@ -82,7 +83,8 @@
- 				s4 {
- 					regulator-min-microvolt	= <1800000>;
- 					regulator-max-microvolt	= <1800000>;
--					qcom,switch-mode-frequency = <3200000>;
-+					qcom,switch-mode-frequency = <1600000>;
-+					qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
- 					bias-pull-down;
- 					regulator-always-on;
- 				};
 -- 
-2.8.3
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--nWEzmRaGLXxZdI3i--
