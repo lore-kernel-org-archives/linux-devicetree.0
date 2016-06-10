@@ -1,211 +1,202 @@
-From: Schuyler Patton <spatton@ti.com>
-Subject: Re: [PATCH v2 0/2] net: ethernet: ti: cpsw: delete rx_descs property
-Date: Fri, 10 Jun 2016 18:04:32 -0500
-Message-ID: <575B4780.9050103@ti.com>
-References: <1465307976-12235-1-git-send-email-ivan.khoronzhuk@linaro.org>
- <5756E7A8.6090703@ti.com> <57582535.5020608@linaro.org>
- <57582650.5010409@linaro.org> <5758A625.3090707@ti.com>
- <5758B236.5000401@linaro.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Example 1 -- show only the nodes that have complications.
+Date: Fri, 10 Jun 2016 16:05:04 -0700
+Message-ID: <575B47A0.4050906@gmail.com>
+References: <575B46CE.6080903@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5758B236.5000401@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, mugunthanvnm@ti.com, linux-kernel@vger.kernel.org
-Cc: grygorii.strashko@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575B46CE.6080903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Complications are things like multiple compatible values, multiple
+matching drivers, node is not enabled, etc.
+
+Upper case flags indicate what the complications are for each entry.
+
+$ scripts/dtc/dt_to_config \
+   --include-suspect \
+   --config ${KBUILD_OUTPUT}/.config \
+   arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+-dDc-------y- : /clocks/sleep_clk : fixed-clock : arch/powerpc/platforms/512x/clock-commonclk.c : CONFIG_COMMON_CLK : y
+-dDc-------y- : /clocks/sleep_clk : fixed-clock : drivers/clk/clk-fixed-rate.c : CONFIG_COMMON_CLK : y
+-dDc-----n--F : /clocks/sleep_clk : fixed-clock : drivers/clk/clk-u300.c : CONFIG_ARCH_U300 : n
+-dDc-----n--F : /clocks/sleep_clk : fixed-clock : drivers/clk/imx/clk-imx27.c : CONFIG_SOC_IMX27 : n
+-dDc-----n--F : /clocks/sleep_clk : fixed-clock : drivers/clk/imx/clk-imx31.c : CONFIG_SOC_IMX31 : n
+
+-dDc-------y- : /clocks/xo_board : fixed-clock : arch/powerpc/platforms/512x/clock-commonclk.c : CONFIG_COMMON_CLK : y
+-dDc-------y- : /clocks/xo_board : fixed-clock : drivers/clk/clk-fixed-rate.c : CONFIG_COMMON_CLK : y
+-dDc-----n--F : /clocks/xo_board : fixed-clock : drivers/clk/clk-u300.c : CONFIG_ARCH_U300 : n
+-dDc-----n--F : /clocks/xo_board : fixed-clock : drivers/clk/imx/clk-imx27.c : CONFIG_SOC_IMX27 : n
+-dDc-----n--F : /clocks/xo_board : fixed-clock : drivers/clk/imx/clk-imx31.c : CONFIG_SOC_IMX31 : n
+
+Md-c-------y- : /cpus/idle-states/spc : qcom,idle-state-spc : drivers/soc/qcom/spm.c : CONFIG_QCOM_PM : y
+MdDc-------y- : /cpus/idle-states/spc : arm,idle-state : drivers/cpuidle/cpuidle-arm.c : CONFIG_ARM_CPUIDLE : y
+MdDc-----n--F : /cpus/idle-states/spc : arm,idle-state : drivers/cpuidle/cpuidle-big_little.c : CONFIG_ARM_BIG_LITTLE_CPUIDLE : n
+
+-dDc---Hx---- : /cpus/l2-cache : cache : arch/avr32/kernel/setup.c : obj-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : arch/ia64/kernel/perfmon.c : obj-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : arch/ia64/kernel/topology.c : obj-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : arch/mips/fw/arc/tree.c : lib-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : arch/mips/kvm/mips.c : kvm-objs : x
+-dDc---Hx---- : /cpus/l2-cache : cache : arch/powerpc/kernel/cacheinfo.c : obj-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : arch/powerpc/platforms/powermac/setup.c : obj-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : arch/sh/kernel/cpu/proc.c : obj-y : x
+-dDc---H-n--F : /cpus/l2-cache : cache : arch/sparc/kernel/mdesc.c : CONFIG_SPARC64 : n
+-dDc---H-n--F : /cpus/l2-cache : cache : drivers/atm/horizon.c : CONFIG_ATM_HORIZON : n
+-dDc---Hx---- : /cpus/l2-cache : cache : drivers/base/cacheinfo.c : obj-y : x
+-dDc---H-n--F : /cpus/l2-cache : cache : drivers/edac/octeon_edac-pc.c : CONFIG_EDAC_OCTEON_PC : n
+-dDc---H-n--F : /cpus/l2-cache : cache : drivers/hwmon/adm1029.c : CONFIG_SENSORS_ADM1029 : n
+-dDc---Hxn--F : /cpus/l2-cache : cache : drivers/ide/ide-disk_proc.c : CONFIG_IDE_PROC_FS && CONFIG_IDE_GD_ATA && ide-gd_mod-y : n, n, x
+-dDc---Hx---- : /cpus/l2-cache : cache : drivers/md/bcache/super.c : bcache-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : drivers/md/dm-cache-target.c : dm-cache-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : drivers/of/base.c : obj-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : drivers/staging/lustre/lustre/osc/osc_cache.c : osc-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : fs/btrfs/disk-io.c : btrfs-y : x
+-dDc---Hx---- : /cpus/l2-cache : cache : fs/cachefiles/bind.c : cachefiles-y : x
+-dDc---H-n--F : /cpus/l2-cache : cache : fs/nfs/cache_lib.c : CONFIG_NFS_USE_LEGACY_DNS : n
+-dDc---H-n--F : /cpus/l2-cache : cache : mm/memcontrol.c : CONFIG_MEMCG : n
+-dDc---Hx---- : /cpus/l2-cache : cache : net/sunrpc/rpc_pipe.c : sunrpc-y : x
+-dD----H----- : /cpus/l2-cache : cache : tools/perf/builtin-list.c : no_config : x
+-dD----H----- : /cpus/l2-cache : cache : tools/perf/builtin-record.c : no_config : x
+
+-dDc-------y- : /smem : qcom,smem : drivers/soc/qcom/smem.c : CONFIG_QCOM_SMEM : y
+-dDc-----n--F : /smem : qcom,smem : drivers/soc/qcom/smp2p.c : CONFIG_QCOM_SMP2P : n
+
+-d-c-----n--F : /smp2p-modem : qcom,smp2p : drivers/soc/qcom/smp2p.c : CONFIG_QCOM_SMP2P : n
+
+-d-c-----n--F : /smp2p-wcnss : qcom,smp2p : drivers/soc/qcom/smp2p.c : CONFIG_QCOM_SMP2P : n
+
+-d-c-----n--F : /smsm : qcom,smsm : drivers/soc/qcom/smsm.c : CONFIG_QCOM_SMSM : n
+
+------W------ : /soc : simple-bus : no_driver : no_config : x
+
+-dDc-------y- : /soc/clock-controller@f9088000 : qcom,kpss-acc-v2 : arch/arm/mach-qcom/platsmp.c : CONFIG_SMP : y
+-dDc-------y- : /soc/clock-controller@f9088000 : qcom,kpss-acc-v2 : drivers/soc/qcom/spm.c : CONFIG_QCOM_PM : y
+
+-dDc-------y- : /soc/clock-controller@f9098000 : qcom,kpss-acc-v2 : arch/arm/mach-qcom/platsmp.c : CONFIG_SMP : y
+-dDc-------y- : /soc/clock-controller@f9098000 : qcom,kpss-acc-v2 : drivers/soc/qcom/spm.c : CONFIG_QCOM_PM : y
+
+-dDc-------y- : /soc/clock-controller@f90a8000 : qcom,kpss-acc-v2 : arch/arm/mach-qcom/platsmp.c : CONFIG_SMP : y
+-dDc-------y- : /soc/clock-controller@f90a8000 : qcom,kpss-acc-v2 : drivers/soc/qcom/spm.c : CONFIG_QCOM_PM : y
+
+-dDc-------y- : /soc/clock-controller@f90b8000 : qcom,kpss-acc-v2 : arch/arm/mach-qcom/platsmp.c : CONFIG_SMP : y
+-dDc-------y- : /soc/clock-controller@f90b8000 : qcom,kpss-acc-v2 : drivers/soc/qcom/spm.c : CONFIG_QCOM_PM : y
+
+-d-c-E-----y- : /soc/i2c@f9924000 : qcom,i2c-qup-v2.1.1 : drivers/i2c/busses/i2c-qup.c : CONFIG_I2C_QUP : y
+
+-d-c-E-----y- : /soc/i2c@f9964000 : qcom,i2c-qup-v2.1.1 : drivers/i2c/busses/i2c-qup.c : CONFIG_I2C_QUP : y
+
+Md-c-------y- : /soc/power-controller@f9089000 : qcom,msm8974-saw2-v2.1-cpu : drivers/soc/qcom/spm.c : CONFIG_QCOM_PM : y
+M------------ : /soc/power-controller@f9089000 : qcom,saw2 : no_driver : no_makefile : x
+
+Md-c-------y- : /soc/power-controller@f9099000 : qcom,msm8974-saw2-v2.1-cpu : drivers/soc/qcom/spm.c : CONFIG_QCOM_PM : y
+M------------ : /soc/power-controller@f9099000 : qcom,saw2 : no_driver : no_makefile : x
+
+Md-c-------y- : /soc/power-controller@f90a9000 : qcom,msm8974-saw2-v2.1-cpu : drivers/soc/qcom/spm.c : CONFIG_QCOM_PM : y
+M------------ : /soc/power-controller@f90a9000 : qcom,saw2 : no_driver : no_makefile : x
+
+Md-c-------y- : /soc/power-controller@f90b9000 : qcom,msm8974-saw2-v2.1-cpu : drivers/soc/qcom/spm.c : CONFIG_QCOM_PM : y
+M------------ : /soc/power-controller@f90b9000 : qcom,saw2 : no_driver : no_makefile : x
+
+-d-c-E-----y- : /soc/sdhci@f98a4900 : qcom,sdhci-msm-v4 : drivers/mmc/host/sdhci-msm.c : CONFIG_MMC_SDHCI_MSM : y
+
+Md-c-------y- : /soc/serial@f991e000 : qcom,msm-uartdm-v1.4 : drivers/tty/serial/msm_serial.c : CONFIG_SERIAL_MSM : y
+Md-c-------y- : /soc/serial@f991e000 : qcom,msm-uartdm : drivers/tty/serial/msm_serial.c : CONFIG_SERIAL_MSM : y
+
+Md-c-------y- : /soc/spmi@fc4cf000/pm8841@4 : qcom,pm8841 : drivers/mfd/qcom-spmi-pmic.c : CONFIG_MFD_SPMI_PMIC : y
+Md-c-------y- : /soc/spmi@fc4cf000/pm8841@4 : qcom,spmi-pmic : drivers/mfd/qcom-spmi-pmic.c : CONFIG_MFD_SPMI_PMIC : y
+
+Md-c-------y- : /soc/spmi@fc4cf000/pm8841@4/mpps@a000 : qcom,pm8841-mpp : drivers/pinctrl/qcom/pinctrl-spmi-mpp.c : CONFIG_PINCTRL_QCOM_SPMI_PMIC : y
+M------------ : /soc/spmi@fc4cf000/pm8841@4/mpps@a000 : qcom,spmi-mpp : no_driver : no_config : x
+
+-d-c-----n--F : /soc/spmi@fc4cf000/pm8841@4/temp-alarm@2400 : qcom,spmi-temp-alarm : drivers/thermal/qcom-spmi-temp-alarm.c : CONFIG_QCOM_SPMI_TEMP_ALARM : n
+
+Md-c-------y- : /soc/spmi@fc4cf000/pm8841@5 : qcom,pm8841 : drivers/mfd/qcom-spmi-pmic.c : CONFIG_MFD_SPMI_PMIC : y
+Md-c-------y- : /soc/spmi@fc4cf000/pm8841@5 : qcom,spmi-pmic : drivers/mfd/qcom-spmi-pmic.c : CONFIG_MFD_SPMI_PMIC : y
+
+Md-c-------y- : /soc/spmi@fc4cf000/pm8941@0 : qcom,pm8941 : drivers/mfd/qcom-spmi-pmic.c : CONFIG_MFD_SPMI_PMIC : y
+Md-c-------y- : /soc/spmi@fc4cf000/pm8941@0 : qcom,spmi-pmic : drivers/mfd/qcom-spmi-pmic.c : CONFIG_MFD_SPMI_PMIC : y
+
+-d-c-E-----y- : /soc/spmi@fc4cf000/pm8941@0/coincell@2800 : qcom,pm8941-coincell : drivers/misc/qcom-coincell.c : CONFIG_QCOM_COINCELL : y
+
+Md-c-------y- : /soc/spmi@fc4cf000/pm8941@0/gpios@c000 : qcom,pm8941-gpio : drivers/pinctrl/qcom/pinctrl-spmi-gpio.c : CONFIG_PINCTRL_QCOM_SPMI_PMIC : y
+M------------ : /soc/spmi@fc4cf000/pm8941@0/gpios@c000 : qcom,spmi-gpio : no_driver : no_config : x
+
+M------------ : /soc/spmi@fc4cf000/pm8941@0/iadc@3600 : qcom,pm8941-iadc : no_driver : no_config : x
+Md-c-----n--F : /soc/spmi@fc4cf000/pm8941@0/iadc@3600 : qcom,spmi-iadc : drivers/iio/adc/qcom-spmi-iadc.c : CONFIG_QCOM_SPMI_IADC : n
+
+Md-c-------y- : /soc/spmi@fc4cf000/pm8941@0/mpps@a000 : qcom,pm8941-mpp : drivers/pinctrl/qcom/pinctrl-spmi-mpp.c : CONFIG_PINCTRL_QCOM_SPMI_PMIC : y
+M------------ : /soc/spmi@fc4cf000/pm8941@0/mpps@a000 : qcom,spmi-mpp : no_driver : no_makefile : x
+
+-d-c-----n--F : /soc/spmi@fc4cf000/pm8941@0/pwrkey@800 : qcom,pm8941-pwrkey : drivers/input/misc/pm8941-pwrkey.c : CONFIG_INPUT_PM8941_PWRKEY : n
+
+-d-c-----n--F : /soc/spmi@fc4cf000/pm8941@0/temp-alarm@2400 : qcom,spmi-temp-alarm : drivers/thermal/qcom-spmi-temp-alarm.c : CONFIG_QCOM_SPMI_TEMP_ALARM : n
+
+-d-c-----n--F : /soc/spmi@fc4cf000/pm8941@0/vadc@3100 : qcom,spmi-vadc : drivers/iio/adc/qcom-spmi-vadc.c : CONFIG_QCOM_SPMI_VADC : n
+
+Md-c-------y- : /soc/spmi@fc4cf000/pm8941@1 : qcom,pm8941 : drivers/mfd/qcom-spmi-pmic.c : CONFIG_MFD_SPMI_PMIC : y
+Md-c-------y- : /soc/spmi@fc4cf000/pm8941@1 : qcom,spmi-pmic : drivers/mfd/qcom-spmi-pmic.c : CONFIG_MFD_SPMI_PMIC : y
+
+-d-c-E---n--F : /soc/spmi@fc4cf000/pm8941@1/wled@d800 : qcom,pm8941-wled : drivers/video/backlight/pm8941-wled.c : CONFIG_BACKLIGHT_PM8941_WLED : n
+
+-dDc---Hx---- : /soc/syscon@f9011000 : syscon : arch/arm/mach-clps711x/devices.c : obj-y : x
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : arch/arm/mach-u300/regulator.c : CONFIG_REGULATOR_AB3100 : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/fpga/zynq-fpga.c : CONFIG_FPGA_MGR_ZYNQ_FPGA : n
+-dDc---H---y- : /soc/syscon@f9011000 : syscon : drivers/hwspinlock/qcom_hwspinlock.c : CONFIG_HWSPINLOCK_QCOM : y
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/input/touchscreen/ts4800-ts.c : CONFIG_TOUCHSCREEN_TS4800 : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/irqchip/irq-digicolor.c : CONFIG_ARCH_DIGICOLOR : n
+-dDcC--Hx---- : /soc/syscon@f9011000 : syscon : drivers/media/platform/omap3isp/isp.c : omap3-isp-objs : x
+-dDcC--H-n--F : /soc/syscon@f9011000 : syscon : drivers/media/platform/omap3isp/isp.c : CONFIG_VIDEO_OMAP3 : n
+-dDc---H---y- : /soc/syscon@f9011000 : syscon : drivers/mfd/syscon.c : CONFIG_MFD_SYSCON : y
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/mfd/vexpress-sysreg.c : CONFIG_MFD_VEXPRESS_SYSREG : n
+-dDcC--H-n--F : /soc/syscon@f9011000 : syscon : drivers/net/ethernet/ti/cpsw-common.c : CONFIG_TI_CPSW : n
+-dDcC--H-n--F : /soc/syscon@f9011000 : syscon : drivers/net/ethernet/ti/cpsw-common.c : CONFIG_TI_DAVINCI_EMAC : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/phy/phy-dm816x-usb.c : CONFIG_PHY_DM816X_USB : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/phy/phy-exynos-mipi-video.c : CONFIG_PHY_EXYNOS_MIPI_VIDEO : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/pinctrl/pinctrl-zynq.c : CONFIG_PINCTRL_ZYNQ : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/power/reset/axxia-reset.c : CONFIG_POWER_RESET_AXXIA : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/power/reset/brcmstb-reboot.c : CONFIG_POWER_RESET_BRCMSTB : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/regulator/pbias-regulator.c : CONFIG_REGULATOR_PBIAS : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/reset/reset-zynq.c : CONFIG_ARCH_ZYNQ : n
+-dDcC--Hx---- : /soc/syscon@f9011000 : syscon : drivers/staging/media/omap4iss/iss.c : omap4-iss-objs : x
+-dDcC--H-n--F : /soc/syscon@f9011000 : syscon : drivers/staging/media/omap4iss/iss.c : CONFIG_VIDEO_OMAP4 : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/tty/serial/clps711x.c : CONFIG_SERIAL_CLPS711X : n
+-dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/watchdog/ts4800_wdt.c : CONFIG_TS4800_WATCHDOG : n
+
+-dDc---Hx---- : /soc/syscon@fd484000 : syscon : arch/arm/mach-clps711x/devices.c : obj-y : x
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : arch/arm/mach-u300/regulator.c : CONFIG_REGULATOR_AB3100 : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/fpga/zynq-fpga.c : CONFIG_FPGA_MGR_ZYNQ_FPGA : n
+-dDc---H---y- : /soc/syscon@fd484000 : syscon : drivers/hwspinlock/qcom_hwspinlock.c : CONFIG_HWSPINLOCK_QCOM : y
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/input/touchscreen/ts4800-ts.c : CONFIG_TOUCHSCREEN_TS4800 : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/irqchip/irq-digicolor.c : CONFIG_ARCH_DIGICOLOR : n
+-dDcC--Hx---- : /soc/syscon@fd484000 : syscon : drivers/media/platform/omap3isp/isp.c : omap3-isp-objs : x
+-dDcC--H-n--F : /soc/syscon@fd484000 : syscon : drivers/media/platform/omap3isp/isp.c : CONFIG_VIDEO_OMAP3 : n
+-dDc---H---y- : /soc/syscon@fd484000 : syscon : drivers/mfd/syscon.c : CONFIG_MFD_SYSCON : y
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/mfd/vexpress-sysreg.c : CONFIG_MFD_VEXPRESS_SYSREG : n
+-dDcC--H-n--F : /soc/syscon@fd484000 : syscon : drivers/net/ethernet/ti/cpsw-common.c : CONFIG_TI_CPSW : n
+-dDcC--H-n--F : /soc/syscon@fd484000 : syscon : drivers/net/ethernet/ti/cpsw-common.c : CONFIG_TI_DAVINCI_EMAC : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/phy/phy-dm816x-usb.c : CONFIG_PHY_DM816X_USB : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/phy/phy-exynos-mipi-video.c : CONFIG_PHY_EXYNOS_MIPI_VIDEO : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/pinctrl/pinctrl-zynq.c : CONFIG_PINCTRL_ZYNQ : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/power/reset/axxia-reset.c : CONFIG_POWER_RESET_AXXIA : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/power/reset/brcmstb-reboot.c : CONFIG_POWER_RESET_BRCMSTB : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/regulator/pbias-regulator.c : CONFIG_REGULATOR_PBIAS : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/reset/reset-zynq.c : CONFIG_ARCH_ZYNQ : n
+-dDcC--Hx---- : /soc/syscon@fd484000 : syscon : drivers/staging/media/omap4iss/iss.c : omap4-iss-objs : x
+-dDcC--H-n--F : /soc/syscon@fd484000 : syscon : drivers/staging/media/omap4iss/iss.c : CONFIG_VIDEO_OMAP4 : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/tty/serial/clps711x.c : CONFIG_SERIAL_CLPS711X : n
+-dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/watchdog/ts4800_wdt.c : CONFIG_TS4800_WATCHDOG : n
+
+-dDc-------y- : /timer : arm,armv7-timer : arch/arm/kernel/vdso.c : CONFIG_VDSO : y
+-dDc-------y- : /timer : arm,armv7-timer : drivers/clocksource/arm_arch_timer.c : CONFIG_ARM_ARCH_TIMER : y
 
 
-On 06/08/2016 07:03 PM, Ivan Khoronzhuk wrote:
->
->
-> On 09.06.16 02:11, Schuyler Patton wrote:
->>
->>
->> On 06/08/2016 09:06 AM, Ivan Khoronzhuk wrote:
->>>
->>>
->>> On 08.06.16 17:01, Ivan Khoronzhuk wrote:
->>>> Hi Schuyer,
->>>>
->>>> On 07.06.16 18:26, Schuyler Patton wrote:
->>>>> Hi,
->>>>>
->>>>> On 06/07/2016 08:59 AM, Ivan Khoronzhuk wrote:
->>>>>> There is no reason in rx_descs property because davinici_cpdma
->>>>>> driver splits pool of descriptors equally between tx and rx 
->>>>>> channels.
->>>>>> So, this patch series makes driver to use available number of
->>>>>> descriptors for rx channels.
->>>>>
->>>>> I agree with the idea of consolidating how the descriptors are 
->>>>> defined because of
->>>>> the two variable components, number and size of the pool can be 
->>>>> confusing to
->>>>> end users. I would like to request to change how it is being 
->>>>> proposed here.
->>>>>
->>>>> I think the number of descriptors should be left in the device 
->>>>> tree source file as
->>>>> is and remove the BD size variable and have the driver calculate 
->>>>> the size of the
->>>>> pool necessary to support the descriptor request. From an user 
->>>>> perspective it is
->>>>> easier I think to be able to list the number of descriptors 
->>>>> necessary vs. the size
->>>>> of the pool.
->>>>>
->>>>> Since the patch series points out how it is used so in the driver 
->>>>> so to make that
->>>>> consistent is perhaps change rx_descs to total_descs.
->>>>>
->>>>> Regards,
->>>>> Schuyler
->>>>
->>>> The DT entry for cpsw doesn't have property for size of the pool.
->>>> It contains only BD ram size, if you mean this. The size of the 
->>>> pool is
->>>> software decision. Current version of DT entry contain only rx desc 
->>>> number.
->>>> That is not correct, as it depends on the size of the descriptor, 
->>>> which is also
->>>> h/w parameter. The DT entry has to describe only h/w part and 
->>>> shouldn't contain
->>>> driver implementation details, and I'm looking on it from this 
->>>> perspective.
->>>>
->>>> Besides, rx_descs describes only rx number of descriptors, that are 
->>>> taken from
->>>> the same pool as tx descriptors, and setting rx desc to some new 
->>>> value doesn't
->>>> mean that rest of them are freed for tx. Also, I'm going to send 
->>>> series that
->>>> adds multi channel support to the driver, and in this case, 
->>>> splitting of the
->>>> pool will be more sophisticated than now, after what setting those 
->>>> parameters
->>>> for user (he should do this via device tree) can be even more 
->>>> confusing. But,
->>> should -> shouldn't
->>>
->>>> as it's supposed, it's software decision that shouldn't leak to the 
->>>> DT.
->>
->> If this rx-desc field is removed how will the number of descriptors 
->> be set?
->>
->> This field has been used to increase the number of descriptors so high
->> volume short packets are not dropped due to descriptor exhaustion. 
->> The current
->> default number of 64 rx descriptors is too low for gigabit networks. 
->> Some users
->> have a strong requirement for zero loss of UDP packets setting this 
->> field to a
->> larger number and setting the descriptors off-chip was a means to solve
->> the problem.
-> The current implementation of cpdma driver splits descs num on 2 parts 
-> equally.
-> Total number = 256, then 128 reserved for rx and 128 for tx, but 
-> setting this to
-> 64, simply limits usage of reserved rx descriptors to 64, so that:
-> 64 rx descs, 128 tx descs and 64 are always present in the pool but 
-> cannot be used,
-> (as new rx descriptor is allocated only after previous was freed).
-> That means, 64 rx descs are unused. In case of rx descriptor 
-> exhaustion, an user can
-> set rx_descs to 128, for instance, in this case all descriptors will 
-> be in use, but then question,
-> why intentionally limit number of rx descs, anyway rest 64 descs 
-> cannot be used for other
-> purposes. In case of this patch, all rx descs are in use, and no need 
-> to correct number
-> of rx descs anymore, use all of them....and it doesn't have impact on 
-> performance, as
-> anyway, bunch of rx descs were simply limited by DT and unused. So, 
-> probably, there is no
-> reason to worry about that.
-
-When we see this issue we set the descriptors to DDR and put a large number
-in the desc count. unfortunately I wish I could provide a number, 
-usually the issue
-is a volume burst of short UDP packets.
-
->
-> PS:
-> It doesn't concern this patch, but, which PPS makes rx descs to be 
-> exhausted?...
-> (In this case "desc_alloc_fail" counter contains some value for rx 
-> channel,
-> and can be read with "ethtool -S eth0". Also, the user will be WARNed 
-> ON by the driver)
->
-> it's interesting to test it, I'm worrying about, because in case of 
-> multichannel,
-> the pool is split between all channels... they are throughput limited, 
-> but
-> anyway, it's good to correlate the number of descs with throughput 
-> assigned to
-> a channel, if possible. That has to be possible, if setting to 128 
-> helps, then
-> has to be value between 64 and 128 to make handling of rx packets fast 
-> enough.
-> After what, can be calculated correlation between number of rx descs 
-> and throughput
-> split between channels....
-
-With gigabit networks 64 or 128 rx descriptors is not going to enough to 
-fix the
-DMA overrun problem. Usually we set this number to an arbitrarily large 
-2000
-descriptors in external DDR to demonstrate it is possible to not drop 
-packets. All
-this does is move the problem higher up so that the drops occur in network
-stack if the ARM is overloaded. With the high speed networks I would like
-to propose that the descriptor pool or pools are moved to DDR by 
-default. It would
-be nice to have some reconfigurability or set a pool size that reduces 
-or eliminates
-the DMA issue that is seen in these types of applications.
-
-This test gets used a lot, which is to send very short UDP packets. If I 
-have the math
-right, a 52 byte (64 byte with the inter-frame gap) UDP packet the 
-default 64
-descriptors gets consumed in roughly 33uS. There are the switch fifos 
-which will also
-allow some headroom, but a user was dropping packets at the switch when they
-were bursting 360 packets at the processor on a gigabit link
-
->
->>
->>>>
->>>>
->>>>>>
->>>>>> Based on master branch
->>>>>>
->>>>>> Since v1:
->>>>>> - separate device tree and driver patches
->>>>>> - return number of rx buffers from cpdma driver
->>>>>>
->>>>>> Ivan Khoronzhuk (2):
->>>>>>    net: ethernet: ti: cpsw: remove rx_descs property
->>>>>>    Documentation: DT: cpsw: remove rx_descs property
->>>>>>
->>>>>>   Documentation/devicetree/bindings/net/cpsw.txt |  1 -
->>>>>>   arch/arm/boot/dts/am33xx.dtsi                  |  1 -
->>>>>>   arch/arm/boot/dts/am4372.dtsi                  |  1 -
->>>>>>   arch/arm/boot/dts/dm814x.dtsi                  |  1 -
->>>>>>   arch/arm/boot/dts/dra7.dtsi                    |  1 -
->>>>>>   drivers/net/ethernet/ti/cpsw.c                 | 13 +++----------
->>>>>>   drivers/net/ethernet/ti/cpsw.h                 |  1 -
->>>>>>   drivers/net/ethernet/ti/davinci_cpdma.c        |  6 ++++++
->>>>>>   drivers/net/ethernet/ti/davinci_cpdma.h        |  1 +
->>>>>>   9 files changed, 10 insertions(+), 16 deletions(-)
->>>>>>
->>>>>
->>>>
->>>
->>
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
