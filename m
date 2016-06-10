@@ -1,109 +1,232 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] backlight: lp855x: Add enable regulator
-Date: Fri, 10 Jun 2016 09:28:45 -0700
-Message-ID: <1465576125-118369-1-git-send-email-briannorris@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Stephen Barber <smbarber@chromium.org>, Doug Anderson <dianders@chromium.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Brian Norris <briannorris@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 01/13] pwm: Add new helpers to create/manipulate PWM
+ states
+Date: Fri, 10 Jun 2016 18:29:42 +0200
+Message-ID: <20160610182942.5e7485ff@bbrezillon>
+References: <1465403688-17098-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1465403688-17098-2-git-send-email-boris.brezillon@free-electrons.com>
+	<20160610152109.GQ27142@ulmo.ba.sec>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20160610152109.GQ27142@ulmo.ba.sec>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Brian Norris <briannorris@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The LP8556 datasheet describes an EN/VDDIO input, which serves "both as
-a chip enable and as a power supply reference for PWM, SDA, and SCL
-inputs." The LP8556 that I'm testing doesn't respond properly if I try
-to talk I2C to it too quickly after enabling VDDIO, and the LP8555
-datasheet mentions a t_RESPONSE delay of up to 1 millisecond.
+Hi Thierry,
 
-Support this EN/VDDIO by adding a regulator property to the binding;
-enabling this regulator at probe time; and sleeping for 1 to 2ms, if the
-EN/VDDIO regulator was provided.
+On Fri, 10 Jun 2016 17:21:09 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- .../devicetree/bindings/leds/backlight/lp855x.txt  |  2 ++
- drivers/video/backlight/lp855x_bl.c                | 29 ++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+> On Wed, Jun 08, 2016 at 06:34:36PM +0200, Boris Brezillon wrote:
+> > The pwm_prepare_new_state() helper prepares a new state object
+> > containing the current PWM state except for the polarity and period
+> > fields which are set to the reference values.
+> > This is particurly useful for PWM users who want to apply a new
+> > duty-cycle expressed relatively to the reference period without
+> > changing the enable state.
+> > 
+> > The PWM framework expect PWM users to configure the duty cycle in
+> > nanosecond, but most users just want to express this duty cycle
+> > relatively to the period value (i.e. duty_cycle = 33% of the period).
+> > Add pwm_{get,set}_relative_duty_cycle() helpers to ease this kind of
+> > conversion.  
+> 
+> This looks pretty useful and good, though I think these could be two
+> separate patches. A couple of suggestions on wording and such below.
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/lp855x.txt b/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-index 0a3ecbc3a1b9..88f56641fc28 100644
---- a/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-+++ b/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-@@ -13,6 +13,7 @@ Optional properties:
-   - rom-addr: Register address of ROM area to be updated (u8)
-   - rom-val: Register value to be updated (u8)
-   - power-supply: Regulator which controls the 3V rail
-+  - enable-supply: Regulator which controls the EN/VDDIO input
- 
- Example:
- 
-@@ -57,6 +58,7 @@ Example:
- 	backlight@2c {
- 		compatible = "ti,lp8557";
- 		reg = <0x2c>;
-+		enable-supply = <&backlight_vddio>;
- 		power-supply = <&backlight_vdd>;
- 
- 		dev-ctrl = /bits/ 8 <0x41>;
-diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
-index e5b14f52628f..7e1f9a78674e 100644
---- a/drivers/video/backlight/lp855x_bl.c
-+++ b/drivers/video/backlight/lp855x_bl.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/i2c.h>
- #include <linux/backlight.h>
-+#include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/of.h>
- #include <linux/platform_data/lp855x.h>
-@@ -74,6 +75,7 @@ struct lp855x {
- 	struct lp855x_platform_data *pdata;
- 	struct pwm_device *pwm;
- 	struct regulator *supply;	/* regulator for VDD input */
-+	struct regulator *enable;	/* regulator for EN/VDDIO input */
- };
- 
- static int lp855x_write_byte(struct lp855x *lp, u8 reg, u8 data)
-@@ -433,6 +435,19 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 		lp->supply = NULL;
- 	}
- 
-+	lp->enable = devm_regulator_get_optional(lp->dev, "enable");
-+	if (IS_ERR(lp->enable)) {
-+		ret = PTR_ERR(lp->enable);
-+		if (ret == -ENODEV) {
-+			lp->enable = NULL;
-+		} else {
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(lp->dev, "error getting enable regulator: %d\n",
-+					ret);
-+			return ret;
-+		}
-+	}
-+
- 	if (lp->supply) {
- 		ret = regulator_enable(lp->supply);
- 		if (ret < 0) {
-@@ -441,6 +456,20 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 		}
- 	}
- 
-+	if (lp->enable) {
-+		ret = regulator_enable(lp->enable);
-+		if (ret < 0) {
-+			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
-+			return ret;
-+		}
-+
-+		/*
-+		 * TS8555 datasheet says t_RESPONSE (time between VDDIO and
-+		 * I2C) is 1ms.
-+		 */
-+		usleep_range(1000, 2000);
-+	}
-+
- 	i2c_set_clientdata(cl, lp);
- 
- 	ret = lp855x_configure(lp);
+Sure, I can split those changes.
+
+> 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > ---
+> >  include/linux/pwm.h | 81 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 81 insertions(+)
+> > 
+> > diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> > index 17018f3..e09babf 100644
+> > --- a/include/linux/pwm.h
+> > +++ b/include/linux/pwm.h
+> > @@ -148,6 +148,87 @@ static inline void pwm_get_args(const struct pwm_device *pwm,
+> >  }
+> >  
+> >  /**
+> > + * pwm_prepare_new_state() - prepare a new state to be applied with
+> > + *			     pwm_apply_state()  
+> 
+> This is weirdly indented.
+
+I'll fix the indentation.
+
+> 
+> > + * @pwm: PWM device
+> > + * @state: state to fill with the prepared PWM state
+> > + *
+> > + * This functions prepares a state that can later be tweaked and applied
+> > + * to the PWM device with pwm_apply_state(). This is a convenient function
+> > + * that first retrieves the current PWM state and the replaces the period
+> > + * and polarity fields with the reference values defined in pwm->args.
+> > + * Once the new state is created you can adjust the ->enable and ->duty_cycle  
+> 
+> "created" has the connotation of allocating. Perhaps: "Once the function
+> returns, you can adjust the ->enabled and ->duty_cycle fields according
+> to your needs before calling pwm_apply_state()."?
+
+Okay.
+
+> 
+> Also note that the field is called ->enabled.
+> 
+> > + * according to your need before calling pwm_apply_state().  
+> 
+> Maybe mention that the ->duty_cycle field is explicitly zeroed. Then
+> again, do we really need it? If users are going to overwrite it anyway,
+> do we even need to bother? I suppose it makes some sense because the
+> current duty cycle is stale when the ->period gets set to the value from
+> args. I think the documentation should mention this in some way.
+
+Yes, if we keep the current duty_cycle it can exceed the period value.
+I'm fine dropping the ->duty_cycle = 0 assignment and documenting the
+behavior.
+
+> 
+> > + */
+> > +static inline void pwm_prepare_new_state(const struct pwm_device *pwm,
+> > +					 struct pwm_state *state)  
+> 
+> Perhaps choose a shorter name, such as: pwm_init_state()?
+
+Sure.
+
+> 
+> > +{
+> > +	struct pwm_args args;
+> > +
+> > +	/* First get the current state. */
+> > +	pwm_get_state(pwm, state);
+> > +
+> > +	/* Then fill it with the reference config */
+> > +	pwm_get_args(pwm, &args);
+> > +
+> > +	state->period = args.period;
+> > +	state->polarity = args.polarity;
+> > +	state->duty_cycle = 0;
+> > +}
+> > +
+> > +/**
+> > + * pwm_get_relative_duty_cycle() - Get a relative duty_cycle value
+> > + * @state: the PWM state to extract period and duty_cycle from
+> > + * @scale: the scale you want to use for you relative duty_cycle value  
+> 
+> Other kerneldoc comments in this file don't prefix the description with
+> "the".
+> 
+> Also, perhaps the following descriptions would be slightly less
+> confusing:
+> 
+> 	@state: PWM state to extract the duty cycle from
+
+Agreed.
+
+> 
+> We don't extract (i.e. return) period from the state, so it's a little
+> confusing to mention it here.
+> 
+> 	@scale: scale in which to return the relative duty cycle
+> 
+> This is slightly more explicit in that it says what the returned duty
+> cycle will be in. Perhaps as an alternative:
+> 
+> 	@scale: target scale of the relative duty cycle
+
+I'll go for this one.
+
+> 
+> > + *
+> > + * This functions converts the absolute duty_cycle stored in @state
+> > + * (expressed in nanosecond) into a relative value.  
+> 
+> Perhaps: "... into a value relative to the period."?
+
+Okay.
+
+> 
+> > + * For example if you want to get the duty_cycle expressed in nanosecond,  
+> 
+> The example below would give you the duty cycle in percent, not
+> nanoseconds, right?
+
+Absolutely. I'll fix that.
+
+> 
+> > + * call:
+> > + *
+> > + * pwm_get_state(pwm, &state);
+> > + * duty = pwm_get_relative_duty_cycle(&state, 100);
+> > + */
+> > +static inline unsigned int
+> > +pwm_get_relative_duty_cycle(const struct pwm_state *state, unsigned int scale)
+> > +{
+> > +	if (!state->period)
+> > +		return 0;
+> > +
+> > +	return DIV_ROUND_CLOSEST_ULL((u64)state->duty_cycle * scale,
+> > +				     state->period);
+> > +}
+> > +
+> > +/**
+> > + * pwm_set_relative_duty_cycle() - Set a relative duty_cycle value
+> > + * @state: the PWM state to fill
+> > + * @val: the relative duty_cycle value
+> > + * @scale: the scale you use for you relative duty_cycle value  
+> 
+> "scale in which @duty_cycle is expressed"?
+
+Yep.
+
+> 
+> > + *
+> > + * This functions converts a relative duty_cycle stored into an absolute
+> > + * one (expressed in nanoseconds), and put the result in state->duty_cycle.
+> > + * For example if you want to change configure a 50% duty_cycle, call:
+> > + *
+> > + * pwm_prepare_new_state(pwm, &state);
+> > + * pwm_set_relative_duty_cycle(&state, 50, 100);
+> > + * pwm_apply_state(pwm, &state);
+> > + */
+> > +static inline void
+> > +pwm_set_relative_duty_cycle(struct pwm_state *state, unsigned int val,  
+> 
+> Any reason why we can't call "val" "duty_cycle"? That's what it is,
+> after all.
+
+Nope, I'll switch to duty_cycle.
+
+> 
+> > +			    unsigned int scale)
+> > +{
+> > +	if (!scale)
+> > +		return;
+> > +
+> > +	/* Make sure we don't have duty_cycle > period */
+> > +	if (val > scale)
+> > +		val = scale;  
+> 
+> Can we return -EINVAL for both of the above checks? I don't like
+> silently clamping the duty cycle that the user passed in.
+
+I'm fine returning -EINVAL in this case.
+
+Thanks for rewording some of my sentences and reviewing the patch.
+
+Regards,
+
+Boris
+
 -- 
-2.8.0.rc3.226.g39d4020
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
