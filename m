@@ -1,43 +1,47 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 2/7] ARM: OMAP3: hwmod data: Fix
-	McBSP2/3 sidetone data
-Date: Fri, 10 Jun 2016 05:08:30 -0700
-Message-ID: <20160610120830.GM22406@atomide.com>
-References: <20160530082350.24285-1-peter.ujfalusi@ti.com>
- <20160530082350.24285-3-peter.ujfalusi@ti.com>
+From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] net: ethernet: Add TSE PCS support to
+ dwmac-socfpga
+Date: Fri, 10 Jun 2016 14:09:54 +0200
+Message-ID: <6ab2c663-5559-5818-5357-6801ff452dfb@st.com>
+References: <1465268516-31480-1-git-send-email-thloh@altera.com>
+ <ab65dd4e-830a-c774-c8fa-1adfb3be1a69@st.com>
+ <1465451310.4467.21.camel@ubuntu>
+ <ac036ba2-c9ce-1fb4-89e3-9af499954907@st.com>
+ <1465539145.4467.42.camel@ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20160530082350.24285-3-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: devicetree@vger.kernel.org, paul@pwsan.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, jarkko.nikula@bitmer.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465539145.4467.42.camel@ubuntu>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thloh85-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [160530 01:26]:
-> The McBSPLP's sidetone main clock is the McBSPLP's ICLK, not FCLK as the
-> sidetone only receives the ICLK from the main McBSP module.
-> Since the McBSP and sidetone is using the very same clock from PRCM level
-> the sidetone must not have the prcm section to check the clock status since
-> the sidetone is only used when McBSP is already configured.
-> If two separate hwmods looking at the same bit and they would use
-> pm_runtime in nested way (as it must happen with McBSP and it's ST module)
-> the hwmod would warn, because the idlest will not match what it is expected
-> after enable/disable of the clocks.
+Hello Tien Hock
 
-OK thanks for fixing this. I'm applying patches 2-7 into
-omap-for-v4.8/soc.
+On 6/10/2016 8:12 AM, Tien Hock Loh wrote:
+>>> Yeah the PCS support for TSE is Altera. To avoid confusion, let's rename
+>>> > > them, would altr_tse_pcs.[hc] be good? I don't think creating a
+>>> > > sub-directory with only 2 files is necessary though.
+>> >
+>> > ok for two files w/o sub-dir.
+>> >
+>>> > >
+>>> > > I see that stmmac.txt is generic, and other vendor's PCS support
+>>> > > documents their specific uses in their own *-dwmac.txt (eg.
+>>> > > rockchip-dwmac.txt). Is this not the case?
+>> >
+>> > yes you can use this name convention. I let you decide.
+> What I meant was we've documented the bindings in socfpga-dwmac.txt for
+> platform specific bindings, and I won't be updating stmmac.txt because
+> that is the generic driver binding. Agree?
 
-Regards,
+ok if you documented all in socfpga-dwmac.txt
 
-Tony
+peppe
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
