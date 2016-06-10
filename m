@@ -1,44 +1,103 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 06/11] Documentation: mmc: sdhci-of-arasan: Add ability
- to export card clock
-Date: Fri, 10 Jun 2016 08:10:52 -0500
-Message-ID: <20160610131052.GA9351@rob-hp-laptop>
-References: <1465339484-969-1-git-send-email-dianders@chromium.org>
- <1465339484-969-7-git-send-email-dianders@chromium.org>
- <20160608201923.GA20683@rob-hp-laptop>
- <CAD=FV=WX_bu-dmALkSmPPrWeatfjJND3M59GJoVEr6bv0vLq9Q@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v10 09/14] usb: of: add an API to get OTG device from USB controller node
+Date: Fri, 10 Jun 2016 16:07:18 +0300
+Message-ID: <1465564043-27163-10-git-send-email-rogerq@ti.com>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WX_bu-dmALkSmPPrWeatfjJND3M59GJoVEr6bv0vLq9Q@mail.gmail.com>
+In-Reply-To: <1465564043-27163-1-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, Ziyuan Xu <xzy.xu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Adrian Hunter <adrian.hunter@intel.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: peter.chen@freescale.com
+Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 08, 2016 at 01:52:20PM -0700, Doug Anderson wrote:
-> Rob,
-> 
-> On Wed, Jun 8, 2016 at 1:19 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Tue, Jun 07, 2016 at 03:44:39PM -0700, Douglas Anderson wrote:
-> >> Some SD/eMMC PHYs (like the PHY from Arasan that is designed to work
-> >> with arasan,sdhci-5.1) need to know the card clock in order to function
-> >> properly.  Let's expose this clock using a standard device tree
-> >> mechanism so that the PHY can get access to and query the card clock.
-> >
-> > Need to know the clock freq or need the clock? The former doesn't need
-> > to be in DT.
-> 
-> The PHY needs to know the card clock frequency.  This clock clock
-> frequency is known nowhere else in the system except the SDHCI driver
-> since the SDHCI component takes its input clock and applies some
-> dividers to get the card clock.  In silicon, the SDHCI component and
-> the PHY are separate and there is a physical clock signal going from
-> the SDHCI component to the PHY component, so modeling this as a clock
-> in in the device tree seems sane, doesn't it?
+The OTG controller and the USB controller can be linked via the
+'otg-controller' property in the USB controller's device node.
 
-Yes, please just re-word it to make it clear there is a connection. With 
-that,
+of_usb_get_otg() can be used to get the OTG controller device
+from the USB controller's device node.
 
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Acked-by: Peter Chen <peter.chen@nxp.com>
 Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/usb/generic.txt |  3 +++
+ drivers/usb/common/common.c                       | 27 +++++++++++++++++++++++
+ include/linux/usb/of.h                            |  9 ++++++++
+ 3 files changed, 39 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+index bba8257..f6866c1 100644
+--- a/Documentation/devicetree/bindings/usb/generic.txt
++++ b/Documentation/devicetree/bindings/usb/generic.txt
+@@ -24,6 +24,9 @@ Optional properties:
+ 			optional for OTG device.
+  - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
+ 			optional for OTG device.
++ - otg-controller: phandle to otg controller. Host or gadget controllers can
++			contain this property to link it to a particular OTG
++			controller.
+ 
+ This is an attribute to a USB controller such as:
+ 
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index e3d0161..d7ec471 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -238,6 +238,33 @@ int of_usb_update_otg_caps(struct device_node *np,
+ }
+ EXPORT_SYMBOL_GPL(of_usb_update_otg_caps);
+ 
++#ifdef CONFIG_USB_OTG
++/**
++ * of_usb_get_otg - get the OTG controller linked to the USB controller
++ * @np: Pointer to the device_node of the USB controller
++ * @otg_caps: Pointer to the target usb_otg_caps to be set
++ *
++ * Returns the OTG controller device or NULL on error.
++ */
++struct device *of_usb_get_otg(struct device_node *np)
++{
++	struct device_node *otg_np;
++	struct platform_device *pdev;
++
++	otg_np = of_parse_phandle(np, "otg-controller", 0);
++	if (!otg_np)
++		return NULL;
++
++	pdev = of_find_device_by_node(otg_np);
++	of_node_put(otg_np);
++	if (!pdev)
++		return NULL;
++
++	return &pdev->dev;
++}
++EXPORT_SYMBOL_GPL(of_usb_get_otg);
++#endif
++
+ #endif
+ 
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+index de3237f..499a4e8 100644
+--- a/include/linux/usb/of.h
++++ b/include/linux/usb/of.h
+@@ -40,6 +40,15 @@ static inline struct device_node *usb_of_get_child_node
+ }
+ #endif
+ 
++#if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_OTG)
++struct device *of_usb_get_otg(struct device_node *np);
++#else
++static inline struct device *of_usb_get_otg(struct device_node *np)
++{
++	return NULL;
++}
++#endif
++
+ #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
+ enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np);
+ #else
+-- 
+2.7.4
