@@ -1,29 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] Documentation: Add documentation for APM X-Gene
- SoC PMU DTS binding
-Date: Fri, 10 Jun 2016 12:57:18 -0500
-Message-ID: <20160610175718.GA27378@rob-hp-laptop>
-References: <1465521892-31420-1-git-send-email-ttnguyen@apm.com>
- <1465521892-31420-3-git-send-email-ttnguyen@apm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] soc: qcom: Update properties for smem state referencing
+Date: Fri, 10 Jun 2016 12:58:47 -0500
+Message-ID: <20160610175847.GA31060@rob-hp-laptop>
+References: <1465531882-25967-1-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465521892-31420-3-git-send-email-ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+In-Reply-To: <1465531882-25967-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 09, 2016 at 06:24:50PM -0700, Tai Nguyen wrote:
-> Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+On Thu, Jun 09, 2016 at 09:11:22PM -0700, Bjorn Andersson wrote:
+> Update the property names to match device tree bindings, the correct
+> values should be qcom,smem-states and qcom,smem-state-names.
+> 
+> Also update the #qcom,smem-state-cells for consistency, before we merge
+> any users of these properties.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  .../devicetree/bindings/perf/apm-xgene-pmu.txt     | 112 +++++++++++++++++++++
->  1 file changed, 112 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+>  Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt |  4 ++--
+>  Documentation/devicetree/bindings/soc/qcom/qcom,smsm.txt  |  4 ++--
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/soc/qcom/smem_state.c                             | 12 ++++++------
+>  3 files changed, 10 insertions(+), 10 deletions(-)
