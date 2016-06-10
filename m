@@ -1,65 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] drm: Add DT bindings documentation for OpenCores
- VGA/LCD controller
-Date: Fri, 10 Jun 2016 12:36:21 -0500
-Message-ID: <20160610173621.GA17641@rob-hp-laptop>
-References: <1465479199-9810-1-git-send-email-andrea.merello@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Update Renesas R-Car FCP DT binding
+Date: Fri, 10 Jun 2016 12:37:24 -0500
+Message-ID: <20160610173724.GA19923@rob-hp-laptop>
+References: <1465479695-18644-1-git-send-email-kieran@bingham.xyz>
+ <1465479695-18644-2-git-send-email-kieran@bingham.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465479199-9810-1-git-send-email-andrea.merello@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrea Merello <andrea.merello@gmail.com>
-Cc: Claudio Lorini <claudio.lorini@iit.it>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Francesco Diotalevi <francesco.diotalevi@iit.it>
+In-Reply-To: <1465479695-18644-2-git-send-email-kieran@bingham.xyz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kieran Bingham <kieran@ksquared.org.uk>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-media@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdW4gMDksIDIwMTYgYXQgMDM6MzM6MTlQTSArMDIwMCwgQW5kcmVhIE1lcmVsbG8g
-d3JvdGU6Cj4gU2lnbmVkLW9mZi1ieTogQW5kcmVhIE1lcmVsbG8gPGFuZHJlYS5tZXJlbGxvQGdt
-YWlsLmNvbT4KPiBDYzogU3RlZmFuIEtyaXN0aWFuc3NvbiA8c3RlZmFuLmtyaXN0aWFuc3NvbkBz
-YXVuYWxhaHRpLmZpPgo+IENjOiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29t
-Pgo+IENjOiBGcmFuY2VzY28gRGlvdGFsZXZpIDxmcmFuY2VzY28uZGlvdGFsZXZpQGlpdC5pdD4K
-PiBDYzogQ2xhdWRpbyBMb3JpbmkgPGNsYXVkaW8ubG9yaW5pQGlpdC5pdD4KPiAtLS0KPiAgLi4u
-L2JpbmRpbmdzL2Rpc3BsYXkvb3BlbmNvcmVzLG9jZHJtLnR4dCAgICAgICAgICAgfCAyNyArKysr
-KysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspCj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9vcGVuY29yZXMsb2Nkcm0udHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L29wZW5jb3JlcyxvY2RybS50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9vcGVuY29yZXMsb2Nkcm0udHh0Cj4g
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi44ZDM2ZGU1Cj4gLS0tIC9kZXYv
-bnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L29w
-ZW5jb3JlcyxvY2RybS50eHQKPiBAQCAtMCwwICsxLDI3IEBACj4gK09wZW5Db3JlcyBWR0EvTENE
-IGNvbnRyb2xsZXIKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTog
-Im9wZW5jb3JlcyxvY2RybSIKCk5hbWUgdGhpcyBiYXNlZCBvbiB3aGF0IHRoZSBoL3cgYmxvY2sg
-aXMgY2FsbGVkLCBub3QgYSBMaW51eCBzdWJzeXN0ZW0uCgpJcyB0aGVyZSBhbnkgc29ydCBvZiB2
-ZXJzaW9uaW5nIGZvciBPcGVuQ29yZSBJUCB0aGF0IHlvdSBjYW4gaW5jbHVkZSBpbiAKdGhlIG5h
-bWU/Cgo+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNv
-bnRyb2xsZXIncyByZWdpc3RlcnMuCj4gKy0gY2xvY2tzOiBNdXN0IGNvbnRhaW4gYW4gZW50cnkg
-Zm9yIHRoZSBwaXhlbGNsb2NrIGdlbmVyYXRvci4KPiArICBTZWUgLi4vY2xvY2tzL2Nsb2NrLWJp
-bmRpbmdzLnR4dCBmb3IgZGV0YWlscy4KPiArCj4gK1JlcXVpcmVkIHN1Yi1ub2RlczoKPiArLSBw
-b3J0OiB0aGUgY29ubmVjdGlvbiB0byBhIERSTSBicmlkZ2UuICBUaGUgY29ubmVjdGlvbiBpcyBt
-b2RlbGxlZAoKRG9uJ3QgaW5jbHVkZSBMaW51eCBkcml2ZXIgZGV0YWlscyAoRFJNKSBpbiBiaW5k
-aW5ncy4KCj4gKyAgdXNpbmcgdGhlIE9GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBpbgo+ICsg
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gKwo+ICtFeGFt
-cGxlOgo+ICsKPiArb2Nkcm1ANDNjMTAwMDAgewo+ICsJY29tcGF0aWJsZSA9ICJvcGVuY29yZXMs
-b2NmYi1kcm0iOwoKRG9lc24ndCBtYXRjaCB0aGUgYWJvdmUgYW5kIGV2ZW4gd29yc2UgbmFtaW5n
-LgoKPiArCXJlZyA9IDwweDQzYzEwMDAwIDB4MTAwMDA+Owo+ICsJY2xvY2tzID0gPCZwaXhfY2xv
-Y2s+Owo+ICsJcG9ydHMgewo+ICsJCXBvcnRAMCB7CgpTaW5nbGUgcG9ydCBkb2Vzbid0IG5lZWQg
-YSB1bml0IGFkZHJlc3MuCgo+ICsJCQlyZ2Jfb3V0OiBlbmRwb2ludCB7Cj4gKwkJCQlyZW1vdGUt
-ZW5kcG9pbnQgPSA8JmJyaWRnZV9pbj47Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gK307Cj4g
-LS0gCj4gMS45LjEKPiAKPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5k
-IHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+IHRoZSBib2R5IG9mIGEgbWVz
-c2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBh
-dCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Jun 09, 2016 at 02:41:32PM +0100, Kieran Bingham wrote:
+> The FCP driver, can also support the FCPF variant for FDP1 compatible
+
+Drop the comma.
+
+> processing.
+> 
+> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
+> ---
+>  Documentation/devicetree/bindings/media/renesas,fcp.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+
+With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
