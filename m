@@ -1,114 +1,438 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2] backlight: lp855x: Add enable regulator
-Date: Fri, 10 Jun 2016 12:39:57 -0700
-Message-ID: <1465587597-131467-1-git-send-email-briannorris@chromium.org>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v7 1/3] firmware: Amlogic: Add secure monitor driver
+Date: Fri, 10 Jun 2016 21:44:09 +0200
+Message-ID: <1465587851-24184-2-git-send-email-carlo@caione.org>
+References: <1465587851-24184-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465587851-24184-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The LP8556 datasheet describes an EN/VDDIO input, which serves "both as
-a chip enable and as a power supply reference for PWM, SDA, and SCL
-inputs." The LP8556 that I'm testing doesn't respond properly if I try
-to talk I2C to it too quickly after enabling VDDIO, and the LP8555
-datasheet mentions a t_RESPONSE delay of up to 1 millisecond.
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Support this EN/VDDIO by adding a regulator property to the binding;
-enabling this regulator at probe time; and sleeping for 1 to 2ms, if the
-EN/VDDIO regulator was provided.
+Introduce a driver to provide calls into secure monitor mode.
 
-Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In the Amlogic SoCs these calls are used for multiple reasons: access to
+NVMEM, set USB boot, enable JTAG, etc...
+
+Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 ---
-v2: s/TS8555/LP8555/ in comment (typo)
+ drivers/firmware/Kconfig                |   1 +
+ drivers/firmware/Makefile               |   1 +
+ drivers/firmware/meson/Kconfig          |   8 +
+ drivers/firmware/meson/Makefile         |   1 +
+ drivers/firmware/meson/meson_sm.c       | 312 ++++++++++++++++++++++++++++++++
+ include/linux/firmware/meson/meson_sm.h |  32 ++++
+ 6 files changed, 355 insertions(+)
+ create mode 100644 drivers/firmware/meson/Kconfig
+ create mode 100644 drivers/firmware/meson/Makefile
+ create mode 100644 drivers/firmware/meson/meson_sm.c
+ create mode 100644 include/linux/firmware/meson/meson_sm.h
 
- .../devicetree/bindings/leds/backlight/lp855x.txt  |  2 ++
- drivers/video/backlight/lp855x_bl.c                | 29 ++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/leds/backlight/lp855x.txt b/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-index 0a3ecbc3a1b9..88f56641fc28 100644
---- a/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-+++ b/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-@@ -13,6 +13,7 @@ Optional properties:
-   - rom-addr: Register address of ROM area to be updated (u8)
-   - rom-val: Register value to be updated (u8)
-   - power-supply: Regulator which controls the 3V rail
-+  - enable-supply: Regulator which controls the EN/VDDIO input
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 6664f11..686e395 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -199,5 +199,6 @@ config HAVE_ARM_SMCCC
+ source "drivers/firmware/broadcom/Kconfig"
+ source "drivers/firmware/google/Kconfig"
+ source "drivers/firmware/efi/Kconfig"
++source "drivers/firmware/meson/Kconfig"
  
- Example:
+ endmenu
+diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+index 474bada..fc4bb09 100644
+--- a/drivers/firmware/Makefile
++++ b/drivers/firmware/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_QCOM_SCM_32)	+= qcom_scm-32.o
+ CFLAGS_qcom_scm-32.o :=$(call as-instr,.arch armv7-a\n.arch_extension sec,-DREQUIRES_SEC=1) -march=armv7-a
  
-@@ -57,6 +58,7 @@ Example:
- 	backlight@2c {
- 		compatible = "ti,lp8557";
- 		reg = <0x2c>;
-+		enable-supply = <&backlight_vddio>;
- 		power-supply = <&backlight_vdd>;
- 
- 		dev-ctrl = /bits/ 8 <0x41>;
-diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
-index e5b14f52628f..939f057836e1 100644
---- a/drivers/video/backlight/lp855x_bl.c
-+++ b/drivers/video/backlight/lp855x_bl.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/i2c.h>
- #include <linux/backlight.h>
-+#include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/of.h>
- #include <linux/platform_data/lp855x.h>
-@@ -74,6 +75,7 @@ struct lp855x {
- 	struct lp855x_platform_data *pdata;
- 	struct pwm_device *pwm;
- 	struct regulator *supply;	/* regulator for VDD input */
-+	struct regulator *enable;	/* regulator for EN/VDDIO input */
- };
- 
- static int lp855x_write_byte(struct lp855x *lp, u8 reg, u8 data)
-@@ -433,6 +435,19 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 		lp->supply = NULL;
- 	}
- 
-+	lp->enable = devm_regulator_get_optional(lp->dev, "enable");
-+	if (IS_ERR(lp->enable)) {
-+		ret = PTR_ERR(lp->enable);
-+		if (ret == -ENODEV) {
-+			lp->enable = NULL;
-+		} else {
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(lp->dev, "error getting enable regulator: %d\n",
-+					ret);
-+			return ret;
-+		}
+ obj-y				+= broadcom/
++obj-y				+= meson/
+ obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
+ obj-$(CONFIG_EFI)		+= efi/
+ obj-$(CONFIG_UEFI_CPER)		+= efi/
+diff --git a/drivers/firmware/meson/Kconfig b/drivers/firmware/meson/Kconfig
+new file mode 100644
+index 0000000..fff11a3
+--- /dev/null
++++ b/drivers/firmware/meson/Kconfig
+@@ -0,0 +1,8 @@
++#
++# Amlogic Secure Monitor driver
++#
++config MESON_SM
++	bool
++	default ARCH_MESON
++	help
++	  Say y here to enable the Amlogic secure monitor driver
+diff --git a/drivers/firmware/meson/Makefile b/drivers/firmware/meson/Makefile
+new file mode 100644
+index 0000000..9ab3884
+--- /dev/null
++++ b/drivers/firmware/meson/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_MESON_SM) +=	meson_sm.o
+diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
+new file mode 100644
+index 0000000..ef548ad
+--- /dev/null
++++ b/drivers/firmware/meson/meson_sm.c
+@@ -0,0 +1,312 @@
++/*
++ * Amlogic Secure Monitor driver
++ *
++ * Copyright (C) 2016 Endless Mobile, Inc.
++ * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program. If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <stdarg.h>
++#include <asm/cacheflush.h>
++#include <asm/compiler.h>
++#include <linux/arm-smccc.h>
++#include <linux/io.h>
++#include <linux/ioport.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/smp.h>
++#include <linux/firmware/meson/meson_sm.h>
++
++struct meson_sm_cmd {
++	unsigned int index;
++	u32 smc_id;
++};
++#define CMD(d, s) { .index = (d), .smc_id = (s), }
++
++struct meson_sm_chip {
++	unsigned int shmem_size;
++	u32 cmd_shmem_in_base;
++	u32 cmd_shmem_out_base;
++	struct meson_sm_cmd cmd[];
++};
++
++struct meson_sm_firmware {
++	struct device *dev;
++	const struct meson_sm_chip *chip;
++	void __iomem *sm_shmem_in_base;
++	void __iomem *sm_shmem_out_base;
++};
++
++struct meson_sm_chip gxbb_chip = {
++	.shmem_size		= 0x1000,
++	.cmd_shmem_in_base	= 0x82000020,
++	.cmd_shmem_out_base	= 0x82000021,
++	.cmd = {
++		CMD(SM_EFUSE_READ,	0x82000030),
++		CMD(SM_EFUSE_WRITE,	0x82000031),
++		CMD(SM_EFUSE_USER_MAX,	0x82000033),
++		{ /* sentinel */ },
++	},
++};
++
++static u32 meson_sm_get_cmd(const struct meson_sm_chip *chip, unsigned int cmd_index)
++{
++	unsigned int i;
++
++	for (i = 0; chip->cmd[i].smc_id; i++)
++		if (chip->cmd[i].index == cmd_index)
++			return chip->cmd[i].smc_id;
++
++	return 0;
++}
++
++static u32 __meson_sm_call(u32 cmd, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(cmd, arg0, arg1, arg2, arg3, arg4, 0, 0, &res);
++	return res.a0;
++}
++
++static void __iomem *meson_sm_map_shmem(u32 cmd_shmem, unsigned int size)
++{
++	u32 sm_phy_base;
++
++	sm_phy_base = __meson_sm_call(cmd_shmem, 0, 0, 0, 0, 0);
++	if (!sm_phy_base)
++		return 0;
++
++	return ioremap_cache(sm_phy_base, size);
++}
++
++/**
++ * meson_sm_call - generic SMC32 call to the secure-monitor
++ *
++ * @fw:		Meson secure-monitor firmware pointer
++ * @cmd_index:	Index of the SMC32 function ID
++ * @ret:	Returned value
++ * @arg0:	SMC32 Argument 0
++ * @arg1:	SMC32 Argument 1
++ * @arg2:	SMC32 Argument 2
++ * @arg3:	SMC32 Argument 3
++ * @arg4:	SMC32 Argument 4
++ *
++ * Return:	0 on success, a negative value on error
++ */
++int meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_index,
++		  u32 *ret, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
++{
++	u32 cmd, lret;
++
++	if (!fw)
++		return -EINVAL;
++
++	cmd = meson_sm_get_cmd(fw->chip, cmd_index);
++	if (!cmd)
++		return -EINVAL;
++
++	lret = __meson_sm_call(cmd, arg0, arg1, arg2, arg3, arg4);
++
++	if (ret)
++		*ret = lret;
++
++	return 0;
++}
++EXPORT_SYMBOL(meson_sm_call);
++
++/**
++ * meson_sm_call_read - retrieve data from secure-monitor
++ *
++ * @fw:		Meson secure-monitor firmware pointer
++ * @buffer:	Buffer to store the retrieved data
++ * @cmd_index:	Index of the SMC32 function ID
++ * @arg0:	SMC32 Argument 0
++ * @arg1:	SMC32 Argument 1
++ * @arg2:	SMC32 Argument 2
++ * @arg3:	SMC32 Argument 3
++ * @arg4:	SMC32 Argument 4
++ *
++ * Return:	size of read data on success, a negative value on error
++ */
++int meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,
++		       unsigned int cmd_index, u32 arg0, u32 arg1,
++		       u32 arg2, u32 arg3, u32 arg4)
++{
++	u32 size;
++
++	if (!fw->chip->cmd_shmem_out_base)
++		return -EINVAL;
++
++	if (meson_sm_call(fw, cmd_index, &size, arg0, arg1, arg2, arg3, arg4) < 0)
++		return -EINVAL;
++
++	if (!size || size > fw->chip->shmem_size)
++		return -EINVAL;
++
++	if (buffer)
++		memcpy(buffer, fw->sm_shmem_out_base, size);
++
++	return size;
++}
++EXPORT_SYMBOL(meson_sm_call_read);
++
++/**
++ * meson_sm_call_write - send data to secure-monitor
++ *
++ * @fw:		Meson secure-monitor firmware pointer
++ * @buffer:	Buffer containing data to send
++ * @b_size:	Size of the data to send
++ * @cmd_index:	Index of the SMC32 function ID
++ * @arg0:	SMC32 Argument 0
++ * @arg1:	SMC32 Argument 1
++ * @arg2:	SMC32 Argument 2
++ * @arg3:	SMC32 Argument 3
++ * @arg4:	SMC32 Argument 4
++ *
++ * Return:	size of sent data on success, a negative value on error
++ */
++int meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
++			unsigned int b_size, unsigned int cmd_index,
++			u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
++{
++	u32 size;
++
++	if (b_size > fw->chip->shmem_size)
++		return -EINVAL;
++
++	if (!fw->chip->cmd_shmem_in_base)
++		return -EINVAL;
++
++	memcpy(fw->sm_shmem_in_base, buffer, b_size);
++
++	if (meson_sm_call(fw, cmd_index, &size, arg0, arg1, arg2, arg3, arg4) < 0)
++		return -EINVAL;
++
++	if (!size)
++		return -EINVAL;
++
++	return size;
++}
++EXPORT_SYMBOL(meson_sm_call_write);
++
++/**
++ * meson_sm_get_fw - get Meson firmware struct
++ *
++ * @firmware_node:	Device node of the secure-monitor
++ *
++ * Return:		Meson secure-monitor firmware struct on success, NULL on error
++ */
++struct meson_sm_firmware *meson_sm_get_fw(struct device_node *firmware_node)
++{
++	struct platform_device *pdev = of_find_device_by_node(firmware_node);
++
++	/*
++	 * Returns NULL is the firmware device is not ready.
++	 */
++	if (!pdev)
++		return NULL;
++
++	return platform_get_drvdata(pdev);
++}
++EXPORT_SYMBOL(meson_sm_get_fw);
++
++static const struct of_device_id meson_sm_ids[] = {
++	{ .compatible = "amlogic,meson-gxbb-sm", .data = &gxbb_chip },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, meson_sm_ids);
++
++static int meson_sm_probe(struct platform_device *pdev)
++{
++	const struct meson_sm_chip *chip;
++	struct meson_sm_firmware *fw;
++	struct device_node *np;
++	const struct of_device_id *matched_np;
++
++	np = of_find_matching_node_and_match(NULL, meson_sm_ids, &matched_np);
++	if (!np) {
++		dev_err(&pdev->dev, "no matching node\n");
++		return -EINVAL;
 +	}
 +
- 	if (lp->supply) {
- 		ret = regulator_enable(lp->supply);
- 		if (ret < 0) {
-@@ -441,6 +456,20 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 		}
- 	}
- 
-+	if (lp->enable) {
-+		ret = regulator_enable(lp->enable);
-+		if (ret < 0) {
-+			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
-+			return ret;
-+		}
-+
-+		/*
-+		 * LP8555 datasheet says t_RESPONSE (time between VDDIO and
-+		 * I2C) is 1ms.
-+		 */
-+		usleep_range(1000, 2000);
++	chip = matched_np->data;
++	if (!chip) {
++		dev_err(&pdev->dev, "unable to setup secure-monitor data\n");
++		return -EINVAL;
 +	}
 +
- 	i2c_set_clientdata(cl, lp);
- 
- 	ret = lp855x_configure(lp);
++	fw = devm_kzalloc(&pdev->dev, sizeof(*fw), GFP_KERNEL);
++	if (!fw)
++		return -ENOMEM;
++
++	if (chip->cmd_shmem_in_base) {
++		fw->sm_shmem_in_base = meson_sm_map_shmem(chip->cmd_shmem_in_base,
++							  chip->shmem_size);
++		if (WARN_ON(!fw->sm_shmem_in_base))
++			goto out;
++	}
++
++	if (chip->cmd_shmem_out_base) {
++		fw->sm_shmem_out_base = meson_sm_map_shmem(chip->cmd_shmem_out_base,
++							   chip->shmem_size);
++		if (WARN_ON(!fw->sm_shmem_out_base))
++			goto out;
++	}
++
++	fw->dev = &pdev->dev;
++	fw->chip = chip;
++	platform_set_drvdata(pdev, fw);
++
++	dev_info(fw->dev, "enabled\n");
++
++	return 0;
++
++out:
++	if (fw->sm_shmem_in_base)
++		iounmap(fw->sm_shmem_in_base);
++
++	return -EINVAL;
++}
++
++static struct platform_driver meson_sm_platform_driver = {
++	.probe	= meson_sm_probe,
++	.driver	= {
++		.name		= "meson-sm",
++		.of_match_table	= meson_sm_ids,
++	},
++};
++
++static int __init meson_sm_init(void)
++{
++	struct platform_device *meson_sm_device;
++	int ret;
++
++	ret = platform_driver_register(&meson_sm_platform_driver);
++	if (ret) {
++		pr_err("unable to register driver\n");
++		return ret;
++	}
++
++	meson_sm_device = platform_device_register_simple("meson-sm",
++							  -1, NULL, 0);
++	if (IS_ERR(meson_sm_device)) {
++		pr_err("unable to register device\n");
++		platform_driver_unregister(&meson_sm_platform_driver);
++		return PTR_ERR(meson_sm_device);
++	}
++
++	return 0;
++}
++device_initcall(meson_sm_init);
++
++MODULE_AUTHOR("Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>");
++MODULE_DESCRIPTION("Amlogic secure monitor driver");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
+new file mode 100644
+index 0000000..863b231
+--- /dev/null
++++ b/include/linux/firmware/meson/meson_sm.h
+@@ -0,0 +1,32 @@
++/*
++ * Copyright (C) 2016 Endless Mobile, Inc.
++ * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program. If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef _MESON_SM_FW_H_
++#define _MESON_SM_FW_H_
++
++#define SM_EFUSE_READ		0
++#define SM_EFUSE_WRITE		1
++#define SM_EFUSE_USER_MAX	2
++
++struct meson_sm_firmware;
++
++int meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_index,
++		  u32 *ret, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
++int meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
++			unsigned int b_size, unsigned int cmd_index,
++			u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
++int meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,
++		       unsigned int cmd_index, u32 arg0, u32 arg1,
++		       u32 arg2, u32 arg3, u32 arg4);
++struct meson_sm_firmware *meson_sm_get_fw(struct device_node *firmware_node);
++
++#endif /* _MESON_SM_FW_H_ */
 -- 
-2.8.0.rc3.226.g39d4020
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
