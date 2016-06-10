@@ -1,85 +1,172 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 08/20] pwm: Add PWM Capture support
-Date: Fri, 10 Jun 2016 18:39:56 +0200
-Message-ID: <20160610163956.GA8696@ulmo.ba.sec>
-References: <20160608092135.21184-1-lee.jones@linaro.org>
- <20160608092135.21184-9-lee.jones@linaro.org>
- <20160610135302.GK27142@ulmo.ba.sec>
- <20160610143854.GE1537@dell>
+From: Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org>
+Subject: Re: [PATCH 1/4] of: Add device tree bindings for Evatronix
+Date: Fri, 10 Jun 2016 18:46:24 +0200
+Message-ID: <alpine.DEB.2.02.1606101803120.30757@lnxricardw1.se.axis.com>
+References: <alpine.DEB.2.02.1606020946500.19416@lnxricardw1.se.axis.com> <20160603162207.0688c9e6@bbrezillon> <alpine.DEB.2.02.1606060757180.23377@lnxricardw1.se.axis.com> <20160608175018.16c88207@bbrezillon> <alpine.DEB.2.02.1606101641050.30757@lnxricardw1.se.axis.com>
+ <20160610175454.327f51a2@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160610143854.GE1537@dell>
+In-Reply-To: <20160610175454.327f51a2@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---n8g4imXOkfNTN/H1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 10 Jun 2016, Boris Brezillon wrote:
 
-On Fri, Jun 10, 2016 at 03:38:54PM +0100, Lee Jones wrote:
-> On Fri, 10 Jun 2016, Thierry Reding wrote:
+> > The use cases as I see are as follows:
+> >=20
+> > a) Two identical chips sharing all but the CS lines, in order to im=
+plement=20
+> > a seemingly-larger address space. (e.g. two 256 Mbit chips implemen=
+ting a=20
+> > 4 GB area). In this case, for certain operations, the controller do=
+es not=20
+> > have to wait for one device to complete before issuing a command to=
+=20
+> > another. I'm not sure how the controller keeps track of the two dev=
+ices=20
+> > though.
 >=20
-> > On Wed, Jun 08, 2016 at 10:21:23AM +0100, Lee Jones wrote:
-> > > Supply a PWM Capture call-back Op in order to pass back
-> > > information obtained by running analysis on PWM a signal.
-> > > This would normally (at least during testing) be called from
-> > > the Sysfs routines with a view to printing out PWM Capture
-> > > data which has been encoded into a string.
+> I think it's the chip-enable use case, isn't it?
+>=20
+> >=20
+> > b) Two different chips with the same connection, which provide disj=
+unct=20
+> > functions, e.g. one (small) flash for program storage and one (larg=
+e) for=20
+> > data.
+>=20
+> Then they can't share the CS line (or be actived at the same time), a=
+t
+> least it doesn't make any sense to me.
+
+Sorry if I haven't been clear enough, but in neither case are the CS li=
+nes=20
+shared between the devices. There is still a separate CS for each flash=
+=20
+chip. The question is how the controller handles the CS lines.
+
+Basically, in the general case, the controller can handle a matrix of n=
+and=20
+flash chips. There can be a number of banks, each of which can have a=20
+number of individual CS lines. For the (in this case academic) case of =
+3=20
+banks and 4 chip selects per bank, there would be a total of 3 x 4 =3D =
+12 CS=20
+lines.
+
+=46or the IP configuration the driver was written for, there are only 2=
+ CS=20
+lines, and we can configure if they are to be viewed by the controller =
+as=20
+2 CS lines within the same single bank, or 2 separate banks with one CS=
+=20
+each. This is what the DT property is intended to express. It basically=
+=20
+translates directly into a register write in the IP.
+
+But, as you are driving at below, the bindings should really cover the=20
+more general case, for which a simple use-bank-select property doesn't=20
+really cut it. Since the driver only supports a single CS at the time=20
+being, I'm really proposing to drop it completely, alternatively we cou=
+ld=20
+have two: 'banks' and 'devices-per-bank', which reflect what the genera=
+l=20
+IP case would be able to handle. For the version of the IP in use these=
+=20
+would have the permitted values of 1 and 2, with some combinations bein=
+g=20
+illegal. Unfortunately, the IP configuration cannot be read out (neithe=
+r=20
+the version of it), so it's not possible for the driver to verify the=20
+DT settings against the actual IP configuration. I don't really know ho=
+w=20
+to solve that.
+
+> > > > I didn't really want to have the added flexibility (and complex=
+ity) of=20
+> > > > being able to use any R/B line for any connected flash chip. It=
+ seems an=20
+> > > > unnecessary complication for the driver without much gain. =20
 > > >=20
-> > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > ---
-> > >  drivers/pwm/core.c  | 27 +++++++++++++++++++++++++++
-> > >  include/linux/pwm.h | 25 +++++++++++++++++++++++++
-> > >  2 files changed, 52 insertions(+)
+> > > Not really, at least if you properly separate the chip and contro=
+ller
+> > > objects it's quite easy to deal with, and I'll ask you to do this=
+ clean
+> > > separation anyway (even if you say you only have a single chip pe=
+r
+> > > controller) :P. =20
+> >=20
+> > Yes, the separation of chip and controller is needed, but the R/B l=
+ine=20
+> > flexibility requires an additional mapping functionality within the=
+=20
+> > driver. Not rocket science of course, but I can't see much point in=
+ it=20
+> > (other than to cover up a potential routing mistake done by a PCB=20
+> > designer).
 >=20
-> So do you want me to re-spin?
+> You seem to argue on all the minor things I'm asking. Honestly, it
+> should be hard or error-prone to do it. And let's say you don't suppo=
+rt
+> it in your driver, you should still think about that when designing
+> your bindings.
+
+Sorry, it's just that over the years I've seen too much code that=20
+introduces various flexibilities just because someone thought it might =
+be=20
+'nice to have at some point' or 'because the hardware supports it', but=
+=20
+which in reality is never used and still must be maintained. Sure, one=20
+small mapping function is certainly not going to break the bank, far fr=
+om=20
+it, but over time the matrix of things that can be configured can grow =
+to=20
+awkward proportions, and often something thought of as a minor issue ca=
+n=20
+turn out to be complex to support in the end. And given a stable API ru=
+le,=20
+it's too late to simplify things once they have been implemented.
+
+Of course, the code should not be written in a way to limit future=20
+expansion either.
+
+> > I mean, an IP may be capable of a lot of things, and we don't neces=
+sarily=20
+> > want to implement them all in the driver to start with and have DT=20
+> > propertes for them all do we?
 >=20
-> Before you said you'd make adjustments on patches 8 through 10, so I'm
-> a little confused.
+> Hm, you should at least take the capabilities you know about into
+> account when defining a new binding, and you already know that some
+> SoCs might decide to expose 2 or more R/B pins, so it should already =
+be
+> designed this way.
 
-Yeah, I only realized that it might be quicker to make these adjustments
-myself when I had finished looking at patch 10. I've pushed the adjusted
-patches to a for-4.8/pwm-capture branch, so if you're going to re-spin
-the remainder of the patches, perhaps that could be your base?
+Ok. I'll give it some more thought then.
 
-	https://git.kernel.org/cgit/linux/kernel/git/thierry.reding/linux-pwm.git/=
-log/?h=3Dfor-4.8/pwm-capture
+> I'm opposed to the idea of putting information that can be
+> automatically deduced in the DT. For this specific case, the main
+> reason is that a board vendor can decide to use different NAND chips
+> on the same design, and they might not all share the same
+> capabilities (and you don't want to have a dts for each NAND).
 
-If you don't have any objections I can put those into linux-next early
-next week.
+Yes, that makes sense of course, but what if someone would want to=20
+override the automatic settings, for whatever reason, using an optional=
+ DT=20
+property? I can think of several reasons either way, that's why I'm=20
+asking.
 
-Thierry
-
---n8g4imXOkfNTN/H1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXWu1cAAoJEN0jrNd/PrOhGzQQAIx9jzFtknhduCh4gDHkFp0f
-WsLfSQnTu4h3nVbH4l0U5VTpytCadFNhWTxGibiT3jGuiTP1vCxnflhYKRVMLdwV
-KAKE3N2GCFI2B6xVvzep5K6UYATfmGYhaXMbEj/SUCuwUx68YLygThjRmvedpT2a
-pbJybTtrUIiTep4YQWosGDrriX+GpytBXKty5JWc3w8rAMRVt2RPQJMyCLJT4czK
-smMl8KLETmC8r0vbQR2llhSYBfTKXWqtBt7vroQRVMu1tgZVUOr1f1+RRy2uFbfO
-ZrcpzKgidid42y7W0uxsQWyWtZK4SuhWiSmSAHrO9RGe3E1iSZ0K+qQEhe11MKuK
-MuCl/Hji8fm2ZWr4h4x2qkIjPHpnLBNiSq+s1vql8vybaEti5r4Amtn+GFNi8pfS
-rzILvaD1sK6x/sP11zX8IwX2FxlkHNUq0tccqKAcAO/1BvylBPuQu0j7+rZkJw/s
-kPYpa5iewrGrrzne2GFCZkKsbBNkM4svQN7HLqeKBARy2AH47/YhiDRx/DU6dwN8
-e1NdNrS0we9ryEqj5vbKGaddR55dcpTdAUMLZc37fXrzadoe4Wb+hwpDjJzqp071
-eH+xY47JzKjYeA2eqNcRdlFLh0N/ZszaxC6tgVwPoiWuU3L0iU+M70oYtBEB/cP0
-VCP6s/sW/fGmLeCkBkXS
-=hkl4
------END PGP SIGNATURE-----
-
---n8g4imXOkfNTN/H1--
+/Ricard
+--=20
+Ricard Wolf Wanderl=F6f                           ricardw(at)axis.com
+Axis Communications AB, Lund, Sweden            www.axis.com
+Phone +46 46 272 2016                           Fax +46 46 13 61 30
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
