@@ -1,109 +1,129 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 5/7] drm: rockchip: use common iommu api to attach iommu
-Date: Fri, 10 Jun 2016 17:03:22 +0900
-Message-ID: <CAAFQd5AEsMhQiNkjBr-Af6rBg9x6Z9bCOu7GuYXt2h=wao7Cow@mail.gmail.com>
-References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com>
- <1465392392-2003-6-git-send-email-zhengsq@rock-chips.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 4/9] genirq: Add runtime power management support for
+ IRQ chips
+Date: Fri, 10 Jun 2016 09:05:41 +0100
+Message-ID: <575A74D5.4050905@nvidia.com>
+References: <1465214023-8299-1-git-send-email-jonathanh@nvidia.com>
+ <1465214023-8299-5-git-send-email-jonathanh@nvidia.com>
+ <57558523.9070700@ti.com> <57558909.9090309@nvidia.com>
+ <57558A83.1000603@ti.com> <5755917A.7070704@nvidia.com>
+ <7htwh2c6o9.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465392392-2003-6-git-send-email-zhengsq@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shunqian Zheng <zhengsq@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux@armlinux.org.uk, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, simon xue <xxm@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7htwh2c6o9.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIEp1biA4LCAyMDE2IGF0IDEwOjI2IFBNLCBTaHVucWlhbiBaaGVuZyA8emhl
-bmdzcUByb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4gUm9ja2NoaXAgRFJNIHVzZWQgdGhlIGFybSBz
-cGVjaWFsIEFQSSwgYXJtX2lvbW11XyooKSwgdG8gYXR0YWNoCj4gaW9tbXUgZm9yIEFSTTMyIFNv
-Q3MuIFRoaXMgcGF0Y2ggY29udmVydCB0byBjb21tb24gaW9tbXUgQVBJCj4gc28gaXQgd291bGQg
-c3VwcG9ydCBBUk02NCBsaWtlIFJLMzM5OS4KPgo+IFRoZSBnZW5lcmFsIGlkZWEgaXMgZG9tYWlu
-X2FsbG9jKCksIGF0dGFjaF9kZXZpY2UoKSBhbmQKPiBhcmNoX3NldHVwX2RtYV9vcHMoKSB0byBz
-ZXQgZG1hX29wcyBtYW51YWxseSBmb3IgRFJNIGF0IHRoZSBsYXN0Lgo+Cj4gU2lnbmVkLW9mZi1i
-eTogU2h1bnFpYW4gWmhlbmcgPHpoZW5nc3FAcm9jay1jaGlwcy5jb20+Cj4gLS0tCj4gIGRyaXZl
-cnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2LmMgfCAxMzAgKysrKysrKysrKysr
-KysrKysrKy0tLS0tLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJt
-X2Rydi5oIHwgICAxICsKPiAgMiBmaWxlcyBjaGFuZ2VkLCA4OSBpbnNlcnRpb25zKCspLCA0MiBk
-ZWxldGlvbnMoLSkKPgoKUGxlYXNlIHNlZSBteSBjb21tZW50cyBpbmxpbmUuCgo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX2Rydi5jIGIvZHJpdmVy
-cy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYuYwo+IGluZGV4IGY1YTY4ZmMuLjc5
-NjVhNjYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2Ry
-bV9kcnYuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2
-LmMKPiBAQCAtMTQsOCArMTQsNiBAQAo+ICAgKiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBm
-b3IgbW9yZSBkZXRhaWxzLgo+ICAgKi8KPgo+IC0jaW5jbHVkZSA8YXNtL2RtYS1pb21tdS5oPgo+
-IC0KPiAgI2luY2x1ZGUgPGRybS9kcm1QLmg+Cj4gICNpbmNsdWRlIDxkcm0vZHJtX2NydGNfaGVs
-cGVyLmg+Cj4gICNpbmNsdWRlIDxkcm0vZHJtX2ZiX2hlbHBlci5oPgo+IEBAIC0yNCw2ICsyMiw4
-IEBACj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L29mX2dy
-YXBoLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9jb21wb25lbnQuaD4KPiArI2luY2x1ZGUgPGxpbnV4
-L2RtYS1pb21tdS5oPgo+ICsjaW5jbHVkZSA8bGludXgvaW9tbXUuaD4KPgo+ICAjaW5jbHVkZSAi
-cm9ja2NoaXBfZHJtX2Rydi5oIgo+ICAjaW5jbHVkZSAicm9ja2NoaXBfZHJtX2ZiLmgiCj4gQEAg
-LTQ2LDcgKzQ2LDggQEAgc3RhdGljIGJvb2wgaXNfc3VwcG9ydF9pb21tdSA9IHRydWU7Cj4gIGlu
-dCByb2NrY2hpcF9kcm1fZG1hX2F0dGFjaF9kZXZpY2Uoc3RydWN0IGRybV9kZXZpY2UgKmRybV9k
-ZXYsCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZGV2aWNlICpk
-ZXYpCj4gIHsKPiAtICAgICAgIHN0cnVjdCBkbWFfaW9tbXVfbWFwcGluZyAqbWFwcGluZyA9IGRy
-bV9kZXYtPmRldi0+YXJjaGRhdGEubWFwcGluZzsKPiArICAgICAgIHN0cnVjdCByb2NrY2hpcF9k
-cm1fcHJpdmF0ZSAqcHJpdmF0ZSA9IGRybV9kZXYtPmRldl9wcml2YXRlOwo+ICsgICAgICAgc3Ry
-dWN0IGlvbW11X2RvbWFpbiAqZG9tYWluID0gcHJpdmF0ZS0+ZG9tYWluOwo+ICAgICAgICAgaW50
-IHJldDsKPgo+ICAgICAgICAgaWYgKCFpc19zdXBwb3J0X2lvbW11KQo+IEBAIC01OCwxNiArNTks
-MjUgQEAgaW50IHJvY2tjaGlwX2RybV9kbWFfYXR0YWNoX2RldmljZShzdHJ1Y3QgZHJtX2Rldmlj
-ZSAqZHJtX2RldiwKPgo+ICAgICAgICAgZG1hX3NldF9tYXhfc2VnX3NpemUoZGV2LCBETUFfQklU
-X01BU0soMzIpKTsKPgo+IC0gICAgICAgcmV0dXJuIGFybV9pb21tdV9hdHRhY2hfZGV2aWNlKGRl
-diwgbWFwcGluZyk7Cj4gKyAgICAgICByZXQgPSBpb21tdV9hdHRhY2hfZGV2aWNlKGRvbWFpbiwg
-ZGV2KTsKPiArCgpuaXQ6IFVubmVjZXNzYXJ5IGJsYW5rIGxpbmUuCgo+ICsgICAgICAgaWYgKHJl
-dCkgewo+ICsgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBhdHRhY2ggaW9t
-bXUgZGV2aWNlXG4iKTsKPiArICAgICAgICAgICAgICAgcmV0dXJuIHJldDsKPiArICAgICAgIH0K
-Cm5pdDogT24gdGhlIG90aGVyIGhhbmQsIGEgYmxhbmsgbGluZSBoZXJlIHdvdWxkIGltcHJvdmUg
-cmVhZGFiaWxpdHkuCgo+ICsgICAgICAgYXJjaF9zZXR1cF9kbWFfb3BzKGRldiwgMHgwMDAwMDAw
-MCwgU1pfMkcsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgKHN0cnVjdCBpb21tdV9vcHMg
-KilkZXYtPmJ1cy0+aW9tbXVfb3BzLCBmYWxzZSk7CgpUaGlzIGlzIGNhc3RpbmcgYSBjb25zdCBw
-b2ludGVyIHRvIGEgbm9uLWNvbnN0IHBvaW50ZXIuIHdoaWNoIGlzbid0CnJlYWxseSBhIGdvb2Qg
-aWRlYS4gSSBjYW4gc2VlIHRoYXQgYXJjaF9zZXR1cF9kbWFfb3BzKCkgcmVxdWlyZXMgYQp3cml0
-YWJsZSBwb2ludGVyLCB0aG91Z2guIExvb2tpbmcgYXQgdGhlIGltcGxlbWVudGF0aW9ucyBvZgph
-cmNoX3NldHVwX2RtYV9vcHMoKSBhcm91bmQgdGhlIHBsYXRmb3JtcyAobmFtZWx5IGFybSBhbmQg
-YXJtNjQuLi4pLAppdCBtYWtlcyBtZSB3b25kZXIgaWYgdGhlIHByb3RvdHlwZSBzaG91bGRuJ3Qg
-YmUgY2hhbmdlZCB0byBjb25zdAppbnN0ZWFkLgoKPiArICAgICAgIHJldHVybiAwOwo+ICB9Cj4K
-PiAgdm9pZCByb2NrY2hpcF9kcm1fZG1hX2RldGFjaF9kZXZpY2Uoc3RydWN0IGRybV9kZXZpY2Ug
-KmRybV9kZXYsCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRl
-dmljZSAqZGV2KQo+ICB7Cj4gLSAgICAgICBpZiAoIWlzX3N1cHBvcnRfaW9tbXUpCj4gLSAgICAg
-ICAgICAgICAgIHJldHVybjsKPiArICAgICAgIHN0cnVjdCByb2NrY2hpcF9kcm1fcHJpdmF0ZSAq
-cHJpdmF0ZSA9IGRybV9kZXYtPmRldl9wcml2YXRlOwo+ICsgICAgICAgc3RydWN0IGlvbW11X2Rv
-bWFpbiAqZG9tYWluID0gcHJpdmF0ZS0+ZG9tYWluOwo+Cj4gLSAgICAgICBhcm1faW9tbXVfZGV0
-YWNoX2RldmljZShkZXYpOwo+ICsgICAgICAgaWYgKGlzX3N1cHBvcnRfaW9tbXUpCj4gKyAgICAg
-ICAgICAgICAgIGlvbW11X2RldGFjaF9kZXZpY2UoZG9tYWluLCBkZXYpOwo+ICB9Cj4KPiAgaW50
-IHJvY2tjaGlwX3JlZ2lzdGVyX2NydGNfZnVuY3Moc3RydWN0IGRybV9jcnRjICpjcnRjLAo+IEBA
-IC0xMzIsMTAgKzE0Miw3MCBAQCBzdGF0aWMgdm9pZCByb2NrY2hpcF9kcm1fY3J0Y19kaXNhYmxl
-X3ZibGFuayhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ICAgICAgICAgICAgICAgICBwcml2LT5j
-cnRjX2Z1bmNzW3BpcGVdLT5kaXNhYmxlX3ZibGFuayhjcnRjKTsKPiAgfQo+Cj4gK3N0YXRpYyBp
-bnQgcm9ja2NoaXBfZHJtX2luaXRfaW9tbXUoc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXYpCj4g
-K3sKPiArICAgICAgIHN0cnVjdCByb2NrY2hpcF9kcm1fcHJpdmF0ZSAqcHJpdmF0ZSA9IGRybV9k
-ZXYtPmRldl9wcml2YXRlOwo+ICsgICAgICAgc3RydWN0IGRldmljZSAqZGV2ID0gZHJtX2Rldi0+
-ZGV2Owo+ICsgICAgICAgaW50IHJldDsKPiArCj4gKyAgICAgICBkZXYtPmRtYV9wYXJtcyA9IGRl
-dm1fa3phbGxvYyhkZXYsIHNpemVvZigqZGV2LT5kbWFfcGFybXMpLAo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgR0ZQX0tFUk5FTCk7Cj4gKyAgICAgICBpZiAoIWRldi0+
-ZG1hX3Bhcm1zKSB7Cj4gKyAgICAgICAgICAgICAgIHJldCA9IC1FTk9NRU07Cj4gKyAgICAgICAg
-ICAgICAgIHJldHVybiByZXQ7CgpuaXQ6IHJldHVybiAtRU5PTUVNOwoKPiArICAgICAgIH0KPiAr
-Cj4gKyAgICAgICByZXQgPSBkbWFfc2V0X2NvaGVyZW50X21hc2soZGV2LCBETUFfQklUX01BU0so
-MzIpKTsKPiArICAgICAgIGlmIChyZXQpIHsKPiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYs
-ICJGYWlsZWQgdG8gc2V0IGNvaGVyZW50IG1hc2tcbiIpOwo+ICsgICAgICAgICAgICAgICByZXR1
-cm4gcmV0Owo+ICsgICAgICAgfQo+ICsKPiArICAgICAgIGRtYV9zZXRfbWF4X3NlZ19zaXplKGRl
-diwgRE1BX0JJVF9NQVNLKDMyKSk7Cj4gKwo+ICsgICAgICAgcHJpdmF0ZS0+ZG9tYWluID0gaW9t
-bXVfZG9tYWluX2FsbG9jKCZwbGF0Zm9ybV9idXNfdHlwZSk7Cj4gKyAgICAgICBpZiAoIXByaXZh
-dGUtPmRvbWFpbikKPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsgICAg
-ICAgcmV0ID0gaW9tbXVfZ2V0X2RtYV9jb29raWUocHJpdmF0ZS0+ZG9tYWluKTsKPiArICAgICAg
-IGlmIChyZXQpIHsKPiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0
-IGRtYSBjb29raWVcbiIpOwo+ICsgICAgICAgICAgICAgICBnb3RvIGVycl9mcmVlX2RvbWFpbjsK
-PiArICAgICAgIH0KPiArCj4gKyAgICAgICByZXQgPSBpb21tdV9kbWFfaW5pdF9kb21haW4ocHJp
-dmF0ZS0+ZG9tYWluLCAweDAwMDAwMDAwLCBTWl8yRyk7CgpJIGd1ZXNzIGRqa3VydHoncyBUT0RP
-IGNvbW1lbnQgY291bGQgYmUgcHJlc2VydmVkIGhlcmUuCgpCZXN0IHJlZ2FyZHMsClRvbWFzegpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+On 09/06/16 23:56, Kevin Hilman wrote:
+> Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> writes:
+> 
+>> On 06/06/16 15:36, Grygorii Strashko wrote:
+>>> On 06/06/2016 05:30 PM, Jon Hunter wrote:
+>>>>
+>>>> On 06/06/16 15:13, Grygorii Strashko wrote:
+>>>>> On 06/06/2016 02:53 PM, Jon Hunter wrote:
+>>>>>> Some IRQ chips may be located in a power domain outside of the CPU
+>>>>>> subsystem and hence will require device specific runtime power
+>>>>>> management. In order to support such IRQ chips, add a pointer for a
+>>>>>> device structure to the irq_chip structure, and if this pointer is
+>>>>>> populated by the IRQ chip driver and CONFIG_PM is selected in the kernel
+>>>>>> configuration, then the pm_runtime_get/put APIs for this chip will be
+>>>>>> called when an IRQ is requested/freed, respectively.
+>>>>>>
+>>>>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>>> Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>>>> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>>>>>> ---
+>>>>>>    include/linux/irq.h    |  4 ++++
+>>>>>>    kernel/irq/chip.c      | 35 +++++++++++++++++++++++++++++++++++
+>>>>>>    kernel/irq/internals.h |  1 +
+>>>>>>    kernel/irq/manage.c    | 31 ++++++++++++++++++++++++++++++-
+>>>>>>    4 files changed, 70 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/include/linux/irq.h b/include/linux/irq.h
+>>>>>> index 4d758a7c604a..6c92a847394d 100644
+>>>>>> --- a/include/linux/irq.h
+>>>>>> +++ b/include/linux/irq.h
+>>>>>> @@ -315,6 +315,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
+>>>>>>    /**
+>>>>>>     * struct irq_chip - hardware interrupt chip descriptor
+>>>>>>     *
+>>>>>> + * @parent_device:	pointer to parent device for irqchip
+>>>>>>     * @name:		name for /proc/interrupts
+>>>>>>     * @irq_startup:	start up the interrupt (defaults to ->enable if NULL)
+>>>>>>     * @irq_shutdown:	shut down the interrupt (defaults to ->disable if NULL)
+>>>>>> @@ -354,6 +355,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
+>>>>>>     * @flags:		chip specific flags
+>>>>>>     */
+>>>>>>    struct irq_chip {
+>>>>>> +	struct device	*parent_device;
+>>>>>>    	const char	*name;
+>>>>>>    	unsigned int	(*irq_startup)(struct irq_data *data);
+>>>>>>    	void		(*irq_shutdown)(struct irq_data *data);
+>>>>>> @@ -488,6 +490,8 @@ extern void handle_bad_irq(struct irq_desc *desc);
+>>>>>>    extern void handle_nested_irq(unsigned int irq);
+>>>>>>    
+>>>>>>    extern int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg);
+>>>>>> +extern int irq_chip_pm_get(struct irq_data *data);
+>>>>>> +extern int irq_chip_pm_put(struct irq_data *data);
+>>>>>>    #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+>>>>>>    extern void irq_chip_enable_parent(struct irq_data *data);
+>>>>>>    extern void irq_chip_disable_parent(struct irq_data *data);
+>>>>>> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+>>>>>> index 2f9f2b0e79f2..b09226e895c7 100644
+>>>>>> --- a/kernel/irq/chip.c
+>>>>>> +++ b/kernel/irq/chip.c
+>>>>>> @@ -1093,3 +1093,38 @@ int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>>>>>>    
+>>>>>>    	return 0;
+>>>>>>    }
+>>>>>> +
+>>>>>> +/**
+>>>>>> + * irq_chip_pm_get - Enable power for an IRQ chip
+>>>>>> + * @data:	Pointer to interrupt specific data
+>>>>>> + *
+>>>>>> + * Enable the power to the IRQ chip referenced by the interrupt data
+>>>>>> + * structure.
+>>>>>> + */
+>>>>>> +int irq_chip_pm_get(struct irq_data *data)
+>>>>>> +{
+>>>>>> +	int retval = 0;
+>>>>>> +
+>>>>>> +	if (IS_ENABLED(CONFIG_PM) && data->chip->parent_device)
+>>>>>> +		retval = pm_runtime_get_sync(data->chip->parent_device);
+>>>>>
+>>>>> Sry, for the late comment - above require pm_runtime_put_noidle(data->chip->parent_device);
+>>>>> in case of failure.
+>>>>
+>>>> No problem. Sorry, can you elaborate? I am not familiar with the
+>>>> _put_noidle().
+>>>>
+>>>
+>>> Question here in use counter - pm_runtime_get_sync() will increment usage_count
+>>> always and it will not decrement it in case of failure.
+>>> pm_runtime_put_noidle() expected to restore usage_count state (-1).
+>>
+>> Thanks was not aware of that. 
+>>
+>> Kevin, Marc, given that you have reviewed this one, are you ok with the
+>> above change Grygorii is proposing? 
+> 
+> Yes, that's the right thing to do on error.
+
+Thanks. I have added this in V6. Please take a look and add your
+reviewed-by again if all looks good.
+
+Cheers
+Jon
+
+-- 
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
