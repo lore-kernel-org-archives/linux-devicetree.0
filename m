@@ -1,72 +1,113 @@
-From: Mychaela Falconia <mychaela.falconia@gmail.com>
-Subject: Re: [PATCH 3/4] mtd: nand: Add support for Evatronix NANDFLASH-CTRL
-Date: Thu, 9 Jun 2016 21:07:49 -0800
-Message-ID: <CA+uuBqb-g1PC1WKR36Rbd5fd1YqreprzG_N57xOn43JOSeDqVw@mail.gmail.com>
-References: <alpine.DEB.2.02.1606020948070.19416@lnxricardw1.se.axis.com>
- <20160603165909.09f27ee0@bbrezillon> <alpine.DEB.2.02.1606071702220.19416@lnxricardw1.se.axis.com>
- <CA+uuBqb4fG4nK7atrF7XOQ=ip2SfKrxU+KXqD3W+PA_ZA7cS3g@mail.gmail.com>
- <20160609200128.5b7a6e29@bbrezillon> <CA+uuBqaRv2f8K-Q2ZLQY8tq6idq8XCDMV21SYM5XCWc4FVV90g@mail.gmail.com>
- <20160609222307.5db4e67f@bbrezillon>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCHv2] backlight: pwm_bl: disable PWM when 'duty_cycle' is
+ zero
+Date: Fri, 10 Jun 2016 07:23:46 +0200
+Message-ID: <20160610072346.51b0a5d5@ipc1.ka-ro>
+References: <1465294429-8570-1-git-send-email-LW@KARO-electronics.de>
+	<20160609135125.GA2385@dell>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160609222307.5db4e67f@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Ricard Wanderlof <ricard.wanderlof@axis.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Oleksij Rempel <linux@rempel-privat.de>, Linux mtd <linux-mtd@lists.infradead.org>, Benoit Cousson <bcousson@baylibre.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20160609135125.GA2385@dell>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/9/16, Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
-> Hm, I think it's changing now that a lot of SoCs are advertised to be
-> running Linux. But you're right in that existing IPs might not support
-> this low-level mode.
+Hi,
 
-Faraday (the IP vendor in the present case) advertise Linux support as
-well, but they never mainlined any of it, and instead they provide
-their own vendor Linux trees. The one I got is based on linux-3.3; I
-don't know if they have a newer one. They do "support" FTNANDC024
-under Linux as well, but their driver for it is gawdawful - see below.
+On Thu, 9 Jun 2016 14:51:25 +0100 Lee Jones wrote:
+> On Tue, 07 Jun 2016, Lothar Wa=C3=9Fmann wrote:
+>=20
+> > 'brightness' is usually an index into a table of duty_cycle values,
+> > where the value at index 0 may well be non-zero
+> > (tegra30-apalis-eval.dts and tegra30-colibri-eval-v3.dts are real-l=
+ife
+> > examples).
+> > Thus brightness =3D=3D 0 does not necessarily mean that the PWM out=
+put
+> > will be inactive.
+> > Check for 'duty_cycle =3D=3D 0' rather than 'brightness =3D=3D 0' t=
+o decide
+> > whether to disable the PWM.
+> >=20
+> > Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+> > ---
+> > Changes wrt. v1:
+> >   - update binding docs to reflect the change
+> >=20
+> >  .../devicetree/bindings/leds/backlight/pwm-backlight.txt         |=
+ 9 ++++++---
+> >  drivers/video/backlight/pwm_bl.c                                 |=
+ 4 ++--
+> >  2 files changed, 8 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-b=
+acklight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-bac=
+klight.txt
+> > index 764db86..95fa8a9 100644
+> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backligh=
+t.txt
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backligh=
+t.txt
+> > @@ -4,10 +4,13 @@ Required properties:
+> >    - compatible: "pwm-backlight"
+> >    - pwms: OF device-tree PWM specification (see PWM binding[0])
+> >    - brightness-levels: Array of distinct brightness levels. Typica=
+lly these
+> > -      are in the range from 0 to 255, but any range starting at 0 =
+will do.
+> > +      are in the range from 0 to 255, but any range will do.
+> >        The actual brightness level (PWM duty cycle) will be interpo=
+lated
+> > -      from these values. 0 means a 0% duty cycle (darkest/off), wh=
+ile the
+> > -      last value in the array represents a 100% duty cycle (bright=
+est).
+> > +      from these values. 0 means a 0% duty cycle, while the highes=
+t value in
+> > +      the array represents a 100% duty cycle.
+> > +      The range may be in reverse order (starting with the maximum=
+ duty cycle
+> > +      value) to create a PWM signal with the 100% duty cycle repre=
+senting
+> > +      minimum and 0% duty cycle maximum brigthness.
+> >    - default-brightness-level: the default brightness level (index =
+into the
+> >        array defined by the "brightness-levels" property)
+> >    - power-supply: regulator for supply voltage
+> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backl=
+ight/pwm_bl.c
+> > index b2b366b..80b2b52 100644
+> > --- a/drivers/video/backlight/pwm_bl.c
+> > +++ b/drivers/video/backlight/pwm_bl.c
+> > @@ -103,8 +103,8 @@ static int pwm_backlight_update_status(struct b=
+acklight_device *bl)
+> >  	if (pb->notify)
+> >  		brightness =3D pb->notify(pb->dev, brightness);
+> > =20
+> > -	if (brightness > 0) {
+> > -		duty_cycle =3D compute_duty_cycle(pb, brightness);
+> > +	duty_cycle =3D compute_duty_cycle(pb, brightness);
+> > +	if (duty_cycle > 0) {
+>=20
+> How does this work in the aforementioned:
+>=20
+>   "The range may be in reverse order"
+>=20
+> ... case?  Surely when duty_cycle is when the screen should be at it'=
+s
+> brightest?  Wouldn't it confuse the user if they turn their brightnes=
+s
+> *up* and the screen goes *off*?
+>=20
+Assuming that the PWM output is inactive (LOW) when the duty_cycle is
+set to zero, there will be no difference between operating the PWM at
+duty_cycle 0 or disabling it.
 
-> Hm, I don't understand why it's not possible to implement basic
-> sequences, but I don't know anything about FTNANDC024, so let's assume
-> you're right.
+Currently, the screen will go bright when it should be off in this
+case.
 
-Read the datasheet (link below) and tell me what you think.
 
-> Sure, feel free to send it to me, I'll have a look. And maybe you can
-> also share your code (both the new and old versions of the driver).
-
-I decided to go ahead and abuse my personal web space on another
-(nothing to do with Linux or with NAND flash) project's server for the
-purpose of sharing this stuff:
-
-https://www.freecalypso.org/members/falcon/linux-mtd/
-
-There you will find the IP datasheet, the vendor's driver (GPL), and a
-current snapshot of my work-in-progress replacement.
-
-> Hm, so you can't even move the column pointer within a page
-> (NAND_CMD_RNDOUT)?
-
-See the FTNANDC024 microcode listings on datasheet PDF pages 108
-through 117. Every FTNANDC024 operation is an execution of one of
-these complete microcode routines from start to finish. Just because a
-given microcode flow includes the issuance of a given NAND command
-(such as Change Read Column or Change Write Column) does not mean that
-you could just ask the controller to issue that command by itself,
-without executing a complete microcode flow which also includes the
-Read Page or Program Page command.
-
-The only workaround would be to write our own microcode. I think this
-approach would actually work: we could write shorter microcode
-routines which *just* issue a given NAND opcode and then stop there,
-and another separate microcode routine (to be invoked via a separate
-command) which would only do what they call "RD_SP" or "WR_SP" (raw
-byte transfers of 1 to 32 bytes), without issuing a Read Page command
-before or a Program Page command after. This approach would allow us
-to perform truly raw page reads and writes, but it would be very ugly
-and inefficient. It would also require a separate microcode routine
-for each different command, NOT one generic microcode routine that
-would correspond to ->cmd_ctrl() or ->cmdfunc().
-
-M~
+Lothar Wa=C3=9Fmann
