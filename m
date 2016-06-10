@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 12/19] ARM: dts: porter: Name spi pfc subnode after device name
-Date: Fri, 10 Jun 2016 15:00:58 +0200
-Message-ID: <1465563665-2231-13-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 19/19] ARM: dts: kzm9g: Name serial port pfc subnode after device name
+Date: Fri, 10 Jun 2016 15:01:05 +0200
+Message-ID: <1465563665-2231-20-git-send-email-geert+renesas@glider.be>
 References: <1465563665-2231-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1465563665-2231-1-git-send-email-geert+renesas@glider.be>
@@ -10,29 +10,29 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Name the Pin Function Controller subnode for QSPI after its device name,
-instead of after the spi interface alias.
+Name the Pin Function Controller subnode for SCIFA4 after its device
+name, instead of after the serial port alias.
 
-This avoids conflicts when enabling support for more spi interfaces
-later, either here or in a DT overlay.
+This avoids conflicts when adding support for more serial ports later,
+either here or in a DT overlay.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7791-porter.dts | 2 +-
+ arch/arm/boot/dts/sh73a0-kzm9g.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r8a7791-porter.dts
-index 85d109a5f43c4017..6761d11d3f9e1317 100644
---- a/arch/arm/boot/dts/r8a7791-porter.dts
-+++ b/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -167,7 +167,7 @@
- 		function = "sdhi2";
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g.dts b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+index 36567cbf2e1c32dd..1df68b1670339491 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+@@ -352,7 +352,7 @@
+ 		};
  	};
  
--	qspi_pins: spi0 {
-+	qspi_pins: qspi {
- 		groups = "qspi_ctrl", "qspi_data4";
- 		function = "qspi";
+-	scifa4_pins: serial4 {
++	scifa4_pins: scifa4 {
+ 		groups = "scifa4_data", "scifa4_ctrl";
+ 		function = "scifa4";
  	};
 -- 
 1.9.1
