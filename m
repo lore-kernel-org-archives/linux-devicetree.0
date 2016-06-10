@@ -1,59 +1,63 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: sd_600eval: Fix eMMC lockup issue
-Date: Fri, 10 Jun 2016 19:19:55 +0100
-Message-ID: <1465582795-30266-2-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1465582795-30266-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465582795-30266-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Parth Pancholi <parth.pancholi-7dMfbm5N4krDzftRWevZcw@public.gmane.org>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv2 2/8] MAINTAINERS: Add Altera Arria10 System Resource
+ Chip
+Date: Fri, 10 Jun 2016 13:09:14 -0500
+Message-ID: <575B024A.7000208@opensource.altera.com>
+References: <1464889948-28793-1-git-send-email-tthayer@opensource.altera.com>
+ <1464889948-28793-3-git-send-email-tthayer@opensource.altera.com>
+ <20160610144714.GF1537@dell>
+Reply-To: <tthayer@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160610144714.GF1537@dell>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Parth Pancholi <parth.pancholi-7dMfbm5N4krDzftRWevZcw@public.gmane.org>
+Hi Lee,
 
-This board locks up if we stress test the eMMC, as the regulator s4 is
-unable to supply enough current for all the peripherials attached to it.
-As this supply is wired up to most of the peripherials including DDR,
-it resulted in such lockup.
+On 06/10/2016 09:47 AM, Lee Jones wrote:
+> On Thu, 02 Jun 2016, tthayer@opensource.altera.com wrote:
+>
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> Add maintainer for the Altera Arria10 Max5 System Resource chip files.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>> Acked-by: Lee Jones <lee.jones@linaro.org>i
+>> ---
+>> v2  Remove altera-a10sr-hwmon.c file.
+>> ---
+>>   MAINTAINERS |    7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 4f74a5f..7683240 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -607,6 +607,13 @@ L:	linux-gpio@vger.kernel.org
+>>   S:	Maintained
+>>   F:	drivers/gpio/gpio-altera.c
+>>
+>> +ALTERA SYSTEM RESOURCE DRIVER FOR ARRIA10 DEVKIT
+>> +M:	Thor Thayer <tthayer@opensource.altera.com>
+>> +S:	Maintained
+>> +F:	drivers/gpio/gpio-altera-a10sr.c
+>> +F:	drivers/mfd/altera-a10sr.c
+>> +F:	include/linux/mfd/altera-a10sr.h
+>
+> When will you upstream the other drivers?
+>
+I'm finishing up some EDAC drivers right now then I'll start looking at 
+adding the other drivers. I should have something in August because of 
+vacation interruptions.
 
-This patch fixes this issue by setting s4 regulator correctly with
-Auto power mode.
+Thanks again!
 
-Reported-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-[Srinivas Kandagatla: rewrote the change log]
-Tested-by: Girish Sharma <girish.sharma-7dMfbm5N4krDzftRWevZcw@public.gmane.org>
-Signed-off-by: Parth Pancholi <parth.pancholi-7dMfbm5N4krDzftRWevZcw@public.gmane.org>
----
- arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
-index 7df0108..39ae2bc 100644
---- a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
-@@ -1,6 +1,7 @@
- #include "qcom-apq8064-v2.0.dtsi"
- #include "qcom-apq8064-arrow-sd-600eval-pins.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/mfd/qcom-rpm.h>
- 
- / {
- 	model = "Arrow Electronics, APQ8064 SD_600eval";
-@@ -82,7 +83,8 @@
- 				s4 {
- 					regulator-min-microvolt	= <1800000>;
- 					regulator-max-microvolt	= <1800000>;
--					qcom,switch-mode-frequency = <3200000>;
-+					qcom,switch-mode-frequency = <1600000>;
-+					qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
- 					bias-pull-down;
- 					regulator-always-on;
- 				};
--- 
-2.8.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>   ALTERA TRIPLE SPEED ETHERNET DRIVER
+>>   M:	Vince Bridgers <vbridger@opensource.altera.com>
+>>   L:	netdev@vger.kernel.org
+>
