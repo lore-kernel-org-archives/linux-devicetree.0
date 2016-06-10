@@ -1,71 +1,130 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 02/20] clk: multiplier: Prevent the multiplier from under
- / over flowing
-Date: Fri, 10 Jun 2016 14:31:38 +0200
-Message-ID: <20160610123138.GX5242@lukather>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
- <1463402840-17062-3-git-send-email-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Z8pjODCYYz+3zRe3"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1463402840-17062-3-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Chris Lapa <chris@lapa.com.au>
+Subject: [PATCH v2 3/4] max8903: cleans up confusing relationship between dc_valid, dok and dcm.
+Date: Fri, 10 Jun 2016 22:32:49 +1000
+Message-ID: <1465561970-18377-4-git-send-email-chris@lapa.com.au>
+References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+ <1465561970-18377-1-git-send-email-chris@lapa.com.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465561970-18377-1-git-send-email-chris@lapa.com.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: k.kozlowski@samsung.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Chris Lapa <chris@lapa.com.au>
 List-Id: devicetree@vger.kernel.org
 
+From: Chris Lapa <chris@lapa.com.au>
 
---Z8pjODCYYz+3zRe3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The max8903_charger.h file indicated that dcm and dok were not optional
+when dc_valid is set.
 
-Hi Mike, Stephen,
+It makes sense to have dok as a compulsory pin when dc_valid is given.
+However dcm can be optionally wired to a fixed level especially when the
+circuit is configured for dc power exclusively.
 
-On Mon, May 16, 2016 at 02:47:02PM +0200, Maxime Ripard wrote:
-> In the current multiplier base clock implementation, if the
-> CLK_SET_RATE_PARENT flag isn't set, the code will not make sure that the
-> multiplier computed remains within the boundaries of our clock.
->=20
-> This means that if the clock we want to reach is below the parent rate,
-> or if the multiplier is above the maximum that we can reach, we will end =
-up
-> with a completely bogus one that the clock cannot achieve.
->=20
-> Fixes: f2e0a53271a4 ("clk: Add a basic multiplier clock")
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+The previous implementation already allowed for this somewhat, however no
+error was given if dok wasn't given whilst dc_valid was.
 
-Any comments?
+The new implementation enforces dok presence when dc_valid is given. Whilst
+allowing dcm to be optional.
 
-Thanks!
-Maxime
+Signed-off-by: Chris Lapa <chris@lapa.com.au>
+---
+ drivers/power/max8903_charger.c       | 40 ++++++++++++-----------------------
+ include/linux/power/max8903_charger.h |  6 +++---
+ 2 files changed, 16 insertions(+), 30 deletions(-)
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---Z8pjODCYYz+3zRe3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXWrMqAAoJEBx+YmzsjxAgW+MP/RTwL+3hhvILaZapjZpT9/td
-VI39fp64YttwWC0j8ck/rkp+y2o35fCZOKS1Kr63+hmTZO+g5/kITYo0ntNBC9Xy
-emJCLeCAUnciQ/MXQ4Loog4jUHNhcEL6X0OtY/oQL3VoXT4ufR2fLMrNXgGRTi70
-tkAJREL7idPpS3kIa3eyzL/mQ1f9Zvrn1jYjqt3GjiLcX7VMbSKz/OYXjO5PuIt/
-loT9yq6DXbrOQY/hj3LnZpbYu9XCSuybTa2pY6TEuZYRbGsP72E/t9xhmxTtRKDK
-oNCznEoK95keVQqEXk3Fjs/SNPFykbmEYQbtK7nwwfGMuxqJUARm+mLgcu/56QCE
-BbFcPfT16vdxi55FBlpwWz/0LXODiFIf1yVzXrvnlS+czesTAL0R/wIx4i/6hDaL
-AkWmT4+CDVYbx+74bEAXLHptyF5e6ne62yE6Y5uYe5j+EBZU6W4K/BRDNiZXH6CD
-jlngV9fBoW/P81zMNYknProId01G4AOPBUxfGQKPQ3fhCdftCPfDu0qHf4F8I3cI
-2aMDz4EMLAB5UY1Gxu02Vq9aPQ5TZwmjo1Z1M3O5/xQErEB9c5D53D2xuWFDhkUC
-ZY5eidDSFPg3RXCkC58mjA8fmJ2IIsIuWliJP52x4PqtoU3FEXC+uT6Ia1yy23B+
-kZY2B5z0e9+EPuw5B5e7
-=fvQF
------END PGP SIGNATURE-----
-
---Z8pjODCYYz+3zRe3--
+diff --git a/drivers/power/max8903_charger.c b/drivers/power/max8903_charger.c
+index d7544c8..20d4b55 100644
+--- a/drivers/power/max8903_charger.c
++++ b/drivers/power/max8903_charger.c
+@@ -282,9 +282,7 @@ static int max8903_probe(struct platform_device *pdev)
+ 
+ 	if (charger->pdata->dc_valid) {
+ 		if (charger->pdata->dok &&
+-				gpio_is_valid(charger->pdata->dok) &&
+-				charger->pdata->dcm &&
+-				gpio_is_valid(charger->pdata->dcm)) {
++				gpio_is_valid(charger->pdata->dok)) {
+ 			ret = devm_gpio_request(dev,
+ 						charger->pdata->dok,
+ 						charger->psy_desc.name);
+@@ -295,6 +293,17 @@ static int max8903_probe(struct platform_device *pdev)
+ 				return -EINVAL;
+ 			}
+ 
++			gpio = charger->pdata->dok; /* PULL_UPed Interrupt */
++			ta_in = gpio_get_value(gpio) ? 0 : 1;
++		} else {
++			dev_err(dev, "When DC is wired, DOK should"
++					" be wired as well.\n");
++			return -EINVAL;
++		}
++	}
++
++	if (charger->pdata->dcm) {
++		if (gpio_is_valid(charger->pdata->dcm)) {
+ 			ret = devm_gpio_request(dev,
+ 						charger->pdata->dcm,
+ 						charger->psy_desc.name);
+@@ -305,35 +314,12 @@ static int max8903_probe(struct platform_device *pdev)
+ 				return -EINVAL;
+ 			}
+ 
+-			gpio = charger->pdata->dok; /* PULL_UPed Interrupt */
+-			ta_in = gpio_get_value(gpio) ? 0 : 1;
+-
+ 			gpio = charger->pdata->dcm; /* Output */
+ 			gpio_set_value(gpio, ta_in);
+ 		} else {
+-			dev_err(dev, "When DC is wired, DOK and DCM should"
+-					" be wired as well.\n");
++			dev_err(dev, "Invalid pin: dcm.\n");
+ 			return -EINVAL;
+ 		}
+-	} else {
+-		if (charger->pdata->dcm) {
+-			if (gpio_is_valid(charger->pdata->dcm)) {
+-				ret = devm_gpio_request(dev,
+-							charger->pdata->dcm,
+-							charger->psy_desc.name);
+-				if (ret) {
+-					dev_err(dev,
+-						"Failed GPIO request for dcm: %d err %d\n",
+-						charger->pdata->dcm, ret);
+-					return -EINVAL;
+-				}
+-
+-				gpio_set_value(charger->pdata->dcm, 0);
+-			} else {
+-				dev_err(dev, "Invalid pin: dcm.\n");
+-				return -EINVAL;
+-			}
+-		}
+ 	}
+ 
+ 	if (charger->pdata->usb_valid) {
+diff --git a/include/linux/power/max8903_charger.h b/include/linux/power/max8903_charger.h
+index 24f51db..89d3f1c 100644
+--- a/include/linux/power/max8903_charger.h
++++ b/include/linux/power/max8903_charger.h
+@@ -26,8 +26,8 @@
+ struct max8903_pdata {
+ 	/*
+ 	 * GPIOs
+-	 * cen, chg, flt, and usus are optional.
+-	 * dok, dcm, and uok are not optional depending on the status of
++	 * cen, chg, flt, dcm and usus are optional.
++	 * dok and uok are not optional depending on the status of
+ 	 * dc_valid and usb_valid.
+ 	 */
+ 	int cen;	/* Charger Enable input */
+@@ -41,7 +41,7 @@ struct max8903_pdata {
+ 	/*
+ 	 * DC(Adapter/TA) is wired
+ 	 * When dc_valid is true,
+-	 *	dok and dcm should be valid.
++	 *	dok should be valid.
+ 	 *
+ 	 * At least one of dc_valid or usb_valid should be true.
+ 	 */
+-- 
+1.9.1
