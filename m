@@ -1,73 +1,143 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: Re: Add MediaTek USB3 DRD Driver
-Date: Fri, 10 Jun 2016 12:27:11 +0300
-Message-ID: <8760th75sg.fsf@linux.intel.com>
-References: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] USB: Fix of_usb_get_dr_mode_by_phy with a shared
+ phy block
+Date: Fri, 10 Jun 2016 11:27:37 +0200
+Message-ID: <764e8d4b-4b8a-6b8a-db34-424efbc8ca93@redhat.com>
+References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
+ <20160609143004.GA2167@uda0271908>
+ <9a05c16a-e8a2-02b7-c093-1131e27bcdd4@redhat.com>
+ <20160609194936.GB2167@uda0271908>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160609194936.GB2167@uda0271908>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
-
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
 
 Hi,
 
-Chunfeng Yun <chunfeng.yun@mediatek.com> writes:
-> From 8fdc924cecf0ca14da6e8aba360501e53437e548 Mon Sep 17 00:00:00 2001
-> From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Date: Fri, 10 Jun 2016 15:20:20 +0800
-> Subject: [PATCH 0/5] Add MediaTek USB3 DRD Driver
+On 09-06-16 21:49, Bin Liu wrote:
+> Hi,
 >
-> These patches introduce the MediaTek USB3 dual-role controller
-> driver.
+> On Thu, Jun 09, 2016 at 04:51:45PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 09-06-16 16:30, Bin Liu wrote:
+>>> Hi,
+>>>
+>>> On Sun, Jun 05, 2016 at 04:59:33PM +0200, Hans de Goede wrote:
+>>>> Some SoCs have a single phy-hw-block with multiple phys, this is
+>>>> modelled by a single phy dts node, so we end up with multiple
+>>>> controller nodes with a phys property pointing to the phy-node
+>>>> of the otg-phy.
+>>>>
+>>>> Only one of these controllers typically is an otg controller, yet we
+>>>> were checking the first controller who uses a phy from the block and
+>>>> then end up looking for a dr_mode property in e.g. the ehci controller.
+>>>>
+>>>> This commit fixes this by adding an arg0 parameter to
+>>>> of_usb_get_dr_mode_by_phy and make of_usb_get_dr_mode_by_phy
+>>>> check that this matches the phandle args[0] value when looking for
+>>>> the otg controller.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>> Changes in v2:
+>>>> -Add a args0 parameter instead of looking for nodes with a dr_mode property
+>>>> Changes in v3:
+>>>> -No changes
+>>>> ---
+>>>> drivers/usb/common/common.c  | 31 ++++++++++++++++++-------------
+>>>> drivers/usb/phy/phy-am335x.c |  2 +-
+>>>> include/linux/usb/of.h       |  4 ++--
+>>>> 3 files changed, 21 insertions(+), 16 deletions(-)
+>>>
+>>> This breaks am335x.
+>>>
+>>> [   17.433166] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
+>>> for /ocp/usb@47400000/usb-phy@47401300
+>>> [   17.443627] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
+>>> for /ocp/usb@47400000/usb-phy@47401b00
+>>> [   17.454005] am335x-phy-driver 47401300.usb-phy: dr_mode 0
+>>> [   17.460518] 47401300.usb-phy supply vcc not found, using dummy
+>>> regulator
+>>> [   17.469685] /ocp/usb@47400000/usb@47401000: could not get #phy-cells
+>>> for /ocp/usb@47400000/usb-phy@47401300
+>>> [   17.479998] /ocp/usb@47400000/usb@47401800: could not get #phy-cells
+>>> for /ocp/usb@47400000/usb-phy@47401b00
+>>> [   17.490342] am335x-phy-driver 47401b00.usb-phy: dr_mode 0
+>>
+>> That is weird, quoting: drivers/phy/phy-core.c: _of_phy_get():
+>>
+>>         ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
+>>                 index, &args);
+>>         if (ret)
+>>                 return ERR_PTR(-ENODEV);
+>>
+>> So if #phy-cells is not defined, then the phy core should not
+>> be able to work with the dts files in question at all.
 >
-> The driver can be configured as Dual-Role Device (DRD),
-> Peripheral Only and Host Only (xHCI) modes. It works well
-> with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
-> tested on MT8173 platform which only contains USB2.0 device IP,
-> and on MT6290 platform which contains USB3.0 device IP.
+> am335x phy does not use phy framework, so those phy core api is not
+> called.
 >
-> Change in v3:
-> 1. fix some typo error
-> 2. rename mtu3.txt to mt8173-mtu3.txt
+>>
+>> All my patch does is make the way of_usb_get_dr_mode_by_phy parses
+>> phy-handles be identical to how phy-core.c does it.
+>>
+>> I see that the usb0_phy node in arch/arm/boot/dts/am33xx.dtsi
+>> indeed lacks a "#phy-cells = <0>;" line.
+>>
+>> Quoting: Documentation/devicetree/bindings/phy/phy-bindings.txt
+>>
+>> PHY device node
+>> ===============
+>>
+>> Required Properties:
+>> #phy-cells:     Number of cells in a PHY specifier;  The meaning of all those
+>>                 cells is defined by the binding for the phy node. The PHY
+>>                 provider can use the values in cells to find the appropriate
+>>                 PHY.
+>>
+>> So not having #phy-cells defined for a phy-node clearly is a bug.
 >
-> Change in v2:
-> 1. modify binding docs according to suggestions
-> 2. modify some comments and remove some dummy blank lines
-> 3. fix memory leakage
+> am335x phy does not follow the bindings in phy/, but usb/phy/.
 
-I don't see anything inherently wrong with this series. But keep in mind
-I don't have HW to test. I can take the peripheral driver in a few days.
+Ah, I did not know about those, that explains. I will send a v4 of
+the patch which will keep compatibility with the usb/phy/ bindings
+when the passed in arg0 == -1.
 
-=2D-=20
-balbi
+Note I will not be resending patch 2-4, please merge these as they
+are (no changes are needed).
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+>>
+>> A patch like the following should fix this:
+>>
+>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+>> index 52be48b..c4ff788d 100644
+>> --- a/arch/arm/boot/dts/am33xx.dtsi
+>> +++ b/arch/arm/boot/dts/am33xx.dtsi
+>> @@ -557,6 +557,7 @@
+>>  			};
+>>
+>>  			usb0_phy: usb-phy@47401300 {
+>> +				#phy-cells = <0>;
+>
+> This seems to be ok, but this patch would break the dt backward compatible.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+I understand, as said above I'll do a new version of the patch preserving
+compatibility.
 
-iQIcBAEBCAAGBQJXWofvAAoJEIaOsuA1yqREjfMP/jHqr0YYEw25bawj6Sd0VNSV
-foC62fuiGDyOY508ES04EQjV7Q9lMa2hWfel/l2SMOV+v8bcNrv7qnySAoxt8HN7
-+9OCiFN68r3wAqZ6H01YsbOWtSC6b6vIRnTB723AJ20vw2IL+WGhZ3AL+5GzWwtU
-cBWRcuFOh3hNzkI8EGcnNxpCuRZLFHSb4g+Pc010m7oEm9GdnywsHoRYd7XzHwhK
-ALlkjv1wUypHNep1sAOXx9hZL8FxTaov29+a9miu9WWnCM7b90yEJvCd31pxm+zC
-ZjzgJoD8MAEl7lKwNeHBR83km4ZznoLa2PV8Yedu4oTqvWEAVUeL876S1JkxzmMo
-LjrEoIKW7WZYsEGvXlUOu9Kr5XwegkstSFbo47clvxs2WbKyZsRglcsKq8AM3JKW
-mEXhkjgY10I5//Ql0OjGBy8jV1TuPSguROXK3GU9M5F0/+pYGLqmgfjqbuK/3eRq
-kQaiyYmIUA/k5/jEWAHelyAjf6QnPX523TLsfDZsno59+eP4+3aXEXdX8hoKQtvC
-H006W8Apwy4uDdoWG7QVQtinPYpe0mywLLIBC6trjktl1/R2wrqYEyHlk9sCG1Yv
-hYi2Fv2szDH38MiZACCOO+Osu1hAqayjQ5VXCSckraMH0OfYDfzuRWZknAkrCNjg
-GHcg6XeJtQ4pt6etVuXu
-=12Xo
------END PGP SIGNATURE-----
---=-=-=--
+>>  				compatible = "ti,am335x-usb-phy";
+>>  				reg = <0x47401300 0x100>;
+>>  				reg-names = "phy";
+>>
+
+Regards,
+
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
