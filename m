@@ -1,65 +1,51 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Thu, 9 Jun 2016 21:01:01 -0700
-Message-ID: <CAD=FV=XiRgjAU2STck4mcWAERqZDvNSsCUytHDnWD+SHL2sRrQ@mail.gmail.com>
-References: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: bindings: add dt documentation for
+ Rockchip PCIe PHY
+Date: Thu, 9 Jun 2016 21:01:24 -0700
+Message-ID: <CAD=FV=W-GCrmsdt2s1-Ua91Ch=r-PwgKqcc9-o8Hwg2bqMpUyA@mail.gmail.com>
+References: <1465370708-23619-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465370708-23619-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Shawn,
 
-On Wed, Jun 8, 2016 at 1:05 AM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> +pcie0: pcie@f8000000 {
-> +       compatible = "rockchip,rk3399-pcie";
-> +       #address-cells = <3>;
-> +       #size-cells = <2>;
-> +       clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
-> +                <&cru PCLK_PCIE>;
-> +       clock-names = "aclk", "aclk-perf",
-> +                     "hclk";
+On Wed, Jun 8, 2016 at 12:25 AM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This patch adds a binding that describes the Rockchip PCIe PHY
+> found on Rockchip SoCs PCIe interface.
+>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>
+>  .../devicetree/bindings/phy/rockchip-pcie-phy.txt  | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+> new file mode 100644
+> index 0000000..ba8c406
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+> @@ -0,0 +1,22 @@
+> +Rockchip PCIE PHY
+> +-----------------------
+> +
+> +Required properties:
+> + - compatible: rockchip,rk3399-pcie-phy
+> + - #phy-cells: must be 0
 
-Code also requires a "pm" clock.
+Code also requires reset and clock.
 
-> +       bus-range = <0x0 0x1>;
-> +       interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
-> +                    <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-> +       interrupt-names: "sys", "legacy", "client";
-
-Shouldn't be ":", should be "=".
-
-
-> +       assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
-> +       assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
-> +       assigned-clock-rates = <100000000>;
-> +       ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-> +       ranges = < 0x82000000 0 0xfa000000 0x0 0xfa000000 0 0x600000
-> +                  0x81000000 0 0xfa600000 0x0 0xfa600000 0 0x100000 >;
-
-nit: I don't thin it's common to have spaces before/after the ">" and "<".
-nit: Be consistent about 0 vs. 0x0 in ranges.
-
-
-> +       num-lanes = <4>;
-> +       reg = < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0x0 0x1000000 >;
-> +       reg-name = "axi-base", "apb-base";
-
-Should be "reg-names" (with an "s")
-
-
-> +       resets = <&cru SRST_PCIEPHY>, <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-> +                <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
-> +       reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
-
-You have 5 resets but 4 reset names.  That doesn't seem right.  Code
-shows you only getting 4, so presumably you need to remove the
-SRST_PCIEPHY one.
-
-
--Doug
+clocks = <&cru SCLK_PCIEPHY_REF>;
+clock-names = "refclk";
+resets = <&cru SRST_PCIEPHY>;
+reset-names = "phy";
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
