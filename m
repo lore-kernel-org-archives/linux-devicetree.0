@@ -1,56 +1,72 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/3] dt-bindings: Document Renesas R-Car FCP power-domains usage
-Date: Fri, 10 Jun 2016 21:11:25 +0200
-Message-ID: <CAMuHMdWQZjE+AnPry6PiVc69PVdZ_2zstOKR==B6nywun2Om9Q@mail.gmail.com>
-References: <1465479695-18644-1-git-send-email-kieran@bingham.xyz>
- <1465479695-18644-3-git-send-email-kieran@bingham.xyz> <20160610173914.GA20505@rob-hp-laptop>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
+Date: Fri, 10 Jun 2016 22:29:17 +0300
+Message-ID: <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
+ <20160601005751.GG20527@verge.net.au>
+ <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
+ <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
+ <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
+ <20160610010245.GA10152@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160610173914.GA20505@rob-hp-laptop>
+In-Reply-To: <20160610010245.GA10152@verge.net.au>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kieran Bingham <kieran@ksquared.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-media@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 06/10/2016 04:02 AM, Simon Horman wrote:
 
-On Fri, Jun 10, 2016 at 7:39 PM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Jun 09, 2016 at 02:41:33PM +0100, Kieran Bingham wrote:
->> The power domain must be specified to bring the device out of module
->> standby. Document this in the example provided, so that new additions
->> are not missed.
+>> [...]
 >>
->> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
->> ---
->>  Documentation/devicetree/bindings/media/renesas,fcp.txt | 1 +
->>  1 file changed, 1 insertion(+)
+>>>>> And that the system behaves sanely on suspend/resume.
+>>>>
+>>>>   I'd be thankful if you told me how to test that. :-)
+>>>
+>>> System suspend:
+>>>
+>>>    echo mem > /sys/power/state
 >>
->> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
->> index 271dcfdb5a76..6a55f5215221 100644
->> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
->> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
->> @@ -31,4 +31,5 @@ Device node example
->>               compatible = "renesas,r8a7795-fcpv", "renesas,fcpv";
->>               reg = <0 0xfea2f000 0 0x200>;
->>               clocks = <&cpg CPG_MOD 602>;
->> +             power-domains = <&sysc R8A7795_PD_A3VP>;
+>>    Oh. I know that one! :-)
+>>
+>>> System resume: You're gonna need a "wakeup-source" in your DTS, e.g. gpio-keys.
+>>> Serial should work too, echo "enabled" to the corresponding wakeup
+>>> file in /sys first.
+>>
+>>    I'm afraid I couldn't find that file. All I saw were RPM controls...
+>>
+>>> In case of issues, try "echo 0 > /sys/module/printk/parameters/console_suspend".
+>>
+>>    There's no problems suspending, it's the resuming that's a problem for me.
+>>
+>>> Good luck!
+>>
+>>    As usual, there was no luck. :-)
+>>
+>> WBR, Sergei
 >
-> This needs to be documented above too, not just the example.
+> Does resume work for UP (i.e. without SMP)?
 
-Why? Power domains are an optional feature, whose presence depends
-on the platform, not on the device.
+    No. My problem with resume is I can't wake up the remote system. I don't 
+see the needed 'wakeup' file in /sys/devices/platform/soc/e6e60000.serial/...
+     However, if I enable CONFIG_PM_[ADVANCED_]DEBUG and do
 
-Hence "power-domains" properties may appear in any device node.
-Having to document them in every single binding document is overkill.
+$ echo -n core /sys/.power/pm_test
 
-Gr{oetje,eeting}s,
+the system happily wakes up after a small delay (5 s), w/either SMP or UP kernel.
 
-                        Geert
+> How did testing CPU hotplug go? Did it work for all CPUs?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+    Sure!
+    The only problem I'm seeing (again) is the RCAN clock failing to register:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+rcar_gen2_cpg_clocks_init: failed to register cpg_clocks rcan clock (-12)
+
+    I was going to look at it yesterday but (wrongly) thought it somehow cured 
+itself... I'll look at it now.
+
+MBR, Sergei
