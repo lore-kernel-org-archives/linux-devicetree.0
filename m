@@ -1,38 +1,44 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 2/7] iommu/rockchip: add map_sg callback for
- rk_iommu_ops
-Date: Fri, 10 Jun 2016 14:31:08 +0900
-Message-ID: <CAAFQd5DNM518hk_RwF+af5Z881o9aEFSC237CvgfB8EAPM8s_g@mail.gmail.com>
-References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com>
- <1465392392-2003-3-git-send-email-zhengsq@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465392392-2003-3-git-send-email-zhengsq@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shunqian Zheng <zhengsq@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux@armlinux.org.uk, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, simon xue <xxm@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Subject: [PATCH v5 2/7] binding: Make "mdio-parent-bus" property from mandatory to optional
+Date: Fri, 10 Jun 2016 11:03:46 +0530
+Message-ID: <1465536831-13023-3-git-send-email-pramod.kumar@broadcom.com>
+References: <1465536831-13023-1-git-send-email-pramod.kumar@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465536831-13023-1-git-send-email-pramod.kumar@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIEp1biA4LCAyMDE2IGF0IDEwOjI2IFBNLCBTaHVucWlhbiBaaGVuZyA8emhl
-bmdzcUByb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4gRnJvbTogU2ltb24gWHVlIDx4eG1Acm9jay1j
-aGlwcy5jb20+Cj4KPiBUaGUgaW9tbXVfZG1hX2FsbG9jKCkgaW4gaW9tbXUvZG1hLWlvbW11LmMg
-Y2FsbHMgaW9tbXVfbWFwX3NnKCkKPiB0aGF0IHJlcXVpcmVzIHRoZSBjYWxsYmFjayBpb21tdV9v
-cHMgLm1hcF9zZygpLiBBZGRpbmcgdGhlCj4gZGVmYXVsdF9pb21tdV9tYXBfc2coKSB0byByb2Nr
-Y2hpcCBpb21tdSBhY2NvcmRpbmdseS4KPgo+IFNpZ25lZC1vZmYtYnk6IFNpbW9uIFh1ZSA8eHht
-QHJvY2stY2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFNodW5xaWFuIFpoZW5nIDx4eG1Acm9j
-ay1jaGlwcy5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUuYyB8IDEg
-Kwo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKClJldmlld2VkLWJ5OiBUb21hc3og
-RmlnYSA8dGZpZ2FAY2hyb21pdW0ub3JnPgoKQmVzdCByZWdhcmRzLApUb21hc3oKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Change "mdio-parent-bus" from mandatory section to optional
+as it won't be required by integrated MDIO multiplexer
+which has bus selection and mdio transaction generation logic,
+integrated inside.
+
+Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/net/mdio-mux.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/mdio-mux.txt b/Documentation/devicetree/bindings/net/mdio-mux.txt
+index 491f5bd..f58571f 100644
+--- a/Documentation/devicetree/bindings/net/mdio-mux.txt
++++ b/Documentation/devicetree/bindings/net/mdio-mux.txt
+@@ -5,11 +5,12 @@ numbered uniquely in a device dependent manner.  The nodes for an MDIO
+ bus multiplexer/switch will have one child node for each child bus.
+ 
+ Required properties:
+-- mdio-parent-bus : phandle to the parent MDIO bus.
+ - #address-cells = <1>;
+ - #size-cells = <0>;
+ 
+ Optional properties:
++- mdio-parent-bus : phandle to the parent MDIO bus.
++
+ - Other properties specific to the multiplexer/switch hardware.
+ 
+ Required properties for child nodes:
+-- 
+1.9.1
