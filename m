@@ -1,64 +1,44 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 20/20] dt-bindings: pwm: sti: Update DT bindings with
- recent changes
-Date: Fri, 10 Jun 2016 15:10:08 +0200
-Message-ID: <20160610131008.GF27142@ulmo.ba.sec>
-References: <20160608092135.21184-1-lee.jones@linaro.org>
- <20160608092135.21184-21-lee.jones@linaro.org>
- <20160608205152.GA5511@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 06/11] Documentation: mmc: sdhci-of-arasan: Add ability
+ to export card clock
+Date: Fri, 10 Jun 2016 08:10:52 -0500
+Message-ID: <20160610131052.GA9351@rob-hp-laptop>
+References: <1465339484-969-1-git-send-email-dianders@chromium.org>
+ <1465339484-969-7-git-send-email-dianders@chromium.org>
+ <20160608201923.GA20683@rob-hp-laptop>
+ <CAD=FV=WX_bu-dmALkSmPPrWeatfjJND3M59GJoVEr6bv0vLq9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cpvLTH7QU4gwfq3S"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160608205152.GA5511@rob-hp-laptop>
+In-Reply-To: <CAD=FV=WX_bu-dmALkSmPPrWeatfjJND3M59GJoVEr6bv0vLq9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, Ziyuan Xu <xzy.xu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Adrian Hunter <adrian.hunter@intel.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 08, 2016 at 01:52:20PM -0700, Doug Anderson wrote:
+> Rob,
+> 
+> On Wed, Jun 8, 2016 at 1:19 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Tue, Jun 07, 2016 at 03:44:39PM -0700, Douglas Anderson wrote:
+> >> Some SD/eMMC PHYs (like the PHY from Arasan that is designed to work
+> >> with arasan,sdhci-5.1) need to know the card clock in order to function
+> >> properly.  Let's expose this clock using a standard device tree
+> >> mechanism so that the PHY can get access to and query the card clock.
+> >
+> > Need to know the clock freq or need the clock? The former doesn't need
+> > to be in DT.
+> 
+> The PHY needs to know the card clock frequency.  This clock clock
+> frequency is known nowhere else in the system except the SDHCI driver
+> since the SDHCI component takes its input clock and applies some
+> dividers to get the card clock.  In silicon, the SDHCI component and
+> the PHY are separate and there is a physical clock signal going from
+> the SDHCI component to the PHY component, so modeling this as a clock
+> in in the device tree seems sane, doesn't it?
 
---cpvLTH7QU4gwfq3S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, please just re-word it to make it clear there is a connection. With 
+that,
 
-On Wed, Jun 08, 2016 at 03:51:52PM -0500, Rob Herring wrote:
-> On Wed, Jun 08, 2016 at 10:21:35AM +0100, Lee Jones wrote:
-> > We're renaming the 'st,pwm-num-chan' binding to 'st,pwm-num-devs' to
-> > be more inline with the naming conventions of the subsystem.  Where
-> > we used to treat each line as a channel, the PWM convention is to
-> > describe them as devices.
->=20
-> That's all linux implementation details and you are breaking=20
-> compatibility.
-
-While it's true that the API calls channels struct pwm_device, that's
-primarily for historical reasons. It's completely fine, and in fact most
-drivers already do exactly that, to internally refer to channels as
-channels.
-
-Thierry
-
---cpvLTH7QU4gwfq3S
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXWrwtAAoJEN0jrNd/PrOhcpoQALhZwFanc3Z3iglfH06D4Rtq
-+qp7hIfnSVFsMwYVE28Y/Q+8hWqx1zAhTkddIzARS3NAibjM5btTeZz6YFszatl8
-ufRqR56BcQj1w7ZFe2+/lNv+ZFvFIteWmPfgXwUmKjWbKj/JQe9FKX0cjtK3L8gJ
-4CKFYYBYoj8m76S0fFPyuuCkW9AywK8mlyo/z3KYuvv2DBKKiLJJFU1uWeC1xFwn
-xshanrmMdX3sz4qZEkVr0hryczbsJUo/dTD02Yha/Pa+/soLCl/nWOiMZMp6TBRX
-aIbSl/3MnNjPlCLvh2GQIfVzCsVFfbbl9zTlXX58leoqgs9Fwuo3nNli99FuD1MH
-6wF5KdS9D4jUssIjsvrKQUZnTlenHiMNginpfLnUOcD5NJ4wbzWgqzzc3TjUSGPx
-11s0Xyrluut3USnWTVHokiSFU2Gygi32+Wr/1T1KcyBa/EQrXiPmLuf3m2EyKNlL
-SSZuBH4+T+KEMK8jiJrtrqwv6v9fJEJW3sIHVBh5G42Ss9SVDb/4WfAf06kMgnQv
-5KiP/dWMyL/2RLWKG08ovMvDviWkyQ0iFMmO8kfHRc0BCJ0gXirFZyopiaXkdUDj
-WhHTZIEJsE1IryPTO+eo0qM7ufYrBjOcMo8V6SLxMHypT+hAs0t3IhL7Qf/ZHnd9
-/Qpo2Q/4Ytm70TDSkmS2
-=iKEu
------END PGP SIGNATURE-----
-
---cpvLTH7QU4gwfq3S--
+Acked-by: Rob Herring <robh@kernel.org>
