@@ -1,34 +1,53 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: add Sharp LQ123P1JX31 panel binding
-Date: Fri, 10 Jun 2016 10:00:09 -0700
-Message-ID: <CAD=FV=Vz2m9Oo0Afj67sj-S5F_zNfJ7LRxF2O6PGiSUDU3dcYw@mail.gmail.com>
-References: <1465577431-20600-1-git-send-email-dianders@chromium.org>
+From: Han Xu <han.xu@nxp.com>
+Subject: [PATCH v2 0/6] support gpmi on i.MX6UL/7D and HW bitflip on i.MX6QP/7D
+Date: Fri, 10 Jun 2016 12:01:28 -0500
+Message-ID: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465577431-20600-1-git-send-email-dianders@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: han.xu@nxp.com, boris.brezillon@free-electrons.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmksIEp1biAxMCwgMjAxNiBhdCA5OjUwIEFNLCBEb3VnbGFzIEFuZGVyc29uIDxk
-aWFuZGVyc0BjaHJvbWl1bS5vcmc+IHdyb3RlOgo+IFRoZSBTdGFycnkgS1IxMjJFQTBTUkEgaXMg
-YSAxMi4yIiwgMTkyMHgxMjAwIFRGVC1MQ0QgcGFuZWwgY29ubmVjdGVkCj4gdXNpbmcgZURQIGlu
-dGVyZmFjZXMuCj4KPiBTaWduZWQtb2ZmLWJ5OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0Bj
-aHJvbWl1bS5vcmc+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
-ZWwvc3RhcnJ5LGtyMTIyZWEwc3JhLnR4dCAgICAgICB8IDcgKysrKysrKwo+ICAxIGZpbGUgY2hh
-bmdlZCwgNyBpbnNlcnRpb25zKCspCgpVZ2guICBJIGNsZWFybHkgbWVzc2VkIHVwIHRoZSBzdWJq
-ZWN0IGFuZCBjb3BpZWQgZnJvbSBZYWtpcidzLiAgU29ycnkhCiA6KCAgSSdsbCByZXNlbmQuLi4K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+add support for gpmi nand on i.MX6UL and i.MX7D, document the related
+properties in DT and add the HW bitflip detection and correction for
+i.MX6QP and i.MX7D.
+
+v1 ---> v2:
+fix several indent and open parenthesis issues
+drop off the void cast
+rebase to latest code and adopt to SW bitflip code
+split bitflip and i.MX6QP code
+
+Han Xu (6):
+  mtd: nand: gpmi: add GPMI NAND support for i.MX7D
+  mtd: nand: gpmi: document the clocks and clock-names in DT property
+  mtd: nand: gpmi: add GPMI NAND support for i.MX6QP
+  mtd: nand: gpmi: correct bitflip for erased NAND page
+  mtd: nand: gpmi: support NAND on i.MX6UL
+  mtd: nand: gpmi: document the new supported chip in DT
+
+ .../devicetree/bindings/mtd/gpmi-nand.txt          | 12 +++-
+ drivers/mtd/nand/gpmi-nand/bch-regs.h              | 24 +++++--
+ drivers/mtd/nand/gpmi-nand/gpmi-lib.c              | 15 +++--
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.c             | 75 ++++++++++++++++++++--
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.h             | 15 ++++-
+ 5 files changed, 119 insertions(+), 22 deletions(-)
+
+-- 
+1.9.1
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
