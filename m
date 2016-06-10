@@ -1,45 +1,70 @@
-From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] musb: sunxi: Simplify dr_mode handling
-Date: Fri, 10 Jun 2016 09:53:40 -0500
-Message-ID: <20160610145340.GE2167@uda0271908>
-References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
- <1465138776-6003-4-git-send-email-hdegoede@redhat.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 3/4] mfd: axp20x: Add axp20x-usb-power-supply for
+ axp22x pmics
+Date: Fri, 10 Jun 2016 15:56:22 +0100
+Message-ID: <20160610145622.GB7351@dell>
+References: <1464887936-17020-1-git-send-email-hdegoede@redhat.com>
+ <1464887936-17020-3-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465138776-6003-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464887936-17020-3-git-send-email-hdegoede@redhat.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 02 Jun 2016, Hans de Goede wrote:
 
-On Sun, Jun 05, 2016 at 04:59:36PM +0200, Hans de Goede wrote:
-> phy-sun4i-usb now has proper dr_mode handling, it always registers an
-> extcon, and sends a notify with the mode (even when in peripheral- /
-> host-only mode) at least once.
-> 
-> So we can simply the sunxi musb glue by always registering its extcon
-> notifier and relying on sunxi_musb_work() to enable vbus when in
-> host-only mode.
-> 
-> This also enables host- and peripheral-only mode with vbus monitoring.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Add axp20x-usb-power-supply for axp22x pmics.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
 > Changes in v2:
-> -No changes
-> Changes in v3:
-> -No changes
+> -Change compatible string for axp22x usb-power-supply cell to match v=
+2 of:
+>  "power: axp20x_usb: Add support for usb power-supply on axp22x pmics=
+"
+> ---
+>  drivers/mfd/axp20x.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-Acked-by: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+Applied, thanks.
 
-Regards,
--Bin.
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index ca04361..6364dab 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -160,6 +160,11 @@ static struct resource axp20x_usb_power_supply_r=
+esources[] =3D {
+>  	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_NOT_VALID, "VBUS_NOT_VALID"),
+>  };
+> =20
+> +static struct resource axp22x_usb_power_supply_resources[] =3D {
+> +	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
+> +	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+> +};
+> +
+>  static struct resource axp22x_pek_resources[] =3D {
+>  	{
+>  		.name   =3D "PEK_DBR",
+> @@ -527,6 +532,11 @@ static struct mfd_cell axp22x_cells[] =3D {
+>  		.resources		=3D axp22x_pek_resources,
+>  	}, {
+>  		.name			=3D "axp20x-regulator",
+> +	}, {
+> +		.name		=3D "axp20x-usb-power-supply",
+> +		.of_compatible	=3D "x-powers,axp221-usb-power-supply",
+> +		.num_resources	=3D ARRAY_SIZE(axp22x_usb_power_supply_resources),
+> +		.resources	=3D axp22x_usb_power_supply_resources,
+>  	},
+>  };
+> =20
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
