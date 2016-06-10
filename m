@@ -1,7 +1,8 @@
 From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Example 1 -- show only the nodes that have complications.
-Date: Fri, 10 Jun 2016 16:05:04 -0700
-Message-ID: <575B47A0.4050906@gmail.com>
+Subject: [PATCH v2] scripts/dtc: dt_to_config - example 2: nodes with
+ complications
+Date: Fri, 10 Jun 2016 16:06:02 -0700
+Message-ID: <575B47DA.9030908@gmail.com>
 References: <575B46CE.6080903@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -13,13 +14,16 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gaurav.minoch
 Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Example 2 -- show only the nodes that have complications, with white list.
+
 Complications are things like multiple compatible values, multiple
 matching drivers, node is not enabled, etc.
 
-Upper case flags indicate what the complications are for each entry.
+Use driver white list.  Entries that used the white list have the
+'W' flag set.
 
 $ scripts/dtc/dt_to_config \
-   --include-suspect \
+   --include-suspect --white-list-driver \
    --config ${KBUILD_OUTPUT}/.config \
    arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
 -dDc-------y- : /clocks/sleep_clk : fixed-clock : arch/powerpc/platforms/512x/clock-commonclk.c : CONFIG_COMMON_CLK : y
@@ -38,31 +42,7 @@ Md-c-------y- : /cpus/idle-states/spc : qcom,idle-state-spc : drivers/soc/qcom/s
 MdDc-------y- : /cpus/idle-states/spc : arm,idle-state : drivers/cpuidle/cpuidle-arm.c : CONFIG_ARM_CPUIDLE : y
 MdDc-----n--F : /cpus/idle-states/spc : arm,idle-state : drivers/cpuidle/cpuidle-big_little.c : CONFIG_ARM_BIG_LITTLE_CPUIDLE : n
 
--dDc---Hx---- : /cpus/l2-cache : cache : arch/avr32/kernel/setup.c : obj-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : arch/ia64/kernel/perfmon.c : obj-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : arch/ia64/kernel/topology.c : obj-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : arch/mips/fw/arc/tree.c : lib-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : arch/mips/kvm/mips.c : kvm-objs : x
--dDc---Hx---- : /cpus/l2-cache : cache : arch/powerpc/kernel/cacheinfo.c : obj-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : arch/powerpc/platforms/powermac/setup.c : obj-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : arch/sh/kernel/cpu/proc.c : obj-y : x
--dDc---H-n--F : /cpus/l2-cache : cache : arch/sparc/kernel/mdesc.c : CONFIG_SPARC64 : n
--dDc---H-n--F : /cpus/l2-cache : cache : drivers/atm/horizon.c : CONFIG_ATM_HORIZON : n
--dDc---Hx---- : /cpus/l2-cache : cache : drivers/base/cacheinfo.c : obj-y : x
--dDc---H-n--F : /cpus/l2-cache : cache : drivers/edac/octeon_edac-pc.c : CONFIG_EDAC_OCTEON_PC : n
--dDc---H-n--F : /cpus/l2-cache : cache : drivers/hwmon/adm1029.c : CONFIG_SENSORS_ADM1029 : n
--dDc---Hxn--F : /cpus/l2-cache : cache : drivers/ide/ide-disk_proc.c : CONFIG_IDE_PROC_FS && CONFIG_IDE_GD_ATA && ide-gd_mod-y : n, n, x
--dDc---Hx---- : /cpus/l2-cache : cache : drivers/md/bcache/super.c : bcache-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : drivers/md/dm-cache-target.c : dm-cache-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : drivers/of/base.c : obj-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : drivers/staging/lustre/lustre/osc/osc_cache.c : osc-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : fs/btrfs/disk-io.c : btrfs-y : x
--dDc---Hx---- : /cpus/l2-cache : cache : fs/cachefiles/bind.c : cachefiles-y : x
--dDc---H-n--F : /cpus/l2-cache : cache : fs/nfs/cache_lib.c : CONFIG_NFS_USE_LEGACY_DNS : n
--dDc---H-n--F : /cpus/l2-cache : cache : mm/memcontrol.c : CONFIG_MEMCG : n
--dDc---Hx---- : /cpus/l2-cache : cache : net/sunrpc/rpc_pipe.c : sunrpc-y : x
--dD----H----- : /cpus/l2-cache : cache : tools/perf/builtin-list.c : no_config : x
--dD----H----- : /cpus/l2-cache : cache : tools/perf/builtin-record.c : no_config : x
+-------H----- : /cpus/l2-cache : cache : hardcoded_no_driver : no_config : x
 
 -dDc-------y- : /smem : qcom,smem : drivers/soc/qcom/smem.c : CONFIG_QCOM_SMEM : y
 -dDc-----n--F : /smem : qcom,smem : drivers/soc/qcom/smp2p.c : CONFIG_QCOM_SMP2P : n
@@ -144,53 +124,9 @@ Md-c-------y- : /soc/spmi@fc4cf000/pm8941@1 : qcom,spmi-pmic : drivers/mfd/qcom-
 
 -d-c-E---n--F : /soc/spmi@fc4cf000/pm8941@1/wled@d800 : qcom,pm8941-wled : drivers/video/backlight/pm8941-wled.c : CONFIG_BACKLIGHT_PM8941_WLED : n
 
--dDc---Hx---- : /soc/syscon@f9011000 : syscon : arch/arm/mach-clps711x/devices.c : obj-y : x
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : arch/arm/mach-u300/regulator.c : CONFIG_REGULATOR_AB3100 : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/fpga/zynq-fpga.c : CONFIG_FPGA_MGR_ZYNQ_FPGA : n
--dDc---H---y- : /soc/syscon@f9011000 : syscon : drivers/hwspinlock/qcom_hwspinlock.c : CONFIG_HWSPINLOCK_QCOM : y
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/input/touchscreen/ts4800-ts.c : CONFIG_TOUCHSCREEN_TS4800 : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/irqchip/irq-digicolor.c : CONFIG_ARCH_DIGICOLOR : n
--dDcC--Hx---- : /soc/syscon@f9011000 : syscon : drivers/media/platform/omap3isp/isp.c : omap3-isp-objs : x
--dDcC--H-n--F : /soc/syscon@f9011000 : syscon : drivers/media/platform/omap3isp/isp.c : CONFIG_VIDEO_OMAP3 : n
--dDc---H---y- : /soc/syscon@f9011000 : syscon : drivers/mfd/syscon.c : CONFIG_MFD_SYSCON : y
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/mfd/vexpress-sysreg.c : CONFIG_MFD_VEXPRESS_SYSREG : n
--dDcC--H-n--F : /soc/syscon@f9011000 : syscon : drivers/net/ethernet/ti/cpsw-common.c : CONFIG_TI_CPSW : n
--dDcC--H-n--F : /soc/syscon@f9011000 : syscon : drivers/net/ethernet/ti/cpsw-common.c : CONFIG_TI_DAVINCI_EMAC : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/phy/phy-dm816x-usb.c : CONFIG_PHY_DM816X_USB : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/phy/phy-exynos-mipi-video.c : CONFIG_PHY_EXYNOS_MIPI_VIDEO : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/pinctrl/pinctrl-zynq.c : CONFIG_PINCTRL_ZYNQ : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/power/reset/axxia-reset.c : CONFIG_POWER_RESET_AXXIA : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/power/reset/brcmstb-reboot.c : CONFIG_POWER_RESET_BRCMSTB : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/regulator/pbias-regulator.c : CONFIG_REGULATOR_PBIAS : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/reset/reset-zynq.c : CONFIG_ARCH_ZYNQ : n
--dDcC--Hx---- : /soc/syscon@f9011000 : syscon : drivers/staging/media/omap4iss/iss.c : omap4-iss-objs : x
--dDcC--H-n--F : /soc/syscon@f9011000 : syscon : drivers/staging/media/omap4iss/iss.c : CONFIG_VIDEO_OMAP4 : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/tty/serial/clps711x.c : CONFIG_SERIAL_CLPS711X : n
--dDc---H-n--F : /soc/syscon@f9011000 : syscon : drivers/watchdog/ts4800_wdt.c : CONFIG_TS4800_WATCHDOG : n
+-d-c---H---y- : /soc/syscon@f9011000 : syscon : drivers/mfd/syscon.c : CONFIG_MFD_SYSCON : y
 
--dDc---Hx---- : /soc/syscon@fd484000 : syscon : arch/arm/mach-clps711x/devices.c : obj-y : x
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : arch/arm/mach-u300/regulator.c : CONFIG_REGULATOR_AB3100 : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/fpga/zynq-fpga.c : CONFIG_FPGA_MGR_ZYNQ_FPGA : n
--dDc---H---y- : /soc/syscon@fd484000 : syscon : drivers/hwspinlock/qcom_hwspinlock.c : CONFIG_HWSPINLOCK_QCOM : y
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/input/touchscreen/ts4800-ts.c : CONFIG_TOUCHSCREEN_TS4800 : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/irqchip/irq-digicolor.c : CONFIG_ARCH_DIGICOLOR : n
--dDcC--Hx---- : /soc/syscon@fd484000 : syscon : drivers/media/platform/omap3isp/isp.c : omap3-isp-objs : x
--dDcC--H-n--F : /soc/syscon@fd484000 : syscon : drivers/media/platform/omap3isp/isp.c : CONFIG_VIDEO_OMAP3 : n
--dDc---H---y- : /soc/syscon@fd484000 : syscon : drivers/mfd/syscon.c : CONFIG_MFD_SYSCON : y
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/mfd/vexpress-sysreg.c : CONFIG_MFD_VEXPRESS_SYSREG : n
--dDcC--H-n--F : /soc/syscon@fd484000 : syscon : drivers/net/ethernet/ti/cpsw-common.c : CONFIG_TI_CPSW : n
--dDcC--H-n--F : /soc/syscon@fd484000 : syscon : drivers/net/ethernet/ti/cpsw-common.c : CONFIG_TI_DAVINCI_EMAC : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/phy/phy-dm816x-usb.c : CONFIG_PHY_DM816X_USB : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/phy/phy-exynos-mipi-video.c : CONFIG_PHY_EXYNOS_MIPI_VIDEO : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/pinctrl/pinctrl-zynq.c : CONFIG_PINCTRL_ZYNQ : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/power/reset/axxia-reset.c : CONFIG_POWER_RESET_AXXIA : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/power/reset/brcmstb-reboot.c : CONFIG_POWER_RESET_BRCMSTB : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/regulator/pbias-regulator.c : CONFIG_REGULATOR_PBIAS : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/reset/reset-zynq.c : CONFIG_ARCH_ZYNQ : n
--dDcC--Hx---- : /soc/syscon@fd484000 : syscon : drivers/staging/media/omap4iss/iss.c : omap4-iss-objs : x
--dDcC--H-n--F : /soc/syscon@fd484000 : syscon : drivers/staging/media/omap4iss/iss.c : CONFIG_VIDEO_OMAP4 : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/tty/serial/clps711x.c : CONFIG_SERIAL_CLPS711X : n
--dDc---H-n--F : /soc/syscon@fd484000 : syscon : drivers/watchdog/ts4800_wdt.c : CONFIG_TS4800_WATCHDOG : n
+-d-c---H---y- : /soc/syscon@fd484000 : syscon : drivers/mfd/syscon.c : CONFIG_MFD_SYSCON : y
 
 -dDc-------y- : /timer : arm,armv7-timer : arch/arm/kernel/vdso.c : CONFIG_VDSO : y
 -dDc-------y- : /timer : arm,armv7-timer : drivers/clocksource/arm_arch_timer.c : CONFIG_ARM_ARCH_TIMER : y
