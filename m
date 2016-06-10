@@ -1,108 +1,56 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 3/4] phy-sun4i-usb: Add workaround for missing Vbus det interrupts on A31
-Date: Fri, 10 Jun 2016 21:02:53 +0200
-Message-ID: <1465585374-10213-4-git-send-email-hdegoede@redhat.com>
-References: <1465585374-10213-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465585374-10213-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/3] dt-bindings: Document Renesas R-Car FCP power-domains usage
+Date: Fri, 10 Jun 2016 21:11:25 +0200
+Message-ID: <CAMuHMdWQZjE+AnPry6PiVc69PVdZ_2zstOKR==B6nywun2Om9Q@mail.gmail.com>
+References: <1465479695-18644-1-git-send-email-kieran@bingham.xyz>
+ <1465479695-18644-3-git-send-email-kieran@bingham.xyz> <20160610173914.GA20505@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160610173914.GA20505@rob-hp-laptop>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kieran Bingham <kieran@ksquared.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-media@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The A31 companion pmic (axp221) does not generate vbus change interrupts
-when the board is driving vbus, so we must poll when using the pmic for
-vbus-det _and_ we're driving vbus.
+Hi Rob,
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--No changes
-Changes in v3:
--No changes
-Changes in v4:
--No changes
----
- drivers/phy/phy-sun4i-usb.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+On Fri, Jun 10, 2016 at 7:39 PM, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Jun 09, 2016 at 02:41:33PM +0100, Kieran Bingham wrote:
+>> The power domain must be specified to bring the device out of module
+>> standby. Document this in the example provided, so that new additions
+>> are not missed.
+>>
+>> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
+>> ---
+>>  Documentation/devicetree/bindings/media/renesas,fcp.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+>> index 271dcfdb5a76..6a55f5215221 100644
+>> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
+>> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+>> @@ -31,4 +31,5 @@ Device node example
+>>               compatible = "renesas,r8a7795-fcpv", "renesas,fcpv";
+>>               reg = <0 0xfea2f000 0 0x200>;
+>>               clocks = <&cpg CPG_MOD 602>;
+>> +             power-domains = <&sysc R8A7795_PD_A3VP>;
+>
+> This needs to be documented above too, not just the example.
 
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index e3cbaae..a7abae6 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -95,6 +95,7 @@
- 
- enum sun4i_usb_phy_type {
- 	sun4i_a10_phy,
-+	sun6i_a31_phy,
- 	sun8i_a33_phy,
- 	sun8i_h3_phy,
- };
-@@ -125,7 +126,6 @@ struct sun4i_usb_phy_data {
- 	/* phy0 / otg related variables */
- 	struct extcon_dev *extcon;
- 	bool phy0_init;
--	bool phy0_poll;
- 	struct gpio_desc *id_det_gpio;
- 	struct gpio_desc *vbus_det_gpio;
- 	struct power_supply *vbus_power_supply;
-@@ -353,6 +353,24 @@ static bool sun4i_usb_phy0_have_vbus_det(struct sun4i_usb_phy_data *data)
- 	return data->vbus_det_gpio || data->vbus_power_supply;
- }
- 
-+static bool sun4i_usb_phy0_poll(struct sun4i_usb_phy_data *data)
-+{
-+	if ((data->id_det_gpio && data->id_det_irq < 0) ||
-+	    (data->vbus_det_gpio && data->vbus_det_irq < 0))
-+		return true;
-+
-+	/*
-+	 * The A31 companion pmic (axp221) does not generate vbus change
-+	 * interrupts when the board is driving vbus, so we must poll
-+	 * when using the pmic for vbus-det _and_ we're driving vbus.
-+	 */
-+	if (data->cfg->type == sun6i_a31_phy &&
-+	    data->vbus_power_supply && data->phys[0].regulator_on)
-+		return true;
-+
-+	return false;
-+}
-+
- static int sun4i_usb_phy_power_on(struct phy *_phy)
- {
- 	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-@@ -374,7 +392,7 @@ static int sun4i_usb_phy_power_on(struct phy *_phy)
- 	phy->regulator_on = true;
- 
- 	/* We must report Vbus high within OTG_TIME_A_WAIT_VRISE msec. */
--	if (phy->index == 0 && data->vbus_det_gpio && data->phy0_poll)
-+	if (phy->index == 0 && sun4i_usb_phy0_poll(data))
- 		mod_delayed_work(system_wq, &data->detect, DEBOUNCE_TIME);
- 
- 	return 0;
-@@ -395,7 +413,7 @@ static int sun4i_usb_phy_power_off(struct phy *_phy)
- 	 * phy0 vbus typically slowly discharges, sometimes this causes the
- 	 * Vbus gpio to not trigger an edge irq on Vbus off, so force a rescan.
- 	 */
--	if (phy->index == 0 && data->vbus_det_gpio && !data->phy0_poll)
-+	if (phy->index == 0 && !sun4i_usb_phy0_poll(data))
- 		mod_delayed_work(system_wq, &data->detect, POLL_TIME);
- 
- 	return 0;
-@@ -483,7 +501,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 	if (vbus_notify)
- 		extcon_set_cable_state_(data->extcon, EXTCON_USB, vbus_det);
- 
--	if (data->phy0_poll)
-+	if (sun4i_usb_phy0_poll(data))
- 		queue_delayed_work(system_wq, &data->detect, POLL_TIME);
- }
- 
-@@ -668,11 +686,6 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 	}
- 
- 	data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
--	data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
--	if ((data->id_det_gpio && data->id_det_irq < 0) ||
--	    (data->vbus_det_gpio && data->vbus_det_irq < 0))
--		data->phy0_poll = true;
+Why? Power domains are an optional feature, whose presence depends
+on the platform, not on the device.
+
+Hence "power-domains" properties may appear in any device node.
+Having to document them in every single binding document is overkill.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
