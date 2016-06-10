@@ -1,166 +1,64 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v10 10/14] usb: otg: add hcd companion support
-Date: Fri, 10 Jun 2016 16:07:19 +0300
-Message-ID: <1465564043-27163-11-git-send-email-rogerq@ti.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 20/20] dt-bindings: pwm: sti: Update DT bindings with
+ recent changes
+Date: Fri, 10 Jun 2016 15:10:08 +0200
+Message-ID: <20160610131008.GF27142@ulmo.ba.sec>
+References: <20160608092135.21184-1-lee.jones@linaro.org>
+ <20160608092135.21184-21-lee.jones@linaro.org>
+ <20160608205152.GA5511@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cpvLTH7QU4gwfq3S"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20160608205152.GA5511@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: peter.chen@freescale.com
-Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Since some host controller (e.g. EHCI) needs a companion host controller
-(e.g. OHCI), this patch adds such a configuration to use it in the OTG
-core.
+--cpvLTH7QU4gwfq3S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Acked-by: Peter Chen <peter.chen@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/usb/generic.txt |  3 +++
- drivers/usb/common/usb-otg.c                      | 31 ++++++++++++++++-------
- include/linux/usb/otg.h                           |  7 ++++-
- 3 files changed, 31 insertions(+), 10 deletions(-)
+On Wed, Jun 08, 2016 at 03:51:52PM -0500, Rob Herring wrote:
+> On Wed, Jun 08, 2016 at 10:21:35AM +0100, Lee Jones wrote:
+> > We're renaming the 'st,pwm-num-chan' binding to 'st,pwm-num-devs' to
+> > be more inline with the naming conventions of the subsystem.  Where
+> > we used to treat each line as a channel, the PWM convention is to
+> > describe them as devices.
+>=20
+> That's all linux implementation details and you are breaking=20
+> compatibility.
 
-diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-index f6866c1..1db1c33 100644
---- a/Documentation/devicetree/bindings/usb/generic.txt
-+++ b/Documentation/devicetree/bindings/usb/generic.txt
-@@ -27,6 +27,9 @@ Optional properties:
-  - otg-controller: phandle to otg controller. Host or gadget controllers can
- 			contain this property to link it to a particular OTG
- 			controller.
-+ - hcd-needs-companion: must be present if otg controller is dealing with
-+			EHCI host controller that needs a companion OHCI host
-+			controller.
- 
- This is an attribute to a USB controller such as:
- 
-diff --git a/drivers/usb/common/usb-otg.c b/drivers/usb/common/usb-otg.c
-index 4185954..c663f4a 100644
---- a/drivers/usb/common/usb-otg.c
-+++ b/drivers/usb/common/usb-otg.c
-@@ -402,6 +402,10 @@ struct usb_otg *usb_otg_register(struct device *dev,
- 	else
- 		INIT_WORK(&otg->work, usb_drd_work);
- 
-+	if (of_find_property(dev->of_node, "hcd-needs-companion", NULL) ||
-+	    config->hcd_needs_companion)	/* needs companion ? */
-+		otg->flags |= OTG_FLAG_HCD_NEEDS_COMPANION;
-+
- 	otg->wq = create_freezable_workqueue("usb_otg");
- 	if (!otg->wq) {
- 		dev_err(dev, "otg: %s: can't create workqueue\n",
-@@ -626,15 +630,18 @@ int usb_otg_register_hcd(struct usb_hcd *hcd, unsigned int irqnum,
- 	/* HCD will be started by OTG fsm when needed */
- 	mutex_lock(&otg->fsm.lock);
- 	if (otg->primary_hcd.hcd) {
--		/* probably a shared HCD ? */
--		if (usb_otg_hcd_is_primary_hcd(hcd)) {
-+		/* probably a shared HCD or a companion OHCI HCD ? */
-+		if (!(otg->flags & OTG_FLAG_HCD_NEEDS_COMPANION) &&
-+		    usb_otg_hcd_is_primary_hcd(hcd)) {
- 			dev_err(otg_dev, "otg: primary host already registered\n");
- 			goto err;
- 		}
- 
--		if (hcd->shared_hcd == otg->primary_hcd.hcd) {
-+		if (otg->flags & OTG_FLAG_HCD_NEEDS_COMPANION ||
-+		    (hcd->shared_hcd == otg->primary_hcd.hcd)) {
- 			if (otg->shared_hcd.hcd) {
--				dev_err(otg_dev, "otg: shared host already registered\n");
-+				dev_err(otg_dev,
-+					"otg: shared/companion host already registered\n");
- 				goto err;
- 			}
- 
-@@ -642,10 +649,12 @@ int usb_otg_register_hcd(struct usb_hcd *hcd, unsigned int irqnum,
- 			otg->shared_hcd.irqnum = irqnum;
- 			otg->shared_hcd.irqflags = irqflags;
- 			otg->shared_hcd.ops = ops;
--			dev_info(otg_dev, "otg: shared host %s registered\n",
-+			dev_info(otg_dev,
-+				 "otg: shared/companion host %s registered\n",
- 				 dev_name(hcd->self.controller));
- 		} else {
--			dev_err(otg_dev, "otg: invalid shared host %s\n",
-+			dev_err(otg_dev,
-+				"otg: invalid shared/companion host %s\n",
- 				dev_name(hcd->self.controller));
- 			goto err;
- 		}
-@@ -668,14 +677,17 @@ int usb_otg_register_hcd(struct usb_hcd *hcd, unsigned int irqnum,
- 	 * we're ready only if we have shared HCD
- 	 * or we don't need shared HCD.
- 	 */
--	if (otg->shared_hcd.hcd || !otg->primary_hcd.hcd->shared_hcd) {
-+	if (otg->shared_hcd.hcd ||
-+	    (!(otg->flags & OTG_FLAG_HCD_NEEDS_COMPANION) &&
-+	     !otg->primary_hcd.hcd->shared_hcd)) {
- 		otg->host = hcd_to_bus(hcd);
- 		/* FIXME: set bus->otg_port if this is true OTG port with HNP */
- 
- 		/* start FSM */
- 		usb_otg_start_fsm(otg);
- 	} else {
--		dev_dbg(otg_dev, "otg: can't start till shared host registers\n");
-+		dev_dbg(otg_dev,
-+			"otg: can't start till shared/companion host registers\n");
- 	}
- 
- 	mutex_unlock(&otg->fsm.lock);
-@@ -723,7 +735,8 @@ int usb_otg_unregister_hcd(struct usb_hcd *hcd)
- 			 dev_name(hcd_dev));
- 	} else if (hcd == otg->shared_hcd.hcd) {
- 		otg->shared_hcd.hcd = NULL;
--		dev_info(otg_dev, "otg: shared host %s unregistered\n",
-+		dev_info(otg_dev,
-+			 "otg: shared/companion host %s unregistered\n",
- 			 dev_name(hcd_dev));
- 	} else {
- 		mutex_unlock(&otg->fsm.lock);
-diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-index 2175fb7..61d524e 100644
---- a/include/linux/usb/otg.h
-+++ b/include/linux/usb/otg.h
-@@ -69,7 +69,8 @@ struct usb_otg_caps {
-  * @list: list of OTG controllers
-  * @work: OTG state machine work
-  * @wq: OTG state machine work queue
-- * @flags: to track if host/gadget is running
-+ * @flags: to track if host/gadget is running, or to indicate if hcd needs
-+ *	   companion
-  */
- struct usb_otg {
- 	u8			default_a;
-@@ -97,6 +98,7 @@ struct usb_otg {
- 	u32 flags;
- #define OTG_FLAG_GADGET_RUNNING (1 << 0)
- #define OTG_FLAG_HOST_RUNNING (1 << 1)
-+#define OTG_FLAG_HCD_NEEDS_COMPANION (1 << 2)
- 	/* use otg->fsm.lock for serializing access */
- 
- /*------------- deprecated interface -----------------------------*/
-@@ -123,11 +125,14 @@ struct usb_otg {
-  * @caps: OTG capabilities of the controller
-  * @ops: OTG FSM operations
-  * @otg_work: optional custom OTG state machine work function
-+ * @hcd_needs_companion: Indicates if host controller needs a companion
-+ *			 controller
-  */
- struct usb_otg_config {
- 	struct usb_otg_caps *otg_caps;
- 	struct otg_fsm_ops *fsm_ops;
- 	void (*otg_work)(struct work_struct *work);
-+	bool hcd_needs_companion;
- };
- 
- extern const char *usb_otg_state_string(enum usb_otg_state state);
--- 
-2.7.4
+While it's true that the API calls channels struct pwm_device, that's
+primarily for historical reasons. It's completely fine, and in fact most
+drivers already do exactly that, to internally refer to channels as
+channels.
+
+Thierry
+
+--cpvLTH7QU4gwfq3S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXWrwtAAoJEN0jrNd/PrOhcpoQALhZwFanc3Z3iglfH06D4Rtq
++qp7hIfnSVFsMwYVE28Y/Q+8hWqx1zAhTkddIzARS3NAibjM5btTeZz6YFszatl8
+ufRqR56BcQj1w7ZFe2+/lNv+ZFvFIteWmPfgXwUmKjWbKj/JQe9FKX0cjtK3L8gJ
+4CKFYYBYoj8m76S0fFPyuuCkW9AywK8mlyo/z3KYuvv2DBKKiLJJFU1uWeC1xFwn
+xshanrmMdX3sz4qZEkVr0hryczbsJUo/dTD02Yha/Pa+/soLCl/nWOiMZMp6TBRX
+aIbSl/3MnNjPlCLvh2GQIfVzCsVFfbbl9zTlXX58leoqgs9Fwuo3nNli99FuD1MH
+6wF5KdS9D4jUssIjsvrKQUZnTlenHiMNginpfLnUOcD5NJ4wbzWgqzzc3TjUSGPx
+11s0Xyrluut3USnWTVHokiSFU2Gygi32+Wr/1T1KcyBa/EQrXiPmLuf3m2EyKNlL
+SSZuBH4+T+KEMK8jiJrtrqwv6v9fJEJW3sIHVBh5G42Ss9SVDb/4WfAf06kMgnQv
+5KiP/dWMyL/2RLWKG08ovMvDviWkyQ0iFMmO8kfHRc0BCJ0gXirFZyopiaXkdUDj
+WhHTZIEJsE1IryPTO+eo0qM7ufYrBjOcMo8V6SLxMHypT+hAs0t3IhL7Qf/ZHnd9
+/Qpo2Q/4Ytm70TDSkmS2
+=iKEu
+-----END PGP SIGNATURE-----
+
+--cpvLTH7QU4gwfq3S--
