@@ -1,216 +1,209 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 01/13] pwm: Add new helpers to create/manipulate PWM
- states
-Date: Fri, 10 Jun 2016 17:21:09 +0200
-Message-ID: <20160610152109.GQ27142@ulmo.ba.sec>
-References: <1465403688-17098-1-git-send-email-boris.brezillon@free-electrons.com>
- <1465403688-17098-2-git-send-email-boris.brezillon@free-electrons.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/4] mtd: nand: Add support for Evatronix NANDFLASH-CTRL
+Date: Fri, 10 Jun 2016 17:34:26 +0200
+Message-ID: <20160610173426.48960ad1@bbrezillon>
+References: <alpine.DEB.2.02.1606020948070.19416@lnxricardw1.se.axis.com>
+	<20160603165909.09f27ee0@bbrezillon>
+	<alpine.DEB.2.02.1606071702220.19416@lnxricardw1.se.axis.com>
+	<20160609110814.78823ef3@bbrezillon>
+	<alpine.DEB.2.02.1606091313490.6751@lnxricardw1.se.axis.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oN4OvwWIcd1E23D1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465403688-17098-2-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Brian Norris <briannorris@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1606091313490.6751-0r+fHKsYbBpkgkEezDIDgepEb+yt5a1K@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, Linux mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 10 Jun 2016 16:40:39 +0200
+Ricard Wanderlof <ricard.wanderlof-VrBV9hrLPhE@public.gmane.org> wrote:
+> 
+> > > > > +/* Information common to all chips, including the NANDFLASH-CTRL IP */
+> > > > > +struct nfc_info {    
+> > > > 
+> > > > Should inherit from nand_hw_ctrl (see the sunxi_nand driver)...
+> > > >     
+> > > > > +	void __iomem *regbase;
+> > > > > +	struct device *dev;
+> > > > > +	struct nand_hw_control *controller;    
+> > > > 
+> > > > ... and not point to it.    
+> > > 
+> > > Ok. I'm a bit unsure what you mean by 'inherit' though; in the sunxi 
+> > > driver the struct nand_hw_controller is contained within the struct 
+> > > sunxi_nfc, in my case there's a pointer to a single instance of a 
+> > > nand_hw_control. I agree that my approach is wasteful on a dynamic 
+> > > allocation and I have no problems changing it, but conceptually there's 
+> > > not much of a difference.  
+> > 
+> > There's a huge different. By embedding the nand_hw_control struct into
+> > your nfc_info object you allow things like:
+> > 
+> > static int get_nfc(struct nand_chip *chip)
+> > {
+> > 	return container_of(chip->controller, struct nfc_info,
+> > 			    controller);
+> > }
+> > 
+> > This way you can retrieve the nfc_info object attached to the nand_chip.  
+> 
+> Yes, of course ... or rather,
+> 
+> static int get_nfc(struct nand_hw_control *controller)
 
---oN4OvwWIcd1E23D1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Actually I meant
 
-On Wed, Jun 08, 2016 at 06:34:36PM +0200, Boris Brezillon wrote:
-> The pwm_prepare_new_state() helper prepares a new state object
-> containing the current PWM state except for the polarity and period
-> fields which are set to the reference values.
-> This is particurly useful for PWM users who want to apply a new
-> duty-cycle expressed relatively to the reference period without
-> changing the enable state.
->=20
-> The PWM framework expect PWM users to configure the duty cycle in
-> nanosecond, but most users just want to express this duty cycle
-> relatively to the period value (i.e. duty_cycle =3D 33% of the period).
-> Add pwm_{get,set}_relative_duty_cycle() helpers to ease this kind of
-> conversion.
+static inline struct nfc_info *get_nfc(struct nand_chip *chip) ...
 
-This looks pretty useful and good, though I think these could be two
-separate patches. A couple of suggestions on wording and such below.
+> 
+> I see new what you mean by inherit. It all comes down to if struct 
+> nfc_info is a specialized type of struct nand_hw_control, or if it just 
+> refers to it. I had assumed it was the latter that was the paradigm.
+> 
+> In the driver in question it makes no practical difference as there is no 
+> need to go from a nand_hw_control to an nfc_info (in fact, the 
+> nand_hw_control is nevery really used explicitly, it tags along, only used 
+> by the framework).
+> 
+> Still, I'm not trying to make an argument here, just trying to understand 
+> what the underlying paradigm is. I'll move it inside as it clearly is 
+> better in several respects.
 
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> ---
->  include/linux/pwm.h | 81 +++++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 81 insertions(+)
->=20
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index 17018f3..e09babf 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -148,6 +148,87 @@ static inline void pwm_get_args(const struct pwm_dev=
-ice *pwm,
->  }
-> =20
->  /**
-> + * pwm_prepare_new_state() - prepare a new state to be applied with
-> + *			     pwm_apply_state()
+The goal here is to retrieve the controller attached to a given chip in
+order to avoid the global nfc_info variable (and abusing
+nand_get/set_controller_data() to store a pointer to the controller is
+not a good idea either: it's supposed to be used to store per-chip
+private data).
 
-This is weirdly indented.
+> 
+> > > > > +
+> > > > > +/* This is a global pointer, as we only support one single instance of the NFC.
+> > > > > + * For multiple instances, we would need to add nfc_info as a parameter to
+> > > > > + * several functions, as well as adding it as a member of the chip_info struct.
+> > > > > + * Since most likely a system would only have one NFC instance, we don't
+> > > > > + * go all the way implementing that feature now.
+> > > > > + */
+> > > > > +static struct nfc_info *nfc_info;    
+> > > > 
+> > > > Come on! Don't be so lazy, do the right thing.    
+> > > 
+> > > It's not a question of laziness, it was a conscious decision: why add 
+> > > unnecessary bloat and complexity for a case that probably will never 
+> > > occur? I can certainly change it if you think it's worth while of course.  
+> > 
+> > It is. And you're okay bloating the code with dead-code, but not with
+> > implementing this in order to avoid singletons when it clearly
+> > shouldn't be?  
+> 
+> I'm ok with bloating the code with something which I consider may be 
+> useful, but I have reservations bloating it with something which I don't 
+> think will ever be used (and which could be added if the need arises 
+> later) and furthermore is not possible to test and verify properly (as 
+> there is in fact only one NAND controller on the platform on which I can 
+> test this).
+> 
+> But I'm fine with adding it, I'm not really trying to knock it, just 
+> explaining why it wasn't done in the first place. (I think I'm actually 
+> reacting to the word 'lazy' here...).
 
-> + * @pwm: PWM device
-> + * @state: state to fill with the prepared PWM state
-> + *
-> + * This functions prepares a state that can later be tweaked and applied
-> + * to the PWM device with pwm_apply_state(). This is a convenient functi=
-on
-> + * that first retrieves the current PWM state and the replaces the period
-> + * and polarity fields with the reference values defined in pwm->args.
-> + * Once the new state is created you can adjust the ->enable and ->duty_=
-cycle
+Then, let's say I really care about this clear separation between NAND
+controllers and NAND chips (even if the controller is only supporting a
+single device), because it makes things clearer, and because it brings
+some consistency in the NAND controller drivers.
+That's something I've asked to other contributors, and I'm asking it to
+you too.
 
-"created" has the connotation of allocating. Perhaps: "Once the function
-returns, you can adjust the ->enabled and ->duty_cycle fields according
-to your needs before calling pwm_apply_state()."?
+You'll see that implementing this separation is not much more
+complicated than having this global variable, and I must admit global
+variable make me scream (especially when they can be avoided).
 
-Also note that the field is called ->enabled.
+> 
+> > > > > +
+> > > > > +/* The timing setup is expected to come via DT. We keep some default timings
+> > > > > + * here for reference, based on a 100 MHz reference clock.
+> > > > > + */
+> > > > > +
+> > > > > +static const struct nfc_timings default_mode0_pll_enabled = {
+> > > > > +	0x0d151533, 0x000b0515, 0x00000046,
+> > > > > +	0x00150000, 0x00000000, 0x00000005, 0x00000015 };    
+> > > > 
+> > > > Can you explain those magic values?    
+> > > 
+> > > Not really, the problem is that the agreement we have with the IP vendor 
+> > > is that we may not disclose any documentation, outside of what is 
+> > > absolutely necessary to write working code.
+> > > 
+> > > A rationale is that anyone else wanting to use the driver will either be 
+> > > designing their own SoC in which case they will have access to the 
+> > > relevant documentation, or if they're using a SoC from someone else, the 
+> > > SoC vendor will have to provide that information in order for the chip to 
+> > > be useful anyway.  
+> > 
+> > Hm, so I'll have a new table like that for each new SoC using this IP?  
+> 
+> Yes, I would say that would be the case.
+> 
+> > I must say I don't like the idea, but let's address the other aspects
+> > first.  
+> 
+> Ok.
+> 
+> > As said above, I'm planning to rework the NAND framework to
+> > support things like:
+> > 
+> > struct nand_operation {
+> > 	u8 cmds[2];
+> > 	u8 addrs[5];
+> > 	int ncmds;
+> > 	int naddrs;
+> > 	union {
+> > 		void *out;
+> > 		const void *in;
+> > 	};
+> > 	enum nand_op_direction dir;
+> > }
+> >   
+> > ->exec_op(struct nand_operation *op);  
+> > 
+> > This way the NAND controller would have all the necessary information
+> > to trigger the whole operation (omitted the ECC info on purpose, to
+> > make it clearer).
+> > 
+> > But this is not there yet, and in the meantime, if possible, I'd prefer
+> > seeing drivers implementing the ->cmd_ctrl() function instead of
+> > overloading the default ->cmdfunc() implementation.  
+> 
+> I see, I suppose that's because during the course of this the ->cmdfunc() 
+> logic will be significantly changed, requiring corresponding changes in 
+> drivers that do overload that function? Fair enough, that's a pretty good 
+> reason, probably more so than the alleged simplicity of the ->cmd_ctrl() 
+> interface.
 
-> + * according to your need before calling pwm_apply_state().
+There's another reason actually. We have chip specific functions (like
+->setup_read_retry()) which might want to use
+non-standard/vendor-specific operations, and this implies patching all
+->cmdfunc() implementations, or at least making sure they will work
+fine with these new commands.
+The ->cmd_ctrl() + generic nand_command_lp() for ->cmdfunc() is making
+that a lot easier.
 
-Maybe mention that the ->duty_cycle field is explicitly zeroed. Then
-again, do we really need it? If users are going to overwrite it anyway,
-do we even need to bother? I suppose it makes some sense because the
-current duty cycle is stale when the ->period gets set to the value from
-args. I think the documentation should mention this in some way.
+So yes, I'm clearly trying to avoid specific ->cmdfunc() (especially
+when they are not generic enough to support new commands).
 
-> + */
-> +static inline void pwm_prepare_new_state(const struct pwm_device *pwm,
-> +					 struct pwm_state *state)
+Again, ->cmd_ctrl() does not have to be used in your internal
+ecc->read/write_page() implementations (all you'll have to do is avoid
+using the ->cmdfunc() method and create your own NAND controller
+specific commands instead), but it should at least be used for basic
+operations that do not require high performances (i.e. NAND detection,
+NAND RESET, read-retry, ...).
 
-Perhaps choose a shorter name, such as: pwm_init_state()?
-
-> +{
-> +	struct pwm_args args;
-> +
-> +	/* First get the current state. */
-> +	pwm_get_state(pwm, state);
-> +
-> +	/* Then fill it with the reference config */
-> +	pwm_get_args(pwm, &args);
-> +
-> +	state->period =3D args.period;
-> +	state->polarity =3D args.polarity;
-> +	state->duty_cycle =3D 0;
-> +}
-> +
-> +/**
-> + * pwm_get_relative_duty_cycle() - Get a relative duty_cycle value
-> + * @state: the PWM state to extract period and duty_cycle from
-> + * @scale: the scale you want to use for you relative duty_cycle value
-
-Other kerneldoc comments in this file don't prefix the description with
-"the".
-
-Also, perhaps the following descriptions would be slightly less
-confusing:
-
-	@state: PWM state to extract the duty cycle from
-
-We don't extract (i.e. return) period from the state, so it's a little
-confusing to mention it here.
-
-	@scale: scale in which to return the relative duty cycle
-
-This is slightly more explicit in that it says what the returned duty
-cycle will be in. Perhaps as an alternative:
-
-	@scale: target scale of the relative duty cycle
-
-> + *
-> + * This functions converts the absolute duty_cycle stored in @state
-> + * (expressed in nanosecond) into a relative value.
-
-Perhaps: "... into a value relative to the period."?
-
-> + * For example if you want to get the duty_cycle expressed in nanosecond,
-
-The example below would give you the duty cycle in percent, not
-nanoseconds, right?
-
-> + * call:
-> + *
-> + * pwm_get_state(pwm, &state);
-> + * duty =3D pwm_get_relative_duty_cycle(&state, 100);
-> + */
-> +static inline unsigned int
-> +pwm_get_relative_duty_cycle(const struct pwm_state *state, unsigned int =
-scale)
-> +{
-> +	if (!state->period)
-> +		return 0;
-> +
-> +	return DIV_ROUND_CLOSEST_ULL((u64)state->duty_cycle * scale,
-> +				     state->period);
-> +}
-> +
-> +/**
-> + * pwm_set_relative_duty_cycle() - Set a relative duty_cycle value
-> + * @state: the PWM state to fill
-> + * @val: the relative duty_cycle value
-> + * @scale: the scale you use for you relative duty_cycle value
-
-"scale in which @duty_cycle is expressed"?
-
-> + *
-> + * This functions converts a relative duty_cycle stored into an absolute
-> + * one (expressed in nanoseconds), and put the result in state->duty_cyc=
-le.
-> + * For example if you want to change configure a 50% duty_cycle, call:
-> + *
-> + * pwm_prepare_new_state(pwm, &state);
-> + * pwm_set_relative_duty_cycle(&state, 50, 100);
-> + * pwm_apply_state(pwm, &state);
-> + */
-> +static inline void
-> +pwm_set_relative_duty_cycle(struct pwm_state *state, unsigned int val,
-
-Any reason why we can't call "val" "duty_cycle"? That's what it is,
-after all.
-
-> +			    unsigned int scale)
-> +{
-> +	if (!scale)
-> +		return;
-> +
-> +	/* Make sure we don't have duty_cycle > period */
-> +	if (val > scale)
-> +		val =3D scale;
-
-Can we return -EINVAL for both of the above checks? I don't like
-silently clamping the duty cycle that the user passed in.
-
-Thierry
-
---oN4OvwWIcd1E23D1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXWtriAAoJEN0jrNd/PrOhVakQAJ46vixDAco1vy98SBEiX0t8
-YarDZyV3gQyM6muAxwOyErgFO/c71XIMELtQzKKjfoRTYmcGamVX7er5/ykS1l6/
-T1tD1lkL5geObe5RKYsZQ9vc4ifljg49kAhWgtzCaMiOmpa6LOGDNDTTntqATKVP
-C/QhO6dj3E4pASURNzh88dN0YRXf+vcxORf+xfW6PeTDS8gQ6u5w13UoXT71yM4/
-JaSgUBCvZP+/sttrlXMplSOIYLumx6ywf/niB+tKrSgS0MTh2YXmWZ8bNGlo3bAK
-HprkBwWIjWTD0em6JVYn7/iHr58aS1zDyArKbJluLNVsxW9z089K21/27j+zOsqz
-qTp9zM73dsv9kU4v1UODaskd7D78YtXC+oDRQP7DNSl54Bu8ev2OhpLcuWV6aI4+
-bqEnphuvDaHRVJm4mDduumFlpHU9Z/PpPYFeHS4VxZSam85ImGhFsY00hseedAii
-DipBMomujvFU36DzCZv2Zu3Kb077aJlw90xnoRQq/25TNFbHepEt7AcAt2pM2B19
-xtQka5F6NNXTKSjn0xttXEyenofGLfna9AZ8nmTxGE7pP3B3QQnJsVUV6La6FEli
-o+q0jKY6T930dNdOnv0HcEGWXvAhStjc+lHclm8mu9i0UOfDs/8VeERpiuLxbJj4
-U/Q81ioXy8AAAnDNyb1l
-=MVbl
------END PGP SIGNATURE-----
-
---oN4OvwWIcd1E23D1--
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
