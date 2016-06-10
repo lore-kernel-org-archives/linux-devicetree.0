@@ -1,44 +1,63 @@
-From: Rajesh Bhagat <rajesh.bhagat@nxp.com>
-Subject: [PATCH 2/3] arm: dts: ls2080a: Add dis_rxdet_inp3_quirk property to USB3 node
-Date: Fri, 10 Jun 2016 11:53:45 +0530
-Message-ID: <1465539826-5519-3-git-send-email-rajesh.bhagat@nxp.com>
-References: <1465539826-5519-1-git-send-email-rajesh.bhagat@nxp.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] ARM64: boot: dts: Add regulators for Tegra210 Smaug
+Date: Fri, 10 Jun 2016 11:58:13 +0530
+Message-ID: <575A5DFD.6040300@nvidia.com>
+References: <1465493923-23313-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465539826-5519-1-git-send-email-rajesh.bhagat@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: shawnguo@kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sriram.dash@nxp.com, Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465493923-23313-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add "dis_rxdet_inp3_quirk" boolean property to USB3 node. This property
-is used to disable rx detection in P3 PHY mode.
 
-Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+On Thursday 09 June 2016 11:08 PM, Rhyland Klein wrote:
+> Add regulators to the Tegra210 Smaug DTS file including
+> support for the max77620 PMIC.
+>
+> Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> +
+> +				fps1 {
+> +					maxim,shutdown-fps-time-period-us = <5120>;
+> +					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN1>;
+> +					maxim,enable-sleep;
+The maxim,enabel-sleep is not the valid property.
+It should be
+maxim,device-state-on-disabled-event = <MAX77620_FPS_INACTIVE_STATE_SLEEP>;
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index 3187c82..09a0450 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -672,6 +672,7 @@
- 			interrupts = <0 80 0x4>; /* Level high type */
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
- 		};
- 
- 		usb1: usb3@3110000 {
-@@ -681,6 +682,7 @@
- 			interrupts = <0 81 0x4>; /* Level high type */
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
- 		};
- 
- 		ccn@4000000 {
--- 
-2.6.2.198.g614a2ac
+
+
+> +				};
+> +
+> +				fps2 {
+> +					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
+> +				};
+> +			};
+> +
+> +			regulators {
+> +				in-ldo0-1-supply = <&pp1350>;
+> +				in-ldo2-supply = <&pp3300>;
+> +				in-ldo3-5-supply = <&pp3300>;
+> +				in-ldo7-8-supply = <&pp1350>;
+> +
+> +				ppvar_soc: sd0 {
+> +					regulator-name = "PPVAR_SOC";
+> +					regulator-min-microvolt = <825000>;
+> +					regulator-max-microvolt = <1125000>;
+> +					regulator-enable-ramp-delay = <146>;
+> +					regulator-always-on;
+> +					regulator-boot-on;
+> +					maxim,ramp-rate-setting = <27500>;
+You need to say regulator-ramp-delay if register config is same as what 
+platform observed.
+This is applicable for all places.
+
+
+> +			regulator-always-on;
+> +			gpio = <&max77620 3 0>;
+GPIO3 is fps-out and hence it can not be done here. Better to do not 
+provide any gpio entry.
