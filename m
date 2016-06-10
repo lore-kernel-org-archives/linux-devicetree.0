@@ -1,53 +1,43 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 2/3] dt-bindings: hwrng: Add Amlogic Meson Hardware Random
- Generator bindings
-Date: Fri, 10 Jun 2016 10:21:54 +0200
-Message-ID: <1465546915-24229-3-git-send-email-narmstrong@baylibre.com>
-References: <1465546915-24229-1-git-send-email-narmstrong@baylibre.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH/RFC v3 02/22] soc: renesas: Add R-Car RST driver
+Date: Fri, 10 Jun 2016 10:38:28 +0200
+Message-ID: <fd389ff9-7863-b848-0e14-ca7241f44f6e@de.bosch.com>
+References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+ <1464808880-343-3-git-send-email-geert+renesas@glider.be>
+ <d38d97fb-5b96-0773-abf6-c737b4f2fef1@de.bosch.com>
+ <CAMuHMdUX=iAe=51+8JyaKxMBOUA_jJXGK0BTKxRuTXtug_R1Tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1465546915-24229-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUX=iAe=51+8JyaKxMBOUA_jJXGK0BTKxRuTXtug_R1Tw@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/rng/amlogic,meson-rng.txt          | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+On 10.06.2016 09:58, Geert Uytterhoeven wrote:
+> Hi Dirk,
+>
+> On Thu, Jun 2, 2016 at 7:42 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
+>>> +int __init rcar_rst_read_mode_pins(u32 *mode)
+>>
+>> Just a style issue: Is the string 'pins' in the function name still
+>> relevant? I.e. what's about just 'rcar_rst_read_mode()'?
+>
+> I feel "mode" is a too generic word for a public API.
+> It's used a several contexts inside the RST module (secure mode, 64-bit
+> addressing mode, free-running mode, step-up mode).
 
-diff --git a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
-new file mode 100644
-index 0000000..202f2d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
-@@ -0,0 +1,14 @@
-+Amlogic Meson Random number generator
-+=====================================
-+
-+Required properties:
-+
-+- compatible : should be "amlogic,meson-rng"
-+- reg : Specifies base physical address and size of the registers.
-+
-+Example:
-+
-+rng {
-+        compatible = "amlogic,meson-rng";
-+        reg = <0x0 0xc8834000 0x0 0x4>;
-+};
--- 
-2.7.0
+What's about
+
+rcar_rst_read_mode_monitor()
+
+then?
+
+Taken from the manual ;)
+
+
+Best regards
+
+Dirk
