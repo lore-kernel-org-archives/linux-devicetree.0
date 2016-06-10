@@ -1,52 +1,32 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: add Starry KR122EA0SRA panel binding
-Date: Fri, 10 Jun 2016 11:03:35 -0700
-Message-ID: <CAD=FV=VuJ6GAXJ-JEHJ1g6-8noxuvVTrihhgYyUXam1WgNimQQ@mail.gmail.com>
-References: <1465578127-30330-1-git-send-email-dianders@chromium.org>
- <CACvgo50-R_7wqy0jw+MoWQn_axVJbni7wMF7BXuFX99H7pD1iQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/7] leds: documentation: 'ide-disk' to 'disk-activity'
+Date: Fri, 10 Jun 2016 13:07:08 -0500
+Message-ID: <20160610180708.GA1598@rob-hp-laptop>
+References: <20160610060021.12382-1-linz@li-pro.net>
+ <20160610060021.12382-2-linz@li-pro.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACvgo50-R_7wqy0jw+MoWQn_axVJbni7wMF7BXuFX99H7pD1iQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160610060021.12382-2-linz@li-pro.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephan Linz <linz@li-pro.net>
+Cc: linux-leds@vger.kernel.org, linux-ide@vger.kernel.org, Joseph Jezak <josejx@gentoo.org>, =?iso-8859-1?Q?J=F6rg?= Sommer <joerg@alea.gnuu.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RW1pbCwKCk9uIEZyaSwgSnVuIDEwLCAyMDE2IGF0IDEwOjI2IEFNLCBFbWlsIFZlbGlrb3YgPGVt
-aWwubC52ZWxpa292QGdtYWlsLmNvbT4gd3JvdGU6Cj4gSGkgRG91Z2xhcywKPgo+IE9uIDEwIEp1
-bmUgMjAxNiBhdCAxODowMiwgRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3Jn
-PiB3cm90ZToKPj4gVGhlIFN0YXJyeSBLUjEyMkVBMFNSQSBpcyBhIDEyLjIiLCAxOTIweDEyMDAg
-VEZULUxDRCBwYW5lbCBjb25uZWN0ZWQKPj4gdXNpbmcgZURQIGludGVyZmFjZXMuCj4+Cj4+IFNp
-Z25lZC1vZmYtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPj4g
-LS0tCj4+IENoYW5nZXMgaW4gdjI6Cj4+IC0gUHJvcGVyIHRpdGxlIChzb3JyeSEpCj4+Cj4+ICAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3N0YXJyeSxrcjEyMmVhMHNyYS50
-eHQgICAgICAgfCA3ICsrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykK
-Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9wYW5lbC9zdGFycnksa3IxMjJlYTBzcmEudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zdGFycnksa3Ix
-MjJlYTBzcmEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvc3RhcnJ5LGtyMTIyZWEwc3JhLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBp
-bmRleCAwMDAwMDAwMDAwMDAuLjFlODdmZTYwNzhhZgo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3N0YXJyeSxr
-cjEyMmVhMHNyYS50eHQKPj4gQEAgLTAsMCArMSw3IEBACj4+ICtTdGFycnkgMTIuMiIgKDE5MjB4
-MTIwMCBwaXhlbHMpIFRGVCBMQ0QgcGFuZWwKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoK
-Pj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJzdGFycnksa3IxMjJlYTBzcmEiCj4+ICsKPiBJ
-IHRoaW5rIHlvdSB3YW50IHRvIGFkZCAnc3RhcnJ5JyB0byB0aGUgdmVuZG9ycyBsaXN0IGZpcnN0
-IFsxXS4gTGF0ZXN0Cj4gbGludXMtbmV4dCBkb2VzIG5vdCBzZWVtIHRvIGhhdmUgc3VjaCBhbiBl
-bnRyeS4KCkdvb2QgY2FsbC4gIFRoYW5rcyEgIEkndmUgcG9zdGVkIGl0IGF0CjxodHRwczovL3Bh
-dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzkxNzAyMDUvPi4KCklmIHlvdSdkIHJhdGhlciBtZSBq
-b2luIGl0IHRvIHRoaXMgc2VyaWVzIGFuZCByZXBvc3QgdGhlIHdob2xlIHRoaW5nLApsZXQgbWUg
-a25vdy4KCgotRG91ZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+On Fri, Jun 10, 2016 at 07:59:57AM +0200, Stephan Linz wrote:
+> Cc: Joseph Jezak <josejx@gentoo.org>
+> Cc: J=F6rg Sommer <joerg@alea.gnuu.de>
+> Signed-off-by: Stephan Linz <linz@li-pro.net>
+> ---
+>  Documentation/devicetree/bindings/leds/common.txt    | 3 ++-
+>  Documentation/devicetree/bindings/leds/leds-gpio.txt | 4 ++--
+>  Documentation/laptops/asus-laptop.txt                | 2 +-
+>  Documentation/leds/leds-class.txt                    | 2 +-
+>  4 files changed, 6 insertions(+), 5 deletions(-)
+
+I'm not copied on the kernel change, but as long as the kernel still=20
+handles ide-disk as you indicated:
+
+Acked-by: Rob Herring <robh@kernel.org>
