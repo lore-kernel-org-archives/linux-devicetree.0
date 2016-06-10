@@ -1,129 +1,222 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V5 4/9] genirq: Add runtime power management support for
- IRQ chips
-Date: Fri, 10 Jun 2016 09:05:41 +0100
-Message-ID: <575A74D5.4050905@nvidia.com>
-References: <1465214023-8299-1-git-send-email-jonathanh@nvidia.com>
- <1465214023-8299-5-git-send-email-jonathanh@nvidia.com>
- <57558523.9070700@ti.com> <57558909.9090309@nvidia.com>
- <57558A83.1000603@ti.com> <5755917A.7070704@nvidia.com>
- <7htwh2c6o9.fsf@baylibre.com>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: sun4i: Re-order pinctrl nodes alphabetically
+Date: Fri, 10 Jun 2016 11:05:18 +0300
+Message-ID: <1465545919-24270-2-git-send-email-mamlinav@gmail.com>
+References: <1465545919-24270-1-git-send-email-mamlinav@gmail.com>
+Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7htwh2c6o9.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCENVD7YAEIK327JXICRUBGT4M6RO-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1465545919-24270-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+No functional change. Re-order sun4i pinctrl nodes alphabetically.
 
-On 09/06/16 23:56, Kevin Hilman wrote:
-> Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> writes:
-> 
->> On 06/06/16 15:36, Grygorii Strashko wrote:
->>> On 06/06/2016 05:30 PM, Jon Hunter wrote:
->>>>
->>>> On 06/06/16 15:13, Grygorii Strashko wrote:
->>>>> On 06/06/2016 02:53 PM, Jon Hunter wrote:
->>>>>> Some IRQ chips may be located in a power domain outside of the CPU
->>>>>> subsystem and hence will require device specific runtime power
->>>>>> management. In order to support such IRQ chips, add a pointer for a
->>>>>> device structure to the irq_chip structure, and if this pointer is
->>>>>> populated by the IRQ chip driver and CONFIG_PM is selected in the kernel
->>>>>> configuration, then the pm_runtime_get/put APIs for this chip will be
->>>>>> called when an IRQ is requested/freed, respectively.
->>>>>>
->>>>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>> Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>>>> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
->>>>>> ---
->>>>>>    include/linux/irq.h    |  4 ++++
->>>>>>    kernel/irq/chip.c      | 35 +++++++++++++++++++++++++++++++++++
->>>>>>    kernel/irq/internals.h |  1 +
->>>>>>    kernel/irq/manage.c    | 31 ++++++++++++++++++++++++++++++-
->>>>>>    4 files changed, 70 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/include/linux/irq.h b/include/linux/irq.h
->>>>>> index 4d758a7c604a..6c92a847394d 100644
->>>>>> --- a/include/linux/irq.h
->>>>>> +++ b/include/linux/irq.h
->>>>>> @@ -315,6 +315,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
->>>>>>    /**
->>>>>>     * struct irq_chip - hardware interrupt chip descriptor
->>>>>>     *
->>>>>> + * @parent_device:	pointer to parent device for irqchip
->>>>>>     * @name:		name for /proc/interrupts
->>>>>>     * @irq_startup:	start up the interrupt (defaults to ->enable if NULL)
->>>>>>     * @irq_shutdown:	shut down the interrupt (defaults to ->disable if NULL)
->>>>>> @@ -354,6 +355,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
->>>>>>     * @flags:		chip specific flags
->>>>>>     */
->>>>>>    struct irq_chip {
->>>>>> +	struct device	*parent_device;
->>>>>>    	const char	*name;
->>>>>>    	unsigned int	(*irq_startup)(struct irq_data *data);
->>>>>>    	void		(*irq_shutdown)(struct irq_data *data);
->>>>>> @@ -488,6 +490,8 @@ extern void handle_bad_irq(struct irq_desc *desc);
->>>>>>    extern void handle_nested_irq(unsigned int irq);
->>>>>>    
->>>>>>    extern int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg);
->>>>>> +extern int irq_chip_pm_get(struct irq_data *data);
->>>>>> +extern int irq_chip_pm_put(struct irq_data *data);
->>>>>>    #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
->>>>>>    extern void irq_chip_enable_parent(struct irq_data *data);
->>>>>>    extern void irq_chip_disable_parent(struct irq_data *data);
->>>>>> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
->>>>>> index 2f9f2b0e79f2..b09226e895c7 100644
->>>>>> --- a/kernel/irq/chip.c
->>>>>> +++ b/kernel/irq/chip.c
->>>>>> @@ -1093,3 +1093,38 @@ int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->>>>>>    
->>>>>>    	return 0;
->>>>>>    }
->>>>>> +
->>>>>> +/**
->>>>>> + * irq_chip_pm_get - Enable power for an IRQ chip
->>>>>> + * @data:	Pointer to interrupt specific data
->>>>>> + *
->>>>>> + * Enable the power to the IRQ chip referenced by the interrupt data
->>>>>> + * structure.
->>>>>> + */
->>>>>> +int irq_chip_pm_get(struct irq_data *data)
->>>>>> +{
->>>>>> +	int retval = 0;
->>>>>> +
->>>>>> +	if (IS_ENABLED(CONFIG_PM) && data->chip->parent_device)
->>>>>> +		retval = pm_runtime_get_sync(data->chip->parent_device);
->>>>>
->>>>> Sry, for the late comment - above require pm_runtime_put_noidle(data->chip->parent_device);
->>>>> in case of failure.
->>>>
->>>> No problem. Sorry, can you elaborate? I am not familiar with the
->>>> _put_noidle().
->>>>
->>>
->>> Question here in use counter - pm_runtime_get_sync() will increment usage_count
->>> always and it will not decrement it in case of failure.
->>> pm_runtime_put_noidle() expected to restore usage_count state (-1).
->>
->> Thanks was not aware of that. 
->>
->> Kevin, Marc, given that you have reviewed this one, are you ok with the
->> above change Grygorii is proposing? 
-> 
-> Yes, that's the right thing to do on error.
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi | 114 +++++++++++++++++++--------------------
+ 1 file changed, 57 insertions(+), 57 deletions(-)
 
-Thanks. I have added this in V6. Please take a look and add your
-reviewed-by again if all looks good.
-
-Cheers
-Jon
-
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index a9c3190..6d9c7c70 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -958,69 +958,62 @@
+ 			#interrupt-cells = <3>;
+ 			#gpio-cells = <3>;
+ 
+-			pwm0_pins_a: pwm0@0 {
+-				allwinner,pins = "PB2";
+-				allwinner,function = "pwm";
+-				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+-			};
+-
+-			pwm1_pins_a: pwm1@0 {
+-				allwinner,pins = "PI3";
+-				allwinner,function = "pwm";
++			emac_pins_a: emac0@0 {
++				allwinner,pins = "PA0", "PA1", "PA2",
++						"PA3", "PA4", "PA5", "PA6",
++						"PA7", "PA8", "PA9", "PA10",
++						"PA11", "PA12", "PA13", "PA14",
++						"PA15", "PA16";
++				allwinner,function = "emac";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			uart0_pins_a: uart0@0 {
+-				allwinner,pins = "PB22", "PB23";
+-				allwinner,function = "uart0";
++			i2c0_pins_a: i2c0@0 {
++				allwinner,pins = "PB0", "PB1";
++				allwinner,function = "i2c0";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			uart0_pins_b: uart0@1 {
+-				allwinner,pins = "PF2", "PF4";
+-				allwinner,function = "uart0";
++			i2c1_pins_a: i2c1@0 {
++				allwinner,pins = "PB18", "PB19";
++				allwinner,function = "i2c1";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			uart1_pins_a: uart1@0 {
+-				allwinner,pins = "PA10", "PA11";
+-				allwinner,function = "uart1";
++			i2c2_pins_a: i2c2@0 {
++				allwinner,pins = "PB20", "PB21";
++				allwinner,function = "i2c2";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			i2c0_pins_a: i2c0@0 {
+-				allwinner,pins = "PB0", "PB1";
+-				allwinner,function = "i2c0";
++			ir0_rx_pins_a: ir0@0 {
++				allwinner,pins = "PB4";
++				allwinner,function = "ir0";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			i2c1_pins_a: i2c1@0 {
+-				allwinner,pins = "PB18", "PB19";
+-				allwinner,function = "i2c1";
++			ir0_tx_pins_a: ir0@1 {
++				allwinner,pins = "PB3";
++				allwinner,function = "ir0";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			i2c2_pins_a: i2c2@0 {
+-				allwinner,pins = "PB20", "PB21";
+-				allwinner,function = "i2c2";
++			ir1_rx_pins_a: ir1@0 {
++				allwinner,pins = "PB23";
++				allwinner,function = "ir1";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			emac_pins_a: emac0@0 {
+-				allwinner,pins = "PA0", "PA1", "PA2",
+-						"PA3", "PA4", "PA5", "PA6",
+-						"PA7", "PA8", "PA9", "PA10",
+-						"PA11", "PA12", "PA13", "PA14",
+-						"PA15", "PA16";
+-				allwinner,function = "emac";
++			ir1_tx_pins_a: ir1@1 {
++				allwinner,pins = "PB22";
++				allwinner,function = "ir1";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+@@ -1040,34 +1033,41 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ 			};
+ 
+-			ir0_rx_pins_a: ir0@0 {
+-				allwinner,pins = "PB4";
+-				allwinner,function = "ir0";
++			ps20_pins_a: ps20@0 {
++				allwinner,pins = "PI20", "PI21";
++				allwinner,function = "ps2";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			ir0_tx_pins_a: ir0@1 {
+-				allwinner,pins = "PB3";
+-				allwinner,function = "ir0";
++			ps21_pins_a: ps21@0 {
++				allwinner,pins = "PH12", "PH13";
++				allwinner,function = "ps2";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			ir1_rx_pins_a: ir1@0 {
+-				allwinner,pins = "PB23";
+-				allwinner,function = "ir1";
++			pwm0_pins_a: pwm0@0 {
++				allwinner,pins = "PB2";
++				allwinner,function = "pwm";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			ir1_tx_pins_a: ir1@1 {
+-				allwinner,pins = "PB22";
+-				allwinner,function = "ir1";
++			pwm1_pins_a: pwm1@0 {
++				allwinner,pins = "PI3";
++				allwinner,function = "pwm";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
++			spdif_tx_pins_a: spdif@0 {
++				allwinner,pins = "PB13";
++				allwinner,function = "spdif";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++			};
++
+ 			spi0_pins_a: spi0@0 {
+ 				allwinner,pins = "PI11", "PI12", "PI13";
+ 				allwinner,function = "spi0";
+@@ -1124,25 +1124,25 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			ps20_pins_a: ps20@0 {
+-				allwinner,pins = "PI20", "PI21";
+-				allwinner,function = "ps2";
++			uart0_pins_a: uart0@0 {
++				allwinner,pins = "PB22", "PB23";
++				allwinner,function = "uart0";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			ps21_pins_a: ps21@0 {
+-				allwinner,pins = "PH12", "PH13";
+-				allwinner,function = "ps2";
++			uart0_pins_b: uart0@1 {
++				allwinner,pins = "PF2", "PF4";
++				allwinner,function = "uart0";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			spdif_tx_pins_a: spdif@0 {
+-				allwinner,pins = "PB13";
+-				allwinner,function = "spdif";
++			uart1_pins_a: uart1@0 {
++				allwinner,pins = "PA10", "PA11";
++				allwinner,function = "uart1";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 		};
+ 
 -- 
-nvpublic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.3
