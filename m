@@ -1,57 +1,67 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] PATH[1/3] ARM: axp20x_usb_power.c add device tree
- configuration options for REG 30H: VBUS-IPSOUT
-Date: Fri, 10 Jun 2016 11:56:25 +0200
-Message-ID: <d7cc3227-e75f-6be1-61b0-cd3f8eefff10@redhat.com>
-References: <0f58d2b3-f3d3-45a3-a307-e54df26c1ab1@googlegroups.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v10 08/14] usb: otg: add OTG/dual-role core
+Date: Fri, 10 Jun 2016 13:19:28 +0300
+Message-ID: <575A9430.6070508@ti.com>
+References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+ <1465376626-30122-9-git-send-email-rogerq@ti.com> <57592060.6060801@ti.com>
+ <2522343c-422f-79e1-af40-eb953bde42f6@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0f58d2b3-f3d3-45a3-a307-e54df26c1ab1-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ene.alexandru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2522343c-422f-79e1-af40-eb953bde42f6@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, peter.chen@freescale.com
+Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 17-05-16 19:41, Ene Alexandru wrote:
-> The AXP20X chips have a configuration register "REG 30H: VBUS-IPSOUT Power Path Management" that provide USB power supply protection.
-> The current axp20x_usb_power.c provides support only for reading those values.
->
-> From the datasheet:
-> In order not to affect the USB communication, VBUS is always working under Voltage-Limit mode by default. In this mode, AXP209 ensures that VBUS voltage remains above a configurable reference voltage VHOLD which can meet the USB specification. The default VHOLD is 4.4V, adjustable in Reg30H [5:3] register. If the system has limit on current obtained from USB VBUS, a current-limit mode is provided (See REG30H[1] register), with 900mA/500mA/100mA (Reg30H [0]) selectable.
->
-> The following entries are added in the axp209.dtsi file: vhold-enable, vhold-set and ibus-limit
-> The chosen default values are the AXP20X reset values, as described in the data sheet.
->
-> Signed-off-by: Ene Alexandru <ene.alexandru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
->
-> ---
-> diff -uprN -X linux-sunxi-original/Documentation/dontdiff linux-sunxi-original/arch/arm/boot/dts/axp209.dtsi linux-sunxi/arch/arm/boot/dts/axp209.dtsi
-> --- linux-sunxi-original/arch/arm/boot/dts/axp209.dtsi         2016-05-11 09:21:47.470923679 +0200
-> +++ linux-sunxi/arch/arm/boot/dts/axp209.dtsi     2016-05-10 18:45:32.795158651 +0200
-> @@ -98,5 +98,8 @@
->            usb_power_supply: usb_power_supply {
->                        compatible = "x-powers,axp202-usb-power-supply";
->                        status = "disabled";
-> +                      vhold-enable = <0x01>;
-> +                      vhold-set = <0x04>;
-> +                      ibus-limit = <0x01>;
->            };
-> };
+On 09/06/16 15:34, Sergei Shtylyov wrote:
+> On 6/9/2016 10:53 AM, Roger Quadros wrote:
+> 
+>> It provides APIs for the following tasks
+>>
+>> - Registering an OTG/dual-role capable controller
+>> - Registering Host and Gadget controllers to OTG core
+>> - Providing inputs to and kicking the OTG state machine
+>>
+>> Provide a dual-role device (DRD) state machine.
+>> DRD mode is a reduced functionality OTG mode. In this mode
+>> we don't support SRP, HNP and dynamic role-swap.
+>>
+>> In DRD operation, the controller mode (Host or Peripheral)
+>> is decided based on the ID pin status. Once a cable plug (Type-A
+>> or Type-B) is attached the controller selects the state
+>> and doesn't change till the cable in unplugged and a different
+>> cable type is inserted.
+>>
+>> As we don't need most of the complex OTG states and OTG timers
+>> we implement a lean DRD state machine in usb-otg.c.
+>> The DRD state machine is only interested in 2 hardware inputs
+>> 'id' and 'b_sess_vld'.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> 
 
-Please do not use raw register values like this, instead make the device-tree property take
-microvolts / microamps like e.g. the regulator bindings do, and translate these in the
-driver.
+<snip>
 
-Regards,
+> [...]
+>> +/**
+>> + * usb_otg_register_gadget - Register the gadget controller to OTG core
+>> + * @gadget:    gadget controller
+> 
+>    We call that USB device controller (UDC). I'm not sure what you meant here...
+>    And what about the 2nd arg, 'ops'?
 
-Hans
+There are 2 data structures representing the Device controller.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+struct usb_gadget - represents a usb slave device
+struct usb_udc -struct usb_udc - describes one usb device controller
+
+usb_udc is for private use only. usb_otg_register_gadget() takes struct usb_gadget
+as argument.
+
+Do you want me to refer to struct usb_gadget as UDC?
+
+What is wrong with calling it gadget controller?
