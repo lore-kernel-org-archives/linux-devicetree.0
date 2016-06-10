@@ -1,111 +1,57 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: apq8064: move sdcc1 pinctrl nodes to soc file
-Date: Fri, 10 Jun 2016 10:38:34 +0100
-Message-ID: <1465551515-21622-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] [V2] ARM: dts: sun7i: Add dts file for
+ Bananapi M1 Plus board
+Date: Fri, 10 Jun 2016 11:38:51 +0200
+Message-ID: <20160610093851.GQ5242@lukather>
+References: <20160602023623.5761-1-luoyi.ly@gmail.com>
+ <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA@mail.gmail.com>
+ <20160602081638.GG4908@lukather>
+ <574FF94B.3020309@web.de>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GDLQamdgIxhPcIwq"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNUV5K5AKGQEYVWCRZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <574FF94B.3020309-S0/GAf8tV78@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>
+Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch moves out the sdcc1 pinctrl nodes out of board files to soc file,
-so that it will be duplicated in other board files.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/qcom-apq8064-pins.dtsi           | 20 ++++++++++++++++++++
- .../arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts | 22 ----------------------
- arch/arm/boot/dts/qcom-apq8064.dtsi                |  2 ++
- 3 files changed, 22 insertions(+), 22 deletions(-)
+--GDLQamdgIxhPcIwq
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-index 4102a98..ca683e5 100644
---- a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-@@ -7,6 +7,26 @@
- 		};
- 	};
- 
-+	sdcc1_pins: sdcc1-pin-active {
-+		clk {
-+			pins = "sdc1_clk";
-+			drive-strengh = <16>;
-+			bias-disable;
-+		};
-+
-+		cmd {
-+			pins = "sdc1_cmd";
-+			drive-strengh = <10>;
-+			bias-pull-up;
-+		};
-+
-+		data {
-+			pins = "sdc1_data";
-+			drive-strengh = <10>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	ps_hold: ps_hold {
- 		mux {
- 			pins = "gpio78";
-diff --git a/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts b/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
-index 06b3c76..93d08b9 100644
---- a/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
-@@ -70,25 +70,6 @@
- 				};
- 			};
- 
--			sdcc1_pin_a: sdcc1-pin-active {
--				clk {
--					pins = "sdc1_clk";
--					drive-strengh = <16>;
--					bias-disable;
--				};
--
--				cmd {
--					pins = "sdc1_cmd";
--					drive-strengh = <10>;
--					bias-pull-up;
--				};
--
--				data {
--					pins = "sdc1_data";
--					drive-strengh = <10>;
--					bias-pull-up;
--				};
--			};
- 
- 			sdcc3_pin_a: sdcc3-pin-active {
- 				clk {
-@@ -417,9 +398,6 @@
- 
- 				vmmc-supply = <&pm8921_l5>;
- 				vqmmc-supply = <&pm8921_s4>;
--
--				pinctrl-names = "default";
--				pinctrl-0 = <&sdcc1_pin_a>;
- 			};
- 
- 			sdcc3: sdcc@12180000 {
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index cf37d55..ce7ce84 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -859,6 +859,8 @@
- 			sdcc1: sdcc@12400000 {
- 				status		= "disabled";
- 				compatible	= "arm,pl18x", "arm,primecell";
-+				pinctrl-names	= "default";
-+				pinctrl-0	= <&sdcc1_pins>;
- 				arm,primecell-periphid = <0x00051180>;
- 				reg		= <0x12400000 0x2000>;
- 				interrupts	= <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+On Thu, Jun 02, 2016 at 11:15:55AM +0200, Bernhard Nortmann wrote:
+> Am 02.06.2016 um 10:16 schrieb Maxime Ripard:
+> >[...]
+> >Yes, everything that is shared with the banana-pro (which, judging
+> >from Bernhard, is pretty much everything but a GPIO) should be merged
+> >in the banapro DT.
+> >
+> >Maxime
+> >
+> 
+> Don't take my word for granted, as I do not own this hardware or know it
+> particularly well. There is no doubt that "BPi-M1+" and "Banana Pro" are
+> very similar, but if in doubt the information form the wiki should be
+> verified.
+
+Hmmmm, ok. Chen-Yu, any input on this? You know the banana-pis much
+more than I do.
+
+Maxime
+
 -- 
-2.8.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--GDLQamdgIxhPcIwq--
