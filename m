@@ -1,35 +1,35 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/2] ARM: dts: sunxi: Re-order sun4i and sun7i
- pinctrl nodes alphabetically
-Date: Fri, 10 Jun 2016 11:05:17 +0300
-Message-ID: <1465545919-24270-1-git-send-email-mamlinav@gmail.com>
-Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIKZ27JXICRUBCZ4WSPG-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 3/3] ARM64: dts: meson-gxbb: Add Hardware Random Generator node
+Date: Fri, 10 Jun 2016 10:21:55 +0200
+Message-ID: <1465546915-24229-4-git-send-email-narmstrong@baylibre.com>
+References: <1465546915-24229-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465546915-24229-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-This patchset have no functional changes, only sorting sun4i and sun7i pinctrl
-nodes in alphabetical order.
-
-Aleksei Mamlin (2):
-  ARM: dts: sun4i: Re-order pinctrl nodes alphabetically
-  ARM: dts: sun7i: Re-order pinctrl nodes alphabetically
-
- arch/arm/boot/dts/sun4i-a10.dtsi | 114 ++++++++--------
- arch/arm/boot/dts/sun7i-a20.dtsi | 284 +++++++++++++++++++--------------------
- 2 files changed, 199 insertions(+), 199 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 832815d..8353621 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -167,6 +167,11 @@
+ 			};
+ 		};
+ 
++		rng {
++			compatible = "amlogic,meson-rng";
++			reg = <0x0 0xc8834000 0x0 0x4>;
++		};
++
+ 		apb: apb@d0000000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xd0000000 0x0 0x200000>;
 -- 
-2.7.3
+2.7.0
