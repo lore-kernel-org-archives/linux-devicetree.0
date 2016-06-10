@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v3,3/5] usb: xhci-mtk: make IPPC register optional
-Date: Fri, 10 Jun 2016 15:32:40 +0800
-Message-ID: <1465543962-11678-4-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v3,2/5] dt-bindings: mt8173-mtu3: add devicetree bindings
+Date: Fri, 10 Jun 2016 15:32:39 +0800
+Message-ID: <1465543962-11678-3-git-send-email-chunfeng.yun@mediatek.com>
 References: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,97 +12,104 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@
 Cc: Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Make IPPC register optional to support host side of dual-role mode,
-due to it is moved into common glue layer for simplification.
+add a DT binding doc for MediaTek USB3 DRD driver
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/host/xhci-mtk.c |   32 +++++++++++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/usb/mt8173-mtu3.txt        |   85 ++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
 
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index 79959f1..dc86832 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -94,6 +94,9 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
- 	int ret;
- 	int i;
- 
-+	if (ippc == NULL)
-+		return 0;
+diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+new file mode 100644
+index 0000000..571ae8b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+@@ -0,0 +1,85 @@
++The device node for Mediatek USB3.0 DRD controller
 +
- 	/* power on host ip */
- 	value = readl(&ippc->ip_pw_ctr1);
- 	value &= ~CTRL1_IP_HOST_PDN;
-@@ -139,6 +142,9 @@ static int xhci_mtk_host_disable(struct xhci_hcd_mtk *mtk)
- 	int ret;
- 	int i;
- 
-+	if (ippc == NULL)
-+		return 0;
++Required properties:
++ - compatible : should be "mediatek,mt8173-mtu3"
++ - reg : specifies physical base address and size of the registers
++ - reg-names: should be "mac" for device IP and "ippc" for IP port control
++ - interrupts : interrupt used by the device IP
++ - power-domains : a phandle to USB power domain node to control USB's
++	mtcmos
++ - vusb33-supply : regulator of USB avdd3.3v
++ - clocks : a list of phandle + clock-specifier pairs, one for each
++	entry in clock-names
++ - clock-names : must contain "sys_ck" for clock of controller;
++	"wakeup_deb_p0" and "wakeup_deb_p1" are optional, they are
++	depends on "mediatek,enable-wakeup"
++ - phys : a list of phandle + phy specifier pairs
++ - dr_mode : should be one of "host", "peripheral" or "otg",
++	refer to usb/generic.txt
 +
- 	/* power down all u3 ports */
- 	for (i = 0; i < mtk->num_u3_ports; i++) {
- 		value = readl(&ippc->u3_ctrl_p[i]);
-@@ -173,6 +179,9 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
- 	struct mu3c_ippc_regs __iomem *ippc = mtk->ippc_regs;
- 	u32 value;
- 
-+	if (ippc == NULL)
-+		return 0;
++Optional properties:
++ - #address-cells, #size-cells : should be '2' if the device has sub-nodes
++	with 'reg' property
++ - ranges : allows valid 1:1 translation between child's address space and
++	parent's address space
++ - extcon : external connector for vbus and idpin changes detection, needed
++	when supports dual-role mode.
++ - vbus-supply : reference to the VBUS regulator, needed when supports
++	dual-role mode.
++ - pinctl-names : a pinctrl state named "default" must be defined,
++	"id_float" and "id_ground" are optinal which depends on
++	"mediatek,enable-manual-drd"
++ - pinctrl-0 : pin control group
++	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
 +
- 	/* reset whole ip */
- 	value = readl(&ippc->ip_pw_ctr0);
- 	value |= CTRL0_IP_SW_RST;
-@@ -475,6 +484,7 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
- /* called during probe() after chip reset completes */
- static int xhci_mtk_setup(struct usb_hcd *hcd)
- {
-+	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
- 	struct xhci_hcd_mtk *mtk = hcd_to_mtk(hcd);
- 	int ret;
- 
-@@ -482,12 +492,21 @@ static int xhci_mtk_setup(struct usb_hcd *hcd)
- 		ret = xhci_mtk_ssusb_config(mtk);
- 		if (ret)
- 			return ret;
-+	}
++ - maximum-speed : valid arguments are "super-speed", "high-speed" and
++	"full-speed"; refer to usb/generic.txt
++ - enable-manual-drd : supports manual dual-role switch via sysfs; only used
++	when receptacle is TYPE-A and also wants to support dual-role mode.
++ - mediatek,enable-wakeup : supports ip sleep wakeup used by host mode
++ - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
++	control register, it depends on "mediatek,enable-wakeup".
 +
-+	ret = xhci_gen_setup(hcd, xhci_mtk_quirks);
-+	if (ret)
-+		return ret;
++Sub-nodes:
++The xhci should be added as subnode to mtu3 as shown in the following example
++if host mode is enabled. The DT binding details of xhci can be found in:
++Documentation/devicetree/bindings/usb/mt8173-xhci.txt
 +
-+	if (usb_hcd_is_primary_hcd(hcd)) {
-+		mtk->num_u3_ports = xhci->num_usb3_ports;
-+		mtk->num_u2_ports = xhci->num_usb2_ports;
- 		ret = xhci_mtk_sch_init(mtk);
- 		if (ret)
- 			return ret;
- 	}
- 
--	return xhci_gen_setup(hcd, xhci_mtk_quirks);
-+	return ret;
- }
- 
- static int xhci_mtk_probe(struct platform_device *pdev)
-@@ -595,11 +614,14 @@ static int xhci_mtk_probe(struct platform_device *pdev)
- 	hcd->rsrc_start = res->start;
- 	hcd->rsrc_len = resource_size(res);
- 
-+	mtk->ippc_regs = NULL;
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	mtk->ippc_regs = devm_ioremap_resource(dev, res);
--	if (IS_ERR(mtk->ippc_regs)) {
--		ret = PTR_ERR(mtk->ippc_regs);
--		goto put_usb2_hcd;
-+	if (res) {	/* ippc register is optional */
-+		mtk->ippc_regs = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(mtk->ippc_regs)) {
-+			ret = PTR_ERR(mtk->ippc_regs);
-+			goto put_usb2_hcd;
-+		}
- 	}
- 
- 	for (phy_num = 0; phy_num < mtk->num_phys; phy_num++) {
++Example:
++ssusb: usb@11271000 {
++	compatible = "mediatek,mt8173-mtu3";
++	reg = <0 0x11271000 0 0x3000>,
++	      <0 0x11280700 0 0x0100>;
++	reg-names = "mac", "ippc";
++	interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>;
++	phys = <&phy_port0 PHY_TYPE_USB3>,
++	       <&phy_port1 PHY_TYPE_USB2>;
++	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
++	clocks = <&topckgen CLK_TOP_USB30_SEL>,
++		 <&pericfg CLK_PERI_USB0>,
++		 <&pericfg CLK_PERI_USB1>;
++	clock-names = "sys_ck",
++		      "wakeup_deb_p0",
++		      "wakeup_deb_p1";
++	vusb33-supply = <&mt6397_vusb_reg>;
++	vbus-supply = <&usb_p0_vbus>;
++	extcon = <&extcon_usb>;
++	dr_mode = "otg";
++	mediatek,enable-wakeup;
++	mediatek,syscon-wakeup = <&pericfg>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++	ranges;
++	status = "disabled";
++
++	usb_host: xhci@11270000 {
++		compatible = "mediatek,mt8173-xhci";
++		reg = <0 0x11270000 0 0x1000>;
++		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
++		clocks = <&topckgen CLK_TOP_USB30_SEL>;
++		clock-names = "sys_ck";
++		vusb33-supply = <&mt6397_vusb_reg>;
++		status = "disabled";
++	};
++};
 -- 
 1.7.9.5
