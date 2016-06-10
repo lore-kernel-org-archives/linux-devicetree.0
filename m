@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 17/19] ARM: dts: silk: Name serial port pfc subnode after device name
-Date: Fri, 10 Jun 2016 15:01:03 +0200
-Message-ID: <1465563665-2231-18-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 15/19] ARM: dts: alt: Name serial port pfc subnode after device name
+Date: Fri, 10 Jun 2016 15:01:01 +0200
+Message-ID: <1465563665-2231-16-git-send-email-geert+renesas@glider.be>
 References: <1465563665-2231-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1465563665-2231-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
@@ -19,16 +19,16 @@ either here or in a DT overlay.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7794-silk.dts | 2 +-
+ arch/arm/boot/dts/r8a7794-alt.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7794-silk.dts b/arch/arm/boot/dts/r8a7794-silk.dts
-index b8c7a63c5ec456bc..7e88f6fe55cdcc02 100644
---- a/arch/arm/boot/dts/r8a7794-silk.dts
-+++ b/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -129,7 +129,7 @@
- 	pinctrl-0 = <&scif_clk_pins>;
- 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
+index 383ad791f1db3151..1335664b2f886a17 100644
+--- a/arch/arm/boot/dts/r8a7794-alt.dts
++++ b/arch/arm/boot/dts/r8a7794-alt.dts
+@@ -111,7 +111,7 @@
+ 		function = "du";
+ 	};
  
 -	scif2_pins: serial2 {
 +	scif2_pins: scif2 {
