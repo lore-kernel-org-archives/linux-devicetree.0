@@ -1,41 +1,80 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/2] clk: max77620: Add clock driver for MAX77620/MAX20024
-Date: Fri, 10 Jun 2016 18:43:52 +0530
-Message-ID: <575ABD10.60208@nvidia.com>
-References: <1465553536-23838-1-git-send-email-ldewangan@nvidia.com>	<1465553536-23838-2-git-send-email-ldewangan@nvidia.com> <CABxcv=mrmN5Mzt595ZFgGbOoHJWQMwQ1wiCvcHEiWh_79EbJqQ@mail.gmail.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 1/2] clk: max77620: Add DT binding doc for MAX77620 clock
+Date: Fri, 10 Jun 2016 09:26:46 -0400
+Message-ID: <CABxcv==dd8x3WA1o7v-EoLgUxBye5jqnzQQ6OmPR=T692NYA1A@mail.gmail.com>
+References: <1465553536-23838-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=mrmN5Mzt595ZFgGbOoHJWQMwQ1wiCvcHEiWh_79EbJqQ@mail.gmail.com>
+In-Reply-To: <1465553536-23838-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
+To: Laxman Dewangan <ldewangan@nvidia.com>
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Laxman,
 
-On Friday 10 June 2016 06:50 PM, Javier Martinez Canillas wrote:
-> Hello Laxman,
+On Fri, Jun 10, 2016 at 6:12 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> MAXIM MAX77620 is the power management IC with multiple DCDC/LDO
+> regulators, RTC, GPIOs, Watchdog, 32KHz clock source etc.
 >
-> On Fri, Jun 10, 2016 at 6:12 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
->> MAXIM MAX77620 is the power management IC with multiple DCDC/LDO(
->> regulators, RTC, GPIOs, Watchdog, 32KHz clock source etc.
->>
->> Add support for controlling the 32KHz clock source via clock
->> framework.
->>
->> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->> ---
-> It looks very similar to the max77686 and max77802 drivers (with only
-> the difference in number of clock outputs), can you use the helpers in
-> drivers/clk/clk-max-gen.c ?
+> Add DT binding doc for the details of the properties for MAX76620
+> clocks.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+>  .../devicetree/bindings/clock/clk-max77620.txt     | 31 ++++++++++++++++++++++
 
-I have explored that option.
+The DT binding for the clock outputs found in the other Maxim PMICs
+(max77686 and max77802) are named maxim,max77{686,802} so I think it
+would be better to call this maxim,max7720 for consistency.
 
-The bit location for clock bit on register are same in case of max77686 
-and max77802 but it is different for the max77620.
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/clk-max77620.txt
+>
+> diff --git a/Documentation/devicetree/bindings/clock/clk-max77620.txt b/Documentation/devicetree/bindings/clock/clk-max77620.txt
+> new file mode 100644
+> index 0000000..cda6ef7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/clk-max77620.txt
+> @@ -0,0 +1,31 @@
+> +* Maxim MAX77620 32KHz clocks *
+> +
+> +Maxim Power Management IC (PMIC) has clock output pins for 32KHz.
+> +
 
-So until I change it too generic, it will not be possible.
-Also if it is require then what about all max77686/max77802 and max77620 
-in single file, the way we did for RTC.
-We dont need 4 files for the similar driver then.
+I think it would be nice to mention that this should be defined in the
+node for the max77620 PMIC and probably have a reference to the MFD
+binding. Look how the other max77xxx DT bindings do.
+
+> +This binding uses the common clock binding ./clock-bindings.txt.
+> +
+> +Required Properties:
+> +--------------------
+> +
+> +-#clock-cells : shall be set to 0.
+> +
+> +Example:
+> +
+> +#include <dt-bindings/mfd/max77620.h>
+> +...
+> +
+> +i2c@7000d000 {
+> +       spmic: max77620@3c {
+> +               compatible = "maxim,max77620";
+> +               :::::
+> +               #clock-cells = <0>;
+> +               :::
+> +       };
+> +};
+> +
+> +bluetooth {
+> +       compatible = "bcom,bluuetooth-device";
+> +       clocks = <&smic>;
+> +       clock-names = "in-32k";
+> +       :::
+> +};
+> --
+
+Best regards,
+Javier
