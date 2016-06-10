@@ -1,50 +1,47 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports while USB
- suspend
-Date: Fri, 10 Jun 2016 08:58:41 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A24364101650BA1DB@penmbx01>
-References: <1465359311-14544-2-git-send-email-wenyou.yang@atmel.com>
- <Pine.LNX.4.44L0.1606081352250.2191-100000@iolanthe.rowland.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.44L0.1606081352250.2191-100000@iolanthe.rowland.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kernel development list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, USB list <linux-usb@vger.kernel.org>
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: [PATCH v4 0/1] leds: pca9532: Add device tree binding
+Date: Fri, 10 Jun 2016 17:01:09 +0800
+Message-ID: <1465549270-41601-1-git-send-email-preid@electromag.com.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, riku.voipio-X3B1VOXEql0@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxhbiwgDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWxhbiBT
-dGVybiBbbWFpbHRvOnN0ZXJuQHJvd2xhbmQuaGFydmFyZC5lZHVdDQo+IFNlbnQ6IDIwMTbE6jbU
-wjnI1SAzOjE0DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4g
-Q2M6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBGZXJy
-ZSwgTmljb2xhcw0KPiA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+OyBSb2IgSGVycmluZyA8cm9i
-aCtkdEBrZXJuZWwub3JnPjsgUGF3ZWwgTW9sbA0KPiA8cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFy
-ayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPjsgSWFuIENhbXBiZWxsDQo+IDxpamMrZGV2aWNl
-dHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsN
-Cj4gQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGZyZWUtZWxlY3Ryb25zLmNv
-bT47IEtlcm5lbCBkZXZlbG9wbWVudA0KPiBsaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IFVTQiBsaXN0IDxsaW51eC11c2JAdmdlci5rZXJuZWwub3JnPg0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvMl0gdXNiOiBvaGNpLWF0OTE6IEZvcmNpYmx5IHN1
-c3BlbmQgcG9ydHMgd2hpbGUgVVNCDQo+IHN1c3BlbmQNCj4gDQo+IE9uIFdlZCwgOCBKdW4gMjAx
-NiwgV2VueW91IFlhbmcgd3JvdGU6DQo+IA0KPiA+IEluIG9yZGVyIHRvIHRoZSBzYXZlIHBvd2Vy
-IGNvbnN1bXB0aW9uLCBhcyBhIHdvcmthcm91bmQsIHN1c3BlbmQNCj4gPiBmb3JjaWJseSB0aGUg
-VVNCIFBPUlRBL0IvQyB2aWEgc2V0IHRoZSBTVVNQRU5EX0EvQi9DIGJpdHMgb2YgT0hDSQ0KPiA+
-IEludGVycnVwdCBDb25maWd1cmF0aW9uIFJlZ2lzdGVyIGluIHRoZSBTRlJzIHdoaWxlIE9IQ0kg
-VVNCIHN1c3BlbmQuDQo+ID4NCj4gPiBUaGlzIHN1c3BlbmQgb3BlcmF0aW9uIG11c3QgYmUgZG9u
-ZSBiZWZvcmUgdGhlIFVTQiBjbG9jayBpcyBkaXNhYmxlZCwNCj4gPiByZXN1bWUgYWZ0ZXIgdGhl
-IFVTQiBjbG9jayBpcyBlbmFibGVkLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VueW91IFlh
-bmcgPHdlbnlvdS55YW5nQGF0bWVsLmNvbT4NCj4gPiAtLS0NCj4gDQo+IFlvdSBuZXZlciBhbnN3
-ZXJlZCB0aGUgcXVlc3Rpb25zIEkgcG9zdGVkIGZvciB0aGUgZmlyc3QgdmVyc2lvbiBvZiB0aGlz
-DQo+IHBhdGNoOg0KPiANCj4gV2hhdCBkb2VzIHRoaXMgbWVhbj8gIFdoYXQgZG9lcyBzdXNwZW5k
-aW5nIGEgcG9ydCBkbz8gIElzIGl0IHRoZSBzYW1lIGFzIGENCj4gbm9ybWFsIFVTQiBwb3J0IHN1
-c3BlbmQ/DQo+IA0KPiBJZiBpdCBpcyB0aGUgc2FtZSwgd2h5IGRvZXNuJ3QgdGhlIFVTQl9QT1JU
-X0ZFQVRfU1VTUEVORCBzdWJjYXNlIG9mIHRoZQ0KPiBTZXRQb3J0RmVhdHVyZSBjYXNlIGluIG9o
-Y2lfaHViX2NvbnRyb2woKSBhbHJlYWR5IHRha2UgY2FyZSBvZiB0aGlzPw0KDQpJIHJlbWVtYmVy
-ZWQgSSBhbnN3ZXJlZCB5b3VyIHF1ZXN0aW9ucywgaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-cGlwZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNi1NYXkvNDI5MjQ1Lmh0bWwNCg0KTWF5YmUg
-bm90IHZlcnkgY2xlYXIuDQoNCj4gDQo+IEFsYW4gU3Rlcm4NCg0KDQpCZXN0IFJlZ2FyZHMsDQpX
-ZW55b3UgWWFuZw0KDQo=
+This patch adds very basic device tree binding support to the
+pca9532 driver. Sufficent to load driver and enable LEDs.
+
+Changes for v4:
+- Reference leds/common.txt in documentation.
+- Check return value of of_match_device()
+
+Changes for v3:
+- Remove state from device tree binding.
+  This needs more thought on how to configure which PWM is used.
+  And is not essential for a first pass.
+
+Changes for v2:
+- Fixup device tree documentation
+- Use label propert and fall back to node name,
+- Call of_node_put when breaking loop iterating leds.
+- Increment the loop counter.
+- Add initial state and default-trigger.
+
+Phil Reid (1):
+  leds: pca9532: Add device tree binding
+
+ .../devicetree/bindings/leds/leds-pca9532.txt      | 39 +++++++++++
+ drivers/leds/leds-pca9532.c                        | 75 ++++++++++++++++++++--
+ include/dt-bindings/leds/leds-pca9532.h            | 18 ++++++
+ include/linux/leds-pca9532.h                       |  9 ++-
+ 4 files changed, 132 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
+ create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
