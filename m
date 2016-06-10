@@ -1,68 +1,168 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: add Starry KR122EA0SRA panel binding
-Date: Fri, 10 Jun 2016 18:03:14 -0400
-Message-ID: <CAF6AEGsZxZuSVUCqVH=8FUOTMiWBVT52xQ+Qcaqt3yF=pRmf3w@mail.gmail.com>
-References: <1465578127-30330-1-git-send-email-dianders@chromium.org>
- <CAF6AEGuonEgNvJhfst+3aZPEOaeGwNnozcYwJq3_Z2S0-7ogSA@mail.gmail.com>
- <CAD=FV=XunjDGJYY1+-GPC+hN=kNxLiWbrtZD0_BO1ywerSLhfQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAD=FV=XunjDGJYY1+-GPC+hN=kNxLiWbrtZD0_BO1ywerSLhfQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: [PATCH 02/48] ARM: at91: Document new TCB bindings
+Date: Sat, 11 Jun 2016 00:03:05 +0200
+Message-ID: <1465596231-21766-3-git-send-email-alexandre.belloni@free-electrons.com>
+References: <1465596231-21766-1-git-send-email-alexandre.belloni@free-electrons.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1465596231-21766-1-git-send-email-alexandre.belloni@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgMzo1MiBQTSwgRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNA
-Y2hyb21pdW0ub3JnPiB3cm90ZToKPiBSb2IsCj4KPiBPbiBGcmksIEp1biAxMCwgMjAxNiBhdCAx
-MTo0MyBBTSwgUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cm90ZToKPj4gT24gRnJp
-LCBKdW4gMTAsIDIwMTYgYXQgMTowMiBQTSwgRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hy
-b21pdW0ub3JnPiB3cm90ZToKPj4+IFRoZSBTdGFycnkgS1IxMjJFQTBTUkEgaXMgYSAxMi4yIiwg
-MTkyMHgxMjAwIFRGVC1MQ0QgcGFuZWwgY29ubmVjdGVkCj4+PiB1c2luZyBlRFAgaW50ZXJmYWNl
-cy4KPj4KPj4gc28gZHJpdmUtYnkgY29tbWVudC4uLiBidXQgc2hvdWxkbid0IGVEUCBiZSBwcm9i
-ZS1hYmxlPyAgTm90IHN1cmUgd2h5Cj4+IHdlIG5lZWQgcGFuZWwgZHJpdmVycyBvciBEVCBiaW5k
-aW5ncz8KPgo+IEkgd2FzIHdvbmRlcmluZyBhYm91dCB0aGF0IHRvby4gIEFzIGZhciBhcyBJIGNh
-biB0ZWxsOgo+Cj4gMS4gV2UgbmVlZCBhIHBhbmVsIGRyaXZlciBiZWNhdXNlIHRoYXQgYXBwZWFy
-cyB0byBiZSB3aGF0IG93bnMgYQo+IHJlZmVyZW5jZSB0byB0aGUgYmFja2xpZ2h0IC8gcGFuZWwg
-cG93ZXIgcmVndWxhdG9yIGFuZCB0aGF0IHBhcnQgaXMKPiBub3QgYXV0by1wcm9iYWJsZS4KCm9o
-LCBobW0uLiBzYWQuLiBJIHdhcyBob3BpbmcgdGhhdCBlRFAgd291bGQgc2F2ZSB1cyBmcm9tIGRz
-aSBwZXItcGFuZWwKZHJpdmVyIGhlbGwuLiBJIGd1ZXNzIGJlaW5nIGFibGUgdG8gdXNlIHBhbmVs
-LXNpbXBsZSBpcyBhdCBsZWFzdCBhbgppbXByb3ZlbWVudC4gIEJ1dCBwYW5lbCBzcGVjaWZpYyBz
-ZXF1ZW5jZXMgaXMgc291bmRzIGxpa2UgcGFuZWwtc2ltcGxlCndvbid0IHNhdmUgdXMgYWxsIHRo
-ZSB0aW1lIDotKAoKPiAyLiBBcyBmYXIgYXMgSSBjb3VsZCB0ZWxsLCB0aGVyZSBpcyBubyB3YXkg
-dG8gZGVjbGFyZSBhIGdlbmVyaWMKPiAodW5zcGVjaWZpZWQpIHBhbmVsIGluIHRoZSBkZXZpY2Ug
-dHJlZS4gIEV2ZXJ5b25lIHNlZW1zIHRvIGluY2x1ZGUKPiAic2ltcGxlLXBhbmVsIiBpbiB0aGVp
-ciBjb21wYXRpYmxlIHN0cmluZyBidXQgYXMgZmFyIGFzIEkgY2FuIHRlbGwKPiBub3RoaW5nIGlu
-IHRoZSBrZXJuZWwgbG9va3MgYXQgaXQuCj4KPiAzLiBJbiB0aGVvcnksIGFsbCB0aGUgaW5mbyBz
-cGVjaWZpZWQgaGVyZSBzaG91bGQgbWF0Y2ggdGhlIEVESUQKPiBleGFjdGx5IGFuZCB0aHVzIChh
-cyB5b3Ugc2FpZCkgYmUgcHJvYmFibGUuICBIb3dldmVyLCBpdCBzb3VuZHMgbGlrZQo+IChmb3Ig
-cG93ZXIgc2VxdWVuY2luZyByZWFzb25zKSB0aGVyZSBtaWdodCBiZSByZWFzb25zIHdoeSB5b3Un
-ZCB3YW50Cj4gdG8ga25vdyBleGFjdGx5IHdoYXQgcGFuZWwgd2FzIHByZXNlbnQgYmVmb3JlaGFu
-ZC4gIFlvdSBtaWdodCBuZWVkIHRvCj4gcG93ZXIgdGhlIHBhbmVsIGFuZCBiYWNrbGlnaHQgaW4g
-dmVyeSBzcGVjaWZpYyBzZXF1ZW5jZXMsIGZvcgo+IGluc3RhbmNlLiAgSSdtIG5vdCBzdXJlIGl0
-J3MgYWx3YXlzIDEwMCUgcG9zc2libGUgaW4gYWxsIGVtYmVkZGVkCj4gZGVzaWducyB0byByZWFk
-IHRoZSBFRElEIGJlZm9yZSB5b3Uga25vdyBob3cgdGhlIHNlcXVlbmNpbmcgc2hvdWxkCj4gd29y
-ayAoYnV0LCBvZiBjb3Vyc2UsIEknbSBhIE5PT0IpLgo+Cj4gNC4gUmVhZGluZyB0aGUgRURJRCBj
-YW4gYmUgc2xvdy4gIElmIHlvdSBoYXBwZW4gdG8ga25vdyBhbGwgdGhlIGluZm8KPiBvbiB0aGUg
-cGFuZWwgYmVmb3JlaGFuZCB5b3UgY2FuIHNpZ25pZmljYW50bHkgc3BlZWQgdXAgYm9vdCBzcGVl
-ZCwKPiBub3RhYmx5IGhvdyBmYXN0IHlvdSBjYW4gZ2V0IHNvbWV0aGluZyBvbiB0aGUgc2NyZWVu
-LgoKVGhlIHRoZW9yeSBpcyAoYWx0aG91Z2ggSSB0aGluayBub3QgdHJ1ZSBjdXJyZW50bHkgZm9y
-IG1vc3Qgb2YgdGhlIGFybQpkcml2ZXJzKSB0aGF0IHdlIHNob3VsZCBiZSByZWFkaW5nIGJhY2sg
-ZnJvbSBodyB0aGUgY3VycmVudCBjb25maWcKZnJvbSBib290bG9hZGVyIHNwbGFzaCBzY3JlZW4s
-IHRvIGF2b2lkIGEgbW9kZXNldCAoYW5kIGNvbnZlbmllbnRseQphbHNvIHRoZSBuZWVkIHRvIHJl
-YWQgZWRpZCkgYXQgYm9vdC4KCkJSLAotUgoKPgo+IEFueXdheSwgbWF5YmUgc29tZW9uZSBlbHNl
-IHdobyBhY3R1YWxseSBrbm93cyB3aGF0IHRoZXkncmUgdGFsa2luZwo+IGFib3V0IHdpbGwgY2hp
-bWUgaW4uICA7KQo+Cj4gLURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+The current binding for the TCB is not flexible enough for some use cases
+and prevents proper utilization of all the channels.
+
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+ .../devicetree/bindings/arm/atmel-at91.txt         | 32 -----------
+ .../devicetree/bindings/mfd/atmel-tcb.txt          | 62 ++++++++++++++++++++++
+ .../devicetree/bindings/pwm/atmel-tcb-pwm.txt      | 12 +++--
+ 3 files changed, 69 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+index e1f5ad855f14..3dc758403d03 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+@@ -60,38 +60,6 @@ System Timer (ST) required properties:
+ Its subnodes can be:
+ - watchdog: compatible should be "atmel,at91rm9200-wdt"
+ 
+-TC/TCLIB Timer required properties:
+-- compatible: Should be "atmel,<chip>-tcb".
+-  <chip> can be "at91rm9200" or "at91sam9x5"
+-- reg: Should contain registers location and length
+-- interrupts: Should contain all interrupts for the TC block
+-  Note that you can specify several interrupt cells if the TC
+-  block has one interrupt per channel.
+-- clock-names: tuple listing input clock names.
+-	Required elements: "t0_clk", "slow_clk"
+-	Optional elements: "t1_clk", "t2_clk"
+-- clocks: phandles to input clocks.
+-
+-Examples:
+-
+-One interrupt per TC block:
+-	tcb0: timer@fff7c000 {
+-		compatible = "atmel,at91rm9200-tcb";
+-		reg = <0xfff7c000 0x100>;
+-		interrupts = <18 4>;
+-		clocks = <&tcb0_clk>;
+-		clock-names = "t0_clk";
+-	};
+-
+-One interrupt per TC channel in a TC block:
+-	tcb1: timer@fffdc000 {
+-		compatible = "atmel,at91rm9200-tcb";
+-		reg = <0xfffdc000 0x100>;
+-		interrupts = <26 4 27 4 28 4>;
+-		clocks = <&tcb1_clk>;
+-		clock-names = "t0_clk";
+-	};
+-
+ RSTC Reset Controller required properties:
+ - compatible: Should be "atmel,<chip>-rstc".
+   <chip> can be "at91sam9260" or "at91sam9g45" or "sama5d3"
+diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+new file mode 100644
+index 000000000000..48196752c78f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+@@ -0,0 +1,62 @@
++* Device tree bindings for Atmel Timer Counter Blocks
++- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
++  <chip> can be "at91rm9200" or "at91sam9x5"
++- reg: Should contain registers location and length
++- #address-cells: has to be 1
++- #size-cells: has to be 0
++- interrupts: Should contain all interrupts for the TC block
++  Note that you can specify several interrupt cells if the TC
++  block has one interrupt per channel.
++- clock-names: tuple listing input clock names.
++	Required elements: "t0_clk", "slow_clk"
++	Optional elements: "t1_clk", "t2_clk"
++- clocks: phandles to input clocks.
++
++The TCB can expose multiple subdevices:
++ * a clocksource and clockevent device
++   - compatible: Should be "atmel,tcb-clksrc"
++   - reg: Should contain the TCB channels to be used. If the
++     counter width is 16 bits (at91rm9200-tcb), two consecutive
++     channels are needed. Else, only one channel will be used.
++
++ * a clockevent device
++   - compatible: Should be "atmel,tcb-clkevt"
++   - reg: Should contain the TCB channel to be used
++
++ * a PWM chip: see ../pwm/atmel-tcb-pwm.txt
++
++Examples:
++
++One interrupt per TC block:
++	tcb0: timer@fff7c000 {
++		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0xfff7c000 0x100>;
++		interrupts = <18 4>;
++		clocks = <&tcb0_clk>;
++		clock-names = "t0_clk";
++
++		timer@0 {
++			compatible = "atmel,tcb-clksrc";
++			reg = <0>, <1>;
++		};
++
++		timer@2 {
++			compatible = "atmel,tcb-clkevt";
++			reg = <2>;
++		};
++	};
++
++One interrupt per TC channel in a TC block:
++	tcb1: timer@fffdc000 {
++		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0xfffdc000 0x100>;
++		interrupts = <26 4>, <27 4>, <28 4>;
++		clocks = <&tcb1_clk>;
++		clock-names = "t0_clk";
++	};
++
++
+diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+index 8031148bcf85..ab8fbd5ba184 100644
+--- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+@@ -2,15 +2,17 @@ Atmel TCB PWM controller
+ 
+ Required properties:
+ - compatible: should be "atmel,tcb-pwm"
++- reg: tcb channel to use. Each channel can export 2 PWMs
+ - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+   the cells format. The only third cell flag supported by this binding is
+   PWM_POLARITY_INVERTED.
+-- tc-block: The Timer Counter block to use as a PWM chip.
+ 
+ Example:
+ 
+-pwm {
+-	compatible = "atmel,tcb-pwm";
+-	#pwm-cells = <3>;
+-	tc-block = <1>;
++tcb0: timer@f800c000 {
++	pwm@0 {
++		compatible = "atmel,tcb-pwm";
++		reg = <0>;
++		#pwm-cells = <3>;
++	};
+ };
+-- 
+2.8.1
