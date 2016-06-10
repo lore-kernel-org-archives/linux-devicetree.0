@@ -1,83 +1,35 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v10 11/14] usb: otg: use dev_vdbg() instead of VDBG()
-Date: Fri, 10 Jun 2016 16:07:20 +0300
-Message-ID: <1465564043-27163-12-git-send-email-rogerq@ti.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 14/14] Documentation: remove the constraint on the
+ distances of node pairs
+Date: Fri, 10 Jun 2016 08:08:03 -0500
+Message-ID: <20160610130803.GA8401@rob-hp-laptop>
+References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+ <1465286898-13828-15-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465564043-27163-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: peter.chen@freescale.com
-Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1465286898-13828-15-git-send-email-thunder.leizhen@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: devicetree <devicetree@vger.kernel.org>, David Daney <david.daney@cavium.com>, Catalin Marinas <catalin.marinas@arm.com>, Xinwei Hu <huxinwei@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Zefan Li <lizefan@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a device reference in struct usb_otg
-let's use dev_vdbg() for debug messages instead of VDBG().
+On Tue, Jun 07, 2016 at 04:08:18PM +0800, Zhen Lei wrote:
+> Update documentation. This limit is unneccessary.
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  Documentation/devicetree/bindings/numa.txt | 1 -
+>  1 file changed, 1 deletion(-)
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Acked-by: Peter Chen <peter.chen@nxp.com>
----
- drivers/usb/common/usb-otg-fsm.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/usb/common/usb-otg-fsm.c b/drivers/usb/common/usb-otg-fsm.c
-index 482d4c9..e6e58c2 100644
---- a/drivers/usb/common/usb-otg-fsm.c
-+++ b/drivers/usb/common/usb-otg-fsm.c
-@@ -30,13 +30,6 @@
- #include <linux/usb/otg.h>
- #include <linux/usb/otg-fsm.h>
- 
--#ifdef VERBOSE
--#define VDBG(fmt, args...) pr_debug("[%s]  " fmt, \
--				 __func__, ## args)
--#else
--#define VDBG(stuff...)	do {} while (0)
--#endif
--
- /* Change USB protocol when there is a protocol change */
- static int otg_set_protocol(struct otg_fsm *fsm, int protocol)
- {
-@@ -44,8 +37,9 @@ static int otg_set_protocol(struct otg_fsm *fsm, int protocol)
- 	int ret = 0;
- 
- 	if (fsm->protocol != protocol) {
--		VDBG("Changing role fsm->protocol= %d; new protocol= %d\n",
--			fsm->protocol, protocol);
-+		dev_vdbg(otg->dev,
-+			 "Changing role fsm->protocol= %d; new protocol= %d\n",
-+			 fsm->protocol, protocol);
- 		/* stop old protocol */
- 		if (fsm->protocol == PROTO_HOST)
- 			ret = otg_start_host(otg, 0);
-@@ -226,7 +220,7 @@ static int otg_set_state(struct otg_fsm *fsm, enum usb_otg_state new_state)
- 
- 	if (otg->state == new_state)
- 		return 0;
--	VDBG("Set state: %s\n", usb_otg_state_string(new_state));
-+	dev_vdbg(otg->dev, "Set state: %s\n", usb_otg_state_string(new_state));
- 	otg_leave_state(fsm, otg->state);
- 	switch (new_state) {
- 	case OTG_STATE_B_IDLE:
-@@ -358,7 +352,7 @@ int otg_statemachine(struct usb_otg *otg)
- 
- 	switch (state) {
- 	case OTG_STATE_UNDEFINED:
--		VDBG("fsm->id = %d\n", fsm->id);
-+		dev_vdbg(otg->dev, "fsm->id = %d\n", fsm->id);
- 		if (fsm->id)
- 			otg_set_state(fsm, OTG_STATE_B_IDLE);
- 		else
-@@ -466,7 +460,8 @@ int otg_statemachine(struct usb_otg *otg)
- 	}
- 	mutex_unlock(&fsm->lock);
- 
--	VDBG("quit statemachine, changed = %d\n", fsm->state_changed);
-+	dev_vdbg(otg->dev, "quit statemachine, changed = %d\n",
-+		 fsm->state_changed);
- 	return fsm->state_changed;
- }
- EXPORT_SYMBOL_GPL(otg_statemachine);
--- 
-2.7.4
+Acked-by: Rob Herring <robh@kernel.org>
