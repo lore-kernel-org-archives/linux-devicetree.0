@@ -1,64 +1,85 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 5/6] dt-bindings: add Sharp LQ123P1JX31 panel binding
-Date: Fri, 10 Jun 2016 09:40:03 -0700
-Message-ID: <CAD=FV=V289pShLFHAAhittPD9SKNuS68RWsArjD+zfp+g6Z4wQ@mail.gmail.com>
-References: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
- <1465386765-27867-1-git-send-email-ykk@rock-chips.com>
- <20160610134217.GA25881@rob-hp-laptop>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 08/20] pwm: Add PWM Capture support
+Date: Fri, 10 Jun 2016 18:39:56 +0200
+Message-ID: <20160610163956.GA8696@ulmo.ba.sec>
+References: <20160608092135.21184-1-lee.jones@linaro.org>
+ <20160608092135.21184-9-lee.jones@linaro.org>
+ <20160610135302.GK27142@ulmo.ba.sec>
+ <20160610143854.GE1537@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160610134217.GA25881@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160610143854.GE1537@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Um9iLAoKT24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgNjo0MiBBTSwgUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4gd3JvdGU6Cj4gT24gV2VkLCBKdW4gMDgsIDIwMTYgYXQgMDc6NTI6NDVQTSAr
-MDgwMCwgWWFraXIgWWFuZyB3cm90ZToKPj4gVGhlIFNoYXJwIExRMTIzUDFKWDMxIGlzIGFuIDEy
-LjMiIDI0MDB4MTYwMCBURlQtTENEIHBhbmVsCj4+IGNvbm5lY3RlZCB1c2luZyBlRFAgaW50ZXJm
-YWNlcy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29t
-Pgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2MjoKPj4gLSBBZGQgZHQtYmluZGluZ3Mgb2YgU2hhcnAg
-TFExMjNQMUpYMzEgcGFuZWwgaW4gdjIKPj4KPj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvc2hhcnAsbHExMjNwMWp4MzEudHh0ICAgICAgICB8IDcgKysrKysrKwo+PiAg
-MSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMTIz
-cDFqeDMxLnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHExMjNwMWp4MzEudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHExMjNwMWp4MzEudHh0
-Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjgxOTM4YzAKPj4gLS0t
-IC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9zaGFycCxscTEyM3AxangzMS50eHQKPj4gQEAgLTAsMCArMSw3IEBACj4+ICtT
-aGFycCAxMi4zIiAoMjQwMHgxNjAwIHBpeGVscykgVEZUIExDRCBwYW5lbAo+PiArCj4+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgInNoYXJwLGxxMTIz
-cDFqeDMxLCIKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBe
-Cj4gTmVlZCB0byBkcm9wIHRoZSBjb21tYS4KClRoYW5rcyBmb3IgY2F0Y2hpbmchCgo+IE5vIHJl
-Z3VsYXRvcnMgb3IgcmVzZXRzIG9yIHB3bXM/CgpDb3VsZCBiZSBtb3JlIGV4cGxpY2l0IEkgZ3Vl
-c3MsIGJ1dCBZYWtpciBkb2VzIHNheToKCj4gVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0
-aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAo+IGluIHNpbXBs
-ZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCgpJbiB0aGF0IGRvY3VtZW50IGl0IHNob3dz
-OgoKUmVxdWlyZWQgcHJvcGVydGllczoKLSBwb3dlci1zdXBwbHk6IHJlZ3VsYXRvciB0byBwcm92
-aWRlIHRoZSBzdXBwbHkgdm9sdGFnZQoKT3B0aW9uYWwgcHJvcGVydGllczoKLSBkZGMtaTJjLWJ1
-czogcGhhbmRsZSBvZiBhbiBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJRCBwcm9iaW5n
-Ci0gZW5hYmxlLWdwaW9zOiBHUElPIHBpbiB0byBlbmFibGUgb3IgZGlzYWJsZSB0aGUgcGFuZWwK
-LSBiYWNrbGlnaHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8g
-dGhlIHBhbmVsCgoKSW4gZ2VuZXJhbCBZYWtpcidzIGJpbmRpbmdzIGRvY3VtZW50IG1hdGNoIGEg
-aHVnZSBjaHVuayBvZiB0aGUgY3VycmVudApleGlzdGluZyBiaW5kaW5ncy4gIERvIHRoaXM6CiAg
-Y2QgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwKICBncmVw
-IC1DMjAgIlRoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCIg
-KgoKWW91J2xsIGZpbmQgYSBodWdlIGNodW5rIG9mIGZpbGVzIHdoaWNoIGFyZSByYXRoZXIgZm9y
-bXVsYWljLiAgSXQKbWlnaHQgbWFrZSBzZW5zZSB0byBqdXN0IGhhdmUgb25lIGZpbGUgYW5kIGEg
-bGlzdCBvZiBwYW5lbHMgd2hpY2ggYXJlCnNpbXBsZSBwYW5lbHM/CgoKLURvdWcKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jun 10, 2016 at 03:38:54PM +0100, Lee Jones wrote:
+> On Fri, 10 Jun 2016, Thierry Reding wrote:
+>=20
+> > On Wed, Jun 08, 2016 at 10:21:23AM +0100, Lee Jones wrote:
+> > > Supply a PWM Capture call-back Op in order to pass back
+> > > information obtained by running analysis on PWM a signal.
+> > > This would normally (at least during testing) be called from
+> > > the Sysfs routines with a view to printing out PWM Capture
+> > > data which has been encoded into a string.
+> > >=20
+> > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > ---
+> > >  drivers/pwm/core.c  | 27 +++++++++++++++++++++++++++
+> > >  include/linux/pwm.h | 25 +++++++++++++++++++++++++
+> > >  2 files changed, 52 insertions(+)
+>=20
+> So do you want me to re-spin?
+>=20
+> Before you said you'd make adjustments on patches 8 through 10, so I'm
+> a little confused.
+
+Yeah, I only realized that it might be quicker to make these adjustments
+myself when I had finished looking at patch 10. I've pushed the adjusted
+patches to a for-4.8/pwm-capture branch, so if you're going to re-spin
+the remainder of the patches, perhaps that could be your base?
+
+	https://git.kernel.org/cgit/linux/kernel/git/thierry.reding/linux-pwm.git/=
+log/?h=3Dfor-4.8/pwm-capture
+
+If you don't have any objections I can put those into linux-next early
+next week.
+
+Thierry
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXWu1cAAoJEN0jrNd/PrOhGzQQAIx9jzFtknhduCh4gDHkFp0f
+WsLfSQnTu4h3nVbH4l0U5VTpytCadFNhWTxGibiT3jGuiTP1vCxnflhYKRVMLdwV
+KAKE3N2GCFI2B6xVvzep5K6UYATfmGYhaXMbEj/SUCuwUx68YLygThjRmvedpT2a
+pbJybTtrUIiTep4YQWosGDrriX+GpytBXKty5JWc3w8rAMRVt2RPQJMyCLJT4czK
+smMl8KLETmC8r0vbQR2llhSYBfTKXWqtBt7vroQRVMu1tgZVUOr1f1+RRy2uFbfO
+ZrcpzKgidid42y7W0uxsQWyWtZK4SuhWiSmSAHrO9RGe3E1iSZ0K+qQEhe11MKuK
+MuCl/Hji8fm2ZWr4h4x2qkIjPHpnLBNiSq+s1vql8vybaEti5r4Amtn+GFNi8pfS
+rzILvaD1sK6x/sP11zX8IwX2FxlkHNUq0tccqKAcAO/1BvylBPuQu0j7+rZkJw/s
+kPYpa5iewrGrrzne2GFCZkKsbBNkM4svQN7HLqeKBARy2AH47/YhiDRx/DU6dwN8
+e1NdNrS0we9ryEqj5vbKGaddR55dcpTdAUMLZc37fXrzadoe4Wb+hwpDjJzqp071
+eH+xY47JzKjYeA2eqNcRdlFLh0N/ZszaxC6tgVwPoiWuU3L0iU+M70oYtBEB/cP0
+VCP6s/sW/fGmLeCkBkXS
+=hkl4
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
