@@ -1,61 +1,99 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH 04/10] arm64: dts: marvell: add peripherals clocks for Armada
- 37xx
-Date: Fri, 10 Jun 2016 15:23:32 +0200
-Message-ID: <1465565018-14172-5-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH 09/10] dt-bindings: clock: add DT binding for the peripheral clocks on Armada 3700
+Date: Fri, 10 Jun 2016 15:23:37 +0200
+Message-ID: <1465565018-14172-10-git-send-email-gregory.clement@free-electrons.com>
 References: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Romain Perier <romain.perier@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Shadi Ammouri <shadi@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Add two new blocks of clocks. The peripheral clocks are the source clocks
-of the peripheral of the Armada 3700 SoC.
+This commit adds the DT binding documentation for the peripheral clocks
+used in the Marvell Armada 3700 SoCs.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../bindings/clock/armada3700-periph-clock.txt     | 70 ++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index e9f0b97c63d5..c55542ba0c54 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -105,6 +105,22 @@
- 				status = "disabled";
- 			};
- 
-+			nb_perih_clk: nb-periph-clk@13000{
-+				compatible = "marvell,armada-3700-periph-clock-nb";
-+				reg = <0x13000 0x100>;
-+				clocks = <&tbg 0>, <&tbg 1>, <&tbg 2>,
-+				<&tbg 3>, <&xtalclk>;
-+				#clock-cells = <1>;
-+			};
+diff --git a/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt b/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
+new file mode 100644
+index 000000000000..549a5ad14031
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
+@@ -0,0 +1,70 @@
++* Peripheral Clock bindings for Marvell Armada 37xx SoCs
 +
-+			sb_perih_clk: sb-periph-clk@13000{
-+				compatible = "marvell,armada-3700-periph-clock-sb";
-+				reg = <0x18000 0x100>;
-+				clocks = <&tbg 0>, <&tbg 1>, <&tbg 2>,
-+				<&tbg 3>, <&xtalclk>;
-+				#clock-cells = <1>;
-+			};
++Marvell Armada 37xx SoCs provide peripheral clocks which are
++used as clock source for the peripheral of the SoC.
 +
- 			tbg: tbg@13200 {
- 				compatible = "marvell,armada-3700-tbg-clock";
- 				reg = <0x13200 0x100>;
++There are two different block associated to north bridge and south
++bridge.
++
++The peripheral clock consumer should specify the desired clock by
++having the clock ID in its "clocks" phandle cell.
++
++The following is a list of provided IDs for Armada 370 North bridge clocks:
++ID	Clock name	Description
++-----------------------------------
++0	mmc		MMC controller
++1	sata_host	Sata Host
++2	sec_at		Security AT
++3	sac_dap		Security DAP
++4	tsecm		Security Engine
++5	setm_tmx	Serial Embedded Trace Module
++6	avs		Adaptive Voltage Scaling
++7	sqf		SPI
++8	pwm		PWM
++9	i2c_2		I2C 2
++10	i2c_1		I2C 1
++11	ddr_phy		DDR PHY
++12	ddr_fclk	DDR F clock
++13	trace		Trace
++14	counter		Counter
++15	eip97		EIP 97
++16	cpu		CPU
++
++The following is a list of provided IDs for Armada 370 South bridge clocks:
++ID	Clock name	Description
++-----------------------------------
++0	gbe-50		50 MHz parent clock for Gigabit Ethernet
++1	gbe-core	parent clock for Gigabit Ethernet core
++2	gbe-125		125 MHz parent clock for Gigabit Ethernet
++3	gbe1-50		50 MHz clock for Gigabit Ethernet port 1
++4	gbe0-50		50 MHz clock for Gigabit Ethernet port 0
++5	gbe1-125	125 MHz clock for Gigabit Ethernet port 1
++6	gbe0-125	125 MHz clock for Gigabit Ethernet port 0
++7	gbe1-core	Gigabit Ethernet core port 1
++8	gbe0-core	Gigabit Ethernet core port 0
++9	gbe-bm		Gigabit Ethernet Buffer Manager
++10	sdio		SDIO
++11	usb32-sub2-sys	USB 2 clock
++12	usb32-ss-sys	USB 3 clock
++
++Required properties:
++
++- compatible : shall be "marvell,armada-3700-periph-clock-nb" for the
++  north bridge block, or
++  "marvell,armada-3700-periph-clock-sb" for the south bridge block
++- reg : must be the register address of North/South Bridge Clock register
++- #clock-cells : from common clock binding; shall be set to 1
++
++- clocks : list of the parent clock phandle in the following order:
++  TBG-A P, TBG-B P, TBG-A S, TBG-B S and finally the xtal clock.
++
++
++Example:
++
++nb_perih_clk: nb-periph-clk@13000{
++	compatible = "marvell,armada-3700-periph-clock-nb";
++	reg = <0x13000 0x1000>;
++	clocks = <&tbg 0>, <&tbg 1>, <&tbg 2>,
++	<&tbg 3>, <&xtalclk>;
++	#clock-cells = <1>;
++};
 -- 
 2.5.0
