@@ -1,51 +1,40 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 1/2] ARM: dts: apq8064: rename db600c to SD_600eval
-Date: Fri, 10 Jun 2016 13:49:20 +0100
-Message-ID: <575AB750.80803@linaro.org>
-References: <1465551298-21457-1-git-send-email-srinivas.kandagatla@linaro.org>
- <575AB433.3060006@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of: irq: don't return 0 from of_irq_get()
+Date: Fri, 10 Jun 2016 07:55:18 -0500
+Message-ID: <CAL_JsqKUM=Un6MAfmJPBQy7jdNMv0MDNB1gmq5v+mG4FwNfrbQ@mail.gmail.com>
+References: <20938812.efaALfQEUn@wasted.cogentembedded.com>
+ <20160603121432.GB8472@rob-hp-laptop> <65e9eb00-ba9a-87c5-1410-8a5da6b42c8f@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <575AB433.3060006@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Andy Gross <andy.gross@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <65e9eb00-ba9a-87c5-1410-8a5da6b42c8f@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/06/16 13:36, Georgi Djakov wrote:
-> Hi Srini,
+On Fri, Jun 10, 2016 at 7:14 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 6/3/2016 3:14 PM, Rob Herring wrote:
 >
-> On 06/10/2016 12:34 PM, Srinivas Kandagatla wrote:
->> This board has been renamed recently and announced at
->> https://eragon.einfochips.com/products/sd-600eval.html
+>>> of_irq_get() returns 0 iff irq_create_of_mapping() call fails. Returning
+>>> both error code  and 0 on failure is a sign of a misdesigned API. Return
+>>> -ENXIO instead like one of the callers, platform_get_irq(), does; fix up
+>>> the kernel-doc as well...
+>>>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 >>
->> So rename this board files so that it reflects actual product in market.
 >>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   arch/arm/boot/dts/Makefile                         |   2 +-
->>   .../boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi   |  52 ---
->>   arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts    | 349 ---------------------
->>   .../dts/qcom-apq8064-arrow-sd-600eval-pins.dtsi    |  52 +++
->>   .../arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts | 349 +++++++++++++++++++++
->>   5 files changed, 402 insertions(+), 402 deletions(-)
->>   delete mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
->>   delete mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
->>   create mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval-pins.dtsi
->>   create mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
->>
+>> So I think this is done this way because of the variation in NO_IRQ
+>> definition across architectures.
 >
-> If you use git format-patch -M, we will see and track the renamed files
-> easier than deleting and adding the files.
-Yep, that would give good diff stat as well.
-Thanks for suggestion, will resend v2 with that change.
+>
+>    I remember that NO_IRQ is "considered harmful" by Linus. Actually, I'm
+> nit sure what you mean, could you elaborate on that?
 
---srini
->
-> BR,
-> Georgi
->
+Calling locations could handle 0 vs. negative differently. The return
+value propagates as well, so you can't easily audit how it is handled.
+I'm being paranoid, but we need a better reason than "misdesigned
+API". I'm pretty sure we misdesigned it on purpose.
+
+Rob
