@@ -1,63 +1,65 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v4 01/14] regulator: of: Add helper for getting all supplies
-Date: Fri, 10 Jun 2016 12:30:56 -0500
-Message-ID: <20160610173056.GA16503@rob-hp-laptop>
-References: <1465465471-28740-1-git-send-email-k.kozlowski@samsung.com>
- <1465465471-28740-2-git-send-email-k.kozlowski@samsung.com>
- <20160609102925.GS7510@sirena.org.uk>
- <5759560A.70107@samsung.com>
+Subject: Re: [PATCH 2/2] drm: Add DT bindings documentation for OpenCores
+ VGA/LCD controller
+Date: Fri, 10 Jun 2016 12:36:21 -0500
+Message-ID: <20160610173621.GA17641@rob-hp-laptop>
+References: <1465479199-9810-1-git-send-email-andrea.merello@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <5759560A.70107@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Heiko Stuebner <heiko@sntech.de>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org, hzpeterchen@gmail.com, Bartlomiej
+In-Reply-To: <1465479199-9810-1-git-send-email-andrea.merello@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrea Merello <andrea.merello@gmail.com>
+Cc: Claudio Lorini <claudio.lorini@iit.it>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Francesco Diotalevi <francesco.diotalevi@iit.it>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 09, 2016 at 01:42:02PM +0200, Krzysztof Kozlowski wrote:
-> On 06/09/2016 12:29 PM, Mark Brown wrote:
-> > On Thu, Jun 09, 2016 at 11:44:18AM +0200, Krzysztof Kozlowski wrote:
-> >> Few drivers have a need of getting regulator supplies without knowing
-> >> their names:
-> >> 1. The Simple Framebuffer driver works on setup provided by bootloader
-> >>    (outside of scope of kernel);
-> >> 2. Generic power sequence driver may be attached to any device node.
-> >>
-> >> Add a Device Tree helper for parsing "-supply" properties and returning
-> >> allocated bulk regulator consumers.
-> > 
-> > I'm still very concerned that this is just an invitation to people to
-> > write half baked regulator consumers and half baked DTs to go along with
-> > it, making it a standard API that doesn't have big red flags on it that
-> > will flag up when "normal" drivers use it is not good.  Right now this
-> > just looks like a standard API and people are going to just start using
-> > it.  If we are going to do this perhaps we need a separate header or
-> > something to help flag this up.
-> 
-> No problem, I can move it to a special header.  Actually, if you dislike
-> this as an API, it does not have to be in header at all.  I can just
-> duplicate the simplefb code.
-> 
-> > In the case of power sequences I'd expect the sequences to perform
-> > operations on named supplies - the core shouldn't know what the supplies
-> > are but the thing specifying the sequence should.
-> 
-> Hm, so maybe passing names like:
-> 
-> usb3503@08 {
-> 	reset-gpios = <&gpx3 5 GPIO_ACTIVE_HIGH>;
-> 	initial-mode = <1>;
-> 	vdd-supply = <&buck8_reg>;
-> 	foo-supply = <&buck9_reg>;
-> 
->         power-sequence;
-> 	power-sequence-supplies = "vdd", "foo";
-
-This alone would be fine as it is just one property, but then what's 
-next? power-sequence-delay, power-sequence-clocks, etc. What if you 
-need to express ordering relationship of supplies, clocks, gpios? We end 
-up with a scripting language in DT and we don't want to have that.
-
-Rob
+T24gVGh1LCBKdW4gMDksIDIwMTYgYXQgMDM6MzM6MTlQTSArMDIwMCwgQW5kcmVhIE1lcmVsbG8g
+d3JvdGU6Cj4gU2lnbmVkLW9mZi1ieTogQW5kcmVhIE1lcmVsbG8gPGFuZHJlYS5tZXJlbGxvQGdt
+YWlsLmNvbT4KPiBDYzogU3RlZmFuIEtyaXN0aWFuc3NvbiA8c3RlZmFuLmtyaXN0aWFuc3NvbkBz
+YXVuYWxhaHRpLmZpPgo+IENjOiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29t
+Pgo+IENjOiBGcmFuY2VzY28gRGlvdGFsZXZpIDxmcmFuY2VzY28uZGlvdGFsZXZpQGlpdC5pdD4K
+PiBDYzogQ2xhdWRpbyBMb3JpbmkgPGNsYXVkaW8ubG9yaW5pQGlpdC5pdD4KPiAtLS0KPiAgLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvb3BlbmNvcmVzLG9jZHJtLnR4dCAgICAgICAgICAgfCAyNyArKysr
+KysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspCj4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9vcGVuY29yZXMsb2Nkcm0udHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L29wZW5jb3JlcyxvY2RybS50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9vcGVuY29yZXMsb2Nkcm0udHh0Cj4g
+bmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi44ZDM2ZGU1Cj4gLS0tIC9kZXYv
+bnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L29w
+ZW5jb3JlcyxvY2RybS50eHQKPiBAQCAtMCwwICsxLDI3IEBACj4gK09wZW5Db3JlcyBWR0EvTENE
+IGNvbnRyb2xsZXIKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTog
+Im9wZW5jb3JlcyxvY2RybSIKCk5hbWUgdGhpcyBiYXNlZCBvbiB3aGF0IHRoZSBoL3cgYmxvY2sg
+aXMgY2FsbGVkLCBub3QgYSBMaW51eCBzdWJzeXN0ZW0uCgpJcyB0aGVyZSBhbnkgc29ydCBvZiB2
+ZXJzaW9uaW5nIGZvciBPcGVuQ29yZSBJUCB0aGF0IHlvdSBjYW4gaW5jbHVkZSBpbiAKdGhlIG5h
+bWU/Cgo+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNv
+bnRyb2xsZXIncyByZWdpc3RlcnMuCj4gKy0gY2xvY2tzOiBNdXN0IGNvbnRhaW4gYW4gZW50cnkg
+Zm9yIHRoZSBwaXhlbGNsb2NrIGdlbmVyYXRvci4KPiArICBTZWUgLi4vY2xvY2tzL2Nsb2NrLWJp
+bmRpbmdzLnR4dCBmb3IgZGV0YWlscy4KPiArCj4gK1JlcXVpcmVkIHN1Yi1ub2RlczoKPiArLSBw
+b3J0OiB0aGUgY29ubmVjdGlvbiB0byBhIERSTSBicmlkZ2UuICBUaGUgY29ubmVjdGlvbiBpcyBt
+b2RlbGxlZAoKRG9uJ3QgaW5jbHVkZSBMaW51eCBkcml2ZXIgZGV0YWlscyAoRFJNKSBpbiBiaW5k
+aW5ncy4KCj4gKyAgdXNpbmcgdGhlIE9GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBpbgo+ICsg
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gKwo+ICtFeGFt
+cGxlOgo+ICsKPiArb2Nkcm1ANDNjMTAwMDAgewo+ICsJY29tcGF0aWJsZSA9ICJvcGVuY29yZXMs
+b2NmYi1kcm0iOwoKRG9lc24ndCBtYXRjaCB0aGUgYWJvdmUgYW5kIGV2ZW4gd29yc2UgbmFtaW5n
+LgoKPiArCXJlZyA9IDwweDQzYzEwMDAwIDB4MTAwMDA+Owo+ICsJY2xvY2tzID0gPCZwaXhfY2xv
+Y2s+Owo+ICsJcG9ydHMgewo+ICsJCXBvcnRAMCB7CgpTaW5nbGUgcG9ydCBkb2Vzbid0IG5lZWQg
+YSB1bml0IGFkZHJlc3MuCgo+ICsJCQlyZ2Jfb3V0OiBlbmRwb2ludCB7Cj4gKwkJCQlyZW1vdGUt
+ZW5kcG9pbnQgPSA8JmJyaWRnZV9pbj47Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gK307Cj4g
+LS0gCj4gMS45LjEKPiAKPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5k
+IHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+IHRoZSBib2R5IG9mIGEgbWVz
+c2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBh
+dCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
