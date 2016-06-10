@@ -1,50 +1,71 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 5/6] dt-bindings: add Sharp LQ123P1JX31 panel binding
-Date: Fri, 10 Jun 2016 11:08:33 -0700
-Message-ID: <CAD=FV=U3FwH4ScoE76hn5Q-Q09JZ22WP-kSbCfxnWkY2V=3fZA@mail.gmail.com>
-References: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
- <1465386765-27867-1-git-send-email-ykk@rock-chips.com>
- <20160610134217.GA25881@rob-hp-laptop>
- <CAD=FV=V289pShLFHAAhittPD9SKNuS68RWsArjD+zfp+g6Z4wQ@mail.gmail.com>
- <CAL_JsqKar09sS=7f-=AQLN88BDP8HE7vYmoWV5YGscwj6pY6Tw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqKar09sS=7f-=AQLN88BDP8HE7vYmoWV5YGscwj6pY6Tw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 0/2] ASoC: Add support to Qualcomm msm8916-wcd codec
+Date: Fri, 10 Jun 2016 19:18:43 +0100
+Message-ID: <1465582725-30183-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, plai@codeaurora.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmksIEp1biAxMCwgMjAxNiBhdCAxMDo1NCBBTSwgUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4gd3JvdGU6Cj4+IEluIGdlbmVyYWwgWWFraXIncyBiaW5kaW5ncyBkb2N1bWVu
-dCBtYXRjaCBhIGh1Z2UgY2h1bmsgb2YgdGhlIGN1cnJlbnQKPj4gZXhpc3RpbmcgYmluZGluZ3Mu
-ICBEbyB0aGlzOgo+PiAgIGNkIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3BhbmVsCj4+ICAgZ3JlcCAtQzIwICJUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRo
-IHRoZSBzaW1wbGUtcGFuZWwiICoKPj4KPj4gWW91J2xsIGZpbmQgYSBodWdlIGNodW5rIG9mIGZp
-bGVzIHdoaWNoIGFyZSByYXRoZXIgZm9ybXVsYWljLiAgSXQKPj4gbWlnaHQgbWFrZSBzZW5zZSB0
-byBqdXN0IGhhdmUgb25lIGZpbGUgYW5kIGEgbGlzdCBvZiBwYW5lbHMgd2hpY2ggYXJlCj4+IHNp
-bXBsZSBwYW5lbHM/Cj4KPiBJZiB3ZSdyZSBqdXN0IGRvY3VtZW50aW5nIGNvbXBhdGlibGUgc3Ry
-aW5ncywgdGhlbiBtYXliZSBzby4KCkknbSBoYXBweSB0byBwb3N0IHN1Y2ggYSBwYXRjaCBpZiBm
-b2xrcyB3b3VsZCBwcmVmZXIuICAuLi5idXQgc2luY2UKaXQncyB0aGUga2luZCBvZiBwYXRjaCB0
-aGF0IGlzIG5lYXJseSBjZXJ0YWluIHRvIHByb2R1Y2UgY29uZmxpY3RzIC8KbWlzcyBpbi1mbGln
-aHQgcGF0Y2hlcywgaXQgbWlnaHQgbWFrZSBzZW5zZSBmb3Igb25lIG9mIHRoZSBtYWludGFpbmVy
-cwpvZiB0aGlzIGRpcmVjdG9yeSB3cml0ZS9wb3N0IGl0IGF0IHRoZSBtb3N0IGV4cGVkaWVudCB0
-aW1lIGFuZCBtYW5hZ2UKdHJhbnNpdGlvbnMuICBJJ20gT0sgZWl0aGVyIHdheSwgc28ganVzdCBs
-ZXQgbWUga25vdy4KClVudGlsIHRoYXQgaGFwcGVucywgSSdkIHByZXN1bWUgdGhhdCB0aGUgYmVz
-dCBjb3Vyc2Ugb2YgYWN0aW9uIGlzIHRvCmtlZXAgcG9zdGluZyBiaW5kaW5ncyB1c2luZyB0aGUg
-Y3VycmVudCBmb3JtdWxhaWMgYXBwcm9hY2ggYW5kIHRvCmRldmlhdGUgYXMgbGl0dGxlIGFzIHBv
-c3NpYmxlIGZyb20gdGhlIGZvcm11bGEgdG8gbWFrZSBsYXRlcgp1bmlmaWNhdGlvbiBlYXNpZXIu
-ICA7KQoKClRoYW5rcyEKCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+This patchset aims at adding msm8916-wcd codec support.
+msm8916-wcd codec is found in Qualcomm msm8916 and apq8016 processors.
+This codec IP is split in to two parts(Digital & Analog), Analog part
+is integrated in to PMIC PM8916 and the digital part is integrated into
+Application processor. Register access to the analog part is done via
+SPMI interface to PMIC, and registers on the Application processor are
+memory mapped. Data transfer between Analog and Digital Die is done via
+a internal bus called PDM.
+
+Most of this driver is ported from downstream Andriod v3.10 kernel.
+Jack support and Headset button detection code is not added in to this series.
+
+This codec support:
+ - 3 Microphones: Primary Mic(Handset mic), Headset Mic and Secondary Mic.
+ - 2 Digital Microphones.
+ - 2 Mic Bias Circuits.
+ - Earpiece
+ - Headset
+ - Loud Speaker.
+ - Jack Detect.
+ - Headset Button detection circuit.
+
+Tested this code on v4.6-rc2 with lpass driver capture support patches for
+Headset (Mic and speakers), Secondary Mic and Loudspeaker on DB410C.
+DMIC should work too.
+
+Thanks,
+srini
+
+Changes since RFC v2:
+ - Fixed error handling on regluator_enable suggested by Kenneth.
+ - Fixed compatible strings suggested by Kenneth
+ - make max/min rates inline with actual supported rates,
+ 	spotted by Kenneth
+ - Few minor suggestions by Kenneth.
+
+Changes since RFC v1 (https://lkml.org/lkml/2016/2/16/710)
+- Lot of code cleanup as suggest by Mark Brown.
+- Fixed bindings as suggested by Mark Rutland.
+- merged all the patches to one as spliting the patches did not help review.
+
+Srinivas Kandagatla (2):
+  ASoC: msm8916: Add codec Device Tree bindings.
+  ASoC: msm8916: Add msm8916-wcd codec driver
+
+ .../devicetree/bindings/sound/qcom,msm8916-wcd.txt |  103 ++
+ include/dt-bindings/sound/msm8916-wcd.h            |    7 +
+ sound/soc/codecs/Kconfig                           |    4 +
+ sound/soc/codecs/Makefile                          |    3 +-
+ sound/soc/codecs/msm8916-wcd-registers.h           |  710 +++++++++
+ sound/soc/codecs/msm8916-wcd.c                     | 1575 ++++++++++++++++++++
+ sound/soc/codecs/msm8916-wcd.h                     |  308 ++++
+ 7 files changed, 2709 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,msm8916-wcd.txt
+ create mode 100644 include/dt-bindings/sound/msm8916-wcd.h
+ create mode 100644 sound/soc/codecs/msm8916-wcd-registers.h
+ create mode 100644 sound/soc/codecs/msm8916-wcd.c
+ create mode 100644 sound/soc/codecs/msm8916-wcd.h
+
+--
+2.8.3
