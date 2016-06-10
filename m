@@ -1,8 +1,7 @@
 From: Han Xu <han.xu@nxp.com>
-Subject: [PATCH v2 2/6] mtd: nand: gpmi: document the clocks and clock-names
- in DT property
-Date: Fri, 10 Jun 2016 12:01:30 -0500
-Message-ID: <1465578094-8816-3-git-send-email-han.xu@nxp.com>
+Subject: [PATCH v2 5/6] mtd: nand: gpmi: support NAND on i.MX6UL
+Date: Fri, 10 Jun 2016 12:01:33 -0500
+Message-ID: <1465578094-8816-6-git-send-email-han.xu@nxp.com>
 References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,43 +21,65 @@ To: han.xu@nxp.com, boris.brezillon@free-electrons.com, richard@nod.at, dwmw2@in
 Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-add the clocks and clock-names in DT property, gpmi-io clock is
-mandatory for all platforms, but some platforms, such as i.MX6Q may
-need more extra clocks for submodules. More details please refer to the
-SoC reference manual.
+support GPMI NAND on i.MX6UL
 
 Signed-off-by: Han Xu <han.xu@nxp.com>
 ---
- Documentation/devicetree/bindings/mtd/gpmi-nand.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 9 +++++++++
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.h | 5 ++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-index d02acaf..c8d0e2f 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-@@ -13,6 +13,13 @@ Required properties:
-     and GPMI DMA channel ID.
-     Refer to dma.txt and fsl-mxs-dma.txt for details.
-   - dma-names: Must be "rx-tx".
-+  - clocks : The clocks needed by the gpmi controller. This field varies
-+    depends on the SoC design, "gpmi-io" is mandatory but some platforms may
-+    need several extra clocks, such as i.MX6Q, it requires "gpmi_apb,
-+    gpmi_bch, gpmi_bch_apb and per1_bch" for all submodules. Please refer to
-+    the HW design manual.
-+  - clock-names : the name of the clocks, please refer to the HW design
-+    manual.
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+index 03bdb4d..133483f 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+@@ -122,6 +122,12 @@ static const struct gpmi_devdata gpmi_devdata_imx7d = {
+ 	.max_chain_delay = 12,
+ };
  
- Optional properties:
-   - nand-on-flash-bbt: boolean to enable on flash bbt option if not
-@@ -51,6 +58,8 @@ gpmi-nand@8000c000 {
- 	interrupt-names = "bch";
- 	dmas = <&dma_apbh 4>;
- 	dma-names = "rx-tx";
-+	clocks = <&clks 50>,;
-+	clock-names = "gpmi_io";
++static const struct gpmi_devdata gpmi_devdata_imx6ul = {
++	.type = IS_MX6UL,
++	.bch_max_ecc_strength = 40,
++	.max_chain_delay = 12,
++};
++
+ static irqreturn_t bch_irq(int irq, void *cookie)
+ {
+ 	struct gpmi_nand_data *this = cookie;
+@@ -2123,6 +2129,9 @@ static const struct of_device_id gpmi_nand_id_table[] = {
+ 		.compatible = "fsl,imx6sx-gpmi-nand",
+ 		.data = &gpmi_devdata_imx6sx,
+ 	}, {
++		.compatible = "fsl,imx6ul-gpmi-nand",
++		.data = &gpmi_devdata_imx6ul,
++	}, {
+ 		.compatible = "fsl,imx7d-gpmi-nand",
+ 		.data = &gpmi_devdata_imx7d,
+ 	}, { /* sentinel */ }
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+index 1cee620..8de122e 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+@@ -126,6 +126,7 @@ enum gpmi_type {
+ 	IS_MX6QP,
+ 	IS_MX6SX,
+ 	IS_MX7D,
++	IS_MX6UL,
+ };
  
- 	partition@0 {
- 	...
+ struct gpmi_devdata {
+@@ -309,8 +310,10 @@ void gpmi_copy_bits(u8 *dst, size_t dst_bit_off,
+ #define GPMI_IS_MX6QP(x)	((x)->devdata->type == IS_MX6QP)
+ #define GPMI_IS_MX6SX(x)	((x)->devdata->type == IS_MX6SX)
+ #define GPMI_IS_MX7D(x)		((x)->devdata->type == IS_MX7D)
++#define GPMI_IS_MX6UL(x)	((x)->devdata->type == IS_MX6UL)
+ 
+ #define GPMI_IS_MX6(x)		(GPMI_IS_MX6Q(x) || GPMI_IS_MX6QP(x)	\
+-				|| GPMI_IS_MX6SX(x))
++				|| GPMI_IS_MX6SX(x) || GPMI_IS_MX6UL(x))
++
+ #define GPMI_IS_MX7(x)		(GPMI_IS_MX7D(x))
+ #endif
 -- 
 1.9.1
 
