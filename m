@@ -1,61 +1,76 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v2 00/10] drm/msm: Fix issues with DT bindings
-Date: Fri, 10 Jun 2016 16:16:30 +0530
-Message-ID: <1465555600-25742-1-git-send-email-architt@codeaurora.org>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 01/10] drm/msm/mdp5: Don't get source of MDP core clock
+Date: Fri, 10 Jun 2016 16:16:31 +0530
+Message-ID: <1465555600-25742-2-git-send-email-architt@codeaurora.org>
 References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: robdclark@gmail.com, robh@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
+ <1465555600-25742-1-git-send-email-architt@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465555600-25742-1-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Q3VycmVudGx5LCBub25lIG9mIHRoZSB1cHN0cmVhbSBRdWFsY29tbSBEVCBmaWxlcyBoYXZlIHRo
-ZSBkaXNwbGF5IGRldmljZQpub2RlcyBwb3B1bGF0ZWQsIGV2ZW4gd2hlbiB0aGUgRFQgYmluZGlu
-ZyBkb2N1bWVudHMgYXJlIHVwc3RyZWFtLgoKVGhpcyByZXZpc2lvbiBkcm9wcyB0aGUgcGF0Y2hl
-cyB0aGF0IGFkZCBjb21wb25lbnRzIHZpYSBwYXJzaW5nIHBvcnRzLgpUaGUgY29tcG9uZW50IGFk
-ZGl0aW9uIGNoYW5nZXMgd2lsbCBiZSBoYW5kbGVkIGluIGEgc2VwYXJhdGUgcGF0Y2hzZXQKbGF0
-ZXIuIFRoZXNlIGNvbnRhaW4gbW9zdGx5IG1pc2MgRFQgZml4ZXMsIGluIHByZXBhcmF0aW9uIGZv
-ciBmdWxsIERUCnN1cHBvcnQuIFRoaXMgYWxzbyBpbmNvcnBvcmF0ZXMgc29tZSBvZiB0aGUgY29t
-bWVudHMgZ2l2ZW4gZm9yIHRoZQpwcmV2aW91cyByZXZpc2lvbi4KCmNoYW5nZXMgaW4gdjI6Ci0g
-RHJvcCBwYXRjaGVzIHRoYXQgYWxsb3dlZCBjb21wb25lbnQgYWRkaXRpb24gdmlhIE1EUCBwb3J0
-IHBhcnNpbmcuCi0gVXNlIGEgbW9yZSBzdGFuZGFyZCBkYXRhIGxhbmVzIGJpbmRpbmcgZm9yIERT
-SS4KLSBVc2UgaHlwaGVuIGluIHRoZSBjb21tb24gUEhZIGJpbmRpbmcgbmFtZXMgZm9yIHRoZSBl
-eGFtcGxlcy4KLSBBZGQgc29tZSBEVCByZWxhdGVkIGZpeGVzIGZvciBNRFA0LzUgY2xvY2tzLgoK
-T3JpZ2luYWwgcmV2aXNpb246Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVz
-L2RyaS1kZXZlbC8yMDE2LU1heS8xMDY2NTMuaHRtbAoKQXJjaGl0IFRhbmVqYSAoMTApOgogIGRy
-bS9tc20vbWRwNTogRG9uJ3QgZ2V0IHNvdXJjZSBvZiBNRFAgY29yZSBjbG9jawogIGRybS9tc20v
-bWRwNDogQ2xlYW4gdXAgc29tZSBNRFA0IGNsb2NrcwogIGR0LWJpbmRpbmdzOiBtc20vbWRwOiBG
-aXggdXAgY2xvY2sgcmVsYXRlZCBiaW5kaW5ncwogIGRybS9tc20vZHNpOiBNb2RpZnkgcG9ydCBw
-YXJzaW5nCiAgZHJtL21zbS9kc2k6IFVzZSBnZW5lcmljIFBIWSBiaW5kaW5ncwogIGRybS9tc20v
-ZHNpOiBVc2UgYSBzdGFuZGFyZCBEVCBiaW5kaW5nIGZvciBkYXRhIGxhbmVzCiAgZHQtYmluZGlu
-Z3M6IG1zbS9kc2k6IFVzZSBzdGFuZGFyZCBkYXRhIGxhbmVzIGJpbmRpbmcKICBkdC1iaW5kaW5n
-czogbXNtL2RzaTogTW9kaWZ5IHBvcnQgYW5kIFBIWSBiaW5kaW5ncwogIGR0LWJpbmRpbmdzOiBt
-c20vZHNpOiBBZGQgYXNzaWduZWQgY2xvY2tzIGJpbmRpbmdzCiAgZHQtYmluZGluZ3M6IG1zbS9k
-c2k6IFNvbWUgYmluZGluZyBkb2MgY2xlYW51cHMKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L21zbS9kc2kudHh0ICAgICAgICB8IDExNyArKysrKysrKysrKysrKy0tLS0tLS0KIC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL21kcC50eHQgICAgICAgIHwgIDEwICst
-CiBkcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9kc2kuYyAgICAgICAgICAgICAgICAgICAgICB8ICAg
-MiArLQogZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpX2hvc3QuYyAgICAgICAgICAgICAgICAg
-fCAgMjcgKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vbWRwL21kcDQvbWRwNF9kdHZfZW5jb2Rl
-ci5jICAgIHwgIDMxICsrKy0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9tZHAvbWRwNC9tZHA0X2tt
-cy5jICAgICAgICAgICAgfCAgIDIgKy0KIGRyaXZlcnMvZ3B1L2RybS9tc20vbWRwL21kcDUvbWRw
-NV9rbXMuYyAgICAgICAgICAgIHwgICA3ICstCiBkcml2ZXJzL2dwdS9kcm0vbXNtL21kcC9tZHA1
-L21kcDVfa21zLmggICAgICAgICAgICB8ICAgMSAtCiA4IGZpbGVzIGNoYW5nZWQsIDExNiBpbnNl
-cnRpb25zKCspLCA4MSBkZWxldGlvbnMoLSkKCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBD
-ZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLApob3N0ZWQg
-YnkgVGhlIExpbnV4IEZvdW5kYXRpb24KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+The driver expects DT to provide the parent to MDP core clock. The only
+operation done to the parent clock is to set a rate. This can be
+achieved by setting the rate on the core clock itsef. Don't try to
+get the parent clock anymore.
+
+Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c | 7 ++-----
+ drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h | 1 -
+ 2 files changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
+index 1d840ae..b46961e 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
+@@ -629,9 +629,6 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+ 	ret = get_clk(pdev, &mdp5_kms->ahb_clk, "iface_clk", true);
+ 	if (ret)
+ 		goto fail;
+-	ret = get_clk(pdev, &mdp5_kms->src_clk, "core_clk_src", true);
+-	if (ret)
+-		goto fail;
+ 	ret = get_clk(pdev, &mdp5_kms->core_clk, "core_clk", true);
+ 	if (ret)
+ 		goto fail;
+@@ -646,7 +643,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+ 	 * rate first, then figure out hw revision, and then set a
+ 	 * more optimal rate:
+ 	 */
+-	clk_set_rate(mdp5_kms->src_clk, 200000000);
++	clk_set_rate(mdp5_kms->core_clk, 200000000);
+ 
+ 	read_hw_revision(mdp5_kms, &major, &minor);
+ 
+@@ -661,7 +658,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+ 	mdp5_kms->caps = config->hw->mdp.caps;
+ 
+ 	/* TODO: compute core clock rate at runtime */
+-	clk_set_rate(mdp5_kms->src_clk, config->hw->max_clk);
++	clk_set_rate(mdp5_kms->core_clk, config->hw->max_clk);
+ 
+ 	/*
+ 	 * Some chipsets have a Shared Memory Pool (SMP), while others
+diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h
+index 9a25898..9cf5aa4 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h
++++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h
+@@ -49,7 +49,6 @@ struct mdp5_kms {
+ 
+ 	struct clk *axi_clk;
+ 	struct clk *ahb_clk;
+-	struct clk *src_clk;
+ 	struct clk *core_clk;
+ 	struct clk *lut_clk;
+ 	struct clk *vsync_clk;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
