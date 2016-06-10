@@ -1,56 +1,38 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2] soc: qcom: Update properties for smem state referencing
-Date: Thu,  9 Jun 2016 22:26:25 -0700
-Message-ID: <1465536385-32215-1-git-send-email-bjorn.andersson@linaro.org>
-References: <1465531882-25967-1-git-send-email-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1465531882-25967-1-git-send-email-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v2 1/7] iommu/rockchip: fix devm_{request,
+ free}_irq parameter
+Date: Fri, 10 Jun 2016 14:30:14 +0900
+Message-ID: <CAAFQd5BOZBqieA3xCi00jRCrYpZSAZmncAK2Qg69AuQGT5FQGA@mail.gmail.com>
+References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com>
+ <1465392392-2003-2-git-send-email-zhengsq@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1465392392-2003-2-git-send-email-zhengsq@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shunqian Zheng <zhengsq@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux@armlinux.org.uk, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, simon xue <xxm@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the property names to match device tree bindings, the correct
-values should be qcom,smem-states and qcom,smem-state-names.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Realised that we already define the smp2p and smsm nodes in mainline, so don't
-change the #qcom,state-cells property.
-
- drivers/soc/qcom/smem_state.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/soc/qcom/smem_state.c b/drivers/soc/qcom/smem_state.c
-index 54261decb369..4e4d5cd3b3cc 100644
---- a/drivers/soc/qcom/smem_state.c
-+++ b/drivers/soc/qcom/smem_state.c
-@@ -104,21 +104,21 @@ struct qcom_smem_state *qcom_smem_state_get(struct device *dev,
- 
- 	if (con_id) {
- 		index = of_property_match_string(dev->of_node,
--						 "qcom,state-names",
-+						 "qcom,smem-state-names",
- 						 con_id);
- 		if (index < 0) {
--			dev_err(dev, "missing qcom,state-names\n");
-+			dev_err(dev, "missing qcom,smem-state-names\n");
- 			return ERR_PTR(index);
- 		}
- 	}
- 
- 	ret = of_parse_phandle_with_args(dev->of_node,
--					 "qcom,state",
-+					 "qcom,smem-states",
- 					 "#qcom,state-cells",
- 					 index,
- 					 &args);
- 	if (ret) {
--		dev_err(dev, "failed to parse qcom,state property\n");
-+		dev_err(dev, "failed to parse qcom,smem-states property\n");
- 		return ERR_PTR(ret);
- 	}
- 
--- 
-2.5.0
+SGksCgpPbiBXZWQsIEp1biA4LCAyMDE2IGF0IDEwOjI2IFBNLCBTaHVucWlhbiBaaGVuZyA8emhl
+bmdzcUByb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4gRnJvbTogU2ltb24gWHVlIDx4eG1Acm9jay1j
+aGlwcy5jb20+Cj4KPiBFdmVuIHRob3VnaCB0aGUgaW9tbXUgc2hhcmVzIGlycSB3aXRoIGl0cyBt
+YXN0ZXIsIHVzaW5nIHRoZSAqZGV2IG9mIGlvbW11Cj4gaW5zdGVhZCBvZiBtYXN0ZXIncyAqZGV2
+IGZvciBkZXZtX3tyZXF1ZXN0LGZyZWV9X2lycSBtYWtlcyB0aGluZ3MgY2xlYXIuCj4KPiBTaWdu
+ZWQtb2ZmLWJ5OiBTaW1vbiBYdWUgPHh4bUByb2NrLWNoaXBzLmNvbT4KPiBTaWduZWQtb2ZmLWJ5
+OiBTaHVucWlhbiBaaGVuZyA8emhlbmdzcUByb2NrLWNoaXBzLmNvbT4KPiAtLS0KPiAgZHJpdmVy
+cy9pb21tdS9yb2NrY2hpcC1pb21tdS5jIHwgNCArKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
+c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4KClJldmlld2VkLWJ5OiBUb21hc3ogRmlnYSA8
+dGZpZ2FAY2hyb21pdW0ub3JnPgoKQmVzdCByZWdhcmRzLApUb21hc3oKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
