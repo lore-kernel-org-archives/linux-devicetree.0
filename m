@@ -1,40 +1,129 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC v3 02/22] soc: renesas: Add R-Car RST driver
-Date: Fri, 10 Jun 2016 16:08:41 +0300
-Message-ID: <1642491.VRMI5sK8yv@avalon>
-References: <1464808880-343-1-git-send-email-geert+renesas@glider.be> <d38d97fb-5b96-0773-abf6-c737b4f2fef1@de.bosch.com> <CAMuHMdUX=iAe=51+8JyaKxMBOUA_jJXGK0BTKxRuTXtug_R1Tw@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v10 07/14] usb: otg: get rid of CONFIG_USB_OTG_FSM in favour of CONFIG_USB_OTG
+Date: Fri, 10 Jun 2016 16:07:16 +0300
+Message-ID: <1465564043-27163-8-git-send-email-rogerq@ti.com>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUX=iAe=51+8JyaKxMBOUA_jJXGK0BTKxRuTXtug_R1Tw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: peter.chen@freescale.com
+Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 10 Jun 2016 09:58:28 Geert Uytterhoeven wrote:
-> Hi Dirk,
-> 
-> On Thu, Jun 2, 2016 at 7:42 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
-> >> +int __init rcar_rst_read_mode_pins(u32 *mode)
-> > 
-> > Just a style issue: Is the string 'pins' in the function name still
-> > relevant? I.e. what's about just 'rcar_rst_read_mode()'?
-> 
-> I feel "mode" is a too generic word for a public API.
-> It's used a several contexts inside the RST module (secure mode, 64-bit
-> addressing mode, free-running mode, step-up mode).
+Let's use CONFIG_USB_OTG as a single config option to enable
+USB OTG and the OTG FSM. This makes things a lot less confusing.
 
-<bikeshedding>
+Update all users of CONFIG_USB_OTG_FSM to CONFIG_USB_OTG.
 
-If it's "pins" that bothers Dirk, how about rcar_rst_read_boot_mode() ? Or 
-maybe rcar_rst_boot_mode(), given that the function caches the value, it 
-doesn't read it every time.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Acked-by: Peter Chen <peter.chen@nxp.com>
+---
+ Documentation/usb/chipidea.txt | 2 +-
+ drivers/usb/chipidea/Makefile  | 2 +-
+ drivers/usb/chipidea/ci.h      | 2 +-
+ drivers/usb/chipidea/otg_fsm.h | 2 +-
+ drivers/usb/common/Makefile    | 3 ++-
+ drivers/usb/core/Kconfig       | 8 --------
+ drivers/usb/phy/Kconfig        | 2 +-
+ 7 files changed, 7 insertions(+), 14 deletions(-)
 
-</bikeshedding>
-
+diff --git a/Documentation/usb/chipidea.txt b/Documentation/usb/chipidea.txt
+index edf7cdf..580d157 100644
+--- a/Documentation/usb/chipidea.txt
++++ b/Documentation/usb/chipidea.txt
+@@ -5,7 +5,7 @@ with 2 Freescale i.MX6Q sabre SD boards.
+ 
+ 1.1 How to enable OTG FSM
+ ---------------------------------------
+-1.1.1 Select CONFIG_USB_OTG_FSM in menuconfig, rebuild kernel
++1.1.1 Select CONFIG_USB_OTG in menuconfig, rebuild kernel
+ Image and modules. If you want to check some internal
+ variables for otg fsm, mount debugfs, there are 2 files
+ which can show otg fsm variables and some controller registers value:
+diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+index 518e445..45aa24d 100644
+--- a/drivers/usb/chipidea/Makefile
++++ b/drivers/usb/chipidea/Makefile
+@@ -3,7 +3,7 @@ obj-$(CONFIG_USB_CHIPIDEA)		+= ci_hdrc.o
+ ci_hdrc-y				:= core.o otg.o debug.o
+ ci_hdrc-$(CONFIG_USB_CHIPIDEA_UDC)	+= udc.o
+ ci_hdrc-$(CONFIG_USB_CHIPIDEA_HOST)	+= host.o
+-ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
++ci_hdrc-$(CONFIG_USB_OTG)		+= otg_fsm.o
+ 
+ # Glue/Bridge layers go here
+ 
+diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
+index c523975..1a32b8c 100644
+--- a/drivers/usb/chipidea/ci.h
++++ b/drivers/usb/chipidea/ci.h
+@@ -406,7 +406,7 @@ static inline u32 hw_test_and_write(struct ci_hdrc *ci, enum ci_hw_regs reg,
+  */
+ static inline bool ci_otg_is_fsm_mode(struct ci_hdrc *ci)
+ {
+-#ifdef CONFIG_USB_OTG_FSM
++#ifdef CONFIG_USB_OTG
+ 	struct usb_otg_caps *otg_caps = &ci->platdata->ci_otg_caps;
+ 
+ 	return ci->is_otg && ci->roles[CI_ROLE_HOST] &&
+diff --git a/drivers/usb/chipidea/otg_fsm.h b/drivers/usb/chipidea/otg_fsm.h
+index 6366fe3..2d451bb 100644
+--- a/drivers/usb/chipidea/otg_fsm.h
++++ b/drivers/usb/chipidea/otg_fsm.h
+@@ -64,7 +64,7 @@
+ 
+ #define TB_AIDL_BDIS         (20)	/* 4ms ~ 150ms, section 5.2.1 */
+ 
+-#if IS_ENABLED(CONFIG_USB_OTG_FSM)
++#if IS_ENABLED(CONFIG_USB_OTG)
+ 
+ int ci_hdrc_otg_fsm_init(struct ci_hdrc *ci);
+ int ci_otg_fsm_work(struct ci_hdrc *ci);
+diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
+index 6bbb3ec..f8f2c88 100644
+--- a/drivers/usb/common/Makefile
++++ b/drivers/usb/common/Makefile
+@@ -6,5 +6,6 @@ obj-$(CONFIG_USB_COMMON)	  += usb-common.o
+ usb-common-y			  += common.o
+ usb-common-$(CONFIG_USB_LED_TRIG) += led.o
+ 
+-obj-$(CONFIG_USB_OTG_FSM) += usb-otg-fsm.o
+ obj-$(CONFIG_USB_ULPI_BUS)	+= ulpi.o
++usbotg-y		:= usb-otg-fsm.o
++obj-$(CONFIG_USB_OTG)	+= usbotg.o
+diff --git a/drivers/usb/core/Kconfig b/drivers/usb/core/Kconfig
+index dd28010..ae228d0 100644
+--- a/drivers/usb/core/Kconfig
++++ b/drivers/usb/core/Kconfig
+@@ -75,14 +75,6 @@ config USB_OTG_BLACKLIST_HUB
+ 	  and software costs by not supporting external hubs.  So
+ 	  are "Embedded Hosts" that don't offer OTG support.
+ 
+-config USB_OTG_FSM
+-	tristate "USB 2.0 OTG FSM implementation"
+-	depends on USB && USB_OTG
+-	select USB_PHY
+-	help
+-	  Implements OTG Finite State Machine as specified in On-The-Go
+-	  and Embedded Host Supplement to the USB Revision 2.0 Specification.
+-
+ config USB_ULPI_BUS
+ 	tristate "USB ULPI PHY interface support"
+ 	depends on USB_SUPPORT
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index ca50944..66a79d3 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -20,7 +20,7 @@ config AB8500_USB
+ 
+ config FSL_USB2_OTG
+ 	bool "Freescale USB OTG Transceiver Driver"
+-	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM && PM
++	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG && PM
+ 	select USB_PHY
+ 	help
+ 	  Enable this to support Freescale USB OTG transceiver.
 -- 
-Regards,
-
-Laurent Pinchart
+2.7.4
