@@ -1,76 +1,131 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2 01/10] drm/msm/mdp5: Don't get source of MDP core clock
-Date: Fri, 10 Jun 2016 16:16:31 +0530
-Message-ID: <1465555600-25742-2-git-send-email-architt@codeaurora.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: [PATCH v2 02/10] drm/msm/mdp4: Clean up some MDP4 clocks
+Date: Fri, 10 Jun 2016 16:16:32 +0530
+Message-ID: <1465555600-25742-3-git-send-email-architt@codeaurora.org>
 References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
  <1465555600-25742-1-git-send-email-architt@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465555600-25742-1-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1465555600-25742-1-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: robdclark@gmail.com, robh@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, heiko@sntech.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver expects DT to provide the parent to MDP core clock. The only
-operation done to the parent clock is to set a rate. This can be
-achieved by setting the rate on the core clock itsef. Don't try to
-get the parent clock anymore.
+Fix some issues with MDP4 clocks:
 
-Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+- mdp4_dtv_encoder tries to get "src_clk", which is a RCG(TV_SRC) in
+  MSM8960 and APQ8064. This isn't something the driver should access or
+  configure. Instead of this, configure the "mdp_clk" (MDP_TV_CLK), a
+  branch clock in MMCC that has the TV_SRC as its parent. Setting
+  rate/enabling the "mdp_clk" will eventually configure "src_clk", which
+  is what we want.
+- Rename "mdp_clk" to "tv_clk" because that's slightly less confusing.
+- Rename "mdp_axi_clk" to "bus_clk" because that's what we do elsewhere
+  too.
+
+Signed-off-by: Archit Taneja <architt@codeaurora.org>
 ---
- drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c | 7 ++-----
- drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h | 1 -
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/msm/mdp/mdp4/mdp4_dtv_encoder.c | 31 ++++++++++---------------
+ drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c         |  2 +-
+ 2 files changed, 13 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-index 1d840ae..b46961e 100644
---- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-@@ -629,9 +629,6 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
- 	ret = get_clk(pdev, &mdp5_kms->ahb_clk, "iface_clk", true);
- 	if (ret)
- 		goto fail;
--	ret = get_clk(pdev, &mdp5_kms->src_clk, "core_clk_src", true);
--	if (ret)
--		goto fail;
- 	ret = get_clk(pdev, &mdp5_kms->core_clk, "core_clk", true);
- 	if (ret)
- 		goto fail;
-@@ -646,7 +643,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
- 	 * rate first, then figure out hw revision, and then set a
- 	 * more optimal rate:
- 	 */
--	clk_set_rate(mdp5_kms->src_clk, 200000000);
-+	clk_set_rate(mdp5_kms->core_clk, 200000000);
+diff --git a/drivers/gpu/drm/msm/mdp/mdp4/mdp4_dtv_encoder.c b/drivers/gpu/drm/msm/mdp/mdp4/mdp4_dtv_encoder.c
+index 35ad78a..24258e3 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp4/mdp4_dtv_encoder.c
++++ b/drivers/gpu/drm/msm/mdp/mdp4/mdp4_dtv_encoder.c
+@@ -23,7 +23,6 @@
  
- 	read_hw_revision(mdp5_kms, &major, &minor);
- 
-@@ -661,7 +658,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
- 	mdp5_kms->caps = config->hw->mdp.caps;
- 
- 	/* TODO: compute core clock rate at runtime */
--	clk_set_rate(mdp5_kms->src_clk, config->hw->max_clk);
-+	clk_set_rate(mdp5_kms->core_clk, config->hw->max_clk);
- 
- 	/*
- 	 * Some chipsets have a Shared Memory Pool (SMP), while others
-diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h
-index 9a25898..9cf5aa4 100644
---- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h
-+++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.h
-@@ -49,7 +49,6 @@ struct mdp5_kms {
- 
- 	struct clk *axi_clk;
- 	struct clk *ahb_clk;
+ struct mdp4_dtv_encoder {
+ 	struct drm_encoder base;
 -	struct clk *src_clk;
- 	struct clk *core_clk;
- 	struct clk *lut_clk;
- 	struct clk *vsync_clk;
+ 	struct clk *hdmi_clk;
+ 	struct clk *mdp_clk;
+ 	unsigned long int pixclock;
+@@ -179,7 +178,6 @@ static void mdp4_dtv_encoder_disable(struct drm_encoder *encoder)
+ 	 */
+ 	mdp_irq_wait(&mdp4_kms->base, MDP4_IRQ_EXTERNAL_VSYNC);
+ 
+-	clk_disable_unprepare(mdp4_dtv_encoder->src_clk);
+ 	clk_disable_unprepare(mdp4_dtv_encoder->hdmi_clk);
+ 	clk_disable_unprepare(mdp4_dtv_encoder->mdp_clk);
+ 
+@@ -208,19 +206,21 @@ static void mdp4_dtv_encoder_enable(struct drm_encoder *encoder)
+ 
+ 	bs_set(mdp4_dtv_encoder, 1);
+ 
+-	DBG("setting src_clk=%lu", pc);
++	DBG("setting mdp_clk=%lu", pc);
+ 
+-	ret = clk_set_rate(mdp4_dtv_encoder->src_clk, pc);
++	ret = clk_set_rate(mdp4_dtv_encoder->mdp_clk, pc);
+ 	if (ret)
+-		dev_err(dev->dev, "failed to set src_clk to %lu: %d\n", pc, ret);
+-	clk_prepare_enable(mdp4_dtv_encoder->src_clk);
+-	ret = clk_prepare_enable(mdp4_dtv_encoder->hdmi_clk);
+-	if (ret)
+-		dev_err(dev->dev, "failed to enable hdmi_clk: %d\n", ret);
++		dev_err(dev->dev, "failed to set mdp_clk to %lu: %d\n",
++			pc, ret);
++
+ 	ret = clk_prepare_enable(mdp4_dtv_encoder->mdp_clk);
+ 	if (ret)
+ 		dev_err(dev->dev, "failed to enabled mdp_clk: %d\n", ret);
+ 
++	ret = clk_prepare_enable(mdp4_dtv_encoder->hdmi_clk);
++	if (ret)
++		dev_err(dev->dev, "failed to enable hdmi_clk: %d\n", ret);
++
+ 	mdp4_write(mdp4_kms, REG_MDP4_DTV_ENABLE, 1);
+ 
+ 	mdp4_dtv_encoder->enabled = true;
+@@ -235,7 +235,7 @@ static const struct drm_encoder_helper_funcs mdp4_dtv_encoder_helper_funcs = {
+ long mdp4_dtv_round_pixclk(struct drm_encoder *encoder, unsigned long rate)
+ {
+ 	struct mdp4_dtv_encoder *mdp4_dtv_encoder = to_mdp4_dtv_encoder(encoder);
+-	return clk_round_rate(mdp4_dtv_encoder->src_clk, rate);
++	return clk_round_rate(mdp4_dtv_encoder->mdp_clk, rate);
+ }
+ 
+ /* initialize encoder */
+@@ -257,13 +257,6 @@ struct drm_encoder *mdp4_dtv_encoder_init(struct drm_device *dev)
+ 			 DRM_MODE_ENCODER_TMDS, NULL);
+ 	drm_encoder_helper_add(encoder, &mdp4_dtv_encoder_helper_funcs);
+ 
+-	mdp4_dtv_encoder->src_clk = devm_clk_get(dev->dev, "src_clk");
+-	if (IS_ERR(mdp4_dtv_encoder->src_clk)) {
+-		dev_err(dev->dev, "failed to get src_clk\n");
+-		ret = PTR_ERR(mdp4_dtv_encoder->src_clk);
+-		goto fail;
+-	}
+-
+ 	mdp4_dtv_encoder->hdmi_clk = devm_clk_get(dev->dev, "hdmi_clk");
+ 	if (IS_ERR(mdp4_dtv_encoder->hdmi_clk)) {
+ 		dev_err(dev->dev, "failed to get hdmi_clk\n");
+@@ -271,9 +264,9 @@ struct drm_encoder *mdp4_dtv_encoder_init(struct drm_device *dev)
+ 		goto fail;
+ 	}
+ 
+-	mdp4_dtv_encoder->mdp_clk = devm_clk_get(dev->dev, "mdp_clk");
++	mdp4_dtv_encoder->mdp_clk = devm_clk_get(dev->dev, "tv_clk");
+ 	if (IS_ERR(mdp4_dtv_encoder->mdp_clk)) {
+-		dev_err(dev->dev, "failed to get mdp_clk\n");
++		dev_err(dev->dev, "failed to get tv_clk\n");
+ 		ret = PTR_ERR(mdp4_dtv_encoder->mdp_clk);
+ 		goto fail;
+ 	}
+diff --git a/drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c
+index f145d25..388663a 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c
++++ b/drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c
+@@ -492,7 +492,7 @@ struct msm_kms *mdp4_kms_init(struct drm_device *dev)
+ 		goto fail;
+ 	}
+ 
+-	mdp4_kms->axi_clk = devm_clk_get(&pdev->dev, "mdp_axi_clk");
++	mdp4_kms->axi_clk = devm_clk_get(&pdev->dev, "bus_clk");
+ 	if (IS_ERR(mdp4_kms->axi_clk)) {
+ 		dev_err(dev->dev, "failed to get axi_clk\n");
+ 		ret = PTR_ERR(mdp4_kms->axi_clk);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
