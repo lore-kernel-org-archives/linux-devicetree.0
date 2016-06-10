@@ -1,7 +1,7 @@
 From: Han Xu <han.xu@nxp.com>
-Subject: [PATCH v2 6/6] mtd: nand: gpmi: document the new supported chip in DT
-Date: Fri, 10 Jun 2016 12:01:34 -0500
-Message-ID: <1465578094-8816-7-git-send-email-han.xu@nxp.com>
+Subject: [PATCH v2 4/6] mtd: nand: gpmi: correct bitflip for erased NAND page
+Date: Fri, 10 Jun 2016 12:01:32 -0500
+Message-ID: <1465578094-8816-5-git-send-email-han.xu@nxp.com>
 References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,27 +21,128 @@ To: han.xu@nxp.com, boris.brezillon@free-electrons.com, richard@nod.at, dwmw2@in
 Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-listed all supported chips in DT.
+i.MX6QP and i.MX7D BCH module integrated a new feature to detect the
+bitflip number for erased NAND page. So for these two platform, set the
+erase threshold to ecc_strength and if bitflip detected, GPMI driver
+will correct the data to all 0xFF.
 
 Signed-off-by: Han Xu <han.xu@nxp.com>
 ---
- Documentation/devicetree/bindings/mtd/gpmi-nand.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mtd/nand/gpmi-nand/bch-regs.h  | 10 ++++++++++
+ drivers/mtd/nand/gpmi-nand/gpmi-lib.c  |  5 +++++
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 27 ++++++++++++++++++++++++++-
+ 3 files changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-index c8d0e2f..ed48f69 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-@@ -4,7 +4,8 @@ The GPMI nand controller provides an interface to control the
- NAND flash chips.
+diff --git a/drivers/mtd/nand/gpmi-nand/bch-regs.h b/drivers/mtd/nand/gpmi-nand/bch-regs.h
+index 228142c..2c44b88 100644
+--- a/drivers/mtd/nand/gpmi-nand/bch-regs.h
++++ b/drivers/mtd/nand/gpmi-nand/bch-regs.h
+@@ -30,7 +30,13 @@
+ #define BM_BCH_CTRL_COMPLETE_IRQ		(1 << 0)
  
- Required properties:
--  - compatible : should be "fsl,<chip>-gpmi-nand"
-+  - compatible : should be "fsl,<chip>-gpmi-nand", the chip should be imx23,
-+    imx28, imx6q, imx6qp, imx6sx, imx6ul or imx7d.
-   - reg : should contain registers location and length for gpmi and bch.
-   - reg-names: Should contain the reg names "gpmi-nand" and "bch"
-   - interrupts : BCH interrupt number.
+ #define HW_BCH_STATUS0				0x00000010
++
+ #define HW_BCH_MODE				0x00000020
++#define BP_BCH_MODE_ERASE_THRESHOLD		0
++#define BM_BCH_MODE_ERASE_THRESHOLD	(0xff << BP_BCH_MODE_ERASE_THRESHOLD)
++#define BF_BCH_MODE_ERASE_THRESHOLD(v)		\
++	(((v) << BP_BCH_MODE_ERASE_THRESHOLD) & BM_BCH_MODE_ERASE_THRESHOLD)
++
+ #define HW_BCH_ENCODEPTR			0x00000030
+ #define HW_BCH_DATAPTR				0x00000040
+ #define HW_BCH_METAPTR				0x00000050
+@@ -125,4 +131,8 @@
+ 	)
+ 
+ #define HW_BCH_VERSION				0x00000160
++#define HW_BCH_DEBUG1				0x00000170
++#define BP_BCH_DEBUG1_ERASED_ZERO_COUNT	0
++#define BM_BCH_DEBUG1_ERASED_ZERO_COUNT		\
++		(0x1ff << BP_BCH_DEBUG1_ERASED_ZERO_COUNT)
+ #endif
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+index 358ff5d..0b5666a 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+@@ -298,6 +298,11 @@ int bch_set_geometry(struct gpmi_nand_data *this)
+ 			| BF_BCH_FLASH0LAYOUT1_DATAN_SIZE(block_size, this),
+ 			r->bch_regs + HW_BCH_FLASH0LAYOUT1);
+ 
++	/* Set erase threshold to ecc_strength for mx6qp and mx7 */
++	if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
++		writel(BF_BCH_MODE_ERASE_THRESHOLD(ecc_strength),
++			r->bch_regs + HW_BCH_MODE);
++
+ 	/* Set *all* chip selects to use layout 0. */
+ 	writel(0, r->bch_regs + HW_BCH_LAYOUTSELECT);
+ 
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+index aedaff3..03bdb4d 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+@@ -1043,6 +1043,7 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+ {
+ 	struct gpmi_nand_data *this = nand_get_controller_data(chip);
+ 	struct bch_geometry *nfc_geo = &this->bch_geometry;
++	void __iomem *bch_regs = this->resources.bch_regs;
+ 	void          *payload_virt;
+ 	dma_addr_t    payload_phys;
+ 	void          *auxiliary_virt;
+@@ -1051,6 +1052,8 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+ 	unsigned char *status;
+ 	unsigned int  max_bitflips = 0;
+ 	int           ret;
++	int bitflips = 0;
++	int bitflip_flag = 0;
+ 
+ 	dev_dbg(this->dev, "page number is : %d\n", page);
+ 	ret = read_page_prepare(this, buf, nfc_geo->payload_size,
+@@ -1088,8 +1091,20 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+ 			   payload_virt, payload_phys);
+ 
+ 	for (i = 0; i < nfc_geo->ecc_chunk_count; i++, status++) {
+-		if ((*status == STATUS_GOOD) || (*status == STATUS_ERASED))
++		if (*status == STATUS_GOOD)
++			continue;
++		if (*status == STATUS_ERASED) {
++			if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this)) {
++				bitflips = readl(bch_regs + HW_BCH_DEBUG1);
++				if (bitflips) {
++					bitflip_flag = 1;
++					max_bitflips = max_t(unsigned int,
++							     max_bitflips,
++							     bitflips);
++				}
++			}
+ 			continue;
++		}
+ 
+ 		if (*status == STATUS_UNCORRECTABLE) {
+ 			int eccbits = nfc_geo->ecc_strength * nfc_geo->gf_len;
+@@ -1098,6 +1113,10 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+ 			int eccbytes;
+ 			int flips;
+ 
++			/* shortcut for i.MX7 and i.MX6QP */
++			if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
++				continue;
++
+ 			/* Read ECC bytes into our internal raw_buffer */
+ 			offset = nfc_geo->metadata_size * 8;
+ 			offset += ((8 * nfc_geo->ecc_chunk_size) + eccbits) * (i + 1);
+@@ -1182,6 +1201,12 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+ 		chip->oob_poi[0] = ((uint8_t *) auxiliary_virt)[0];
+ 	}
+ 
++	/* if bitflip occurred in erased page, change data to all 0xff */
++	if (bitflip_flag) {
++		memset(buf, ~0, nfc_geo->payload_size);
++		memset(chip->oob_poi, ~0, mtd->oobsize);
++	}
++
+ 	return max_bitflips;
+ }
+ 
 -- 
 1.9.1
 
