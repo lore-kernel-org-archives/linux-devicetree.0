@@ -1,57 +1,94 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] [V2] ARM: dts: sun7i: Add dts file for
- Bananapi M1 Plus board
-Date: Fri, 10 Jun 2016 11:38:51 +0200
-Message-ID: <20160610093851.GQ5242@lukather>
-References: <20160602023623.5761-1-luoyi.ly@gmail.com>
- <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA@mail.gmail.com>
- <20160602081638.GG4908@lukather>
- <574FF94B.3020309@web.de>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GDLQamdgIxhPcIwq"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNUV5K5AKGQEYVWCRZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <574FF94B.3020309-S0/GAf8tV78@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>
-Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 2/2] ARM: dts: apq8064: move sdcc3 pinctrls out of baord file
+Date: Fri, 10 Jun 2016 10:38:35 +0100
+Message-ID: <1465551515-21622-2-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1465551515-21622-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465551515-21622-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch move sdcc3 pinctrl nodes out of board file, so that
+other boards do not duplicate the same thing.
 
---GDLQamdgIxhPcIwq
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ arch/arm/boot/dts/qcom-apq8064-pins.dtsi           | 20 ++++++++++++++++++++
+ .../arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts | 22 +---------------------
+ 2 files changed, 21 insertions(+), 21 deletions(-)
 
-On Thu, Jun 02, 2016 at 11:15:55AM +0200, Bernhard Nortmann wrote:
-> Am 02.06.2016 um 10:16 schrieb Maxime Ripard:
-> >[...]
-> >Yes, everything that is shared with the banana-pro (which, judging
-> >from Bernhard, is pretty much everything but a GPIO) should be merged
-> >in the banapro DT.
-> >
-> >Maxime
-> >
-> 
-> Don't take my word for granted, as I do not own this hardware or know it
-> particularly well. There is no doubt that "BPi-M1+" and "Banana Pro" are
-> very similar, but if in doubt the information form the wiki should be
-> verified.
-
-Hmmmm, ok. Chen-Yu, any input on this? You know the banana-pis much
-more than I do.
-
-Maxime
-
+diff --git a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
+index ca683e5..6b801e7 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
+@@ -27,6 +27,26 @@
+ 		};
+ 	};
+ 
++	sdcc3_pins: sdcc3-pin-active {
++		clk {
++			pins = "sdc3_clk";
++			drive-strengh = <8>;
++			bias-disable;
++		};
++
++		cmd {
++			pins = "sdc3_cmd";
++			drive-strengh = <8>;
++			bias-pull-up;
++		};
++
++		data {
++			pins = "sdc3_data";
++			drive-strengh = <8>;
++			bias-pull-up;
++		};
++	};
++
+ 	ps_hold: ps_hold {
+ 		mux {
+ 			pins = "gpio78";
+diff --git a/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts b/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
+index 93d08b9..ebd675c 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
+@@ -71,26 +71,6 @@
+ 			};
+ 
+ 
+-			sdcc3_pin_a: sdcc3-pin-active {
+-				clk {
+-					pins = "sdc3_clk";
+-					drive-strengh = <8>;
+-					bias-disable;
+-				};
+-
+-				cmd {
+-					pins = "sdc3_cmd";
+-					drive-strengh = <8>;
+-					bias-pull-up;
+-				};
+-
+-				data {
+-					pins = "sdc3_data";
+-					drive-strengh = <8>;
+-					bias-pull-up;
+-				};
+-			};
+-
+ 			sdcc3_cd_pin_a: sdcc3-cd-pin-active {
+ 				pins = "gpio26";
+ 				function = "gpio";
+@@ -407,7 +387,7 @@
+ 				cd-gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
+ 
+ 				pinctrl-names = "default";
+-				pinctrl-0 = <&sdcc3_pin_a>, <&sdcc3_cd_pin_a>;
++				pinctrl-0 = <&sdcc3_pins>, <&sdcc3_cd_pin_a>;
+ 			};
+ 		};
+ 	};
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---GDLQamdgIxhPcIwq--
+2.8.3
