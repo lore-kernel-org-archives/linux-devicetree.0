@@ -1,76 +1,72 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: RE: [PATCH v4 4/7] dt: mdio-mux: Add mdio multiplexer driver node
-Date: Fri, 10 Jun 2016 09:54:11 +0530
-Message-ID: <0581378b82179ea816fb2f8644d3fc93@mail.gmail.com>
-References: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
- <1465216900-11755-5-git-send-email-pramod.kumar@broadcom.com> <5755C2FE.1090303@gmail.com>
+From: Mychaela Falconia <mychaela.falconia@gmail.com>
+Subject: Re: [PATCH 3/4] mtd: nand: Add support for Evatronix NANDFLASH-CTRL
+Date: Thu, 9 Jun 2016 21:07:49 -0800
+Message-ID: <CA+uuBqb-g1PC1WKR36Rbd5fd1YqreprzG_N57xOn43JOSeDqVw@mail.gmail.com>
+References: <alpine.DEB.2.02.1606020948070.19416@lnxricardw1.se.axis.com>
+ <20160603165909.09f27ee0@bbrezillon> <alpine.DEB.2.02.1606071702220.19416@lnxricardw1.se.axis.com>
+ <CA+uuBqb4fG4nK7atrF7XOQ=ip2SfKrxU+KXqD3W+PA_ZA7cS3g@mail.gmail.com>
+ <20160609200128.5b7a6e29@bbrezillon> <CA+uuBqaRv2f8K-Q2ZLQY8tq6idq8XCDMV21SYM5XCWc4FVV90g@mail.gmail.com>
+ <20160609222307.5db4e67f@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5755C2FE.1090303@gmail.com>
+In-Reply-To: <20160609222307.5db4e67f@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Ricard Wanderlof <ricard.wanderlof@axis.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Oleksij Rempel <linux@rempel-privat.de>, Linux mtd <linux-mtd@lists.infradead.org>, Benoit Cousson <bcousson@baylibre.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+On 6/9/16, Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+> Hm, I think it's changing now that a lot of SoCs are advertised to be
+> running Linux. But you're right in that existing IPs might not support
+> this low-level mode.
 
-> -----Original Message-----
-> From: Florian Fainelli [mailto:f.fainelli@gmail.com]
-> Sent: 07 June 2016 00:08
-> To: Pramod Kumar; Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell;
-> Kumar Gala; Catalin Marinas; Will Deacon; Kishon Vijay Abraham I; David S.
-> Miller
-> Cc: devicetree@vger.kernel.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; bcm-kernel-feedback-list@broadcom.com; linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH v4 4/7] dt: mdio-mux: Add mdio multiplexer driver node
->
-> On 06/06/2016 05:41 AM, Pramod Kumar wrote:
-> > Add integrated MDIO multiplexer driver node which contains two mux
-> > PCIe bus and one ethernet bus along with phys lying on these bus.
-> >
-> > Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> > ---
-> > +		mdio_mux_iproc: mdio-mux@6602023c {
-> > +			compatible = "brcm,mdio-mux-iproc";
-> > +			reg = <0x6602023c 0x14>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +
-> > +			mdio@0 {
-> > +				reg = <0x0>;
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +
-> > +				pci_phy0: pci-phy@0 {
-> > +					compatible = "brcm,ns2-pcie-phy";
-> > +					reg = <0x0>;
-> > +					#phy-cells = <0>;
-> > +				};
-> > +			};
-> > +
-> > +			mdio@7 {
-> > +				reg = <0x7>;
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +
-> > +				pci_phy1: pci-phy@0 {
-> > +					compatible = "brcm,ns2-pcie-phy";
-> > +					reg = <0x0>;
-> > +					#phy-cells = <0>;
-> > +				};
->
-> Are these two PHYs always available in the NS2 SoC, or does that depend on
-> interfaces exposed at the board level? Should not they be flagged with a
-> disabled status property by default and enabled in their respective board
-> files?
-> --
+Faraday (the IP vendor in the present case) advertise Linux support as
+well, but they never mainlined any of it, and instead they provide
+their own vendor Linux trees. The one I got is based on linux-3.3; I
+don't know if they have a newer one. They do "support" FTNANDC024
+under Linux as well, but their driver for it is gawdawful - see below.
 
-It depends on the interfaces exposed at board level. We will disable it in
-dtsi and enable it dts file. I'll address this through next patch set.
+> Hm, I don't understand why it's not possible to implement basic
+> sequences, but I don't know anything about FTNANDC024, so let's assume
+> you're right.
 
-> Florian
+Read the datasheet (link below) and tell me what you think.
 
-Regards,
-Pramod
+> Sure, feel free to send it to me, I'll have a look. And maybe you can
+> also share your code (both the new and old versions of the driver).
+
+I decided to go ahead and abuse my personal web space on another
+(nothing to do with Linux or with NAND flash) project's server for the
+purpose of sharing this stuff:
+
+https://www.freecalypso.org/members/falcon/linux-mtd/
+
+There you will find the IP datasheet, the vendor's driver (GPL), and a
+current snapshot of my work-in-progress replacement.
+
+> Hm, so you can't even move the column pointer within a page
+> (NAND_CMD_RNDOUT)?
+
+See the FTNANDC024 microcode listings on datasheet PDF pages 108
+through 117. Every FTNANDC024 operation is an execution of one of
+these complete microcode routines from start to finish. Just because a
+given microcode flow includes the issuance of a given NAND command
+(such as Change Read Column or Change Write Column) does not mean that
+you could just ask the controller to issue that command by itself,
+without executing a complete microcode flow which also includes the
+Read Page or Program Page command.
+
+The only workaround would be to write our own microcode. I think this
+approach would actually work: we could write shorter microcode
+routines which *just* issue a given NAND opcode and then stop there,
+and another separate microcode routine (to be invoked via a separate
+command) which would only do what they call "RD_SP" or "WR_SP" (raw
+byte transfers of 1 to 32 bytes), without issuing a Read Page command
+before or a Program Page command after. This approach would allow us
+to perform truly raw page reads and writes, but it would be very ugly
+and inefficient. It would also require a separate microcode routine
+for each different command, NOT one generic microcode routine that
+would correspond to ->cmd_ctrl() or ->cmdfunc().
+
+M~
