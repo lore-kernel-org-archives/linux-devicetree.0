@@ -1,62 +1,56 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v7 2/3] documentation: Add secure monitor binding documentation
-Date: Fri, 10 Jun 2016 21:44:10 +0200
-Message-ID: <1465587851-24184-3-git-send-email-carlo@caione.org>
-References: <1465587851-24184-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465587851-24184-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: add Starry KR122EA0SRA panel binding
+Date: Fri, 10 Jun 2016 12:52:41 -0700
+Message-ID: <CAD=FV=XunjDGJYY1+-GPC+hN=kNxLiWbrtZD0_BO1ywerSLhfQ@mail.gmail.com>
+References: <1465578127-30330-1-git-send-email-dianders@chromium.org>
+ <CAF6AEGuonEgNvJhfst+3aZPEOaeGwNnozcYwJq3_Z2S0-7ogSA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAF6AEGuonEgNvJhfst+3aZPEOaeGwNnozcYwJq3_Z2S0-7ogSA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-
-Add the binding documentation for the Amlogic secure monitor driver.
-
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- .../bindings/firmware/meson/meson_sm.txt           | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
-
-diff --git a/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
-new file mode 100644
-index 0000000..d017675
---- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
-@@ -0,0 +1,27 @@
-+* Amlogic Secure Monitor
-+
-+In the Amlogic SoCs the Secure Monitor code is used to provide access to the
-+NVMEM, enable JTAG, set USB boot, etc...
-+
-+Required properties for the secure monitor node:
-+- compatible: Should be "amlogic,meson-gxbb-sm"
-+
-+Example:
-+
-+	firmware {
-+		sm: secure-monitor {
-+			compatible = "amlogic,meson-gxbb-sm";
-+		};
-+	};
-+
-+Example of the node using the secure monitor:
-+
-+	efuse: efuse {
-+		compatible = "amlogic,meson-gxbb-efuse";
-+		secure-monitor = <&sm>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		...
-+	};
-+
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Um9iLAoKT24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgMTE6NDMgQU0sIFJvYiBDbGFyayA8cm9iZGNs
+YXJrQGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgMTowMiBQTSwg
+RG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4gVGhlIFN0
+YXJyeSBLUjEyMkVBMFNSQSBpcyBhIDEyLjIiLCAxOTIweDEyMDAgVEZULUxDRCBwYW5lbCBjb25u
+ZWN0ZWQKPj4gdXNpbmcgZURQIGludGVyZmFjZXMuCj4KPiBzbyBkcml2ZS1ieSBjb21tZW50Li4u
+IGJ1dCBzaG91bGRuJ3QgZURQIGJlIHByb2JlLWFibGU/ICBOb3Qgc3VyZSB3aHkKPiB3ZSBuZWVk
+IHBhbmVsIGRyaXZlcnMgb3IgRFQgYmluZGluZ3M/CgpJIHdhcyB3b25kZXJpbmcgYWJvdXQgdGhh
+dCB0b28uICBBcyBmYXIgYXMgSSBjYW4gdGVsbDoKCjEuIFdlIG5lZWQgYSBwYW5lbCBkcml2ZXIg
+YmVjYXVzZSB0aGF0IGFwcGVhcnMgdG8gYmUgd2hhdCBvd25zIGEKcmVmZXJlbmNlIHRvIHRoZSBi
+YWNrbGlnaHQgLyBwYW5lbCBwb3dlciByZWd1bGF0b3IgYW5kIHRoYXQgcGFydCBpcwpub3QgYXV0
+by1wcm9iYWJsZS4KCjIuIEFzIGZhciBhcyBJIGNvdWxkIHRlbGwsIHRoZXJlIGlzIG5vIHdheSB0
+byBkZWNsYXJlIGEgZ2VuZXJpYwoodW5zcGVjaWZpZWQpIHBhbmVsIGluIHRoZSBkZXZpY2UgdHJl
+ZS4gIEV2ZXJ5b25lIHNlZW1zIHRvIGluY2x1ZGUKInNpbXBsZS1wYW5lbCIgaW4gdGhlaXIgY29t
+cGF0aWJsZSBzdHJpbmcgYnV0IGFzIGZhciBhcyBJIGNhbiB0ZWxsCm5vdGhpbmcgaW4gdGhlIGtl
+cm5lbCBsb29rcyBhdCBpdC4KCjMuIEluIHRoZW9yeSwgYWxsIHRoZSBpbmZvIHNwZWNpZmllZCBo
+ZXJlIHNob3VsZCBtYXRjaCB0aGUgRURJRApleGFjdGx5IGFuZCB0aHVzIChhcyB5b3Ugc2FpZCkg
+YmUgcHJvYmFibGUuICBIb3dldmVyLCBpdCBzb3VuZHMgbGlrZQooZm9yIHBvd2VyIHNlcXVlbmNp
+bmcgcmVhc29ucykgdGhlcmUgbWlnaHQgYmUgcmVhc29ucyB3aHkgeW91J2Qgd2FudAp0byBrbm93
+IGV4YWN0bHkgd2hhdCBwYW5lbCB3YXMgcHJlc2VudCBiZWZvcmVoYW5kLiAgWW91IG1pZ2h0IG5l
+ZWQgdG8KcG93ZXIgdGhlIHBhbmVsIGFuZCBiYWNrbGlnaHQgaW4gdmVyeSBzcGVjaWZpYyBzZXF1
+ZW5jZXMsIGZvcgppbnN0YW5jZS4gIEknbSBub3Qgc3VyZSBpdCdzIGFsd2F5cyAxMDAlIHBvc3Np
+YmxlIGluIGFsbCBlbWJlZGRlZApkZXNpZ25zIHRvIHJlYWQgdGhlIEVESUQgYmVmb3JlIHlvdSBr
+bm93IGhvdyB0aGUgc2VxdWVuY2luZyBzaG91bGQKd29yayAoYnV0LCBvZiBjb3Vyc2UsIEknbSBh
+IE5PT0IpLgoKNC4gUmVhZGluZyB0aGUgRURJRCBjYW4gYmUgc2xvdy4gIElmIHlvdSBoYXBwZW4g
+dG8ga25vdyBhbGwgdGhlIGluZm8Kb24gdGhlIHBhbmVsIGJlZm9yZWhhbmQgeW91IGNhbiBzaWdu
+aWZpY2FudGx5IHNwZWVkIHVwIGJvb3Qgc3BlZWQsCm5vdGFibHkgaG93IGZhc3QgeW91IGNhbiBn
+ZXQgc29tZXRoaW5nIG9uIHRoZSBzY3JlZW4uCgoKQW55d2F5LCBtYXliZSBzb21lb25lIGVsc2Ug
+d2hvIGFjdHVhbGx5IGtub3dzIHdoYXQgdGhleSdyZSB0YWxraW5nCmFib3V0IHdpbGwgY2hpbWUg
+aW4uICA7KQoKLURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
