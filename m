@@ -1,78 +1,49 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC v3 01/22] reset: Add renesas,rst DT bindings
-Date: Fri, 10 Jun 2016 09:52:07 +0200
-Message-ID: <CAMuHMdVVCwhVBzPTRVzU6MFbP_sfQPu_dGx1Ef2urNMD+Eda_g@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH/RFC v3 02/22] soc: renesas: Add R-Car RST driver
+Date: Fri, 10 Jun 2016 09:54:22 +0200
+Message-ID: <CAMuHMdUX+DqPyo4cTJnNyinc2zgB-0CtUBmyjQjFEKWmV_Y-Fg@mail.gmail.com>
 References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
- <1464808880-343-2-git-send-email-geert+renesas@glider.be> <10393056.BKo7UTPXFi@avalon>
+ <1464808880-343-3-git-send-email-geert+renesas@glider.be> <6849015.bJCuAeaMgZ@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <10393056.BKo7UTPXFi@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6849015.bJCuAeaMgZ@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Laurent,
 
-On Thu, Jun 2, 2016 at 11:47 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+On Thu, Jun 2, 2016 at 11:58 PM, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/renesas,rst.txt
->> @@ -0,0 +1,35 @@
->> +DT bindings for the Renesas R-Car Reset Controller
->> +
->> +The R-Car Reset Controller provides reset control, and implements the
->> following
->> +functions:
->> +  - Latching of the levels on mode pins when PRESET# is negated,
->> +  - Mode monitoring register,
->> +  - Reset control of peripheral devices (on R-Car Gen1),
->> +  - Watchdog timer (on R-Car Gen1).
->> +  - Register-based reset control and boot address registers for the various
->> CPU
->> +    cores (on R-Car Gen2/Gen3),
->> +
->> +
->> +Required properties:
->> +  - compatible: Should be
->> +               - "renesas,<soctype>-reset-wdt" for R-Car Gen1,
->> +               - "renesas,<soctype>-rst" for R-Car Gen2/Gen3.
->> +             Examples with soctypes are:
->> +               - "renesas,r8a7778-reset-wdt" (R-Car M1A)
->> +               - "renesas,r8a7779-reset-wdt" (R-Car H1)
->> +               - "renesas,r8a7790-rst" (R-Car H2)
->> +               - "renesas,r8a7791-rst" (R-Car M2-W)
->> +               - "renesas,r8a7792-rst" (R-Car V2H
->> +               - "renesas,r8a7793-rst" (R-Car M2-N)
->> +               - "renesas,r8a7794-rst" (R-Car E2)
->> +               - "renesas,r8a7795-rst" (R-Car H3)
->> +               - "renesas,r8a7796-rst" (R-Car M3-W)
+>> +++ b/drivers/soc/renesas/rcar-rst.c
+
+>> +static int __init rcar_rst_init(void)
+>> +{
+
+[...]
+
+>> +}
+>> +arch_initcall(rcar_rst_init);
 >
-> Any specific reason for such a large indentation ? (I know this is really
-> nitpicking)
+> Given that rcar_rst_init() is only used as a support function for
+> rcar_rst_read_mode_pins(), how about removing the initcall ?
 
-To align the two paragraphs and lists.
-
-> Apart from that, it's just a bit of a shame we can't have generic compatible
-> strings, but that would require additional DT properties to describe the reset
-> controller features, and I assume that's not a path we want to take.
-
-The reset controller is one of the few blocks that really differs
-between members
-of the same family, due to the relationship with the various CPU cores.
-
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Thanks!
+Thanks, good idea!
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
