@@ -1,142 +1,86 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Fri, 10 Jun 2016 08:32:10 +0100
-Message-ID: <20160610083210.17f4fdd6@arm.com>
-References: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Add MediaTek USB3 DRD Driver
+Date: Fri, 10 Jun 2016 15:32:37 +0800
+Message-ID: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 8 Jun 2016 16:05:17 +0800
-Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>From 8fdc924cecf0ca14da6e8aba360501e53437e548 Mon Sep 17 00:00:00 2001
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Date: Fri, 10 Jun 2016 15:20:20 +0800
+Subject: [PATCH 0/5] Add MediaTek USB3 DRD Driver
 
-> This patch adds a binding that describes the Rockchip PCIe controller
-> found on Rockchip SoCs PCIe interface.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - fix lots clk/reset stuff suggested by Heiko
-> - remove msi-parent and add msi-map suggested by Marc
+These patches introduce the MediaTek USB3 dual-role controller
+driver.
 
-I noticed this ^^^^ ...
+The driver can be configured as Dual-Role Device (DRD),
+Peripheral Only and Host Only (xHCI) modes. It works well
+with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
+tested on MT8173 platform which only contains USB2.0 device IP,
+and on MT6290 platform which contains USB3.0 device IP.
 
-> - drop phy related stuff
-> - some others minor fixes
-> 
->  .../devicetree/bindings/pci/rockchip-pcie.txt      | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> new file mode 100644
-> index 0000000..eb92e29
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> @@ -0,0 +1,86 @@
-> +* Rockchip AXI PCIe Root Port Bridge DT description
-> +
-> +Required properties:
-> +- #address-cells: Address representation for root ports, set to <3>
-> +- #size-cells: Size representation for root ports, set to <2>
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +		interrupt source. The value must be 1.
-> +- compatible: Should contain "rockchip,rk3399-pcie"
-> +- reg: Two register ranges as listed in the reg-names property
-> +- reg-names: Must include the following names
-> +	- "axi-base"
-> +	- "apb-base"
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +		See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +	- "aclk"
-> +	- "aclk-perf"
-> +	- "hclk"
-> +	- "pm"
-> +- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
-> +- phy-names:  MUST be "pcie-phy".
-> +- interrupts: Three interrupt entries must be specified.
-> +- interrupt-names: Must include the following names
-> +	- "sys"
-> +	- "legacy"
-> +	- "client"
-> +- resets: Must contain five entries for each entry in reset-names.
-> +	   See ../reset/reset.txt for details.
-> +- reset-names: Must include the following names
-> +	- "core"
-> +	- "mgmt"
-> +	- "mgmt-sticky"
-> +	- "pipe"
-> +- pinctrl-names : The pin control state names
-> +- pinctrl-0: The "default" pinctrl state
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +
-> +Optional Property:
-> +- ep-gpios: contain the entry for pre-reset gpio
-> +- num-lanes: number of lanes to use
-> +- vpcie3v3-supply: The phandle to the 3.3v regulator to use for pcie. If this
-> +  is specified we'll defer probe until we can find this regulator.
-> +- vpcie1v8-supply: The phandle to the 1.8v regulator to use for pcie. If this
-> +  is specified we'll defer probe until we can find this regulator.
-> +- vpcie0v9-supply: The phandle to the 0.9v regulator to use for pcie. If this
-> +  is specified we'll defer probe until we can find this regulator.
-> +
-> +Example:
-> +
-> +pcie0: pcie@f8000000 {
-> +	compatible = "rockchip,rk3399-pcie";
-> +	#address-cells = <3>;
-> +	#size-cells = <2>;
-> +	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
-> +		 <&cru PCLK_PCIE>;
-> +	clock-names = "aclk", "aclk-perf",
-> +		      "hclk";
-> +	bus-range = <0x0 0x1>;
-> +	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names: "sys", "legacy", "client";
-> +	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
-> +	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
-> +	assigned-clock-rates = <100000000>;
-> +	ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-> +	ranges = < 0x82000000 0 0xfa000000 0x0 0xfa000000 0 0x600000
-> +		   0x81000000 0 0xfa600000 0x0 0xfa600000 0 0x100000 >;
-> +	num-lanes = <4>;
-> +	reg = < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0x0 0x1000000 >;
-> +	reg-name = "axi-base", "apb-base";
-> +	resets = <&cru SRST_PCIEPHY>, <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-> +		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
-> +	reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
-> +	phys = <&pcie_phy>;
-> +	phy-names = "pcie-phy";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_clkreq>;
-> +	#interrupt-cells = <1>;
-> +	interrupt-controller;
-> +	interrupt-map-mask = <0 0 0 7>;
-> +	interrupt-map = <0 0 0 1 &pcie0 1>,
-> +			<0 0 0 2 &pcie0 2>,
-> +			<0 0 0 3 &pcie0 3>,
-> +			<0 0 0 4 &pcie0 4>;
-> +};
+Change in v3:
+1. fix some typo error
+2. rename mtu3.txt to mt8173-mtu3.txt
+
+Change in v2:
+1. modify binding docs according to suggestions
+2. modify some comments and remove some dummy blank lines
+3. fix memory leakage
+
+Chunfeng Yun (5):
+  dt-bindings: mt8173-xhci: support host side of dual-role mode
+  dt-bindings: mt8173-mtu3: add devicetree bindings
+  usb: xhci-mtk: make IPPC register optional
+  usb: Add MediaTek USB3 DRD Driver
+  arm64: dts: mediatek: add USB3 DRD driver
+
+ .../devicetree/bindings/usb/mt8173-mtu3.txt        |   85 ++
+ .../devicetree/bindings/usb/mt8173-xhci.txt        |   48 ++
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |   46 +-
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   28 +-
+ drivers/usb/Kconfig                                |    2 +
+ drivers/usb/Makefile                               |    1 +
+ drivers/usb/host/xhci-mtk.c                        |   32 +-
+ drivers/usb/mtu3/Kconfig                           |   47 ++
+ drivers/usb/mtu3/Makefile                          |   20 +
+ drivers/usb/mtu3/mtu3.h                            |  422 ++++++++++
+ drivers/usb/mtu3/mtu3_core.c                       |  879 ++++++++++++++++++++
+ drivers/usb/mtu3/mtu3_dr.c                         |  348 ++++++++
+ drivers/usb/mtu3/mtu3_dr.h                         |  108 +++
+ drivers/usb/mtu3/mtu3_gadget.c                     |  731 ++++++++++++++++
+ drivers/usb/mtu3/mtu3_gadget_ep0.c                 |  879 ++++++++++++++++++++
+ drivers/usb/mtu3/mtu3_host.c                       |  294 +++++++
+ drivers/usb/mtu3/mtu3_hw_regs.h                    |  474 +++++++++++
+ drivers/usb/mtu3/mtu3_plat.c                       |  490 +++++++++++
+ drivers/usb/mtu3/mtu3_qmu.c                        |  599 +++++++++++++
+ drivers/usb/mtu3/mtu3_qmu.h                        |   43 +
+ 20 files changed, 5562 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+ create mode 100644 drivers/usb/mtu3/Kconfig
+ create mode 100644 drivers/usb/mtu3/Makefile
+ create mode 100644 drivers/usb/mtu3/mtu3.h
+ create mode 100644 drivers/usb/mtu3/mtu3_core.c
+ create mode 100644 drivers/usb/mtu3/mtu3_dr.c
+ create mode 100644 drivers/usb/mtu3/mtu3_dr.h
+ create mode 100644 drivers/usb/mtu3/mtu3_gadget.c
+ create mode 100644 drivers/usb/mtu3/mtu3_gadget_ep0.c
+ create mode 100644 drivers/usb/mtu3/mtu3_host.c
+ create mode 100644 drivers/usb/mtu3/mtu3_hw_regs.h
+ create mode 100644 drivers/usb/mtu3/mtu3_plat.c
+ create mode 100644 drivers/usb/mtu3/mtu3_qmu.c
+ create mode 100644 drivers/usb/mtu3/mtu3_qmu.h
+
+--
+1.7.9.5
 
 
-And yet I don't see anything related to msi-map in the binding or in
-the example. As Doug mentioned issues with MSIs being delivered, I
-wonder if the two are related...
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
