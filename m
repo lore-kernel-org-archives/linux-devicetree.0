@@ -1,63 +1,33 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM64: boot: dts: Add regulators for Tegra210 Smaug
-Date: Fri, 10 Jun 2016 11:58:13 +0530
-Message-ID: <575A5DFD.6040300@nvidia.com>
-References: <1465493923-23313-1-git-send-email-rklein@nvidia.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 06/12] ARM: dts: r8a7792: initial SoC device tree
+Date: Fri, 10 Jun 2016 08:50:42 +0200
+Message-ID: <CAMuHMdXMnbHFbXCsTR7yiiehWrOyitrFctxuNn0O2+kr5kig1A@mail.gmail.com>
+References: <1879394.3zBGLpF2nv@wasted.cogentembedded.com> <2935290.QhIdlclvX3@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465493923-23313-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2935290.QhIdlclvX3@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Thursday 09 June 2016 11:08 PM, Rhyland Klein wrote:
-> Add regulators to the Tegra210 Smaug DTS file including
-> support for the max77620 PMIC.
+On Thu, Jun 9, 2016 at 11:41 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> The initial R8A7792 SoC device tree including CPU cores, GIC, timer, SYSC,
+> and the required  clock descriptions.
 >
-> Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> +
-> +				fps1 {
-> +					maxim,shutdown-fps-time-period-us = <5120>;
-> +					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN1>;
-> +					maxim,enable-sleep;
-The maxim,enabel-sleep is not the valid property.
-It should be
-maxim,device-state-on-disabled-event = <MAX77620_FPS_INACTIVE_STATE_SLEEP>;
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
 
-> +				};
-> +
-> +				fps2 {
-> +					maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
-> +				};
-> +			};
-> +
-> +			regulators {
-> +				in-ldo0-1-supply = <&pp1350>;
-> +				in-ldo2-supply = <&pp3300>;
-> +				in-ldo3-5-supply = <&pp3300>;
-> +				in-ldo7-8-supply = <&pp1350>;
-> +
-> +				ppvar_soc: sd0 {
-> +					regulator-name = "PPVAR_SOC";
-> +					regulator-min-microvolt = <825000>;
-> +					regulator-max-microvolt = <1125000>;
-> +					regulator-enable-ramp-delay = <146>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +					maxim,ramp-rate-setting = <27500>;
-You need to say regulator-ramp-delay if register config is same as what 
-platform observed.
-This is applicable for all places.
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> +			regulator-always-on;
-> +			gpio = <&max77620 3 0>;
-GPIO3 is fps-out and hence it can not be done here. Better to do not 
-provide any gpio entry.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
