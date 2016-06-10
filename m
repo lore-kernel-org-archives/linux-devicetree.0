@@ -1,90 +1,37 @@
-From: Han Xu <han.xu@nxp.com>
-Subject: [PATCH v2 3/6] mtd: nand: gpmi: add GPMI NAND support for i.MX6QP
-Date: Fri, 10 Jun 2016 12:01:31 -0500
-Message-ID: <1465578094-8816-4-git-send-email-han.xu@nxp.com>
-References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: han.xu@nxp.com, boris.brezillon@free-electrons.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v2 1/2] dt-bindings: add Starry KR122EA0SRA panel binding
+Date: Fri, 10 Jun 2016 10:02:06 -0700
+Message-ID: <1465578127-30330-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thierry.reding@gmail.com
+Cc: airlied@linux.ie, robh+dt@kernel.org, Douglas Anderson <dianders@chromium.org>, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-support GPMI NAND on i.MX6QP
+The Starry KR122EA0SRA is a 12.2", 1920x1200 TFT-LCD panel connected
+using eDP interfaces.
 
-Signed-off-by: Han Xu <han.xu@nxp.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 9 +++++++++
- drivers/mtd/nand/gpmi-nand/gpmi-nand.h | 5 ++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+Changes in v2:
+- Proper title (sorry!)
 
-diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-index a8936fd..aedaff3 100644
---- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-@@ -104,6 +104,12 @@ static const struct gpmi_devdata gpmi_devdata_imx6q = {
- 	.max_chain_delay = 12,
- };
- 
-+static const struct gpmi_devdata gpmi_devdata_imx6qp = {
-+	.type = IS_MX6QP,
-+	.bch_max_ecc_strength = 40,
-+	.max_chain_delay = 12,
-+};
+ .../devicetree/bindings/display/panel/starry,kr122ea0sra.txt       | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/starry,kr122ea0sra.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/starry,kr122ea0sra.txt b/Documentation/devicetree/bindings/display/panel/starry,kr122ea0sra.txt
+new file mode 100644
+index 000000000000..1e87fe6078af
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/starry,kr122ea0sra.txt
+@@ -0,0 +1,7 @@
++Starry 12.2" (1920x1200 pixels) TFT LCD panel
 +
- static const struct gpmi_devdata gpmi_devdata_imx6sx = {
- 	.type = IS_MX6SX,
- 	.bch_max_ecc_strength = 62,
-@@ -2086,6 +2092,9 @@ static const struct of_device_id gpmi_nand_id_table[] = {
- 		.compatible = "fsl,imx6q-gpmi-nand",
- 		.data = &gpmi_devdata_imx6q,
- 	}, {
-+		.compatible = "fsl,imx6qp-gpmi-nand",
-+		.data = &gpmi_devdata_imx6qp,
-+	}, {
- 		.compatible = "fsl,imx6sx-gpmi-nand",
- 		.data = &gpmi_devdata_imx6sx,
- 	}, {
-diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-index 04a3584..1cee620 100644
---- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-@@ -123,6 +123,7 @@ enum gpmi_type {
- 	IS_MX23,
- 	IS_MX28,
- 	IS_MX6Q,
-+	IS_MX6QP,
- 	IS_MX6SX,
- 	IS_MX7D,
- };
-@@ -305,9 +306,11 @@ void gpmi_copy_bits(u8 *dst, size_t dst_bit_off,
- #define GPMI_IS_MX23(x)		((x)->devdata->type == IS_MX23)
- #define GPMI_IS_MX28(x)		((x)->devdata->type == IS_MX28)
- #define GPMI_IS_MX6Q(x)		((x)->devdata->type == IS_MX6Q)
-+#define GPMI_IS_MX6QP(x)	((x)->devdata->type == IS_MX6QP)
- #define GPMI_IS_MX6SX(x)	((x)->devdata->type == IS_MX6SX)
- #define GPMI_IS_MX7D(x)		((x)->devdata->type == IS_MX7D)
- 
--#define GPMI_IS_MX6(x)		(GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x))
-+#define GPMI_IS_MX6(x)		(GPMI_IS_MX6Q(x) || GPMI_IS_MX6QP(x)	\
-+				|| GPMI_IS_MX6SX(x))
- #define GPMI_IS_MX7(x)		(GPMI_IS_MX7D(x))
- #endif
++Required properties:
++- compatible: should be "starry,kr122ea0sra"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
 -- 
-1.9.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+2.8.0.rc3.226.g39d4020
