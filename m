@@ -1,106 +1,236 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 20/20] dt-bindings: pwm: sti: Update DT bindings with
- recent changes
-Date: Fri, 10 Jun 2016 15:18:55 +0200
-Message-ID: <20160610131855.GG27142@ulmo.ba.sec>
-References: <20160608092135.21184-1-lee.jones@linaro.org>
- <20160608092135.21184-21-lee.jones@linaro.org>
- <20160608205152.GA5511@rob-hp-laptop>
- <20160609114107.GB1388@dell>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 2/2] clk: max77620: Add clock driver for MAX77620/MAX20024
+Date: Fri, 10 Jun 2016 09:20:44 -0400
+Message-ID: <CABxcv=mrmN5Mzt595ZFgGbOoHJWQMwQ1wiCvcHEiWh_79EbJqQ@mail.gmail.com>
+References: <1465553536-23838-1-git-send-email-ldewangan@nvidia.com>
+	<1465553536-23838-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cyV/sMl4KAhiehtf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160609114107.GB1388@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1465553536-23838-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Laxman,
 
---cyV/sMl4KAhiehtf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jun 10, 2016 at 6:12 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> MAXIM MAX77620 is the power management IC with multiple DCDC/LDO(
+> regulators, RTC, GPIOs, Watchdog, 32KHz clock source etc.
+>
+> Add support for controlling the 32KHz clock source via clock
+> framework.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
 
-On Thu, Jun 09, 2016 at 12:41:07PM +0100, Lee Jones wrote:
-> On Wed, 08 Jun 2016, Rob Herring wrote:
->=20
-> > On Wed, Jun 08, 2016 at 10:21:35AM +0100, Lee Jones wrote:
-> > > We're renaming the 'st,pwm-num-chan' binding to 'st,pwm-num-devs' to
-> > > be more inline with the naming conventions of the subsystem.  Where
-> > > we used to treat each line as a channel, the PWM convention is to
-> > > describe them as devices.
-> >=20
-> > That's all linux implementation details and you are breaking=20
-> > compatibility.
->=20
-> Normally I'd agree with you, but I happen to know that a) this IP is
-> currently unused and b) up until this point (and probably beyond), ST
-> always ship the DTB with the kernel, so there will be no breakage.
+It looks very similar to the max77686 and max77802 drivers (with only
+the difference in number of clock outputs), can you use the helpers in
+drivers/clk/clk-max-gen.c ?
 
-Heh... I've long given up on trying to make that argument go anywhere.
-The general rule is that once we support a binding in a kernel release
-we have to support it indefinitely. If you really want to go ahead with
-this change (I don't think you should), you'd at least have to document
-both properties and support st,pwm-num-chan in the driver for backwards
-compatibility.
+>  drivers/clk/Kconfig        |   9 +++
+>  drivers/clk/Makefile       |   1 +
+>  drivers/clk/clk-max77620.c | 143 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 153 insertions(+)
+>  create mode 100644 drivers/clk/clk-max77620.c
+>
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 98efbfc..149f813 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -34,6 +34,15 @@ source "drivers/clk/versatile/Kconfig"
+>  config COMMON_CLK_MAX_GEN
+>          bool
+>
+> +config COMMON_CLK_MAX77620
+> +       tristate "Clock driver for Maxim 77620/MAX20024 MFD"
+> +       depends on MFD_MAX77620
+> +       ---help---
+> +         This driver supports Maxim MAX77620/MAX20024 32KHz crystal
+> +         oscillator. These multi-function devices have one fixed rate.
+> +         The clock can be ON and OFF. Say y to make this driver as
+> +         built-in and m to make it as module.
+> +
+>  config COMMON_CLK_MAX77686
+>         tristate "Clock driver for Maxim 77686 MFD"
+>         depends on MFD_MAX77686
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index dcc5e69..8c2de43 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_ARCH_CLPS711X)           += clk-clps711x.o
+>  obj-$(CONFIG_ARCH_EFM32)               += clk-efm32gg.o
+>  obj-$(CONFIG_ARCH_HIGHBANK)            += clk-highbank.o
+>  obj-$(CONFIG_MACH_LOONGSON32)          += clk-ls1x.o
+> +obj-$(CONFIG_COMMON_CLK_MAX77620)      += clk-max77620.o
+>  obj-$(CONFIG_COMMON_CLK_MAX_GEN)       += clk-max-gen.o
+>  obj-$(CONFIG_COMMON_CLK_MAX77686)      += clk-max77686.o
+>  obj-$(CONFIG_COMMON_CLK_MAX77802)      += clk-max77802.o
+> diff --git a/drivers/clk/clk-max77620.c b/drivers/clk/clk-max77620.c
+> new file mode 100644
+> index 0000000..615cf2e
+> --- /dev/null
+> +++ b/drivers/clk/clk-max77620.c
+> @@ -0,0 +1,143 @@
+> +/*
+> + * Clock driver for Maxim Max77620 device.
+> + *
+> + * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/mfd/max77620.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +struct max77620_clks_info {
+> +       struct device *dev;
+> +       struct regmap *rmap;
+> +       struct clk *clk;
+> +       struct clk_hw hw;
+> +};
+> +
+> +static struct max77620_clks_info *to_max77620_clks_info(struct clk_hw *hw)
+> +{
+> +       return container_of(hw, struct max77620_clks_info, hw);
+> +}
+> +
+> +static unsigned long max77620_clks_recalc_rate(struct clk_hw *hw,
+> +                                              unsigned long parent_rate)
+> +{
+> +       return 32768;
+> +}
+> +
+> +static int max77620_clks_prepare(struct clk_hw *hw)
+> +{
+> +       struct max77620_clks_info *mci = to_max77620_clks_info(hw);
+> +
+> +       return regmap_update_bits(mci->rmap, MAX77620_REG_CNFG1_32K,
+> +                                 MAX77620_CNFG1_32K_OUT0_EN,
+> +                                 MAX77620_CNFG1_32K_OUT0_EN);
+> +}
+> +
+> +static void max77620_clks_unprepare(struct clk_hw *hw)
+> +{
+> +       struct max77620_clks_info *mci = to_max77620_clks_info(hw);
+> +
+> +       regmap_update_bits(mci->rmap, MAX77620_REG_CNFG1_32K,
+> +                          MAX77620_CNFG1_32K_OUT0_EN, 0);
+> +}
+> +
+> +static int max77620_clks_is_prepared(struct clk_hw *hw)
+> +{
+> +       struct max77620_clks_info *mci = to_max77620_clks_info(hw);
+> +       unsigned int rval;
+> +       int ret;
+> +
+> +       ret = regmap_read(mci->rmap, MAX77620_REG_CNFG1_32K, &rval);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return !!(rval & MAX77620_CNFG1_32K_OUT0_EN);
+> +}
+> +
+> +static struct clk_ops max77620_clks_ops = {
+> +       .prepare        = max77620_clks_prepare,
+> +       .unprepare      = max77620_clks_unprepare,
+> +       .is_prepared    = max77620_clks_is_prepared,
+> +       .recalc_rate    = max77620_clks_recalc_rate,
+> +};
+> +
+> +struct clk_init_data max77620_clk_init_data = {
+> +       .name = "clk-32k",
+> +       .ops = &max77620_clks_ops,
+> +       .flags = CLK_IGNORE_UNUSED,
+> +};
+> +
 
-> > > The second documentation adaption entails adding support for PWM
-> > > capture devices.  A new clock is required as well as an IRQ line.
-> > > We're also adding a new property similar to the one described
-> > > above, but for capture channels.  Typically, there will be less
-> > > capture channels than PWM-out, since all channels have the latter
-> > > capability, but only some have capture support.
-> >=20
-> > Humm, sounds like all of this should be implied from compatible strings.
->=20
-> You mean have a bunch of of_machine_is_compatibles() scattered around?
+Is really needed to ignore this clock if unused? Consumers should
+define this clock and enable if needed.
 
-I don't understand why you need this at all. Quite frankly I don't even
-know why st,pwm-num-devs exists. I probably missed it back at the time.
-Usually, like Rob suggests, this should be inferred from the compatible
-string. One commonly used way to avoid scattering explicit checks for
-the compatible string is to add this information to the of_device_id
-table. See a bunch of existing drivers for reference.
+> +static int max77620_clks_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.parent->of_node;
+> +       struct max77620_clks_info *mci;
+> +       struct clk *clk;
+> +       int ret;
+> +
+> +       mci = devm_kzalloc(&pdev->dev, sizeof(*mci), GFP_KERNEL);
+> +       if (!mci)
+> +               return -ENOMEM;
+> +
+> +       platform_set_drvdata(pdev, mci);
+> +
+> +       mci->dev = &pdev->dev;
+> +       mci->rmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +       if (!mci->rmap) {
+> +               dev_err(mci->dev, "Failed to get parent regmap\n");
+> +               return -ENODEV;
+> +       }
+> +       mci->hw.init = &max77620_clk_init_data;
+> +
+> +       clk = devm_clk_register(&pdev->dev, &mci->hw);
+> +       if (IS_ERR(clk)) {
+> +               ret = PTR_ERR(clk);
+> +               dev_err(mci->dev, "Fail to register clock: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       mci->clk = clk;
+> +       ret = of_clk_add_provider(np, of_clk_src_simple_get, mci->clk);
+> +       if (ret < 0)
+> +               dev_err(&pdev->dev, "Fail to add clock driver, %d\n", ret);
+> +
+> +       return ret;
+> +}
+> +
+> +static int max77620_clks_remove(struct platform_device *pdev)
+> +{
+> +       of_clk_del_provider(pdev->dev.parent->of_node);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_device_id max77620_clks_devtype[] = {
+> +       { .name = "max77620-clock", },
+> +       {},
+> +};
+> +
 
-Also, why make a separation of output vs. capture channels at this
-point? Could you not simply obtain the total number of PWM channels,
-preferably from SoC data associated with the compatible string, and
-check at ->capture() time whether or not the particular PWM supports
-this?
+Your Kconfig symbol is tristate so the driver can be built as a module
+but autoload will not work because the driver is not exporting a
+module alias.
 
-As-is, you imply that you have n (output) + m (capture) channels, and
-that 0..n-1 are output and n..n+m-1 are capture channels. What if that
-no longer holds true, but 0 and 2 are the only ones that support
-capture?
+IOW, you need MODULE_DEVICE_TABLE(platform, max77620_clks_devtype) here.
 
-If you check for this at runtime you can avoid complicated DT parsing
-code, but still get the safety check which should be enough to encourage
-people to use the right channels in DT.
-
-Thierry
-
---cyV/sMl4KAhiehtf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXWr4/AAoJEN0jrNd/PrOhmJ0P/A9UE4RtPDkvqerNqjTY/IEv
-4LPm2o1CaGzlEMUp5WVEIwKw1B3cTkXjmicZSOA1znOkgTqV1w8wzc1mBOKjQqP1
-7yR3o/vdz8aS+23W3cCTjHkw7qJyGGAtvaiNZ81EoAQiwZWVe0Nkp4NoOWBfPBiQ
-u2ImZ5iwXNMCP3g9s+VE3pFqTigNo4cAk1XRXMwF8WPvMu8n72GoybCNnP3geeiL
-w9s3ESkxxhYcphsy2i7j6pDxRMM8abvQWIwDFE/mTqgMJ1hUcl5JtPSGgPOZPdqg
-bHBXNCPDIbRCPkYnJp+4JKvnbi8N8ge19XfLWAZV50vvFmajcBFKBqS4kUoY/gQO
-7yui2V9OhQwfqiIXKO+LEbgfcBvOGdimdhwFz7oCTTgKBwSdOp4HJSNN/51zY6pV
-GdWMgGNWQtxDFZyKBCCMotZ0/dgj9ru/32c5+saHnSYNiGd8zBguZoeAC90deVuG
-zoPIZxdvvnee/3cEq6XBAJ1mf/TXacTpd+17Bcqs+y+1bbV3EhzfgElUB+6OHwrc
-Zc6ZpFR4gvBIsROHdHyvYj4N/fBmSNFsO6mljj6uaiCu0EuZxPpk4WkLtjjGpjR9
-xo/KMmQ16pydsfSr/p7yaWJ6ZOO5z4OxTnaD1suPtXJnbLiHiJSuFRqm+QBbHrfu
-AbJwyc41wJCK51N1SzQT
-=0VUw
------END PGP SIGNATURE-----
-
---cyV/sMl4KAhiehtf--
+> +static struct platform_driver max77620_clks_driver = {
+> +       .driver = {
+> +               .name = "max77620-clock",
+> +       },
+> +       .probe = max77620_clks_probe,
+> +       .remove = max77620_clks_remove,
+> +       .id_table = max77620_clks_devtype,
+> +};
+> +
+> +module_platform_driver(max77620_clks_driver);
+> +
+> +MODULE_DESCRIPTION("Clock driver for Maxim max77620 PMIC Device");
+> +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
