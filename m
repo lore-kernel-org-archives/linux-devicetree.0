@@ -1,45 +1,68 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: case sensitivity for devicetree node names
-Date: Fri, 10 Jun 2016 15:02:53 -0700
-Message-ID: <575B390D.1040600@gmail.com>
-References: <575B1D84.2010703@gmail.com>
- <CAL_JsqKw8dVp5y487fo6_mwZfeN6ww8HiYnsudnB8afBrv2oMQ@mail.gmail.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: add Starry KR122EA0SRA panel binding
+Date: Fri, 10 Jun 2016 18:03:14 -0400
+Message-ID: <CAF6AEGsZxZuSVUCqVH=8FUOTMiWBVT52xQ+Qcaqt3yF=pRmf3w@mail.gmail.com>
+References: <1465578127-30330-1-git-send-email-dianders@chromium.org>
+ <CAF6AEGuonEgNvJhfst+3aZPEOaeGwNnozcYwJq3_Z2S0-7ogSA@mail.gmail.com>
+ <CAD=FV=XunjDGJYY1+-GPC+hN=kNxLiWbrtZD0_BO1ywerSLhfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKw8dVp5y487fo6_mwZfeN6ww8HiYnsudnB8afBrv2oMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAD=FV=XunjDGJYY1+-GPC+hN=kNxLiWbrtZD0_BO1ywerSLhfQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/16 14:38, Rob Herring wrote:
-> On Fri, Jun 10, 2016 at 3:05 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> I had assumed that devicetree node names were case sensitive. But a recent
->> email thread asserted that they were not, which made me curious.
-> 
-> News to me. Got a pointer?
-> 
-> Rob
-> 
-
-http://lkml.iu.edu/hypermail/linux/kernel/1606.1/02457.html
-
-Subject: RE: [RESEND PATCH v2 1/2] device property: Add function to search
-for named child of device
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Date: Fri, 10 Jun 2016 09:58:39 +0000
-
-
-Snippet:
-
->
-> Why do you use strcasecmp() here?
-
-DT node names are case insensitive. The of.h header does provide a helper macro
-which is equivalent to this, but that macro is part of the '#ifdef CONFIG_OF'
-block. If I were to use it then it would cause non-DT builds to fail. I opted
-for strcasecmp() directly as I didn't think for just this one scenario it made
-sense to reorganise the of.h header with regards to the helper macros. Of course
-if there are other opinions on this then am happy to listen.
+T24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgMzo1MiBQTSwgRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNA
+Y2hyb21pdW0ub3JnPiB3cm90ZToKPiBSb2IsCj4KPiBPbiBGcmksIEp1biAxMCwgMjAxNiBhdCAx
+MTo0MyBBTSwgUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cm90ZToKPj4gT24gRnJp
+LCBKdW4gMTAsIDIwMTYgYXQgMTowMiBQTSwgRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hy
+b21pdW0ub3JnPiB3cm90ZToKPj4+IFRoZSBTdGFycnkgS1IxMjJFQTBTUkEgaXMgYSAxMi4yIiwg
+MTkyMHgxMjAwIFRGVC1MQ0QgcGFuZWwgY29ubmVjdGVkCj4+PiB1c2luZyBlRFAgaW50ZXJmYWNl
+cy4KPj4KPj4gc28gZHJpdmUtYnkgY29tbWVudC4uLiBidXQgc2hvdWxkbid0IGVEUCBiZSBwcm9i
+ZS1hYmxlPyAgTm90IHN1cmUgd2h5Cj4+IHdlIG5lZWQgcGFuZWwgZHJpdmVycyBvciBEVCBiaW5k
+aW5ncz8KPgo+IEkgd2FzIHdvbmRlcmluZyBhYm91dCB0aGF0IHRvby4gIEFzIGZhciBhcyBJIGNh
+biB0ZWxsOgo+Cj4gMS4gV2UgbmVlZCBhIHBhbmVsIGRyaXZlciBiZWNhdXNlIHRoYXQgYXBwZWFy
+cyB0byBiZSB3aGF0IG93bnMgYQo+IHJlZmVyZW5jZSB0byB0aGUgYmFja2xpZ2h0IC8gcGFuZWwg
+cG93ZXIgcmVndWxhdG9yIGFuZCB0aGF0IHBhcnQgaXMKPiBub3QgYXV0by1wcm9iYWJsZS4KCm9o
+LCBobW0uLiBzYWQuLiBJIHdhcyBob3BpbmcgdGhhdCBlRFAgd291bGQgc2F2ZSB1cyBmcm9tIGRz
+aSBwZXItcGFuZWwKZHJpdmVyIGhlbGwuLiBJIGd1ZXNzIGJlaW5nIGFibGUgdG8gdXNlIHBhbmVs
+LXNpbXBsZSBpcyBhdCBsZWFzdCBhbgppbXByb3ZlbWVudC4gIEJ1dCBwYW5lbCBzcGVjaWZpYyBz
+ZXF1ZW5jZXMgaXMgc291bmRzIGxpa2UgcGFuZWwtc2ltcGxlCndvbid0IHNhdmUgdXMgYWxsIHRo
+ZSB0aW1lIDotKAoKPiAyLiBBcyBmYXIgYXMgSSBjb3VsZCB0ZWxsLCB0aGVyZSBpcyBubyB3YXkg
+dG8gZGVjbGFyZSBhIGdlbmVyaWMKPiAodW5zcGVjaWZpZWQpIHBhbmVsIGluIHRoZSBkZXZpY2Ug
+dHJlZS4gIEV2ZXJ5b25lIHNlZW1zIHRvIGluY2x1ZGUKPiAic2ltcGxlLXBhbmVsIiBpbiB0aGVp
+ciBjb21wYXRpYmxlIHN0cmluZyBidXQgYXMgZmFyIGFzIEkgY2FuIHRlbGwKPiBub3RoaW5nIGlu
+IHRoZSBrZXJuZWwgbG9va3MgYXQgaXQuCj4KPiAzLiBJbiB0aGVvcnksIGFsbCB0aGUgaW5mbyBz
+cGVjaWZpZWQgaGVyZSBzaG91bGQgbWF0Y2ggdGhlIEVESUQKPiBleGFjdGx5IGFuZCB0aHVzIChh
+cyB5b3Ugc2FpZCkgYmUgcHJvYmFibGUuICBIb3dldmVyLCBpdCBzb3VuZHMgbGlrZQo+IChmb3Ig
+cG93ZXIgc2VxdWVuY2luZyByZWFzb25zKSB0aGVyZSBtaWdodCBiZSByZWFzb25zIHdoeSB5b3Un
+ZCB3YW50Cj4gdG8ga25vdyBleGFjdGx5IHdoYXQgcGFuZWwgd2FzIHByZXNlbnQgYmVmb3JlaGFu
+ZC4gIFlvdSBtaWdodCBuZWVkIHRvCj4gcG93ZXIgdGhlIHBhbmVsIGFuZCBiYWNrbGlnaHQgaW4g
+dmVyeSBzcGVjaWZpYyBzZXF1ZW5jZXMsIGZvcgo+IGluc3RhbmNlLiAgSSdtIG5vdCBzdXJlIGl0
+J3MgYWx3YXlzIDEwMCUgcG9zc2libGUgaW4gYWxsIGVtYmVkZGVkCj4gZGVzaWducyB0byByZWFk
+IHRoZSBFRElEIGJlZm9yZSB5b3Uga25vdyBob3cgdGhlIHNlcXVlbmNpbmcgc2hvdWxkCj4gd29y
+ayAoYnV0LCBvZiBjb3Vyc2UsIEknbSBhIE5PT0IpLgo+Cj4gNC4gUmVhZGluZyB0aGUgRURJRCBj
+YW4gYmUgc2xvdy4gIElmIHlvdSBoYXBwZW4gdG8ga25vdyBhbGwgdGhlIGluZm8KPiBvbiB0aGUg
+cGFuZWwgYmVmb3JlaGFuZCB5b3UgY2FuIHNpZ25pZmljYW50bHkgc3BlZWQgdXAgYm9vdCBzcGVl
+ZCwKPiBub3RhYmx5IGhvdyBmYXN0IHlvdSBjYW4gZ2V0IHNvbWV0aGluZyBvbiB0aGUgc2NyZWVu
+LgoKVGhlIHRoZW9yeSBpcyAoYWx0aG91Z2ggSSB0aGluayBub3QgdHJ1ZSBjdXJyZW50bHkgZm9y
+IG1vc3Qgb2YgdGhlIGFybQpkcml2ZXJzKSB0aGF0IHdlIHNob3VsZCBiZSByZWFkaW5nIGJhY2sg
+ZnJvbSBodyB0aGUgY3VycmVudCBjb25maWcKZnJvbSBib290bG9hZGVyIHNwbGFzaCBzY3JlZW4s
+IHRvIGF2b2lkIGEgbW9kZXNldCAoYW5kIGNvbnZlbmllbnRseQphbHNvIHRoZSBuZWVkIHRvIHJl
+YWQgZWRpZCkgYXQgYm9vdC4KCkJSLAotUgoKPgo+IEFueXdheSwgbWF5YmUgc29tZW9uZSBlbHNl
+IHdobyBhY3R1YWxseSBrbm93cyB3aGF0IHRoZXkncmUgdGFsa2luZwo+IGFib3V0IHdpbGwgY2hp
+bWUgaW4uICA7KQo+Cj4gLURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
