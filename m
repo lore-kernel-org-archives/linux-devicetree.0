@@ -1,250 +1,99 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH v4 1/1] leds: pca9532: Add device tree binding
-Date: Fri, 10 Jun 2016 17:01:10 +0800
-Message-ID: <1465549270-41601-2-git-send-email-preid@electromag.com.au>
-References: <1465549270-41601-1-git-send-email-preid@electromag.com.au>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1465549270-41601-1-git-send-email-preid@electromag.com.au>
-Sender: linux-leds-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, j.anaszewski@samsung.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
-Cc: Phil Reid <preid@electromag.com.au>
+From: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] iommu/rockchip: use DMA API to map, to flush cache
+Date: Fri, 10 Jun 2016 18:10:29 +0900
+Message-ID: <CAAFQd5Da+Eg=eiRUgLSS_qPjGbG474KYWDC=GaAMS8A_CuQ3Mg@mail.gmail.com>
+References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com> <1465392392-2003-7-git-send-email-zhengsq@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465392392-2003-7-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, =?UTF-8?B?5aea5pm65oOF?= <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, simon xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic device tree support for the pca9532 LEDs.
+Hi,
 
-Signed-off-by: Phil Reid <preid@electromag.com.au>
----
- .../devicetree/bindings/leds/leds-pca9532.txt      | 39 +++++++++++
- drivers/leds/leds-pca9532.c                        | 75 ++++++++++++++++++++--
- include/dt-bindings/leds/leds-pca9532.h            | 18 ++++++
- include/linux/leds-pca9532.h                       |  9 ++-
- 4 files changed, 132 insertions(+), 9 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
- create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+On Wed, Jun 8, 2016 at 10:26 PM, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Use DMA API instead of architecture internal functions like
+> __cpuc_flush_dcache_area() etc.
+>
+> To support the virtual device like DRM the virtual slave iommu
+> added in the previous patch, attaching to which the DRM can use
+> it own domain->dev for dma_map_*(), dma_sync_*() even VOP is disabled.
+>
+> With this patch, this driver is available for ARM64 like RK3399.
+>
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-new file mode 100644
-index 0000000..198f3ba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-@@ -0,0 +1,39 @@
-+*NXP - pca9532 PWM LED Driver
-+
-+The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
-+The PWM support 256 steps.
-+
-+Required properties:
-+	- compatible:
-+		"nxp,pca9530"
-+		"nxp,pca9531"
-+		"nxp,pca9532"
-+		"nxp,pca9533"
-+	- reg -  I2C slave address
-+
-+Each led is represented as a sub-node of the nxp,pca9530.
-+
-+Optional sub-node properties:
-+	- label: see Documentation/devicetree/bindings/leds/common.txt
-+	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
-+	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+  #include <dt-bindings/leds/leds-pca9532.h>
-+
-+  leds: pca9530@60 {
-+    compatible = "nxp,pca9530";
-+    reg = <0x60>;
-+
-+    red-power {
-+      label = "pca:red:power";
-+      type = <PCA9532_TYPE_LED>;
-+    };
-+    green-power {
-+      label = "pca:green:power";
-+      type = <PCA9532_TYPE_LED>;
-+    };
-+  };
-+
-+For more product information please see the link below:
-+http://nxp.com/documents/data_sheet/PCA9532.pdf
-diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-index e3d3b1a..502e88a 100644
---- a/drivers/leds/leds-pca9532.c
-+++ b/drivers/leds/leds-pca9532.c
-@@ -21,6 +21,8 @@
- #include <linux/workqueue.h>
- #include <linux/leds-pca9532.h>
- #include <linux/gpio.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- /* m =  num_leds*/
- #define PCA9532_REG_INPUT(i)	((i) >> 3)
-@@ -86,9 +88,22 @@ static const struct pca9532_chip_info pca9532_chip_info_tbl[] = {
- 	},
- };
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_pca9532_leds_match[] = {
-+	{ .compatible = "nxp,pca9530", .data = (void *)pca9530 },
-+	{ .compatible = "nxp,pca9531", .data = (void *)pca9531 },
-+	{ .compatible = "nxp,pca9532", .data = (void *)pca9532 },
-+	{ .compatible = "nxp,pca9533", .data = (void *)pca9533 },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_pca9532_leds_match);
-+#endif
-+
- static struct i2c_driver pca9532_driver = {
- 	.driver = {
- 		.name = "leds-pca953x",
-+		.of_match_table = of_match_ptr(of_pca9532_leds_match),
- 	},
- 	.probe = pca9532_probe,
- 	.remove = pca9532_remove,
-@@ -354,6 +369,7 @@ static int pca9532_configure(struct i2c_client *client,
- 			led->state = pled->state;
- 			led->name = pled->name;
- 			led->ldev.name = led->name;
-+			led->ldev.default_trigger = led->default_trigger;
- 			led->ldev.brightness = LED_OFF;
- 			led->ldev.brightness_set_blocking =
- 						pca9532_set_brightness;
-@@ -432,15 +448,66 @@ exit:
- 	return err;
- }
- 
-+struct pca9532_platform_data *pca9532_of_populate_pdata(struct device *dev,
-+						      struct device_node *np)
-+{
-+	struct pca9532_platform_data *pdata;
-+	struct device_node *child;
-+	const struct of_device_id *match;
-+	int devid, maxleds;
-+	int i = 0;
-+
-+	match = of_match_device(of_pca9532_leds_match, dev);
-+	if (!match)
-+		return ERR_PTR(-ENODEV);
-+
-+	devid = (int)match->data;
-+	maxleds = pca9532_chip_info_tbl[devid].num_leds;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for_each_child_of_node(np, child) {
-+		if (of_property_read_string(child, "label",
-+					    &pdata->leds[i].name))
-+			pdata->leds[i].name = child->name;
-+		of_property_read_u32(child, "type", &pdata->leds[i].type);
-+		of_property_read_string(child, "linux,default-trigger",
-+					&pdata->leds[i].default_trigger);
-+		if (++i >= maxleds) {
-+			of_node_put(child);
-+			break;
-+		}
-+	}
-+
-+	return pdata;
-+}
-+
- static int pca9532_probe(struct i2c_client *client,
- 	const struct i2c_device_id *id)
- {
-+	int devid;
- 	struct pca9532_data *data = i2c_get_clientdata(client);
- 	struct pca9532_platform_data *pca9532_pdata =
- 			dev_get_platdata(&client->dev);
--
--	if (!pca9532_pdata)
--		return -EIO;
-+	struct device_node *np = client->dev.of_node;
-+
-+	if (!pca9532_pdata) {
-+		if (np) {
-+			pca9532_pdata =
-+				pca9532_of_populate_pdata(&client->dev, np);
-+			if (IS_ERR(pca9532_pdata))
-+				return PTR_ERR(pca9532_pdata);
-+		} else {
-+			dev_err(&client->dev, "no platform data\n");
-+			return -EINVAL;
-+		}
-+		devid = (int)of_match_device(
-+			of_pca9532_leds_match, &client->dev)->data;
-+	} else {
-+		devid = id->driver_data;
-+	}
- 
- 	if (!i2c_check_functionality(client->adapter,
- 		I2C_FUNC_SMBUS_BYTE_DATA))
-@@ -450,7 +517,7 @@ static int pca9532_probe(struct i2c_client *client,
- 	if (!data)
- 		return -ENOMEM;
- 
--	data->chip_info = &pca9532_chip_info_tbl[id->driver_data];
-+	data->chip_info = &pca9532_chip_info_tbl[devid];
- 
- 	dev_info(&client->dev, "setting platform data\n");
- 	i2c_set_clientdata(client, data);
-diff --git a/include/dt-bindings/leds/leds-pca9532.h b/include/dt-bindings/leds/leds-pca9532.h
-new file mode 100644
-index 0000000..4d917aa
---- /dev/null
-+++ b/include/dt-bindings/leds/leds-pca9532.h
-@@ -0,0 +1,18 @@
-+/*
-+ * This header provides constants for pca9532 LED bindings.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#ifndef _DT_BINDINGS_LEDS_PCA9532_H
-+#define _DT_BINDINGS_LEDS_PCA9532_H
-+
-+#define PCA9532_TYPE_NONE         0
-+#define PCA9532_TYPE_LED          1
-+#define PCA9532_TYPE_N2100_BEEP   2
-+#define PCA9532_TYPE_GPIO         3
-+#define PCA9532_LED_TIMER2        4
-+
-+#endif /* _DT_BINDINGS_LEDS_PCA9532_H */
-diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
-index b8d6fff..d215b45 100644
---- a/include/linux/leds-pca9532.h
-+++ b/include/linux/leds-pca9532.h
-@@ -16,6 +16,7 @@
- 
- #include <linux/leds.h>
- #include <linux/workqueue.h>
-+#include <dt-bindings/leds/leds-pca9532.h>
- 
- enum pca9532_state {
- 	PCA9532_OFF  = 0x0,
-@@ -24,16 +25,14 @@ enum pca9532_state {
- 	PCA9532_PWM1 = 0x3
- };
- 
--enum pca9532_type { PCA9532_TYPE_NONE, PCA9532_TYPE_LED,
--	PCA9532_TYPE_N2100_BEEP, PCA9532_TYPE_GPIO };
--
- struct pca9532_led {
- 	u8 id;
- 	struct i2c_client *client;
--	char *name;
-+	const char *name;
-+	const char *default_trigger;
- 	struct led_classdev ldev;
- 	struct work_struct work;
--	enum pca9532_type type;
-+	u32 type;
- 	enum pca9532_state state;
- };
- 
--- 
-1.8.3.1
+Could we instead simply allocate coherent memory for page tables using
+dma_alloc_coherent() and skip any flushing on CPU side completely? If
+I'm looking correctly, the driver only reads back the page directory
+when checking if there is a need to allocate new page table, so there
+shouldn't be any significant penalty for disabling the cache.
+
+Other than that, please see some comments inline.
+
+> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  drivers/iommu/rockchip-iommu.c | 113 ++++++++++++++++++++++++++---------------
+>  1 file changed, 71 insertions(+), 42 deletions(-)
+>
+> diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+> index d6c3051..aafea6e 100644
+> --- a/drivers/iommu/rockchip-iommu.c
+> +++ b/drivers/iommu/rockchip-iommu.c
+> @@ -4,8 +4,6 @@
+>   * published by the Free Software Foundation.
+>   */
+>
+> -#include <asm/cacheflush.h>
+> -#include <asm/pgtable.h>
+>  #include <linux/compiler.h>
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+> @@ -61,8 +59,7 @@
+>  #define RK_MMU_IRQ_BUS_ERROR     0x02  /* bus read error */
+>  #define RK_MMU_IRQ_MASK          (RK_MMU_IRQ_PAGE_FAULT | RK_MMU_IRQ_BUS_ERROR)
+>
+> -#define NUM_DT_ENTRIES 1024
+> -#define NUM_PT_ENTRIES 1024
+> +#define NUM_TLB_ENTRIES 1024 /* for both DT and PT */
+
+Is it necessary to change this in this patch? In general, it's not a
+good idea to mix multiple logical changes together.
+
+>
+>  #define SPAGE_ORDER 12
+>  #define SPAGE_SIZE (1 << SPAGE_ORDER)
+> @@ -82,7 +79,9 @@
+>
+>  struct rk_iommu_domain {
+>         struct list_head iommus;
+> +       struct device *dev;
+>         u32 *dt; /* page directory table */
+> +       dma_addr_t dt_dma;
+>         spinlock_t iommus_lock; /* lock for iommus list */
+>         spinlock_t dt_lock; /* lock for modifying page directory table */
+>
+> @@ -98,14 +97,12 @@ struct rk_iommu {
+>         struct iommu_domain *domain; /* domain to which iommu is attached */
+>  };
+>
+> -static inline void rk_table_flush(u32 *va, unsigned int count)
+> +static inline void rk_table_flush(struct device *dev, dma_addr_t dma,
+> +                                 unsigned int count)
+>  {
+> -       phys_addr_t pa_start = virt_to_phys(va);
+> -       phys_addr_t pa_end = virt_to_phys(va + count);
+> -       size_t size = pa_end - pa_start;
+> +       size_t size = count * 4;
+
+It would be a good idea to specify what "count" is. I'm a bit confused
+that before it meant bytes and now some multiple of 4?
+
+Best regards,
+Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
