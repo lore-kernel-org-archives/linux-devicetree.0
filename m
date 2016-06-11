@@ -1,120 +1,121 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pci: add DT binding for Axis
- ARTPEC-6 PCIe controller
-Date: Sat, 11 Jun 2016 14:10:33 -0500
-Message-ID: <20160611191033.GL16462@localhost>
-References: <1462794507-30262-1-git-send-email-niklass@axis.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: case sensitivity for devicetree node names
+Date: Sat, 11 Jun 2016 12:38:09 -0700
+Message-ID: <575C68A1.1020701@gmail.com>
+References: <575B1D84.2010703@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1462794507-30262-1-git-send-email-niklass-VrBV9hrLPhE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Cc: niklass-VrBV9hrLPhE@public.gmane.org, jespern-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575B1D84.2010703-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 09, 2016 at 01:48:27PM +0200, Niklas Cassel wrote:
-> From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Hi Ben,
+
+(and adding other powerpc folks)
+
+On 06/10/16 13:05, Frank Rowand wrote:
+> I had assumed that devicetree node names were case sensitive. But a recent
+> email thread asserted that they were not, which made me curious.
 > 
-> This commit adds the Device Tree binding documentation that allows to
-> describe the PCIe controller found in the Axis ARTPEC-6 SoC.
+> dtc treats node names as case sensitive:
 > 
-> Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+> $ cat test_node_case_1.dts
+> 
+> /dts-v1/;
+> 
+> / {
+> 	node-x {
+> 		prop_a = < 1 >;
+> 	};
+> };
+> 
+> / {
+> 	node-X {
+> 		prop_a = < 2 >;
+> 	};
+> };
+> 
+> $ cat test_node_case_2.dts
+> 
+> /dts-v1/;
+> 
+> / {
+> 	node-x {
+> 		prop_a = < 1 >;
+> 	};
+> };
+> 
+> / {
+> 	node-x {
+> 		prop_a = < 2 >;
+> 	};
+> };
+> 
+> $ dtc -O dts test_node_case_1.dts
+> /dts-v1/;
+> 
+> / {
+> 
+> 	node-x {
+> 		prop_a = <0x1>;
+> 	};
+> 
+> 	node-X {
+> 		prop_a = <0x2>;
+> 	};
+> };
+> 
+> $ dtc -O dts test_node_case_2.dts
+> /dts-v1/;
+> 
+> / {
+> 
+> 	node-x {
+> 		prop_a = <0x2>;
+> 	};
+> };
+> 
+> 
+> But the Linux kernel source code defines of_node_cmp() as:
+> 
+>   include/linux/of.h:
+> 
+>   /* Default string compare functions, Allow arch asm/prom.h to override */
+>   #if !defined(of_compat_cmp)
+>   #define of_node_cmp(s1, s2) strcasecmp((s1), (s2))
+> 
+> arch/sparc/include/asm/prom.h uses strcmp() instead of strcasecmp().
+> 
+> Examples of using of_node_cmp() to check for a node name can be found,
+> for example, of_find_node_by_name().
+> 
+> Is case insensitivity for node names a bug in the Linux kernel, or desired
+> for some reason?
+> 
+> -Frank
+> 
 
-I applied both of these, with Rob's ack on the first, to
-pci/host-artpec for v4.8, thanks!
+I chased through the history and found a 2.6.0-test5 announcement
+which noted the patch from you which adds:
 
-I made the following minor edits; hopefully I didn't break anything:
+  of_find_node_by_path()
+  of_find_node_by_name()
+  of_find_node_by_type()
+  of_find_compatible_node()
 
-diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-index f91b916..330a45b 100644
---- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-@@ -1,11 +1,11 @@
- * Axis ARTPEC-6 PCIe interface
- 
--This PCIe host controller is based on the Synopsys Designware PCIe IP
-+This PCIe host controller is based on the Synopsys DesignWare PCIe IP
- and thus inherits all the common properties defined in designware-pcie.txt.
- 
- Required properties:
- - compatible: "axis,artpec6-pcie", "snps,dw-pcie"
--- reg: base addresses and lengths of the pcie controller (DBI),
-+- reg: base addresses and lengths of the PCIe controller (DBI),
- 	the phy controller, and configuration address space.
- - reg-names: Must include the following entries:
- 	- "dbi"
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index 1a2de8f..033d9ad 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -250,5 +250,8 @@ config PCIE_ARTPEC6
- 	depends on MACH_ARTPEC6
- 	select PCIE_DW
- 	select PCIEPORTBUS
-+	help
-+	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
-+	  SoCs.  This PCIe controller uses the DesignWare core.
- 
- endmenu
-diff --git a/drivers/pci/host/pcie-artpec6.c b/drivers/pci/host/pcie-artpec6.c
-index d53dbaf..19adc77 100644
---- a/drivers/pci/host/pcie-artpec6.c
-+++ b/drivers/pci/host/pcie-artpec6.c
-@@ -61,7 +61,7 @@ struct artpec6_pcie {
- #define PHY_STATUS			0x118
- #define PHY_COSPLLLOCK			(1 << 0)
- 
--#define ARTPEC6_CPU_TO_BUS_ADDR		0x0FFFFFFF
-+#define ARTPEC6_CPU_TO_BUS_ADDR		0x0fffffff
- 
- static int artpec6_pcie_establish_link(struct pcie_port *pp)
- {
-@@ -241,35 +241,26 @@ static int __init artpec6_pcie_probe(struct platform_device *pdev)
- 
- 	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
- 	pp->dbi_base = devm_ioremap_resource(&pdev->dev, dbi_base);
--	if (IS_ERR(pp->dbi_base)) {
--		ret = PTR_ERR(pp->dbi_base);
--		goto fail;
--	}
-+	if (IS_ERR(pp->dbi_base))
-+		return PTR_ERR(pp->dbi_base);
- 
- 	phy_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
- 	artpec6_pcie->phy_base = devm_ioremap_resource(&pdev->dev, phy_base);
--	if (IS_ERR(artpec6_pcie->phy_base)) {
--		ret = PTR_ERR(artpec6_pcie->phy_base);
--		goto fail;
--	}
-+	if (IS_ERR(artpec6_pcie->phy_base))
-+		return PTR_ERR(artpec6_pcie->phy_base);
- 
- 	artpec6_pcie->regmap =
- 		syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
- 						"axis,syscon-pcie");
--	if (IS_ERR(artpec6_pcie->regmap)) {
--		ret = PTR_ERR(artpec6_pcie->regmap);
--		goto fail;
--	}
-+	if (IS_ERR(artpec6_pcie->regmap))
-+		return PTR_ERR(artpec6_pcie->regmap);
- 
- 	ret = artpec6_add_pcie_port(pp, pdev);
- 	if (ret < 0)
--		goto fail;
-+		return ret;
- 
- 	platform_set_drvdata(pdev, artpec6_pcie);
- 	return 0;
--
--fail:
--	return ret;
- }
- 
- static const struct of_device_id artpec6_pcie_of_match[] = {
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(And the patch is commit 394edd852a14 in the git recreation
+of bitkeeper days, which is found at
+git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git)
+
+That version of the functions uses a case insensitive compare for
+devicetree node names.
+
+Do you remember why you chose to not use a case sensitive compare?
+
+Thanks,
+
+-Frank
