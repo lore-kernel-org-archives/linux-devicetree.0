@@ -1,71 +1,97 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: sun6i: Add pmic / regulator nodes to
- Mele A1000G quad dts
-Date: Sat, 11 Jun 2016 17:46:44 +0200
-Message-ID: <20160611154644.GF19854@lukather>
-References: <1465469898-8102-1-git-send-email-hdegoede@redhat.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] Devicetree fixes for 4.7
+Date: Sat, 11 Jun 2016 11:06:04 -0500
+Message-ID: <CAL_Jsq+yGBq6f6Xaq6p3gCzGXJUdrtuM2woiyeEsHSd4Jr+iRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ni93GHxFvA+th69W"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465469898-8102-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
---ni93GHxFvA+th69W
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please pull DT fixes for 4.7. Details below.
 
-On Thu, Jun 09, 2016 at 12:58:17PM +0200, Hans de Goede wrote:
-> Add pmic / regulator nodes to Mele A1000G quad dts.
->=20
-> Note both reg_usb1_vbus and reg_dldo4 need to be on for the hub attached
-> to usb1 to work, and we can list only one usb1_vbus-supply, so dldo4 is
-> marked as regulator-always-on.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v2:
-> -Add a bit to the commit msg explaining why dldo4 is marked regulator-alw=
-ays-on
+Rob
 
-We should really have that as a comment in the DT.
+The following changes since commit 1a695a905c18548062509178b98bc91e67510864:
 
-Thanks!
-Maxime
+  Linux 4.7-rc1 (2016-05-29 09:29:24 -0700)
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+are available in the git repository at:
 
---ni93GHxFvA+th69W
-Content-Type: application/pgp-signature; name="signature.asc"
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.7
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+for you to fetch changes up to 06dfeef88573cf032e5c27e37f80ff5237b3318a:
 
-iQIcBAEBAgAGBQJXXDJkAAoJEBx+YmzsjxAgMhgP/AiuUyoCerjYKJWZ1OI4PPPa
-MNh2Vh+w7AIQmGwo2iYSMA16qWz3l2RIunj3f+V2Ou6muXRohuHg4LwZWrfUUUEg
-+KB11uu2NT3MBr/nAFSHZrPLxWxqXm98ElLGbddELzxMXL3FKQRMuiMkIXc7dA5k
-Uf4PjcQjnzGcusgsr+bjH8CMvUpwj3u5EwQFAksHh4szmAb1TlXm3GpAscBidnnV
-2nxGqZHbmG3grXlCJuwIxcWuvDML5BTeoIloQ8RZP8k9kZ6q4Z62NGyX9GSXKmqR
-j1afwYctZ8o+7a9pt/4VhZ5e9aVL2Za0ooV7OSNguxoB5i9hc6+n8ASBp7/sMvx0
-kSZc9peYkldCyS8H7vt8466Ao56yz5jwhX3uz/+rL9V3mFVw8FCvOu33W2PMl2YD
-tZE+qsai693vIXZA90k8NWEdUNsAVCScW/50fOJFIbOGHxmwMw0ReBti0qsUkrTh
-mhpQ0OgB+tQZsxtQpeZPENvhFetG30OMbmUgL9wP3muGULsFyWalxpBCpyg3VJzT
-fr08+Y4OTlYX9oK7SnDZwU88gtnuVJoRHn3zU+dsg3reilKy9cgyPPKBdCpSvp07
-/GlDuVg2+tEG8KHGKtjog1Vl7RuYW1NO2VzMmppQ8LSm5416LN0UNLSzwjJiNil2
-8QvQryoQYulJucWaDuUE
-=PvfE
------END PGP SIGNATURE-----
+  drivers: of: add definition of
+early_init_dt_alloc_reserved_memory_arch (2016-06-09 14:38:22 -0500)
 
---ni93GHxFvA+th69W--
+----------------------------------------------------------------
+DeviceTree fixes for 4.7-rc:
+
+- Fix unflatten_dt_nodes when dad parameter is set.
+
+- Add vendor prefixes for TechNexion and UniWest
+
+- Documentation fix for Marvell BT
+
+- OF IRQ kerneldoc fixes
+
+- Restrict CMA alignment adjustments to non dma-coherent
+
+- Couple of warning fixes in reserved-memory code
+
+- DT maintainers updates
+
+----------------------------------------------------------------
+Ben Dooks (1):
+      drivers: of: add definition of early_init_dt_alloc_reserved_memory_arch
+
+Fabio Estevam (1):
+      dt-bindings: Add vendor prefix for TechNexion
+
+Gavin Shan (1):
+      drivers/of: Fix depth for sub-tree blob in unflatten_dt_nodes()
+
+Jaewon (1):
+      drivers: of: of_reserved_mem: fixup the CMA alignment not to
+affect dma-coherent
+
+Joshua Clayton (1):
+      of: add vendor prefix for UniWest
+
+Kuninori Morimoto (1):
+      of: add missing const for of_parse_phandle_with_args() in !CONFIG_OF
+
+Rob Herring (1):
+      MAINTAINERS: DeviceTree maintainer updates
+
+Robin Murphy (1):
+      drivers: of: Fix of_pci.h header guard
+
+Sergei Shtylyov (1):
+      of: irq: fix of_irq_get[_byname]() kernel-doc
+
+Stephen Rothwell (1):
+      of: silence warnings due to max() usage
+
+Wei-Ning Huang (1):
+      dt: bindings: fix documentation for MARVELL's bt-sd8xxx wireless device
+
+ .../devicetree/bindings/net/marvell-bt-sd8xxx.txt     |  8 ++++----
+ Documentation/devicetree/bindings/vendor-prefixes.txt |  2 ++
+ MAINTAINERS                                           |  7 ++-----
+ drivers/of/fdt.c                                      | 15 +++++++++++++--
+ drivers/of/irq.c                                      | 19 ++++++++++---------
+ drivers/of/of_reserved_mem.c                          | 11 +++++++++--
+ include/linux/of.h                                    |  2 +-
+ include/linux/of_pci.h                                |  2 +-
+ include/linux/of_reserved_mem.h                       |  7 +++++++
+ 9 files changed, 49 insertions(+), 24 deletions(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
