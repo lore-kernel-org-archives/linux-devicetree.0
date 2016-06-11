@@ -1,27 +1,35 @@
 From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 1/2] net: ethernet: ti: cpsw: remove rx_descs
- property
-Date: Fri, 10 Jun 2016 22:50:43 -0700 (PDT)
-Message-ID: <20160610.225043.1035032413161700163.davem@davemloft.net>
-References: <1465307976-12235-1-git-send-email-ivan.khoronzhuk@linaro.org>
-	<1465307976-12235-2-git-send-email-ivan.khoronzhuk@linaro.org>
+Subject: Re: [PATCH v5 0/7] Add MDIO bus multiplexer support for iProc SoCs
+Date: Fri, 10 Jun 2016 23:27:08 -0700 (PDT)
+Message-ID: <20160610.232708.520435980652214195.davem@davemloft.net>
+References: <1465536831-13023-1-git-send-email-pramod.kumar@broadcom.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1465307976-12235-2-git-send-email-ivan.khoronzhuk@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: ivan.khoronzhuk@linaro.org
-Cc: mugunthanvnm@ti.com, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465536831-13023-1-git-send-email-pramod.kumar@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: pramod.kumar@broadcom.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Date: Tue,  7 Jun 2016 16:59:35 +0300
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Date: Fri, 10 Jun 2016 11:03:44 +0530
 
->  	if (!cpsw_common_res_usage_state(priv)) {
-> +		int buf_num;
->  		struct cpsw_priv *priv_sl0 = cpsw_get_slave_priv(priv, 0);
->  
+> Broadcom iProc based SoCs use a MDIO bus multiplexer where child buses
+> could be internal as well external to SoCs. These buses could supports
+> MDIO transaction compatible to C-22/C-45.
+> 
+> Broadcom MDIO bus multiplexer is an integrated multiplexer where child bus
+> selection and mdio transaction logic lies inside multiplexer itself.
+> To accommodate this multiplexer in existing mux framework below changes
+> were required-
+> 
+> 1. Passed MDIO parent bus via mdio_mux_init to MDIO mux framework.
+> 
+> This patch set includes MDIO bus multiplexer driver along with above
+> framework change. It includes one external bus node having Ethernet PHY
+> attached and two internal bus node holding PCIe PHYs.
+ ...
 
-Please always order local variable declarations from longest to shortest
-line.
+Series applied, thanks.
