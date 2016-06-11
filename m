@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/6] ARM: dts: axp22x.dtsi: Add usb_power_supply node
-Date: Sat, 11 Jun 2016 15:53:02 +0200
-Message-ID: <1465653186-953-3-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 3/6] ARM: dts: axp22x.dtsi: Add reg_drivebus node
+Date: Sat, 11 Jun 2016 15:53:03 +0200
+Message-ID: <1465653186-953-4-git-send-email-hdegoede@redhat.com>
 References: <1465653186-953-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1465653186-953-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,8 +10,10 @@ To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripa
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a node describing the (optional) usbpower-supply of the
-axp221 / axp223 pmic.
+Add a node describing the drivebus regulator which is an (optional)
+part of the axp221/axp223 pmic. Since this regulator may not be
+available at all depending on the board, mark it as disabled by
+default.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
@@ -19,19 +21,21 @@ Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
  1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
-index 0cfec50..0401787 100644
+index 0401787..458b668 100644
 --- a/arch/arm/boot/dts/axp22x.dtsi
 +++ b/arch/arm/boot/dts/axp22x.dtsi
-@@ -142,4 +142,9 @@
+@@ -141,6 +141,11 @@
+ 			regulator-max-microvolt = <3000000>;
  			regulator-name = "rtc_ldo";
  		};
- 	};
 +
-+	usb_power_supply: usb_power_supply {
-+		compatible = "x-powers,axp221-usb-power-supply";
-+		status = "disabled";
-+	};
- };
++		reg_drivevbus: drivevbus {
++			regulator-name = "drivevbus";
++			status = "disabled";
++		};
+ 	};
+ 
+ 	usb_power_supply: usb_power_supply {
 -- 
 2.7.4
 
