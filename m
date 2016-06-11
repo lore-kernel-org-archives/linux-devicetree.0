@@ -1,78 +1,88 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: [PATCH v3 2/2] media: et8ek8: Add documentation
-Date: Sat, 11 Jun 2016 18:39:53 +0300
-Message-ID: <1465659593-16858-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
-References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: sakari.ailus@iki.fi
-Cc: sre@kernel.org, pali.rohar@gmail.com, pavel@ucw.cz, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun4i: The blue led on the Mele A1000 is a
+ power led
+Date: Sat, 11 Jun 2016 17:45:33 +0200
+Message-ID: <20160611154533.GE19854@lukather>
+References: <1465129393-22379-1-git-send-email-hdegoede@redhat.com>
+ <20160607212419.GE14179@lukather>
+ <0acb666e-3fa7-fb10-4c0d-1d7990f9eaa6@redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DqhR8hV3EnoxUkKN"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <0acb666e-3fa7-fb10-4c0d-1d7990f9eaa6-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings description
 
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
----
- .../bindings/media/i2c/toshiba,et8ek8.txt          | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+--DqhR8hV3EnoxUkKN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-new file mode 100644
-index 0000000..997d268
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-@@ -0,0 +1,50 @@
-+Toshiba et8ek8 5MP sensor
-+
-+Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
-+
-+More detailed documentation can be found in
-+Documentation/devicetree/bindings/media/video-interfaces.txt .
-+
-+
-+Mandatory properties
-+--------------------
-+
-+- compatible: "toshiba,et8ek8"
-+- reg: I2C address (0x3e, or an alternative address)
-+- vana-supply: Analogue voltage supply (VANA), 2.8 volts
-+- clocks: External clock to the sensor
-+- clock-frequency: Frequency of the external clock to the sensor
-+- reset-gpios: XSHUTDOWN GPIO
-+
-+
-+Endpoint node mandatory properties
-+----------------------------------
-+
-+- remote-endpoint: A phandle to the bus receiver's endpoint node.
-+
-+Endpoint node optional properties
-+----------------------------------
-+
-+- clock-lanes: <0>
-+- data-lanes: <1..n>
-+
-+Example
-+-------
-+
-+&i2c3 {
-+	clock-frequency = <400000>;
-+
-+	cam1: camera@3e {
-+		compatible = "toshiba,et8ek8";
-+		reg = <0x3e>;
-+		vana-supply = <&vaux4>;
-+		clocks = <&isp 0>;
-+		clock-frequency = <9600000>;
-+		reset-gpio = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* 102 */
-+		port {
-+			csi_cam1: endpoint {
-+				remote-endpoint = <&csi_out1>;
-+			};
-+		};
-+	};
-+};
--- 
-1.9.1
+On Wed, Jun 08, 2016 at 03:23:31PM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 07-06-16 23:24, Maxime Ripard wrote:
+> >On Sun, Jun 05, 2016 at 02:23:11PM +0200, Hans de Goede wrote:
+> >>The blue led on the Mele A1000 is wired to light up as soon as the board
+> >>has powered (it will be on while the gpio is still in input / floating
+> >>mode), also its location on the top-set box clearly signals "power led".
+> >>
+> >>Until now we've been treating this as a generic usr function led, which
+> >>means that when you plug power into the top-set box, the power-led ligh=
+ts
+> >>and then turns off as soon as the kernel loads, which looks wrong.
+> >
+> >I'm not sure I understand the relationship between usr vs pwr led and
+> >the fact that it's disabled.
+>=20
+> There is no relation, other then that pwr leds typically have
+> default-state =3D "on"; set whereas usr leds do not.
+>=20
+> >>This renames the led from a1000:blue:usr to a1000:blue:pwr and marks
+> >>it as default on, fixing this.
+> >
+> >however, the default on might. Is it just a confusing commit log, or
+> >am I overlooking something?
+>=20
+> Just a slightly confusing commit log.
+
+Ok, applied all three.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--DqhR8hV3EnoxUkKN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXXDIdAAoJEBx+YmzsjxAgmNUP/2OQbvxvxVakaE05SaYiP2vr
+gEX+38qPPqkfz5WrrQua8SAHI92H2ghoSwmX0KDSsUDiTSqvkvIOho9h2hz9Ad95
+IZuLl16A5bw/f4MrIA+e7M3K5MWKzRztDrvp8sfZNN6mXBDTff+1GwrrdKiKz9z1
+mFSws1eEOpHz3war4Y0P/AixWSL52IPuvQUcNHqrYtNe2r2wjOD9MVXpX+Elkacp
+JPUXuvmLsZYjc9NYxzQ3EiOxmonBpjMFJQhDD/qy4PHz7mMkPzSaZLnhDn9cit67
+MkmuY1ISvp6Yef1NmI5/GYFzHunc3IgAqp7Fzc7BgUYIWah411nGtasVGRN3idkb
+Y98t3PCQt4F4uO/LJ5vfxxgr4emGLR6wd/aI51Q5VA+goQi8Kf7120O1z75Zrc5e
+5zLpdoDLWWwAEX6HLfcIaPJ4F9A2et3Us3X5VW8znkvo+wcGR5Xt1i+/ioGFhvpK
+Ep780bBvUvOasreOEqbn/bC8Cgt5E+WPsrc1Ebsu8vxqhpl2rt+oIy+EO+FHuBlR
++KOW64f8wptYgimvhtfQPRmhvnghdXqbKYZQi5aFNp3H1k2yaiPcl6xZxDg5VB73
+IjA1hzwcXQpwG48HE9I4WYx9f5EhI5ZcHPB4+0K2IIEGt2i0wwSKBMF5LfwVtdCL
+x4zkFMUvxPzeIk53kWYf
+=KFKU
+-----END PGP SIGNATURE-----
+
+--DqhR8hV3EnoxUkKN--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
