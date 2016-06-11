@@ -1,29 +1,32 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/2] ARM: imx6: disable deeper idle states when FEC is
- active w/o HW workaround
-Date: Sat, 11 Jun 2016 17:04:38 +0800
-Message-ID: <20160611090438.GG20243@tiger>
-References: <1464971480-9203-1-git-send-email-l.stach@pengutronix.de>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: dts: mxs: fix dtc warnings
+Date: Sat, 11 Jun 2016 17:21:03 +0800
+Message-ID: <20160611092103.GI20243@tiger>
+References: <1465134490-13383-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1464971480-9203-1-git-send-email-l.stach@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fugang Duan <fugang.duan@nxp.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de
+In-Reply-To: <1465134490-13383-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2016 at 06:31:19PM +0200, Lucas Stach wrote:
-> The i.MX6 Q/DL has an erratum (ERR006687) that prevents the FEC from
-> waking the CPUs when they are in wait(unclocked) state. As the hardware
-> workaround isn't applicable to all boards, disable the deeper idle state
-> when the workaround isn't present and the FEC is in use.
+On Sun, Jun 05, 2016 at 01:48:10PM +0000, Stefan Wahren wrote:
+> This patch series fixes some dtc warnings for the mxs platform.
 > 
-> This allows to safely run a kernel with CPUidle enabled on all i.MX6
-> boards.
+> The first patch has been tested with real hardware. The others are
+> only compile tested.
 > 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Acked-by: David S. Miller <davem@davemloft.net> (for network changes)
+> Stefan Wahren (4):
+>   ARM: dts: mxs: add missing reg properties for GPIO banks
+>   ARM: dts: imx28-eukrea-mbmx28lc: add missing reg properties
+>   ARM: dts: imx28-cfa10049: fix dtc warning
+>   ARM: dts: imx28-tx28: fix dtc warning
 
-Applied both, thanks.
+Applied all, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
