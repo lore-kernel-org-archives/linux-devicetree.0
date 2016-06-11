@@ -1,57 +1,120 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] iio: ad5755: Add DT binding documentation
-Date: Sat, 11 Jun 2016 18:26:07 +0100
-Message-ID: <b55cee8b-2966-d14f-3943-4a848876b43f@kernel.org>
-References: <1457705561-12253-1-git-send-email-sean.nyekjaer@prevas.dk>
- <1457705561-12253-2-git-send-email-sean.nyekjaer@prevas.dk>
- <56E3E121.9030400@kernel.org> <56F94A21.6070804@kernel.org>
- <8a7b1dcb-205a-8801-737f-6aa1c39f6605@prevas.dk>
- <8e62350f-ec4c-cba4-fa46-95549a89e720@kernel.org>
- <574AF8EB.9060609@metafoo.de>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pci: add DT binding for Axis
+ ARTPEC-6 PCIe controller
+Date: Sat, 11 Jun 2016 14:10:33 -0500
+Message-ID: <20160611191033.GL16462@localhost>
+References: <1462794507-30262-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <574AF8EB.9060609-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1462794507-30262-1-git-send-email-niklass-VrBV9hrLPhE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Cc: niklass-VrBV9hrLPhE@public.gmane.org, jespern-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/05/16 15:12, Lars-Peter Clausen wrote:
-> On 05/29/2016 03:57 PM, Jonathan Cameron wrote:
->> On 09/05/16 09:16, Sean Nyekj=E6r wrote:
->>>
->>>
->>> On 2016-03-28 17:13, Jonathan Cameron wrote:
->>>> On 12/03/16 09:28, Jonathan Cameron wrote:
->>>>> On 11/03/16 14:12, Sean Nyekjaer wrote:
->>>>>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
->>>>> Looks much better to me.
->>>>>
->>>>> Looking for Acks from Lars and a device tree binding maintainer
->>>>> on this one though.
->>>>> (added CCs)
->>>> Lars?
->>> No response...
->>> Is there anything wrong with this?
->> Given we are early in cycle there is no real rush for this...
->>
->> Lars, let me know if you are going to a while getting to this / any =
-other
->> patches I want responses on from you.
->=20
-> I don't think this solution is the correct approach, but since I'm no=
-t able
-> to provide an alternative and everybody else is OK with it, I'm not g=
-oing to
-> block it either. So go ahead and apply it.
+On Mon, May 09, 2016 at 01:48:27PM +0200, Niklas Cassel wrote:
+> From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+> 
+> This commit adds the Device Tree binding documentation that allows to
+> describe the PCIe controller found in the Axis ARTPEC-6 SoC.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
 
-Hmm. I've applied this now.  Perhaps we will revisit in the future and
-eventually deprecate this binding in favour of something more generic.
+I applied both of these, with Rob's ack on the first, to
+pci/host-artpec for v4.8, thanks!
 
-Thanks for your hard work on this Sean. It certainly wasn't a case
-with obvious 'right' answers!
+I made the following minor edits; hopefully I didn't break anything:
 
-Jonathan
->=20
+diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+index f91b916..330a45b 100644
+--- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+@@ -1,11 +1,11 @@
+ * Axis ARTPEC-6 PCIe interface
+ 
+-This PCIe host controller is based on the Synopsys Designware PCIe IP
++This PCIe host controller is based on the Synopsys DesignWare PCIe IP
+ and thus inherits all the common properties defined in designware-pcie.txt.
+ 
+ Required properties:
+ - compatible: "axis,artpec6-pcie", "snps,dw-pcie"
+-- reg: base addresses and lengths of the pcie controller (DBI),
++- reg: base addresses and lengths of the PCIe controller (DBI),
+ 	the phy controller, and configuration address space.
+ - reg-names: Must include the following entries:
+ 	- "dbi"
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index 1a2de8f..033d9ad 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -250,5 +250,8 @@ config PCIE_ARTPEC6
+ 	depends on MACH_ARTPEC6
+ 	select PCIE_DW
+ 	select PCIEPORTBUS
++	help
++	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
++	  SoCs.  This PCIe controller uses the DesignWare core.
+ 
+ endmenu
+diff --git a/drivers/pci/host/pcie-artpec6.c b/drivers/pci/host/pcie-artpec6.c
+index d53dbaf..19adc77 100644
+--- a/drivers/pci/host/pcie-artpec6.c
++++ b/drivers/pci/host/pcie-artpec6.c
+@@ -61,7 +61,7 @@ struct artpec6_pcie {
+ #define PHY_STATUS			0x118
+ #define PHY_COSPLLLOCK			(1 << 0)
+ 
+-#define ARTPEC6_CPU_TO_BUS_ADDR		0x0FFFFFFF
++#define ARTPEC6_CPU_TO_BUS_ADDR		0x0fffffff
+ 
+ static int artpec6_pcie_establish_link(struct pcie_port *pp)
+ {
+@@ -241,35 +241,26 @@ static int __init artpec6_pcie_probe(struct platform_device *pdev)
+ 
+ 	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+ 	pp->dbi_base = devm_ioremap_resource(&pdev->dev, dbi_base);
+-	if (IS_ERR(pp->dbi_base)) {
+-		ret = PTR_ERR(pp->dbi_base);
+-		goto fail;
+-	}
++	if (IS_ERR(pp->dbi_base))
++		return PTR_ERR(pp->dbi_base);
+ 
+ 	phy_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+ 	artpec6_pcie->phy_base = devm_ioremap_resource(&pdev->dev, phy_base);
+-	if (IS_ERR(artpec6_pcie->phy_base)) {
+-		ret = PTR_ERR(artpec6_pcie->phy_base);
+-		goto fail;
+-	}
++	if (IS_ERR(artpec6_pcie->phy_base))
++		return PTR_ERR(artpec6_pcie->phy_base);
+ 
+ 	artpec6_pcie->regmap =
+ 		syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+ 						"axis,syscon-pcie");
+-	if (IS_ERR(artpec6_pcie->regmap)) {
+-		ret = PTR_ERR(artpec6_pcie->regmap);
+-		goto fail;
+-	}
++	if (IS_ERR(artpec6_pcie->regmap))
++		return PTR_ERR(artpec6_pcie->regmap);
+ 
+ 	ret = artpec6_add_pcie_port(pp, pdev);
+ 	if (ret < 0)
+-		goto fail;
++		return ret;
+ 
+ 	platform_set_drvdata(pdev, artpec6_pcie);
+ 	return 0;
+-
+-fail:
+-	return ret;
+ }
+ 
+ static const struct of_device_id artpec6_pcie_of_match[] = {
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
