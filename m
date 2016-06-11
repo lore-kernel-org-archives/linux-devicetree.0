@@ -1,180 +1,150 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] firmware: qcom: scm: Expose PAS command 10 as reset-controller
-Date: Fri, 10 Jun 2016 21:52:20 -0700
-Message-ID: <1465620740-24474-1-git-send-email-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3] Input: synaptics-rmi4: Support regulator supplies
+Date: Fri, 10 Jun 2016 22:25:22 -0700
+Message-ID: <1465622722-31714-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>, Christopher Heiny <cheiny-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PAS command 10 is used to assert and deassert the MSS reset via
-TrustZone, expose this as a reset-controller to follow the non-secure
-case where GCC exposes this control.
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Support the two supplies - vdd and vio - to make it possible to control
+power to the Synaptics chip.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/firmware/qcom,scm.txt      |  6 ++++
- drivers/firmware/qcom_scm-32.c                     | 13 +++++++++
- drivers/firmware/qcom_scm-64.c                     | 17 +++++++++++
- drivers/firmware/qcom_scm.c                        | 34 ++++++++++++++++++++++
- drivers/firmware/qcom_scm.h                        |  2 ++
- 5 files changed, 72 insertions(+)
+ .../devicetree/bindings/input/rmi4/rmi_i2c.txt     |  9 +++++
+ drivers/input/rmi4/rmi_i2c.c                       | 41 ++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-index 3b4436e56865..f1ae9d3871f5 100644
---- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-+++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-@@ -17,6 +17,11 @@ Required properties:
- - clock-names: Must contain "core" for the core clock, "iface" for the interface
-   clock and "bus" for the bus clock per the requirements of the compatible.
+diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+index 95fa715c6046..ec908b91fd90 100644
+--- a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
++++ b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+@@ -22,6 +22,15 @@ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ - syna,reset-delay-ms: The number of milliseconds to wait after resetting the
+ 			device.
  
-+Optional properties:
-+- #reset-cells: must be 1, if specified. Specifies that the scm implements a
-+  reset controller exposing the modem subsystem reset as a single reset, at
-+  index 0.
++- syna,startup-delay-ms: The number of milliseconds to wait after powering on
++			 the device.
 +
- Example for MSM8916:
- 
- 	firmware {
-@@ -24,5 +29,6 @@ Example for MSM8916:
- 			compatible = "qcom,scm";
- 			clocks = <&gcc GCC_CRYPTO_CLK> , <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
- 			clock-names = "core", "bus", "iface";
-+			#reset-cells = <1>;
- 		};
- 	};
-diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index 5e00aa400c4a..41d56013f6fc 100644
---- a/drivers/firmware/qcom_scm-32.c
-+++ b/drivers/firmware/qcom_scm-32.c
-@@ -513,3 +513,16 @@ int __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral)
- 
- 	return ret ? : le32_to_cpu(out);
- }
++- vdd-supply: VDD power supply.
++See ../regulator/regulator.txt
 +
-+int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
-+{
-+	__le32 out;
-+	__le32 in = cpu_to_le32(reset);
-+	int ret;
++- vio-supply: VIO power supply
++See ../regulator/regulator.txt
 +
-+	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET,
-+			&in, sizeof(in),
-+			&out, sizeof(out));
-+
-+	return ret ? : le32_to_cpu(out);
-+}
-diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-index 496badd49fe8..e720100f2cb1 100644
---- a/drivers/firmware/qcom_scm-64.c
-+++ b/drivers/firmware/qcom_scm-64.c
-@@ -342,3 +342,20 @@ int __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral)
- 
- 	return ret ? : scm_ret;
- }
-+
-+int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
-+{
-+	struct qcom_scm_desc desc = {0};
-+	u32 scm_ret;
-+	int ret;
-+
-+	desc.args[0] = reset;
-+	desc.args[1] = 0;
-+	desc.arginfo = QCOM_SCM_ARGS(2);
-+
-+	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET,
-+			    &desc);
-+	scm_ret = desc.res.a1;
-+
-+	return ret ? : scm_ret;
-+}
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 79bb0b00577e..b0119535c0fb 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -21,6 +21,7 @@
+ Function Parameters:
+ Parameters specific to RMI functions are contained in child nodes of the rmi device
+  node. Documentation for the parameters of each function can be found in:
+diff --git a/drivers/input/rmi4/rmi_i2c.c b/drivers/input/rmi4/rmi_i2c.c
+index a96a326b53bd..71dc6cdde8ac 100644
+--- a/drivers/input/rmi4/rmi_i2c.c
++++ b/drivers/input/rmi4/rmi_i2c.c
+@@ -11,6 +11,8 @@
+ #include <linux/rmi.h>
+ #include <linux/irq.h>
  #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/clk.h>
-+#include <linux/reset-controller.h>
++#include <linux/delay.h>
++#include <linux/regulator/consumer.h>
+ #include "rmi_driver.h"
  
- #include "qcom_scm.h"
+ #define BUFFER_SIZE_INCREMENT 32
+@@ -37,6 +39,9 @@ struct rmi_i2c_xport {
  
-@@ -29,6 +30,7 @@ struct qcom_scm {
- 	struct clk *core_clk;
- 	struct clk *iface_clk;
- 	struct clk *bus_clk;
-+	struct reset_controller_dev reset;
+ 	u8 *tx_buf;
+ 	size_t tx_buf_size;
++
++	struct regulator_bulk_data supplies[2];
++	u32 startup_delay;
  };
  
- static struct qcom_scm *__scm;
-@@ -283,6 +285,33 @@ int qcom_scm_pas_shutdown(u32 peripheral)
- }
- EXPORT_SYMBOL(qcom_scm_pas_shutdown);
- 
-+static int qcom_scm_pas_reset_assert(struct reset_controller_dev *rcdev,
-+				     unsigned long idx)
-+{
-+	struct qcom_scm *scm = container_of(rcdev, struct qcom_scm, reset);
-+
-+	if (idx != 0)
-+		return -EINVAL;
-+
-+	return __qcom_scm_pas_mss_reset(scm->dev, 1);
-+}
-+
-+static int qcom_scm_pas_reset_deassert(struct reset_controller_dev *rcdev,
-+				       unsigned long idx)
-+{
-+	struct qcom_scm *scm = container_of(rcdev, struct qcom_scm, reset);
-+
-+	if (idx != 0)
-+		return -EINVAL;
-+
-+	return __qcom_scm_pas_mss_reset(scm->dev, 0);
-+}
-+
-+static struct reset_control_ops qcom_scm_pas_reset_ops = {
-+	.assert = qcom_scm_pas_reset_assert,
-+	.deassert = qcom_scm_pas_reset_deassert,
-+};
-+
- static int qcom_scm_probe(struct platform_device *pdev)
- {
- 	struct qcom_scm *scm;
-@@ -317,6 +346,11 @@ static int qcom_scm_probe(struct platform_device *pdev)
- 		}
+ #define RMI_PAGE_SELECT_REGISTER 0xff
+@@ -246,6 +251,24 @@ static int rmi_i2c_probe(struct i2c_client *client,
+ 		return -ENODEV;
  	}
  
-+	scm->reset.ops = &qcom_scm_pas_reset_ops;
-+	scm->reset.nr_resets = 1;
-+	scm->reset.of_node = pdev->dev.of_node;
-+	reset_controller_register(&scm->reset);
++	rmi_i2c->supplies[0].supply = "vdd";
++	rmi_i2c->supplies[1].supply = "vio";
++	retval = devm_regulator_bulk_get(&client->dev,
++					 ARRAY_SIZE(rmi_i2c->supplies),
++					 rmi_i2c->supplies);
++	if (retval < 0)
++		return retval;
 +
- 	/* vote for max clk rate for highest performance */
- 	ret = clk_set_rate(scm->core_clk, INT_MAX);
- 	if (ret)
-diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-index 1a16ff925d6d..3584b00fe7e6 100644
---- a/drivers/firmware/qcom_scm.h
-+++ b/drivers/firmware/qcom_scm.h
-@@ -46,6 +46,7 @@ extern void __qcom_scm_init(void);
- #define QCOM_SCM_PAS_AUTH_AND_RESET_CMD	0x5
- #define QCOM_SCM_PAS_SHUTDOWN_CMD	0x6
- #define QCOM_SCM_PAS_IS_SUPPORTED_CMD	0x7
-+#define QCOM_SCM_PAS_MSS_RESET		0xa
- extern bool __qcom_scm_pas_supported(struct device *dev, u32 peripheral);
- extern int  __qcom_scm_pas_init_image(struct device *dev, u32 peripheral,
- 		dma_addr_t metadata_phys);
-@@ -53,6 +54,7 @@ extern int  __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
- 		phys_addr_t addr, phys_addr_t size);
- extern int  __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral);
- extern int  __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral);
-+extern int  __qcom_scm_pas_mss_reset(struct device *dev, bool reset);
++	retval = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
++				       rmi_i2c->supplies);
++	if (retval < 0)
++		return retval;
++
++	of_property_read_u32(client->dev.of_node, "syna,startup-delay-ms",
++			     &rmi_i2c->startup_delay);
++
++	msleep(rmi_i2c->startup_delay);
++
+ 	rmi_i2c->client = client;
+ 	mutex_init(&rmi_i2c->page_mutex);
  
- /* common error codes */
- #define QCOM_SCM_V2_EBUSY	-12
+@@ -286,6 +309,7 @@ static int rmi_i2c_remove(struct i2c_client *client)
+ 	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+ 
+ 	rmi_unregister_transport_device(&rmi_i2c->xport);
++	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+ 
+ 	return 0;
+ }
+@@ -308,6 +332,9 @@ static int rmi_i2c_suspend(struct device *dev)
+ 			dev_warn(dev, "Failed to enable irq for wake: %d\n",
+ 				ret);
+ 	}
++
++	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
++
+ 	return ret;
+ }
+ 
+@@ -317,6 +344,12 @@ static int rmi_i2c_resume(struct device *dev)
+ 	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+ 	int ret;
+ 
++	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
++	if (ret)
++		return ret;
++
++	msleep(rmi_i2c->startup_delay);
++
+ 	enable_irq(rmi_i2c->irq);
+ 	if (device_may_wakeup(&client->dev)) {
+ 		ret = disable_irq_wake(rmi_i2c->irq);
+@@ -346,6 +379,8 @@ static int rmi_i2c_runtime_suspend(struct device *dev)
+ 
+ 	disable_irq(rmi_i2c->irq);
+ 
++	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
++
+ 	return 0;
+ }
+ 
+@@ -355,6 +390,12 @@ static int rmi_i2c_runtime_resume(struct device *dev)
+ 	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+ 	int ret;
+ 
++	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
++	if (ret)
++		return ret;
++
++	msleep(rmi_i2c->startup_delay);
++
+ 	enable_irq(rmi_i2c->irq);
+ 
+ 	ret = rmi_driver_resume(rmi_i2c->xport.rmi_dev);
 -- 
 2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
