@@ -1,29 +1,38 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] ARM: dts: imx6q-cm-fx6: remove iomuxc container
- node
-Date: Sat, 11 Jun 2016 17:34:39 +0800
-Message-ID: <20160611093439.GJ20243@tiger>
-References: <3b1f9cd8f7804e7da7e093b4661441d4@rwthex-s1-b.rwth-ad.de>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: Re: [PATCH v2 1/2] net: ethernet: ti: cpsw: remove rx_descs property
+Date: Sat, 11 Jun 2016 13:11:29 +0300
+Message-ID: <575BE3D1.5000507@linaro.org>
+References: <1465307976-12235-1-git-send-email-ivan.khoronzhuk@linaro.org>
+ <1465307976-12235-2-git-send-email-ivan.khoronzhuk@linaro.org>
+ <20160610.225043.1035032413161700163.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3b1f9cd8f7804e7da7e093b4661441d4-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160610.225043.1035032413161700163.davem@davemloft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: mugunthanvnm@ti.com, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 07:14:15PM +0200, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
-> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> 
-> The imx6q-cm-fx6 iomuxc container node is not required. Remove it.
-> 
-> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 11.06.16 08:50, David Miller wrote:
+> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> Date: Tue,  7 Jun 2016 16:59:35 +0300
+>
+>>   	if (!cpsw_common_res_usage_state(priv)) {
+>> +		int buf_num;
+>>   		struct cpsw_priv *priv_sl0 = cpsw_get_slave_priv(priv, 0);
+>>
+>
+> Please always order local variable declarations from longest to shortest
+> line.
+>
+I will correct it in v3
+
+
+
+-- 
+Regards,
+Ivan Khoronzhuk
