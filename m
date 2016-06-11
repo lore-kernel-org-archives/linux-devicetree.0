@@ -1,65 +1,44 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: Add dts file for Polaroid MID2407PXE03
- tablet
-Date: Sat, 11 Jun 2016 16:30:30 +0200
-Message-ID: <20160611143030.GC19854@lukather>
-References: <1465653230-1027-1-git-send-email-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1ccMZA6j1vT5UqiK"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465653230-1027-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Subject: [PATCH v3 0/2] media: add et8ek8 camera sensor driver and documentation
+Date: Sat, 11 Jun 2016 18:39:51 +0300
+Message-ID: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sakari.ailus@iki.fi
+Cc: sre@kernel.org, pali.rohar@gmail.com, pavel@ucw.cz, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+This series adds driver for Toshiba et8ek8 camera sensor found in Nokia N900
 
---1ccMZA6j1vT5UqiK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes from v2:
 
-On Sat, Jun 11, 2016 at 03:53:50PM +0200, Hans de Goede wrote:
-> The Polaroid MID2407PXE03 is an a23 based 7" tablet based on a M86_MB V2.0
-> PCB, featuring a 800x480 LCD, 512MB RAM, 4G NAND, esp8089 wifi, gsl1680
-> touchschreen, micro-sd slot, 3.5mm headphone jack and a micro-usb otg
-> connector which doubles as charging port.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+ - fix build when CONFIG_PM is not defined
 
-Applied, thanks!
-Maxime
+Changes from v1:
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+ - driver and documentation split into separate patches
+ - removed custom controls
+ - code changed according to the comments on v1
 
---1ccMZA6j1vT5UqiK
-Content-Type: application/pgp-signature; name="signature.asc"
+Ivaylo Dimitrov (2):
+  media: Driver for Toshiba et8ek8 5MP sensor
+  media: et8ek8: Add documentation
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+ .../bindings/media/i2c/toshiba,et8ek8.txt          |   50 +
+ drivers/media/i2c/Kconfig                          |    1 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/et8ek8/Kconfig                   |    6 +
+ drivers/media/i2c/et8ek8/Makefile                  |    2 +
+ drivers/media/i2c/et8ek8/et8ek8_driver.c           | 1593 ++++++++++++++++++++
+ drivers/media/i2c/et8ek8/et8ek8_mode.c             |  590 ++++++++
+ drivers/media/i2c/et8ek8/et8ek8_reg.h              |   96 ++
+ 8 files changed, 2339 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+ create mode 100644 drivers/media/i2c/et8ek8/Kconfig
+ create mode 100644 drivers/media/i2c/et8ek8/Makefile
+ create mode 100644 drivers/media/i2c/et8ek8/et8ek8_driver.c
+ create mode 100644 drivers/media/i2c/et8ek8/et8ek8_mode.c
+ create mode 100644 drivers/media/i2c/et8ek8/et8ek8_reg.h
 
-iQIcBAEBAgAGBQJXXCCGAAoJEBx+YmzsjxAg4fAQAJcQYmBWCSVxjwCLAgSjcnuh
-hxdmsoLczCjCXxSgnjihz15wyxGRMIozOMJBvfHiSqECDjM/m8BEerBoZNFbGifm
-0/+UbMmUgnKVTddZIQhQAQKsLDHnB+sd25soIBISt8Y3BMAwo0Qvk8CPAPyorirx
-n//3Z8HCEYXT2ruVXSsSAUdq7nJJU0gUmIZBAC6NrJ/iOmlZkXBHm+YtFwvp1y7w
-77jJzlPT/OHSvZvggk0MleaAxMlqblBD6OAcG820iR/mbWFFxVGAn3+olOoaYWFo
-yuN1u+VU14kkRc3RBdFneFz1MKlinmjvvjBk5p0+U07pcOUkN+wmDu7i8YrWsEIz
-6XSLSq51OyqIlEZMyQjBiCVwo/uB7vYKTmt5gZUMRbVt0UJ4vyETPi1ezzGVVoXe
-+0cmkhg5/VFIvguobwB9SjrxJw/Oe8sIFZvZYznKoL6TAsaefrRSlkUtZ+xEsLG4
-06yLGySTIc7mYglPOvYIRltDG2WsLZR3NuNx7TMw2qs5m0sszhOJ+nlsDLrsGyJz
-+RVi8r4fBVA7Gv1ofvq+XD7oBCQJRzjNz2AE6zZJEiPIC0F5GSujX5tNz0Ra42IV
-RF6anv5iKhtmKEN0OqPsgBFyT8vG9HAGx7GMg0uElj4jwqXr+8x4bRZ54LIz5+94
-/xPd5qgTzc+WJ+ZWG14H
-=kApP
------END PGP SIGNATURE-----
-
---1ccMZA6j1vT5UqiK--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
