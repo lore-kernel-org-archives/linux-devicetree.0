@@ -1,35 +1,35 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v5 0/7] Add MDIO bus multiplexer support for iProc SoCs
-Date: Fri, 10 Jun 2016 23:27:08 -0700 (PDT)
-Message-ID: <20160610.232708.520435980652214195.davem@davemloft.net>
-References: <1465536831-13023-1-git-send-email-pramod.kumar@broadcom.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: Use generic uart-has-rtscts DT property
+Date: Sat, 11 Jun 2016 14:48:26 +0800
+Message-ID: <20160611064826.GC20243@tiger>
+References: <1464705112-21609-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465536831-13023-1-git-send-email-pramod.kumar@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: pramod.kumar@broadcom.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1464705112-21609-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Date: Fri, 10 Jun 2016 11:03:44 +0530
+On Tue, May 31, 2016 at 04:31:49PM +0200, Geert Uytterhoeven wrote:
+> 	Hi Shawn, Sascha, Barry,
+> 
+> As of v4.7-rc1, the Freescale MXS AUART and IMX UART drivers, and the
+> SiRF UART driver, recognize the generic "uart-has-rtscts" DT property,
+> deprecating the vendor-specific "<vendor>,uart-has-rtscts" DT
+> properties.  This series updates all DTS files to replace the latter by
+> the former.
+> 
+> Thanks for applying!
+> 
+> Geert Uytterhoeven (3):
+>   ARM: dts: imx28: Use generic uart-has-rtscts DT property
+>   ARM: dts: imx: Use generic uart-has-rtscts DT property
 
-> Broadcom iProc based SoCs use a MDIO bus multiplexer where child buses
-> could be internal as well external to SoCs. These buses could supports
-> MDIO transaction compatible to C-22/C-45.
-> 
-> Broadcom MDIO bus multiplexer is an integrated multiplexer where child bus
-> selection and mdio transaction logic lies inside multiplexer itself.
-> To accommodate this multiplexer in existing mux framework below changes
-> were required-
-> 
-> 1. Passed MDIO parent bus via mdio_mux_init to MDIO mux framework.
-> 
-> This patch set includes MDIO bus multiplexer driver along with above
-> framework change. It includes one external bus node having Ethernet PHY
-> attached and two internal bus node holding PCIe PHYs.
- ...
-
-Series applied, thanks.
+Applied these two, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
