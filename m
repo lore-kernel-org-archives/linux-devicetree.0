@@ -1,138 +1,73 @@
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v2 17/17] sh: landisk CPLD interrupt controller driver
-Date: Sun, 12 Jun 2016 16:44:14 +0900
-Message-ID: <1465717454-7606-1-git-send-email-ysato@users.sourceforge.jp>
-References: <1465714475-24111-18-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1465714475-24111-18-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] userspace API definitions for auto-focus coil
+Date: Sun, 12 Jun 2016 09:54:17 +0200
+Message-ID: <20160612075416.GA1160@amd>
+References: <20160531212222.GP26360@valkosipuli.retiisi.org.uk>
+ <20160531213437.GA28397@amd>
+ <20160601152439.GQ26360@valkosipuli.retiisi.org.uk>
+ <20160601220840.GA21946@amd>
+ <20160602074544.GR26360@valkosipuli.retiisi.org.uk>
+ <20160602193027.GB7984@amd>
+ <20160602212746.GT26360@valkosipuli.retiisi.org.uk>
+ <20160605190716.GA11321@amd>
+ <575512E5.5030000@gmail.com>
+ <20160611220654.GC26360@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160611220654.GC26360@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, patrikbachan@gmail.com, serge@hallyn.com, linux-media@vger.kernel.org, mchehab@osg.samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry. I send old patches.
-Please ignore previous files.
+Hi!
 
-Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
----
- .../interrupt-controller/iodata-landisk.txt        | 28 +++++++++
- drivers/irqchip/irq-io-landisk.c                   | 72 ++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
- create mode 100644 drivers/irqchip/irq-io-landisk.c
+> > >@@ -974,4 +975,9 @@ enum v4l2_detect_md_mode {
+> > >  #define V4L2_CID_DETECT_MD_THRESHOLD_GRID	(V4L2_CID_DETECT_CLASS_BASE + 3)
+> > >  #define V4L2_CID_DETECT_MD_REGION_GRID		(V4L2_CID_DETECT_CLASS_BASE + 4)
+> > >
+> > >+/* Control IDs specific to the AD5820 driver as defined by V4L2 */
+> > >+#define V4L2_CID_FOCUS_AD5820_BASE 	(V4L2_CTRL_CLASS_CAMERA | 0x10af)
+> 
+> Please check V4L2_CID_USER_*_BASE. That's how custom controls are handled
+> nowadays.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
-new file mode 100644
-index 0000000..d398538
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
-@@ -0,0 +1,28 @@
-+DT bindings for the I/O DATA HDL-U interrupt controller
-+
-+Required properties:
-+
-+  - compatible: has to be "iodata,landisk-intc".
-+
-+  - reg: Base address and length of interrupt controller register.
-+
-+  - interrupt-controller: Identifies the node as an interrupt controller.
-+
-+  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined
-+    in interrupts.txt in this directory.
-+
-+  - interrupt-map: Interrupt mapping on parent controller.
-+
-+Example
-+-------
-+
-+	cpldintc: cpld@b0000000 {
-+		compatible = "iodata,landisk-intc";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0xb0000000 8>;
-+		interrupt-map=<0 &shintc 0 0>, <1 &shintc 1 0>,
-+		              <2 &shintc 2 0>, <3 &shintc 3 0>,
-+		              <4 &shintc 4 0>, <5 &shintc 5 0>,
-+		              <6 &shintc 6 0>, <7 &shintc 7 0>;
-+	};
-diff --git a/drivers/irqchip/irq-io-landisk.c b/drivers/irqchip/irq-io-landisk.c
-new file mode 100644
-index 0000000..7db20d6
---- /dev/null
-+++ b/drivers/irqchip/irq-io-landisk.c
-@@ -0,0 +1,72 @@
-+/*
-+ * IO-DATA LANDISK CPLD IRQ driver
-+ *
-+ * Copyright 2016 Yoshinori Sato <ysato@users.sourceforge.jp>
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
-+
-+static void landisk_mask_irq(struct irq_data *data)
-+{
-+	u8 mask = __raw_readb(data->chip_data + 5);
-+
-+	mask &= !(1 << (data->irq - 5));
-+	__raw_writeb(mask, data->chip_data + 5);
-+}
-+
-+static void landisk_unmask_irq(struct irq_data *data)
-+{
-+	u8 mask = __raw_readb(data->chip_data + 5);
-+
-+	mask |= (1 << (data->irq - 5));
-+	__raw_writeb(mask, data->chip_data + 5);
-+}
-+
-+static struct irq_chip cpld_irq_chip = {
-+	.name		= "LANDISK-CPLD",
-+	.irq_unmask	= landisk_unmask_irq,
-+	.irq_mask	= landisk_mask_irq,
-+};
-+
-+static int cpld_map(struct irq_domain *d, unsigned int virq,
-+		    irq_hw_number_t hw_irq_num)
-+{
-+	irq_set_chip_and_handler(virq, &cpld_irq_chip,
-+				 handle_simple_irq);
-+	irq_set_chip_data(virq, d->host_data);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops irq_ops = {
-+	.xlate	= irq_domain_xlate_twocell,
-+	.map	= cpld_map,
-+};
-+
-+static int __init landisk_intc_of_init(struct device_node *intc,
-+				    struct device_node *parent)
-+{
-+	struct irq_domain *domain, *pdomain;
-+	int num_irqpin;
-+	void *baseaddr;
-+
-+	baseaddr = of_iomap(intc, 0);
-+	pdomain = irq_find_host(parent);
-+	of_get_property(intc, "interrupt-map", &num_irqpin);
-+	num_irqpin /= sizeof(u32) * 3;
-+	domain = irq_domain_create_hierarchy(pdomain, 0, num_irqpin,
-+					     of_node_to_fwnode(intc),
-+					     &irq_ops, baseaddr);
-+	if (!domain)
-+		panic("%s: unable to create IRQ domain\n", intc->full_name);
-+	irq_domain_associate_many(domain, 0, 0, 8);
-+	return 0;
-+}
-+
-+IRQCHIP_DECLARE(cpld_intc, "iodata,landisk-intc", landisk_intc_of_init);
+Let me see...
+
+> Now that I think about this, the original implementation in N900 very likely
+> did not use either of the two controls; the device driver was still written
+> to provide access to full capabilities of the chip. And that one had no
+> continuous AF.
+
+I'm not sure about the original implementation, but fcam-dev library
+(which is our best chance for usable camera) does use both:
+
+pavel@duo:~/g/fcam-dev$ grep -ri RAMP_TIME .
+./.svn/pristine/05/0574680922f59e07bd49e16a951d69421690a323.svn-base:
+int val = ioctlSet(V4L2_CID_FOCUS_AD5820_RAMP_TIME,
+1000000.0f/diopterRateToTickRate(speed));
+./src/N900/Lens.cpp:    int val =
+ioctlSet(V4L2_CID_FOCUS_AD5820_RAMP_TIME,
+1000000.0f/diopterRateToTickRate(speed));
+pavel@duo:~/g/fcam-dev$ grep -ri RAMP_MODE .
+./.svn/pristine/05/0574680922f59e07bd49e16a951d69421690a323.svn-base:
+ioctlSet(V4L2_CID_FOCUS_AD5820_RAMP_MODE, 0);
+./src/N900/Lens.cpp:    ioctlSet(V4L2_CID_FOCUS_AD5820_RAMP_MODE, 0);
+pavel@duo:~/g/fcam-dev$
+
+> I might as well drop the two controls, up to you. If someone ever needs them
+> they can always be reintroduced. I'd be happy to get a new patch, the
+> current driver patch does not compile (just tried) as the definitions of
+> these controls are missing.
+
+I'd prefer to keep the controls, as we have userspace using them. I
+got it to compile but have yet to get it to work (subdevs split, so it
+needs some modifications).
+
+Best regards,
+									Pavel
 -- 
-2.7.0
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
