@@ -1,75 +1,33 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v5 12/12] ARM: dts: blanche: add Ethernet support
-Date: Mon, 13 Jun 2016 00:17:11 +0300
-Message-ID: <1791778.Vq4vL64bUW@wasted.cogentembedded.com>
-References: <14666252.G84Ipxe6EL@wasted.cogentembedded.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: case sensitivity for devicetree node names
+Date: Mon, 13 Jun 2016 07:56:30 +1000
+Message-ID: <1465768590.3022.10.camel@kernel.crashing.org>
+References: <575B1D84.2010703@gmail.com> <575C68A1.1020701@gmail.com>
+ <1465682743.19533.18.camel@kernel.crashing.org>
+	 <575DAC69.5010804@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <14666252.G84Ipxe6EL@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575DAC69.5010804-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-R8A7792  SoC  doesn't have the EtherMAC core, so SMSC  LAN89218  Ethernet
-chip was used instead on the Blanche board; this chip  is compatible with
-SMSC LAN9115  for  which there's a (device tree aware) driver. Describe
-the  chip in  the  Blanche device tree;  enable DHCP and NFS root in the
-kernel command line for the kernel booting.
+On Sun, 2016-06-12 at 11:39 -0700, Frank Rowand wrote:
+>=20
+> Is there a kernel config option (or a small set of config options)
+> that would identify the affected machines?=C2=A0 It would be ok if
+> the option(s) also included some non-affected machines.=C2=A0 That
+> way we could use the case insensitive compare for a small
+> set of machines.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Why do we want this ? Are there people really wanting to rely on case
+difference between nodes ? That sounds fishy...
 
----
-Changes in version 3:
-- refreshed the patch.
+If you really want to do that, then CONFIG_PPC_PMAC would be your
+test I suppose.
 
-Changes in version 2:
-- added Simon's ACK.
-
- arch/arm/boot/dts/r8a7792-blanche.dts |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
-
-Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
-+++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-@@ -22,7 +22,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "ignore_loglevel";
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-@@ -30,6 +30,27 @@
- 		device_type = "memory";
- 		reg = <0 0x40000000 0 0x40000000>;
- 	};
-+
-+	d3_3v: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "D3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	ethernet@18000000 {
-+		compatible = "smsc,lan89218", "smsc,lan9115";
-+		reg = <0 0x18000000 0 0x100>;
-+		phy-mode = "mii";
-+		interrupt-parent = <&irqc>;
-+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+		smsc,irq-push-pull;
-+		reg-io-width = <4>;
-+		vddvario-supply = <&d3_3v>;
-+		vdd33a-supply = <&d3_3v>;
-+	};
- };
- 
- &extal_clk {
+Cheers,
+Ben.
