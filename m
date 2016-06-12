@@ -1,46 +1,43 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: utilite-pro: add mmc card slot support
-Date: Sun, 12 Jun 2016 16:10:06 +0200
-Message-ID: <acc71f8948b54994b692c805e8da5b46@rwthex-s1-b.rwth-ad.de>
-References: <20160612132046.1363-1-christopher.spinrath@rwth-aachen.de>
- <30f2c9e9b50d47d893218811f3223b3f@rwthex-s1-b.rwth-ad.de>
- <b6f3c46c5ae54abdab846effbed6c8fe@rwthex-s1-b.rwth-ad.de>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6q-cm-fx6: fix the operation points
+Date: Sun, 12 Jun 2016 11:36:59 -0300
+Message-ID: <CAOMZO5APbW8Hc_HCEyF=22T320KJ6K+E1AVpZPH4Rkzjqi-8rQ@mail.gmail.com>
+References: <6b48c849983548f29259b42d69c5224c@rwthex-s1-b.rwth-ad.de>
+ <650a7982db35484194a0be26863a89f9@rwthex-s1-a.rwth-ad.de> <2256c64f85d847d29c2c3e0f4e095d90@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b6f3c46c5ae54abdab846effbed6c8fe-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
+In-Reply-To: <2256c64f85d847d29c2c3e0f4e095d90-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+On Sun, Jun 12, 2016 at 11:05 AM, Christopher Spinrath
+<christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
 
-On 06/12/2016 03:45 PM, Fabio Estevam wrote:
-> On Sun, Jun 12, 2016 at 10:20 AM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
-> 
->> +&usdhc3 {
->> +       pinctrl-names = "default", "state_100mhz", "state_200mhz";
->> +       pinctrl-0 = <&pinctrl_usdhc3>;
->> +       pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
->> +       pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
->> +       no-1-8-v;
->> +       broken-cd;
-> 
-> A comment in the commit log as to why you use the 'broken-cd' property
-> would be helpful.
-> 
-There are no card detection pins (until board revision 1.3; which seems
-to be fairly new) and adding "broken-cd" was the only way to get card
-detection working on my board. I will add this information to the commit
-log.
+> Well, without this patch the SoC runs at 1.2GHz so it seems like the
+> fuse indicates that it is possible. But with a fair amount of IPs
+> enabled and high load the board becomes unstable (display
+> flickering/blanks, ethernet package drops, ...). I guess CompuLab
+> allowed 1.2GHz at first and then realized that it is a bad idea (at
+> least for some boards).
+>
+> Is there any way to influence the fuse (e.g. from the
+> firmware/bootloader) or do you have another proposal on how to fix this
+> issue?
 
-Thanks,
-Christopher
+Ok, understood. So the mx6q fuse indicates that 1.2GHz operation is
+possible on , but the board itself does not behave nicely at this
+frequency.
 
-> Thanks
-> 
+Maybe you could send a v2 of this patch that matches the operating
+points form mx6qdl.dtsi and remove only the 1.2GHz entry and put the
+explanation you gave us here in the dts and commit log.
+
+Regards,
+
+Fabio Estevam
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
