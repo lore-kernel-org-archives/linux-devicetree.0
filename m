@@ -1,46 +1,60 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v3 5/6] dt-bindings: add Sharp LQ123P1JX31 panel binding
-Date: Sun, 12 Jun 2016 10:56:16 +0800
-Message-ID: <1465700176-13716-1-git-send-email-ykk@rock-chips.com>
-References: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
+From: Gang Liu <gang.liu@nxp.com>
+Subject: RE: [PATCH] arm64: dts: ls1043a: Add 'dma-coherent' for ls1043a PCI
+ nodes
+Date: Sun, 12 Jun 2016 03:00:56 +0000
+Message-ID: <DB4PR04MB2663122FB05EFC7BA1197D882520@DB4PR04MB266.eurprd04.prod.outlook.com>
+References: <1465282546-28256-1-git-send-email-Gang.Liu@nxp.com>
+ <1465282546-28256-2-git-send-email-Gang.Liu@nxp.com>
+ <DB5PR0401MB192810622C64C85F08C281D9915E0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, emil.l.velikov@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <DB5PR0401MB192810622C64C85F08C281D9915E0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Scott Wood <scott.wood@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh@kernel.org" <robh@kernel.org>
+Cc: Minghuan Lian <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFNoYXJwIExRMTIzUDFKWDMxIGlzIGFuIDEyLjMiIDI0MDB4MTYwMCBURlQtTENEIHBhbmVs
-CmNvbm5lY3RlZCB1c2luZyBlRFAgaW50ZXJmYWNlcy4KClNpZ25lZC1vZmYtYnk6IFlha2lyIFlh
-bmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KUmV2aWV3ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRp
-YW5kZXJzQGNocm9taXVtLm9yZz4KLS0tCkNoYW5nZXMgaW4gdjM6Ci0gRHJvcCB0aGUgZXh0cmEg
-Y29tbWEgaW4gY29tcGF0aWJsZSBuYW1lIChSb2IpCi0gQWRkIHRoZSByZXZpZXdlZCBmbGFnIGZy
-b20gRG91ZwoKQ2hhbmdlcyBpbiB2MjoKLSBBZGQgZHQtYmluZGluZ3Mgb2YgU2hhcnAgTFExMjNQ
-MUpYMzEgcGFuZWwgaW4gdjIKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
-L3NoYXJwLGxxMTIzcDFqeDMxLnR4dCAgICAgICAgfCA3ICsrKysrKysKIDEgZmlsZSBjaGFuZ2Vk
-LCA3IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTEyM3AxangzMS50eHQKCmRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9z
-aGFycCxscTEyM3AxangzMS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9wYW5lbC9zaGFycCxscTEyM3AxangzMS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
-aW5kZXggMDAwMDAwMC4uYmNiMGU4YQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMTIzcDFqeDMxLnR4dApA
-QCAtMCwwICsxLDcgQEAKK1NoYXJwIDEyLjMiICgyNDAweDE2MDAgcGl4ZWxzKSBURlQgTENEIHBh
-bmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAic2hh
-cnAsbHExMjNwMWp4MzEiCisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNp
-bXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBsZS1wYW5lbC50
-eHQgaW4gdGhpcyBkaXJlY3RvcnkuCi0tIAoxLjkuMQoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+> From: Scott Wood
+> 
+> On 06/07/2016 02:06 AM, Liu Gang wrote:
+> > The 'dma-coherent' indicates that the hardware IP block can ensure the
+> > coherency of the data transferred from/to the IP block. This can avoid
+> > the software cache flush/invalid actions, and improve the performance
+> > significantly.
+> >
+> > The PCI IP block of ls1043a has this capability, so adding this
+> > feature to improve the PCI performance.
+> >
+> > Signed-off-by: Liu Gang <Gang.Liu@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
+> >  1 file changed, 3 insertions(+)
+> 
+> Why not ls2080a as well?
+[Liu Gang] ls2080 should also include this property, we can add it after verification.
+ 
+> What about non-PCI devices?
+> 
+> Pretty much everything on these chips should be coherent as long as it's
+> properly configured.
+[Liu Gang] you are right. For the layerscape platforms including CCI or CCN internal bus,
+theoretically, pretty much IP blocks (PCI/non-PCI) should be coherent. But this depends
+on the properly hardware and software configurations. (ls1012a PCI devices cannot implement
+the coherent duo to hardware issue)
+So I think we'd better to add this property after each IP block's verification.
+
+Thanks!
+Liu Gang
+>
+> -Scott
