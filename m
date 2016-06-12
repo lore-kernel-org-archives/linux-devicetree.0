@@ -1,179 +1,119 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX
- settings
-Date: Sun, 12 Jun 2016 11:25:38 +0800
-Message-ID: <20160612032538.GB22054@shlinux2>
-References: <20160318211936.GA4158@rob-hp-laptop>
- <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com>
- <20160323043638.GA18462@peterchendt>
- <56F2D43D.1040404@timesys.com>
- <56F2DDB7.7070700@timesys.com>
- <20160324022117.GA5301@peterchendt>
- <57588DA8.4050000@timesys.com>
- <CAL411-of2Phqx18LBaGt6FMg5DxaJesRYvrRzsfSNyJRopsUZQ@mail.gmail.com>
- <CAENNV6+978syhexzQber58xuai=grC2_TsVF3GmHCAp_Zj=HZQ@mail.gmail.com>
+From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] drm: rockchip: use common iommu api to attach iommu
+Date: Sun, 12 Jun 2016 11:37:12 +0800
+Message-ID: <575CD8E8.6060502@rock-chips.com>
+References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com>
+	<1465392392-2003-6-git-send-email-zhengsq@rock-chips.com>
+	<CAAFQd5AEsMhQiNkjBr-Af6rBg9x6Z9bCOu7GuYXt2h=wao7Cow@mail.gmail.com>
+Reply-To: zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAENNV6+978syhexzQber58xuai=grC2_TsVF3GmHCAp_Zj=HZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAAFQd5AEsMhQiNkjBr-Af6rBg9x6Z9bCOu7GuYXt2h=wao7Cow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, list-Y9sIeH5OGRo@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, simon xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, open-Y9sIeH5OGRo@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?5aea5pm65oOF?= <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 09, 2016 at 02:07:52PM -0400, Justin Waters wrote:
-> Peter,
-> 
-> On Wed, Jun 8, 2016 at 10:41 PM, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Thu, Jun 9, 2016 at 5:27 AM, Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org> wrote:
-> >> On 03/23/2016 10:21 PM, Peter Chen wrote:
-> >>>
-> >>> On Wed, Mar 23, 2016 at 02:17:27PM -0400, Jaret Cantu wrote:
-> >>>>
-> >>>> On 03/23/2016 01:37 PM, Jaret Cantu wrote:
-> >>>>>
-> >>>>> On 03/23/2016 12:36 AM, Peter Chen wrote:
-> >>>>>>
-> >>>>>> On Mon, Mar 21, 2016 at 12:32:27PM -0400, Jaret Cantu wrote:
-> >>>>>>>
-> >>>>>>> The TX settings can be calibrated for particular hardware.  The
-> >>>>>>> phy is reset by Linux, so this cannot be handled by the bootloader.
-> >>>>>>>
-> >>>>>>> The TRM mentions that the maximum resistance should be used for the
-> >>>>>>> DN/DP calibration in order to pass USB certification.
-> >>>>>>>
-> >>>>>>> The values for the TX registers are poorly described in the TRM.
-> >>>>>>> The meanings of the register values were taken from another
-> >>>>>>> Freescale-provided document:
-> >>>>>>> https://community.freescale.com/message/566147#comment-566912
-> >>>>>>>
-> >>>>>>> Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-> >>>>>>> ---
-> >>>>>>> v3. Added unit suffix (-ohms) to tx-cal-45-d*
-> >>>>>>>
-> >>>>>>> v2. Copying devicetree list
-> >>>>>>>      Removed prettifying extra whitespace
-> >>>>>>>      Removed unnecessary register rewrite on resume
-> >>>>>>>      Use min and max constants for clarity
-> >>>>>>>
-> >>>>>>>   .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
-> >>>>>>>   drivers/usb/phy/phy-mxs-usb.c                      |   58
-> >>>>>>> ++++++++++++++++++++
-> >>>>>>>   2 files changed, 68 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> >>>>>>> b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> >>>>>>> index 379b84a..1d25b04 100644
-> >>>>>>> --- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> >>>>>>> +++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> >>>>>>> @@ -12,6 +12,16 @@ Required properties:
-> >>>>>>>   - interrupts: Should contain phy interrupt
-> >>>>>>>   - fsl,anatop: phandle for anatop register, it is only for imx6 SoC
-> >>>>>>> series
-> >>>>>>>
-> >>>>>>> +
-> >>>>>>> +    if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
-> >>>>>>> +        val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
-> >>>>>>> +        /* scale to 4-bit value */
-> >>>>>>> +        val = (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
-> >>>>>>> +            / (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
-> >>>>>>> +        mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
-> >>>>>>> +        mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
-> >>>>>>> +    }
-> >>>>>>> +
-> >>>>>>
-> >>>>>>
-> >>>>>> I have tested "tx-d-cal", but it seems incorrect according to the xls
-> >>>>>> you
-> >>>>>> have provided, would you please check it again or am I wrong?
-> >>>>>
-> >>>>>
-> >>>>> Gah! You're right. Some of the D_CAL values need to be rounded up to
-> >>>>> match the xls.  And even then, the value for 86 still doesn't play nice.
-> >>>>>   I was really hoping to avoid using a table for these values.
-> >>>>>
-> >>>>> The TXCALDP/DN values use a much simpler 1-to-1 scale across the 16
-> >>>>> possible register values and so are unaffected by a similar issue.  I
-> >>>>> rechecked their numbers just to be sure.
-> >>>>
-> >>>>
-> >>>> The solution looks to be to scale D_CAL starting from 80 instead of
-> >>>> 79.  If you look at the xls listing, the jump from 79 to 83 is the
-> >>>> only time two adjacent register values result in a change greater
-> >>>> than 2% or 3%.
-> >>>>
-> >>>> This will result in some code ugliness as the minimum allowed
-> >>>> percentage (79), per the Freescale document, and the point at which
-> >>>> we are scaling the percentage values to register values (80) are
-> >>>> different.
-> >>>>
-> >>>> And, as mentioned before, the values will also have to be rounded up.
-> >>>>
-> >>>> This quick shell code confirms that these sorts of calculations
-> >>>> match up with the values in the spreadsheet:
-> >>>>
-> >>>> for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79; do
-> >>>> echo "$d="$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) ));
-> >>>> d=$((d+1)); done
-> >>>>
-> >>>>
-> >>>> I can't find any formula which would hit all of those same
-> >>>> percentages without rounding up.
-> >>>>
-> >>>
-> >>> Then, we had to use table for it. Besides, IC team confirms the default
-> >>> value and the step for TXCAL45DP/DN are changed at next generation SoCs,
-> >>> so I am wondering how we describe it at binding doc.
-> >>>
-> >>
-> >> Which next gen SoC would this be?  The MX7?  The documentation for the USB
-> >> PHY in that reference manual is even sparser than the one for the MX6 in
-> >> regards to these register values.
-> >>
-> >
-> > Here, I mean i.mx8
-> >
-> 
-> Currently, there is no support in the mainline kernel for the i.MX8.
-> Do you mean to say that this feature is blocked until the i.MX8 is
-> supported in the mainline kernel? Or that we would be required to add
-> the register definitions for the i.MX8 as a prerequisite? Wouldn't it
-> make more sense to add support to the driver as part of the i.MX8
-> enablement, especially considering no documentation is freely
-> available at this time?
-> 
-> >> The MX7 manual does still mention that HW_USBPHY_TX_TXCAL45DP and
-> >> HW_USBPHY_TX_TXCAL45DN should both be set to zero, but there is no listing
-> >> as to the location of these registers, let alone their defaults/step values.
-> >>
-> >> Do you know where we could get the default and step values for the TXCAL
-> >> registers on the new SoC?  This information had to come from a Freescale
-> >> community thread for the MX6 since it wasn't defined clearly elsewhere.
-> >
-> > In theory, these information should be listed at SoC reference manual.
-> >
-> 
-> I have not seen the reference manual, so I'm not sure if it's in there
-> or not. However, if the i.MX6 manual is any indication, I'm not
-> certain it will be documented anyway.
-> 
-> How do we unblock this issue? We currently have hardware that cannot
-> meet specifications without this feature, and based on the app note
-> from NXP, I'm certain plenty of other people do as well.
-> 
-
-I agree with you that we don't need to consider i.mx8 case now.
-
-According to your previous information, the single formula can't be used
-to get D_CAL value, do you have any good ways except for using a table?
-Sending the patch for new algorithm to speed up this issue please.
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpPbiAyMDE25bm0MDbmnIgxMOaXpSAxNjowMywgVG9tYXN6IEZpZ2Egd3JvdGU6Cj4gSGks
+Cj4KPiBPbiBXZWQsIEp1biA4LCAyMDE2IGF0IDEwOjI2IFBNLCBTaHVucWlhbiBaaGVuZyA8emhl
+bmdzcUByb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4+IFJvY2tjaGlwIERSTSB1c2VkIHRoZSBhcm0g
+c3BlY2lhbCBBUEksIGFybV9pb21tdV8qKCksIHRvIGF0dGFjaAo+PiBpb21tdSBmb3IgQVJNMzIg
+U29Dcy4gVGhpcyBwYXRjaCBjb252ZXJ0IHRvIGNvbW1vbiBpb21tdSBBUEkKPj4gc28gaXQgd291
+bGQgc3VwcG9ydCBBUk02NCBsaWtlIFJLMzM5OS4KPj4KPj4gVGhlIGdlbmVyYWwgaWRlYSBpcyBk
+b21haW5fYWxsb2MoKSwgYXR0YWNoX2RldmljZSgpIGFuZAo+PiBhcmNoX3NldHVwX2RtYV9vcHMo
+KSB0byBzZXQgZG1hX29wcyBtYW51YWxseSBmb3IgRFJNIGF0IHRoZSBsYXN0Lgo+Pgo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBTaHVucWlhbiBaaGVuZyA8emhlbmdzcUByb2NrLWNoaXBzLmNvbT4KPj4gLS0t
+Cj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYuYyB8IDEzMCAr
+KysrKysrKysrKysrKysrKysrLS0tLS0tLS0tCj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
+L3JvY2tjaGlwX2RybV9kcnYuaCB8ICAgMSArCj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCA4OSBpbnNl
+cnRpb25zKCspLCA0MiBkZWxldGlvbnMoLSkKPj4KPiBQbGVhc2Ugc2VlIG15IGNvbW1lbnRzIGlu
+bGluZS4KPgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlw
+X2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2LmMK
+Pj4gaW5kZXggZjVhNjhmYy4uNzk2NWE2NiAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvcm9ja2NoaXBfZHJtX2Rydi5jCj4+IEBAIC0xNCw4ICsxNCw2IEBACj4+ICAgICogR05V
+IEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPj4gICAgKi8KPj4KPj4g
+LSNpbmNsdWRlIDxhc20vZG1hLWlvbW11Lmg+Cj4+IC0KPj4gICAjaW5jbHVkZSA8ZHJtL2RybVAu
+aD4KPj4gICAjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBlci5oPgo+PiAgICNpbmNsdWRlIDxk
+cm0vZHJtX2ZiX2hlbHBlci5oPgo+PiBAQCAtMjQsNiArMjIsOCBAQAo+PiAgICNpbmNsdWRlIDxs
+aW51eC9tb2R1bGUuaD4KPj4gICAjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KPj4gICAjaW5j
+bHVkZSA8bGludXgvY29tcG9uZW50Lmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvZG1hLWlvbW11Lmg+
+Cj4+ICsjaW5jbHVkZSA8bGludXgvaW9tbXUuaD4KPj4KPj4gICAjaW5jbHVkZSAicm9ja2NoaXBf
+ZHJtX2Rydi5oIgo+PiAgICNpbmNsdWRlICJyb2NrY2hpcF9kcm1fZmIuaCIKPj4gQEAgLTQ2LDcg
+KzQ2LDggQEAgc3RhdGljIGJvb2wgaXNfc3VwcG9ydF9pb21tdSA9IHRydWU7Cj4+ICAgaW50IHJv
+Y2tjaGlwX2RybV9kbWFfYXR0YWNoX2RldmljZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldiwK
+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRldmljZSAqZGV2
+KQo+PiAgIHsKPj4gLSAgICAgICBzdHJ1Y3QgZG1hX2lvbW11X21hcHBpbmcgKm1hcHBpbmcgPSBk
+cm1fZGV2LT5kZXYtPmFyY2hkYXRhLm1hcHBpbmc7Cj4+ICsgICAgICAgc3RydWN0IHJvY2tjaGlw
+X2RybV9wcml2YXRlICpwcml2YXRlID0gZHJtX2Rldi0+ZGV2X3ByaXZhdGU7Cj4+ICsgICAgICAg
+c3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluID0gcHJpdmF0ZS0+ZG9tYWluOwo+PiAgICAgICAg
+ICBpbnQgcmV0Owo+Pgo+PiAgICAgICAgICBpZiAoIWlzX3N1cHBvcnRfaW9tbXUpCj4+IEBAIC01
+OCwxNiArNTksMjUgQEAgaW50IHJvY2tjaGlwX2RybV9kbWFfYXR0YWNoX2RldmljZShzdHJ1Y3Qg
+ZHJtX2RldmljZSAqZHJtX2RldiwKPj4KPj4gICAgICAgICAgZG1hX3NldF9tYXhfc2VnX3NpemUo
+ZGV2LCBETUFfQklUX01BU0soMzIpKTsKPj4KPj4gLSAgICAgICByZXR1cm4gYXJtX2lvbW11X2F0
+dGFjaF9kZXZpY2UoZGV2LCBtYXBwaW5nKTsKPj4gKyAgICAgICByZXQgPSBpb21tdV9hdHRhY2hf
+ZGV2aWNlKGRvbWFpbiwgZGV2KTsKPj4gKwo+IG5pdDogVW5uZWNlc3NhcnkgYmxhbmsgbGluZS4K
+V2lsbCBmaXggaXQgaW4gdjMuCj4KPj4gKyAgICAgICBpZiAocmV0KSB7Cj4+ICsgICAgICAgICAg
+ICAgICBkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBhdHRhY2ggaW9tbXUgZGV2aWNlXG4iKTsKPj4g
+KyAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+ICsgICAgICAgfQo+IG5pdDogT24gdGhlIG90
+aGVyIGhhbmQsIGEgYmxhbmsgbGluZSBoZXJlIHdvdWxkIGltcHJvdmUgcmVhZGFiaWxpdHkuCldp
+bGwgZml4IGl0IGluIHYzLgo+Cj4+ICsgICAgICAgYXJjaF9zZXR1cF9kbWFfb3BzKGRldiwgMHgw
+MDAwMDAwMCwgU1pfMkcsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIChzdHJ1Y3QgaW9t
+bXVfb3BzICopZGV2LT5idXMtPmlvbW11X29wcywgZmFsc2UpOwo+IFRoaXMgaXMgY2FzdGluZyBh
+IGNvbnN0IHBvaW50ZXIgdG8gYSBub24tY29uc3QgcG9pbnRlci4gd2hpY2ggaXNuJ3QKPiByZWFs
+bHkgYSBnb29kIGlkZWEuIEkgY2FuIHNlZSB0aGF0IGFyY2hfc2V0dXBfZG1hX29wcygpIHJlcXVp
+cmVzIGEKPiB3cml0YWJsZSBwb2ludGVyLCB0aG91Z2guIExvb2tpbmcgYXQgdGhlIGltcGxlbWVu
+dGF0aW9ucyBvZgo+IGFyY2hfc2V0dXBfZG1hX29wcygpIGFyb3VuZCB0aGUgcGxhdGZvcm1zIChu
+YW1lbHkgYXJtIGFuZCBhcm02NC4uLiksCj4gaXQgbWFrZXMgbWUgd29uZGVyIGlmIHRoZSBwcm90
+b3R5cGUgc2hvdWxkbid0IGJlIGNoYW5nZWQgdG8gY29uc3QKPiBpbnN0ZWFkLgpBY3R1YWxseSwg
+a2VybmVsLW5leHQgY2hhbmdlZCBpb21tdV9vcHMgdG8gY29uc3QgYnk6CjUzYzkyZDcgaW9tbXU6
+IG9mOiBlbmZvcmNlIGNvbnN0LW5lc3Mgb2Ygc3RydWN0IGlvbW11X29wcwoKV2lsbCByZW1vdmUg
+Y2FzdGluZyBpbiB0aGUgdjMuCj4KPj4gKyAgICAgICByZXR1cm4gMDsKPj4gICB9Cj4+Cj4+ICAg
+dm9pZCByb2NrY2hpcF9kcm1fZG1hX2RldGFjaF9kZXZpY2Uoc3RydWN0IGRybV9kZXZpY2UgKmRy
+bV9kZXYsCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZGV2
+aWNlICpkZXYpCj4+ICAgewo+PiAtICAgICAgIGlmICghaXNfc3VwcG9ydF9pb21tdSkKPj4gLSAg
+ICAgICAgICAgICAgIHJldHVybjsKPj4gKyAgICAgICBzdHJ1Y3Qgcm9ja2NoaXBfZHJtX3ByaXZh
+dGUgKnByaXZhdGUgPSBkcm1fZGV2LT5kZXZfcHJpdmF0ZTsKPj4gKyAgICAgICBzdHJ1Y3QgaW9t
+bXVfZG9tYWluICpkb21haW4gPSBwcml2YXRlLT5kb21haW47Cj4+Cj4+IC0gICAgICAgYXJtX2lv
+bW11X2RldGFjaF9kZXZpY2UoZGV2KTsKPj4gKyAgICAgICBpZiAoaXNfc3VwcG9ydF9pb21tdSkK
+Pj4gKyAgICAgICAgICAgICAgIGlvbW11X2RldGFjaF9kZXZpY2UoZG9tYWluLCBkZXYpOwo+PiAg
+IH0KPj4KPj4gICBpbnQgcm9ja2NoaXBfcmVnaXN0ZXJfY3J0Y19mdW5jcyhzdHJ1Y3QgZHJtX2Ny
+dGMgKmNydGMsCj4+IEBAIC0xMzIsMTAgKzE0Miw3MCBAQCBzdGF0aWMgdm9pZCByb2NrY2hpcF9k
+cm1fY3J0Y19kaXNhYmxlX3ZibGFuayhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+PiAgICAgICAg
+ICAgICAgICAgIHByaXYtPmNydGNfZnVuY3NbcGlwZV0tPmRpc2FibGVfdmJsYW5rKGNydGMpOwo+
+PiAgIH0KPj4KPj4gK3N0YXRpYyBpbnQgcm9ja2NoaXBfZHJtX2luaXRfaW9tbXUoc3RydWN0IGRy
+bV9kZXZpY2UgKmRybV9kZXYpCj4+ICt7Cj4+ICsgICAgICAgc3RydWN0IHJvY2tjaGlwX2RybV9w
+cml2YXRlICpwcml2YXRlID0gZHJtX2Rldi0+ZGV2X3ByaXZhdGU7Cj4+ICsgICAgICAgc3RydWN0
+IGRldmljZSAqZGV2ID0gZHJtX2Rldi0+ZGV2Owo+PiArICAgICAgIGludCByZXQ7Cj4+ICsKPj4g
+KyAgICAgICBkZXYtPmRtYV9wYXJtcyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqZGV2LT5k
+bWFfcGFybXMpLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdGUF9L
+RVJORUwpOwo+PiArICAgICAgIGlmICghZGV2LT5kbWFfcGFybXMpIHsKPj4gKyAgICAgICAgICAg
+ICAgIHJldCA9IC1FTk9NRU07Cj4+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Owo+IG5pdDog
+cmV0dXJuIC1FTk9NRU07CldpbGwgZml4IGl0IGluIHYzLgo+Cj4+ICsgICAgICAgfQo+PiArCj4+
+ICsgICAgICAgcmV0ID0gZG1hX3NldF9jb2hlcmVudF9tYXNrKGRldiwgRE1BX0JJVF9NQVNLKDMy
+KSk7Cj4+ICsgICAgICAgaWYgKHJldCkgewo+PiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYs
+ICJGYWlsZWQgdG8gc2V0IGNvaGVyZW50IG1hc2tcbiIpOwo+PiArICAgICAgICAgICAgICAgcmV0
+dXJuIHJldDsKPj4gKyAgICAgICB9Cj4+ICsKPj4gKyAgICAgICBkbWFfc2V0X21heF9zZWdfc2l6
+ZShkZXYsIERNQV9CSVRfTUFTSygzMikpOwo+PiArCj4+ICsgICAgICAgcHJpdmF0ZS0+ZG9tYWlu
+ID0gaW9tbXVfZG9tYWluX2FsbG9jKCZwbGF0Zm9ybV9idXNfdHlwZSk7Cj4+ICsgICAgICAgaWYg
+KCFwcml2YXRlLT5kb21haW4pCj4+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsKPj4g
+Kwo+PiArICAgICAgIHJldCA9IGlvbW11X2dldF9kbWFfY29va2llKHByaXZhdGUtPmRvbWFpbik7
+Cj4+ICsgICAgICAgaWYgKHJldCkgewo+PiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJG
+YWlsZWQgdG8gZ2V0IGRtYSBjb29raWVcbiIpOwo+PiArICAgICAgICAgICAgICAgZ290byBlcnJf
+ZnJlZV9kb21haW47Cj4+ICsgICAgICAgfQo+PiArCj4+ICsgICAgICAgcmV0ID0gaW9tbXVfZG1h
+X2luaXRfZG9tYWluKHByaXZhdGUtPmRvbWFpbiwgMHgwMDAwMDAwMCwgU1pfMkcpOwo+IEkgZ3Vl
+c3MgZGprdXJ0eidzIFRPRE8gY29tbWVudCBjb3VsZCBiZSBwcmVzZXJ2ZWQgaGVyZS4KQWdyZWUu
+CgpUaGFuayB5b3UgdmVyeSBtdWNoLgpTaHVucWlhbgo+Cj4gQmVzdCByZWdhcmRzLAo+IFRvbWFz
+ego+Cj4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmlvbW11IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRw
+czovL2xpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
