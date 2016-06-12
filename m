@@ -1,90 +1,170 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v9 08/14] usb: otg: add OTG/dual-role core
-Date: Sun, 12 Jun 2016 18:56:27 +0800
-Message-ID: <20160612105627.GA32615@shlinux2>
-References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
- <1465376626-30122-9-git-send-email-rogerq@ti.com>
- <20160608095336.GA4444@shlinux2>
- <5757EF7A.20604@ti.com>
- <20160608124204.GB10029@shlinux2>
- <575919BC.8080003@ti.com>
- <20160612062617.GC22054@shlinux2>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160612062617.GC22054@shlinux2>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 1/2] ARM: dts: sun6i: Add pmic / regulator nodes to Mele A1000G quad dts
+Date: Sun, 12 Jun 2016 13:07:00 +0200
+Message-ID: <1465729621-27378-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 12, 2016 at 02:26:17PM +0800, Peter Chen wrote:
-> On Thu, Jun 09, 2016 at 10:24:44AM +0300, Roger Quadros wrote:
-> > On 08/06/16 15:42, Peter Chen wrote:
-> > > On Wed, Jun 08, 2016 at 01:12:10PM +0300, Roger Quadros wrote:
-> > >> Hi,
-> > >>
-> > >> On 08/06/16 12:53, Peter Chen wrote:
-> > >>> On Wed, Jun 08, 2016 at 12:03:40PM +0300, Roger Quadros wrote:
-> > >>>> +int usb_otg_unregister(struct device *dev)
-> > >>>> +{
-> > >>>> +	struct usb_otg *otg;
-> > >>>> +
-> > >>>> +	mutex_lock(&otg_list_mutex);
-> > >>>> +	otg = usb_otg_get_data(dev);
-> > >>>> +	if (!otg) {
-> > >>>> +		dev_err(dev, "otg: %s: device not in otg list\n",
-> > >>>> +			__func__);
-> > >>>> +		mutex_unlock(&otg_list_mutex);
-> > >>>> +		return -EINVAL;
-> > >>>> +	}
-> > >>>> +
-> > >>>> +	/* prevent unregister till both host & gadget have unregistered */
-> > >>>> +	if (otg->host || otg->gadget) {
-> > >>>> +		dev_err(dev, "otg: %s: host/gadget still registered\n",
-> > >>>> +			__func__);
-> > >>>
-> > >>> You need to call mutex_unlock here
-> > >>
-> > >> Indeed. good catch.
-> > >>>
-> > >>>> +
-> > >>>> +int usb_otg_gadget_ready(struct usb_gadget *gadget, bool ready)
-> > >>>> +{
-> > >>>
-> > >>> What this API is for? Why need it in this version?
-> > >>
-> > >> we moved gadget to otg registration from udc_bind_to_driver() to usb_add_gadget_udc_release().
-> > >> This means there is a window when gadget function driver (e.g. g_zero) is not loaded.
-> > >> We don't want to start the gadget controller in that window.
-> > >>
-> > >> usb_otg_gadget_ready() is used by gadget core to notify the otg core when the function driver
-> > >> is ready or not-ready.
-> > >>
-> > > 
-> > > Why you need to move this from gadget's probe to udc's probe? Currently,
-> > > the sequence of gadget and udc's probe is random, but udc_bind_to_driver
-> > > is called when udc is ready.
-> > > 
-> > Because we need to support -EPROBE_DEFER at udc probe.
-> > At udc_bind_to_driver there is no scope for -EPROBE_DEFER.
-> > 
-> 
-> Why udc_bind_to_driver can't return -EPROBE_DEFER if register to OTG is
-> failed?
-> 
-> > Another issue is that we need to register with otg and have otg->caps available
-> > before driver->bind() is called in udc_bind_to_driver(). Else gadget function
-> > will not have the correct OTG descriptor.
-> > 
-> 
-> You can do register before calling driver->bind.
-> 
+Add pmic / regulator nodes to Mele A1000G quad dts.
 
-Please skip my comments, I understand your changes now.
+Note both reg_usb1_vbus and reg_dldo4 need to be on for the hub attached
+to usb1 to work, and we can list only one usb1_vbus-supply, so dldo4 is
+marked as regulator-always-on.
 
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-Add a bit to the commit msg explaining why dldo4 is marked regulator-always-on
+Changes in v3:
+-Also add a comment explaining why dldo4 is marked regulator-always-on
+---
+ arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts | 93 +++++++++++++++++++++++-
+ 1 file changed, 92 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+index e063dab..5faeae4 100644
+--- a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
++++ b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+@@ -72,6 +72,10 @@
+ 	};
+ };
+ 
++&cpu0 {
++	cpu-supply = <&reg_dcdc3>;
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -85,6 +89,7 @@
+ 	pinctrl-0 = <&gmac_pins_mii_a>;
+ 	phy = <&phy1>;
+ 	phy-mode = "mii";
++	phy-supply = <&reg_dldo1>;
+ 	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+@@ -101,13 +106,26 @@
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_m9>;
+-	vmmc-supply = <&reg_vcc3v3>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
+ 	cd-inverted;
+ 	status = "okay";
+ };
+ 
++&p2wi {
++	status = "okay";
++
++	axp22x: pmic@68 {
++		compatible = "x-powers,axp221";
++		reg = <0x68>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++#include "axp22x.dtsi"
++
+ &pio {
+ 	led_pins_m9: led_pins@0 {
+ 		allwinner,pins = "PH13";
+@@ -131,6 +149,78 @@
+ 	};
+ };
+ 
++&reg_aldo1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-wifi";
++};
++
++&reg_aldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <2700000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "avcc";
++};
++
++&reg_dc5ldo {
++	regulator-always-on;
++	regulator-min-microvolt = <700000>;
++	regulator-max-microvolt = <1320000>;
++	regulator-name = "vdd-cpus"; /* This is an educated guess */
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-3v3";
++};
++
++&reg_dcdc2 {
++	regulator-min-microvolt = <700000>;
++	regulator-max-microvolt = <1320000>;
++	regulator-name = "vdd-gpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <700000>;
++	regulator-max-microvolt = <1320000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc4 {
++	regulator-always-on;
++	regulator-min-microvolt = <700000>;
++	regulator-max-microvolt = <1320000>;
++	regulator-name = "vdd-sys-dll";
++};
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1500000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vcc-dram";
++};
++
++&reg_dldo1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-ethernet-phy";
++};
++
++/*
++ * Both reg_usb1_vbus and reg_dldo4 need to be on for the hub attached
++ * to usb1 to work, and we can list only one usb1_vbus-supply, so dldo4 is
++ * marked as regulator-always-on.
++ */
++&reg_dldo4 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-usb-hub";
++};
++
+ &reg_usb1_vbus {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&usb1_vbus_pin_m9>;
+@@ -151,5 +241,6 @@
+ 
+ &usbphy {
+ 	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_aldo1>;
+ 	status = "okay";
+ };
 -- 
+2.7.4
 
-Best Regards,
-Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
