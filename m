@@ -1,155 +1,73 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Sun, 12 Jun 2016 09:42:12 +0800
-Message-ID: <af7b8d26-e88d-97df-9cce-30a6aaba0e1c@rock-chips.com>
-References: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
- <20160608204448.GA26861@rob-hp-laptop>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v2 4/6] drm/panel: simple: Add support for Samsung
+ LSN122DL01-C01 2560x1600 panel
+Date: Sun, 12 Jun 2016 10:05:21 +0800
+Message-ID: <575CC361.4080003@rock-chips.com>
+References: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
+ <1465386762-27816-1-git-send-email-ykk@rock-chips.com>
+ <CACP_E+KFDF2VoXo4pRkAmd9wTcy7a6NTK9YpaPbtMD8=2f7e7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160608204448.GA26861@rob-hp-laptop>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>
-Cc: devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Wenrui Li <wenrui.li@rock-chips.com>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACP_E+KFDF2VoXo4pRkAmd9wTcy7a6NTK9YpaPbtMD8=2f7e7Q@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?St=c3=a9phane_Marchesin?= <stephane.marchesin@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/6/9 4:44, Rob Herring wrote:
-> On Wed, Jun 08, 2016 at 04:05:17PM +0800, Shawn Lin wrote:
->> This patch adds a binding that describes the Rockchip PCIe controller
->> found on Rockchip SoCs PCIe interface.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>
->> ---
->>
->> Changes in v2:
->> - fix lots clk/reset stuff suggested by Heiko
->> - remove msi-parent and add msi-map suggested by Marc
->> - drop phy related stuff
->> - some others minor fixes
->>
->>  .../devicetree/bindings/pci/rockchip-pcie.txt      | 86 ++++++++++++++++++++++
->>  1 file changed, 86 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> new file mode 100644
->> index 0000000..eb92e29
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> @@ -0,0 +1,86 @@
->> +* Rockchip AXI PCIe Root Port Bridge DT description
->> +
->> +Required properties:
->> +- #address-cells: Address representation for root ports, set to <3>
->> +- #size-cells: Size representation for root ports, set to <2>
->> +- #interrupt-cells: specifies the number of cells needed to encode an
->> +		interrupt source. The value must be 1.
->> +- compatible: Should contain "rockchip,rk3399-pcie"
->> +- reg: Two register ranges as listed in the reg-names property
->> +- reg-names: Must include the following names
->> +	- "axi-base"
->> +	- "apb-base"
->> +- clocks: Must contain an entry for each entry in clock-names.
->> +		See ../clocks/clock-bindings.txt for details.
->> +- clock-names: Must include the following entries:
->> +	- "aclk"
->> +	- "aclk-perf"
->> +	- "hclk"
->> +	- "pm"
->> +- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
->> +- phy-names:  MUST be "pcie-phy".
->
-> phy-names is kind of pointless for 1 phy.
-
-ok, I will remove it.
-
->
->> +- interrupts: Three interrupt entries must be specified.
->> +- interrupt-names: Must include the following names
->> +	- "sys"
->> +	- "legacy"
->> +	- "client"
->> +- resets: Must contain five entries for each entry in reset-names.
->> +	   See ../reset/reset.txt for details.
->> +- reset-names: Must include the following names
->> +	- "core"
->> +	- "mgmt"
->> +	- "mgmt-sticky"
->> +	- "pipe"
->> +- pinctrl-names : The pin control state names
->> +- pinctrl-0: The "default" pinctrl state
->> +- interrupt-map-mask and interrupt-map: standard PCI properties
->> +- interrupt-controller: identifies the node as an interrupt controller
->> +
->> +Optional Property:
->> +- ep-gpios: contain the entry for pre-reset gpio
->> +- num-lanes: number of lanes to use
->> +- vpcie3v3-supply: The phandle to the 3.3v regulator to use for pcie. If this
->> +  is specified we'll defer probe until we can find this regulator.
->> +- vpcie1v8-supply: The phandle to the 1.8v regulator to use for pcie. If this
->> +  is specified we'll defer probe until we can find this regulator.
->> +- vpcie0v9-supply: The phandle to the 0.9v regulator to use for pcie. If this
->> +  is specified we'll defer probe until we can find this regulator.
->> +
->> +Example:
->> +
->> +pcie0: pcie@f8000000 {
->> +	compatible = "rockchip,rk3399-pcie";
->> +	#address-cells = <3>;
->> +	#size-cells = <2>;
->> +	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
->> +		 <&cru PCLK_PCIE>;
->> +	clock-names = "aclk", "aclk-perf",
->> +		      "hclk";
->> +	bus-range = <0x0 0x1>;
->> +	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
->> +		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
->> +	interrupt-names: "sys", "legacy", "client";
->> +	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
->> +	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
->> +	assigned-clock-rates = <100000000>;
->> +	ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
->> +	ranges = < 0x82000000 0 0xfa000000 0x0 0xfa000000 0 0x600000
->> +		   0x81000000 0 0xfa600000 0x0 0xfa600000 0 0x100000 >;
->
-> No 64-bit memory space?
-
-Will fix this example. Thanks for catching this:)
-
->
->> +	num-lanes = <4>;
->> +	reg = < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0x0 0x1000000 >;
->> +	reg-name = "axi-base", "apb-base";
->> +	resets = <&cru SRST_PCIEPHY>, <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
->> +		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
->> +	reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
->> +	phys = <&pcie_phy>;
->> +	phy-names = "pcie-phy";
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pcie_clkreq>;
->> +	#interrupt-cells = <1>;
->> +	interrupt-controller;
->> +	interrupt-map-mask = <0 0 0 7>;
->> +	interrupt-map = <0 0 0 1 &pcie0 1>,
->> +			<0 0 0 2 &pcie0 2>,
->> +			<0 0 0 3 &pcie0 3>,
->> +			<0 0 0 4 &pcie0 4>;
->> +};
->> --
->> 2.3.7
->>
->>
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
-
-
--- 
-Best Regards
-Shawn Lin
+U3TDqXBoYW5lLAoKT24gMDYvMTAvMjAxNiAwODowNCBBTSwgU3TDqXBoYW5lIE1hcmNoZXNpbiB3
+cm90ZToKPiBPbiBXZWQsIEp1biA4LCAyMDE2IGF0IDQ6NTIgQU0sIFlha2lyIFlhbmcgPHlra0By
+b2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4+IFRoZSBTYW1zdW5nIExTTjEyMkRMMDEtQzAxIGlzIGFu
+IDEyLjIiIDI1NjB4MTYwMCAoV1FYR0EpIFRGVC1MQ0QgcGFuZWwKPj4gY29ubmVjdGVkIHVzaW5n
+IGVEUCBpbnRlcmZhY2VzLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9j
+ay1jaGlwcy5jb20+Cj4+IC0tLQo+PiBDaGFuZ2VzIGluIHYyOiBOb25lCj4+Cj4+ICAgZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIHwgMjUgKysrKysrKysrKysrKysrKysrKysr
+KysrKwo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPj4gaW5kZXggNDEwMjBlMS4uMDY3YTVjNCAxMDA2NDQK
+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4+ICsrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+PiBAQCAtMTI0Niw2ICsxMjQ2LDI4
+IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBxZDQzMDAzYzBfNDAgPSB7Cj4+ICAg
+ICAgICAgIC5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNCwKPj4gICB9Owo+
+Pgo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIHNhbXN1bmdfbHNuMTIy
+ZGwwMV9jMDFfbW9kZSA9IHsKPj4gKyAgICAgICAuY2xvY2sgPSAyNzE1NjAsCj4+ICsgICAgICAg
+LmhkaXNwbGF5ID0gMjU2MCwKPj4gKyAgICAgICAuaHN5bmNfc3RhcnQgPSAyNTYwICsgNDgsCj4+
+ICsgICAgICAgLmhzeW5jX2VuZCA9IDI1NjAgKyA0OCArIDMyLAo+PiArICAgICAgIC5odG90YWwg
+PSAyNTYwICsgNDggKyAzMiArIDgwLAo+PiArICAgICAgIC52ZGlzcGxheSA9IDE2MDAsCj4+ICsg
+ICAgICAgLnZzeW5jX3N0YXJ0ID0gMTYwMCArIDIsCj4+ICsgICAgICAgLnZzeW5jX2VuZCA9IDE2
+MDAgKyAyICsgNSwKPj4gKyAgICAgICAudnRvdGFsID0gMTYwMCArIDIgKyA1ICsgNTcsCj4+ICsg
+ICAgICAgLnZyZWZyZXNoID0gNjAsCj4+ICt9Owo+PiArCj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0
+IHBhbmVsX2Rlc2Mgc2Ftc3VuZ19sc24xMjJkbDAxX2MwMSA9IHsKPj4gKyAgICAgICAubW9kZXMg
+PSAmc2Ftc3VuZ19sc24xMjJkbDAxX2MwMV9tb2RlLAo+PiArICAgICAgIC5udW1fbW9kZXMgPSAx
+LAo+PiArICAgICAgIC5zaXplID0gewo+PiArICAgICAgICAgICAgICAgLndpZHRoID0gMjU2MCwK
+Pj4gKyAgICAgICAgICAgICAgIC5oZWlnaHQgPSAxNjAwLAo+IFRoZXNlIGFyZSBtZWFudCB0byBi
+ZSB0aGUgcGh5c2ljYWwgZGltZW5zaW9ucyAoc2FtZSB0aGluZyBmb3IgdGhlCj4gb3RoZXIgcGF0
+Y2hlcyBidHcpLgoKR290IGl0LCBzbyB0aGlzIHNob3VsZCBiZSB0aGUgImFjdGl2ZSBhcmVhIiBp
+biBwYW5lbCBib29rLgpEaXNwbGF5IGFyZWEgICAgIDI2Mi42NTYoSCkgWCAxNjQuMTYoVikgICAg
+ICAgICAoMTIuMuKAnWRpYWdvbmFsKQoKClRoYW5rcywKLVlha2lyCgo+IFN0w6lwaGFuZQo+Cj4+
+ICsgICAgICAgfSwKPj4gK307Cj4+ICsKPj4gICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNw
+bGF5X21vZGUgc2Ftc3VuZ19sdG4xMDFudDA1X21vZGUgPSB7Cj4+ICAgICAgICAgIC5jbG9jayA9
+IDU0MDMwLAo+PiAgICAgICAgICAuaGRpc3BsYXkgPSAxMDI0LAo+PiBAQCAtMTUwNiw2ICsxNTI4
+LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hb
+XSA9IHsKPj4gICAgICAgICAgICAgICAgICAuY29tcGF0aWJsZSA9ICJxaWFvZGlhbixxZDQzMDAz
+YzAtNDAiLAo+PiAgICAgICAgICAgICAgICAgIC5kYXRhID0gJnFkNDMwMDNjMF80MCwKPj4gICAg
+ICAgICAgfSwgewo+PiArICAgICAgICAgICAgICAgLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxsc24x
+MjJkbDAxLWMwMSIsCj4+ICsgICAgICAgICAgICAgICAuZGF0YSA9ICZzYW1zdW5nX2xzbjEyMmRs
+MDFfYzAxLAo+PiArICAgICAgIH0sIHsKPj4gICAgICAgICAgICAgICAgICAuY29tcGF0aWJsZSA9
+ICJzYW1zdW5nLGx0bjEwMW50MDUiLAo+PiAgICAgICAgICAgICAgICAgIC5kYXRhID0gJnNhbXN1
+bmdfbHRuMTAxbnQwNSwKPj4gICAgICAgICAgfSwgewo+PiAtLQo+PiAxLjkuMQo+Pgo+Pgo+PiBf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+PiBkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0Cj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPj4gaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKPgo+
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
