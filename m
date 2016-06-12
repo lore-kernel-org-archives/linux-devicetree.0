@@ -1,157 +1,90 @@
-From: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Sun, 12 Jun 2016 17:36:55 +0800
-Message-ID: <e9d3a691-c246-9bac-adac-64a90f68d63d@atmel.com>
-References: <1465283513-30224-1-git-send-email-songjun.wu@atmel.com>
- <1465283513-30224-3-git-send-email-songjun.wu@atmel.com>
- <20160608235753.46e73078@bbrezillon>
- <6a878440-042f-c447-19cb-aa05b5dc535d@atmel.com>
- <20160612092321.60b55a81@bbrezillon>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v9 08/14] usb: otg: add OTG/dual-role core
+Date: Sun, 12 Jun 2016 18:56:27 +0800
+Message-ID: <20160612105627.GA32615@shlinux2>
+References: <1465376626-30122-1-git-send-email-rogerq@ti.com>
+ <1465376626-30122-9-git-send-email-rogerq@ti.com>
+ <20160608095336.GA4444@shlinux2>
+ <5757EF7A.20604@ti.com>
+ <20160608124204.GB10029@shlinux2>
+ <575919BC.8080003@ti.com>
+ <20160612062617.GC22054@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160612092321.60b55a81@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160612062617.GC22054@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Jun 12, 2016 at 02:26:17PM +0800, Peter Chen wrote:
+> On Thu, Jun 09, 2016 at 10:24:44AM +0300, Roger Quadros wrote:
+> > On 08/06/16 15:42, Peter Chen wrote:
+> > > On Wed, Jun 08, 2016 at 01:12:10PM +0300, Roger Quadros wrote:
+> > >> Hi,
+> > >>
+> > >> On 08/06/16 12:53, Peter Chen wrote:
+> > >>> On Wed, Jun 08, 2016 at 12:03:40PM +0300, Roger Quadros wrote:
+> > >>>> +int usb_otg_unregister(struct device *dev)
+> > >>>> +{
+> > >>>> +	struct usb_otg *otg;
+> > >>>> +
+> > >>>> +	mutex_lock(&otg_list_mutex);
+> > >>>> +	otg = usb_otg_get_data(dev);
+> > >>>> +	if (!otg) {
+> > >>>> +		dev_err(dev, "otg: %s: device not in otg list\n",
+> > >>>> +			__func__);
+> > >>>> +		mutex_unlock(&otg_list_mutex);
+> > >>>> +		return -EINVAL;
+> > >>>> +	}
+> > >>>> +
+> > >>>> +	/* prevent unregister till both host & gadget have unregistered */
+> > >>>> +	if (otg->host || otg->gadget) {
+> > >>>> +		dev_err(dev, "otg: %s: host/gadget still registered\n",
+> > >>>> +			__func__);
+> > >>>
+> > >>> You need to call mutex_unlock here
+> > >>
+> > >> Indeed. good catch.
+> > >>>
+> > >>>> +
+> > >>>> +int usb_otg_gadget_ready(struct usb_gadget *gadget, bool ready)
+> > >>>> +{
+> > >>>
+> > >>> What this API is for? Why need it in this version?
+> > >>
+> > >> we moved gadget to otg registration from udc_bind_to_driver() to usb_add_gadget_udc_release().
+> > >> This means there is a window when gadget function driver (e.g. g_zero) is not loaded.
+> > >> We don't want to start the gadget controller in that window.
+> > >>
+> > >> usb_otg_gadget_ready() is used by gadget core to notify the otg core when the function driver
+> > >> is ready or not-ready.
+> > >>
+> > > 
+> > > Why you need to move this from gadget's probe to udc's probe? Currently,
+> > > the sequence of gadget and udc's probe is random, but udc_bind_to_driver
+> > > is called when udc is ready.
+> > > 
+> > Because we need to support -EPROBE_DEFER at udc probe.
+> > At udc_bind_to_driver there is no scope for -EPROBE_DEFER.
+> > 
+> 
+> Why udc_bind_to_driver can't return -EPROBE_DEFER if register to OTG is
+> failed?
+> 
+> > Another issue is that we need to register with otg and have otg->caps available
+> > before driver->bind() is called in udc_bind_to_driver(). Else gadget function
+> > will not have the correct OTG descriptor.
+> > 
+> 
+> You can do register before calling driver->bind.
+> 
 
+Please skip my comments, I understand your changes now.
 
-On 6/12/2016 15:23, Boris Brezillon wrote:
-> On Sun, 12 Jun 2016 11:04:27 +0800
-> "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
->
->> On 6/9/2016 05:57, Boris Brezillon wrote:
->>> On Tue, 7 Jun 2016 15:11:53 +0800
->>> Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>>> DT binding documentation for ISC driver.
->>>>
->>>> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>>
->>>> Changes in v4:
->>>> - Remove the isc clock nodes.
->>>>
->>>> Changes in v3:
->>>> - Remove the 'atmel,sensor-preferred'.
->>>> - Modify the isc clock node according to the Rob's remarks.
->>>>
->>>> Changes in v2:
->>>> - Remove the unit address of the endpoint.
->>>> - Add the unit address to the clock node.
->>>> - Avoid using underscores in node names.
->>>> - Drop the "0x" in the unit address of the i2c node.
->>>> - Modify the description of 'atmel,sensor-preferred'.
->>>> - Add the description for the ISC internal clock.
->>>>
->>>>  .../devicetree/bindings/media/atmel-isc.txt        | 69 ++++++++++++++++++++++
->>>>  1 file changed, 69 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
->>>> new file mode 100644
->>>> index 0000000..3f83524
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
->>>> @@ -0,0 +1,69 @@
->>>> +Atmel Image Sensor Controller (ISC)
->>>> +----------------------------------------------
->>>> +
->>>> +Required properties for ISC:
->>>> +- compatible
->>>> +	Must be "atmel,sama5d2-isc".
->>>> +- reg
->>>> +	Physical base address and length of the registers set for the device.
->>>> +- interrupts
->>>> +	Should contain IRQ line for the ISC.
->>>> +- clocks
->>>> +	List of clock specifiers, corresponding to entries in
->>>> +	the clock-names property;
->>>> +	Please refer to clock-bindings.txt.
->>>> +- clock-names
->>>> +	Required elements: "hclock".
->>>> +- #clock-cells
->>>> +	Should be 0.
->>>> +- clock-output-names
->>>> +	Should contain the name of the clock driving the sensor master clock.
->>>> +- pinctrl-names, pinctrl-0
->>>> +	Please refer to pinctrl-bindings.txt.
->>>> +
->>>> +
->>>> +ISC supports a single port node with parallel bus. It should contain one
->>>> +'port' child node with child 'endpoint' node. Please refer to the bindings
->>>> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
->>>> +
->>>> +Example:
->>>> +isc: isc@f0008000 {
->>>> +	compatible = "atmel,sama5d2-isc";
->>>> +	reg = <0xf0008000 0x4000>;
->>>> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
->>>> +	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
->>>> +	clock-names = "hclock";
->>>
->>> You have 3 clocks here and only one name. Are you sure this example is
->>> actually working?
->>>
->> The isc_clk is mandatory, but the other two clocks are optional, so I
->> did not give their name. This example is tested.
->> Should I add the name for the other two clocks?
->
-> It only works here because you're using these clocks as the parents of
-> the ispck ismck clocks, but that's an implementation detail, and
-> consumer are usually referencing their clocks by name. So yes, I'd
-> recommend specifying names here, even if it's not strictly required by
-> your current implementation.
->
-Accept. The clock names will be specified.
-Thank you.
+-- 
 
->>
->>>> +	#clock-cells = <0>;
->>>> +	clock-output-names = "isc-mck";
->>>> +
->>>> +	port {
->>>> +		#address-cells = <1>;
->>>> +		#size-cells = <0>;
->>>> +
->>>> +		isc_0: endpoint {
->>>> +			remote-endpoint = <&ov7740_0>;
->>>> +			hsync-active = <1>;
->>>> +			vsync-active = <0>;
->>>> +			pclk-sample = <1>;
->>>> +		};
->>>> +	};
->>>> +
->>>> +
->>>> +};
->>>> +
->>>> +i2c1: i2c@fc028000 {
->>>> +	ov7740: camera@21 {
->>>> +	compatible = "ovti,ov7740";
->>>> +	reg = <0x21>;
->>>> +
->>>> +	clocks = <&isc>;
->>>> +	clock-names = "xvclk";
->>>> +	assigned-clocks = <&isc>;
->>>> +	assigned-clock-rates = <24000000>;
->>>> +
->>>> +	port {
->>>> +		ov7740_0: endpoint {
->>>> +			remote-endpoint = <&isc_0>;
->>>> +		};
->>>> +	};
->>>> +};
->>>
->>>
->>>
->
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
