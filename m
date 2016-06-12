@@ -1,62 +1,145 @@
-From: Hongtao Jia <hongtao.jia@nxp.com>
-Subject: Re: [PATCH 7/7] thermal: qoriq: Add thermal management support
-Date: Sun, 12 Jun 2016 08:58:42 +0000
-Message-ID: <AM4PR0401MB1843BE91034567CEC96A76FEEB520@AM4PR0401MB1843.eurprd04.prod.outlook.com>
+From: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] [media] atmel-isc: DT binding for Image Sensor
+ Controller driver
+Date: Sun, 12 Jun 2016 17:35:35 +0800
+Message-ID: <d53d04a6-b9e7-81cd-8b3c-ed952582b154@atmel.com>
+References: <1465283513-30224-1-git-send-email-songjun.wu@atmel.com>
+ <1465283513-30224-3-git-send-email-songjun.wu@atmel.com>
+ <20160608200052.GA8515@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Language: zh-CN
-Sender: linux-pm-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: "kbuild-all@01.org" <kbuild-all@01.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, Scott Wood <scott.wood@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160608200052.GA8515@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgYWxsLA0KDQpJIHJlY2VpdmVkIHRoaXMgYXV0byBidWlsZCBlcnJvciBub3RpY2UuIEkgaGF2
-ZSBzb21ldGhpbmcgdG8gY2xhcmlmeSBhbmQgYXNrOg0KLSBbY2Fubm90IGFwcGx5IHRvIHJvYmgv
-Zm9yLW5leHQgc29jLXRoZXJtYWwvbmV4dF0NCiAgIEl0IGNvdWxkIGFwcGx5IHRvIHJvYmgvZm9y
-LW5leHQuDQogICBJdCBjb3VsZCBub3QgYXBwbHkgdG8gc29jLXRoZXJtYWwvbmV4dCBiZWNhdXNl
-IHRoaXMgYnJhbmNoIGlzIG5vdCB1cGRhdGVkIHRvIHRoZSBsYXRlc3Qga2VybmVsLg0KDQotIFth
-dXRvIGJ1aWxkIHRlc3QgRVJST1Igb24gdjQuNy1yYzFdIFthbHNvIGJ1aWxkIHRlc3QgRVJST1Ig
-b24gbmV4dC0yMDE2MDYwM10NCiAgIEl0IHBhc3NlZCBhbGwgYnVpbGQgdGVzdCB1bmRlciBBUkNI
-PWFybS9wb3dlcnBjL3g4Ni4NCiAgIFRoZSBlcnJvciBsb2cgdW5kZXIgQVJDSD11bSAiaW1wbGlj
-aXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24gJ2lvdW5tYXAnIiBsb29rcyBvZGQgZm9yIG1lIGJl
-Y2F1c2UNCiAgIEkgYmVsaWV2ZSBpdCdzIGluY2x1ZGVkIGluIDxsaW51eC9pby5oPi4gQW55IHN1
-Z2dlc3Rpb25zIGZvciBtZSB0byBmaXggdGhpcyBpc3N1ZT8NCg0KVGhhbmtzLg0KLSBIb25ndGFv
-DQoNCg0KPiAtLS0tLdPKvP7Urbz+LS0tLS0NCj4gt6K8/sjLOiBrYnVpbGQgdGVzdCByb2JvdCBb
-bWFpbHRvOmxrcEBpbnRlbC5jb21dDQo+ILeiy83KsbzkOiBNb25kYXksIEp1bmUgMDYsIDIwMTYg
-MTo1MiBBTQ0KPiDK1bz+yMs6IEhvbmd0YW8gSmlhIDxob25ndGFvLmppYUBueHAuY29tPg0KPiCz
-rcvNOiBrYnVpbGQtYWxsQDAxLm9yZzsgZWR1YmV6dmFsQGdtYWlsLmNvbTsgcnVpLnpoYW5nQGlu
-dGVsLmNvbTsNCj4gcm9iaCtkdEBrZXJuZWwub3JnOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsgU2Nv
-dHQgV29vZA0KPiA8c2NvdHQud29vZEBueHAuY29tPjsgc2hhd25ndW9Aa2VybmVsLm9yZzsgbGlu
-dXgtcG1Admdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtDQo+IGRldkBsaXN0cy5vemxhYnMu
-b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IEhvbmd0YW8gSmlhDQo+
-IDxob25ndGFvLmppYUBueHAuY29tPg0KPiDW98ziOiBSZTogW1BBVENIIDcvN10gdGhlcm1hbDog
-cW9yaXE6IEFkZCB0aGVybWFsIG1hbmFnZW1lbnQgc3VwcG9ydA0KPiANCj4gSGksDQo+IA0KPiBb
-YXV0byBidWlsZCB0ZXN0IEVSUk9SIG9uIHY0LjctcmMxXQ0KPiBbYWxzbyBidWlsZCB0ZXN0IEVS
-Uk9SIG9uIG5leHQtMjAxNjA2MDNdDQo+IFtjYW5ub3QgYXBwbHkgdG8gcm9iaC9mb3ItbmV4dCBz
-b2MtdGhlcm1hbC9uZXh0XQ0KPiBbaWYgeW91ciBwYXRjaCBpcyBhcHBsaWVkIHRvIHRoZSB3cm9u
-ZyBnaXQgdHJlZSwgcGxlYXNlIGRyb3AgdXMgYSBub3RlIHRvIGhlbHANCj4gaW1wcm92ZSB0aGUg
-c3lzdGVtXQ0KPiANCj4gdXJsOiAgICBodHRwczovL2dpdGh1Yi5jb20vMGRheS1jaS9saW51eC9j
-b21taXRzL0ppYS1Ib25ndGFvL2R0LWJpbmRpbmdzLQ0KPiBVcGRhdGUtUW9ySVEtVE1VLXRoZXJt
-YWwtYmluZGluZ3MvMjAxNjA2MDMtMTU0NDI4DQo+IGNvbmZpZzogdW0tYWxsbW9kY29uZmlnIChh
-dHRhY2hlZCBhcyAuY29uZmlnKQ0KPiBjb21waWxlcjogZ2NjLTYgKERlYmlhbiA2LjEuMS0xKSA2
-LjEuMSAyMDE2MDQzMA0KPiByZXByb2R1Y2U6DQo+ICAgICAgICAgIyBzYXZlIHRoZSBhdHRhY2hl
-ZCAuY29uZmlnIHRvIGxpbnV4IGJ1aWxkIHRyZWUNCj4gICAgICAgICBtYWtlIEFSQ0g9dW0NCj4g
-DQo+IEFsbCBlcnJvcnMgKG5ldyBvbmVzIHByZWZpeGVkIGJ5ID4+KToNCj4gDQo+ICAgIGRyaXZl
-cnMvdGhlcm1hbC9xb3JpcV90aGVybWFsLmM6IEluIGZ1bmN0aW9uICdxb3JpcV90bXVfcHJvYmUn
-Og0KPiA+PiBkcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jOjI1NToyOiBlcnJvcjogaW1w
-bGljaXQgZGVjbGFyYXRpb24gb2YNCj4gZnVuY3Rpb24gJ2lvdW5tYXAnIFstV2Vycm9yPWltcGxp
-Y2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0KPiAgICAgIGlvdW5tYXAoZGF0YS0+cmVncyk7DQo+
-ICAgICAgXn5+fn5+fg0KPiAgICBjYzE6IHNvbWUgd2FybmluZ3MgYmVpbmcgdHJlYXRlZCBhcyBl
-cnJvcnMNCj4gDQo+IHZpbSArL2lvdW5tYXAgKzI1NSBkcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhl
-cm1hbC5jDQo+IA0KPiAgICAyNDkJCXNpdGUgfD0gMHgxIDw8ICgxNSAtIGRhdGEtPnNlbnNvcl9p
-ZCk7DQo+ICAgIDI1MAkJdG11X3dyaXRlKGRhdGEsIHNpdGUgfCBUTVJfTUUgfCBUTVJfQUxQRiwg
-JmRhdGEtPnJlZ3MtDQo+ID50bXIpOw0KPiAgICAyNTENCj4gICAgMjUyCQlyZXR1cm4gMDsNCj4g
-ICAgMjUzDQo+ICAgIDI1NAllcnJfdG11Og0KPiAgPiAyNTUJCWlvdW5tYXAoZGF0YS0+cmVncyk7
-DQo+ICAgIDI1Ng0KPiAgICAyNTcJZXJyX2lvbWFwOg0KPiAgICAyNTgJCXBsYXRmb3JtX3NldF9k
-cnZkYXRhKHBkZXYsIE5VTEwpOw0KPiANCj4gLS0tDQo+IDAtREFZIGtlcm5lbCB0ZXN0IGluZnJh
-c3RydWN0dXJlICAgICAgICAgICAgICAgIE9wZW4gU291cmNlIFRlY2hub2xvZ3kgQ2VudGVyDQo+
-IGh0dHBzOi8vbGlzdHMuMDEub3JnL3BpcGVybWFpbC9rYnVpbGQtYWxsICAgICAgICAgICAgICAg
-ICAgIEludGVsIENvcnBvcmF0aW9uDQo=
+
+
+On 6/9/2016 04:00, Rob Herring wrote:
+> On Tue, Jun 07, 2016 at 03:11:53PM +0800, Songjun Wu wrote:
+>> DT binding documentation for ISC driver.
+>>
+>> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>
+>> Changes in v4:
+>> - Remove the isc clock nodes.
+>>
+>> Changes in v3:
+>> - Remove the 'atmel,sensor-preferred'.
+>> - Modify the isc clock node according to the Rob's remarks.
+>>
+>> Changes in v2:
+>> - Remove the unit address of the endpoint.
+>> - Add the unit address to the clock node.
+>> - Avoid using underscores in node names.
+>> - Drop the "0x" in the unit address of the i2c node.
+>> - Modify the description of 'atmel,sensor-preferred'.
+>> - Add the description for the ISC internal clock.
+>>
+>>  .../devicetree/bindings/media/atmel-isc.txt        | 69 ++++++++++++++++++++++
+>>  1 file changed, 69 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+>
+> Almost there...
+>
+>> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+>> new file mode 100644
+>> index 0000000..3f83524
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+>> @@ -0,0 +1,69 @@
+>> +Atmel Image Sensor Controller (ISC)
+>> +----------------------------------------------
+>> +
+>> +Required properties for ISC:
+>> +- compatible
+>> +	Must be "atmel,sama5d2-isc".
+>> +- reg
+>> +	Physical base address and length of the registers set for the device.
+>> +- interrupts
+>> +	Should contain IRQ line for the ISC.
+>> +- clocks
+>> +	List of clock specifiers, corresponding to entries in
+>> +	the clock-names property;
+>> +	Please refer to clock-bindings.txt.
+>> +- clock-names
+>> +	Required elements: "hclock".
+>> +- #clock-cells
+>> +	Should be 0.
+>> +- clock-output-names
+>> +	Should contain the name of the clock driving the sensor master clock.
+>> +- pinctrl-names, pinctrl-0
+>> +	Please refer to pinctrl-bindings.txt.
+>
+> Required, but not in your example.
+>
+I will add it to the example.
+
+>> +
+>> +
+>> +ISC supports a single port node with parallel bus. It should contain one
+>> +'port' child node with child 'endpoint' node. Please refer to the bindings
+>> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> +
+>> +Example:
+>> +isc: isc@f0008000 {
+>> +	compatible = "atmel,sama5d2-isc";
+>> +	reg = <0xf0008000 0x4000>;
+>> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
+>> +	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
+>> +	clock-names = "hclock";
+>> +	#clock-cells = <0>;
+>> +	clock-output-names = "isc-mck";
+>> +
+>> +	port {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>
+> These 2 you can drop.
+>
+Accept. Thank you.
+
+>> +
+>> +		isc_0: endpoint {
+>> +			remote-endpoint = <&ov7740_0>;
+>> +			hsync-active = <1>;
+>> +			vsync-active = <0>;
+>> +			pclk-sample = <1>;
+>> +		};
+>> +	};
+>> +
+>> +
+>> +};
+>> +
+>> +i2c1: i2c@fc028000 {
+>> +	ov7740: camera@21 {
+>> +	compatible = "ovti,ov7740";
+>
+> Fix the indentation.
+>
+Accept. Thank you.
+
+>> +	reg = <0x21>;
+>> +
+>> +	clocks = <&isc>;
+>> +	clock-names = "xvclk";
+>> +	assigned-clocks = <&isc>;
+>> +	assigned-clock-rates = <24000000>;
+>> +
+>> +	port {
+>> +		ov7740_0: endpoint {
+>> +			remote-endpoint = <&isc_0>;
+>> +		};
+>> +	};
+>> +};
+>> --
+>> 2.7.4
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
