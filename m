@@ -1,154 +1,77 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Sun, 12 Jun 2016 09:23:21 +0200
-Message-ID: <20160612092321.60b55a81@bbrezillon>
-References: <1465283513-30224-1-git-send-email-songjun.wu@atmel.com>
-	<1465283513-30224-3-git-send-email-songjun.wu@atmel.com>
-	<20160608235753.46e73078@bbrezillon>
-	<6a878440-042f-c447-19cb-aa05b5dc535d@atmel.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [RFC v4 01/14] regulator: of: Add helper for getting all supplies
+Date: Sun, 12 Jun 2016 15:29:01 +0800
+Message-ID: <20160612072901.GD22054@shlinux2>
+References: <1465465471-28740-1-git-send-email-k.kozlowski@samsung.com>
+ <1465465471-28740-2-git-send-email-k.kozlowski@samsung.com>
+ <20160609102925.GS7510@sirena.org.uk>
+ <5759560A.70107@samsung.com>
+ <20160610173056.GA16503@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6a878440-042f-c447-19cb-aa05b5dc535d-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160610173056.GA16503@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Heiko Stuebner <heiko@sntech.de>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 12 Jun 2016 11:04:27 +0800
-"Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-
-> On 6/9/2016 05:57, Boris Brezillon wrote:
-> > On Tue, 7 Jun 2016 15:11:53 +0800
-> > Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> >  
-> >> DT binding documentation for ISC driver.
-> >>
-> >> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >>
-> >> Changes in v4:
-> >> - Remove the isc clock nodes.
-> >>
-> >> Changes in v3:
-> >> - Remove the 'atmel,sensor-preferred'.
-> >> - Modify the isc clock node according to the Rob's remarks.
-> >>
-> >> Changes in v2:
-> >> - Remove the unit address of the endpoint.
-> >> - Add the unit address to the clock node.
-> >> - Avoid using underscores in node names.
-> >> - Drop the "0x" in the unit address of the i2c node.
-> >> - Modify the description of 'atmel,sensor-preferred'.
-> >> - Add the description for the ISC internal clock.
-> >>
-> >>  .../devicetree/bindings/media/atmel-isc.txt        | 69 ++++++++++++++++++++++
-> >>  1 file changed, 69 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> >> new file mode 100644
-> >> index 0000000..3f83524
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> >> @@ -0,0 +1,69 @@
-> >> +Atmel Image Sensor Controller (ISC)
-> >> +----------------------------------------------
-> >> +
-> >> +Required properties for ISC:
-> >> +- compatible
-> >> +	Must be "atmel,sama5d2-isc".
-> >> +- reg
-> >> +	Physical base address and length of the registers set for the device.
-> >> +- interrupts
-> >> +	Should contain IRQ line for the ISC.
-> >> +- clocks
-> >> +	List of clock specifiers, corresponding to entries in
-> >> +	the clock-names property;
-> >> +	Please refer to clock-bindings.txt.
-> >> +- clock-names
-> >> +	Required elements: "hclock".
-> >> +- #clock-cells
-> >> +	Should be 0.
-> >> +- clock-output-names
-> >> +	Should contain the name of the clock driving the sensor master clock.
-> >> +- pinctrl-names, pinctrl-0
-> >> +	Please refer to pinctrl-bindings.txt.
-> >> +
-> >> +
-> >> +ISC supports a single port node with parallel bus. It should contain one
-> >> +'port' child node with child 'endpoint' node. Please refer to the bindings
-> >> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-> >> +
-> >> +Example:
-> >> +isc: isc@f0008000 {
-> >> +	compatible = "atmel,sama5d2-isc";
-> >> +	reg = <0xf0008000 0x4000>;
-> >> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
-> >> +	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-> >> +	clock-names = "hclock";  
-> >
-> > You have 3 clocks here and only one name. Are you sure this example is
-> > actually working?
-> >  
-> The isc_clk is mandatory, but the other two clocks are optional, so I 
-> did not give their name. This example is tested.
-> Should I add the name for the other two clocks?
-
-It only works here because you're using these clocks as the parents of
-the ispck ismck clocks, but that's an implementation detail, and
-consumer are usually referencing their clocks by name. So yes, I'd
-recommend specifying names here, even if it's not strictly required by
-your current implementation.
-
+On Fri, Jun 10, 2016 at 12:30:56PM -0500, Rob Herring wrote:
+> On Thu, Jun 09, 2016 at 01:42:02PM +0200, Krzysztof Kozlowski wrote:
+> > On 06/09/2016 12:29 PM, Mark Brown wrote:
+> > > On Thu, Jun 09, 2016 at 11:44:18AM +0200, Krzysztof Kozlowski wrote:
+> > >> Few drivers have a need of getting regulator supplies without knowing
+> > >> their names:
+> > >> 1. The Simple Framebuffer driver works on setup provided by bootloader
+> > >>    (outside of scope of kernel);
+> > >> 2. Generic power sequence driver may be attached to any device node.
+> > >>
+> > >> Add a Device Tree helper for parsing "-supply" properties and returning
+> > >> allocated bulk regulator consumers.
+> > > 
+> > > I'm still very concerned that this is just an invitation to people to
+> > > write half baked regulator consumers and half baked DTs to go along with
+> > > it, making it a standard API that doesn't have big red flags on it that
+> > > will flag up when "normal" drivers use it is not good.  Right now this
+> > > just looks like a standard API and people are going to just start using
+> > > it.  If we are going to do this perhaps we need a separate header or
+> > > something to help flag this up.
+> > 
+> > No problem, I can move it to a special header.  Actually, if you dislike
+> > this as an API, it does not have to be in header at all.  I can just
+> > duplicate the simplefb code.
+> > 
+> > > In the case of power sequences I'd expect the sequences to perform
+> > > operations on named supplies - the core shouldn't know what the supplies
+> > > are but the thing specifying the sequence should.
+> > 
+> > Hm, so maybe passing names like:
+> > 
+> > usb3503@08 {
+> > 	reset-gpios = <&gpx3 5 GPIO_ACTIVE_HIGH>;
+> > 	initial-mode = <1>;
+> > 	vdd-supply = <&buck8_reg>;
+> > 	foo-supply = <&buck9_reg>;
+> > 
+> >         power-sequence;
+> > 	power-sequence-supplies = "vdd", "foo";
 > 
-> >> +	#clock-cells = <0>;
-> >> +	clock-output-names = "isc-mck";
-> >> +
-> >> +	port {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >> +
-> >> +		isc_0: endpoint {
-> >> +			remote-endpoint = <&ov7740_0>;
-> >> +			hsync-active = <1>;
-> >> +			vsync-active = <0>;
-> >> +			pclk-sample = <1>;
-> >> +		};
-> >> +	};
-> >> +
-> >> +
-> >> +};
-> >> +
-> >> +i2c1: i2c@fc028000 {
-> >> +	ov7740: camera@21 {
-> >> +	compatible = "ovti,ov7740";
-> >> +	reg = <0x21>;
-> >> +
-> >> +	clocks = <&isc>;
-> >> +	clock-names = "xvclk";
-> >> +	assigned-clocks = <&isc>;
-> >> +	assigned-clock-rates = <24000000>;
-> >> +
-> >> +	port {
-> >> +		ov7740_0: endpoint {
-> >> +			remote-endpoint = <&isc_0>;
-> >> +		};
-> >> +	};
-> >> +};  
-> >
-> >
-> >  
+> This alone would be fine as it is just one property, but then what's 
+> next? power-sequence-delay, power-sequence-clocks, etc. What if you 
+> need to express ordering relationship of supplies, clocks, gpios? We end 
+> up with a scripting language in DT and we don't want to have that.
+> 
 
+Can we do things like below:
 
+- DT describes hardware elements (clock, gpios, etc) for power sequence, and we
+need a node for power sequence.
+- Power sequence framework handles getting hardware elements.
+- Power sequence platform driver handles special sequence for devices,
+and we can create some generic drivers for generic devices.
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Best Regards,
+Peter Chen
