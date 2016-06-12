@@ -1,54 +1,91 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] Documentation: bindings: add DT documentation for
- Rockchip USB2PHY
-Date: Sun, 12 Jun 2016 09:18:07 +0800
-Message-ID: <eb90a778-5e8a-91f4-c1ec-e0886a961882@rock-chips.com>
-References: <1465290954-15852-1-git-send-email-frank.wang@rock-chips.com>
- <1465290954-15852-2-git-send-email-frank.wang@rock-chips.com>
- <20160608200419.GA12468@rob-hp-laptop>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt doc for Rockchip
+ PCIe controller
+Date: Sun, 12 Jun 2016 09:34:56 +0800
+Message-ID: <bdbc3e8e-b06a-4adf-bf61-56cc19ca67d9@rock-chips.com>
+References: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
+ <CAD=FV=XiRgjAU2STck4mcWAERqZDvNSsCUytHDnWD+SHL2sRrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160608200419.GA12468@rob-hp-laptop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=XiRgjAU2STck4mcWAERqZDvNSsCUytHDnWD+SHL2sRrQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Shawn Lin <shawn.lin@rock-chips.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Wenrui Li <wenrui.li@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bob,
+=E5=9C=A8 2016/6/10 12:01, Doug Anderson =E5=86=99=E9=81=93:
+> Shawn,
+>
+> On Wed, Jun 8, 2016 at 1:05 AM, Shawn Lin <shawn.lin@rock-chips.com> =
+wrote:
+>> +pcie0: pcie@f8000000 {
+>> +       compatible =3D "rockchip,rk3399-pcie";
+>> +       #address-cells =3D <3>;
+>> +       #size-cells =3D <2>;
+>> +       clocks =3D <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
+>> +                <&cru PCLK_PCIE>;
+>> +       clock-names =3D "aclk", "aclk-perf",
+>> +                     "hclk";
+>
+> Code also requires a "pm" clock.
+>
+>> +       bus-range =3D <0x0 0x1>;
+>> +       interrupts =3D <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50=
+ IRQ_TYPE_LEVEL_HIGH>,
+>> +                    <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+>> +       interrupt-names: "sys", "legacy", "client";
+>
+> Shouldn't be ":", should be "=3D".
+>
+>
+>> +       assigned-clocks =3D <&cru SCLK_PCIEPHY_REF>;
+>> +       assigned-clock-parents =3D <&cru SCLK_PCIEPHY_REF100M>;
+>> +       assigned-clock-rates =3D <100000000>;
+>> +       ep-gpios =3D <&gpio3 13 GPIO_ACTIVE_HIGH>;
+>> +       ranges =3D < 0x82000000 0 0xfa000000 0x0 0xfa000000 0 0x6000=
+00
+>> +                  0x81000000 0 0xfa600000 0x0 0xfa600000 0 0x100000=
+ >;
+>
+> nit: I don't thin it's common to have spaces before/after the ">" and=
+ "<".
+> nit: Be consistent about 0 vs. 0x0 in ranges.
+>
+>
+>> +       num-lanes =3D <4>;
+>> +       reg =3D < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0=
+x0 0x1000000 >;
+>> +       reg-name =3D "axi-base", "apb-base";
+>
+> Should be "reg-names" (with an "s")
+>
+>
+>> +       resets =3D <&cru SRST_PCIEPHY>, <&cru SRST_PCIE_CORE>, <&cru=
+ SRST_PCIE_MGMT>,
+>> +                <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>=
+;
+>> +       reset-names =3D "core", "mgmt", "mgmt-sticky", "pipe";
+>
+> You have 5 resets but 4 reset names.  That doesn't seem right.  Code
+> shows you only getting 4, so presumably you need to remove the
+> SRST_PCIEPHY one.
 
-On 2016/6/9 4:04, Rob Herring wrote:
-> On Tue, Jun 07, 2016 at 05:15:53PM +0800, Frank Wang wrote:
->> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->> Changes in v4:
->>   - Used 'phy-supply' instead of 'vbus_*-supply'.
->>
->> Changes in v3:
->>   - Added 'clocks' and 'clock-names' optional properties.
->>   - Specified 'otg-port' and 'host-port' as the sub-node name.
->>
->> Changes in v2:
->>   - Changed vbus_host optional property from gpio to regulator.
->>   - Specified vbus_otg-supply optional property.
->>   - Specified otg_id and otg_bvalid property.
->>
->>   .../bindings/phy/phy-rockchip-inno-usb2.txt        |   62 ++++++++++++++++++++
->>   1 file changed, 62 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Thanks for catching these above as I forgot to rework the this sample.
+
+>
+>
+> -Doug
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 >
 
- From the latest comments of Heiko, the devicetree bindings need to add 
-a new property to handle multiple phy, and I will send out a new patch 
-later today.
 
-BR.
-Frank
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Best Regards
+Shawn Lin
