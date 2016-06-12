@@ -1,56 +1,82 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx6q-cm-fx6: fix the operation points
-Date: Mon, 13 Jun 2016 01:04:15 +0200
-Message-ID: <333d8139fc75434e87b49a479c91fd60@rwthex-s1-b.rwth-ad.de>
-References: <cd3010c3a4144ec38f2cfd1bfbd1b2ad@rwthex-s1-b.rwth-ad.de>
- <c961c1e0cdde471daf1bdce2e8e7696b@rwthex-s2-a.rwth-ad.de>
+From: <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: [PATCH v3 1/2] ARM: dts: imx6q-cm-fx6: fix the operation points
+Date: Mon, 13 Jun 2016 01:24:55 +0200
+Message-ID: <e24c7d64dbce490fbeaa0f44b56027d0@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c961c1e0cdde471daf1bdce2e8e7696b-gtPewvpZjL+1MzRH+ruthl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+From: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 
-thanks again for your review!
+The current ldo settings of the cm-fx6 do not allow 1.2GHz cpu
+frequency. At this frequency the module behaves unstable.
 
-On 06/13/2016 12:49 AM, Fabio Estevam wrote:
-> On Sun, Jun 12, 2016 at 12:19 PM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
-> 
->> +&cpu0 {
->> +       /* Although the imx6q fuse indicates that 1.2GHz operation is possible,
->> +        * the module behaves unstable at this frequency. Hence, remove the
->> +        * 1.2GHz operation point here.
->> +        */
-> 
-> Just one minor comment.
-> 
-> From Documentation/CodingStyle:
-> 
-> "The preferred style for long (multi-line) comments is:
-> 
->     /*
->      * This is the preferred style for multi-line
->      * comments in the Linux kernel source code.
->      * Please use it consistently.
->      *
->      * Description:  A column of asterisks on the left side,
->      * with beginning and ending almost-blank lines.
->      */
-> "
-> 
-ups, I took only a quick look and picked the comment style for net/ ...
-I will fix it and read more carefully next time.
+But the imx6q fuse indicates that 1.2GHz operation is possible.
+Hence, remove the 1.2GHz operation point in the device tree.
 
-Thanks,
-Christopher
+Signed-off-by: Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+[christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org: enhance commit message, adjust
+ remaining operation points to match the ones in imx6q.dtsi and add
+ a comment in the device tree]
+Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+---
 
-> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> 
+Notes:
+    Changes since v2:
+     - fix comment style
+     - add Fabio's Reviewed-By
+    
+    Changes since v1:
+     - Enhance commit message to explain that we cannot rely on the imx6q
+       fuse to restrict the frequency
+     - put the same information into a comment in the device tree
+     - fix the remaining operation points to match the ones given in
+       imx6q.dtsi
+
+ arch/arm/boot/dts/imx6q-cm-fx6.dts | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+index 6d8d5e9..b5de7e6 100644
+--- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
++++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+@@ -91,6 +91,28 @@
+ 	};
+ };
+ 
++&cpu0 {
++	/*
++	 * Although the imx6q fuse indicates that 1.2GHz operation is possible,
++	 * the module behaves unstable at this frequency. Hence, remove the
++	 * 1.2GHz operation point here.
++	 */
++	operating-points = <
++		/* kHz	uV */
++		996000	1250000
++		852000	1250000
++		792000	1175000
++		396000	975000
++	>;
++	fsl,soc-operating-points = <
++		/* ARM kHz	SOC-PU uV */
++		996000		1250000
++		852000		1250000
++		792000		1175000
++		396000		1175000
++	>;
++};
++
+ &ecspi1 {
+ 	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>, <&gpio3 19 GPIO_ACTIVE_HIGH>;
+-- 
+2.8.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
