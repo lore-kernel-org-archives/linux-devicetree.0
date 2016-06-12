@@ -1,73 +1,86 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] userspace API definitions for auto-focus coil
-Date: Sun, 12 Jun 2016 09:54:17 +0200
-Message-ID: <20160612075416.GA1160@amd>
-References: <20160531212222.GP26360@valkosipuli.retiisi.org.uk>
- <20160531213437.GA28397@amd>
- <20160601152439.GQ26360@valkosipuli.retiisi.org.uk>
- <20160601220840.GA21946@amd>
- <20160602074544.GR26360@valkosipuli.retiisi.org.uk>
- <20160602193027.GB7984@amd>
- <20160602212746.GT26360@valkosipuli.retiisi.org.uk>
- <20160605190716.GA11321@amd>
- <575512E5.5030000@gmail.com>
- <20160611220654.GC26360@valkosipuli.retiisi.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/3] dt-bindings: Document Renesas R-Car FCP power-domains usage
+Date: Sun, 12 Jun 2016 10:46:34 +0200
+Message-ID: <CAMuHMdUnwHYUVGHZn=gE0dxqR81iKO0dMEMATOL=Sw5aWbGVgQ@mail.gmail.com>
+References: <1465479695-18644-1-git-send-email-kieran@bingham.xyz>
+ <1465479695-18644-3-git-send-email-kieran@bingham.xyz> <20160610173914.GA20505@rob-hp-laptop>
+ <CAMuHMdWQZjE+AnPry6PiVc69PVdZ_2zstOKR==B6nywun2Om9Q@mail.gmail.com> <CAL_JsqLd+sXeEtq+chtrCxyDgyBm9s3giCC+ri8oMvfVLjunaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160611220654.GC26360@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, patrikbachan@gmail.com, serge@hallyn.com, linux-media@vger.kernel.org, mchehab@osg.samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLd+sXeEtq+chtrCxyDgyBm9s3giCC+ri8oMvfVLjunaA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kieran Bingham <kieran@ksquared.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-media@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hi Rob,
 
-> > >@@ -974,4 +975,9 @@ enum v4l2_detect_md_mode {
-> > >  #define V4L2_CID_DETECT_MD_THRESHOLD_GRID	(V4L2_CID_DETECT_CLASS_BASE + 3)
-> > >  #define V4L2_CID_DETECT_MD_REGION_GRID		(V4L2_CID_DETECT_CLASS_BASE + 4)
-> > >
-> > >+/* Control IDs specific to the AD5820 driver as defined by V4L2 */
-> > >+#define V4L2_CID_FOCUS_AD5820_BASE 	(V4L2_CTRL_CLASS_CAMERA | 0x10af)
-> 
-> Please check V4L2_CID_USER_*_BASE. That's how custom controls are handled
-> nowadays.
+CC linux-pm
 
-Let me see...
+On Fri, Jun 10, 2016 at 11:33 PM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Jun 10, 2016 at 2:11 PM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Fri, Jun 10, 2016 at 7:39 PM, Rob Herring <robh@kernel.org> wrote:
+>>> On Thu, Jun 09, 2016 at 02:41:33PM +0100, Kieran Bingham wrote:
+>>>> The power domain must be specified to bring the device out of module
+>>>> standby. Document this in the example provided, so that new additions
+>>>> are not missed.
+>>>>
+>>>> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/media/renesas,fcp.txt | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+>>>> index 271dcfdb5a76..6a55f5215221 100644
+>>>> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
+>>>> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+>>>> @@ -31,4 +31,5 @@ Device node example
+>>>>               compatible = "renesas,r8a7795-fcpv", "renesas,fcpv";
+>>>>               reg = <0 0xfea2f000 0 0x200>;
+>>>>               clocks = <&cpg CPG_MOD 602>;
+>>>> +             power-domains = <&sysc R8A7795_PD_A3VP>;
+>>>
+>>> This needs to be documented above too, not just the example.
+>>
+>> Why? Power domains are an optional feature, whose presence depends
+>> on the platform, not on the device.
+>
+> Examples are not documentation. The binding should stand on its own
+> without the example.
+>
+> How did I know this is optional unless you document it as optional?
+> How many power domains does the device have?
 
-> Now that I think about this, the original implementation in N900 very likely
-> did not use either of the two controls; the device driver was still written
-> to provide access to full capabilities of the chip. And that one had no
-> continuous AF.
+The device does not have power domains, and is not aware of the existence
+of power domains. Each SoC has one or more power domains.
 
-I'm not sure about the original implementation, but fcam-dev library
-(which is our best chance for usable camera) does use both:
+"power-domains" properties are used to describe the hierarchical relationship
+between power domains and the devices that resides in these power domains.
+Just like nodes and subnodes describe the hierarchical relationship between
+buses and the devices directly connected to these buses.
 
-pavel@duo:~/g/fcam-dev$ grep -ri RAMP_TIME .
-./.svn/pristine/05/0574680922f59e07bd49e16a951d69421690a323.svn-base:
-int val = ioctlSet(V4L2_CID_FOCUS_AD5820_RAMP_TIME,
-1000000.0f/diopterRateToTickRate(speed));
-./src/N900/Lens.cpp:    int val =
-ioctlSet(V4L2_CID_FOCUS_AD5820_RAMP_TIME,
-1000000.0f/diopterRateToTickRate(speed));
-pavel@duo:~/g/fcam-dev$ grep -ri RAMP_MODE .
-./.svn/pristine/05/0574680922f59e07bd49e16a951d69421690a323.svn-base:
-ioctlSet(V4L2_CID_FOCUS_AD5820_RAMP_MODE, 0);
-./src/N900/Lens.cpp:    ioctlSet(V4L2_CID_FOCUS_AD5820_RAMP_MODE, 0);
-pavel@duo:~/g/fcam-dev$
+On the (Linux) software side, the device driver does have to use Runtime PM
+if an SoC has more power domains than just the single "always-on" power domain.
 
-> I might as well drop the two controls, up to you. If someone ever needs them
-> they can always be reintroduced. I'd be happy to get a new patch, the
-> current driver patch does not compile (just tried) as the definitions of
-> these controls are missing.
+>> Hence "power-domains" properties may appear in any device node.
+>> Having to document them in every single binding document is overkill.
+>
+> We do it for everything else pretty much. There's some exceptions like "status".
 
-I'd prefer to keep the controls, as we have userspace using them. I
-got it to compile but have yet to get it to work (subdevs split, so it
-needs some modifications).
+IMHO having to document "power-domains" in every single DT binding is
+as silly as having to document that the device node must be a child of the bus
+device node in every single DT binding. This belongs in the DT binding of the
+power controller, which is the device controlling the power domain.
 
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
