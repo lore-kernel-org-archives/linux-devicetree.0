@@ -1,97 +1,77 @@
-From: Vinay Simha BN <simhavcs@gmail.com>
-Subject: [[RESEND][PATCH v2] 2/2] dt-bindings: Add jdi lt070me05000 panel bindings
-Date: Sun, 12 Jun 2016 22:21:24 +0530
-Message-ID: <1465750286-4305-2-git-send-email-simhavcs@gmail.com>
-References: <1465750286-4305-1-git-send-email-simhavcs@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465750286-4305-1-git-send-email-simhavcs@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Vinay Simha BN <simhavcs@gmail.com>, Archit Taneja <archit.taneja@gmail.com>, John Stultz <john.stultz@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/1] iio: light: Added CM36672 Proximity Sensor Driver.
+Date: Sun, 12 Jun 2016 19:30:04 +0200
+Message-ID: <CACRpkdaRiNaUPt-pB4M-k6u4-z5mCaz8FRYvZyHYD7B6VPy31A@mail.gmail.com>
+References: <1465462845-1571-1-git-send-email-capellamicro@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465462845-1571-1-git-send-email-capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Tsai <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TasMV2rI37PzA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for lt070me05000 panel
+On Thu, Jun 9, 2016 at 11:00 AM, Kevin Tsai <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Cc: Archit Taneja <archit.taneja@gmail.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
+> V2:
+> Thanks commends from Peter Meerwald-Stadler, Jonathan Cameron, and Linux
+> Walleij.
 
---
-v2:
- * incorporated rob herring and thierry reviews
-   gpio to gpios, gpio to regulator using fixed regulators
-   and pwm backlight is removed, since it is controlled by
-   dcs commands
----
- .../bindings/display/panel/jdi,lt070me05000.txt    | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
+Haha that again, everybody does that.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-new file mode 100644
-index 0000000..613b76f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-@@ -0,0 +1,57 @@
-+JDI model LT070ME05000 1200x1920 7" DSI Panel
-+
-+Required properties:
-+- compatible: should be "jdi,lt070me05000"
-+- vddp-supply: phandle of the regulator that provides the supply voltage
-+  Power IC supply (3-5V)
-+- dcdc_en-supply: phandle of the regulator that provides the supply voltage
-+  Power IC supply enable, High active
-+- vcc-supply: phandle of the regulator that provides the supply voltage
-+  IOVCC , power supply for LCM (1.8V)
-+- reset-gpios: phandle of gpio for reset line
-+  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
-+  XRES, Reset, Low active
-+- enable-gpios: phandle of gpio for enable line
-+  LED_EN, LED backlight enable, High active
-+
-+Example:
-+
-+	vcc_1p8v: regulator-fixed@2 {
-+		compatible = "regulator-fixed";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-name = "vcc_1p8v";
-+		regulator-type = "voltage";
-+		startup-delay-us = <0>;
-+		gpio = <&pm8921_gpio 23 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-boot-on;
-+	};
-+
-+	tlmm_pinmux: pinctrl@800000 {
-+
-+		dsi_panel_pinctrl: dsi-panel-pinctrl {
-+			mux {
-+				pins = "gpio54";
-+				function = "gpio";
-+				bias-pull-up;
-+				drive-strength = <8>;
-+			};
-+		};
-+	};
-+
-+	dsi0: qcom,mdss_dsi@4700000 {
-+		panel@0 {
-+			compatible = "jdi,lt070me05000";
-+			reg = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&dsi_panel_pinctrl>;
-+
-+			vddp-supply = <&pm8921_l17>;
-+			dcdc_en-supply = <&pm8921_lvs7>;
-+			vcc-supply = <&vcc_1p8v>;
-+
-+			reset-gpios = <&tlmm_pinmux 54 0>;
-+			enable-gpios = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
--- 
-1.9.1
+> Updated for the following:
+>  - Remove unused defines.
+>  - Rewrite event registration.
+>  - Remove direct register values in the device tree.
+>  - Rewrite by regmap API.
+>  - Remove irq module parameter.
+>  - Correct cm36672_remove().
+
+Awesome. Minor comments still:
+
+> +Required properties:
+> +- compatible: must be capella,cm36672"
+> +- reg: the I2C slave address, usually 0x60
+> +- interrupts: interrupt mapping for GPIO IRQ
+
+Don't say GPIO IRQ. Some chips have hardwired external interrupt lines
+rather than GPIOs and those should work just as fine. Does it support
+level, edge etc IRQs?
+
+> +Optional properties:
+> +- interrupt-parent: interrupt controller
+> +- interrupts: interrupt mapping for GPIO IRQ
+
+That is mentioned again, I guess it is not optional and should be removed
+from here?
+
+> +- cm36672,prx_led_current: LED current, must be one of the following values:
+> +    - 0: 50mA
+> +    - 1: 75mA
+> +    - 2: 100mA
+> +    - 3: 120mA
+> +    - 4: 140mA
+> +    - 5: 160mA
+> +    - 6: 180mA
+> +    - 7: 200mA
+
+Do not specify enumerators. Specify milliamps in the device tree
+and have the code translate it to enumerators. DTS should be
+human-readable and easy to understand without reading tables.
+
+Just use vendor prefix and something you seen before like:
+capella,driver-strength = <160>;
+For 160mA
+
+> +- cm36672,prx_hd: width of proximity sensor output data, must be one of the
+> +  following values:
+> +    - 0: 12-bit
+> +    - 1: 16-bit
+
+Use
+capella,bus-width = <12>;
+The SD cards have this pattern for bus widths.
+
+Yours,
+Linus Walleij
