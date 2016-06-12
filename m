@@ -1,14 +1,16 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/2] ARM: dts: sun6i: Add pmic / regulator nodes to Mele A1000G quad dts
-Date: Sun, 12 Jun 2016 13:07:00 +0200
-Message-ID: <1465729621-27378-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v3 2/2] ARM: dts: sun6i: Add pmic / regulator nodes to Mele M9 dts
+Date: Sun, 12 Jun 2016 13:07:01 +0200
+Message-ID: <1465729621-27378-2-git-send-email-hdegoede@redhat.com>
+References: <1465729621-27378-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465729621-27378-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pmic / regulator nodes to Mele A1000G quad dts.
+Add pmic / regulator nodes to Mele M9 dts.
 
 Note both reg_usb1_vbus and reg_dldo4 need to be on for the hub attached
 to usb1 to work, and we can list only one usb1_vbus-supply, so dldo4 is
@@ -21,13 +23,13 @@ Changes in v2:
 Changes in v3:
 -Also add a comment explaining why dldo4 is marked regulator-always-on
 ---
- arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts | 93 +++++++++++++++++++++++-
+ arch/arm/boot/dts/sun6i-a31-m9.dts | 93 +++++++++++++++++++++++++++++++++++++-
  1 file changed, 92 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
-index e063dab..5faeae4 100644
---- a/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts
+diff --git a/arch/arm/boot/dts/sun6i-a31-m9.dts b/arch/arm/boot/dts/sun6i-a31-m9.dts
+index 66d29b8..29016a1 100644
+--- a/arch/arm/boot/dts/sun6i-a31-m9.dts
++++ b/arch/arm/boot/dts/sun6i-a31-m9.dts
 @@ -72,6 +72,10 @@
  	};
  };
@@ -154,7 +156,7 @@ index e063dab..5faeae4 100644
  &reg_usb1_vbus {
  	pinctrl-names = "default";
  	pinctrl-0 = <&usb1_vbus_pin_m9>;
-@@ -151,5 +241,6 @@
+@@ -146,5 +236,6 @@
  
  &usbphy {
  	usb1_vbus-supply = <&reg_usb1_vbus>;
