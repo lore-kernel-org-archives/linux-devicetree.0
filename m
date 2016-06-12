@@ -1,124 +1,179 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Sun, 12 Jun 2016 11:08:14 +0800
-Message-ID: <85e0f96c-975a-94be-f211-62995b1f950f@rock-chips.com>
-References: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com>
- <20160608204448.GA26861@rob-hp-laptop>
- <af7b8d26-e88d-97df-9cce-30a6aaba0e1c@rock-chips.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX
+ settings
+Date: Sun, 12 Jun 2016 11:25:38 +0800
+Message-ID: <20160612032538.GB22054@shlinux2>
+References: <20160318211936.GA4158@rob-hp-laptop>
+ <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com>
+ <20160323043638.GA18462@peterchendt>
+ <56F2D43D.1040404@timesys.com>
+ <56F2DDB7.7070700@timesys.com>
+ <20160324022117.GA5301@peterchendt>
+ <57588DA8.4050000@timesys.com>
+ <CAL411-of2Phqx18LBaGt6FMg5DxaJesRYvrRzsfSNyJRopsUZQ@mail.gmail.com>
+ <CAENNV6+978syhexzQber58xuai=grC2_TsVF3GmHCAp_Zj=HZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <af7b8d26-e88d-97df-9cce-30a6aaba0e1c-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAENNV6+978syhexzQber58xuai=grC2_TsVF3GmHCAp_Zj=HZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Cc: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoK5ZyoIDIwMTYvNi8xMiA5OjQyLCBTaGF3biBMaW4g5YaZ6YGTOgo+IE9uIDIwMTYv
-Ni85IDQ6NDQsIFJvYiBIZXJyaW5nIHdyb3RlOgo+PiBPbiBXZWQsIEp1biAwOCwgMjAxNiBhdCAw
-NDowNToxN1BNICswODAwLCBTaGF3biBMaW4gd3JvdGU6Cj4+PiBUaGlzIHBhdGNoIGFkZHMgYSBi
-aW5kaW5nIHRoYXQgZGVzY3JpYmVzIHRoZSBSb2NrY2hpcCBQQ0llIGNvbnRyb2xsZXIKPj4+IGZv
-dW5kIG9uIFJvY2tjaGlwIFNvQ3MgUENJZSBpbnRlcmZhY2UuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1i
-eTogU2hhd24gTGluIDxzaGF3bi5saW5Acm9jay1jaGlwcy5jb20+Cj4+Pgo+Pj4gLS0tCj4+Pgo+
-Pj4gQ2hhbmdlcyBpbiB2MjoKPj4+IC0gZml4IGxvdHMgY2xrL3Jlc2V0IHN0dWZmIHN1Z2dlc3Rl
-ZCBieSBIZWlrbwo+Pj4gLSByZW1vdmUgbXNpLXBhcmVudCBhbmQgYWRkIG1zaS1tYXAgc3VnZ2Vz
-dGVkIGJ5IE1hcmMKPj4+IC0gZHJvcCBwaHkgcmVsYXRlZCBzdHVmZgo+Pj4gLSBzb21lIG90aGVy
-cyBtaW5vciBmaXhlcwo+Pj4KPj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcm9ja2No
-aXAtcGNpZS50eHQgICAgICB8IDg2Cj4+PiArKysrKysrKysrKysrKysrKysrKysrCj4+PiAgMSBm
-aWxlIGNoYW5nZWQsIDg2IGluc2VydGlvbnMoKykKPj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQKPj4+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcm9ja2NoaXAtcGNpZS50eHQK
-Pj4+Cj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bj
-aS9yb2NrY2hpcC1wY2llLnR4dAo+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcGNpL3JvY2tjaGlwLXBjaWUudHh0Cj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4gaW5k
-ZXggMDAwMDAwMC4uZWI5MmUyOQo+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yb2NrY2hpcC1wY2llLnR4dAo+Pj4gQEAgLTAs
-MCArMSw4NiBAQAo+Pj4gKyogUm9ja2NoaXAgQVhJIFBDSWUgUm9vdCBQb3J0IEJyaWRnZSBEVCBk
-ZXNjcmlwdGlvbgo+Pj4gKwo+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+PiArLSAjYWRkcmVz
-cy1jZWxsczogQWRkcmVzcyByZXByZXNlbnRhdGlvbiBmb3Igcm9vdCBwb3J0cywgc2V0IHRvIDwz
-Pgo+Pj4gKy0gI3NpemUtY2VsbHM6IFNpemUgcmVwcmVzZW50YXRpb24gZm9yIHJvb3QgcG9ydHMs
-IHNldCB0byA8Mj4KPj4+ICstICNpbnRlcnJ1cHQtY2VsbHM6IHNwZWNpZmllcyB0aGUgbnVtYmVy
-IG9mIGNlbGxzIG5lZWRlZCB0byBlbmNvZGUgYW4KPj4+ICsgICAgICAgIGludGVycnVwdCBzb3Vy
-Y2UuIFRoZSB2YWx1ZSBtdXN0IGJlIDEuCj4+PiArLSBjb21wYXRpYmxlOiBTaG91bGQgY29udGFp
-biAicm9ja2NoaXAscmszMzk5LXBjaWUiCj4+PiArLSByZWc6IFR3byByZWdpc3RlciByYW5nZXMg
-YXMgbGlzdGVkIGluIHRoZSByZWctbmFtZXMgcHJvcGVydHkKPj4+ICstIHJlZy1uYW1lczogTXVz
-dCBpbmNsdWRlIHRoZSBmb2xsb3dpbmcgbmFtZXMKPj4+ICsgICAgLSAiYXhpLWJhc2UiCj4+PiAr
-ICAgIC0gImFwYi1iYXNlIgo+Pj4gKy0gY2xvY2tzOiBNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9y
-IGVhY2ggZW50cnkgaW4gY2xvY2stbmFtZXMuCj4+PiArICAgICAgICBTZWUgLi4vY2xvY2tzL2Ns
-b2NrLWJpbmRpbmdzLnR4dCBmb3IgZGV0YWlscy4KPj4+ICstIGNsb2NrLW5hbWVzOiBNdXN0IGlu
-Y2x1ZGUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOgo+Pj4gKyAgICAtICJhY2xrIgo+Pj4gKyAgICAt
-ICJhY2xrLXBlcmYiCj4+PiArICAgIC0gImhjbGsiCj4+PiArICAgIC0gInBtIgo+Pj4gKy0gcGh5
-czogRnJvbSBQSFkgYmluZGluZ3M6IFBoYW5kbGUgZm9yIHRoZSBHZW5lcmljIFBIWSBmb3IgUENJ
-ZS4KPj4+ICstIHBoeS1uYW1lczogIE1VU1QgYmUgInBjaWUtcGh5Ii4KPj4KPj4gcGh5LW5hbWVz
-IGlzIGtpbmQgb2YgcG9pbnRsZXNzIGZvciAxIHBoeS4KPgoKV2UgbmVlZCBpdCBvdGhlcndpc2Ug
-ZGV2bV9waHkqIHdpbGwgZmFpbCB0byBnZXQgaXQgYXMgaXQgbmVlZAp0aGUgbmFtZSB0byBsb29r
-dXAgdGhlIHBoeQoKPgo+Pgo+Pj4gKy0gaW50ZXJydXB0czogVGhyZWUgaW50ZXJydXB0IGVudHJp
-ZXMgbXVzdCBiZSBzcGVjaWZpZWQuCj4+PiArLSBpbnRlcnJ1cHQtbmFtZXM6IE11c3QgaW5jbHVk
-ZSB0aGUgZm9sbG93aW5nIG5hbWVzCj4+PiArICAgIC0gInN5cyIKPj4+ICsgICAgLSAibGVnYWN5
-Igo+Pj4gKyAgICAtICJjbGllbnQiCj4+PiArLSByZXNldHM6IE11c3QgY29udGFpbiBmaXZlIGVu
-dHJpZXMgZm9yIGVhY2ggZW50cnkgaW4gcmVzZXQtbmFtZXMuCj4+PiArICAgICAgIFNlZSAuLi9y
-ZXNldC9yZXNldC50eHQgZm9yIGRldGFpbHMuCj4+PiArLSByZXNldC1uYW1lczogTXVzdCBpbmNs
-dWRlIHRoZSBmb2xsb3dpbmcgbmFtZXMKPj4+ICsgICAgLSAiY29yZSIKPj4+ICsgICAgLSAibWdt
-dCIKPj4+ICsgICAgLSAibWdtdC1zdGlja3kiCj4+PiArICAgIC0gInBpcGUiCj4+PiArLSBwaW5j
-dHJsLW5hbWVzIDogVGhlIHBpbiBjb250cm9sIHN0YXRlIG5hbWVzCj4+PiArLSBwaW5jdHJsLTA6
-IFRoZSAiZGVmYXVsdCIgcGluY3RybCBzdGF0ZQo+Pj4gKy0gaW50ZXJydXB0LW1hcC1tYXNrIGFu
-ZCBpbnRlcnJ1cHQtbWFwOiBzdGFuZGFyZCBQQ0kgcHJvcGVydGllcwo+Pj4gKy0gaW50ZXJydXB0
-LWNvbnRyb2xsZXI6IGlkZW50aWZpZXMgdGhlIG5vZGUgYXMgYW4gaW50ZXJydXB0IGNvbnRyb2xs
-ZXIKPj4+ICsKPj4+ICtPcHRpb25hbCBQcm9wZXJ0eToKPj4+ICstIGVwLWdwaW9zOiBjb250YWlu
-IHRoZSBlbnRyeSBmb3IgcHJlLXJlc2V0IGdwaW8KPj4+ICstIG51bS1sYW5lczogbnVtYmVyIG9m
-IGxhbmVzIHRvIHVzZQo+Pj4gKy0gdnBjaWUzdjMtc3VwcGx5OiBUaGUgcGhhbmRsZSB0byB0aGUg
-My4zdiByZWd1bGF0b3IgdG8gdXNlIGZvcgo+Pj4gcGNpZS4gSWYgdGhpcwo+Pj4gKyAgaXMgc3Bl
-Y2lmaWVkIHdlJ2xsIGRlZmVyIHByb2JlIHVudGlsIHdlIGNhbiBmaW5kIHRoaXMgcmVndWxhdG9y
-Lgo+Pj4gKy0gdnBjaWUxdjgtc3VwcGx5OiBUaGUgcGhhbmRsZSB0byB0aGUgMS44diByZWd1bGF0
-b3IgdG8gdXNlIGZvcgo+Pj4gcGNpZS4gSWYgdGhpcwo+Pj4gKyAgaXMgc3BlY2lmaWVkIHdlJ2xs
-IGRlZmVyIHByb2JlIHVudGlsIHdlIGNhbiBmaW5kIHRoaXMgcmVndWxhdG9yLgo+Pj4gKy0gdnBj
-aWUwdjktc3VwcGx5OiBUaGUgcGhhbmRsZSB0byB0aGUgMC45diByZWd1bGF0b3IgdG8gdXNlIGZv
-cgo+Pj4gcGNpZS4gSWYgdGhpcwo+Pj4gKyAgaXMgc3BlY2lmaWVkIHdlJ2xsIGRlZmVyIHByb2Jl
-IHVudGlsIHdlIGNhbiBmaW5kIHRoaXMgcmVndWxhdG9yLgo+Pj4gKwo+Pj4gK0V4YW1wbGU6Cj4+
-PiArCj4+PiArcGNpZTA6IHBjaWVAZjgwMDAwMDAgewo+Pj4gKyAgICBjb21wYXRpYmxlID0gInJv
-Y2tjaGlwLHJrMzM5OS1wY2llIjsKPj4+ICsgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mz47Cj4+PiAr
-ICAgICNzaXplLWNlbGxzID0gPDI+Owo+Pj4gKyAgICBjbG9ja3MgPSA8JmNydSBBQ0xLX1BDSUU+
-LCA8JmNydSBBQ0xLX1BFUkZfUENJRT4sCj4+PiArICAgICAgICAgPCZjcnUgUENMS19QQ0lFPjsK
-Pj4+ICsgICAgY2xvY2stbmFtZXMgPSAiYWNsayIsICJhY2xrLXBlcmYiLAo+Pj4gKyAgICAgICAg
-ICAgICAgImhjbGsiOwo+Pj4gKyAgICBidXMtcmFuZ2UgPSA8MHgwIDB4MT47Cj4+PiArICAgIGlu
-dGVycnVwdHMgPSA8R0lDX1NQSSA0OSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgPEdJQ19TUEkgNTAK
-Pj4+IElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+Pj4gKyAgICAgICAgICAgICA8R0lDX1NQSSA1MSBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPjsKPj4+ICsgICAgaW50ZXJydXB0LW5hbWVzOiAic3lzIiwgImxl
-Z2FjeSIsICJjbGllbnQiOwo+Pj4gKyAgICBhc3NpZ25lZC1jbG9ja3MgPSA8JmNydSBTQ0xLX1BD
-SUVQSFlfUkVGPjsKPj4+ICsgICAgYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmY3J1IFNDTEtf
-UENJRVBIWV9SRUYxMDBNPjsKPj4+ICsgICAgYXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8MTAwMDAw
-MDAwPjsKPj4+ICsgICAgZXAtZ3Bpb3MgPSA8JmdwaW8zIDEzIEdQSU9fQUNUSVZFX0hJR0g+Owo+
-Pj4gKyAgICByYW5nZXMgPSA8IDB4ODIwMDAwMDAgMCAweGZhMDAwMDAwIDB4MCAweGZhMDAwMDAw
-IDAgMHg2MDAwMDAKPj4+ICsgICAgICAgICAgIDB4ODEwMDAwMDAgMCAweGZhNjAwMDAwIDB4MCAw
-eGZhNjAwMDAwIDAgMHgxMDAwMDAgPjsKPj4KPj4gTm8gNjQtYml0IG1lbW9yeSBzcGFjZT8KPgo+
-IFdpbGwgZml4IHRoaXMgZXhhbXBsZS4gVGhhbmtzIGZvciBjYXRjaGluZyB0aGlzOikKPgo+Pgo+
-Pj4gKyAgICBudW0tbGFuZXMgPSA8ND47Cj4+PiArICAgIHJlZyA9IDwgMHgwIDB4ZjgwMDAwMDAg
-MHgwIDB4MjAwMDAwMCA+LCA8IDB4MCAweGZkMDAwMDAwIDB4MAo+Pj4gMHgxMDAwMDAwID47Cj4+
-PiArICAgIHJlZy1uYW1lID0gImF4aS1iYXNlIiwgImFwYi1iYXNlIjsKPj4+ICsgICAgcmVzZXRz
-ID0gPCZjcnUgU1JTVF9QQ0lFUEhZPiwgPCZjcnUgU1JTVF9QQ0lFX0NPUkU+LCA8JmNydQo+Pj4g
-U1JTVF9QQ0lFX01HTVQ+LAo+Pj4gKyAgICAgICAgIDwmY3J1IFNSU1RfUENJRV9NR01UX1NUSUNL
-WT4sIDwmY3J1IFNSU1RfUENJRV9QSVBFPjsKPj4+ICsgICAgcmVzZXQtbmFtZXMgPSAiY29yZSIs
-ICJtZ210IiwgIm1nbXQtc3RpY2t5IiwgInBpcGUiOwo+Pj4gKyAgICBwaHlzID0gPCZwY2llX3Bo
-eT47Cj4+PiArICAgIHBoeS1uYW1lcyA9ICJwY2llLXBoeSI7Cj4+PiArICAgIHBpbmN0cmwtbmFt
-ZXMgPSAiZGVmYXVsdCI7Cj4+PiArICAgIHBpbmN0cmwtMCA9IDwmcGNpZV9jbGtyZXE+Owo+Pj4g
-KyAgICAjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+Pj4gKyAgICBpbnRlcnJ1cHQtY29udHJvbGxl
-cjsKPj4+ICsgICAgaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Owo+Pj4gKyAgICBpbnRl
-cnJ1cHQtbWFwID0gPDAgMCAwIDEgJnBjaWUwIDE+LAo+Pj4gKyAgICAgICAgICAgIDwwIDAgMCAy
-ICZwY2llMCAyPiwKPj4+ICsgICAgICAgICAgICA8MCAwIDAgMyAmcGNpZTAgMz4sCj4+PiArICAg
-ICAgICAgICAgPDAgMCAwIDQgJnBjaWUwIDQ+Owo+Pj4gK307Cj4+PiAtLQo+Pj4gMi4zLjcKPj4+
-Cj4+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Xwo+PiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKPj4gTGludXgtcm9ja2NoaXBAbGlzdHMu
-aW5mcmFkZWFkLm9yZwo+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LXJvY2tjaGlwCj4+Cj4KPgoKCi0tIApCZXN0IFJlZ2FyZHMKU2hhd24gTGluCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9j
-a2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
+On Thu, Jun 09, 2016 at 02:07:52PM -0400, Justin Waters wrote:
+> Peter,
+> 
+> On Wed, Jun 8, 2016 at 10:41 PM, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Thu, Jun 9, 2016 at 5:27 AM, Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> On 03/23/2016 10:21 PM, Peter Chen wrote:
+> >>>
+> >>> On Wed, Mar 23, 2016 at 02:17:27PM -0400, Jaret Cantu wrote:
+> >>>>
+> >>>> On 03/23/2016 01:37 PM, Jaret Cantu wrote:
+> >>>>>
+> >>>>> On 03/23/2016 12:36 AM, Peter Chen wrote:
+> >>>>>>
+> >>>>>> On Mon, Mar 21, 2016 at 12:32:27PM -0400, Jaret Cantu wrote:
+> >>>>>>>
+> >>>>>>> The TX settings can be calibrated for particular hardware.  The
+> >>>>>>> phy is reset by Linux, so this cannot be handled by the bootloader.
+> >>>>>>>
+> >>>>>>> The TRM mentions that the maximum resistance should be used for the
+> >>>>>>> DN/DP calibration in order to pass USB certification.
+> >>>>>>>
+> >>>>>>> The values for the TX registers are poorly described in the TRM.
+> >>>>>>> The meanings of the register values were taken from another
+> >>>>>>> Freescale-provided document:
+> >>>>>>> https://community.freescale.com/message/566147#comment-566912
+> >>>>>>>
+> >>>>>>> Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> >>>>>>> ---
+> >>>>>>> v3. Added unit suffix (-ohms) to tx-cal-45-d*
+> >>>>>>>
+> >>>>>>> v2. Copying devicetree list
+> >>>>>>>      Removed prettifying extra whitespace
+> >>>>>>>      Removed unnecessary register rewrite on resume
+> >>>>>>>      Use min and max constants for clarity
+> >>>>>>>
+> >>>>>>>   .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
+> >>>>>>>   drivers/usb/phy/phy-mxs-usb.c                      |   58
+> >>>>>>> ++++++++++++++++++++
+> >>>>>>>   2 files changed, 68 insertions(+)
+> >>>>>>>
+> >>>>>>> diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >>>>>>> b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >>>>>>> index 379b84a..1d25b04 100644
+> >>>>>>> --- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >>>>>>> +++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >>>>>>> @@ -12,6 +12,16 @@ Required properties:
+> >>>>>>>   - interrupts: Should contain phy interrupt
+> >>>>>>>   - fsl,anatop: phandle for anatop register, it is only for imx6 SoC
+> >>>>>>> series
+> >>>>>>>
+> >>>>>>> +
+> >>>>>>> +    if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
+> >>>>>>> +        val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
+> >>>>>>> +        /* scale to 4-bit value */
+> >>>>>>> +        val = (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
+> >>>>>>> +            / (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
+> >>>>>>> +        mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
+> >>>>>>> +        mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
+> >>>>>>> +    }
+> >>>>>>> +
+> >>>>>>
+> >>>>>>
+> >>>>>> I have tested "tx-d-cal", but it seems incorrect according to the xls
+> >>>>>> you
+> >>>>>> have provided, would you please check it again or am I wrong?
+> >>>>>
+> >>>>>
+> >>>>> Gah! You're right. Some of the D_CAL values need to be rounded up to
+> >>>>> match the xls.  And even then, the value for 86 still doesn't play nice.
+> >>>>>   I was really hoping to avoid using a table for these values.
+> >>>>>
+> >>>>> The TXCALDP/DN values use a much simpler 1-to-1 scale across the 16
+> >>>>> possible register values and so are unaffected by a similar issue.  I
+> >>>>> rechecked their numbers just to be sure.
+> >>>>
+> >>>>
+> >>>> The solution looks to be to scale D_CAL starting from 80 instead of
+> >>>> 79.  If you look at the xls listing, the jump from 79 to 83 is the
+> >>>> only time two adjacent register values result in a change greater
+> >>>> than 2% or 3%.
+> >>>>
+> >>>> This will result in some code ugliness as the minimum allowed
+> >>>> percentage (79), per the Freescale document, and the point at which
+> >>>> we are scaling the percentage values to register values (80) are
+> >>>> different.
+> >>>>
+> >>>> And, as mentioned before, the values will also have to be rounded up.
+> >>>>
+> >>>> This quick shell code confirms that these sorts of calculations
+> >>>> match up with the values in the spreadsheet:
+> >>>>
+> >>>> for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79; do
+> >>>> echo "$d="$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) ));
+> >>>> d=$((d+1)); done
+> >>>>
+> >>>>
+> >>>> I can't find any formula which would hit all of those same
+> >>>> percentages without rounding up.
+> >>>>
+> >>>
+> >>> Then, we had to use table for it. Besides, IC team confirms the default
+> >>> value and the step for TXCAL45DP/DN are changed at next generation SoCs,
+> >>> so I am wondering how we describe it at binding doc.
+> >>>
+> >>
+> >> Which next gen SoC would this be?  The MX7?  The documentation for the USB
+> >> PHY in that reference manual is even sparser than the one for the MX6 in
+> >> regards to these register values.
+> >>
+> >
+> > Here, I mean i.mx8
+> >
+> 
+> Currently, there is no support in the mainline kernel for the i.MX8.
+> Do you mean to say that this feature is blocked until the i.MX8 is
+> supported in the mainline kernel? Or that we would be required to add
+> the register definitions for the i.MX8 as a prerequisite? Wouldn't it
+> make more sense to add support to the driver as part of the i.MX8
+> enablement, especially considering no documentation is freely
+> available at this time?
+> 
+> >> The MX7 manual does still mention that HW_USBPHY_TX_TXCAL45DP and
+> >> HW_USBPHY_TX_TXCAL45DN should both be set to zero, but there is no listing
+> >> as to the location of these registers, let alone their defaults/step values.
+> >>
+> >> Do you know where we could get the default and step values for the TXCAL
+> >> registers on the new SoC?  This information had to come from a Freescale
+> >> community thread for the MX6 since it wasn't defined clearly elsewhere.
+> >
+> > In theory, these information should be listed at SoC reference manual.
+> >
+> 
+> I have not seen the reference manual, so I'm not sure if it's in there
+> or not. However, if the i.MX6 manual is any indication, I'm not
+> certain it will be documented anyway.
+> 
+> How do we unblock this issue? We currently have hardware that cannot
+> meet specifications without this feature, and based on the app note
+> from NXP, I'm certain plenty of other people do as well.
+> 
+
+I agree with you that we don't need to consider i.mx8 case now.
+
+According to your previous information, the single formula can't be used
+to get D_CAL value, do you have any good ways except for using a table?
+Sending the patch for new algorithm to speed up this issue please.
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
