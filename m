@@ -1,271 +1,47 @@
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v2 14/17] sh: SH3/4 Generic IRQCHIP driever
-Date: Sun, 12 Jun 2016 15:54:32 +0900
-Message-ID: <1465714475-24111-15-git-send-email-ysato@users.sourceforge.jp>
-References: <1465714475-24111-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465714475-24111-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+From: Hanjun Guo <guohanjun@huawei.com>
+Subject: Re: [PATCH v4 00/14] fix some type infos and bugs for arm64/of numa
+Date: Sun, 12 Jun 2016 15:09:46 +0800
+Message-ID: <575D0ABA.2010503@huawei.com>
+References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+ <20160607135852.GA20477@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160607135852.GA20477@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>, Zhen Lei <thunder.leizhen@huawei.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, David Daney <david.daney@cavium.com>, Catalin Marinas <catalin.marinas@arm.com>, Xinwei Hu <huxinwei@huawei.com>, linux-kernel <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Rob Herring <robh+dt@kernel.org>, Tianhong Ding <dingtianhong@huawei.com>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-IPR based IRQ chip driver.
+Hi Will,
 
-Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
----
- .../interrupt-controller/renesas,sh7751-intc.txt   |  25 ++++
- arch/sh/Kconfig                                    |   6 +-
- arch/sh/boards/Kconfig                             |   1 +
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-renesas-sh7751.c               | 141 +++++++++++++++++++++
- 6 files changed, 176 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
- create mode 100644 drivers/irqchip/irq-renesas-sh7751.c
+On 2016/6/7 21:58, Will Deacon wrote:
+> On Tue, Jun 07, 2016 at 04:08:04PM +0800, Zhen Lei wrote:
+>> v3 -> v4:
+>> 1. Packed three patches of Kefeng Wang, patch6-8.
+>> 2. Add 6 new patches(9-15) to enhance the numa on arm64.
+>>
+>> v2 -> v3:
+>> 1. Adjust patch2 and patch5 according to Matthias Brugger's advice, to make the
+>>    patches looks more well. The final code have no change. 
+>>
+>> v1 -> v2:
+>> 1. Base on https://lkml.org/lkml/2016/5/24/679
+> If you want bug fixes to land in 4.7, you'll need to base them on a
+> mainline kernel.
+>
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
-new file mode 100644
-index 0000000..2bc6f22f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
-@@ -0,0 +1,25 @@
-+DT bindings for the SH7751 interrupt controller
-+
-+Required properties:
-+
-+  - compatible: has to be "renesas,sh7751-intc".
-+
-+  - reg: Base address and length of interrupt controller register
-+         and extend register.
-+
-+  - interrupt-controller: Identifies the node as an interrupt controller.
-+
-+  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined
-+    in interrupts.txt in this directory.
-+
-+Example
-+-------
-+
-+	shintc: interrupt-controller@ffd00000 {
-+		compatible = "renesas,sh7751-intc";
-+		#interrupt-cells = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		interrupt-controller;
-+		reg = <0xffd00000 14>, <0xfe080000 128>;
-+	};
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index 4fa5894..f268277 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -28,7 +28,7 @@ config SUPERH
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_REGS_AND_STACK_ACCESS_API
--	select MAY_HAVE_SPARSE_IRQ
-+	select MAY_HAVE_SPARSE_IRQ if !SH_DEVICE_TREE
- 	select IRQ_FORCED_THREADING
- 	select RTC_LIB
- 	select GENERIC_ATOMIC64
-@@ -67,7 +67,7 @@ config SUPERH32
- 	select HAVE_MIXED_BREAKPOINTS_REGS
- 	select PERF_EVENTS
- 	select ARCH_HIBERNATION_POSSIBLE if MMU
--	select SPARSE_IRQ
-+	select SPARSE_IRQ if !SH_DEVICE_TREE
- 	select HAVE_CC_STACKPROTECTOR
- 
- config SUPERH64
-@@ -860,7 +860,7 @@ config PCI
- 	depends on SYS_SUPPORTS_PCI
- 	select PCI_DOMAINS
- 	select GENERIC_PCI_IOMAP
--	select NO_GENERIC_PCI_IOPORT_MAP
-+	select NO_GENERIC_PCI_IOPORT_MAP if !SH_DEVICE_TREE
- 	help
- 	  Find out whether you have a PCI motherboard. PCI is the name of a
- 	  bus system, i.e. the way the CPU talks to the other stuff inside
-diff --git a/arch/sh/boards/Kconfig b/arch/sh/boards/Kconfig
-index cfde921..d33ae46 100644
---- a/arch/sh/boards/Kconfig
-+++ b/arch/sh/boards/Kconfig
-@@ -15,6 +15,7 @@ config SH_DEVICE_TREE
- 	select GENERIC_IOMAP
- 	select COMMON_CLK
- 	select SYS_SUPPORTS_PCI
-+	select GENERIC_IRQ_CHIP
- 	help
- 	  Select Board Described by Device Tree to build a kernel that
- 	  does not hard-code any board-specific knowledge but instead uses
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3e12479..273f19d 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -244,3 +244,8 @@ config IRQ_MXS
- config MVEBU_ODMI
- 	bool
- 	select GENERIC_MSI_IRQ_DOMAIN
-+
-+config RENESAS_SH_INTC
-+	def_bool y if SH_DEVICE_TREE
-+	select IRQ_DOMAIN
-+	select IRQ_DOMAIN_HIERARCHY
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index b03cfcb..dac7e90 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -65,3 +65,4 @@ obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
- obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
- obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
-+obj-$(CONFIG_RENESAS_SH_INTC)	+= irq-renesas-sh7751.o irq-io-landisk.o
-diff --git a/drivers/irqchip/irq-renesas-sh7751.c b/drivers/irqchip/irq-renesas-sh7751.c
-new file mode 100644
-index 0000000..ea7002a
---- /dev/null
-+++ b/drivers/irqchip/irq-renesas-sh7751.c
-@@ -0,0 +1,141 @@
-+/*
-+ * SH7751 interrupt contoller driver
-+ *
-+ * Copyright 2016 Yoshinori Sato <ysato@users.sourceforge.jp>
-+ */
-+
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of.h>
-+#include <linxu/io.h>
-+
-+static struct sh7751_intc_regs {
-+	void *icr;
-+	void *ipr;
-+	void *intpri00;
-+	void *intreq00;
-+	void *intmsk00;
-+	void *intmskclr00;
-+} sh7751_regs;
-+
-+static const unsigned int ipr_table[] = {
-+	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, /* 0 - 7 */
-+	0x41, 0xff, 0xff, 0x40, 0xff, 0xff, 0xff, 0xff, /* 8 - 15 */
-+	0x03, 0x02, 0x01, 0x01, 0x00, 0x00, 0x00, 0x11, /* 16 - 23 */
-+	0x11, 0x11, 0x11, 0x13, 0x12, 0x12, 0xff, 0xff, /* 24 - 31 */
-+	0x30, 0x33, 0x32, 0x32, 0x32, 0x32, 0x32, 0x21, /* 32 - 39 */
-+	0x21, 0x21, 0x21, 0x21, 0x32, 0x32, 0x32, 0x32, /* 40 - 47 */
-+	0xff, 0xff, 0xff, 0x40, 0xff, 0xff, 0xff, 0xff, /* 48 - 55 */
-+	0xff, 0xff, 0xff, 0x40, 0xff, 0xff, 0xff, 0xff, /* 56 - 63 */
-+};
-+
-+static const unsigned int pri_table[] = {
-+	0, 4, 4, 4, 4, 4, 4, 4,
-+	8, 32, 32, 32, 12, 32, 32, 32,
-+};
-+
-+static void sh_disable_irq(struct irq_data *data)
-+{
-+	int pos;
-+	unsigned int addr;
-+	unsigned long pri;
-+	int irq = data->irq;
-+	struct sh7751_intc_regs *reg = data->chip_data;
-+
-+	if (irq < 64) {
-+		if (ipr_table[irq] != 0xff) {
-+			addr = (ipr_table[irq] & 0xf0) >> 2;
-+			pos = (ipr_table[irq] & 0x0f) << 4;
-+			pri = ~(0x000f << pos);
-+			pri &= __raw_readw(reg->ipr + addr);
-+			__raw_writew(pri, reg->ipr + addr);
-+		}
-+	} else {
-+		if (pri_table[irq - 64] < 32) {
-+			pos = pri_table[irq - 64];
-+			pri = ~(0x000f << pos);
-+			pri &= __raw_readw(reg->intpri00);
-+			__raw_writew(pri, reg->intpri00);
-+		}
-+	}
-+}
-+
-+static void sh_enable_irq(struct irq_data *data)
-+{
-+	int pos;
-+	unsigned int addr;
-+	unsigned long pri;
-+	int irq = data->irq;
-+	struct sh7751_intc_regs *reg = data->chip_data;
-+
-+	if (irq < 64) {
-+		if (ipr_table[irq] != 0xff) {
-+			addr = (ipr_table[irq] & 0xf0) >> 2;
-+			pos = (ipr_table[irq] & 0x0f) * 4;
-+			pri = ~(0x000f << pos);
-+			pri &= __raw_readw(reg->ipr + addr);
-+			pri |= 1 << pos;
-+			__raw_writew(pri, reg->ipr + addr);
-+		}
-+	} else {
-+		if (pri_table[irq - 64] < 32) {
-+			pos = pri_table[irq - 64];
-+			pri = ~(0x000f << pos);
-+			pri &= __raw_readw(reg->intpri00);
-+			pri |= 1 << pos;
-+			__raw_writew(pri, reg->intpri00);
-+		}
-+	}
-+}
-+
-+static struct irq_chip sh_irq_chip = {
-+	.name		= "SH-IPR",
-+	.irq_unmask	= sh_enable_irq,
-+	.irq_mask	= sh_disable_irq,
-+};
-+
-+static __init int irq_map(struct irq_domain *h, unsigned int virq,
-+			  irq_hw_number_t hw_irq_num)
-+{
-+	irq_set_chip_and_handler(virq, &sh_irq_chip, handle_level_irq);
-+	irq_get_irq_data(virq)->chip_data = h->host_data;
-+	irq_modify_status(virq, IRQ_NOREQUEST, IRQ_NOPROBE);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops irq_ops = {
-+	.map    = irq_map,
-+	.xlate  = irq_domain_xlate_onecell,
-+};
-+
-+static int __init sh_intc_7751_init(struct device_node *intc,
-+				    struct device_node *parent)
-+{
-+	struct irq_domain *domain;
-+	void *intc_baseaddr;
-+	void *intc_baseaddr2;
-+
-+	intc_baseaddr = of_iomap(intc, 0);
-+	intc_baseaddr2 = of_iomap(intc, 1);
-+	if (!intc_baseaddr || !intc_baseaddr2)
-+		panic("INTC regsiter not defined");
-+
-+	sh7751_regs.icr = intc_baseaddr;
-+	sh7751_regs.ipr = intc_baseaddr + 4;
-+	sh7751_regs.intpri00 = intc_baseaddr2;
-+	sh7751_regs.intreq00 = intc_baseaddr2 + 0x20;
-+	sh7751_regs.intmsk00 = intc_baseaddr2 + 0x40;
-+	sh7751_regs.intmskclr00 = intc_baseaddr2 + 0x60;
-+
-+	domain = irq_domain_add_linear(intc, NR_IRQS, &irq_ops, &sh7751_regs);
-+	if (!domain)
-+		panic("%s: unable to create IRQ domain\n", intc->full_name);
-+
-+	irq_set_default_host(domain);
-+	return 0;
-+}
-+
-+IRQCHIP_DECLARE(sh_7751_intc, "renesas,sh7751-intc", sh_intc_7751_init);
--- 
-2.7.0
+Rafael queued ARM64 ACPI NUMA support for 4.8, and this patch set is based
+on that with no urgent bugfixes, can this patch set be queued for 4.8?
+
+Thanks
+Hanjun
