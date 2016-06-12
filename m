@@ -1,68 +1,151 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v2 5/6] dt-bindings: add Sharp LQ123P1JX31 panel binding
-Date: Sun, 12 Jun 2016 10:14:19 +0800
-Message-ID: <575CC57B.6050404@rock-chips.com>
-References: <1465386727-27647-1-git-send-email-ykk@rock-chips.com>
- <1465386765-27867-1-git-send-email-ykk@rock-chips.com>
- <20160610134217.GA25881@rob-hp-laptop>
- <CAD=FV=V289pShLFHAAhittPD9SKNuS68RWsArjD+zfp+g6Z4wQ@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 3/3] ARM: dts: imx7: add Toradex Colibri iMX7S/iMX7D
+ support
+Date: Sun, 12 Jun 2016 10:31:00 +0800
+Message-ID: <20160612023100.GW20243@tiger>
+References: <20160608023709.32090-1-stefan@agner.ch>
+ <20160608023709.32090-4-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAD=FV=V289pShLFHAAhittPD9SKNuS68RWsArjD+zfp+g6Z4wQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Doug Anderson <dianders@chromium.org>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160608023709.32090-4-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: kernel@pengutronix.de, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marcel.ziswiler@toradex.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, max.krummenacher@toradex.com, galak@codeaurora.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDA2LzExLzIwMTYgMTI6NDAgQU0sIERvdWcgQW5kZXJzb24gd3JvdGU6Cj4gUm9iLAo+Cj4g
-T24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgNjo0MiBBTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4+IE9uIFdlZCwgSnVuIDA4LCAyMDE2IGF0IDA3OjUyOjQ1UE0gKzA4MDAs
-IFlha2lyIFlhbmcgd3JvdGU6Cj4+PiBUaGUgU2hhcnAgTFExMjNQMUpYMzEgaXMgYW4gMTIuMyIg
-MjQwMHgxNjAwIFRGVC1MQ0QgcGFuZWwKPj4+IGNvbm5lY3RlZCB1c2luZyBlRFAgaW50ZXJmYWNl
-cy4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+
-Cj4+PiAtLS0KPj4+IENoYW5nZXMgaW4gdjI6Cj4+PiAtIEFkZCBkdC1iaW5kaW5ncyBvZiBTaGFy
-cCBMUTEyM1AxSlgzMSBwYW5lbCBpbiB2Mgo+Pj4KPj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTEyM3AxangzMS50eHQgICAgICAgIHwgNyArKysrKysr
-Cj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPj4+ICAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3No
-YXJwLGxxMTIzcDFqeDMxLnR4dAo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTEyM3AxangzMS50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTEy
-M3AxangzMS50eHQKPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+PiBpbmRleCAwMDAwMDAwLi44
-MTkzOGMwCj4+PiAtLS0gL2Rldi9udWxsCj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTEyM3AxangzMS50eHQKPj4+IEBAIC0w
-LDAgKzEsNyBAQAo+Pj4gK1NoYXJwIDEyLjMiICgyNDAweDE2MDAgcGl4ZWxzKSBURlQgTENEIHBh
-bmVsCj4+PiArCj4+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4+ICstIGNvbXBhdGlibGU6IHNo
-b3VsZCBiZSAic2hhcnAsbHExMjNwMWp4MzEsIgo+PiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgXgo+PiBOZWVkIHRvIGRyb3AgdGhlIGNvbW1hLgo+IFRoYW5r
-cyBmb3IgY2F0Y2hpbmchCgpEb25lLAoKPgo+PiBObyByZWd1bGF0b3JzIG9yIHJlc2V0cyBvciBw
-d21zPwo+IENvdWxkIGJlIG1vcmUgZXhwbGljaXQgSSBndWVzcywgYnV0IFlha2lyIGRvZXMgc2F5
-Ogo+Cj4+IFRoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBi
-aW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKPj4gaW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlz
-IGRpcmVjdG9yeS4KPiBJbiB0aGF0IGRvY3VtZW50IGl0IHNob3dzOgo+Cj4gUmVxdWlyZWQgcHJv
-cGVydGllczoKPiAtIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBs
-eSB2b2x0YWdlCj4KPiBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+IC0gZGRjLWkyYy1idXM6IHBoYW5k
-bGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQgcHJvYmluZwo+IC0gZW5h
-YmxlLWdwaW9zOiBHUElPIHBpbiB0byBlbmFibGUgb3IgZGlzYWJsZSB0aGUgcGFuZWwKPiAtIGJh
-Y2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUg
-cGFuZWwKPgo+Cj4gSW4gZ2VuZXJhbCBZYWtpcidzIGJpbmRpbmdzIGRvY3VtZW50IG1hdGNoIGEg
-aHVnZSBjaHVuayBvZiB0aGUgY3VycmVudAo+IGV4aXN0aW5nIGJpbmRpbmdzLiAgRG8gdGhpczoK
-PiAgICBjZCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbAo+
-ICAgIGdyZXAgLUMyMCAiVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxl
-LXBhbmVsIiAqCj4KPiBZb3UnbGwgZmluZCBhIGh1Z2UgY2h1bmsgb2YgZmlsZXMgd2hpY2ggYXJl
-IHJhdGhlciBmb3JtdWxhaWMuICBJdAo+IG1pZ2h0IG1ha2Ugc2Vuc2UgdG8ganVzdCBoYXZlIG9u
-ZSBmaWxlIGFuZCBhIGxpc3Qgb2YgcGFuZWxzIHdoaWNoIGFyZQo+IHNpbXBsZSBwYW5lbHM/Cj4K
-Pgo+IC1Eb3VnCj4KPgo+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Tue, Jun 07, 2016 at 07:37:09PM -0700, Stefan Agner wrote:
+> +&lcdif {
+> +	status = "okay";
+> +	display = <&display0>;
+
+Please put 'status' at the bottom of property list.
+
+> +
+> +	display0: lcd-display {
+> +		bits-per-pixel = <16>;
+> +		bus-width = <18>;
+> +
+> +		display-timings {
+> +			native-mode = <&timing_vga>;
+> +
+> +			/* Standard VGA timing */
+> +			timing_vga: 640x480 {
+> +				clock-frequency = <25175000>;
+> +				hactive = <640>;
+> +				vactive = <480>;
+> +				hback-porch = <40>;
+> +				hfront-porch = <24>;
+> +				vback-porch = <32>;
+> +				vfront-porch = <11>;
+> +				hsync-len = <96>;
+> +				vsync-len = <2>;
+> +				de-active = <1>;
+> +				hsync-active = <0>;
+> +				vsync-active = <0>;
+> +				pixelclk-active = <0>;
+> +			};
+> +		};
+> +	};
+> +};
+
+<snip>
+
+> +&usdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
+> +	no-1-8-v;
+> +	cd-gpios = <&gpio1 0 0>;
+
+Use the macro in include/dt-bindings/gpio/gpio.h.
+
+> +	enable-sdio-wakeup;
+
+This is deprecated.  Please use wakeup-source instead.
+
+> +	fsl,tuning-step = <2>;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +};
+
+<snip>
+
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet1>;
+> +	clocks = <&clks IMX7D_ENET_AXI_ROOT_CLK>,
+> +		<&clks IMX7D_ENET_AXI_ROOT_CLK>,
+> +		<&clks IMX7D_ENET1_TIME_ROOT_CLK>,
+> +		<&clks IMX7D_PLL_ENET_MAIN_50M_CLK>;
+> +	clock-names = "ipg", "ahb", "ptp", "enet_clk_ref";
+> +
+
+Drop this newline.
+
+> +	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
+> +			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+> +	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+> +	assigned-clock-rates = <0>, <100000000>;
+> +	phy-mode = "rmii";
+> +	phy-supply = <&reg_LDO1>;
+> +	fsl,magic-packet;
+> +};
+
+<snip>
+
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1 &pinctrl_uart1_ctrl1 &pinctrl_uart1_ctrl2>;
+> +	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
+> +	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
+> +	fsl,uart-has-rtscts;
+
+Please use generic 'uart-has-rtscts' instead.
+
+> +	fsl,dte-mode;
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
+> +	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
+> +	fsl,uart-has-rtscts;
+
+Ditto
+
+> +	fsl,dte-mode;
+> +};
+
+<snip>
+
+> +/ {
+> +	model = "Toradex Colibri iMX7D on Colibri Evaluation Board V3";
+> +	compatible = "toradex,colibri_imx7d-eval", "toradex,colibri_imx7d", \
+
+We always use hyphen than underscore in compatible string.
+
+> +		     "fsl,imx7d";
+> +
+> +	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_usbotg2_reg>;
+> +		regulator-name = "VCC_USB[1-4]";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+> +/ {
+> +	model = "Toradex Colibri iMX7S on Colibri Evaluation Board V3";
+> +	compatible = "toradex,colibri_imx7s-eval", "toradex,colibri_imx7s", \
+> +		     "fsl,imx7s", "fsl,imx7d";
+
+You may not want to have "fsl,imx7d" here.  Otherwise, the detection
+between  imx7s and imx7d colibri-eval-v3 board will be difficult.
+
+Shawn
+
+> +};
