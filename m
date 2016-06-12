@@ -1,47 +1,102 @@
-From: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Subject: [PATCH v2 17/17] sh: landisk CPLD interrupt controller driver
-Date: Sun, 12 Jun 2016 15:54:35 +0900
-Message-ID: <1465714475-24111-18-git-send-email-ysato@users.sourceforge.jp>
+From: Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: [PATCH v2 16/17] sh: I/O DATA HDL-U (a.k.a. landisk) Device Tree
+Date: Sun, 12 Jun 2016 15:54:34 +0900
+Message-ID: <1465714475-24111-17-git-send-email-ysato@users.sourceforge.jp>
 References: <1465714475-24111-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465714475-24111-1-git-send-email-ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1465714475-24111-1-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- .../interrupt-controller/iodata-landisk.txt        | 28 +++++++++
- drivers/irqchip/irq-io-landisk.c                   | 72 ++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
- create mode 100644 drivers/irqchip/irq-io-landisk.c
+ arch/sh/boot/dts/landisk.dts | 150 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 150 insertions(+)
+ create mode 100644 arch/sh/boot/dts/landisk.dts
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
 new file mode 100644
-index 0000000..d398538
+index 0000000..23396a0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
-@@ -0,0 +1,28 @@
-+DT bindings for the I/O DATA HDL-U interrupt controller
++++ b/arch/sh/boot/dts/landisk.dts
+@@ -0,0 +1,150 @@
++#include <dt-bindings/interrupt-controller/sh_intc.h>
 +
-+Required properties:
++/dts-v1/;
++/ {
++	model = "I/O DATA HDL-U";
++	compatible = "iodata,hdl-u";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	interrupt-parent = <&shintc>;
++	chosen {
++		stdout-path = &sci1;
++		bootargs = "console=ttySC1,115200";
++	};
++	aliases {
++		serial0 = &sci0;
++		serial1 = &sci1;
++	};
 +
-+  - compatible: has to be "iodata,landisk-intc".
++	oclk: oscillator {
++                #clock-cells = <0>;
++                compatible = "fixed-clock";
++                clock-frequency = <22222222>;
++        };
++        pllclk: pllclk {
++                compatible = "renesas,sh7750-pll-clock";
++                clocks = <&oclk>;
++                #clock-cells = <0>;
++		renesas,mult = <12>;
++                reg = <0xffc00000 2>, <0xffc00008 4>;
++        };
++        iclk: iclk {
++                compatible = "renesas,sh7750-div-clock";
++                clocks = <&pllclk>;
++                #clock-cells = <0>;
++                reg = <0xffc00000 2>;
++		renesas,offset = <6>;
++		clock-output-names = "ick";
++        };
++        bclk: bclk {
++                compatible = "renesas,sh7750-div-clock";
++                clocks = <&pllclk>;
++                #clock-cells = <0>;
++                reg = <0xffc00000 2>;
++		renesas,offset = <3>;
++		clock-output-names = "bck";
++        };
++        fclk: fclk {
++                compatible = "renesas,sh7750-div-clock";
++                clocks = <&pllclk>;
++                #clock-cells = <0>;
++                reg = <0xffc00000 2>;
++		renesas,offset = <0>;
++		clock-output-names = "fck";
++        };
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++		      compatible = "renesas,sh4", "renesas,sh";
++		      clock-frequency = <266666666>;
++		};
++	};
++	memory@0c000000 {
++		device_type = "memory";
++		reg = <0x0c000000 0x4000000>;
++	};
++	shintc: interrupt-controller@ffd00000 {
++		compatible = "renesas,sh7751-intc";
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-controller;
++		reg = <0xffd00000 14>, <0xfe080000 128>;
 +
-+  - reg: Base address and length of interrupt controller register.
-+
-+  - interrupt-controller: Identifies the node as an interrupt controller.
-+
-+  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined
-+    in interrupts.txt in this directory.
-+
-+  - interrupt-map: Interrupt mapping on parent controller.
-+
-+Example
-+-------
-+
++	};
 +	cpldintc: cpld@b0000000 {
 +		compatible = "iodata,landisk-intc";
 +		#interrupt-cells = <2>;
@@ -52,88 +107,71 @@ index 0000000..d398538
 +		              <4 &shintc 4 0>, <5 &shintc 5 0>,
 +		              <6 &shintc 6 0>, <7 &shintc 7 0>;
 +	};
-diff --git a/drivers/irqchip/irq-io-landisk.c b/drivers/irqchip/irq-io-landisk.c
-new file mode 100644
-index 0000000..973c4fb
---- /dev/null
-+++ b/drivers/irqchip/irq-io-landisk.c
-@@ -0,0 +1,72 @@
-+/*
-+ * IO-DATA LANDISK CPLD IRQ driver
-+ *
-+ * Copyright 2016 Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-+ */
++	sci0: serial@ffe00000 {
++		compatible = "renesas,scif";
++		reg = <0xffe00000 0x20>;
++		interrupts = <evt2irq(0x4e0) 0
++		              evt2irq(0x500) 0
++		              evt2irq(0x540) 0
++		              evt2irq(0x520) 0>;
++		clocks = <&fclk>;
++		clock-names = "fck";
++	};
++	sci1: serial@ffe80000 {
++		compatible = "renesas,scif";
++		reg = <0xffe80000 0x100>;
++		interrupts = <evt2irq(0x700) 0
++			      evt2irq(0x720) 0
++			      evt2irq(0x760) 0
++			      evt2irq(0x740) 0>;
++		clocks = <&fclk>;
++		clock-names = "fck";
++	};
++	tmu: timer@ffd80000 {
++		compatible = "renesas,tmu";
++		reg = <0xffd80000 12>;
++		interrupts = <evt2irq(0x400) 0
++			      evt2irq(0x420) 0
++			      evt2irq(0x440) 0>;
++		clocks = <&fclk>;
++		clock-names = "fck";
++		renesas,channels-mask = <0x03>;
++	};
 +
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
++	pci: pci-controller@fe200000 {
++		compatible = "renesas,sh7751-pci", "iodata,landisk";
++		device_type = "pci";
++		bus-range = <0 0>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0x02000000 0x00000000 0xfd000000 0xfd000000 0x00000000 0x01000000>,
++		         <0x01000000 0x00000000 0xfe240000 0x00000000 0x00000000 0x00040000>;
++		reg = <0xfe200000 0x0400>,
++		      <0x0c000000 0x04000000>,
++		      <0xff800000 0x0030>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0x1800 0 7>;
++		interrupt-map = <0x0000 0 1 &cpldintc evt2irq(0x2a0) 0
++		                 0x0000 0 2 &cpldintc evt2irq(0x2c0) 0
++		                 0x0000 0 3 &cpldintc evt2irq(0x2e0) 0
++		                 0x0000 0 4 &cpldintc evt2irq(0x300) 0
 +
-+static void landisk_mask_irq(struct irq_data *data)
-+{
-+	u8 mask = __raw_readb(data->chip_data + 5);
++		                 0x0800 0 1 &cpldintc evt2irq(0x2c0) 0
++		                 0x0800 0 2 &cpldintc evt2irq(0x2e0) 0
++		                 0x0800 0 3 &cpldintc evt2irq(0x300) 0
++		                 0x0800 0 4 &cpldintc evt2irq(0x2a0) 0
 +
-+	mask &= !(1 << (data->irq - 5));
-+	__raw_writeb(mask, data->chip_data + 5);
-+}
++		                 0x1000 0 1 &cpldintc evt2irq(0x2e0) 0
++		                 0x1000 0 2 &cpldintc evt2irq(0x300) 0
++		                 0x1000 0 3 &cpldintc evt2irq(0x2a0) 0
++		                 0x1000 0 4 &cpldintc evt2irq(0x2c0) 0
 +
-+static void landisk_unmask_irq(struct irq_data *data)
-+{
-+	u8 mask = __raw_readb(data->chip_data + 5);
-+
-+	mask |= (1 << (data->irq - 5));
-+	__raw_writeb(mask, data->chip_data + 5);
-+}
-+
-+static struct irq_chip cpld_irq_chip = {
-+	.name		= "LANDISK-CPLD",
-+	.irq_unmask	= landisk_unmask_irq,
-+	.irq_mask	= landisk_mask_irq,
++		                 0x1800 0 1 &cpldintc evt2irq(0x300) 0
++		                 0x1800 0 2 &cpldintc evt2irq(0x2a0) 0
++		                 0x1800 0 3 &cpldintc evt2irq(0x2c0) 0
++		                 0x1800 0 4 &cpldintc evt2irq(0x2e0) 0>;
++	};
 +};
-+
-+static int cpld_map(struct irq_domain *d, unsigned int virq,
-+		    irq_hw_number_t hw_irq_num)
-+{
-+	irq_set_chip_and_handler(virq, &cpld_irq_chip,
-+				 handle_simple_irq);
-+	irq_set_chip_data(virq, d->host_data);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops irq_ops = {
-+	.xlate	= irq_domain_xlate_twocell,
-+	.map	= cpld_map,
-+};
-+
-+static int __init landisk_intc_of_init(struct device_node *intc,
-+				    struct device_node *parent)
-+{
-+	struct irq_domain *domain, *pdomain;
-+	int num_irqpin;
-+	void *baseaddr;
-+
-+	baseaddr = of_iomap(intc, 0);
-+	pdomain = irq_find_host(parent);
-+	of_get_property(intc, "interrupt-map", &num_irqpin);
-+	num_irqpin /= sizeof(u32) * 3;
-+	domain = irq_domain_create_hierarchy(pdomain, 0, num_irqpin,
-+					     of_node_to_fwnode(intc),
-+					     &irq_ops, baseaddr);
-+	if (!domain)
-+		panic"%s: unable to create IRQ domain\n", intc->full_name);
-+	irq_domain_associate_many(domain, 0, 0, 8);
-+	return 0;
-+}
-+
-+IRQCHIP_DECLARE(cpld_intc, "iodata,landisk-intc", landisk_intc_of_init);
 -- 
 2.7.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
