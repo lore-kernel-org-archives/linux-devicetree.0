@@ -1,56 +1,41 @@
 From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v3 4/6] drm/panel: simple: Add support for Samsung
- LSN122DL01-C01 2560x1600 panel
-Date: Sun, 12 Jun 2016 10:56:13 +0800
-Message-ID: <1465700173-13671-1-git-send-email-ykk@rock-chips.com>
+Subject: [PATCH v3 3/6] dt-bindings: add Samsung LSN122DL01-C01 panel binding
+Date: Sun, 12 Jun 2016 10:56:06 +0800
+Message-ID: <1465700166-13620-1-git-send-email-ykk@rock-chips.com>
 References: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, emil.l.velikov@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFNhbXN1bmcgTFNOMTIyREwwMS1DMDEgaXMgYW4gMTIuMiIgMjU2MHgxNjAwIChXUVhHQSkg
-VEZULUxDRCBwYW5lbApjb25uZWN0ZWQgdXNpbmcgZURQIGludGVyZmFjZXMuCgpTaWduZWQtb2Zm
-LWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Ci0tLQpDaGFuZ2VzIGluIHYzOgot
-IENvcnJlY3QgdGhlIHNpemUgb2YgcGFuZWxfZGVzYyB0byBhY3RpdmUgYXJlYSAyNjJtbXgxNjRt
-bSAoRW1pbCwgU3TDqXBoYW5lKQoKQ2hhbmdlcyBpbiB2MjogTm9uZQoKIGRyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9wYW5lbC1zaW1wbGUuYyB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysrKysKIDEg
-ZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNp
-bXBsZS5jCmluZGV4IDJkNDBhMjEuLjE3Y2M5NzMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
-c2ltcGxlLmMKQEAgLTEyNDYsNiArMTI0NiwyOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVs
-X2Rlc2MgcWQ0MzAwM2MwXzQwID0gewogCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4
-ODhfMVgyNCwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBzYW1z
-dW5nX2xzbjEyMmRsMDFfYzAxX21vZGUgPSB7CisJLmNsb2NrID0gMjcxNTYwLAorCS5oZGlzcGxh
-eSA9IDI1NjAsCisJLmhzeW5jX3N0YXJ0ID0gMjU2MCArIDQ4LAorCS5oc3luY19lbmQgPSAyNTYw
-ICsgNDggKyAzMiwKKwkuaHRvdGFsID0gMjU2MCArIDQ4ICsgMzIgKyA4MCwKKwkudmRpc3BsYXkg
-PSAxNjAwLAorCS52c3luY19zdGFydCA9IDE2MDAgKyAyLAorCS52c3luY19lbmQgPSAxNjAwICsg
-MiArIDUsCisJLnZ0b3RhbCA9IDE2MDAgKyAyICsgNSArIDU3LAorCS52cmVmcmVzaCA9IDYwLAor
-fTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIHNhbXN1bmdfbHNuMTIyZGwwMV9j
-MDEgPSB7CisJLm1vZGVzID0gJnNhbXN1bmdfbHNuMTIyZGwwMV9jMDFfbW9kZSwKKwkubnVtX21v
-ZGVzID0gMSwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMjYyLAorCQkuaGVpZ2h0ID0gMTY0LAor
-CX0sCit9OworCiBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgc2Ftc3VuZ19s
-dG4xMDFudDA1X21vZGUgPSB7CiAJLmNsb2NrID0gNTQwMzAsCiAJLmhkaXNwbGF5ID0gMTAyNCwK
-QEAgLTE1MDYsNiArMTUyOCw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBs
-YXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21wYXRpYmxlID0gInFpYW9kaWFuLHFkNDMwMDNj
-MC00MCIsCiAJCS5kYXRhID0gJnFkNDMwMDNjMF80MCwKIAl9LCB7CisJCS5jb21wYXRpYmxlID0g
-InNhbXN1bmcsbHNuMTIyZGwwMS1jMDEiLAorCQkuZGF0YSA9ICZzYW1zdW5nX2xzbjEyMmRsMDFf
-YzAxLAorCX0sIHsKIAkJLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxsdG4xMDFudDA1IiwKIAkJLmRh
-dGEgPSAmc2Ftc3VuZ19sdG4xMDFudDA1LAogCX0sIHsKLS0gCjEuOS4xCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The Samsung LSN122DL01-C01 is an 12.2" 2560x1600 (WQXGA) TFT-LCD
+panel connected using eDP interfaces.
+
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes in v3: None
+Changes in v2:
+- Add Rob's acked for dt-bindings of Samsung LSN122DL01 panel
+
+ .../devicetree/bindings/display/panel/samsung,lsn122dl01-c01.txt   | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,lsn122dl01-c01.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,lsn122dl01-c01.txt b/Documentation/devicetree/bindings/display/panel/samsung,lsn122dl01-c01.txt
+new file mode 100644
+index 0000000..dba298b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/samsung,lsn122dl01-c01.txt
+@@ -0,0 +1,7 @@
++Samsung 12.2" (2560x1600 pixels) TFT LCD panel
++
++Required properties:
++- compatible: should be "samsung,lsn122dl01-c01"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+-- 
+1.9.1
