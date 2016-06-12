@@ -1,101 +1,275 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH 1/2] Documentation: bindings: add dt documentation for
- Rockchip PCIe PHY
-Date: Sun, 12 Jun 2016 15:38:52 +0800
-Message-ID: <d2aa6f82-7b20-8c40-c134-370e9f91281e@rock-chips.com>
-References: <1465370708-23619-1-git-send-email-shawn.lin@rock-chips.com>
- <20160608202900.GA25662@rob-hp-laptop> <1524911.R4OXTTYFIK@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524911.R4OXTTYFIK@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Rob Herring <robh@kernel.org>
-Cc: shawn.lin@rock-chips.com, devicetree@vger.kernel.org, Wenrui Li <wenrui.li@rock-chips.com>, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
+From: Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: [PATCH v2 14/17] sh: SH3/4 Generic IRQCHIP driever
+Date: Sun, 12 Jun 2016 16:43:46 +0900
+Message-ID: <1465717426-7520-1-git-send-email-ysato@users.sourceforge.jp>
+References: <1465714475-24111-15-git-send-email-ysato@users.sourceforge.jp>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1465714475-24111-15-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/6/9 4:40, Heiko St=FCbner wrote:
-> Am Mittwoch, 8. Juni 2016, 15:29:00 schrieb Rob Herring:
->> gOn Wed, Jun 08, 2016 at 03:25:08PM +0800, Shawn Lin wrote:
->>> This patch adds a binding that describes the Rockchip PCIe PHY
->>> found on Rockchip SoCs PCIe interface.
->>>
->>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>> ---
->>>
->>>  .../devicetree/bindings/phy/rockchip-pcie-phy.txt  | 22
->>>  ++++++++++++++++++++++ 1 file changed, 22 insertions(+)
->>>  create mode 100644
->>>  Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt>
->>> diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie-ph=
-y.txt
->>> b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt new f=
-ile
->>> mode 100644
->>> index 0000000..ba8c406
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
->>> @@ -0,0 +1,22 @@
->>> +Rockchip PCIE PHY
->>> +-----------------------
->>> +
->>> +Required properties:
->>> + - compatible: rockchip,rk3399-pcie-phy
->>> + - #phy-cells: must be 0
->>> +
->>> +Example:
->>> +
->>> +grf: syscon@ff770000 {
->>> +	compatible =3D "rockchip,rk3399-grf", "syscon", "simple-mfd";
->>> +	#address-cells =3D <1>;
->>> +	#size-cells =3D <1>;
->>> +
->>> +	...
->>> +
->>> +	pcie_phy: phy@e220 {
->>
->> unit-address needs a reg property or drop the unit address. I'd do t=
-he
->> former if there's a register range you can describe here.
->
-> Hmm, I think I'd suggest going the other way - call the node pcie-phy=
- .
+Sorry. I send old patches.
+Please ignore previous files.
 
-pcie phy does not cantain a reg range, so I will drop the unit-address.
+IPR based IRQ chip driver.
 
->
-> While the General Register Files do contain some specific address ran=
-ges (like
-> for the emmc phy, or some performance monitor things), the register a=
-t 0xe220
-> is a shared register (GRF_SOC_CON8), containing both i2s and pcie set=
-ting
-> bits.
+Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+---
+ .../interrupt-controller/renesas,sh7751-intc.txt   |  25 ++++
+ arch/sh/Kconfig                                    |   6 +-
+ arch/sh/boards/Kconfig                             |   1 +
+ drivers/irqchip/Kconfig                            |   5 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-renesas-sh7751.c               | 141 +++++++++++++++++++++
+ 6 files changed, 176 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
+ create mode 100644 drivers/irqchip/irq-renesas-sh7751.c
 
-yes, we only need two bits: test_addr(for pcie phy's internal configure
-address) and test_i(corresponding value for the address given) whthin
-GRF_SOC_CON8 to W/R the phy.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
+new file mode 100644
+index 0000000..2bc6f22f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
+@@ -0,0 +1,25 @@
++DT bindings for the SH7751 interrupt controller
++
++Required properties:
++
++  - compatible: has to be "renesas,sh7751-intc".
++
++  - reg: Base address and length of interrupt controller register
++         and extend register.
++
++  - interrupt-controller: Identifies the node as an interrupt controller.
++
++  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined
++    in interrupts.txt in this directory.
++
++Example
++-------
++
++	shintc: interrupt-controller@ffd00000 {
++		compatible = "renesas,sh7751-intc";
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-controller;
++		reg = <0xffd00000 14>, <0xfe080000 128>;
++	};
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 4fa5894..f268277 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -28,7 +28,7 @@ config SUPERH
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+-	select MAY_HAVE_SPARSE_IRQ
++	select MAY_HAVE_SPARSE_IRQ if !SH_DEVICE_TREE
+ 	select IRQ_FORCED_THREADING
+ 	select RTC_LIB
+ 	select GENERIC_ATOMIC64
+@@ -67,7 +67,7 @@ config SUPERH32
+ 	select HAVE_MIXED_BREAKPOINTS_REGS
+ 	select PERF_EVENTS
+ 	select ARCH_HIBERNATION_POSSIBLE if MMU
+-	select SPARSE_IRQ
++	select SPARSE_IRQ if !SH_DEVICE_TREE
+ 	select HAVE_CC_STACKPROTECTOR
+ 
+ config SUPERH64
+@@ -860,7 +860,7 @@ config PCI
+ 	depends on SYS_SUPPORTS_PCI
+ 	select PCI_DOMAINS
+ 	select GENERIC_PCI_IOMAP
+-	select NO_GENERIC_PCI_IOPORT_MAP
++	select NO_GENERIC_PCI_IOPORT_MAP if !SH_DEVICE_TREE
+ 	help
+ 	  Find out whether you have a PCI motherboard. PCI is the name of a
+ 	  bus system, i.e. the way the CPU talks to the other stuff inside
+diff --git a/arch/sh/boards/Kconfig b/arch/sh/boards/Kconfig
+index cfde921..d33ae46 100644
+--- a/arch/sh/boards/Kconfig
++++ b/arch/sh/boards/Kconfig
+@@ -15,6 +15,7 @@ config SH_DEVICE_TREE
+ 	select GENERIC_IOMAP
+ 	select COMMON_CLK
+ 	select SYS_SUPPORTS_PCI
++	select GENERIC_IRQ_CHIP
+ 	help
+ 	  Select Board Described by Device Tree to build a kernel that
+ 	  does not hard-code any board-specific knowledge but instead uses
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 3e12479..273f19d 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -244,3 +244,8 @@ config IRQ_MXS
+ config MVEBU_ODMI
+ 	bool
+ 	select GENERIC_MSI_IRQ_DOMAIN
++
++config RENESAS_SH_INTC
++	def_bool y if SH_DEVICE_TREE
++	select IRQ_DOMAIN
++	select IRQ_DOMAIN_HIERARCHY
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index b03cfcb..dac7e90 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -65,3 +65,4 @@ obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
+ obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
+ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
+ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
++obj-$(CONFIG_RENESAS_SH_INTC)	+= irq-renesas-sh7751.o irq-io-landisk.o
+diff --git a/drivers/irqchip/irq-renesas-sh7751.c b/drivers/irqchip/irq-renesas-sh7751.c
+new file mode 100644
+index 0000000..1710978
+--- /dev/null
++++ b/drivers/irqchip/irq-renesas-sh7751.c
+@@ -0,0 +1,141 @@
++/*
++ * SH7751 interrupt contoller driver
++ *
++ * Copyright 2016 Yoshinori Sato <ysato@users.sourceforge.jp>
++ */
++
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/of.h>
++#include <linux/io.h>
++
++static struct sh7751_intc_regs {
++	void *icr;
++	void *ipr;
++	void *intpri00;
++	void *intreq00;
++	void *intmsk00;
++	void *intmskclr00;
++} sh7751_regs;
++
++static const unsigned int ipr_table[] = {
++	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, /* 0 - 7 */
++	0x41, 0xff, 0xff, 0x40, 0xff, 0xff, 0xff, 0xff, /* 8 - 15 */
++	0x03, 0x02, 0x01, 0x01, 0x00, 0x00, 0x00, 0x11, /* 16 - 23 */
++	0x11, 0x11, 0x11, 0x13, 0x12, 0x12, 0xff, 0xff, /* 24 - 31 */
++	0x30, 0x33, 0x32, 0x32, 0x32, 0x32, 0x32, 0x21, /* 32 - 39 */
++	0x21, 0x21, 0x21, 0x21, 0x32, 0x32, 0x32, 0x32, /* 40 - 47 */
++	0xff, 0xff, 0xff, 0x40, 0xff, 0xff, 0xff, 0xff, /* 48 - 55 */
++	0xff, 0xff, 0xff, 0x40, 0xff, 0xff, 0xff, 0xff, /* 56 - 63 */
++};
++
++static const unsigned int pri_table[] = {
++	0, 4, 4, 4, 4, 4, 4, 4,
++	8, 32, 32, 32, 12, 32, 32, 32,
++};
++
++static void sh_disable_irq(struct irq_data *data)
++{
++	int pos;
++	unsigned int addr;
++	unsigned long pri;
++	int irq = data->irq;
++	struct sh7751_intc_regs *reg = data->chip_data;
++
++	if (irq < 64) {
++		if (ipr_table[irq] != 0xff) {
++			addr = (ipr_table[irq] & 0xf0) >> 2;
++			pos = (ipr_table[irq] & 0x0f) << 4;
++			pri = ~(0x000f << pos);
++			pri &= __raw_readw(reg->ipr + addr);
++			__raw_writew(pri, reg->ipr + addr);
++		}
++	} else {
++		if (pri_table[irq - 64] < 32) {
++			pos = pri_table[irq - 64];
++			pri = ~(0x000f << pos);
++			pri &= __raw_readw(reg->intpri00);
++			__raw_writew(pri, reg->intpri00);
++		}
++	}
++}
++
++static void sh_enable_irq(struct irq_data *data)
++{
++	int pos;
++	unsigned int addr;
++	unsigned long pri;
++	int irq = data->irq;
++	struct sh7751_intc_regs *reg = data->chip_data;
++
++	if (irq < 64) {
++		if (ipr_table[irq] != 0xff) {
++			addr = (ipr_table[irq] & 0xf0) >> 2;
++			pos = (ipr_table[irq] & 0x0f) * 4;
++			pri = ~(0x000f << pos);
++			pri &= __raw_readw(reg->ipr + addr);
++			pri |= 1 << pos;
++			__raw_writew(pri, reg->ipr + addr);
++		}
++	} else {
++		if (pri_table[irq - 64] < 32) {
++			pos = pri_table[irq - 64];
++			pri = ~(0x000f << pos);
++			pri &= __raw_readw(reg->intpri00);
++			pri |= 1 << pos;
++			__raw_writew(pri, reg->intpri00);
++		}
++	}
++}
++
++static struct irq_chip sh_irq_chip = {
++	.name		= "SH-IPR",
++	.irq_unmask	= sh_enable_irq,
++	.irq_mask	= sh_disable_irq,
++};
++
++static __init int irq_map(struct irq_domain *h, unsigned int virq,
++			  irq_hw_number_t hw_irq_num)
++{
++	irq_set_chip_and_handler(virq, &sh_irq_chip, handle_level_irq);
++	irq_get_irq_data(virq)->chip_data = h->host_data;
++	irq_modify_status(virq, IRQ_NOREQUEST, IRQ_NOPROBE);
++
++	return 0;
++}
++
++static struct irq_domain_ops irq_ops = {
++	.map    = irq_map,
++	.xlate  = irq_domain_xlate_onecell,
++};
++
++static int __init sh_intc_7751_init(struct device_node *intc,
++				    struct device_node *parent)
++{
++	struct irq_domain *domain;
++	void *intc_baseaddr;
++	void *intc_baseaddr2;
++
++	intc_baseaddr = of_iomap(intc, 0);
++	intc_baseaddr2 = of_iomap(intc, 1);
++	if (!intc_baseaddr || !intc_baseaddr2)
++		panic("INTC regsiter not defined");
++
++	sh7751_regs.icr = intc_baseaddr;
++	sh7751_regs.ipr = intc_baseaddr + 4;
++	sh7751_regs.intpri00 = intc_baseaddr2;
++	sh7751_regs.intreq00 = intc_baseaddr2 + 0x20;
++	sh7751_regs.intmsk00 = intc_baseaddr2 + 0x40;
++	sh7751_regs.intmskclr00 = intc_baseaddr2 + 0x60;
++
++	domain = irq_domain_add_linear(intc, NR_IRQS, &irq_ops, &sh7751_regs);
++	if (!domain)
++		panic("%s: unable to create IRQ domain\n", intc->full_name);
++
++	irq_set_default_host(domain);
++	return 0;
++}
++
++IRQCHIP_DECLARE(sh_7751_intc, "renesas,sh7751-intc", sh_intc_7751_init);
+-- 
+2.7.0
 
->
-> Specifying register ranges suggests some form of exclusivity to me - =
-which is
-> just great for things like the emmc phy that has an actual range, but=
- for a
-> device being controlled from some shared register.
->
->
-> Heiko
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
-
-
---=20
-Best Regards
-Shawn Lin
