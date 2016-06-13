@@ -1,65 +1,93 @@
-From: Shunqian Zheng <shunqian.zheng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] iommu/rockchip: use DMA API to map, to flush cache
-Date: Mon, 13 Jun 2016 18:31:11 +0800
-Message-ID: <575E8B6F.1040103@gmail.com>
-References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com>
-	<1465392392-2003-7-git-send-email-zhengsq@rock-chips.com>
-	<CAAFQd5Da+Eg=eiRUgLSS_qPjGbG474KYWDC=GaAMS8A_CuQ3Mg@mail.gmail.com>
-	<575E834C.30305@gmail.com>
-	<CAAFQd5DDCd8VcdEhEASAK7NMBnVJWuUxgGURtsa2KQBKsgsxUQ@mail.gmail.com>
-Reply-To: shunqian.zheng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] net: hisilicon: Add Fast Ethernet MAC driver
+Date: Mon, 13 Jun 2016 11:06:05 +0200
+Message-ID: <4004629.ilZU8AvAjF@wuerfel>
+References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com> <1465798076-176393-4-git-send-email-lidongpo@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAAFQd5DDCd8VcdEhEASAK7NMBnVJWuUxgGURtsa2KQBKsgsxUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, simon xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465798076-176393-4-git-send-email-lidongpo@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dongpo Li <lidongpo@hisilicon.com>
+Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SEksCgpPbiAyMDE25bm0MDbmnIgxM+aXpSAxODoyMSwgVG9tYXN6IEZpZ2Egd3JvdGU6Cj4gT24g
-TW9uLCBKdW4gMTMsIDIwMTYgYXQgNjo1NiBQTSwgU2h1bnFpYW4gWmhlbmcKPiA8c2h1bnFpYW4u
-emhlbmdAZ21haWwuY29tPiB3cm90ZToKPj4gSGkKPj4KPj4gT24gMjAxNuW5tDA25pyIMTDml6Ug
-MTc6MTAsIFRvbWFzeiBGaWdhIHdyb3RlOgo+Pj4gSGksCj4+Pgo+Pj4gT24gV2VkLCBKdW4gOCwg
-MjAxNiBhdCAxMDoyNiBQTSwgU2h1bnFpYW4gWmhlbmcgPHpoZW5nc3FAcm9jay1jaGlwcy5jb20+
-Cj4+PiB3cm90ZToKPj4+PiBVc2UgRE1BIEFQSSBpbnN0ZWFkIG9mIGFyY2hpdGVjdHVyZSBpbnRl
-cm5hbCBmdW5jdGlvbnMgbGlrZQo+Pj4+IF9fY3B1Y19mbHVzaF9kY2FjaGVfYXJlYSgpIGV0Yy4K
-Pj4+Pgo+Pj4+IFRvIHN1cHBvcnQgdGhlIHZpcnR1YWwgZGV2aWNlIGxpa2UgRFJNIHRoZSB2aXJ0
-dWFsIHNsYXZlIGlvbW11Cj4+Pj4gYWRkZWQgaW4gdGhlIHByZXZpb3VzIHBhdGNoLCBhdHRhY2hp
-bmcgdG8gd2hpY2ggdGhlIERSTSBjYW4gdXNlCj4+Pj4gaXQgb3duIGRvbWFpbi0+ZGV2IGZvciBk
-bWFfbWFwXyooKSwgZG1hX3N5bmNfKigpIGV2ZW4gVk9QIGlzIGRpc2FibGVkLgo+Pj4+Cj4+Pj4g
-V2l0aCB0aGlzIHBhdGNoLCB0aGlzIGRyaXZlciBpcyBhdmFpbGFibGUgZm9yIEFSTTY0IGxpa2Ug
-UkszMzk5Lgo+Pj4+Cj4+PiBDb3VsZCB3ZSBpbnN0ZWFkIHNpbXBseSBhbGxvY2F0ZSBjb2hlcmVu
-dCBtZW1vcnkgZm9yIHBhZ2UgdGFibGVzIHVzaW5nCj4+PiBkbWFfYWxsb2NfY29oZXJlbnQoKSBh
-bmQgc2tpcCBhbnkgZmx1c2hpbmcgb24gQ1BVIHNpZGUgY29tcGxldGVseT8gSWYKPj4+IEknbSBs
-b29raW5nIGNvcnJlY3RseSwgdGhlIGRyaXZlciBvbmx5IHJlYWRzIGJhY2sgdGhlIHBhZ2UgZGly
-ZWN0b3J5Cj4+PiB3aGVuIGNoZWNraW5nIGlmIHRoZXJlIGlzIGEgbmVlZCB0byBhbGxvY2F0ZSBu
-ZXcgcGFnZSB0YWJsZSwgc28gdGhlcmUKPj4+IHNob3VsZG4ndCBiZSBhbnkgc2lnbmlmaWNhbnQg
-cGVuYWx0eSBmb3IgZGlzYWJsaW5nIHRoZSBjYWNoZS4KPj4gSSB0cnkgdG8gdXNlIGRtYV9hbGxv
-Y19jb2hlcmVudCgpIHRvIHJlcGxhY2UgdGhlIGRtYV9tYXBfc2luZ2xlKCksCj4+IGJ1dCBpdCBk
-b2Vzbid0IHdvcmsgZm9yIG1lIHByb3Blcmx5Lgo+PiBCZWNhdXNlIHRoZSBEUk0gdXNlcyB0aGUg
-aW9tbXVfZG1hX29wcyBpbnN0ZWFkIHRoZSBzd2lvdGxiX2RtYV9vcHMgYWZ0ZXIKPj4gYXR0YWNo
-aW5nCj4+IHRvIGlvbW11LCBzbyB3aGVuIHRoZSBpb21tdSBkb21haW4gbmVlZCB0byBhbGxvYyBh
-IG5ldyBwYWdlIGluCj4+IHJrX2lvbW11X21hcCgpLAo+PiBpdCB3b3VsZCBjYWxsOgo+PiBya19p
-b21tdV9tYXAoKSAgLS0+IGRtYV9hbGxvY19jb2hlcmVudCgpICAtLT4gb3BzLT5hbGxvYygpICAt
-LT4gaW9tbXVfbWFwKCkKPj4gLS0+IHJrX2lvbW11X21hcCgpCj4gSXQgc2hvdWxkbid0IGNhbGwg
-aW9tbXVfbWFwKCksIGJlY2F1c2UgdGhlIElPTU1VIGlzIG5vdCBiZWhpbmQgYW5vdGhlcgo+IElP
-TU1VLiBBcmUgeW91IHN1cmUgeW91IGNhbGxlZCBkbWFfYWxsb2NfY29oZXJlbnQoKSBvbiBiZWhh
-bGYgb2YgdGhlCj4gSU9NTVUgc3RydWN0IGRldmljZSBhbmQgbm90IHRoZSBEUk0gZGV2aWNlPwpJ
-IGNhbGxlZCBkbWFfYWxsb2NfY29oZXJlbnQoKSB3aXRoIERSTSBkZXZpY2UgYnV0IG5vdCB0aGUg
-SU9NTVUgZGV2aWNlLApiZWNhdXNlIERSTSBkaWRuJ3QgYXR0YWNoIHRvIGFueSBpb21tdS4gRXZl
-biBhbGxvY2F0aW5nIGFuIHZpcnR1YWwgb25lIAp3aGVuIGF0dGFjaGluZywgdGhlIGlvbW11LT5k
-ZXYKaXMgRFJNIGRldmljZSB0aG91Z2guCkFtIEkgcmlnaHQgaGVyZT8KClRoYW5rIHlvdSB2ZXJ5
-IG11Y2gsClNodW5xaWFuCj4KPiBCZXN0IHJlZ2FyZHMsCj4gVG9tYXN6CgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwppb21tdSBtYWlsaW5nIGxpc3QKaW9t
-bXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcKaHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRp
-b24ub3JnL21haWxtYW4vbGlzdGluZm8vaW9tbXU=
+On Monday, June 13, 2016 2:07:56 PM CEST Dongpo Li wrote:
+
+> +- reset-names: should contain the reset signal name "mac_reset"(required)
+> +	and "phy_reset"(optional).
+
+Maybe just name the resets 'mac' and 'phy'? The '_reset' part is
+implied by the property.
+
+I gave the driver a brief review and basically everything looks
+great, very nice work!
+
+There are two small things that I noticed:
+
+> +
+> +       do {
+> +               hisi_femac_xmit_reclaim(dev);
+> +               num = hisi_femac_rx(dev, task);
+> +               work_done += num;
+> +               task -= num;
+> +               if ((work_done >= budget) || (num == 0))
+> +                       break;
+> +
+> +               ints = readl(priv->glb_base + GLB_IRQ_STAT);
+> +               writel(ints & DEF_INT_MASK,
+> +                      priv->glb_base + GLB_IRQ_RAW);
+> +       } while (ints & DEF_INT_MASK);
+> +
+> +       if (work_done < budget) {
+> +               napi_complete(napi);
+> +               hisi_femac_irq_enable(priv, DEF_INT_MASK);
+> +       }
+
+You tx function uses BQL to optimize the queue length, and that
+is great. You also check xmit reclaim for rx interrupts, so
+as long as you have both rx and tx traffic, this should work
+great.
+
+However, I notice that you only have a 'tx fifo empty'
+interrupt triggering the napi poll, so I guess on a tx-only
+workload you will always end up pushing packets into the
+queue until BQL throttles tx, and then get the interrupt
+after all packets have been sent, which will cause BQL to
+make the queue longer up to the maximum queue size, and that
+negates the effect of BQL.
+
+Is there any way you can get a tx interrupt earlier than
+this in order to get a more balanced queue, or is it ok
+to just rely on rx packets to come in occasionally, and
+just use the tx fifo empty interrupt as a fallback?
+
+> +	priv->phy_mode = of_get_phy_mode(node);
+> +	if (priv->phy_mode < 0) {
+> +		dev_err(dev, "not find phy-mode\n");
+> +		ret = -EINVAL;
+> +		goto out_disable_clk;
+> +	}
+> +
+> +	priv->phy_node = of_parse_phandle(node, "phy-handle", 0);
+> +	if (!priv->phy_node) {
+> +		dev_err(dev, "not find phy-handle\n");
+> +		ret = -EINVAL;
+> +		goto out_disable_clk;
+> +	}
+> +
+> +	priv->phy = of_phy_connect(ndev, priv->phy_node,
+> +				   hisi_femac_adjust_link, 0, priv->phy_mode);
+> +	if (!(priv->phy) || IS_ERR(priv->phy)) {
+> +		dev_err(dev, "connect to PHY failed!\n");
+> +		ret = -ENODEV;
+> +		goto out_phy_node;
+> +	}
+
+I wonder if we could generalize this set of three calls, I
+get the impression that we duplicate this across several
+drivers that shouldn't need to bother with the specific
+phy-handle and phy-mode properties.
+
+	Arnd
