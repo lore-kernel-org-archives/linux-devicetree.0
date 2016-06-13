@@ -1,82 +1,94 @@
 From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
-	<noltari@gmail.com>
-Subject: [PATCH 4/6] MIPS: BMIPS: Add device tree example for BCM3368
-Date: Mon, 13 Jun 2016 09:38:52 +0200
-Message-ID: <1465803534-25840-4-git-send-email-noltari@gmail.com>
+        <noltari@gmail.com>
+Subject: [PATCH 2/6] MIPS: BMIPS: Add device tree example for BCM63268
+Date: Mon, 13 Jun 2016 09:38:50 +0200
+Message-ID: <1465803534-25840-2-git-send-email-noltari@gmail.com>
 References: <1465803534-25840-1-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1465803534-25840-1-git-send-email-noltari@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ralf@linux-mips.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com, robh@kernel.org, simon@fire.lp0.eu
 Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a device tree example for Netgear CVG834G.
+This adds a device tree example for Comtrend VR-3032u, which
+also serves as a real example for brcm,bcm6328-leds.
 
 Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
 ---
- arch/mips/bmips/Kconfig                     |   4 ++
- arch/mips/boot/dts/brcm/Makefile            |   2 +
- arch/mips/boot/dts/brcm/bcm3368.dtsi        | 101 ++++++++++++++++++++=
+ arch/mips/bmips/Kconfig                      |   4 +
+ arch/mips/boot/dts/brcm/Makefile             |   2 +
+ arch/mips/boot/dts/brcm/bcm63268.dtsi        | 134 +++++++++++++++++++=
 ++++++++
- arch/mips/boot/dts/brcm/bcm93368cvg834g.dts |  22 ++++++
- 4 files changed, 129 insertions(+)
- create mode 100644 arch/mips/boot/dts/brcm/bcm3368.dtsi
- create mode 100644 arch/mips/boot/dts/brcm/bcm93368cvg834g.dts
+ arch/mips/boot/dts/brcm/bcm963268vr3032u.dts | 108 +++++++++++++++++++=
+++
+ 4 files changed, 248 insertions(+)
+ create mode 100644 arch/mips/boot/dts/brcm/bcm63268.dtsi
+ create mode 100644 arch/mips/boot/dts/brcm/bcm963268vr3032u.dts
 
 diff --git a/arch/mips/bmips/Kconfig b/arch/mips/bmips/Kconfig
-index 14f4b4c..5b0ad8c 100644
+index 264328d..14f4b4c 100644
 --- a/arch/mips/bmips/Kconfig
 +++ b/arch/mips/bmips/Kconfig
-@@ -13,6 +13,10 @@ choice
- config DT_NONE
- 	bool "None"
+@@ -21,6 +21,10 @@ config DT_BCM93384WVG_VIPER
+ 	bool "BCM93384WVG Viper CPU (EXPERIMENTAL)"
+ 	select BUILTIN_DTB
 =20
-+config DT_BCM93368CVG834G
-+	bool "BCM93368CVG834G"
-+	select BUILTIN_DTB
++config DT_BCM963268VR3032U
++        bool "BCM963268VR3032U"
++        select BUILTIN_DTB
 +
- config DT_BCM93384WVG
- 	bool "BCM93384WVG Zephyr CPU"
+ config DT_BCM96358NB4SER
+ 	bool "BCM96358NB4SER"
  	select BUILTIN_DTB
 diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/brcm=
 /Makefile
-index 2060e70..c553b95 100644
+index fda9d38..2060e70 100644
 --- a/arch/mips/boot/dts/brcm/Makefile
 +++ b/arch/mips/boot/dts/brcm/Makefile
-@@ -1,3 +1,4 @@
-+dtb-$(CONFIG_DT_BCM93368CVG834G)	+=3D bcm93368cvg834g.dtb
+@@ -1,5 +1,6 @@
  dtb-$(CONFIG_DT_BCM93384WVG)		+=3D bcm93384wvg.dtb
  dtb-$(CONFIG_DT_BCM93384WVG_VIPER)	+=3D bcm93384wvg_viper.dtb
- dtb-$(CONFIG_DT_BCM963268VR3032U)	+=3D bcm963268vr3032u.dtb
-@@ -14,6 +15,7 @@ dtb-$(CONFIG_DT_BCM97425SVMB)		+=3D bcm97425svmb.dtb
- dtb-$(CONFIG_DT_BCM97435SVMB)		+=3D bcm97435svmb.dtb
-=20
++dtb-$(CONFIG_DT_BCM963268VR3032U)	+=3D bcm963268vr3032u.dtb
+ dtb-$(CONFIG_DT_BCM96358NB4SER)		+=3D bcm96358nb4ser.dtb
+ dtb-$(CONFIG_DT_BCM96368MVWG)		+=3D bcm96368mvwg.dtb
+ dtb-$(CONFIG_DT_BCM9EJTAGPRB)		+=3D bcm9ejtagprb.dtb
+@@ -15,6 +16,7 @@ dtb-$(CONFIG_DT_BCM97435SVMB)		+=3D bcm97435svmb.dtb
  dtb-$(CONFIG_DT_NONE)			+=3D \
-+						bcm93368cvg834g.dtb	\
  						bcm93384wvg.dtb		\
  						bcm93384wvg_viper.dtb	\
- 						bcm963268vr3032u.dtb	\
-diff --git a/arch/mips/boot/dts/brcm/bcm3368.dtsi b/arch/mips/boot/dts/=
-brcm/bcm3368.dtsi
++						bcm963268vr3032u.dtb	\
+ 						bcm96358nb4ser.dtb	\
+ 						bcm96368mvwg.dtb	\
+ 						bcm9ejtagprb.dtb	\
+diff --git a/arch/mips/boot/dts/brcm/bcm63268.dtsi b/arch/mips/boot/dts=
+/brcm/bcm63268.dtsi
 new file mode 100644
-index 0000000..bee855c
+index 0000000..7e6bf2c
 --- /dev/null
-+++ b/arch/mips/boot/dts/brcm/bcm3368.dtsi
-@@ -0,0 +1,101 @@
++++ b/arch/mips/boot/dts/brcm/bcm63268.dtsi
+@@ -0,0 +1,134 @@
 +/ {
 +	#address-cells =3D <1>;
 +	#size-cells =3D <1>;
-+	compatible =3D "brcm,bcm3368";
++	compatible =3D "brcm,bcm63268";
 +
 +	cpus {
 +		#address-cells =3D <1>;
 +		#size-cells =3D <0>;
 +
-+		mips-hpt-frequency =3D <150000000>;
++		mips-hpt-frequency =3D <200000000>;
 +
 +		cpu@0 {
 +			compatible =3D "brcm,bmips4350";
@@ -119,78 +131,197 @@ index 0000000..bee855c
 +		compatible =3D "simple-bus";
 +		ranges;
 +
-+		periph_cntl: syscon@fff8c000 {
++		periph_cntl: syscon@10000000 {
 +			compatible =3D "syscon";
-+			reg =3D <0xfff8c000 0xc>;
++			reg =3D <0x10000000 0x14>;
 +			native-endian;
 +		};
 +
-+		reboot: syscon-reboot@fff8c008 {
++		reboot: syscon-reboot@10000008 {
 +			compatible =3D "syscon-reboot";
 +			regmap =3D <&periph_cntl>;
 +			offset =3D <0x8>;
 +			mask =3D <0x1>;
 +		};
 +
-+		periph_intc: interrupt-controller@fff8c00c {
++		periph_intc: interrupt-controller@10000020 {
 +			compatible =3D "brcm,bcm6345-l1-intc";
-+			reg =3D <0xfff8c00c 0x8>;
++			reg =3D <0x10000020 0x20>,
++			      <0x10000040 0x20>;
 +
 +			interrupt-controller;
 +			#interrupt-cells =3D <1>;
 +
 +			interrupt-parent =3D <&cpu_intc>;
-+			interrupts =3D <2>;
++			interrupts =3D <2>, <3>;
 +		};
 +
-+		uart0: serial@fff8c100 {
++		uart0: serial@10000180 {
 +			compatible =3D "brcm,bcm6345-uart";
-+			reg =3D <0xfff8c100 0x18>;
++			reg =3D <0x10000180 0x18>;
 +
 +			interrupt-parent =3D <&periph_intc>;
-+			interrupts =3D <2>;
++			interrupts =3D <5>;
 +
 +			clocks =3D <&periph_clk>;
 +
 +			status =3D "disabled";
 +		};
 +
-+		uart1: serial@fff8c120 {
++		uart1: serial@100001a0 {
 +			compatible =3D "brcm,bcm6345-uart";
-+			reg =3D <0xfff8c120 0x18>;
++			reg =3D <0x100001a0 0x18>;
 +
 +			interrupt-parent =3D <&periph_intc>;
-+			interrupts =3D <3>;
++			interrupts =3D <34>;
 +
 +			clocks =3D <&periph_clk>;
++
++			status =3D "disabled";
++		};
++
++		leds0: led-controller@10001900 {
++			#address-cells =3D <1>;
++			#size-cells =3D <0>;
++			compatible =3D "brcm,bcm6328-leds";
++			reg =3D <0x10001900 0x24>;
++
++			status =3D "disabled";
++		};
++
++		ehci: usb@10002500 {
++			compatible =3D "brcm,bcm63268-ehci", "generic-ehci";
++			reg =3D <0x10002500 0x100>;
++			big-endian;
++
++			interrupt-parent =3D <&periph_intc>;
++			interrupts =3D <10>;
++
++			status =3D "disabled";
++		};
++
++		ohci: usb@10002600 {
++			compatible =3D "brcm,bcm63268-ohci", "generic-ohci";
++			reg =3D <0x10002600 0x100>;
++			big-endian;
++			no-big-frame-no;
++
++			interrupt-parent =3D <&periph_intc>;
++			interrupts =3D <9>;
 +
 +			status =3D "disabled";
 +		};
 +	};
 +};
-diff --git a/arch/mips/boot/dts/brcm/bcm93368cvg834g.dts b/arch/mips/bo=
-ot/dts/brcm/bcm93368cvg834g.dts
+diff --git a/arch/mips/boot/dts/brcm/bcm963268vr3032u.dts b/arch/mips/b=
+oot/dts/brcm/bcm963268vr3032u.dts
 new file mode 100644
-index 0000000..68475c4
+index 0000000..430d35c
 --- /dev/null
-+++ b/arch/mips/boot/dts/brcm/bcm93368cvg834g.dts
-@@ -0,0 +1,22 @@
++++ b/arch/mips/boot/dts/brcm/bcm963268vr3032u.dts
+@@ -0,0 +1,108 @@
 +/dts-v1/;
 +
-+/include/ "bcm3368.dtsi"
++/include/ "bcm63268.dtsi"
 +
 +/ {
-+	compatible =3D "netgear,cvg834g", "brcm,bcm3368";
-+	model =3D "Netgear CVG834G";
++	compatible =3D "comtrend,vr-3032u", "brcm,bcm63268";
++	model =3D "Comtrend VR-3032u";
 +
 +	memory@0 {
 +		device_type =3D "memory";
-+		reg =3D <0x00000000 0x02000000>;
++		reg =3D <0x00000000 0x04000000>;
 +	};
 +
 +	chosen {
 +		bootargs =3D "console=3DttyS0,115200";
 +		stdout-path =3D &uart0;
++	};
++};
++
++&leds0 {
++	status =3D "ok";
++	brcm,serial-leds;
++	brcm,serial-dat-low;
++	brcm,serial-shift-inv;
++
++	led@0 {
++		reg =3D <0>;
++		brcm,hardware-controlled;
++		brcm,link-signal-sources =3D <0>;
++		/* GPHY0 Speed 0 */
++	};
++	led@1 {
++		reg =3D <1>;
++		brcm,hardware-controlled;
++		brcm,link-signal-sources =3D <1>;
++		/* GPHY0 Speed 1 */
++	};
++	led@2 {
++		reg =3D <2>;
++		active-low;
++		label =3D "vr-3032u:red:inet";
++	};
++	led@3 {
++		reg =3D <3>;
++		active-low;
++		label =3D "vr-3032u:green:dsl";
++	};
++	led@4 {
++		reg =3D <4>;
++		active-low;
++		label =3D "vr-3032u:green:usb";
++	};
++	led@7 {
++		reg =3D <7>;
++		active-low;
++		label =3D "vr-3032u:green:wps";
++	};
++	led@8 {
++		reg =3D <8>;
++		active-low;
++		label =3D "vr-3032u:green:inet";
++	};
++	led@9 {
++		reg =3D <9>;
++		brcm,hardware-controlled;
++		/* EPHY0 Activity */
++	};
++	led@10 {
++		reg =3D <10>;
++		brcm,hardware-controlled;
++		/* EPHY1 Activity */
++	};
++	led@11 {
++		reg =3D <11>;
++		brcm,hardware-controlled;
++		/* EPHY2 Activity */
++	};
++	led@12 {
++		reg =3D <12>;
++		brcm,hardware-controlled;
++		/* GPHY0 Activity */
++	};
++	led@13 {
++		reg =3D <13>;
++		brcm,hardware-controlled;
++		/* EPHY0 Speed */
++	};
++	led@14 {
++		reg =3D <14>;
++		brcm,hardware-controlled;
++		/* EPHY1 Speed */
++	};
++	led@15 {
++		reg =3D <15>;
++		brcm,hardware-controlled;
++		/* EPHY2 Speed */
++	};
++	led@20 {
++		reg =3D <20>;
++		active-low;
++		label =3D "vr-3032u:green:power";
++		default-state =3D "on";
 +	};
 +};
 +
