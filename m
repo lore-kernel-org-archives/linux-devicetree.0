@@ -1,64 +1,322 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH 10/11] phy: rockchip-emmc: Minor code cleanup in
- rockchip_emmc_phy_power_off()
-Date: Mon, 13 Jun 2016 16:56:47 +0800
-Message-ID: <f80ba471-95dd-5cda-00a2-9006cfe15167@rock-chips.com>
-References: <1465339484-969-1-git-send-email-dianders@chromium.org>
- <1465339484-969-11-git-send-email-dianders@chromium.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V6 9/9] irqchip/gic: Add platform driver for non-root GICs
+ that require RPM
+Date: Mon, 13 Jun 2016 10:10:55 +0100
+Message-ID: <575E789F.3050509@arm.com>
+References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
+ <1465312354-27778-10-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1465339484-969-11-git-send-email-dianders@chromium.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>, ulf.hansson@linaro.org, kishon@ti.com, Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org
-Cc: shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465312354-27778-10-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016/6/8 6:44, Douglas Anderson wrote:
-> There's no reason to store the return value of rockchip_emmc_phy_power()
-> in a variable nor to check it.  Just return it.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Hi Jon,
+
+On 07/06/16 16:12, Jon Hunter wrote:
+> Add a platform driver to support non-root GICs that require runtime
+> power-management. Currently, only non-root GICs are supported because
+> the functions, smp_cross_call() and set_handle_irq(), that need to
+> be called for a root controller are located in the __init section and
+> so cannot be called by the platform driver.
+> 
+> The GIC platform driver re-uses many functions from the existing GIC
+> driver including some functions to save and restore the GIC context
+> during power transitions. The functions for saving and restoring the
+> GIC context are currently only defined if CONFIG_CPU_PM is enabled and
+> to ensure that these functions are always defined when the platform
+> driver is enabled, a dependency on CONFIG_ARM_GIC_PM (which selects the
+> platform driver) has been added.
+> 
+> In order to re-use the private GIC initialisation code, a new public
+> function, gic_of_init_child(), has been added which calls various
+> private functions to initialise the GIC. This is different from the
+> existing gic_of_init() because it only supports non-root GICs (ie. does
+> not call smp_cross_call() is set_handle_irq()) and is not located in
+> the __init section (so can be used by platform drivers). Furthermore,
+> gic_of_init_child() dynamically allocates memory for the GIC chip data
+> which is also different from gic_of_init().
+> 
+> There is no specific suspend handling for GICs registered as platform
+> devices. Non-wakeup interrupts will be disabled by the kernel during
+> late suspend, however, this alone will not power down the GIC if
+> interrupts have been requested and not freed. Therefore, requestors of
+> non-wakeup interrupts will need to free them on entering suspend in
+> order to power-down the GIC.
+> 
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/phy/phy-rockchip-emmc.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockchip-emmc.c
-> index 0fce7359d468..188e4c387ba8 100644
-> --- a/drivers/phy/phy-rockchip-emmc.c
-> +++ b/drivers/phy/phy-rockchip-emmc.c
-> @@ -227,8 +227,6 @@ static int rockchip_emmc_phy_power_off(struct phy *phy)
->  static int rockchip_emmc_phy_power_on(struct phy *phy)
->  {
-
-I saw the cleanup for power_off is done on [patch 9/11]
-
-shouldn't be in this patch? :)
-
->  	struct rockchip_emmc_phy *rk_phy = phy_get_drvdata(phy);
-> -	int ret = 0;
-> -
->
->  	/* Drive impedance: 50 Ohm */
->  	regmap_write(rk_phy->reg_base,
-> @@ -252,11 +250,7 @@ static int rockchip_emmc_phy_power_on(struct phy *phy)
->  				   PHYCTRL_OTAPDLYSEL_SHIFT));
->
->  	/* Power up emmc phy analog blocks */
-> -	ret = rockchip_emmc_phy_power(phy, PHYCTRL_PDB_PWR_ON);
-> -	if (ret)
-> -		return ret;
-> -
-> -	return 0;
-> +	return rockchip_emmc_phy_power(phy, PHYCTRL_PDB_PWR_ON);
+>  drivers/irqchip/Kconfig         |   6 ++
+>  drivers/irqchip/Makefile        |   1 +
+>  drivers/irqchip/irq-gic-pm.c    | 184 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/irqchip/irq-gic.c       |  38 ++++++++-
+>  include/linux/irqchip/arm-gic.h |   6 ++
+>  5 files changed, 232 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/irqchip/irq-gic-pm.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index fa33c50b0e5a..5495a5ba8039 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -8,6 +8,12 @@ config ARM_GIC
+>  	select IRQ_DOMAIN_HIERARCHY
+>  	select MULTI_IRQ_HANDLER
+>  
+> +config ARM_GIC_PM
+> +	bool
+> +	depends on PM
+> +	select ARM_GIC
+> +	select PM_CLK
+> +
+>  config ARM_GIC_MAX_NR
+>  	int
+>  	default 2 if ARCH_REALVIEW
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 38853a187607..bd0257e0aab6 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -24,6 +24,7 @@ obj-$(CONFIG_ARCH_SUNXI)		+= irq-sun4i.o
+>  obj-$(CONFIG_ARCH_SUNXI)		+= irq-sunxi-nmi.o
+>  obj-$(CONFIG_ARCH_SPEAR3XX)		+= spear-shirq.o
+>  obj-$(CONFIG_ARM_GIC)			+= irq-gic.o irq-gic-common.o
+> +obj-$(CONFIG_ARM_GIC_PM)		+= irq-gic-pm.o
+>  obj-$(CONFIG_REALVIEW_DT)		+= irq-gic-realview.o
+>  obj-$(CONFIG_ARM_GIC_V2M)		+= irq-gic-v2m.o
+>  obj-$(CONFIG_ARM_GIC_V3)		+= irq-gic-v3.o irq-gic-common.o
+> diff --git a/drivers/irqchip/irq-gic-pm.c b/drivers/irqchip/irq-gic-pm.c
+> new file mode 100644
+> index 000000000000..4cbffba3ff13
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-gic-pm.c
+> @@ -0,0 +1,184 @@
+> +/*
+> + * Copyright (C) 2016 NVIDIA CORPORATION, All Rights Reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/clk.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/irqchip/arm-gic.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_clock.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+> +
+> +struct gic_clk_data {
+> +	unsigned int num_clocks;
+> +	const char *const *clocks;
+> +};
+> +
+> +static int gic_runtime_resume(struct device *dev)
+> +{
+> +	struct gic_chip_data *gic = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = pm_clk_resume(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * On the very first resume, the pointer to the driver data
+> +	 * will be NULL and this is intentional, because we do not
+> +	 * want to restore the GIC on the very first resume. So if
+> +	 * the pointer is not valid just return.
+> +	 */
+> +	if (!gic)
+> +		return 0;
+> +
+> +	gic_dist_restore(gic);
+> +	gic_cpu_restore(gic);
+> +
+> +	return 0;
+> +}
+> +
+> +static int gic_runtime_suspend(struct device *dev)
+> +{
+> +	struct gic_chip_data *gic = dev_get_drvdata(dev);
+> +
+> +	gic_dist_save(gic);
+> +	gic_cpu_save(gic);
+> +
+> +	return pm_clk_suspend(dev);
+> +}
+> +
+> +static int gic_get_clocks(struct device *dev, const struct gic_clk_data *data)
+> +{
+> +	struct clk *clk;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	if (!dev || !data)
+> +		return -EINVAL;
+> +
+> +	ret = pm_clk_create(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < data->num_clocks; i++) {
+> +		clk = of_clk_get_by_name(dev->of_node, data->clocks[i]);
+> +		if (IS_ERR(clk)) {
+> +			dev_err(dev, "failed to get clock %s\n",
+> +				data->clocks[i]);
+> +			ret = PTR_ERR(clk);
+> +			goto error;
+> +		}
+> +
+> +		ret = pm_clk_add_clk(dev, clk);
+> +		if (ret) {
+> +			dev_err(dev, "failed to add clock at index %d\n", i);
+> +			clk_put(clk);
+> +			goto error;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +error:
+> +	pm_clk_destroy(dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int gic_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	const struct gic_clk_data *data;
+> +	struct gic_chip_data *gic;
+> +	int ret, irq;
+> +
+> +	data = of_device_get_match_data(&pdev->dev);
+> +	if (!data) {
+> +		dev_err(&pdev->dev, "no device match found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	irq = irq_of_parse_and_map(dev->of_node, 0);
+> +	if (!irq) {
+> +		dev_err(dev, "no parent interrupt found!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = gic_get_clocks(dev, data);
+> +	if (ret)
+> +		goto irq_dispose;
+> +
+> +	pm_runtime_enable(dev);
+> +
+> +	ret = pm_runtime_get_sync(dev);
+> +	if (ret < 0)
+> +		goto rpm_disable;
+> +
+> +	ret = gic_of_init_child(dev, &gic, irq);
+> +	if (ret)
+> +		goto rpm_put;
+> +
+> +	platform_set_drvdata(pdev, gic);
+> +
+> +	pm_runtime_put(dev);
+> +
+> +	dev_info(dev, "GIC IRQ controller registered\n");
+> +
+> +	return 0;
+> +
+> +rpm_put:
+> +	pm_runtime_put_sync(dev);
+> +rpm_disable:
+> +	pm_runtime_disable(dev);
+> +	pm_clk_destroy(dev);
+> +irq_dispose:
+> +	irq_dispose_mapping(irq);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct dev_pm_ops gic_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(gic_runtime_suspend,
+> +			   gic_runtime_resume, NULL)
+> +};
+> +
+> +static const char * const gic400_clocks[] = {
+> +	"clk",
+> +};
+> +
+> +static const struct gic_clk_data gic400_data = {
+> +	.num_clocks = ARRAY_SIZE(gic400_clocks),
+> +	.clocks = gic400_clocks,
+> +};
+> +
+> +static const struct of_device_id gic_match[] = {
+> +	{ .compatible = "nvidia,tegra210-agic",	.data = &gic400_data },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, gic_match);
+> +
+> +static struct platform_driver gic_driver = {
+> +	.probe		= gic_probe,
+> +	.driver		= {
+> +		.name	= "gic",
+> +		.of_match_table	= gic_match,
+> +		.pm	= &gic_pm_ops,
+> +	}
+> +};
+> +
+> +builtin_platform_driver(gic_driver);
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 141ea5801784..57423f3b218b 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -75,7 +75,7 @@ struct gic_chip_data {
+>  	void __iomem *raw_dist_base;
+>  	void __iomem *raw_cpu_base;
+>  	u32 percpu_offset;
+> -#ifdef CONFIG_CPU_PM
+> +#if defined(CONFIG_CPU_PM) || defined(CONFIG_ARM_GIC_PM)
+>  	u32 saved_spi_enable[DIV_ROUND_UP(1020, 32)];
+>  	u32 saved_spi_active[DIV_ROUND_UP(1020, 32)];
+>  	u32 saved_spi_conf[DIV_ROUND_UP(1020, 16)];
+> @@ -528,7 +528,7 @@ int gic_cpu_if_down(unsigned int gic_nr)
+>  	return 0;
 >  }
->
->  static const struct phy_ops ops = {
->
+>  
+> -#ifdef CONFIG_CPU_PM
+> +#if defined(CONFIG_CPU_PM) || defined(CONFIG_ARM_GIC_PM)
+>  /*
+>   * Saves the GIC distributor registers during suspend or idle.  Must be called
+>   * with interrupts disabled but before powering down the GIC.  After calling
+> @@ -1296,6 +1296,34 @@ error:
+>  	return -ENOMEM;
+>  }
+>  
+> +int gic_of_init_child(struct device *dev, struct gic_chip_data **gic, int irq)
 
+I got this:
 
+WARNING: drivers/built-in.o(.text+0x2464): Section mismatch in reference from the function gic_of_init_child() to the function .init.text:gic_of_setup()
+The function gic_of_init_child() references
+the function __init gic_of_setup().
+This is often because gic_of_init_child lacks a __init 
+annotation or the annotation of gic_of_setup is wrong.
+
+I've fixed it locally by making the function __init.
+
+Thanks,
+
+	M.
 -- 
-Best Regards
-Shawn Lin
-
+Jazz is not dead. It just smells funny...
