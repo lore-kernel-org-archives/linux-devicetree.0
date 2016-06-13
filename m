@@ -1,58 +1,69 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 0/2] Add a new Rockchip usb2 phy driver
-Date: Mon, 13 Jun 2016 10:10:08 +0800
-Message-ID: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] [V2] ARM: dts: sun7i: Add dts file for
+ Bananapi M1 Plus board
+Date: Mon, 13 Jun 2016 11:01:53 +0800
+Message-ID: <CAGb2v64PYU9H7Ag45ogwtjJAO87D6saTFv5-4P_E7d1xobQXXA@mail.gmail.com>
+References: <20160602023623.5761-1-luoyi.ly@gmail.com> <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA@mail.gmail.com>
+ <20160602081638.GG4908@lukather> <574FF94B.3020309@web.de> <20160610093851.GQ5242@lukather>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBOGE7C5AKGQEDZDNZDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160610093851.GQ5242@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?572X57+8?= <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The newer SoCs (rk3366, rk3399) of Rock-chip take a different usb-phy
-IP block than rk3288 and before, and most of phy-related registers are
-also different from the past, so a new phy driver is required necessarily.
+On Fri, Jun 10, 2016 at 5:38 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Thu, Jun 02, 2016 at 11:15:55AM +0200, Bernhard Nortmann wrote:
+>> Am 02.06.2016 um 10:16 schrieb Maxime Ripard:
+>> >[...]
+>> >Yes, everything that is shared with the banana-pro (which, judging
+>> >from Bernhard, is pretty much everything but a GPIO) should be merged
+>> >in the banapro DT.
+>> >
+>> >Maxime
+>> >
+>>
+>> Don't take my word for granted, as I do not own this hardware or know it
+>> particularly well. There is no doubt that "BPi-M1+" and "Banana Pro" are
+>> very similar, but if in doubt the information form the wiki should be
+>> verified.
+>
+> Hmmmm, ok. Chen-Yu, any input on this? You know the banana-pis much
+> more than I do.
 
-These series patches add phy-rockchip-inno-usb2.c and the corresponding
-documentation.
+I did a comparison of the "Banana Pro" vs the "BPi-M1+".
 
-Changes in v5:
- - Added 'reg' property both in devicetree bindings and driver to match the different phy-blocks.
+The differences are similar to what we have with any other development
+board, say the Cubietruck:
 
-Changes in v4:
- - Used 'phy-supply' instead of 'vbus_*-supply'.
+  - A different WiFi chip is used, and the BT part is not hooked up.
+  - Different GPIOs for external power regulator/switches
+  - Different GPIOs for LEDs
+  - Different peripherals exposed on the headers.
 
-Changes in v3:
- - Supplemented some hardware-description into the devicetree bindings.
- - Resolved the mapping defect between fixed value in driver and the property
-   in devicetree.
- - Code cleanup.
+IMO There's no need to merge or have a common .dtsi for the two boards.
+They (and all the other development boards) look similar because
+everyone is following the basic set by Allwinner's reference design,
+like which MMC controller and pins are used for SD/MMC, which ones
+are used for SDIO-based WiFi, and so on.
 
-Changes in v2:
- - Specified more hardware-description into the devicetree bindings.
- - Optimized some process of driver.
+I did a version completely from scratch using just the schematics:
 
-Frank Wang (2):
-  Documentation: bindings: add DT documentation for Rockchip USB2PHY
-  phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
+  https://github.com/wens/linux/commits/bpi-m1-plus
 
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |   64 ++
- drivers/phy/Kconfig                                |    7 +
- drivers/phy/Makefile                               |    1 +
- drivers/phy/phy-rockchip-inno-usb2.c               |  645 ++++++++++++++++++++
- 4 files changed, 717 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
- create mode 100644 drivers/phy/phy-rockchip-inno-usb2.c
+Please ignore the last commit. It's just me playing with NTP support
+for GPS time.
 
--- 
-1.7.9.5
+
+Regards
+ChenYu
