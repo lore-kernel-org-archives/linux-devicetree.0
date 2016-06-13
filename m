@@ -1,70 +1,130 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv3 1/7] EDAC, altera: Check parent status for Arria10 EDAC block
-Date: Mon, 13 Jun 2016 16:19:06 -0500
-Message-ID: <1465852752-11018-2-git-send-email-tthayer@opensource.altera.com>
+From: <tthayer@opensource.altera.com>
+Subject: [PATCHv3 6/7] EDAC, altera: Add Arria10 Ethernet EDAC support
+Date: Mon, 13 Jun 2016 16:19:11 -0500
+Message-ID: <1465852752-11018-7-git-send-email-tthayer@opensource.altera.com>
 References: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465852752-11018-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+From: Thor Thayer <tthayer@opensource.altera.com>
 
-In preparation for the Arria10 ECC modules, check the status
-of the parent in the device tree to ensure the block is enabled.
-Skip if no parent phandle is set in the device tree.
+Add Altera Arria10 Ethernet FIFO memory EDAC support. Update
+to support a common compatibility string for all ethernet
+FIFOs in the DT.
 
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2  No change
-v3  Move check into validate_parent_available().
+v2  Remove (void *) cast from altr_edac_device_of_match[]
+    Addition of panic flag to ethernet private data.
+v3  Use common compatiblity string.
+    Simplify socfpga_init_ethernet_ecc().
 ---
- drivers/edac/altera_edac.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/edac/Kconfig       |    7 +++++++
+ drivers/edac/altera_edac.c |   38 ++++++++++++++++++++++++++++++++++++--
+ drivers/edac/altera_edac.h |    3 +++
+ 3 files changed, 46 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 6ca7474..d0c1dab 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -391,6 +391,13 @@ config EDAC_ALTERA_OCRAM
+ 	  Support for error detection and correction on the
+ 	  Altera On-Chip RAM Memory for Altera SoCs.
+ 
++config EDAC_ALTERA_ETHERNET
++	bool "Altera Ethernet FIFO ECC"
++	depends on EDAC_ALTERA=y
++	help
++	  Support for error detection and correction on the
++	  Altera Ethernet FIFO Memory for Altera SoCs.
++
+ config EDAC_SYNOPSYS
+ 	tristate "Synopsys DDR Memory Controller"
+ 	depends on EDAC_MM_EDAC && ARCH_ZYNQ
 diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 6f5d586..926bcaf 100644
+index f27bb29..14f99ae 100644
 --- a/drivers/edac/altera_edac.c
 +++ b/drivers/edac/altera_edac.c
-@@ -1125,6 +1125,20 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
+@@ -1260,6 +1260,34 @@ const struct edac_device_prv_data a10_l2ecc_data = {
  
-+static int validate_parent_available(struct device_node *np)
-+{
-+	struct device_node *parent;
+ #endif	/* CONFIG_EDAC_ALTERA_L2C */
+ 
++/********************* Ethernet Device Functions ********************/
 +
-+	/* Ensure parent device is enabled if parent node exists */
-+	parent = of_parse_phandle(np, "parent", 0);
-+	if (parent && !of_device_is_available(parent)) {
-+		of_node_put(parent);
-+		return -ENODEV;
-+	}
-+	of_node_put(parent);
-+	return 0;
++#ifdef CONFIG_EDAC_ALTERA_ETHERNET
++
++const struct edac_device_prv_data a10_enet0rxecc_data = {
++	.setup = altr_check_ecc_deps,
++	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
++	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
++	.dbgfs_name = "altr_trigger",
++	.ecc_enable_mask = ALTR_A10_ETHERNET_ECC_EN_CTL,
++	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
++	.ce_set_mask = ALTR_A10_ECC_TSERRA,
++	.ue_set_mask = ALTR_A10_ECC_TDERRA,
++	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
++	.ecc_irq_handler = altr_edac_a10_ecc_irq,
++	.inject_fops = &altr_edac_a10_device_inject_fops,
++	.panic = false,
++};
++
++static int __init socfpga_init_ethernet_ecc(void)
++{
++	return altr_init_a10_ecc_device_type("altr,socfpga-eth-mac-ecc");
 +}
 +
- static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
- 				    struct device_node *np)
- {
-@@ -1146,6 +1160,9 @@ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
- 	if (IS_ERR_OR_NULL(prv))
- 		return -ENODEV;
- 
-+	if (validate_parent_available(np))
-+		return -ENODEV;
++early_initcall(socfpga_init_ethernet_ecc);
 +
- 	if (!devres_open_group(edac->dev, altr_edac_a10_device_add, GFP_KERNEL))
- 		return -ENOMEM;
++#endif	/* CONFIG_EDAC_ALTERA_ETHERNET */
++
+ /********************* Arria10 EDAC Device Functions *************************/
+ static const struct of_device_id altr_edac_a10_device_of_match[] = {
+ #ifdef CONFIG_EDAC_ALTERA_L2C
+@@ -1269,6 +1297,10 @@ static const struct of_device_id altr_edac_a10_device_of_match[] = {
+ 	{ .compatible = "altr,socfpga-a10-ocram-ecc",
+ 	  .data = &a10_ocramecc_data },
+ #endif
++#ifdef CONFIG_EDAC_ALTERA_ETHERNET
++	{ .compatible = "altr,socfpga-eth-mac-ecc",
++	  .data = &a10_enet0rxecc_data },
++#endif
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, altr_edac_a10_device_of_match);
+@@ -1557,8 +1589,10 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+ 			continue;
+ 		if (of_device_is_compatible(child, "altr,socfpga-a10-l2-ecc"))
+ 			altr_edac_a10_device_add(edac, child);
+-		else if (of_device_is_compatible(child,
+-						 "altr,socfpga-a10-ocram-ecc"))
++		else if ((of_device_is_compatible(child,
++					"altr,socfpga-a10-ocram-ecc")) ||
++			 (of_device_is_compatible(child,
++					"altr,socfpga-eth-mac-ecc")))
+ 			altr_edac_a10_device_add(edac, child);
+ 		else if (of_device_is_compatible(child,
+ 						 "altr,sdram-edac-a10"))
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index aa7c690..9e3f986 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -285,6 +285,9 @@ struct altr_sdram_mc_data {
+ /* Arria 10 OCRAM ECC Management Group Defines */
+ #define ALTR_A10_OCRAM_ECC_EN_CTL       (BIT(1) | BIT(0))
+ 
++/* Arria 10 Ethernet ECC Management Group Defines */
++#define ALTR_A10_ETHERNET_ECC_EN_CTL    BIT(0)
++
+ /* A10 ECC Controller memory initialization timeout */
+ #define ALTR_A10_ECC_INIT_WATCHDOG_10US      10000
  
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
