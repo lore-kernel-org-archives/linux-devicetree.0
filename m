@@ -1,267 +1,71 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: Add dts file for inet86dz board
-Date: Mon, 13 Jun 2016 11:37:53 +0200
-Message-ID: <fdfd3d11-3ded-07d6-a7e4-5588b1d30558@redhat.com>
-References: <1465754150-16753-1-git-send-email-hdegoede@redhat.com>
- <CAGb2v66cbx0jta1unrKeYm1t9JKO9Unw8z75rXbW3JSi2=NuMw@mail.gmail.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [v2 PATCH 3/4] Documentation: bindings: add dt documentation for cdn
+ DP controller
+Date: Mon, 13 Jun 2016 17:39:48 +0800
+Message-ID: <1465810789-22303-4-git-send-email-zyw@rock-chips.com>
+References: <1465810789-22303-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v66cbx0jta1unrKeYm1t9JKO9Unw8z75rXbW3JSi2=NuMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1465810789-22303-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-And to also answer another question I missed before:
-
-On 13-06-16 05:16, Chen-Yu Tsai wrote:
-
-<snip>
-
->> +&i2c0 {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&i2c0_pins_a>;
->> +       status = "okay";
->> +       /*
->> +        * The gsl1680 is rated at 400KHz and it will not work reliable at
->> +        * 100KHz, this has been confirmed on multiple different tablets.
->> +        * The gsl1680 is the only device on this bus.
->> +        */
->> +       clock-frequency = <400000>;
->> +
->> +       gsl1680: touchscreen@40 {
->> +               compatible = "silead,gsl1680";
->
-> Do we already have a driver for this? I don't see one in linux-next.
-
-I've a bunch of students form the local university working on a driver
-for this, they should submit it real soon now. That does mean that
-including this node is a bit premature as the bindings my change, sorry
-I overlooked this.
-
-Regards,
-
-Hans
-
-
-
->
->> +               reg = <0x40>;
->> +               interrupt-parent = <&pio>;
->> +               interrupts = <1 5 IRQ_TYPE_EDGE_FALLING>; /* PB5 */
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&ts_power_pin_inet86dz>;
->> +               power-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
->> +               touchscreen-size-x = <960>;
->> +               touchscreen-size-y = <640>;
->> +               touchscreen-max-fingers = <5>;
->> +               touchscreen-fw-name = "silead/gsl1680-inet86dz.fw";
->> +       };
->> +};
->> +
->> +&i2c1 {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&i2c1_pins_a>;
->> +       status = "okay";
->> +};
->> +
->> +&lradc {
->> +       vref-supply = <&reg_vcc3v0>;
->> +       status = "okay";
->> +
->> +       button@200 {
->> +               label = "Volume Up";
->> +               linux,code = <KEY_VOLUMEUP>;
->> +               channel = <0>;
->> +               voltage = <200000>;
->> +       };
->> +
->> +       button@400 {
->> +               label = "Volume Down";
->> +               linux,code = <KEY_VOLUMEDOWN>;
->> +               channel = <0>;
->> +               voltage = <400000>;
->> +       };
->> +};
->> +
->> +&mmc0 {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_inet86dz>;
->> +       vmmc-supply = <&reg_dcdc1>;
->> +       bus-width = <4>;
->> +       cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
->> +       cd-inverted;
->> +       status = "okay";
->> +};
->> +
->> +&pio {
->> +       bl_en_pin_inet86dz: bl_en_pin@0 {
->> +               allwinner,pins = "PH6";
->> +               allwinner,function = "gpio_in";
->> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +       };
->> +
->> +       mmc0_cd_pin_inet86dz: mmc0_cd_pin@0 {
->> +               allwinner,pins = "PB4";
->> +               allwinner,function = "gpio_in";
->> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->> +       };
->> +
->> +       ts_power_pin_inet86dz: ts_power_pin@0 {
->> +               allwinner,pins = "PH1";
->> +               allwinner,function = "gpio_out";
->> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +       };
->> +
->> +       usb0_id_detect_pin: usb0_id_detect_pin@0 {
->> +               allwinner,pins = "PH8";
->> +               allwinner,function = "gpio_in";
->> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->> +       };
->> +};
->> +
->> +&pwm {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&pwm0_pins>;
->> +       status = "okay";
->> +};
->> +
->> +&r_rsb {
->> +       status = "okay";
->> +
->> +       axp22x: pmic@3a3 {
->> +               compatible = "x-powers,axp223";
->> +               reg = <0x3a3>;
->> +               interrupt-parent = <&nmi_intc>;
->> +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->> +               eldoin-supply = <&reg_dcdc1>;
->
-> Adding a drivevbus-supply referencing vcc_5v0 so it doesn't
-> show 0V would be nice.
->
-> ChenYu
->
->> +               x-powers,drive-vbus-en;
->> +       };
->> +};
->> +
->> +&r_uart {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&r_uart_pins_a>;
->> +       status = "okay";
->> +};
->> +
->> +#include "axp22x.dtsi"
->> +
->> +&reg_aldo1 {
->> +       regulator-always-on;
->> +       regulator-min-microvolt = <3000000>;
->> +       regulator-max-microvolt = <3000000>;
->> +       regulator-name = "vcc-io";
->> +};
->> +
->> +&reg_aldo2 {
->> +       regulator-always-on;
->> +       regulator-min-microvolt = <2350000>;
->> +       regulator-max-microvolt = <2650000>;
->> +       regulator-name = "vdd-dll";
->> +};
->> +
->> +&reg_aldo3 {
->> +       regulator-always-on;
->> +       regulator-min-microvolt = <2700000>;
->> +       regulator-max-microvolt = <3300000>;
->> +       regulator-name = "vcc-pll-avcc";
->> +};
->> +
->> +&reg_dc1sw {
->> +       regulator-name = "vcc-lcd";
->> +};
->> +
->> +&reg_dc5ldo {
->> +       regulator-always-on;
->> +       regulator-min-microvolt = <900000>;
->> +       regulator-max-microvolt = <1400000>;
->> +       regulator-name = "vdd-cpus";
->> +};
->> +
->> +&reg_dcdc1 {
->> +       regulator-always-on;
->> +       regulator-min-microvolt = <3000000>;
->> +       regulator-max-microvolt = <3000000>;
->> +       regulator-name = "vcc-3v0";
->> +};
->> +
->> +&reg_dcdc2 {
->> +       regulator-always-on;
->> +       regulator-min-microvolt = <900000>;
->> +       regulator-max-microvolt = <1400000>;
->> +       regulator-name = "vdd-sys";
->> +};
->> +
->> +&reg_dcdc3 {
->> +       regulator-always-on;
->> +       regulator-min-microvolt = <900000>;
->> +       regulator-max-microvolt = <1400000>;
->> +       regulator-name = "vdd-cpu";
->> +};
->> +
->> +&reg_dcdc5 {
->> +       regulator-always-on;
->> +       regulator-min-microvolt = <1500000>;
->> +       regulator-max-microvolt = <1500000>;
->> +       regulator-name = "vcc-dram";
->> +};
->> +
->> +&reg_dldo1 {
->> +       regulator-min-microvolt = <3300000>;
->> +       regulator-max-microvolt = <3300000>;
->> +       regulator-name = "vcc-wifi";
->> +};
->> +
->> +&reg_drivevbus {
->> +       regulator-name = "usb0-vbus";
->> +       status = "okay";
->> +};
->> +
->> +&reg_rtc_ldo {
->> +       regulator-name = "vcc-rtc";
->> +};
->> +
->> +&simplefb_lcd {
->> +       vcc-lcd-supply = <&reg_dc1sw>;
->> +};
->> +
->> +&usb_otg {
->> +       dr_mode = "otg";
->> +       status = "okay";
->> +};
->> +
->> +&usb_power_supply {
->> +       status = "okay";
->> +};
->> +
->> +&usbphy {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&usb0_id_detect_pin>;
->> +       usb0_id_det-gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
->> +       usb0_vbus_power-supply = <&usb_power_supply>;
->> +       usb0_vbus-supply = <&reg_drivevbus>;
->> +       usb1_vbus-supply = <&reg_dldo1>;
->> +       status = "okay";
->> +};
->> --
->> 2.7.4
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaCBhZGRzIGEgYmluZGluZyB0aGF0IGRlc2NyaWJlcyB0aGUgY2RuIERQIGNvbnRy
+b2xsZXIgZm9yCnJrMzM5OS4KClNpZ25lZC1vZmYtYnk6IENocmlzIFpob25nIDx6eXdAcm9jay1j
+aGlwcy5jb20+CgotLS0KCkNoYW5nZXMgaW4gdjI6IE5vbmUKQ2hhbmdlcyBpbiB2MToKLSBhZGQg
+ZXh0Y29uIG5vZGUgZGVzY3JpcHRpb24KLSBhZGQgI3NvdW5kLWRhaS1jZWxscyBkZXNjcmlwdGlv
+bgoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQgIHwg
+NjIgKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDYyIGluc2VydGlvbnMo
+KykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9yb2NrY2hpcC9jZG4tZHAtcm9ja2NoaXAudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvY2RuLWRwLXJvY2tj
+aGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tj
+aGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAw
+MC4uNGE2NmZjMwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQKQEAgLTAsMCArMSw2
+MiBAQAorUm9ja2NoaXAgUkszMzk5IHNwZWNpZmljIGV4dGVuc2lvbnMgdG8gdGhlIGNkbiBEaXNw
+bGF5IFBvcnQKKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CisKK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6CistIGNvbXBhdGlibGU6IG11c3QgYmUgInJvY2tjaGlwLGNkbi1kcCIKKworLSBy
+ZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgY29udHJvbGxlciBhbmQgbGVuZ3RoCisK
+Ky0gY2xvY2tzOiBmcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nOiBoYW5kbGUgdG8gZHAgY2xvY2su
+CisKKy0gY2xvY2stbmFtZXM6IGZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmc6CisJICAgICAgIFJl
+cXVpcmVkIGVsZW1lbnRzOiAiY29yZV9jbGsiICJwY2xrIiAic3BkaWYiCisKKy0gcm9ja2NoaXAs
+Z3JmOiB0aGlzIHNvYyBzaG91bGQgc2V0IEdSRiByZWdzLCBzbyBuZWVkIGdldCBncmYgaGVyZS4K
+KworLSBwb3J0czogY29udGFpbiBhIHBvcnQgbm9kZXMgd2l0aCBlbmRwb2ludCBkZWZpbml0aW9u
+cyBhcyBkZWZpbmVkIGluCisJIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRp
+YS92aWRlby1pbnRlcmZhY2VzLnR4dC4KKwkgY29udGFpbmVkIDIgZW5kcG9pbnRzLCBjb25uZWN0
+aW5nIHRvIHRoZSBvdXRwdXQgb2Ygdm9wLgorCistIHBoeXM6IGZyb20gZ2VuZXJhbCBQSFkgYmlu
+ZGluZzogdGhlIHBoYW5kbGUgZm9yIHRoZSBQSFkgZGV2aWNlLgorCistIGV4dGNvbjogZXh0Y29u
+IHNwZWNpZmllciBmb3IgdGhlIFBvd2VyIERlbGl2ZXJ5CisKKy0gI3NvdW5kLWRhaS1jZWxscyA9
+IGl0IG11c3QgYmUgMSBpZiB5b3VyIHN5c3RlbSBpcyB1c2luZyAyIERBSXM6IEkyUywgU1BESUYK
+KworLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQorCitFeGFtcGxlOgorCWNkbl9kcDogZHBAZmVjMDAw
+MDAgeworCQljb21wYXRpYmxlID0gInJvY2tjaGlwLGNkbi1kcCI7CisJCXJlZyA9IDwweDAgMHhm
+ZWMwMDAwMCAweDAgMHgxMDAwMDA+OworCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOSBJUlFfVFlQ
+RV9MRVZFTF9ISUdIPjsKKwkJY2xvY2tzID0gPCZjcnUgU0NMS19EUF9DT1JFPiwgPCZjcnUgUENM
+S19EUF9DVFJMPiwKKwkJCSA8JmNydSBTQ0xLX1NQRElGX1JFQ19EUFRYPjsKKwkJY2xvY2stbmFt
+ZXMgPSAiY29yZV9jbGsiLCAicGNsayIsICJzcGRpZiI7CisJCXBoeXMgPSA8JnRjcGh5MD47CisJ
+CWV4dGNvbiA9IDwmZnVzYjE+OworCQlyb2NrY2hpcCxncmYgPSA8JmdyZj47CisJCSNhZGRyZXNz
+LWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwkJI3NvdW5kLWRhaS1jZWxscyA9
+IDwxPjsKKworCQlwb3J0cyB7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNl
+bGxzID0gPDA+OworCQkJcmVnID0gPDE+OworCisJCQlkcF9pbjogcG9ydCB7CisJCQkJI2FkZHJl
+c3MtY2VsbHMgPSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJZHBfaW5fdm9wYjog
+ZW5kcG9pbnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2
+b3BiX291dF9kcD47CisJCQkJfTsKKworCQkJCWRwX2luX3ZvcGw6IGVuZHBvaW50QDEgeworCQkJ
+CQlyZWcgPSA8MT47CisJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdm9wbF9vdXRfZHA+OworCQkJ
+CX07CisJCQl9OworCQl9OworCX07Ci0tIAoyLjYuMwoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
