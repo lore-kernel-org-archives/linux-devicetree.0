@@ -1,187 +1,119 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 12/17] sh: Add PCI host bridge driver for SH7751
-Date: Mon, 13 Jun 2016 10:38:28 +0200
-Message-ID: <3663292.cfJj8naP7U@wuerfel>
-References: <1465714475-24111-1-git-send-email-ysato@users.sourceforge.jp> <1465714475-24111-13-git-send-email-ysato@users.sourceforge.jp>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] iommu/rockchip: use DMA API to map, to flush cache
+Date: Mon, 13 Jun 2016 11:39:26 +0100
+Message-ID: <575E8D5E.9090400@arm.com>
+References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com>
+	<1465392392-2003-7-git-send-email-zhengsq@rock-chips.com>
+	<CAAFQd5Da+Eg=eiRUgLSS_qPjGbG474KYWDC=GaAMS8A_CuQ3Mg@mail.gmail.com>
+	<575E834C.30305@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465714475-24111-13-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <575E834C.30305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: shunqian.zheng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, simon xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?5aea5pm65oOF?= <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday, June 12, 2016 3:54:30 PM CEST Yoshinori Sato wrote:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/sh7751-pci.txt
-> +		ranges = <0x02000000 0x00000000 0xfd000000 0xfd000000 0x00000000 0x01000000>,
-> +		         <0x01000000 0x00000000 0xfe240000 0x00000000 0x00000000 0x00040000>;
-> +		reg = <0xfe200000 0x0400>,
-> +		      <0x0c000000 0x04000000>,
-> +		      <0xff800000 0x0030>;
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0x1800 0 7>;
-> +		interrupt-map = <0x0000 0 1 &cpldintc evt2irq(0x2a0) 0
-> +		                 0x0000 0 2 &cpldintc evt2irq(0x2c0) 0
-> +		                 0x0000 0 3 &cpldintc evt2irq(0x2e0) 0
-> +		                 0x0000 0 4 &cpldintc evt2irq(0x300) 0
-> +
-> +		                 0x0800 0 1 &cpldintc evt2irq(0x2c0) 0
-> +		                 0x0800 0 2 &cpldintc evt2irq(0x2e0) 0
-> +		                 0x0800 0 3 &cpldintc evt2irq(0x300) 0
-> +		                 0x0800 0 4 &cpldintc evt2irq(0x2a0) 0
-
-Is this not the default swizzling? I would guess that you can just
-list the interrupt once.
-
-The formatting is slightly inconsistent here, my recommendation is
-to always enclose each entry in '< >' so you have a comma-separated
-list.
-
-> +
-> +#define pcic_writel(val, reg) __raw_writel(val, pci_reg_base + (reg))
-> +#define pcic_readl(reg) __raw_readl(pci_reg_base + (reg))
-
-We generally try not to use __raw_*() accessors in drivers, because
-they are not portable, lack barriers and atomicity, and don't work
-when you change endianess.
-
-> +unsigned long PCIBIOS_MIN_IO;
-> +unsigned long PCIBIOS_MIN_MEM;
-
-These should probably be in architecture code, otherwise you cannot
-build more than one such driver into the kernel.
-
-> +DEFINE_RAW_SPINLOCK(pci_config_lock);
-
-This seems unnecessary, the config operations are always called
-under a spinlock already.
-
-> +static __initconst const struct fixups {
-> +	char *compatible;
-> +	void (*fixup)(void __iomem *, void __iomem *);
-> +} fixup_list[] = {
-> +	{
-> +		.compatible = "iodata,landisk",
-> +		.fixup = landisk_fixup,
-> +	},
-> +};
-
-Just move the fixup pointer into the existing of match table
-as the .data pointer, or add a structure to which .data
-points.
-
-> +/*
-> + * Functions for accessing PCI configuration space with type 1 accesses
-> + */
-> +static int sh4_pci_read(struct pci_bus *bus, unsigned int devfn,
-> +			   int where, int size, u32 *val)
-> +{
-> +	struct gen_pci *pci = bus->sysdata;
-> +	void __iomem *pci_reg_base;
-> +	unsigned long flags;
-> +	u32 data;
-> +
-> +	pci_reg_base = ioremap(pci->cfg.res.start,
-> +			       pci->cfg.res.end - pci->cfg.res.start);
-
-You cannot call normally ioremap from pci_read, because it
-gets called under a spinlock and ioremap can normally sleep
-(that might be architecture specific).
-
-Better map it a probe time, or use fixmap.
-
-> +	/*
-> +	 * PCIPDR may only be accessed as 32 bit words,
-> +	 * so we must do byte alignment by hand
-> +	 */
-> +	raw_spin_lock_irqsave(&pci_config_lock, flags);
-> +	pcic_writel(CONFIG_CMD(bus, devfn, where), SH4_PCIPAR);
-> +	data = pcic_readl(SH4_PCIPDR);
-> +	raw_spin_unlock_irqrestore(&pci_config_lock, flags);
-
-This is shorter to express this using a 'map' function
-in pci_ops combined with pci_generic_config_read32
-and pci_generic_config_write32.
-
-> +/*
-> + * Called after each bus is probed, but before its children
-> + * are examined.
-> + */
-> +void pcibios_fixup_bus(struct pci_bus *bus)
-> +{
-> +}
-
-This doesn't really belong into the driver.
-
-> +/*
-> + * We need to avoid collisions with `mirrored' VGA ports
-> + * and other strange ISA hardware, so we always want the
-> + * addresses to be allocated in the 0x000-0x0ff region
-> + * modulo 0x400.
-> + */
-> +resource_size_t pcibios_align_resource(void *data,
-> +				       const struct resource *res,
-> +				       resource_size_t size,
-> +				       resource_size_t align)
-> +{
-> +	resource_size_t start = res->start;
-> +
-> +	return start;
-> +}
-
-The comment does not match what the function does, you should
-change one or the other. Also move it to the same file as
-pcibios_fixup_bus.
-
-> +int pci_mmap_page_range(struct pci_dev *dev, struct vm_area_struct *vma,
-> +			enum pci_mmap_state mmap_state, int write_combine)
-> +{
-> +	/*
-> +	 * I/O space can be accessed via normal processor loads and stores on
-> +	 * this platform but for now we elect not to do this and portable
-> +	 * drivers should not do this anyway.
-> +	 */
-> +
-> +	if (mmap_state == pci_mmap_io)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Ignore write-combine; for now only return uncached mappings.
-> +	 */
-> +	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-> +
-> +	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-> +			       vma->vm_end - vma->vm_start,
-> +			       vma->vm_page_prot);
-> +}
-
-Do you actually need HAVE_PCI_MMAP? Maybe you can just unset that
-and remove the function here.
-
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pci_reg_base = ioremap(res->start, res->end - res->start);
-> +	if (IS_ERR(pci_reg_base))
-> +		return PTR_ERR(pci_reg_base);
-> +
-> +	wres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (IS_ERR(wres))
-> +		return PTR_ERR(wres);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-> +	bcr = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(bcr))
-
-
-You map three distinct memory resources here, but your
-binding just describes one as "reg: base address and
-length of the PCI controller registers".
-
-If there are multiple register ranges, please list each
-one in the binding and document in which order they
-are expected, or use named resources and list the required
-names.
-
-	Arnd
+T24gMTMvMDYvMTYgMTA6NTYsIFNodW5xaWFuIFpoZW5nIHdyb3RlOgo+IEhpCj4KPiBPbiAyMDE2
+5bm0MDbmnIgxMOaXpSAxNzoxMCwgVG9tYXN6IEZpZ2Egd3JvdGU6Cj4+IEhpLAo+Pgo+PiBPbiBX
+ZWQsIEp1biA4LCAyMDE2IGF0IDEwOjI2IFBNLCBTaHVucWlhbiBaaGVuZwo+PiA8emhlbmdzcUBy
+b2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4+PiBVc2UgRE1BIEFQSSBpbnN0ZWFkIG9mIGFyY2hpdGVj
+dHVyZSBpbnRlcm5hbCBmdW5jdGlvbnMgbGlrZQo+Pj4gX19jcHVjX2ZsdXNoX2RjYWNoZV9hcmVh
+KCkgZXRjLgo+Pj4KPj4+IFRvIHN1cHBvcnQgdGhlIHZpcnR1YWwgZGV2aWNlIGxpa2UgRFJNIHRo
+ZSB2aXJ0dWFsIHNsYXZlIGlvbW11Cj4+PiBhZGRlZCBpbiB0aGUgcHJldmlvdXMgcGF0Y2gsIGF0
+dGFjaGluZyB0byB3aGljaCB0aGUgRFJNIGNhbiB1c2UKPj4+IGl0IG93biBkb21haW4tPmRldiBm
+b3IgZG1hX21hcF8qKCksIGRtYV9zeW5jXyooKSBldmVuIFZPUCBpcyBkaXNhYmxlZC4KPj4+Cj4+
+PiBXaXRoIHRoaXMgcGF0Y2gsIHRoaXMgZHJpdmVyIGlzIGF2YWlsYWJsZSBmb3IgQVJNNjQgbGlr
+ZSBSSzMzOTkuCj4+Pgo+PiBDb3VsZCB3ZSBpbnN0ZWFkIHNpbXBseSBhbGxvY2F0ZSBjb2hlcmVu
+dCBtZW1vcnkgZm9yIHBhZ2UgdGFibGVzIHVzaW5nCj4+IGRtYV9hbGxvY19jb2hlcmVudCgpIGFu
+ZCBza2lwIGFueSBmbHVzaGluZyBvbiBDUFUgc2lkZSBjb21wbGV0ZWx5PyBJZgo+PiBJJ20gbG9v
+a2luZyBjb3JyZWN0bHksIHRoZSBkcml2ZXIgb25seSByZWFkcyBiYWNrIHRoZSBwYWdlIGRpcmVj
+dG9yeQo+PiB3aGVuIGNoZWNraW5nIGlmIHRoZXJlIGlzIGEgbmVlZCB0byBhbGxvY2F0ZSBuZXcg
+cGFnZSB0YWJsZSwgc28gdGhlcmUKPj4gc2hvdWxkbid0IGJlIGFueSBzaWduaWZpY2FudCBwZW5h
+bHR5IGZvciBkaXNhYmxpbmcgdGhlIGNhY2hlLgo+IEkgdHJ5IHRvIHVzZSBkbWFfYWxsb2NfY29o
+ZXJlbnQoKSB0byByZXBsYWNlIHRoZSBkbWFfbWFwX3NpbmdsZSgpLAo+IGJ1dCBpdCBkb2Vzbid0
+IHdvcmsgZm9yIG1lIHByb3Blcmx5Lgo+IEJlY2F1c2UgdGhlIERSTSB1c2VzIHRoZSBpb21tdV9k
+bWFfb3BzIGluc3RlYWQgdGhlIHN3aW90bGJfZG1hX29wcyBhZnRlcgo+IGF0dGFjaGluZwo+IHRv
+IGlvbW11LCBzbyB3aGVuIHRoZSBpb21tdSBkb21haW4gbmVlZCB0byBhbGxvYyBhIG5ldyBwYWdl
+IGluCj4gcmtfaW9tbXVfbWFwKCksCj4gaXQgd291bGQgY2FsbDoKPiBya19pb21tdV9tYXAoKSAg
+LS0+IGRtYV9hbGxvY19jb2hlcmVudCgpICAtLT4gb3BzLT5hbGxvYygpICAtLT4KPiBpb21tdV9t
+YXAoKSAtLT4gcmtfaW9tbXVfbWFwKCkKClRoYXQgc291bmRzIG1vcmUgbGlrZSB5b3UncmUgcGFz
+c2luZyB0aGUgd3JvbmcgZGV2aWNlIGFyb3VuZCBzb21ld2hlcmUsIApzaW5jZSB0aGlzIGFwcHJv
+YWNoIGlzIHdvcmtpbmcgZmluZSBmb3Igb3RoZXIgSU9NTVVzOyBzcGVjaWZpY2FsbHksIHRoZSAK
+ZmxvdyBnb2VzOgoKZG1hX2FsbG9jX2NvaGVyZW50KERSTSBkZXYpICAgLy8gZm9yIGJ1ZmZlcgot
+LT4gb3BzLT5hbGxvYyhEUk0gZGV2KQogICAgIC0tPiBpb21tdV9kbWFfYWxsb2MoRFJNIGRldikK
+ICAgICAgICAgLS0+IGlvbW11X21hcCgpCiAgICAgICAgICAgICAtLT4gZG1hX2FsbG9jX2NvaGVy
+ZW50KElPTU1VIGRldikgIC8vIGZvciBwYWdldGFibGUKICAgICAgICAgICAgICAgICAtLT4gb3Bz
+LT5hbGxvYyhJT01NVSBkZXYpCiAgICAgICAgICAgICAgICAgICAgIC0tPiBzd2lvdGxiX2FsbG9j
+KElPTU1VIGRldikKClRoZXJlIHNob3VsZG4ndCBiZSBhbnkgbmVlZCBmb3IgdGhpcyAidmlydHVh
+bCBJT01NVSIgYXQgYWxsLiBJIHRoaW5rIHRoZSAKRXh5bm9zIERSTSBkcml2ZXIgaXMgaW4gYSBz
+aW1pbGFyIHNpdHVhdGlvbiBvZiBoYXZpbmcgbXVsdGlwbGUgZGV2aWNlcyAKKGludm9sdmluZyBt
+dWx0aXBsZSBJT01NVXMpIGJhY2tpbmcgdGhlIHZpcnR1YWwgRFJNIGRldmljZSwgYW5kIHRoYXQg
+CmRvZXNuJ3Qgc2VlbSB0byBiZSBkb2luZyBhbnl0aGluZyB0aGlzIGNyYXp5IHNvIGl0J3MgcHJv
+YmFibHkgd29ydGggCnRha2luZyBhIGxvb2sgYXQuCgpSb2Jpbi4KCj4gVGhlbiBJIHRyeSB0byBy
+ZXNlcnZlIG1lbW9yeSBmb3IgY29oZXJlbnQgc28gdGhhdCwgZG1hX2FsbG9jX2NvaGVyZW50KCkK
+PiBjYWxscyBkbWFfYWxsb2NfZnJvbV9jb2hlcmVudCgpCj4gYnV0IG5vdCBvcHMtPmFsbG9jKCku
+IEJ1dCBpdCBkb2Vzbid0IHdvcmsgdG9vIGJlY2F1c2Ugd2hlbiBEUk0gcmVxdWVzdAo+IGJ1ZmZl
+ciBpdCBuZXZlciB1c2VzIGlvbW11Lgo+Pgo+PiBPdGhlciB0aGFuIHRoYXQsIHBsZWFzZSBzZWUg
+c29tZSBjb21tZW50cyBpbmxpbmUuCj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBTaHVucWlhbiBaaGVu
+ZyA8emhlbmdzcUByb2NrLWNoaXBzLmNvbT4KPj4+IC0tLQo+Pj4gICBkcml2ZXJzL2lvbW11L3Jv
+Y2tjaGlwLWlvbW11LmMgfCAxMTMKPj4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0t
+LS0tLS0tLS0tCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA3MSBpbnNlcnRpb25zKCspLCA0MiBkZWxl
+dGlvbnMoLSkKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9yb2NrY2hpcC1pb21t
+dS5jCj4+PiBiL2RyaXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUuYwo+Pj4gaW5kZXggZDZjMzA1
+MS4uYWFmZWE2ZSAxMDA2NDQKPj4+IC0tLSBhL2RyaXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUu
+Ywo+Pj4gKysrIGIvZHJpdmVycy9pb21tdS9yb2NrY2hpcC1pb21tdS5jCj4+PiBAQCAtNCw4ICs0
+LDYgQEAKPj4+ICAgICogcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24u
+Cj4+PiAgICAqLwo+Pj4KPj4+IC0jaW5jbHVkZSA8YXNtL2NhY2hlZmx1c2guaD4KPj4+IC0jaW5j
+bHVkZSA8YXNtL3BndGFibGUuaD4KPj4+ICAgI2luY2x1ZGUgPGxpbnV4L2NvbXBpbGVyLmg+Cj4+
+PiAgICNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+Pj4gICAjaW5jbHVkZSA8bGludXgvZGV2aWNl
+Lmg+Cj4+PiBAQCAtNjEsOCArNTksNyBAQAo+Pj4gICAjZGVmaW5lIFJLX01NVV9JUlFfQlVTX0VS
+Uk9SICAgICAweDAyICAvKiBidXMgcmVhZCBlcnJvciAqLwo+Pj4gICAjZGVmaW5lIFJLX01NVV9J
+UlFfTUFTSyAgICAgICAgICAoUktfTU1VX0lSUV9QQUdFX0ZBVUxUIHwKPj4+IFJLX01NVV9JUlFf
+QlVTX0VSUk9SKQo+Pj4KPj4+IC0jZGVmaW5lIE5VTV9EVF9FTlRSSUVTIDEwMjQKPj4+IC0jZGVm
+aW5lIE5VTV9QVF9FTlRSSUVTIDEwMjQKPj4+ICsjZGVmaW5lIE5VTV9UTEJfRU5UUklFUyAxMDI0
+IC8qIGZvciBib3RoIERUIGFuZCBQVCAqLwo+PiBJcyBpdCBuZWNlc3NhcnkgdG8gY2hhbmdlIHRo
+aXMgaW4gdGhpcyBwYXRjaD8gSW4gZ2VuZXJhbCwgaXQncyBub3QgYQo+PiBnb29kIGlkZWEgdG8g
+bWl4IG11bHRpcGxlIGxvZ2ljYWwgY2hhbmdlcyB0b2dldGhlci4KPiBTdXJlLCB3aWxsIHJlc3Rv
+cmUgY2hhbmdlcyBpbiB2My4KPj4KPj4+ICAgI2RlZmluZSBTUEFHRV9PUkRFUiAxMgo+Pj4gICAj
+ZGVmaW5lIFNQQUdFX1NJWkUgKDEgPDwgU1BBR0VfT1JERVIpCj4+PiBAQCAtODIsNyArNzksOSBA
+QAo+Pj4KPj4+ICAgc3RydWN0IHJrX2lvbW11X2RvbWFpbiB7Cj4+PiAgICAgICAgICBzdHJ1Y3Qg
+bGlzdF9oZWFkIGlvbW11czsKPj4+ICsgICAgICAgc3RydWN0IGRldmljZSAqZGV2Owo+Pj4gICAg
+ICAgICAgdTMyICpkdDsgLyogcGFnZSBkaXJlY3RvcnkgdGFibGUgKi8KPj4+ICsgICAgICAgZG1h
+X2FkZHJfdCBkdF9kbWE7Cj4+PiAgICAgICAgICBzcGlubG9ja190IGlvbW11c19sb2NrOyAvKiBs
+b2NrIGZvciBpb21tdXMgbGlzdCAqLwo+Pj4gICAgICAgICAgc3BpbmxvY2tfdCBkdF9sb2NrOyAv
+KiBsb2NrIGZvciBtb2RpZnlpbmcgcGFnZSBkaXJlY3RvcnkKPj4+IHRhYmxlICovCj4+Pgo+Pj4g
+QEAgLTk4LDE0ICs5NywxMiBAQCBzdHJ1Y3QgcmtfaW9tbXUgewo+Pj4gICAgICAgICAgc3RydWN0
+IGlvbW11X2RvbWFpbiAqZG9tYWluOyAvKiBkb21haW4gdG8gd2hpY2ggaW9tbXUgaXMKPj4+IGF0
+dGFjaGVkICovCj4+PiAgIH07Cj4+Pgo+Pj4gLXN0YXRpYyBpbmxpbmUgdm9pZCBya190YWJsZV9m
+bHVzaCh1MzIgKnZhLCB1bnNpZ25lZCBpbnQgY291bnQpCj4+PiArc3RhdGljIGlubGluZSB2b2lk
+IHJrX3RhYmxlX2ZsdXNoKHN0cnVjdCBkZXZpY2UgKmRldiwgZG1hX2FkZHJfdCBkbWEsCj4+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgaW50IGNvdW50KQo+Pj4g
+ICB7Cj4+PiAtICAgICAgIHBoeXNfYWRkcl90IHBhX3N0YXJ0ID0gdmlydF90b19waHlzKHZhKTsK
+Pj4+IC0gICAgICAgcGh5c19hZGRyX3QgcGFfZW5kID0gdmlydF90b19waHlzKHZhICsgY291bnQp
+Owo+Pj4gLSAgICAgICBzaXplX3Qgc2l6ZSA9IHBhX2VuZCAtIHBhX3N0YXJ0Owo+Pj4gKyAgICAg
+ICBzaXplX3Qgc2l6ZSA9IGNvdW50ICogNDsKPj4gSXQgd291bGQgYmUgYSBnb29kIGlkZWEgdG8g
+c3BlY2lmeSB3aGF0ICJjb3VudCIgaXMuIEknbSBhIGJpdCBjb25mdXNlZAo+PiB0aGF0IGJlZm9y
+ZSBpdCBtZWFudCBieXRlcyBhbmQgbm93IHNvbWUgbXVsdGlwbGUgb2YgND8KPiAiY291bnQiIG1l
+YW5zIFBUL0RUIGVudHJ5IGNvdW50IHRvIGZsdXNoIGhlcmUuIEkgd291bGQgYWRkIHNvbWUgbW9y
+ZQo+IGNvbW1lbnQgb24gaXQuCj4KPiBUaGFuayB5b3UgdmVyeSBtdWNoLAo+IFNodW5xaWFuCj4+
+Cj4+IEJlc3QgcmVnYXJkcywKPj4gVG9tYXN6Cj4+Cj4+IF9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCj4+IExpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdAo+
+PiBMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCj4+IGh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAKPgo+IF9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gaW9tbXUgbWFpbGluZyBsaXN0
+Cj4gaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcKPiBodHRwczovL2xpc3RzLmxpbnV4
+Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxp
+c3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
