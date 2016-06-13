@@ -1,69 +1,478 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] [V2] ARM: dts: sun7i: Add dts file for
- Bananapi M1 Plus board
-Date: Mon, 13 Jun 2016 11:01:53 +0800
-Message-ID: <CAGb2v64PYU9H7Ag45ogwtjJAO87D6saTFv5-4P_E7d1xobQXXA@mail.gmail.com>
-References: <20160602023623.5761-1-luoyi.ly@gmail.com> <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA@mail.gmail.com>
- <20160602081638.GG4908@lukather> <574FF94B.3020309@web.de> <20160610093851.GQ5242@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm64: dts: juno: add coresight support
+Date: Sun, 12 Jun 2016 21:05:33 -0600
+Message-ID: <CANLsYkx7q7PJrqP6LaCguxZiwEFVyuA8A1j6SuY+8TMotBNUXw@mail.gmail.com>
+References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
+ <1465228765-14038-2-git-send-email-sudeep.holla@arm.com> <CANLsYkzbtW2nFsntQ8vLafu=JS+qcjXm+6HQpi3F_P2a5CsHaw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBOGE7C5AKGQEDZDNZDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160610093851.GQ5242@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?572X57+8?= <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANLsYkzbtW2nFsntQ8vLafu=JS+qcjXm+6HQpi3F_P2a5CsHaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 10, 2016 at 5:38 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Jun 02, 2016 at 11:15:55AM +0200, Bernhard Nortmann wrote:
->> Am 02.06.2016 um 10:16 schrieb Maxime Ripard:
->> >[...]
->> >Yes, everything that is shared with the banana-pro (which, judging
->> >from Bernhard, is pretty much everything but a GPIO) should be merged
->> >in the banapro DT.
->> >
->> >Maxime
->> >
+On 12 June 2016 at 15:57, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 6 June 2016 at 09:59, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>> Most of the debug-related components on Juno are located in the coreSight
+>> subsystem while others are located in the Cortex-Axx clusters, the SCP
+>> subsystem, and in the main system.
 >>
->> Don't take my word for granted, as I do not own this hardware or know it
->> particularly well. There is no doubt that "BPi-M1+" and "Banana Pro" are
->> very similar, but if in doubt the information form the wiki should be
->> verified.
+>> Each core in the two processor clusters contain an Embedded Trace
+>> Macrocell(ETM) which generates real-time trace information that trace
+>> tools can use and an ATB trace output that is sent to a funnel before
+>> going to the CoreSight subsystem.
+>>
+>> The trace output signals combine with two trace expansions using another
+>> funnel and fed into the Embedded Trace FIFO(ETF0).
+>>
+>> The output trace data stream of the funnel is then replicated before it
+>> is sent to either the:
+>> - Trace Port Interface Unit(TPIU), that sends it out using the trace port.
+>> - ETR that can write the trace data to memory located in the application
+>>   memory space
 >
-> Hmmmm, ok. Chen-Yu, any input on this? You know the banana-pis much
-> more than I do.
+> Hi Sudeep,
+>
+> Did you try booting this on juno-r0?
 
-I did a comparison of the "Banana Pro" vs the "BPi-M1+".
-
-The differences are similar to what we have with any other development
-board, say the Cubietruck:
-
-  - A different WiFi chip is used, and the BT part is not hooked up.
-  - Different GPIOs for external power regulator/switches
-  - Different GPIOs for LEDs
-  - Different peripherals exposed on the headers.
-
-IMO There's no need to merge or have a common .dtsi for the two boards.
-They (and all the other development boards) look similar because
-everyone is following the basic set by Allwinner's reference design,
-like which MMC controller and pins are used for SD/MMC, which ones
-are used for SDIO-based WiFi, and so on.
-
-I did a version completely from scratch using just the schematics:
-
-  https://github.com/wens/linux/commits/bpi-m1-plus
-
-Please ignore the last commit. It's just me playing with NTP support
-for GPS time.
+Forget this comment - I just noticed the dependency on the SCPI
+patches in the cover letter.  I'll test again tomorrow.
 
 
-Regards
-ChenYu
+> On my side the system won't boot
+> unless I enable the debug power domain by externally connecting to the
+> system using DS-5.
+>
+> The branch I used is here [1].
+>
+> Thanks,
+> Mathieu
+>
+> [1]. https://git.linaro.org/kernel/coresight.git (branch next)
+>
+>
+>>
+>> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/arm/juno-base.dtsi | 296 +++++++++++++++++++++++++++++++++
+>>  arch/arm64/boot/dts/arm/juno-r1.dts    |  24 +++
+>>  arch/arm64/boot/dts/arm/juno-r2.dts    |  24 +++
+>>  arch/arm64/boot/dts/arm/juno.dts       |  24 +++
+>>  4 files changed, 368 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+>> index dee2386d3b9b..90a8710f7032 100644
+>> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+>> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+>> @@ -56,6 +56,302 @@
+>>                              <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
+>>         };
+>>
+>> +       /*
+>> +        * Juno TRMs specify the size for these coresight components as 64K.
+>> +        * The actual size is just 4K though 64K is reserved. Access to the
+>> +        * unmapped reserved region results in a DECERR response.
+>> +        */
+>> +       etf@20010000 {
+>> +               compatible = "arm,coresight-tmc", "arm,primecell";
+>> +               reg = <0 0x20010000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       /* input port */
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               etf_in_port: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&main_funnel_out_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       /* output port */
+>> +                       port@1 {
+>> +                               reg = <0>;
+>> +                               etf_out_port: endpoint {
+>> +                                       remote-endpoint = <&replicator_in_port0>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       tpiu@20030000 {
+>> +               compatible = "arm,coresight-tpiu", "arm,primecell";
+>> +               reg = <0 0x20030000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       tpiu_in_port: endpoint {
+>> +                               slave-mode;
+>> +                               remote-endpoint = <&replicator_out_port0>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       main_funnel@20040000 {
+>> +               compatible = "arm,coresight-funnel", "arm,primecell";
+>> +               reg = <0 0x20040000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               main_funnel_out_port: endpoint {
+>> +                                       remote-endpoint = <&etf_in_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@1 {
+>> +                               reg = <0>;
+>> +                               main_funnel_in_port0: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&cluster0_funnel_out_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@2 {
+>> +                               reg = <1>;
+>> +                               main_funnel_in_port1: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&cluster1_funnel_out_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +               };
+>> +       };
+>> +
+>> +       etr@20070000 {
+>> +               compatible = "arm,coresight-tmc", "arm,primecell";
+>> +               reg = <0 0x20070000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       etr_in_port: endpoint {
+>> +                               slave-mode;
+>> +                               remote-endpoint = <&replicator_out_port1>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       coresight-replicator {
+>> +               /* non-configurable replicators don't show up on the
+>> +                * AMBA bus.  As such no need to add "arm,primecell".
+>> +                */
+>> +               compatible = "arm,coresight-replicator";
+>> +
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       /* replicator output ports */
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               replicator_out_port0: endpoint {
+>> +                                       remote-endpoint = <&tpiu_in_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@1 {
+>> +                               reg = <1>;
+>> +                               replicator_out_port1: endpoint {
+>> +                                       remote-endpoint = <&etr_in_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       /* replicator input port */
+>> +                       port@2 {
+>> +                               reg = <0>;
+>> +                               replicator_in_port0: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&etf_out_port>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       cluster0_funnel@220c0000 {
+>> +               compatible = "arm,coresight-funnel", "arm,primecell";
+>> +               reg = <0 0x220c0000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               cluster0_funnel_out_port: endpoint {
+>> +                                       remote-endpoint = <&main_funnel_in_port0>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@1 {
+>> +                               reg = <0>;
+>> +                               cluster0_funnel_in_port0: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&cluster0_etm0_out_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@2 {
+>> +                               reg = <1>;
+>> +                               cluster0_funnel_in_port1: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&cluster0_etm1_out_port>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       cluster1_funnel@230c0000 {
+>> +               compatible = "arm,coresight-funnel", "arm,primecell";
+>> +               reg = <0 0x230c0000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               cluster1_funnel_out_port: endpoint {
+>> +                                       remote-endpoint = <&main_funnel_in_port1>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@1 {
+>> +                               reg = <0>;
+>> +                               cluster1_funnel_in_port0: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&cluster1_etm0_out_port>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@2 {
+>> +                               reg = <1>;
+>> +                               cluster1_funnel_in_port1: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&cluster1_etm1_out_port>;
+>> +                               };
+>> +                       };
+>> +                       port@3 {
+>> +                               reg = <2>;
+>> +                               cluster1_funnel_in_port2: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&cluster1_etm2_out_port>;
+>> +                               };
+>> +                       };
+>> +                       port@4 {
+>> +                               reg = <3>;
+>> +                               cluster1_funnel_in_port3: endpoint {
+>> +                                       slave-mode;
+>> +                                       remote-endpoint = <&cluster1_etm3_out_port>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       etm0: etm@22040000 {
+>> +               compatible = "arm,coresight-etm4x", "arm,primecell";
+>> +               reg = <0 0x22040000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       cluster0_etm0_out_port: endpoint {
+>> +                               remote-endpoint = <&cluster0_funnel_in_port0>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       etm1: etm@22140000 {
+>> +               compatible = "arm,coresight-etm4x", "arm,primecell";
+>> +               reg = <0 0x22140000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       cluster0_etm1_out_port: endpoint {
+>> +                               remote-endpoint = <&cluster0_funnel_in_port1>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       etm2: etm@23040000 {
+>> +               compatible = "arm,coresight-etm4x", "arm,primecell";
+>> +               reg = <0 0x23040000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       cluster1_etm0_out_port: endpoint {
+>> +                               remote-endpoint = <&cluster1_funnel_in_port0>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       etm3: etm@23140000 {
+>> +               compatible = "arm,coresight-etm4x", "arm,primecell";
+>> +               reg = <0 0x23140000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       cluster1_etm1_out_port: endpoint {
+>> +                               remote-endpoint = <&cluster1_funnel_in_port1>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       etm4: etm@23240000 {
+>> +               compatible = "arm,coresight-etm4x", "arm,primecell";
+>> +               reg = <0 0x23240000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       cluster1_etm2_out_port: endpoint {
+>> +                               remote-endpoint = <&cluster1_funnel_in_port2>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       etm5: etm@23340000 {
+>> +               compatible = "arm,coresight-etm4x", "arm,primecell";
+>> +               reg = <0 0x23340000 0 0x1000>;
+>> +
+>> +               clocks = <&soc_smc50mhz>;
+>> +               clock-names = "apb_pclk";
+>> +               port {
+>> +                       cluster1_etm3_out_port: endpoint {
+>> +                               remote-endpoint = <&cluster1_funnel_in_port3>;
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>>         sram: sram@2e000000 {
+>>                 compatible = "arm,juno-sram-ns", "mmio-sram";
+>>                 reg = <0x0 0x2e000000 0x0 0x8000>;
+>> diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
+>> index d95d9e7e2dc0..f4f8f54f8b85 100644
+>> --- a/arch/arm64/boot/dts/arm/juno-r1.dts
+>> +++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+>> @@ -181,3 +181,27 @@
+>>  &pcie_ctlr {
+>>         status = "okay";
+>>  };
+>> +
+>> +&etm0 {
+>> +       cpu = <&A57_0>;
+>> +};
+>> +
+>> +&etm1 {
+>> +       cpu = <&A57_1>;
+>> +};
+>> +
+>> +&etm2 {
+>> +       cpu = <&A53_0>;
+>> +};
+>> +
+>> +&etm3 {
+>> +       cpu = <&A53_1>;
+>> +};
+>> +
+>> +&etm4 {
+>> +       cpu = <&A53_2>;
+>> +};
+>> +
+>> +&etm5 {
+>> +       cpu = <&A53_3>;
+>> +};
+>> diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
+>> index 88ecd6182b67..d903e545b64c 100644
+>> --- a/arch/arm64/boot/dts/arm/juno-r2.dts
+>> +++ b/arch/arm64/boot/dts/arm/juno-r2.dts
+>> @@ -181,3 +181,27 @@
+>>  &pcie_ctlr {
+>>         status = "okay";
+>>  };
+>> +
+>> +&etm0 {
+>> +       cpu = <&A72_0>;
+>> +};
+>> +
+>> +&etm1 {
+>> +       cpu = <&A72_1>;
+>> +};
+>> +
+>> +&etm2 {
+>> +       cpu = <&A53_0>;
+>> +};
+>> +
+>> +&etm3 {
+>> +       cpu = <&A53_1>;
+>> +};
+>> +
+>> +&etm4 {
+>> +       cpu = <&A53_2>;
+>> +};
+>> +
+>> +&etm5 {
+>> +       cpu = <&A53_3>;
+>> +};
+>> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+>> index dcfcf15a17f5..a7270eff6939 100644
+>> --- a/arch/arm64/boot/dts/arm/juno.dts
+>> +++ b/arch/arm64/boot/dts/arm/juno.dts
+>> @@ -173,3 +173,27 @@
+>>
+>>         #include "juno-base.dtsi"
+>>  };
+>> +
+>> +&etm0 {
+>> +       cpu = <&A57_0>;
+>> +};
+>> +
+>> +&etm1 {
+>> +       cpu = <&A57_1>;
+>> +};
+>> +
+>> +&etm2 {
+>> +       cpu = <&A53_0>;
+>> +};
+>> +
+>> +&etm3 {
+>> +       cpu = <&A53_1>;
+>> +};
+>> +
+>> +&etm4 {
+>> +       cpu = <&A53_2>;
+>> +};
+>> +
+>> +&etm5 {
+>> +       cpu = <&A53_3>;
+>> +};
+>> --
+>> 2.7.4
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
