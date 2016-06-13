@@ -1,54 +1,84 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC 4/6] ASoC: Add DT bindings documentation for max98504
- amplifier
-Date: Mon, 13 Jun 2016 16:32:27 +0100
-Message-ID: <20160613153227.GJ2282@sirena.org.uk>
-References: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
- <1465815160-28504-5-git-send-email-s.nawrocki@samsung.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: sd_600eval: Fix eMMC lockup issue
+Date: Mon, 13 Jun 2016 17:21:16 +0100
+Message-ID: <575EDD7C.8010504@linaro.org>
+References: <1465582795-30266-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1465582795-30266-2-git-send-email-srinivas.kandagatla@linaro.org>
+ <20160612044736.GS1256@tuxbot>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="O2lvLMQR9k8T/RyB"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465815160-28504-5-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, robh@kernel.org, linux-samsung-soc@vger.kernel.org, ideal.song@samsung.com, beomho.seo@samsung.com, inki.dae@samsung.com, k.kozlowski@samsung.com, b.zolnierkie@samsung.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160612044736.GS1256@tuxbot>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Parth Pancholi <parth.pancholi-7dMfbm5N4krDzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---O2lvLMQR9k8T/RyB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Jun 13, 2016 at 12:52:38PM +0200, Sylwester Nawrocki wrote:
+On 12/06/16 05:47, Bjorn Andersson wrote:
+> On Fri 10 Jun 11:19 PDT 2016, Srinivas Kandagatla wrote:
+>
+>> From: Parth Pancholi <parth.pancholi-7dMfbm5N4krDzftRWevZcw@public.gmane.org>
+>>
+>> This board locks up if we stress test the eMMC, as the regulator s4 is
+>> unable to supply enough current for all the peripherials attached to it.
+>> As this supply is wired up to most of the peripherials including DDR,
+>> it resulted in such lockup.
+>>
+>> This patch fixes this issue by setting s4 regulator correctly with
+>> Auto power mode.
+>>
+>> Reported-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> [Srinivas Kandagatla: rewrote the change log]
+>> Tested-by: Girish Sharma <girish.sharma-7dMfbm5N4krDzftRWevZcw@public.gmane.org>
+>> Signed-off-by: Parth Pancholi <parth.pancholi-7dMfbm5N4krDzftRWevZcw@public.gmane.org>
+>
+> If I read the msm-3.4 tree correctly most (perhaps all) 8064 devices
+> should have this setup.
+>
+I agree, we should patch other boards as well with the same value.
 
-> + - maxim,rx-path : indicates speaker source interface:
-> +    0 - PCM monomix output,
-> +    1 - Analog input,
-> +    2 - left PDM channel (CH0),
-> +    3 - right PDM channel (CH1)
 
-This should be a DAPM control.
+> Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> + - maxim,rx-channel-mask : a bitmask indicating active PCM Rx channels,
-> +   bits b7...b0 correspond to channels CH7...CH0
-
-This should be done using the TDM API.
-
---O2lvLMQR9k8T/RyB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXXtIKAAoJECTWi3JdVIfQQ3wH/iGC1/NmXWiVC4SkBbMZcuX2
-0GjDIjA9FYq7wGRoeAtnCppIm5PP5knmuw+i3GjgGuxtO/PQFEuH1cg+7RLAM7ZO
-8e+8D+GdfEqK4ouHHJ6aKi3bNqilJEBKH8wXw1KzdY1p5nNAukKZaDTnkwJ9M/NK
-PoFQxBpBf5gTOJjWzW9+y2n95ZWGU4GxU38EYi81UeSEJtdFAPQWuj3W00iAb1zN
-odYbq7R/ozR7OD6uJ/wKDgGEwDWv4QQSlflY+d+ceygbC7p6M0b6p4WydXqqcRAc
-kqYo8LqxtXBqe6ngTCZn4tk2cnIK9cnbkPqC1MQ+y5Q7GpDOiVfG7FD1FEHxKA8=
-=WwkU
------END PGP SIGNATURE-----
-
---O2lvLMQR9k8T/RyB--
+thanks,
+srini
+>
+> Regards,
+> Bjorn
+>
+>> ---
+>>   arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
+>> index 7df0108..39ae2bc 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
+>> +++ b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
+>> @@ -1,6 +1,7 @@
+>>   #include "qcom-apq8064-v2.0.dtsi"
+>>   #include "qcom-apq8064-arrow-sd-600eval-pins.dtsi"
+>>   #include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/mfd/qcom-rpm.h>
+>>
+>>   / {
+>>   	model = "Arrow Electronics, APQ8064 SD_600eval";
+>> @@ -82,7 +83,8 @@
+>>   				s4 {
+>>   					regulator-min-microvolt	= <1800000>;
+>>   					regulator-max-microvolt	= <1800000>;
+>> -					qcom,switch-mode-frequency = <3200000>;
+>> +					qcom,switch-mode-frequency = <1600000>;
+>> +					qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
+>>   					bias-pull-down;
+>>   					regulator-always-on;
+>>   				};
+>> --
+>> 2.8.3
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
