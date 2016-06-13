@@ -1,33 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 03/10] dt-bindings: msm/mdp: Fix up clock related
- bindings
-Date: Mon, 13 Jun 2016 14:03:31 -0500
-Message-ID: <20160613190331.GA27237@rob-hp-laptop>
-References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
- <1465555600-25742-1-git-send-email-architt@codeaurora.org>
- <1465555600-25742-4-git-send-email-architt@codeaurora.org>
+From: ernestovm07@gmail.com
+Subject: Re: [PATCH v2 0/6] Introduce Allwinner A33 support
+Date: Mon, 13 Jun 2016 12:10:57 -0700 (PDT)
+Message-ID: <8a9fe780-30c2-49eb-8158-a5825887c857@googlegroups.com>
+References: <1432997706-20172-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465555600-25742-4-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: robdclark@gmail.com, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, heiko@sntech.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: multipart/mixed;
+ boundary="----=_Part_319_379902740.1465845057610"
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1432997706-20172-1-git-send-email-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-sunxi <linux-sunxi@googlegroups.com>
+Cc: devicetree@vger.kernel.org, vishnupatekar0510@gmail.com, hdegoede@redhat.com, wens@csie.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 10, 2016 at 04:16:33PM +0530, Archit Taneja wrote:
-> MDP5:
-> - Don't ask for source clock
-> 
-> MDP4:
-> - Give a better name for MDP_TV_CLK
-> - Remove TV_SRC
-> - Add MDP_AXI_CLK
+------=_Part_319_379902740.1465845057610
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-This could use the explanation in the commit msg why it is okay you are 
-breaking compatibility.
+El s=C3=A1bado, 30 de mayo de 2015, 9:55:10 (UTC-5), Hans de Goede escribi=
+=C3=B3:
+> Hi Maxime,
+>=20
+> Here is a cleaned up series of Vishnu Patekar's A33 support. This should
+> address all concerns raised during the posting of v1.
+>=20
+> I've tested that all peripherals declared in the shared sun8i-a23-a33.dts=
+i
+> work on the A33 too, with the exception of the dma-controller. For the
+> dma-controller I've compared the A23 vs A33 manual and the entire dma-
+> controller description including the register description is bit for bit
+> identical.
+>=20
+> This has been tested on a 7" Ippo Q8H v1.2 A23 tablet, a 7" Ippo Q8H v1.2
+> A33 tablet and a 10" GA10H A33 tablet. The dts for the 10" tablet still
+> needs some work wrt the lradc button voltages so that is not included
+> in this set.
+>=20
+> Regards,
+>=20
+> Hans
 
-With that,
+http://hp7g2.blogspot.com
+------=_Part_319_379902740.1465845057610
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Acked-by: Rob Herring <robh@kernel.org>
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+------=_Part_319_379902740.1465845057610--
