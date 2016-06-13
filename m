@@ -1,100 +1,357 @@
-From: Shunqian Zheng <shunqian.zheng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] iommu/rockchip: use DMA API to map, to flush cache
-Date: Mon, 13 Jun 2016 17:56:28 +0800
-Message-ID: <575E834C.30305@gmail.com>
-References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com>
- <1465392392-2003-7-git-send-email-zhengsq@rock-chips.com>
- <CAAFQd5Da+Eg=eiRUgLSS_qPjGbG474KYWDC=GaAMS8A_CuQ3Mg@mail.gmail.com>
-Reply-To: shunqian.zheng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V6 9/9] irqchip/gic: Add platform driver for non-root GICs
+ that require RPM
+Date: Mon, 13 Jun 2016 10:58:16 +0100
+Message-ID: <575E83B8.2050602@nvidia.com>
+References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
+ <1465312354-27778-10-git-send-email-jonathanh@nvidia.com>
+ <575E789F.3050509@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAAFQd5Da+Eg=eiRUgLSS_qPjGbG474KYWDC=GaAMS8A_CuQ3Mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?5aea5pm65oOF?= <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, simon xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575E789F.3050509-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkKCk9uIDIwMTblubQwNuaciDEw5pelIDE3OjEwLCBUb21hc3ogRmlnYSB3cm90ZToKPiBIaSwK
-Pgo+IE9uIFdlZCwgSnVuIDgsIDIwMTYgYXQgMTA6MjYgUE0sIFNodW5xaWFuIFpoZW5nIDx6aGVu
-Z3NxQHJvY2stY2hpcHMuY29tPiB3cm90ZToKPj4gVXNlIERNQSBBUEkgaW5zdGVhZCBvZiBhcmNo
-aXRlY3R1cmUgaW50ZXJuYWwgZnVuY3Rpb25zIGxpa2UKPj4gX19jcHVjX2ZsdXNoX2RjYWNoZV9h
-cmVhKCkgZXRjLgo+Pgo+PiBUbyBzdXBwb3J0IHRoZSB2aXJ0dWFsIGRldmljZSBsaWtlIERSTSB0
-aGUgdmlydHVhbCBzbGF2ZSBpb21tdQo+PiBhZGRlZCBpbiB0aGUgcHJldmlvdXMgcGF0Y2gsIGF0
-dGFjaGluZyB0byB3aGljaCB0aGUgRFJNIGNhbiB1c2UKPj4gaXQgb3duIGRvbWFpbi0+ZGV2IGZv
-ciBkbWFfbWFwXyooKSwgZG1hX3N5bmNfKigpIGV2ZW4gVk9QIGlzIGRpc2FibGVkLgo+Pgo+PiBX
-aXRoIHRoaXMgcGF0Y2gsIHRoaXMgZHJpdmVyIGlzIGF2YWlsYWJsZSBmb3IgQVJNNjQgbGlrZSBS
-SzMzOTkuCj4+Cj4gQ291bGQgd2UgaW5zdGVhZCBzaW1wbHkgYWxsb2NhdGUgY29oZXJlbnQgbWVt
-b3J5IGZvciBwYWdlIHRhYmxlcyB1c2luZwo+IGRtYV9hbGxvY19jb2hlcmVudCgpIGFuZCBza2lw
-IGFueSBmbHVzaGluZyBvbiBDUFUgc2lkZSBjb21wbGV0ZWx5PyBJZgo+IEknbSBsb29raW5nIGNv
-cnJlY3RseSwgdGhlIGRyaXZlciBvbmx5IHJlYWRzIGJhY2sgdGhlIHBhZ2UgZGlyZWN0b3J5Cj4g
-d2hlbiBjaGVja2luZyBpZiB0aGVyZSBpcyBhIG5lZWQgdG8gYWxsb2NhdGUgbmV3IHBhZ2UgdGFi
-bGUsIHNvIHRoZXJlCj4gc2hvdWxkbid0IGJlIGFueSBzaWduaWZpY2FudCBwZW5hbHR5IGZvciBk
-aXNhYmxpbmcgdGhlIGNhY2hlLgpJIHRyeSB0byB1c2UgZG1hX2FsbG9jX2NvaGVyZW50KCkgdG8g
-cmVwbGFjZSB0aGUgZG1hX21hcF9zaW5nbGUoKSwKYnV0IGl0IGRvZXNuJ3Qgd29yayBmb3IgbWUg
-cHJvcGVybHkuCkJlY2F1c2UgdGhlIERSTSB1c2VzIHRoZSBpb21tdV9kbWFfb3BzIGluc3RlYWQg
-dGhlIHN3aW90bGJfZG1hX29wcyBhZnRlciAKYXR0YWNoaW5nCnRvIGlvbW11LCBzbyB3aGVuIHRo
-ZSBpb21tdSBkb21haW4gbmVlZCB0byBhbGxvYyBhIG5ldyBwYWdlIGluIApya19pb21tdV9tYXAo
-KSwKaXQgd291bGQgY2FsbDoKcmtfaW9tbXVfbWFwKCkgIC0tPiBkbWFfYWxsb2NfY29oZXJlbnQo
-KSAgLS0+IG9wcy0+YWxsb2MoKSAgLS0+IAppb21tdV9tYXAoKSAtLT4gcmtfaW9tbXVfbWFwKCkK
-ClRoZW4gSSB0cnkgdG8gcmVzZXJ2ZSBtZW1vcnkgZm9yIGNvaGVyZW50IHNvIHRoYXQsIGRtYV9h
-bGxvY19jb2hlcmVudCgpICAKY2FsbHMgZG1hX2FsbG9jX2Zyb21fY29oZXJlbnQoKQpidXQgbm90
-IG9wcy0+YWxsb2MoKS4gQnV0IGl0IGRvZXNuJ3Qgd29yayB0b28gYmVjYXVzZSB3aGVuIERSTSBy
-ZXF1ZXN0IApidWZmZXIgaXQgbmV2ZXIgdXNlcyBpb21tdS4KPgo+IE90aGVyIHRoYW4gdGhhdCwg
-cGxlYXNlIHNlZSBzb21lIGNvbW1lbnRzIGlubGluZS4KPgo+PiBTaWduZWQtb2ZmLWJ5OiBTaHVu
-cWlhbiBaaGVuZyA8emhlbmdzcUByb2NrLWNoaXBzLmNvbT4KPj4gLS0tCj4+ICAgZHJpdmVycy9p
-b21tdS9yb2NrY2hpcC1pb21tdS5jIHwgMTEzICsrKysrKysrKysrKysrKysrKysrKysrKysrLS0t
-LS0tLS0tLS0tLS0tCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDcxIGluc2VydGlvbnMoKyksIDQyIGRl
-bGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9yb2NrY2hpcC1pb21t
-dS5jIGIvZHJpdmVycy9pb21tdS9yb2NrY2hpcC1pb21tdS5jCj4+IGluZGV4IGQ2YzMwNTEuLmFh
-ZmVhNmUgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUuYwo+PiAr
-KysgYi9kcml2ZXJzL2lvbW11L3JvY2tjaGlwLWlvbW11LmMKPj4gQEAgLTQsOCArNCw2IEBACj4+
-ICAgICogcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uCj4+ICAgICov
-Cj4+Cj4+IC0jaW5jbHVkZSA8YXNtL2NhY2hlZmx1c2guaD4KPj4gLSNpbmNsdWRlIDxhc20vcGd0
-YWJsZS5oPgo+PiAgICNpbmNsdWRlIDxsaW51eC9jb21waWxlci5oPgo+PiAgICNpbmNsdWRlIDxs
-aW51eC9kZWxheS5oPgo+PiAgICNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4KPj4gQEAgLTYxLDgg
-KzU5LDcgQEAKPj4gICAjZGVmaW5lIFJLX01NVV9JUlFfQlVTX0VSUk9SICAgICAweDAyICAvKiBi
-dXMgcmVhZCBlcnJvciAqLwo+PiAgICNkZWZpbmUgUktfTU1VX0lSUV9NQVNLICAgICAgICAgIChS
-S19NTVVfSVJRX1BBR0VfRkFVTFQgfCBSS19NTVVfSVJRX0JVU19FUlJPUikKPj4KPj4gLSNkZWZp
-bmUgTlVNX0RUX0VOVFJJRVMgMTAyNAo+PiAtI2RlZmluZSBOVU1fUFRfRU5UUklFUyAxMDI0Cj4+
-ICsjZGVmaW5lIE5VTV9UTEJfRU5UUklFUyAxMDI0IC8qIGZvciBib3RoIERUIGFuZCBQVCAqLwo+
-IElzIGl0IG5lY2Vzc2FyeSB0byBjaGFuZ2UgdGhpcyBpbiB0aGlzIHBhdGNoPyBJbiBnZW5lcmFs
-LCBpdCdzIG5vdCBhCj4gZ29vZCBpZGVhIHRvIG1peCBtdWx0aXBsZSBsb2dpY2FsIGNoYW5nZXMg
-dG9nZXRoZXIuClN1cmUsIHdpbGwgcmVzdG9yZSBjaGFuZ2VzIGluIHYzLgo+Cj4+ICAgI2RlZmlu
-ZSBTUEFHRV9PUkRFUiAxMgo+PiAgICNkZWZpbmUgU1BBR0VfU0laRSAoMSA8PCBTUEFHRV9PUkRF
-UikKPj4gQEAgLTgyLDcgKzc5LDkgQEAKPj4KPj4gICBzdHJ1Y3QgcmtfaW9tbXVfZG9tYWluIHsK
-Pj4gICAgICAgICAgc3RydWN0IGxpc3RfaGVhZCBpb21tdXM7Cj4+ICsgICAgICAgc3RydWN0IGRl
-dmljZSAqZGV2Owo+PiAgICAgICAgICB1MzIgKmR0OyAvKiBwYWdlIGRpcmVjdG9yeSB0YWJsZSAq
-Lwo+PiArICAgICAgIGRtYV9hZGRyX3QgZHRfZG1hOwo+PiAgICAgICAgICBzcGlubG9ja190IGlv
-bW11c19sb2NrOyAvKiBsb2NrIGZvciBpb21tdXMgbGlzdCAqLwo+PiAgICAgICAgICBzcGlubG9j
-a190IGR0X2xvY2s7IC8qIGxvY2sgZm9yIG1vZGlmeWluZyBwYWdlIGRpcmVjdG9yeSB0YWJsZSAq
-Lwo+Pgo+PiBAQCAtOTgsMTQgKzk3LDEyIEBAIHN0cnVjdCBya19pb21tdSB7Cj4+ICAgICAgICAg
-IHN0cnVjdCBpb21tdV9kb21haW4gKmRvbWFpbjsgLyogZG9tYWluIHRvIHdoaWNoIGlvbW11IGlz
-IGF0dGFjaGVkICovCj4+ICAgfTsKPj4KPj4gLXN0YXRpYyBpbmxpbmUgdm9pZCBya190YWJsZV9m
-bHVzaCh1MzIgKnZhLCB1bnNpZ25lZCBpbnQgY291bnQpCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQg
-cmtfdGFibGVfZmx1c2goc3RydWN0IGRldmljZSAqZGV2LCBkbWFfYWRkcl90IGRtYSwKPj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBjb3VudCkKPj4gICB7
-Cj4+IC0gICAgICAgcGh5c19hZGRyX3QgcGFfc3RhcnQgPSB2aXJ0X3RvX3BoeXModmEpOwo+PiAt
-ICAgICAgIHBoeXNfYWRkcl90IHBhX2VuZCA9IHZpcnRfdG9fcGh5cyh2YSArIGNvdW50KTsKPj4g
-LSAgICAgICBzaXplX3Qgc2l6ZSA9IHBhX2VuZCAtIHBhX3N0YXJ0Owo+PiArICAgICAgIHNpemVf
-dCBzaXplID0gY291bnQgKiA0Owo+IEl0IHdvdWxkIGJlIGEgZ29vZCBpZGVhIHRvIHNwZWNpZnkg
-d2hhdCAiY291bnQiIGlzLiBJJ20gYSBiaXQgY29uZnVzZWQKPiB0aGF0IGJlZm9yZSBpdCBtZWFu
-dCBieXRlcyBhbmQgbm93IHNvbWUgbXVsdGlwbGUgb2YgND8KImNvdW50IiBtZWFucyBQVC9EVCBl
-bnRyeSBjb3VudCB0byBmbHVzaCBoZXJlLiBJIHdvdWxkIGFkZCBzb21lIG1vcmUgCmNvbW1lbnQg
-b24gaXQuCgpUaGFuayB5b3UgdmVyeSBtdWNoLApTaHVucWlhbgo+Cj4gQmVzdCByZWdhcmRzLAo+
-IFRvbWFzego+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KPiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKPiBMaW51eC1yb2NrY2hpcEBsaXN0cy5p
-bmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1yb2NrY2hpcAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtcm9ja2NoaXAK
+Hi Marc,
+
+On 13/06/16 10:10, Marc Zyngier wrote:
+> Hi Jon,
+> 
+> On 07/06/16 16:12, Jon Hunter wrote:
+>> Add a platform driver to support non-root GICs that require runtime
+>> power-management. Currently, only non-root GICs are supported because
+>> the functions, smp_cross_call() and set_handle_irq(), that need to
+>> be called for a root controller are located in the __init section and
+>> so cannot be called by the platform driver.
+>>
+>> The GIC platform driver re-uses many functions from the existing GIC
+>> driver including some functions to save and restore the GIC context
+>> during power transitions. The functions for saving and restoring the
+>> GIC context are currently only defined if CONFIG_CPU_PM is enabled and
+>> to ensure that these functions are always defined when the platform
+>> driver is enabled, a dependency on CONFIG_ARM_GIC_PM (which selects the
+>> platform driver) has been added.
+>>
+>> In order to re-use the private GIC initialisation code, a new public
+>> function, gic_of_init_child(), has been added which calls various
+>> private functions to initialise the GIC. This is different from the
+>> existing gic_of_init() because it only supports non-root GICs (ie. does
+>> not call smp_cross_call() is set_handle_irq()) and is not located in
+>> the __init section (so can be used by platform drivers). Furthermore,
+>> gic_of_init_child() dynamically allocates memory for the GIC chip data
+>> which is also different from gic_of_init().
+>>
+>> There is no specific suspend handling for GICs registered as platform
+>> devices. Non-wakeup interrupts will be disabled by the kernel during
+>> late suspend, however, this alone will not power down the GIC if
+>> interrupts have been requested and not freed. Therefore, requestors of
+>> non-wakeup interrupts will need to free them on entering suspend in
+>> order to power-down the GIC.
+>>
+>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  drivers/irqchip/Kconfig         |   6 ++
+>>  drivers/irqchip/Makefile        |   1 +
+>>  drivers/irqchip/irq-gic-pm.c    | 184 ++++++++++++++++++++++++++++++++++++++++
+>>  drivers/irqchip/irq-gic.c       |  38 ++++++++-
+>>  include/linux/irqchip/arm-gic.h |   6 ++
+>>  5 files changed, 232 insertions(+), 3 deletions(-)
+>>  create mode 100644 drivers/irqchip/irq-gic-pm.c
+>>
+>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+>> index fa33c50b0e5a..5495a5ba8039 100644
+>> --- a/drivers/irqchip/Kconfig
+>> +++ b/drivers/irqchip/Kconfig
+>> @@ -8,6 +8,12 @@ config ARM_GIC
+>>  	select IRQ_DOMAIN_HIERARCHY
+>>  	select MULTI_IRQ_HANDLER
+>>  
+>> +config ARM_GIC_PM
+>> +	bool
+>> +	depends on PM
+>> +	select ARM_GIC
+>> +	select PM_CLK
+>> +
+>>  config ARM_GIC_MAX_NR
+>>  	int
+>>  	default 2 if ARCH_REALVIEW
+>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+>> index 38853a187607..bd0257e0aab6 100644
+>> --- a/drivers/irqchip/Makefile
+>> +++ b/drivers/irqchip/Makefile
+>> @@ -24,6 +24,7 @@ obj-$(CONFIG_ARCH_SUNXI)		+= irq-sun4i.o
+>>  obj-$(CONFIG_ARCH_SUNXI)		+= irq-sunxi-nmi.o
+>>  obj-$(CONFIG_ARCH_SPEAR3XX)		+= spear-shirq.o
+>>  obj-$(CONFIG_ARM_GIC)			+= irq-gic.o irq-gic-common.o
+>> +obj-$(CONFIG_ARM_GIC_PM)		+= irq-gic-pm.o
+>>  obj-$(CONFIG_REALVIEW_DT)		+= irq-gic-realview.o
+>>  obj-$(CONFIG_ARM_GIC_V2M)		+= irq-gic-v2m.o
+>>  obj-$(CONFIG_ARM_GIC_V3)		+= irq-gic-v3.o irq-gic-common.o
+>> diff --git a/drivers/irqchip/irq-gic-pm.c b/drivers/irqchip/irq-gic-pm.c
+>> new file mode 100644
+>> index 000000000000..4cbffba3ff13
+>> --- /dev/null
+>> +++ b/drivers/irqchip/irq-gic-pm.c
+>> @@ -0,0 +1,184 @@
+>> +/*
+>> + * Copyright (C) 2016 NVIDIA CORPORATION, All Rights Reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +#include <linux/module.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/irqchip/arm-gic.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pm_clock.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/slab.h>
+>> +
+>> +struct gic_clk_data {
+>> +	unsigned int num_clocks;
+>> +	const char *const *clocks;
+>> +};
+>> +
+>> +static int gic_runtime_resume(struct device *dev)
+>> +{
+>> +	struct gic_chip_data *gic = dev_get_drvdata(dev);
+>> +	int ret;
+>> +
+>> +	ret = pm_clk_resume(dev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * On the very first resume, the pointer to the driver data
+>> +	 * will be NULL and this is intentional, because we do not
+>> +	 * want to restore the GIC on the very first resume. So if
+>> +	 * the pointer is not valid just return.
+>> +	 */
+>> +	if (!gic)
+>> +		return 0;
+>> +
+>> +	gic_dist_restore(gic);
+>> +	gic_cpu_restore(gic);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int gic_runtime_suspend(struct device *dev)
+>> +{
+>> +	struct gic_chip_data *gic = dev_get_drvdata(dev);
+>> +
+>> +	gic_dist_save(gic);
+>> +	gic_cpu_save(gic);
+>> +
+>> +	return pm_clk_suspend(dev);
+>> +}
+>> +
+>> +static int gic_get_clocks(struct device *dev, const struct gic_clk_data *data)
+>> +{
+>> +	struct clk *clk;
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	if (!dev || !data)
+>> +		return -EINVAL;
+>> +
+>> +	ret = pm_clk_create(dev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	for (i = 0; i < data->num_clocks; i++) {
+>> +		clk = of_clk_get_by_name(dev->of_node, data->clocks[i]);
+>> +		if (IS_ERR(clk)) {
+>> +			dev_err(dev, "failed to get clock %s\n",
+>> +				data->clocks[i]);
+>> +			ret = PTR_ERR(clk);
+>> +			goto error;
+>> +		}
+>> +
+>> +		ret = pm_clk_add_clk(dev, clk);
+>> +		if (ret) {
+>> +			dev_err(dev, "failed to add clock at index %d\n", i);
+>> +			clk_put(clk);
+>> +			goto error;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +error:
+>> +	pm_clk_destroy(dev);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int gic_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	const struct gic_clk_data *data;
+>> +	struct gic_chip_data *gic;
+>> +	int ret, irq;
+>> +
+>> +	data = of_device_get_match_data(&pdev->dev);
+>> +	if (!data) {
+>> +		dev_err(&pdev->dev, "no device match found\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	irq = irq_of_parse_and_map(dev->of_node, 0);
+>> +	if (!irq) {
+>> +		dev_err(dev, "no parent interrupt found!\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	ret = gic_get_clocks(dev, data);
+>> +	if (ret)
+>> +		goto irq_dispose;
+>> +
+>> +	pm_runtime_enable(dev);
+>> +
+>> +	ret = pm_runtime_get_sync(dev);
+>> +	if (ret < 0)
+>> +		goto rpm_disable;
+>> +
+>> +	ret = gic_of_init_child(dev, &gic, irq);
+>> +	if (ret)
+>> +		goto rpm_put;
+>> +
+>> +	platform_set_drvdata(pdev, gic);
+>> +
+>> +	pm_runtime_put(dev);
+>> +
+>> +	dev_info(dev, "GIC IRQ controller registered\n");
+>> +
+>> +	return 0;
+>> +
+>> +rpm_put:
+>> +	pm_runtime_put_sync(dev);
+>> +rpm_disable:
+>> +	pm_runtime_disable(dev);
+>> +	pm_clk_destroy(dev);
+>> +irq_dispose:
+>> +	irq_dispose_mapping(irq);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct dev_pm_ops gic_pm_ops = {
+>> +	SET_RUNTIME_PM_OPS(gic_runtime_suspend,
+>> +			   gic_runtime_resume, NULL)
+>> +};
+>> +
+>> +static const char * const gic400_clocks[] = {
+>> +	"clk",
+>> +};
+>> +
+>> +static const struct gic_clk_data gic400_data = {
+>> +	.num_clocks = ARRAY_SIZE(gic400_clocks),
+>> +	.clocks = gic400_clocks,
+>> +};
+>> +
+>> +static const struct of_device_id gic_match[] = {
+>> +	{ .compatible = "nvidia,tegra210-agic",	.data = &gic400_data },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, gic_match);
+>> +
+>> +static struct platform_driver gic_driver = {
+>> +	.probe		= gic_probe,
+>> +	.driver		= {
+>> +		.name	= "gic",
+>> +		.of_match_table	= gic_match,
+>> +		.pm	= &gic_pm_ops,
+>> +	}
+>> +};
+>> +
+>> +builtin_platform_driver(gic_driver);
+>> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+>> index 141ea5801784..57423f3b218b 100644
+>> --- a/drivers/irqchip/irq-gic.c
+>> +++ b/drivers/irqchip/irq-gic.c
+>> @@ -75,7 +75,7 @@ struct gic_chip_data {
+>>  	void __iomem *raw_dist_base;
+>>  	void __iomem *raw_cpu_base;
+>>  	u32 percpu_offset;
+>> -#ifdef CONFIG_CPU_PM
+>> +#if defined(CONFIG_CPU_PM) || defined(CONFIG_ARM_GIC_PM)
+>>  	u32 saved_spi_enable[DIV_ROUND_UP(1020, 32)];
+>>  	u32 saved_spi_active[DIV_ROUND_UP(1020, 32)];
+>>  	u32 saved_spi_conf[DIV_ROUND_UP(1020, 16)];
+>> @@ -528,7 +528,7 @@ int gic_cpu_if_down(unsigned int gic_nr)
+>>  	return 0;
+>>  }
+>>  
+>> -#ifdef CONFIG_CPU_PM
+>> +#if defined(CONFIG_CPU_PM) || defined(CONFIG_ARM_GIC_PM)
+>>  /*
+>>   * Saves the GIC distributor registers during suspend or idle.  Must be called
+>>   * with interrupts disabled but before powering down the GIC.  After calling
+>> @@ -1296,6 +1296,34 @@ error:
+>>  	return -ENOMEM;
+>>  }
+>>  
+>> +int gic_of_init_child(struct device *dev, struct gic_chip_data **gic, int irq)
+> 
+> I got this:
+> 
+> WARNING: drivers/built-in.o(.text+0x2464): Section mismatch in reference from the function gic_of_init_child() to the function .init.text:gic_of_setup()
+> The function gic_of_init_child() references
+> the function __init gic_of_setup().
+> This is often because gic_of_init_child lacks a __init 
+> annotation or the annotation of gic_of_setup is wrong.
+
+Ugh! A lot of the changes were to avoid these section mismatches. Somehow I missed that one :-(
+ 
+> I've fixed it locally by making the function __init.
+
+So gic_of_init_child() cannot be __init because it is called by the driver. If you do this you should get ...
+
+WARNING: drivers/irqchip/built-in.o(.text+0x2314): Section mismatch in reference from the function gic_probe() to the function .init.text:gic_of_init_child()
+The function gic_probe() references
+the function __init gic_of_init_child().
+This is often because gic_probe lacks a __init 
+annotation or the annotation of gic_of_init_child is wrong.
+
+
+The correct fix is ...
+
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 57423f3b218b..1de07eb5839c 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -1272,7 +1272,7 @@ static bool gic_check_eoimode(struct device_node *node, void __iomem **base)
+        return true;
+ }
+ 
+-static int __init gic_of_setup(struct gic_chip_data *gic, struct device_node *node)
++static int gic_of_setup(struct gic_chip_data *gic, struct device_node *node)
+ {
+        if (!gic || !node)
+                return -EINVAL;
+
+Cheers
+Jon
+
+-- 
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
