@@ -1,75 +1,65 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv3 4/7] Documentation: dt: socfpga: Add Arria10 Ethernet binding
-Date: Mon, 13 Jun 2016 16:19:09 -0500
-Message-ID: <1465852752-11018-5-git-send-email-tthayer@opensource.altera.com>
+From: <tthayer@opensource.altera.com>
+Subject: [PATCHv3 7/7] ARM: dts: Add Arria10 Ethernet EDAC devicetree entry
+Date: Mon, 13 Jun 2016 16:19:12 -0500
+Message-ID: <1465852752-11018-8-git-send-email-tthayer@opensource.altera.com>
 References: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465852752-11018-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add the device tree bindings needed to support the Altera Ethernet
-FIFO buffers on the Arria10 chip.
+Add the device tree entries needed to support the Altera Ethernet
+FIFO buffer EDAC on the Arria10 chip.
 
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2  No Change
-v3  Change to common compatible string based on maintainer comments
-    Add local IRQ values.
+v2  No change
+v3  Add interrupts for SBERR and DBERR.
 ---
- .../bindings/arm/altera/socfpga-eccmgr.txt         |   24 ++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/socfpga_arria10.dtsi |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-index 15eb0df..e9febbb 100644
---- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-@@ -82,6 +82,14 @@ Required Properties:
- - interrupts : Should be single bit error interrupt, then double bit error
- 	interrupt, in this order.
- 
-+Ethernet FIFO ECC
-+Required Properties:
-+- compatible : Should be "altr,socfpga-eth-mac-ecc"
-+- reg        : Address and size for ECC block registers.
-+- parent     : phandle to parent Ethernet node.
-+- interrupts : Should be single bit error interrupt, then double bit error
-+	interrupt, in this order.
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 21f6c3c..5cf4dc5 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -628,6 +628,22 @@
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <33 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
 +
- Example:
- 
- 	eccmgr: eccmgr@ffd06000 {
-@@ -108,4 +116,20 @@ Example:
- 			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>,
- 				     <33 IRQ_TYPE_LEVEL_HIGH> ;
++			emac0-rx-ecc@ff8c0800 {
++				compatible = "altr,socfpga-eth-mac-ecc";
++				reg = <0xff8c0800 0x400>;
++				parent = <&gmac0>;
++				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>,
++					     <36 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			emac0-tx-ecc@ff8c0c00 {
++				compatible = "altr,socfpga-eth-mac-ecc";
++				reg = <0xff8c0c00 0x400>;
++				parent = <&gmac0>;
++				interrupts = <5 IRQ_TYPE_LEVEL_HIGH>,
++					     <37 IRQ_TYPE_LEVEL_HIGH>;
++			};
  		};
-+
-+		emac0-rx-ecc@ff8c0800 {
-+			compatible = "altr,socfpga-eth-mac-ecc";
-+			reg = <0xff8c0800 0x400>;
-+			parent = <&gmac0>;
-+			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>,
-+				     <36 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		emac0-tx-ecc@ff8c0c00 {
-+			compatible = "altr,socfpga-eth-mac-ecc";
-+			reg = <0xff8c0c00 0x400>;
-+			parent = <&gmac0>;
-+			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>,
-+				     <37 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
+ 
+ 		rst: rstmgr@ffd05000 {
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
