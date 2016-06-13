@@ -1,90 +1,61 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V6 2/9] genirq: Look-up trigger type if not specified by
- caller
-Date: Mon, 13 Jun 2016 12:09:11 +0100
-Message-ID: <575E9457.8010100@nvidia.com>
-References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
- <1465312354-27778-3-git-send-email-jonathanh@nvidia.com>
- <575E8E29.3090808@arm.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
+Date: Mon, 13 Jun 2016 14:24:58 +0300
+Message-ID: <7d93d81d-cca9-e434-6488-0ea839f81663@cogentembedded.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
+ <20160601005751.GG20527@verge.net.au>
+ <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
+ <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
+ <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
+ <20160610010245.GA10152@verge.net.au>
+ <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
+ <CAMuHMdUK=y2kZY1kA97QpCDyUZXFejpXTpO9ZVNQoBfDNoRgfg@mail.gmail.com>
+ <1b9a4cf4-1101-ccbf-772b-49b8a689a1b6@cogentembedded.com>
+ <CAMuHMdV6f5ZzPxySzCgi7L+Sr1_4Ph1sLLyQ_j-sJ0tmBOvrHg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <575E8E29.3090808-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV6f5ZzPxySzCgi7L+Sr1_4Ph1sLLyQ_j-sJ0tmBOvrHg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 6/13/2016 10:12 AM, Geert Uytterhoeven wrote:
 
-On 13/06/16 11:42, Marc Zyngier wrote:
-> On 07/06/16 16:12, Jon Hunter wrote:
->> For some devices the IRQ trigger type for a device is read from
->> firmware, such as device-tree. The IRQ trigger type is typically read
->> when the mapping for IRQ is created, which is before the IRQ is
->> requested. Hence, the IRQ trigger type is programmed when mapping the
->> IRQ and not when requesting the IRQ.
+>>>>    The only problem I'm seeing (again) is the RCAN clock failing to
+>>>> register:
+>>>>
+>>>> rcar_gen2_cpg_clocks_init: failed to register cpg_clocks rcan clock (-12)
+>>>>
+>>>>    I was going to look at it yesterday but (wrongly) thought it somehow
+>>>> cured itself... I'll look at it now.
+>>>
+>>> The RCAN parent is the second clock in the CPG node's "clocks" property,
+>>> which you didn't provide.
 >>
->> Although this works for most cases, in order to support IRQ chips which
->> require runtime power management, which may not be accessible prior
->> to requesting the IRQ, it is desirable to look-up the IRQ trigger type
->> when it is requested. Therefore, if the IRQ trigger type is not
->> specified when __setup_irq() is called, look-up the saved IRQ trigger
->> type. This will allow us to defer the programming of the trigger type
->> from when the IRQ is mapped to when it is actually requested.
->>
->> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  kernel/irq/manage.c | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
->> index ef0bc02c3a70..eaedeb74b49d 100644
->> --- a/kernel/irq/manage.c
->> +++ b/kernel/irq/manage.c
->> @@ -1117,6 +1117,13 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
->>  	new->irq = irq;
->>  
->>  	/*
->> +	 * If the trigger type is not specified by the caller,
->> +	 * then use the default for this interrupt.
->> +	 */
->> +	if (!(new->flags & IRQF_TRIGGER_MASK))
->> +		new->flags |= irqd_get_trigger_type(&desc->irq_data);
->> +
->> +	/*
->>  	 * Check whether the interrupt nests into another interrupt
->>  	 * thread.
->>  	 */
->>
-> 
-> I've added the following patch to the queue, in order to deal with
-> percpu interrupts that were not handled by this patch:
-> 
-> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-> index f8fd1fb..00cfc85 100644
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -1751,7 +1751,14 @@ void enable_percpu_irq(unsigned int irq, unsigned int type)
->  	if (!desc)
->  		return;
->  
-> +	/*
-> +	 * If the trigger type is not specified by the caller, then
-> +	 * use the default for this interrupt.
-> +	 */
->  	type &= IRQ_TYPE_SENSE_MASK;
-> +	if (type == IRQ_TYPE_NONE)
-> +		type = irqd_get_trigger_type(&desc->irq_data);
-> +
+>>    Actually, the things are more complex. The figure 7.1c suggests that the
+>> RCAN clock has different parent on R8A7792 than on the other SoCs -- namely
+>> PLL1/VCO 1/4. That may be, since there's just no USB_EXTAL signal on this
+>> SoC (it doesn't seem to support any USB IPs). Which means the
+>> 'clk-rcar-gen2' driver can't work with the RCAN clock in its current form.
+>
+> Right, I had forgotten about that.
+> Fortunately the clk-rcar-gen2 driver has a sane failure mode for this case ;-)
 
-I am wondering if you need this here because now __setup_irq(), called
-by request_percpu_irq(), will actually look-up the saved type even for a
-percpu-irq. So shouldn't this already be handled? Or am I missing something?
+    What do you mean?
 
-Cheers
-Jon
+> it seems the RCAN clock can just be modeled as a fixed clock. However,
+> its divider value isn't clear to me,
 
--- 
-nvpublic
+    IIRC, the fixed RCAN divisor was equal to 6.
+
+[...]
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+
+MBR, Sergei
