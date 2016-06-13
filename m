@@ -1,68 +1,65 @@
-From: Tomasz Figa <tfiga@google.com>
-Subject: Re: [PATCH v2 6/7] iommu/rockchip: use DMA API to map, to flush cache
-Date: Mon, 13 Jun 2016 19:21:26 +0900
-Message-ID: <CAAFQd5DDCd8VcdEhEASAK7NMBnVJWuUxgGURtsa2KQBKsgsxUQ@mail.gmail.com>
-References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com>
- <1465392392-2003-7-git-send-email-zhengsq@rock-chips.com> <CAAFQd5Da+Eg=eiRUgLSS_qPjGbG474KYWDC=GaAMS8A_CuQ3Mg@mail.gmail.com>
- <575E834C.30305@gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V6 9/9] irqchip/gic: Add platform driver for non-root GICs
+ that require RPM
+Date: Mon, 13 Jun 2016 11:27:38 +0100
+Message-ID: <575E8A9A.1040907@nvidia.com>
+References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
+ <1465312354-27778-10-git-send-email-jonathanh@nvidia.com>
+ <575E789F.3050509@arm.com> <575E83B8.2050602@nvidia.com>
+ <575E8741.8060902@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <575E834C.30305@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shunqian.zheng@gmail.com
-Cc: Shunqian Zheng <zhengsq@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, David Airlie <airlied@linux.ie>, Joerg Roedel <joro@8bytes.org>, linux@armlinux.org.uk, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Rob Herring
-	<robh+dt@kernel.org>, simon xue <xxm@rock-chips.com>,
-	linux-arm-kernel@lists.infradead.org" <mark.yao@rock-chips.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575E8741.8060902-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2016 at 6:56 PM, Shunqian Zheng
-<shunqian.zheng@gmail.com> wrote:
-> Hi
->
-> On 2016=E5=B9=B406=E6=9C=8810=E6=97=A5 17:10, Tomasz Figa wrote:
->>
->> Hi,
->>
->> On Wed, Jun 8, 2016 at 10:26 PM, Shunqian Zheng <zhengsq@rock-chips.=
-com>
->> wrote:
->>>
->>> Use DMA API instead of architecture internal functions like
->>> __cpuc_flush_dcache_area() etc.
->>>
->>> To support the virtual device like DRM the virtual slave iommu
->>> added in the previous patch, attaching to which the DRM can use
->>> it own domain->dev for dma_map_*(), dma_sync_*() even VOP is disabl=
-ed.
->>>
->>> With this patch, this driver is available for ARM64 like RK3399.
->>>
->> Could we instead simply allocate coherent memory for page tables usi=
-ng
->> dma_alloc_coherent() and skip any flushing on CPU side completely? I=
-f
->> I'm looking correctly, the driver only reads back the page directory
->> when checking if there is a need to allocate new page table, so ther=
-e
->> shouldn't be any significant penalty for disabling the cache.
->
-> I try to use dma_alloc_coherent() to replace the dma_map_single(),
-> but it doesn't work for me properly.
-> Because the DRM uses the iommu_dma_ops instead the swiotlb_dma_ops af=
-ter
-> attaching
-> to iommu, so when the iommu domain need to alloc a new page in
-> rk_iommu_map(),
-> it would call:
-> rk_iommu_map()  --> dma_alloc_coherent()  --> ops->alloc()  --> iommu=
-_map()
-> --> rk_iommu_map()
 
-It shouldn't call iommu_map(), because the IOMMU is not behind another
-IOMMU. Are you sure you called dma_alloc_coherent() on behalf of the
-IOMMU struct device and not the DRM device?
+On 13/06/16 11:13, Marc Zyngier wrote:
 
-Best regards,
-Tomasz
+...
+
+> OK, that's because ARM_GIC_PM is never selected (and there is no way I
+> can actually select). Do you have some additional patches that selects
+> it for Tegra?
+
+Yes locally, I have the following for testing ...
+
+diff --git a/drivers/soc/tegra/Kconfig b/drivers/soc/tegra/Kconfig
+index 03089ad2fc65..ffd02a3c093a 100644
+--- a/drivers/soc/tegra/Kconfig
++++ b/drivers/soc/tegra/Kconfig
+@@ -63,6 +63,7 @@ config ARCH_TEGRA_132_SOC
+
+ config ARCH_TEGRA_210_SOC
+        bool "NVIDIA Tegra210 SoC"
++       select ARM_GIC_PM
+        select PINCTRL_TEGRA210
+
+>> The correct fix is ...
+>>
+>> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+>> index 57423f3b218b..1de07eb5839c 100644
+>> --- a/drivers/irqchip/irq-gic.c
+>> +++ b/drivers/irqchip/irq-gic.c
+>> @@ -1272,7 +1272,7 @@ static bool gic_check_eoimode(struct device_node *node, void __iomem **base)
+>>         return true;
+>>  }
+>>  
+>> -static int __init gic_of_setup(struct gic_chip_data *gic, struct device_node *node)
+>> +static int gic_of_setup(struct gic_chip_data *gic, struct device_node *node)
+>>  {
+>>         if (!gic || !node)
+>>                 return -EINVAL;
+> 
+> OK, I've applied this locally (no need to resend).
+
+Great. Thanks. Sorry about this.
+
+Jon
+
+-- 
+nvpublic
