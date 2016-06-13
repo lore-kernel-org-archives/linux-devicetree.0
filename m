@@ -1,91 +1,106 @@
-From: Fugang Duan <fugang.duan@nxp.com>
-Subject: RE: [PATCH v2 1/2] ARM: imx6: disable deeper idle states when FEC is
- active w/o HW workaround
-Date: Mon, 13 Jun 2016 01:17:58 +0000
-Message-ID: <VI1PR0401MB185520C3915ED81041902AF6FF530@VI1PR0401MB1855.eurprd04.prod.outlook.com>
-References: <1464971480-9203-1-git-send-email-l.stach@pengutronix.de>
- <VI1PR0401MB1855AA40FA576AF677A68E6FFF5C0@VI1PR0401MB1855.eurprd04.prod.outlook.com>
- <1465464924.18807.5.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1465464924.18807.5.camel@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH v5 1/2] Documentation: bindings: add DT documentation for Rockchip USB2PHY
+Date: Mon, 13 Jun 2016 10:10:09 +0800
+Message-ID: <1465783810-18756-2-git-send-email-frank.wang@rock-chips.com>
+References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com, frank.wang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de> Sent: Thursday, June 09, 2016 5:35 PM
-> To: Fugang Duan <fugang.duan@nxp.com>; Shawn Guo <shawnguo@kernel.org>
-> Cc: devicetree@vger.kernel.org; patchwork-lst@pengutronix.de;
-> kernel@pengutronix.de; linux-arm-kernel@lists.infradead.org;
-> netdev@vger.kernel.org
-> Subject: Re: [PATCH v2 1/2] ARM: imx6: disable deeper idle states when FEC is
-> active w/o HW workaround
-> 
-> Hi Fugang,
-> 
-> Am Montag, den 06.06.2016, 02:00 +0000 schrieb Fugang Duan:
-> > From: Lucas Stach <l.stach@pengutronix.de> Sent: Saturday, June 04,
-> > 2016 12:31 AM
-> > >
-> > > To: Shawn Guo <shawnguo@kernel.org>; Fugang Duan <fugang.duan@nxp.c
-> > > om>
-> > > Cc: devicetree@vger.kernel.org; patchwork-lst@pengutronix.de;
-> > > kernel@pengutronix.de; linux-arm-kernel@lists.infradead.org;
-> > > netdev@vger.kernel.org
-> > > Subject: [PATCH v2 1/2] ARM: imx6: disable deeper idle states when
-> > > FEC is active w/o HW workaround
-> > >
-> > > The i.MX6 Q/DL has an erratum (ERR006687) that prevents the FEC from
-> > > waking the CPUs when they are in wait(unclocked) state. As the
-> > > hardware workaround isn't applicable to all boards, disable the
-> > > deeper idle state when the workaround isn't present and the FEC is
-> > > in use.
-> > >
-> > > This allows to safely run a kernel with CPUidle enabled on all
-> > > i.MX6 boards.
-> > >
-> > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > > Acked-by: David S. Miller <davem@davemloft.net> (for network
-> > > changes)
-> > > ---
-> 
-> [...]
-> 
-> > Hi, Lucas,
-> >
-> > FEC irq cannot wake up CPUs when system is in wait mode. But we can
-> > use GPIO_6 for FEC interrupt that GPIO irq wake up CPUs.
-> > No need to disable wait mode as your such patches.
-> >
-> > You just config the gpio irq like below patches:
-> > bc20a5d6da71 (ARM: dts: imx6qdl-sabreauto: use GPIO_6 for FEC
-> > interrupt.)
-> > 6261c4c8f13e (ARM: dts: imx6qdl-sabrelite: use GPIO_6 for FEC
-> > interrupt.)
-> >
-> Please look at the description of this series again. The changes don't disable the
-> deeper idle states on boards where the HW waorkaround is available. There is a
-> large number of boards in the wild which can not use the HW workaround, as
-> they use GPIO_6 for other purposes. The aim of this series is to have an
-> automatic software workaround available for those boards.
-> 
-> Regards,
-> Lucas
+Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+---
 
-I see.  My concern is the wild boards why don't follow NXP HW reference guide.
+Changes in v5:
+ - Added 'reg' property to identify the different phy-blocks.
 
-For the patch itself, it is fine for me to fix the wild boards issue.
+Changes in v4:
+ - Used 'phy-supply' instead of 'vbus_*-supply'.
 
-Acked-by: Fugang Duan <fugang.duan@nxp.com>
+Changes in v3:
+ - Added 'clocks' and 'clock-names' optional properties.
+ - Specified 'otg-port' and 'host-port' as the sub-node name.
+
+Changes in v2:
+ - Changed vbus_host optional property from gpio to regulator.
+ - Specified vbus_otg-supply optional property.
+ - Specified otg_id and otg_bvalid property.
+
+ .../bindings/phy/phy-rockchip-inno-usb2.txt        |   64 ++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+new file mode 100644
+index 0000000..48bb5de
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+@@ -0,0 +1,64 @@
++ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
++
++Required properties (phy (parent) node):
++ - compatible : should be one of the listed compatibles:
++	* "rockchip,rk3366-usb2phy"
++	* "rockchip,rk3399-usb2phy"
++ - reg : the address offset of grf for usb-phy configuration.
++ - #clock-cells : should be 0.
++ - clock-output-names : specify the 480m output clock name.
++
++Optional properties:
++ - clocks : phandle + phy specifier pair, for the input clock of phy.
++ - clock-names : input clock name of phy, must be "phyclk".
++
++Required nodes : a sub-node is required for each port the phy provides.
++		 The sub-node name is used to identify host or otg port,
++		 and shall be the following entries:
++	* "otg-port" : the name of otg port.
++	* "host-port" : the name of host port.
++
++Required properties (port (child) node):
++ - #phy-cells : must be 0. See ./phy-bindings.txt for details.
++ - interrupts : specify an interrupt for each entry in interrupt-names.
++ - interrupt-names : a list which shall be the following entries:
++	* "otg_id" : for the otg id interrupt.
++	* "otg_bvalid" : for the otg vbus interrupt.
++	* "linestate" : for the host/otg linestate interrupt.
++
++Optional properties:
++ - phy-supply : phandle to a regulator that provides power to VBUS.
++		See ./phy-bindings.txt for details.
++
++Example:
++
++grf: syscon@ff770000 {
++	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++...
++
++	u2phy: usb2-phy@700 {
++		compatible = "rockchip,rk3366-usb2phy";
++		reg = <0x700 0x2c>;
++		#clock-cells = <0>;
++		clock-output-names = "sclk_otgphy0_480m";
++
++		u2phy_otg: otg-port {
++			#phy-cells = <0>;
++			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "otg_id", "otg_bvalid", "linestate";
++			status = "okay";
++		};
++
++		u2phy_host: host-port {
++			#phy-cells = <0>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "linestate";
++			status = "okay";
++		};
++	};
++};
+-- 
+1.7.9.5
