@@ -1,99 +1,610 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 13/14] usb: gadget: udc: adapt to OTG core
-Date: Mon, 13 Jun 2016 15:40:56 +0800
-Message-ID: <20160613074056.GC19728@shlinux2>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
- <1465564043-27163-14-git-send-email-rogerq@ti.com>
- <20160612113655.GC32615@shlinux2>
- <575E5D57.7010700@ti.com>
- <20160613072019.GB19728@shlinux2>
- <575E62D7.8010409@ti.com>
+From: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v6 1/5] mfd: RK808: Add RK818 support
+Date: Mon, 13 Jun 2016 09:46:25 +0200
+Message-ID: <1465803989-33632-1-git-send-email-w.egorov@phytec.de>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <575E62D7.8010409-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBAABBRWK7G5AKGQEPCAISAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2016 at 10:37:59AM +0300, Roger Quadros wrote:
-> On 13/06/16 10:20, Peter Chen wrote:
-> > On Mon, Jun 13, 2016 at 10:14:31AM +0300, Roger Quadros wrote:
-> >> On 12/06/16 14:36, Peter Chen wrote:
-> >>> On Fri, Jun 10, 2016 at 04:07:22PM +0300, Roger Quadros wrote:
-> >>>>  
-> >>>> +/**
-> >>>> + * usb_otg_add_gadget_udc - adds a new gadget to the udc class driver list
-> >>>> + * @parent: the parent device to this udc. Usually the controller
-> >>>> + * driver's device.
-> >>>
-> >>> It seems it should be udc device
-> >>
-> >> Parent and udc->dev are not the same right?
-> > 
-> > Sure, udc's parent is otg device.
-> > 
-> >>
-> >> I guess i'll omit the second statement to avoid confusion. So.
-> >>
-> >> @parent: the parent device to this udc.
-> > 
-> > Where you call below APIs? It seems to be a udc driver, right?
-> > So, when you try to get "otg-controller" from the node, this node
-> > should be udc.
-> 
-> @parent is actually the device that represents the USB Device controller
-> in the device tree. When you call usb_add_gadget_udc_release() a new
-> udc->dev device is created as it's child.
-> 
-> See explanation for the @parent argument in usb_add_gadget_udc_release().
-> As we want to keep the parent argument identical to that I will not make
-> any changes then.
+The RK818 chip is a Power Management IC (PMIC) for multimedia and handheld
+devices. It contains the following components:
 
-Oh, yes. The parent should be glue layer udc device or the dual-role controller
-device.
+- Regulators
+- RTC
+- Clocking
+- Battery support
 
-Peter
-> 
-> > 
-> > /**
-> >  * usb_otg_add_gadget_udc - adds a new gadget to the udc class driver list
-> >  * @parent: the parent device to this udc. Usually the controller
-> >  * driver's device.
-> >  * @gadget: the gadget to be added to the list
-> >  * @otg_dev: the OTG controller device
-> >  *
-> >  * If otg_dev is NULL then device tree node is checked
-> >  * for OTG controller via the otg-controller property.
-> >  * Returns zero on success, negative errno otherwise.
-> >  */
-> > int usb_otg_add_gadget_udc(struct device *parent, struct usb_gadget *gadget,
-> > 			   struct device *otg_dev)
-> > {
-> > 	if (!otg_dev) {
-> > 		gadget->otg_dev = of_usb_get_otg(parent->of_node);
-> > 		if (!gadget->otg_dev)
-> > 			return -ENODEV;
-> > 	} else {
-> > 		gadget->otg_dev = otg_dev;
-> > 	}
-> > 
-> > 	return usb_add_gadget_udc_release(parent, gadget, NULL);
-> > }
-> > EXPORT_SYMBOL_GPL(usb_otg_add_gadget_udc);
-> > 
-> 
-> --
-> cheers,
-> -roger
+Both RK808 and RK818 chips are using a similar register map,
+so we can reuse the RTC and Clocking functionality.
+
+Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+---
+Changes since v5:
+- Few spell fixes in the commit description
+- Alignment fixes
+- Moved rk808_reg_data struct back to c file
+- Removed cells and pre_init_reg from the rk808 struct
+- Moved of_match_device and variant determination to probe
+---
+ drivers/mfd/Kconfig       |   4 +-
+ drivers/mfd/rk808.c       | 225 +++++++++++++++++++++++++++++++++++++++-------
+ include/linux/mfd/rk808.h | 152 +++++++++++++++++++++++++++++--
+ 3 files changed, 339 insertions(+), 42 deletions(-)
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 1bcf601..d0b7ea3 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -839,13 +839,13 @@ config MFD_RC5T583
+ 	  different functionality of the device.
+ 
+ config MFD_RK808
+-	tristate "Rockchip RK808 Power Management chip"
++	tristate "Rockchip RK808/RK818 Power Management Chip"
+ 	depends on I2C && OF
+ 	select MFD_CORE
+ 	select REGMAP_I2C
+ 	select REGMAP_IRQ
+ 	help
+-	  If you say yes here you get support for the RK808
++	  If you say yes here you get support for the RK808 and RK818
+ 	  Power Management chips.
+ 	  This driver provides common support for accessing the device
+ 	  through I2C interface. The device supports multiple sub-devices
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index 49d7f62..66f7b08 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -1,11 +1,15 @@
+ /*
+- * MFD core driver for Rockchip RK808
++ * MFD core driver for Rockchip RK808/RK818
+  *
+  * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+  *
+  * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+  * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+  *
++ * Copyright (C) 2016 PHYTEC Messtechnik GmbH
++ *
++ * Author: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
++ *
+  * This program is free software; you can redistribute it and/or modify it
+  * under the terms and conditions of the GNU General Public License,
+  * version 2, as published by the Free Software Foundation.
+@@ -22,6 +26,7 @@
+ #include <linux/mfd/core.h>
+ #include <linux/module.h>
+ #include <linux/regmap.h>
++#include <linux/of_device.h>
+ 
+ struct rk808_reg_data {
+ 	int addr;
+@@ -57,6 +62,14 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+ 	return false;
+ }
+ 
++static const struct regmap_config rk818_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = RK818_USB_CTRL_REG,
++	.cache_type = REGCACHE_RBTREE,
++	.volatile_reg = rk808_is_volatile_reg,
++};
++
+ static const struct regmap_config rk808_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 8,
+@@ -79,11 +92,21 @@ static const struct mfd_cell rk808s[] = {
+ 	{
+ 		.name = "rk808-rtc",
+ 		.num_resources = ARRAY_SIZE(rtc_resources),
+-		.resources = &rtc_resources[0],
++		.resources = rtc_resources,
+ 	},
+ };
+ 
+-static const struct rk808_reg_data pre_init_reg[] = {
++static const struct mfd_cell rk818s[] = {
++	{ .name = "rk808-clkout", },
++	{ .name = "rk808-regulator", },
++	{
++		.name = "rk808-rtc",
++		.num_resources = ARRAY_SIZE(rtc_resources),
++		.resources = rtc_resources,
++	},
++};
++
++static const struct rk808_reg_data rk808_pre_init_reg[] = {
+ 	{ RK808_BUCK3_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_150MA },
+ 	{ RK808_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_200MA },
+ 	{ RK808_BOOST_CONFIG_REG, BOOST_ILMIN_MASK, BOOST_ILMIN_100MA },
+@@ -94,6 +117,24 @@ static const struct rk808_reg_data pre_init_reg[] = {
+ 						    VB_LO_SEL_3500MV },
+ };
+ 
++static const struct rk808_reg_data rk818_pre_init_reg[] = {
++	/* improve efficiency */
++	{ RK818_BUCK2_CONFIG_REG, BUCK2_RATE_MASK,  BUCK_ILMIN_250MA },
++	{ RK818_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_250MA },
++	{ RK818_BOOST_CONFIG_REG, BOOST_ILMIN_MASK, BOOST_ILMIN_100MA },
++	{ RK818_USB_CTRL_REG,	  RK818_USB_ILIM_SEL_MASK,
++						    RK818_USB_ILMIN_2000MA },
++	/* close charger when usb lower then 3.4V */
++	{ RK818_USB_CTRL_REG,	  RK818_USB_CHG_SD_VSEL_MASK,
++						    (0x7 << 4) },
++	/* no action when vref */
++	{ RK818_H5V_EN_REG,	  BIT(1),	    RK818_REF_RDY_CTRL },
++	/* enable HDMI 5V */
++	{ RK818_H5V_EN_REG,	  BIT(0),	    RK818_H5V_EN },
++	{ RK808_VB_MON_REG,	  MASK_ALL,	    VB_LO_ACT |
++						    VB_LO_SEL_3500MV },
++};
++
+ static const struct regmap_irq rk808_irqs[] = {
+ 	/* INT_STS */
+ 	[RK808_IRQ_VOUT_LO] = {
+@@ -136,6 +177,76 @@ static const struct regmap_irq rk808_irqs[] = {
+ 	},
+ };
+ 
++static const struct regmap_irq rk818_irqs[] = {
++	/* INT_STS */
++	[RK818_IRQ_VOUT_LO] = {
++		.mask = RK818_IRQ_VOUT_LO_MSK,
++		.reg_offset = 0,
++	},
++	[RK818_IRQ_VB_LO] = {
++		.mask = RK818_IRQ_VB_LO_MSK,
++		.reg_offset = 0,
++	},
++	[RK818_IRQ_PWRON] = {
++		.mask = RK818_IRQ_PWRON_MSK,
++		.reg_offset = 0,
++	},
++	[RK818_IRQ_PWRON_LP] = {
++		.mask = RK818_IRQ_PWRON_LP_MSK,
++		.reg_offset = 0,
++	},
++	[RK818_IRQ_HOTDIE] = {
++		.mask = RK818_IRQ_HOTDIE_MSK,
++		.reg_offset = 0,
++	},
++	[RK818_IRQ_RTC_ALARM] = {
++		.mask = RK818_IRQ_RTC_ALARM_MSK,
++		.reg_offset = 0,
++	},
++	[RK818_IRQ_RTC_PERIOD] = {
++		.mask = RK818_IRQ_RTC_PERIOD_MSK,
++		.reg_offset = 0,
++	},
++	[RK818_IRQ_USB_OV] = {
++		.mask = RK818_IRQ_USB_OV_MSK,
++		.reg_offset = 0,
++	},
++
++	/* INT_STS2 */
++	[RK818_IRQ_PLUG_IN] = {
++		.mask = RK818_IRQ_PLUG_IN_MSK,
++		.reg_offset = 1,
++	},
++	[RK818_IRQ_PLUG_OUT] = {
++		.mask = RK818_IRQ_PLUG_OUT_MSK,
++		.reg_offset = 1,
++	},
++	[RK818_IRQ_CHG_OK] = {
++		.mask = RK818_IRQ_CHG_OK_MSK,
++		.reg_offset = 1,
++	},
++	[RK818_IRQ_CHG_TE] = {
++		.mask = RK818_IRQ_CHG_TE_MSK,
++		.reg_offset = 1,
++	},
++	[RK818_IRQ_CHG_TS1] = {
++		.mask = RK818_IRQ_CHG_TS1_MSK,
++		.reg_offset = 1,
++	},
++	[RK818_IRQ_TS2] = {
++		.mask = RK818_IRQ_TS2_MSK,
++		.reg_offset = 1,
++	},
++	[RK818_IRQ_CHG_CVTLIM] = {
++		.mask = RK818_IRQ_CHG_CVTLIM_MSK,
++		.reg_offset = 1,
++	},
++	[RK818_IRQ_DISCHG_ILIM] = {
++		.mask = RK818_IRQ_DISCHG_ILIM_MSK,
++		.reg_offset = 1,
++	},
++};
++
+ static struct regmap_irq_chip rk808_irq_chip = {
+ 	.name = "rk808",
+ 	.irqs = rk808_irqs,
+@@ -148,6 +259,18 @@ static struct regmap_irq_chip rk808_irq_chip = {
+ 	.init_ack_masked = true,
+ };
+ 
++static struct regmap_irq_chip rk818_irq_chip = {
++	.name = "rk818",
++	.irqs = rk818_irqs,
++	.num_irqs = ARRAY_SIZE(rk818_irqs),
++	.num_regs = 2,
++	.irq_reg_stride = 2,
++	.status_base = RK818_INT_STS_REG1,
++	.mask_base = RK818_INT_STS_MSK_REG1,
++	.ack_base = RK818_INT_STS_REG1,
++	.init_ack_masked = true,
++};
++
+ static struct i2c_client *rk808_i2c_client;
+ static void rk808_device_shutdown(void)
+ {
+@@ -167,55 +290,99 @@ static void rk808_device_shutdown(void)
+ 		dev_err(&rk808_i2c_client->dev, "power off error!\n");
+ }
+ 
++static const struct of_device_id rk808_of_match[] = {
++	{ .compatible = "rockchip,rk808", .data = (void *) RK808_ID },
++	{ .compatible = "rockchip,rk818", .data = (void *) RK818_ID },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, rk808_of_match);
++
+ static int rk808_probe(struct i2c_client *client,
+ 		       const struct i2c_device_id *id)
+ {
+ 	struct device_node *np = client->dev.of_node;
+ 	struct rk808 *rk808;
++	const struct of_device_id *match;
++	const struct rk808_reg_data *pre_init_reg;
++	const struct mfd_cell *cells;
++	int nr_pre_init_regs;
++	int nr_cells;
+ 	int pm_off = 0;
+ 	int ret;
+ 	int i;
+ 
+-	if (!client->irq) {
+-		dev_err(&client->dev, "No interrupt support, no core IRQ\n");
+-		return -EINVAL;
+-	}
+-
+ 	rk808 = devm_kzalloc(&client->dev, sizeof(*rk808), GFP_KERNEL);
+ 	if (!rk808)
+ 		return -ENOMEM;
+ 
+-	rk808->regmap = devm_regmap_init_i2c(client, &rk808_regmap_config);
++	match = of_match_device(rk808_of_match, &client->dev);
++	if (!match) {
++		dev_err(&client->dev, "Unable to match OF ID\n");
++		return -ENODEV;
++	}
++	rk808->variant = (long)match->data;
++
++	switch (rk808->variant) {
++	case RK808_ID:
++		rk808->regmap_cfg = &rk808_regmap_config;
++		rk808->regmap_irq_chip = &rk808_irq_chip;
++		pre_init_reg = rk808_pre_init_reg;
++		nr_pre_init_regs = ARRAY_SIZE(rk808_pre_init_reg);
++		cells = rk808s;
++		nr_cells = ARRAY_SIZE(rk808s);
++		break;
++	case RK818_ID:
++		rk808->regmap_cfg = &rk818_regmap_config;
++		rk808->regmap_irq_chip = &rk818_irq_chip;
++		pre_init_reg = rk818_pre_init_reg;
++		nr_pre_init_regs = ARRAY_SIZE(rk818_pre_init_reg);
++		cells = rk818s;
++		nr_cells = ARRAY_SIZE(rk818s);
++		break;
++	default:
++		dev_err(&client->dev, "Unsupported RK8XX ID %lu\n",
++			rk808->variant);
++		return -EINVAL;
++	}
++
++	rk808->i2c = client;
++	i2c_set_clientdata(client, rk808);
++
++	rk808->regmap = devm_regmap_init_i2c(client, rk808->regmap_cfg);
+ 	if (IS_ERR(rk808->regmap)) {
+ 		dev_err(&client->dev, "regmap initialization failed\n");
+ 		return PTR_ERR(rk808->regmap);
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(pre_init_reg); i++) {
+-		ret = regmap_update_bits(rk808->regmap, pre_init_reg[i].addr,
+-					 pre_init_reg[i].mask,
+-					 pre_init_reg[i].value);
+-		if (ret) {
+-			dev_err(&client->dev,
+-				"0x%x write err\n", pre_init_reg[i].addr);
+-			return ret;
+-		}
++	if (!client->irq) {
++		dev_err(&client->dev, "No interrupt support, no core IRQ\n");
++		return -EINVAL;
+ 	}
+ 
+ 	ret = regmap_add_irq_chip(rk808->regmap, client->irq,
+ 				  IRQF_ONESHOT, -1,
+-				  &rk808_irq_chip, &rk808->irq_data);
++				  rk808->regmap_irq_chip, &rk808->irq_data);
+ 	if (ret) {
+ 		dev_err(&client->dev, "Failed to add irq_chip %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-	rk808->i2c = client;
+-	i2c_set_clientdata(client, rk808);
++	for (i = 0; i < nr_pre_init_regs; i++) {
++		ret = regmap_update_bits(rk808->regmap,
++					pre_init_reg[i].addr,
++					pre_init_reg[i].mask,
++					pre_init_reg[i].value);
++		if (ret) {
++			dev_err(&client->dev,
++				"0x%x write err\n",
++				pre_init_reg[i].addr);
++			return ret;
++		}
++	}
+ 
+-	ret = devm_mfd_add_devices(&client->dev, -1,
+-				   rk808s, ARRAY_SIZE(rk808s), NULL, 0,
+-				   regmap_irq_get_domain(rk808->irq_data));
++	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
++			      cells, nr_cells, NULL, 0,
++			      regmap_irq_get_domain(rk808->irq_data));
+ 	if (ret) {
+ 		dev_err(&client->dev, "failed to add MFD devices %d\n", ret);
+ 		goto err_irq;
+@@ -245,14 +412,9 @@ static int rk808_remove(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id rk808_of_match[] = {
+-	{ .compatible = "rockchip,rk808" },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(of, rk808_of_match);
+-
+ static const struct i2c_device_id rk808_ids[] = {
+ 	{ "rk808" },
++	{ "rk818" },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(i2c, rk808_ids);
+@@ -272,4 +434,5 @@ module_i2c_driver(rk808_i2c_driver);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+ MODULE_AUTHOR("Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+-MODULE_DESCRIPTION("RK808 PMIC driver");
++MODULE_AUTHOR("Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>");
++MODULE_DESCRIPTION("RK808/RK818 PMIC driver");
+diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+index 441b6ee..e5ae21d 100644
+--- a/include/linux/mfd/rk808.h
++++ b/include/linux/mfd/rk808.h
+@@ -1,11 +1,15 @@
+ /*
+- * rk808.h for Rockchip RK808
++ * Register definitions for Rockchip's RK808/RK818 PMIC
+  *
+  * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+  *
+  * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+  * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+  *
++ * Copyright (C) 2016 PHYTEC Messtechnik GmbH
++ *
++ * Author: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
++ *
+  * This program is free software; you can redistribute it and/or modify it
+  * under the terms and conditions of the GNU General Public License,
+  * version 2, as published by the Free Software Foundation.
+@@ -16,8 +20,8 @@
+  * more details.
+  */
+ 
+-#ifndef __LINUX_REGULATOR_rk808_H
+-#define __LINUX_REGULATOR_rk808_H
++#ifndef __LINUX_REGULATOR_RK808_H
++#define __LINUX_REGULATOR_RK808_H
+ 
+ #include <linux/regulator/machine.h>
+ #include <linux/regmap.h>
+@@ -28,7 +32,7 @@
+ 
+ #define RK808_DCDC1	0 /* (0+RK808_START) */
+ #define RK808_LDO1	4 /* (4+RK808_START) */
+-#define RK808_NUM_REGULATORS   14
++#define RK808_NUM_REGULATORS	14
+ 
+ enum rk808_reg {
+ 	RK808_ID_DCDC1,
+@@ -115,7 +119,92 @@ enum rk808_reg {
+ #define RK808_INT_STS_MSK_REG2	0x4f
+ #define RK808_IO_POL_REG	0x50
+ 
+-/* IRQ Definitions */
++/* RK818 */
++#define RK818_DCDC1			0
++#define RK818_LDO1			4
++#define RK818_NUM_REGULATORS		17
++
++enum rk818_reg {
++	RK818_ID_DCDC1,
++	RK818_ID_DCDC2,
++	RK818_ID_DCDC3,
++	RK818_ID_DCDC4,
++	RK818_ID_BOOST,
++	RK818_ID_LDO1,
++	RK818_ID_LDO2,
++	RK818_ID_LDO3,
++	RK818_ID_LDO4,
++	RK818_ID_LDO5,
++	RK818_ID_LDO6,
++	RK818_ID_LDO7,
++	RK818_ID_LDO8,
++	RK818_ID_LDO9,
++	RK818_ID_SWITCH,
++	RK818_ID_HDMI_SWITCH,
++	RK818_ID_OTG_SWITCH,
++};
++
++#define RK818_DCDC_EN_REG		0x23
++#define RK818_LDO_EN_REG		0x24
++#define RK818_SLEEP_SET_OFF_REG1	0x25
++#define RK818_SLEEP_SET_OFF_REG2	0x26
++#define RK818_DCDC_UV_STS_REG		0x27
++#define RK818_DCDC_UV_ACT_REG		0x28
++#define RK818_LDO_UV_STS_REG		0x29
++#define RK818_LDO_UV_ACT_REG		0x2a
++#define RK818_DCDC_PG_REG		0x2b
++#define RK818_LDO_PG_REG		0x2c
++#define RK818_VOUT_MON_TDB_REG		0x2d
++#define RK818_BUCK1_CONFIG_REG		0x2e
++#define RK818_BUCK1_ON_VSEL_REG		0x2f
++#define RK818_BUCK1_SLP_VSEL_REG	0x30
++#define RK818_BUCK2_CONFIG_REG		0x32
++#define RK818_BUCK2_ON_VSEL_REG		0x33
++#define RK818_BUCK2_SLP_VSEL_REG	0x34
++#define RK818_BUCK3_CONFIG_REG		0x36
++#define RK818_BUCK4_CONFIG_REG		0x37
++#define RK818_BUCK4_ON_VSEL_REG		0x38
++#define RK818_BUCK4_SLP_VSEL_REG	0x39
++#define RK818_BOOST_CONFIG_REG		0x3a
++#define RK818_LDO1_ON_VSEL_REG		0x3b
++#define RK818_LDO1_SLP_VSEL_REG		0x3c
++#define RK818_LDO2_ON_VSEL_REG		0x3d
++#define RK818_LDO2_SLP_VSEL_REG		0x3e
++#define RK818_LDO3_ON_VSEL_REG		0x3f
++#define RK818_LDO3_SLP_VSEL_REG		0x40
++#define RK818_LDO4_ON_VSEL_REG		0x41
++#define RK818_LDO4_SLP_VSEL_REG		0x42
++#define RK818_LDO5_ON_VSEL_REG		0x43
++#define RK818_LDO5_SLP_VSEL_REG		0x44
++#define RK818_LDO6_ON_VSEL_REG		0x45
++#define RK818_LDO6_SLP_VSEL_REG		0x46
++#define RK818_LDO7_ON_VSEL_REG		0x47
++#define RK818_LDO7_SLP_VSEL_REG		0x48
++#define RK818_LDO8_ON_VSEL_REG		0x49
++#define RK818_LDO8_SLP_VSEL_REG		0x4a
++#define RK818_BOOST_LDO9_ON_VSEL_REG	0x54
++#define RK818_BOOST_LDO9_SLP_VSEL_REG	0x55
++#define RK818_DEVCTRL_REG		0x4b
++#define RK818_INT_STS_REG1		0X4c
++#define RK818_INT_STS_MSK_REG1		0x4d
++#define RK818_INT_STS_REG2		0x4e
++#define RK818_INT_STS_MSK_REG2		0x4f
++#define RK818_IO_POL_REG		0x50
++#define RK818_H5V_EN_REG		0x52
++#define RK818_SLEEP_SET_OFF_REG3	0x53
++#define RK818_BOOST_LDO9_ON_VSEL_REG	0x54
++#define RK818_BOOST_LDO9_SLP_VSEL_REG	0x55
++#define RK818_BOOST_CTRL_REG		0x56
++#define RK818_DCDC_ILMAX		0x90
++#define RK818_USB_CTRL_REG		0xa1
++
++#define RK818_H5V_EN			BIT(0)
++#define RK818_REF_RDY_CTRL		BIT(1)
++#define RK818_USB_ILIM_SEL_MASK		0xf
++#define RK818_USB_ILMIN_2000MA		0x7
++#define RK818_USB_CHG_SD_VSEL_MASK	0x70
++
++/* RK808 IRQ Definitions */
+ #define RK808_IRQ_VOUT_LO	0
+ #define RK808_IRQ_VB_LO		1
+ #define RK808_IRQ_PWRON		2
+@@ -137,6 +226,43 @@ enum rk808_reg {
+ #define RK808_IRQ_PLUG_IN_INT_MSK	BIT(0)
+ #define RK808_IRQ_PLUG_OUT_INT_MSK	BIT(1)
+ 
++/* RK818 IRQ Definitions */
++#define RK818_IRQ_VOUT_LO	0
++#define RK818_IRQ_VB_LO		1
++#define RK818_IRQ_PWRON		2
++#define RK818_IRQ_PWRON_LP	3
++#define RK818_IRQ_HOTDIE	4
++#define RK818_IRQ_RTC_ALARM	5
++#define RK818_IRQ_RTC_PERIOD	6
++#define RK818_IRQ_USB_OV	7
++#define RK818_IRQ_PLUG_IN	8
++#define RK818_IRQ_PLUG_OUT	9
++#define RK818_IRQ_CHG_OK	10
++#define RK818_IRQ_CHG_TE	11
++#define RK818_IRQ_CHG_TS1	12
++#define RK818_IRQ_TS2		13
++#define RK818_IRQ_CHG_CVTLIM	14
++#define RK818_IRQ_DISCHG_ILIM	7
++
++#define RK818_IRQ_VOUT_LO_MSK		BIT(0)
++#define RK818_IRQ_VB_LO_MSK		BIT(1)
++#define RK818_IRQ_PWRON_MSK		BIT(2)
++#define RK818_IRQ_PWRON_LP_MSK		BIT(3)
++#define RK818_IRQ_HOTDIE_MSK		BIT(4)
++#define RK818_IRQ_RTC_ALARM_MSK		BIT(5)
++#define RK818_IRQ_RTC_PERIOD_MSK	BIT(6)
++#define RK818_IRQ_USB_OV_MSK		BIT(7)
++#define RK818_IRQ_PLUG_IN_MSK		BIT(0)
++#define RK818_IRQ_PLUG_OUT_MSK		BIT(1)
++#define RK818_IRQ_CHG_OK_MSK		BIT(2)
++#define RK818_IRQ_CHG_TE_MSK		BIT(3)
++#define RK818_IRQ_CHG_TS1_MSK		BIT(4)
++#define RK818_IRQ_TS2_MSK		BIT(5)
++#define RK818_IRQ_CHG_CVTLIM_MSK	BIT(6)
++#define RK818_IRQ_DISCHG_ILIM_MSK	BIT(7)
++
++#define RK818_NUM_IRQ		16
++
+ #define RK808_VBAT_LOW_2V8	0x00
+ #define RK808_VBAT_LOW_2V9	0x01
+ #define RK808_VBAT_LOW_3V0	0x02
+@@ -191,9 +317,17 @@ enum {
+ 	BOOST_ILMIN_250MA,
+ };
+ 
++enum {
++	RK808_ID,
++	RK818_ID,
++};
++
+ struct rk808 {
+-	struct i2c_client *i2c;
+-	struct regmap_irq_chip_data *irq_data;
+-	struct regmap *regmap;
++	struct i2c_client		*i2c;
++	struct regmap_irq_chip_data	*irq_data;
++	struct regmap			*regmap;
++	long				variant;
++	const struct regmap_config	*regmap_cfg;
++	const struct regmap_irq_chip	*regmap_irq_chip;
+ };
+-#endif /* __LINUX_REGULATOR_rk808_H */
++#endif /* __LINUX_REGULATOR_RK808_H */
+-- 
+1.9.1
 
 -- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
