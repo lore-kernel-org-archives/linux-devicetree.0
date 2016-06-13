@@ -1,87 +1,67 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: dts: juno: add coresight support
-Date: Mon, 13 Jun 2016 15:53:47 +0100
-Message-ID: <575EC8FB.40309@arm.com>
-References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
- <1465228765-14038-2-git-send-email-sudeep.holla@arm.com>
- <CANLsYkzbtW2nFsntQ8vLafu=JS+qcjXm+6HQpi3F_P2a5CsHaw@mail.gmail.com>
- <575E7A56.6070005@arm.com>
- <CANLsYkzSOrypAZaDYAvvaFBB50ugkOpGFKCh-Sd=EyCE8bG0gg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RFC 3/6] ASoC: max98504: Add max98504 speaker amplifier
+ driver
+Date: Mon, 13 Jun 2016 16:14:29 +0100
+Message-ID: <20160613151429.GI2282@sirena.org.uk>
+References: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
+ <1465815160-28504-4-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANLsYkzSOrypAZaDYAvvaFBB50ugkOpGFKCh-Sd=EyCE8bG0gg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="1vEdgMWljt97yA53"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465815160-28504-4-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, robh@kernel.org, linux-samsung-soc@vger.kernel.org, ideal.song@samsung.com, beomho.seo@samsung.com, inki.dae@samsung.com, k.kozlowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 
+--1vEdgMWljt97yA53
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 13/06/16 15:47, Mathieu Poirier wrote:
-> On 13 June 2016 at 03:18, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->>
->> On 12/06/16 22:57, Mathieu Poirier wrote:
->>>
->>> On 6 June 2016 at 09:59, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>>>
->>>> Most of the debug-related components on Juno are located in the coreSight
->>>> subsystem while others are located in the Cortex-Axx clusters, the SCP
->>>> subsystem, and in the main system.
->>>>
->>>> Each core in the two processor clusters contain an Embedded Trace
->>>> Macrocell(ETM) which generates real-time trace information that trace
->>>> tools can use and an ATB trace output that is sent to a funnel before
->>>> going to the CoreSight subsystem.
->>>>
->>>> The trace output signals combine with two trace expansions using another
->>>> funnel and fed into the Embedded Trace FIFO(ETF0).
->>>>
->>>> The output trace data stream of the funnel is then replicated before it
->>>> is sent to either the:
->>>> - Trace Port Interface Unit(TPIU), that sends it out using the trace
->>>> port.
->>>> - ETR that can write the trace data to memory located in the application
->>>>     memory space
->>>
->>>
->>> Hi Sudeep,
->>>
->>> Did you try booting this on juno-r0?  On my side the system won't boot
->>> unless I enable the debug power domain by externally connecting to the
->>> system using DS-5.
->>>
->>
->> As you have already realized that you need SCPI power domain patches for
->> the functionality. However, in absence of those patches or when it's
->> disabled, it shouldn't cause any boot or runtime issues. Only ETM or
->> coresight won't work. If it's causing any crash or hang, please do let
->> me know, that needs to be fixed. I have only tested with latest
->> firmware. Let me know the details of hang/crash and firmware version you
->> are using.
->
-> We have a problem then.  Booting with this branch[1] and the 3 DT
-> patches from this set the system hangs.  But before going any further
-> I'd bet the FW on my board is too old.  This is what I get on my side:
->
-> RM V2M-Juno Boot loader v1.0.0
-> HBI0262 build 1684
->
-> ARM V2M_Juno Firmware v1.3.4
-> Build Date: Aug 27 2015
->
+On Mon, Jun 13, 2016 at 12:52:37PM +0200, Sylwester Nawrocki wrote:
 
-Yes looks old *but* these are motherboard firmware, while I was
-interested in SCP firmware. Anyways can you provide more details on the
-hang (where/what/...)? Also the boot log(what ever you are getting out
-if any)
+> [s.nawrocki: removed unused macro definitions and regulator handling
+>  code, rewrote regmap config code, added support for speaker enable
+>  and global chip enable through DAPM, rewritten as component driver,
+>  redesigned DT bindings]
 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Removed the regulator handling code?  Why?
+
+> +	default:
+> +		/* Analog input, disable PCM, PDM Rx */
+> +		regmap_write(map, MAX98504_REG_PCM_RX_ENABLE, 0);
+> +		regmap_write(map, MAX98504_REG_PDM_RX_ENABLE, 0);
+> +	}
+
+Add a break here please, at least for consistency.
+
+> +		ret = PTR_ERR(max98504->regmap);
+> +		dev_err(&client->dev, "regmap initialization failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = max98504_probe(max98504);
+> +	if (ret < 0)
+> +		return ret;
+
+Why not just inline this code?
+
+--1vEdgMWljt97yA53
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXXs3RAAoJECTWi3JdVIfQDa0H/RJEIpnxoLlBbIvwv9vg1HeV
+aIP5p+wPlHuLnaT5zymI/GsWKdkE6r7MrfNX4X9sIpMKbfdp6Kpfy3aJpyCfckOo
+gLUK9wQTbUHJmvwwM9tSgJMXiJvgHVj98NRDlI0aXH0XuybfkpS1wCY6CMhOLA7p
+oLNRFRmT3to9dL140iFVjrHVvm0/VVN7MQkpO9lcSs7jRP/YGBkq6lt/fL0SvFOx
+UQ67Xt+hVBTT9/IMY4wJ6bSxhGa8PC5KvZgCi7EXs94nIfeZMc2fmjE8/DOvSlDc
+b7HrMxu7oMSvOAA/jBdqkFLYKPldMYNvFRSG/O+Nh2pdQmYJvnKvsI0YTCA9+o4=
+=J9Pe
+-----END PGP SIGNATURE-----
+
+--1vEdgMWljt97yA53--
