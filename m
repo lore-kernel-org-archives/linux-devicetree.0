@@ -1,286 +1,47 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv3 5/7] EDAC, altera: Add Arria10 ECC memory init functions
-Date: Mon, 13 Jun 2016 16:19:10 -0500
-Message-ID: <1465852752-11018-6-git-send-email-tthayer@opensource.altera.com>
-References: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 3/3] ARM64: dts: meson-gxbb: Add Hardware Random Generator node
+Date: Mon, 13 Jun 2016 15:09:55 -0700
+Message-ID: <m2ziqoviz0.fsf@baylibre.com>
+References: <1465546915-24229-1-git-send-email-narmstrong@baylibre.com>
+	<1465546915-24229-4-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465852752-11018-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1465546915-24229-4-git-send-email-narmstrong@baylibre.com> (Neil
+	Armstrong's message of "Fri, 10 Jun 2016 10:21:55 +0200")
+Sender: linux-crypto-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Hi Neil,
 
-In preparation for additional memory module ECCs, add the
-memory initialization functions and helper functions used
-for memory initialization.
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
-v2: Specify INTMODE selection -> IRQ on each ECC error.
-    Insert functions above memory-specific functions so that function
-    declarations are not required.
-    Use ERRINTENS & ERRINTENR registers instead of read/modify/write.
-v3: Changes for common compatibility string:
-    - Pass node instead of compatibility string.
-    - New altr_init_a10_ecc_device_type() for peripherals.
-    - Add __init to altr_init_a10_ecc_block().
-    - Add a10_get_irq_mask().
----
- drivers/edac/altera_edac.c |  197 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/edac/altera_edac.h |    8 ++
- 2 files changed, 205 insertions(+)
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> index 832815d..8353621 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -167,6 +167,11 @@
+>  			};
+>  		};
+>  
+> +		rng {
+> +			compatible = "amlogic,meson-rng";
+> +			reg = <0x0 0xc8834000 0x0 0x4>;
+> +		};
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index a3f490d..f27bb29 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -19,6 +19,7 @@
- 
- #include <asm/cacheflush.h>
- #include <linux/ctype.h>
-+#include <linux/delay.h>
- #include <linux/edac.h>
- #include <linux/genalloc.h>
- #include <linux/interrupt.h>
-@@ -876,6 +877,202 @@ static irqreturn_t altr_edac_a10_ecc_irq(int irq, void *dev_id)
- 
- #endif /* CONFIG_EDAC_ALTERA_OCRAM || CONFIG_EDAC_ALTERA_ETHERNET */
- 
-+/******************* Arria10 Memory Buffer Functions *********************/
-+
-+#if defined(CONFIG_EDAC_ALTERA_ETHERNET)
-+
-+static inline int a10_get_irq_mask(struct device_node *np)
-+{
-+	int irq;
-+	const u32 *handle = of_get_property(np, "interrupts", NULL);
-+
-+	if (!handle)
-+		return -ENODEV;
-+	irq = be32_to_cpup(handle);
-+	return irq;
-+}
-+
-+static inline void ecc_set_bits(u32 bit_mask, void __iomem *ioaddr)
-+{
-+	u32 value = readl(ioaddr);
-+
-+	value |= bit_mask;
-+	writel(value, ioaddr);
-+}
-+
-+static inline void ecc_clear_bits(u32 bit_mask, void __iomem *ioaddr)
-+{
-+	u32 value = readl(ioaddr);
-+
-+	value &= ~bit_mask;
-+	writel(value, ioaddr);
-+}
-+
-+static inline int ecc_test_bits(u32 bit_mask, void __iomem *ioaddr)
-+{
-+	u32 value = readl(ioaddr);
-+
-+	return (value & bit_mask) ? 1 : 0;
-+}
-+
-+/*
-+ * This function uses the memory initialization block in the Arria10 ECC
-+ * controller to initialize/clear the entire memory data and ECC data.
-+ */
-+static int altr_init_memory_port(void __iomem *ioaddr, int port)
-+{
-+	int limit = ALTR_A10_ECC_INIT_WATCHDOG_10US;
-+	u32 init_mask = ALTR_A10_ECC_INITA;
-+	u32 stat_mask = ALTR_A10_ECC_INITCOMPLETEA;
-+	u32 clear_mask = ALTR_A10_ECC_ERRPENA_MASK;
-+	int ret = 0;
-+
-+	if (port) {
-+		init_mask = ALTR_A10_ECC_INITB;
-+		stat_mask = ALTR_A10_ECC_INITCOMPLETEB;
-+		clear_mask = ALTR_A10_ECC_ERRPENB_MASK;
-+	}
-+
-+	ecc_set_bits(init_mask, (ioaddr + ALTR_A10_ECC_CTRL_OFST));
-+	while (limit--) {
-+		if (ecc_test_bits(stat_mask,
-+				  (ioaddr + ALTR_A10_ECC_INITSTAT_OFST)))
-+			break;
-+		udelay(1);
-+	}
-+	if (limit < 0)
-+		ret = -EBUSY;
-+
-+	/* Clear any pending ECC interrupts */
-+	writel(clear_mask, (ioaddr + ALTR_A10_ECC_INTSTAT_OFST));
-+
-+	return ret;
-+}
-+
-+/*
-+ * Aside from the L2 ECC, the Arria10 ECC memories have a common register
-+ * layout so the following functions can be shared between all peripherals.
-+ */
-+static __init int altr_init_a10_ecc_block(struct device_node *np, u32 irq_mask,
-+					  u32 ecc_ctrl_en_mask, bool dual_port)
-+{
-+	int ret = 0;
-+	void __iomem *ecc_block_base;
-+	struct regmap *ecc_mgr_map;
-+	char *ecc_name;
-+	struct device_node *np_eccmgr;
-+
-+	ecc_name = (char *)np->name;
-+
-+	/* Get the ECC Manager - parent of the device EDACs */
-+	np_eccmgr = of_get_parent(np);
-+	ecc_mgr_map = syscon_regmap_lookup_by_phandle(np_eccmgr,
-+						      "altr,sysmgr-syscon");
-+	of_node_put(np_eccmgr);
-+	if (IS_ERR(ecc_mgr_map)) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "Unable to get syscon altr,sysmgr-syscon\n");
-+		return -ENODEV;
-+	}
-+
-+	/* Map the ECC Block */
-+	ecc_block_base = of_iomap(np, 0);
-+	if (!ecc_block_base) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "Unable to map %s ECC block\n", ecc_name);
-+		return -ENODEV;
-+	}
-+
-+	/* Disable ECC */
-+	regmap_write(ecc_mgr_map, A10_SYSMGR_ECC_INTMASK_SET_OFST, irq_mask);
-+	writel(ALTR_A10_ECC_SERRINTEN,
-+	       (ecc_block_base + ALTR_A10_ECC_ERRINTENR_OFST));
-+	ecc_clear_bits(ecc_ctrl_en_mask,
-+		       (ecc_block_base + ALTR_A10_ECC_CTRL_OFST));
-+	/* Ensure all writes complete */
-+	wmb();
-+	/* Use HW initialization block to initialize memory for ECC */
-+	ret = altr_init_memory_port(ecc_block_base, 0);
-+	if (ret) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "ECC: cannot init %s PORTA memory\n", ecc_name);
-+		goto out;
-+	}
-+
-+	if (dual_port) {
-+		ret = altr_init_memory_port(ecc_block_base, 1);
-+		if (ret) {
-+			edac_printk(KERN_ERR, EDAC_DEVICE,
-+				    "ECC: cannot init %s PORTB memory\n",
-+				    ecc_name);
-+			goto out;
-+		}
-+	}
-+
-+	/* Interrupt mode set to every SBERR */
-+	regmap_write(ecc_mgr_map, ALTR_A10_ECC_INTMODE_OFST,
-+		     ALTR_A10_ECC_INTMODE);
-+	/* Enable ECC */
-+	ecc_set_bits(ecc_ctrl_en_mask, (ecc_block_base +
-+					ALTR_A10_ECC_CTRL_OFST));
-+	writel(ALTR_A10_ECC_SERRINTEN,
-+	       (ecc_block_base + ALTR_A10_ECC_ERRINTENS_OFST));
-+	regmap_write(ecc_mgr_map, A10_SYSMGR_ECC_INTMASK_CLR_OFST, irq_mask);
-+	/* Ensure all writes complete */
-+	wmb();
-+out:
-+	iounmap(ecc_block_base);
-+	return ret;
-+}
-+
-+static int validate_parent_available(struct device_node *np);
-+static const struct of_device_id altr_edac_a10_device_of_match[];
-+static int __init altr_init_a10_ecc_device_type(char *compat)
-+{
-+	int irq;
-+	struct device_node *child, *np = of_find_compatible_node(NULL, NULL,
-+					"altr,socfpga-a10-ecc-manager");
-+	if (!np) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE, "ECC Manager not found\n");
-+		return -ENODEV;
-+	}
-+
-+	for_each_child_of_node(np, child) {
-+		const struct of_device_id *pdev_id;
-+		const struct edac_device_prv_data *prv;
-+
-+		if (!of_device_is_available(child))
-+			continue;
-+		if (!of_device_is_compatible(child, compat))
-+			continue;
-+
-+		if (validate_parent_available(child))
-+			continue;
-+
-+		irq = a10_get_irq_mask(child);
-+		if (irq < 0)
-+			continue;
-+
-+		/* Get matching node and check for valid result */
-+		pdev_id = of_match_node(altr_edac_a10_device_of_match, child);
-+		if (IS_ERR_OR_NULL(pdev_id))
-+			continue;
-+
-+		/* Validate private data pointer before dereferencing */
-+		prv = pdev_id->data;
-+		if (!prv)
-+			continue;
-+
-+		altr_init_a10_ecc_block(child, BIT(irq),
-+					prv->ecc_enable_mask, 0);
-+	}
-+
-+	of_node_put(np);
-+	return 0;
-+}
-+
-+#endif	/* CONFIG_EDAC_ALTERA_ETHERNET */
-+
- /*********************** OCRAM EDAC Device Functions *********************/
- 
- #ifdef CONFIG_EDAC_ALTERA_OCRAM
-diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index cf4e8cb..aa7c690 100644
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -230,8 +230,13 @@ struct altr_sdram_mc_data {
- #define ALTR_A10_ECC_INITCOMPLETEB      BIT(8)
- 
- #define ALTR_A10_ECC_ERRINTEN_OFST      0x10
-+#define ALTR_A10_ECC_ERRINTENS_OFST     0x14
-+#define ALTR_A10_ECC_ERRINTENR_OFST     0x18
- #define ALTR_A10_ECC_SERRINTEN          BIT(0)
- 
-+#define ALTR_A10_ECC_INTMODE_OFST       0x1C
-+#define ALTR_A10_ECC_INTMODE            BIT(0)
-+
- #define ALTR_A10_ECC_INTSTAT_OFST       0x20
- #define ALTR_A10_ECC_SERRPENA           BIT(0)
- #define ALTR_A10_ECC_DERRPENA           BIT(8)
-@@ -280,6 +285,9 @@ struct altr_sdram_mc_data {
- /* Arria 10 OCRAM ECC Management Group Defines */
- #define ALTR_A10_OCRAM_ECC_EN_CTL       (BIT(1) | BIT(0))
- 
-+/* A10 ECC Controller memory initialization timeout */
-+#define ALTR_A10_ECC_INIT_WATCHDOG_10US      10000
-+
- struct altr_edac_device_dev;
- 
- struct edac_device_prv_data {
--- 
-1.7.9.5
+This should be under the periphs bus, with an offset of 0x0 instead of
+at the top level.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+See the for-next branch in the linux-amlogic tree[1] which has separate
+busses for periphs and hiu.
+
+Kevin
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git
