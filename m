@@ -1,181 +1,99 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v4 3/7] powerpc: use the new LED disk activity trigger
-Date: Mon, 13 Jun 2016 09:46:17 +0200
-Message-ID: <575E64C9.6060302@samsung.com>
-References: <20160610060021.12382-1-linz@li-pro.net>
- <20160610060021.12382-3-linz@li-pro.net>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 13/14] usb: gadget: udc: adapt to OTG core
+Date: Mon, 13 Jun 2016 15:40:56 +0800
+Message-ID: <20160613074056.GC19728@shlinux2>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+ <1465564043-27163-14-git-send-email-rogerq@ti.com>
+ <20160612113655.GC32615@shlinux2>
+ <575E5D57.7010700@ti.com>
+ <20160613072019.GB19728@shlinux2>
+ <575E62D7.8010409@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20160610060021.12382-3-linz@li-pro.net>
-Sender: linux-leds-owner@vger.kernel.org
-To: Stephan Linz <linz@li-pro.net>
-Cc: linux-leds@vger.kernel.org, linux-ide@vger.kernel.org, Joseph Jezak <josejx@gentoo.org>, =?UTF-8?B?SsO2cmcgU29tbWVy?= <joerg@alea.gnuu.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <575E62D7.8010409-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Mon, Jun 13, 2016 at 10:37:59AM +0300, Roger Quadros wrote:
+> On 13/06/16 10:20, Peter Chen wrote:
+> > On Mon, Jun 13, 2016 at 10:14:31AM +0300, Roger Quadros wrote:
+> >> On 12/06/16 14:36, Peter Chen wrote:
+> >>> On Fri, Jun 10, 2016 at 04:07:22PM +0300, Roger Quadros wrote:
+> >>>>  
+> >>>> +/**
+> >>>> + * usb_otg_add_gadget_udc - adds a new gadget to the udc class driver list
+> >>>> + * @parent: the parent device to this udc. Usually the controller
+> >>>> + * driver's device.
+> >>>
+> >>> It seems it should be udc device
+> >>
+> >> Parent and udc->dev are not the same right?
+> > 
+> > Sure, udc's parent is otg device.
+> > 
+> >>
+> >> I guess i'll omit the second statement to avoid confusion. So.
+> >>
+> >> @parent: the parent device to this udc.
+> > 
+> > Where you call below APIs? It seems to be a udc driver, right?
+> > So, when you try to get "otg-controller" from the node, this node
+> > should be udc.
+> 
+> @parent is actually the device that represents the USB Device controller
+> in the device tree. When you call usb_add_gadget_udc_release() a new
+> udc->dev device is created as it's child.
+> 
+> See explanation for the @parent argument in usb_add_gadget_udc_release().
+> As we want to keep the parent argument identical to that I will not make
+> any changes then.
 
-=46or consistency reasons this patch should be merged through LED tree,
-but I need an ack from relevant maintainer. Benjamin, Michael, Paul?
+Oh, yes. The parent should be glue layer udc device or the dual-role controller
+device.
 
-Thanks,
-Jacek Anaszewski
+Peter
+> 
+> > 
+> > /**
+> >  * usb_otg_add_gadget_udc - adds a new gadget to the udc class driver list
+> >  * @parent: the parent device to this udc. Usually the controller
+> >  * driver's device.
+> >  * @gadget: the gadget to be added to the list
+> >  * @otg_dev: the OTG controller device
+> >  *
+> >  * If otg_dev is NULL then device tree node is checked
+> >  * for OTG controller via the otg-controller property.
+> >  * Returns zero on success, negative errno otherwise.
+> >  */
+> > int usb_otg_add_gadget_udc(struct device *parent, struct usb_gadget *gadget,
+> > 			   struct device *otg_dev)
+> > {
+> > 	if (!otg_dev) {
+> > 		gadget->otg_dev = of_usb_get_otg(parent->of_node);
+> > 		if (!gadget->otg_dev)
+> > 			return -ENODEV;
+> > 	} else {
+> > 		gadget->otg_dev = otg_dev;
+> > 	}
+> > 
+> > 	return usb_add_gadget_udc_release(parent, gadget, NULL);
+> > }
+> > EXPORT_SYMBOL_GPL(usb_otg_add_gadget_udc);
+> > 
+> 
+> --
+> cheers,
+> -roger
 
-On 06/10/2016 07:59 AM, Stephan Linz wrote:
-> - dts: rename 'ide-disk' to 'disk-activity'
-> - defconfig: rename 'ADB_PMU_LED_IDE' to 'ADB_PMU_LED_DISK'
->
-> Cc: Joseph Jezak <josejx@gentoo.org>
-> Cc: J=C3=B6rg Sommer <joerg@alea.gnuu.de>
-> Signed-off-by: Stephan Linz <linz@li-pro.net>
-> ---
->   arch/powerpc/boot/dts/mpc8315erdb.dts |  2 +-
->   arch/powerpc/boot/dts/mpc8377_rdb.dts |  2 +-
->   arch/powerpc/boot/dts/mpc8378_rdb.dts |  2 +-
->   arch/powerpc/boot/dts/mpc8379_rdb.dts |  2 +-
->   arch/powerpc/configs/pmac32_defconfig |  2 +-
->   arch/powerpc/configs/ppc6xx_defconfig |  2 +-
->   drivers/macintosh/Kconfig             | 13 ++++++-------
->   drivers/macintosh/via-pmu-led.c       |  4 ++--
->   8 files changed, 14 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/powerpc/boot/dts/mpc8315erdb.dts b/arch/powerpc/boo=
-t/dts/mpc8315erdb.dts
-> index 4354684..ca5139e 100644
-> --- a/arch/powerpc/boot/dts/mpc8315erdb.dts
-> +++ b/arch/powerpc/boot/dts/mpc8315erdb.dts
-> @@ -472,7 +472,7 @@
->
->   		hdd {
->   			gpios =3D <&mcu_pio 1 0>;
-> -			linux,default-trigger =3D "ide-disk";
-> +			linux,default-trigger =3D "disk-activity";
->   		};
->   	};
->   };
-> diff --git a/arch/powerpc/boot/dts/mpc8377_rdb.dts b/arch/powerpc/boo=
-t/dts/mpc8377_rdb.dts
-> index 2b4b653..e326139 100644
-> --- a/arch/powerpc/boot/dts/mpc8377_rdb.dts
-> +++ b/arch/powerpc/boot/dts/mpc8377_rdb.dts
-> @@ -496,7 +496,7 @@
->
->   		hdd {
->   			gpios =3D <&mcu_pio 1 0>;
-> -			linux,default-trigger =3D "ide-disk";
-> +			linux,default-trigger =3D "disk-activity";
->   		};
->   	};
->   };
-> diff --git a/arch/powerpc/boot/dts/mpc8378_rdb.dts b/arch/powerpc/boo=
-t/dts/mpc8378_rdb.dts
-> index 74b6a53..71842fc 100644
-> --- a/arch/powerpc/boot/dts/mpc8378_rdb.dts
-> +++ b/arch/powerpc/boot/dts/mpc8378_rdb.dts
-> @@ -480,7 +480,7 @@
->
->   		hdd {
->   			gpios =3D <&mcu_pio 1 0>;
-> -			linux,default-trigger =3D "ide-disk";
-> +			linux,default-trigger =3D "disk-activity";
->   		};
->   	};
->   };
-> diff --git a/arch/powerpc/boot/dts/mpc8379_rdb.dts b/arch/powerpc/boo=
-t/dts/mpc8379_rdb.dts
-> index 3b5cbac..e442a29 100644
-> --- a/arch/powerpc/boot/dts/mpc8379_rdb.dts
-> +++ b/arch/powerpc/boot/dts/mpc8379_rdb.dts
-> @@ -446,7 +446,7 @@
->
->   		hdd {
->   			gpios =3D <&mcu_pio 1 0>;
-> -			linux,default-trigger =3D "ide-disk";
-> +			linux,default-trigger =3D "disk-activity";
->   		};
->   	};
->   };
-> diff --git a/arch/powerpc/configs/pmac32_defconfig b/arch/powerpc/con=
-figs/pmac32_defconfig
-> index ea8705f..3f6c9a6 100644
-> --- a/arch/powerpc/configs/pmac32_defconfig
-> +++ b/arch/powerpc/configs/pmac32_defconfig
-> @@ -158,7 +158,7 @@ CONFIG_ADB=3Dy
->   CONFIG_ADB_CUDA=3Dy
->   CONFIG_ADB_PMU=3Dy
->   CONFIG_ADB_PMU_LED=3Dy
-> -CONFIG_ADB_PMU_LED_IDE=3Dy
-> +CONFIG_ADB_PMU_LED_DISK=3Dy
->   CONFIG_PMAC_APM_EMU=3Dm
->   CONFIG_PMAC_MEDIABAY=3Dy
->   CONFIG_PMAC_BACKLIGHT=3Dy
-> diff --git a/arch/powerpc/configs/ppc6xx_defconfig b/arch/powerpc/con=
-figs/ppc6xx_defconfig
-> index 99ccbeba..1dde0be 100644
-> --- a/arch/powerpc/configs/ppc6xx_defconfig
-> +++ b/arch/powerpc/configs/ppc6xx_defconfig
-> @@ -442,7 +442,7 @@ CONFIG_ADB=3Dy
->   CONFIG_ADB_CUDA=3Dy
->   CONFIG_ADB_PMU=3Dy
->   CONFIG_ADB_PMU_LED=3Dy
-> -CONFIG_ADB_PMU_LED_IDE=3Dy
-> +CONFIG_ADB_PMU_LED_DISK=3Dy
->   CONFIG_PMAC_APM_EMU=3Dy
->   CONFIG_PMAC_MEDIABAY=3Dy
->   CONFIG_PMAC_BACKLIGHT=3Dy
-> diff --git a/drivers/macintosh/Kconfig b/drivers/macintosh/Kconfig
-> index 3e8b29e..d28690f 100644
-> --- a/drivers/macintosh/Kconfig
-> +++ b/drivers/macintosh/Kconfig
-> @@ -96,19 +96,18 @@ config ADB_PMU_LED
->   	  Support the front LED on Power/iBooks as a generic LED that can
->   	  be triggered by any of the supported triggers. To get the
->   	  behaviour of the old CONFIG_BLK_DEV_IDE_PMAC_BLINK, select this
-> -	  and the ide-disk LED trigger and configure appropriately through
-> -	  sysfs.
-> +	  and the disk LED trigger and configure appropriately through sysf=
-s.
->
-> -config ADB_PMU_LED_IDE
-> -	bool "Use front LED as IDE LED by default"
-> +config ADB_PMU_LED_DISK
-> +	bool "Use front LED as DISK LED by default"
->   	depends on ADB_PMU_LED
->   	depends on LEDS_CLASS
->   	depends on IDE_GD_ATA
->   	select LEDS_TRIGGERS
-> -	select LEDS_TRIGGER_IDE_DISK
-> +	select LEDS_TRIGGER_DISK
->   	help
-> -	  This option makes the front LED default to the IDE trigger
-> -	  so that it blinks on IDE activity.
-> +	  This option makes the front LED default to the disk trigger
-> +	  so that it blinks on disk activity.
->
->   config PMAC_SMU
->   	bool "Support for SMU  based PowerMacs"
-> diff --git a/drivers/macintosh/via-pmu-led.c b/drivers/macintosh/via-=
-pmu-led.c
-> index 19c3718..ae067ab 100644
-> --- a/drivers/macintosh/via-pmu-led.c
-> +++ b/drivers/macintosh/via-pmu-led.c
-> @@ -73,8 +73,8 @@ static void pmu_led_set(struct led_classdev *led_cd=
-ev,
->
->   static struct led_classdev pmu_led =3D {
->   	.name =3D "pmu-led::front",
-> -#ifdef CONFIG_ADB_PMU_LED_IDE
-> -	.default_trigger =3D "ide-disk",
-> +#ifdef CONFIG_ADB_PMU_LED_DISK
-> +	.default_trigger =3D "disk-activity",
->   #endif
->   	.brightness_set =3D pmu_led_set,
->   };
->
+-- 
 
-
---=20
-Best regards,
-Jacek Anaszewski
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
