@@ -1,262 +1,78 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v4 1/1] leds: pca9532: Add device tree binding
-Date: Mon, 13 Jun 2016 10:25:12 +0200
-Message-ID: <575E6DE8.7030900@samsung.com>
-References: <1465549270-41601-1-git-send-email-preid@electromag.com.au>
- <1465549270-41601-2-git-send-email-preid@electromag.com.au>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/1] ARM: dts: sunxi: Fix simplefb not working in 4.7-rc1
+Date: Mon, 13 Jun 2016 10:30:57 +0200
+Message-ID: <1a9a0d76-5bbf-4b79-abee-1c9dd0436567@redhat.com>
+References: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
+ <20160609074643.GA5242@lukather>
+ <21258fc0-0250-951b-2ee7-d022fb3c09ac@redhat.com>
+ <20160613080124.GA4481@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1465549270-41601-2-git-send-email-preid@electromag.com.au>
-Sender: linux-leds-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160613080124.GA4481@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
+Hi,
 
-On 06/10/2016 11:01 AM, Phil Reid wrote:
-> This patch adds basic device tree support for the pca9532 LEDs.
+On 13-06-16 10:01, Maxime Ripard wrote:
+> On Thu, Jun 09, 2016 at 12:47:36PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 09-06-16 09:46, Maxime Ripard wrote:
+>>> Hi Hans,
+>>>
+>>> On Sat, Jun 04, 2016 at 08:05:23PM +0200, Hans de Goede wrote:
+>>>> Hi Maxime,
+>>>>
+>>>> While testing 4.7-rc1 / linux-sunxi/sunxi-next on a A10s I noticed that
+>>>> hdmi out is no longer working (screen goes black when the kernel turns
+>>>> of unused clocks).
+>>>>
+>>>> This is caused by the dtsi for sun4i / sun5i / sun7i based boards now
+>>>> listing pll3, without pll3 being added to the clocks list for the
+>>>> simplefb nodes.
+>>>
+>>> Why not do just that then? It's more appropriate for a fix imho.
+>>
+>> You mean just for sun5i-a10s, or for all of sun4i / sun5i-a10s and
+>> sun7i ?
+>>
+>> For sun4i and sun7i things are already fixed in next:
+>>
+>> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=5a7f2310cc847a73852e70bc720a61ca9bf986a6
+>> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=c79255ca4d7b67cce4eac4dd532e097ce49f3679
+>>
+>> It seems best to use those fixes, rather then come up with a separate
+>> fix for 4.7.
+>>
+>> My patch for fixing sun5i-a10s is inline with the 2 above patches,
+>> which seems best, rather then doing something special for just sun5i-a10s.
 >
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
->   .../devicetree/bindings/leds/leds-pca9532.txt      | 39 +++++++++++
->   drivers/leds/leds-pca9532.c                        | 75 ++++++++++++++++++++--
->   include/dt-bindings/leds/leds-pca9532.h            | 18 ++++++
->   include/linux/leds-pca9532.h                       |  9 ++-
->   4 files changed, 132 insertions(+), 9 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
->   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+> Well, you are doing something special for just the A10s: the patches
+> quoted above just add a bunch of clocks and add the handles to the
+> list of clocks managed by simplefb.
 >
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> new file mode 100644
-> index 0000000..198f3ba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> @@ -0,0 +1,39 @@
-> +*NXP - pca9532 PWM LED Driver
-> +
-> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
-> +The PWM support 256 steps.
-> +
-> +Required properties:
-> +	- compatible:
-> +		"nxp,pca9530"
-> +		"nxp,pca9531"
-> +		"nxp,pca9532"
-> +		"nxp,pca9533"
-> +	- reg -  I2C slave address
-> +
-> +Each led is represented as a sub-node of the nxp,pca9530.
-> +
-> +Optional sub-node properties:
-> +	- label: see Documentation/devicetree/bindings/leds/common.txt
-> +	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
-> +	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +  #include <dt-bindings/leds/leds-pca9532.h>
-> +
-> +  leds: pca9530@60 {
-> +    compatible = "nxp,pca9530";
-> +    reg = <0x60>;
-> +
-> +    red-power {
-> +      label = "pca:red:power";
-> +      type = <PCA9532_TYPE_LED>;
-> +    };
-> +    green-power {
-> +      label = "pca:green:power";
-> +      type = <PCA9532_TYPE_LED>;
-> +    };
-> +  };
-> +
-> +For more product information please see the link below:
-> +http://nxp.com/documents/data_sheet/PCA9532.pdf
-> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-> index e3d3b1a..502e88a 100644
-> --- a/drivers/leds/leds-pca9532.c
-> +++ b/drivers/leds/leds-pca9532.c
-> @@ -21,6 +21,8 @@
->   #include <linux/workqueue.h>
->   #include <linux/leds-pca9532.h>
->   #include <linux/gpio.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->
->   /* m =  num_leds*/
->   #define PCA9532_REG_INPUT(i)	((i) >> 3)
-> @@ -86,9 +88,22 @@ static const struct pca9532_chip_info pca9532_chip_info_tbl[] = {
->   	},
->   };
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id of_pca9532_leds_match[] = {
-> +	{ .compatible = "nxp,pca9530", .data = (void *)pca9530 },
-> +	{ .compatible = "nxp,pca9531", .data = (void *)pca9531 },
-> +	{ .compatible = "nxp,pca9532", .data = (void *)pca9532 },
-> +	{ .compatible = "nxp,pca9533", .data = (void *)pca9533 },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, of_pca9532_leds_match);
-> +#endif
-> +
->   static struct i2c_driver pca9532_driver = {
->   	.driver = {
->   		.name = "leds-pca953x",
-> +		.of_match_table = of_match_ptr(of_pca9532_leds_match),
->   	},
->   	.probe = pca9532_probe,
->   	.remove = pca9532_remove,
-> @@ -354,6 +369,7 @@ static int pca9532_configure(struct i2c_client *client,
->   			led->state = pled->state;
->   			led->name = pled->name;
->   			led->ldev.name = led->name;
-> +			led->ldev.default_trigger = led->default_trigger;
->   			led->ldev.brightness = LED_OFF;
->   			led->ldev.brightness_set_blocking =
->   						pca9532_set_brightness;
-> @@ -432,15 +448,66 @@ exit:
->   	return err;
->   }
->
-> +struct pca9532_platform_data *pca9532_of_populate_pdata(struct device *dev,
-> +						      struct device_node *np)
-> +{
-> +	struct pca9532_platform_data *pdata;
-> +	struct device_node *child;
-> +	const struct of_device_id *match;
-> +	int devid, maxleds;
-> +	int i = 0;
-> +
-> +	match = of_match_device(of_pca9532_leds_match, dev);
-> +	if (!match)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	devid = (int)match->data;
-> +	maxleds = pca9532_chip_info_tbl[devid].num_leds;
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	for_each_child_of_node(np, child) {
-> +		if (of_property_read_string(child, "label",
-> +					    &pdata->leds[i].name))
-> +			pdata->leds[i].name = child->name;
-> +		of_property_read_u32(child, "type", &pdata->leds[i].type);
-> +		of_property_read_string(child, "linux,default-trigger",
-> +					&pdata->leds[i].default_trigger);
-> +		if (++i >= maxleds) {
-> +			of_node_put(child);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return pdata;
-> +}
-> +
->   static int pca9532_probe(struct i2c_client *client,
->   	const struct i2c_device_id *id)
->   {
-> +	int devid;
->   	struct pca9532_data *data = i2c_get_clientdata(client);
->   	struct pca9532_platform_data *pca9532_pdata =
->   			dev_get_platdata(&client->dev);
-> -
-> -	if (!pca9532_pdata)
-> -		return -EIO;
-> +	struct device_node *np = client->dev.of_node;
-> +
-> +	if (!pca9532_pdata) {
-> +		if (np) {
-> +			pca9532_pdata =
-> +				pca9532_of_populate_pdata(&client->dev, np);
-> +			if (IS_ERR(pca9532_pdata))
-> +				return PTR_ERR(pca9532_pdata);
-> +		} else {
-> +			dev_err(&client->dev, "no platform data\n");
-> +			return -EINVAL;
-> +		}
-> +		devid = (int)of_match_device(
-> +			of_pca9532_leds_match, &client->dev)->data;
-> +	} else {
-> +		devid = id->driver_data;
-> +	}
->
->   	if (!i2c_check_functionality(client->adapter,
->   		I2C_FUNC_SMBUS_BYTE_DATA))
-> @@ -450,7 +517,7 @@ static int pca9532_probe(struct i2c_client *client,
->   	if (!data)
->   		return -ENOMEM;
->
-> -	data->chip_info = &pca9532_chip_info_tbl[id->driver_data];
-> +	data->chip_info = &pca9532_chip_info_tbl[devid];
->
->   	dev_info(&client->dev, "setting platform data\n");
->   	i2c_set_clientdata(client, data);
-> diff --git a/include/dt-bindings/leds/leds-pca9532.h b/include/dt-bindings/leds/leds-pca9532.h
-> new file mode 100644
-> index 0000000..4d917aa
-> --- /dev/null
-> +++ b/include/dt-bindings/leds/leds-pca9532.h
-> @@ -0,0 +1,18 @@
-> +/*
-> + * This header provides constants for pca9532 LED bindings.
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_LEDS_PCA9532_H
-> +#define _DT_BINDINGS_LEDS_PCA9532_H
-> +
-> +#define PCA9532_TYPE_NONE         0
-> +#define PCA9532_TYPE_LED          1
-> +#define PCA9532_TYPE_N2100_BEEP   2
-> +#define PCA9532_TYPE_GPIO         3
-> +#define PCA9532_LED_TIMER2        4
-> +
-> +#endif /* _DT_BINDINGS_LEDS_PCA9532_H */
-> diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
-> index b8d6fff..d215b45 100644
-> --- a/include/linux/leds-pca9532.h
-> +++ b/include/linux/leds-pca9532.h
-> @@ -16,6 +16,7 @@
->
->   #include <linux/leds.h>
->   #include <linux/workqueue.h>
-> +#include <dt-bindings/leds/leds-pca9532.h>
->
->   enum pca9532_state {
->   	PCA9532_OFF  = 0x0,
-> @@ -24,16 +25,14 @@ enum pca9532_state {
->   	PCA9532_PWM1 = 0x3
->   };
->
-> -enum pca9532_type { PCA9532_TYPE_NONE, PCA9532_TYPE_LED,
-> -	PCA9532_TYPE_N2100_BEEP, PCA9532_TYPE_GPIO };
-> -
->   struct pca9532_led {
->   	u8 id;
->   	struct i2c_client *client;
-> -	char *name;
-> +	const char *name;
-> +	const char *default_trigger;
->   	struct led_classdev ldev;
->   	struct work_struct work;
-> -	enum pca9532_type type;
-> +	u32 type;
->   	enum pca9532_state state;
->   };
->
->
+> For the A10s, you also declare the whole display engine block without
+> anyone having tested that it was actually working.
 
-Applied, thanks.
+A10s is the same SoC as A13 / R8, just in a different package / with
+different pins routed to the outside and it features a parallel LCD
+interface just like the A13 / R8. We've had this confirmed by
+Allwinner multiple times now, A13 / A10s / R8 literary are the same
+chip, there simply is no way the displayblock on the A10s somehow
+is magically different.
 
--- 
-Best regards,
-Jacek Anaszewski
+Given all this, clearly having this identical displayblock in the
+shared sun5i.dtsi is the right thing to do.
+
+Regards,
+
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
