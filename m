@@ -1,63 +1,384 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 03/11] Documentation: mmc: sdhci-of-arasan: Add soc-ctl-syscon for corecfg regs
-Date: Mon, 13 Jun 2016 11:32:18 +0200
-Message-ID: <1678454.YQFjtBiLV1@diego>
-References: <1465339484-969-1-git-send-email-dianders@chromium.org> <1465339484-969-4-git-send-email-dianders@chromium.org> <45a7e8c7-5bd4-8c40-004a-b8906eff881a@rock-chips.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: Add dts file for inet86dz board
+Date: Mon, 13 Jun 2016 11:35:15 +0200
+Message-ID: <f080dda9-6410-ec79-f083-29a20d147d61@redhat.com>
+References: <1465754150-16753-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v66cbx0jta1unrKeYm1t9JKO9Unw8z75rXbW3JSi2=NuMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <45a7e8c7-5bd4-8c40-004a-b8906eff881a-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <CAGb2v66cbx0jta1unrKeYm1t9JKO9Unw8z75rXbW3JSi2=NuMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 13. Juni 2016, 16:18:24 schrieb Shawn Lin:
-> On 2016/6/8 6:44, Douglas Anderson wrote:
-> > As can be seen in Arasan's datasheet [1] there are several "corecfg"
-> > settings in their SDHCI IP Block that are supposed to be controlled by
-> > software.  Although the datasheet referenced is a bit vague about how to
-> > access corecfg, in Figure 5 you can see that for Arasan's PHY (a
-> > separate component than their SDHCI component) they describe the
-> > "phyctrl" registers as being "FROM SOC CTL REG", implying that it's up
-> > to the licensee of the Arasan IP block to implement these registers.  It
-> > seems sane to assume that the "corecfg" registers in their SDHCI IP
-> > block works in a similar way for all licensees of the IP Block.
-> > 
-> > Device tree has a model that allows a device to get a reference to
-> > random registers located elsewhere in the SoC: sysctl.  Let's leverage
-> > this model and allow adding a sysctl reference to access the control
-> > registers for the Arasan SDHCI PHYs.
-> > 
-> > Having a reference to the control registers doesn't do much for us on
-> > its own since the Arasan spec doesn't specify how these corecfg values
-> > are laid out in memory.  In the SDHCI driver we'll need a map detailing
-> > where each corecfg can be found in each implementation.  This map can be
-> > found using the primary compatible string of the SDHCI device.  In that
-> > spirit, document that existing rk3399 device trees already have a
-> > specific compatible string, though up to now they've always been relying
-> > on the driver supporting the generic.
-> > 
-> > Note that since existing devices seem to work fairly well as-is, we'll
-> > list the syscon reference as "optional", but it's likely that we'll run
-> > into much fewer problems if we can actually set the proper values in the
-> > syscon, so it is strongly suggested that any SoCs where we have a map to
-> > set the corecfg also include a reference to the syscon.
-> 
-> yes, the interaction of phy and controller should be more explicitly
-> now. Why not make it mandatory for arasan,sdhci-5.1.
+Hi
 
-The omnipresent backwards-compatiblity :-) .
+On 13-06-16 05:16, Chen-Yu Tsai wrote:
+> Hi,
+>
+> On Mon, Jun 13, 2016 at 1:55 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> The inet86dz board is a board used in 7" tablets from various oems.
+>>
+>> These tablets are a23 based 7" tablets featuring a 1024x600 LCD,
+>> 512MB RAM, 4G NAND, rtl8188etv usb wifi, gsl1680 touchschreen,
+>> micro-sd slot, 3.5mm headphone jack and a micro-usb otg connector
+>> which doubles as charging port.
+>
+> This seems awfully similar to the sun8i-a23-q8-tablet, any reason
+> not to include that or sun8i-q8-common.dtsi?
 
-The binding did not require any of this in the past, so the driver should 
-always also work with devicetrees created according to this old binding.
+So to answer this both for this board and for the Polaroid MID2407PXE03
+one, these are not q8 tablets, they are not using the standard q8 casing
+at least. So using q8 for them would seem to be a bit confusing to users
+and figuring out how to do proper autodetect is already hard enough without
+throwing these into the mix too.
 
-And obviously it was working without that before as well, as Doug stated.
+OTOH you are right that there is a lot of code duplication here. Since I
+plan to start working on touchscreen autodetect soon-ish, let me see how
+that goes first.
+
+Maxime can you drop the Polaroid MID2407PXE03 patch for now ?
+
+Regards,
+
+Hans
 
 
-Heiko
 
+>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile               |   1 +
+>>  arch/arm/boot/dts/sun8i-a23-inet86dz.dts | 293 +++++++++++++++++++++++++++++++
+>>  2 files changed, 294 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun8i-a23-inet86dz.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 8223602..1ff5434 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -751,6 +751,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>>  dtb-$(CONFIG_MACH_SUN8I) += \
+>>         sun8i-a23-evb.dtb \
+>>         sun8i-a23-gt90h-v4.dtb \
+>> +       sun8i-a23-inet86dz.dtb \
+>>         sun8i-a23-ippo-q8h-v5.dtb \
+>>         sun8i-a23-ippo-q8h-v1.2.dtb \
+>>         sun8i-a23-polaroid-mid2407pxe03.dtb \
+>> diff --git a/arch/arm/boot/dts/sun8i-a23-inet86dz.dts b/arch/arm/boot/dts/sun8i-a23-inet86dz.dts
+>> new file mode 100644
+>> index 0000000..0405258
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-a23-inet86dz.dts
+>> @@ -0,0 +1,293 @@
+>> +/*
+>> + * Copyright 2016 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun8i-a23.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>> +#include <dt-bindings/pwm/pwm.h>
+>> +
+>> +/ {
+>> +       model = "INet-86DZ Rev 01";
+>> +       compatible = "primux,inet86dz", "allwinner,sun8i-a23";
+>> +
+>> +       aliases {
+>> +               serial0 = &r_uart;
+>> +       };
+>> +
+>> +       backlight: backlight {
+>> +               compatible = "pwm-backlight";
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&bl_en_pin_inet86dz>;
+>> +               pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+>> +               brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+>> +               default-brightness-level = <8>;
+>> +               enable-gpios = <&pio 7 6 GPIO_ACTIVE_HIGH>; /* PH6 */
+>> +       };
+>> +
+>> +       chosen {
+>> +               stdout-path = "serial0:115200n8";
+>> +       };
+>> +};
+>> +
+>> +&ehci0 {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&i2c0 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&i2c0_pins_a>;
+>> +       status = "okay";
+>> +       /*
+>> +        * The gsl1680 is rated at 400KHz and it will not work reliable at
+>> +        * 100KHz, this has been confirmed on multiple different tablets.
+>> +        * The gsl1680 is the only device on this bus.
+>> +        */
+>> +       clock-frequency = <400000>;
+>> +
+>> +       gsl1680: touchscreen@40 {
+>> +               compatible = "silead,gsl1680";
+>
+> Do we already have a driver for this? I don't see one in linux-next.
+>
+>> +               reg = <0x40>;
+>> +               interrupt-parent = <&pio>;
+>> +               interrupts = <1 5 IRQ_TYPE_EDGE_FALLING>; /* PB5 */
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&ts_power_pin_inet86dz>;
+>> +               power-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+>> +               touchscreen-size-x = <960>;
+>> +               touchscreen-size-y = <640>;
+>> +               touchscreen-max-fingers = <5>;
+>> +               touchscreen-fw-name = "silead/gsl1680-inet86dz.fw";
+>> +       };
+>> +};
+>> +
+>> +&i2c1 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&i2c1_pins_a>;
+>> +       status = "okay";
+>> +};
+>> +
+>> +&lradc {
+>> +       vref-supply = <&reg_vcc3v0>;
+>> +       status = "okay";
+>> +
+>> +       button@200 {
+>> +               label = "Volume Up";
+>> +               linux,code = <KEY_VOLUMEUP>;
+>> +               channel = <0>;
+>> +               voltage = <200000>;
+>> +       };
+>> +
+>> +       button@400 {
+>> +               label = "Volume Down";
+>> +               linux,code = <KEY_VOLUMEDOWN>;
+>> +               channel = <0>;
+>> +               voltage = <400000>;
+>> +       };
+>> +};
+>> +
+>> +&mmc0 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_inet86dz>;
+>> +       vmmc-supply = <&reg_dcdc1>;
+>> +       bus-width = <4>;
+>> +       cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+>> +       cd-inverted;
+>> +       status = "okay";
+>> +};
+>> +
+>> +&pio {
+>> +       bl_en_pin_inet86dz: bl_en_pin@0 {
+>> +               allwinner,pins = "PH6";
+>> +               allwinner,function = "gpio_in";
+>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +       };
+>> +
+>> +       mmc0_cd_pin_inet86dz: mmc0_cd_pin@0 {
+>> +               allwinner,pins = "PB4";
+>> +               allwinner,function = "gpio_in";
+>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>> +       };
+>> +
+>> +       ts_power_pin_inet86dz: ts_power_pin@0 {
+>> +               allwinner,pins = "PH1";
+>> +               allwinner,function = "gpio_out";
+>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +       };
+>> +
+>> +       usb0_id_detect_pin: usb0_id_detect_pin@0 {
+>> +               allwinner,pins = "PH8";
+>> +               allwinner,function = "gpio_in";
+>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>> +       };
+>> +};
+>> +
+>> +&pwm {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pwm0_pins>;
+>> +       status = "okay";
+>> +};
+>> +
+>> +&r_rsb {
+>> +       status = "okay";
+>> +
+>> +       axp22x: pmic@3a3 {
+>> +               compatible = "x-powers,axp223";
+>> +               reg = <0x3a3>;
+>> +               interrupt-parent = <&nmi_intc>;
+>> +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> +               eldoin-supply = <&reg_dcdc1>;
+>
+> Adding a drivevbus-supply referencing vcc_5v0 so it doesn't
+> show 0V would be nice.
+>
+> ChenYu
+>
+>> +               x-powers,drive-vbus-en;
+>> +       };
+>> +};
+>> +
+>> +&r_uart {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&r_uart_pins_a>;
+>> +       status = "okay";
+>> +};
+>> +
+>> +#include "axp22x.dtsi"
+>> +
+>> +&reg_aldo1 {
+>> +       regulator-always-on;
+>> +       regulator-min-microvolt = <3000000>;
+>> +       regulator-max-microvolt = <3000000>;
+>> +       regulator-name = "vcc-io";
+>> +};
+>> +
+>> +&reg_aldo2 {
+>> +       regulator-always-on;
+>> +       regulator-min-microvolt = <2350000>;
+>> +       regulator-max-microvolt = <2650000>;
+>> +       regulator-name = "vdd-dll";
+>> +};
+>> +
+>> +&reg_aldo3 {
+>> +       regulator-always-on;
+>> +       regulator-min-microvolt = <2700000>;
+>> +       regulator-max-microvolt = <3300000>;
+>> +       regulator-name = "vcc-pll-avcc";
+>> +};
+>> +
+>> +&reg_dc1sw {
+>> +       regulator-name = "vcc-lcd";
+>> +};
+>> +
+>> +&reg_dc5ldo {
+>> +       regulator-always-on;
+>> +       regulator-min-microvolt = <900000>;
+>> +       regulator-max-microvolt = <1400000>;
+>> +       regulator-name = "vdd-cpus";
+>> +};
+>> +
+>> +&reg_dcdc1 {
+>> +       regulator-always-on;
+>> +       regulator-min-microvolt = <3000000>;
+>> +       regulator-max-microvolt = <3000000>;
+>> +       regulator-name = "vcc-3v0";
+>> +};
+>> +
+>> +&reg_dcdc2 {
+>> +       regulator-always-on;
+>> +       regulator-min-microvolt = <900000>;
+>> +       regulator-max-microvolt = <1400000>;
+>> +       regulator-name = "vdd-sys";
+>> +};
+>> +
+>> +&reg_dcdc3 {
+>> +       regulator-always-on;
+>> +       regulator-min-microvolt = <900000>;
+>> +       regulator-max-microvolt = <1400000>;
+>> +       regulator-name = "vdd-cpu";
+>> +};
+>> +
+>> +&reg_dcdc5 {
+>> +       regulator-always-on;
+>> +       regulator-min-microvolt = <1500000>;
+>> +       regulator-max-microvolt = <1500000>;
+>> +       regulator-name = "vcc-dram";
+>> +};
+>> +
+>> +&reg_dldo1 {
+>> +       regulator-min-microvolt = <3300000>;
+>> +       regulator-max-microvolt = <3300000>;
+>> +       regulator-name = "vcc-wifi";
+>> +};
+>> +
+>> +&reg_drivevbus {
+>> +       regulator-name = "usb0-vbus";
+>> +       status = "okay";
+>> +};
+>> +
+>> +&reg_rtc_ldo {
+>> +       regulator-name = "vcc-rtc";
+>> +};
+>> +
+>> +&simplefb_lcd {
+>> +       vcc-lcd-supply = <&reg_dc1sw>;
+>> +};
+>> +
+>> +&usb_otg {
+>> +       dr_mode = "otg";
+>> +       status = "okay";
+>> +};
+>> +
+>> +&usb_power_supply {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&usbphy {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&usb0_id_detect_pin>;
+>> +       usb0_id_det-gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
+>> +       usb0_vbus_power-supply = <&usb_power_supply>;
+>> +       usb0_vbus-supply = <&reg_drivevbus>;
+>> +       usb1_vbus-supply = <&reg_dldo1>;
+>> +       status = "okay";
+>> +};
+>> --
+>> 2.7.4
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
