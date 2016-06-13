@@ -1,165 +1,63 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 4/6] ARM: dts: sun8i-a?3-q8-tablet.dts: Add full otg
- support
-Date: Mon, 13 Jun 2016 11:32:32 +0200
-Message-ID: <4b407a13-0c65-10ca-6379-b66125ac89e7@redhat.com>
-References: <1465653186-953-1-git-send-email-hdegoede@redhat.com>
- <1465653186-953-5-git-send-email-hdegoede@redhat.com>
- <CAGb2v67+56hd6b+mZLNpMHPRGu3Fp9j-zJLNS2MkUmy2N_Lmdw@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 03/11] Documentation: mmc: sdhci-of-arasan: Add soc-ctl-syscon for corecfg regs
+Date: Mon, 13 Jun 2016 11:32:18 +0200
+Message-ID: <1678454.YQFjtBiLV1@diego>
+References: <1465339484-969-1-git-send-email-dianders@chromium.org> <1465339484-969-4-git-send-email-dianders@chromium.org> <45a7e8c7-5bd4-8c40-004a-b8906eff881a@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v67+56hd6b+mZLNpMHPRGu3Fp9j-zJLNS2MkUmy2N_Lmdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <45a7e8c7-5bd4-8c40-004a-b8906eff881a-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Am Montag, 13. Juni 2016, 16:18:24 schrieb Shawn Lin:
+> On 2016/6/8 6:44, Douglas Anderson wrote:
+> > As can be seen in Arasan's datasheet [1] there are several "corecfg"
+> > settings in their SDHCI IP Block that are supposed to be controlled by
+> > software.  Although the datasheet referenced is a bit vague about how to
+> > access corecfg, in Figure 5 you can see that for Arasan's PHY (a
+> > separate component than their SDHCI component) they describe the
+> > "phyctrl" registers as being "FROM SOC CTL REG", implying that it's up
+> > to the licensee of the Arasan IP block to implement these registers.  It
+> > seems sane to assume that the "corecfg" registers in their SDHCI IP
+> > block works in a similar way for all licensees of the IP Block.
+> > 
+> > Device tree has a model that allows a device to get a reference to
+> > random registers located elsewhere in the SoC: sysctl.  Let's leverage
+> > this model and allow adding a sysctl reference to access the control
+> > registers for the Arasan SDHCI PHYs.
+> > 
+> > Having a reference to the control registers doesn't do much for us on
+> > its own since the Arasan spec doesn't specify how these corecfg values
+> > are laid out in memory.  In the SDHCI driver we'll need a map detailing
+> > where each corecfg can be found in each implementation.  This map can be
+> > found using the primary compatible string of the SDHCI device.  In that
+> > spirit, document that existing rk3399 device trees already have a
+> > specific compatible string, though up to now they've always been relying
+> > on the driver supporting the generic.
+> > 
+> > Note that since existing devices seem to work fairly well as-is, we'll
+> > list the syscon reference as "optional", but it's likely that we'll run
+> > into much fewer problems if we can actually set the proper values in the
+> > syscon, so it is strongly suggested that any SoCs where we have a map to
+> > set the corecfg also include a reference to the syscon.
+> 
+> yes, the interaction of phy and controller should be more explicitly
+> now. Why not make it mandatory for arasan,sdhci-5.1.
 
-On 13-06-16 05:19, Chen-Yu Tsai wrote:
-> Hi,
->
-> On Sat, Jun 11, 2016 at 9:53 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Now that we've all the necessary bits in place we can enable
->> full otg support on these tablets.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun8i-a23-q8-tablet.dts | 15 ---------------
->>  arch/arm/boot/dts/sun8i-a33-q8-tablet.dts | 15 ---------------
->>  arch/arm/boot/dts/sun8i-q8-common.dtsi    | 31 +++++++++++++++++++++++++++++++
->>  3 files changed, 31 insertions(+), 30 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts b/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts
->> index 6062ea7..956320a 100644
->> --- a/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts
->> +++ b/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts
->> @@ -48,18 +48,3 @@
->>         model = "Q8 A23 Tablet";
->>         compatible = "allwinner,q8-a23", "allwinner,sun8i-a23";
->>  };
->> -
->> -/*
->> - * FIXME for now we only support host mode and rely on u-boot to have
->> - * turned on Vbus which is controlled by the axp223 pmic on the board.
->> - *
->> - * Once we have axp223 support we should switch to fully supporting otg.
->> - */
->> -&usb_otg {
->> -       dr_mode = "host";
->> -       status = "okay";
->> -};
->> -
->> -&usbphy {
->> -       status = "okay";
->> -};
->> diff --git a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
->> index 44b3229..b0bc236 100644
->> --- a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
->> +++ b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
->> @@ -48,18 +48,3 @@
->>         model = "Q8 A33 Tablet";
->>         compatible = "allwinner,q8-a33", "allwinner,sun8i-a33";
->>  };
->> -
->> -/*
->> - * FIXME for now we only support host mode and rely on u-boot to have
->> - * turned on Vbus which is controlled by the axp223 pmic on the board.
->> - *
->> - * Once we have axp223 support we should switch to fully supporting otg.
->> - */
->> -&usb_otg {
->> -       dr_mode = "host";
->> -       status = "okay";
->> -};
->> -
->> -&usbphy {
->> -       status = "okay";
->> -};
->> diff --git a/arch/arm/boot/dts/sun8i-q8-common.dtsi b/arch/arm/boot/dts/sun8i-q8-common.dtsi
->> index 346a49d..991087f 100644
->> --- a/arch/arm/boot/dts/sun8i-q8-common.dtsi
->> +++ b/arch/arm/boot/dts/sun8i-q8-common.dtsi
->> @@ -87,6 +87,13 @@
->>                 allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>                 allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>         };
->> +
->> +       usb0_id_detect_pin: usb0_id_detect_pin@0 {
->> +               allwinner,pins = "PH8";
->> +               allwinner,function = "gpio_in";
->> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->> +       };
->>  };
->>
->>  &r_rsb {
->> @@ -98,6 +105,7 @@
->>                 interrupt-parent = <&nmi_intc>;
->>                 interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->>                 eldoin-supply = <&reg_dcdc1>;
->> +               x-powers,drive-vbus-en;
->>         };
->>  };
->>
->> @@ -163,6 +171,11 @@
->>         regulator-name = "vcc-dram";
->>  };
->>
->> +&reg_drivevbus {
->> +       regulator-name = "usb0-vbus";
->> +       status = "okay";
->
-> Adding a drivevbus-supply referencing vcc_5v0 (in the axp node) so
-> it doesn't show 0V would be nice.
+The omnipresent backwards-compatiblity :-) .
 
-Ack, given that you've just asked for this with a number of boards,
-I think that this belongs in axp22x.dtsi. I'll prepare a follow-up patch for
-this.
+The binding did not require any of this in the past, so the driver should 
+always also work with devicetrees created according to this old binding.
 
-Regards,
-
-Hans
+And obviously it was working without that before as well, as Doug stated.
 
 
+Heiko
 
->
-> Sorry for the late reply. I was out on vacation for a few days.
->
-> ChenYu
->
->> +};
->> +
->>  &reg_rtc_ldo {
->>         regulator-name = "vcc-rtc";
->>  };
->> @@ -176,3 +189,21 @@
->>  &simplefb_lcd {
->>         vcc-lcd-supply = <&reg_dc1sw>;
->>  };
->> +
->> +&usb_otg {
->> +       dr_mode = "otg";
->> +       status = "okay";
->> +};
->> +
->> +&usb_power_supply {
->> +       status = "okay";
->> +};
->> +
->> +&usbphy {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&usb0_id_detect_pin>;
->> +       usb0_id_det-gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
->> +       usb0_vbus_power-supply = <&usb_power_supply>;
->> +       usb0_vbus-supply = <&reg_drivevbus>;
->> +       status = "okay";
->> +};
->> --
->> 2.7.4
->>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
