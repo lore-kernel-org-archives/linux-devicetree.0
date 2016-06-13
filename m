@@ -1,71 +1,43 @@
-From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
-        <noltari@gmail.com>
-Subject: [PATCH 3/6] MIPS: BMIPS: Add BCM3368 support
-Date: Mon, 13 Jun 2016 09:38:51 +0200
-Message-ID: <1465803534-25840-3-git-send-email-noltari@gmail.com>
-References: <1465803534-25840-1-git-send-email-noltari@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 5/7] ARM: OMAP: dmtimer: Do not call PM runtime functions
+ when not needed.
+Date: Mon, 13 Jun 2016 00:39:59 -0700
+Message-ID: <20160613073958.GR22406@atomide.com>
+References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1462634508-24961-6-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <20160509193624.GH5995@atomide.com>
+ <5730F840.3050807@gmail.com>
+ <20160610102225.GS22406@atomide.com>
+ <575B2F48.4090707@gmail.com>
+ <20160613071057.GQ22406@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1465803534-25840-1-git-send-email-noltari@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ralf@linux-mips.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com, robh@kernel.org, simon@fire.lp0.eu
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160613071057.GQ22406@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, sre@kernel.org, pali.rohar@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-BCM3368 has a shared TLB which conflicts with current SMP support, so i=
-t must
-be disabled for now.
+* Tony Lindgren <tony@atomide.com> [160613 00:10]:
+> * Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com> [160610 14:23]:
+> > 
+> > On 10.06.2016 13:22, Tony Lindgren wrote:
+> > > 
+> > > OK. And I just applied the related dts changes. Please repost the driver
+> > > changes and DT binding doc with Rob's ack to the driver maintainers to
+> > > apply.
+> > > 
+> > 
+> > Already did, see https://lkml.org/lkml/2016/5/16/429
+> > 
+> > Shall I do anything else?
+> 
+> Probably good idea to repost just the driver changes to the
+> subsystem maintainers. With v4.7 out any pre v4.7 patchsets
+> easily get forgotten.
 
-Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
----
- Documentation/devicetree/bindings/mips/brcm/soc.txt | 2 +-
- arch/mips/bmips/setup.c                             | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Heh s/v4.7/v4.6/ :)
 
-diff --git a/Documentation/devicetree/bindings/mips/brcm/soc.txt b/Docu=
-mentation/devicetree/bindings/mips/brcm/soc.txt
-index 4a7e030..65bc572 100644
---- a/Documentation/devicetree/bindings/mips/brcm/soc.txt
-+++ b/Documentation/devicetree/bindings/mips/brcm/soc.txt
-@@ -2,7 +2,7 @@
-=20
- Required properties:
-=20
--- compatible: "brcm,bcm3384", "brcm,bcm33843"
-+- compatible: "brcm,bcm3368", "brcm,bcm3384", "brcm,bcm33843"
-               "brcm,bcm3384-viper", "brcm,bcm33843-viper"
-               "brcm,bcm6328", "brcm,bcm6358", "brcm,bcm6368",
-               "brcm,bcm63168", "brcm,bcm63268",
-diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-index f146d12..4fbd2f1 100644
---- a/arch/mips/bmips/setup.c
-+++ b/arch/mips/bmips/setup.c
-@@ -98,7 +98,7 @@ static void bcm6328_quirks(void)
- static void bcm6358_quirks(void)
- {
- 	/*
--	 * BCM6358 needs special handling for its shared TLB, so
-+	 * BCM3368/BCM6358 need special handling for their shared TLB, so
- 	 * disable SMP for now
- 	 */
- 	bmips_smp_enabled =3D 0;
-@@ -110,6 +110,7 @@ static void bcm6368_quirks(void)
- }
-=20
- static const struct bmips_quirk bmips_quirk_list[] =3D {
-+	{ "brcm,bcm3368",		&bcm6358_quirks			},
- 	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
- 	{ "brcm,bcm33843-viper",	&bcm3384_viper_quirks		},
- 	{ "brcm,bcm6328",		&bcm6328_quirks			},
---=20
-2.1.4
+Tony
