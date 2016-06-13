@@ -1,66 +1,77 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [[RESEND][PATCH v2] 1/2] dt-bindings: Add jdi panel vendor
-Date: Mon, 13 Jun 2016 13:46:23 +0200
-Message-ID: <20160613114623.GD27930@ulmo.ba.sec>
-References: <1465750286-4305-1-git-send-email-simhavcs@gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
+Date: Mon, 13 Jun 2016 13:48:33 +0200
+Message-ID: <CAMuHMdWbkdaDZPfwe7r0=bDbF-RcvddihAJi4VFGonqUnuvTkw@mail.gmail.com>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2539026.OyU5nvpxa6@wasted.cogentembedded.com> <20160601005751.GG20527@verge.net.au>
+ <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com> <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
+ <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com> <20160610010245.GA10152@verge.net.au>
+ <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com> <CAMuHMdUK=y2kZY1kA97QpCDyUZXFejpXTpO9ZVNQoBfDNoRgfg@mail.gmail.com>
+ <1b9a4cf4-1101-ccbf-772b-49b8a689a1b6@cogentembedded.com> <CAMuHMdV6f5ZzPxySzCgi7L+Sr1_4Ph1sLLyQ_j-sJ0tmBOvrHg@mail.gmail.com>
+ <7d93d81d-cca9-e434-6488-0ea839f81663@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0/kgSOzhNoDC5T3a"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465750286-4305-1-git-send-email-simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <7d93d81d-cca9-e434-6488-0ea839f81663-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Archit Taneja <archit.taneja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sergei,
 
---0/kgSOzhNoDC5T3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jun 13, 2016 at 1:24 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> On 6/13/2016 10:12 AM, Geert Uytterhoeven wrote:
+>>>>>    The only problem I'm seeing (again) is the RCAN clock failing to
+>>>>> register:
+>>>>>
+>>>>> rcar_gen2_cpg_clocks_init: failed to register cpg_clocks rcan clock
+>>>>> (-12)
+>>>>>
+>>>>>    I was going to look at it yesterday but (wrongly) thought it somehow
+>>>>> cured itself... I'll look at it now.
+>>>>
+>>>>
+>>>> The RCAN parent is the second clock in the CPG node's "clocks" property,
+>>>> which you didn't provide.
+>>>
+>>>
+>>>    Actually, the things are more complex. The figure 7.1c suggests that
+>>> the
+>>> RCAN clock has different parent on R8A7792 than on the other SoCs --
+>>> namely
+>>> PLL1/VCO 1/4. That may be, since there's just no USB_EXTAL signal on this
+>>> SoC (it doesn't seem to support any USB IPs). Which means the
+>>> 'clk-rcar-gen2' driver can't work with the RCAN clock in its current
+>>> form.
+>>
+>> Right, I had forgotten about that.
+>> Fortunately the clk-rcar-gen2 driver has a sane failure mode for this case
+>> ;-)
+>
+>    What do you mean?
 
-On Sun, Jun 12, 2016 at 10:21:23PM +0530, Vinay Simha BN wrote:
-> Japan Display Inc.
->=20
-> Cc: Archit Taneja <archit.taneja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+I mean that it failed due to the missing parent clock, instead of continuing
+silently with a wrong clock rate.
 
-Applied with a modified subject and commit message. Please also be
-careful not to mangle the subject line in the future, since git am was
-not stripping the outer [] from the subject.
+>> it seems the RCAN clock can just be modeled as a fixed clock. However,
+>> its divider value isn't clear to me,
+>
+>    IIRC, the fixed RCAN divisor was equal to 6.
 
-Thierry
+1560 / 6 != 15.9.
 
---0/kgSOzhNoDC5T3a
-Content-Type: application/pgp-signature; name="signature.asc"
+Gr{oetje,eeting}s,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+                        Geert
 
-iQIcBAABCAAGBQJXXp0OAAoJEN0jrNd/PrOhMN4P+gLNARWvosu2imJlB6WbygDE
-PclSjZ30jtHDGmN3Zhun3yM6OhPl9PPIcLaVTyRqz2rJ/po/0juiZ0aU2OXHyn59
-o2Na/P4laTsc628JHrVKyDSnzHWULZr7JjvasbLJ8h7Mo8lfBkUywILtsYErYo3m
-y4XtL8onoIMp7bLfHhSjyrZemTPxLNrbr7EqJRi4/tMWO3f+jvjl3L609QtvEsqo
-4Z/j3kYAlcUyckK82il5b6/mffWCuo6st1U1vadEPHLJPkQRsRpyMpRImNltSQLA
-CU4AjIdqO2gZSDByN4E1ZQfL1kQa9nBgBJs4juTLO2gUC7hVHpDFGyuN4Pe2IrNZ
-dPJwwK0OL1BOo2h+WKfm/4OzPU9frXOOLDxTxWmI5LQvYUguLd/VAGE9cHr/ohj4
-ERyfVylShArI9Q2W05j7f9tqvYLIlt4yeEA9i3dTW8eUsuTd5Vu3OwiOTHuPBPat
-kCT4EQ7uK8ajyLcB/xRd5a5WxP1/VTu0uEvNExoS63PVIrsZBxI/0mP241Ho9ZGa
-WaUhL5gR7FrBhvk97Iuvplcdqdra38i+HKMBX5W8o0kflZPhGU0wbp/QkcW6P2XY
-acb61SnguCfN4DCKxo03raU74fN9EjwinZHAoUc9hpU3Kr7F92vSGyTvY9tlp3tV
-7Bp1p2245YTU/wBSdGBz
-=zAUc
------END PGP SIGNATURE-----
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
---0/kgSOzhNoDC5T3a--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
