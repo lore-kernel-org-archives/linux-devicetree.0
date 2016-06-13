@@ -1,69 +1,51 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH RFC 6/6] ASoC: samsung: Add DT bindings documentation for TM2
- sound subsystem
-Date: Mon, 13 Jun 2016 12:52:40 +0200
-Message-ID: <1465815160-28504-7-git-send-email-s.nawrocki@samsung.com>
-References: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, linux-samsung-soc@vger.kernel.org, ideal.song@samsung.com, beomho.seo@samsung.com, inki.dae@samsung.com, k.kozlowski@samsung.com, b.zolnierkie@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6: tag boards that have the HW
+ workaround for ERR006687
+Date: Mon, 13 Jun 2016 13:03:18 +0200
+Message-ID: <1465815798.2313.13.camel@pengutronix.de>
+References: <1464794983-31484-1-git-send-email-l.stach@pengutronix.de>
+	 <1464794983-31484-3-git-send-email-l.stach@pengutronix.de>
+	 <20160601161729.GB19428@n2100.arm.linux.org.uk>
+	 <1464855906.9501.1.camel@pengutronix.de>
+	 <20160607124650.1e69c658@jclayton-pc>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160607124650.1e69c658@jclayton-pc>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding documentation for Exnos5433 based TM2
-and TM2E boards sound subsystem.
+Am Dienstag, den 07.06.2016, 12:46 -0700 schrieb Joshua Clayton:
+> On Thu, 02 Jun 2016 10:25:06 +0200
+> Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> 
+> > Am Mittwoch, den 01.06.2016, 17:17 +0100 schrieb Russell King - ARM
+> > Linux:
+> > > On Wed, Jun 01, 2016 at 05:29:43PM +0200, Lucas Stach wrote:  
+> > > > @@ -97,6 +97,7 @@
+> > > >  	phy-reset-gpios = <&gpio3 31 0>;
+> > > >  	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+> > > >  			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+> > > > +	fsl,err006687-war-present;  
+> > > 
+> 
+> Why can't we just have the quirk detect the interrupts-extended
+> property, which is not present on boards without the workaround.
+> Wouldn't that be better? No dts change needed.
+> 
+I pondered that idea too, but have gone with the solution presented in
+this patch series as it's more explicit and - with far more weight to it
+- does not require the driver to touch DT properties that are outside of
+its domain of responsibility. The "interrupts-extended" properties are
+not meant to be parsed by the driver, but rather the IRQ subsystem.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- .../bindings/sound/samsung,tm2-wm5110.txt          | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-wm5110.txt
+Regards,
+Lucas
 
-diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-wm5110.txt b/Documentation/devicetree/bindings/sound/samsung,tm2-wm5110.txt
-new file mode 100644
-index 0000000..32f69fcc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/samsung,tm2-wm5110.txt
-@@ -0,0 +1,39 @@
-+Samsung Exynos5433 TM2(E) audio complex with WM5110 codec
-+
-+Required properties:
-+
-+ - compatible : "samsung,tm2-audio"
-+ - samsung,model : the user-visible name of this sound complex
-+ - clocks : must contain an entry for each entry in clock-names,
-+   see ../clocks/clock-bindings.txt for details
-+ - clock-names : must include the following entries:
-+   "mclk1", "mclk2"
-+ - samsung,i2s-controller : the phandle of the I2S controller
-+ - samsung,speaker-amplifier : the phandle of the MAX98504 amplifier
-+ - samsung,audio-routing : a list of the connections between audio
-+   components;  each entry is a pair of strings, the first being the
-+   connection's sink, the second being the connection's source;
-+   valid names for sources and sinks are the WM5110's and MAX98504's
-+   pins and the jacks on the board:
-+   HP, SPK, Main Mic, Sub Mic, Third Mic, Headset Mic.
-+ - mic-bias-gpios : GPIO pin that enables the Main Mic bias regulator
-+
-+Example:
-+
-+sound {
-+	compatible = "samsung,tm2-audio";
-+	clocks = <&pmu_system_controller 0>, <&s2mps13_osc 2>;
-+	clock-names = "mclk1", "mclk2";
-+	samsung,i2s-controller = <&i2s0>;
-+	samsung,speaker-amplifier = <&max98504>;
-+	samsung,model = "wm5110";
-+	mic-bias-gpios = <&gpr3 2 0>;
-+	samsung,audio-routing =
-+		"HP", "HPOUT1L",
-+		"HP", "HPOUT1R",
-+		"SPK", "SPKOUT",
-+		"SPKOUT", "HPOUT2L",
-+		"SPKOUT", "HPOUT2R",
-+		"Main Mic", "MICBIAS2",
-+		"IN1R", "Main Mic";
-+};
--- 
-1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
