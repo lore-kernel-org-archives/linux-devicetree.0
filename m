@@ -1,99 +1,64 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V6 2/9] genirq: Look-up trigger type if not specified by
- caller
-Date: Mon, 13 Jun 2016 12:59:57 +0100
-Message-ID: <575EA03D.5070706@arm.com>
-References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
- <1465312354-27778-3-git-send-email-jonathanh@nvidia.com>
- <575E8E29.3090808@arm.com> <575E9457.8010100@nvidia.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Update Renesas R-Car FCP DT binding
+Date: Mon, 13 Jun 2016 15:17:41 +0300
+Message-ID: <2159488.zJIIWenpjG@avalon>
+References: <1465479695-18644-1-git-send-email-kieran@bingham.xyz> <1465479695-18644-2-git-send-email-kieran@bingham.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <575E9457.8010100-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1465479695-18644-2-git-send-email-kieran-SI8QzZ7I9JUn3X9lZQuFcg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/06/16 12:09, Jon Hunter wrote:
+Hi Kieran,
+
+Thank you for the patch.
+
+On Thursday 09 Jun 2016 14:41:32 Kieran Bingham wrote:
+> The FCP driver, can also support the FCPF variant for FDP1 compatible
+> processing.
+
+With the comma dropped,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> Signed-off-by: Kieran Bingham <kieran-SI8QzZ7I9JUn3X9lZQuFcg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/media/renesas,fcp.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> On 13/06/16 11:42, Marc Zyngier wrote:
->> On 07/06/16 16:12, Jon Hunter wrote:
->>> For some devices the IRQ trigger type for a device is read from
->>> firmware, such as device-tree. The IRQ trigger type is typically read
->>> when the mapping for IRQ is created, which is before the IRQ is
->>> requested. Hence, the IRQ trigger type is programmed when mapping the
->>> IRQ and not when requesting the IRQ.
->>>
->>> Although this works for most cases, in order to support IRQ chips which
->>> require runtime power management, which may not be accessible prior
->>> to requesting the IRQ, it is desirable to look-up the IRQ trigger type
->>> when it is requested. Therefore, if the IRQ trigger type is not
->>> specified when __setup_irq() is called, look-up the saved IRQ trigger
->>> type. This will allow us to defer the programming of the trigger type
->>> from when the IRQ is mapped to when it is actually requested.
->>>
->>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>  kernel/irq/manage.c | 7 +++++++
->>>  1 file changed, 7 insertions(+)
->>>
->>> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
->>> index ef0bc02c3a70..eaedeb74b49d 100644
->>> --- a/kernel/irq/manage.c
->>> +++ b/kernel/irq/manage.c
->>> @@ -1117,6 +1117,13 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
->>>  	new->irq = irq;
->>>  
->>>  	/*
->>> +	 * If the trigger type is not specified by the caller,
->>> +	 * then use the default for this interrupt.
->>> +	 */
->>> +	if (!(new->flags & IRQF_TRIGGER_MASK))
->>> +		new->flags |= irqd_get_trigger_type(&desc->irq_data);
->>> +
->>> +	/*
->>>  	 * Check whether the interrupt nests into another interrupt
->>>  	 * thread.
->>>  	 */
->>>
->>
->> I've added the following patch to the queue, in order to deal with
->> percpu interrupts that were not handled by this patch:
->>
->> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
->> index f8fd1fb..00cfc85 100644
->> --- a/kernel/irq/manage.c
->> +++ b/kernel/irq/manage.c
->> @@ -1751,7 +1751,14 @@ void enable_percpu_irq(unsigned int irq, unsigned int type)
->>  	if (!desc)
->>  		return;
->>  
->> +	/*
->> +	 * If the trigger type is not specified by the caller, then
->> +	 * use the default for this interrupt.
->> +	 */
->>  	type &= IRQ_TYPE_SENSE_MASK;
->> +	if (type == IRQ_TYPE_NONE)
->> +		type = irqd_get_trigger_type(&desc->irq_data);
->> +
+> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> b/Documentation/devicetree/bindings/media/renesas,fcp.txt index
+> 6a12960609d8..271dcfdb5a76 100644
+> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> @@ -7,12 +7,14 @@ conversion of AXI transactions in order to reduce the
+> memory bandwidth.
 > 
-> I am wondering if you need this here because now __setup_irq(), called
-> by request_percpu_irq(), will actually look-up the saved type even for a
-> percpu-irq. So shouldn't this already be handled? Or am I missing something?
+>  There are three types of FCP: FCP for Codec (FCPC), FCP for VSP (FCPV) and
+> FCP for FDP (FCPF). Their configuration and behaviour depend on the module
+> they -are paired with. These DT bindings currently support the FCPV only.
+> +are paired with. These DT bindings currently support the FCPV and FCPF.
+> 
+>   - compatible: Must be one or more of the following
+> 
+>     - "renesas,r8a7795-fcpv" for R8A7795 (R-Car H3) compatible 'FCP for VSP'
+> +   - "renesas,r8a7795-fcpf" for R8A7795 (R-Car H3) compatible 'FCP for
+> FDP' - "renesas,fcpv" for generic compatible 'FCP for VSP'
+> +   - "renesas,fcpf" for generic compatible 'FCP for FDP'
+> 
+>     When compatible with the generic version, nodes must list the
+>     SoC-specific version corresponding to the platform first, followed by
+> the
 
-You are overlooking the fact that the configuration registers are
-themselves per-CPU, which means that __setup_irq() will only configure
-the interrupt on the CPU it runs on. And you can't even tell which one,
-since you are in a preemptible context.
-
-Does it make more sense?
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+Regards,
+
+Laurent Pinchart
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
