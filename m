@@ -1,65 +1,119 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv3 7/7] ARM: dts: Add Arria10 Ethernet EDAC devicetree entry
-Date: Mon, 13 Jun 2016 16:19:12 -0500
-Message-ID: <1465852752-11018-8-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv3 3/7] EDAC, altera: Share Arria10 check_deps & IRQ functions
+Date: Mon, 13 Jun 2016 16:19:08 -0500
+Message-ID: <1465852752-11018-4-git-send-email-tthayer@opensource.altera.com>
 References: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-doc-owner@vger.kernel.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add the device tree entries needed to support the Altera Ethernet
-FIFO buffer EDAC on the Arria10 chip.
+In preparation for additional memory module ECCs, the IRQ and
+check_deps() functions are being made available to all the memory
+buffers. Move them outside of the OCRAM only area.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2  No change
-v3  Add interrupts for SBERR and DBERR.
+v2  New patch. Move shared functions outside OCRAM only area.
+v3  Change title line - check_deps & IRQ.
 ---
- arch/arm/boot/dts/socfpga_arria10.dtsi |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/edac/altera_edac.c |   62 ++++++++++++++++++++++++--------------------
+ 1 file changed, 34 insertions(+), 28 deletions(-)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index 21f6c3c..5cf4dc5 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -628,6 +628,22 @@
- 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH>,
- 					     <33 IRQ_TYPE_LEVEL_HIGH>;
- 			};
-+
-+			emac0-rx-ecc@ff8c0800 {
-+				compatible = "altr,socfpga-eth-mac-ecc";
-+				reg = <0xff8c0800 0x400>;
-+				parent = <&gmac0>;
-+				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>,
-+					     <36 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			emac0-tx-ecc@ff8c0c00 {
-+				compatible = "altr,socfpga-eth-mac-ecc";
-+				reg = <0xff8c0c00 0x400>;
-+				parent = <&gmac0>;
-+				interrupts = <5 IRQ_TYPE_LEVEL_HIGH>,
-+					     <37 IRQ_TYPE_LEVEL_HIGH>;
-+			};
- 		};
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index a9d8fa7..a3f490d 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -825,9 +825,9 @@ static struct platform_driver altr_edac_device_driver = {
+ };
+ module_platform_driver(altr_edac_device_driver);
  
- 		rst: rstmgr@ffd05000 {
+-/*********************** OCRAM EDAC Device Functions *********************/
++/******************* Arria10 Device ECC Shared Functions *****************/
+ 
+-#ifdef CONFIG_EDAC_ALTERA_OCRAM
++#if defined(CONFIG_EDAC_ALTERA_OCRAM) || defined(CONFIG_EDAC_ALTERA_ETHERNET)
+ /*
+  *  Test for memory's ECC dependencies upon entry because platform specific
+  *  startup should have initialized the memory and enabled the ECC.
+@@ -848,6 +848,38 @@ static int altr_check_ecc_deps(struct altr_edac_device_dev *device)
+ 	return -ENODEV;
+ }
+ 
++static irqreturn_t altr_edac_a10_ecc_irq(int irq, void *dev_id)
++{
++	struct altr_edac_device_dev *dci = dev_id;
++	void __iomem  *base = dci->base;
++
++	if (irq == dci->sb_irq) {
++		writel(ALTR_A10_ECC_SERRPENA,
++		       base + ALTR_A10_ECC_INTSTAT_OFST);
++		edac_device_handle_ce(dci->edac_dev, 0, 0, dci->edac_dev_name);
++
++		return IRQ_HANDLED;
++	} else if (irq == dci->db_irq) {
++		writel(ALTR_A10_ECC_DERRPENA,
++		       base + ALTR_A10_ECC_INTSTAT_OFST);
++		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
++		if (dci->data->panic)
++			panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
++
++		return IRQ_HANDLED;
++	}
++
++	WARN_ON(1);
++
++	return IRQ_NONE;
++}
++
++#endif /* CONFIG_EDAC_ALTERA_OCRAM || CONFIG_EDAC_ALTERA_ETHERNET */
++
++/*********************** OCRAM EDAC Device Functions *********************/
++
++#ifdef CONFIG_EDAC_ALTERA_OCRAM
++
+ static void *ocram_alloc_mem(size_t size, void **other)
+ {
+ 	struct device_node *np;
+@@ -882,32 +914,6 @@ static void ocram_free_mem(void *p, size_t size, void *other)
+ 	gen_pool_free((struct gen_pool *)other, (u32)p, size);
+ }
+ 
+-static irqreturn_t altr_edac_a10_ecc_irq(int irq, void *dev_id)
+-{
+-	struct altr_edac_device_dev *dci = dev_id;
+-	void __iomem  *base = dci->base;
+-
+-	if (irq == dci->sb_irq) {
+-		writel(ALTR_A10_ECC_SERRPENA,
+-		       base + ALTR_A10_ECC_INTSTAT_OFST);
+-		edac_device_handle_ce(dci->edac_dev, 0, 0, dci->edac_dev_name);
+-
+-		return IRQ_HANDLED;
+-	} else if (irq == dci->db_irq) {
+-		writel(ALTR_A10_ECC_DERRPENA,
+-		       base + ALTR_A10_ECC_INTSTAT_OFST);
+-		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
+-		if (dci->data->panic)
+-			panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
+-
+-		return IRQ_HANDLED;
+-	}
+-
+-	WARN_ON(1);
+-
+-	return IRQ_NONE;
+-}
+-
+ const struct edac_device_prv_data ocramecc_data = {
+ 	.setup = altr_check_ecc_deps,
+ 	.ce_clear_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_SERR),
 -- 
 1.7.9.5
+
