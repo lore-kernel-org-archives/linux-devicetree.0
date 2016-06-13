@@ -1,66 +1,118 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ARM: dts: sun6i: Add pmic / regulator nodes to
- Mele A1000G quad dts
-Date: Mon, 13 Jun 2016 10:18:13 +0200
-Message-ID: <20160613081813.GD4481@lukather>
-References: <1465729621-27378-1-git-send-email-hdegoede@redhat.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH 03/11] Documentation: mmc: sdhci-of-arasan: Add
+ soc-ctl-syscon for corecfg regs
+Date: Mon, 13 Jun 2016 16:18:24 +0800
+Message-ID: <45a7e8c7-5bd4-8c40-004a-b8906eff881a@rock-chips.com>
+References: <1465339484-969-1-git-send-email-dianders@chromium.org>
+ <1465339484-969-4-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="veXX9dWIonWZEC6h"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465729621-27378-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1465339484-969-4-git-send-email-dianders@chromium.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>, ulf.hansson@linaro.org, kishon@ti.com, Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org
+Cc: shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016/6/8 6:44, Douglas Anderson wrote:
+> As can be seen in Arasan's datasheet [1] there are several "corecfg"
+> settings in their SDHCI IP Block that are supposed to be controlled by
+> software.  Although the datasheet referenced is a bit vague about how to
+> access corecfg, in Figure 5 you can see that for Arasan's PHY (a
+> separate component than their SDHCI component) they describe the
+> "phyctrl" registers as being "FROM SOC CTL REG", implying that it's up
+> to the licensee of the Arasan IP block to implement these registers.  It
+> seems sane to assume that the "corecfg" registers in their SDHCI IP
+> block works in a similar way for all licensees of the IP Block.
+>
+> Device tree has a model that allows a device to get a reference to
+> random registers located elsewhere in the SoC: sysctl.  Let's leverage
+> this model and allow adding a sysctl reference to access the control
+> registers for the Arasan SDHCI PHYs.
+>
+> Having a reference to the control registers doesn't do much for us on
+> its own since the Arasan spec doesn't specify how these corecfg values
+> are laid out in memory.  In the SDHCI driver we'll need a map detailing
+> where each corecfg can be found in each implementation.  This map can be
+> found using the primary compatible string of the SDHCI device.  In that
+> spirit, document that existing rk3399 device trees already have a
+> specific compatible string, though up to now they've always been relying
+> on the driver supporting the generic.
+>
+> Note that since existing devices seem to work fairly well as-is, we'll
+> list the syscon reference as "optional", but it's likely that we'll run
+> into much fewer problems if we can actually set the proper values in the
+> syscon, so it is strongly suggested that any SoCs where we have a map to
+> set the corecfg also include a reference to the syscon.
 
---veXX9dWIonWZEC6h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+yes, the interaction of phy and controller should be more explicitly
+now. Why not make it mandatory for arasan,sdhci-5.1.
 
-On Sun, Jun 12, 2016 at 01:07:00PM +0200, Hans de Goede wrote:
-> Add pmic / regulator nodes to Mele A1000G quad dts.
->=20
-> Note both reg_usb1_vbus and reg_dldo4 need to be on for the hub attached
-> to usb1 to work, and we can list only one usb1_vbus-supply, so dldo4 is
-> marked as regulator-always-on.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>
+> [1]: https://arasan.com/wp-content/media/eMMC-5-1-Total-Solution_Rev-1-3.pdf
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt       | 27 ++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index 31b35c3a5e47..b67e623ca1ff 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -9,8 +9,12 @@ Device Tree Bindings for the Arasan SDHCI Controller
+>    [4] Documentation/devicetree/bindings/phy/phy-bindings.txt
+>
+>  Required Properties:
+> -  - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
+> -                'arasan,sdhci-4.9a' or 'arasan,sdhci-5.1'
+> +  - compatible: Compatibility string.  One of:
+> +    - "arasan,sdhci-8.9a"
+> +    - "arasan,sdhci-4.9a"
+> +    - "arasan,sdhci-5.1"
+> +    - "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1": The PHY in rk3399.
 
-Applied both, thanks!
-Maxime
+The PHY in rk3399?
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> +      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+>    - reg: From mmc bindings: Register location and length.
+>    - clocks: From clock bindings: Handles to clock inputs.
+>    - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
+> @@ -22,6 +26,11 @@ Required Properties for "arasan,sdhci-5.1":
+>    - phys: From PHY bindings: Phandle for the Generic PHY for arasan.
+>    - phy-names:  MUST be "phy_arasan".
+>
+> +Optional Properties:
+> +  - arasan,soc-ctl-syscon: A phandle to a syscon device (see ../mfd/syscon.txt)
+> +    used to access core corecfg registers.  Offsets of registers in this
+> +    syscon are determined based on the main compatible string for the device.
+> +
+>  Example:
+>  	sdhci@e0100000 {
+>  		compatible = "arasan,sdhci-8.9a";
+> @@ -42,3 +51,17 @@ Example:
+>  		phys = <&emmc_phy>;
+>  		phy-names = "phy_arasan";
+>  	} ;
+> +
+> +	sdhci: sdhci@fe330000 {
+> +		compatible = "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1";
+> +		reg = <0x0 0xfe330000 0x0 0x10000>;
+> +		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_EMMC>, <&cru ACLK_EMMC>;
+> +		clock-names = "clk_xin", "clk_ahb";
+> +		arasan,soc-ctl-syscon = <&grf>;
+> +		assigned-clocks = <&cru SCLK_EMMC>;
+> +		assigned-clock-rates = <200000000>;
+> +		phys = <&emmc_phy>;
+> +		phy-names = "phy_arasan";
+> +		status = "disabled";
+> +	};
+>
 
---veXX9dWIonWZEC6h
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+-- 
+Best Regards
+Shawn Lin
 
-iQIcBAEBAgAGBQJXXmxFAAoJEBx+YmzsjxAgGnkP/095CyleWineWi1NIYYWRoiR
-i47D8cDS9fya33rv1YkYDxEfVP8NRKe7ri9tVFd3CPavd6gpEguWmt5+W67V6dCI
-iELwtEv/F7DegtRKQZHLjhydjJnbE8j4J+Idvn76b6OggW3Lz4oJwY0qNx9duvnl
-2twB/OjCTJJw325d/6nIsZ5jK01sW5rZpipLGa1q1o7tnN9ypmXTwbbeR/VQ0/95
-w742bXOSKWNn6ZKSyV00gOjX3hRjJpe7pVsT30vqhE2A5R5EXhnbxZ2oDztpC8x6
-1uE0ixQGoViwJWRvWYdItgoVZjEyEsCmHccaG3qou0a0zm+nUDjWZAOoWu8s7b0W
-HBhI+gz/KiQCaURHCOIa9MRLbfQx3u9y/2FWPWwdrMXQoW/aTqgW3HwDlB4S3dFU
-KnWwltMgbH+N5heTzevhM2lhzD+9D4mPjA3luy/k3/5laLRLJvZ3CwG1/LQuPqQS
-JtfW276U10gaft/dxoBeCXh14PRv5Evq1JfoAGProKtUWwROo/IK2wb2Yg4i8N2B
-qevI7RmFU/+sLLSaLUEAMsYtoO6I41fIOW+VCXZFxlQcZsPYFvbkSFmcSpmqTqN3
-jq3h2UDvQMLi6t30b2tWW3KTsDeqLW6U2nlwBhsyjPE38Vdl5Dd2iSn7lXfqu/fP
-garjRx7tlXrVB1eXv6LY
-=ZmtF
------END PGP SIGNATURE-----
-
---veXX9dWIonWZEC6h--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
