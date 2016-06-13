@@ -1,89 +1,100 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [[RESEND][PATCH v2] 2/2] dt-bindings: Add jdi lt070me05000 panel
- bindings
-Date: Mon, 13 Jun 2016 13:52:30 +0200
-Message-ID: <20160613115230.GE27930@ulmo.ba.sec>
-References: <1465750286-4305-1-git-send-email-simhavcs@gmail.com>
- <1465750286-4305-2-git-send-email-simhavcs@gmail.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V6 2/9] genirq: Look-up trigger type if not specified by
+ caller
+Date: Mon, 13 Jun 2016 12:59:57 +0100
+Message-ID: <575EA03D.5070706@arm.com>
+References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
+ <1465312354-27778-3-git-send-email-jonathanh@nvidia.com>
+ <575E8E29.3090808@arm.com> <575E9457.8010100@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0288081267=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465750286-4305-2-git-send-email-simhavcs@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vinay Simha BN <simhavcs@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Archit Taneja <archit.taneja@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575E9457.8010100-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 13/06/16 12:09, Jon Hunter wrote:
+> 
+> On 13/06/16 11:42, Marc Zyngier wrote:
+>> On 07/06/16 16:12, Jon Hunter wrote:
+>>> For some devices the IRQ trigger type for a device is read from
+>>> firmware, such as device-tree. The IRQ trigger type is typically read
+>>> when the mapping for IRQ is created, which is before the IRQ is
+>>> requested. Hence, the IRQ trigger type is programmed when mapping the
+>>> IRQ and not when requesting the IRQ.
+>>>
+>>> Although this works for most cases, in order to support IRQ chips which
+>>> require runtime power management, which may not be accessible prior
+>>> to requesting the IRQ, it is desirable to look-up the IRQ trigger type
+>>> when it is requested. Therefore, if the IRQ trigger type is not
+>>> specified when __setup_irq() is called, look-up the saved IRQ trigger
+>>> type. This will allow us to defer the programming of the trigger type
+>>> from when the IRQ is mapped to when it is actually requested.
+>>>
+>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>>> ---
+>>>  kernel/irq/manage.c | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+>>> index ef0bc02c3a70..eaedeb74b49d 100644
+>>> --- a/kernel/irq/manage.c
+>>> +++ b/kernel/irq/manage.c
+>>> @@ -1117,6 +1117,13 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
+>>>  	new->irq = irq;
+>>>  
+>>>  	/*
+>>> +	 * If the trigger type is not specified by the caller,
+>>> +	 * then use the default for this interrupt.
+>>> +	 */
+>>> +	if (!(new->flags & IRQF_TRIGGER_MASK))
+>>> +		new->flags |= irqd_get_trigger_type(&desc->irq_data);
+>>> +
+>>> +	/*
+>>>  	 * Check whether the interrupt nests into another interrupt
+>>>  	 * thread.
+>>>  	 */
+>>>
+>>
+>> I've added the following patch to the queue, in order to deal with
+>> percpu interrupts that were not handled by this patch:
+>>
+>> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+>> index f8fd1fb..00cfc85 100644
+>> --- a/kernel/irq/manage.c
+>> +++ b/kernel/irq/manage.c
+>> @@ -1751,7 +1751,14 @@ void enable_percpu_irq(unsigned int irq, unsigned int type)
+>>  	if (!desc)
+>>  		return;
+>>  
+>> +	/*
+>> +	 * If the trigger type is not specified by the caller, then
+>> +	 * use the default for this interrupt.
+>> +	 */
+>>  	type &= IRQ_TYPE_SENSE_MASK;
+>> +	if (type == IRQ_TYPE_NONE)
+>> +		type = irqd_get_trigger_type(&desc->irq_data);
+>> +
+> 
+> I am wondering if you need this here because now __setup_irq(), called
+> by request_percpu_irq(), will actually look-up the saved type even for a
+> percpu-irq. So shouldn't this already be handled? Or am I missing something?
 
---===============0288081267==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DqhR8hV3EnoxUkKN"
-Content-Disposition: inline
+You are overlooking the fact that the configuration registers are
+themselves per-CPU, which means that __setup_irq() will only configure
+the interrupt on the CPU it runs on. And you can't even tell which one,
+since you are in a preemptible context.
 
+Does it make more sense?
 
---DqhR8hV3EnoxUkKN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jun 12, 2016 at 10:21:24PM +0530, Vinay Simha BN wrote:
-> Add documentation for lt070me05000 panel
->=20
-> Cc: Archit Taneja <archit.taneja@gmail.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
->=20
-> --
-
-That's not a valid separator, so git am doesn't cut it off at the right
-point, which means that I had to manually delete this. I've done so now
-but in the future, please make sure to use the proper separator (---)
-so that maintainers don't have to manually intervene.
-
-Thierry
-
---DqhR8hV3EnoxUkKN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXXp5+AAoJEN0jrNd/PrOhXR0P/1bHvu4pS+mpNXE2/uP5bBb6
-nvoGpolpZoZElmgxxJnhBl0LegFr0y8/i/XkZZOnl+rlYZhXNgoWux/Hg2Kh63KV
-N0viwZKQaEuSqFx8x+5pdfIu24BOMf0msBJVg5nqaTf718w2zmejRsm/obSrHaQ2
-zLtoxULhdabMHfUvbDSpiYiEtd+S/Y/1vHQx6Gyg51YvDE2FPHp/Ah+sDPY6QEQz
-6BdtjNW0xYqt26RvLRMDBYKJg8aZc37uPJl4VnCKR3QYYHpGrfrDFPPAFkkF08Cv
-TyoGGW9nmLZbcySvGbR3Xo9c9EyyO1QpCOScr8eKQG4iL5VuR7MkfK9lBhr0k/UK
-fvYsXVYtNE0T+YHgCxycK/zh5u6ZOLtAsvXnAl+vOFFUDR+iGH3O1BkKU7xK2dZA
-CMo5Wilx6/HqbPQWTHtSOFifCJTlZZwf4TYqayjbGHAwp4Ze6R7s6gh+L3ljXiPu
-T9D5vQLw2660sp++226+IunA31kPJNSTzSmNX9tuH2dUJ/jsJyVM3Q7PwE7f2dmh
-EUMYk98VWKpKERimZCtvR/JugD2pFICMQ4uYFiWml4CiUIjTF1Q03xxeTY5QTAed
-NAMnkltwz5x3HQxEGz3BqwTPU9b6t6c6bHL7MtOsWjrCNplinfNCfulO9Xg7JgAF
-nq4DKXelZjKfYCt2jMgW
-=nKL7
------END PGP SIGNATURE-----
-
---DqhR8hV3EnoxUkKN--
-
---===============0288081267==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0288081267==--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
