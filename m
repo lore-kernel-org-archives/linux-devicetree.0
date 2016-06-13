@@ -1,11 +1,14 @@
 From: Michal Suchanek <hramrach@gmail.com>
-Subject: [PATCH v3 00/13] sunxi spi fixes
-Date: 13 Jun 2016 17:46:48 -0000
-Message-ID: <cover.1465490774.git.hramrach@gmail.com>
+Subject: [PATCH v3 01/13] spi: sunxi: set maximum and minimum speed of SPI
+ master
+Date: 13 Jun 2016 17:46:49 -0000
+Message-ID: <2db0ce0ea1ddc17e9bb790c8cc50bcb4bb97be58.1465490774.git.hramrach@gmail.com>
+References: <cover.1465490774.git.hramrach@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1465490774.git.hramrach@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,40 +21,53 @@ Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead
 To: linux-sunxi@googlegroups.com, stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Mark Brown <broonie@kernel.org>, Michal Suchanek <hramrach@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Simon Horman <horms+renesas@verge.net.au>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Thierry Reding <treding@nvidia.com>, Alison Wang <b18965@freescale.com>, Timo Sigurdsson <public_timo.s@silentcreek.de>, Jonathan Liu <net147@gmail.com>, Gerhard Bertelsmann <info@gerhard-bertelsmann.>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpUaGlzIGlzIHVwZGF0ZSBvZiB0aGUgc3VueGkgc3BpIHBhdGNoZXMgdGhhdCBzaG91
-bGQgZ2l2ZSBmdWxsLWZlYXR1cmVkIFNQSQpkcml2ZXIuCgpGaXJzdCB0aHJlZSBwYXRjaGVzIGZp
-eCBpc3N1ZXMgd2l0aCB0aGUgY3VycmVudCBkcml2ZXIgYW5kIGNhbiBiZSBvZiB1c2UgZm9yCnN0
-YWJsZSBrZXJuZWxzIHNvIGFkZGluZyBjYyBmb3IgdGhvc2UuCgpJIG1lcmdlZCB0aGUgc3VuNGkg
-YW5kIHN1bjZpIGRyaXZlciBiZWNhdXNlIHRoZXJlIHNldmVyYWwgaXNzdWVzIHRoYXQgbmVlZCB0
-bwpiZSBmaXhlZCBpbiBib3RoIHNlcGFyYXRlbHkgYW5kIHRoZXkgYXJlIGV2ZW4gb3V0IG9mIHN5
-bmMgd3J0IHNvbWUgZml4ZXMuCkkgZ3Vlc3Mgc29tZSBvZiB0aGUgbWVyZ2UgcGF0Y2hlcyBjYW4g
-YmUgc3F1YXNoZWQuCgpJIHRlc3RlZCB0aGlzIHdpdGggQTEwcyBPbGludXhpbm8gTWljcm8uIEkg
-aGF2ZSBubyBzdW42aSBkZXZpY2Ugc28gSSBjYW5ub3QKdGVsbCBpZiB0aGF0IHNpZGUgd2FzIGJy
-b2tlbiBieSB0aGlzIHBhdGNoc2V0IC0gZXNwZWNpYWxseSB0aGUgbGFzdCBwYXRjaCB0aGF0CmFk
-ZHMgRE1BIHdhcyBhZmFpayBuZXZlciB0ZXN0ZWQgb24gc3VuNmkuCgoKRW1pbGlvIEzDs3BleiAo
-MSk6CiAgc3BpOiBzdW40aTogYWRkIERNQSBzdXBwb3J0CgpNaWNoYWwgU3VjaGFuZWsgKDEyKToK
-ICBzcGk6IHN1bnhpOiBzZXQgbWF4aW11bSBhbmQgbWluaW11bSBzcGVlZCBvZiBTUEkgbWFzdGVy
-CiAgc3BpOiBzdW54aTogZml4IHRyYW5zZmVyIHRpbWVvdXQKICBzcGk6IHN1bjRpOiBmaXggRklG
-TyBsaW1pdAogIHNwaTogc3VueGk6IGV4cG9zZSBtYXhpbXVtIHRyYW5zZmVyIHNpemUgbGltaXQK
-ICBzcGk6IHN1bjZpOiB1cGRhdGUgQ1MgaGFuZGxpbmcgZnJvbSBzcGktc3VuNGkKICBzcGk6IHN1
-bnhpOiByZW5hbWUgc3VuNGksc3VuNmkgLT4gc3VueGkKICBzcGk6IHN1bnhpOiByZW5hbWUgY29u
-c3RhbnRzIHRvIG1hdGNoIGJldHdlZW4gc3VuNGkgYW5kIHN1bjZpCiAgc3BpOiBzdW54aTogc3lu
-Y2hyb25pemUgd2hpdGVzcGFjZSwgY29tbWVudHMsIHN0cnVjdAogIHNwaTogc3VueGk6IHVzZSBy
-ZWdpc3RlciBtYXAKICBzcGk6IHN1bnhpOiBtZXJnZSBzdW40aSBhbmQgc3VuNmkgU1BJIGRyaXZl
-cgogIGR0OiBzcGk6IHN1bjRpOiBtZXJnZSBzdW40aSBhbmQgc3VuNmkgYmluZGluZyBkb2MKICBz
-cGk6IHN1bnhpOiByZW1vdmUgQ09ORklHX1NQSV9TVU42SQoKIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3NwaS9zcGktc3VuNGkudHh0ICAgICAgICAgIHwgIDIxICstCiAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy9zcGkvc3BpLXN1bjZpLnR4dCAgICAgICAgICB8ICAyNCAtCiBhcmNoL2FybS9jb25m
-aWdzL211bHRpX3Y3X2RlZmNvbmZpZyAgICAgICAgICAgICAgICB8ICAgMSAtCiBhcmNoL2FybS9j
-b25maWdzL3N1bnhpX2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMSAtCiBkcml2ZXJz
-L3NwaS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMCArLQogZHJp
-dmVycy9zcGkvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgLQog
-ZHJpdmVycy9zcGkvc3BpLXN1bjRpLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA3Mjgg
-KysrKysrKysrKysrKysrKystLS0tCiBkcml2ZXJzL3NwaS9zcGktc3VuNmkuYyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8IDQ4MiAtLS0tLS0tLS0tLS0tLQogOCBmaWxlcyBjaGFuZ2VkLCA2
-MDAgaW5zZXJ0aW9ucygrKSwgNjY4IGRlbGV0aW9ucygtKQogZGVsZXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLXN1bjZpLnR4dAogZGVsZXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvc3BpL3NwaS1zdW42aS5jCgotLSAKMi44LjEKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+The speed limits are unset in the sun4i and sun6i SPI drivers.
+
+The maximum speed of SPI master is used when maximum speed of SPI slave
+is not specified. Also the __spi_validate function should check that
+transfer speeds do not exceed the master limits.
+
+The user manual for A10 and A31 specifies maximum
+speed of the SPI clock as 100MHz and minimum as 3kHz.
+
+Setting the SPI clock to out-of-spec values can lock up the SoC.
+
+Signed-off-by: Michal Suchanek <hramrach@gmail.com>
+--
+v2:
+new patch
+v3:
+fix constant style
+---
+ drivers/spi/spi-sun4i.c | 2 ++
+ drivers/spi/spi-sun6i.c | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
+index 1ddd9e2..4213508 100644
+--- a/drivers/spi/spi-sun4i.c
++++ b/drivers/spi/spi-sun4i.c
+@@ -387,6 +387,8 @@ static int sun4i_spi_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	sspi->master = master;
++	master->max_speed_hz = 100 * 1000 * 1000;
++	master->min_speed_hz =          3 * 1000;
+ 	master->set_cs = sun4i_spi_set_cs;
+ 	master->transfer_one = sun4i_spi_transfer_one;
+ 	master->num_chipselect = 4;
+diff --git a/drivers/spi/spi-sun6i.c b/drivers/spi/spi-sun6i.c
+index 42e2c4b..fe70695 100644
+--- a/drivers/spi/spi-sun6i.c
++++ b/drivers/spi/spi-sun6i.c
+@@ -386,6 +386,8 @@ static int sun6i_spi_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	sspi->master = master;
++	master->max_speed_hz = 100 * 1000 * 1000;
++	master->min_speed_hz =          3 * 1000;
+ 	master->set_cs = sun6i_spi_set_cs;
+ 	master->transfer_one = sun6i_spi_transfer_one;
+ 	master->num_chipselect = 4;
+-- 
+2.8.1
