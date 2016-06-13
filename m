@@ -1,27 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] Documentation: DT: vdma: Update binding doc for
- multi-channel dma mode
-Date: Mon, 13 Jun 2016 13:58:06 -0500
-Message-ID: <20160613185805.GA25243@rob-hp-laptop>
-References: <1465549954-30220-1-git-send-email-appanad@xilinx.com>
- <1465549954-30220-2-git-send-email-appanad@xilinx.com>
+From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Subject: Re: [PATCH 5/7] ARM: OMAP: dmtimer: Do not call PM runtime functions
+ when not needed.
+Date: Mon, 13 Jun 2016 21:58:39 +0300
+Message-ID: <575F025F.7000101@gmail.com>
+References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1462634508-24961-6-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <20160509193624.GH5995@atomide.com> <5730F840.3050807@gmail.com>
+ <20160610102225.GS22406@atomide.com> <575B2F48.4090707@gmail.com>
+ <20160613071057.GQ22406@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465549954-30220-2-git-send-email-appanad@xilinx.com>
+In-Reply-To: <20160613071057.GQ22406@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, sre@kernel.org, pali.rohar@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 10, 2016 at 02:42:31PM +0530, Kedareswara rao Appana wrote:
-> This patch updates the device-tree binding doc for
-> AXI DMA multi channel dma mode.
-> 
-> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
-> ---
->  .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt |    4 ++++
->  1 files changed, 4 insertions(+), 0 deletions(-)
+Hi,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 13.06.2016 10:10, Tony Lindgren wrote:
+> * Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com> [160610 14:23]:
+>>
+>> On 10.06.2016 13:22, Tony Lindgren wrote:
+>>>
+>>> OK. And I just applied the related dts changes. Please repost the driver
+>>> changes and DT binding doc with Rob's ack to the driver maintainers to
+>>> apply.
+>>>
+>>
+>> Already did, see https://lkml.org/lkml/2016/5/16/429
+>>
+>> Shall I do anything else?
+>
+> Probably good idea to repost just the driver changes to the
+> subsystem maintainers. With v4.7 out any pre v4.7 patchsets
+> easily get forgotten.
+>
+
+Sorry for the maybe stupid question, but does this mean that I should 
+send separate patches instead of series? Or the series without what 
+you've already applied?
+
+Thanks,
+Ivo
