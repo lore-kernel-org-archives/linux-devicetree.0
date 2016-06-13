@@ -1,97 +1,86 @@
-From: Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] iommu/rockchip: use DMA API to map, to flush cache
-Date: Mon, 13 Jun 2016 19:41:26 +0900
-Message-ID: <CAAFQd5AXq9c0X6nQOvbgiBNgJp3UfDNmwC7iQnFGunE=7zdO1A@mail.gmail.com>
-References: <1465392392-2003-1-git-send-email-zhengsq@rock-chips.com>
- <1465392392-2003-7-git-send-email-zhengsq@rock-chips.com> <CAAFQd5Da+Eg=eiRUgLSS_qPjGbG474KYWDC=GaAMS8A_CuQ3Mg@mail.gmail.com>
- <575E834C.30305@gmail.com> <CAAFQd5DDCd8VcdEhEASAK7NMBnVJWuUxgGURtsa2KQBKsgsxUQ@mail.gmail.com>
- <575E8B6F.1040103@gmail.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V6 2/9] genirq: Look-up trigger type if not specified by
+ caller
+Date: Mon, 13 Jun 2016 11:42:49 +0100
+Message-ID: <575E8E29.3090808@arm.com>
+References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
+ <1465312354-27778-3-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <575E8B6F.1040103-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shunqian.zheng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring
-	<robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, simon xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>,
-	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465312354-27778-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2016 at 7:31 PM, Shunqian Zheng
-<shunqian.zheng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> HI,
->
->
-> On 2016=E5=B9=B406=E6=9C=8813=E6=97=A5 18:21, Tomasz Figa wrote:
->>
->> On Mon, Jun 13, 2016 at 6:56 PM, Shunqian Zheng
->> <shunqian.zheng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>> Hi
->>>
->>> On 2016=E5=B9=B406=E6=9C=8810=E6=97=A5 17:10, Tomasz Figa wrote:
->>>>
->>>> Hi,
->>>>
->>>> On Wed, Jun 8, 2016 at 10:26 PM, Shunqian Zheng <zhengsq@rock-chip=
-s.com>
->>>> wrote:
->>>>>
->>>>> Use DMA API instead of architecture internal functions like
->>>>> __cpuc_flush_dcache_area() etc.
->>>>>
->>>>> To support the virtual device like DRM the virtual slave iommu
->>>>> added in the previous patch, attaching to which the DRM can use
->>>>> it own domain->dev for dma_map_*(), dma_sync_*() even VOP is disa=
-bled.
->>>>>
->>>>> With this patch, this driver is available for ARM64 like RK3399.
->>>>>
->>>> Could we instead simply allocate coherent memory for page tables u=
-sing
->>>> dma_alloc_coherent() and skip any flushing on CPU side completely?=
- If
->>>> I'm looking correctly, the driver only reads back the page directo=
-ry
->>>> when checking if there is a need to allocate new page table, so th=
-ere
->>>> shouldn't be any significant penalty for disabling the cache.
->>>
->>> I try to use dma_alloc_coherent() to replace the dma_map_single(),
->>> but it doesn't work for me properly.
->>> Because the DRM uses the iommu_dma_ops instead the swiotlb_dma_ops =
-after
->>> attaching
->>> to iommu, so when the iommu domain need to alloc a new page in
->>> rk_iommu_map(),
->>> it would call:
->>> rk_iommu_map()  --> dma_alloc_coherent()  --> ops->alloc()  -->
->>> iommu_map()
->>> --> rk_iommu_map()
->>
->> It shouldn't call iommu_map(), because the IOMMU is not behind anoth=
-er
->> IOMMU. Are you sure you called dma_alloc_coherent() on behalf of the
->> IOMMU struct device and not the DRM device?
->
-> I called dma_alloc_coherent() with DRM device but not the IOMMU devic=
-e,
-> because DRM didn't attach to any iommu. Even allocating an virtual on=
-e when
-> attaching, the iommu->dev
-> is DRM device though.
-> Am I right here?
+On 07/06/16 16:12, Jon Hunter wrote:
+> For some devices the IRQ trigger type for a device is read from
+> firmware, such as device-tree. The IRQ trigger type is typically read
+> when the mapping for IRQ is created, which is before the IRQ is
+> requested. Hence, the IRQ trigger type is programmed when mapping the
+> IRQ and not when requesting the IRQ.
+> 
+> Although this works for most cases, in order to support IRQ chips which
+> require runtime power management, which may not be accessible prior
+> to requesting the IRQ, it is desirable to look-up the IRQ trigger type
+> when it is requested. Therefore, if the IRQ trigger type is not
+> specified when __setup_irq() is called, look-up the saved IRQ trigger
+> type. This will allow us to defer the programming of the trigger type
+> from when the IRQ is mapped to when it is actually requested.
+> 
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  kernel/irq/manage.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+> index ef0bc02c3a70..eaedeb74b49d 100644
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -1117,6 +1117,13 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
+>  	new->irq = irq;
+>  
+>  	/*
+> +	 * If the trigger type is not specified by the caller,
+> +	 * then use the default for this interrupt.
+> +	 */
+> +	if (!(new->flags & IRQF_TRIGGER_MASK))
+> +		new->flags |= irqd_get_trigger_type(&desc->irq_data);
+> +
+> +	/*
+>  	 * Check whether the interrupt nests into another interrupt
+>  	 * thread.
+>  	 */
+> 
 
-What I meant, is that even though rk_iommu_map() is called for DRM
-device, the page table allocation happening inside should be called
-for the IOMMU device itself, because it's the consumer of these page
-tables.
+I've added the following patch to the queue, in order to deal with
+percpu interrupts that were not handled by this patch:
 
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index f8fd1fb..00cfc85 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -1751,7 +1751,14 @@ void enable_percpu_irq(unsigned int irq, unsigned int type)
+ 	if (!desc)
+ 		return;
+ 
++	/*
++	 * If the trigger type is not specified by the caller, then
++	 * use the default for this interrupt.
++	 */
+ 	type &= IRQ_TYPE_SENSE_MASK;
++	if (type == IRQ_TYPE_NONE)
++		type = irqd_get_trigger_type(&desc->irq_data);
++
+ 	if (type != IRQ_TYPE_NONE) {
+ 		int ret;
+ 
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
