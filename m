@@ -1,100 +1,57 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 11/13] dt: spi: sun4i: merge sun4i and sun6i
- binding doc
-Date: 13 Jun 2016 17:46:52 -0000
-Message-ID: <cccbd6c3f0a194ec6eecd6627c4874da7b936f37.1465490774.git.hramrach@gmail.com>
-References: <cover.1465490774.git.hramrach@gmail.com>
-Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Michal Suchanek <hramrach@gmail.com>
+Subject: [PATCH v3 00/13] sunxi spi fixes
+Date: 13 Jun 2016 17:46:48 -0000
+Message-ID: <cover.1465490774.git.hramrach@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCQMLUOX54MBBJXD7O5AKGQEZEAHF4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.1465490774.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Bertelsmann <info-La43T0Mi4bH5xCKuJOYmCvaTkwRoYoCU@public.gmane.org>, Pri
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-sunxi@googlegroups.com, stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Mark Brown <broonie@kernel.org>, Michal Suchanek <hramrach@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Simon Horman <horms+renesas@verge.net.au>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Thierry Reding <treding@nvidia.com>, Alison Wang <b18965@freescale.com>, Timo Sigurdsson <public_timo.s@silentcreek.de>, Jonathan Liu <net147@gmail.com>, Gerhard Bertelsmann <info@gerhard-bertelsmann.>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/spi/spi-sun4i.txt          | 21 ++++++++++---------
- .../devicetree/bindings/spi/spi-sun6i.txt          | 24 ----------------------
- 2 files changed, 11 insertions(+), 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-sun6i.txt
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-sun4i.txt b/Documentation/devicetree/bindings/spi/spi-sun4i.txt
-index de827f5..329e543 100644
---- a/Documentation/devicetree/bindings/spi/spi-sun4i.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-sun4i.txt
-@@ -1,7 +1,8 @@
--Allwinner A10 SPI controller
-+Allwinner A10/A31 SPI controller
- 
- Required properties:
--- compatible: Should be "allwinner,sun4-a10-spi".
-+- compatible: Should be one of	"allwinner,sun4i-a10-spi" and
-+				"allwinner,sun6i-a31-spi"
- - reg: Should contain register location and length.
- - interrupts: Should contain interrupt.
- - clocks: phandle to the clocks feeding the SPI controller. Two are
-@@ -9,16 +10,16 @@ Required properties:
-   - "ahb": the gated AHB parent clock
-   - "mod": the parent module clock
- - clock-names: Must contain the clock names described just above
-+- resets: (sun6i only) phandle to the reset controller asserting
-+	  this device in reset
- 
- Example:
- 
--spi1: spi@01c06000 {
--	compatible = "allwinner,sun4i-a10-spi";
--	reg = <0x01c06000 0x1000>;
--	interrupts = <11>;
--	clocks = <&ahb_gates 21>, <&spi1_clk>;
-+spi1: spi@01c69000 {
-+	compatible = "allwinner,sun6i-a31-spi";
-+	reg = <0x01c69000 0x1000>;
-+	interrupts = <0 66 4>;
-+	clocks = <&ahb1_gates 21>, <&spi1_clk>;
- 	clock-names = "ahb", "mod";
--	status = "disabled";
--	#address-cells = <1>;
--	#size-cells = <0>;
-+	resets = <&ahb1_rst 21>;
- };
-diff --git a/Documentation/devicetree/bindings/spi/spi-sun6i.txt b/Documentation/devicetree/bindings/spi/spi-sun6i.txt
-deleted file mode 100644
-index 21de73d..0000000
---- a/Documentation/devicetree/bindings/spi/spi-sun6i.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Allwinner A31 SPI controller
--
--Required properties:
--- compatible: Should be "allwinner,sun6i-a31-spi".
--- reg: Should contain register location and length.
--- interrupts: Should contain interrupt.
--- clocks: phandle to the clocks feeding the SPI controller. Two are
--          needed:
--  - "ahb": the gated AHB parent clock
--  - "mod": the parent module clock
--- clock-names: Must contain the clock names described just above
--- resets: phandle to the reset controller asserting this device in
--          reset
--
--Example:
--
--spi1: spi@01c69000 {
--	compatible = "allwinner,sun6i-a31-spi";
--	reg = <0x01c69000 0x1000>;
--	interrupts = <0 66 4>;
--	clocks = <&ahb1_gates 21>, <&spi1_clk>;
--	clock-names = "ahb", "mod";
--	resets = <&ahb1_rst 21>;
--};
--- 
-2.8.1
+SGVsbG8sCgpUaGlzIGlzIHVwZGF0ZSBvZiB0aGUgc3VueGkgc3BpIHBhdGNoZXMgdGhhdCBzaG91
+bGQgZ2l2ZSBmdWxsLWZlYXR1cmVkIFNQSQpkcml2ZXIuCgpGaXJzdCB0aHJlZSBwYXRjaGVzIGZp
+eCBpc3N1ZXMgd2l0aCB0aGUgY3VycmVudCBkcml2ZXIgYW5kIGNhbiBiZSBvZiB1c2UgZm9yCnN0
+YWJsZSBrZXJuZWxzIHNvIGFkZGluZyBjYyBmb3IgdGhvc2UuCgpJIG1lcmdlZCB0aGUgc3VuNGkg
+YW5kIHN1bjZpIGRyaXZlciBiZWNhdXNlIHRoZXJlIHNldmVyYWwgaXNzdWVzIHRoYXQgbmVlZCB0
+bwpiZSBmaXhlZCBpbiBib3RoIHNlcGFyYXRlbHkgYW5kIHRoZXkgYXJlIGV2ZW4gb3V0IG9mIHN5
+bmMgd3J0IHNvbWUgZml4ZXMuCkkgZ3Vlc3Mgc29tZSBvZiB0aGUgbWVyZ2UgcGF0Y2hlcyBjYW4g
+YmUgc3F1YXNoZWQuCgpJIHRlc3RlZCB0aGlzIHdpdGggQTEwcyBPbGludXhpbm8gTWljcm8uIEkg
+aGF2ZSBubyBzdW42aSBkZXZpY2Ugc28gSSBjYW5ub3QKdGVsbCBpZiB0aGF0IHNpZGUgd2FzIGJy
+b2tlbiBieSB0aGlzIHBhdGNoc2V0IC0gZXNwZWNpYWxseSB0aGUgbGFzdCBwYXRjaCB0aGF0CmFk
+ZHMgRE1BIHdhcyBhZmFpayBuZXZlciB0ZXN0ZWQgb24gc3VuNmkuCgoKRW1pbGlvIEzDs3BleiAo
+MSk6CiAgc3BpOiBzdW40aTogYWRkIERNQSBzdXBwb3J0CgpNaWNoYWwgU3VjaGFuZWsgKDEyKToK
+ICBzcGk6IHN1bnhpOiBzZXQgbWF4aW11bSBhbmQgbWluaW11bSBzcGVlZCBvZiBTUEkgbWFzdGVy
+CiAgc3BpOiBzdW54aTogZml4IHRyYW5zZmVyIHRpbWVvdXQKICBzcGk6IHN1bjRpOiBmaXggRklG
+TyBsaW1pdAogIHNwaTogc3VueGk6IGV4cG9zZSBtYXhpbXVtIHRyYW5zZmVyIHNpemUgbGltaXQK
+ICBzcGk6IHN1bjZpOiB1cGRhdGUgQ1MgaGFuZGxpbmcgZnJvbSBzcGktc3VuNGkKICBzcGk6IHN1
+bnhpOiByZW5hbWUgc3VuNGksc3VuNmkgLT4gc3VueGkKICBzcGk6IHN1bnhpOiByZW5hbWUgY29u
+c3RhbnRzIHRvIG1hdGNoIGJldHdlZW4gc3VuNGkgYW5kIHN1bjZpCiAgc3BpOiBzdW54aTogc3lu
+Y2hyb25pemUgd2hpdGVzcGFjZSwgY29tbWVudHMsIHN0cnVjdAogIHNwaTogc3VueGk6IHVzZSBy
+ZWdpc3RlciBtYXAKICBzcGk6IHN1bnhpOiBtZXJnZSBzdW40aSBhbmQgc3VuNmkgU1BJIGRyaXZl
+cgogIGR0OiBzcGk6IHN1bjRpOiBtZXJnZSBzdW40aSBhbmQgc3VuNmkgYmluZGluZyBkb2MKICBz
+cGk6IHN1bnhpOiByZW1vdmUgQ09ORklHX1NQSV9TVU42SQoKIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3NwaS9zcGktc3VuNGkudHh0ICAgICAgICAgIHwgIDIxICstCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9zcGkvc3BpLXN1bjZpLnR4dCAgICAgICAgICB8ICAyNCAtCiBhcmNoL2FybS9jb25m
+aWdzL211bHRpX3Y3X2RlZmNvbmZpZyAgICAgICAgICAgICAgICB8ICAgMSAtCiBhcmNoL2FybS9j
+b25maWdzL3N1bnhpX2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMSAtCiBkcml2ZXJz
+L3NwaS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMCArLQogZHJp
+dmVycy9zcGkvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgLQog
+ZHJpdmVycy9zcGkvc3BpLXN1bjRpLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA3Mjgg
+KysrKysrKysrKysrKysrKystLS0tCiBkcml2ZXJzL3NwaS9zcGktc3VuNmkuYyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8IDQ4MiAtLS0tLS0tLS0tLS0tLQogOCBmaWxlcyBjaGFuZ2VkLCA2
+MDAgaW5zZXJ0aW9ucygrKSwgNjY4IGRlbGV0aW9ucygtKQogZGVsZXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLXN1bjZpLnR4dAogZGVsZXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvc3BpL3NwaS1zdW42aS5jCgotLSAKMi44LjEKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
