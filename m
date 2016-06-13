@@ -1,60 +1,165 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: dts: juno: add coresight support
-Date: Mon, 13 Jun 2016 10:18:14 +0100
-Message-ID: <575E7A56.6070005@arm.com>
-References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
- <1465228765-14038-2-git-send-email-sudeep.holla@arm.com>
- <CANLsYkzbtW2nFsntQ8vLafu=JS+qcjXm+6HQpi3F_P2a5CsHaw@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i-a?3-q8-tablet.dts: Add full otg
+ support
+Date: Mon, 13 Jun 2016 11:32:32 +0200
+Message-ID: <4b407a13-0c65-10ca-6379-b66125ac89e7@redhat.com>
+References: <1465653186-953-1-git-send-email-hdegoede@redhat.com>
+ <1465653186-953-5-git-send-email-hdegoede@redhat.com>
+ <CAGb2v67+56hd6b+mZLNpMHPRGu3Fp9j-zJLNS2MkUmy2N_Lmdw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANLsYkzbtW2nFsntQ8vLafu=JS+qcjXm+6HQpi3F_P2a5CsHaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAGb2v67+56hd6b+mZLNpMHPRGu3Fp9j-zJLNS2MkUmy2N_Lmdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-On 12/06/16 22:57, Mathieu Poirier wrote:
-> On 6 June 2016 at 09:59, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> Most of the debug-related components on Juno are located in the coreSight
->> subsystem while others are located in the Cortex-Axx clusters, the SCP
->> subsystem, and in the main system.
->>
->> Each core in the two processor clusters contain an Embedded Trace
->> Macrocell(ETM) which generates real-time trace information that trace
->> tools can use and an ATB trace output that is sent to a funnel before
->> going to the CoreSight subsystem.
->>
->> The trace output signals combine with two trace expansions using another
->> funnel and fed into the Embedded Trace FIFO(ETF0).
->>
->> The output trace data stream of the funnel is then replicated before it
->> is sent to either the:
->> - Trace Port Interface Unit(TPIU), that sends it out using the trace port.
->> - ETR that can write the trace data to memory located in the application
->>    memory space
+On 13-06-16 05:19, Chen-Yu Tsai wrote:
+> Hi,
 >
-> Hi Sudeep,
+> On Sat, Jun 11, 2016 at 9:53 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Now that we've all the necessary bits in place we can enable
+>> full otg support on these tablets.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun8i-a23-q8-tablet.dts | 15 ---------------
+>>  arch/arm/boot/dts/sun8i-a33-q8-tablet.dts | 15 ---------------
+>>  arch/arm/boot/dts/sun8i-q8-common.dtsi    | 31 +++++++++++++++++++++++++++++++
+>>  3 files changed, 31 insertions(+), 30 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts b/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts
+>> index 6062ea7..956320a 100644
+>> --- a/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts
+>> +++ b/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts
+>> @@ -48,18 +48,3 @@
+>>         model = "Q8 A23 Tablet";
+>>         compatible = "allwinner,q8-a23", "allwinner,sun8i-a23";
+>>  };
+>> -
+>> -/*
+>> - * FIXME for now we only support host mode and rely on u-boot to have
+>> - * turned on Vbus which is controlled by the axp223 pmic on the board.
+>> - *
+>> - * Once we have axp223 support we should switch to fully supporting otg.
+>> - */
+>> -&usb_otg {
+>> -       dr_mode = "host";
+>> -       status = "okay";
+>> -};
+>> -
+>> -&usbphy {
+>> -       status = "okay";
+>> -};
+>> diff --git a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
+>> index 44b3229..b0bc236 100644
+>> --- a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
+>> +++ b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
+>> @@ -48,18 +48,3 @@
+>>         model = "Q8 A33 Tablet";
+>>         compatible = "allwinner,q8-a33", "allwinner,sun8i-a33";
+>>  };
+>> -
+>> -/*
+>> - * FIXME for now we only support host mode and rely on u-boot to have
+>> - * turned on Vbus which is controlled by the axp223 pmic on the board.
+>> - *
+>> - * Once we have axp223 support we should switch to fully supporting otg.
+>> - */
+>> -&usb_otg {
+>> -       dr_mode = "host";
+>> -       status = "okay";
+>> -};
+>> -
+>> -&usbphy {
+>> -       status = "okay";
+>> -};
+>> diff --git a/arch/arm/boot/dts/sun8i-q8-common.dtsi b/arch/arm/boot/dts/sun8i-q8-common.dtsi
+>> index 346a49d..991087f 100644
+>> --- a/arch/arm/boot/dts/sun8i-q8-common.dtsi
+>> +++ b/arch/arm/boot/dts/sun8i-q8-common.dtsi
+>> @@ -87,6 +87,13 @@
+>>                 allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>>                 allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>>         };
+>> +
+>> +       usb0_id_detect_pin: usb0_id_detect_pin@0 {
+>> +               allwinner,pins = "PH8";
+>> +               allwinner,function = "gpio_in";
+>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>> +       };
+>>  };
+>>
+>>  &r_rsb {
+>> @@ -98,6 +105,7 @@
+>>                 interrupt-parent = <&nmi_intc>;
+>>                 interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>>                 eldoin-supply = <&reg_dcdc1>;
+>> +               x-powers,drive-vbus-en;
+>>         };
+>>  };
+>>
+>> @@ -163,6 +171,11 @@
+>>         regulator-name = "vcc-dram";
+>>  };
+>>
+>> +&reg_drivevbus {
+>> +       regulator-name = "usb0-vbus";
+>> +       status = "okay";
 >
-> Did you try booting this on juno-r0?  On my side the system won't boot
-> unless I enable the debug power domain by externally connecting to the
-> system using DS-5.
->
+> Adding a drivevbus-supply referencing vcc_5v0 (in the axp node) so
+> it doesn't show 0V would be nice.
 
-As you have already realized that you need SCPI power domain patches for
-the functionality. However, in absence of those patches or when it's
-disabled, it shouldn't cause any boot or runtime issues. Only ETM or
-coresight won't work. If it's causing any crash or hang, please do let
-me know, that needs to be fixed. I have only tested with latest
-firmware. Let me know the details of hang/crash and firmware version you
-are using.
+Ack, given that you've just asked for this with a number of boards,
+I think that this belongs in axp22x.dtsi. I'll prepare a follow-up patch for
+this.
 
--- 
 Regards,
-Sudeep
+
+Hans
+
+
+
+>
+> Sorry for the late reply. I was out on vacation for a few days.
+>
+> ChenYu
+>
+>> +};
+>> +
+>>  &reg_rtc_ldo {
+>>         regulator-name = "vcc-rtc";
+>>  };
+>> @@ -176,3 +189,21 @@
+>>  &simplefb_lcd {
+>>         vcc-lcd-supply = <&reg_dc1sw>;
+>>  };
+>> +
+>> +&usb_otg {
+>> +       dr_mode = "otg";
+>> +       status = "okay";
+>> +};
+>> +
+>> +&usb_power_supply {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&usbphy {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&usb0_id_detect_pin>;
+>> +       usb0_id_det-gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
+>> +       usb0_vbus_power-supply = <&usb_power_supply>;
+>> +       usb0_vbus-supply = <&reg_drivevbus>;
+>> +       status = "okay";
+>> +};
+>> --
+>> 2.7.4
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
