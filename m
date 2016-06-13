@@ -1,69 +1,32 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [PATCH 0/7] ir-rx51 driver fixes
-Date: Mon, 13 Jun 2016 21:48:34 +0300
-Message-ID: <575F0002.4060809@gmail.com>
-References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <201606132017.38629@pali>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3,1/5] dt-bindings: mt8173-xhci: support host side of
+ dual-role mode
+Date: Mon, 13 Jun 2016 13:54:54 -0500
+Message-ID: <20160613185454.GA21742@rob-hp-laptop>
+References: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1465543962-11678-2-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <201606132017.38629@pali>
-Sender: linux-media-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, tony@atomide.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, sre@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465543962-11678-2-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Jun 10, 2016 at 03:32:38PM +0800, Chunfeng Yun wrote:
+> Some resources, such as IPPC register etc, shared with device
+> driver are moved into common glue layer when xHCI driver is the
+> host side of dual-role mode and they should be changed as optional
+> properties if they are required ones before. For clarity, add
+> a new part of binding to support host side of dual-role mode.
+> 
+> Additionally add optional properties of pinctrl for host only mode
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  .../devicetree/bindings/usb/mt8173-xhci.txt        |   48 ++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
 
-On 13.06.2016 21:17, Pali Roh=C3=A1r wrote:
-> On Saturday 07 May 2016 17:21:41 Ivaylo Dimitrov wrote:
->> ir-rx51 is a driver for Nokia N900 IR transmitter. The current serie=
-s
->> fixes the remaining problems in the driver:
->>
->>   - replace GP timer 9 with PWM framework usage
->>   - replace pulse width timer dmtimer usage with hrtimer
->>   - add DT support to the driver
->>   - add driver to the board DTS
->>
->> Pathes 2 and 5 are needed so the driver to function correctly,
->> without those PWM either refuses to set the needed carrier frequency
->> (patch 2) or there are such a delays in the PWM framework, code that
->> transmission duration raises to ~5s instead of half a second.
->>
->> Ivaylo Dimitrov (6):
->>    pwm: omap-dmtimer: Allow for setting dmtimer clock source
->>    [media] ir-rx51: use PWM framework instead of OMAP dmtimer
->>    [media] ir-rx51: add DT support to driver
->>    ARM: OMAP: dmtimer: Do not call PM runtime functions when not
->> needed. [media] ir-rx51: use hrtimer instead of dmtimer
->>    ARM: dts: n900: enable lirc-rx51 driver
->>
->> Tony Lindgren (1):
->>    ir-rx51: Fix build after multiarch changes broke it
->>
->>   .../devicetree/bindings/media/nokia,lirc-rx51      |  19 ++
->>   .../devicetree/bindings/pwm/pwm-omap-dmtimer.txt   |   4 +
->>   arch/arm/boot/dts/omap3-n900.dts                   |  12 ++
->>   arch/arm/mach-omap2/board-rx51-peripherals.c       |   5 -
->>   arch/arm/mach-omap2/pdata-quirks.c                 |  10 +-
->>   arch/arm/plat-omap/dmtimer.c                       |   9 +-
->>   arch/arm/plat-omap/include/plat/dmtimer.h          |   1 +
->>   drivers/media/rc/Kconfig                           |   2 +-
->>   drivers/media/rc/ir-rx51.c                         | 229
->> +++++++-------------- drivers/pwm/pwm-omap-dmtimer.c
->>      |  12 +- include/linux/platform_data/media/ir-rx51.h        |
->> 3 -
->>   11 files changed, 131 insertions(+), 175 deletions(-)
->>   create mode 100644
->> Documentation/devicetree/bindings/media/nokia,lirc-rx51
->
-> Patch series looks good, you can add my Acked-by.
->
-
-There is a newer series, please look at https://lkml.org/lkml/2016/5/16=
-/429
-
-Ivo
+Acked-by: Rob Herring <robh@kernel.org>
