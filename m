@@ -1,27 +1,38 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 0/2] ARM: dts: NSP: add PL330 support and XMC board
-Date: Mon, 13 Jun 2016 12:46:32 -0700
-Message-ID: <575F0D98.60701@gmail.com>
-References: <1465338487-14932-1-git-send-email-jon.mason@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 07/10] dt-bindings: msm/dsi: Use standard data lanes
+ binding
+Date: Mon, 13 Jun 2016 14:53:28 -0500
+Message-ID: <20160613195328.GA22518@rob-hp-laptop>
+References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
+ <1465555600-25742-1-git-send-email-architt@codeaurora.org>
+ <1465555600-25742-8-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465338487-14932-1-git-send-email-jon.mason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465555600-25742-8-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: robdclark@gmail.com, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, heiko@sntech.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2016 03:28 PM, Jon Mason wrote:
-> Add support for the PL330 DMA engine and the XMC form factor for
-> Broadcom Northstar Plus SoCs
+On Fri, Jun 10, 2016 at 04:16:37PM +0530, Archit Taneja wrote:
+> The "qcom,data-lane-map" binding mentioned in the document is changed to
+> the more generic "data-lanes" property specified in:
 > 
+> Documentation/devicetree/bindings/media/video-interfaces.txt
 > 
-> Jon Mason (2):
->   ARM: dts: NSP: Add XMC board support
->   ARM: dts: NSP: Add PL330 support
+> The previous binding expressed physical to logical data lane mappings,
+> the standard "data-lanes" binding uses logical to physical data lane
+> mappings. Update the docs to reflect this change. The example had the
+> property incorrectly named as "lanes", update this too.
+> 
+> The MSM DSI DT bindings aren't used anywhere at the moment, so
+> it's okay to update this property.
+> 
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> ---
+>  .../devicetree/bindings/display/msm/dsi.txt        | 37 +++++++++++-----------
+>  1 file changed, 19 insertions(+), 18 deletions(-)
 
-Series applied, thanks Jon
--- 
-Florian
+Acked-by: Rob Herring <robh@kernel.org>
