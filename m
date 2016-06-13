@@ -1,106 +1,99 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 01/11] phy: rockchip-emmc: Increase lock time allowance
-Date: Mon, 13 Jun 2016 15:58:41 +0800
-Message-ID: <3e19ff54-ee4a-c208-e137-1c0f8022f6b3@rock-chips.com>
-References: <1465339484-969-1-git-send-email-dianders@chromium.org>
- <1465339484-969-2-git-send-email-dianders@chromium.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/1] ARM: dts: sunxi: Fix simplefb not working in 4.7-rc1
+Date: Mon, 13 Jun 2016 10:01:24 +0200
+Message-ID: <20160613080124.GA4481@lukather>
+References: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
+ <20160609074643.GA5242@lukather>
+ <21258fc0-0250-951b-2ee7-d022fb3c09ac@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1465339484-969-2-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <21258fc0-0250-951b-2ee7-d022fb3c09ac-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/6/8 6:44, Douglas Anderson wrote:
-> Previous PHY code waited a fixed amount of time for the DLL to lock at
-> power on time.  Unfortunately, the time for the DLL to lock is actually
-> a bit more dynamic and can be longer if the card clock is slower.
->
-> Instead of waiting a fixed 30 us, let's now dynamically wait until the
-> lock bit gets set.  We'll wait up to 10 ms which should be OK even if
-> the card clock is at the super slow 100 kHz.
->
 
-mmc stack limit the min freq to 200k when initializing the card.
-So 5ms is enough, but it's ok to set the max timeout to 10ms as we
-can break out if locked.
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On its own, this change makes the PHY power on code a little more
-> robust.  Before this change the PHY was relying on the eMMC code to make
-> sure the PHY was only powered on when the card clock was set to at least
-> 50 MHz before, though this reliance wasn't documented anywhere.
->
-> This change will be even more useful in future changes where we actually
-> need to be able to wait for a DLL lock at slower clock speeds.
->
-> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  drivers/phy/phy-rockchip-emmc.c | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockchip-emmc.c
-> index a69f53630e67..8336053aea5c 100644
-> --- a/drivers/phy/phy-rockchip-emmc.c
-> +++ b/drivers/phy/phy-rockchip-emmc.c
-> @@ -85,6 +85,7 @@ static int rockchip_emmc_phy_power(struct rockchip_emmc_phy *rk_phy,
->  {
->  	unsigned int caldone;
->  	unsigned int dllrdy;
-> +	unsigned long timeout;
->
->  	/*
->  	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-> @@ -137,15 +138,25 @@ static int rockchip_emmc_phy_power(struct rockchip_emmc_phy *rk_phy,
->  				   PHYCTRL_ENDLL_MASK,
->  				   PHYCTRL_ENDLL_SHIFT));
->  	/*
-> -	 * After enable analog DLL circuits, we need an extra 10.2us
-> -	 * for dll to be ready for work. But according to testing, we
-> -	 * find some chips need more than 25us.
-> +	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-> +	 * our source clock is at 50 MHz and that lock time scales linearly
-> +	 * with clock speed.  If we are powering on the PHY and the card clock
-> +	 * is super slow (like 100 kHZ) this could take as long as 5.1 ms.
+On Thu, Jun 09, 2016 at 12:47:36PM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 09-06-16 09:46, Maxime Ripard wrote:
+> >Hi Hans,
+> >
+> >On Sat, Jun 04, 2016 at 08:05:23PM +0200, Hans de Goede wrote:
+> >>Hi Maxime,
+> >>
+> >>While testing 4.7-rc1 / linux-sunxi/sunxi-next on a A10s I noticed that
+> >>hdmi out is no longer working (screen goes black when the kernel turns
+> >>of unused clocks).
+> >>
+> >>This is caused by the dtsi for sun4i / sun5i / sun7i based boards now
+> >>listing pll3, without pll3 being added to the clocks list for the
+> >>simplefb nodes.
+> >
+> >Why not do just that then? It's more appropriate for a fix imho.
+>=20
+> You mean just for sun5i-a10s, or for all of sun4i / sun5i-a10s and
+> sun7i ?
+>=20
+> For sun4i and sun7i things are already fixed in next:
+>=20
+> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=
+=3D5a7f2310cc847a73852e70bc720a61ca9bf986a6
+> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=
+=3Dc79255ca4d7b67cce4eac4dd532e097ce49f3679
+>=20
+> It seems best to use those fixes, rather then come up with a separate
+> fix for 4.7.
+>=20
+> My patch for fixing sun5i-a10s is inline with the 2 above patches,
+> which seems best, rather then doing something special for just sun5i-a10s.
 
-5.1ms is by calculation or test?
+Well, you are doing something special for just the A10s: the patches
+quoted above just add a bunch of clocks and add the handles to the
+list of clocks managed by simplefb.
 
-> +	 * Hopefully we won't be running at 100 kHz, but we should still make
-> +	 * sure we wait long enough.
->  	 */
-> -	udelay(30);
-> -	regmap_read(rk_phy->reg_base,
-> -		    rk_phy->reg_offset + GRF_EMMCPHY_STATUS,
-> -		    &dllrdy);
-> -	dllrdy = (dllrdy >> PHYCTRL_DLLRDY_SHIFT) & PHYCTRL_DLLRDY_MASK;
-> +	timeout = jiffies + msecs_to_jiffies(10);
-> +	do {
-> +		udelay(1);
-> +
-> +		regmap_read(rk_phy->reg_base,
-> +			rk_phy->reg_offset + GRF_EMMCPHY_STATUS,
-> +			&dllrdy);
-> +		dllrdy = (dllrdy >> PHYCTRL_DLLRDY_SHIFT) & PHYCTRL_DLLRDY_MASK;
-> +		if (dllrdy == PHYCTRL_DLLRDY_DONE)
-> +			break;
-> +	} while (!time_after(jiffies, timeout));
-> +
->  	if (dllrdy != PHYCTRL_DLLRDY_DONE) {
->  		pr_err("rockchip_emmc_phy_power: dllrdy timeout.\n");
->  		return -ETIMEDOUT;
->
+For the A10s, you also declare the whole display engine block without
+anyone having tested that it was actually working.
 
+Maxime
 
--- 
-Best Regards
-Shawn Lin
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXXmhUAAoJEBx+YmzsjxAgW0sP/j/xev7Z8pdDleEhAzVTDpgZ
+DKXVcbb0al9K5nd0bhfEgRV2BJZ1M3LqqcWn6TkiQlRbi2HBJLzF0rXrXewP82LD
+yYUBRZ/kJEULGkgVG+bZAzHNaOGfiGdvWGnWFKbFoD8HtcSHrJBJB9/k707skrLX
+uHNIGDBucDuG2QWjIU0J9DHmfdtR1PpfoKWM0b/GbTMilMy3+D2cmEBaOZNzEiSd
+4iz4bxI3diSAHLmhdteW/DCRwGVear/zjgrYE+qym8+gwdslPUuFuAlIZb4mj+Hi
+ASIvV/wQmtpA+Hq+xosdaU72K0tqBvaK7Icb+HvChBUnYcmf/GJmxncZQpMOEJwf
+6cklyrIPWaCtfZXMcY8ip67pwvca99M/mFLaIXVoeOoaAQ5ghpel787VQ5DfbC8H
+tlN2VWMpxwtNRnU5sbW1sfR0FaEw1D7K9S8fE4kTGuZXV07AM08DfjJ/w0GFk/o1
+ZskEmdFzayTAaf4KrPvrDWXqdNCVPyEm62EDNTGcqUyA9HQLphcI6b0dF+BSxG5J
+m8Dbl94SUhZhc8g03G9xDNRJxgfS+RBxlw2LSMnbQlaqg/LGhZpkficf1yUfWOzq
+kP4PsUOpFLmO7aHwcUfujLNlwDLT+8mY6rLmbWt38yWOOW3/bPAMaZS4tq0pia2t
+EduBTTtDj6MqsD6kJ7b/
+=RyoS
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
