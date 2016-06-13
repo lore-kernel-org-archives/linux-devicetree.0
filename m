@@ -1,125 +1,91 @@
-From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] backlight: lp855x: Add enable regulator
-Date: Mon, 13 Jun 2016 10:05:07 +0900
-Message-ID: <575E06C3.4020305@ti.com>
-References: <1465587597-131467-1-git-send-email-briannorris@chromium.org>
+From: Fugang Duan <fugang.duan@nxp.com>
+Subject: RE: [PATCH v2 1/2] ARM: imx6: disable deeper idle states when FEC is
+ active w/o HW workaround
+Date: Mon, 13 Jun 2016 01:17:58 +0000
+Message-ID: <VI1PR0401MB185520C3915ED81041902AF6FF530@VI1PR0401MB1855.eurprd04.prod.outlook.com>
+References: <1464971480-9203-1-git-send-email-l.stach@pengutronix.de>
+ <VI1PR0401MB1855AA40FA576AF677A68E6FFF5C0@VI1PR0401MB1855.eurprd04.prod.outlook.com>
+ <1465464924.18807.5.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465587597-131467-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1465464924.18807.5.camel@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 6/11/2016 4:39 AM, Brian Norris wrote:
-> The LP8556 datasheet describes an EN/VDDIO input, which serves "both as
-> a chip enable and as a power supply reference for PWM, SDA, and SCL
-> inputs." The LP8556 that I'm testing doesn't respond properly if I try
-> to talk I2C to it too quickly after enabling VDDIO, and the LP8555
-> datasheet mentions a t_RESPONSE delay of up to 1 millisecond.
->
-> Support this EN/VDDIO by adding a regulator property to the binding;
-> enabling this regulator at probe time; and sleeping for 1 to 2ms, if the
-> EN/VDDIO regulator was provided.
->
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Lucas Stach <l.stach@pengutronix.de> Sent: Thursday, June 09, 2016 5:35 PM
+> To: Fugang Duan <fugang.duan@nxp.com>; Shawn Guo <shawnguo@kernel.org>
+> Cc: devicetree@vger.kernel.org; patchwork-lst@pengutronix.de;
+> kernel@pengutronix.de; linux-arm-kernel@lists.infradead.org;
+> netdev@vger.kernel.org
+> Subject: Re: [PATCH v2 1/2] ARM: imx6: disable deeper idle states when FEC is
+> active w/o HW workaround
+> 
+> Hi Fugang,
+> 
+> Am Montag, den 06.06.2016, 02:00 +0000 schrieb Fugang Duan:
+> > From: Lucas Stach <l.stach@pengutronix.de> Sent: Saturday, June 04,
+> > 2016 12:31 AM
+> > >
+> > > To: Shawn Guo <shawnguo@kernel.org>; Fugang Duan <fugang.duan@nxp.c
+> > > om>
+> > > Cc: devicetree@vger.kernel.org; patchwork-lst@pengutronix.de;
+> > > kernel@pengutronix.de; linux-arm-kernel@lists.infradead.org;
+> > > netdev@vger.kernel.org
+> > > Subject: [PATCH v2 1/2] ARM: imx6: disable deeper idle states when
+> > > FEC is active w/o HW workaround
+> > >
+> > > The i.MX6 Q/DL has an erratum (ERR006687) that prevents the FEC from
+> > > waking the CPUs when they are in wait(unclocked) state. As the
+> > > hardware workaround isn't applicable to all boards, disable the
+> > > deeper idle state when the workaround isn't present and the FEC is
+> > > in use.
+> > >
+> > > This allows to safely run a kernel with CPUidle enabled on all
+> > > i.MX6 boards.
+> > >
+> > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > > Acked-by: David S. Miller <davem@davemloft.net> (for network
+> > > changes)
+> > > ---
+> 
+> [...]
+> 
+> > Hi, Lucas,
+> >
+> > FEC irq cannot wake up CPUs when system is in wait mode. But we can
+> > use GPIO_6 for FEC interrupt that GPIO irq wake up CPUs.
+> > No need to disable wait mode as your such patches.
+> >
+> > You just config the gpio irq like below patches:
+> > bc20a5d6da71 (ARM: dts: imx6qdl-sabreauto: use GPIO_6 for FEC
+> > interrupt.)
+> > 6261c4c8f13e (ARM: dts: imx6qdl-sabrelite: use GPIO_6 for FEC
+> > interrupt.)
+> >
+> Please look at the description of this series again. The changes don't disable the
+> deeper idle states on boards where the HW waorkaround is available. There is a
+> large number of boards in the wild which can not use the HW workaround, as
+> they use GPIO_6 for other purposes. The aim of this series is to have an
+> automatic software workaround available for those boards.
+> 
+> Regards,
+> Lucas
 
-Acked-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+I see.  My concern is the wild boards why don't follow NXP HW reference guide.
 
-Thanks!
+For the patch itself, it is fine for me to fix the wild boards issue.
 
-> ---
-> v2: s/TS8555/LP8555/ in comment (typo)
->
->   .../devicetree/bindings/leds/backlight/lp855x.txt  |  2 ++
->   drivers/video/backlight/lp855x_bl.c                | 29 ++++++++++++++++++++++
->   2 files changed, 31 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/lp855x.txt b/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-> index 0a3ecbc3a1b9..88f56641fc28 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-> @@ -13,6 +13,7 @@ Optional properties:
->     - rom-addr: Register address of ROM area to be updated (u8)
->     - rom-val: Register value to be updated (u8)
->     - power-supply: Regulator which controls the 3V rail
-> +  - enable-supply: Regulator which controls the EN/VDDIO input
->
->   Example:
->
-> @@ -57,6 +58,7 @@ Example:
->   	backlight@2c {
->   		compatible = "ti,lp8557";
->   		reg = <0x2c>;
-> +		enable-supply = <&backlight_vddio>;
->   		power-supply = <&backlight_vdd>;
->
->   		dev-ctrl = /bits/ 8 <0x41>;
-> diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
-> index e5b14f52628f..939f057836e1 100644
-> --- a/drivers/video/backlight/lp855x_bl.c
-> +++ b/drivers/video/backlight/lp855x_bl.c
-> @@ -13,6 +13,7 @@
->   #include <linux/slab.h>
->   #include <linux/i2c.h>
->   #include <linux/backlight.h>
-> +#include <linux/delay.h>
->   #include <linux/err.h>
->   #include <linux/of.h>
->   #include <linux/platform_data/lp855x.h>
-> @@ -74,6 +75,7 @@ struct lp855x {
->   	struct lp855x_platform_data *pdata;
->   	struct pwm_device *pwm;
->   	struct regulator *supply;	/* regulator for VDD input */
-> +	struct regulator *enable;	/* regulator for EN/VDDIO input */
->   };
->
->   static int lp855x_write_byte(struct lp855x *lp, u8 reg, u8 data)
-> @@ -433,6 +435,19 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
->   		lp->supply = NULL;
->   	}
->
-> +	lp->enable = devm_regulator_get_optional(lp->dev, "enable");
-> +	if (IS_ERR(lp->enable)) {
-> +		ret = PTR_ERR(lp->enable);
-> +		if (ret == -ENODEV) {
-> +			lp->enable = NULL;
-> +		} else {
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(lp->dev, "error getting enable regulator: %d\n",
-> +					ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->   	if (lp->supply) {
->   		ret = regulator_enable(lp->supply);
->   		if (ret < 0) {
-> @@ -441,6 +456,20 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
->   		}
->   	}
->
-> +	if (lp->enable) {
-> +		ret = regulator_enable(lp->enable);
-> +		if (ret < 0) {
-> +			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		/*
-> +		 * LP8555 datasheet says t_RESPONSE (time between VDDIO and
-> +		 * I2C) is 1ms.
-> +		 */
-> +		usleep_range(1000, 2000);
-> +	}
-> +
->   	i2c_set_clientdata(cl, lp);
->
->   	ret = lp855x_configure(lp);
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Fugang Duan <fugang.duan@nxp.com>
