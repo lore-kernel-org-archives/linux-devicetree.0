@@ -1,129 +1,164 @@
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pci: add DT binding for Axis ARTPEC-6
- PCIe controller
-Date: Mon, 13 Jun 2016 15:30:53 +0200
-Message-ID: <575EB58D.2020107@axis.com>
-References: <1462794507-30262-1-git-send-email-niklass@axis.com>
- <20160611191033.GL16462@localhost>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/3] net: Add MDIO bus driver for the Hisilicon FEMAC
+Date: Mon, 13 Jun 2016 15:32:30 +0200
+Message-ID: <20160613133230.GA3132@lunn.ch>
+References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com>
+ <1465798076-176393-2-git-send-email-lidongpo@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160611191033.GL16462@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: jespern@axis.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465798076-176393-2-git-send-email-lidongpo@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dongpo Li <lidongpo@hisilicon.com>
+Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 06/11/2016 09:10 PM, Bjorn Helgaas wrote:
-> On Mon, May 09, 2016 at 01:48:27PM +0200, Niklas Cassel wrote:
->> From: Niklas Cassel <niklas.cassel@axis.com>
->>
->> This commit adds the Device Tree binding documentation that allows to
->> describe the PCIe controller found in the Axis ARTPEC-6 SoC.
->>
->> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
-> I applied both of these, with Rob's ack on the first, to
-> pci/host-artpec for v4.8, thanks!
->
-> I made the following minor edits; hopefully I didn't break anything:
-
-Hello Bjorn,
-
-Your changes look good.
-
-Thank you for reviewing and applying :)
-
-(By the way, I couldn't find pci/host-artpec on
-https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/
-but I suppose that you just haven't pushed your local branches yet.)
-
->
-> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> index f91b916..330a45b 100644
-> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> @@ -1,11 +1,11 @@
->  * Axis ARTPEC-6 PCIe interface
+On Mon, Jun 13, 2016 at 02:07:54PM +0800, Dongpo Li wrote:
+> This patch adds a separate driver for the MDIO interface of the
+> Hisilicon Fast Ethernet MAC.
+> 
+> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
+> ---
+>  .../bindings/net/hisilicon-femac-mdio.txt          |  22 +++
+>  drivers/net/phy/Kconfig                            |   8 +
+>  drivers/net/phy/Makefile                           |   1 +
+>  drivers/net/phy/mdio-hisi-femac.c                  | 165 +++++++++++++++++++++
+>  4 files changed, 196 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
+>  create mode 100644 drivers/net/phy/mdio-hisi-femac.c
+> 
+> diff --git a/Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
+> new file mode 100644
+> index 0000000..6f46337
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
+> @@ -0,0 +1,22 @@
+> +Hisilicon Fast Ethernet MDIO Controller interface
+> +
+> +Required properties:
+> +- compatible: should be "hisilicon,hisi-femac-mdio".
+> +- reg: address and length of the register set for the device.
+> +- clocks: A phandle to the reference clock for this device.
+> +
+> +- PHY subnode: inherits from phy binding [1]
+> +[1] Documentation/devicetree/bindings/net/phy.txt
+> +
+> +Example:
+> +mdio: mdio@10091100 {
+> +	compatible = "hisilicon,hisi-femac-mdio";
+> +	reg = <0x10091100 0x10>;
+> +	clocks = <&crg HI3518EV200_MDIO_CLK>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	phy0: phy@1 {
+> +		reg = <1>;
+> +	};
+> +};
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index 6dad9a9..e257322 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -271,6 +271,14 @@ config MDIO_BCM_IPROC
+>  	  This module provides a driver for the MDIO busses found in the
+>  	  Broadcom iProc SoC's.
 >  
-> -This PCIe host controller is based on the Synopsys Designware PCIe IP
-> +This PCIe host controller is based on the Synopsys DesignWare PCIe IP
->  and thus inherits all the common properties defined in designware-pcie.txt.
->  
->  Required properties:
->  - compatible: "axis,artpec6-pcie", "snps,dw-pcie"
-> -- reg: base addresses and lengths of the pcie controller (DBI),
-> +- reg: base addresses and lengths of the PCIe controller (DBI),
->  	the phy controller, and configuration address space.
->  - reg-names: Must include the following entries:
->  	- "dbi"
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index 1a2de8f..033d9ad 100644
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
-> @@ -250,5 +250,8 @@ config PCIE_ARTPEC6
->  	depends on MACH_ARTPEC6
->  	select PCIE_DW
->  	select PCIEPORTBUS
+> +config MDIO_HISI_FEMAC
+> +	tristate "Hisilicon FEMAC MDIO bus controller"
+> +	depends on ARCH_HISI
+> +	depends on HAS_IOMEM && OF_MDIO
 > +	help
-> +	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
-> +	  SoCs.  This PCIe controller uses the DesignWare core.
+> +	  This module provides a driver for the MDIO busses found in the
+> +	  Hisilicon SoC that have an Fast Ethernet MAC.
+> +
+>  endif # PHYLIB
 >  
->  endmenu
-> diff --git a/drivers/pci/host/pcie-artpec6.c b/drivers/pci/host/pcie-artpec6.c
-> index d53dbaf..19adc77 100644
-> --- a/drivers/pci/host/pcie-artpec6.c
-> +++ b/drivers/pci/host/pcie-artpec6.c
-> @@ -61,7 +61,7 @@ struct artpec6_pcie {
->  #define PHY_STATUS			0x118
->  #define PHY_COSPLLLOCK			(1 << 0)
->  
-> -#define ARTPEC6_CPU_TO_BUS_ADDR		0x0FFFFFFF
-> +#define ARTPEC6_CPU_TO_BUS_ADDR		0x0fffffff
->  
->  static int artpec6_pcie_establish_link(struct pcie_port *pp)
->  {
-> @@ -241,35 +241,26 @@ static int __init artpec6_pcie_probe(struct platform_device *pdev)
->  
->  	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
->  	pp->dbi_base = devm_ioremap_resource(&pdev->dev, dbi_base);
-> -	if (IS_ERR(pp->dbi_base)) {
-> -		ret = PTR_ERR(pp->dbi_base);
-> -		goto fail;
-> -	}
-> +	if (IS_ERR(pp->dbi_base))
-> +		return PTR_ERR(pp->dbi_base);
->  
->  	phy_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
->  	artpec6_pcie->phy_base = devm_ioremap_resource(&pdev->dev, phy_base);
-> -	if (IS_ERR(artpec6_pcie->phy_base)) {
-> -		ret = PTR_ERR(artpec6_pcie->phy_base);
-> -		goto fail;
-> -	}
-> +	if (IS_ERR(artpec6_pcie->phy_base))
-> +		return PTR_ERR(artpec6_pcie->phy_base);
->  
->  	artpec6_pcie->regmap =
->  		syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
->  						"axis,syscon-pcie");
-> -	if (IS_ERR(artpec6_pcie->regmap)) {
-> -		ret = PTR_ERR(artpec6_pcie->regmap);
-> -		goto fail;
-> -	}
-> +	if (IS_ERR(artpec6_pcie->regmap))
-> +		return PTR_ERR(artpec6_pcie->regmap);
->  
->  	ret = artpec6_add_pcie_port(pp, pdev);
->  	if (ret < 0)
-> -		goto fail;
-> +		return ret;
->  
->  	platform_set_drvdata(pdev, artpec6_pcie);
->  	return 0;
-> -
-> -fail:
-> -	return ret;
->  }
->  
->  static const struct of_device_id artpec6_pcie_of_match[] = {
+>  config MICREL_KS8995MA
+> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> index fcdbb92..039c4be 100644
+> --- a/drivers/net/phy/Makefile
+> +++ b/drivers/net/phy/Makefile
+> @@ -44,3 +44,4 @@ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+>  obj-$(CONFIG_MDIO_BCM_UNIMAC)	+= mdio-bcm-unimac.o
+>  obj-$(CONFIG_MICROCHIP_PHY)	+= microchip.o
+>  obj-$(CONFIG_MDIO_BCM_IPROC)	+= mdio-bcm-iproc.o
+> +obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+> diff --git a/drivers/net/phy/mdio-hisi-femac.c b/drivers/net/phy/mdio-hisi-femac.c
+> new file mode 100644
+> index 0000000..a9eea61
+> --- /dev/null
+> +++ b/drivers/net/phy/mdio-hisi-femac.c
+> @@ -0,0 +1,165 @@
+> +/*
+> + * Hisilicon Fast Ethernet MDIO Bus Driver
+> + *
+> + * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define MDIO_RWCTRL		0x00
+> +#define MDIO_RO_DATA		0x04
+> +#define MDIO_WRITE		BIT(13)
+> +#define MDIO_RW_FINISH		BIT(15)
+> +#define BIT_PHY_ADDR_OFFSET	8
+> +#define BIT_WR_DATA_OFFSET	16
+> +
+> +struct hisi_femac_mdio_data {
+> +	struct clk *clk;
+> +	void __iomem *membase;
+> +};
+> +
+
+Hi Dongpo
+
+Overall this looks good. Just some minor comments
+
+> +static int hisi_femac_mdio_wait_ready(struct mii_bus *bus)
+> +{
+> +	struct hisi_femac_mdio_data *data = bus->priv;
+
+You could just pass data here. Your read and write functions already
+have it.
+
+> +	data->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(data->clk)) {
+> +		ret = -ENODEV;
+> +		goto err_out_free_mdiobus;
+> +	}
+
+Return the error which devm_clk_get() gives you.
+
+> +
+> +	ret = clk_prepare_enable(data->clk);
+> +	if (ret)
+> +		goto err_out_free_mdiobus;
+> +
+> +	ret = of_mdiobus_register(bus, np);
+> +	if (ret)
+> +		goto err_out_free_mdiobus;
+
+You leave the clock prepared and enabled on error.
+
+    Andrew
