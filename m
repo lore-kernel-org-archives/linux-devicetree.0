@@ -1,164 +1,80 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/3] net: Add MDIO bus driver for the Hisilicon FEMAC
-Date: Mon, 13 Jun 2016 15:32:30 +0200
-Message-ID: <20160613133230.GA3132@lunn.ch>
-References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com>
- <1465798076-176393-2-git-send-email-lidongpo@hisilicon.com>
+From: Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 05/12] mmc: sdhci: add a pre voltage switch callback
+ function
+Date: Mon, 13 Jun 2016 14:04:28 +0000
+Message-ID: <D7CF8A19-9181-4A97-90AF-AC5A6517CE2B@marvell.com>
+References: <1465456218-28354-1-git-send-email-gregory.clement@free-electrons.com>
+ <1465456218-28354-6-git-send-email-gregory.clement@free-electrons.com>,<575E72DC.5090604@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465798076-176393-2-git-send-email-lidongpo@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dongpo Li <lidongpo@hisilicon.com>
-Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575E72DC.5090604-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Language: zh-CN
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2016 at 02:07:54PM +0800, Dongpo Li wrote:
-> This patch adds a separate driver for the MDIO interface of the
-> Hisilicon Fast Ethernet MAC.
-> 
-> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
-> ---
->  .../bindings/net/hisilicon-femac-mdio.txt          |  22 +++
->  drivers/net/phy/Kconfig                            |   8 +
->  drivers/net/phy/Makefile                           |   1 +
->  drivers/net/phy/mdio-hisi-femac.c                  | 165 +++++++++++++++++++++
->  4 files changed, 196 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
->  create mode 100644 drivers/net/phy/mdio-hisi-femac.c
-> 
-> diff --git a/Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
-> new file mode 100644
-> index 0000000..6f46337
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
-> @@ -0,0 +1,22 @@
-> +Hisilicon Fast Ethernet MDIO Controller interface
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,hisi-femac-mdio".
-> +- reg: address and length of the register set for the device.
-> +- clocks: A phandle to the reference clock for this device.
-> +
-> +- PHY subnode: inherits from phy binding [1]
-> +[1] Documentation/devicetree/bindings/net/phy.txt
-> +
-> +Example:
-> +mdio: mdio@10091100 {
-> +	compatible = "hisilicon,hisi-femac-mdio";
-> +	reg = <0x10091100 0x10>;
-> +	clocks = <&crg HI3518EV200_MDIO_CLK>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	phy0: phy@1 {
-> +		reg = <1>;
-> +	};
-> +};
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index 6dad9a9..e257322 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -271,6 +271,14 @@ config MDIO_BCM_IPROC
->  	  This module provides a driver for the MDIO busses found in the
->  	  Broadcom iProc SoC's.
->  
-> +config MDIO_HISI_FEMAC
-> +	tristate "Hisilicon FEMAC MDIO bus controller"
-> +	depends on ARCH_HISI
-> +	depends on HAS_IOMEM && OF_MDIO
-> +	help
-> +	  This module provides a driver for the MDIO busses found in the
-> +	  Hisilicon SoC that have an Fast Ethernet MAC.
-> +
->  endif # PHYLIB
->  
->  config MICREL_KS8995MA
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index fcdbb92..039c4be 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -44,3 +44,4 @@ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
->  obj-$(CONFIG_MDIO_BCM_UNIMAC)	+= mdio-bcm-unimac.o
->  obj-$(CONFIG_MICROCHIP_PHY)	+= microchip.o
->  obj-$(CONFIG_MDIO_BCM_IPROC)	+= mdio-bcm-iproc.o
-> +obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
-> diff --git a/drivers/net/phy/mdio-hisi-femac.c b/drivers/net/phy/mdio-hisi-femac.c
-> new file mode 100644
-> index 0000000..a9eea61
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-hisi-femac.c
-> @@ -0,0 +1,165 @@
-> +/*
-> + * Hisilicon Fast Ethernet MDIO Bus Driver
-> + *
-> + * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define MDIO_RWCTRL		0x00
-> +#define MDIO_RO_DATA		0x04
-> +#define MDIO_WRITE		BIT(13)
-> +#define MDIO_RW_FINISH		BIT(15)
-> +#define BIT_PHY_ADDR_OFFSET	8
-> +#define BIT_WR_DATA_OFFSET	16
-> +
-> +struct hisi_femac_mdio_data {
-> +	struct clk *clk;
-> +	void __iomem *membase;
-> +};
-> +
-
-Hi Dongpo
-
-Overall this looks good. Just some minor comments
-
-> +static int hisi_femac_mdio_wait_ready(struct mii_bus *bus)
-> +{
-> +	struct hisi_femac_mdio_data *data = bus->priv;
-
-You could just pass data here. Your read and write functions already
-have it.
-
-> +	data->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(data->clk)) {
-> +		ret = -ENODEV;
-> +		goto err_out_free_mdiobus;
-> +	}
-
-Return the error which devm_clk_get() gives you.
-
-> +
-> +	ret = clk_prepare_enable(data->clk);
-> +	if (ret)
-> +		goto err_out_free_mdiobus;
-> +
-> +	ret = of_mdiobus_register(bus, np);
-> +	if (ret)
-> +		goto err_out_free_mdiobus;
-
-You leave the clock prepared and enabled on error.
-
-    Andrew
+SGkgQWRyaWFuLA0KDQogIFRoYW5rcyBhIGxvdCBmb3IgdGhlIHN1Z2dlc3Rpb24uIEknbSBmcm9t
+IE1hcnZlbGwgWGVub24gU0RIQyB0ZWFtLg0KICBNb3N0IG9mIHNkaGNpIGhvc3Qgb3BzIGFyZSBz
+dGlsbCB1c2VkIGluIG91ciBkcml2ZXIuIFdlIGp1c3QgY2hhbmdlIG9yIGFkZCBmZXcgb3BzLiBU
+aHVzLCBpZiB3ZSBjcmVhdGUgb3VyIG93biBtbWNfaG9zdF9vcHMsIG1hbnkgc3RhdGljIHNkaGNp
+IGhvc3Qgb3BzIHdpbGwgYmUgZXhwb3J0ZWQuIEkgd291bGQgbGlrZSB0byBrbm93IHdoZXRoZXIg
+c3VjaCBhIG1vZGlmaWNhdGlvbiBjYW4gYmUgYWNjZXB0ZWQgb3Igbm90Lg0KDQogICBJIG5vdGlj
+ZSB0aGF0IGNvbW11bml0eSBpcyBpbXByb3Zpbmcgc2RoY2kuIFRodXMgYWxsIHRoZSBzdGF0aWMg
+c2RoY2kgb3BzIGNhbGxlZCBvdXRzaWRlIHRoZSBzZGhjaS5jIHdpbGwgYmUgZXhwb3J0ZWQuIElz
+IG15IHVuZGVyc3RhbmRpbmcgY29ycmVjdD8NCiAgIFRoYW5rIHlvdS4NCg0KQmVzdCByZWdhcmRz
+LA0KSHUgWmlqaQ0KDQo+PiDU2iAyMDE2xOo21MIxM8jVo6wxNjo1MqOsQWRyaWFuIEh1bnRlciA8
+YWRyaWFuLmh1bnRlckBpbnRlbC5jb20+INC0tcCjug0KPj4gDQo+PiBPbiAwOS8wNi8xNiAxMDox
+MCwgR3JlZ29yeSBDTEVNRU5UIHdyb3RlOg0KPj4gRnJvbTogVmljdG9yIEd1IDx4aWd1QG1hcnZl
+bGwuY29tPg0KPj4gDQo+PiBTb21lIGhvc3QgY29udHJvbGxlciBzdWNoIGFzIFhlbm9uIG5lZWRz
+IGFkZGl0aW9uYWwgc2V0dGluZyB3aGVuDQo+PiBzd2l0Y2hpbmcgc2lnbmFsIHZvbHRhZ2UgaW4g
+ZU1NQyBtb2RlLiBUaGV5IGFsc28gbmVlZCB0byByZS1lbmFibGUNCj4+IGludGVybmFsIGNsb2Nr
+IGJlZm9yZSBhIHZvbHRhZ2Ugc3dpdGNoLg0KPj4gDQo+PiBUaGlzIGNvbW1pdCBhZGRzIGEgY2Fs
+bGJhY2sgcm91dGluZSAidm9sdGFnZV9zd2l0Y2hfcHJlIiBpbiB0aGUgc3RydWN0DQo+PiBzZGhj
+aV9vcHMsIHdoaWNoIGlzIHVzZWQgYnkgc29tZSBob3N0IGNvbnRyb2xsZXJzIHdoaWNoIG5lZWQg
+cmUtZW5hYmxlDQo+PiB0aGUgaW50ZXJuYWwgY2xvY2sgYmVmb3JlIGEgdm9sdGFnZSBzd2l0Y2gu
+DQo+IA0KPiBEb24ndCB3YW50IHRvIGFkZCBzZGhjaSBob3N0IG9wcyBmb3IgdGhlICJkbyBzb21l
+dGhpbmcgYmVmb3JlIGEgbW1jIGhvc3Qgb3AiDQo+IGNhc2UuDQo+IA0KPiBJbnN0ZWFkLCBleHBv
+cnQgc2RoY2lfc3RhcnRfc2lnbmFsX3ZvbHRhZ2Vfc3dpdGNoKCkgYW5kICBob29rDQo+IGhvc3Qt
+Pm1tY19ob3N0X29wcy5zdGFydF9zaWduYWxfdm9sdGFnZV9zd2l0Y2guIFRoZW4gaW4gc2RoY2kt
+eGVub24uYzoNCj4gDQo+IGludCB4ZW5vbl9fc3RhcnRfc2lnbmFsX3ZvbHRhZ2Vfc3dpdGNoKHN0
+cnVjdCBtbWNfaG9zdCAqbW1jLA0KPiAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgbW1jX2lv
+cyAqaW9zKQ0KPiB7DQo+ICAgYmxhaCBibGFoDQo+ICAgcmV0dXJuIHNkaGNpX3N0YXJ0X3NpZ25h
+bF92b2x0YWdlX3N3aXRjaChtbWMsIGlvcyk7DQo+IH0NCj4gDQo+IA0KPj4gDQo+PiBbZ3JlZ29y
+eS5jbGVtZW50QGZyZWUtZWxlY3Ryb25zLmNvbTogc3BsaXQgdGhlIGluaXRpYWwgY29tbWl0IGFu
+ZA0KPj4gcmVmb3JtdWxhdGUgdGhlIGxvZ10NCj4+IA0KPj4gU2lnbmVkLW9mZi1ieTogVmljdG9y
+IEd1IDx4aWd1QG1hcnZlbGwuY29tPg0KPj4gU2lnbmVkLW9mZi1ieTogTWFyY2luIFdvanRhcyA8
+bXdAc2VtaWhhbGYuY29tPg0KPj4gU2lnbmVkLW9mZi1ieTogR3JlZ29yeSBDTEVNRU5UIDxncmVn
+b3J5LmNsZW1lbnRAZnJlZS1lbGVjdHJvbnMuY29tPg0KPj4gLS0tDQo+PiBkcml2ZXJzL21tYy9o
+b3N0L3NkaGNpLmMgfCA0ICsrKysNCj4+IGRyaXZlcnMvbW1jL2hvc3Qvc2RoY2kuaCB8IDEgKw0K
+Pj4gMiBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCj4+IA0KPj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2kuYyBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2kuYw0KPj4g
+aW5kZXggYjA3MjE5NDI2ZDM5Li5jYWQwM2ZmYTlkOWIgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJz
+L21tYy9ob3N0L3NkaGNpLmMNCj4+ICsrKyBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2kuYw0KPj4g
+QEAgLTE3MjksNiArMTcyOSwxMCBAQCBzdGF0aWMgaW50IHNkaGNpX3N0YXJ0X3NpZ25hbF92b2x0
+YWdlX3N3aXRjaChzdHJ1Y3QgbW1jX2hvc3QgKm1tYywNCj4+ICAgaWYgKGhvc3QtPnZlcnNpb24g
+PCBTREhDSV9TUEVDXzMwMCkNCj4+ICAgICAgIHJldHVybiAwOw0KPj4gDQo+PiArICAgIC8qIFNv
+bWUgY29udHJvbGxlciBuZWVkIHRvIGRvIG1vcmUgYmVmb3JlIHN3aXRjaGluZyAqLw0KPj4gKyAg
+ICBpZiAoaG9zdC0+b3BzLT52b2x0YWdlX3N3aXRjaF9wcmUpDQo+PiArICAgICAgICBob3N0LT5v
+cHMtPnZvbHRhZ2Vfc3dpdGNoX3ByZShob3N0KTsNCj4+ICsNCj4+ICAgY3RybCA9IHNkaGNpX3Jl
+YWR3KGhvc3QsIFNESENJX0hPU1RfQ09OVFJPTDIpOw0KPj4gDQo+PiAgIHN3aXRjaCAoaW9zLT5z
+aWduYWxfdm9sdGFnZSkgew0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ku
+aCBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2kuaA0KPj4gaW5kZXggNDljNmM1YjBlMzNiLi42YmVj
+MWIwMzY4ZDIgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL21tYy9ob3N0L3NkaGNpLmgNCj4+ICsr
+KyBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2kuaA0KPj4gQEAgLTU1MCw2ICs1NTAsNyBAQCBzdHJ1
+Y3Qgc2RoY2lfb3BzIHsNCj4+ICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBpbnQgbWF4X2R0
+ciwgaW50IGhvc3RfZHJ2LA0KPj4gICAgICAgICAgICAgICAgICAgIGludCBjYXJkX2RydiwgaW50
+ICpkcnZfdHlwZSk7DQo+PiAgIHZvaWQgICAgKCppbml0X2NhcmQpKHN0cnVjdCBzZGhjaV9ob3N0
+ICpob3N0LCBzdHJ1Y3QgbW1jX2NhcmQgKmNhcmQpOw0KPj4gKyAgICB2b2lkICAgICgqdm9sdGFn
+ZV9zd2l0Y2hfcHJlKShzdHJ1Y3Qgc2RoY2lfaG9zdCAqaG9zdCk7DQo+PiB9Ow0KPj4gDQo+PiAj
+aWZkZWYgQ09ORklHX01NQ19TREhDSV9JT19BQ0NFU1NPUlMNCj4gDQo+IC0tDQo+IFRvIHVuc3Vi
+c2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1t
+bWMiIGluDQo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwu
+b3JnDQo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFq
+b3Jkb21vLWluZm8uaHRtbA0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
