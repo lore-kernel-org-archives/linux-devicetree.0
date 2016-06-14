@@ -1,241 +1,75 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
-Date: Tue, 14 Jun 2016 12:17:30 +0200
-Message-ID: <575FD9BA.8040708@gmail.com>
-References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
- <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
- <574C5CBF.7060002@gmail.com> <1464683762.14604.59.camel@mtksdaap41>
- <574DEE40.9010008@gmail.com> <1464775020.11122.40.camel@mtksdaap41>
- <574FF264.7050209@gmail.com> <1464934356.15175.31.camel@mtksdaap41>
- <57516774.5080008@gmail.com> <1464956037.16029.8.camel@mtksdaap41>
- <575181E5.6090603@gmail.com> <5756FD73.3050607@gmail.com>
- <1465364427.9963.13.camel@mtksdaap41> <5757F762.4020908@gmail.com>
- <1465388727.21326.8.camel@mtksdaap41> <57583B45.2080504@gmail.com>
- <1465890268.7191.13.camel@mtksdaap41>
+From: tiffany lin <tiffany.lin@mediatek.com>
+Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
+Date: Tue, 14 Jun 2016 19:08:08 +0800
+Message-ID: <1465902488.27938.7.camel@mtksdaap41>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+	 <20160607112235.475c2e4c@recife.lan> <575746EE.3030706@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465890268.7191.13.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Horng-Shyang Liao <hs.liao@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, jassisinghbrar@gmail.com, jaswinder.singh@linaro.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <575746EE.3030706@cisco.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hansverk@cisco.com>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, tiffany.lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Mauro,
 
 
-On 14/06/16 09:44, Horng-Shyang Liao wrote:
-> Hi Matthias,
->
-> On Wed, 2016-06-08 at 17:35 +0200, Matthias Brugger wrote:
->>
->> On 08/06/16 14:25, Horng-Shyang Liao wrote:
->>> Hi Matthias,
->>>
->>> On Wed, 2016-06-08 at 12:45 +0200, Matthias Brugger wrote:
->>>>
->>>> On 08/06/16 07:40, Horng-Shyang Liao wrote:
->>>>> Hi Matthias,
->>>>>
->>>>> On Tue, 2016-06-07 at 18:59 +0200, Matthias Brugger wrote:
->>>>>>
->>>>>> On 03/06/16 15:11, Matthias Brugger wrote:
->>>>>>>
->>>>>>>
->>>>>> [...]
->>>>>>
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +            smp_mb(); /* modify jump before enable thread */
->>>>>>>>>>>>>>>> +        }
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +        cmdq_thread_writel(thread, task->pa_base +
->>>>>>>>>>>>>>>> task->command_size,
->>>>>>>>>>>>>>>> +                   CMDQ_THR_END_ADDR);
->>>>>>>>>>>>>>>> +        cmdq_thread_resume(thread);
->>>>>>>>>>>>>>>> +    }
->>>>>>>>>>>>>>>> +    list_move_tail(&task->list_entry, &thread->task_busy_list);
->>>>>>>>>>>>>>>> +    spin_unlock_irqrestore(&cmdq->exec_lock, flags);
->>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +static void cmdq_handle_error_done(struct cmdq *cmdq,
->>>>>>>>>>>>>>>> +                   struct cmdq_thread *thread, u32 irq_flag)
->>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>> +    struct cmdq_task *task, *tmp, *curr_task = NULL;
->>>>>>>>>>>>>>>> +    u32 curr_pa;
->>>>>>>>>>>>>>>> +    struct cmdq_cb_data cmdq_cb_data;
->>>>>>>>>>>>>>>> +    bool err;
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +    if (irq_flag & CMDQ_THR_IRQ_ERROR)
->>>>>>>>>>>>>>>> +        err = true;
->>>>>>>>>>>>>>>> +    else if (irq_flag & CMDQ_THR_IRQ_DONE)
->>>>>>>>>>>>>>>> +        err = false;
->>>>>>>>>>>>>>>> +    else
->>>>>>>>>>>>>>>> +        return;
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +    curr_pa = cmdq_thread_readl(thread, CMDQ_THR_CURR_ADDR);
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +    list_for_each_entry_safe(task, tmp, &thread->task_busy_list,
->>>>>>>>>>>>>>>> +                 list_entry) {
->>>>>>>>>>>>>>>> +        if (curr_pa >= task->pa_base &&
->>>>>>>>>>>>>>>> +            curr_pa < (task->pa_base + task->command_size))
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> What are you checking here? It seems as if you make some implcit
->>>>>>>>>>>>>>> assumptions about pa_base and the order of execution of
->>>>>>>>>>>>>>> commands in the
->>>>>>>>>>>>>>> thread. Is it save to do so? Does dma_alloc_coherent give any
->>>>>>>>>>>>>>> guarantees
->>>>>>>>>>>>>>> about dma_handle?
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> 1. Check what is the current running task in this GCE thread.
->>>>>>>>>>>>>> 2. Yes.
->>>>>>>>>>>>>> 3. Yes, CMDQ doesn't use iommu, so physical address is continuous.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> Yes, physical addresses might be continous, but AFAIK there is no
->>>>>>>>>>>>> guarantee that the dma_handle address is steadily growing, when
->>>>>>>>>>>>> calling
->>>>>>>>>>>>> dma_alloc_coherent. And if I understand the code correctly, you
->>>>>>>>>>>>> use this
->>>>>>>>>>>>> assumption to decide if the task picked from task_busy_list is
->>>>>>>>>>>>> currently
->>>>>>>>>>>>> executing. So I think this mecanism is not working.
->>>>>>>>>>>>
->>>>>>>>>>>> I don't use dma_handle address, and just use physical addresses.
->>>>>>>>>>>>       From CPU's point of view, tasks are linked by the busy list.
->>>>>>>>>>>>       From GCE's point of view, tasks are linked by the JUMP command.
->>>>>>>>>>>>
->>>>>>>>>>>>> In which cases does the HW thread raise an interrupt.
->>>>>>>>>>>>> In case of error. When does CMDQ_THR_IRQ_DONE get raised?
->>>>>>>>>>>>
->>>>>>>>>>>> GCE will raise interrupt if any task is done or error.
->>>>>>>>>>>> However, GCE is fast, so CPU may get multiple done tasks
->>>>>>>>>>>> when it is running ISR.
->>>>>>>>>>>>
->>>>>>>>>>>> In case of error, that GCE thread will pause and raise interrupt.
->>>>>>>>>>>> So, CPU may get multiple done tasks and one error task.
->>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> I think we should reimplement the ISR mechanism. Can't we just read
->>>>>>>>>>> CURR_IRQ_STATUS and THR_IRQ_STATUS in the handler and leave
->>>>>>>>>>> cmdq_handle_error_done to the thread_fn? You will need to pass
->>>>>>>>>>> information from the handler to thread_fn, but that shouldn't be an
->>>>>>>>>>> issue. AFAIK interrupts are disabled in the handler, so we should stay
->>>>>>>>>>> there as short as possible. Traversing task_busy_list is expensive, so
->>>>>>>>>>> we need to do it in a thread context.
->>>>>>>>>>
->>>>>>>>>> Actually, our initial implementation is similar to your suggestion,
->>>>>>>>>> but display needs CMDQ to return callback function very precisely,
->>>>>>>>>> else display will drop frame.
->>>>>>>>>> For display, CMDQ interrupt will be raised every 16 ~ 17 ms,
->>>>>>>>>> and CMDQ needs to call callback function in ISR.
->>>>>>>>>> If we defer callback to workqueue, the time interval may be larger than
->>>>>>>>>> 32 ms.sometimes.
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> I think the problem is, that you implemented the workqueue as a ordered
->>>>>>>>> workqueue, so there is no parallel processing. I'm still not sure why
->>>>>>>>> you need the workqueue to be ordered. Can you please explain.
->>>>>>>>
->>>>>>>> The order should be kept.
->>>>>>>> Let me use mouse cursor as an example.
->>>>>>>> If task 1 means move mouse cursor to point A, task 2 means point B,
->>>>>>>> and task 3 means point C, our expected result is A -> B -> C.
->>>>>>>> If the order is not kept, the result could become A -> C -> B.
->>>>>>>>
->>>>>>>
->>>>>>> Got it, thanks for the clarification.
->>>>>>>
->>>>>>
->>>>>> I think a way to get rid of the workqueue is to use a timer, which gets
->>>>>> programmed to the time a timeout in the first task in the busy list
->>>>>> would happen. Everytime we update the busy list (e.g. because of task
->>>>>> got finished by the thread), we update the timer. When the timer
->>>>>> triggers, which hopefully won't happen too often, we return timeout on
->>>>>> the busy list elements, until the time is lower then the actual time.
->>>>>>
->>>>>> At least with this we can reduce the data structures in this driver and
->>>>>> make it more lightweight.
->>>>>
->>>>>    From my understanding, your proposed method can handle timeout case.
->>>>>
->>>>> However, the workqueue is also in charge of releasing tasks.
->>>>> Do you take releasing tasks into consideration by using the proposed
->>>>> timer method?
->>>>> Furthermore, I think the code will become more complex if we also use
->>>>> timer to implement releasing tasks.
->>>>>
->>>>
->>>> Can't we call
->>>>            clk_disable_unprepare(cmdq->clock);
->>>>            cmdq_task_release(task);
->>>> after invoking the callback?
->>>
->>> Do you mean just call these two functions in ISR?
->>> My major concern is dma_free_coherent() and kfree() in
->>> cmdq_task_release(task).
->>
->> Why do we need the dma calls at all? Can't we just calculate the
->> physical address using __pa(x)?
->
-> I prefer to use dma_map_single/dma_unmap_single.
->
+On Wed, 2016-06-08 at 07:13 +0900, Hans Verkuil wrote:
+> 
+> On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:
+> > Em Mon, 30 May 2016 20:29:14 +0800
+> > Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
+> >
+> >> ==============
+> >>   Introduction
+> >> ==============
+> >>
+> >> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+> >> Mediatek Video Codec is able to handle video decoding of in a range of formats.
+> >>
+> >> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
+> >> V4L2_PIX_FMT_MT21 format.
+> >>
+> >> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
+> >> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
+> >> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
+> >>
+> >> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
+> >>
+> >> [1]https://patchwork.linuxtv.org/patch/33734/
+> >> [2]https://chromium-review.googlesource.com/#/c/245241/
+> >
+> > Hmm... I'm not seeing the firmware for this driver at the
+> > linux-firmware tree:
+> > 	https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
+> >
+> > Nor I'm seeing any pull request for them. Did you send it?
+> > I'll only merge the driver upstream after seeing such pull request.
+> 
+Sorry, I am not familiar with how to upstream firmware.
+Do you mean we need to upstream vpu firmware first before merge encoder
+driver upstream?
 
-Can you please elaborate why you need this. We don't do dma, so we 
-should not use dma memory for this.
+In
+https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/tree/README, it mentions that 
+"To submit firmware to this repository, please send either a git binary
+diff or preferably a git pull request to: linux-firmware@kernel.org and
+also cc: to related mailing lists."
 
->>> Therefore, your suggestion is to use GFP_ATOMIC for both
->>> dma_alloc_coherent() and kzalloc(). Right?
->>
->> I don't think we need GFP_ATOMIC, the critical path will just free the
->> memory.
->
-> I tested these two functions, and kfree was safe.
-> However, dma_free_coherent raised BUG.
-> BUG: failure at
-> /mnt/host/source/src/third_party/kernel/v3.18/mm/vmalloc.c:1514/vunmap()!
+How we made a git pull request to linux-firmware@kernel.org? 
+How we find out related mailing lists?
 
-Just a general hint. Please try to evaluate on a recent kernel. It looks 
-like as if you tried this on a v3.18 based one.
+best regards,
+Tiffany
 
-Best regards,
-Matthias
-
-> 1512 void vunmap(const void *addr)
-> 1513 {
-> 1514         BUG_ON(in_interrupt());		// <-- here
-> 1515         might_sleep();
-> 1516         if (addr)
-> 1517                 __vunmap(addr, 0);
-> 1518 }
-> 1519 EXPORT_SYMBOL(vunmap);
->
-> Therefore, I plan to use kmalloc + dma_map_single instead of
-> dma_alloc_coherent, and dma_unmap_single + kfree instead of
-> dma_free_coherent.
->
-> What do you think about the function replacement?
->
->>> If so, I can try to implement timeout by timer, and discuss with you
->>> if I have further questions.
->>>
->>
->> Sounds good :)
->>
->> Thanks,
->> Matthias
->
-> Thanks,
-> HS
->
->>>> Regrading the clock, wouldn't it be easier to handle the clock
->>>> enable/disable depending on the state of task_busy_list? I suppose we
->>>> can't as we would need to check the task_busy_list of all threads, right?
->>>>
->>>> Regards,
->>>> Matthias
->>>
->>> Thanks,
->>> HS
->>>
->
->
+> Mauro, are you confusing the decoder and encoder driver? I haven't thoroughly reviewed the decoder driver
+> yet, so there is no pull request for the decoder driver.
+> 
+> The only pull request I made was for the encoder driver.
+> 
+> Regards,
+> 
+> 	Hans
