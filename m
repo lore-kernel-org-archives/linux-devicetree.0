@@ -1,94 +1,60 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
-Date: Tue, 14 Jun 2016 17:20:14 +0200
-Message-ID: <2983992.DFFWV4P4jo@diego>
-References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com> <1465783810-18756-3-git-send-email-frank.wang@rock-chips.com> <57601A1D.9020803@roeck-us.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] ASoC: msm8916: Add codec Device Tree bindings.
+Date: Tue, 14 Jun 2016 16:23:18 +0100
+Message-ID: <20160614152318.GR2282@sirena.org.uk>
+References: <1465582725-30183-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1465582725-30183-2-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57601A1D.9020803-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="htVlOAOs/VIaEhiC"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465582725-30183-2-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, plai@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 14. Juni 2016, 07:52:13 schrieb Guenter Roeck:
-> On 06/12/2016 07:10 PM, Frank Wang wrote:
-> > The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
-> > than rk3288 and before, and most of phy-related registers are also
-> > different from the past, so a new phy driver is required necessarily.
-> > 
-> > Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > ---
-> 
-> [ ... ]
-> 
-> > +
-> > +static int rockchip_usb2phy_resume(struct phy *phy)
-> > +{
-> > +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
-> > +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
-> > +	int ret;
-> > +
-> > +	dev_dbg(&rport->phy->dev, "port resume\n");
-> > +
-> > +	ret = clk_prepare_enable(rphy->clk480m);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = property_enable(rphy, &rport->port_cfg->phy_sus, false);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	rport->suspended = false;
-> > +	return 0;
-> > +}
-> > +
-> > +static int rockchip_usb2phy_suspend(struct phy *phy)
-> > +{
-> > +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
-> > +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
-> > +	int ret;
-> > +
-> > +	dev_dbg(&rport->phy->dev, "port suspend\n");
-> > +
-> > +	ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	rport->suspended = true;
-> > +	clk_disable_unprepare(rphy->clk480m);
-> > +	return 0;
-> > +}
-> > +
-> 
-> I am still quite confused by the clock handling.
-> 
-> The above will be called for each instantiated phy (user, otg).
-> Each time, clk_disable_unprepare() will be called. Yet, there
-> is no matching clk_prepare_enable() call during initialization.
-> 
-> How does this work ?
 
-the created clock gets the supplying clock as parent, see 
+--htVlOAOs/VIaEhiC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-+       rphy->clk = of_clk_get_by_name(node, "phyclk");
-+       if (IS_ERR(rphy->clk)) {
-+               rphy->clk = NULL;
-+               init.parent_names = NULL;
-+               init.num_parents = 0;
-+       } else {
-+               clk_name = __clk_get_name(rphy->clk);
-+               init.parent_names = &clk_name;
-+               init.num_parents = 1;
-+       }
+On Fri, Jun 10, 2016 at 07:18:44PM +0100, Srinivas Kandagatla wrote:
 
-that way when you enable the 480m clock from the phy, its parent will 
-automatically get enabled as well. And of course due to refcounting in the 
-clock framework, the 480m clock (and thus also its parent) will only get 
-disabled once both the host and otg port have disabled it.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Codec IP is divided into two parts, first analog which is integrated in pmic pm8916
+> +and secondly digital part which is integrated into application processor. Codec register
+> +controls are also split across pmic an lpass. Analog part is controlled via spmi bus to pmic.
+
+Please keep things wrapped at less than 80 columns.
+
+> + - interrupt-parent : The parent interrupt controller.
+> + - interrupts: List of interrupts in given SPMI peripheral.
+> + - interrupt-names: Names specified to above list of interrupts in same
+> +		    order. List of supported interrupt names are:
+> +  "spk_cnp_int" - Speaker click and pop interrupt
+
+Please format this more clearly so these don't look like properties,
+more indentation would be good.
+
+> + - vddio-supply: phandle to VDD_CDC_IO regulator device tree node.
+> + - vdd-tx-rx-supply: phandle to VDD_CDC_TX/RX/CX regulator device tree node.
+
+You should name the supplies with the same name as the datasheet uses.
+
+--htVlOAOs/VIaEhiC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXYCFiAAoJECTWi3JdVIfQtQwH/iCnUxV1XkjcxF/Z3UQv1Y5Z
+h2EG3PriI+QcxTMZw6dMj63DLsR61voL+RScWtAUmW6kx4qDjaSCU7qpurxJ2eCO
+YtM0oyygIAJER52ReFK8U36AwlGbz+q8w2tKtqFxJve5FAD6EV1Jz/RRWesc094C
+RHbB69Ibu2dEEWgZaDTiQdnPd5kHqTvXFV2ztjTMeXllhZWHLgA14UWpZ2+MNkAH
+bS0UDcy6QPs7FIZbCQT2X/Eipi5Q478k2E7MN2Yzi1sFsjtf9TAzlFCpfoyxdM3w
+/5uMT5xO6Pj367z/kIN/9XEXMYzFZ2iHbiiS54YwBjE3I5ae2RBjJ76d3EvX6Ac=
+=Vr3l
+-----END PGP SIGNATURE-----
+
+--htVlOAOs/VIaEhiC--
