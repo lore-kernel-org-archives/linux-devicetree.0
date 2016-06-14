@@ -1,105 +1,104 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
-Date: Wed, 15 Jun 2016 00:08:21 +0300
-Message-ID: <efac403f-3709-6a1a-aa02-a8ab26b21ffc@cogentembedded.com>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
- <20160601005751.GG20527@verge.net.au>
- <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
- <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
- <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
- <20160610010245.GA10152@verge.net.au>
- <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
- <20160614004317.GC6456@verge.net.au>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: hisilicon: Add Fast Ethernet MAC driver
+Date: Tue, 14 Jun 2016 23:20:10 +0200
+Message-ID: <247637090.PhpfAhp4VJ@wuerfel>
+References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com> <4004629.ilZU8AvAjF@wuerfel> <576003F8.3090000@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160614004317.GC6456@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <576003F8.3090000-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Dongpo <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tuesday, June 14, 2016 9:17:44 PM CEST Li Dongpo wrote:
+> On 2016/6/13 17:06, Arnd Bergmann wrote:
+> > On Monday, June 13, 2016 2:07:56 PM CEST Dongpo Li wrote:
+> > You tx function uses BQL to optimize the queue length, and that
+> > is great. You also check xmit reclaim for rx interrupts, so
+> > as long as you have both rx and tx traffic, this should work
+> > great.
+> > 
+> > However, I notice that you only have a 'tx fifo empty'
+> > interrupt triggering the napi poll, so I guess on a tx-only
+> > workload you will always end up pushing packets into the
+> > queue until BQL throttles tx, and then get the interrupt
+> > after all packets have been sent, which will cause BQL to
+> > make the queue longer up to the maximum queue size, and that
+> > negates the effect of BQL.
+> > 
+> > Is there any way you can get a tx interrupt earlier than
+> > this in order to get a more balanced queue, or is it ok
+> > to just rely on rx packets to come in occasionally, and
+> > just use the tx fifo empty interrupt as a fallback?
+> > 
+> In tx direction, there are only two kinds of interrupts, 'tx fifo empty'
+> and 'tx one packet finish'. I didn't use 'tx one packet finish' because
+> it would lead to high hardware interrupts rate. This has been verified in
+> our chips. It's ok to just use tx fifo empty interrupt.
 
-On 06/14/2016 03:43 AM, Simon Horman wrote:
+I'm not convinced by the explanation, I don't think that has anything
+to do with the hardware design, but instead is about the correctness
+of the BQL logic with your driver.
 
->>>> [...]
->>>>
->>>>>>> And that the system behaves sanely on suspend/resume.
->>>>>>
->>>>>>  I'd be thankful if you told me how to test that. :-)
->>>>>
->>>>> System suspend:
->>>>>
->>>>>   echo mem > /sys/power/state
->>>>
->>>>   Oh. I know that one! :-)
->>>>
->>>>> System resume: You're gonna need a "wakeup-source" in your DTS, e.g. gpio-keys.
->>>>> Serial should work too, echo "enabled" to the corresponding wakeup
->>>>> file in /sys first.
->>>>
->>>>   I'm afraid I couldn't find that file. All I saw were RPM controls...
->>>>
->>>>> In case of issues, try "echo 0 > /sys/module/printk/parameters/console_suspend".
->>>>
->>>>   There's no problems suspending, it's the resuming that's a problem for me.
->>>>
->>>>> Good luck!
->>>>
->>>>   As usual, there was no luck. :-)
->>>>
->>>> WBR, Sergei
->>>
->>> Does resume work for UP (i.e. without SMP)?
->>
->>    No. My problem with resume is I can't wake up the remote system. I don't
->> see the needed 'wakeup' file in
->> /sys/devices/platform/soc/e6e60000.serial/...
->>     However, if I enable CONFIG_PM_[ADVANCED_]DEBUG and do
->>
->> $ echo -n core /sys/.power/pm_test
->>
->> the system happily wakes up after a small delay (5 s), w/either SMP or UP kernel.
->
-> That seems promising but it seems curious that there is no wakeup file.
->
-> On Lager the following procedure works for me using
-> renesas-devel-20160613-v4.7-rc3 and shmobile defconfig.
->
-> 0. Add wakeup-source property to serial@e6ce0000 node in DT
+Maybe your xmit function can do something like
 
-    Ah, stupid me, it was the piece that I'd overlooked!
+	if (dql_avail(netdev_get_tx_queue(dev, 0)->dql) < 0)
+		enable per-packet interrupt
+	else
+		use only fifo-empty interrupt
 
-> 1. echo enabled > /sys/devices/platform/e6e60000.serial/tty/ttySC0/power/wakeup
-> 2. echo mem > /sys/power/state
-> 3. Provide input on serial console
->
-> * Success! *
+That way, you don't get a lot of interrupts when the system is
+in a state of packets being received and sent continuously,
+but if you get to the point where your tx queue fills up
+and no rx interrupts arrive, you don't have to wait for it
+to become completely empty before adding new packets, and
+BQL won't keep growing the queue.
 
-    Yeah, works now!
-    Sorry, I had no previous experience with the PM. Was unsupported feature 
-back in MontaVista... :-)
+> >> +    priv->phy_mode = of_get_phy_mode(node);
+> >> +    if (priv->phy_mode < 0) {
+> >> +            dev_err(dev, "not find phy-mode\n");
+> >> +            ret = -EINVAL;
+> >> +            goto out_disable_clk;
+> >> +    }
+> >> +
+> >> +    priv->phy_node = of_parse_phandle(node, "phy-handle", 0);
+> >> +    if (!priv->phy_node) {
+> >> +            dev_err(dev, "not find phy-handle\n");
+> >> +            ret = -EINVAL;
+> >> +            goto out_disable_clk;
+> >> +    }
+> >> +
+> >> +    priv->phy = of_phy_connect(ndev, priv->phy_node,
+> >> +                               hisi_femac_adjust_link, 0, priv->phy_mode);
+> >> +    if (!(priv->phy) || IS_ERR(priv->phy)) {
+> >> +            dev_err(dev, "connect to PHY failed!\n");
+> >> +            ret = -ENODEV;
+> >> +            goto out_phy_node;
+> >> +    }
+> > 
+> > I wonder if we could generalize this set of three calls, I
+> > get the impression that we duplicate this across several
+> > drivers that shouldn't need to bother with the specific
+> > phy-handle and phy-mode properties.
+> > 
+> Some drivers only call 'of_phy_connect' when ndo_open called,
+> some call when driver probed. But 'phy_mode' and 'phy_node' are
+> usually initialized when driver probed.
+> So I think it's not suitable to combine 'of_phy_connect' with
+> 'of_get_phy_mode' and 'of_parse_phandle'.
+> Do you have any more suggestions ?
 
->>> How did testing CPU hotplug go? Did it work for all CPUs?
->>
->>    Sure!
->
-> Great!
->
->>    The only problem I'm seeing (again) is the RCAN clock failing to register:
->>
->> rcar_gen2_cpg_clocks_init: failed to register cpg_clocks rcan clock (-12)
->>
->>    I was going to look at it yesterday but (wrongly) thought it somehow
->> cured itself... I'll look at it now.
->
-> Is this resolved? If not perhaps you could consider removing the node
-> in question for now.
+My idea was to add another interface that drivers could optionally
+call if they use the logic that you have here, but other drivers
+could keep using the plain of_phy_connect.
 
-    That's what I did in v5, i.e. removed the RCAN CPG clock (not the whole 
-node)...
+Anyway, this was just an idea, it's not important.
 
-MBR, Sergei
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
