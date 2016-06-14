@@ -1,82 +1,83 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX
- settings
-Date: Tue, 14 Jun 2016 10:06:57 +0800
-Message-ID: <20160614020657.GA25052@shlinux2>
-References: <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com>
- <20160323043638.GA18462@peterchendt>
- <56F2D43D.1040404@timesys.com>
- <56F2DDB7.7070700@timesys.com>
- <20160324022117.GA5301@peterchendt>
- <57588DA8.4050000@timesys.com>
- <CAL411-of2Phqx18LBaGt6FMg5DxaJesRYvrRzsfSNyJRopsUZQ@mail.gmail.com>
- <CAENNV6+978syhexzQber58xuai=grC2_TsVF3GmHCAp_Zj=HZQ@mail.gmail.com>
- <20160612032538.GB22054@shlinux2>
- <575F1A57.6030807@timesys.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 04/11] mmc: sdhci-of-arasan: Properly set
+ corecfg_baseclkfreq on rk3399
+Date: Mon, 13 Jun 2016 19:13:43 -0700
+Message-ID: <CAD=FV=WGwiQqRNMSSX9OR6nAOwuu7CbULuz7BcNp-S=duqpLLQ@mail.gmail.com>
+References: <1465339484-969-1-git-send-email-dianders@chromium.org>
+ <1465339484-969-5-git-send-email-dianders@chromium.org> <f5dcc018-bd60-87a7-798b-efc261e443dd@rock-chips.com>
+ <CAD=FV=UzGZmwGTthqqO5Skxj5f0wsS5VKr4gYP2i9SUyGqvbjg@mail.gmail.com>
+ <47a2dcd9-9c3c-8fde-2be0-40e305c25e8d@rock-chips.com> <CAD=FV=UL5tU8RWtHF=-pE8SA0jUcBsqQDOU0BrruXOF7yGh5xg@mail.gmail.com>
+ <da1c9ae9-71d9-6e9d-7b9f-08485ee9178e@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <575F1A57.6030807-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <da1c9ae9-71d9-6e9d-7b9f-08485ee9178e@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Ziyuan Xu <xzy.xu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Adrian Hunter <adrian.hunter@intel.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2016 at 04:40:55PM -0400, Jaret Cantu wrote:
-> >
-> >According to your previous information, the single formula can't be used
-> >to get D_CAL value, do you have any good ways except for using a table?
-> 
-> That is not exactly what I said:
-> 
-> "I can't find any formula which would hit all of those same
-> percentages **without rounding up.**"
-> 
+Shawn,
 
-Sorry, my careless.
+On Mon, Jun 13, 2016 at 5:59 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>> Even in the case that an SoC designer didn't put a value into
+>> corecfg_baseclkfreq that matched register[15:8], it seems very likely
+>> that the rate returned from the clk_get_rate() would match.
+>>
+>> I guess what I'm saying is that, to me, it seems like my patch isn't
+>> broken in any real systems.  If we ever find a system that needs this
+>> behavior in the future, we can add it.  Until then, it seems like my
+>> patch would be fine.  Do you agree?
+>
+>
+> I agree. But from the code itself, we should still use
+> SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN to see if we could get
+> it from internal register in case of some platforms don't
+> provide the clk stuff.. Sounds sane? :)
 
-> I did find a formula that hits all of the percentages with rounding
-> up, and I listed this formula (in shell form) previously. The
-> rounding (+ (119-80)/2) just makes it look a little more awkward
-> than I would like:
-> 
-> $ for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79;
-> do echo "$d="$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) ));
-> d=$((d+1)); done
-> 119=0
-> 116=1
-> 114=2
-> 112=3
-> 109=4
-> 106=5
-> 103=6
-> 100=7
-> 97=8
-> 95=9
-> 93=10
-> 90=11
-> 88=12
-> 86=13
-> 83=14
-> 79=15
-> 
-> These current percentage/register value pairs match the D_CAL table.
-> 
-> 
-> > Sending the patch for new algorithm to speed up this issue please.
-> >
-> There were also some Documentation changes from between when I
-> created this patch and the current HOL for which I had to modify the
-> patch.
+Could we wait until there exists a SoC that needs to provide
+baseclkfreq in its sdhci_arasan_soc_ctl_map table and that needs this
+value copied from register[15:8]?
 
-I will review and test your v4 patch, thanks.
+AKA:
 
--- 
+A) If you have a SoC where clk_get_rate() is right and software needs
+to set baseclkfreq manualy, then you should include "baseclkfreq" in
+your sdhci_arasan_soc_ctl_map table.  This is like rk3399.  Note that
+if _both_ clk_get_rate() and register[15:8] are right, that's fine.
+We can still use clk_get_rate() since it will be exactly the same as
+register[15:8].
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+B) If you have a SoC that doesn't even expose corecfg_baseclkfreq to
+software control, just don't include "baseclkfreq" in your
+sdhci_arasan_soc_ctl_map table.  Easy.  This is how my patch treats
+anyone using the current "generic" bindings, but you could easily just
+specify an offset of "-1" for baseclkfreq if you didn't want to use
+the generic bindings but couldn't control baseclkfreq.
+
+C) If you have a SoC that provides a valid value in register[15:8] and
+clk_get_rate() is wrong and software is required to copy the value
+from register[15:8] to baseclkfreq, technically we should fix
+clk_get_rate() anyway.  It's good when common clock framework provides
+correct values.  NOTE: It seems very unlikely to me that
+register[15:8] would be right AND that software would be required to
+copy this value to baseclkfreq, but I suppose there are some pretty
+crazy hardware designs out there.
+
+D) If you have a SoC that provides a valid value in register[15:8] and
+clk_get_rate() is wrong and can't be fixed (REALLY?) and software is
+required to copy the value from register[15:8] to baseclkfreq, we will
+need to add new code.  My assertion is that such a SoC doesn't exist
+and is unlikely to ever exist, so I am hesitant to add extra code to
+support this SoC.
+
+
+With my patch, A) and B) are certainly handled.  I think C) is
+unlikely to exist, but if it did exist then I'd say we should fix
+clk_get_rate().  I think D) is VERY unlikely to exist.  If I'm shown
+proof of D) existing, I'm happy to submit a patch for it.  Until we
+see proof of D)'s existence, I don't think we should clutter the code
+with support for it.
+
+
+-Doug
