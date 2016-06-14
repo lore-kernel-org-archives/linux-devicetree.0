@@ -1,531 +1,723 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] ARM: sun8i: Add Parrot Board DTS
-Date: Tue, 14 Jun 2016 21:19:58 +0800
-Message-ID: <CAGb2v67JGG35odB7kEAoF0kGes=KRGoREOSTc_GM0B4A+8cKWg@mail.gmail.com>
-References: <1465812931-22824-1-git-send-email-quentin.schulz@free-electrons.com>
- <1465812931-22824-2-git-send-email-quentin.schulz@free-electrons.com>
- <CAGb2v64jduBijEXzsKbOpSvLd9YHwO=qpSyPSDuYtMPg8wfKzA@mail.gmail.com> <575FFFBE.5090107@free-electrons.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
+Date: Tue, 14 Jun 2016 15:27:13 +0200
+Message-ID: <7225720.0AClDW7eQ6@diego>
+References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com> <1465783810-18756-3-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <575FFFBE.5090107@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Hans De Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465783810-18756-3-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 8:59 PM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> Hi,
->
-> On 13/06/2016 15:04, Chen-Yu Tsai wrote:
->> Hi,
->>
->> On Mon, Jun 13, 2016 at 6:15 PM, Quentin Schulz
->> <quentin.schulz@free-electrons.com> wrote:
->>> The Parrot Board is an evaluation board with an Allwinner R16 (assumed
->>> to be close to an Allwinner A33), 4GB of NAND, 512MB of RAM, USB host
->>
->> You say NAND here, but you enable mmc2 for eMMC below. Please correct it.
->>
->
-> ACK.
->
->>> and OTG, a WiFi/Bluetooth combo chip, a micro SD Card reader, 2
->>> controllable buttons, an LVDS port with separated backlight and
->>> capacitive touch panel ports, an audio/microphone jack, a camera CSI
->>> port, 2 sets of 22 GPIOs and an accelerometer.
->>
->> I assume the board is this one:
->>
->> https://world.taobao.com/item/530374411673.htm
->>
->
-> Definitely looks like it.
->
->>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->>> ---
->>>  arch/arm/boot/dts/Makefile             |   1 +
->>>  arch/arm/boot/dts/sun8i-r16-parrot.dts | 333 +++++++++++++++++++++++++++++++++
->>>  2 files changed, 334 insertions(+)
->>>  create mode 100644 arch/arm/boot/dts/sun8i-r16-parrot.dts
->>>
->>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>> index 06b6c2d..1149512 100644
->>> --- a/arch/arm/boot/dts/Makefile
->>> +++ b/arch/arm/boot/dts/Makefile
->>> @@ -760,6 +760,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->>>         sun8i-a33-ippo-q8h-v1.2.dtb \
->>>         sun8i-a33-q8-tablet.dtb \
->>>         sun8i-a33-sinlinx-sina33.dtb \
->>> +       sun8i-r16-parrot.dtb \
->>>         sun8i-a83t-allwinner-h8homlet-v2.dtb \
->>>         sun8i-a83t-cubietruck-plus.dtb \
->>>         sun8i-h3-orangepi-2.dtb \
->>> diff --git a/arch/arm/boot/dts/sun8i-r16-parrot.dts b/arch/arm/boot/dts/sun8i-r16-parrot.dts
->>> new file mode 100644
->>> index 0000000..75e2420
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/sun8i-r16-parrot.dts
->>> @@ -0,0 +1,333 @@
->>> +/*
->>> + * Copyright 2015 Quentin Schulz
->>> + *
->>> + * Quentin Schulz <quentin.schulz@free-electrons.com>
->>> + *
->>> + * This file is dual-licensed: you can use it either under the terms
->>> + * of the GPL or the X11 license, at your option. Note that this dual
->>> + * licensing only applies to this file, and not this project as a
->>> + * whole.
->>> + *
->>> + *  a) This file is free software; you can redistribute it and/or
->>> + *     modify it under the terms of the GNU General Public License as
->>> + *     published by the Free Software Foundation; either version 2 of the
->>> + *     License, or (at your option) any later version.
->>> + *
->>> + *     This file is distributed in the hope that it will be useful,
->>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + *     GNU General Public License for more details.
->>> + *
->>> + * Or, alternatively,
->>> + *
->>> + *  b) Permission is hereby granted, free of charge, to any person
->>> + *     obtaining a copy of this software and associated documentation
->>> + *     files (the "Software"), to deal in the Software without
->>> + *     restriction, including without limitation the rights to use,
->>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->>> + *     sell copies of the Software, and to permit persons to whom the
->>> + *     Software is furnished to do so, subject to the following
->>> + *     conditions:
->>> + *
->>> + *     The above copyright notice and this permission notice shall be
->>> + *     included in all copies or substantial portions of the Software.
->>> + *
->>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->>> + *     OTHER DEALINGS IN THE SOFTWARE.
->>> + */
->>> +
->>> +/dts-v1/;
->>> +#include "sun8i-a33.dtsi"
->>> +#include "sunxi-common-regulators.dtsi"
->>> +
->>> +#include <dt-bindings/gpio/gpio.h>
->>> +#include <dt-bindings/input/input.h>
->>> +
->>> +/ {
->>> +       model = "Allwinner Parrot EVB R16";
->>> +       compatible = "allwinner,parrot-evb-r16", "allwinner,sun8i-a33";
->>> +
->>> +       aliases {
->>> +               serial0 = &uart0;
->>> +       };
->>> +
->>> +       chosen {
->>> +               stdout-path = "serial0:115200n8";
->>> +       };
->>> +
->>> +       leds {
->>> +               compatible = "gpio-leds";
->>> +               pinctrl-names = "default";
->>> +               pinctrl-0 = <&led_pins_r16>;
->>
->> IMO r16 is too generic. You may want to add parrot_ or parrot_evb_ to it.
->> Same goes for all the other r16 identifier names.
->>
->
-> ACK.
->
->>> +
->>> +               led1 {
->>> +                       label = "r16:led1:usr";
->>> +                       gpio = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
->>> +               };
->>> +
->>> +               led2 {
->>> +                       label = "r16:led2:usr";
->>> +                       gpio = <&pio 4 16 GPIO_ACTIVE_HIGH>; /* PE16 */
->>> +               };
->>> +       };
->>> +
->>> +       wifi_pwrseq: wifi_pwrseq {
->>> +               compatible = "mmc-pwrseq-simple";
->>> +               reset-gpios = <&r_pio 0 6 GPIO_ACTIVE_LOW>; /* PL06 */
->>> +       };
->>> +
->>> +};
->>> +
->>> +&ehci0 {
->>> +       status = "okay";
->>> +};
->>> +
->>> +&i2c1 {
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <&i2c1_pins_a>;
->>> +       status = "okay";
->>
->> Nothing connected? A comment mentioning which connector this is on
->> if it's not directly connecting something on the board would be nice.
->>
->
-> An accelerometer is connected to this i2c, but:
-> 1) The given address of the i2c device given by i2cdetect is not the
-> same as specified in both fex and schematics.
-> 2) The accelerometer has a "product reference" on the schematics for a
-> Broadcom BMA250 but the associated driver does not work with it.
->
-> So there is an accelerometer connected to this i2c but I've not found
-> yet what can drive it. I could add a comment specifying the
-> accelerometer is attached to this i2c or remove the node?
+Am Montag, 13. Juni 2016, 10:10:10 schrieb Frank Wang:
+> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+> than rk3288 and before, and most of phy-related registers are also
+> different from the past, so a new phy driver is required necessarily.
+> 
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+> Changes in v5:
+>  - Added 'reg' in the data block to match the different phy-blocks in dt.
+> 
+> Changes in v4:
+>  - Removed some processes related to 'vbus_host-supply'.
+> 
+> Changes in v3:
+>  - Resolved the mapping defect between fixed value in driver and the
+> property in devicetree.
+>  - Optimized 480m output clock register function.
+>  - Code cleanup.
+> 
+> Changes in v2:
+>  - Changed vbus_host operation from gpio to regulator in *_probe.
+>  - Improved the fault treatment relate to 480m clock register.
+>  - Cleaned up some meaningless codes in *_clk480m_disable.
+>  - made more clear the comment of *_sm_work.
+> 
+>  drivers/phy/Kconfig                  |    7 +
+>  drivers/phy/Makefile                 |    1 +
+>  drivers/phy/phy-rockchip-inno-usb2.c |  645
+> ++++++++++++++++++++++++++++++++++ 3 files changed, 653 insertions(+)
+>  create mode 100644 drivers/phy/phy-rockchip-inno-usb2.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index b869b98..29ef15c 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -347,6 +347,13 @@ config PHY_ROCKCHIP_USB
+>  	help
+>  	  Enable this to support the Rockchip USB 2.0 PHY.
+> 
+> +config PHY_ROCKCHIP_INNO_USB2
+> +	tristate "Rockchip INNO USB2PHY Driver"
+> +	depends on ARCH_ROCKCHIP && OF
+> +	select GENERIC_PHY
+> +	help
+> +	  Support for Rockchip USB2.0 PHY with Innosilicon IP block.
+> +
+>  config PHY_ROCKCHIP_EMMC
+>  	tristate "Rockchip EMMC PHY Driver"
+>  	depends on ARCH_ROCKCHIP && OF
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 9c3e73c..4963fbc 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -38,6 +38,7 @@ phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)	+=
+> phy-s5pv210-usb2.o obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+>  obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
+>  obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
+> +obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
+>  obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
+>  obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
+>  obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+> diff --git a/drivers/phy/phy-rockchip-inno-usb2.c
+> b/drivers/phy/phy-rockchip-inno-usb2.c new file mode 100644
+> index 0000000..fc599c7
+> --- /dev/null
+> +++ b/drivers/phy/phy-rockchip-inno-usb2.c
+> @@ -0,0 +1,645 @@
+> +/*
+> + * Rockchip USB2.0 PHY with Innosilicon IP block driver
+> + *
+> + * Copyright (C) 2016 Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +
+> +#define BIT_WRITEABLE_SHIFT	16
+> +#define SCHEDULE_DELAY	(60 * HZ)
+> +
+> +enum rockchip_usb2phy_port_id {
+> +	USB2PHY_PORT_OTG,
+> +	USB2PHY_PORT_HOST,
+> +	USB2PHY_NUM_PORTS,
+> +};
+> +
+> +enum rockchip_usb2phy_host_state {
+> +	PHY_STATE_HS_ONLINE	= 0,
+> +	PHY_STATE_DISCONNECT	= 1,
+> +	PHY_STATE_HS_CONNECT	= 2,
+> +	PHY_STATE_FS_CONNECT	= 4,
+> +};
+> +
+> +struct usb2phy_reg {
+> +	unsigned int	offset;
+> +	unsigned int	bitend;
+> +	unsigned int	bitstart;
+> +	unsigned int	disable;
+> +	unsigned int	enable;
+> +};
+> +
+> +/**
+> + * struct rockchip_usb2phy_port_cfg: usb-phy port configuration.
+> + * @phy_sus: phy suspend register.
+> + * @ls_det_en: linestate detection enable register.
+> + * @ls_det_st: linestate detection state register.
+> + * @ls_det_clr: linestate detection clear register.
+> + * @utmi_ls: utmi linestate state register.
+> + * @utmi_hstdet: utmi host disconnect register.
+> + */
+> +struct rockchip_usb2phy_port_cfg {
+> +	struct usb2phy_reg	phy_sus;
+> +	struct usb2phy_reg	ls_det_en;
+> +	struct usb2phy_reg	ls_det_st;
+> +	struct usb2phy_reg	ls_det_clr;
+> +	struct usb2phy_reg	utmi_ls;
+> +	struct usb2phy_reg	utmi_hstdet;
+> +};
+> +
+> +/**
+> + * struct rockchip_usb2phy_cfg: usb-phy configuration.
+> + * @reg: the address offset of grf for usb-phy config.
+> + * @num_ports: specify how many ports that the phy has.
+> + * @clkout_ctl: keep on/turn off output clk of phy.
+> + */
+> +struct rockchip_usb2phy_cfg {
+> +	unsigned int	reg;
+> +	unsigned int	num_ports;
+> +	struct usb2phy_reg	clkout_ctl;
+> +	const struct rockchip_usb2phy_port_cfg	port_cfgs[USB2PHY_NUM_PORTS];
+> +};
+> +
+> +/**
+> + * struct rockchip_usb2phy_port: usb-phy port data.
+> + * @port_id: flag for otg port or host port.
+> + * @suspended: phy suspended flag.
+> + * @ls_irq: IRQ number assigned for linestate detection.
+> + * @mutex: for register updating in sm_work.
+> + * @sm_work: OTG state machine work.
+> + * @phy_cfg: port register configuration, assigned by driver data.
+> + */
+> +struct rockchip_usb2phy_port {
+> +	struct phy	*phy;
+> +	unsigned int	port_id;
+> +	bool		suspended;
+> +	int		ls_irq;
+> +	struct mutex	mutex;
+> +	struct		delayed_work sm_work;
+> +	const struct	rockchip_usb2phy_port_cfg *port_cfg;
+> +};
+> +
+> +/**
+> + * struct rockchip_usb2phy: usb2.0 phy driver data.
+> + * @grf: General Register Files regmap.
+> + * @clk: clock struct of phy input clk.
+> + * @clk480m: clock struct of phy output clk.
+> + * @clk_hw: clock struct of phy output clk management.
+> + * @phy_cfg: phy register configuration, assigned by driver data.
+> + * @ports: phy port instance.
+> + */
+> +struct rockchip_usb2phy {
+> +	struct device	*dev;
+> +	struct regmap	*grf;
+> +	struct clk	*clk;
+> +	struct clk	*clk480m;
+> +	struct clk_hw	clk480m_hw;
+> +	const struct rockchip_usb2phy_cfg	*phy_cfg;
+> +	struct rockchip_usb2phy_port	ports[USB2PHY_NUM_PORTS];
+> +};
+> +
+> +static inline int property_enable(struct rockchip_usb2phy *rphy,
+> +				  const struct usb2phy_reg *reg, bool en)
+> +{
+> +	unsigned int val, mask, tmp;
+> +
+> +	tmp = en ? reg->enable : reg->disable;
+> +	mask = GENMASK(reg->bitend, reg->bitstart);
+> +	val = (tmp << reg->bitstart) | (mask << BIT_WRITEABLE_SHIFT);
+> +
+> +	return regmap_write(rphy->grf, reg->offset, val);
+> +}
+> +
+> +static inline bool property_enabled(struct rockchip_usb2phy *rphy,
+> +				    const struct usb2phy_reg *reg)
+> +{
+> +	int ret;
+> +	unsigned int tmp, orig;
+> +	unsigned int mask = GENMASK(reg->bitend, reg->bitstart);
+> +
+> +	ret = regmap_read(rphy->grf, reg->offset, &orig);
+> +	if (ret)
+> +		return false;
+> +
+> +	tmp = (orig & mask) >> reg->bitstart;
+> +	return tmp == reg->enable;
+> +}
+> +
+> +static int rockchip_usb2phy_clk480m_enable(struct clk_hw *hw)
+> +{
+> +	struct rockchip_usb2phy *rphy =
+> +		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
+> +	int ret;
+> +
+> +	/* turn on 480m clk output if it is off */
+> +	if (!property_enabled(rphy, &rphy->phy_cfg->clkout_ctl)) {
+> +		ret = property_enable(rphy, &rphy->phy_cfg->clkout_ctl, true);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* waitting for the clk become stable */
+> +		mdelay(1);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void rockchip_usb2phy_clk480m_disable(struct clk_hw *hw)
+> +{
+> +	struct rockchip_usb2phy *rphy =
+> +		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
+> +
+> +	/* turn off 480m clk output */
+> +	property_enable(rphy, &rphy->phy_cfg->clkout_ctl, false);
+> +}
+> +
+> +static int rockchip_usb2phy_clk480m_enabled(struct clk_hw *hw)
+> +{
+> +	struct rockchip_usb2phy *rphy =
+> +		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
+> +
+> +	return property_enabled(rphy, &rphy->phy_cfg->clkout_ctl);
+> +}
+> +
+> +static unsigned long
+> +rockchip_usb2phy_clk480m_recalc_rate(struct clk_hw *hw,
+> +				     unsigned long parent_rate)
+> +{
+> +	return 480000000;
+> +}
+> +
+> +static const struct clk_ops rockchip_usb2phy_clkout_ops = {
+> +	.enable = rockchip_usb2phy_clk480m_enable,
+> +	.disable = rockchip_usb2phy_clk480m_disable,
+> +	.is_enabled = rockchip_usb2phy_clk480m_enabled,
+> +	.recalc_rate = rockchip_usb2phy_clk480m_recalc_rate,
+> +};
+> +
+> +static void rockchip_usb2phy_clk480m_unregister(void *data)
+> +{
+> +	struct rockchip_usb2phy *rphy = data;
+> +
+> +	of_clk_del_provider(rphy->dev->of_node);
+> +	clk_unregister(rphy->clk480m);
+> +
+> +	if (rphy->clk)
+> +		clk_put(rphy->clk);
+> +}
+> +
+> +static int
+> +rockchip_usb2phy_clk480m_register(struct rockchip_usb2phy *rphy)
+> +{
+> +	struct device_node *node = rphy->dev->of_node;
+> +	struct clk_init_data init;
+> +	const char *clk_name;
+> +	int ret;
+> +
+> +	init.flags = 0;
+> +	init.name = "clk_usbphy_480m";
+> +	init.ops = &rockchip_usb2phy_clkout_ops;
+> +
+> +	/* optional override of the clockname */
+> +	of_property_read_string(node, "clock-output-names", &init.name);
+> +
+> +	rphy->clk = of_clk_get_by_name(node, "phyclk");
+> +	if (IS_ERR(rphy->clk)) {
+> +		rphy->clk = NULL;
+> +		init.parent_names = NULL;
+> +		init.num_parents = 0;
+> +	} else {
+> +		clk_name = __clk_get_name(rphy->clk);
+> +		init.parent_names = &clk_name;
+> +		init.num_parents = 1;
+> +	}
+> +
+> +	rphy->clk480m_hw.init = &init;
+> +
+> +	/* register the clock */
+> +	rphy->clk480m = clk_register(rphy->dev, &rphy->clk480m_hw);
+> +	if (IS_ERR(rphy->clk480m)) {
+> +		ret = PTR_ERR(rphy->clk480m);
+> +		goto err_register;
+> +	}
+> +
+> +	ret = of_clk_add_provider(node, of_clk_src_simple_get, rphy->clk480m);
+> +	if (ret < 0)
+> +		goto err_clk_provider;
+> +
+> +	ret = devm_add_action(rphy->dev, rockchip_usb2phy_clk480m_unregister,
+> +			      rphy);
+> +	if (ret < 0)
+> +		goto err_unreg_action;
+> +
+> +	return 0;
+> +
+> +err_unreg_action:
+> +	of_clk_del_provider(node);
+> +err_clk_provider:
+> +	clk_unregister(rphy->clk480m);
+> +err_register:
+> +	if (rphy->clk)
+> +		clk_put(rphy->clk);
+> +	return ret;
+> +}
+> +
+> +static int rockchip_usb2phy_init(struct phy *phy)
+> +{
+> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
+> +	int ret;
+> +
 
-A comment will suffice, until you figure out what exactly is on there.
+	if (!rport->port_cfg)
+		return 0;
 
->
->>> +};
->>> +
->>> +&lradc {
->>> +       vref-supply = <&reg_aldo3>;
->>> +       status = "okay";
->>> +
->>> +       button@0 {
->>> +               label = "V+";
->>> +               linux,code = <KEY_VOLUMEUP>;
->>> +               channel = <0>;
->>> +               voltage = <190000>;
->>> +       };
->>> +
->>> +       button@1 {
->>> +               label = "V-";
->>> +               linux,code = <KEY_VOLUMEDOWN>;
->>> +               channel = <0>;
->>> +               voltage = <390000>;
->>> +       };
->>> +
->>> +};
->>> +
->>> +&mmc0 {
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_parrot>;
->>> +       vmmc-supply = <&reg_dcdc1>;
->>> +       cd-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
->>> +       bus-width = <4>;
->>> +       status = "okay";
->>> +};
->>> +
->>> +&mmc1 {
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <&mmc1_pins_a>, <&wifi_reset_pin_r16>;
->>> +       vmmc-supply = <&reg_aldo1>;
->>
->> This looks fishy. See below.
->>
->>> +       mmc-pwrseq = <&wifi_pwrseq>;
->>> +       bus-width = <4>;
->>> +       non-removable;
->>> +       status = "okay";
->>> +};
->>> +
->>> +&mmc2 {
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <&mmc2_8bit_pins>;
->>> +       vmmc-supply = <&reg_dcdc1>;
->>> +       bus-width = <8>;
->>> +       non-removable;
->>> +       cap-mmc-hw-reset;
->>> +       status = "okay";
->>> +};
->>> +
->>> +&mmc2_8bit_pins {
->>> +       allwinner,drive = <SUN4I_PINCTRL_40_MA>;
->>> +       allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>> +};
->>> +
->>> +&ohci0 {
->>> +       status = "okay";
->>> +};
->>> +
->>> +&pio {
->>> +       mmc0_cd_pin_parrot: mmc0_cd_pin@0 {
->>
->> _parrot suffix works as well.
->>
->>> +               allwinner,pins = "PD14";
->>> +               allwinner,function = "gpio_in";
->>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>> +       };
->>> +
->>> +       led_pins_r16: led_pins@0 {
->>> +               allwinner,pins = "PE16", "PE17";
->>> +               allwinner,function = "gpio_out";
->>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +       };
->>> +
->>> +       usb0_id_det: usb0_id_detect_pin@0 {
->>> +               allwinner,pins = "PD10";
->>> +               allwinner,function = "gpio_in";
->>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>> +       };
->>> +
->>> +       usb1_vbus_pin_r16: usb1_vbus_pin@0 {
->>> +               allwinner,pins = "PD12";
->>> +               allwinner,function = "gpio_out";
->>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +       };
->>> +};
->>> +
->>> +&r_pio {
->>> +       wifi_reset_pin_r16: wifi_reset_pin@3 {
->>
->> Why @3?
->>
->
-> This is a typo, I'll correct it.
->
->>> +               allwinner,pins = "PL6";
->>> +               allwinner,function = "gpio_out";
->>> +               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>> +               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>> +       };
->>> +};
->>> +
->>> +&r_rsb {
->>> +       status = "okay";
->>> +
->>> +       axp22x: pmic@3a3 {
->>> +               compatible = "x-powers,axp223";
->>> +               reg = <0x3a3>;
->>> +               interrupt-parent = <&nmi_intc>;
->>> +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->>> +               eldoin-supply = <&reg_dcdc1>;
->>
->> A drivevbus-supply referencing reg_vcc5v0 here would be better.
->>
->
-> ACK.
->
->>> +               x-powers,drive-vbus-en;
->>> +       };
->>> +};
->>> +
->>> +#include "axp22x.dtsi"
->>> +
->>> +&reg_aldo1 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <3000000>;
->>> +       regulator-max-microvolt = <3000000>;
->>> +       regulator-name = "aldo1";
->>
->> What is this for exactly? Would turning it off render the system inoperable?
->> How was it referenced in the fex file?
->>
->> If this is for WiFi I/O VCC, then you should specify it in mmc1 with
->> vqmmc-supply.
->>
->
-> In the fex, aldo1 is one of the three power inputs for the WiFi (the
-> others being dldo1 and dldo2) and in the schematics it is linked to
-> both VCC-USB and VCC-IO-WIFI.
->
-> I tried to turn it off and, indeed, the system becomes inoperable.
->
-> I'll add vqmmc-supply in mmc1 with aldo1 regulator. However, I am
-> wondering what to put in vmmc-supply for mmc1 since the WiFi module has
-> three power inputs: dldo1, dldo2 and aldo1. In the fex, they are
-> referenced as, respectively, module_power1, module_power2 and
-> module_power3 and in the schematics dldo1 and dldo2 are named VCC-WIFI
-> while aldo1 is used for VCC-IO-WIFI (if it can help in any way).
->
-> VCC-WIFI is connected to pin VBAT of the Broadcom AP6212 WiFi chip.
-> VCC-IO-WIFI is connected to pin VDDIO of the chip.
+Otherwise the currently empty otg-port will cause null-pointer dereferences 
+when it gets assigned in the devicetree already.
 
-VCC-IO-WIFI is vqmmc, and VCC-WIFI is vmmc.
 
-About having 2 regulators, Maxime is working on a solution. In the
-meantime, you could have dldo1/dldo2 always-on, and put a TODO
-comment on them.
+> +	if (rport->port_id == USB2PHY_PORT_HOST) {
+> +		/* clear linestate and enable linestate detect irq */
+> +		mutex_lock(&rport->mutex);
+> +
+> +		ret = property_enable(rphy, &rport->port_cfg->ls_det_clr, true);
+> +		if (ret) {
+> +			mutex_unlock(&rport->mutex);
+> +			return ret;
+> +		}
+> +
+> +		ret = property_enable(rphy, &rport->port_cfg->ls_det_en, true);
+> +		if (ret) {
+> +			mutex_unlock(&rport->mutex);
+> +			return ret;
+> +		}
+> +
+> +		mutex_unlock(&rport->mutex);
+> +		schedule_delayed_work(&rport->sm_work, SCHEDULE_DELAY);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb2phy_resume(struct phy *phy)
+> +{
+> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
+> +	int ret;
+> +
+> +	dev_dbg(&rport->phy->dev, "port resume\n");
 
-Not sure about it also linked to VCC-USB though. Is VCC-USB connected
-to the SoC or just a trace on the board? If it's the latter, it might
-also be designed to work with a USB based WiFi module.
+	if (!rport->port_cfg)
+		return 0;
 
->
->>> +};
->>> +
->>> +&reg_aldo2 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <2350000>;
->>> +       regulator-max-microvolt = <2650000>;
->>> +       regulator-name = "vdd-dll";
->>> +};
->>> +
->>> +&reg_aldo3 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <2700000>;
->>> +       regulator-max-microvolt = <3300000>;
->>> +       regulator-name = "vcc-pll-avcc";
->>> +};
->>> +
->>> +&reg_dc5ldo {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <900000>;
->>> +       regulator-max-microvolt = <1400000>;
->>> +       regulator-name = "vdd-cpus";
->>> +};
->>> +
->>> +&reg_dcdc1 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <3000000>;
->>> +       regulator-max-microvolt = <3000000>;
->>> +       regulator-name = "vcc-3v0";
->>> +};
->>> +
->>> +&reg_dcdc2 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <900000>;
->>> +       regulator-max-microvolt = <1400000>;
->>> +       regulator-name = "vdd-sys";
->>> +};
->>> +
->>> +&reg_dcdc3 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <900000>;
->>> +       regulator-max-microvolt = <1400000>;
->>> +       regulator-name = "vdd-cpu";
->>> +};
->>> +
->>> +&reg_dcdc5 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <1500000>;
->>> +       regulator-max-microvolt = <1500000>;
->>> +       regulator-name = "vcc-dram";
->>> +};
->>> +
->>> +&reg_dldo1 {
->>> +       regulator-always-on;
->>
->> A comment saying why this is always on would be nice.
->> I assume this is and dldo2 are waiting on regulator supply list support.
->>
->
-> dldo1 and dldo2 are not always on. It is a mistake on my side. Certainly
-> left after quick debugging sessions for the WiFi.
->
->>> +       regulator-min-microvolt = <3300000>;
->>> +       regulator-max-microvolt = <3300000>;
->>> +       regulator-name = "vcc-wifi";
->>> +};
->>> +
->>> +&reg_dldo2 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <3300000>;
->>> +       regulator-max-microvolt = <3300000>;
->>> +       regulator-name = "vcc-wifi1";
->>> +};
->>> +
->>> +&reg_dldo3 {
->>> +       regulator-min-microvolt = <3000000>;
->>> +       regulator-max-microvolt = <3000000>;
->>> +       regulator-name = "vcc-3v0-csi";
->>> +};
->>> +
->>> +&reg_drivevbus {
->>> +       regulator-name = "usb0-vbus";
->>> +       status = "okay";
->>> +};
->>> +
->>> +&reg_eldo1 {
->>> +       regulator-min-microvolt = <1200000>;
->>> +       regulator-max-microvolt = <1200000>;
->>> +       regulator-name = "vcc-1v2-hsic";
->>> +};
->>> +
->>> +&reg_eldo2 {
->>> +       regulator-min-microvolt = <3000000>;
->>> +       regulator-max-microvolt = <3000000>;
->>> +       regulator-name = "dsp-vcc";
->>> +};
->>> +
->>> +&reg_eldo3 {
->>> +       regulator-min-microvolt = <3000000>;
->>> +       regulator-max-microvolt = <3000000>;
->>> +       regulator-name = "eldo3";
->>
->> Is this connected or used? If not you could just omit it.
->>
->
-> eldo3 is connected to a single GPIO.
+> +
+> +	ret = clk_prepare_enable(rphy->clk480m);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = property_enable(rphy, &rport->port_cfg->phy_sus, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rport->suspended = false;
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb2phy_suspend(struct phy *phy)
+> +{
+> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
+> +	int ret;
+> +
 
-Any idea what it's used for?
+	if (!rport->port_cfg)
+		return 0;
 
->
->>> +};
->>> +
->>> +&reg_usb1_vbus {
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <&usb1_vbus_pin_r16>;
->>> +       gpio = <&pio 3 12 GPIO_ACTIVE_HIGH>; /* PD12 */
->>> +       status = "okay";
->>> +};
->>> +
->>> +&uart0 {
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <&uart0_pins_b>;
->>> +       status = "okay";
->>> +};
->>> +
->>> +&usb_otg {
->>> +       dr_mode = "otg";
->>> +       status = "okay";
->>> +};
->>> +
->>> +&usbphy {
->>> +       status = "okay";
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <&usb0_id_det>;
->>> +       usb0_vbus-supply = <&reg_drivevbus>;
->>> +       usb0_id_det-gpios = <&pio 3 10 GPIO_ACTIVE_HIGH>; /* PD10 */
->>
->> No vbus detect or vbus-power-supply? Though IIRC it still works, just slower.
->>
->
-> Adding "usb0_vbus_power-supply = <&usb_power_suply>;" (and setting
-> status of usb_power_supply to okay) makes the micro USB port not
-> detecting USB cable plugged in (in host or peripheral mode).
+> +	dev_dbg(&rport->phy->dev, "port suspend\n");
+> +
+> +	ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rport->suspended = true;
+> +	clk_disable_unprepare(rphy->clk480m);
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb2phy_exit(struct phy *phy)
+> +{
+> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+> +
 
-(CC-ing Hans)
+	if (!rport->port_cfg)
+		return 0;
 
-There are some fixes for this, though they might not have landed.
+> +	if (rport->port_id == USB2PHY_PORT_HOST)
+> +		cancel_delayed_work_sync(&rport->sm_work);
+> +
 
->
-> In the fex, the vbus_det-gpio is "apx_ctrl", I guess this means we don't
-> have a GPIO for vbus detection?
+you will also need to resume the port here, if it is suspended at this point, 
+as phy_power_off gets called after phy_exit and would probably produce clk 
+enable/disable mismatches otherwise.
 
-Yeah. This means we're using the PMIC's VBUS sensing function.
 
-Regards
-ChenYu
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops rockchip_usb2phy_ops = {
+> +	.init		= rockchip_usb2phy_init,
+> +	.exit		= rockchip_usb2phy_exit,
+> +	.power_on	= rockchip_usb2phy_resume,
+> +	.power_off	= rockchip_usb2phy_suspend,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +/*
+> + * The function manage host-phy port state and suspend/resume phy port
+> + * to save power.
+> + *
+> + * we rely on utmi_linestate and utmi_hostdisconnect to identify whether
+> + * FS/HS is disconnect or not. Besides, we do not need care it is FS
+> + * disconnected or HS disconnected, actually, we just only need get the
+> + * device is disconnected at last through rearm the delayed work,
+> + * to suspend the phy port in _PHY_STATE_DISCONNECT_ case.
+> + *
+> + * NOTE: It may invoke *phy_suspend or *phy_resume which will invoke some
+> + * clk related APIs, so do not invoke it from interrupt context directly.
+> + */
+> +static void rockchip_usb2phy_sm_work(struct work_struct *work)
+> +{
+> +	struct rockchip_usb2phy_port *rport =
+> +		container_of(work, struct rockchip_usb2phy_port, sm_work.work);
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(rport->phy->dev.parent);
+> +	unsigned int sh = rport->port_cfg->utmi_hstdet.bitend -
+> +			  rport->port_cfg->utmi_hstdet.bitstart + 1;
+> +	unsigned int ul, uhd, state;
+> +	unsigned int ul_mask, uhd_mask;
+> +	int ret;
+> +
+> +	mutex_lock(&rport->mutex);
+> +
+> +	ret = regmap_read(rphy->grf, rport->port_cfg->utmi_ls.offset, &ul);
+> +	if (ret < 0)
+> +		goto next_schedule;
+> +
+> +	ret = regmap_read(rphy->grf, rport->port_cfg->utmi_hstdet.offset,
+> +			  &uhd);
+> +	if (ret < 0)
+> +		goto next_schedule;
+> +
+> +	uhd_mask = GENMASK(rport->port_cfg->utmi_hstdet.bitend,
+> +			   rport->port_cfg->utmi_hstdet.bitstart);
+> +	ul_mask = GENMASK(rport->port_cfg->utmi_ls.bitend,
+> +			  rport->port_cfg->utmi_ls.bitstart);
+> +
+> +	/* stitch on utmi_ls and utmi_hstdet as phy state */
+> +	state = ((uhd & uhd_mask) >> rport->port_cfg->utmi_hstdet.bitstart) |
+> +		(((ul & ul_mask) >> rport->port_cfg->utmi_ls.bitstart) << sh);
+> +
+> +	switch (state) {
+> +	case PHY_STATE_HS_ONLINE:
+> +		dev_dbg(&rport->phy->dev, "HS online\n");
+> +		break;
+> +	case PHY_STATE_FS_CONNECT:
+> +		/*
+> +		 * For FS device, the online state share with connect state
+> +		 * from utmi_ls and utmi_hstdet register, so we distinguish
+> +		 * them via suspended flag.
+> +		 */
+> +		if (!rport->suspended) {
+> +			dev_dbg(&rport->phy->dev, "FS online\n");
+> +			break;
+> +		}
+> +		/* fall through */
+> +	case PHY_STATE_HS_CONNECT:
+> +		if (rport->suspended) {
+> +			dev_dbg(&rport->phy->dev, "HS/FS connected\n");
+> +			rockchip_usb2phy_resume(rport->phy);
+> +			rport->suspended = false;
+> +		}
+> +		break;
+> +	case PHY_STATE_DISCONNECT:
+> +		if (!rport->suspended) {
+> +			dev_dbg(&rport->phy->dev, "HS/FS disconnected\n");
+> +			rockchip_usb2phy_suspend(rport->phy);
+> +			rport->suspended = true;
+> +		}
+> +
+> +		/*
+> +		 * activate the linestate detection to get the next device
+> +		 * plug-in irq.
+> +		 */
+> +		property_enable(rphy, &rport->port_cfg->ls_det_clr, true);
+> +		property_enable(rphy, &rport->port_cfg->ls_det_en, true);
+> +
+> +		/*
+> +		 * we don't need to rearm the delayed work when the phy port
+> +		 * is suspended.
+> +		 */
+> +		mutex_unlock(&rport->mutex);
+> +		return;
+> +	default:
+> +		dev_dbg(&rport->phy->dev, "unknown phy state\n");
+> +		break;
+> +	}
+> +
+> +next_schedule:
+> +	mutex_unlock(&rport->mutex);
+> +	schedule_delayed_work(&rport->sm_work, SCHEDULE_DELAY);
+> +}
+> +
+> +static irqreturn_t rockchip_usb2phy_linestate_irq(int irq, void *data)
+> +{
+> +	struct rockchip_usb2phy_port *rport = data;
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(rport->phy->dev.parent);
+> +
+> +	if (!property_enabled(rphy, &rport->port_cfg->ls_det_st))
+> +		return IRQ_NONE;
+> +
+> +	mutex_lock(&rport->mutex);
+> +
+> +	/* disable linestate detect irq and clear its status */
+> +	property_enable(rphy, &rport->port_cfg->ls_det_en, false);
+> +	property_enable(rphy, &rport->port_cfg->ls_det_clr, true);
+> +
+> +	mutex_unlock(&rport->mutex);
+> +
+> +	/*
+> +	 * In this case for host phy port, a new device is plugged in,
+> +	 * meanwhile, if the phy port is suspended, we need rearm the work to
+> +	 * resume it and mange its states; otherwise, we do nothing about that.
+> +	 */
+> +	if (rport->suspended && rport->port_id == USB2PHY_PORT_HOST)
+> +		rockchip_usb2phy_sm_work(&rport->sm_work.work);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int rockchip_usb2phy_host_port_init(struct rockchip_usb2phy *rphy,
+> +					   struct rockchip_usb2phy_port *rport,
+> +					   struct device_node *child_np)
+> +{
+> +	int ret;
+> +
+> +	rport->port_id = USB2PHY_PORT_HOST;
+> +	rport->port_cfg = &rphy->phy_cfg->port_cfgs[USB2PHY_PORT_HOST];
+> +
+> +	mutex_init(&rport->mutex);
+> +	INIT_DELAYED_WORK(&rport->sm_work, rockchip_usb2phy_sm_work);
+> +
+> +	rport->ls_irq = of_irq_get_byname(child_np, "linestate");
+> +	if (rport->ls_irq < 0) {
+> +		dev_err(rphy->dev, "no linestate irq provided\n");
+> +		return rport->ls_irq;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(rphy->dev, rport->ls_irq, NULL,
+> +					rockchip_usb2phy_linestate_irq,
+> +					IRQF_ONESHOT,
+> +					"rockchip_usb2phy", rport);
+> +	if (ret) {
+> +		dev_err(rphy->dev, "failed to request irq handle\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb2phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *child_np;
+> +	struct phy_provider *provider;
+> +	struct rockchip_usb2phy *rphy;
+> +	const struct rockchip_usb2phy_cfg *phy_cfgs;
+> +	const struct of_device_id *match;
+> +	unsigned int reg;
+> +	int index, ret;
+> +
+> +	rphy = devm_kzalloc(dev, sizeof(*rphy), GFP_KERNEL);
+> +	if (!rphy)
+> +		return -ENOMEM;
+> +
+> +	match = of_match_device(dev->driver->of_match_table, dev);
+> +	if (!match || !match->data) {
+> +		dev_err(dev, "phy configs are not assigned!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!dev->parent || !dev->parent->of_node)
+> +		return -EINVAL;
+> +
+> +	rphy->grf = syscon_node_to_regmap(dev->parent->of_node);
+> +	if (IS_ERR(rphy->grf))
+> +		return PTR_ERR(rphy->grf);
+> +
+> +	if (of_property_read_u32(np, "reg", &reg)) {
+> +		dev_err(dev, "the reg property is not assigned in %s node\n",
+> +			np->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rphy->dev = dev;
+> +	phy_cfgs = match->data;
+> +	platform_set_drvdata(pdev, rphy);
+> +
+> +	/* find out a proper config which can be matched with dt. */
+> +	index = 0;
+> +	while (phy_cfgs[index].reg) {
+> +		if (phy_cfgs[index].reg == reg) {
+> +			rphy->phy_cfg = &phy_cfgs[index];
+> +			break;
+> +		}
+> +
+> +		++index;
+> +	}
+> +
+> +	if (!rphy->phy_cfg) {
+> +		dev_err(dev, "no phy-config can be matched with %s node\n",
+> +			np->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = rockchip_usb2phy_clk480m_register(rphy);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register 480m output clock\n");
+> +		return ret;
+> +	}
+> +
+> +	index = 0;
+> +	for_each_available_child_of_node(np, child_np) {
+> +		struct rockchip_usb2phy_port *rport = &rphy->ports[index];
+> +		struct phy *phy;
+> +
+> +		phy = devm_phy_create(dev, child_np, &rockchip_usb2phy_ops);
+> +		if (IS_ERR(phy)) {
+> +			dev_err(dev, "failed to create phy\n");
+> +			ret = PTR_ERR(phy);
+> +			goto put_child;
+> +		}
+> +
+> +		rport->phy = phy;
 
->
-> Thanks!
->
-> Regards,
-> Quentin
->
->> Regards,
->> ChenYu
->>
->>> +       usb1_vbus-supply = <&reg_usb1_vbus>; /* USB1 VBUS is always on */
->>> +};
->>> --
->>> 2.5.0
->>>
+	phy_set_drvdata(rport->phy, rport);
+
+> +
+> +		/* initialize otg/host port separately */
+> +		if (!of_node_cmp(child_np->name, "host-port")) {
+> +			ret = rockchip_usb2phy_host_port_init(rphy, rport,
+> +							      child_np);
+> +			if (ret)
+> +				goto put_child;
+> +		}
+> +
+> +		phy_set_drvdata(rport->phy, rport);
+
+move this to the location above to prevent null-pointer dereferences with 
+devices plugged in on boot.
+
+I've tested this a bit on a rk3036 (which is lacking the disconnect-detection 
+it seems), so in general (apart from the stuff mentioned above) this looks 
+nice now. So with the stuff above fixed:
+
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
