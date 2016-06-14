@@ -1,113 +1,121 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [v2 PATCH 3/4] Documentation: bindings: add dt documentation for
- cdn DP controller
-Date: Tue, 14 Jun 2016 18:12:56 -0500
-Message-ID: <20160614231256.GA17242@rob-hp-laptop>
-References: <1465810789-22303-1-git-send-email-zyw@rock-chips.com>
- <1465810789-22303-4-git-send-email-zyw@rock-chips.com>
+Subject: Re: [PATCH v4] input: touchscreen: Add generic driver for Silead
+ touchscreens
+Date: Tue, 14 Jun 2016 18:27:20 -0500
+Message-ID: <20160614232720.GA28035@rob-hp-laptop>
+References: <1465814810-7151-1-git-send-email-djaniboe@gmail.com>
+ <1465814810-7151-2-git-send-email-djaniboe@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465810789-22303-4-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, linux-rockchip@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1465814810-7151-2-git-send-email-djaniboe@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Daniel Jansen <djaniboe@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Robert Dolca <robert.dolca@gmail.com>, Gregor Riepl <onitake@gmail.com>, Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Wessel Blokzijl <wesselb94@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2016 at 05:39:48PM +0800, Chris Zhong wrote:
-> This patch adds a binding that describes the cdn DP controller for
-> rk3399.
+On Mon, Jun 13, 2016 at 12:46:50PM +0200, Daniel Jansen wrote:
+> From: Robert Dolca <robert.dolca@intel.com>
 > 
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> This driver adds support for Silead touchscreens. It has been tested
+> with GSL1680 and GSL3680 touch panels.
 > 
+> It supports ACPI and device tree enumeration. Screen resolution,
+> the maximum number of fingers supported and firmware name are
+> configurable.
+> 
+> Signed-off-by: Robert Dolca <robert.dolca@intel.com>
+> Signed-off-by: Daniel Jansen <djaniboe@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
+> Changes since v3
+> - Check for the hw reporting more touches than expected
+> - Fix input_mt_assign_slots usage
+> - Remove unnecessary defines.
+> - Shorten lines to be under 80 characters.
+> - Move closing block comment to new line.
+> - Add device tree bindings document for silead_gsl1680.
+> - Use dev->driver->acpi_match_table instead of silead_ts_acpi_match
+> - Replaced sprintf in default firmware file name generator with snprintf
+> - Add missing input_mt_sync_frame() call
+> - Fix device tree support
 > 
-> Changes in v2: None
-> Changes in v1:
-> - add extcon node description
-> - add #sound-dai-cells description
+> Changes since v2
+> - removed device properties requirements
+>        - max x and y default to 4095
+>        - max fingers default to 10
+>        - firmware name uses the HID / device name
+>        - power named GPIO optional with fallback to indexed GPIO
+>          (without it there is no pm support in the driver)
+> - finger tracking in the kernel using slot assignment
+> - add device property for x/y inverting and xy swapping
 > 
->  .../bindings/display/rockchip/cdn-dp-rockchip.txt  | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+> Changes since v1
+> - changed device tree properties names
+> - removed cast for `void *id`
+> - removed ifdef from suspend and resume and use __maybe_unused
+> - remove ifdef from ACPI_PTR
+> - renamed ret to error
+> - removed input_set_capability for EV_ABS
+> - fixed endianess issues
+> - added mask for y in order to use only 12 bits
+> - using the 4 MSb for touch ID instead of LSb (bug)
+> - using the 4 LSB for X instead of MSb (bug)
+> ---
+>  .../bindings/input/touchscreen/silead_gsl1680.txt  |  39 ++
+>  drivers/input/touchscreen/Kconfig                  |  13 +
+>  drivers/input/touchscreen/Makefile                 |   1 +
+>  drivers/input/touchscreen/silead.c                 | 652 +++++++++++++++++++++
+>  4 files changed, 705 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>  create mode 100644 drivers/input/touchscreen/silead.c
 > 
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
 > new file mode 100644
-> index 0000000..4a66fc3
+> index 0000000..d0164be
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
-> @@ -0,0 +1,62 @@
-> +Rockchip RK3399 specific extensions to the cdn Display Port
-> +================================
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+> @@ -0,0 +1,39 @@
+> +* GSL 1680 touchscreen controller
 > +
 > +Required properties:
-> +- compatible: must be "rockchip,cdn-dp"
+> +- compatible		  : "silead,gsl1680"
+> +- reg			  : I2C slave address of the chip (0x40)
+> +- interrupt-parent	  : a phandle pointing to the interrupt controller
+> +			    serving the interrupt for this chip
+> +- interrupts		  : interrupt specification for the gsl1680 interrupt
+> +- wake-gpios		  : GPIO specification for the WAKE input
 
-SoC specific compatible string please.
+What direction is this?
 
+> +- touchscreen-size-x	  : horizontal resolution of touchscreen (in pixels)
+> +- touchscreen-size-y	  : vertical resolution of touchscreen (in pixels)
+> +- touchscreen-max-fingers : maximal input values given to inputsystem
 > +
-> +- reg: physical base address of the controller and length
-> +
-> +- clocks: from common clock binding: handle to dp clock.
-> +
-> +- clock-names: from common clock binding:
-> +	       Required elements: "core_clk" "pclk" "spdif"
-> +
-> +- rockchip,grf: this soc should set GRF regs, so need get grf here.
-> +
-> +- ports: contain a port nodes with endpoint definitions as defined in
-> +	 Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +	 contained 2 endpoints, connecting to the output of vop.
-> +
-> +- phys: from general PHY binding: the phandle for the PHY device.
-> +
-> +- extcon: extcon specifier for the Power Delivery
-> +
-> +- #sound-dai-cells = it must be 1 if your system is using 2 DAIs: I2S, SPDIF
-> +
-> +-------------------------------------------------------------------------------
+> +Optional properties:
+> +- touchscreen-inverted-x  : X axis is inverted (boolean)
+> +- touchscreen-inverted-y  : Y axis is inverted (boolean)
+> +- touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
+> +			    Swapping is done after inverting the axis
 > +
 > +Example:
-> +	cdn_dp: dp@fec00000 {
-> +		compatible = "rockchip,cdn-dp";
-> +		reg = <0x0 0xfec00000 0x0 0x100000>;
-> +		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_DP_CORE>, <&cru PCLK_DP_CTRL>,
-> +			 <&cru SCLK_SPDIF_REC_DPTX>;
-> +		clock-names = "core_clk", "pclk", "spdif";
-> +		phys = <&tcphy0>;
-> +		extcon = <&fusb1>;
-> +		rockchip,grf = <&grf>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		#sound-dai-cells = <1>;
 > +
-> +		ports {
-
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-
-Don't need these with a single port.
-
+> +i2c@00000000 {
 > +
-> +			dp_in: port {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				dp_in_vopb: endpoint@0 {
-> +					reg = <0>;
-> +					remote-endpoint = <&vopb_out_dp>;
-> +				};
-> +
-> +				dp_in_vopl: endpoint@1 {
-> +					reg = <1>;
-> +					remote-endpoint = <&vopl_out_dp>;
-> +				};
-> +			};
-> +		};
+> +	gsl1680: touchscreen@40 {
+> +		compatible = "silead,gsl1680";
+> +		reg = <0x40>;
+> +		interrupt-parent = <&pio>;
+> +		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>;
+> +		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>;
+> +		touchscreen-size-x = <480>;
+> +		touchscreen-size-y = <800>;
+> +		touchscreen-max-fingers = <5>;
+> +		touchscreen-inverted-x;
+> +		touchscreen-swapped-x-y;
 > +	};
-> -- 
-> 2.6.3
-> 
-> 
+> +
+> +	/* ... */
+> +};
+> +
