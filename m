@@ -1,117 +1,278 @@
-From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 05/12] mmc: sdhci: add a pre voltage switch callback
- function
-Date: Tue, 14 Jun 2016 10:07:06 +0300
-Message-ID: <575FAD1A.6090407@intel.com>
-References: <1465456218-28354-1-git-send-email-gregory.clement@free-electrons.com>
- <1465456218-28354-6-git-send-email-gregory.clement@free-electrons.com>
- <575E72DC.5090604@intel.com>
- <D7CF8A19-9181-4A97-90AF-AC5A6517CE2B@marvell.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [Patch v5 1/1] leds: pca9532: Add device tree binding
+Date: Tue, 14 Jun 2016 09:30:12 +0200
+Message-ID: <575FB284.2090209@samsung.com>
+References: <1465869369-13449-1-git-send-email-preid@electromag.com.au>
+ <1465869369-13449-2-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <D7CF8A19-9181-4A97-90AF-AC5A6517CE2B-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1465869369-13449-2-git-send-email-preid@electromag.com.au>
+Sender: linux-leds-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/06/16 17:04, Ziji Hu wrote:
-> Hi Adrian,
->=20
-> Thanks a lot for the suggestion. I'm from Marvell Xenon SDHC team. Mo=
-st
-> of sdhci host ops are still used in our driver. We just change or add=
- few
-> ops. Thus, if we create our own mmc_host_ops, many static sdhci host =
-ops
-> will be exported. I would like to know whether such a modification ca=
-n be
-> accepted or not.
->=20
-> I notice that community is improving sdhci. Thus all the static sdhci=
- ops
-> called outside the sdhci.c will be exported. Is my understanding
-> correct? Thank you.
+Hi Phil
 
-The aim is to make sdhci more like a library and give more control to t=
-he
-drivers.  That will mean more sdhci functions get exported, particularl=
-y mmc
-host ops like sdhci_set_ios() or sdhci_start_signal_voltage_switch().
+On 06/14/2016 03:56 AM, Phil Reid wrote:
+> This patch adds basic device tree support for the pca9532 LEDs.
+>
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> ---
+>   .../devicetree/bindings/leds/leds-pca9532.txt      | 39 +++++++++++
+>   drivers/leds/leds-pca9532.c                        | 76 ++++++++++++++++++++--
+>   include/dt-bindings/leds/leds-pca9532.h            | 18 +++++
+>   include/linux/leds-pca9532.h                       |  9 ++-
+>   4 files changed, 133 insertions(+), 9 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+> new file mode 100644
+> index 0000000..198f3ba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+> @@ -0,0 +1,39 @@
+> +*NXP - pca9532 PWM LED Driver
+> +
+> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
+> +The PWM support 256 steps.
+> +
+> +Required properties:
+> +	- compatible:
+> +		"nxp,pca9530"
+> +		"nxp,pca9531"
+> +		"nxp,pca9532"
+> +		"nxp,pca9533"
+> +	- reg -  I2C slave address
+> +
+> +Each led is represented as a sub-node of the nxp,pca9530.
+> +
+> +Optional sub-node properties:
+> +	- label: see Documentation/devicetree/bindings/leds/common.txt
+> +	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
+> +	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +  #include <dt-bindings/leds/leds-pca9532.h>
+> +
+> +  leds: pca9530@60 {
+> +    compatible = "nxp,pca9530";
+> +    reg = <0x60>;
+> +
+> +    red-power {
+> +      label = "pca:red:power";
+> +      type = <PCA9532_TYPE_LED>;
+> +    };
+> +    green-power {
+> +      label = "pca:green:power";
+> +      type = <PCA9532_TYPE_LED>;
+> +    };
+> +  };
+> +
+> +For more product information please see the link below:
+> +http://nxp.com/documents/data_sheet/PCA9532.pdf
+> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+> index e3d3b1a..49930a3 100644
+> --- a/drivers/leds/leds-pca9532.c
+> +++ b/drivers/leds/leds-pca9532.c
+> @@ -21,6 +21,8 @@
+>   #include <linux/workqueue.h>
+>   #include <linux/leds-pca9532.h>
+>   #include <linux/gpio.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>
+>   /* m =  num_leds*/
+>   #define PCA9532_REG_INPUT(i)	((i) >> 3)
+> @@ -86,9 +88,22 @@ static const struct pca9532_chip_info pca9532_chip_info_tbl[] = {
+>   	},
+>   };
+>
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id of_pca9532_leds_match[] = {
+> +	{ .compatible = "nxp,pca9530", .data = (void *)pca9530 },
+> +	{ .compatible = "nxp,pca9531", .data = (void *)pca9531 },
+> +	{ .compatible = "nxp,pca9532", .data = (void *)pca9532 },
+> +	{ .compatible = "nxp,pca9533", .data = (void *)pca9533 },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, of_pca9532_leds_match);
+> +#endif
+> +
+>   static struct i2c_driver pca9532_driver = {
+>   	.driver = {
+>   		.name = "leds-pca953x",
+> +		.of_match_table = of_match_ptr(of_pca9532_leds_match),
+>   	},
+>   	.probe = pca9532_probe,
+>   	.remove = pca9532_remove,
+> @@ -354,6 +369,7 @@ static int pca9532_configure(struct i2c_client *client,
+>   			led->state = pled->state;
+>   			led->name = pled->name;
+>   			led->ldev.name = led->name;
+> +			led->ldev.default_trigger = led->default_trigger;
+>   			led->ldev.brightness = LED_OFF;
+>   			led->ldev.brightness_set_blocking =
+>   						pca9532_set_brightness;
+> @@ -432,15 +448,67 @@ exit:
+>   	return err;
+>   }
+>
+> +static struct pca9532_platform_data *
+> +pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
+> +{
+> +	struct pca9532_platform_data *pdata;
+> +	struct device_node *child;
+> +	const struct of_device_id *match;
+> +	uintptr_t devid;
 
->=20
-> Best regards, Hu Ziji
->=20
->>> =D4=DA 2016=C4=EA6=D4=C213=C8=D5=A3=AC16:52=A3=ACAdrian Hunter <adr=
-ian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> =D0=B4=B5=C0=A3=BA
->>>=20
->>> On 09/06/16 10:10, Gregory CLEMENT wrote: From: Victor Gu
->>> <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->>>=20
->>> Some host controller such as Xenon needs additional setting when=20
->>> switching signal voltage in eMMC mode. They also need to re-enable=20
->>> internal clock before a voltage switch.
->>>=20
->>> This commit adds a callback routine "voltage_switch_pre" in the
->>> struct sdhci_ops, which is used by some host controllers which need
->>> re-enable the internal clock before a voltage switch.
->>=20
->> Don't want to add sdhci host ops for the "do something before a mmc
->> host op" case.
->>=20
->> Instead, export sdhci_start_signal_voltage_switch() and  hook=20
->> host->mmc_host_ops.start_signal_voltage_switch. Then in sdhci-xenon.=
-c:
->>=20
->> int xenon__start_signal_voltage_switch(struct mmc_host *mmc, struct
->> mmc_ios *ios) { blah blah return sdhci_start_signal_voltage_switch(m=
-mc,
->> ios); }
->>=20
->>=20
->>>=20
->>> [gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org: split the initial commit and=20
->>> reformulate the log]
->>>=20
->>> Signed-off-by: Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> Signed-off-by: Marcin
->>> Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> Signed-off-by: Gregory CLEMENT
->>> <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> --- drivers/mmc/host/sdhci.c |=
- 4
->>> ++++ drivers/mmc/host/sdhci.h | 1 + 2 files changed, 5 insertions(+=
-)
->>>=20
->>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c=20
->>> index b07219426d39..cad03ffa9d9b 100644 ---
->>> a/drivers/mmc/host/sdhci.c +++ b/drivers/mmc/host/sdhci.c @@ -1729,=
-6
->>> +1729,10 @@ static int sdhci_start_signal_voltage_switch(struct
->>> mmc_host *mmc, if (host->version < SDHCI_SPEC_300) return 0;
->>>=20
->>> +    /* Some controller need to do more before switching */ +    if
->>> (host->ops->voltage_switch_pre) +
->>> host->ops->voltage_switch_pre(host); + ctrl =3D sdhci_readw(host,
->>> SDHCI_HOST_CONTROL2);
->>>=20
->>> switch (ios->signal_voltage) { diff --git a/drivers/mmc/host/sdhci.=
-h
->>> b/drivers/mmc/host/sdhci.h index 49c6c5b0e33b..6bec1b0368d2 100644=20
->>> --- a/drivers/mmc/host/sdhci.h +++ b/drivers/mmc/host/sdhci.h @@
->>> -550,6 +550,7 @@ struct sdhci_ops { unsigned int max_dtr, int
->>> host_drv, int card_drv, int *drv_type); void    (*init_card)(struct
->>> sdhci_host *host, struct mmc_card *card); +    void
->>> (*voltage_switch_pre)(struct sdhci_host *host); };
->>>=20
->>> #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
->>=20
->> -- To unsubscribe from this list: send the line "unsubscribe linux-m=
-mc"
->> in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo
->> info at  http://vger.kernel.org/majordomo-info.html
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If devid is int the warning also disappears.
+Please make it int and to be entirely consistent apply
+double casting: (int)(uintptr_t).
+
+> +	int maxleds;
+> +	int i = 0;
+> +
+> +	match = of_match_device(of_pca9532_leds_match, dev);
+> +	if (!match)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	devid = (uintptr_t)match->data;
+
+devid = (int)(uintptr_t)match->data
+
+> +	maxleds = pca9532_chip_info_tbl[devid].num_leds;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	for_each_child_of_node(np, child) {
+> +		if (of_property_read_string(child, "label",
+> +					    &pdata->leds[i].name))
+> +			pdata->leds[i].name = child->name;
+> +		of_property_read_u32(child, "type", &pdata->leds[i].type);
+> +		of_property_read_string(child, "linux,default-trigger",
+> +					&pdata->leds[i].default_trigger);
+> +		if (++i >= maxleds) {
+> +			of_node_put(child);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return pdata;
+> +}
+> +
+>   static int pca9532_probe(struct i2c_client *client,
+>   	const struct i2c_device_id *id)
+>   {
+> +	uintptr_t devid;
+
+int devid;
+
+ >
+>   	struct pca9532_data *data = i2c_get_clientdata(client);
+>   	struct pca9532_platform_data *pca9532_pdata =
+>   			dev_get_platdata(&client->dev);
+> -
+> -	if (!pca9532_pdata)
+> -		return -EIO;
+> +	struct device_node *np = client->dev.of_node;
+> +
+> +	if (!pca9532_pdata) {
+> +		if (np) {
+> +			pca9532_pdata =
+> +				pca9532_of_populate_pdata(&client->dev, np);
+> +			if (IS_ERR(pca9532_pdata))
+> +				return PTR_ERR(pca9532_pdata);
+> +		} else {
+> +			dev_err(&client->dev, "no platform data\n");
+> +			return -EINVAL;
+> +		}
+> +		devid = (uintptr_t)of_match_device(
+
+devid = (int)(uintptr_t)of_match_device(
+
+> +			of_pca9532_leds_match, &client->dev)->data;
+> +	} else {
+> +		devid = id->driver_data;
+> +	}
+>
+>   	if (!i2c_check_functionality(client->adapter,
+>   		I2C_FUNC_SMBUS_BYTE_DATA))
+> @@ -450,7 +518,7 @@ static int pca9532_probe(struct i2c_client *client,
+>   	if (!data)
+>   		return -ENOMEM;
+>
+> -	data->chip_info = &pca9532_chip_info_tbl[id->driver_data];
+> +	data->chip_info = &pca9532_chip_info_tbl[devid];
+>
+>   	dev_info(&client->dev, "setting platform data\n");
+>   	i2c_set_clientdata(client, data);
+> diff --git a/include/dt-bindings/leds/leds-pca9532.h b/include/dt-bindings/leds/leds-pca9532.h
+> new file mode 100644
+> index 0000000..4d917aa
+> --- /dev/null
+> +++ b/include/dt-bindings/leds/leds-pca9532.h
+> @@ -0,0 +1,18 @@
+> +/*
+> + * This header provides constants for pca9532 LED bindings.
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_LEDS_PCA9532_H
+> +#define _DT_BINDINGS_LEDS_PCA9532_H
+> +
+> +#define PCA9532_TYPE_NONE         0
+> +#define PCA9532_TYPE_LED          1
+> +#define PCA9532_TYPE_N2100_BEEP   2
+> +#define PCA9532_TYPE_GPIO         3
+> +#define PCA9532_LED_TIMER2        4
+> +
+> +#endif /* _DT_BINDINGS_LEDS_PCA9532_H */
+> diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
+> index b8d6fff..d215b45 100644
+> --- a/include/linux/leds-pca9532.h
+> +++ b/include/linux/leds-pca9532.h
+> @@ -16,6 +16,7 @@
+>
+>   #include <linux/leds.h>
+>   #include <linux/workqueue.h>
+> +#include <dt-bindings/leds/leds-pca9532.h>
+>
+>   enum pca9532_state {
+>   	PCA9532_OFF  = 0x0,
+> @@ -24,16 +25,14 @@ enum pca9532_state {
+>   	PCA9532_PWM1 = 0x3
+>   };
+>
+> -enum pca9532_type { PCA9532_TYPE_NONE, PCA9532_TYPE_LED,
+> -	PCA9532_TYPE_N2100_BEEP, PCA9532_TYPE_GPIO };
+> -
+>   struct pca9532_led {
+>   	u8 id;
+>   	struct i2c_client *client;
+> -	char *name;
+> +	const char *name;
+> +	const char *default_trigger;
+>   	struct led_classdev ldev;
+>   	struct work_struct work;
+> -	enum pca9532_type type;
+> +	u32 type;
+>   	enum pca9532_state state;
+>   };
+>
+>
+
+
+-- 
+Best regards,
+Jacek Anaszewski
