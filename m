@@ -1,122 +1,139 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v10 12/14] usb: hcd: Adapt to OTG core
-Date: Tue, 14 Jun 2016 11:17:52 +0300
-Message-ID: <575FBDB0.20700@ti.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
- <1465564043-27163-13-git-send-email-rogerq@ti.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v10 2/2] dmaengine: Add Xilinx zynqmp dma engine driver
+ support
+Date: Tue, 14 Jun 2016 08:18:09 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5B6441@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1464765839-29018-1-git-send-email-appanad@xilinx.com>
+ <1464765839-29018-2-git-send-email-appanad@xilinx.com>
+ <20160607070841.GJ16910@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B4FA9@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160613055012.GC16910@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465564043-27163-13-git-send-email-rogerq@ti.com>
+In-Reply-To: <20160613055012.GC16910@localhost>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Srikanth Vemula <svemula@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-+Alan
+Hi Vinod,
 
-On 10/06/16 16:07, Roger Quadros wrote:
-> Introduce usb_otg_add/remove_hcd() for use by host
-> controllers that are part of OTG/dual-role port.
+	Thanks for the review...
+
 > 
-> Non device tree platforms can use the otg_dev argument
-> to specify the OTG controller device. If otg_dev is NULL
-> then the device tree node's otg-controller property is used to
-> get the otg_dev device.
+> On Wed, Jun 08, 2016 at 07:40:52AM +0000, Appana Durga Kedareswara Rao
+> wrote:
+> > > > +static void zynqmp_dma_desc_config_eod(struct zynqmp_dma_chan
+> > > > +*chan, void *desc)
+> > >
+> > > eod? 80 line?
 > 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Acked-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  drivers/usb/core/hcd.c  | 55 +++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/usb/hcd.h |  4 ++++
->  2 files changed, 59 insertions(+)
+> What's eod?
+
+End of descriptor...
+
 > 
-> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> index ae6c76d..c6f4155 100644
-> --- a/drivers/usb/core/hcd.c
-> +++ b/drivers/usb/core/hcd.c
-> @@ -46,6 +46,11 @@
->  #include <linux/usb.h>
->  #include <linux/usb/hcd.h>
->  #include <linux/usb/phy.h>
-> +#include <linux/usb/otg.h>
-> +#include <linux/usb/of.h>
-> +
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
->  
->  #include "usb.h"
->  
-> @@ -3025,6 +3030,56 @@ void usb_remove_hcd(struct usb_hcd *hcd)
->  }
->  EXPORT_SYMBOL_GPL(usb_remove_hcd);
->  
-> +static struct otg_hcd_ops otg_hcd_intf = {
-> +	.add = usb_add_hcd,
-> +	.remove = usb_remove_hcd,
-> +	.usb_bus_start_enum = usb_bus_start_enum,
-> +	.usb_control_msg = usb_control_msg,
-> +	.usb_hub_find_child = usb_hub_find_child,
-> +};
-> +
-> +/**
-> + * usb_otg_add_hcd - Register the HCD with OTG core.
-> + * @hcd: the usb_hcd structure to initialize
-> + * @irqnum: Interrupt line to allocate
-> + * @irqflags: Interrupt type flags
-> + * @otg_dev: OTG controller device managing this HCD
-> + *
-> + * Registers the HCD with OTG core. OTG core will call usb_add_hcd()
-> + * or usb_remove_hcd() as necessary.
-> + * If otg_dev is NULL then device tree node is checked for OTG
-> + * controller device via the otg-controller property.
-> + */
-> +int usb_otg_add_hcd(struct usb_hcd *hcd,
-> +		    unsigned int irqnum, unsigned long irqflags,
-> +		    struct device *otg_dev)
-> +{
-> +	struct device *dev = hcd->self.controller;
-> +
-> +	if (!otg_dev) {
-> +		hcd->otg_dev = of_usb_get_otg(dev->of_node);
-> +		if (!hcd->otg_dev)
-> +			return -ENODEV;
-> +	} else {
-> +		hcd->otg_dev = otg_dev;
-> +	}
-> +
-> +	return usb_otg_register_hcd(hcd, irqnum, irqflags, &otg_hcd_intf);
-> +}
-> +EXPORT_SYMBOL_GPL(usb_otg_add_hcd);
-> +
-> +/**
-> + * usb_otg_remove_hcd - Unregister the HCD with OTG core.
-> + * @hcd: the usb_hcd structure to remove
-> + *
-> + * Unregisters the HCD from the OTG core.
-> + */
-> +void usb_otg_remove_hcd(struct usb_hcd *hcd)
-> +{
-> +	usb_otg_unregister_hcd(hcd);
-> +}
-> +EXPORT_SYMBOL_GPL(usb_otg_remove_hcd);
-> +
->  void
->  usb_hcd_platform_shutdown(struct platform_device *dev)
->  {
-> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-> index 36bd54f..0c70282 100644
-> --- a/include/linux/usb/hcd.h
-> +++ b/include/linux/usb/hcd.h
-> @@ -473,6 +473,10 @@ extern int usb_hcd_is_primary_hcd(struct usb_hcd *hcd);
->  extern int usb_add_hcd(struct usb_hcd *hcd,
->  		unsigned int irqnum, unsigned long irqflags);
->  extern void usb_remove_hcd(struct usb_hcd *hcd);
-> +extern int usb_otg_add_hcd(struct usb_hcd *hcd,
-> +			   unsigned int irqnum, unsigned long irqflags,
-> +			   struct device *otg_dev);
-> +extern void usb_otg_remove_hcd(struct usb_hcd *hcd);
->  extern int usb_hcd_find_raw_port_number(struct usb_hcd *hcd, int port1);
->  
->  struct platform_device;
+> > > > +int zynqmp_dma_channel_set_config(struct dma_chan *dchan,
+> > > > +				  struct zynqmp_dma_config *cfg) {
+> > > > +	struct zynqmp_dma_chan *chan = to_chan(dchan);
+> > > > +
+> > > > +	chan->config.ovrfetch = cfg->ovrfetch;
+> > > > +	chan->config.has_sg = cfg->has_sg;
+> > >
+> > > is this HW capability? if so why would anyone not like to use it!
+> >
+> > Yes it is HW capability. It can be either in simple mode or SG mode
+> > Earlier In the driver this configuration is read from the device-tree
+> > But as per lars and your suggestion moved it as runtime config parameters.
 > 
+> If sg mode is available why would anyone _not_ want it?
+> 
+> I do not think there is point to have this
+
+You mean always keep the device in SG mode and provide an option 
+For simple dma mode if user want to use simple DMA mode??
+
+There are few features that are available in the simple DMA mode won't
+Available in SG mode like write only DMA , read only DMA mode etc...
+
+> 
+> >
+> > >
+> > > > +	chan->config.ratectrl = cfg->ratectrl;
+> > > > +	chan->config.src_issue = cfg->src_issue;
+> > > > +	chan->config.src_burst_len = cfg->src_burst_len;
+> > > > +	chan->config.dst_burst_len = cfg->dst_burst_len;
+> > >
+> > > can you describe these parameters?
+> > ratectl:
+> > Rate control can be independently enabled per channel. When rate
+> > control is enabled, the DMA channel uses the rate control count to schedule
+> successive data read transactions.
+> 
+> And how is this used by client?
+
+When rate control is enabled, ZDMA channel uses the rate control count
+To schedule successive data read transactions I mean kind of flow control to schedule 
+Transactions at fixed intervals instead of pumping the transfers without delay or whenever bus is available
+
+Rate control count register definition (11:0):
+Scheduling interval for SRC AXI transaction, only used if rate control is enabled 
+
+
+> 
+> > src_issue:
+> > Tells outstanding transaction on SRC.
+> 
+> This should be read only then, right?
+
+It is a Read/Write register
+http://www.xilinx.com/html_docs/registers/ug1087/ug1087-zynq-ultrascale-registers.html 
+By default it is configured for Max transactions.
+If user want to limit it they can limit it using this config option.
+
+> 
+> > Burst_len:
+> > Configures the burst length of the src and dst transfers...
+> 
+> Hmmm, but you are on memcpy, so that should be programmed for throughput?
+
+Yes...
+
+> 
+> > >
+> > > How would a client know how to configure them?
+> >
+> > With the default values of the config parameters driver will work.
+> 
+> But how will client know what is default!
+
+Default values means IP default state after reset.
+If user not aware of the above parameters also still the driver will work for basic functionality.
+Do you want me to implement one more API get_config so that 
+Whenever user will call the get_config he will know the default values
+Of the config parameters?
+
+> 
+> > If user has specific requirement to change these parameters they can
+> > pass It to the driver using set_config API and all these parameters
+> > are Documented in the include/linux/dma/xilinx_dma.h file...
+> 
+> Can you give me an example where user would like to do that
+
+
+I am using customized dma test client.
+There I am calling this set_config API before triggering memcpy/SG operations.
+
+Regards,
+Kedar.
+
+> 
+> --
+> ~Vinod
+> --
+> To unsubscribe from this list: send the line "unsubscribe dmaengine" in the body
+> of a message to majordomo@vger.kernel.org More majordomo info at
+> http://vger.kernel.org/majordomo-info.html
