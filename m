@@ -1,93 +1,144 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: case sensitivity for devicetree node names
-Date: Tue, 14 Jun 2016 16:05:17 +1000
-Message-ID: <20160614060517.GN4882@voom.fritz.box>
-References: <575B1D84.2010703@gmail.com>
- <20160614011021.GD4882@voom.fritz.box>
- <575F7FC1.5040508@gmail.com>
- <20160614051028.GL4882@voom.fritz.box>
- <575F963F.8090105@gmail.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 10/13] spi: sunxi: merge sun4i and sun6i
+ SPI driver
+Date: Tue, 14 Jun 2016 08:35:09 +0200
+Message-ID: <CAOMqctTff3S9dBa0JVnPwRyY6j2kVbB8SCTKham-MH8CX6JwJw@mail.gmail.com>
+References: <cover.1465490774.git.hramrach@gmail.com> <ad0ec30ef6b01f58e1b3b92da06e6cbd5c947354.1465490774.git.hramrach@gmail.com>
+ <CAGRGNgVONS+i=57D52VeW8J6SvfmX=iG+3VpxNS8=kJOV+WSLw@mail.gmail.com>
+ <CAOMqctQD=o6YBk-QRiqbE9Cj+ZAH1nAM33rW6ZHefV8dU3aucQ@mail.gmail.com>
+ <CAGRGNgWPBh03zQrM=OMF24ezJvC-K0TMw2oqPhuNLj-nZ=mZQA@mail.gmail.com>
+ <CAOMqctTjGTeaFC3MJe4MoMipdSf2ppOpikBSa8A-ht2v4j86bg@mail.gmail.com> <CAGRGNgUYhwr5gCcp1bkN8R3Mx3LByFXH7j9i=ZXmvX5m7OBb4A@mail.gmail.com>
+Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Vxa5joy26gVGOrvU"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <575F963F.8090105-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQMLUOX54MBBROL725AKGQEBUQAXIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGRGNgUYhwr5gCcp1bkN8R3Mx3LByFXH7j9i=ZXmvX5m7OBb4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Bertelsmann <info-La43T0Mi4bH5xCKuJOYmCvaTkwRoYoCU@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>devicet
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---Vxa5joy26gVGOrvU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 14 June 2016 at 07:45, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Michal,
+>
+> On Tue, Jun 14, 2016 at 3:28 PM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 14 June 2016 at 06:47, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> Hi Michal,
+>>>
+>>> On Tue, Jun 14, 2016 at 2:34 PM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> Hello,
+>>>>
+>>>> On 14 June 2016 at 01:43, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> Hi Michal,
+>>>>>
+>>>>> On Tue, Jun 14, 2016 at 3:46 AM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>> The drivers are very similar and share multiple flaws which needed
+>>>>>> separate fixes for both drivers.
+>>>>>>
+>>>>>> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>> ---
+>>>>>>  drivers/spi/Kconfig     |   8 +-
+>>>>>>  drivers/spi/Makefile    |   1 -
+>>>>>>  drivers/spi/spi-sun4i.c | 156 +++++++++++--
+>>>>>>  drivers/spi/spi-sun6i.c | 598 ------------------------------------------------
+>>>>>>  4 files changed, 143 insertions(+), 620 deletions(-)
+>>>>>>  delete mode 100644 drivers/spi/spi-sun6i.c
+>>>>>>
+>>>>>> diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
+>>>>>> index 0b8e6c6..c76f8e4 100644
+>>>>>> --- a/drivers/spi/spi-sun4i.c
+>>>>>> +++ b/drivers/spi/spi-sun4i.c
+>>>>>> @@ -279,9 +321,14 @@ static int sunxi_spi_transfer_one(struct spi_master *master,
+>>>>>>         reg = sunxi_spi_read(sspi, SUNXI_TFR_CTL_REG);
+>>>>>>
+>>>>>>         /* Reset FIFOs */
+>>>>>> -       sunxi_spi_write(sspi, SUNXI_TFR_CTL_REG,
+>>>>>> -                       reg | sspi_bits(sspi, SUNXI_CTL_RF_RST) |
+>>>>>> -                       sspi_bits(sspi, SUNXI_CTL_TF_RST));
+>>>>>> +       if (sspi->type == SPI_SUN4I)
+>>>>>> +               sunxi_spi_write(sspi, SUNXI_TFR_CTL_REG,
+>>>>>> +                               reg | sspi_bits(sspi, SUNXI_CTL_RF_RST) |
+>>>>>> +                               sspi_bits(sspi, SUNXI_CTL_TF_RST));
+>>>>>> +       else
+>>>>>> +               sunxi_spi_write(sspi, SUNXI_FIFO_CTL_REG,
+>>>>>> +                               sspi_bits(sspi, SUNXI_CTL_RF_RST) |
+>>>>>> +                               sspi_bits(sspi, SUNXI_CTL_TF_RST));
+>>>>>
+>>>>> If we're already doing different stuff for each generation of the IP,
+>>>>> why not just use the register offsets and bit definitions directly?
+>>>>
+>>>> Because having (*sspi->regmap)[SUNXI_FIFO_CTL_REG] all over the place
+>>>> makes my eyes bleed and you cannot use the check that you are
+>>>> accessing a register that actually exists.
+>>>
+>>> I mean removing SUNXI_CTL_RF_RST and SUNXI_CTL_TF_RST from all of the
+>>> indirection you added and using them directly, i.e.
+>>>
+>>> #define SUN4I_TFR_CTL_RF_RST BIT(x)
+>>> #define SUN4I_TFR_CTL_TF_RST BIT(x)
+>>> #define SUN6I_FIFO_CTL_RF_RST BIT(x)
+>>> #define SUN6I_FIFO_CTL_TF_RST BIT(x)
+>>>
+>>> then
+>>>
+>>> if (sspi->type == SPI_SUN4I)
+>>>     sunxi_spi_write(sspi, SUNXI_TFR_CTL_REG, reg |
+>>> SUN4I_TFR_CTL_RF_RST | SUN4I_TFR_CTL_TF_RST);
+>>> else
+>>>     sunxi_spi_write(sspi, SUNXI_FIFO_CTL_REG, reg |
+>>> SUN6I_FIFO_CTL_RF_RST | SUN6I_FIFO_CTL_TF_RST);
+>>>
+>>> I.e. the bits that need setting are in different registers, so you
+>>> have to have an if statement and separate calls. Therefore there's no
+>>> real benefit from the indirection you've introduced here, unless
+>>> you're expecting the SUN8I variant to use different bits in one of
+>>> those two registers.
+>>>
+>>
+>> That looks nice for this particular case.
+>
+> There was another case I pointed out in this driver that could
+> potentially benefit from this.
+>
+>> Still you will have to remember that these bits are specified directly
+>> while other bits on the register are mapped which is not so nice.
+>
+> True. I'm not sure which path is best in this case. To my eye, your
+> indirection scheme seems like the "heavy" solution, however I have no
+> idea what form a "lighter" solution would take.
+>
+> Other drivers I've seen which have tackled similar problems have used
+> a large struct to hold all the variant-specific stuff, whether that's
+> function pointers, register offsets, constants, etc. (so this code
+> could theoretically be re-written as sunxi_spi_write(sspi,
+> sspi->fifo_reg, reg | sspi->fifo_reset_arg)
 
-On Mon, Jun 13, 2016 at 10:29:35PM -0700, Frank Rowand wrote:
-> On 06/13/16 22:10, David Gibson wrote:
-> > On Mon, Jun 13, 2016 at 08:53:37PM -0700, Frank Rowand wrote:
-> >> On 06/13/16 18:10, David Gibson wrote:
->=20
-> < snip >
->=20
-> >>> Here's my inclination for how to treat this in dtc for the time being:
-> >>>     1) Leave the bulk of dtc case sensitive, as now
-> >>>     2) Add a new check which will generate an error if there are node
-> >>>        names which differ only in case.
-> >>>
-> >>> Any objections to that plan?
-> >>
-> >> I think that the kernel should match the current behavior of dtc.
-> >>
-> >> I agree with "1)".
-> >>
-> >> I don't think that "2)" is required.  I think it is a really dumb idea=
- for
-> >> anyone to create a dts with node names that differ only in case.  But I
-> >> don't think it is the compiler's job to protect people from being dumb.
-> >> An analogue would be the C language and compilers.  The C compiler doe=
-sn't
-> >> error on a program that has variables "foo" and "Foo".
-> >=20
-> > Hmm.. actually I think protecting you from being dumb is exactly the
-> > purpose of compiler warnings.  Now that you found that quote from
-> > 1275, which is pretty definitive as far as I'm concerned, I'd expect
-> > to reduce that error to a warning (by default).
->=20
-> A warning is ok by me.
+This won't do. There is fifo_reg and tfr_reg on both IPs but some bits
+from one migrated to the other.
 
-Ok, I'll implement that when I get a chance.
+> or sspi->reset_fifo())
 
-Note that in most cases there's no fundamental distinction between dtc
-errors and dtc warnings - it's just a question of whether they're
-flagged as "error" or "warning" level in the check table.
+This would work but would require more thorough rewrite and heavier
+adaptation layer.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+As it is where different register is used in different IP revision it
+is specified explicitly in the code while register names to numbers
+are mapped in read() and write(). Value bits are mapped by explicitly
+calling a function on the name.
 
---Vxa5joy26gVGOrvU
-Content-Type: application/pgp-signature; name="signature.asc"
+This gives nice 1:1 mapping to the old code and allows checking that
+both the register and the bit value in question exist on the IP.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Matching the value to register relies on the driver code, however.
 
-iQIcBAEBAgAGBQJXX56dAAoJEGw4ysog2bOS4ZwP/R9kUcc/rWcz1LZmAo03iR5w
-RwC926Z5n04PoEwiwkTFqYjYr5XqO4E7AwitHubQ2ZJindQcHE4YXN2usR96d0Da
-ggDXL2y0MdyJv5dCkAchsZnupr2lVLQyl1zvKhejWPK7O99amstRdVX7eY0suPVA
-nOY7foFROaV1DNS9/91iLoegIjDs4Np2gbM5M6H66wTZGWyVvYudGrzOFzaD5fqs
-YMHdxiQD0cN7KOc/ztR/pGNB2swh0Lq7k+e7Pb0t6DaEW27VFw8QV1VEaOvQeP9i
-56lzMD5wB20trGHIhQ5P6rZ38XbIl9s6hDzQ8S5G4nPM4ciiMunotlwVMcQk1ZLe
-4GW5nPz6XdIHszSxyOXvdD37IlZevS3TAkCVD49F6ET2UKLkF+enYLABULMYCcXc
-iMRNTdXmQgsoXO5e1AKZQeYTVFt/Pezs3AJduIApERus81KC39hz0fWpE6aqXxrV
-9/gZoOSf/X3Rx3QiuMDLbJgA1+9JzqepiabrXrq9x58KnQRDjaWQEfIKtrFbwnBT
-2P8S5Muw6K6OzluYTWMFVUrlM29cAu//wZlyYCfFuVyBMH1ChZ2HBa32QVzsXg6g
-kWlSlDe0JBUhnv97HYRRkoY0hYEpferjhMZrqcdJjslnknMelU+E+8/qEhFQ06VB
-xUwt9c1PcslNqTCeyhdP
-=727m
------END PGP SIGNATURE-----
+Thanks
 
---Vxa5joy26gVGOrvU--
+Michal
