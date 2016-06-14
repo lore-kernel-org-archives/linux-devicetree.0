@@ -1,45 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 09/10] dt-bindings: clock: add DT binding for the
- peripheral clocks on Armada 3700
-Date: Tue, 14 Jun 2016 07:42:36 -0500
-Message-ID: <20160614124236.GA2001@rob-hp-laptop>
-References: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
- <1465565018-14172-10-git-send-email-gregory.clement@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] mtd: nand: gpmi: document the clocks and
+ clock-names in DT property
+Date: Tue, 14 Jun 2016 07:46:14 -0500
+Message-ID: <20160614124614.GA3616@rob-hp-laptop>
+References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
+ <1465578094-8816-3-git-send-email-han.xu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1465565018-14172-10-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+In-Reply-To: <1465578094-8816-3-git-send-email-han.xu-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+Cc: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 10, 2016 at 03:23:37PM +0200, Gregory CLEMENT wrote:
-> This commit adds the DT binding documentation for the peripheral clocks
-> used in the Marvell Armada 3700 SoCs.
+On Fri, Jun 10, 2016 at 12:01:30PM -0500, Han Xu wrote:
+> add the clocks and clock-names in DT property, gpmi-io clock is
+> mandatory for all platforms, but some platforms, such as i.MX6Q may
+> need more extra clocks for submodules. More details please refer to the
+> SoC reference manual.
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
 > ---
->  .../bindings/clock/armada3700-periph-clock.txt     | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
+>  Documentation/devicetree/bindings/mtd/gpmi-nand.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt b/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
-> new file mode 100644
-> index 000000000000..549a5ad14031
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
-> @@ -0,0 +1,70 @@
-> +* Peripheral Clock bindings for Marvell Armada 37xx SoCs
-> +
-> +Marvell Armada 37xx SoCs provide peripheral clocks which are
-> +used as clock source for the peripheral of the SoC.
-> +
-> +There are two different block associated to north bridge and south
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> index d02acaf..c8d0e2f 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> @@ -13,6 +13,13 @@ Required properties:
+>      and GPMI DMA channel ID.
+>      Refer to dma.txt and fsl-mxs-dma.txt for details.
+>    - dma-names: Must be "rx-tx".
+> +  - clocks : The clocks needed by the gpmi controller. This field varies
+> +    depends on the SoC design, "gpmi-io" is mandatory but some platforms may
+> +    need several extra clocks, such as i.MX6Q, it requires "gpmi_apb,
+> +    gpmi_bch, gpmi_bch_apb and per1_bch" for all submodules. Please refer to
+> +    the HW design manual.
 
-s/block/blocks/
+You need to spell out exactly which clocks each chip/compatible string 
+has.
 
-Otherwise,
+I'm generally suspicious of varying number of clocks. My guess is all 
+the versions have the additional clocks, but they are all just tied to 
+the same parent. 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
