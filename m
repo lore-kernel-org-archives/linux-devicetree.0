@@ -1,124 +1,110 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v10 14/14] usb: host: xhci-plat: Add otg device to
- platform data
-Date: Tue, 14 Jun 2016 11:18:51 +0300
-Message-ID: <575FBDEB.3050004@ti.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
- <1465564043-27163-15-git-send-email-rogerq@ti.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 09/12] mmc: sdhci-xenon: add initial Xenon eMMC driver
+Date: Tue, 14 Jun 2016 10:19:12 +0200
+Message-ID: <878ty8chdr.fsf@free-electrons.com>
+References: <1465456218-28354-1-git-send-email-gregory.clement@free-electrons.com>
+	<1465456218-28354-10-git-send-email-gregory.clement@free-electrons.com>
+	<575FA9BF.6070703@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465564043-27163-15-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mathias.nyman@linux.intel.com
-Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <575FA9BF.6070703@intel.com> (Adrian Hunter's message of "Tue, 14
+	Jun 2016 09:52:47 +0300")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Mathias,
+Hi Adrian,
+ 
+ On mar., juin 14 2016, Adrian Hunter <adrian.hunter@intel.com> wrote:
 
-On 10/06/16 16:07, Roger Quadros wrote:
-> Host controllers that are part of an OTG/dual-role instance
-> need to somehow pass the OTG controller device information
-> to the HCD core.
-> 
-> We use platform data to pass the OTG controller device.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Reviewed-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  drivers/usb/host/xhci-plat.c     | 35 ++++++++++++++++++++++++++++-------
->  include/linux/usb/xhci_pdriver.h |  3 +++
->  2 files changed, 31 insertions(+), 7 deletions(-)
+> On 09/06/16 10:10, Gregory CLEMENT wrote:
+>> From: Victor Gu <xigu@marvell.com>
+>> 
+>> This path adds the driver for the Marvell Xenon eMMC host controller
+>> which supports eMMC 5.1, SD 3.0.
+>> 
+>> However this driver supports only up to eMMC 5.0 since the command queue
+>> feature is not included (yet) in the driver.
+>> 
+>> [gregory.clement@free-electrons.com:
+>>  - reformulate commit log
+>>  - overload the sdhci_set_uhs_signaling function instead of using a quirk
+>>  - fix a kconfig dependency
+>>  - remove dead code]
+>> 
+>> Signed-off-by: Victor Gu <xigu@marvell.com>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> ---
+>>  drivers/mmc/host/Kconfig       |   10 +
+>>  drivers/mmc/host/Makefile      |    1 +
+>>  drivers/mmc/host/sdhci-xenon.c | 1164 ++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 1175 insertions(+)
+>>  create mode 100644 drivers/mmc/host/sdhci-xenon.c
+>> 
+>
+> <SNIP>
+>
+>> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
+>> new file mode 100644
+>> index 000000000000..43c06db95872
+>> --- /dev/null
+>> +++ b/drivers/mmc/host/sdhci-xenon.c
+>
+> <SNIP>
+>
+>> +static int sdhci_xenon_delay_adj_test(struct sdhci_host *host,
+>> +		struct mmc_card *card, unsigned int delay,
+>> +		bool invert, bool phase)
+>> +{
+>> +	int ret;
+>> +	struct mmc_card *oldcard;
+>> +
+>> +	sdhci_xenon_set_fix_delay(host, delay, invert, phase);
+>> +
+>> +	/*
+>> +	 * If the card is not yet associated to the host, we
+>> +	 * temporally do it
+>> +	 */
+>> +	oldcard = card->host->card;
+>> +	if (!oldcard)
+>> +		card->host->card = card;
+>> +	ret =  card_alive(card);
+>
+> This looks like an abuse of bus_ops->alive().  You will need to get
+> agreement with Ulf how to handle this.  I will wait for Ulf's comments
+> before reviewing this patch set further.
 
-Any comments on this one?
+Actually I modified this part of the driver to use
+bus_ops->alive(). Initially, the alive() code was more or less copied
+and paste from the mmc core with ugly include from mmc_ops.h and
+sdio_ops.h to make it work. I find it cleaner to directly access the
+alive() function.
 
-> 
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 676ea45..24d030a 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -239,11 +239,20 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  			goto put_usb3_hcd;
->  	}
->  
-> -	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
-> +	if (pdata && pdata->otg_dev)
-> +		ret = usb_otg_add_hcd(hcd, irq, IRQF_SHARED, pdata->otg_dev);
-> +	else
-> +		ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
-> +
->  	if (ret)
->  		goto disable_usb_phy;
->  
-> -	ret = usb_add_hcd(xhci->shared_hcd, irq, IRQF_SHARED);
-> +	if (pdata && pdata->otg_dev)
-> +		ret = usb_otg_add_hcd(xhci->shared_hcd, irq, IRQF_SHARED,
-> +				      pdata->otg_dev);
-> +	else
-> +		ret = usb_add_hcd(xhci->shared_hcd, irq, IRQF_SHARED);
-> +
->  	if (ret)
->  		goto dealloc_usb2_hcd;
->  
-> @@ -251,7 +260,10 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  
->  
->  dealloc_usb2_hcd:
-> -	usb_remove_hcd(hcd);
-> +	if (pdata && pdata->otg_dev)
-> +		usb_otg_remove_hcd(hcd);
-> +	else
-> +		usb_remove_hcd(hcd);
->  
->  disable_usb_phy:
->  	usb_phy_shutdown(hcd->usb_phy);
-> @@ -269,16 +281,25 @@ put_hcd:
->  	return ret;
->  }
->  
-> -static int xhci_plat_remove(struct platform_device *dev)
-> +static int xhci_plat_remove(struct platform_device *pdev)
->  {
-> -	struct usb_hcd	*hcd = platform_get_drvdata(dev);
-> +	struct usb_hcd	*hcd = platform_get_drvdata(pdev);
->  	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
->  	struct clk *clk = xhci->clk;
-> +	struct usb_xhci_pdata *pdata = dev_get_platdata(&pdev->dev);
-> +
-> +	if (pdata && pdata->otg_dev)
-> +		usb_otg_remove_hcd(xhci->shared_hcd);
-> +	else
-> +		usb_remove_hcd(xhci->shared_hcd);
->  
-> -	usb_remove_hcd(xhci->shared_hcd);
->  	usb_phy_shutdown(hcd->usb_phy);
->  
-> -	usb_remove_hcd(hcd);
-> +	if (pdata && pdata->otg_dev)
-> +		usb_otg_remove_hcd(hcd);
-> +	else
-> +		usb_remove_hcd(hcd);
-> +
->  	usb_put_hcd(xhci->shared_hcd);
->  
->  	if (!IS_ERR(clk))
-> diff --git a/include/linux/usb/xhci_pdriver.h b/include/linux/usb/xhci_pdriver.h
-> index 376654b..5c68b83 100644
-> --- a/include/linux/usb/xhci_pdriver.h
-> +++ b/include/linux/usb/xhci_pdriver.h
-> @@ -18,10 +18,13 @@
->   *
->   * @usb3_lpm_capable:	determines if this xhci platform supports USB3
->   *			LPM capability
-> + * @otg_dev:		OTG controller device. Only requied if part of
-> + *			OTG/dual-role.
->   *
->   */
->  struct usb_xhci_pdata {
->  	unsigned	usb3_lpm_capable:1;
-> +	struct device	*otg_dev;
->  };
->  
->  #endif /* __USB_CORE_XHCI_PDRIVER_H */
-> 
+Could you explain why it is an abuse of  bus_ops->alive()?
+
+Thanks,
+
+Gregory
+
+
+>> +	card->host->card = oldcard;
+>> +	if (ret) {
+>> +		pr_debug("Xenon failed when sampling fix delay %d, inverted %d, phase %d\n",
+>> +			 delay, invert, phase);
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	pr_debug("Xenon succeeded when sampling fixed delay %d, inverted %d, phase %d\n",
+>> +		 delay, invert, phase);
+>> +	return 0;
+>> +}
+>
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
