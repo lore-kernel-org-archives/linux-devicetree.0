@@ -1,73 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 17/17] sh: landisk CPLD interrupt controller driver
-Date: Tue, 14 Jun 2016 17:24:38 -0500
-Message-ID: <20160614222438.GA30320@rob-hp-laptop>
-References: <1465714475-24111-18-git-send-email-ysato@users.sourceforge.jp>
- <1465717454-7606-1-git-send-email-ysato@users.sourceforge.jp>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] Documentation: bindings: add DT documentation for
+ Rockchip USB2PHY
+Date: Tue, 14 Jun 2016 17:26:35 -0500
+Message-ID: <20160614222635.GA3297@rob-hp-laptop>
+References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
+ <1465783810-18756-2-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1465717454-7606-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1465783810-18756-2-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 12, 2016 at 04:44:14PM +0900, Yoshinori Sato wrote:
-> Sorry. I send old patches.
-> Please ignore previous files.
-
-same comment here.
-
-> 
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+On Mon, Jun 13, 2016 at 10:10:09AM +0800, Frank Wang wrote:
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  .../interrupt-controller/iodata-landisk.txt        | 28 +++++++++
->  drivers/irqchip/irq-io-landisk.c                   | 72 ++++++++++++++++++++++
->  2 files changed, 100 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
->  create mode 100644 drivers/irqchip/irq-io-landisk.c
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
-> new file mode 100644
-> index 0000000..d398538
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
-> @@ -0,0 +1,28 @@
-> +DT bindings for the I/O DATA HDL-U interrupt controller
-> +
-> +Required properties:
-> +
-> +  - compatible: has to be "iodata,landisk-intc".
-> +
-> +  - reg: Base address and length of interrupt controller register.
-> +
-> +  - interrupt-controller: Identifies the node as an interrupt controller.
-> +
-> +  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined
-> +    in interrupts.txt in this directory.
-> +
-> +  - interrupt-map: Interrupt mapping on parent controller.
-> +
-> +Example
-> +-------
-> +
-> +	cpldintc: cpld@b0000000 {
-> +		compatible = "iodata,landisk-intc";
-> +		#interrupt-cells = <2>;
-> +		interrupt-controller;
-> +		reg = <0xb0000000 8>;
-> +		interrupt-map=<0 &shintc 0 0>, <1 &shintc 1 0>,
-> +		              <2 &shintc 2 0>, <3 &shintc 3 0>,
-> +		              <4 &shintc 4 0>, <5 &shintc 5 0>,
-> +		              <6 &shintc 6 0>, <7 &shintc 7 0>;
+> Changes in v5:
+>  - Added 'reg' property to identify the different phy-blocks.
+> 
+> Changes in v4:
+>  - Used 'phy-supply' instead of 'vbus_*-supply'.
+> 
+> Changes in v3:
+>  - Added 'clocks' and 'clock-names' optional properties.
+>  - Specified 'otg-port' and 'host-port' as the sub-node name.
+> 
+> Changes in v2:
+>  - Changed vbus_host optional property from gpio to regulator.
+>  - Specified vbus_otg-supply optional property.
+>  - Specified otg_id and otg_bvalid property.
+> 
+>  .../bindings/phy/phy-rockchip-inno-usb2.txt        |   64 ++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
 
-This is not right. Since this node has 2 interrupt-cells, you need 2 
-entries for the child-interrupt specifier. You also need to set 
-#address-cells to 0 and set the mask to mask out the 2nd cell.
-
-Then again, there is not any real translation happening here, so perhaps 
-you don't need this at all.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
