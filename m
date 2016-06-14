@@ -1,36 +1,28 @@
-From: chunfeng yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v3,1/5] dt-bindings: mt8173-xhci: support host side of
- dual-role mode
-Date: Tue, 14 Jun 2016 10:20:15 +0800
-Message-ID: <1465870815.19154.1.camel@mhfsdcap03>
-References: <1465543962-11678-1-git-send-email-chunfeng.yun@mediatek.com>
-	 <1465543962-11678-2-git-send-email-chunfeng.yun@mediatek.com>
-	 <20160613185454.GA21742@rob-hp-laptop>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: Add mt6755 basic chip support
+Date: Tue, 14 Jun 2016 10:20:03 +0800
+Message-ID: <1465870805-10451-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160613185454.GA21742@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Choui <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Scott Shu <scott.shu@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-06-13 at 13:54 -0500, Rob Herring wrote:
-> On Fri, Jun 10, 2016 at 03:32:38PM +0800, Chunfeng Yun wrote:
-> > Some resources, such as IPPC register etc, shared with device
-> > driver are moved into common glue layer when xHCI driver is the
-> > host side of dual-role mode and they should be changed as optional
-> > properties if they are required ones before. For clarity, add
-> > a new part of binding to support host side of dual-role mode.
-> > 
-> > Additionally add optional properties of pinctrl for host only mode
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/usb/mt8173-xhci.txt        |   48 ++++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+This patch adds basic support for Mediatek's new 8-core chip, mt6755.
+It is also named as Helio P10. It is based on 4.7-rc1
 
-Thank you
+Mars Cheng (2):
+  Document: DT: Add bindings for mediatek MT6755 SoC Platform
+  arm64: dts: mediatek: add mt6755 support
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
+ .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+ .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |    1 +
+ arch/arm64/boot/dts/mediatek/mt6755-phone.dts      |   39 ++++++
+ arch/arm64/boot/dts/mediatek/mt6755.dtsi           |  143 ++++++++++++++++++++
+ 6 files changed, 189 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6755-phone.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6755.dtsi
