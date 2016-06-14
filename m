@@ -1,13 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 03/10] mfd: Add driver for X-Powers AC100 audio
- codec / RTC combo IC
-Date: Tue, 14 Jun 2016 10:17:51 +0800
-Message-ID: <1465870678-30128-5-git-send-email-wens@csie.org>
+Subject: [PATCH 05/10] rtc: ac100: Add clk output support
+Date: Tue, 14 Jun 2016 10:17:53 +0800
+Message-ID: <1465870678-30128-7-git-send-email-wens@csie.org>
 References: <1465870678-30128-1-git-send-email-wens@csie.org>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCMILY6JWQBBB2GS7W5AKGQEKA7EGUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCMILY6JWQBBB2OS7W5AKGQEPMK3QUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1465870678-30128-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,244 +19,384 @@ To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AC100 is a multifunction device with an audio codec subsystem and
-an RTC subsystem. These two subsystems share a common register space
-and host interface.
+The AC100's RTC side has 3 clock outputs on external pins, which can
+provide a clock signal to the SoC or other modules, such as WiFi or
+GSM modules.
+
+Support this with a custom clk driver integrated with the rtc driver.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/mfd/Kconfig       |  10 ++++
- drivers/mfd/Makefile      |   2 +
- drivers/mfd/ac100.c       | 116 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/ac100.h |  62 +++++++++++++++++++++++++
- 4 files changed, 190 insertions(+)
- create mode 100644 drivers/mfd/ac100.c
- create mode 100644 include/linux/mfd/ac100.h
+ drivers/rtc/rtc-ac100.c | 319 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 319 insertions(+)
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 1bcf601de5bc..bd83849a0c8d 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -101,6 +101,16 @@ config MFD_BCM590XX
- 	help
- 	  Support for the BCM590xx PMUs from Broadcom
+diff --git a/drivers/rtc/rtc-ac100.c b/drivers/rtc/rtc-ac100.c
+index 360346792ca5..89b63b4bb88f 100644
+--- a/drivers/rtc/rtc-ac100.c
++++ b/drivers/rtc/rtc-ac100.c
+@@ -15,6 +15,7 @@
+  */
  
-+config MFD_AC100
-+	tristate "X-Powers AC100"
-+	select MFD_CORE
-+	depends on SUNXI_RSB
-+	help
-+	  If you say Y here you get support for the X-Powers AC100 audio codec
-+	  IC.
-+	  This driver include only the core APIs. You have to select individual
-+	  components like codecs or RTC under the corresponding menus.
+ #include <linux/bcd.h>
++#include <linux/clk-provider.h>
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+@@ -31,6 +32,15 @@
+ /* Control register */
+ #define AC100_RTC_CTRL_24HOUR	BIT(0)
+ 
++/* Clock output register bits */
++#define AC100_CLK32K_PRE_DIV_SHIFT	5
++#define AC100_CLK32K_PRE_DIV_WIDTH	3
++#define AC100_CLK32K_MUX_SHIFT		4
++#define AC100_CLK32K_MUX_WIDTH		1
++#define AC100_CLK32K_DIV_SHIFT		1
++#define AC100_CLK32K_DIV_WIDTH		3
++#define AC100_CLK32K_EN			BIT(0)
 +
- config MFD_AXP20X
- 	tristate
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 42a66e19e191..60f9a6b0557c 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -113,6 +113,8 @@ obj-$(CONFIG_PMIC_DA9052)	+= da9052-irq.o
- obj-$(CONFIG_PMIC_DA9052)	+= da9052-core.o
- obj-$(CONFIG_MFD_DA9052_SPI)	+= da9052-spi.o
- obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
+ /* RTC */
+ #define AC100_RTC_SEC_MASK	GENMASK(6, 0)
+ #define AC100_RTC_MIN_MASK	GENMASK(6, 0)
+@@ -67,6 +77,26 @@
+ #define AC100_YEAR_MAX				2069
+ #define AC100_YEAR_OFF				(AC100_YEAR_MIN - 1900)
+ 
++struct ac100_clk32k {
++	struct clk_hw hw;
++	struct regmap *regmap;
++	u8 offset;
++};
 +
-+obj-$(CONFIG_MFD_AC100)		+= ac100.o
- obj-$(CONFIG_MFD_AXP20X)	+= axp20x.o
- obj-$(CONFIG_MFD_AXP20X_I2C)	+= axp20x-i2c.o
- obj-$(CONFIG_MFD_AXP20X_RSB)	+= axp20x-rsb.o
-diff --git a/drivers/mfd/ac100.c b/drivers/mfd/ac100.c
-new file mode 100644
-index 000000000000..3e6752e9dc07
---- /dev/null
-+++ b/drivers/mfd/ac100.c
-@@ -0,0 +1,116 @@
-+/*
-+ * ac100.c - MFD core driver for X-Powers' AC100 Audio Codec IC
-+ *
-+ * The AC100 is a highly integrated audio codec and RTC subsystem designed
-+ * for mobile applications. It has 3 I2S/PCM interfaces, a 2 channel DAC,
-+ * a 2 channel ADC with 5 inputs and a builtin mixer. The RTC subsystem has
-+ * 3 clock outputs.
-+ *
-+ * The audio codec and RTC parts are completely separate, sharing only the
-+ * host interface for access to its registers.
-+ *
-+ * Author: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++#define to_ac100_clk32k(_hw) container_of(_hw, struct ac100_clk32k, hw)
++
++#define AC100_RTC_32K_NAME	"ac100-rtc-32k"
++#define AC100_RTC_32K_RATE	32768
++#define AC100_ADDA_4M_NAME	"ac100-adda-4M"
++#define AC100_ADDA_4M_RATE	4000000
++#define AC100_CLK32K_NUM	3
++
++static const char * const ac100_clk32k_names[] = {
++	"ac100-clk32k-ap",
++	"ac100-clk32k-bb",
++	"ac100-clk32k-md",
++};
++
+ struct ac100_rtc_dev {
+ 	struct rtc_device *rtc;
+ 	struct device *dev;
+@@ -74,8 +104,283 @@ struct ac100_rtc_dev {
+ 	struct mutex mutex;
+ 	int irq;
+ 	unsigned long alarm;
++
++	struct clk_hw *rtc_32k_clk;
++	struct clk_hw *adda_4M_clk;
++	struct ac100_clk32k clks[AC100_CLK32K_NUM];
++	struct clk_hw_onecell_data *clk_data;
++};
++
++/**
++ * Clock controls for 3 clock output pins
 + */
 +
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/ac100.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+#include <linux/sunxi-rsb.h>
-+
-+static const struct regmap_range ac100_writeable_ranges[] = {
-+	regmap_reg_range(AC100_CLK32K_ANALOG_CTRL, AC100_CLK32K_OUT_CTRL3),
-+	regmap_reg_range(AC100_RTC_RST, AC100_RTC_UPD),
-+	regmap_reg_range(AC100_ALM_INT_ENA, AC100_ALM_INT_STA),
-+	regmap_reg_range(AC100_ALM_SEC, AC100_RTC_GP(15)),
++static const struct clk_div_table ac100_clk32k_prediv[] = {
++	{ .val = 0, .div = 1 },
++	{ .val = 1, .div = 2 },
++	{ .val = 2, .div = 4 },
++	{ .val = 3, .div = 8 },
++	{ .val = 4, .div = 16 },
++	{ .val = 5, .div = 32 },
++	{ .val = 6, .div = 64 },
++	{ .val = 7, .div = 122 },
++	{ },
 +};
 +
-+static const struct regmap_range ac100_volatile_ranges[] = {
-+	regmap_reg_range(AC100_RTC_RST, AC100_RTC_RST),
-+	regmap_reg_range(AC100_RTC_SEC, AC100_ALM_INT_STA),
-+	regmap_reg_range(AC100_ALM_SEC, AC100_ALM_UPD),
-+};
-+
-+static const struct regmap_access_table ac100_writeable_table = {
-+	.yes_ranges	= ac100_writeable_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(ac100_writeable_ranges),
-+};
-+
-+static const struct regmap_access_table ac100_volatile_table = {
-+	.yes_ranges	= ac100_volatile_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(ac100_volatile_ranges),
-+};
-+
-+static const struct regmap_config ac100_regmap_config = {
-+	.reg_bits	= 8,
-+	.val_bits	= 16,
-+	.wr_table	= &ac100_writeable_table,
-+	.volatile_table	= &ac100_volatile_table,
-+	.max_register	= AC100_RTC_GP(15),
-+	.cache_type	= REGCACHE_RBTREE,
-+};
-+
-+static struct mfd_cell ac100_cells[] = {
-+	{
-+		.name		= "ac100-codec",
-+		.of_compatible	= "x-powers,ac100-codec",
-+	}, {
-+		.name		= "ac100-rtc",
-+		.of_compatible	= "x-powers,ac100-rtc",
-+	},
-+};
-+
-+static int ac100_rsb_probe(struct sunxi_rsb_device *rdev)
++/* Abuse the fact that one parent is 32768 Hz, and the other is 4 MHz */
++static unsigned long ac100_clk32k_recalc_rate(struct clk_hw *hw,
++					      unsigned long prate)
 +{
-+	struct ac100_dev *ac100;
-+	int ret;
++	struct ac100_clk32k *clk = to_ac100_clk32k(hw);
++	unsigned int reg, div;
 +
-+	ac100 = devm_kzalloc(&rdev->dev, sizeof(*ac100), GFP_KERNEL);
-+	if (!ac100)
-+		return -ENOMEM;
++	regmap_read(clk->regmap, clk->offset, &reg);
 +
-+	ac100->dev = &rdev->dev;
-+	sunxi_rsb_device_set_drvdata(rdev, ac100);
-+
-+	ac100->regmap = devm_regmap_init_sunxi_rsb(rdev, &ac100_regmap_config);
-+	if (IS_ERR(ac100->regmap)) {
-+		ret = PTR_ERR(ac100->regmap);
-+		dev_err(ac100->dev, "regmap init failed: %d\n", ret);
-+		return ret;
++	/* Handle pre-divider first */
++	if (prate != AC100_RTC_32K_RATE) {
++		div = (reg >> AC100_CLK32K_PRE_DIV_SHIFT) &
++			((1 << AC100_CLK32K_PRE_DIV_WIDTH) - 1);
++		prate = divider_recalc_rate(hw, prate, div,
++					    ac100_clk32k_prediv, 0);
 +	}
 +
-+	ret = devm_mfd_add_devices(ac100->dev, PLATFORM_DEVID_NONE, ac100_cells,
-+				   ARRAY_SIZE(ac100_cells), NULL, 0, NULL);
-+	if (ret) {
-+		dev_err(ac100->dev, "failed to add MFD devices: %d\n", ret);
-+		return ret;
++	div = (reg >> AC100_CLK32K_DIV_SHIFT) &
++		(BIT(AC100_CLK32K_DIV_WIDTH) - 1);
++	return divider_recalc_rate(hw, prate, div, NULL,
++				   CLK_DIVIDER_POWER_OF_TWO);
++}
++
++static long ac100_clk32k_round_rate(struct clk_hw *hw, unsigned long rate,
++				    unsigned long prate)
++{
++	unsigned long best_rate = 0, tmp_rate, tmp_prate;
++	int i;
++
++	if (prate == AC100_RTC_32K_RATE)
++		return divider_round_rate(hw, rate, &prate, NULL,
++					  AC100_CLK32K_DIV_WIDTH,
++					  CLK_DIVIDER_POWER_OF_TWO);
++
++	for (i = 0; ac100_clk32k_prediv[i].div; i++) {
++		tmp_prate = DIV_ROUND_UP(prate, ac100_clk32k_prediv[i].val);
++		tmp_rate = divider_round_rate(hw, rate, &tmp_prate, NULL,
++					      AC100_CLK32K_DIV_WIDTH,
++					      CLK_DIVIDER_POWER_OF_TWO);
++
++		if (tmp_rate > rate)
++			continue;
++		if (rate - tmp_rate < best_rate - tmp_rate)
++			best_rate = tmp_rate;
 +	}
++
++	return best_rate;
++}
++
++static int ac100_clk32k_determine_rate(struct clk_hw *hw,
++				       struct clk_rate_request *req)
++{
++	struct clk_hw *best_parent;
++	unsigned long best = 0;
++	int i, num_parents = clk_hw_get_num_parents(hw);
++
++	for (i = 0; i < num_parents; i++) {
++		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
++		unsigned long tmp, prate = clk_hw_get_rate(parent);
++
++		tmp = ac100_clk32k_round_rate(hw, req->rate, prate);
++
++		if (tmp > req->rate)
++			continue;
++		if (req->rate - tmp < req->rate - best) {
++			best = tmp;
++			best_parent = parent;
++		}
++	}
++
++	if (!best)
++		return -EINVAL;
++
++	req->best_parent_hw = best_parent;
++	req->best_parent_rate = best;
++	req->rate = best;
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id ac100_of_match[] = {
-+	{ .compatible = "x-powers,ac100" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, ac100_of_match);
++static int ac100_clk32k_set_rate(struct clk_hw *hw, unsigned long rate,
++				 unsigned long prate)
++{
++	struct ac100_clk32k *clk = to_ac100_clk32k(hw);
++	int div = 0, pre_div = 0;
 +
-+static struct sunxi_rsb_driver ac100_rsb_driver = {
-+	.driver = {
-+		.name	= "ac100",
-+		.of_match_table	= of_match_ptr(ac100_of_match),
-+	},
-+	.probe	= ac100_rsb_probe,
-+};
-+module_sunxi_rsb_driver(ac100_rsb_driver);
++	do {
++		div = divider_get_val(rate * ac100_clk32k_prediv[pre_div].div,
++				      prate, NULL, AC100_CLK32K_DIV_WIDTH,
++				      CLK_DIVIDER_POWER_OF_TWO);
++		if (div >= 0)
++			break;
++	} while (prate == AC100_ADDA_4M_RATE &&
++		 ac100_clk32k_prediv[++pre_div].div);
 +
-+MODULE_DESCRIPTION("Audio codec MFD core driver for AC100");
-+MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/ac100.h b/include/linux/mfd/ac100.h
-new file mode 100644
-index 000000000000..6d3b9f5c5aa2
---- /dev/null
-+++ b/include/linux/mfd/ac100.h
-@@ -0,0 +1,62 @@
-+/*
-+ * Functions and registers to access AC100 codec / RTC combo IC.
-+ *
-+ * Copyright (C) 2013, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++	if (div < 0)
++		return div;
++
++	pre_div = ac100_clk32k_prediv[pre_div].val;
++
++	regmap_update_bits(clk->regmap, clk->offset,
++			   ((1 << AC100_CLK32K_DIV_WIDTH) - 1) << AC100_CLK32K_DIV_SHIFT |
++			   ((1 << AC100_CLK32K_PRE_DIV_WIDTH) - 1) << AC100_CLK32K_PRE_DIV_SHIFT,
++			   (div - 1) << AC100_CLK32K_DIV_SHIFT |
++			   (pre_div - 1) << AC100_CLK32K_PRE_DIV_SHIFT);
++
++	return 0;
++}
++
++static int ac100_clk32k_prepare(struct clk_hw *hw)
++{
++	struct ac100_clk32k *clk = to_ac100_clk32k(hw);
++
++	return regmap_update_bits(clk->regmap, clk->offset, AC100_CLK32K_EN,
++				  AC100_CLK32K_EN);
++}
++
++static void ac100_clk32k_unprepare(struct clk_hw *hw)
++{
++	struct ac100_clk32k *clk = to_ac100_clk32k(hw);
++
++	regmap_update_bits(clk->regmap, clk->offset, AC100_CLK32K_EN, 0);
++}
++
++static int ac100_clk32k_is_prepared(struct clk_hw *hw)
++{
++	struct ac100_clk32k *clk = to_ac100_clk32k(hw);
++	unsigned int reg;
++
++	regmap_read(clk->regmap, clk->offset, &reg);
++
++	return reg & AC100_CLK32K_EN;
++}
++
++static u8 ac100_clk32k_get_parent(struct clk_hw *hw)
++{
++	struct ac100_clk32k *clk = to_ac100_clk32k(hw);
++	unsigned int reg;
++
++	regmap_read(clk->regmap, clk->offset, &reg);
++
++	return (reg >> AC100_CLK32K_MUX_SHIFT) & 0x1;
++}
++
++static int ac100_clk32k_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct ac100_clk32k *clk = to_ac100_clk32k(hw);
++
++	return regmap_update_bits(clk->regmap, clk->offset,
++				  BIT(AC100_CLK32K_MUX_SHIFT),
++				  index ? BIT(AC100_CLK32K_MUX_SHIFT) : 0);
++}
++
++static const struct clk_ops ac100_clk32k_ops = {
++	.prepare	= ac100_clk32k_prepare,
++	.unprepare	= ac100_clk32k_unprepare,
++	.is_prepared	= ac100_clk32k_is_prepared,
++	.recalc_rate	= ac100_clk32k_recalc_rate,
++	.determine_rate	= ac100_clk32k_determine_rate,
++	.get_parent	= ac100_clk32k_get_parent,
++	.set_parent	= ac100_clk32k_set_parent,
++	.set_rate	= ac100_clk32k_set_rate,
+ };
+ 
++static int ac100_rtc_register_clks(struct ac100_rtc_dev *chip)
++{
++	struct device_node *np = chip->dev->of_node;
++	const char *parents[2] = {AC100_RTC_32K_NAME, AC100_ADDA_4M_NAME};
++	int i, ret;
++
++	chip->clk_data = devm_kzalloc(chip->dev, sizeof(*chip->clk_data) +
++						 sizeof(*chip->clk_data->hws) *
++						 AC100_CLK32K_NUM,
++						 GFP_KERNEL);
++	if (!chip->clk_data)
++		return -ENOMEM;
++
++	chip->rtc_32k_clk = clk_hw_register_fixed_rate(chip->dev,
++						       AC100_RTC_32K_NAME,
++						       NULL, 0,
++						       AC100_RTC_32K_RATE);
++	if (IS_ERR(chip->rtc_32k_clk)) {
++		ret = PTR_ERR(chip->rtc_32k_clk);
++		dev_err(chip->dev, "Failed to register RTC-32k clock: %d\n",
++			ret);
++		return ret;
++	}
++
++	/*
++	 * The ADDA 4 MHz clock is from the codec side of the AC100,
++	 * which is likely a different power domain. However, boards
++	 * always have both sides powered on, so it is impossible to
++	 * test this.
++	 */
++	chip->adda_4M_clk = clk_hw_register_fixed_rate(chip->dev,
++						       AC100_ADDA_4M_NAME,
++						       NULL, 0,
++						       AC100_ADDA_4M_RATE);
++	if (IS_ERR(chip->adda_4M_clk)) {
++		ret = PTR_ERR(chip->adda_4M_clk);
++		dev_err(chip->dev, "Failed to register ADDA-4M clock: %d\n",
++			ret);
++		goto err_unregister_rtc_32k;
++	}
++
++	for (i = 0; i < AC100_CLK32K_NUM; i++) {
++		struct ac100_clk32k *clk = &chip->clks[i];
++		struct clk_init_data init = {
++			.name = ac100_clk32k_names[i],
++			.ops = &ac100_clk32k_ops,
++			.parent_names = parents,
++			.num_parents = ARRAY_SIZE(parents),
++			.flags = 0,
++		};
++
++		clk->regmap = chip->regmap;
++		clk->offset = AC100_CLK32K_OUT_CTRL1 + i;
++		clk->hw.init = &init;
++
++		ret = devm_clk_hw_register(chip->dev, &clk->hw);
++		if (ret) {
++			dev_err(chip->dev, "Failed to register clk '%s': %d\n",
++				init.name, ret);
++			goto err_unregister_adda_4M;
++		}
++
++		chip->clk_data->hws[i] = &clk->hw;
++	}
++
++	chip->clk_data->num = i;
++	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, chip->clk_data);
++	if (ret)
++		goto err_unregister_adda_4M;
++
++	return 0;
++
++err_unregister_adda_4M:
++	clk_unregister_fixed_rate(chip->adda_4M_clk->clk);
++err_unregister_rtc_32k:
++	clk_unregister_fixed_rate(chip->rtc_32k_clk->clk);
++
++	return ret;
++}
++
++static void ac100_rtc_unregister_clks(struct ac100_rtc_dev *chip)
++{
++	of_clk_del_provider(chip->dev->of_node);
++	clk_unregister_fixed_rate(chip->adda_4M_clk->clk);
++	clk_unregister_fixed_rate(chip->rtc_32k_clk->clk);
++}
++
++/**
++ * RTC related bits
 + */
+ static int ac100_rtc_get_time(struct device *dev, struct rtc_time *rtc_tm)
+ {
+ 	struct ac100_rtc_dev *chip = dev_get_drvdata(dev);
+@@ -349,13 +654,27 @@ static int ac100_rtc_probe(struct platform_device *pdev)
+ 	/* We do not support user interrupts */
+ 	chip->rtc->uie_unsupported = 1;
+ 
++	ret = ac100_rtc_register_clks(chip);
++	if (ret)
++		return ret;
 +
-+#ifndef __LINUX_MFD_AC100_H
-+#define __LINUX_MFD_AC100_H
+ 	dev_info(&pdev->dev, "RTC enabled\n");
+ 
+ 	return 0;
+ }
+ 
++static int ac100_rtc_remove(struct platform_device *pdev)
++{
++	struct ac100_rtc_dev *chip = platform_get_drvdata(pdev);
 +
-+#include <linux/regmap.h>
++	ac100_rtc_unregister_clks(chip);
 +
-+struct ac100_dev {
-+	struct device			*dev;
-+	struct regmap			*regmap;
-+};
++	return 0;
++}
 +
-+/* Audio codec related registers */
-+#define AC100_AUDIO_CHIP_RST		0x00
-+#define AC100_PLL_CTRL1			0x01
-+#define AC100_PLL_CTRL2			0x02
-+#define AC100_SYSCLK_CTRL		0x03
-+#define AC100_MOD_CLK_ENA		0x04
-+#define AC100_MOD_RST_CTRL		0x05
-+
-+/* RTC */
-+#define AC100_CLK32K_ANALOG_CTRL	0xc0
-+#define AC100_CLK32K_OUT_CTRL1		0xc1
-+#define AC100_CLK32K_OUT_CTRL2		0xc2
-+#define AC100_CLK32K_OUT_CTRL3		0xc3
-+
-+/* RTC module */
-+#define AC100_RTC_RST			0xc6
-+#define AC100_RTC_CTRL			0xc7
-+#define AC100_RTC_SEC			0xc8 /* second */
-+#define AC100_RTC_MIN			0xc9 /* minute */
-+#define AC100_RTC_HOU			0xca /* hour */
-+#define AC100_RTC_WEE			0xcb /* weekday */
-+#define AC100_RTC_DAY			0xcc /* day */
-+#define AC100_RTC_MON			0xcd /* month */
-+#define AC100_RTC_YEA			0xce /* year */
-+#define AC100_RTC_UPD			0xcf /* update trigger */
-+
-+/* RTC Alarm */
-+#define AC100_ALM_INT_ENA		0xd0
-+#define	AC100_ALM_INT_STA		0xd1
-+#define AC100_ALM_SEC			0xd8
-+#define AC100_ALM_MIN			0xd9
-+#define AC100_ALM_HOU			0xda
-+#define AC100_ALM_WEE			0xdb
-+#define AC100_ALM_DAY			0xdc
-+#define AC100_ALM_MON			0xdd
-+#define AC100_ALM_YEA			0xde
-+#define AC100_ALM_UPD			0xdf
-+
-+/* RTC general purpose register 0 ~ 15 */
-+#define AC100_RTC_GP(x)			(0xe0 + (x))
-+
-+#endif /* __LINUX_MFD_AC100_H */
+ static struct platform_driver ac100_rtc_driver = {
+ 	.probe		= ac100_rtc_probe,
++	.remove		= ac100_rtc_remove,
+ 	.driver		= {
+ 		.name		= "ac100-rtc",
+ 	},
 -- 
 2.8.1
 
