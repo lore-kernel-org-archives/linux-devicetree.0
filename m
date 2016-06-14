@@ -1,49 +1,74 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 1/6] MIPS: BMIPS: add missing console to bcm96358nb4ser
-Date: Tue, 14 Jun 2016 16:38:47 +0200
-Message-ID: <CAOiHx=kmkkMyHQQ5wm7J7UGgrsgpMv6dcBxHhwv4yFUc6zzwDw@mail.gmail.com>
-References: <1465803534-25840-1-git-send-email-noltari@gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/3] dt-bindings: add bindings documentation for
+ PDC driver.
+Date: Tue, 14 Jun 2016 15:42:15 +0100
+Message-ID: <576017C7.50609@arm.com>
+References: <1465912965-35500-1-git-send-email-rob.rice@broadcom.com>
+ <1465912965-35500-2-git-send-email-rob.rice@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465803534-25840-1-git-send-email-noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1465912965-35500-2-git-send-email-rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+To: Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Rice <rrice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi =C3=81lvaro,
 
-On 13 June 2016 at 09:38, =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gma=
-il.com> wrote:
-> Console definition is needed in order to avoid a warning in earlycon =
-to
-> console transition.
+
+On 14/06/16 15:02, Rob Rice wrote:
+> From: Rob Rice <rrice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 >
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Add the device tree binding documentation for the PDC hardware
+> in Broadcom iProc SoCs.
+>
+> Signed-off-by: Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > ---
->  arch/mips/boot/dts/brcm/bcm96358nb4ser.dts | 1 +
->  1 file changed, 1 insertion(+)
+>   .../bindings/mailbox/brcm,iproc-pdc-mbox.txt       | 23 ++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
 >
-> diff --git a/arch/mips/boot/dts/brcm/bcm96358nb4ser.dts b/arch/mips/b=
-oot/dts/brcm/bcm96358nb4ser.dts
-> index f412117..702eae2 100644
-> --- a/arch/mips/boot/dts/brcm/bcm96358nb4ser.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm96358nb4ser.dts
+> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
+> new file mode 100644
+> index 0000000..411ccf4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
+> @@ -0,0 +1,23 @@
+> +The PDC driver manages data transfer to and from various offload engines
+> +on some Broadcom SoCs. An SoC may have multiple PDC hardware blocks. There is
+> +one device tree entry per block.
+> +
+> +Required properties:
+> +- compatible : Should be "brcm,iproc-pdc-mbox".
+> +- reg: Should contain PDC registers location and length.
+> +- interrupts: Should contain the IRQ line for the PDC.
+> +- #mbox-cells: 1
+> +- brcm,rx-status-len: Length of metadata preceding received frames, in bytes.
+> +
 
-Unfortunately I haven't seen this earlier, but please don't name the
-dts file bcm9* unless it's an actual reference/eval board from
-Broadcom.
+Ideally the metadata is more associated with the software protocol built
+on top of the mailbox controller.
 
-A more sensible name would be neufbox4-sercom.dts or
-bcm6358-neufbox4-sercom.dts.
+Is this metadata added by the hardware ?
 
+Otherwise it's better to make it part of the protocol rather than the
+associating with the controller.
 
-Regards
-Jonas
+> +Optional properties:
+> +- brcm,use-bcm-hdr:  present if a BCM header precedes each frame.
+> +
+
+Same here.
+
+-- 
+Regards,
+Sudeep
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
