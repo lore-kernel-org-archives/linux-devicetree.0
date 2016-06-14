@@ -1,77 +1,55 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] of: Add a new macro to declare_of for one parameter
- function returning a value
-Date: Tue, 14 Jun 2016 09:41:49 +0200
-Message-ID: <575FB53D.8030107@linaro.org>
-References: <1464770093-12667-1-git-send-email-daniel.lezcano@linaro.org>
- <1464770093-12667-2-git-send-email-daniel.lezcano@linaro.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH v8 2/2] drm/bridge: Add sii902x DT bindings doc
+Date: Tue, 14 Jun 2016 09:42:22 +0200
+Message-ID: <1465890142-14464-2-git-send-email-boris.brezillon@free-electrons.com>
+References: <1465890142-14464-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464770093-12667-2-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1465890142-14464-1-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, Archit Taneja <architt@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Meng Yi <meng.yi@nxp.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Emil Velikov <emil.l.velikov@gmail.com>, Alison Wang <alison.wang@nxp.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2016 10:34 AM, Daniel Lezcano wrote:
-> The macro OF_DECLARE_1 expect a void (*func)(struct device_node *) wh=
-ile the
-> OF_DECLARE_2 expect a int (*func)(struct device_node *, struct device=
-_node *).
->
-> The second one allows to pass an init function returning a value, whi=
-ch make
-> possible to call the functions in the table and check the return valu=
-e in order
-> to catch at a higher level the errors and handle them from there inst=
-ead of
-> doing a panic in each driver (well at least this is the case for the =
-clkevt).
->
-> Unfortunately the OF_DECLARE_1 does not allow that and that lead to s=
-ome code
-> duplication and crappyness in the drivers.
->
-> The OF_DECLARE_1 is used by all the clk drivers and the clocksource/c=
-lockevent
-> drivers. It is not possible to do the change in one shot as we have t=
-o change
-> all the init functions.
->
-> The OF_DECLARE_2 specifies an init function prototype with two parame=
-ters with
-> the node and its parent. The latter won't be used, ever, in the timer=
- drivers.
->
-> Introduce a OF_DECLARE_1_RET macro to be used, and hopefully we can s=
-moothly
-> and iteratively change the users of OF_DECLARE_1 to use the new macro=
- instead.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-
-Rob, Grant,
-
-do you agree with this change ?
-
-Thanks.
-
-   -- Daniel
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIFNpaTkwMjIgRFQgYmluZGluZ3MgZGVzY3JpcHRpb24uCgpTaWduZWQtb2ZmLWJ5OiBCb3Jp
+cyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+CkFja2VkLWJ5
+OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KQ2hhbmdlcyBzaW5jZSB2NjoKLSBt
+YWtlICdyZXNldC1ncGlvcycgb3B0aW9uYWwKCkNoYW5nZXMgc2luY2UgdjE6Ci0gcmVuYW1lIGRv
+YyBmaWxlCi0gcy9zaWw5MDIvc2lpOTAyLwotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL3NpaTkwMngudHh0IHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwogMSBm
+aWxlIGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTAyeC50eHQKCmRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
+Z2Uvc2lpOTAyeC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9icmlkZ2Uvc2lpOTAyeC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4u
+NTZhM2U2OAotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dApAQCAtMCwwICsxLDM1IEBACitzaWk5MDJ4
+IEhETUkgYnJpZGdlIGJpbmRpbmdzCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CisJLSBjb21wYXRp
+YmxlOiAic2lsLHNpaTkwMjIiCisJLSByZWc6IGkyYyBhZGRyZXNzIG9mIHRoZSBicmlkZ2UKKwor
+T3B0aW9uYWwgcHJvcGVydGllczoKKwktIGludGVycnVwdHMtZXh0ZW5kZWQgb3IgaW50ZXJydXB0
+LXBhcmVudCArIGludGVycnVwdHM6IGRlc2NyaWJlCisJICB0aGUgaW50ZXJydXB0IGxpbmUgdXNl
+ZCB0byBpbmZvcm0gdGhlIGhvc3QgYWJvdXQgaG90cGx1ZyBldmVudHMuCisJLSByZXNldC1ncGlv
+czogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBSU1RfTiBwaW4uCisKK09w
+dGlvbmFsIHN1Ym5vZGVzOgorCS0gdmlkZW8gaW5wdXQ6IHRoaXMgc3Vibm9kZSBjYW4gY29udGFp
+biBhIHZpZGVvIGlucHV0IHBvcnQgbm9kZQorCSAgdG8gY29ubmVjdCB0aGUgYnJpZGdlIHRvIGEg
+ZGlzcGxheSBjb250cm9sbGVyIG91dHB1dCAoU2VlIHRoaXMKKwkgIGRvY3VtZW50YXRpb24gWzFd
+KS4KKworWzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8t
+aW50ZXJmYWNlcy50eHQKKworRXhhbXBsZToKKwloZG1pLWJyaWRnZUAzOSB7CisJCWNvbXBhdGli
+bGUgPSAic2lsLHNpaTkwMjIiOworCQlyZWcgPSA8MHgzOT47CisJCXJlc2V0LWdwaW9zID0gPCZw
+aW9BIDEgMD47CisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUt
+Y2VsbHMgPSA8MD47CisKKwkJCXBvcnRAMCB7CisJCQkJcmVnID0gPDA+OworCQkJCWJyaWRnZV9p
+bjogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRjX291dD47CisJCQkJfTsK
+KwkJCX07CisJCX07CisJfTsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
