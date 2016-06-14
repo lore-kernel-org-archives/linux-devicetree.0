@@ -1,73 +1,272 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 02/10] mfd: ac100: Add device tree bindings for X-Powers AC100 codec/RTC combo IC
-Date: Tue, 14 Jun 2016 10:17:49 +0800
-Message-ID: <1465870678-30128-3-git-send-email-wens@csie.org>
+Subject: [PATCH 03/10] mfd: Add driver for X-Powers AC100 audio
+ codec / RTC combo IC
+Date: Tue, 14 Jun 2016 10:17:51 +0800
+Message-ID: <1465870678-30128-5-git-send-email-wens@csie.org>
 References: <1465870678-30128-1-git-send-email-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCMILY6JWQBBB2GS7W5AKGQEKA7EGUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1465870678-30128-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
 To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The AC100 is a multifunction device with an audio codec subsystem and
+an RTC subsystem. These two subsystems share a common register space
+and host interface.
+
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/ac100.txt | 42 +++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/ac100.txt
+ drivers/mfd/Kconfig       |  10 ++++
+ drivers/mfd/Makefile      |   2 +
+ drivers/mfd/ac100.c       | 116 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/ac100.h |  62 +++++++++++++++++++++++++
+ 4 files changed, 190 insertions(+)
+ create mode 100644 drivers/mfd/ac100.c
+ create mode 100644 include/linux/mfd/ac100.h
 
-diff --git a/Documentation/devicetree/bindings/mfd/ac100.txt b/Documentation/devicetree/bindings/mfd/ac100.txt
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 1bcf601de5bc..bd83849a0c8d 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -101,6 +101,16 @@ config MFD_BCM590XX
+ 	help
+ 	  Support for the BCM590xx PMUs from Broadcom
+ 
++config MFD_AC100
++	tristate "X-Powers AC100"
++	select MFD_CORE
++	depends on SUNXI_RSB
++	help
++	  If you say Y here you get support for the X-Powers AC100 audio codec
++	  IC.
++	  This driver include only the core APIs. You have to select individual
++	  components like codecs or RTC under the corresponding menus.
++
+ config MFD_AXP20X
+ 	tristate
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 42a66e19e191..60f9a6b0557c 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -113,6 +113,8 @@ obj-$(CONFIG_PMIC_DA9052)	+= da9052-irq.o
+ obj-$(CONFIG_PMIC_DA9052)	+= da9052-core.o
+ obj-$(CONFIG_MFD_DA9052_SPI)	+= da9052-spi.o
+ obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
++
++obj-$(CONFIG_MFD_AC100)		+= ac100.o
+ obj-$(CONFIG_MFD_AXP20X)	+= axp20x.o
+ obj-$(CONFIG_MFD_AXP20X_I2C)	+= axp20x-i2c.o
+ obj-$(CONFIG_MFD_AXP20X_RSB)	+= axp20x-rsb.o
+diff --git a/drivers/mfd/ac100.c b/drivers/mfd/ac100.c
 new file mode 100644
-index 000000000000..fbab623e6fba
+index 000000000000..3e6752e9dc07
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/ac100.txt
-@@ -0,0 +1,42 @@
-+X-Powers AC100 Codec/RTC IC device tree bindings
++++ b/drivers/mfd/ac100.c
+@@ -0,0 +1,116 @@
++/*
++ * ac100.c - MFD core driver for X-Powers' AC100 Audio Codec IC
++ *
++ * The AC100 is a highly integrated audio codec and RTC subsystem designed
++ * for mobile applications. It has 3 I2S/PCM interfaces, a 2 channel DAC,
++ * a 2 channel ADC with 5 inputs and a builtin mixer. The RTC subsystem has
++ * 3 clock outputs.
++ *
++ * The audio codec and RTC parts are completely separate, sharing only the
++ * host interface for access to its registers.
++ *
++ * Author: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
-+AC100 is a audio codec and RTC subsystem combo IC. The 2 parts are
-+separated, including power supplies and interrupt lines, but share
-+a common register address space and host interface.
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/mfd/core.h>
++#include <linux/mfd/ac100.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++#include <linux/sunxi-rsb.h>
 +
-+Required properties:
-+- compatible: "x-powers,ac100"
-+- reg: The I2C slave address or RSB hardware address for the chip
-+- sub-nodes:
-+  - codec
-+    - compatible: "x-powers,ac100-codec"
-+    - interrupt-parent: The parent interrupt controller
-+    - interrupts: SoC NMI / GPIO interrupt connected to the IRQ_AUDIO pin
-+  - rtc
-+    - compatible: "x-powers,ac100-rtc"
-+    - interrupt-parent: The parent interrupt controller
-+    - interrupts: SoC NMI / GPIO interrupt connected to the IRQ_RTC pin
-+    - #clock-cells: shall be 1
-+    - clock-output-names: "cko1_rtc", "cko2_rtc", "cko3_rtc"
-+    - see clock/clock-bindings.txt for common clock bindings
-+
-+Example:
-+
-+ac100: codec@e89 {
-+	compatible = "x-powers,ac100";
-+	reg = <0xe89>;
-+
-+	ac100_codec {
-+		compatible = "x-powers,ac100-codec";
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	ac100_rtc {
-+		compatible = "x-powers,ac100-rtc";
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		#clock-cells = <1>;
-+		clock-output-names = "cko1_rtc", "cko2_rtc", "cko3_rtc";
-+	};
++static const struct regmap_range ac100_writeable_ranges[] = {
++	regmap_reg_range(AC100_CLK32K_ANALOG_CTRL, AC100_CLK32K_OUT_CTRL3),
++	regmap_reg_range(AC100_RTC_RST, AC100_RTC_UPD),
++	regmap_reg_range(AC100_ALM_INT_ENA, AC100_ALM_INT_STA),
++	regmap_reg_range(AC100_ALM_SEC, AC100_RTC_GP(15)),
 +};
++
++static const struct regmap_range ac100_volatile_ranges[] = {
++	regmap_reg_range(AC100_RTC_RST, AC100_RTC_RST),
++	regmap_reg_range(AC100_RTC_SEC, AC100_ALM_INT_STA),
++	regmap_reg_range(AC100_ALM_SEC, AC100_ALM_UPD),
++};
++
++static const struct regmap_access_table ac100_writeable_table = {
++	.yes_ranges	= ac100_writeable_ranges,
++	.n_yes_ranges	= ARRAY_SIZE(ac100_writeable_ranges),
++};
++
++static const struct regmap_access_table ac100_volatile_table = {
++	.yes_ranges	= ac100_volatile_ranges,
++	.n_yes_ranges	= ARRAY_SIZE(ac100_volatile_ranges),
++};
++
++static const struct regmap_config ac100_regmap_config = {
++	.reg_bits	= 8,
++	.val_bits	= 16,
++	.wr_table	= &ac100_writeable_table,
++	.volatile_table	= &ac100_volatile_table,
++	.max_register	= AC100_RTC_GP(15),
++	.cache_type	= REGCACHE_RBTREE,
++};
++
++static struct mfd_cell ac100_cells[] = {
++	{
++		.name		= "ac100-codec",
++		.of_compatible	= "x-powers,ac100-codec",
++	}, {
++		.name		= "ac100-rtc",
++		.of_compatible	= "x-powers,ac100-rtc",
++	},
++};
++
++static int ac100_rsb_probe(struct sunxi_rsb_device *rdev)
++{
++	struct ac100_dev *ac100;
++	int ret;
++
++	ac100 = devm_kzalloc(&rdev->dev, sizeof(*ac100), GFP_KERNEL);
++	if (!ac100)
++		return -ENOMEM;
++
++	ac100->dev = &rdev->dev;
++	sunxi_rsb_device_set_drvdata(rdev, ac100);
++
++	ac100->regmap = devm_regmap_init_sunxi_rsb(rdev, &ac100_regmap_config);
++	if (IS_ERR(ac100->regmap)) {
++		ret = PTR_ERR(ac100->regmap);
++		dev_err(ac100->dev, "regmap init failed: %d\n", ret);
++		return ret;
++	}
++
++	ret = devm_mfd_add_devices(ac100->dev, PLATFORM_DEVID_NONE, ac100_cells,
++				   ARRAY_SIZE(ac100_cells), NULL, 0, NULL);
++	if (ret) {
++		dev_err(ac100->dev, "failed to add MFD devices: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id ac100_of_match[] = {
++	{ .compatible = "x-powers,ac100" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ac100_of_match);
++
++static struct sunxi_rsb_driver ac100_rsb_driver = {
++	.driver = {
++		.name	= "ac100",
++		.of_match_table	= of_match_ptr(ac100_of_match),
++	},
++	.probe	= ac100_rsb_probe,
++};
++module_sunxi_rsb_driver(ac100_rsb_driver);
++
++MODULE_DESCRIPTION("Audio codec MFD core driver for AC100");
++MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/ac100.h b/include/linux/mfd/ac100.h
+new file mode 100644
+index 000000000000..6d3b9f5c5aa2
+--- /dev/null
++++ b/include/linux/mfd/ac100.h
+@@ -0,0 +1,62 @@
++/*
++ * Functions and registers to access AC100 codec / RTC combo IC.
++ *
++ * Copyright (C) 2013, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef __LINUX_MFD_AC100_H
++#define __LINUX_MFD_AC100_H
++
++#include <linux/regmap.h>
++
++struct ac100_dev {
++	struct device			*dev;
++	struct regmap			*regmap;
++};
++
++/* Audio codec related registers */
++#define AC100_AUDIO_CHIP_RST		0x00
++#define AC100_PLL_CTRL1			0x01
++#define AC100_PLL_CTRL2			0x02
++#define AC100_SYSCLK_CTRL		0x03
++#define AC100_MOD_CLK_ENA		0x04
++#define AC100_MOD_RST_CTRL		0x05
++
++/* RTC */
++#define AC100_CLK32K_ANALOG_CTRL	0xc0
++#define AC100_CLK32K_OUT_CTRL1		0xc1
++#define AC100_CLK32K_OUT_CTRL2		0xc2
++#define AC100_CLK32K_OUT_CTRL3		0xc3
++
++/* RTC module */
++#define AC100_RTC_RST			0xc6
++#define AC100_RTC_CTRL			0xc7
++#define AC100_RTC_SEC			0xc8 /* second */
++#define AC100_RTC_MIN			0xc9 /* minute */
++#define AC100_RTC_HOU			0xca /* hour */
++#define AC100_RTC_WEE			0xcb /* weekday */
++#define AC100_RTC_DAY			0xcc /* day */
++#define AC100_RTC_MON			0xcd /* month */
++#define AC100_RTC_YEA			0xce /* year */
++#define AC100_RTC_UPD			0xcf /* update trigger */
++
++/* RTC Alarm */
++#define AC100_ALM_INT_ENA		0xd0
++#define	AC100_ALM_INT_STA		0xd1
++#define AC100_ALM_SEC			0xd8
++#define AC100_ALM_MIN			0xd9
++#define AC100_ALM_HOU			0xda
++#define AC100_ALM_WEE			0xdb
++#define AC100_ALM_DAY			0xdc
++#define AC100_ALM_MON			0xdd
++#define AC100_ALM_YEA			0xde
++#define AC100_ALM_UPD			0xdf
++
++/* RTC general purpose register 0 ~ 15 */
++#define AC100_RTC_GP(x)			(0xe0 + (x))
++
++#endif /* __LINUX_MFD_AC100_H */
 -- 
 2.8.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
