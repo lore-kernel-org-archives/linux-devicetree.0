@@ -1,50 +1,33 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] Documentation: bindings: add DT documentation for
- Rockchip USB2PHY
-Date: Tue, 14 Jun 2016 17:26:35 -0500
-Message-ID: <20160614222635.GA3297@rob-hp-laptop>
-References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
- <1465783810-18756-2-git-send-email-frank.wang@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] net: Add MDIO bus driver for the Hisilicon FEMAC
+Date: Tue, 14 Jun 2016 17:27:46 -0500
+Message-ID: <20160614222746.GA4322@rob-hp-laptop>
+References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com>
+ <1465798076-176393-2-git-send-email-lidongpo@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465783810-18756-2-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+In-Reply-To: <1465798076-176393-2-git-send-email-lidongpo@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dongpo Li <lidongpo@hisilicon.com>
+Cc: f.fainelli@gmail.com, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2016 at 10:10:09AM +0800, Frank Wang wrote:
-> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Mon, Jun 13, 2016 at 02:07:54PM +0800, Dongpo Li wrote:
+> This patch adds a separate driver for the MDIO interface of the
+> Hisilicon Fast Ethernet MAC.
+> 
+> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
 > ---
-> 
-> Changes in v5:
->  - Added 'reg' property to identify the different phy-blocks.
-> 
-> Changes in v4:
->  - Used 'phy-supply' instead of 'vbus_*-supply'.
-> 
-> Changes in v3:
->  - Added 'clocks' and 'clock-names' optional properties.
->  - Specified 'otg-port' and 'host-port' as the sub-node name.
-> 
-> Changes in v2:
->  - Changed vbus_host optional property from gpio to regulator.
->  - Specified vbus_otg-supply optional property.
->  - Specified otg_id and otg_bvalid property.
-> 
->  .../bindings/phy/phy-rockchip-inno-usb2.txt        |   64 ++++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>  .../bindings/net/hisilicon-femac-mdio.txt          |  22 +++
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/net/phy/Kconfig                            |   8 +
+>  drivers/net/phy/Makefile                           |   1 +
+>  drivers/net/phy/mdio-hisi-femac.c                  | 165 +++++++++++++++++++++
+>  4 files changed, 196 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
+>  create mode 100644 drivers/net/phy/mdio-hisi-femac.c
