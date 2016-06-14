@@ -1,85 +1,95 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v2 09/11] phy: rockchip-emmc: Minor code cleanup in
- rockchip_emmc_phy_power_on/off()
-Date: Tue, 14 Jun 2016 08:36:11 +0800
-Message-ID: <361ee77c-ae92-a8f5-c716-1867652db653@rock-chips.com>
-References: <1465859076-4868-1-git-send-email-dianders@chromium.org>
- <1465859076-4868-10-git-send-email-dianders@chromium.org>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
+Date: Tue, 14 Jun 2016 09:43:17 +0900
+Message-ID: <20160614004317.GC6456@verge.net.au>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
+ <20160601005751.GG20527@verge.net.au>
+ <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
+ <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
+ <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
+ <20160610010245.GA10152@verge.net.au>
+ <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465859076-4868-10-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>, ulf.hansson@linaro.org, kishon@ti.com, Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org
-Cc: shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8efb1c7e-5463-2556-744c-d327886d92d4-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=D4=DA 2016/6/14 7:04, Douglas Anderson =D0=B4=B5=C0:
-> There's no reason to store the return value of rockchip_emmc_phy_powe=
-r()
-> in a variable nor to check it.  Just return it.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> Changes in v2:
-> - Move code cleanup before set phyctrl_frqsel based on card clock (Sh=
-awn)
+On Fri, Jun 10, 2016 at 10:29:17PM +0300, Sergei Shtylyov wrote:
+> On 06/10/2016 04:02 AM, Simon Horman wrote:
+> 
+> >>[...]
+> >>
+> >>>>>And that the system behaves sanely on suspend/resume.
+> >>>>
+> >>>>  I'd be thankful if you told me how to test that. :-)
+> >>>
+> >>>System suspend:
+> >>>
+> >>>   echo mem > /sys/power/state
+> >>
+> >>   Oh. I know that one! :-)
+> >>
+> >>>System resume: You're gonna need a "wakeup-source" in your DTS, e.g. gpio-keys.
+> >>>Serial should work too, echo "enabled" to the corresponding wakeup
+> >>>file in /sys first.
+> >>
+> >>   I'm afraid I couldn't find that file. All I saw were RPM controls...
+> >>
+> >>>In case of issues, try "echo 0 > /sys/module/printk/parameters/console_suspend".
+> >>
+> >>   There's no problems suspending, it's the resuming that's a problem for me.
+> >>
+> >>>Good luck!
+> >>
+> >>   As usual, there was no luck. :-)
+> >>
+> >>WBR, Sergei
+> >
+> >Does resume work for UP (i.e. without SMP)?
+> 
+>    No. My problem with resume is I can't wake up the remote system. I don't
+> see the needed 'wakeup' file in
+> /sys/devices/platform/soc/e6e60000.serial/...
+>     However, if I enable CONFIG_PM_[ADVANCED_]DEBUG and do
+> 
+> $ echo -n core /sys/.power/pm_test
+> 
+> the system happily wakes up after a small delay (5 s), w/either SMP or UP kernel.
 
-Looks good to me.
+That seems promising but it seems curious that there is no wakeup file.
 
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+On Lager the following procedure works for me using
+renesas-devel-20160613-v4.7-rc3 and shmobile defconfig.
 
->
->  drivers/phy/phy-rockchip-emmc.c | 14 ++------------
->  1 file changed, 2 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockch=
-ip-emmc.c
-> index 2d059c046978..23fe50864526 100644
-> --- a/drivers/phy/phy-rockchip-emmc.c
-> +++ b/drivers/phy/phy-rockchip-emmc.c
-> @@ -169,20 +169,14 @@ static int rockchip_emmc_phy_power(struct rockc=
-hip_emmc_phy *rk_phy,
->  static int rockchip_emmc_phy_power_off(struct phy *phy)
->  {
->  	struct rockchip_emmc_phy *rk_phy =3D phy_get_drvdata(phy);
-> -	int ret =3D 0;
->
->  	/* Power down emmc phy analog blocks */
-> -	ret =3D rockchip_emmc_phy_power(rk_phy, PHYCTRL_PDB_PWR_OFF);
-> -	if (ret)
-> -		return ret;
-> -
-> -	return 0;
-> +	return rockchip_emmc_phy_power(rk_phy, PHYCTRL_PDB_PWR_OFF);
->  }
->
->  static int rockchip_emmc_phy_power_on(struct phy *phy)
->  {
->  	struct rockchip_emmc_phy *rk_phy =3D phy_get_drvdata(phy);
-> -	int ret =3D 0;
->
->  	/* DLL operation: 200 MHz */
->  	regmap_write(rk_phy->reg_base,
-> @@ -213,11 +207,7 @@ static int rockchip_emmc_phy_power_on(struct phy=
- *phy)
->  				   PHYCTRL_OTAPDLYSEL_SHIFT));
->
->  	/* Power up emmc phy analog blocks */
-> -	ret =3D rockchip_emmc_phy_power(rk_phy, PHYCTRL_PDB_PWR_ON);
-> -	if (ret)
-> -		return ret;
-> -
-> -	return 0;
-> +	return rockchip_emmc_phy_power(rk_phy, PHYCTRL_PDB_PWR_ON);
->  }
->
->  static const struct phy_ops ops =3D {
->
+0. Add wakeup-source property to serial@e6ce0000 node in DT
+1. echo enabled > /sys/devices/platform/e6e60000.serial/tty/ttySC0/power/wakeup
+2. echo mem > /sys/power/state
+3. Provide input on serial console
 
+* Success! *
 
---=20
-Best Regards
-Shawn Lin
+> >How did testing CPU hotplug go? Did it work for all CPUs?
+> 
+>    Sure!
+
+Great!
+
+>    The only problem I'm seeing (again) is the RCAN clock failing to register:
+> 
+> rcar_gen2_cpg_clocks_init: failed to register cpg_clocks rcan clock (-12)
+> 
+>    I was going to look at it yesterday but (wrongly) thought it somehow
+> cured itself... I'll look at it now.
+
+Is this resolved? If not perhaps you could consider removing the node
+in question for now.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
