@@ -1,78 +1,84 @@
-From: Li Dongpo <lidongpo@hisilicon.com>
-Subject: Re: [PATCH 1/3] net: Add MDIO bus driver for the Hisilicon FEMAC
-Date: Tue, 14 Jun 2016 16:24:48 +0800
-Message-ID: <575FBF50.30904@hisilicon.com>
-References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com>
- <1465798076-176393-2-git-send-email-lidongpo@hisilicon.com>
- <20160613133230.GA3132@lunn.ch>
+From: Po Liu <po.liu@nxp.com>
+Subject: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
+Date: Tue, 14 Jun 2016 16:24:05 +0800
+Message-ID: <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-1-git-send-email-po.liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160613133230.GA3132@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1465892645-32381-1-git-send-email-po.liu@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Po Liu <po.liu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
+When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
+maybe there is interrupt line for aer pme etc. Search the interrupt
+number in the fdt file. Then fixup the dev->irq with it.
 
+Signed-off-by: Po Liu <po.liu@nxp.com>
+---
+changes for V3:
+	- Move to quirk;
+	- Only correct the irq in RC mode;
 
-On 2016/6/13 21:32, Andrew Lunn wrote:
-> On Mon, Jun 13, 2016 at 02:07:54PM +0800, Dongpo Li wrote:
->> This patch adds a separate driver for the MDIO interface of the
->> Hisilicon Fast Ethernet MAC.
->>
->> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
->> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
->> ---
->>  .../bindings/net/hisilicon-femac-mdio.txt          |  22 +++
->>  drivers/net/phy/Kconfig                            |   8 +
->>  drivers/net/phy/Makefile                           |   1 +
->>  drivers/net/phy/mdio-hisi-femac.c                  | 165 +++++++++++++++++++++
->>  4 files changed, 196 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
->>  create mode 100644 drivers/net/phy/mdio-hisi-femac.c
+ drivers/pci/quirks.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-[...]
->> +
-> 
-> Hi Dongpo
-> 
-> Overall this looks good. Just some minor comments
-> 
->> +static int hisi_femac_mdio_wait_ready(struct mii_bus *bus)
->> +{
->> +	struct hisi_femac_mdio_data *data = bus->priv;
-> 
-> You could just pass data here. Your read and write functions already
-> have it.
-> 
-Thank you, I will fix it in next patch version.
-
->> +	data->clk = devm_clk_get(&pdev->dev, NULL);
->> +	if (IS_ERR(data->clk)) {
->> +		ret = -ENODEV;
->> +		goto err_out_free_mdiobus;
->> +	}
-> 
-> Return the error which devm_clk_get() gives you.
-> 
-ok, I will fix it.
-
->> +
->> +	ret = clk_prepare_enable(data->clk);
->> +	if (ret)
->> +		goto err_out_free_mdiobus;
->> +
->> +	ret = of_mdiobus_register(bus, np);
->> +	if (ret)
->> +		goto err_out_free_mdiobus;
-> 
-> You leave the clock prepared and enabled on error.
-> 
-ok, I will fix it.
-
->     Andrew
-> 
-> .
-> 
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ee72ebe..8b39cce 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -25,6 +25,7 @@
+ #include <linux/sched.h>
+ #include <linux/ktime.h>
+ #include <linux/mm.h>
++#include <linux/of_irq.h>
+ #include <asm/dma.h>	/* isa_dma_bridge_buggy */
+ #include "pci.h"
+ 
+@@ -4419,3 +4420,31 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
+ 	}
+ }
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
++
++/* If root port doesn't support MSI/MSI-X/INTx in RC mode,
++ * but use standalone irq. Read the device tree for the aer
++ * interrupt number.
++ */
++static void quirk_aer_interrupt(struct pci_dev *dev)
++{
++	int ret;
++	u8 header_type;
++	struct device_node *np = NULL;
++
++	/* Only for the RC mode device */
++	pci_read_config_byte(dev, PCI_HEADER_TYPE, &header_type);
++	if ((header_type & 0x7F) != PCI_HEADER_TYPE_BRIDGE)
++		return;
++
++	if (dev->bus->dev.of_node)
++		np = dev->bus->dev.of_node;
++
++	if (IS_ENABLED(CONFIG_OF_IRQ) && np) {
++		ret = of_irq_get_byname(np, "aer");
++		if (ret > 0) {
++			dev->no_msi = 1;
++			dev->irq = ret;
++		}
++	}
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_aer_interrupt);
+-- 
+2.1.0.27.g96db324
