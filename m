@@ -1,135 +1,108 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 4/6] drm/panel: simple: Add support for Samsung
- LSN122DL01-C01 2560x1600 panel
-Date: Tue, 14 Jun 2016 10:57:49 +0200
-Message-ID: <20160614085749.GB24442@ulmo.ba.sec>
-References: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
- <1465700173-13671-1-git-send-email-ykk@rock-chips.com>
- <CAD=FV=VL0KgZnpjvAvYgK8rzgntKL2N0D6QbG6V0LO8vkaQkig@mail.gmail.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: Re: [PATCH v2 0/4] clocksource: rockchip/timer: Support rktimer for
+ rk3399
+Date: Tue, 14 Jun 2016 17:12:12 +0800
+Message-ID: <575FCA6C.1010405@rock-chips.com>
+References: <1465275273-22076-1-git-send-email-wxt@rock-chips.com> <20160613130625.GC10634@linaro.org> <575F814C.104@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0979560527=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAD=FV=VL0KgZnpjvAvYgK8rzgntKL2N0D6QbG6V0LO8vkaQkig@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Emil Velikov <emil.l.velikov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <575F814C.104@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "Huang, Tao" <huangtao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, cf@rock-chips.com, devicetree@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0979560527==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
-Content-Disposition: inline
+On 2016=E5=B9=B406=E6=9C=8814=E6=97=A5 12:00, Huang, Tao wrote:
+> Hi Daniel:
+> On 2016=E5=B9=B406=E6=9C=8813=E6=97=A5 21:06, Daniel Lezcano wrote:
+>> On Tue, Jun 07, 2016 at 12:54:29PM +0800, Caesar Wang wrote:
+>>> This series patches had been tested on rockchip inside kernel.
+>>> In order to support the rk3399 SoC timer and turn off interrupts an=
+d IPIs to
+>>> save power in idle.
+>> For my personnal information, are the arch_timer in the same power d=
+omain
+>> than the CPU ? IOW, what is the 'always-on' property in the DT ?
+> Yes. In our SoC design, all arch (generic) timer in the same power
+> domain of CPU core. So if one CPU core power down, the arch (generic)
+> timer will lose it's state and stop working.
+> While rk timer maybe in peri power domain or pmu power domain, so the
+> timer will still work when CPU power down.
+>
+> But before RK3399, all SoCs with CPU power domain, do not support aut=
+o
+> power down while cpu idle. So the arch timer can be seem as always on=
+,
+> i.e. we don't need a broadcast timer at all.
+>
+>>> Okay, it still works bootup on rk3288/other SoCs, even though many =
+socs
+>>> hasn't used
+>>> the broadcast timer.
+>> Yes, unfortunately the SoC design on rk3288 and the previous ones do=
+ not
+>> allow to use a cpuidle driver with cpu/cluster power down, so obviou=
+sly the
+>> broadcast timer is pointless on these boards :)
+>>
+> You are right.
+>
+>>> History version:
+>>> v1:
+>>> https://lkml.org/lkml/2016/5/25/186
+>>>
+>>> Easy to test for my borad.
+>>> localhost / # cat /proc/interrupts
+>>> CPU0       CPU1       CPU2       CPU3       CPU4       CPU5
+>>> 1:          0          0          0          0          0          =
+0     GICv3  29 Edge      arch_timer
+>>> ...
+>>> 5:          0          0          0          0          0          =
+0     GICv3 113 Level     rk_timer
+>>> ..
+>>>
+>>> localhost / # cat /proc/timer_list | grep event_handler
+>>> get "event_handler:  hrtimer_interrupt"
+>>> event_handler:  tick_handle_oneshot_broadcast
+>>> event_handler:  hrtimer_interrupt
+>> What are you trying to demonstrate here ? There are no interrupts fo=
+r both
+>> arch_timer and rk_timer.
+
+My god!! let's forget it now!
+Sorry for forgetting what happened.
+---
+
+Re-picked them up for my board since I'm doing other things to run a=20
+single cpu.
+
+localhost / # cat /proc/interrupts
+            CPU0
+   1:          0     GICv3  29 Edge      arch_timer
+   2:        807     GICv3  30 Edge      arch_timer
+   5:        712     GICv3 113 Level     rk_timer
+=2E...
 
 
---cmJC7u66zC7hs+87
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> I don't know. Maybe Caesar do something wrong :(
+> This is my output:
+>             CPU0       CPU1       CPU2       CPU3       CPU4       CP=
+U5
+>
+> ...
+>    2:       2911       1967       1588       1608       1295       16=
+06
+>     GICv3  30 Edge      arch_timer
+>    5:        578        637        684        626        161        1=
+65
+>     GICv3 113 Level     rk_timer
+>
+>
+>
 
-On Mon, Jun 13, 2016 at 10:00:45AM -0700, Doug Anderson wrote:
-> Yakir,
->=20
-> On Sat, Jun 11, 2016 at 7:56 PM, Yakir Yang <ykk@rock-chips.com> wrote:
-> > The Samsung LSN122DL01-C01 is an 12.2" 2560x1600 (WQXGA) TFT-LCD panel
-> > connected using eDP interfaces.
-> >
-> > Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> > ---
-> > Changes in v3:
-> > - Correct the size of panel_desc to active area 262mmx164mm (Emil, St=
-=C3=A9phane)
-> >
-> > Changes in v2: None
-> >
-> >  drivers/gpu/drm/panel/panel-simple.c | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/pan=
-el/panel-simple.c
-> > index 2d40a21..17cc973 100644
-> > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > @@ -1246,6 +1246,28 @@ static const struct panel_desc qd43003c0_40 =3D {
-> >         .bus_format =3D MEDIA_BUS_FMT_RGB888_1X24,
-> >  };
-> >
-> > +static const struct drm_display_mode samsung_lsn122dl01_c01_mode =3D {
-> > +       .clock =3D 271560,
-> > +       .hdisplay =3D 2560,
-> > +       .hsync_start =3D 2560 + 48,
-> > +       .hsync_end =3D 2560 + 48 + 32,
-> > +       .htotal =3D 2560 + 48 + 32 + 80,
-> > +       .vdisplay =3D 1600,
-> > +       .vsync_start =3D 1600 + 2,
-> > +       .vsync_end =3D 1600 + 2 + 5,
-> > +       .vtotal =3D 1600 + 2 + 5 + 57,
-> > +       .vrefresh =3D 60,
-> > +};
-> > +
-> > +static const struct panel_desc samsung_lsn122dl01_c01 =3D {
-> > +       .modes =3D &samsung_lsn122dl01_c01_mode,
-> > +       .num_modes =3D 1,
-> > +       .size =3D {
-> > +               .width =3D 262,
-> > +               .height =3D 164,
->=20
-> Earlier you said that the active area of this panel was:
->=20
-> > Display area     262.656(H) X 164.16(V)         (12.2=E2=80=9Ddiagonal)
->=20
-> In other panels I looked at the EDID tended to round numbers, not
-> truncate them.  For instance the Starry panel that I sent the patch
-> for says in the manual "262.7712 (H) x 164.232 (V)" but then the EDID
-> says "263 x 164".
->=20
-> That would mean your width should be 263 mm, not 262 mm.
-
-Yes, rounding is what I've also applied to all panels that I added.
-While it isn't documented I hope that other panels did round, rather
-than truncate, as well.
-
-Thierry
-
---cmJC7u66zC7hs+87
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXX8cNAAoJEN0jrNd/PrOhba8P/0l7NNMwnlcZfJ9KRZrsJMu8
-rkcZQJLg+cl95wtbPTHvsimOKN3JyhiDVvh4KhfhVPIrCjMQTS8UXzoWtC+Le/9B
-G1kQIk1H/b9BJ3Y0YGkEAJZ4cQMHk7WlNewe+T8+uZhPhICQvyB0qLdqaHkFNsZb
-Ae2tZKpy+eQx7vIUWr/iQ/5dzl7PzPqE4A+jre8AWJO3yARYeI4ZTJZuiNIwMEc6
-xmQW6Y7gvRBYb/W+2ouD1tcXbTQxtSMZ6OC7L+sCJ0y832KK3Ztg7v9DRkDe12SN
-fR3NeXfJnG0lDQbYUT1VfqQHGjZp8N9crmaGjCugmnWVmk07ILggyc+6RCmk3suN
-zhfexT1XH413wvUIv7+pR7mZgh8ybuAUqewmO74neHq8+T3+wRVpQwu8z2PkWWtu
-iPG05zoyvTlhlcIGO/WNTGVabO7ygbc55N1BIU9o6+US0QrO/luQfkiQMgG8DZ+f
-JwuQ7d+8NXYvcjz1C2Erk/D8KtmQihcicqt4NROubyk6PeN41mBUewbsN8UB2YUa
-QjZLWRnojXrcxjoLYayDUcabW1HcG57EQTU5WV+KNYPoOI74aUH6HT7wRy0RYH29
-Rn1/KX26Y+FRXnqOTwr45P6K3VmjS279PPQVE3P643X8+rRMgCaXw7VM4mVHcpXH
-HtoMQTpQOQBQHEo+0G9x
-=sOHK
------END PGP SIGNATURE-----
-
---cmJC7u66zC7hs+87--
-
---===============0979560527==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0979560527==--
+--=20
+caesar wang | software engineer | wxt@rock-chip.com
