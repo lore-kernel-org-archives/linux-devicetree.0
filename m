@@ -1,75 +1,59 @@
-From: tiffany lin <tiffany.lin@mediatek.com>
-Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
-Date: Tue, 14 Jun 2016 19:08:08 +0800
-Message-ID: <1465902488.27938.7.camel@mtksdaap41>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
-	 <20160607112235.475c2e4c@recife.lan> <575746EE.3030706@cisco.com>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 2/4] ARM: dts: sun4i: Add NFC node to
+ Allwinner A10 SoC
+Date: Tue, 14 Jun 2016 14:17:36 +0300
+Message-ID: <1465903058-9211-3-git-send-email-mamlinav@gmail.com>
+References: <1465208664-9366-1-git-send-email-mamlinav@gmail.com>
+ <1465903058-9211-1-git-send-email-mamlinav@gmail.com>
+Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <575746EE.3030706@cisco.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hansverk@cisco.com>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, tiffany.lin@mediatek.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCENVD7YAEIPRUH7XICRUBG2SXIAG-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1465903058-9211-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
+Add NAND Flash controller node definition to the A10 SoC.
 
-On Wed, 2016-06-08 at 07:13 +0900, Hans Verkuil wrote:
-> 
-> On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:
-> > Em Mon, 30 May 2016 20:29:14 +0800
-> > Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
-> >
-> >> ==============
-> >>   Introduction
-> >> ==============
-> >>
-> >> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
-> >> Mediatek Video Codec is able to handle video decoding of in a range of formats.
-> >>
-> >> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
-> >> V4L2_PIX_FMT_MT21 format.
-> >>
-> >> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
-> >> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
-> >> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
-> >>
-> >> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
-> >>
-> >> [1]https://patchwork.linuxtv.org/patch/33734/
-> >> [2]https://chromium-review.googlesource.com/#/c/245241/
-> >
-> > Hmm... I'm not seeing the firmware for this driver at the
-> > linux-firmware tree:
-> > 	https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
-> >
-> > Nor I'm seeing any pull request for them. Did you send it?
-> > I'll only merge the driver upstream after seeing such pull request.
-> 
-Sorry, I am not familiar with how to upstream firmware.
-Do you mean we need to upstream vpu firmware first before merge encoder
-driver upstream?
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-In
-https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/tree/README, it mentions that 
-"To submit firmware to this repository, please send either a git binary
-diff or preferably a git pull request to: linux-firmware@kernel.org and
-also cc: to related mailing lists."
-
-How we made a git pull request to linux-firmware@kernel.org? 
-How we find out related mailing lists?
-
-best regards,
-Tiffany
-
-> Mauro, are you confusing the decoder and encoder driver? I haven't thoroughly reviewed the decoder driver
-> yet, so there is no pull request for the decoder driver.
-> 
-> The only pull request I made was for the encoder driver.
-> 
-> Regards,
-> 
-> 	Hans
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index e579bdd..308ed5d 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -719,6 +719,19 @@
+ 			#dma-cells = <2>;
+ 		};
+ 
++		nfc: nand@01c03000 {
++			compatible = "allwinner,sun4i-a10-nand";
++			reg = <0x01c03000 0x1000>;
++			interrupts = <37>;
++			clocks = <&ahb_gates 13>, <&nand_clk>;
++			clock-names = "ahb", "mod";
++			dmas = <&dma SUN4I_DMA_DEDICATED 3>;
++			dma-names = "rxtx";
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		spi0: spi@01c05000 {
+ 			compatible = "allwinner,sun4i-a10-spi";
+ 			reg = <0x01c05000 0x1000>;
+-- 
+2.7.3
