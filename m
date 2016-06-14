@@ -1,225 +1,105 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: case sensitivity for devicetree node names
-Date: Tue, 14 Jun 2016 15:10:28 +1000
-Message-ID: <20160614051028.GL4882@voom.fritz.box>
-References: <575B1D84.2010703@gmail.com>
- <20160614011021.GD4882@voom.fritz.box>
- <575F7FC1.5040508@gmail.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 10/13] spi: sunxi: merge sun4i and sun6i
+ SPI driver
+Date: Tue, 14 Jun 2016 07:28:39 +0200
+Message-ID: <CAOMqctTjGTeaFC3MJe4MoMipdSf2ppOpikBSa8A-ht2v4j86bg@mail.gmail.com>
+References: <cover.1465490774.git.hramrach@gmail.com> <ad0ec30ef6b01f58e1b3b92da06e6cbd5c947354.1465490774.git.hramrach@gmail.com>
+ <CAGRGNgVONS+i=57D52VeW8J6SvfmX=iG+3VpxNS8=kJOV+WSLw@mail.gmail.com>
+ <CAOMqctQD=o6YBk-QRiqbE9Cj+ZAH1nAM33rW6ZHefV8dU3aucQ@mail.gmail.com> <CAGRGNgWPBh03zQrM=OMF24ezJvC-K0TMw2oqPhuNLj-nZ=mZQA@mail.gmail.com>
+Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="umrsQkkrw7viUWFs"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <575F7FC1.5040508-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQMLUOX54MBBL5M725AKGQE4PKAEQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGRGNgWPBh03zQrM=OMF24ezJvC-K0TMw2oqPhuNLj-nZ=mZQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Bertelsmann <info-La43T0Mi4bH5xCKuJOYmCvaTkwRoYoCU@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>devicet
 List-Id: devicetree@vger.kernel.org
 
+On 14 June 2016 at 06:47, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Michal,
+>
+> On Tue, Jun 14, 2016 at 2:34 PM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hello,
+>>
+>> On 14 June 2016 at 01:43, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> Hi Michal,
+>>>
+>>> On Tue, Jun 14, 2016 at 3:46 AM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> The drivers are very similar and share multiple flaws which needed
+>>>> separate fixes for both drivers.
+>>>>
+>>>> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> ---
+>>>>  drivers/spi/Kconfig     |   8 +-
+>>>>  drivers/spi/Makefile    |   1 -
+>>>>  drivers/spi/spi-sun4i.c | 156 +++++++++++--
+>>>>  drivers/spi/spi-sun6i.c | 598 ------------------------------------------------
+>>>>  4 files changed, 143 insertions(+), 620 deletions(-)
+>>>>  delete mode 100644 drivers/spi/spi-sun6i.c
+>>>>
+>>>> diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
+>>>> index 0b8e6c6..c76f8e4 100644
+>>>> --- a/drivers/spi/spi-sun4i.c
+>>>> +++ b/drivers/spi/spi-sun4i.c
+>>>> @@ -279,9 +321,14 @@ static int sunxi_spi_transfer_one(struct spi_master *master,
+>>>>         reg = sunxi_spi_read(sspi, SUNXI_TFR_CTL_REG);
+>>>>
+>>>>         /* Reset FIFOs */
+>>>> -       sunxi_spi_write(sspi, SUNXI_TFR_CTL_REG,
+>>>> -                       reg | sspi_bits(sspi, SUNXI_CTL_RF_RST) |
+>>>> -                       sspi_bits(sspi, SUNXI_CTL_TF_RST));
+>>>> +       if (sspi->type == SPI_SUN4I)
+>>>> +               sunxi_spi_write(sspi, SUNXI_TFR_CTL_REG,
+>>>> +                               reg | sspi_bits(sspi, SUNXI_CTL_RF_RST) |
+>>>> +                               sspi_bits(sspi, SUNXI_CTL_TF_RST));
+>>>> +       else
+>>>> +               sunxi_spi_write(sspi, SUNXI_FIFO_CTL_REG,
+>>>> +                               sspi_bits(sspi, SUNXI_CTL_RF_RST) |
+>>>> +                               sspi_bits(sspi, SUNXI_CTL_TF_RST));
+>>>
+>>> If we're already doing different stuff for each generation of the IP,
+>>> why not just use the register offsets and bit definitions directly?
+>>
+>> Because having (*sspi->regmap)[SUNXI_FIFO_CTL_REG] all over the place
+>> makes my eyes bleed and you cannot use the check that you are
+>> accessing a register that actually exists.
+>
+> I mean removing SUNXI_CTL_RF_RST and SUNXI_CTL_TF_RST from all of the
+> indirection you added and using them directly, i.e.
+>
+> #define SUN4I_TFR_CTL_RF_RST BIT(x)
+> #define SUN4I_TFR_CTL_TF_RST BIT(x)
+> #define SUN6I_FIFO_CTL_RF_RST BIT(x)
+> #define SUN6I_FIFO_CTL_TF_RST BIT(x)
+>
+> then
+>
+> if (sspi->type == SPI_SUN4I)
+>     sunxi_spi_write(sspi, SUNXI_TFR_CTL_REG, reg |
+> SUN4I_TFR_CTL_RF_RST | SUN4I_TFR_CTL_TF_RST);
+> else
+>     sunxi_spi_write(sspi, SUNXI_FIFO_CTL_REG, reg |
+> SUN6I_FIFO_CTL_RF_RST | SUN6I_FIFO_CTL_TF_RST);
+>
+> I.e. the bits that need setting are in different registers, so you
+> have to have an if statement and separate calls. Therefore there's no
+> real benefit from the indirection you've introduced here, unless
+> you're expecting the SUN8I variant to use different bits in one of
+> those two registers.
+>
 
---umrsQkkrw7viUWFs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That looks nice for this particular case.
 
-On Mon, Jun 13, 2016 at 08:53:37PM -0700, Frank Rowand wrote:
-> On 06/13/16 18:10, David Gibson wrote:
-> > On Fri, Jun 10, 2016 at 01:05:24PM -0700, Frank Rowand wrote:
-> >> I had assumed that devicetree node names were case sensitive. But a re=
-cent
-> >> email thread asserted that they were not, which made me curious.
-> >>
-> >> dtc treats node names as case sensitive:
-> >>
-> >> $ cat test_node_case_1.dts
-> >>
-> >> /dts-v1/;
-> >>
-> >> / {
-> >> 	node-x {
-> >> 		prop_a =3D < 1 >;
-> >> 	};
-> >> };
-> >>
-> >> / {
-> >> 	node-X {
-> >> 		prop_a =3D < 2 >;
-> >> 	};
-> >> };
-> >>
-> >> $ cat test_node_case_2.dts
-> >>
-> >> /dts-v1/;
-> >>
-> >> / {
-> >> 	node-x {
-> >> 		prop_a =3D < 1 >;
-> >> 	};
-> >> };
-> >>
-> >> / {
-> >> 	node-x {
-> >> 		prop_a =3D < 2 >;
-> >> 	};
-> >> };
-> >>
-> >> $ dtc -O dts test_node_case_1.dts
-> >> /dts-v1/;
-> >>
-> >> / {
-> >>
-> >> 	node-x {
-> >> 		prop_a =3D <0x1>;
-> >> 	};
-> >>
-> >> 	node-X {
-> >> 		prop_a =3D <0x2>;
-> >> 	};
-> >> };
-> >>
-> >> $ dtc -O dts test_node_case_2.dts
-> >> /dts-v1/;
-> >>
-> >> / {
-> >>
-> >> 	node-x {
-> >> 		prop_a =3D <0x2>;
-> >> 	};
-> >> };
-> >>
-> >>
-> >> But the Linux kernel source code defines of_node_cmp() as:
-> >>
-> >>   include/linux/of.h:
-> >>
-> >>   /* Default string compare functions, Allow arch asm/prom.h to overri=
-de */
-> >>   #if !defined(of_compat_cmp)
-> >>   #define of_node_cmp(s1, s2) strcasecmp((s1), (s2))
-> >>
-> >> arch/sparc/include/asm/prom.h uses strcmp() instead of strcasecmp().
-> >>
-> >> Examples of using of_node_cmp() to check for a node name can be found,
-> >> for example, of_find_node_by_name().
-> >>
-> >> Is case insensitivity for node names a bug in the Linux kernel, or des=
-ired
-> >> for some reason?
-> >=20
-> > Hmm.. a bit embarrassingly, I've never really thought about this in
-> > all the years I've been doing dtc - I also pretty much just assumed
-> > it was case-sensitive.
-> >=20
-> > I haven't been able to find something in IEEE 1275 definitively saying
-> > one way or the other - it's not exactly easy to search for since
-> > "case" gives you hundreds or thousands of irrelevant hits of the form
-> > "in the case of blah".
->=20
-> One reference in 1275 that I just happened to notice this morning is
-> in "3.2.1.1 Node names":
->=20
->    Each node in the device tree is identified by a node name using the fo=
-llowing notation:
->=20
->       driver-name@unit-addres:device-arguments
->=20
->    The driver name field is a sequence of between one and 31 letters, dig=
-its, and punctuation characters from the set
->    ",._+-". Uppercase and lowercase characters are distinct.
->=20
-> I am reading "Uppercase and lowercase characters are distinct" to mean th=
-at
-> node names are case sensitive.
+Still you will have to remember that these bits are specified directly
+while other bits on the register are mapped which is not so nice.
 
-Yes, that's my reading as well.
+Thanks
 
-> > I do recall that there was a semantic difference between vendor
-> > prefixes in uppercase (they were supposed to be stock tickers) and
-> > those in lowercase (those were freeform).  That suggests that property
-> > names at least were expected to be case sensitive.
-> >=20
-> > Here's my inclination for how to treat this in dtc for the time being:
-> >     1) Leave the bulk of dtc case sensitive, as now
-> >     2) Add a new check which will generate an error if there are node
-> >        names which differ only in case.
-> >=20
-> > Any objections to that plan?
->=20
-> I think that the kernel should match the current behavior of dtc.
->=20
-> I agree with "1)".
->=20
-> I don't think that "2)" is required.  I think it is a really dumb idea for
-> anyone to create a dts with node names that differ only in case.  But I
-> don't think it is the compiler's job to protect people from being dumb.
-> An analogue would be the C language and compilers.  The C compiler doesn't
-> error on a program that has variables "foo" and "Foo".
-
-Hmm.. actually I think protecting you from being dumb is exactly the
-purpose of compiler warnings.  Now that you found that quote from
-1275, which is pretty definitive as far as I'm concerned, I'd expect
-to reduce that error to a warning (by default).
-
-> My current thought is to create a Linux kernel RFC patch that=20
->=20
-> 1) changes of_node_cmp() and friends to something like:
->=20
->    #ifdef CONFIG_OF_CASE_BROKEN
->    #define of_node_cmp(s1, s2) strcasecmp((s1), (s2))
->    #else
->    #define of_node_cmp(s1, s2) strcmp((s1), (s2))
->    #endif
->=20
-> 2) remove the sparc definition of of_node_cmp() and friends.
->=20
-> 3) Change the Kconfig entry for CONFIG_PPC_PMAC to select
->    CONFIG_OF_CASE_BROKEN
->=20
-> Then let the patch sit in the -next tree for two releases to
-> try to shake out any issues.  Any other case broken platform
-> could then select or set CONFIG_OF_CASE_BROKEN if the dts
-> and/or code can't be reasonably fixed.
->=20
-> I have a patch series (a few kernel printks and a userspace
-> program to parse the console output) that shows 1) which
-> properties the kernel attempts to access but do not exist
-> in a given device tree and 2) which properties are in a
-> given device tree but the kernel does _not_ attempt to
-> access.  I could probably extend that to do the same checks
-> for node names.  The patch series is not quite ready for
-> prime-time, but I could make it easily available for
-> anyone who is trying to figure out why my proposed
-> kernel patch breaks a system's boot.  Then it becomes
-> a case by case choice of whether to fix the devicetrees or
-> modify the kernel to also check for the incorrect case node.
->=20
-> -Frank
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---umrsQkkrw7viUWFs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXX5HEAAoJEGw4ysog2bOS2DYP/AlE0B/8of/wISHfQ0XEaXpg
-OTnon83NxGRyyLu+B9kqct3cCKowwbIm4Pip53PZxjr/Bv1/udue9MqdPtpVX9PB
-7eGpbIHebNPolaY9y+tM/EHna0qSfYNXjkJazioqjPaNjpbQpaqb7L1boKA3bGAN
-KipTEumzHjIAR4HsIQpKBTg7/zQGhOwpfoh3imUbSdFC9IwFlVDPdQAA/VA3eb8K
-1YYJRKdK6QUM+ykxrVrSeTCNdxGFiQZ298K65UmV1U4977KYwYyZJ51G7CwfUfVz
-tUaav99pjPcMpPCwV9KAx/On1i7SWJ/Wd2/pbzw+pvqtK6r/V8mUPLGjjbSkql3T
-2/eQfdJj5Od1TG2ljP9VMqdpz3cZSeKE2GP56TkhDpqKNbOobhxwiPvBz2gkGojK
-UMdW0W7GEQ+zvs+ccyEAF3THUYX5d5c4orvqLblwp7PcR9Xzm7tsSg4HH1Gm4PsM
-PxY3vx/fE6SChqU/fWW4k4KuNllS1gt0O2HoFTyJSMKqdsoxzsC9wLpfO3yH/Tgl
-fNO4L8X/FaDotvbOzdngwLkYcuXtq0endnEfvZbQ/P4mCIQeba1Ga+5oPakVXnqN
-V+fB+FgroY82BNuYoFcMV1W6uC/uZdWIoIDZLWOEHt+gVVJVr7GJqRtusEy/Qflw
-BNjvKEq5aHs04J9Dnz2e
-=bciT
------END PGP SIGNATURE-----
-
---umrsQkkrw7viUWFs--
+Michal
