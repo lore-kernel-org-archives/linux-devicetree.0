@@ -1,264 +1,113 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [Patch v6 1/1] leds: pca9532: Add device tree binding
-Date: Tue, 14 Jun 2016 10:08:03 +0200
-Message-ID: <575FBB63.6020902@samsung.com>
-References: <1465889777-42390-1-git-send-email-preid@electromag.com.au>
- <1465889777-42390-2-git-send-email-preid@electromag.com.au>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH 2/2 v16] drm/bridge: Add I2C based driver for ps8640 bridge
+Date: Tue, 14 Jun 2016 16:09:23 +0800
+Message-ID: <CAGS+omDpakAsjijbhUG9gJZ6WA=+UBJ2fhhmp-ZEz7CtK8AHCw@mail.gmail.com>
+References: <1464861445-11086-1-git-send-email-jitao.shi@mediatek.com> <1464861445-11086-2-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1465889777-42390-2-git-send-email-preid@electromag.com.au>
-Sender: linux-leds-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1464861445-11086-2-git-send-email-jitao.shi@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: David Airlie <airlied@linux.ie>, Thierry Reding <treding@nvidia.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, moderated list:A
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
+Hi Jitao,
 
-Thanks for addressing my remarks.
+On Thu, Jun 2, 2016 at 5:57 PM, Jitao Shi <jitao.shi@mediatek.com> wrote:
+>
+> This patch adds drm_bridge driver for parade DSI to eDP bridge chip.
+>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+> ---
+> Changes since v15:
+>  - Drop drm_connector_(un)register calls from parade ps8640.
+>    The main DRM driver mtk_drm_drv now calls
+>    drm_connector_register_all() after drm_dev_register() in the
+>    mtk_drm_bind() function. That function should iterate over all
+>    connectors and call drm_connector_register() for each of them.
+>    So, remove drm_connector_(un)register calls from parade ps8640.
 
-I changed the commit title to "Add device tree support", as it
-better describes the patch, and applied.
+[snip...]
+
+> +static void ps8640_pre_enable(struct drm_bridge *bridge)
+> +{
+> +       struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+> +       struct i2c_client *client = ps_bridge->page[2];
+> +       int err;
+> +       u8 set_vdo_done;
+> +       ktime_t timeout;
+> +
+> +       if (ps_bridge->in_fw_update)
+> +               return;
+> +
+> +       if (ps_bridge->enabled)
+> +               return;
+> +
+> +       err = drm_panel_prepare(ps_bridge->panel);
+> +       if (err < 0) {
+> +               DRM_ERROR("failed to prepare panel: %d\n", err);
+> +               return;
+> +       }
+> +
+
+(1) For patch v10, Philipp Zabel commented that gpio_slp_n &
+gpio_rst_n are both active low, and that the device tree should
+contain a reset-gpios property with the GPIO_ACTIVE_LOW flag set.
+(2) However, you did change the the reset logic from v10 -> v11, but
+it isn't clear why (nor mentioned in the patch notes).
+
+v10 (https://patchwork.kernel.org/patch/8357851/) had:
+
++ gpiod_set_value(ps_bridge->gpio_slp_n, 1);
++ gpiod_set_value(ps_bridge->gpio_rst_n, 0);
++
++ err = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
++    ps_bridge->supplies);
++ if (err < 0) {
++ DRM_ERROR("cannot enable regulators %d\n", err);
++ goto err_panel_unprepare;
++ }
++
++ usleep_range(500, 700);
++ gpiod_set_value(ps_bridge->gpio_rst_n, 1);
+
+In other words:
+  (a) de-assert power down
+  (b) assert reset
+  (c) enable 1.2 & 3.3 regulators
+  (d) <wait for  regulator delay> (aka regulator-ramp-delay in device-tree)
+  (e) wait an additional 2 ms (as requested by Parade for ps8640 to stabilize?)
+  (f) de-assert reset
+  (g) wait 200 ms (for ps8640 FW to load?)
+
+This mostly made sense to me, except for step (a)... I'm not sure why
+you de-assert power down before enabling the regulators.  It seems
+like you'd want to do that later, maybe after reset (can you ask
+Paradetech?).
+
+Now (as of v11) it has changed to:
+
+> +       err = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
+> +                                   ps_bridge->supplies);
+> +       if (err < 0) {
+> +               DRM_ERROR("cannot enable regulators %d\n", err);
+> +               goto err_panel_unprepare;
+> +       }
+> +
+> +       gpiod_set_value(ps_bridge->gpio_slp_n, 1);
+> +       gpiod_set_value(ps_bridge->gpio_rst_n, 0);
+> +       usleep_range(2000, 2500);
+> +       gpiod_set_value(ps_bridge->gpio_rst_n, 1);
+
+Two additional comments:
+
+(3) if you correctly configure these gpios as GPIO_ACTIVE_LOW, you can
+drop the "_n" suffix, which will make the driver code easier to
+understand.
+(4) "gpio_slp_n" is called "PD#" by the PS8640 datasheet, so a better
+name might be: "gpio_power_down".
 
 Thanks,
-Jacek Anaszewski
-
-On 06/14/2016 09:36 AM, Phil Reid wrote:
-> This patch adds basic device tree support for the pca9532 LEDs.
->
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
->   .../devicetree/bindings/leds/leds-pca9532.txt      | 39 +++++++++++
->   drivers/leds/leds-pca9532.c                        | 75 ++++++++++++++++++++--
->   include/dt-bindings/leds/leds-pca9532.h            | 18 ++++++
->   include/linux/leds-pca9532.h                       |  9 ++-
->   4 files changed, 132 insertions(+), 9 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
->   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> new file mode 100644
-> index 0000000..198f3ba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> @@ -0,0 +1,39 @@
-> +*NXP - pca9532 PWM LED Driver
-> +
-> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
-> +The PWM support 256 steps.
-> +
-> +Required properties:
-> +	- compatible:
-> +		"nxp,pca9530"
-> +		"nxp,pca9531"
-> +		"nxp,pca9532"
-> +		"nxp,pca9533"
-> +	- reg -  I2C slave address
-> +
-> +Each led is represented as a sub-node of the nxp,pca9530.
-> +
-> +Optional sub-node properties:
-> +	- label: see Documentation/devicetree/bindings/leds/common.txt
-> +	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
-> +	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +  #include <dt-bindings/leds/leds-pca9532.h>
-> +
-> +  leds: pca9530@60 {
-> +    compatible = "nxp,pca9530";
-> +    reg = <0x60>;
-> +
-> +    red-power {
-> +      label = "pca:red:power";
-> +      type = <PCA9532_TYPE_LED>;
-> +    };
-> +    green-power {
-> +      label = "pca:green:power";
-> +      type = <PCA9532_TYPE_LED>;
-> +    };
-> +  };
-> +
-> +For more product information please see the link below:
-> +http://nxp.com/documents/data_sheet/PCA9532.pdf
-> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-> index e3d3b1a..09a7cffb 100644
-> --- a/drivers/leds/leds-pca9532.c
-> +++ b/drivers/leds/leds-pca9532.c
-> @@ -21,6 +21,8 @@
->   #include <linux/workqueue.h>
->   #include <linux/leds-pca9532.h>
->   #include <linux/gpio.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->
->   /* m =  num_leds*/
->   #define PCA9532_REG_INPUT(i)	((i) >> 3)
-> @@ -86,9 +88,22 @@ static const struct pca9532_chip_info pca9532_chip_info_tbl[] = {
->   	},
->   };
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id of_pca9532_leds_match[] = {
-> +	{ .compatible = "nxp,pca9530", .data = (void *)pca9530 },
-> +	{ .compatible = "nxp,pca9531", .data = (void *)pca9531 },
-> +	{ .compatible = "nxp,pca9532", .data = (void *)pca9532 },
-> +	{ .compatible = "nxp,pca9533", .data = (void *)pca9533 },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, of_pca9532_leds_match);
-> +#endif
-> +
->   static struct i2c_driver pca9532_driver = {
->   	.driver = {
->   		.name = "leds-pca953x",
-> +		.of_match_table = of_match_ptr(of_pca9532_leds_match),
->   	},
->   	.probe = pca9532_probe,
->   	.remove = pca9532_remove,
-> @@ -354,6 +369,7 @@ static int pca9532_configure(struct i2c_client *client,
->   			led->state = pled->state;
->   			led->name = pled->name;
->   			led->ldev.name = led->name;
-> +			led->ldev.default_trigger = led->default_trigger;
->   			led->ldev.brightness = LED_OFF;
->   			led->ldev.brightness_set_blocking =
->   						pca9532_set_brightness;
-> @@ -432,15 +448,66 @@ exit:
->   	return err;
->   }
->
-> +static struct pca9532_platform_data *
-> +pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
-> +{
-> +	struct pca9532_platform_data *pdata;
-> +	struct device_node *child;
-> +	const struct of_device_id *match;
-> +	int devid, maxleds;
-> +	int i = 0;
-> +
-> +	match = of_match_device(of_pca9532_leds_match, dev);
-> +	if (!match)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	devid = (int)(uintptr_t)match->data;
-> +	maxleds = pca9532_chip_info_tbl[devid].num_leds;
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	for_each_child_of_node(np, child) {
-> +		if (of_property_read_string(child, "label",
-> +					    &pdata->leds[i].name))
-> +			pdata->leds[i].name = child->name;
-> +		of_property_read_u32(child, "type", &pdata->leds[i].type);
-> +		of_property_read_string(child, "linux,default-trigger",
-> +					&pdata->leds[i].default_trigger);
-> +		if (++i >= maxleds) {
-> +			of_node_put(child);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return pdata;
-> +}
-> +
->   static int pca9532_probe(struct i2c_client *client,
->   	const struct i2c_device_id *id)
->   {
-> +	int devid;
->   	struct pca9532_data *data = i2c_get_clientdata(client);
->   	struct pca9532_platform_data *pca9532_pdata =
->   			dev_get_platdata(&client->dev);
-> -
-> -	if (!pca9532_pdata)
-> -		return -EIO;
-> +	struct device_node *np = client->dev.of_node;
-> +
-> +	if (!pca9532_pdata) {
-> +		if (np) {
-> +			pca9532_pdata =
-> +				pca9532_of_populate_pdata(&client->dev, np);
-> +			if (IS_ERR(pca9532_pdata))
-> +				return PTR_ERR(pca9532_pdata);
-> +		} else {
-> +			dev_err(&client->dev, "no platform data\n");
-> +			return -EINVAL;
-> +		}
-> +		devid = (int)(uintptr_t)of_match_device(
-> +			of_pca9532_leds_match, &client->dev)->data;
-> +	} else {
-> +		devid = id->driver_data;
-> +	}
->
->   	if (!i2c_check_functionality(client->adapter,
->   		I2C_FUNC_SMBUS_BYTE_DATA))
-> @@ -450,7 +517,7 @@ static int pca9532_probe(struct i2c_client *client,
->   	if (!data)
->   		return -ENOMEM;
->
-> -	data->chip_info = &pca9532_chip_info_tbl[id->driver_data];
-> +	data->chip_info = &pca9532_chip_info_tbl[devid];
->
->   	dev_info(&client->dev, "setting platform data\n");
->   	i2c_set_clientdata(client, data);
-> diff --git a/include/dt-bindings/leds/leds-pca9532.h b/include/dt-bindings/leds/leds-pca9532.h
-> new file mode 100644
-> index 0000000..4d917aa
-> --- /dev/null
-> +++ b/include/dt-bindings/leds/leds-pca9532.h
-> @@ -0,0 +1,18 @@
-> +/*
-> + * This header provides constants for pca9532 LED bindings.
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_LEDS_PCA9532_H
-> +#define _DT_BINDINGS_LEDS_PCA9532_H
-> +
-> +#define PCA9532_TYPE_NONE         0
-> +#define PCA9532_TYPE_LED          1
-> +#define PCA9532_TYPE_N2100_BEEP   2
-> +#define PCA9532_TYPE_GPIO         3
-> +#define PCA9532_LED_TIMER2        4
-> +
-> +#endif /* _DT_BINDINGS_LEDS_PCA9532_H */
-> diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
-> index b8d6fff..d215b45 100644
-> --- a/include/linux/leds-pca9532.h
-> +++ b/include/linux/leds-pca9532.h
-> @@ -16,6 +16,7 @@
->
->   #include <linux/leds.h>
->   #include <linux/workqueue.h>
-> +#include <dt-bindings/leds/leds-pca9532.h>
->
->   enum pca9532_state {
->   	PCA9532_OFF  = 0x0,
-> @@ -24,16 +25,14 @@ enum pca9532_state {
->   	PCA9532_PWM1 = 0x3
->   };
->
-> -enum pca9532_type { PCA9532_TYPE_NONE, PCA9532_TYPE_LED,
-> -	PCA9532_TYPE_N2100_BEEP, PCA9532_TYPE_GPIO };
-> -
->   struct pca9532_led {
->   	u8 id;
->   	struct i2c_client *client;
-> -	char *name;
-> +	const char *name;
-> +	const char *default_trigger;
->   	struct led_classdev ldev;
->   	struct work_struct work;
-> -	enum pca9532_type type;
-> +	u32 type;
->   	enum pca9532_state state;
->   };
->
->
+-Dan
