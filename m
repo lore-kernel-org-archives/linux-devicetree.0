@@ -1,122 +1,59 @@
-From: Li Dongpo <lidongpo@hisilicon.com>
-Subject: Re: [PATCH 3/3] net: hisilicon: Add Fast Ethernet MAC driver
-Date: Tue, 14 Jun 2016 21:17:44 +0800
-Message-ID: <576003F8.3090000@hisilicon.com>
-References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com>
- <1465798076-176393-4-git-send-email-lidongpo@hisilicon.com>
- <4004629.ilZU8AvAjF@wuerfel>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: dts: sun7i: Add NFC node to
+ Allwinner A20 SoC
+Date: Tue, 14 Jun 2016 16:19:08 +0300
+Message-ID: <20160614161908.53016f4f22c18e9126a041d2@gmail.com>
+References: <1465903058-9211-5-git-send-email-mamlinav@gmail.com>
+	<201606142105.1AaT2uM6%fengguang.wu@intel.com>
+Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4004629.ilZU8AvAjF@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCENVD7YAEIM5CEAXMCRUBDWQHT5K-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <201606142105.1AaT2uM6%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 14 Jun 2016 21:11:12 +0800
+kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+
+> Hi,
+> 
+> [auto build test ERROR on mripard/sunxi/for-next]
+> [also build test ERROR on next-20160614]
+> [cannot apply to robh/for-next v4.7-rc3]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Aleksei-Mamlin/dts-sunxi-Add-sunxi-NAND-Flash-Controller-support/20160614-192539
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git sunxi/for-next
+> config: arm-sunxi_defconfig (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (Debian 5.3.1-8) 5.3.1 20160205
+> reproduce:
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm 
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> Error: arch/arm/boot/dts/sun7i-a20.dtsi:806.26-27 syntax error
+>    FATAL ERROR: Unable to parse input tree
+> 
+
+My bad, dual semicolon at line 806. Maxime, can you fix it locally?
+
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 
-On 2016/6/13 17:06, Arnd Bergmann wrote:
-> On Monday, June 13, 2016 2:07:56 PM CEST Dongpo Li wrote:
-> 
->> +- reset-names: should contain the reset signal name "mac_reset"(required)
->> +	and "phy_reset"(optional).
-> 
-> Maybe just name the resets 'mac' and 'phy'? The '_reset' part is
-> implied by the property.
-> 
-Hi, Arnd,
-Thank you for your advice. It's ok to omit the '_reset', I'll fix it in next version.
-
-> I gave the driver a brief review and basically everything looks
-> great, very nice work!
-> 
-> There are two small things that I noticed:
-> 
->> +
->> +       do {
->> +               hisi_femac_xmit_reclaim(dev);
->> +               num = hisi_femac_rx(dev, task);
->> +               work_done += num;
->> +               task -= num;
->> +               if ((work_done >= budget) || (num == 0))
->> +                       break;
->> +
->> +               ints = readl(priv->glb_base + GLB_IRQ_STAT);
->> +               writel(ints & DEF_INT_MASK,
->> +                      priv->glb_base + GLB_IRQ_RAW);
->> +       } while (ints & DEF_INT_MASK);
->> +
->> +       if (work_done < budget) {
->> +               napi_complete(napi);
->> +               hisi_femac_irq_enable(priv, DEF_INT_MASK);
->> +       }
-> 
-> You tx function uses BQL to optimize the queue length, and that
-> is great. You also check xmit reclaim for rx interrupts, so
-> as long as you have both rx and tx traffic, this should work
-> great.
-> 
-> However, I notice that you only have a 'tx fifo empty'
-> interrupt triggering the napi poll, so I guess on a tx-only
-> workload you will always end up pushing packets into the
-> queue until BQL throttles tx, and then get the interrupt
-> after all packets have been sent, which will cause BQL to
-> make the queue longer up to the maximum queue size, and that
-> negates the effect of BQL.
-> 
-> Is there any way you can get a tx interrupt earlier than
-> this in order to get a more balanced queue, or is it ok
-> to just rely on rx packets to come in occasionally, and
-> just use the tx fifo empty interrupt as a fallback?
-> 
-In tx direction, there are only two kinds of interrupts, 'tx fifo empty'
-and 'tx one packet finish'. I didn't use 'tx one packet finish' because
-it would lead to high hardware interrupts rate. This has been verified in
-our chips. It's ok to just use tx fifo empty interrupt.
-
->> +	priv->phy_mode = of_get_phy_mode(node);
->> +	if (priv->phy_mode < 0) {
->> +		dev_err(dev, "not find phy-mode\n");
->> +		ret = -EINVAL;
->> +		goto out_disable_clk;
->> +	}
->> +
->> +	priv->phy_node = of_parse_phandle(node, "phy-handle", 0);
->> +	if (!priv->phy_node) {
->> +		dev_err(dev, "not find phy-handle\n");
->> +		ret = -EINVAL;
->> +		goto out_disable_clk;
->> +	}
->> +
->> +	priv->phy = of_phy_connect(ndev, priv->phy_node,
->> +				   hisi_femac_adjust_link, 0, priv->phy_mode);
->> +	if (!(priv->phy) || IS_ERR(priv->phy)) {
->> +		dev_err(dev, "connect to PHY failed!\n");
->> +		ret = -ENODEV;
->> +		goto out_phy_node;
->> +	}
-> 
-> I wonder if we could generalize this set of three calls, I
-> get the impression that we duplicate this across several
-> drivers that shouldn't need to bother with the specific
-> phy-handle and phy-mode properties.
-> 
-Some drivers only call 'of_phy_connect' when ndo_open called,
-some call when driver probed. But 'phy_mode' and 'phy_node' are
-usually initialized when driver probed.
-So I think it's not suitable to combine 'of_phy_connect' with
-'of_get_phy_mode' and 'of_parse_phandle'.
-Do you have any more suggestions ?
-
-> 	Arnd
-> 
-> 
-> .
-> 
-	Regards,
-	Dongpo
-
-
-.
+-- 
+Thanks and regards,
+Aleksei Mamlin
