@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 08/10] ARM: dts: sun9i: cubieboard4: Order nodes
- by alphabetical order
-Date: Tue, 14 Jun 2016 10:17:56 +0800
-Message-ID: <1465870678-30128-10-git-send-email-wens@csie.org>
+Subject: [PATCH 07/10] ARM: dts: sun9i: cubieboard4: Add device
+ node for AC100
+Date: Tue, 14 Jun 2016 10:17:55 +0800
+Message-ID: <1465870678-30128-9-git-send-email-wens@csie.org>
 References: <1465870678-30128-1-git-send-email-wens@csie.org>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCMILY6JWQBBB2OS7W5AKGQEPMK3QUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCMILY6JWQBBB2GS7W5AKGQEKA7EGUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1465870678-30128-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,63 +20,43 @@ To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move the &pio node below the mmc nodes for proper ordering by name.
-
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 32 ++++++++++++++---------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-index a92eeea1b222..65f4f32f89ad 100644
+index db770d06c31e..a92eeea1b222 100644
 --- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
 +++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-@@ -78,22 +78,6 @@
+@@ -250,6 +250,27 @@
+ 			};
+ 		};
  	};
++
++	ac100: codec@e89 {
++		compatible = "x-powers,ac100";
++		reg = <0xe89>;
++
++		ac100_codec: codec {
++			compatible = "x-powers,ac100-codec";
++			interrupt-parent = <&r_pio>;
++			interrupts = <0 9 IRQ_TYPE_LEVEL_LOW>; /* PL9 */
++		};
++
++		ac100_rtc: rtc {
++			compatible = "x-powers,ac100-rtc";
++			interrupt-parent = <&nmi_intc>;
++			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++			#clock-cells = <1>;
++			clock-output-names = "cko1_rtc",
++					     "cko2_rtc",
++					     "cko3_rtc";
++		};
++	};
  };
  
--&pio {
--	led_pins_cubieboard4: led-pins@0 {
--		allwinner,pins = "PH6", "PH17";
--		allwinner,function = "gpio_out";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--	};
--
--	mmc0_cd_pin_cubieboard4: mmc0_cd_pin@0 {
--		allwinner,pins = "PH18";
--		allwinner,function = "gpio_in";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
--	};
--};
--
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>, <&mmc0_cd_pin_cubieboard4>;
-@@ -119,6 +103,22 @@
- 	allwinner,drive = <SUN4I_PINCTRL_40_MA>;
- };
- 
-+&pio {
-+	led_pins_cubieboard4: led-pins@0 {
-+		allwinner,pins = "PH6", "PH17";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	mmc0_cd_pin_cubieboard4: mmc0_cd_pin@0 {
-+		allwinner,pins = "PH18";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+};
-+
- &r_ir {
- 	status = "okay";
- };
+ #include "axp809.dtsi"
 -- 
 2.8.1
 
