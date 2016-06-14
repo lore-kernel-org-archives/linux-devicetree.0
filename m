@@ -1,77 +1,58 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for
- Rockchip usb2phy
-Date: Tue, 14 Jun 2016 07:52:13 -0700
-Message-ID: <57601A1D.9020803@roeck-us.net>
-References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
- <1465783810-18756-3-git-send-email-frank.wang@rock-chips.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC 3/6] ASoC: max98504: Add max98504 speaker amplifier
+ driver
+Date: Tue, 14 Jun 2016 16:52:15 +0200
+Message-ID: <57601A1F.5030906@samsung.com>
+References: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
+ <1465815160-28504-4-git-send-email-s.nawrocki@samsung.com>
+ <20160613151429.GI2282@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465783810-18756-3-git-send-email-frank.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wang <frank.wang@rock-chips.com>, heiko@sntech.de, dianders@chromium.org, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20160613151429.GI2282@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, robh@kernel.org, linux-samsung-soc@vger.kernel.org, ideal.song@samsung.com, beomho.seo@samsung.com, inki.dae@samsung.com, k.kozlowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2016 07:10 PM, Frank Wang wrote:
-> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
-> than rk3288 and before, and most of phy-related registers are also
-> different from the past, so a new phy driver is required necessarily.
->
-> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
-> ---
->
+On 06/13/2016 05:14 PM, Mark Brown wrote:
+> On Mon, Jun 13, 2016 at 12:52:37PM +0200, Sylwester Nawrocki wrote:
+> 
+>> [s.nawrocki: removed unused macro definitions and regulator handling
+>>  code, rewrote regmap config code, added support for speaker enable
+>>  and global chip enable through DAPM, rewritten as component driver,
+>>  redesigned DT bindings]
+> 
+> Removed the regulator handling code?  Why?
 
-[ ... ]
+Because it was effectively a dead code (disabled by a DT flag property)
+and didn't make any sense on our test board. It was setting regulator's
+load and voltage on a shared fixed voltage regulator. Even if calls like
+regulator_set_optimum_mode() were added that wouldn't make any difference,
+since the corresponding PMIC driver ops were not implemented.
+I started more or less with something like this [1].
 
-> +
-> +static int rockchip_usb2phy_resume(struct phy *phy)
-> +{
-> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
-> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
-> +	int ret;
-> +
-> +	dev_dbg(&rport->phy->dev, "port resume\n");
-> +
-> +	ret = clk_prepare_enable(rphy->clk480m);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = property_enable(rphy, &rport->port_cfg->phy_sus, false);
-> +	if (ret)
-> +		return ret;
-> +
-> +	rport->suspended = false;
-> +	return 0;
-> +}
-> +
-> +static int rockchip_usb2phy_suspend(struct phy *phy)
-> +{
-> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
-> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
-> +	int ret;
-> +
-> +	dev_dbg(&rport->phy->dev, "port suspend\n");
-> +
-> +	ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	rport->suspended = true;
-> +	clk_disable_unprepare(rphy->clk480m);
-> +	return 0;
-> +}
-> +
+>> +	default:
+>> +		/* Analog input, disable PCM, PDM Rx */
+>> +		regmap_write(map, MAX98504_REG_PCM_RX_ENABLE, 0);
+>> +		regmap_write(map, MAX98504_REG_PDM_RX_ENABLE, 0);
+>> +	}
+> 
+> Add a break here please, at least for consistency.
+> 
+>> +		ret = PTR_ERR(max98504->regmap);
+>> +		dev_err(&client->dev, "regmap initialization failed: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = max98504_probe(max98504);
+>> +	if (ret < 0)
+>> +		return ret;
+> 
+> Why not just inline this code?
 
-I am still quite confused by the clock handling.
+Will do in next iteration. Thanks for your review.
 
-The above will be called for each instantiated phy (user, otg).
-Each time, clk_disable_unprepare() will be called. Yet, there
-is no matching clk_prepare_enable() call during initialization.
-
-How does this work ?
-
-Thanks,
-Guenter
+[1]
+https://github.com/halaszk/Perseus-halaszk-universal5433/blob/perseus5433-mm/sound/soc/codecs/max98504a.c
