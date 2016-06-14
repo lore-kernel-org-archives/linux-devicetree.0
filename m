@@ -1,240 +1,110 @@
 From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH 04/11] mmc: sdhci-of-arasan: Properly set
- corecfg_baseclkfreq on rk3399
-Date: Tue, 14 Jun 2016 08:14:22 +0800
-Message-ID: <47a2dcd9-9c3c-8fde-2be0-40e305c25e8d@rock-chips.com>
+Subject: Re: [PATCH 09/11] phy: rockchip-emmc: Set phyctrl_frqsel based on
+ card clock
+Date: Tue, 14 Jun 2016 08:24:43 +0800
+Message-ID: <036b0349-8343-f5de-7215-5a0843ebc6a9@rock-chips.com>
 References: <1465339484-969-1-git-send-email-dianders@chromium.org>
- <1465339484-969-5-git-send-email-dianders@chromium.org>
- <f5dcc018-bd60-87a7-798b-efc261e443dd@rock-chips.com>
- <CAD=FV=UzGZmwGTthqqO5Skxj5f0wsS5VKr4gYP2i9SUyGqvbjg@mail.gmail.com>
+ <1465339484-969-10-git-send-email-dianders@chromium.org>
+ <937cbbc5-f9dc-bdf0-c46a-c7e814b9b373@rock-chips.com>
+ <CAD=FV=VA6vmfzHEOZwAFJvNXRDhPmf+bX-Jw1eFboOdP6kD3dg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=UzGZmwGTthqqO5Skxj5f0wsS5VKr4gYP2i9SUyGqvbjg@mail.gmail.com>
+In-Reply-To: <CAD=FV=VA6vmfzHEOZwAFJvNXRDhPmf+bX-Jw1eFboOdP6kD3dg@mail.gmail.com>
 Sender: linux-mmc-owner@vger.kernel.org
 To: Doug Anderson <dianders@chromium.org>
-Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Ziyuan Xu <xzy.xu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Adrian Hunter <adrian.hunter@intel.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Ziyuan Xu <xzy.xu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Adrian Hunter <adrian.hunter@intel.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2016/6/14 7:06, Doug Anderson =E5=86=99=E9=81=93:
+=E5=9C=A8 2016/6/14 7:05, Doug Anderson =E5=86=99=E9=81=93:
 > Shawn,
 >
-> On Mon, Jun 13, 2016 at 1:36 AM, Shawn Lin <shawn.lin@rock-chips.com>=
+> On Mon, Jun 13, 2016 at 1:54 AM, Shawn Lin <shawn.lin@rock-chips.com>=
  wrote:
->> =E5=9C=A8 2016/6/8 6:44, Douglas Anderson =E5=86=99=E9=81=93:
+>> On 2016/6/8 6:44, Douglas Anderson wrote:
 >>>
->>> In the the earlier change in this series ("Documentation: mmc:
->>> sdhci-of-arasan: Add soc-ctl-syscon for corecfg regs") we can see t=
+>>> The "phyctrl_frqsel" is described in the Arasan datasheet [1] as "t=
 he
->>> mechansim for specifying a syscon to properly set corecfg registers=
- in
->>> sdhci-of-arasan.  Now let's use this mechanism to properly set
->>> corecfg_baseclkfreq on rk3399.
+>>> frequency range of DLL operation".  Although the Rockchip variant o=
+f
+>>> this PHY has different ranges than the reference Arasan PHY it appe=
+ars
+>>> as if the functionality is similar.  We should set this phyctrl fie=
+ld
+>>> properly.
 >>>
->>>> From [1] the corecfg_baseclkfreq is supposed to be set to:
+>>> Note: as per Rockchip engineers, apparently the "phyctrl_frqsel" is
+>>> actually only useful in HS200 / HS400 modes even though the DLL its=
+elf
+>>> it used for some purposes in all modes.  See the discussion in the
+>>> earlier change in this series: ("mmc: sdhci-of-arasan: Always power=
+ the
+>>> PHY off/on when clock changes").  In any case, it shouldn't hurt to=
+ set
+>>> this always.
 >>>
->>>   Base Clock Frequency for SD Clock.
->>>   This is the frequency of the xin_clk.
->>>
->>> This is a relatively easy thing to do.  Note that we assume that xi=
-n_clk
->>> is not dynamic and we can check the clock at probe time.  If any re=
-al
->>> devices have a dynamic xin_clk future patches could register for
->>> notifiers for the clock.
->>>
->>> At the moment, setting corecfg_baseclkfreq is only supported for rk=
-3399
->>> since we need a specific map for each implementation.  The code is
->>> written in a generic way that should make this easy to extend to ot=
-her
->>> SoCs.  Note that a specific compatible string for rk3399 is already=
- in
->>> use and so we add that to the table to match rk3399.
->>>
->>> [1]:
->>> https://arasan.com/wp-content/media/eMMC-5-1-Total-Solution_Rev-1-3=
-=2Epdf
->>>
->>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->>> ---
->>>  drivers/mmc/host/sdhci-of-arasan.c | 189
->>> ++++++++++++++++++++++++++++++++++---
->>>  1 file changed, 178 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c
->>> b/drivers/mmc/host/sdhci-of-arasan.c
->>> index 3ff1711077c2..859ea1b21215 100644
->>> --- a/drivers/mmc/host/sdhci-of-arasan.c
->>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->>> @@ -22,6 +22,8 @@
->>>  #include <linux/module.h>
->>>  #include <linux/of_device.h>
->>>  #include <linux/phy/phy.h>
->>> +#include <linux/regmap.h>
->>> +#include <linux/mfd/syscon.h>
+>>> Note that this change should allow boards to run at HS200 / HS400 s=
+peed
+>>> modes while running at 100 MHz or 150 MHz.  In fact, running HS400 =
+at
+>>> 150 MHz (giving 300 MB/s) is the main motivation of this series, si=
+nce
+>>> performance is still good but signal integrity problems are less
+>>> prevelant at 150 MHz.
 >>
 >>
->> alphabetical order
+>> Thanks for doing this, but I think we should limit freq if assigning
+>> max-frequency from DT more explicitly since the PHY could only suppo=
+rt
+>> 50/100/150/200M for hs200/400? Otherwise I can't say if the PHY coul=
+d
+>> always work well. i.e if geting 125000000 ... 174999999 , you code m=
+ake
+>> the phyctrl_frqsel to be 150M, so it will be 15% missing of precisio=
+n
+>> for tuning delay element. Ideally, the sample point should be in the
+>> middle of window, but I don't know if there is a bad HW design makes
+>> the window small enough which need special care about it.
 >
-> It was, but with a different definition of alphabetical order.  ;)
-> "syscon" (s) comes after "regmap" (r).  ...but your way is better,
-> you're right.
+> What would you suggest as a valid range, then?
+>
+>>From the public Arasan datasheet they seem to indicate +/- 15 MHz is
+> sane.  Does that sound OK?  Presuming that all of your numbers
+> (50/100/150/200) are centers, that means that we could support clock
+> rates of:
+>
+> 35 MHz - 65 MHz
+> 85 MHz - 115 MHz
+> 135 MHz - 165 MHz
+> 185 MHz - 200 MHz
 >
 >
->>> +/**
->>> + * sdhci_arasan_update_baseclkfreq - Set corecfg_baseclkfreq
->>> + *
->>> + * The corecfg_baseclkfreq is supposed to contain the MHz of clk_x=
-in.
->>> This
->>> + * function can be used to make that happen.
->>> + *
->>> + * NOTES:
->>> + * - Many existing devices don't seem to do this and work fine.  T=
-o keep
->>> + *   compatibility for old hardware where the device tree doesn't =
-provide
->>> a
->>> + *   register map, this function is a noop if a soc_ctl_map hasn't=
- been
->>> provided
->>> + *   for this platform.
->>> + * - It's assumed that clk_xin is not dynamic and that we use the =
-SDHCI
->>> divider
->>> + *   to achieve lower clock rates.  That means that this function =
-is
->>> called once
->>> + *   at probe time and never called again.
->>> + *
->>> + * @host:              The sdhci_host
->>> + */
->>> +static void sdhci_arasan_update_baseclkfreq(struct sdhci_host *hos=
-t)
->>> +{
->>> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
->>> +       struct sdhci_arasan_data *sdhci_arasan =3D
->>> sdhci_pltfm_priv(pltfm_host);
->>> +       const struct sdhci_arasan_soc_ctl_map *soc_ctl_map =3D
->>> +               sdhci_arasan->soc_ctl_map;
->>> +       u32 mhz =3D DIV_ROUND_CLOSEST(clk_get_rate(pltfm_host->clk)=
-,
->>> 1000000);
->>> +
->>
->>
->> It's broken when reading capabilities reg on RK3399 platform
->> which means you should get it via clk framework. But you should cons=
-ider
->> the non-broken case.
->
-> I'm afraid I don't understand.  Can you elaborate?  Are you saying if
-> things weren't broken then we wouldn't have to ask the common clock
-> framework for this?  Where would we get this value?
+> So how about if we add a warning for things that are outside of those
+> ranges?  ...except no warning for < 35 MHz since presumably we're not
+> using high speed modes when the DLL is that slow and so we're OK.
 
-
-I mean bascially we should get baseclk from capabilities register[15:8]
-(offset 0x40@sdhci), namely EMMCCORE_CAP on TRM. Only when you get 0x0
-from there, can you consider to get it from clock framework.
-
->
-> ...or are you suggesting that in other SoCs you wouldn't need to set
-> corecfg_baseclkfreq because it would be somehow automatic?
-
-capabilities register[15:8] should reflect the real baseclkfreq
-automatic if implemented. It's broken for rk3399 which means you should
-get it via another method just as what TRM said, but not really for
-other arasan IP I guess.
-
-  If that's
-> so then those SoCs should just set -1 for "shift" in their map and
-> this function will be a no-op.
->
->
->>> +       /* Having a map is optional */
->>> +       if (!soc_ctl_map)
->>> +               return;
->>> +
->>> +       /* If we have a map, we expect to have a syscon */
->>> +       if (!sdhci_arasan->soc_ctl_base) {
->>> +               pr_warn("%s: Have regmap, but no soc-ctl-syscon\n",
->>> +                       mmc_hostname(host->mmc));
->>> +               return;
->>> +       }
->>> +
->>> +       sdhci_arasan_syscon_write(host, &soc_ctl_map->baseclkfreq, =
-mhz);
->>
->>
->> should we check the return value, and if not -EINVAL, we should give
->> another try?
->
-> I don't see a reason to check the return code here.  Specifically:
->
-> * If this is a SoC where you don't need to write corecfg_baseclkfreq
-> then we need do nothing about this error.
->
-> * If the regmap write failed (which would be terribly unexpected for =
-a
-> memory mapped register) then we've already printed an error (in
-> sdhci_arasan_syscon_write).  Best course of action seems to keep goin=
-g
-> and try anyway.
->
->
-> I don't think a retry is likely to help anything.
-
-Well, I saw you add a return value for sdhci_arasan_syscon_write, so
-should we remove it?
+a warning should be ok.
+If we ask 150M, but PLL only provide 175M maybe, then should we
+fallback it to 150M or promote it to 200M when setting?
 
 >
 >
->>> +}
->>> +
->>>  static int sdhci_arasan_probe(struct platform_device *pdev)
->>>  {
->>>         int ret;
->>> +       const struct of_device_id *match;
->>> +       struct device_node *node;
->>>         struct clk *clk_xin;
->>>         struct sdhci_host *host;
->>>         struct sdhci_pltfm_host *pltfm_host;
->>> @@ -207,6 +363,23 @@ static int sdhci_arasan_probe(struct platform_=
-device
->>> *pdev)
->>>         pltfm_host =3D sdhci_priv(host);
->>>         sdhci_arasan =3D sdhci_pltfm_priv(pltfm_host);
->>>
->>> +       match =3D of_match_node(sdhci_arasan_of_match, pdev->dev.of=
-_node);
->>> +       sdhci_arasan->soc_ctl_map =3D match->data;
->>> +
->>> +       node =3D of_parse_phandle(pdev->dev.of_node,
->>> "arasan,soc-ctl-syscon", 0);
->>
->>
->> should it be within the scope of arasan,sdhci-5.1 or
->> rockchip,rk3399-sdhci-5.1?
+> NOTE: In rk3399 it's actually quite important to handle clocks that
+> aren't exactly the right MHz.  When you ask for 150 MHz you actually
+> end up a child of GPLL and actually end up at 148.5 MHz.  This should
+> be close enough, but it's not exactly 150 MHz.  If we can't handle
+> 148.5 MHz then the 150 MHz setting in the PHY is useless.
 >
-> IMHO it doesn't hurt to do this for all SoCs.  This will help
-> facilitate other SoCs adding their own syscon so that they can
-> properly modify corecfg registers.
+> Also note that on rk3399 we're fairly limited on the number of rates
+> we can actually make since they need to be even divisors of 594 MHz o=
+r
+> 800 MHz (assuming you don't rejigger all the PLLs in the SoC or
+> something).  Most of the rates are actually in those ranges...
 
-okay.
+Yes I don't.
 
->
-> I can't say that I know anything about the other Arasan PHYs, but
-> presumably they also have corecfg registers.  If/when maps are added
-> for SoCs including those PHYs then this would be useful for them.
->
-> If you want I could change the code to only call of_parse_phandle if
-> "sdhci_arasan->soc_ctl_map" was non-NULL, but that should have no
-> functional change since we'll never actually use the syscon if we hav=
-e
-> no map.
 >
 >
 > -Doug
