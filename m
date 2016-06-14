@@ -1,110 +1,78 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 09/12] mmc: sdhci-xenon: add initial Xenon eMMC driver
-Date: Tue, 14 Jun 2016 10:19:12 +0200
-Message-ID: <878ty8chdr.fsf@free-electrons.com>
-References: <1465456218-28354-1-git-send-email-gregory.clement@free-electrons.com>
-	<1465456218-28354-10-git-send-email-gregory.clement@free-electrons.com>
-	<575FA9BF.6070703@intel.com>
+From: Li Dongpo <lidongpo@hisilicon.com>
+Subject: Re: [PATCH 1/3] net: Add MDIO bus driver for the Hisilicon FEMAC
+Date: Tue, 14 Jun 2016 16:24:48 +0800
+Message-ID: <575FBF50.30904@hisilicon.com>
+References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com>
+ <1465798076-176393-2-git-send-email-lidongpo@hisilicon.com>
+ <20160613133230.GA3132@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <575FA9BF.6070703@intel.com> (Adrian Hunter's message of "Tue, 14
-	Jun 2016 09:52:47 +0300")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160613133230.GA3132@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Adrian,
- 
- On mar., juin 14 2016, Adrian Hunter <adrian.hunter@intel.com> wrote:
 
-> On 09/06/16 10:10, Gregory CLEMENT wrote:
->> From: Victor Gu <xigu@marvell.com>
->> 
->> This path adds the driver for the Marvell Xenon eMMC host controller
->> which supports eMMC 5.1, SD 3.0.
->> 
->> However this driver supports only up to eMMC 5.0 since the command queue
->> feature is not included (yet) in the driver.
->> 
->> [gregory.clement@free-electrons.com:
->>  - reformulate commit log
->>  - overload the sdhci_set_uhs_signaling function instead of using a quirk
->>  - fix a kconfig dependency
->>  - remove dead code]
->> 
->> Signed-off-by: Victor Gu <xigu@marvell.com>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+
+On 2016/6/13 21:32, Andrew Lunn wrote:
+> On Mon, Jun 13, 2016 at 02:07:54PM +0800, Dongpo Li wrote:
+>> This patch adds a separate driver for the MDIO interface of the
+>> Hisilicon Fast Ethernet MAC.
+>>
+>> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+>> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
 >> ---
->>  drivers/mmc/host/Kconfig       |   10 +
->>  drivers/mmc/host/Makefile      |    1 +
->>  drivers/mmc/host/sdhci-xenon.c | 1164 ++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 1175 insertions(+)
->>  create mode 100644 drivers/mmc/host/sdhci-xenon.c
->> 
->
-> <SNIP>
->
->> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
->> new file mode 100644
->> index 000000000000..43c06db95872
->> --- /dev/null
->> +++ b/drivers/mmc/host/sdhci-xenon.c
->
-> <SNIP>
->
->> +static int sdhci_xenon_delay_adj_test(struct sdhci_host *host,
->> +		struct mmc_card *card, unsigned int delay,
->> +		bool invert, bool phase)
+>>  .../bindings/net/hisilicon-femac-mdio.txt          |  22 +++
+>>  drivers/net/phy/Kconfig                            |   8 +
+>>  drivers/net/phy/Makefile                           |   1 +
+>>  drivers/net/phy/mdio-hisi-femac.c                  | 165 +++++++++++++++++++++
+>>  4 files changed, 196 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/hisilicon-femac-mdio.txt
+>>  create mode 100644 drivers/net/phy/mdio-hisi-femac.c
+
+[...]
+>> +
+> 
+> Hi Dongpo
+> 
+> Overall this looks good. Just some minor comments
+> 
+>> +static int hisi_femac_mdio_wait_ready(struct mii_bus *bus)
 >> +{
->> +	int ret;
->> +	struct mmc_card *oldcard;
->> +
->> +	sdhci_xenon_set_fix_delay(host, delay, invert, phase);
->> +
->> +	/*
->> +	 * If the card is not yet associated to the host, we
->> +	 * temporally do it
->> +	 */
->> +	oldcard = card->host->card;
->> +	if (!oldcard)
->> +		card->host->card = card;
->> +	ret =  card_alive(card);
->
-> This looks like an abuse of bus_ops->alive().  You will need to get
-> agreement with Ulf how to handle this.  I will wait for Ulf's comments
-> before reviewing this patch set further.
+>> +	struct hisi_femac_mdio_data *data = bus->priv;
+> 
+> You could just pass data here. Your read and write functions already
+> have it.
+> 
+Thank you, I will fix it in next patch version.
 
-Actually I modified this part of the driver to use
-bus_ops->alive(). Initially, the alive() code was more or less copied
-and paste from the mmc core with ugly include from mmc_ops.h and
-sdio_ops.h to make it work. I find it cleaner to directly access the
-alive() function.
-
-Could you explain why it is an abuse of  bus_ops->alive()?
-
-Thanks,
-
-Gregory
-
-
->> +	card->host->card = oldcard;
->> +	if (ret) {
->> +		pr_debug("Xenon failed when sampling fix delay %d, inverted %d, phase %d\n",
->> +			 delay, invert, phase);
->> +		return -EIO;
+>> +	data->clk = devm_clk_get(&pdev->dev, NULL);
+>> +	if (IS_ERR(data->clk)) {
+>> +		ret = -ENODEV;
+>> +		goto err_out_free_mdiobus;
 >> +	}
->> +
->> +	pr_debug("Xenon succeeded when sampling fixed delay %d, inverted %d, phase %d\n",
->> +		 delay, invert, phase);
->> +	return 0;
->> +}
->
->
+> 
+> Return the error which devm_clk_get() gives you.
+> 
+ok, I will fix it.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+>> +
+>> +	ret = clk_prepare_enable(data->clk);
+>> +	if (ret)
+>> +		goto err_out_free_mdiobus;
+>> +
+>> +	ret = of_mdiobus_register(bus, np);
+>> +	if (ret)
+>> +		goto err_out_free_mdiobus;
+> 
+> You leave the clock prepared and enabled on error.
+> 
+ok, I will fix it.
+
+>     Andrew
+> 
+> .
+> 
