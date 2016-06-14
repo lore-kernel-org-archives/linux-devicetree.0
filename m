@@ -1,34 +1,56 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] Input: synaptics-rmi4: Support regulator supplies
-Date: Tue, 14 Jun 2016 17:01:30 -0500
-Message-ID: <20160614220130.GA23045@rob-hp-laptop>
-References: <1465622722-31714-1-git-send-email-bjorn.andersson@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/2] media: et8ek8: Add documentation
+Date: Tue, 14 Jun 2016 17:05:17 -0500
+Message-ID: <20160614220517.GA23504@rob-hp-laptop>
+References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1465659593-16858-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465622722-31714-1-git-send-email-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>, Christopher Heiny <cheiny-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+In-Reply-To: <1465659593-16858-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: sakari.ailus@iki.fi, sre@kernel.org, pali.rohar@gmail.com, pavel@ucw.cz, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 10, 2016 at 10:25:22PM -0700, Bjorn Andersson wrote:
-> From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+On Sat, Jun 11, 2016 at 06:39:53PM +0300, Ivaylo Dimitrov wrote:
+> Add DT bindings description
+
+Not exactly the best commit msg.
+
 > 
-> Support the two supplies - vdd and vio - to make it possible to control
-> power to the Synaptics chip.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 > ---
->  .../devicetree/bindings/input/rmi4/rmi_i2c.txt     |  9 +++++
+>  .../bindings/media/i2c/toshiba,et8ek8.txt          | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> new file mode 100644
+> index 0000000..997d268
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> @@ -0,0 +1,50 @@
+> +Toshiba et8ek8 5MP sensor
+> +
+> +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
+> +
+> +More detailed documentation can be found in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt .
+> +
+> +
+> +Mandatory properties
+> +--------------------
+> +
+> +- compatible: "toshiba,et8ek8"
+> +- reg: I2C address (0x3e, or an alternative address)
+> +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> +- clocks: External clock to the sensor
+> +- clock-frequency: Frequency of the external clock to the sensor
 
->  drivers/input/rmi4/rmi_i2c.c                       | 41 ++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These should be mutually-exclusive. If you have a clock, then you can 
+get the frequency at runtime.
+
+Rob
