@@ -1,178 +1,95 @@
-From: Po Liu <po.liu@nxp.com>
-Subject: [PATCH v3 1/2] nxp/dts: add pcie aer interrupt-name property in the
- dts
-Date: Tue, 14 Jun 2016 16:24:04 +0800
-Message-ID: <1465892645-32381-1-git-send-email-po.liu@nxp.com>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 09/12] mmc: sdhci-xenon: add initial Xenon eMMC driver
+Date: Tue, 14 Jun 2016 11:36:22 +0300
+Message-ID: <575FC206.4030903@intel.com>
+References: <1465456218-28354-1-git-send-email-gregory.clement@free-electrons.com>
+ <1465456218-28354-10-git-send-email-gregory.clement@free-electrons.com>
+ <575FA9BF.6070703@intel.com> <878ty8chdr.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Po Liu <po.liu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <878ty8chdr.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-NXP some platforms aer interrupt was not MSI/MSI-X/INTx
-but using interrupt line independently. This patch add a "aer"
-interrupt-names for aer interrupt.
+On 14/06/16 11:19, Gregory CLEMENT wrote:
+> Hi Adrian,
+>  
+>  On mar., juin 14 2016, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> On 09/06/16 10:10, Gregory CLEMENT wrote:
+>>> From: Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>>
+>>> This path adds the driver for the Marvell Xenon eMMC host controller
+>>> which supports eMMC 5.1, SD 3.0.
+>>>
+>>> However this driver supports only up to eMMC 5.0 since the command queue
+>>> feature is not included (yet) in the driver.
+>>>
+>>> [gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org:
+>>>  - reformulate commit log
+>>>  - overload the sdhci_set_uhs_signaling function instead of using a quirk
+>>>  - fix a kconfig dependency
+>>>  - remove dead code]
+>>>
+>>> Signed-off-by: Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>>  drivers/mmc/host/Kconfig       |   10 +
+>>>  drivers/mmc/host/Makefile      |    1 +
+>>>  drivers/mmc/host/sdhci-xenon.c | 1164 ++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 1175 insertions(+)
+>>>  create mode 100644 drivers/mmc/host/sdhci-xenon.c
+>>>
+>>
+>> <SNIP>
+>>
+>>> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
+>>> new file mode 100644
+>>> index 000000000000..43c06db95872
+>>> --- /dev/null
+>>> +++ b/drivers/mmc/host/sdhci-xenon.c
+>>
+>> <SNIP>
+>>
+>>> +static int sdhci_xenon_delay_adj_test(struct sdhci_host *host,
+>>> +		struct mmc_card *card, unsigned int delay,
+>>> +		bool invert, bool phase)
+>>> +{
+>>> +	int ret;
+>>> +	struct mmc_card *oldcard;
+>>> +
+>>> +	sdhci_xenon_set_fix_delay(host, delay, invert, phase);
+>>> +
+>>> +	/*
+>>> +	 * If the card is not yet associated to the host, we
+>>> +	 * temporally do it
+>>> +	 */
+>>> +	oldcard = card->host->card;
+>>> +	if (!oldcard)
+>>> +		card->host->card = card;
+>>> +	ret =  card_alive(card);
+>>
+>> This looks like an abuse of bus_ops->alive().  You will need to get
+>> agreement with Ulf how to handle this.  I will wait for Ulf's comments
+>> before reviewing this patch set further.
+> 
+> Actually I modified this part of the driver to use
+> bus_ops->alive(). Initially, the alive() code was more or less copied
+> and paste from the mmc core with ugly include from mmc_ops.h and
+> sdio_ops.h to make it work. I find it cleaner to directly access the
+> alive() function.
+> 
+> Could you explain why it is an abuse of  bus_ops->alive()?
 
-Signed-off-by: Po Liu <po.liu@nxp.com>
----
-changes for v3:
-	- None;
+bus_ops->alive() is used to determine if the card is present and able to
+respond.  You seem to be using it for a different purpose.  I will wait for
+Ulf's comments.
 
- .../devicetree/bindings/pci/layerscape-pci.txt         |  4 ++--
- arch/arm/boot/dts/ls1021a.dtsi                         |  6 ++++--
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi         | 18 +++++++++---------
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi         | 16 ++++++++--------
- 4 files changed, 23 insertions(+), 21 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index ef683b2..d27973a 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -19,7 +19,7 @@ Required properties:
- - interrupts: A list of interrupt outputs of the controller. Must contain an
-   entry for each entry in the interrupt-names property.
- - interrupt-names: Must include the following entries:
--  "intr": The interrupt that is asserted for controller interrupts
-+  "aer" : The interrupt that is asserted for aer interrupts
- - fsl,pcie-scfg: Must include two entries.
-   The first entry must be a link to the SCFG device node
-   The second entry must be '0' or '1' based on physical PCIe controller index.
-@@ -33,7 +33,7 @@ Example:
- 		       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 		reg-names = "regs", "config";
- 		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
--		interrupt-names = "intr";
-+		interrupt-names = "aer";
- 		fsl,pcie-scfg = <&scfg 0>;
- 		#address-cells = <3>;
- 		#size-cells = <2>;
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 5ae8e92..b638697 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -633,7 +633,8 @@
- 			reg = <0x00 0x03400000 0x0 0x00010000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-+			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			fsl,pcie-scfg = <&scfg 0>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
-@@ -656,7 +657,8 @@
- 			reg = <0x00 0x03500000 0x0 0x00010000   /* controller registers */
- 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			fsl,pcie-scfg = <&scfg 1>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index de0323b..4beb760 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -473,9 +473,9 @@
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 118 0x4>, /* controller interrupt */
--				     <0 117 0x4>; /* PME interrupt */
--			interrupt-names = "intr", "pme";
-+			interrupts = <0 117 0x4>, /* PME interrupt */
-+					 <0 118 0x4>; /* aer interrupt */
-+			interrupt-names = "pme", "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -497,9 +497,9 @@
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 128 0x4>,
--				     <0 127 0x4>;
--			interrupt-names = "intr", "pme";
-+			interrupts = <0 127 0x4>,
-+					 <0 128 0x4>;
-+			interrupt-names = "pme", "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -521,9 +521,9 @@
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 162 0x4>,
--				     <0 161 0x4>;
--			interrupt-names = "intr", "pme";
-+			interrupts = <0 161 0x4>,
-+					 <0 162 0x4>;
-+			interrupt-names = "pme", "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index 3187c82..6edf24b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -559,8 +559,8 @@
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x10 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 108 0x4>; /* Level high type */
--			interrupt-names = "intr";
-+			interrupts = <0 108 0x4>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -583,8 +583,8 @@
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x12 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 113 0x4>; /* Level high type */
--			interrupt-names = "intr";
-+			interrupts = <0 113 0x4>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -607,8 +607,8 @@
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x14 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 118 0x4>; /* Level high type */
--			interrupt-names = "intr";
-+			interrupts = <0 118 0x4>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -631,8 +631,8 @@
- 			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
- 			       0x16 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 123 0x4>; /* Level high type */
--			interrupt-names = "intr";
-+			interrupts = <0 123 0x4>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
--- 
-2.1.0.27.g96db324
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
