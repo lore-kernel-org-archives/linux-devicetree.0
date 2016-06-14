@@ -1,216 +1,52 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 06/14] pwm: rockchip: Add support for atomic update
-Date: Tue, 14 Jun 2016 11:13:14 +0200
-Message-ID: <1465895602-31008-7-git-send-email-boris.brezillon@free-electrons.com>
-References: <1465895602-31008-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 00/14] fix some type infos and bugs for arm64/of numa
+Date: Tue, 14 Jun 2016 18:10:14 +0800
+Message-ID: <575FD806.5090600@huawei.com>
+References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+ <20160607135852.GA20477@arm.com> <575D0ABA.2010503@huawei.com>
+ <20160613101233.GB1605@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1465895602-31008-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160613101233.GB1605-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implement the ->apply() function to add support for atomic update.
+On 2016/6/13 18:12, Will Deacon wrote:
+> On Sun, Jun 12, 2016 at 03:09:46PM +0800, Hanjun Guo wrote:
+>> On 2016/6/7 21:58, Will Deacon wrote:
+>>> On Tue, Jun 07, 2016 at 04:08:04PM +0800, Zhen Lei wrote:
+>>>> v3 -> v4:
+>>>> 1. Packed three patches of Kefeng Wang, patch6-8.
+>>>> 2. Add 6 new patches(9-15) to enhance the numa on arm64.
+>>>>
+>>>> v2 -> v3:
+>>>> 1. Adjust patch2 and patch5 according to Matthias Brugger's advice, to make the
+>>>>    patches looks more well. The final code have no change. 
+>>>>
+>>>> v1 -> v2:
+>>>> 1. Base on https://lkml.org/lkml/2016/5/24/679
+>>> If you want bug fixes to land in 4.7, you'll need to base them on a
+>>> mainline kernel.
+>>>
+>> Rafael queued ARM64 ACPI NUMA support for 4.8, and this patch set is based
+>> on that with no urgent bugfixes, can this patch set be queued for 4.8?
+> Up to Catalin, since he's handling the 4.8 merge window. It would be really
+> nice if you could give us the heads up about dependencies like this in the
+> future, preferably *before* the base part has already been merged. That way,
+> it's easier to create shared topic branches and gives us more options if
+> we think that conflicts are likely to occur.
 
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/pwm/pwm-rockchip.c | 84 ++++++++++++++++++++++++----------------------
- 1 file changed, 43 insertions(+), 41 deletions(-)
+Understood the maintenance difficulty will have, will do that next time.
+Much appreciate if it can be merged for 4.8.
 
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index dd8ca86..ef89df1 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -47,10 +47,12 @@ struct rockchip_pwm_regs {
- struct rockchip_pwm_data {
- 	struct rockchip_pwm_regs regs;
- 	unsigned int prescaler;
-+	bool supports_polarity;
- 	const struct pwm_ops *ops;
- 
- 	void (*set_enable)(struct pwm_chip *chip,
--			   struct pwm_device *pwm, bool enable);
-+			   struct pwm_device *pwm, bool enable,
-+			   enum pwm_polarity polarity);
- 	void (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
- 			  struct pwm_state *state);
- };
-@@ -61,7 +63,8 @@ static inline struct rockchip_pwm_chip *to_rockchip_pwm_chip(struct pwm_chip *c)
- }
- 
- static void rockchip_pwm_set_enable_v1(struct pwm_chip *chip,
--				       struct pwm_device *pwm, bool enable)
-+				       struct pwm_device *pwm, bool enable,
-+				       enum pwm_polarity polarity)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
- 	u32 enable_conf = PWM_CTRL_OUTPUT_EN | PWM_CTRL_TIMER_EN;
-@@ -91,14 +94,15 @@ static void rockchip_pwm_get_state_v1(struct pwm_chip *chip,
- }
- 
- static void rockchip_pwm_set_enable_v2(struct pwm_chip *chip,
--				       struct pwm_device *pwm, bool enable)
-+				       struct pwm_device *pwm, bool enable,
-+				       enum pwm_polarity polarity)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
- 	u32 enable_conf = PWM_OUTPUT_LEFT | PWM_LP_DISABLE | PWM_ENABLE |
- 			  PWM_CONTINUOUS;
- 	u32 val;
- 
--	if (pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED)
-+	if (polarity == PWM_POLARITY_INVERSED)
- 		enable_conf |= PWM_DUTY_NEGATIVE | PWM_INACTIVE_POSITIVE;
- 	else
- 		enable_conf |= PWM_DUTY_POSITIVE | PWM_INACTIVE_NEGATIVE;
-@@ -166,7 +170,6 @@ static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
- 	unsigned long period, duty;
- 	u64 clk_rate, div;
--	int ret;
- 
- 	clk_rate = clk_get_rate(pc->clk);
- 
-@@ -182,69 +185,66 @@ static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	div = clk_rate * duty_ns;
- 	duty = DIV_ROUND_CLOSEST_ULL(div, pc->data->prescaler * NSEC_PER_SEC);
- 
--	ret = clk_enable(pc->clk);
--	if (ret)
--		return ret;
--
- 	writel(period, pc->base + pc->data->regs.period);
- 	writel(duty, pc->base + pc->data->regs.duty);
--	writel(0, pc->base + pc->data->regs.cntr);
--
--	clk_disable(pc->clk);
--
--	return 0;
--}
--
--static int rockchip_pwm_set_polarity(struct pwm_chip *chip,
--				     struct pwm_device *pwm,
--				     enum pwm_polarity polarity)
--{
--	/*
--	 * No action needed here because pwm->polarity will be set by the core
--	 * and the core will only change polarity when the PWM is not enabled.
--	 * We'll handle things in set_enable().
--	 */
- 
- 	return 0;
- }
- 
--static int rockchip_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+static int rockchip_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
-+	struct pwm_state curstate;
-+	bool enabled;
- 	int ret;
- 
-+	pwm_get_state(pwm, &curstate);
-+	enabled = curstate.enabled;
-+
- 	ret = clk_enable(pc->clk);
- 	if (ret)
- 		return ret;
- 
--	pc->data->set_enable(chip, pwm, true);
-+	if (state->polarity != curstate.polarity && enabled) {
-+		pc->data->set_enable(chip, pwm, false, state->polarity);
-+		enabled = false;
-+	}
- 
--	return 0;
--}
-+	ret = rockchip_pwm_config(chip, pwm, state->duty_cycle, state->period);
-+	if (ret) {
-+		if (enabled != curstate.enabled)
-+			pc->data->set_enable(chip, pwm, !enabled,
-+					     state->polarity);
- 
--static void rockchip_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
-+		goto out;
-+	}
-+
-+	if (state->enabled != enabled)
-+		pc->data->set_enable(chip, pwm, state->enabled,
-+				     state->polarity);
- 
--	pc->data->set_enable(chip, pwm, false);
-+	/*
-+	 * Update the state with the real hardware, which can differ a bit
-+	 * because of period/duty_cycle approximation.
-+	 */
-+	rockchip_pwm_get_state(chip, pwm, state);
- 
-+out:
- 	clk_disable(pc->clk);
-+
-+	return ret;
- }
- 
- static const struct pwm_ops rockchip_pwm_ops_v1 = {
- 	.get_state = rockchip_pwm_get_state,
--	.config = rockchip_pwm_config,
--	.enable = rockchip_pwm_enable,
--	.disable = rockchip_pwm_disable,
-+	.apply = rockchip_pwm_apply,
- 	.owner = THIS_MODULE,
- };
- 
- static const struct pwm_ops rockchip_pwm_ops_v2 = {
- 	.get_state = rockchip_pwm_get_state,
--	.config = rockchip_pwm_config,
--	.set_polarity = rockchip_pwm_set_polarity,
--	.enable = rockchip_pwm_enable,
--	.disable = rockchip_pwm_disable,
-+	.apply = rockchip_pwm_apply,
- 	.owner = THIS_MODULE,
- };
- 
-@@ -269,6 +269,7 @@ static const struct rockchip_pwm_data pwm_data_v2 = {
- 		.ctrl = 0x0c,
- 	},
- 	.prescaler = 1,
-+	.supports_polarity = true,
- 	.ops = &rockchip_pwm_ops_v2,
- 	.set_enable = rockchip_pwm_set_enable_v2,
- 	.get_state = rockchip_pwm_get_state_v2,
-@@ -282,6 +283,7 @@ static const struct rockchip_pwm_data pwm_data_vop = {
- 		.ctrl = 0x00,
- 	},
- 	.prescaler = 1,
-+	.supports_polarity = true,
- 	.ops = &rockchip_pwm_ops_v2,
- 	.set_enable = rockchip_pwm_set_enable_v2,
- 	.get_state = rockchip_pwm_get_state_v2,
-@@ -331,7 +333,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 	pc->chip.base = -1;
- 	pc->chip.npwm = 1;
- 
--	if (pc->data->ops->set_polarity) {
-+	if (pc->data->supports_polarity) {
- 		pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 		pc->chip.of_pwm_n_cells = 3;
- 	}
--- 
-2.7.4
+Thanks
+Hanjun
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
