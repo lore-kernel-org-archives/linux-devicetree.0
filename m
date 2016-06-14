@@ -1,56 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] media: et8ek8: Add documentation
-Date: Tue, 14 Jun 2016 17:05:17 -0500
-Message-ID: <20160614220517.GA23504@rob-hp-laptop>
-References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <1465659593-16858-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Subject: Re: [PATCH v3 5/6] dt-bindings: add Sharp LQ123P1JX31 panel binding
+Date: Tue, 14 Jun 2016 17:06:25 -0500
+Message-ID: <20160614220625.GA25751@rob-hp-laptop>
+References: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
+ <1465700176-13716-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465659593-16858-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: sakari.ailus@iki.fi, sre@kernel.org, pali.rohar@gmail.com, pavel@ucw.cz, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1465700176-13716-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, emil.l.velikov@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 11, 2016 at 06:39:53PM +0300, Ivaylo Dimitrov wrote:
-> Add DT bindings description
-
-Not exactly the best commit msg.
-
+On Sun, Jun 12, 2016 at 10:56:16AM +0800, Yakir Yang wrote:
+> The Sharp LQ123P1JX31 is an 12.3" 2400x1600 TFT-LCD panel
+> connected using eDP interfaces.
 > 
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  .../bindings/media/i2c/toshiba,et8ek8.txt          | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> Changes in v3:
+> - Drop the extra comma in compatible name (Rob)
+> - Add the reviewed flag from Doug
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-> new file mode 100644
-> index 0000000..997d268
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-> @@ -0,0 +1,50 @@
-> +Toshiba et8ek8 5MP sensor
-> +
-> +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
-> +
-> +More detailed documentation can be found in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt .
-> +
-> +
-> +Mandatory properties
-> +--------------------
-> +
-> +- compatible: "toshiba,et8ek8"
-> +- reg: I2C address (0x3e, or an alternative address)
-> +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
+> Changes in v2:
+> - Add dt-bindings of Sharp LQ123P1JX31 panel in v2
+> 
+>  .../devicetree/bindings/display/panel/sharp,lq123p1jx31.txt        | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq123p1jx31.txt
 
-> +- clocks: External clock to the sensor
-> +- clock-frequency: Frequency of the external clock to the sensor
-
-These should be mutually-exclusive. If you have a clock, then you can 
-get the frequency at runtime.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
