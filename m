@@ -1,97 +1,167 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] of/irq: Break out msi-map lookup (again)
-Date: Tue, 14 Jun 2016 19:20:07 +0100
-Message-ID: <20160614182007.GK16531@arm.com>
-References: <cover.1464966939.git.robin.murphy@arm.com>
- <2cbffa9a341edfd10114994f6486f6b08d0c390c.1464966939.git.robin.murphy@arm.com>
- <20160614143750.GJ19407@arm.com>
- <5760491E.7060104@arm.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] mtd: nand: gpmi: correct bitflip for erased NAND
+ page
+Date: Tue, 14 Jun 2016 21:14:01 +0200
+Message-ID: <20160614211401.40c26b37@bbrezillon>
+References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
+	<1465578094-8816-5-git-send-email-han.xu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5760491E.7060104-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1465578094-8816-5-git-send-email-han.xu-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+To: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+Cc: richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 07:12:46PM +0100, Robin Murphy wrote:
-> On 14/06/16 15:37, Will Deacon wrote:
-> >On Fri, Jun 03, 2016 at 06:15:38PM +0100, Robin Murphy wrote:
-> >>The PCI msi-map code is already doing double-duty translating IDs and
-> >>retrieving MSI parents, which unsurprisingly is the same functionality
-> >>we need for the identically-formatted PCI iommu-map property. Drag the
-> >>core parsing routine up yet another layer into the general OF-PCI code,
-> >>and further generalise it for either kind of lookup in either flavour
-> >>of map property.
-> >>
-> >>CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>CC: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>CC: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> >>Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> >>---
-> >>
-> >>v2: No change.
-> >>
-> >>  drivers/of/irq.c       |  70 ++-------------------------------
-> >>  drivers/of/of_pci.c    | 102 +++++++++++++++++++++++++++++++++++++++++++++++++
-> >>  include/linux/of_pci.h |   8 ++++
-> >>  3 files changed, 114 insertions(+), 66 deletions(-)
-> >
-> >[...]
-> >
-> >>diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> >>index 13f4fed38048..20bf5a0c57fd 100644
-> >>--- a/drivers/of/of_pci.c
-> >>+++ b/drivers/of/of_pci.c
-> >>@@ -306,3 +306,105 @@ struct msi_controller *of_pci_find_msi_chip_by_node(struct device_node *of_node)
-> >>  EXPORT_SYMBOL_GPL(of_pci_find_msi_chip_by_node);
-> >>
-> >>  #endif /* CONFIG_PCI_MSI */
-> >>+
-> >>+#define MASK_NAME_LEN	32	/* Safely longer than "iommu-map-mask" */
-> >>+
-> >>+/**
-> >>+ * of_pci_map_rid - Translate a requester ID through a downstream mapping.
-> >>+ * @np: root complex device node.
-> >>+ * @map_name: property name of the map to use.
-> >>+ * @target: optional pointer to a target device node.
-> >>+ * @id_out: optional pointer to receive the translated ID.
-> >>+ *
-> >>+ * Given a PCI requester ID, look up the appropriate implementation-defined
-> >>+ * platform ID and/or the target device which receives transactions on that
-> >>+ * ID, as per the "iommu-map" and "msi-map" bindings. @target or @id_out may
-> >>+ * be NULL if not required. If @target points to a device node pointer, only
-> >>+ * entries targeting that node will be matched; if it points to a NULL
-> >>+ * value, it will receive the device node for the first matching target entry,
-> >>+ * with a reference held.
-> >>+ *
-> >>+ * Return: 0 on success or a standard error code on failure.
-> >>+ */
-> >>+int of_pci_map_rid(struct device_node *np, const char *map_name, u32 rid_in,
-> >>+		   struct device_node **target, u32 *rid_out)
-> >>+{
-> >>+	u32 map_mask, masked_rid;
-> >>+	int map_len;
-> >>+	const __be32 *map = NULL;
-> >>+	char mask_name[MASK_NAME_LEN];
-> >
-> >Couldn't you avoid this if you just took const char *mask_name as a
-> >parameter too?
+On Fri, 10 Jun 2016 12:01:32 -0500
+Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org> wrote:
+
+> i.MX6QP and i.MX7D BCH module integrated a new feature to detect the
+> bitflip number for erased NAND page. So for these two platform, set the
+> erase threshold to ecc_strength and if bitflip detected, GPMI driver
+> will correct the data to all 0xFF.
 > 
-> Having started out with that, I considered two strings essentially
-> duplicating each other, possibly duplicated per callsite, and thought it
-> might be prudent to trade off a little runtime work for a permanent
-> reduction in static data. I like the "never save anything you can
-> recalculate" philosophy, but it is possible I got a bit carried away here.
-> If you hate it I can just add the extra argument back.
+> Signed-off-by: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  drivers/mtd/nand/gpmi-nand/bch-regs.h  | 10 ++++++++++
+>  drivers/mtd/nand/gpmi-nand/gpmi-lib.c  |  5 +++++
+>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 27 ++++++++++++++++++++++++++-
+>  3 files changed, 41 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/nand/gpmi-nand/bch-regs.h b/drivers/mtd/nand/gpmi-nand/bch-regs.h
+> index 228142c..2c44b88 100644
+> --- a/drivers/mtd/nand/gpmi-nand/bch-regs.h
+> +++ b/drivers/mtd/nand/gpmi-nand/bch-regs.h
+> @@ -30,7 +30,13 @@
+>  #define BM_BCH_CTRL_COMPLETE_IRQ		(1 << 0)
+>  
+>  #define HW_BCH_STATUS0				0x00000010
+> +
+>  #define HW_BCH_MODE				0x00000020
+> +#define BP_BCH_MODE_ERASE_THRESHOLD		0
+> +#define BM_BCH_MODE_ERASE_THRESHOLD	(0xff << BP_BCH_MODE_ERASE_THRESHOLD)
+> +#define BF_BCH_MODE_ERASE_THRESHOLD(v)		\
+> +	(((v) << BP_BCH_MODE_ERASE_THRESHOLD) & BM_BCH_MODE_ERASE_THRESHOLD)
+> +
+>  #define HW_BCH_ENCODEPTR			0x00000030
+>  #define HW_BCH_DATAPTR				0x00000040
+>  #define HW_BCH_METAPTR				0x00000050
+> @@ -125,4 +131,8 @@
+>  	)
+>  
+>  #define HW_BCH_VERSION				0x00000160
+> +#define HW_BCH_DEBUG1				0x00000170
+> +#define BP_BCH_DEBUG1_ERASED_ZERO_COUNT	0
+> +#define BM_BCH_DEBUG1_ERASED_ZERO_COUNT		\
+> +		(0x1ff << BP_BCH_DEBUG1_ERASED_ZERO_COUNT)
+>  #endif
+> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+> index 358ff5d..0b5666a 100644
+> --- a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+> @@ -298,6 +298,11 @@ int bch_set_geometry(struct gpmi_nand_data *this)
+>  			| BF_BCH_FLASH0LAYOUT1_DATAN_SIZE(block_size, this),
+>  			r->bch_regs + HW_BCH_FLASH0LAYOUT1);
+>  
+> +	/* Set erase threshold to ecc_strength for mx6qp and mx7 */
+> +	if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
+> +		writel(BF_BCH_MODE_ERASE_THRESHOLD(ecc_strength),
+> +			r->bch_regs + HW_BCH_MODE);
+> +
+>  	/* Set *all* chip selects to use layout 0. */
+>  	writel(0, r->bch_regs + HW_BCH_LAYOUTSELECT);
+>  
+> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> index aedaff3..03bdb4d 100644
+> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> @@ -1043,6 +1043,7 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>  {
+>  	struct gpmi_nand_data *this = nand_get_controller_data(chip);
+>  	struct bch_geometry *nfc_geo = &this->bch_geometry;
+> +	void __iomem *bch_regs = this->resources.bch_regs;
+>  	void          *payload_virt;
+>  	dma_addr_t    payload_phys;
+>  	void          *auxiliary_virt;
+> @@ -1051,6 +1052,8 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>  	unsigned char *status;
+>  	unsigned int  max_bitflips = 0;
+>  	int           ret;
+> +	int bitflips = 0;
+> +	int bitflip_flag = 0;
 
-Yeah, please do. The idea is that this can be used with different bindings,
-and I don't think we gain anything from constructing the mask string other
-than and ugliness complexity.
+Hm, I would choose another name, but I'm not even sure this is really
+needed (see below).
 
-Will
+>  
+>  	dev_dbg(this->dev, "page number is : %d\n", page);
+>  	ret = read_page_prepare(this, buf, nfc_geo->payload_size,
+> @@ -1088,8 +1091,20 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>  			   payload_virt, payload_phys);
+>  
+>  	for (i = 0; i < nfc_geo->ecc_chunk_count; i++, status++) {
+> -		if ((*status == STATUS_GOOD) || (*status == STATUS_ERASED))
+> +		if (*status == STATUS_GOOD)
+> +			continue;
+> +		if (*status == STATUS_ERASED) {
+> +			if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this)) {
+> +				bitflips = readl(bch_regs + HW_BCH_DEBUG1);
+
+You could use ret here or define a flips variable locally to this code
+(see what's done for the software correction).
+
+BTW, why not memset-ing the data chunk here (as done for the SW
+correction part). This way you wouldn't need the extra bitflips_flag
+variable.
+
+> +				if (bitflips) {
+> +					bitflip_flag = 1;
+> +					max_bitflips = max_t(unsigned int,
+> +							     max_bitflips,
+> +							     bitflips);
+> +				}
+> +			}
+>  			continue;
+> +		}
+>  
+>  		if (*status == STATUS_UNCORRECTABLE) {
+>  			int eccbits = nfc_geo->ecc_strength * nfc_geo->gf_len;
+> @@ -1098,6 +1113,10 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>  			int eccbytes;
+>  			int flips;
+>  
+> +			/* shortcut for i.MX7 and i.MX6QP */
+> +			if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
+
+You should increment mtd->ecc_stats.failed in this case.
+
+> +				continue;
+> +
+>  			/* Read ECC bytes into our internal raw_buffer */
+>  			offset = nfc_geo->metadata_size * 8;
+>  			offset += ((8 * nfc_geo->ecc_chunk_size) + eccbits) * (i + 1);
+> @@ -1182,6 +1201,12 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>  		chip->oob_poi[0] = ((uint8_t *) auxiliary_virt)[0];
+>  	}
+>  
+> +	/* if bitflip occurred in erased page, change data to all 0xff */
+> +	if (bitflip_flag) {
+> +		memset(buf, ~0, nfc_geo->payload_size);
+> +		memset(chip->oob_poi, ~0, mtd->oobsize);
+> +	}
+> +
+>  	return max_bitflips;
+>  }
+>  
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
