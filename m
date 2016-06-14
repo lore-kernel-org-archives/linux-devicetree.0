@@ -1,94 +1,81 @@
-From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 09/12] mmc: sdhci-xenon: add initial Xenon eMMC driver
-Date: Tue, 14 Jun 2016 11:36:22 +0300
-Message-ID: <575FC206.4030903@intel.com>
-References: <1465456218-28354-1-git-send-email-gregory.clement@free-electrons.com>
- <1465456218-28354-10-git-send-email-gregory.clement@free-electrons.com>
- <575FA9BF.6070703@intel.com> <878ty8chdr.fsf@free-electrons.com>
+From: =?UTF-8?B?V3UtQ2hlbmcgTGkgKOadjuWLmeiqoCk=?=
+	<wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
+Date: Tue, 14 Jun 2016 16:44:36 +0800
+Message-ID: <CAOMLVLjnktOoDWseZBwsFwLbym8mX7CQzOHW3tbum1yWJjfFNA@mail.gmail.com>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+ <20160607112235.475c2e4c@recife.lan> <575746EE.3030706@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <878ty8chdr.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <575746EE.3030706-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lin PoChun <PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/06/16 11:19, Gregory CLEMENT wrote:
-> Hi Adrian,
->  
->  On mar., juin 14 2016, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> 
->> On 09/06/16 10:10, Gregory CLEMENT wrote:
->>> From: Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->>>
->>> This path adds the driver for the Marvell Xenon eMMC host controller
->>> which supports eMMC 5.1, SD 3.0.
->>>
->>> However this driver supports only up to eMMC 5.0 since the command queue
->>> feature is not included (yet) in the driver.
->>>
->>> [gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org:
->>>  - reformulate commit log
->>>  - overload the sdhci_set_uhs_signaling function instead of using a quirk
->>>  - fix a kconfig dependency
->>>  - remove dead code]
->>>
->>> Signed-off-by: Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> ---
->>>  drivers/mmc/host/Kconfig       |   10 +
->>>  drivers/mmc/host/Makefile      |    1 +
->>>  drivers/mmc/host/sdhci-xenon.c | 1164 ++++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 1175 insertions(+)
->>>  create mode 100644 drivers/mmc/host/sdhci-xenon.c
->>>
+On Wed, Jun 8, 2016 at 6:13 AM, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org> wrote:
+>
+>
+> On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:
 >>
->> <SNIP>
+>> Em Mon, 30 May 2016 20:29:14 +0800
+>> Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
 >>
->>> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
->>> new file mode 100644
->>> index 000000000000..43c06db95872
->>> --- /dev/null
->>> +++ b/drivers/mmc/host/sdhci-xenon.c
+>>> ==============
+>>>   Introduction
+>>> ==============
+>>>
+>>> The purpose of this series is to add the driver for video codec hw
+>>> embedded in the Mediatek's MT8173 SoCs.
+>>> Mediatek Video Codec is able to handle video decoding of in a range of
+>>> formats.
+>>>
+>>> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the
+>>> decoder driver will decoded bitstream to
+>>> V4L2_PIX_FMT_MT21 format.
+>>>
+>>> This patch series rely on MTK VPU driver in patch series "Add MT8173
+>>> Video Encoder Driver and VPU Driver"[1]
+>>> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9
+>>> support.
+>>> Mediatek Video Decoder driver rely on VPU driver to load, communicate
+>>> with VPU.
+>>>
+>>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI
+>>> both have been merged in v4.6-rc1.
+>>>
+>>> [1]https://patchwork.linuxtv.org/patch/33734/
+>>> [2]https://chromium-review.googlesource.com/#/c/245241/
 >>
->> <SNIP>
 >>
->>> +static int sdhci_xenon_delay_adj_test(struct sdhci_host *host,
->>> +		struct mmc_card *card, unsigned int delay,
->>> +		bool invert, bool phase)
->>> +{
->>> +	int ret;
->>> +	struct mmc_card *oldcard;
->>> +
->>> +	sdhci_xenon_set_fix_delay(host, delay, invert, phase);
->>> +
->>> +	/*
->>> +	 * If the card is not yet associated to the host, we
->>> +	 * temporally do it
->>> +	 */
->>> +	oldcard = card->host->card;
->>> +	if (!oldcard)
->>> +		card->host->card = card;
->>> +	ret =  card_alive(card);
+>> Hmm... I'm not seeing the firmware for this driver at the
+>> linux-firmware tree:
 >>
->> This looks like an abuse of bus_ops->alive().  You will need to get
->> agreement with Ulf how to handle this.  I will wait for Ulf's comments
->> before reviewing this patch set further.
-> 
-> Actually I modified this part of the driver to use
-> bus_ops->alive(). Initially, the alive() code was more or less copied
-> and paste from the mmc core with ugly include from mmc_ops.h and
-> sdio_ops.h to make it work. I find it cleaner to directly access the
-> alive() function.
-> 
-> Could you explain why it is an abuse of  bus_ops->alive()?
+>> https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
+Tiffany. Can you check the license and add the firmware to linux-firmware?
 
-bus_ops->alive() is used to determine if the card is present and able to
-respond.  You seem to be using it for a different purpose.  I will wait for
-Ulf's comments.
-
+For the information, both encoder and decoder drivers require the
+firmware to work.
+>>
+>> Nor I'm seeing any pull request for them. Did you send it?
+>> I'll only merge the driver upstream after seeing such pull request.
+>
+>
+> Mauro, are you confusing the decoder and encoder driver? I haven't
+> thoroughly reviewed the decoder driver
+> yet, so there is no pull request for the decoder driver.
+>
+> The only pull request I made was for the encoder driver.
+>
+> Regards,
+>
+>         Hans
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
