@@ -1,73 +1,54 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt documentation for
- Rockchip PCIe PHY
-Date: Tue, 14 Jun 2016 10:27:46 -0700
-Message-ID: <CAD=FV=Ubm8goQ4J=T11mWmAZrP+J7YYWdxACGjAhdsONyzPdKQ@mail.gmail.com>
-References: <1465865072-25833-1-git-send-email-shawn.lin@rock-chips.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] firmware: qcom: scm: Expose PAS command 10 as
+ reset-controller
+Date: Tue, 14 Jun 2016 10:48:18 -0700
+Message-ID: <20160614174818.GD28218@codeaurora.org>
+References: <1465620740-24474-1-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465865072-25833-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465620740-24474-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Jun 13, 2016 at 5:44 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> This patch adds a binding that describes the Rockchip PCIe PHY
-> found on Rockchip SoCs PCIe interface.
->
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->
+On 06/10, Bjorn Andersson wrote:
+> PAS command 10 is used to assert and deassert the MSS reset via
+> TrustZone, expose this as a reset-controller to follow the non-secure
+> case where GCC exposes this control.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->
-> Changes in v2:
-> - add clk and reset description
-> - remove unit-address
->
->  .../devicetree/bindings/phy/rockchip-pcie-phy.txt  | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
->
-> diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-> new file mode 100644
-> index 0000000..ad55c67
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-> @@ -0,0 +1,32 @@
-> +Rockchip PCIE PHY
-> +-----------------------
-> +
-> +Required properties:
-> + - compatible: rockchip,rk3399-pcie-phy
-> + - #phy-cells: must be 0
-> + - clocks: Must contain an entry in clock-names.
-> +       See ../clocks/clock-bindings.txt for details.
-> + - clock-names: Must be "refclk"
-> + - resets: Must contain an entry in reset-names.
-> +       See ../reset/reset.txt for details.
-> + - reset-names: Must be "phy"
-> +
-> +Example:
-> +
-> +grf: syscon@ff770000 {
-> +       compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +
-> +       ...
-> +
-> +       pcie-phy: phy {
+>  .../devicetree/bindings/firmware/qcom,scm.txt      |  6 ++++
+>  drivers/firmware/qcom_scm-32.c                     | 13 +++++++++
+>  drivers/firmware/qcom_scm-64.c                     | 17 +++++++++++
+>  drivers/firmware/qcom_scm.c                        | 34 ++++++++++++++++++++++
+>  drivers/firmware/qcom_scm.h                        |  2 ++
 
-Just calling this node "phy" isn't a good idea.  There will be
-multiple PHYs under the GRF and they can't all have a subnode named
-"phy".
+We should add some sort of select for the reset controller
+config in SCM?
 
-Also: at least in Rockchip device trees usually aliases use
-underscores whereas node names use dashes.  I'm not actually sure what
-the official device tree policy is on this, but it's what I've seen
-done.  So this should actually be:
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 79bb0b00577e..b0119535c0fb 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -21,6 +21,7 @@
+>  
+> +
+> +static struct reset_control_ops qcom_scm_pas_reset_ops = {
 
-pcie_phy: pcie-phy {
+const?
+
+> +	.assert = qcom_scm_pas_reset_assert,
+> +	.deassert = qcom_scm_pas_reset_deassert,
+> +};
+> +
+>  static int qcom_scm_probe(struct platform_device *pdev)
+>  {
+>  	struct qcom_scm *scm;
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
