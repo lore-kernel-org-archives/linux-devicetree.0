@@ -1,80 +1,71 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
-Date: Tue, 14 Jun 2016 16:00:24 +0200
-Message-ID: <4065185.1IWsBDlcMJ@diego>
-References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com> <7225720.0AClDW7eQ6@diego> <CABXOdTfzDeg3KOmEkJkeUWs76wFind89D-bSrs=7-jSxmdhSHQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 05/13] ARM: shmobile: genmai dts: Update console parameters
+Date: Tue, 14 Jun 2016 16:01:52 +0200
+Message-ID: <CAMuHMdU9p8-7BXwT8EwTQDZ1fFt=O0jRV5fqU3V987uaVUtVgA@mail.gmail.com>
+References: <1449597258-32623-1-git-send-email-geert+renesas@glider.be>
+ <1449597258-32623-6-git-send-email-geert+renesas@glider.be> <20151210070434.GB17682@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABXOdTfzDeg3KOmEkJkeUWs76wFind89D-bSrs=7-jSxmdhSHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151210070434.GB17682@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 14. Juni 2016, 06:50:31 schrieb Guenter Roeck:
-> On Tue, Jun 14, 2016 at 6:27 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wr=
-ote:
-> > Am Montag, 13. Juni 2016, 10:10:10 schrieb Frank Wang:
-> >> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
-> >> than rk3288 and before, and most of phy-related registers are also
-> >> different from the past, so a new phy driver is required necessari=
-ly.
-> >>=20
-> >> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> ---
+On Thu, Dec 10, 2015 at 8:04 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Tue, Dec 08, 2015 at 06:54:10PM +0100, Geert Uytterhoeven wrote:
+>> Change the console alias to "serial0", for consistency with other
+>> boards (the first unlabeled serial port is always called "serial0").
+>> Add serial port config to chosen/stdout-path.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>>  arch/arm/boot/dts/r7s72100-genmai.dts | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
+>> index a9da7a89fc4ba65a..47533c2c419e164d 100644
+>> --- a/arch/arm/boot/dts/r7s72100-genmai.dts
+>> +++ b/arch/arm/boot/dts/r7s72100-genmai.dts
+>> @@ -17,12 +17,12 @@
+>>       compatible = "renesas,genmai", "renesas,r7s72100";
+>>
+>>       aliases {
+>> -             serial2 = &scif2;
+>> +             serial0 = &scif2;
+>>       };
+>>
+>>       chosen {
+>>               bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+>> -             stdout-path = &scif2;
+>> +             stdout-path = "serial0:115200n8";
+>>       };
+>>
+>>       memory {
+>
+> As noted elsewhere the serial2 -> serial0 portion of
+> this patch seems to result in no console.
+>
+> I am wary about that change as it is user-space visible
+> but I didn't expect it to also have an impact on the kernel console.
+>
+> In case it helps anyone now or in the future the output with earlyprintk
+> follows.
+>
+> -- after with early printk --
 
-[...]
+> [    0.000000] Kernel command line: console=ttySC2,115200 root=/dev/nfs rw ip=dhcp ignore_loglevel earlyprintk=sh-sci.2,115200
 
-> >> +static int rockchip_usb2phy_init(struct phy *phy)
-> >> +{
-> >> +     struct rockchip_usb2phy_port *rport =3D phy_get_drvdata(phy)=
-;
-> >> +     struct rockchip_usb2phy *rphy =3D dev_get_drvdata(phy->dev.p=
-arent);
-> >> +     int ret;
-> >> +
-> >>=20
-> >         if (!rport->port_cfg)
-> >        =20
-> >                 return 0;
-> >=20
-> > Otherwise the currently empty otg-port will cause null-pointer
-> > dereferences
-> > when it gets assigned in the devicetree already.
->=20
-> Not really, at least not here - that port should not have port_id set
-> to USB2PHY_PORT_HOST.
->=20
-> Does it even make sense to instantiate the otg port ? Is it going to
-> do anything without port configuration ?
+Got you! Stale "bootargs" environment variable overriding the console.
 
-Ok, that would be the other option - not creating the phy in the driver=
-=2E
+Gr{oetje,eeting}s,
 
-Or from what I've seen, handling it as similar to the host-port should =
-work=20
-initially as well most likely, supplying the additional otg-parts later=
- on.
-
-[...]
-
-> >> +static int rockchip_usb2phy_exit(struct phy *phy)
-> >> +{
-> >> +     struct rockchip_usb2phy_port *rport =3D phy_get_drvdata(phy)=
-;
-> >> +
-> >>=20
-> >         if (!rport->port_cfg)
-> >        =20
-> >                 return 0;
->=20
-> No access to port_cfg here ?
-
-sorry, one copy'n'paste to many :-)
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
