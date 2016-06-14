@@ -1,45 +1,230 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 03/10] mfd: Add driver for X-Powers AC100
- audio codec / RTC combo IC
-Date: Tue, 14 Jun 2016 10:20:40 +0800
-Message-ID: <CAGb2v66_SrKjQ_t_rL68QUVZQ=8hBoCTb8tbwCeBWz84kTabcQ@mail.gmail.com>
-References: <1465870678-30128-1-git-send-email-wens@csie.org> <1465870678-30128-5-git-send-email-wens@csie.org>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: [PATCH 2/2] arm64: dts: mediatek: add mt6755 support
+Date: Tue, 14 Jun 2016 10:20:05 +0800
+Message-ID: <1465870805-10451-3-git-send-email-mars.cheng@mediatek.com>
+References: <1465870805-10451-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCMILY6JWQBBBD6U7W5AKGQEH5CKJ7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1465870678-30128-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465870805-10451-1-git-send-email-mars.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Choui <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Scott Shu <scott.shu@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Mars Cheng <mars.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 10:17 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> The AC100 is a multifunction device with an audio codec subsystem and
-> an RTC subsystem. These two subsystems share a common register space
-> and host interface.
->
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+This adds basic chip support for MT6755 SoC.
 
-Self-NACK. A last minute fix up resulted in a compile error.
+Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+ arch/arm64/boot/dts/mediatek/mt6755-phone.dts |   39 +++++++
+ arch/arm64/boot/dts/mediatek/mt6755.dtsi      |  143 +++++++++++++++++++++++++
+ 3 files changed, 183 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6755-phone.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6755.dtsi
 
-I'll send v2 later. Sorry for the noise.
-
-Regards
-ChenYu
-
+diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+index e0a4bff..9abdb01 100644
+--- a/arch/arm64/boot/dts/mediatek/Makefile
++++ b/arch/arm64/boot/dts/mediatek/Makefile
+@@ -1,3 +1,4 @@
++dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-phone.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+ 
+diff --git a/arch/arm64/boot/dts/mediatek/mt6755-phone.dts b/arch/arm64/boot/dts/mediatek/mt6755-phone.dts
+new file mode 100644
+index 0000000..f551666
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt6755-phone.dts
+@@ -0,0 +1,39 @@
++/*
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: Mars.C <mars.cheng@mediatek.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++#include "mt6755.dtsi"
++
++/ {
++	model = "MediaTek MT6755 phone";
++	compatible = "mediatek,mt6755-phone", "mediatek,mt6755";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x1e800000>;
++	};
++
++	chosen {
++		stdout-path = "serial0:921600n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt6755.dtsi b/arch/arm64/boot/dts/mediatek/mt6755.dtsi
+new file mode 100644
+index 0000000..36c3384
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt6755.dtsi
+@@ -0,0 +1,143 @@
++/*
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: Mars.C <mars.cheng@mediatek.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "mediatek,mt6755";
++	interrupt-parent = <&sysirq>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x000>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x001>;
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x002>;
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x003>;
++		};
++
++		cpu4: cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x100>;
++		};
++
++		cpu5: cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x101>;
++		};
++
++		cpu6: cpu@102 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x102>;
++		};
++
++		cpu7: cpu@103 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x103>;
++		};
++	};
++
++	uart_clk: dummy26m {
++		compatible = "fixed-clock";
++		clock-frequency = <26000000>;
++		#clock-cells = <0>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13
++			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14
++			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11
++			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10
++			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	sysirq: intpol-controller@10200620 {
++		compatible = "mediatek,mt6755-sysirq",
++			     "mediatek,mt6577-sysirq";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		reg = <0 0x10200620 0 0x20>;
++	};
++
++	gic: interrupt-controller@10231000 {
++		compatible = "arm,gic-400";
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		interrupt-controller;
++		reg = <0 0x10231000 0 0x1000>,
++		      <0 0x10232000 0 0x2000>,
++		      <0 0x10234000 0 0x2000>,
++		      <0 0x10236000 0 0x2000>;
++	};
++
++	uart0: serial@11002000 {
++		compatible = "mediatek,mt6755-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11002000 0 0x400>;
++		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++	};
++
++	uart1: serial@11003000 {
++		compatible = "mediatek,mt6755-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11003000 0 0x400>;
++		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++	};
++};
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+1.7.9.5
