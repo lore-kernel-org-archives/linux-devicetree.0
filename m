@@ -1,30 +1,62 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] mtd: nand: gpmi: document the new supported chip
- in DT
-Date: Tue, 14 Jun 2016 07:48:20 -0500
-Message-ID: <20160614124820.GA5523@rob-hp-laptop>
-References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
- <1465578094-8816-7-git-send-email-han.xu@nxp.com>
+From: Antony Pavlov <antonynpavlov@gmail.com>
+Subject: Re: [PATCH] Documentation: dt: gpio-keys-polled: add missed "label"
+ property description
+Date: Tue, 14 Jun 2016 15:52:58 +0300
+Message-ID: <20160614155258.390200bf66e02966d17e3544@gmail.com>
+References: <1465905151-1960-1-git-send-email-antonynpavlov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465578094-8816-7-git-send-email-han.xu-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
-Cc: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1465905151-1960-1-git-send-email-antonynpavlov@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Pereira da Silva <aletes.xgr@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 10, 2016 at 12:01:34PM -0500, Han Xu wrote:
-> listed all supported chips in DT.
-> 
-> Signed-off-by: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/gpmi-nand.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+On Tue, 14 Jun 2016 14:52:31 +0300
+Antony Pavlov <antonynpavlov@gmail.com> wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Please ignore previous email.
+
+The "label" property description is not missed.
+
+Sorry.
+
+> Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
+> Cc: Alexandre Pereira da Silva <aletes.xgr@gmail.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-input@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/input/gpio-keys-polled.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/input/gpio-keys-polled=
+=2Etxt b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+> index 95d0fb1..e84d3eb 100644
+> --- a/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+> +++ b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>  Optional properties:
+>  	- autorepeat: Boolean, Enable auto repeat feature of Linux input
+>  	  subsystem.
+> +	- label: String, name of the input device.
+> =20
+>  Each button (key) is represented as a sub-node of "gpio-keys-polled"=
+:
+>  Subnode properties:
+> --=20
+> 2.7.0
+>=20
+
+
+--=20
+--=A0
+Best regards,
+=A0 Antony Pavlov
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
