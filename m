@@ -1,58 +1,73 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v10 03/14] usb: hcd.h: Add OTG to HCD interface
-Date: Tue, 14 Jun 2016 10:21:59 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1606141018530.1574-100000@iolanthe.rowland.org>
-References: <575FBD8D.7090700@ti.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v4 00/14] fix some type infos and bugs for arm64/of numa
+Date: Tue, 14 Jun 2016 15:22:20 +0100
+Message-ID: <20160614142220.GC14654@e104818-lin.cambridge.arm.com>
+References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+ <20160607135852.GA20477@arm.com>
+ <5757DE57.10700@huawei.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <575FBD8D.7090700-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5757DE57.10700@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Cc: Will Deacon <will.deacon@arm.com>, devicetree <devicetree@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, David Daney <david.daney@cavium.com>, Xinwei Hu <huxinwei@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, linux-kernel <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Rob Herring <robh+dt@kernel.org>, Tianhong Ding <dingtianhong@huawei.com>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 14 Jun 2016, Roger Quadros wrote:
-
-> +Alan
+On Wed, Jun 08, 2016 at 04:59:03PM +0800, Leizhen (ThunderTown) wrote:
+> On 2016/6/7 21:58, Will Deacon wrote:
+> > On Tue, Jun 07, 2016 at 04:08:04PM +0800, Zhen Lei wrote:
+> >> v3 -> v4:
+> >> 1. Packed three patches of Kefeng Wang, patch6-8.
+> >> 2. Add 6 new patches(9-15) to enhance the numa on arm64.
+> >>
+> >> v2 -> v3:
+> >> 1. Adjust patch2 and patch5 according to Matthias Brugger's advice, to make the
+> >>    patches looks more well. The final code have no change. 
+> >>
+> >> v1 -> v2:
+> >> 1. Base on https://lkml.org/lkml/2016/5/24/679
+> > 
+> > If you want bug fixes to land in 4.7, you'll need to base them on a
+> > mainline kernel.
 > 
-> On 10/06/16 16:07, Roger Quadros wrote:
-> > The OTG core will use struct otg_hcd_ops to interface
-> > with the HCD (Host Controller Driver).
-> > 
-> > The main purpose of this interface is to avoid directly
-> > calling HCD APIs from the OTG core as they
-> > wouldn't be defined in the built-in symbol table if
-> > CONFIG_USB is m.
-> > 
-> > Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> > Acked-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> >  include/linux/usb/hcd.h | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> > 
-> > diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-> > index 66fc137..7729c1f 100644
-> > --- a/include/linux/usb/hcd.h
-> > +++ b/include/linux/usb/hcd.h
-> > @@ -400,6 +400,30 @@ struct hc_driver {
-> >  
-> >  };
-> >  
-> > +/**
-> > + * struct otg_hcd_ops - Interface between OTG core and HCD
-> > + *
-> > + * Provided by the HCD core to allow the OTG core to interface with the HCD
+> I heared that David Daney's acpi numa patch series was accepted and
+> put into next branch(Linux 4.8).
+> Otherwise I will suggest him sending his patch6-7 to mainline first.
+> So that, only a very small conflict will be exist.
+> 
+> I also tested that:
+> 1. git am David Daney's patch6-7, then git am all of my patches on a
+> branch, named branch A.
+> 2. git am David Daney's patch6-7 on another branch, named branch B.
+> 3. when I git merge B into branch A, it's still conflict. So I guess
+> git merge is based on source code, rather than patches.
+> 
+> So at present, unless the maintainers are willing to resolve the
+> conflict, otherwise I update my patches will not work.
 
-Add:  * in case the OTG core is built-in and the HCD core is built as a module.
+It usually depends on how complex the conflict is and whether your
+patches functionally depend on the other patches. I have no idea what
+the dependency is here since I haven't tried applying them to mainline.
 
-Otherwise, for patches 1, 3, and 12:
+> Fortunately, these patches are not particularly urgent. So I think I
+> can wait until Linux 4.8 start, then send these patches again. But I'm
+> not sure whether these patches can be merged into Linux 4.8, I really
+> hope.
 
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+If there are fixes to the arm64 ACPI NUMA patches that Rafael queued
+into linux-next, they should be sent to him and potentially being queued
+on top ahead of the 4.8 merging window or shortly after 4.8-rc1.
+Non-ACPI NUMA patches (as I can see, most of these patches are DT
+specific) could be merged independently.
 
-Alan Stern
+So how many patches do you have in each category below:
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1. NUMA fixes against current mainline (4.7-rc3)
+2. NUMA fixes against the arm64 ACPI NUMA patches queued by Rafael
+3. New functionality or clean-up. Are these against mainline or ACPI
+   NUMA patches?
+
+-- 
+Catalin
