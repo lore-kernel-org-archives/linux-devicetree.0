@@ -1,178 +1,93 @@
-From: Po Liu <po.liu@nxp.com>
-Subject: [PATCH v2 1/2] nxp/dts: add pcie aer interrupt-name property in the
- dts
-Date: Tue, 14 Jun 2016 14:12:26 +0800
-Message-ID: <1465884747-1517-1-git-send-email-po.liu@nxp.com>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: case sensitivity for devicetree node names
+Date: Tue, 14 Jun 2016 16:05:17 +1000
+Message-ID: <20160614060517.GN4882@voom.fritz.box>
+References: <575B1D84.2010703@gmail.com>
+ <20160614011021.GD4882@voom.fritz.box>
+ <575F7FC1.5040508@gmail.com>
+ <20160614051028.GL4882@voom.fritz.box>
+ <575F963F.8090105@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Po Liu <po.liu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Vxa5joy26gVGOrvU"
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <575F963F.8090105-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-NXP some platforms aer interrupt was not MSI/MSI-X/INTx
-but using interrupt line independently. This patch add a "aer"
-interrupt-names for aer interrupt.
 
-Signed-off-by: Po Liu <po.liu@nxp.com>
----
-Changes for V2:
-	- None.
+--Vxa5joy26gVGOrvU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- .../devicetree/bindings/pci/layerscape-pci.txt         |  4 ++--
- arch/arm/boot/dts/ls1021a.dtsi                         |  6 ++++--
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi         | 18 +++++++++---------
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi         | 16 ++++++++--------
- 4 files changed, 23 insertions(+), 21 deletions(-)
+On Mon, Jun 13, 2016 at 10:29:35PM -0700, Frank Rowand wrote:
+> On 06/13/16 22:10, David Gibson wrote:
+> > On Mon, Jun 13, 2016 at 08:53:37PM -0700, Frank Rowand wrote:
+> >> On 06/13/16 18:10, David Gibson wrote:
+>=20
+> < snip >
+>=20
+> >>> Here's my inclination for how to treat this in dtc for the time being:
+> >>>     1) Leave the bulk of dtc case sensitive, as now
+> >>>     2) Add a new check which will generate an error if there are node
+> >>>        names which differ only in case.
+> >>>
+> >>> Any objections to that plan?
+> >>
+> >> I think that the kernel should match the current behavior of dtc.
+> >>
+> >> I agree with "1)".
+> >>
+> >> I don't think that "2)" is required.  I think it is a really dumb idea=
+ for
+> >> anyone to create a dts with node names that differ only in case.  But I
+> >> don't think it is the compiler's job to protect people from being dumb.
+> >> An analogue would be the C language and compilers.  The C compiler doe=
+sn't
+> >> error on a program that has variables "foo" and "Foo".
+> >=20
+> > Hmm.. actually I think protecting you from being dumb is exactly the
+> > purpose of compiler warnings.  Now that you found that quote from
+> > 1275, which is pretty definitive as far as I'm concerned, I'd expect
+> > to reduce that error to a warning (by default).
+>=20
+> A warning is ok by me.
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index ef683b2..d27973a 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -19,7 +19,7 @@ Required properties:
- - interrupts: A list of interrupt outputs of the controller. Must contain an
-   entry for each entry in the interrupt-names property.
- - interrupt-names: Must include the following entries:
--  "intr": The interrupt that is asserted for controller interrupts
-+  "aer" : The interrupt that is asserted for aer interrupts
- - fsl,pcie-scfg: Must include two entries.
-   The first entry must be a link to the SCFG device node
-   The second entry must be '0' or '1' based on physical PCIe controller index.
-@@ -33,7 +33,7 @@ Example:
- 		       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 		reg-names = "regs", "config";
- 		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
--		interrupt-names = "intr";
-+		interrupt-names = "aer";
- 		fsl,pcie-scfg = <&scfg 0>;
- 		#address-cells = <3>;
- 		#size-cells = <2>;
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 5ae8e92..b638697 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -633,7 +633,8 @@
- 			reg = <0x00 0x03400000 0x0 0x00010000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-+			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			fsl,pcie-scfg = <&scfg 0>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
-@@ -656,7 +657,8 @@
- 			reg = <0x00 0x03500000 0x0 0x00010000   /* controller registers */
- 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			fsl,pcie-scfg = <&scfg 1>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index de0323b..4beb760 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -473,9 +473,9 @@
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 118 0x4>, /* controller interrupt */
--				     <0 117 0x4>; /* PME interrupt */
--			interrupt-names = "intr", "pme";
-+			interrupts = <0 117 0x4>, /* PME interrupt */
-+					 <0 118 0x4>; /* aer interrupt */
-+			interrupt-names = "pme", "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -497,9 +497,9 @@
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 128 0x4>,
--				     <0 127 0x4>;
--			interrupt-names = "intr", "pme";
-+			interrupts = <0 127 0x4>,
-+					 <0 128 0x4>;
-+			interrupt-names = "pme", "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -521,9 +521,9 @@
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 162 0x4>,
--				     <0 161 0x4>;
--			interrupt-names = "intr", "pme";
-+			interrupts = <0 161 0x4>,
-+					 <0 162 0x4>;
-+			interrupt-names = "pme", "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index 3187c82..6edf24b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -559,8 +559,8 @@
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x10 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 108 0x4>; /* Level high type */
--			interrupt-names = "intr";
-+			interrupts = <0 108 0x4>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -583,8 +583,8 @@
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x12 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 113 0x4>; /* Level high type */
--			interrupt-names = "intr";
-+			interrupts = <0 113 0x4>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -607,8 +607,8 @@
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x14 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 118 0x4>; /* Level high type */
--			interrupt-names = "intr";
-+			interrupts = <0 118 0x4>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-@@ -631,8 +631,8 @@
- 			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
- 			       0x16 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--			interrupts = <0 123 0x4>; /* Level high type */
--			interrupt-names = "intr";
-+			interrupts = <0 123 0x4>; /* aer interrupt */
-+			interrupt-names = "aer";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
--- 
-2.1.0.27.g96db324
+Ok, I'll implement that when I get a chance.
+
+Note that in most cases there's no fundamental distinction between dtc
+errors and dtc warnings - it's just a question of whether they're
+flagged as "error" or "warning" level in the check table.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--Vxa5joy26gVGOrvU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXX56dAAoJEGw4ysog2bOS4ZwP/R9kUcc/rWcz1LZmAo03iR5w
+RwC926Z5n04PoEwiwkTFqYjYr5XqO4E7AwitHubQ2ZJindQcHE4YXN2usR96d0Da
+ggDXL2y0MdyJv5dCkAchsZnupr2lVLQyl1zvKhejWPK7O99amstRdVX7eY0suPVA
+nOY7foFROaV1DNS9/91iLoegIjDs4Np2gbM5M6H66wTZGWyVvYudGrzOFzaD5fqs
+YMHdxiQD0cN7KOc/ztR/pGNB2swh0Lq7k+e7Pb0t6DaEW27VFw8QV1VEaOvQeP9i
+56lzMD5wB20trGHIhQ5P6rZ38XbIl9s6hDzQ8S5G4nPM4ciiMunotlwVMcQk1ZLe
+4GW5nPz6XdIHszSxyOXvdD37IlZevS3TAkCVD49F6ET2UKLkF+enYLABULMYCcXc
+iMRNTdXmQgsoXO5e1AKZQeYTVFt/Pezs3AJduIApERus81KC39hz0fWpE6aqXxrV
+9/gZoOSf/X3Rx3QiuMDLbJgA1+9JzqepiabrXrq9x58KnQRDjaWQEfIKtrFbwnBT
+2P8S5Muw6K6OzluYTWMFVUrlM29cAu//wZlyYCfFuVyBMH1ChZ2HBa32QVzsXg6g
+kWlSlDe0JBUhnv97HYRRkoY0hYEpferjhMZrqcdJjslnknMelU+E+8/qEhFQ06VB
+xUwt9c1PcslNqTCeyhdP
+=727m
+-----END PGP SIGNATURE-----
+
+--Vxa5joy26gVGOrvU--
