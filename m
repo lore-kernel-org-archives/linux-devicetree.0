@@ -1,167 +1,32 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] mtd: nand: gpmi: correct bitflip for erased NAND
- page
-Date: Tue, 14 Jun 2016 21:14:01 +0200
-Message-ID: <20160614211401.40c26b37@bbrezillon>
-References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
-	<1465578094-8816-5-git-send-email-han.xu@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: add Starry KR122EA0SRA panel binding
+Date: Tue, 14 Jun 2016 15:00:33 -0500
+Message-ID: <20160614200033.GA31574@rob-hp-laptop>
+References: <1465578127-30330-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465578094-8816-5-git-send-email-han.xu-3arQi8VN3Tc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1465578127-30330-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
-Cc: richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 Jun 2016 12:01:32 -0500
-Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org> wrote:
-
-> i.MX6QP and i.MX7D BCH module integrated a new feature to detect the
-> bitflip number for erased NAND page. So for these two platform, set the
-> erase threshold to ecc_strength and if bitflip detected, GPMI driver
-> will correct the data to all 0xFF.
+On Fri, Jun 10, 2016 at 10:02:06AM -0700, Douglas Anderson wrote:
+> The Starry KR122EA0SRA is a 12.2", 1920x1200 TFT-LCD panel connected
+> using eDP interfaces.
 > 
-> Signed-off-by: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
->  drivers/mtd/nand/gpmi-nand/bch-regs.h  | 10 ++++++++++
->  drivers/mtd/nand/gpmi-nand/gpmi-lib.c  |  5 +++++
->  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 27 ++++++++++++++++++++++++++-
->  3 files changed, 41 insertions(+), 1 deletion(-)
+> Changes in v2:
+> - Proper title (sorry!)
 > 
-> diff --git a/drivers/mtd/nand/gpmi-nand/bch-regs.h b/drivers/mtd/nand/gpmi-nand/bch-regs.h
-> index 228142c..2c44b88 100644
-> --- a/drivers/mtd/nand/gpmi-nand/bch-regs.h
-> +++ b/drivers/mtd/nand/gpmi-nand/bch-regs.h
-> @@ -30,7 +30,13 @@
->  #define BM_BCH_CTRL_COMPLETE_IRQ		(1 << 0)
->  
->  #define HW_BCH_STATUS0				0x00000010
-> +
->  #define HW_BCH_MODE				0x00000020
-> +#define BP_BCH_MODE_ERASE_THRESHOLD		0
-> +#define BM_BCH_MODE_ERASE_THRESHOLD	(0xff << BP_BCH_MODE_ERASE_THRESHOLD)
-> +#define BF_BCH_MODE_ERASE_THRESHOLD(v)		\
-> +	(((v) << BP_BCH_MODE_ERASE_THRESHOLD) & BM_BCH_MODE_ERASE_THRESHOLD)
-> +
->  #define HW_BCH_ENCODEPTR			0x00000030
->  #define HW_BCH_DATAPTR				0x00000040
->  #define HW_BCH_METAPTR				0x00000050
-> @@ -125,4 +131,8 @@
->  	)
->  
->  #define HW_BCH_VERSION				0x00000160
-> +#define HW_BCH_DEBUG1				0x00000170
-> +#define BP_BCH_DEBUG1_ERASED_ZERO_COUNT	0
-> +#define BM_BCH_DEBUG1_ERASED_ZERO_COUNT		\
-> +		(0x1ff << BP_BCH_DEBUG1_ERASED_ZERO_COUNT)
->  #endif
-> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
-> index 358ff5d..0b5666a 100644
-> --- a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
-> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
-> @@ -298,6 +298,11 @@ int bch_set_geometry(struct gpmi_nand_data *this)
->  			| BF_BCH_FLASH0LAYOUT1_DATAN_SIZE(block_size, this),
->  			r->bch_regs + HW_BCH_FLASH0LAYOUT1);
->  
-> +	/* Set erase threshold to ecc_strength for mx6qp and mx7 */
-> +	if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
-> +		writel(BF_BCH_MODE_ERASE_THRESHOLD(ecc_strength),
-> +			r->bch_regs + HW_BCH_MODE);
-> +
->  	/* Set *all* chip selects to use layout 0. */
->  	writel(0, r->bch_regs + HW_BCH_LAYOUTSELECT);
->  
-> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> index aedaff3..03bdb4d 100644
-> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> @@ -1043,6 +1043,7 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->  {
->  	struct gpmi_nand_data *this = nand_get_controller_data(chip);
->  	struct bch_geometry *nfc_geo = &this->bch_geometry;
-> +	void __iomem *bch_regs = this->resources.bch_regs;
->  	void          *payload_virt;
->  	dma_addr_t    payload_phys;
->  	void          *auxiliary_virt;
-> @@ -1051,6 +1052,8 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->  	unsigned char *status;
->  	unsigned int  max_bitflips = 0;
->  	int           ret;
-> +	int bitflips = 0;
-> +	int bitflip_flag = 0;
+>  .../devicetree/bindings/display/panel/starry,kr122ea0sra.txt       | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/starry,kr122ea0sra.txt
 
-Hm, I would choose another name, but I'm not even sure this is really
-needed (see below).
-
->  
->  	dev_dbg(this->dev, "page number is : %d\n", page);
->  	ret = read_page_prepare(this, buf, nfc_geo->payload_size,
-> @@ -1088,8 +1091,20 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->  			   payload_virt, payload_phys);
->  
->  	for (i = 0; i < nfc_geo->ecc_chunk_count; i++, status++) {
-> -		if ((*status == STATUS_GOOD) || (*status == STATUS_ERASED))
-> +		if (*status == STATUS_GOOD)
-> +			continue;
-> +		if (*status == STATUS_ERASED) {
-> +			if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this)) {
-> +				bitflips = readl(bch_regs + HW_BCH_DEBUG1);
-
-You could use ret here or define a flips variable locally to this code
-(see what's done for the software correction).
-
-BTW, why not memset-ing the data chunk here (as done for the SW
-correction part). This way you wouldn't need the extra bitflips_flag
-variable.
-
-> +				if (bitflips) {
-> +					bitflip_flag = 1;
-> +					max_bitflips = max_t(unsigned int,
-> +							     max_bitflips,
-> +							     bitflips);
-> +				}
-> +			}
->  			continue;
-> +		}
->  
->  		if (*status == STATUS_UNCORRECTABLE) {
->  			int eccbits = nfc_geo->ecc_strength * nfc_geo->gf_len;
-> @@ -1098,6 +1113,10 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->  			int eccbytes;
->  			int flips;
->  
-> +			/* shortcut for i.MX7 and i.MX6QP */
-> +			if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
-
-You should increment mtd->ecc_stats.failed in this case.
-
-> +				continue;
-> +
->  			/* Read ECC bytes into our internal raw_buffer */
->  			offset = nfc_geo->metadata_size * 8;
->  			offset += ((8 * nfc_geo->ecc_chunk_size) + eccbits) * (i + 1);
-> @@ -1182,6 +1201,12 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->  		chip->oob_poi[0] = ((uint8_t *) auxiliary_virt)[0];
->  	}
->  
-> +	/* if bitflip occurred in erased page, change data to all 0xff */
-> +	if (bitflip_flag) {
-> +		memset(buf, ~0, nfc_geo->payload_size);
-> +		memset(chip->oob_poi, ~0, mtd->oobsize);
-> +	}
-> +
->  	return max_bitflips;
->  }
->  
-
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
