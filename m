@@ -1,233 +1,138 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2 1/2] arm64: dts: apm: Use lowercase consistently for hex
- constants
-Date: Tue, 14 Jun 2016 08:00:20 -0500
-Message-ID: <20160614130020.22169.51495.stgit@bhelgaas-glaptop2.roam.corp.google.com>
-References: <20160614125756.22169.50783.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH V12 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller
+Date: Tue, 14 Jun 2016 14:59:03 +0200
+Message-ID: <575FFF97.7040104@denx.de>
+References: <1465000774-7762-1-git-send-email-marex@denx.de>
+ <1465000774-7762-2-git-send-email-marex@denx.de> <575F91B2.7010304@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160614125756.22169.50783.stgit@bhelgaas-glaptop2.roam.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Duc Dang <dhdang@apm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <575F91B2.7010304@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Vignesh R <vigneshr@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Tull <atull@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Graham Moore <grmoore@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-The convention in these files is to use lowercase for "0x" prefixes and for
-the hex constants themselves, but a few changes didn't follow that
-convention, which makes the file annoying to read.
+On 06/14/2016 07:10 AM, Vignesh R wrote:
+> Hi,
 
-Use lowercase consistently for the hex constants.  No functional change
-intended.
+Hi,
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- .../devicetree/bindings/net/apm-xgene-enet.txt     |    4 +-
- arch/arm64/boot/dts/apm/apm-shadowcat.dtsi         |   40 ++++++++++----------
- arch/arm64/boot/dts/apm/apm-storm.dtsi             |   36 +++++++++---------
- 3 files changed, 40 insertions(+), 40 deletions(-)
+> On Saturday 04 June 2016 06:09 AM, Marek Vasut wrote:
+> [...]
+>> +
+>> +static int cqspi_indirect_read_execute(struct spi_nor *nor,
+>> +				       u8 *rxbuf, const unsigned n_rx)
+>> +{
+>> +	struct cqspi_flash_pdata *f_pdata = nor->priv;
+>> +	struct cqspi_st *cqspi = f_pdata->cqspi;
+>> +	void __iomem *reg_base = cqspi->iobase;
+>> +	void __iomem *ahb_base = cqspi->ahb_base;
+>> +	unsigned int remaining = n_rx;
+>> +	unsigned int bytes_to_read = 0;
+>> +	int ret = 0;
+>> +
+>> +	writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
+>> +
+>> +	/* Clear all interrupts. */
+>> +	writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
+>> +
+>> +	writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
+>> +
+>> +	reinit_completion(&cqspi->transfer_complete);
+>> +	writel(CQSPI_REG_INDIRECTRD_START_MASK,
+>> +	       reg_base + CQSPI_REG_INDIRECTRD);
+>> +
+>> +	while (remaining > 0) {
+>> +		ret = wait_for_completion_timeout(&cqspi->transfer_complete,
+>> +						  msecs_to_jiffies
+>> +						  (CQSPI_READ_TIMEOUT_MS));
+>> +
+>> +		bytes_to_read = cqspi_get_rd_sram_level(cqspi);
+>> +
+>> +		if (!ret && bytes_to_read == 0) {
+>> +			dev_err(nor->dev, "Indirect read timeout, no bytes\n");
+>> +			ret = -ETIMEDOUT;
+>> +			goto failrd;
+>> +		}
+>> +
+>> +		while (bytes_to_read != 0) {
+>> +			bytes_to_read *= cqspi->fifo_width;
+>> +			bytes_to_read = bytes_to_read > remaining ?
+>> +					remaining : bytes_to_read;
+>> +			readsl(ahb_base, rxbuf, DIV_ROUND_UP(bytes_to_read, 4));
+>> +			rxbuf += bytes_to_read;
+>> +			remaining -= bytes_to_read;
+>> +			bytes_to_read = cqspi_get_rd_sram_level(cqspi);
+>> +		}
+>> +
+>> +		if (remaining > 0)
+>> +			reinit_completion(&cqspi->transfer_complete);
+>> +	}
+>> +
+>> +	/* Check indirect done status */
+>> +	ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTRD,
+>> +				 CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
+>> +
+> 
+> I was wondering if its better to use direct access mode[1].
 
-diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-index 05f705e3..e41b2d5 100644
---- a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-+++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-@@ -59,8 +59,8 @@ Example:
- 		compatible = "apm,xgene-enet";
- 		status = "disabled";
- 		reg = <0x0 0x17020000 0x0 0xd100>,
--		      <0x0 0X17030000 0x0 0X400>,
--		      <0x0 0X10000000 0x0 0X200>;
-+		      <0x0 0x17030000 0x0 0x400>,
-+		      <0x0 0x10000000 0x0 0x200>;
- 		reg-names = "enet_csr", "ring_csr", "ring_cmd";
- 		interrupts = <0x0 0x3c 0x4>;
- 		port-id = <0>;
-diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-index c569f76..9773687 100644
---- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-@@ -106,9 +106,9 @@
- 		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
- 		ranges = <0 0 0 0x79000000 0x0 0x800000>; /* MSI Range */
- 		reg = <0x0 0x78090000 0x0 0x10000>,	/* GIC Dist */
--		      <0x0 0x780A0000 0x0 0x20000>,	/* GIC CPU */
--		      <0x0 0x780C0000 0x0 0x10000>,	/* GIC VCPU Control */
--		      <0x0 0x780E0000 0x0 0x20000>;	/* GIC VCPU */
-+		      <0x0 0x780a0000 0x0 0x20000>,	/* GIC CPU */
-+		      <0x0 0x780c0000 0x0 0x10000>,	/* GIC VCPU Control */
-+		      <0x0 0x780e0000 0x0 0x20000>;	/* GIC VCPU */
- 		v2m0: v2m@0x00000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
-@@ -159,35 +159,35 @@
- 			msi-controller;
- 			reg = <0x0 0x90000 0x0 0x1000>;
- 		};
--		v2m10: v2m@0xA0000 {
-+		v2m10: v2m@0xa0000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0x0 0xA0000 0x0 0x1000>;
-+			reg = <0x0 0xa0000 0x0 0x1000>;
- 		};
--		v2m11: v2m@0xB0000 {
-+		v2m11: v2m@0xb0000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0x0 0xB0000 0x0 0x1000>;
-+			reg = <0x0 0xb0000 0x0 0x1000>;
- 		};
--		v2m12: v2m@0xC0000 {
-+		v2m12: v2m@0xc0000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0x0 0xC0000 0x0 0x1000>;
-+			reg = <0x0 0xc0000 0x0 0x1000>;
- 		};
--		v2m13: v2m@0xD0000 {
-+		v2m13: v2m@0xd0000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0x0 0xD0000 0x0 0x1000>;
-+			reg = <0x0 0xd0000 0x0 0x1000>;
- 		};
--		v2m14: v2m@0xE0000 {
-+		v2m14: v2m@0xe0000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0x0 0xE0000 0x0 0x1000>;
-+			reg = <0x0 0xe0000 0x0 0x1000>;
- 		};
--		v2m15: v2m@0xF0000 {
-+		v2m15: v2m@0xf0000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0x0 0xF0000 0x0 0x1000>;
-+			reg = <0x0 0xf0000 0x0 0x1000>;
- 		};
- 	};
- 
-@@ -629,8 +629,8 @@
- 			compatible = "apm,xgene2-sgenet";
- 			status = "disabled";
- 			reg = <0x0 0x1f610000 0x0 0x10000>,
--			      <0x0 0x1f600000 0x0 0Xd100>,
--			      <0x0 0x20000000 0x0 0X20000>;
-+			      <0x0 0x1f600000 0x0 0xd100>,
-+			      <0x0 0x20000000 0x0 0x20000>;
- 			interrupts = <0 96 4>,
- 				     <0 97 4>;
- 			dma-coherent;
-@@ -643,8 +643,8 @@
- 			compatible = "apm,xgene2-xgenet";
- 			status = "disabled";
- 			reg = <0x0 0x1f620000 0x0 0x10000>,
--			      <0x0 0x1f600000 0x0 0Xd100>,
--			      <0x0 0x20000000 0x0 0X220000>;
-+			      <0x0 0x1f600000 0x0 0xd100>,
-+			      <0x0 0x20000000 0x0 0x220000>;
- 			interrupts = <0 108 4>,
- 				     <0 109 4>,
- 				     <0 110 4>,
-@@ -684,7 +684,7 @@
- 			#size-cells = <0>;
- 			compatible = "snps,designware-i2c";
- 			reg = <0x0 0x10640000 0x0 0x1000>;
--			interrupts = <0 0x3A 0x4>;
-+			interrupts = <0 0x3a 0x4>;
- 			clocks = <&i2c4clk 0>;
- 			bus_num = <4>;
- 		};
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index 5147d76..e0e8d2a 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -204,7 +204,7 @@
- 				#clock-cells = <1>;
- 				clocks = <&socplldiv2 0>;
- 				clock-names = "qmlclk";
--				reg = <0x0 0x1703C000 0x0 0x1000>;
-+				reg = <0x0 0x1703c000 0x0 0x1000>;
- 				reg-names = "csr-reg";
- 				clock-output-names = "qmlclk";
- 			};
-@@ -226,7 +226,7 @@
- 				compatible = "apm,xgene-device-clock";
- 				#clock-cells = <1>;
- 				clocks = <&ethclk 0>;
--				reg = <0x0 0x1702C000 0x0 0x1000>;
-+				reg = <0x0 0x1702c000 0x0 0x1000>;
- 				reg-names = "csr-reg";
- 				clock-output-names = "menetclk";
- 			};
-@@ -925,8 +925,8 @@
- 			compatible = "apm,xgene-enet";
- 			status = "disabled";
- 			reg = <0x0 0x17020000 0x0 0xd100>,
--			      <0x0 0X17030000 0x0 0Xc300>,
--			      <0x0 0X10000000 0x0 0X200>;
-+			      <0x0 0x17030000 0x0 0xc300>,
-+			      <0x0 0x10000000 0x0 0x200>;
- 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
- 			interrupts = <0x0 0x3c 0x4>;
- 			dma-coherent;
-@@ -951,11 +951,11 @@
- 			compatible = "apm,xgene1-sgenet";
- 			status = "disabled";
- 			reg = <0x0 0x1f210000 0x0 0xd100>,
--			      <0x0 0x1f200000 0x0 0Xc300>,
--			      <0x0 0x1B000000 0x0 0X200>;
-+			      <0x0 0x1f200000 0x0 0xc300>,
-+			      <0x0 0x1b000000 0x0 0x200>;
- 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
--			interrupts = <0x0 0xA0 0x4>,
--				     <0x0 0xA1 0x4>;
-+			interrupts = <0x0 0xa0 0x4>,
-+				     <0x0 0xa1 0x4>;
- 			dma-coherent;
- 			clocks = <&sge0clk 0>;
- 			local-mac-address = [00 00 00 00 00 00];
-@@ -966,11 +966,11 @@
- 			compatible = "apm,xgene1-sgenet";
- 			status = "disabled";
- 			reg = <0x0 0x1f210030 0x0 0xd100>,
--			      <0x0 0x1f200000 0x0 0Xc300>,
--			      <0x0 0x1B000000 0x0 0X8000>;
-+			      <0x0 0x1f200000 0x0 0xc300>,
-+			      <0x0 0x1b000000 0x0 0x8000>;
- 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
--			interrupts = <0x0 0xAC 0x4>,
--				     <0x0 0xAD 0x4>;
-+			interrupts = <0x0 0xac 0x4>,
-+				     <0x0 0xad 0x4>;
- 			port-id = <1>;
- 			dma-coherent;
- 			clocks = <&sge1clk 0>;
-@@ -982,8 +982,8 @@
- 			compatible = "apm,xgene1-xgenet";
- 			status = "disabled";
- 			reg = <0x0 0x1f610000 0x0 0xd100>,
--			      <0x0 0x1f600000 0x0 0Xc300>,
--			      <0x0 0x18000000 0x0 0X200>;
-+			      <0x0 0x1f600000 0x0 0xc300>,
-+			      <0x0 0x18000000 0x0 0x200>;
- 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
- 			interrupts = <0x0 0x60 0x4>,
- 				     <0x0 0x61 0x4>,
-@@ -1005,11 +1005,11 @@
- 			compatible = "apm,xgene1-xgenet";
- 			status = "disabled";
- 			reg = <0x0 0x1f620000 0x0 0xd100>,
--			      <0x0 0x1f600000 0x0 0Xc300>,
--			      <0x0 0x18000000 0x0 0X8000>;
-+			      <0x0 0x1f600000 0x0 0xc300>,
-+			      <0x0 0x18000000 0x0 0x8000>;
- 			reg-names = "enet_csr", "ring_csr", "ring_cmd";
--			interrupts = <0x0 0x6C 0x4>,
--				     <0x0 0x6D 0x4>;
-+			interrupts = <0x0 0x6c 0x4>,
-+				     <0x0 0x6d 0x4>;
- 			port-id = <1>;
- 			dma-coherent;
- 			clocks = <&xge1clk 0>;
+The link leads to altera documentation front page, but I have an idea
+what you mean. You might want to refer to [2] instead.
+
+[2] https://www.altera.com/en_US/pdfs/literature/hb/cyclone-v/cv_5v4.pdf
+
+> With this
+> mode there is no need to wait for IRQ or monitor sdram level. By setting
+> up QSPI in direct access mode, this entire function can be replaced by:
+> memcpy(buf, cqspi->ahb_base + from, n_rx)
+
+The altera docs, page 993, show how to use the direct access mode. The
+idea is to map 1 MiB blocks of the flash in the address space, one at a
+time and then do IO into those. I don't like such solution:
+
+- I didn't find any way to find when all the data in the current 1 MiB
+  block were written and you can remap another 1 MiB block in place.
+- Since the controller doesn't use the internal buffer in direct
+  operation mode, it will block the AHB bus during it's operation.
+- I didn't find how IO errors get handled in this case, but maybe I
+  didn't drill deep enough on this one.
+
+Moreover, page 991 bottom of [2] states that the indirect mode is
+"high-performance". I am inclined to believe that as it uses the
+internal buffer of the QSPI controller, which is tightly coupled to the
+block,
+so the data are available immediately when the flash is ready instead
+of having to wait for the next AHB turn.
+
+My impression is that the Direct mode is great when the system boots
+from the QSPI because it can "map" the flash and just execute code from
+it. But for normal operation, the indirect mode seems the better choice.
+
+> IMO, this might give better throughput. Have tested this mode?
+
+I haven't tested it, no.
+
+> [1] https://documentation.altera.com/#/00038604-AA$AA00045811
+> 
+> 
+> 
+
+
+-- 
+Best regards,
+Marek Vasut
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
