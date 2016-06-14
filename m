@@ -1,86 +1,107 @@
-From: Kenneth Westfield <kwestfie@codeaurora.org>
-Subject: Re: [PATCH v3 1/2] ASoC: msm8916: Add codec Device Tree bindings.
-Date: Tue, 14 Jun 2016 09:12:27 -0700
-Message-ID: <20160614161227.GA10893@kwestfie-linux.qualcomm.com>
-References: <1465582725-30183-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1465582725-30183-2-git-send-email-srinivas.kandagatla@linaro.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] iommu/arm-smmu: Implement of_xlate() for SMMUv3
+Date: Tue, 14 Jun 2016 17:11:59 +0100
+Message-ID: <57602CCF.1060603@arm.com>
+References: <cover.1464966939.git.robin.murphy@arm.com>
+ <55aa94e099f00fd586077c45d4c4fd1c010981d9.1464966939.git.robin.murphy@arm.com>
+ <20160614150757.GB16531@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465582725-30183-2-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, plai@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160614150757.GB16531-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 10, 2016 at 11:18:44AM -0700, Srinivas Kandagatla wrote:
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd.txt
-> b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd.txt
-> new file mode 100644
-> index 0000000..0559c1f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd.txt
-> @@ -0,0 +1,103 @@
-> +msm8916 audio CODEC audio CODEC
-> +
-> +Codec IP is divided into two parts, first analog which is integrated in
-> pmic pm8916
-> +and secondly digital part which is integrated into application processor.
-> Codec register
-> +controls are also split across pmic an lpass. Analog part is controlled
-> via spmi bus to pmic.
+On 14/06/16 16:07, Will Deacon wrote:
+> On Fri, Jun 03, 2016 at 06:15:40PM +0100, Robin Murphy wrote:
+>> Now that we can properly describe the mapping between PCI RIDs and
+>> stream IDs via "iommu-map", and have it fed it to the driver
+>> automatically via of_xlate(), rework the SMMUv3 driver to benefit from
+>> that. Initially, this just gets rid of the misuse of the "iommus"
+>> binding without changing the driver's existing level of functionality,
+>> but does at least pave the way to extending it more easily in future.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>
+>> v2: New.
+>>
+>>   drivers/iommu/arm-smmu-v3.c | 119 +++++++++++++++++++++++++++-----------------
+>>   1 file changed, 73 insertions(+), 46 deletions(-)
+>>
+>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+>> index 94b68213c50d..7631639cc209 100644
+>> --- a/drivers/iommu/arm-smmu-v3.c
+>> +++ b/drivers/iommu/arm-smmu-v3.c
+>> @@ -30,6 +30,7 @@
+>>   #include <linux/msi.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_address.h>
+>> +#include <linux/of_iommu.h>
+>>   #include <linux/of_platform.h>
+>>   #include <linux/pci.h>
+>>   #include <linux/platform_device.h>
+>> @@ -638,6 +639,12 @@ struct arm_smmu_domain {
+>>   	struct iommu_domain		domain;
+>>   };
+>>
+>> +/* SMMU private data for each master */
+>> +struct arm_smmu_master_data {
+>> +	struct arm_smmu_device		*smmu;
+>> +	u32				sid;
+>> +};
+>
+> Hmm, we already have this information in arm_smmu_group so I'd rather
+> avoid the duplication if we can.
 
-Cleaning up the description:
+For of_xlate() to work at all, we need to associate the IDs with their 
+device long before groups are even available (because the device is only 
+partially constructed), so at a bare minimum we need something to carry 
+the data through until we see it again in add_device, where we can 
+allocate a group.
 
-msm8916 audio CODEC
+>> @@ -1804,23 +1790,41 @@ static int arm_smmu_add_device(struct device *dev)
+>>   {
+>>   	int i, ret;
+>>   	u32 sid, *sids;
+>> -	struct pci_dev *pdev;
+>>   	struct iommu_group *group;
+>> +	struct device_node *np;
+>>   	struct arm_smmu_group *smmu_group;
+>> -	struct arm_smmu_device *smmu;
+>> +	struct arm_smmu_device *smmu = NULL;
+>> +	struct arm_smmu_master_data *data = dev->archdata.iommu;
+>>
+>> -	/* We only support PCI, for now */
+>> -	if (!dev_is_pci(dev))
+>> +	if (!data)
+>>   		return -ENODEV;
+>>
+>> -	pdev = to_pci_dev(dev);
+>> +	np = (struct device_node *)data->smmu;
+>> +	smmu = data->smmu = arm_smmu_get_by_node(np);
+>> +	of_node_put(np);
+>> +	if (!smmu)
+>> +		return -ENODEV;
+>
+> Why can't we continue to use the group here?
 
-Codec IP is divided into two parts:
-  * analog, which is integrated into pmic pm8916
-  * digital, which is integrated into LPASS on the SOC
-Codec registers are also split across pmic and LPASS.
-Analog codec is controlled via spmi bus to pmic.
+I don't follow; at this point we've still not even allocated/found a 
+group for this device yet. The code a few dozen lines later that takes 
+the IDs and stashes them in the groupdata once it _does_ exist is 
+unchanged in this patch, all that's changing is how those IDs got here 
+in the first place.
 
-> +## Bindings for codec core on pmic:
-> +
-> +Required properties
-> + - compatible = "qcom,msm8916-pmic-wcd-codec";
+Robin.
 
-OK.  Looking at this again, I think its better just to drop the pmic.
+>
+> Will
+>
 
-> +  "spk_cnp_int" - Speaker click and pop interrupt
-> +  "spk_clip_int" - Speaker clip interrupt
-> +  "spk_ocp_int" - Speaker over current protect interrupt.
-> +  "ins_rem_det1" - jack insert removal detect interrupt 1.
-> +  "but_rel_det" - button release interrupt
-> +  "but_press_det" - button press event
-> +  "ins_rem_det" - jack insert removal detect interrup
-> +  "mbhc_int"	- multi button headset interrupt.
-> +  "ear_ocp_int" - Earphone over current protect interrupt.
-> +  "hphr_ocp_int" - Headphone R over current protect interrupt.
-> +  "hphl_ocp_det" - Headphone L over current protect interrupt
-> +  "ear_cnp_int" - earphone cnp interrupt.
-> +  "hphr_cnp_int" - hphr click and pop interrupt.
-> +  "hphl_cnp_int" - hphl click and pop interrupt
-
-Please use labels that more closely match the HW spec:
-  "cdc_spk_cnp_int"
-  "cdc_spk_clip_int"
-  "cdc_spk_ocp_int"
-  "mbhc_ins_rem_det1"
-  "mbhc_but_rel_det"
-  "mbhc_but_press_det"
-  "mbhc_ins_rem_det"
-  "mbhc_switch_int"
-  "cdc_ear_ocp_int"
-  "cdc_hphr_ocp_int"
-  "cdc_hphl_ocp_int"
-  "cdc_ear_cnp_int"
-  "cdc_hphr_cnp_int"
-  "cdc_hphl_cnp_int"
-
--- 
-Kenneth Westfield
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, 
-a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
