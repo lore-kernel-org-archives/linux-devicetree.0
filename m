@@ -1,104 +1,149 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/3] net: hisilicon: Add Fast Ethernet MAC driver
-Date: Tue, 14 Jun 2016 23:20:10 +0200
-Message-ID: <247637090.PhpfAhp4VJ@wuerfel>
-References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com> <4004629.ilZU8AvAjF@wuerfel> <576003F8.3090000@hisilicon.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 02/48] ARM: at91: Document new TCB bindings
+Date: Tue, 14 Jun 2016 16:47:37 -0500
+Message-ID: <20160614214737.GA10294@rob-hp-laptop>
+References: <1465596231-21766-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <1465596231-21766-3-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <576003F8.3090000-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Dongpo <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465596231-21766-3-git-send-email-alexandre.belloni@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, June 14, 2016 9:17:44 PM CEST Li Dongpo wrote:
-> On 2016/6/13 17:06, Arnd Bergmann wrote:
-> > On Monday, June 13, 2016 2:07:56 PM CEST Dongpo Li wrote:
-> > You tx function uses BQL to optimize the queue length, and that
-> > is great. You also check xmit reclaim for rx interrupts, so
-> > as long as you have both rx and tx traffic, this should work
-> > great.
-> > 
-> > However, I notice that you only have a 'tx fifo empty'
-> > interrupt triggering the napi poll, so I guess on a tx-only
-> > workload you will always end up pushing packets into the
-> > queue until BQL throttles tx, and then get the interrupt
-> > after all packets have been sent, which will cause BQL to
-> > make the queue longer up to the maximum queue size, and that
-> > negates the effect of BQL.
-> > 
-> > Is there any way you can get a tx interrupt earlier than
-> > this in order to get a more balanced queue, or is it ok
-> > to just rely on rx packets to come in occasionally, and
-> > just use the tx fifo empty interrupt as a fallback?
-> > 
-> In tx direction, there are only two kinds of interrupts, 'tx fifo empty'
-> and 'tx one packet finish'. I didn't use 'tx one packet finish' because
-> it would lead to high hardware interrupts rate. This has been verified in
-> our chips. It's ok to just use tx fifo empty interrupt.
+On Sat, Jun 11, 2016 at 12:03:05AM +0200, Alexandre Belloni wrote:
+> The current binding for the TCB is not flexible enough for some use cases
+> and prevents proper utilization of all the channels.
+> 
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: linux-pwm@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> ---
+>  .../devicetree/bindings/arm/atmel-at91.txt         | 32 -----------
+>  .../devicetree/bindings/mfd/atmel-tcb.txt          | 62 ++++++++++++++++++++++
+>  .../devicetree/bindings/pwm/atmel-tcb-pwm.txt      | 12 +++--
+>  3 files changed, 69 insertions(+), 37 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
 
-I'm not convinced by the explanation, I don't think that has anything
-to do with the hardware design, but instead is about the correctness
-of the BQL logic with your driver.
+[...]
 
-Maybe your xmit function can do something like
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> new file mode 100644
+> index 000000000000..48196752c78f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> @@ -0,0 +1,62 @@
+> +* Device tree bindings for Atmel Timer Counter Blocks
+> +- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
+> +  <chip> can be "at91rm9200" or "at91sam9x5"
+> +- reg: Should contain registers location and length
+> +- #address-cells: has to be 1
+> +- #size-cells: has to be 0
+> +- interrupts: Should contain all interrupts for the TC block
+> +  Note that you can specify several interrupt cells if the TC
+> +  block has one interrupt per channel.
+> +- clock-names: tuple listing input clock names.
+> +	Required elements: "t0_clk", "slow_clk"
+> +	Optional elements: "t1_clk", "t2_clk"
+> +- clocks: phandles to input clocks.
 
-	if (dql_avail(netdev_get_tx_queue(dev, 0)->dql) < 0)
-		enable per-packet interrupt
-	else
-		use only fifo-empty interrupt
+What is the order of clocks?
 
-That way, you don't get a lot of interrupts when the system is
-in a state of packets being received and sent continuously,
-but if you get to the point where your tx queue fills up
-and no rx interrupts arrive, you don't have to wait for it
-to become completely empty before adding new packets, and
-BQL won't keep growing the queue.
+> +
+> +The TCB can expose multiple subdevices:
+> + * a clocksource and clockevent device
 
-> >> +    priv->phy_mode = of_get_phy_mode(node);
-> >> +    if (priv->phy_mode < 0) {
-> >> +            dev_err(dev, "not find phy-mode\n");
-> >> +            ret = -EINVAL;
-> >> +            goto out_disable_clk;
-> >> +    }
-> >> +
-> >> +    priv->phy_node = of_parse_phandle(node, "phy-handle", 0);
-> >> +    if (!priv->phy_node) {
-> >> +            dev_err(dev, "not find phy-handle\n");
-> >> +            ret = -EINVAL;
-> >> +            goto out_disable_clk;
-> >> +    }
-> >> +
-> >> +    priv->phy = of_phy_connect(ndev, priv->phy_node,
-> >> +                               hisi_femac_adjust_link, 0, priv->phy_mode);
-> >> +    if (!(priv->phy) || IS_ERR(priv->phy)) {
-> >> +            dev_err(dev, "connect to PHY failed!\n");
-> >> +            ret = -ENODEV;
-> >> +            goto out_phy_node;
-> >> +    }
-> > 
-> > I wonder if we could generalize this set of three calls, I
-> > get the impression that we duplicate this across several
-> > drivers that shouldn't need to bother with the specific
-> > phy-handle and phy-mode properties.
-> > 
-> Some drivers only call 'of_phy_connect' when ndo_open called,
-> some call when driver probed. But 'phy_mode' and 'phy_node' are
-> usually initialized when driver probed.
-> So I think it's not suitable to combine 'of_phy_connect' with
-> 'of_get_phy_mode' and 'of_parse_phandle'.
-> Do you have any more suggestions ?
+No. These compatible names are linuxisms. Describe features of the 
+timers to be able to select which timer to use if you need to pick 
+certain timers. For example, interrupt capability could be used to 
+select the clkevt.
 
-My idea was to add another interface that drivers could optionally
-call if they use the logic that you have here, but other drivers
-could keep using the plain of_phy_connect.
+> +   - compatible: Should be "atmel,tcb-clksrc"
+> +   - reg: Should contain the TCB channels to be used. If the
+> +     counter width is 16 bits (at91rm9200-tcb), two consecutive
+> +     channels are needed. Else, only one channel will be used.
+> +
+> + * a clockevent device
+> +   - compatible: Should be "atmel,tcb-clkevt"
+> +   - reg: Should contain the TCB channel to be used
+> +
+> + * a PWM chip: see ../pwm/atmel-tcb-pwm.txt
+> +
+> +Examples:
+> +
+> +One interrupt per TC block:
+> +	tcb0: timer@fff7c000 {
+> +		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0xfff7c000 0x100>;
+> +		interrupts = <18 4>;
+> +		clocks = <&tcb0_clk>;
+> +		clock-names = "t0_clk";
 
-Anyway, this was just an idea, it's not important.
+Missing slow_clk
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +		timer@0 {
+> +			compatible = "atmel,tcb-clksrc";
+> +			reg = <0>, <1>;
+> +		};
+> +
+> +		timer@2 {
+> +			compatible = "atmel,tcb-clkevt";
+> +			reg = <2>;
+> +		};
+> +	};
+> +
+> +One interrupt per TC channel in a TC block:
+> +	tcb1: timer@fffdc000 {
+> +		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0xfffdc000 0x100>;
+> +		interrupts = <26 4>, <27 4>, <28 4>;
+> +		clocks = <&tcb1_clk>;
+> +		clock-names = "t0_clk";
+> +	};
+> +
+> +
+> diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> index 8031148bcf85..ab8fbd5ba184 100644
+> --- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> @@ -2,15 +2,17 @@ Atmel TCB PWM controller
+>  
+>  Required properties:
+>  - compatible: should be "atmel,tcb-pwm"
+> +- reg: tcb channel to use. Each channel can export 2 PWMs
+
+Is there a difference in channels? If not, then this compatible should 
+go.
+
+>  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+>    the cells format. The only third cell flag supported by this binding is
+>    PWM_POLARITY_INVERTED.
+> -- tc-block: The Timer Counter block to use as a PWM chip.
+>  
+>  Example:
+>  
+> -pwm {
+> -	compatible = "atmel,tcb-pwm";
+> -	#pwm-cells = <3>;
+> -	tc-block = <1>;
+> +tcb0: timer@f800c000 {
+> +	pwm@0 {
+> +		compatible = "atmel,tcb-pwm";
+> +		reg = <0>;
+> +		#pwm-cells = <3>;
+> +	};
+>  };
+> -- 
+> 2.8.1
+> 
