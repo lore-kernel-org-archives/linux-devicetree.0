@@ -1,105 +1,256 @@
-From: Chris Lapa <chris@lapa.com.au>
-Subject: Re: [PATCH v2 1/4] max8903: adds documentation for device tree
- bindings.
-Date: Tue, 14 Jun 2016 11:54:17 +1000
-Message-ID: <001abdba-d10c-90d5-944f-ebeaf236eb12@lapa.com.au>
-References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
- <1465561970-18377-1-git-send-email-chris@lapa.com.au>
- <1465561970-18377-2-git-send-email-chris@lapa.com.au>
- <575AC5E5.3020405@samsung.com>
-Reply-To: chris@lapa.com.au
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <575AC5E5.3020405@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: [Patch v5 1/1] leds: pca9532: Add device tree binding
+Date: Tue, 14 Jun 2016 09:56:09 +0800
+Message-ID: <1465869369-13449-2-git-send-email-preid@electromag.com.au>
+References: <1465869369-13449-1-git-send-email-preid@electromag.com.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465869369-13449-1-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, riku.voipio-X3B1VOXEql0@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/06/2016 11:51 PM, Krzysztof Kozlowski wrote:
-> On 06/10/2016 02:32 PM, Chris Lapa wrote:
->> From: Chris Lapa <chris@lapa.com.au>
->>
->> Signed-off-by: Chris Lapa <chris@lapa.com.au>
->> ---
->>  .../devicetree/bindings/power/max8903-charger.txt  | 30 ++++++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/max8903-charger.txt
->
-> You again skipped all of the maintainers. Your patch won't be applied.
-> You need to send the patch to the appropriate person so he/she could
-> apply it.
->
-> From this patch:
-> Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED
-> DEVICE TREE BINDINGS,commit_signer:9/19=47%)
-> Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND
-> FLATTENED DEVICE TREE BINDINGS)
->
-> From power suppyy tree:
-> Sebastian Reichel <sre@kernel.org> (maintainer:POWER SUPPLY
-> CLASS/SUBSYSTEM and DRIVERS)
-> Dmitry Eremin-Solenikov <dbaryshkov@gmail.com> (maintainer:POWER SUPPLY
-> CLASS/SUBSYSTEM and DRIVERS)
-> David Woodhouse <dwmw2@infradead.org> (maintainer:POWER SUPPLY
-> CLASS/SUBSYSTEM and DRIVERS)
->
->
->> diff --git a/Documentation/devicetree/bindings/power/max8903-charger.txt b/Documentation/devicetree/bindings/power/max8903-charger.txt
->> new file mode 100644
->> index 0000000..e0b5366
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/max8903-charger.txt
->> @@ -0,0 +1,30 @@
->> +Maxim Semiconductor MAX8903 Battery Charger bindings
->> +
->> +Required properties:
->> +- compatible: "maxim,max8903-charger" for MAX8903 Battery Charger
->> +- dc_valid: Specifies that the DC portion of the MAX8903 has been connected up
->> +		and that dok-gpios should be specified
->
-> You don't need the dc_valid nor the usb_valid.  If the dok-gpios are
-> present - use DC power. If the uok-gpios - USB power.
->
-I did think that as well, but I didn't want to break backwards 
-compatibility.
+This patch adds basic device tree support for the pca9532 LEDs.
 
-> If both or none: print error.
-Its valid to have both connected.
+Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+---
+ .../devicetree/bindings/leds/leds-pca9532.txt      | 39 +++++++++++
+ drivers/leds/leds-pca9532.c                        | 76 ++++++++++++++++++++--
+ include/dt-bindings/leds/leds-pca9532.h            | 18 +++++
+ include/linux/leds-pca9532.h                       |  9 ++-
+ 4 files changed, 133 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
+ create mode 100644 include/dt-bindings/leds/leds-pca9532.h
 
->
-> BTW, It would be nice if send also the user of this bindings - DTS/DTSI.
-I'm not sure I understand what you mean here?
+diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+new file mode 100644
+index 0000000..198f3ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+@@ -0,0 +1,39 @@
++*NXP - pca9532 PWM LED Driver
++
++The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
++The PWM support 256 steps.
++
++Required properties:
++	- compatible:
++		"nxp,pca9530"
++		"nxp,pca9531"
++		"nxp,pca9532"
++		"nxp,pca9533"
++	- reg -  I2C slave address
++
++Each led is represented as a sub-node of the nxp,pca9530.
++
++Optional sub-node properties:
++	- label: see Documentation/devicetree/bindings/leds/common.txt
++	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
++	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++  #include <dt-bindings/leds/leds-pca9532.h>
++
++  leds: pca9530@60 {
++    compatible = "nxp,pca9530";
++    reg = <0x60>;
++
++    red-power {
++      label = "pca:red:power";
++      type = <PCA9532_TYPE_LED>;
++    };
++    green-power {
++      label = "pca:green:power";
++      type = <PCA9532_TYPE_LED>;
++    };
++  };
++
++For more product information please see the link below:
++http://nxp.com/documents/data_sheet/PCA9532.pdf
+diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+index e3d3b1a..49930a3 100644
+--- a/drivers/leds/leds-pca9532.c
++++ b/drivers/leds/leds-pca9532.c
+@@ -21,6 +21,8 @@
+ #include <linux/workqueue.h>
+ #include <linux/leds-pca9532.h>
+ #include <linux/gpio.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ /* m =  num_leds*/
+ #define PCA9532_REG_INPUT(i)	((i) >> 3)
+@@ -86,9 +88,22 @@ static const struct pca9532_chip_info pca9532_chip_info_tbl[] = {
+ 	},
+ };
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id of_pca9532_leds_match[] = {
++	{ .compatible = "nxp,pca9530", .data = (void *)pca9530 },
++	{ .compatible = "nxp,pca9531", .data = (void *)pca9531 },
++	{ .compatible = "nxp,pca9532", .data = (void *)pca9532 },
++	{ .compatible = "nxp,pca9533", .data = (void *)pca9533 },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, of_pca9532_leds_match);
++#endif
++
+ static struct i2c_driver pca9532_driver = {
+ 	.driver = {
+ 		.name = "leds-pca953x",
++		.of_match_table = of_match_ptr(of_pca9532_leds_match),
+ 	},
+ 	.probe = pca9532_probe,
+ 	.remove = pca9532_remove,
+@@ -354,6 +369,7 @@ static int pca9532_configure(struct i2c_client *client,
+ 			led->state = pled->state;
+ 			led->name = pled->name;
+ 			led->ldev.name = led->name;
++			led->ldev.default_trigger = led->default_trigger;
+ 			led->ldev.brightness = LED_OFF;
+ 			led->ldev.brightness_set_blocking =
+ 						pca9532_set_brightness;
+@@ -432,15 +448,67 @@ exit:
+ 	return err;
+ }
+ 
++static struct pca9532_platform_data *
++pca9532_of_populate_pdata(struct device *dev, struct device_node *np)
++{
++	struct pca9532_platform_data *pdata;
++	struct device_node *child;
++	const struct of_device_id *match;
++	uintptr_t devid;
++	int maxleds;
++	int i = 0;
++
++	match = of_match_device(of_pca9532_leds_match, dev);
++	if (!match)
++		return ERR_PTR(-ENODEV);
++
++	devid = (uintptr_t)match->data;
++	maxleds = pca9532_chip_info_tbl[devid].num_leds;
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	for_each_child_of_node(np, child) {
++		if (of_property_read_string(child, "label",
++					    &pdata->leds[i].name))
++			pdata->leds[i].name = child->name;
++		of_property_read_u32(child, "type", &pdata->leds[i].type);
++		of_property_read_string(child, "linux,default-trigger",
++					&pdata->leds[i].default_trigger);
++		if (++i >= maxleds) {
++			of_node_put(child);
++			break;
++		}
++	}
++
++	return pdata;
++}
++
+ static int pca9532_probe(struct i2c_client *client,
+ 	const struct i2c_device_id *id)
+ {
++	uintptr_t devid;
+ 	struct pca9532_data *data = i2c_get_clientdata(client);
+ 	struct pca9532_platform_data *pca9532_pdata =
+ 			dev_get_platdata(&client->dev);
+-
+-	if (!pca9532_pdata)
+-		return -EIO;
++	struct device_node *np = client->dev.of_node;
++
++	if (!pca9532_pdata) {
++		if (np) {
++			pca9532_pdata =
++				pca9532_of_populate_pdata(&client->dev, np);
++			if (IS_ERR(pca9532_pdata))
++				return PTR_ERR(pca9532_pdata);
++		} else {
++			dev_err(&client->dev, "no platform data\n");
++			return -EINVAL;
++		}
++		devid = (uintptr_t)of_match_device(
++			of_pca9532_leds_match, &client->dev)->data;
++	} else {
++		devid = id->driver_data;
++	}
+ 
+ 	if (!i2c_check_functionality(client->adapter,
+ 		I2C_FUNC_SMBUS_BYTE_DATA))
+@@ -450,7 +518,7 @@ static int pca9532_probe(struct i2c_client *client,
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	data->chip_info = &pca9532_chip_info_tbl[id->driver_data];
++	data->chip_info = &pca9532_chip_info_tbl[devid];
+ 
+ 	dev_info(&client->dev, "setting platform data\n");
+ 	i2c_set_clientdata(client, data);
+diff --git a/include/dt-bindings/leds/leds-pca9532.h b/include/dt-bindings/leds/leds-pca9532.h
+new file mode 100644
+index 0000000..4d917aa
+--- /dev/null
++++ b/include/dt-bindings/leds/leds-pca9532.h
+@@ -0,0 +1,18 @@
++/*
++ * This header provides constants for pca9532 LED bindings.
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#ifndef _DT_BINDINGS_LEDS_PCA9532_H
++#define _DT_BINDINGS_LEDS_PCA9532_H
++
++#define PCA9532_TYPE_NONE         0
++#define PCA9532_TYPE_LED          1
++#define PCA9532_TYPE_N2100_BEEP   2
++#define PCA9532_TYPE_GPIO         3
++#define PCA9532_LED_TIMER2        4
++
++#endif /* _DT_BINDINGS_LEDS_PCA9532_H */
+diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
+index b8d6fff..d215b45 100644
+--- a/include/linux/leds-pca9532.h
++++ b/include/linux/leds-pca9532.h
+@@ -16,6 +16,7 @@
+ 
+ #include <linux/leds.h>
+ #include <linux/workqueue.h>
++#include <dt-bindings/leds/leds-pca9532.h>
+ 
+ enum pca9532_state {
+ 	PCA9532_OFF  = 0x0,
+@@ -24,16 +25,14 @@ enum pca9532_state {
+ 	PCA9532_PWM1 = 0x3
+ };
+ 
+-enum pca9532_type { PCA9532_TYPE_NONE, PCA9532_TYPE_LED,
+-	PCA9532_TYPE_N2100_BEEP, PCA9532_TYPE_GPIO };
+-
+ struct pca9532_led {
+ 	u8 id;
+ 	struct i2c_client *client;
+-	char *name;
++	const char *name;
++	const char *default_trigger;
+ 	struct led_classdev ldev;
+ 	struct work_struct work;
+-	enum pca9532_type type;
++	u32 type;
+ 	enum pca9532_state state;
+ };
+ 
+-- 
+1.8.3.1
 
->
-> Best regards,
-> Krzysztof
->
->> +	- dok-gpios: Valid DC power has been detected
->> +- usb_valid: Specifies that the USB portion of the MAX8903 has been connected up
->> +		and that uok-gpios should be specified
->> +	- uok-gpios: Valid USB power has been detected
->> +
->> +Optional properties:
->> +- cen-gpios: Charge enable pin
->> +- chg-gpios: Charger status pin
->> +- flt-gpios: Fault pin
->> +- dcm-gpios: Current limit mode setting (DC or USB)
->> +- usus-gpios: USB suspend pin
->> +
->> +
->> +Example:
->> +
->> +	max8903-charger {
->> +		compatible = "maxim,max8903-charger";
->> +		dok-gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
->> +		flt-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
->> +		chg-gpios = <&gpio3 15 GPIO_ACTIVE_LOW>;
->> +		cen-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
->> +		dc_valid;
->> +		status = "okay";
->> +	};
->>
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
