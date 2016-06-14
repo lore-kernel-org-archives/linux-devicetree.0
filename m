@@ -1,100 +1,127 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] iommu/of: Handle iommu-map property for PCI
-Date: Tue, 14 Jun 2016 15:45:59 +0100
-Message-ID: <20160614144559.GK19407@arm.com>
-References: <cover.1464966939.git.robin.murphy@arm.com>
-	<69952eda726c370ed6e5739bdd2e32cdc4466bfb.1464966939.git.robin.murphy@arm.com>
+From: Jonas Gorski <jogo@openwrt.org>
+Subject: Re: [PATCH 6/6] MIPS: BMIPS: Add device tree example for BCM6362
+Date: Tue, 14 Jun 2016 16:46:23 +0200
+Message-ID: <CAOiHx==5ZOfL5JGyv9t6jUEXGfL4xnNjKmUocEv5gBeve8=KLA@mail.gmail.com>
+References: <1465803534-25840-1-git-send-email-noltari@gmail.com> <1465803534-25840-6-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <69952eda726c370ed6e5739bdd2e32cdc4466bfb.1464966939.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1465803534-25840-6-git-send-email-noltari@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc: MIPS Mailing List <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Rob Herring <robh@kernel.org>, Simon Arlott <simon@fire.lp0.eu>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2016 at 06:15:39PM +0100, Robin Murphy wrote:
-> Now that we have a way to pick up the RID translation and target IOMMU,
-> hook up of_iommu_configure() to bring PCI devices into the of_xlate
-> mechanism and allow them IOMMU-backed DMA ops without the need for
-> driver-specific handling.
-> 
-> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Hi,
+
+On 13 June 2016 at 09:38, =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gma=
+il.com> wrote:
+> This adds a device tree example for SFR NeufBox 6.
+>
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
 > ---
-> 
-> v2: Skip disabled IOMMUs.
-> 
->  drivers/iommu/of_iommu.c | 44 +++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 37 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index 662f9a600f4f..5716131199b3 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -22,6 +22,7 @@
->  #include <linux/limits.h>
->  #include <linux/of.h>
->  #include <linux/of_iommu.h>
-> +#include <linux/of_pci.h>
->  #include <linux/slab.h>
->  
->  static const struct of_device_id __iommu_of_table_sentinel
-> @@ -134,20 +135,49 @@ const struct iommu_ops *of_iommu_get_ops(struct device_node *np)
->  	return ops;
->  }
->  
-> +static int __get_pci_rid(struct pci_dev *pdev, u16 alias, void *data)
-> +{
-> +	struct of_phandle_args *iommu_spec = data;
-> +
-> +	iommu_spec->args[0] = alias;
-> +	return iommu_spec->np == pdev->bus->dev.of_node;
-> +}
-> +
->  const struct iommu_ops *of_iommu_configure(struct device *dev,
->  					   struct device_node *master_np)
->  {
->  	struct of_phandle_args iommu_spec;
-> -	struct device_node *np;
-> +	struct device_node *np = NULL;
->  	const struct iommu_ops *ops = NULL;
->  	int idx;
->  
-> -	/*
-> -	 * We can't do much for PCI devices without knowing how
-> -	 * device IDs are wired up from the PCI bus to the IOMMU.
-> -	 */
-> -	if (dev_is_pci(dev))
-> -		return NULL;
-> +	if (dev_is_pci(dev)) {
-> +		/*
-> +		 * Start by tracing the RID alias down the PCI topology as
-> +		 * far as the host bridge whose OF node we have...
-> +		 */
-> +		iommu_spec.np = master_np;
-> +		pci_for_each_dma_alias(to_pci_dev(dev), __get_pci_rid,
-> +				       &iommu_spec);
-> +		/*
-> +		 * ...then find out what that becomes once it escapes the PCI
-> +		 * bus into the system beyond, and which IOMMU it ends up at.
-> +		 */
-> +		if (of_pci_map_rid(master_np, "iommu-map", iommu_spec.args[0],
-> +				   &np, iommu_spec.args) ||
-> +		    !of_device_is_available(np))
-> +			return NULL;
+>  arch/mips/bmips/Kconfig                    |   4 +
+>  arch/mips/boot/dts/brcm/Makefile           |   2 +
+>  arch/mips/boot/dts/brcm/bcm6362.dtsi       | 134 +++++++++++++++++++=
+++++++++++
+>  arch/mips/boot/dts/brcm/bcm96362nb6ser.dts |  22 +++++
+>  4 files changed, 162 insertions(+)
+>  create mode 100644 arch/mips/boot/dts/brcm/bcm6362.dtsi
+>  create mode 100644 arch/mips/boot/dts/brcm/bcm96362nb6ser.dts
+>
+> diff --git a/arch/mips/bmips/Kconfig b/arch/mips/bmips/Kconfig
+> index 5b0ad8c..43da496 100644
+> --- a/arch/mips/bmips/Kconfig
+> +++ b/arch/mips/bmips/Kconfig
+> @@ -33,6 +33,10 @@ config DT_BCM96358NB4SER
+>         bool "BCM96358NB4SER"
+>         select BUILTIN_DTB
+>
+> +config DT_BCM96362NB6SER
+> +       bool "BCM96362NB6SER"
 
-Hmm, do we need to of_node_put(np) in the case that it's not available?
+DT_SFR_NEUFBOX6_SERCOMM
+       bool "SFR Neufbox 6 (Sercomm)"
 
-Will
+maybe?
+
+> +       select BUILTIN_DTB
+> +
+>  config DT_BCM96368MVWG
+>         bool "BCM96368MVWG"
+>         select BUILTIN_DTB
+> diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/br=
+cm/Makefile
+> index c553b95..161e54b 100644
+> --- a/arch/mips/boot/dts/brcm/Makefile
+> +++ b/arch/mips/boot/dts/brcm/Makefile
+> @@ -3,6 +3,7 @@ dtb-$(CONFIG_DT_BCM93384WVG)            +=3D bcm93384=
+wvg.dtb
+>  dtb-$(CONFIG_DT_BCM93384WVG_VIPER)     +=3D bcm93384wvg_viper.dtb
+>  dtb-$(CONFIG_DT_BCM963268VR3032U)      +=3D bcm963268vr3032u.dtb
+>  dtb-$(CONFIG_DT_BCM96358NB4SER)                +=3D bcm96358nb4ser.d=
+tb
+> +dtb-$(CONFIG_DT_BCM96362NB6SER)                +=3D bcm96362nb6ser.d=
+tb
+
+Similar here.
+
+>  dtb-$(CONFIG_DT_BCM96368MVWG)          +=3D bcm96368mvwg.dtb
+>  dtb-$(CONFIG_DT_BCM9EJTAGPRB)          +=3D bcm9ejtagprb.dtb
+>  dtb-$(CONFIG_DT_BCM97125CBMB)          +=3D bcm97125cbmb.dtb
+> @@ -20,6 +21,7 @@ dtb-$(CONFIG_DT_NONE)                 +=3D \
+>                                                 bcm93384wvg_viper.dtb=
+   \
+>                                                 bcm963268vr3032u.dtb =
+   \
+>                                                 bcm96358nb4ser.dtb   =
+   \
+> +                                               bcm96362nb6ser.dtb   =
+   \
+>                                                 bcm96368mvwg.dtb     =
+   \
+>                                                 bcm9ejtagprb.dtb     =
+   \
+>                                                 bcm97125cbmb.dtb     =
+   \
+
+(snip)
+
+> diff --git a/arch/mips/boot/dts/brcm/bcm96362nb6ser.dts b/arch/mips/b=
+oot/dts/brcm/bcm96362nb6ser.dts
+> new file mode 100644
+> index 0000000..a470230
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/brcm/bcm96362nb6ser.dts
+
+Similar here.
+
+> @@ -0,0 +1,22 @@
+> +/dts-v1/;
+> +
+> +/include/ "bcm6362.dtsi"
+> +
+> +/ {
+> +       compatible =3D "sfr,nb6-ser", "brcm,bcm6362";
+
+I don't see the sfr vendor prefix documented (at least not in
+4.7-rc2). If it is already in -next, then disregard that comment.
+
+
+> +       model =3D "SFT NeufBox 6 (Sercomm)";
+
+SFT? Not SFR? ;p
+
+
+
+Regards
+Jonas
