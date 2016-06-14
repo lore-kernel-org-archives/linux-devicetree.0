@@ -1,63 +1,201 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] iommu/arm-smmu: Finish off SMMUv3 default domain
- support
-Date: Tue, 14 Jun 2016 16:59:48 +0100
-Message-ID: <20160614155948.GD16531@arm.com>
-References: <cover.1464966939.git.robin.murphy@arm.com>
- <aabcdd814b93b2b6a902b189f6911f929a29b64f.1464966939.git.robin.murphy@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 2/2] ASoC: msm8916: Add msm8916-wcd codec driver
+Date: Tue, 14 Jun 2016 16:59:38 +0100
+Message-ID: <20160614155938.GS2282@sirena.org.uk>
+References: <1465582725-30183-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1465582725-30183-3-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="en9/O5YN3eJ0yPaf"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <aabcdd814b93b2b6a902b189f6911f929a29b64f.1464966939.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <1465582725-30183-3-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, plai@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 03, 2016 at 06:15:41PM +0100, Robin Murphy wrote:
-> The driver's current reliance on attaching/detaching an entire group
-> for the first device it sees is at odds with the IOMMU core's initial
-> construction of a group by adding each device and attaching it to the
-> default domain in turn. As it turns out, we can happily do away with the
-> whole palaver by simply letting each device be in charge of its own
-> stream ID/stream table entry, and reducing the problem of tracking
-> duplicate IDs and domains down to "Is the STE already associated with
-> the appropriate context?", which is easily done by just looking at the
-> stream table itself.
 
-Hmm, it would be nice if Joerg could confirm this before we remove the
-driver code.
+--en9/O5YN3eJ0yPaf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Joerg: can an IOMMU driver rely on not receiving contradictory ->attach
-callbacks for devices in the same group? Robin is proposing that we
-remove the group tracking code from the ARM SMMU driver which is a nice
-cleanup but leaves us open to silent misconfiguration if we are asked to
-violate the group constraints.
+On Fri, Jun 10, 2016 at 07:18:45PM +0100, Srinivas Kandagatla wrote:
 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 7631639cc209..28dcc5ca237e 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -607,15 +607,6 @@ struct arm_smmu_device {
->  	struct arm_smmu_strtab_cfg	strtab_cfg;
->  };
->  
-> -/* SMMU private data for an IOMMU group */
-> -struct arm_smmu_group {
-> -	struct arm_smmu_device		*smmu;
-> -	struct arm_smmu_domain		*domain;
-> -	int				num_sids;
-> -	u32				*sids;
-> -	struct arm_smmu_strtab_ent	ste;
-> -};
+> +config SND_SOC_MSM8916_WCD
+> +	tristate "Qualcomm MSM8916 WCD"
+> +	depends on SPMI && MFD_SYSCON
+> +
 
-I'm not keen on losing this structure. How about we instead change the
-sids array to be a linked list of {struct device, sid[]} and then change
-arm_smmu_install_ste_for_group to take a device pointer as well?
+Normally users select MFD_SYSCON.
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> @@ -208,7 +209,6 @@ snd-soc-wm9705-objs := wm9705.o
+>  snd-soc-wm9712-objs := wm9712.o
+>  snd-soc-wm9713-objs := wm9713.o
+>  snd-soc-wm-hubs-objs := wm_hubs.o
+> -
+>  # Amp
+>  snd-soc-max9877-objs := max9877.o
+>  snd-soc-tpa6130a2-objs := tpa6130a2.o
+
+Spurious whitespace change.
+
+> +#include "msm8916-wcd-registers.h"
+> +#include "msm8916-wcd.h"
+> +#include "dt-bindings/sound/msm8916-wcd.h"
+
+What's in here?  There weren't any constants in the bindings.
+
+> +struct msm8916_wcd_chip {
+> +	struct regmap *analog_map;
+> +	struct regmap *digital_map;
+> +	unsigned int analog_offset;
+> +	u16 pmic_rev;
+> +	u16 codec_version;
+
+Why is this one device and not two devices?  The description indicated
+that this was two separate bits of silicon.
+
+> +static int msm8916_wcd_write(struct snd_soc_codec *codec, unsigned int reg,
+> +			     unsigned int val)
+> +{
+> +	int ret = -EINVAL;
+> +	struct msm8916_wcd_chip *chip = dev_get_drvdata(codec->dev);
+> +	u8 *cache = codec->reg_cache;
+> +
+> +	if (!msm8916_wcd_reg_readonly[reg])
+> +		cache[reg] = val;
+
+Why is the driver open coding a cache?  Don't do that!
+
+> +	case SND_SOC_DAPM_POST_PMU:
+> +		if (w->shift == 5)
+> +			snd_soc_update_bits(codec, LPASS_CDC_RX1_B6_CTL,
+> +					    RXn_B6_CTL_MUTE_MASK, 0);
+> +		else if (w->shift == 4)
+> +			snd_soc_update_bits(codec, LPASS_CDC_RX2_B6_CTL,
+> +					    RXn_B6_CTL_MUTE_MASK, 0);
+
+Switch statement.
+
+> +	widget_name = kstrndup(w->name, 15, GFP_KERNEL);
+> +	if (!widget_name)
+> +		return -ENOMEM;
+> +	temp = widget_name;
+> +
+> +	dec_name = strsep(&widget_name, " ");
+> +	widget_name = temp;
+> +	if (!dec_name) {
+> +		dev_err(codec->dev, "Invalid decimator = %s\n", w->name);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	dec_num = strpbrk(dec_name, "12");
+> +	if (dec_num == NULL) {
+> +		dev_err(codec->dev, "Invalid Decimator\n");
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	ret = kstrtouint(dec_num, 10, &decimator);
+> +	if (ret < 0) {
+> +		dev_err(codec->dev, "Invalid decimator = %s\n", dec_name);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+
+I'm not terribly clear what this is doing, it probably needs some
+comments explaining what's going on at the very least.
+
+> +	/*RX stuff */
+> +	SND_SOC_DAPM_AIF_IN("I2S RX1", "AIF1 Playback", 0, SND_SOC_NOPM, 0, 0),
+> +	SND_SOC_DAPM_AIF_IN("I2S RX2", "AIF1 Playback", 0, SND_SOC_NOPM, 0, 0),
+> +	SND_SOC_DAPM_AIF_IN("I2S RX3", "AIF1 Playback", 0, SND_SOC_NOPM, 0, 0),
+
+Use DAPM routes to connect the widgets in, don't name the DAI in the
+widget.
+
+> +		mclk_rate = clk_get_rate(msm8916_wcd->mclk);
+> +
+> +		if (mclk_rate == 12288000)
+> +			snd_soc_update_bits(codec, LPASS_CDC_TOP_CTL,
+> +					    TOP_CTL_DIG_MCLK_FREQ_MASK,
+> +					    TOP_CTL_DIG_MCLK_FREQ_F_12_288MHZ);
+> +
+> +		else if (mclk_rate == 9600000)
+> +			snd_soc_update_bits(codec, LPASS_CDC_TOP_CTL,
+> +					    TOP_CTL_DIG_MCLK_FREQ_MASK,
+> +					    TOP_CTL_DIG_MCLK_FREQ_F_9_6MHZ);
+
+Switch statement, and this should also handle unexpected rates.
+
+> +static int msm8916_wcd_codec_probe(struct snd_soc_codec *codec)
+> +{
+> +	struct msm8916_wcd_chip *chip = dev_get_drvdata(codec->dev);
+> +	int err, reg;
+> +
+> +	err = regulator_enable(chip->vddio);
+> +	if (err < 0) {
+> +		dev_err(codec->dev,
+> +			"failed to enable VDDIO regulator (%d)\n", err);
+> +		return err;
+> +	}
+> +
+> +	err = regulator_enable(chip->vdd_tx_rx);
+> +	if (err < 0) {
+> +		dev_err(codec->dev,
+> +			"failed to enable VDD_TX_RX regulator (%d)\n", err);
+> +		regulator_disable(chip->vddio);
+> +		return err;
+> +	}
+
+Why is this not using regulator_bulk_enable()?  I'd also expect to see
+most if not all of this initial setup stuff in the main device probe.
+
+> +	if (TOMBAK_IS_1_0(chip->pmic_rev)) {
+> +		for (reg = 0; reg < ARRAY_SIZE(wcd_reg_defaults); reg++)
+> +			snd_soc_write(codec, wcd_reg_defaults[reg].reg,
+> +				      wcd_reg_defaults[reg].val);
+> +	} else {
+> +		for (reg = 0; reg < ARRAY_SIZE(wcd_reg_defaults_2_0); reg++)
+> +			snd_soc_write(codec, wcd_reg_defaults_2_0[reg].reg,
+> +				      wcd_reg_defaults_2_0[reg].val);
+> +	}
+
+Please reset the chip properly.
+
+> +	ret = clk_prepare_enable(chip->mclk);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to enable mclk %d\n", ret);
+> +		return ret;
+> +	}
+
+Runtime PM?
+
+> +static const struct of_device_id msm8916_wcd_match_table[] = {
+> +	{.compatible = "qcom,msm8916-pmic-wcd-codec"},
+> +	{}
+> +};
+
+We were peering inside the parent for the register map, why does this
+appear in the device tree as a separate device?  Both the patch
+description and that code suggest that it doesn't really have a separate
+existence independent of the broader IP.
+
+--en9/O5YN3eJ0yPaf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXYCnpAAoJECTWi3JdVIfQxqEH/3yWp8YCZbf6h/7YY1R0gr0e
+DNtI6guoUhDlwOytJLd4pGeHyvT/KkMQauFVhY8SsdhYlCL7fhexhsW419h4fZnx
+1BYmmMSw4cqpl9voGqWq6Qr7znDf1W6d4y11RCFTX+3o6jpq4qhiLkKCmvdym3T5
+6wew13Wb87MN1GeWDvD2kL/M1GBAZTBX1VQ//yXsdXbkC+l8rG9qHPQGGWJruv/4
+B5HEltKBiPN35ACVCUgb+ciLml1ZYApzclNixMq27QSx/bbZhIZRZNAoZ2wzxx7L
+MqPcSpWQd1mf7R1CI5NFw06nagwIgo+IUmMU/5Ce+rtNYfRZXjHbk3aX0Htj2Lo=
+=Ra9W
+-----END PGP SIGNATURE-----
+
+--en9/O5YN3eJ0yPaf--
