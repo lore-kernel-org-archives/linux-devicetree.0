@@ -1,78 +1,62 @@
-From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ARM: dts: utilite-pro: add mmc card slot support
-Date: Wed, 15 Jun 2016 09:40:01 +0300
-Message-ID: <5760F841.4010307@compulab.co.il>
-References: <20160612232456.1621-1-christopher.spinrath@rwth-aachen.de>
- <c25d8e5d113240c5ab78771f301d901a@rwthex-s1-b.rwth-ad.de>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v10 03/14] usb: hcd.h: Add OTG to HCD interface
+Date: Wed, 15 Jun 2016 10:14:39 +0300
+Message-ID: <5761005F.4060303@ti.com>
+References: <Pine.LNX.4.44L0.1606141018530.1574-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c25d8e5d113240c5ab78771f301d901a-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.44L0.1606141018530.1574-100000@iolanthe.rowland.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christopher,
+On 14/06/16 17:21, Alan Stern wrote:
+> On Tue, 14 Jun 2016, Roger Quadros wrote:
+> 
+>> +Alan
+>>
+>> On 10/06/16 16:07, Roger Quadros wrote:
+>>> The OTG core will use struct otg_hcd_ops to interface
+>>> with the HCD (Host Controller Driver).
+>>>
+>>> The main purpose of this interface is to avoid directly
+>>> calling HCD APIs from the OTG core as they
+>>> wouldn't be defined in the built-in symbol table if
+>>> CONFIG_USB is m.
+>>>
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>> Acked-by: Peter Chen <peter.chen@nxp.com>
+>>> ---
+>>>  include/linux/usb/hcd.h | 24 ++++++++++++++++++++++++
+>>>  1 file changed, 24 insertions(+)
+>>>
+>>> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+>>> index 66fc137..7729c1f 100644
+>>> --- a/include/linux/usb/hcd.h
+>>> +++ b/include/linux/usb/hcd.h
+>>> @@ -400,6 +400,30 @@ struct hc_driver {
+>>>  
+>>>  };
+>>>  
+>>> +/**
+>>> + * struct otg_hcd_ops - Interface between OTG core and HCD
+>>> + *
+>>> + * Provided by the HCD core to allow the OTG core to interface with the HCD
+> 
+> Add:  * in case the OTG core is built-in and the HCD core is built as a module.
 
-On 06/13/2016 02:24 AM, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
-> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> 
-> The Utilite Pro has a mmc card slot connected to the usdhc3
-> controller. There is no card detection until hardware revision 1.3.
-> 
-> Add support for it and signal the controller with the broken-cd
-> property that polling has to be used to detect a card.
-> 
-> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> ---
-> 
-> Notes:
->     Changes since v2:
->      - add Fabio's Reviewed-By
->     
->     Changes since v1:
->      - enhance commit message to explain to the broken-cd property
-> 
->  arch/arm/boot/dts/imx6q-utilite-pro.dts | 44 +++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
-> index 7219745..6199063 100644
-> --- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
-> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+OK.
 
-[...]
-
-> @@ -151,3 +184,14 @@
->  	uart-has-rtscts;
->  	status = "okay";
->  };
-> +
-> +&usdhc3 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc3>;
-> +	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-> +	no-1-8-v;
-> +	broken-cd;
-
-A wast majority of boards produced are of revision >=1.3.
-Can we please have the default as revision 1.3 with cd?
-And let the patch you have submitted to U-Boot do the job
-for older revisions?
-
-> +	keep-power-in-suspend;
-> +	status = "okay";
-> +};
+> 
+> Otherwise, for patches 1, 3, and 12:
+> 
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
 > 
 
--- 
-Regards,
-Igor.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+
+cheers,
+-roger
