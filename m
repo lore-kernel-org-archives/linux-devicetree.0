@@ -1,120 +1,58 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ARM: dts: utilite-pro: add mmc card slot support
-Date: Wed, 15 Jun 2016 16:40:26 +0200
-Message-ID: <2160fa6084b94c839b339a663334ae65@rwthex-s1-b.rwth-ad.de>
-References: <20160612232456.1621-1-christopher.spinrath@rwth-aachen.de>
- <c25d8e5d113240c5ab78771f301d901a@rwthex-s1-b.rwth-ad.de>
- <089d827c9de9426eab79a907a2043828@rwthex-s1-a.rwth-ad.de>
- <712bda47d095416f8b69f4eecbf979a5@rwthex-s1-b.rwth-ad.de>
- <575994a0ec924e2db7282a2945d3355f@rwthex-s2-b.rwth-ad.de>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH v5 4/8] arm64: parse cpu capacity-dmips-mhz from DT
+Date: Wed, 15 Jun 2016 15:48:21 +0100
+Message-ID: <20160615144821.GF5981@e106622-lin>
+References: <1465985877-18271-1-git-send-email-juri.lelli@arm.com>
+ <1465985877-18271-5-git-send-email-juri.lelli@arm.com>
+ <20160615134938.GA2282@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <575994a0ec924e2db7282a2945d3355f-gtPewvpZjL+krInni0qv/15UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, "Spinrath, Christopher" <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160615134938.GA2282@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, sgurrappadi@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-On 06/15/2016 12:33 PM, Igor Grinberg wrote:
-> Hi Christopher,
+On 15/06/16 14:49, Mark Brown wrote:
+> On Wed, Jun 15, 2016 at 11:17:53AM +0100, Juri Lelli wrote:
 > 
-> On 06/15/2016 12:16 PM, Christopher Spinrath wrote:
->> Hi Igor,
->>
->> On 06/15/2016 08:40 AM, Igor Grinberg wrote:
->>> Hi Christopher,
->>>
->>> On 06/13/2016 02:24 AM, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
->>>> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
->>>>
->>>> The Utilite Pro has a mmc card slot connected to the usdhc3
->>>> controller. There is no card detection until hardware revision 1.3.
->>>>
->>>> Add support for it and signal the controller with the broken-cd
->>>> property that polling has to be used to detect a card.
->>>>
->>>> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
->>>> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->>>> ---
->>>>
->>>> Notes:
->>>>     Changes since v2:
->>>>      - add Fabio's Reviewed-By
->>>>     
->>>>     Changes since v1:
->>>>      - enhance commit message to explain to the broken-cd property
->>>>
->>>>  arch/arm/boot/dts/imx6q-utilite-pro.dts | 44 +++++++++++++++++++++++++++++++++
->>>>  1 file changed, 44 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
->>>> index 7219745..6199063 100644
->>>> --- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
->>>> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
->>>
->>> [...]
->>>
->>>> @@ -151,3 +184,14 @@
->>>>  	uart-has-rtscts;
->>>>  	status = "okay";
->>>>  };
->>>> +
->>>> +&usdhc3 {
->>>> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
->>>> +	pinctrl-0 = <&pinctrl_usdhc3>;
->>>> +	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
->>>> +	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
->>>> +	no-1-8-v;
->>>> +	broken-cd;
->>>
->>> A wast majority of boards produced are of revision >=1.3.
->>> Can we please have the default as revision 1.3 with cd?
->>> And let the patch you have submitted to U-Boot do the job
->>> for older revisions?
->>>
->>
->> Well, my board has revision 1.0. So I cannot test that and feel uneasy
->> to put my Signed-off-by under such a patch. IMHO the best solution would
->> be that someone with a revision >= 1.3 board sends a follow-up patch
->> adding the cd-gpios.
->>
->> If I resend the patch with cd-gpios could you test it and provide a
->> Tested-By?
+> > +		if (!raw_capacity) {
+> > +			raw_capacity = kzalloc(sizeof(*raw_capacity) *
+> > +					num_possible_cpus(), GFP_KERNEL);
 > 
-> Yes. Absolutely.
+> kcalloc()?
 > 
 
-Can we have your opinion on that matter?
+Right. Will change.
 
->>
->> The other question is: should the dts provide a working/sane
->> configuration for all boards (which the broken-cd approach is)
->> independently of the bootloader?
+> > +			if (!raw_capacity) {
+> > +				pr_err("cpu_capacity: failed to allocate memory"
+> > +				       " for raw capacities\n");
 > 
-> Well, no, I wouldn't go that way, as "why wouldn't we just use the
-> broken-cd approach on all boards and not bother with gpio-cds"...
-> We do want the gpio-cd to work as expected where it can.
+> It's normally better to avoid splitting errors message so people can
+> grep if they see the error.
 > 
->> Is it ok to put both, the  cd-gpios and
->> the broken-cd property into the dts and let the bootloader remove the
->> broken-cd property for revision >= 1.3 (due to the documentation it is
->> not but the driver favourites the broken cd property - hence, it would
->> work)?
+
+Tried to avoid breaking 80 columns. But, we seem to have longer pr_err
+strings already. I'll change that.
+
+> > +	} else {
+> > +		pr_err("cpu_capacity: missing %s raw capacity "
+> > +		       "(fallback to 1024 for all CPUs)\n",
+> > +				cpu_node->full_name);
 > 
-> That sounds sane from my POV (unless I'm missing something), but
-> will have to have comments explaining what is going on.
-> 
-> There are two main reasons why I would not want to have the broken-cd
-> as a default:
-> 1) It is not broken... It just does not exist prior to revision 1.3.
-> 2) There are more boards of revision >=1.3 then older ones outside and
->    we would want them to work as expected even with older U-Boot versions.
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> That's going to complain fairly loudly for all existing DTs isn't it and
+> it's kind of redundant if all the cores have the same capacity (which is
+> a very common case)?  How about printing an error only if we already
+> found one, or printing a single warning at the end if we didn't get
+> anything?
+
+Right, I'll change the condition for which pr_err is emitted. I think
+the situation for which we care the most about is when we find partial
+information in DT.
+
+Thanks,
+
+- Juri
