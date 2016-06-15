@@ -1,60 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] input: touchscreen: Add generic driver for Silead touchscreens
-Date: Wed, 15 Jun 2016 13:39:15 -0500
-Message-ID: <CAL_JsqJOSYMO7znAF3+98MmQQ3nNChrgW+N=yTmim67=X6TgLg@mail.gmail.com>
-References: <1465814810-7151-1-git-send-email-djaniboe@gmail.com>
- <1465814810-7151-2-git-send-email-djaniboe@gmail.com> <20160614232720.GA28035@rob-hp-laptop>
- <46f9d002-61df-66aa-c468-9df42c8af306@redhat.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] media: et8ek8: Add documentation
+Date: Wed, 15 Jun 2016 13:41:18 -0500
+Message-ID: <CAL_JsqKDxnc-pTOcdbL4iWFB9qU5924N0TV0NFw=A-zGN8boXQ@mail.gmail.com>
+References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1465659593-16858-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <20160614220517.GA23504@rob-hp-laptop> <20160615043116.GG26360@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <46f9d002-61df-66aa-c468-9df42c8af306@redhat.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Daniel Jansen <djaniboe@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Robert Dolca <robert.dolca@gmail.com>, Gregor Riepl <onitake@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wessel Blokzijl <wesselb94@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160615043116.GG26360-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 2:39 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi,
+On Tue, Jun 14, 2016 at 11:31 PM, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> wrote:
+> Hi Rob,
 >
->
-> On 06/15/2016 01:27 AM, Rob Herring wrote:
+> On Tue, Jun 14, 2016 at 05:05:17PM -0500, Rob Herring wrote:
+>> On Sat, Jun 11, 2016 at 06:39:53PM +0300, Ivaylo Dimitrov wrote:
+>> > Add DT bindings description
 >>
->> On Mon, Jun 13, 2016 at 12:46:50PM +0200, Daniel Jansen wrote:
->>>
->>> From: Robert Dolca <robert.dolca@intel.com>
->>>
->>> This driver adds support for Silead touchscreens. It has been tested
->>> with GSL1680 and GSL3680 touch panels.
->>>
->>> It supports ACPI and device tree enumeration. Screen resolution,
->>> the maximum number of fingers supported and firmware name are
->>> configurable.
-
-[...]
-
->>> b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
->>> @@ -0,0 +1,39 @@
->>> +* GSL 1680 touchscreen controller
->>> +
->>> +Required properties:
->>> +- compatible             : "silead,gsl1680"
->>> +- reg                    : I2C slave address of the chip (0x40)
->>> +- interrupt-parent       : a phandle pointing to the interrupt
->>> controller
->>> +                           serving the interrupt for this chip
->>> +- interrupts             : interrupt specification for the gsl1680
->>> interrupt
->>> +- wake-gpios             : GPIO specification for the WAKE input
+>> Not exactly the best commit msg.
 >>
+>> >
+>> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > ---
+>> >  .../bindings/media/i2c/toshiba,et8ek8.txt          | 50 ++++++++++++++++++++++
+>> >  1 file changed, 50 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+>> > new file mode 100644
+>> > index 0000000..997d268
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+>> > @@ -0,0 +1,50 @@
+>> > +Toshiba et8ek8 5MP sensor
+>> > +
+>> > +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
+>> > +
+>> > +More detailed documentation can be found in
+>> > +Documentation/devicetree/bindings/media/video-interfaces.txt .
+>> > +
+>> > +
+>> > +Mandatory properties
+>> > +--------------------
+>> > +
+>> > +- compatible: "toshiba,et8ek8"
+>> > +- reg: I2C address (0x3e, or an alternative address)
+>> > +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
 >>
->> What direction is this?
+>> > +- clocks: External clock to the sensor
+>> > +- clock-frequency: Frequency of the external clock to the sensor
+>>
+>> These should be mutually-exclusive. If you have a clock, then you can
+>> get the frequency at runtime.
 >
->
-> This is an input to the touchscreen controller, it needs to be driven high
-> to take the touchscreen controller out of its low power state.
+> Yes, you can. But the intention is to set the frequency: the sensor requires
+> a particular, pre-determined frequency. Typically this is specific to the
+> board.
 
-Okay, please clarify that in the description. The gpio flags should
-also indicate it is active high.
+Okay, then state that in the description.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
