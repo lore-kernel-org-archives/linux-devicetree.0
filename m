@@ -1,95 +1,52 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v5 3/3] MAINTAINERS: Add entry for Mali-DP driver
-Date: Wed, 15 Jun 2016 17:21:29 +0100
-Message-ID: <20160615162129.GG9711@e106497-lin.cambridge.arm.com>
-References: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
- <1466002295-24813-4-git-send-email-Liviu.Dudau@arm.com>
- <20160615153524.GA21140@imgtec.com>
- <20160615161208.GQ1338@phenom.ffwll.local>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dma: mv_xor_v2: new driver
+Date: Wed, 15 Jun 2016 22:11:31 +0530
+Message-ID: <20160615164131.GB16910@localhost>
+References: <1455523083-25506-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160222032730.GU19598@localhost>
+ <20160615160837.64377829@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160615161208.GQ1338@phenom.ffwll.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Engestrom <eric.engestrom@imgtec.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Brian Starkey <brian.starkey@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, LAKML <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>
+In-Reply-To: <20160615160837.64377829-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 06:12:08PM +0200, Daniel Vetter wrote:
-> On Wed, Jun 15, 2016 at 04:35:24PM +0100, Eric Engestrom wrote:
-> > On Wed, Jun 15, 2016 at 03:51:35PM +0100, Liviu Dudau wrote:
-> > > Add MAINTAINERS entry for ARM Mali-DP driver and update the
-> > > HDLCD file matching pattern to cover only HDLCD rather than
-> > > the whole drivers/gpu/drm/arm directory.
-> > >=20
-> > > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > > ---
-> > >  MAINTAINERS | 10 +++++++++-
-> > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 0bf119c..16deb07 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -865,9 +865,17 @@ F:	Documentation/devicetree/bindings/display=
-/snps,arcpgu.txt
-> > >  ARM HDLCD DRM DRIVER
-> > >  M:	Liviu Dudau <liviu.dudau@arm.com>
-> > >  S:	Supported
-> > > -F:	drivers/gpu/drm/arm/
-> > > +F:	drivers/gpu/drm/arm/hdlcd_*
-> > >  F:	Documentation/devicetree/bindings/display/arm,hdlcd.txt
-> > > =20
-> > > +ARM MALI-DP DRM DRIVER
-> > > +M:	Liviu Dudau <liviu.dudau@arm.com>
-> > > +M:	Brian Starkey <brian.starkey@arm.com>
-> > > +M:	Mali DP Maintainers <malidp@foss.arm.com>
-> > > +S:	Supported
-> > > +F:	drivers/gpu/drm/arm/
-> >=20
-> > IIUC this will also catch `drivers/gpu/drm/arm/hdlcd_*`.
-> > Did you mean `drivers/gpu/drm/arm/malidp_*` ?
-
-Emil Velikov commented on this as well on the v2 version.
-
-Because the HDLCD comes first it will catch the hdlcd_* ones (note that=
- path is updated
-as well).
-
->=20
-> Or just merge it and create one entry for all ARM drm drivers?
-
-It might happen in the end, but I would like to reduce the burden on th=
-e rest
-of the team with a driver where I have most of the knowledge.
-
-Best regards,
-Liviu
-
-> -Daniel
->=20
-> >=20
-> > > +F:	Documentation/devicetree/bindings/display/arm,malidp.txt
+On Wed, Jun 15, 2016 at 04:08:37PM +0200, Thomas Petazzoni wrote:
+ 
+> > > +			(xor_dev->desc_size * desq_ptr));
 > > > +
-> > >  ARM MFM AND FLOPPY DRIVERS
-> > >  M:	Ian Molton <spyro@f2s.com>
-> > >  S:	Maintained
-> > > --=20
-> > > 2.8.2
->=20
-> --=20
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
->=20
+> > > +	memcpy(dest_hw_desc, &sw_desc->hw_desc, xor_dev->desc_size);
+> > > +
+> > > +	/* update the DMA Engine with the new descriptor */
+> > > +	mv_xor_v2_add_desc_to_desq(xor_dev, 1);
+> > > +
+> > > +	/* unlock enqueue DESCQ */
+> > > +	spin_unlock_bh(&xor_dev->push_lock);  
+> > 
+> > and if IIUC, you are pushing this to HW as well, that is not quite right if
+> > thats the case. We need to do this in issue_pending
+> 
+> This is probably the only thing that I have not changed. The mv_xor
+> driver is already using the same strategy, and enqueuing in
+> issue_pending() would force us to add the request to a temporary linked
+> list, which would be dequeued in issue_pending(). This is quite a bit
+> of additional processing, while pushing the new requests directly to
+> the engine works fine.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Well that is wrong! And patch is welcome for mv_xor as well :)
+
+The DMAengine API mandates that we should submit a descriptor to a queue and
+then push them by invoking issue_pending.
+
+The users are also expected to follow this
+
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
