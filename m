@@ -1,44 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5] ASoC: rockchip: Add machine driver for RK3399 GRU Boards
-Date: Wed, 15 Jun 2016 07:44:32 -0500
-Message-ID: <CAL_JsqKEDw14HmbW=78_4P03nFDfmT7kOn4RsTF-PrBi+jWr0g@mail.gmail.com>
-References: <1465807339-1100-1-git-send-email-zhengxing@rock-chips.com>
- <20160614223810.GA7925@rob-hp-laptop> <20160615095312.GY2282@sirena.org.uk>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] mfd: ac100: Add device tree bindings
+ for X-Powers AC100 codec/RTC combo IC
+Date: Wed, 15 Jun 2016 13:49:43 +0100
+Message-ID: <20160615124943.GE4948@dell>
+References: <1465986467-14802-1-git-send-email-wens@csie.org>
+ <1465986467-14802-3-git-send-email-wens@csie.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160615095312.GY2282@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Xing Zheng <zhengxing@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Doug Anderson <dianders@chromium.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <rtc-linux+bncBDA7X7F2WUEBBP45QW5QKGQEHJKITCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1465986467-14802-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 4:53 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Jun 14, 2016 at 05:38:10PM -0500, Rob Herring wrote:
->> On Mon, Jun 13, 2016 at 04:42:18PM +0800, Xing Zheng wrote:
->
->> > +sound {
->> > +   compatible = "rockchip,rk3399-gru-sound";
->> > +   rockchip,cpu = <&i2s0>;
->> > +   rockchip,codec = <&max98357a &rt5514 &da7219>;
->
->> These seem fairly standard though a variety of versions in the bindings.
->> Can we use audio-codec and audio-cpu (or cpu or audio-dai) here? Mark?
->
-> Well, the roles aren't actually that standard (the fact that there's
-> multiple CODECs and one CPU DAI here is really odd and definitely needs
-> a very system specific interpretation).  If they were standard we
-> already have the simple-card binding that things should be using.
-> There's no point in standard property names if the interpretation has to
-> be non-standard.
+On Wed, 15 Jun 2016, Chen-Yu Tsai wrote:
 
-Okay, I agree with the system specific interpretation part. However, I
-don't think using simple-card or not determines using common
-properties.
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/ac100.txt | 42 +++++++++++++++++++=
+++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ac100.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/ac100.txt b/Documentat=
+ion/devicetree/bindings/mfd/ac100.txt
+> new file mode 100644
+> index 000000000000..fbab623e6fba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/ac100.txt
+> @@ -0,0 +1,42 @@
+> +X-Powers AC100 Codec/RTC IC device tree bindings
+> +
+> +AC100 is a audio codec and RTC subsystem combo IC. The 2 parts are
+> +separated, including power supplies and interrupt lines, but share
+> +a common register address space and host interface.
+> +
+> +Required properties:
+> +- compatible: "x-powers,ac100"
+> +- reg: The I2C slave address or RSB hardware address for the chip
+> +- sub-nodes:
+> +  - codec
+> +    - compatible: "x-powers,ac100-codec"
+> +    - interrupt-parent: The parent interrupt controller
+> +    - interrupts: SoC NMI / GPIO interrupt connected to the IRQ_AUDIO pi=
+n
+> +  - rtc
+> +    - compatible: "x-powers,ac100-rtc"
+> +    - interrupt-parent: The parent interrupt controller
+> +    - interrupts: SoC NMI / GPIO interrupt connected to the IRQ_RTC pin
+> +    - #clock-cells: shall be 1
+> +    - clock-output-names: "cko1_rtc", "cko2_rtc", "cko3_rtc"
+> +    - see clock/clock-bindings.txt for common clock bindings
+> +
+> +Example:
+> +
+> +ac100: codec@e89 {
+> +	compatible =3D "x-powers,ac100";
+> +	reg =3D <0xe89>;
+> +
+> +	ac100_codec {
+> +		compatible =3D "x-powers,ac100-codec";
+> +		interrupt-parent =3D <&nmi_intc>;
+> +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	ac100_rtc {
+> +		compatible =3D "x-powers,ac100-rtc";
+> +		interrupt-parent =3D <&nmi_intc>;
+> +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
 
-> The vendor specific prefixes are there because all bindings are supposed
-> to add prefixes to property names.
+Isn't this the same interrupt as above?  Is it shared?
 
-...unless they are common.
+> +		#clock-cells =3D <1>;
+> +		clock-output-names =3D "cko1_rtc", "cko2_rtc", "cko3_rtc";
+> +	};
+> +};
 
-Rob
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+---=20
+You received this message because you are subscribed to the Google Groups "=
+rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
