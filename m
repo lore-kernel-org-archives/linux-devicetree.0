@@ -1,75 +1,56 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 3/4] arm64: dts: marvell: adjust to the latest mv-xor-v2 DT binding
-Date: Wed, 15 Jun 2016 16:03:13 +0200
-Message-ID: <1465999394-14334-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1465999394-14334-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465999394-14334-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 1/8] Documentation: arm: define DT cpu
+ capacity-dmips-mhz bindings
+Date: Wed, 15 Jun 2016 15:04:47 +0100
+Message-ID: <20160615140447.GB2282@sirena.org.uk>
+References: <1465985877-18271-1-git-send-email-juri.lelli@arm.com>
+ <1465985877-18271-2-git-send-email-juri.lelli@arm.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hTyD2MSx3HZlTIuF"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465985877-18271-2-git-send-email-juri.lelli@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, sgurrappadi@nvidia.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-As suggested by Rob Herring, we should:
 
- 1/ Use a SoC-specific compatible string in addition to the more generic
-    one.
+--hTyD2MSx3HZlTIuF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- 2/ The generic compatible string has been changed from
-    "marvell,mv-xor-v2" to "marvell,xor-v2".
+On Wed, Jun 15, 2016 at 11:17:50AM +0100, Juri Lelli wrote:
 
-We simply reflect the changes made to the Device Tree bindings to the
-relevant Marvell 7K/8K Device Tree files.
+> +CPU capacities are obtained by running a suitable benchmark. This binding makes
+> +no aspersions on the validity or suitability of any particular benchmark, the
+> +final capacity should, however, be:
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Makes no guarantees.  An aspersion is an insult!
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 20d256b..eab1a42 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -141,7 +141,7 @@
- 			};
- 
- 			xor@400000 {
--				compatible = "marvell,mv-xor-v2";
-+				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
- 				reg = <0x400000 0x1000>,
- 				      <0x410000 0x1000>;
- 				msi-parent = <&gic_v2m0>;
-@@ -149,7 +149,7 @@
- 			};
- 
- 			xor@420000 {
--				compatible = "marvell,mv-xor-v2";
-+				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
- 				reg = <0x420000 0x1000>,
- 				      <0x430000 0x1000>;
- 				msi-parent = <&gic_v2m0>;
-@@ -157,7 +157,7 @@
- 			};
- 
- 			xor@440000 {
--				compatible = "marvell,mv-xor-v2";
-+				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
- 				reg = <0x440000 0x1000>,
- 				      <0x450000 0x1000>;
- 				msi-parent = <&gic_v2m0>;
-@@ -165,7 +165,7 @@
- 			};
- 
- 			xor@460000 {
--				compatible = "marvell,mv-xor-v2";
-+				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
- 				reg = <0x460000 0x1000>,
- 				      <0x470000 0x1000>;
- 				msi-parent = <&gic_v2m0>;
--- 
-2.7.4
+> +CPU capacities are obtained by running the Dhrystone benchmark on each CPU at
+> +max frequency. The obtained DMIPS score is then divided by the frequency (in
+> +MHz) at which the benchmark has been run, so that DMIPS/MHz are obtained.
+> +Such values are then normalized w.r.t. the highest score obtained in the
+> +system.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Perhaps worth mentioning that caches and so on should be enabled (based
+on previous experience with people doing bringup)?
+
+--hTyD2MSx3HZlTIuF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXYWB+AAoJECTWi3JdVIfQ0n0H+QFFGQlAwUqW5r7MeENtno09
+xyaKc04bxsEYYXlC1htnknLdPtY13kJ6czFAQ8RHvdQPNfzwG3CcEXaFUiLeIjLP
+hT2zdt9eUb+4bUit40dcULVK1UZH9p70s8yR5RmOl2e4Nr/4qebp33ccKwB2po6g
+PwZSlbKleMYGSwnGFa0zvfQ/EetzrV+wRrXqPx7JA8I77w5PIQ1RA2xUbUT9ShMx
+pXl8vbywOSC1vDwdP/Yzcd81z2NPvspJM6mveWJ562X/wLqtFAfj5JuN7fRKKOpK
+iamibu+l1/ALV0rbF8Zhu4gxs4/6o6m+9g5vdtmav3zZvo8FIwNMw6HuA5mcMx4=
+=R+jA
+-----END PGP SIGNATURE-----
+
+--hTyD2MSx3HZlTIuF--
