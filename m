@@ -1,106 +1,44 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 03/10] mfd: ac100: Add driver for X-Powers
- AC100 audio codec / RTC combo IC
-Date: Wed, 15 Jun 2016 20:41:35 +0800
-Message-ID: <CAGb2v669g6G4aK5UssyLLve1a-AbdVfo4CPYrt+YWmCUURz9qQ@mail.gmail.com>
-References: <1465986467-14802-1-git-send-email-wens@csie.org>
- <1465986467-14802-4-git-send-email-wens@csie.org> <20160615123646.GD4948@dell>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5] ASoC: rockchip: Add machine driver for RK3399 GRU Boards
+Date: Wed, 15 Jun 2016 07:44:32 -0500
+Message-ID: <CAL_JsqKEDw14HmbW=78_4P03nFDfmT7kOn4RsTF-PrBi+jWr0g@mail.gmail.com>
+References: <1465807339-1100-1-git-send-email-zhengxing@rock-chips.com>
+ <20160614223810.GA7925@rob-hp-laptop> <20160615095312.GY2282@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCMILY6JWQBBBF42QW5QKGQEWREDT7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160615123646.GD4948@dell>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160615095312.GY2282@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Xing Zheng <zhengxing@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Doug Anderson <dianders@chromium.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 8:36 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, 15 Jun 2016, Chen-Yu Tsai wrote:
+On Wed, Jun 15, 2016 at 4:53 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Jun 14, 2016 at 05:38:10PM -0500, Rob Herring wrote:
+>> On Mon, Jun 13, 2016 at 04:42:18PM +0800, Xing Zheng wrote:
 >
->> The AC100 is a multifunction device with an audio codec subsystem and
->> an RTC subsystem. These two subsystems share a common register space
->> and host interface.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
+>> > +sound {
+>> > +   compatible = "rockchip,rk3399-gru-sound";
+>> > +   rockchip,cpu = <&i2s0>;
+>> > +   rockchip,codec = <&max98357a &rt5514 &da7219>;
 >
-> Change log?
-
-Change log was in the cover letter. Changes were the addition of the
-codec related register macros and regmap ranges.
-
->>  drivers/mfd/Kconfig       |  10 +++
->>  drivers/mfd/Makefile      |   2 +
->>  drivers/mfd/ac100.c       | 135 +++++++++++++++++++++++++++++++++++
->>  include/linux/mfd/ac100.h | 176 ++++++++++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 323 insertions(+)
->>  create mode 100644 drivers/mfd/ac100.c
->>  create mode 100644 include/linux/mfd/ac100.h
->>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 1bcf601de5bc..bd83849a0c8d 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -101,6 +101,16 @@ config MFD_BCM590XX
->>       help
->>         Support for the BCM590xx PMUs from Broadcom
->>
->> +config MFD_AC100
->> +     tristate "X-Powers AC100"
->> +     select MFD_CORE
->> +     depends on SUNXI_RSB
->> +     help
->> +       If you say Y here you get support for the X-Powers AC100 audio codec
->> +       IC.
->> +       This driver include only the core APIs. You have to select individual
->> +       components like codecs or RTC under the corresponding menus.
->> +
->>  config MFD_AXP20X
->>       tristate
->>       select MFD_CORE
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index 42a66e19e191..60f9a6b0557c 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -113,6 +113,8 @@ obj-$(CONFIG_PMIC_DA9052) += da9052-irq.o
->>  obj-$(CONFIG_PMIC_DA9052)    += da9052-core.o
->>  obj-$(CONFIG_MFD_DA9052_SPI) += da9052-spi.o
->>  obj-$(CONFIG_MFD_DA9052_I2C) += da9052-i2c.o
->> +
->> +obj-$(CONFIG_MFD_AC100)              += ac100.o
->>  obj-$(CONFIG_MFD_AXP20X)     += axp20x.o
->>  obj-$(CONFIG_MFD_AXP20X_I2C) += axp20x-i2c.o
->>  obj-$(CONFIG_MFD_AXP20X_RSB) += axp20x-rsb.o
->> diff --git a/drivers/mfd/ac100.c b/drivers/mfd/ac100.c
->> new file mode 100644
->> index 000000000000..15d24fa77771
->> --- /dev/null
->> +++ b/drivers/mfd/ac100.c
->> @@ -0,0 +1,135 @@
->> +/*
->> + * ac100.c - MFD core driver for X-Powers' AC100 Audio Codec IC
+>> These seem fairly standard though a variety of versions in the bindings.
+>> Can we use audio-codec and audio-cpu (or cpu or audio-dai) here? Mark?
 >
-> Nit: Drop the filename here.
->
-> Apart from that:
->   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Well, the roles aren't actually that standard (the fact that there's
+> multiple CODECs and one CPU DAI here is really odd and definitely needs
+> a very system specific interpretation).  If they were standard we
+> already have the simple-card binding that things should be using.
+> There's no point in standard property names if the interpretation has to
+> be non-standard.
 
-Thanks.
-ChenYu
+Okay, I agree with the system specific interpretation part. However, I
+don't think using simple-card or not determines using common
+properties.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> The vendor specific prefixes are there because all bindings are supposed
+> to add prefixes to property names.
+
+...unless they are common.
+
+Rob
