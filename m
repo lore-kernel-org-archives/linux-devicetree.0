@@ -1,70 +1,133 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] media: et8ek8: Add documentation
-Date: Wed, 15 Jun 2016 13:41:18 -0500
-Message-ID: <CAL_JsqKDxnc-pTOcdbL4iWFB9qU5924N0TV0NFw=A-zGN8boXQ@mail.gmail.com>
-References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <1465659593-16858-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160614220517.GA23504@rob-hp-laptop> <20160615043116.GG26360@valkosipuli.retiisi.org.uk>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
+Date: Wed, 15 Jun 2016 20:49:30 +0200
+Message-ID: <2590052.6LplKWTe68@diego>
+References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com> <20086422.3ieDmpZrvB@diego> <da45cb15-4823-0992-0b83-475f1ad4c8aa@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160615043116.GG26360-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <da45cb15-4823-0992-0b83-475f1ad4c8aa@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wang <frank.wang@rock-chips.com>
+Cc: dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 11:31 PM, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Tue, Jun 14, 2016 at 05:05:17PM -0500, Rob Herring wrote:
->> On Sat, Jun 11, 2016 at 06:39:53PM +0300, Ivaylo Dimitrov wrote:
->> > Add DT bindings description
->>
->> Not exactly the best commit msg.
->>
->> >
->> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > ---
->> >  .../bindings/media/i2c/toshiba,et8ek8.txt          | 50 ++++++++++++++++++++++
->> >  1 file changed, 50 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
->> > new file mode 100644
->> > index 0000000..997d268
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
->> > @@ -0,0 +1,50 @@
->> > +Toshiba et8ek8 5MP sensor
->> > +
->> > +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
->> > +
->> > +More detailed documentation can be found in
->> > +Documentation/devicetree/bindings/media/video-interfaces.txt .
->> > +
->> > +
->> > +Mandatory properties
->> > +--------------------
->> > +
->> > +- compatible: "toshiba,et8ek8"
->> > +- reg: I2C address (0x3e, or an alternative address)
->> > +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
->>
->> > +- clocks: External clock to the sensor
->> > +- clock-frequency: Frequency of the external clock to the sensor
->>
->> These should be mutually-exclusive. If you have a clock, then you can
->> get the frequency at runtime.
->
-> Yes, you can. But the intention is to set the frequency: the sensor requires
-> a particular, pre-determined frequency. Typically this is specific to the
-> board.
+Hi Frank,
 
-Okay, then state that in the description.
+Am Mittwoch, 15. Juni 2016, 18:58:43 schrieb Frank Wang:
+> On 2016/6/15 17:04, Heiko St=FCbner wrote:
+> > Am Mittwoch, 15. Juni 2016, 11:23:26 schrieb Frank Wang:
+> >> On 2016/6/14 21:27, Heiko St=FCbner wrote:
+> >>> Am Montag, 13. Juni 2016, 10:10:10 schrieb Frank Wang:
+> >>>> The newer SoCs (rk3366, rk3399) take a different usb-phy IP bloc=
+k
+> >>>> than rk3288 and before, and most of phy-related registers are al=
+so
+> >>>> different from the past, so a new phy driver is required necessa=
+rily.
+> >>>>=20
+> >>>> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+> >>>> ---
+> >>>>=20
+> >>>> Changes in v5:
+> >>>>    - Added 'reg' in the data block to match the different phy-bl=
+ocks in
+> >>>>    dt.
+> >>>>=20
+> >>>> Changes in v4:
+> >>>>    - Removed some processes related to 'vbus_host-supply'.
+> >>>>=20
+> >>>> Changes in v3:
+> >>>>    - Resolved the mapping defect between fixed value in driver a=
+nd the
+> >>>>=20
+> >>>> property in devicetree.
+> >>>>=20
+> >>>>    - Optimized 480m output clock register function.
+> >>>>    - Code cleanup.
+> >>>>=20
+> >>>> Changes in v2:
+> >>>>    - Changed vbus_host operation from gpio to regulator in *_pro=
+be.
+> >>>>    - Improved the fault treatment relate to 480m clock register.
+> >>>>    - Cleaned up some meaningless codes in *_clk480m_disable.
+> >>>>    - made more clear the comment of *_sm_work.
+> >>>>   =20
+> >>>>    drivers/phy/Kconfig                  |    7 +
+> >>>>    drivers/phy/Makefile                 |    1 +
+> >>>>    drivers/phy/phy-rockchip-inno-usb2.c |  645
+> >>>>=20
+> >>>> ++++++++++++++++++++++++++++++++++ 3 files changed, 653 insertio=
+ns(+)
+> >>>>=20
+> >>>> [...]
+> >>>>=20
+> >>>> +
+> >>>> +static int rockchip_usb2phy_exit(struct phy *phy)
+> >>>> +{
+> >>>> +	struct rockchip_usb2phy_port *rport =3D phy_get_drvdata(phy);
+> >>>> +
+> >>>>=20
+> >>> 	if (!rport->port_cfg)
+> >>> =09
+> >>> 		return 0;
+> >>>>=20
+> >>>> +	if (rport->port_id =3D=3D USB2PHY_PORT_HOST)
+> >>>> +		cancel_delayed_work_sync(&rport->sm_work);
+> >>>> +
+> >>>=20
+> >>> you will also need to resume the port here, if it is suspended at=
+ this
+> >>> point, as phy_power_off gets called after phy_exit and would prob=
+ably
+> >>> produce clk enable/disable mismatches otherwise.
+> >>=20
+> >> Hmm, from my personal point of view, when canceling sm_work here, =
+it may
+> >> not cause the port goes to suspend, isn't it? besides, clk only pr=
+epared
+> >> in *_usb2phy_resume(), and unprepared in *_usb2phy_suspend(), so i=
+f we
+> >> resume port here,  the prepare_count of clk will be increased agai=
+n, I
+> >> am afraid this is not correct, and am I wrong? would you like to t=
+ell me
+> >> more details?
+> >=20
+> > usb2phy_resume gets called both initially through phy_power_on as w=
+ell.
+> > So it's on but through the first scheduled work call, might get sus=
+pended
+> > when nothing is connected. (clk_enable and clk_disable will run).
+> > If nothing is connected on unload phy_power_off will get called whi=
+le the
+> > clock actually is still disabled.
+> >=20
+> > So I think it's either resuming on exit, or at least making sure to=
+ do
+> > nothing in that case in the phy_power_off callback of the driver.
+>=20
+> Well, I got what you mean. I saw phy_power_on() gets called  twice at
+> ehci/ohci driver probe time, one is at pdata->power_on(); another is =
+at
+> usb_add_hcd(), so after that, the power_count of phy increases to two=
+=2E
+> however, when ehci/ohci driver goes to suspend, there is only once to
+> call phy_power_off(), and the power_count of phy decreases to 1, so o=
+ur
+> usb2phy_resume() could not be invoked :-) .
+>
+> If so, is it still need to care it?
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You should never have to rely on oddities in other drivers :-)
+
+> How about use suspended member of
+> rockchip_usb2phy_port as a conditional to check in *_usb2phy_suspend(=
+),
+> if necessary.
+
+That looks also sane and should work.
+
+
+Heiko
