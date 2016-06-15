@@ -1,65 +1,60 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun8i-q8-common: Add support for USB wifi controllers
-Date: Wed, 15 Jun 2016 20:23:50 +0200
-Message-ID: <1466015030-18091-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4] input: touchscreen: Add generic driver for Silead touchscreens
+Date: Wed, 15 Jun 2016 13:39:15 -0500
+Message-ID: <CAL_JsqJOSYMO7znAF3+98MmQQ3nNChrgW+N=yTmim67=X6TgLg@mail.gmail.com>
+References: <1465814810-7151-1-git-send-email-djaniboe@gmail.com>
+ <1465814810-7151-2-git-send-email-djaniboe@gmail.com> <20160614232720.GA28035@rob-hp-laptop>
+ <46f9d002-61df-66aa-c468-9df42c8af306@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <46f9d002-61df-66aa-c468-9df42c8af306@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Daniel Jansen <djaniboe@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Robert Dolca <robert.dolca@gmail.com>, Gregor Riepl <onitake@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wessel Blokzijl <wesselb94@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Some of the sun8i q8 boards have an usb wifi controller, on other
-variants this will result in an used usb root-hub, but the best
-way to deal with wifi on this boards is to simply let the kernel
-auto-detect usb or sdio wifi controllers.
+On Wed, Jun 15, 2016 at 2:39 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi,
+>
+>
+> On 06/15/2016 01:27 AM, Rob Herring wrote:
+>>
+>> On Mon, Jun 13, 2016 at 12:46:50PM +0200, Daniel Jansen wrote:
+>>>
+>>> From: Robert Dolca <robert.dolca@intel.com>
+>>>
+>>> This driver adds support for Silead touchscreens. It has been tested
+>>> with GSL1680 and GSL3680 touch panels.
+>>>
+>>> It supports ACPI and device tree enumeration. Screen resolution,
+>>> the maximum number of fingers supported and firmware name are
+>>> configurable.
 
-This has been tested on an a23 based q8 tablet with a RTL8188ETV wifi
-controller.
+[...]
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-q8-common.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+>>> b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>>> @@ -0,0 +1,39 @@
+>>> +* GSL 1680 touchscreen controller
+>>> +
+>>> +Required properties:
+>>> +- compatible             : "silead,gsl1680"
+>>> +- reg                    : I2C slave address of the chip (0x40)
+>>> +- interrupt-parent       : a phandle pointing to the interrupt
+>>> controller
+>>> +                           serving the interrupt for this chip
+>>> +- interrupts             : interrupt specification for the gsl1680
+>>> interrupt
+>>> +- wake-gpios             : GPIO specification for the WAKE input
+>>
+>>
+>> What direction is this?
+>
+>
+> This is an input to the touchscreen controller, it needs to be driven high
+> to take the touchscreen controller out of its low power state.
 
-diff --git a/arch/arm/boot/dts/sun8i-q8-common.dtsi b/arch/arm/boot/dts/sun8i-q8-common.dtsi
-index 991087f..f3f4ce0 100644
---- a/arch/arm/boot/dts/sun8i-q8-common.dtsi
-+++ b/arch/arm/boot/dts/sun8i-q8-common.dtsi
-@@ -63,6 +63,10 @@
- 	};
- };
- 
-+&ehci0 {
-+	status  = "okay";
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8>;
-@@ -171,6 +175,12 @@
- 	regulator-name = "vcc-dram";
- };
- 
-+&reg_dldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi";
-+};
-+
- &reg_drivevbus {
- 	regulator-name = "usb0-vbus";
- 	status = "okay";
-@@ -205,5 +215,6 @@
- 	usb0_id_det-gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
- 	usb0_vbus_power-supply = <&usb_power_supply>;
- 	usb0_vbus-supply = <&reg_drivevbus>;
-+	usb1_vbus-supply = <&reg_dldo1>;
- 	status = "okay";
- };
--- 
-2.7.4
+Okay, please clarify that in the description. The gpio flags should
+also indicate it is active high.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
