@@ -1,64 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 4/5] mfd: tps65217: Add power button as subdevice
-Date: Wed, 15 Jun 2016 15:12:42 +0100
-Message-ID: <20160615141242.GK4948@dell>
-References: <20160614132927.3309-1-m.niestroj@grinn-global.com>
- <20160614132927.3309-5-m.niestroj@grinn-global.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v3 3/6] iommu/rockchip: support virtual iommu slave device
+Date: Wed, 15 Jun 2016 23:21:28 +0900
+Message-ID: <CAAFQd5AHj8dNrpXXP80k9qguBjEyGehbnGO=rCQU499Nm23yew@mail.gmail.com>
+References: <1465992285-16187-1-git-send-email-zhengsq@rock-chips.com>
+ <1465992285-16187-4-git-send-email-zhengsq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160614132927.3309-5-m.niestroj@grinn-global.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>
-Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1465992285-16187-4-git-send-email-zhengsq@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shunqian Zheng <zhengsq@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux@armlinux.org.uk, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, simon xue <xxm@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 14 Jun 2016, Marcin Niestroj wrote:
-
-> Add tps65217 power buttor subdevice with assigned IRQ resources.
->=20
-> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
-> ---
-> depends on patch 1 in series
->=20
->  drivers/mfd/tps65217.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-
-Applied, thanks.
-
-> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
-> index d49f94e..68cf431 100644
-> --- a/drivers/mfd/tps65217.c
-> +++ b/drivers/mfd/tps65217.c
-> @@ -38,6 +38,10 @@ static struct resource charger_resources[] =3D {
->  	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
->  };
-> =20
-> +static struct resource pb_resources[] =3D {
-> +	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_PB, "PB"),
-> +};
-> +
->  struct tps65217_irq {
->  	int mask;
->  	int interrupt;
-> @@ -122,6 +126,12 @@ static struct mfd_cell tps65217s[] =3D {
->  		.resources =3D charger_resources,
->  		.of_compatible =3D "ti,tps65217-charger",
->  	},
-> +	{
-> +		.name =3D "tps65217-pwrbutton",
-> +		.num_resources =3D ARRAY_SIZE(pb_resources),
-> +		.resources =3D pb_resources,
-> +		.of_compatible =3D "ti,tps65217-pwrbutton",
-> +	},
->  };
-> =20
->  static irqreturn_t tps65217_irq_thread(int irq, void *data)
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+SGkgU2h1bnFpYW4sCgpPbiBXZWQsIEp1biAxNSwgMjAxNiBhdCA5OjA0IFBNLCBTaHVucWlhbiBa
+aGVuZyA8emhlbmdzcUByb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4gQW4gdmlydHVhbCBtYXN0ZXIg
+ZGV2aWNlIGxpa2UgRFJNIG5lZWQgdG8gYXR0YWNoIHRvIGlvbW11Cj4gZG9tYWluIHRvIHNoYXJl
+IHRoZSBtYXBwaW5nIHdpdGggVk9Qcyh0aGUgb25lIHdpdGggYWN0dWFsCj4gaW9tbXUgc2xhdmVz
+KS4KPiBEUk0gYXR0YWNoZXMgdG8gaW9tbXUgYW5kIGFsbG9jYXRlcyBidWZmZXJzIGJlZm9yZSBW
+T1BzIGVuYWJsZWQsCj4gd2hpY2ggbWVhbnMgdGhlcmUgbWF5IGhhdmUgbm90IHJlYWwgaW9tbXUg
+ZGV2aWNlcyBjYW4gYmUgdXNlZAo+IHRvIGRvIGRtYSBtYXBwaW5nLgo+Cj4gVGhpcyBwYXRjaCBj
+cmVhdGVzIGEgaW9tbXUgd2hlbiB2aXJ0dWFsIG1hc3Rlcihncm91cCBpcyBOVUxMKQo+IGF0dGFj
+aGluZywgc28gaXQgY2FuIHVzZSB0aGlzIGlvbW11IGV2ZW4gdGhlIHJlYWwgaW9tbXVzIGRpc2Fi
+bGVkLgo+Cj4gQ2hhbmdlcyBvZiBWMzoKPiAtIEluc3RlYWQgb2YgcmVnaXN0ZXJpbmcgdmlydHVh
+bCBpb21tdSBpbiBEVFMsIHRoaXMgcGF0Y2gKPiAgIGNyZWF0ZXMgYSBpb21tdSB3aGVuIGF0dGFj
+aGluZy4KPgo+IFNpZ25lZC1vZmYtYnk6IFNodW5xaWFuIFpoZW5nIDx6aGVuZ3NxQHJvY2stY2hp
+cHMuY29tPgo+IFN1Z2dlc3RlZC1ieTogVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4K
+ClRvIGNsYXJpZnksIEkgZG9uJ3QgcmVhbGx5IGxpa2UgdGhlIGlkZWEgb2YgdmlydHVhbCBJT01N
+VSwgaG93ZXZlciBpdAppcyByZWdpc3RlcmVkLCBkdHMgb3IgbWFudWFsbHksIGJ1dCBJIGRvbid0
+IHRoaW5rIHRoZXJlIGlzIGFueSBvdGhlcgpyZWFzb25hYmxlIHdheSBvZiBkZWFsaW5nIHdpdGgg
+YWxsb2NhdGlvbnMgZm9yIHN1YnN5c3RlbXMgc3VjaCBhcyBEUk0sCndoZXJlIHRoZXJlIGFyZSBt
+dWx0aXBsZSBkZXZpY2VzIGluIG9uZSBJT01NVSBkb21haW4uIEhhdmluZyBzYWlkCnRoYXQsIHBs
+ZWFzZSBzZWUgc29tZSBtaW5vciBjb21tZW50cyBpbmxpbmUuCgo+IC0tLQo+ICBkcml2ZXJzL2lv
+bW11L3JvY2tjaGlwLWlvbW11LmMgfCAxMzMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKy0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDEyMiBpbnNlcnRpb25zKCspLCAxMSBkZWxl
+dGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L3JvY2tjaGlwLWlvbW11LmMg
+Yi9kcml2ZXJzL2lvbW11L3JvY2tjaGlwLWlvbW11LmMKPiBpbmRleCAzYzE2ZWMzLi44MmVjYzk5
+IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUuYwo+ICsrKyBiL2Ry
+aXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUuYwpbc25pcF0KPiBAQCAtODc4LDYgKzk3NSw5IEBA
+IHN0YXRpYyBzdHJ1Y3QgaW9tbXVfZG9tYWluICpya19pb21tdV9kb21haW5fYWxsb2ModW5zaWdu
+ZWQgdHlwZSkKPiAgICAgICAgIGlmICghcmtfZG9tYWluKQo+ICAgICAgICAgICAgICAgICByZXR1
+cm4gTlVMTDsKPgo+ICsgICAgICAgaWYgKGlvbW11X2dldF9kbWFfY29va2llKCZya19kb21haW4t
+PmRvbWFpbikpCj4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyX2R0Owo+ICsKClNob3VsZG4ndCB0
+aGlzIGJlbG9uZyB0byBhIHNlcGFyYXRlIHBhdGNoPyBBY3R1YWxseSwgaXMgdGhpcyByZXF1aXJl
+ZD8KSWYgc28sIGhvdyB0aGlzIHdvcmtlZCBiZWZvcmU/Cgo+ICAgICAgICAgLyoKPiAgICAgICAg
+ICAqIHJrMzJ4eCBpb21tdXMgdXNlIGEgMiBsZXZlbCBwYWdldGFibGUuCj4gICAgICAgICAgKiBF
+YWNoIGxldmVsMSAoZHQpIGFuZCBsZXZlbDIgKHB0KSB0YWJsZSBoYXMgMTAyNCA0LWJ5dGUgZW50
+cmllcy4KPiBAQCAtOTE3LDYgKzEwMTcsOSBAQCBzdGF0aWMgdm9pZCBya19pb21tdV9kb21haW5f
+ZnJlZShzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4pCj4gICAgICAgICB9Cj4KPiAgICAgICAg
+IGZyZWVfcGFnZSgodW5zaWduZWQgbG9uZylya19kb21haW4tPmR0KTsKPiArCj4gKyAgICAgICBp
+b21tdV9wdXRfZG1hX2Nvb2tpZSgmcmtfZG9tYWluLT5kb21haW4pOwo+ICsKClNlZSBhYm92ZS4K
+Ck90aGVyd2lzZSwgd2l0aCB0aGUgYWJvdmUgYWRkcmVzc2VkLCB5b3UgY2FuIGFkZCBteSBSZXZp
+ZXdlZC1ieS4KCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
