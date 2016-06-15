@@ -1,178 +1,132 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 02/48] ARM: at91: Document new TCB bindings
-Date: Wed, 15 Jun 2016 09:29:55 +0200
-Message-ID: <20160615092955.261f14fb@bbrezillon>
-References: <1465596231-21766-1-git-send-email-alexandre.belloni@free-electrons.com>
-	<1465596231-21766-3-git-send-email-alexandre.belloni@free-electrons.com>
-	<20160614214737.GA10294@rob-hp-laptop>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4] input: touchscreen: Add generic driver for Silead
+ touchscreens
+Date: Wed, 15 Jun 2016 09:39:13 +0200
+Message-ID: <46f9d002-61df-66aa-c468-9df42c8af306@redhat.com>
+References: <1465814810-7151-1-git-send-email-djaniboe@gmail.com>
+ <1465814810-7151-2-git-send-email-djaniboe@gmail.com>
+ <20160614232720.GA28035@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20160614214737.GA10294@rob-hp-laptop>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160614232720.GA28035@rob-hp-laptop>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Daniel Jansen <djaniboe@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Robert Dolca <robert.dolca@gmail.com>, Gregor Riepl <onitake@gmail.com>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Wessel Blokzijl <wesselb94@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 14 Jun 2016 16:47:37 -0500
-Rob Herring <robh@kernel.org> wrote:
+Hi,
 
-> On Sat, Jun 11, 2016 at 12:03:05AM +0200, Alexandre Belloni wrote:
-> > The current binding for the TCB is not flexible enough for some use cases
-> > and prevents proper utilization of all the channels.
-> > 
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: linux-pwm@vger.kernel.org
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > ---
-> >  .../devicetree/bindings/arm/atmel-at91.txt         | 32 -----------
-> >  .../devicetree/bindings/mfd/atmel-tcb.txt          | 62 ++++++++++++++++++++++
-> >  .../devicetree/bindings/pwm/atmel-tcb-pwm.txt      | 12 +++--
-> >  3 files changed, 69 insertions(+), 37 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt  
-> 
-> [...]
-> 
-> > diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-> > new file mode 100644
-> > index 000000000000..48196752c78f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-> > @@ -0,0 +1,62 @@
-> > +* Device tree bindings for Atmel Timer Counter Blocks
-> > +- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
-> > +  <chip> can be "at91rm9200" or "at91sam9x5"
-> > +- reg: Should contain registers location and length
-> > +- #address-cells: has to be 1
-> > +- #size-cells: has to be 0
-> > +- interrupts: Should contain all interrupts for the TC block
-> > +  Note that you can specify several interrupt cells if the TC
-> > +  block has one interrupt per channel.
-> > +- clock-names: tuple listing input clock names.
-> > +	Required elements: "t0_clk", "slow_clk"
-> > +	Optional elements: "t1_clk", "t2_clk"
-> > +- clocks: phandles to input clocks.  
-> 
-> What is the order of clocks?
-> 
-> > +
-> > +The TCB can expose multiple subdevices:
-> > + * a clocksource and clockevent device  
-> 
-> No. These compatible names are linuxisms. Describe features of the 
-> timers to be able to select which timer to use if you need to pick 
-> certain timers. For example, interrupt capability could be used to 
-> select the clkevt.
+On 06/15/2016 01:27 AM, Rob Herring wrote:
+> On Mon, Jun 13, 2016 at 12:46:50PM +0200, Daniel Jansen wrote:
+>> From: Robert Dolca <robert.dolca@intel.com>
+>>
+>> This driver adds support for Silead touchscreens. It has been tested
+>> with GSL1680 and GSL3680 touch panels.
+>>
+>> It supports ACPI and device tree enumeration. Screen resolution,
+>> the maximum number of fingers supported and firmware name are
+>> configurable.
+>>
+>> Signed-off-by: Robert Dolca <robert.dolca@intel.com>
+>> Signed-off-by: Daniel Jansen <djaniboe@gmail.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes since v3
+>> - Check for the hw reporting more touches than expected
+>> - Fix input_mt_assign_slots usage
+>> - Remove unnecessary defines.
+>> - Shorten lines to be under 80 characters.
+>> - Move closing block comment to new line.
+>> - Add device tree bindings document for silead_gsl1680.
+>> - Use dev->driver->acpi_match_table instead of silead_ts_acpi_match
+>> - Replaced sprintf in default firmware file name generator with snprintf
+>> - Add missing input_mt_sync_frame() call
+>> - Fix device tree support
+>>
+>> Changes since v2
+>> - removed device properties requirements
+>>        - max x and y default to 4095
+>>        - max fingers default to 10
+>>        - firmware name uses the HID / device name
+>>        - power named GPIO optional with fallback to indexed GPIO
+>>          (without it there is no pm support in the driver)
+>> - finger tracking in the kernel using slot assignment
+>> - add device property for x/y inverting and xy swapping
+>>
+>> Changes since v1
+>> - changed device tree properties names
+>> - removed cast for `void *id`
+>> - removed ifdef from suspend and resume and use __maybe_unused
+>> - remove ifdef from ACPI_PTR
+>> - renamed ret to error
+>> - removed input_set_capability for EV_ABS
+>> - fixed endianess issues
+>> - added mask for y in order to use only 12 bits
+>> - using the 4 MSb for touch ID instead of LSb (bug)
+>> - using the 4 LSB for X instead of MSb (bug)
+>> ---
+>>  .../bindings/input/touchscreen/silead_gsl1680.txt  |  39 ++
+>>  drivers/input/touchscreen/Kconfig                  |  13 +
+>>  drivers/input/touchscreen/Makefile                 |   1 +
+>>  drivers/input/touchscreen/silead.c                 | 652 +++++++++++++++++++++
+>>  4 files changed, 705 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>>  create mode 100644 drivers/input/touchscreen/silead.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>> new file mode 100644
+>> index 0000000..d0164be
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>> @@ -0,0 +1,39 @@
+>> +* GSL 1680 touchscreen controller
+>> +
+>> +Required properties:
+>> +- compatible		  : "silead,gsl1680"
+>> +- reg			  : I2C slave address of the chip (0x40)
+>> +- interrupt-parent	  : a phandle pointing to the interrupt controller
+>> +			    serving the interrupt for this chip
+>> +- interrupts		  : interrupt specification for the gsl1680 interrupt
+>> +- wake-gpios		  : GPIO specification for the WAKE input
+>
+> What direction is this?
 
-Would 'atmel,tcb-free-running-timer' (to replace 'atmel,tcb-clksrc') and
-'atmel,tcb-programmable-timer' (to replace 'atmel,tcb-clkevt') be
-acceptable?
+This is an input to the touchscreen controller, it needs to be driven high
+to take the touchscreen controller out of its low power state.
 
-> 
-> > +   - compatible: Should be "atmel,tcb-clksrc"
-> > +   - reg: Should contain the TCB channels to be used. If the
-> > +     counter width is 16 bits (at91rm9200-tcb), two consecutive
-> > +     channels are needed. Else, only one channel will be used.
-> > +
-> > + * a clockevent device
-> > +   - compatible: Should be "atmel,tcb-clkevt"
-> > +   - reg: Should contain the TCB channel to be used
-> > +
-> > + * a PWM chip: see ../pwm/atmel-tcb-pwm.txt
-> > +
-> > +Examples:
-> > +
-> > +One interrupt per TC block:
-> > +	tcb0: timer@fff7c000 {
-> > +		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		reg = <0xfff7c000 0x100>;
-> > +		interrupts = <18 4>;
-> > +		clocks = <&tcb0_clk>;
-> > +		clock-names = "t0_clk";  
-> 
-> Missing slow_clk
-> 
-> > +
-> > +		timer@0 {
-> > +			compatible = "atmel,tcb-clksrc";
-> > +			reg = <0>, <1>;
-> > +		};
-> > +
-> > +		timer@2 {
-> > +			compatible = "atmel,tcb-clkevt";
-> > +			reg = <2>;
-> > +		};
-> > +	};
-> > +
-> > +One interrupt per TC channel in a TC block:
-> > +	tcb1: timer@fffdc000 {
-> > +		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		reg = <0xfffdc000 0x100>;
-> > +		interrupts = <26 4>, <27 4>, <28 4>;
-> > +		clocks = <&tcb1_clk>;
-> > +		clock-names = "t0_clk";
-> > +	};
-> > +
-> > +
-> > diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> > index 8031148bcf85..ab8fbd5ba184 100644
-> > --- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> > +++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> > @@ -2,15 +2,17 @@ Atmel TCB PWM controller
-> >  
-> >  Required properties:
-> >  - compatible: should be "atmel,tcb-pwm"
-> > +- reg: tcb channel to use. Each channel can export 2 PWMs  
-> 
-> Is there a difference in channels? If not, then this compatible should 
-> go.
+Regards,
 
-This one I don't understand.
-The TCB (Timer Counter Block) is an MFD containing 3 Timer Counter
-devices. Each of these devices (also called channels) can be assigned a
-specific mode:
-- timer mode (free-running of programmable)
-- waveform generator mode (IOW, a PWM)
-- capture mode (an IIO device, but we don't have any driver for that
-  right now)
+Hans
 
-So each sub-device of the TCB is represented as a sub-node with its own
-compatible. Is there a problem with that?
-
-> 
-> >  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
-> >    the cells format. The only third cell flag supported by this binding is
-> >    PWM_POLARITY_INVERTED.
-> > -- tc-block: The Timer Counter block to use as a PWM chip.
-> >  
-> >  Example:
-> >  
-> > -pwm {
-> > -	compatible = "atmel,tcb-pwm";
-> > -	#pwm-cells = <3>;
-> > -	tc-block = <1>;
-> > +tcb0: timer@f800c000 {
-> > +	pwm@0 {
-> > +		compatible = "atmel,tcb-pwm";
-> > +		reg = <0>;
-> > +		#pwm-cells = <3>;
-> > +	};
-> >  };
-> > -- 
-> > 2.8.1
-> >   
-
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+>> +- touchscreen-size-x	  : horizontal resolution of touchscreen (in pixels)
+>> +- touchscreen-size-y	  : vertical resolution of touchscreen (in pixels)
+>> +- touchscreen-max-fingers : maximal input values given to inputsystem
+>> +
+>> +Optional properties:
+>> +- touchscreen-inverted-x  : X axis is inverted (boolean)
+>> +- touchscreen-inverted-y  : Y axis is inverted (boolean)
+>> +- touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
+>> +			    Swapping is done after inverting the axis
+>> +
+>> +Example:
+>> +
+>> +i2c@00000000 {
+>> +
+>> +	gsl1680: touchscreen@40 {
+>> +		compatible = "silead,gsl1680";
+>> +		reg = <0x40>;
+>> +		interrupt-parent = <&pio>;
+>> +		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>;
+>> +		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>;
+>> +		touchscreen-size-x = <480>;
+>> +		touchscreen-size-y = <800>;
+>> +		touchscreen-max-fingers = <5>;
+>> +		touchscreen-inverted-x;
+>> +		touchscreen-swapped-x-y;
+>> +	};
+>> +
+>> +	/* ... */
+>> +};
+>> +
