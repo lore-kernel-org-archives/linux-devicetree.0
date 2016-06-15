@@ -1,235 +1,110 @@
-From: Shunqian Zheng <zhengsq@rock-chips.com>
-Subject: [PATCH v3 4/6] drm: rockchip: use common iommu api to attach iommu
-Date: Wed, 15 Jun 2016 20:04:43 +0800
-Message-ID: <1465992285-16187-5-git-send-email-zhengsq@rock-chips.com>
-References: <1465992285-16187-1-git-send-email-zhengsq@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465992285-16187-1-git-send-email-zhengsq@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: joro@8bytes.org, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mark.yao@rock-chips.com, airlied@linux.ie, tfiga@google.com, xxm@rock-chips.com
-Cc: linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Shunqian Zheng <zhengsq@rock-chips.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 03/10] mfd: ac100: Add driver for X-Powers
+ AC100 audio codec / RTC combo IC
+Date: Wed, 15 Jun 2016 13:36:46 +0100
+Message-ID: <20160615123646.GD4948@dell>
+References: <1465986467-14802-1-git-send-email-wens@csie.org>
+ <1465986467-14802-4-git-send-email-wens@csie.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <rtc-linux+bncBDA7X7F2WUEBBN4XQW5QKGQER43DQVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1465986467-14802-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rockchip DRM used the arm special API, arm_iommu_*(), to attach
-iommu for ARM32 SoCs. This patch convert to common iommu API
-so it would support ARM64 like RK3399.
+On Wed, 15 Jun 2016, Chen-Yu Tsai wrote:
 
-The general idea is domain_alloc(), attach_device() and
-arch_setup_dma_ops() to set dma_ops manually for DRM at the last.
+> The AC100 is a multifunction device with an audio codec subsystem and
+> an RTC subsystem. These two subsystems share a common register space
+> and host interface.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
 
-Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
----
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 112 +++++++++++++++++-----------
- drivers/gpu/drm/rockchip/rockchip_drm_drv.h |   1 +
- 2 files changed, 71 insertions(+), 42 deletions(-)
+Change log?
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-index f5a68fc..b52c38d 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-@@ -14,16 +14,16 @@
-  * GNU General Public License for more details.
-  */
- 
--#include <asm/dma-iommu.h>
--
- #include <drm/drmP.h>
- #include <drm/drm_crtc_helper.h>
- #include <drm/drm_fb_helper.h>
-+#include <linux/dma-iommu.h>
- #include <linux/dma-mapping.h>
- #include <linux/pm_runtime.h>
- #include <linux/module.h>
- #include <linux/of_graph.h>
- #include <linux/component.h>
-+#include <linux/iommu.h>
- 
- #include "rockchip_drm_drv.h"
- #include "rockchip_drm_fb.h"
-@@ -46,7 +46,8 @@ static bool is_support_iommu = true;
- int rockchip_drm_dma_attach_device(struct drm_device *drm_dev,
- 				   struct device *dev)
- {
--	struct dma_iommu_mapping *mapping = drm_dev->dev->archdata.mapping;
-+	struct rockchip_drm_private *private = drm_dev->dev_private;
-+	struct iommu_domain *domain = private->domain;
- 	int ret;
- 
- 	if (!is_support_iommu)
-@@ -58,16 +59,25 @@ int rockchip_drm_dma_attach_device(struct drm_device *drm_dev,
- 
- 	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
- 
--	return arm_iommu_attach_device(dev, mapping);
-+	ret = iommu_attach_device(domain, dev);
-+	if (ret) {
-+		dev_err(dev, "Failed to attach iommu device\n");
-+		return ret;
-+	}
-+
-+	/* TODO(djkurtz): fetch the mapping start/size from somewhere */
-+	arch_setup_dma_ops(dev, 0x00000000, SZ_2G, dev->bus->iommu_ops, false);
-+	return 0;
- }
- 
- void rockchip_drm_dma_detach_device(struct drm_device *drm_dev,
- 				    struct device *dev)
- {
--	if (!is_support_iommu)
--		return;
-+	struct rockchip_drm_private *private = drm_dev->dev_private;
-+	struct iommu_domain *domain = private->domain;
- 
--	arm_iommu_detach_device(dev);
-+	if (is_support_iommu)
-+		iommu_detach_device(domain, dev);
- }
- 
- int rockchip_register_crtc_funcs(struct drm_crtc *crtc,
-@@ -132,10 +142,52 @@ static void rockchip_drm_crtc_disable_vblank(struct drm_device *dev,
- 		priv->crtc_funcs[pipe]->disable_vblank(crtc);
- }
- 
-+static int rockchip_drm_init_iommu(struct drm_device *drm_dev)
-+{
-+	struct rockchip_drm_private *private = drm_dev->dev_private;
-+	struct device *dev = drm_dev->dev;
-+	int ret;
-+
-+	dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
-+				      GFP_KERNEL);
-+	if (!dev->dma_parms)
-+		return -ENOMEM;
-+
-+	private->domain = iommu_domain_alloc(&platform_bus_type);
-+	if (!private->domain)
-+		return -ENOMEM;
-+
-+	/* TODO(djkurtz): fetch the mapping start/size from somewhere */
-+	ret = iommu_dma_init_domain(private->domain, 0x00000000, SZ_2G);
-+	if (ret) {
-+		dev_err(dev, "Failed to init domain\n");
-+		goto err_free_domain;
-+	}
-+
-+	ret = rockchip_drm_dma_attach_device(drm_dev, dev);
-+	if (ret) {
-+		dev_err(dev, "Failed to attach device\n");
-+		goto err_free_domain;
-+	}
-+
-+	return 0;
-+
-+err_free_domain:
-+	iommu_domain_free(private->domain);
-+
-+	return ret;
-+}
-+
-+static void rockchip_iommu_cleanup(struct drm_device *drm_dev)
-+{
-+	struct rockchip_drm_private *private = drm_dev->dev_private;
-+
-+	iommu_domain_free(private->domain);
-+}
-+
- static int rockchip_drm_load(struct drm_device *drm_dev, unsigned long flags)
- {
- 	struct rockchip_drm_private *private;
--	struct dma_iommu_mapping *mapping = NULL;
- 	struct device *dev = drm_dev->dev;
- 	struct drm_connector *connector;
- 	int ret;
-@@ -153,38 +205,18 @@ static int rockchip_drm_load(struct drm_device *drm_dev, unsigned long flags)
- 
- 	rockchip_drm_mode_config_init(drm_dev);
- 
--	dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
--				      GFP_KERNEL);
--	if (!dev->dma_parms) {
--		ret = -ENOMEM;
--		goto err_config_cleanup;
--	}
--
- 	if (is_support_iommu) {
--		/* TODO(djkurtz): fetch the mapping start/size from somewhere */
--		mapping = arm_iommu_create_mapping(&platform_bus_type,
--						   0x00000000,
--						   SZ_2G);
--		if (IS_ERR(mapping)) {
--			ret = PTR_ERR(mapping);
--			goto err_config_cleanup;
--		}
--
--		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
--		if (ret)
--			goto err_release_mapping;
--
--		dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
--
--		ret = arm_iommu_attach_device(dev, mapping);
-+		ret = rockchip_drm_init_iommu(drm_dev);
- 		if (ret)
--			goto err_release_mapping;
-+			goto err_config_cleanup;
- 	}
- 
- 	/* Try to bind all sub drivers. */
- 	ret = component_bind_all(dev, drm_dev);
--	if (ret)
--		goto err_detach_device;
-+	if (ret) {
-+		dev_err(dev, "Failed to bind components\n");
-+		goto err_iommu_cleanup;
-+	}
- 
- 	/*
- 	 * All components are now added, we can publish the connector sysfs
-@@ -222,21 +254,17 @@ static int rockchip_drm_load(struct drm_device *drm_dev, unsigned long flags)
- 	if (ret)
- 		goto err_vblank_cleanup;
- 
--	if (is_support_iommu)
--		arm_iommu_release_mapping(mapping);
- 	return 0;
-+
- err_vblank_cleanup:
- 	drm_vblank_cleanup(drm_dev);
- err_kms_helper_poll_fini:
- 	drm_kms_helper_poll_fini(drm_dev);
- err_unbind:
- 	component_unbind_all(dev, drm_dev);
--err_detach_device:
--	if (is_support_iommu)
--		arm_iommu_detach_device(dev);
--err_release_mapping:
-+err_iommu_cleanup:
- 	if (is_support_iommu)
--		arm_iommu_release_mapping(mapping);
-+		rockchip_iommu_cleanup(drm_dev);
- err_config_cleanup:
- 	drm_mode_config_cleanup(drm_dev);
- 	drm_dev->dev_private = NULL;
-@@ -252,7 +280,7 @@ static int rockchip_drm_unload(struct drm_device *drm_dev)
- 	drm_kms_helper_poll_fini(drm_dev);
- 	component_unbind_all(dev, drm_dev);
- 	if (is_support_iommu)
--		arm_iommu_detach_device(dev);
-+		rockchip_iommu_cleanup(drm_dev);
- 	drm_mode_config_cleanup(drm_dev);
- 	drm_dev->dev_private = NULL;
- 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-index 56f43a3..1e2a666 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-@@ -70,6 +70,7 @@ struct rockchip_drm_private {
- 	const struct rockchip_crtc_funcs *crtc_funcs[ROCKCHIP_MAX_CRTC];
- 
- 	struct rockchip_atomic_commit commit;
-+	struct iommu_domain *domain;
- };
- 
- void rockchip_drm_atomic_work(struct work_struct *work);
--- 
-1.9.1
+>  drivers/mfd/Kconfig       |  10 +++
+>  drivers/mfd/Makefile      |   2 +
+>  drivers/mfd/ac100.c       | 135 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/ac100.h | 176 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  4 files changed, 323 insertions(+)
+>  create mode 100644 drivers/mfd/ac100.c
+>  create mode 100644 include/linux/mfd/ac100.h
+>=20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 1bcf601de5bc..bd83849a0c8d 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -101,6 +101,16 @@ config MFD_BCM590XX
+>  	help
+>  	  Support for the BCM590xx PMUs from Broadcom
+> =20
+> +config MFD_AC100
+> +	tristate "X-Powers AC100"
+> +	select MFD_CORE
+> +	depends on SUNXI_RSB
+> +	help
+> +	  If you say Y here you get support for the X-Powers AC100 audio codec
+> +	  IC.
+> +	  This driver include only the core APIs. You have to select individual
+> +	  components like codecs or RTC under the corresponding menus.
+> +
+>  config MFD_AXP20X
+>  	tristate
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 42a66e19e191..60f9a6b0557c 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -113,6 +113,8 @@ obj-$(CONFIG_PMIC_DA9052)	+=3D da9052-irq.o
+>  obj-$(CONFIG_PMIC_DA9052)	+=3D da9052-core.o
+>  obj-$(CONFIG_MFD_DA9052_SPI)	+=3D da9052-spi.o
+>  obj-$(CONFIG_MFD_DA9052_I2C)	+=3D da9052-i2c.o
+> +
+> +obj-$(CONFIG_MFD_AC100)		+=3D ac100.o
+>  obj-$(CONFIG_MFD_AXP20X)	+=3D axp20x.o
+>  obj-$(CONFIG_MFD_AXP20X_I2C)	+=3D axp20x-i2c.o
+>  obj-$(CONFIG_MFD_AXP20X_RSB)	+=3D axp20x-rsb.o
+> diff --git a/drivers/mfd/ac100.c b/drivers/mfd/ac100.c
+> new file mode 100644
+> index 000000000000..15d24fa77771
+> --- /dev/null
+> +++ b/drivers/mfd/ac100.c
+> @@ -0,0 +1,135 @@
+> +/*
+> + * ac100.c - MFD core driver for X-Powers' AC100 Audio Codec IC
+
+Nit: Drop the filename here.
+
+Apart from that:
+  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+---=20
+You received this message because you are subscribed to the Google Groups "=
+rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
