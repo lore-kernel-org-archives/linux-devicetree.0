@@ -1,133 +1,69 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
-Date: Wed, 15 Jun 2016 20:49:30 +0200
-Message-ID: <2590052.6LplKWTe68@diego>
-References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com> <20086422.3ieDmpZrvB@diego> <da45cb15-4823-0992-0b83-475f1ad4c8aa@rock-chips.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of: fix memory leak related to safe_name()
+Date: Wed, 15 Jun 2016 14:12:50 -0500
+Message-ID: <CAL_JsqL7zT3HF4P0WP9_=JwaZis4X1Bbp9t2ydNj1gyddVcjkA@mail.gmail.com>
+References: <57619AE5.70102@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <da45cb15-4823-0992-0b83-475f1ad4c8aa@rock-chips.com>
+In-Reply-To: <57619AE5.70102@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wang <frank.wang@rock-chips.com>
-Cc: dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Mathieu Malaterre <mathieu.malaterre@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
-
-Am Mittwoch, 15. Juni 2016, 18:58:43 schrieb Frank Wang:
-> On 2016/6/15 17:04, Heiko St=FCbner wrote:
-> > Am Mittwoch, 15. Juni 2016, 11:23:26 schrieb Frank Wang:
-> >> On 2016/6/14 21:27, Heiko St=FCbner wrote:
-> >>> Am Montag, 13. Juni 2016, 10:10:10 schrieb Frank Wang:
-> >>>> The newer SoCs (rk3366, rk3399) take a different usb-phy IP bloc=
-k
-> >>>> than rk3288 and before, and most of phy-related registers are al=
-so
-> >>>> different from the past, so a new phy driver is required necessa=
-rily.
-> >>>>=20
-> >>>> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
-> >>>> ---
-> >>>>=20
-> >>>> Changes in v5:
-> >>>>    - Added 'reg' in the data block to match the different phy-bl=
-ocks in
-> >>>>    dt.
-> >>>>=20
-> >>>> Changes in v4:
-> >>>>    - Removed some processes related to 'vbus_host-supply'.
-> >>>>=20
-> >>>> Changes in v3:
-> >>>>    - Resolved the mapping defect between fixed value in driver a=
-nd the
-> >>>>=20
-> >>>> property in devicetree.
-> >>>>=20
-> >>>>    - Optimized 480m output clock register function.
-> >>>>    - Code cleanup.
-> >>>>=20
-> >>>> Changes in v2:
-> >>>>    - Changed vbus_host operation from gpio to regulator in *_pro=
-be.
-> >>>>    - Improved the fault treatment relate to 480m clock register.
-> >>>>    - Cleaned up some meaningless codes in *_clk480m_disable.
-> >>>>    - made more clear the comment of *_sm_work.
-> >>>>   =20
-> >>>>    drivers/phy/Kconfig                  |    7 +
-> >>>>    drivers/phy/Makefile                 |    1 +
-> >>>>    drivers/phy/phy-rockchip-inno-usb2.c |  645
-> >>>>=20
-> >>>> ++++++++++++++++++++++++++++++++++ 3 files changed, 653 insertio=
-ns(+)
-> >>>>=20
-> >>>> [...]
-> >>>>=20
-> >>>> +
-> >>>> +static int rockchip_usb2phy_exit(struct phy *phy)
-> >>>> +{
-> >>>> +	struct rockchip_usb2phy_port *rport =3D phy_get_drvdata(phy);
-> >>>> +
-> >>>>=20
-> >>> 	if (!rport->port_cfg)
-> >>> =09
-> >>> 		return 0;
-> >>>>=20
-> >>>> +	if (rport->port_id =3D=3D USB2PHY_PORT_HOST)
-> >>>> +		cancel_delayed_work_sync(&rport->sm_work);
-> >>>> +
-> >>>=20
-> >>> you will also need to resume the port here, if it is suspended at=
- this
-> >>> point, as phy_power_off gets called after phy_exit and would prob=
-ably
-> >>> produce clk enable/disable mismatches otherwise.
-> >>=20
-> >> Hmm, from my personal point of view, when canceling sm_work here, =
-it may
-> >> not cause the port goes to suspend, isn't it? besides, clk only pr=
-epared
-> >> in *_usb2phy_resume(), and unprepared in *_usb2phy_suspend(), so i=
-f we
-> >> resume port here,  the prepare_count of clk will be increased agai=
-n, I
-> >> am afraid this is not correct, and am I wrong? would you like to t=
-ell me
-> >> more details?
-> >=20
-> > usb2phy_resume gets called both initially through phy_power_on as w=
-ell.
-> > So it's on but through the first scheduled work call, might get sus=
-pended
-> > when nothing is connected. (clk_enable and clk_disable will run).
-> > If nothing is connected on unload phy_power_off will get called whi=
-le the
-> > clock actually is still disabled.
-> >=20
-> > So I think it's either resuming on exit, or at least making sure to=
- do
-> > nothing in that case in the phy_power_off callback of the driver.
->=20
-> Well, I got what you mean. I saw phy_power_on() gets called  twice at
-> ehci/ohci driver probe time, one is at pdata->power_on(); another is =
-at
-> usb_add_hcd(), so after that, the power_count of phy increases to two=
-=2E
-> however, when ehci/ohci driver goes to suspend, there is only once to
-> call phy_power_off(), and the power_count of phy decreases to 1, so o=
-ur
-> usb2phy_resume() could not be invoked :-) .
+On Wed, Jun 15, 2016 at 1:13 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@am.sony.com>
 >
-> If so, is it still need to care it?
+> Fix a memory leak resulting from memory allocation in safe_name().
+> This patch fixes all call sites of safe_name().
+>
+> Mathieu Malaterre reported the memory leak on boot:
+>
+> On my PowerMac device-tree would generate a duplicate name:
+>
+> [    0.023043] device-tree: Duplicate name in PowerPC,G4@0, renamed to "l2-cache#1"
+>
+> in this case a newly allocated name is generated by `safe_name`. However
+> in this case it is never deallocated.
+>
+> The bug was found using kmemleak reported as:
+>
+> unreferenced object 0xdf532e60 (size 32):
+>   comm "swapper", pid 1, jiffies 4294892300 (age 1993.532s)
+>   hex dump (first 32 bytes):
+>     6c 32 2d 63 61 63 68 65 23 31 00 dd e4 dd 1e c2  l2-cache#1......
+>     ec d4 ba ce 04 ec cc de 8e 85 e9 ca c4 ec cc 9e  ................
+>   backtrace:
+>     [<c02d3350>] kvasprintf+0x64/0xc8
+>     [<c02d3400>] kasprintf+0x4c/0x5c
+>     [<c0453814>] safe_name.isra.1+0x80/0xc4
+>     [<c04545d8>] __of_attach_node_sysfs+0x6c/0x11c
+>     [<c075f21c>] of_core_init+0x8c/0xf8
+>     [<c0729594>] kernel_init_freeable+0xd4/0x208
+>     [<c00047e8>] kernel_init+0x24/0x11c
+>     [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=120331
+>
+> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
+> Reported-by: mathieu.malaterre@gmail.com
 
-You should never have to rely on oddities in other drivers :-)
+[...]
 
-> How about use suspended member of
-> rockchip_usb2phy_port as a conditional to check in *_usb2phy_suspend(=
-),
-> if necessary.
+> Index: b/include/linux/of.h
+> ===================================================================
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -121,6 +121,8 @@ static inline int of_node_is_attached(st
+>  #ifdef CONFIG_OF_DYNAMIC
+>  extern struct device_node *of_node_get(struct device_node *node);
+>  extern void of_node_put(struct device_node *node);
+> +extern void __of_sysfs_remove_bin_file(struct device_node *np,
+> +                                      struct property *prop);
 
-That looks also sane and should work.
+Should be internal to DT code, right?
 
-
-Heiko
+>  #else /* CONFIG_OF_DYNAMIC */
+>  /* Dummy ref counting routines - to be implemented later */
+>  static inline struct device_node *of_node_get(struct device_node *node)
