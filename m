@@ -1,125 +1,149 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4,2/5] dt-bindings: mt8173-mtu3: add devicetree bindings
-Date: Wed, 15 Jun 2016 11:07:17 +0800
-Message-ID: <1465960040-768-3-git-send-email-chunfeng.yun@mediatek.com>
-References: <1465960040-768-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for
+ Rockchip usb2phy
+Date: Wed, 15 Jun 2016 11:23:26 +0800
+Message-ID: <44bb6bf0-cf86-c440-665a-b0d441ce4427@rock-chips.com>
+References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
+ <1465783810-18756-3-git-send-email-frank.wang@rock-chips.com>
+ <7225720.0AClDW7eQ6@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1465960040-768-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7225720.0AClDW7eQ6@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add a DT binding doc for MediaTek USB3 DRD driver
+Hi Heiko,
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/usb/mt8173-mtu3.txt        |   86 ++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+On 2016/6/14 21:27, Heiko St=C3=BCbner wrote:
+> Am Montag, 13. Juni 2016, 10:10:10 schrieb Frank Wang:
+>> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+>> than rk3288 and before, and most of phy-related registers are also
+>> different from the past, so a new phy driver is required necessarily=
+=2E
+>>
+>> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>
+>> Changes in v5:
+>>   - Added 'reg' in the data block to match the different phy-blocks =
+in dt.
+>>
+>> Changes in v4:
+>>   - Removed some processes related to 'vbus_host-supply'.
+>>
+>> Changes in v3:
+>>   - Resolved the mapping defect between fixed value in driver and th=
+e
+>> property in devicetree.
+>>   - Optimized 480m output clock register function.
+>>   - Code cleanup.
+>>
+>> Changes in v2:
+>>   - Changed vbus_host operation from gpio to regulator in *_probe.
+>>   - Improved the fault treatment relate to 480m clock register.
+>>   - Cleaned up some meaningless codes in *_clk480m_disable.
+>>   - made more clear the comment of *_sm_work.
+>>
+>>   drivers/phy/Kconfig                  |    7 +
+>>   drivers/phy/Makefile                 |    1 +
+>>   drivers/phy/phy-rockchip-inno-usb2.c |  645
+>> ++++++++++++++++++++++++++++++++++ 3 files changed, 653 insertions(+=
+)
+>>  =20
+>> [...]
+>>
+>> +
+>> +static int rockchip_usb2phy_exit(struct phy *phy)
+>> +{
+>> +	struct rockchip_usb2phy_port *rport =3D phy_get_drvdata(phy);
+>> +
+> 	if (!rport->port_cfg)
+> 		return 0;
+>
+>> +	if (rport->port_id =3D=3D USB2PHY_PORT_HOST)
+>> +		cancel_delayed_work_sync(&rport->sm_work);
+>> +
+> you will also need to resume the port here, if it is suspended at thi=
+s point,
+> as phy_power_off gets called after phy_exit and would probably produc=
+e clk
+> enable/disable mismatches otherwise.
+>
 
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-new file mode 100644
-index 0000000..12f3c2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-@@ -0,0 +1,86 @@
-+The device node for Mediatek USB3.0 DRD controller
-+
-+Required properties:
-+ - compatible : should be "mediatek,mt8173-mtu3"
-+ - reg : specifies physical base address and size of the registers
-+ - reg-names: should be "mac" for device IP and "ippc" for IP port control
-+ - interrupts : interrupt used by the device IP
-+ - power-domains : a phandle to USB power domain node to control USB's
-+	mtcmos
-+ - vusb33-supply : regulator of USB avdd3.3v
-+ - clocks : a list of phandle + clock-specifier pairs, one for each
-+	entry in clock-names
-+ - clock-names : must contain "sys_ck" for clock of controller;
-+	"wakeup_deb_p0" and "wakeup_deb_p1" are optional, they are
-+	depends on "mediatek,enable-wakeup"
-+ - phys : a list of phandle + phy specifier pairs
-+ - dr_mode : should be one of "host", "peripheral" or "otg",
-+	refer to usb/generic.txt
-+
-+Optional properties:
-+ - #address-cells, #size-cells : should be '2' if the device has sub-nodes
-+	with 'reg' property
-+ - ranges : allows valid 1:1 translation between child's address space and
-+	parent's address space
-+ - extcon : external connector for vbus and idpin changes detection, needed
-+	when supports dual-role mode.
-+ - vbus-supply : reference to the VBUS regulator, needed when supports
-+	dual-role mode.
-+ - pinctl-names : a pinctrl state named "default" must be defined,
-+	"id_float" and "id_ground" are optinal which depends on
-+	"mediatek,enable-manual-drd"
-+ - pinctrl-0 : pin control group
-+	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+
-+ - maximum-speed : valid arguments are "super-speed", "high-speed" and
-+	"full-speed"; refer to usb/generic.txt
-+ - enable-manual-drd : supports manual dual-role switch via debugfs; usually
-+	used when receptacle is TYPE-A and also wants to support dual-role
-+	mode.
-+ - mediatek,enable-wakeup : supports ip sleep wakeup used by host mode
-+ - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
-+	control register, it depends on "mediatek,enable-wakeup".
-+
-+Sub-nodes:
-+The xhci should be added as subnode to mtu3 as shown in the following example
-+if host mode is enabled. The DT binding details of xhci can be found in:
-+Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-+
-+Example:
-+ssusb: usb@11271000 {
-+	compatible = "mediatek,mt8173-mtu3";
-+	reg = <0 0x11271000 0 0x3000>,
-+	      <0 0x11280700 0 0x0100>;
-+	reg-names = "mac", "ippc";
-+	interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>;
-+	phys = <&phy_port0 PHY_TYPE_USB3>,
-+	       <&phy_port1 PHY_TYPE_USB2>;
-+	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+	clocks = <&topckgen CLK_TOP_USB30_SEL>,
-+		 <&pericfg CLK_PERI_USB0>,
-+		 <&pericfg CLK_PERI_USB1>;
-+	clock-names = "sys_ck",
-+		      "wakeup_deb_p0",
-+		      "wakeup_deb_p1";
-+	vusb33-supply = <&mt6397_vusb_reg>;
-+	vbus-supply = <&usb_p0_vbus>;
-+	extcon = <&extcon_usb>;
-+	dr_mode = "otg";
-+	mediatek,enable-wakeup;
-+	mediatek,syscon-wakeup = <&pericfg>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	ranges;
-+	status = "disabled";
-+
-+	usb_host: xhci@11270000 {
-+		compatible = "mediatek,mt8173-xhci";
-+		reg = <0 0x11270000 0 0x1000>;
-+		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+		clocks = <&topckgen CLK_TOP_USB30_SEL>;
-+		clock-names = "sys_ck";
-+		vusb33-supply = <&mt6397_vusb_reg>;
-+		status = "disabled";
-+	};
-+};
--- 
-1.7.9.5
+Hmm, from my personal point of view, when canceling sm_work here, it ma=
+y=20
+not cause the port goes to suspend, isn't it? besides, clk only prepare=
+d=20
+in *_usb2phy_resume(), and unprepared in *_usb2phy_suspend(), so if we=20
+resume port here,  the prepare_count of clk will be increased again, I=20
+am afraid this is not correct, and am I wrong? would you like to tell m=
+e=20
+more details?
+
+>> +	return 0;
+>> +}
+>>
+>> [...]
+>>
+>> +static int rockchip_usb2phy_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev =3D &pdev->dev;
+>> +	struct device_node *np =3D dev->of_node;
+>> +	struct device_node *child_np;
+>>
+>> [...]
+>>
+>> +	index =3D 0;
+>> +	for_each_available_child_of_node(np, child_np) {
+>> +		struct rockchip_usb2phy_port *rport =3D &rphy->ports[index];
+>> +		struct phy *phy;
+>> +
+>> +		phy =3D devm_phy_create(dev, child_np, &rockchip_usb2phy_ops);
+>> +		if (IS_ERR(phy)) {
+>> +			dev_err(dev, "failed to create phy\n");
+>> +			ret =3D PTR_ERR(phy);
+>> +			goto put_child;
+>> +		}
+>> +
+>> +		rport->phy =3D phy;
+> 	phy_set_drvdata(rport->phy, rport);
+>
+>> +
+>> +		/* initialize otg/host port separately */
+>> +		if (!of_node_cmp(child_np->name, "host-port")) {
+>> +			ret =3D rockchip_usb2phy_host_port_init(rphy, rport,
+>> +							      child_np);
+>> +			if (ret)
+>> +				goto put_child;
+>> +		}
+>> +
+>> +		phy_set_drvdata(rport->phy, rport);
+> move this to the location above to prevent null-pointer dereferences =
+with
+> devices plugged in on boot.
+
+OK, I will fix it.
+
+>
+> I've tested this a bit on a rk3036 (which is lacking the disconnect-d=
+etection
+> it seems), so in general (apart from the stuff mentioned above) this =
+looks
+> nice now. So with the stuff above fixed:
+>
+> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+
+BR.
+=46rank
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
