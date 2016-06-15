@@ -1,79 +1,64 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [PATCH v3 2/2] media: et8ek8: Add documentation
-Date: Wed, 15 Jun 2016 22:24:40 +0300
-Message-ID: <5761AB78.2030707@gmail.com>
-References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <1465659593-16858-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160614220517.GA23504@rob-hp-laptop>
- <20160615043116.GG26360@valkosipuli.retiisi.org.uk>
- <CAL_JsqKDxnc-pTOcdbL4iWFB9qU5924N0TV0NFw=A-zGN8boXQ@mail.gmail.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v5 2/3] drm/arm: Add support for Mali Display Processors
+Date: Wed, 15 Jun 2016 21:29:38 +0200
+Message-ID: <CAKMK7uGFTmQERWcDeQ=V-ntbgQv6K1avGx1LKCGLcAWacmHKnA@mail.gmail.com>
+References: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
+ <1466002295-24813-3-git-send-email-Liviu.Dudau@arm.com>
+ <20160615152309.GI1338@phenom.ffwll.local>
+ <20160615161758.GF9711@e106497-lin.cambridge.arm.com>
+ <CAKMK7uENW3cU8LccHcqffX3cbzax2-5mzY0101yLfR7vtD4CoA@mail.gmail.com>
+ <20160615172104.GI9711@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKDxnc-pTOcdbL4iWFB9qU5924N0TV0NFw=A-zGN8boXQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sebastian Reichel <sre@kernel.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160615172104.GI9711@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 15.06.2016 21:41, Rob Herring wrote:
-> On Tue, Jun 14, 2016 at 11:31 PM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
->> Hi Rob,
->>
->> On Tue, Jun 14, 2016 at 05:05:17PM -0500, Rob Herring wrote:
->>> On Sat, Jun 11, 2016 at 06:39:53PM +0300, Ivaylo Dimitrov wrote:
->>>> Add DT bindings description
->>>
->>> Not exactly the best commit msg.
->>>
-
-will elaborate a bit more in the next patch version
-
->>>>
->>>> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
->>>> ---
->>>>   .../bindings/media/i2c/toshiba,et8ek8.txt          | 50 ++++++++++++++++++++++
->>>>   1 file changed, 50 insertions(+)
->>>>   create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
->>>> new file mode 100644
->>>> index 0000000..997d268
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
->>>> @@ -0,0 +1,50 @@
->>>> +Toshiba et8ek8 5MP sensor
->>>> +
->>>> +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
->>>> +
->>>> +More detailed documentation can be found in
->>>> +Documentation/devicetree/bindings/media/video-interfaces.txt .
->>>> +
->>>> +
->>>> +Mandatory properties
->>>> +--------------------
->>>> +
->>>> +- compatible: "toshiba,et8ek8"
->>>> +- reg: I2C address (0x3e, or an alternative address)
->>>> +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
->>>
->>>> +- clocks: External clock to the sensor
->>>> +- clock-frequency: Frequency of the external clock to the sensor
->>>
->>> These should be mutually-exclusive. If you have a clock, then you can
->>> get the frequency at runtime.
->>
->> Yes, you can. But the intention is to set the frequency: the sensor requires
->> a particular, pre-determined frequency. Typically this is specific to the
->> board.
->
-> Okay, then state that in the description.
->
-
-ok, will do in the next patch version
-
-Thanks,
-Ivo
+T24gV2VkLCBKdW4gMTUsIDIwMTYgYXQgNzoyMSBQTSwgTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1
+QGFybS5jb20+IHdyb3RlOgo+IE9uIFdlZCwgSnVuIDE1LCAyMDE2IGF0IDA3OjEzOjE1UE0gKzAy
+MDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4+IE9uIFdlZCwgSnVuIDE1LCAyMDE2IGF0IDY6MTcg
+UE0sIExpdml1IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPiB3cm90ZToKPj4gPiBPbiBXZWQs
+IEp1biAxNSwgMjAxNiBhdCAwNToyMzoxMFBNICswMjAwLCBEYW5pZWwgVmV0dGVyIHdyb3RlOgo+
+PiA+PiBPbiBXZWQsIEp1biAxNSwgMjAxNiBhdCAwMzo1MTozNFBNICswMTAwLCBMaXZpdSBEdWRh
+dSB3cm90ZToKPj4gPj4gPiBBZGQgc3VwcG9ydCBmb3IgdGhlIG5ldyBmYW1pbHkgb2YgRGlzcGxh
+eSBQcm9jZXNzb3JzIGZyb20gQVJNIEx0ZC4KPj4gPj4gPiBUaGlzIGNvbW1pdCBhZGRzIGJhc2lj
+IHN1cHBvcnQgZm9yIE1hbGkgRFA1MDAsIERQNTUwIGFuZCBEUDY1MAo+PiA+PiA+IHBhcnRzLCB3
+aXRoIG9ubHkgdGhlIGRpc3BsYXkgZW5naW5lIGJlaW5nIHN1cHBvcnRlZCBhdCB0aGUgbW9tZW50
+Lgo+PiA+PiA+Cj4+ID4+ID4gQ2M6IERhdmlkIEJyb3duIDxEYXZpZC5Ccm93bkBhcm0uY29tPgo+
+PiA+PiA+IENjOiBCcmlhbiBTdGFya2V5IDxCcmlhbi5TdGFya2V5QGFybS5jb20+Cj4+ID4+ID4K
+Pj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4K
+Pj4gPj4KPj4gPj4gU21hbGwgdGhpbmcgSSBub3RpY2VkOiBkcm1fZGV2X3JlZ2lzdGVyL2Nvbm5l
+Y3Rvcl9yZWdpc3Rlcl9hbGwgc2hvdWxkIGJlCj4+ID4+IHRoZSBsYXN0IHN0ZXAgaW4geW91ciBp
+bml0IGNvZGUsIGFuZCB1bnJlZ2lzdGVyIHRoZSBmaXJzdC4gQXRtIGl0J3MKPj4gPj4gc29tZXdo
+ZXJlIGluIHRoZSBtaWRkbGUuIEJ1dCBwZXJmZWN0bHkgZmluZSB0byBkbyB0aGF0IGFzIGEgZm9s
+bG93LXVwLgo+PiA+Cj4+ID4gSSd2ZSB0cmllZCB0aGF0LCBidXQgdGhlIGNvbm5lY3RvciBhbmQg
+ZW5jb2RlciB0aGF0IGdldHMgcmVnaXN0ZXJlZCBhcyBwYXJ0Cj4+ID4gb2YgdGhlIGNvbXBvbmVu
+dF9iaW5kX2FsbCgpIGZhaWxzIGlmIHRoZXJlIGlzIG5vIGRybSBkZXYgcmVnaXN0ZXJlZC4gWW91
+IGRpZAo+PiA+IGNvbW1lbnQgb24gdGhlIHY0IHZlcnNpb24gYWJvdXQgdGhhdCBhbmQgSSBkaWQg
+dGVzdCB5b3VyIGlkZWEsIHNvcnJ5IGZvcgo+PiA+IGZvcmdldGluZyB0byB1cGRhdGUgeW91IG9u
+IHRoYXQuCj4+Cj4+IFdoeSBkb2VzIGl0IGZhaWw/IFRoYXQgc2hvdWxkbid0IGhhcHBlbiAuLi4g
+d2UgbmVlZCB0byBiZSBhYmxlIHRvIHNldAo+PiB1cCBldmVyeXRoaW5nIGZpcnN0LCBiZWZvcmUg
+d2UgcmVnaXN0ZXIuCj4KPiBDb3VsZCBiZSB0aGUgdGRhOTk4eF9kcnYgZmF1bHQsIGJ1dCBJJ20g
+Z2V0dGluZyB0aGlzIHNwbGF0OgoKWWVhaCwgdGRhOTk5OHggbmVlZHMgdG8gYmUgZml4ZWQgdG8g
+X25vdF8gcmVnaXN0ZXIgaXQncyBjb25uZWN0b3IKYmVmb3JlIHRoZSBvdmVyYWxsIChjb21wb25l
+bnRpemVkKSBkcml2ZXIgaXMgcmVhZHkuIFdlIG5lZWQgdG8gbWFrZQpzdXJlIGZpcnN0IG9mYyB0
+aGF0IGFsbCB1c2VycyBvZiB0aGF0IGRyaXZlciBkbyByZWdpc3RlciBjb25uZWN0b3JzLApidXQg
+Q2hyaXMnIHBhdGNoIHNlcmllcyB3aWxsIHRha2UgY2FyZSBvZiB0aGF0LiBCdXQgdGRhOTk5OHgg
+bmVlZHMgdG8KYmUgZml4ZWQgZWl0aGVyIHdheS4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpT
+b2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KKzQxICgwKSA3OSAzNjUgNTcgNDgg
+LSBodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
