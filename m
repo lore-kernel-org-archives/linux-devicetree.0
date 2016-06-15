@@ -1,90 +1,50 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] [V2] ARM: dts: sun7i: Add dts file for
- Bananapi M1 Plus board
-Date: Wed, 15 Jun 2016 22:52:23 +0200
-Message-ID: <20160615205223.GC5144@lukather>
-References: <20160602023623.5761-1-luoyi.ly@gmail.com>
- <CAGRGNgUiGaxoVxtq=k8NG5mCqEXS9fd-ry1vvVJfzb+R2ATMTA@mail.gmail.com>
- <20160602081638.GG4908@lukather>
- <574FF94B.3020309@web.de>
- <20160610093851.GQ5242@lukather>
- <CAGb2v64PYU9H7Ag45ogwtjJAO87D6saTFv5-4P_E7d1xobQXXA@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 0/4] ASoC: sunxi: Add i2s controller support
+Date: Wed, 15 Jun 2016 23:11:19 +0200
+Message-ID: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="O3RTKUHj+75w1tg5"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCEAQ65QKGQEGHUPXXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64PYU9H7Ag45ogwtjJAO87D6saTFv5-4P_E7d1xobQXXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?572X57+8?= <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, gianfranco@moddevices.com, linux-kernel@vger.kernel.org, Code Kipper <codekipper@gmail.com>, Andrea Venturi <ennesimamail.av@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---O3RTKUHj+75w1tg5
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi Chen-Yu,
-
-On Mon, Jun 13, 2016 at 11:01:53AM +0800, Chen-Yu Tsai wrote:
-> On Fri, Jun 10, 2016 at 5:38 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Thu, Jun 02, 2016 at 11:15:55AM +0200, Bernhard Nortmann wrote:
-> >> Am 02.06.2016 um 10:16 schrieb Maxime Ripard:
-> >> >[...]
-> >> >Yes, everything that is shared with the banana-pro (which, judging
-> >> >from Bernhard, is pretty much everything but a GPIO) should be merged
-> >> >in the banapro DT.
-> >> >
-> >> >Maxime
-> >> >
-> >>
-> >> Don't take my word for granted, as I do not own this hardware or know it
-> >> particularly well. There is no doubt that "BPi-M1+" and "Banana Pro" are
-> >> very similar, but if in doubt the information form the wiki should be
-> >> verified.
-> >
-> > Hmmmm, ok. Chen-Yu, any input on this? You know the banana-pis much
-> > more than I do.
-> 
-> I did a comparison of the "Banana Pro" vs the "BPi-M1+".
-> 
-> The differences are similar to what we have with any other development
-> board, say the Cubietruck:
-> 
->   - A different WiFi chip is used, and the BT part is not hooked up.
->   - Different GPIOs for external power regulator/switches
->   - Different GPIOs for LEDs
->   - Different peripherals exposed on the headers.
-> 
-> IMO There's no need to merge or have a common .dtsi for the two boards.
-
-Ok.
-
-> They (and all the other development boards) look similar because
-> everyone is following the basic set by Allwinner's reference design,
-> like which MMC controller and pins are used for SD/MMC, which ones
-> are used for SDIO-based WiFi, and so on.
-> 
-> I did a version completely from scratch using just the schematics:
-> 
->   https://github.com/wens/linux/commits/bpi-m1-plus
-
-So, what do you mean by that? Do you have some comments on that patch,
-or should I merge it, and you'll post your additions on top of it?
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---O3RTKUHj+75w1tg5--
+SGkgZXZlcnlvbmUsCgpUaGlzIGlzIHRoZSBzZWNvbmQgdmVyc2lvbiBvZiB0aGUgSTJTIHN1cHBv
+cnQgZm9yIHRoZSBjb250cm9sbGVyIGZvdW5kCmluIHRoZSBBbGx3aW5uZXIgQTEwIGFuZCBsYXRl
+ciBTb0NzLgoKUGxheWJhY2sgaGFzIGJlZW4gdGVzdGVkIHdpdGggYW4gVURBMTM4MCBvbiBhbiBB
+MjAtT2xpbnV4aW5vLiBDYXB0dXJlCmlzIG5vdCBpbXBsZW1lbnRlZCB5ZXQsIGJ1dCB3aWxsIGNv
+bWUgZXZlbnR1YWxseS4KCkxldCBtZSBrbm93IHdoYXQgeW91IHRoaW5rLApNYXhpbWUKCkNoYW5n
+ZXMgZnJvbSB2MToKICAtIEZpeGVkIGJvZ3VzIGluZGVudGF0aW9uIGFuZCBzcHVyaW91cyB3aGl0
+ZXNwYWNlcyAvIG5ld2xpbmVzCiAgLSBNb3ZlZCB0aGUgZGV2aWNlIGluaXRpYWxpc2F0aW9uIGlu
+IHRoZSBwcm9iZSB0byB0aGUgc3RhcnR1cCBmdW5jdGlvbgogIC0gRGlzYWJsZWQgdGhlIGRldmlj
+ZSBpbiBzaHV0ZG93bgogIC0gUmVtb3ZlZCBmdW5jdGlvbiB0byBnZXQgd3NzIGFuZCBzciB0byBp
+bmxpbmUgdGhlbSBpbiBod19wYXJhbXMKICAtIENoYW5nZWQgdGhlIHdheSB0byBhY2Nlc3MgdGhl
+IGRpdmlkZXIgYXJyYXkKICAtIENoZWNrZWQgY2xrX3NldF9yYXRlIHJldHVybiBjb2RlCiAgLSBG
+aXhlZCBjb25kaXRpb24gZm9yIGludmFsaWQgYmNsayBhbmQgbWNsayBkaXZpZGVycwogIC0gQWRk
+ZWQgc291bmQtZGFpLWNlbGxzIHRvIHRoZSBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIHJlcXVpcmVk
+IHByb3BlcnRpZXMKCkVtaWxpbyBMw7NwZXogKDEpOgogIEFSTTogc3VuN2k6IEFkZCBtb2QxIGNs
+b2NrIG5vZGVzCgpNYXhpbWUgUmlwYXJkICgzKToKICBBU29DOiBzdW54aTogQWRkIEExMCBJMlMg
+Y29udHJvbGxlciBiaW5kaW5nIGRvY3VtZW50YXRpb24KICBBU29DOiBzdW54aTogQWRkIEFsbHdp
+bm5lciBBMTAgRGlnaXRhbCBBdWRpbyBkcml2ZXIKICBBUk06IHN1bjdpOiBBZGQgREFJIG5vZGVz
+CgogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc3VuNGktaTJzLnR4dCAgICAgICAgfCAg
+MzQgKwogYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2ktYTIwLmR0c2kgICAgICAgICAgICAgICAgICAg
+fCAgODcgKystCiBzb3VuZC9zb2Mvc3VueGkvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8ICAgOSArCiBzb3VuZC9zb2Mvc3VueGkvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgMiArLQogc291bmQvc29jL3N1bnhpL3N1bjRpLWkycy5jICAgICAgICAgICAg
+ICAgICAgICAgICAgfCA3MDMgKysrKysrKysrKysrKysrKysrKysrCiA1IGZpbGVzIGNoYW5nZWQs
+IDgzMiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdW40aS1pMnMudHh0CiBjcmVh
+dGUgbW9kZSAxMDA2NDQgc291bmQvc29jL3N1bnhpL3N1bjRpLWkycy5jCgotLSAKMi45LjAKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwg
+bWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5h
+bHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
