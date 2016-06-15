@@ -1,55 +1,38 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH] ARM: dts: am437x-sk-evm: Reduce i2c0 bus speed for tps65218
-Date: Wed, 15 Jun 2016 11:45:28 +0530
-Message-ID: <1465971328-16046-1-git-send-email-j-keerthy@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: robh+dt@kernel.org, j-keerthy@ti.com, mark.rutland@arm.com, d-gerlach@ti.com, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Franklin S Cooper Jr <fcooper@ti.com>, Aparna Balasubramanian <aparnab@ti.com>
+From: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/3] Add Broadcom iproc-static-adc controller driver
+Date: Wed, 15 Jun 2016 12:08:38 +0530
+Message-ID: <1465972721-7639-1-git-send-email-raveendra.padasalagi@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
+This patchset contains initial driver for Broadcom's
+iproc static adc controller. The patchset is based on v4.7-rc1
+tag and its tested on Broadcom Cygnus SoC.
 
-Based on the latest timing specifications for the TPS65218 from the data
-sheet, http://www.ti.com/lit/ds/symlink/tps65218.pdf, document SLDS206
-from November 2014, we must change the i2c bus speed to better fit within
-the minimum high SCL time required for proper i2c transfer.
+The patches can be fetched from iproc-adc-v1 branch of
+https://github.com/Broadcom/arm64-linux.git
 
-When running at 400khz, measurements show that SCL spends
-0.8125 uS/1.666 uS high/low which violates the requirement for minimum
-high period of SCL provided in datasheet Table 7.6 which is 1 uS.
-Switching to 100khz gives us 5 uS/5 uS high/low which both fall above
-the minimum given values for 100 khz, 4.0 uS/4.7 uS high/low.
+Raveendra Padasalagi (3):
+  Documentation: DT: Add iproc-static-adc binding
+  iio: Add driver for Broadcom iproc-static-adc
+  ARM:dts-Add dt node for Broadcom iproc-static-adc
 
-Without this patch occasionally a voltage set operation from the kernel
-will appear to have worked but the actual voltage reflected on the PMIC
-will not have updated, causing problems especially with cpufreq that may
-update to a higher OPP without actually raising the voltage on DCDC2,
-leading to a hang.
+ .../bindings/iio/adc/brcm,iproc-static-adc.txt     |  43 ++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  13 +
+ drivers/iio/adc/Kconfig                            |  12 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/bcm_iproc_adc.c                    | 556 +++++++++++++++++++++
+ 5 files changed, 625 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt
+ create mode 100644 drivers/iio/adc/bcm_iproc_adc.c
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-Signed-off-by: Aparna Balasubramanian <aparnab@ti.com>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- arch/arm/boot/dts/am437x-sk-evm.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index 18a3445..5f67001 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -490,7 +490,7 @@
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins>;
--	clock-frequency = <400000>;
-+	clock-frequency = <100000>;
- 
- 	tps@24 {
- 		compatible = "ti,tps65218";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
