@@ -1,128 +1,60 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 03/13] RTC: ds1307: Add DS1341 specific
- power-saving options
-Date: Tue, 14 Jun 2016 22:59:29 -0700
-Message-ID: <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com>
-References: <1465970379-14703-1-git-send-email-andrew.smirnov@gmail.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: [tiL4.4-P PATCH] ARM: dts: am437x-sk-evm: Reduce i2c0 bus speed for tps65218
+Date: Wed, 15 Jun 2016 11:43:31 +0530
+Message-ID: <1465971211-15994-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDKOBWPM5ABRB2G5QO5QKGQEBXYN52Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1465970379-14703-1-git-send-email-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Aparna Balasubramanian <aparnab-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DS1341 specific power-saving options that allow to disable certain
-functional aspects of the chip in order to minimize its power
-consumption.
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Based on the latest timing specifications for the TPS65218 from the data
+sheet, http://www.ti.com/lit/ds/symlink/tps65218.pdf, document SLDS206
+from November 2014, we must change the i2c bus speed to better fit within
+the minimum high SCL time required for proper i2c transfer.
+
+When running at 400khz, measurements show that SCL spends
+0.8125 uS/1.666 uS high/low which violates the requirement for minimum
+high period of SCL provided in datasheet Table 7.6 which is 1 uS.
+Switching to 100khz gives us 5 uS/5 uS high/low which both fall above
+the minimum given values for 100 khz, 4.0 uS/4.7 uS high/low.
+
+Without this patch occasionally a voltage set operation from the kernel
+will appear to have worked but the actual voltage reflected on the PMIC
+will not have updated, causing problems especially with cpufreq that may
+update to a higher OPP without actually raising the voltage on DCDC2,
+leading to a hang.
+
+Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Aparna Balasubramanian <aparnab-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/dallas,ds1341.txt      | 23 ++++++++++++++++++
- drivers/rtc/rtc-ds1307.c                           | 28 ++++++++++++++++++++++
- 2 files changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
+ arch/arm/boot/dts/am437x-sk-evm.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
-new file mode 100644
-index 0000000..b8be7a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
-@@ -0,0 +1,23 @@
-+* Dallas DS1341		I2C Serial Real-Time Clock
-+
-+Required properties:
-+
-+- compatible: Should contain "dallas,ds1341".
-+
-+- reg: I2C address for chip
-+
-+Optional properties:
-+
-+- disable-oscillator-stop-flag : Configure chip to disable oscillator
-+  fault detection circuitry
-+
-+- enable-glitch-filter : Configure chip to enable crystal oscillator
-+  output glitch filtering
-+
-+Example:
-+	ds1341: rtc@68 {
-+		compatible = "dallas,ds1341";
-+		disable-oscillator-stop-flag;
-+		enable-glitch-filter;
-+		reg = <0x68>;
-+	};
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index c618c22..54cc527 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -78,6 +78,7 @@ enum ds_type {
- #define DS1337_REG_CONTROL	0x0e
- #	define DS1337_BIT_nEOSC		0x80
- #	define DS1339_BIT_BBSQI		0x20
-+#	define DS1341_BIT_EGFIL		0x20
- #	define DS3231_BIT_BBSQW		0x40 /* same as BBSQI */
- #	define DS1337_BIT_RS2		0x10
- #	define DS1337_BIT_RS1		0x08
-@@ -93,7 +94,9 @@ enum ds_type {
- #	define DS1340_BIT_OSF		0x80
- #define DS1337_REG_STATUS	0x0f
- #	define DS1337_BIT_OSF		0x80
-+#	define DS1341_BIT_DOSF		0x40
- #	define DS3231_BIT_EN32KHZ	0x08
-+#	define DS1341_BIT_ECLK		0x04
- #	define DS1337_BIT_A2I		0x02
- #	define DS1337_BIT_A1I		0x01
- #define DS1339_REG_ALARM1_SECS	0x07
-@@ -1319,6 +1322,31 @@ static int ds1307_probe(struct i2c_client *client,
- 		if (ds1307->regs[0] & DS1337_BIT_nEOSC)
- 			ds1307->regs[0] &= ~DS1337_BIT_nEOSC;
+diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
+index 18a3445..5f67001 100644
+--- a/arch/arm/boot/dts/am437x-sk-evm.dts
++++ b/arch/arm/boot/dts/am437x-sk-evm.dts
+@@ -490,7 +490,7 @@
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins>;
+-	clock-frequency = <400000>;
++	clock-frequency = <100000>;
  
-+		if (ds1307->type == ds_1341) {
-+			/* Make sure we are not generating square wave
-+			 * output */
-+			ds1307->regs[1] &= ~DS1341_BIT_ECLK;
-+
-+			if (of_property_read_bool(client->dev.of_node,
-+						  "disable-oscillator-stop-flag"))
-+				ds1307->regs[1] |= DS1341_BIT_DOSF;
-+			else
-+				ds1307->regs[1] &= ~DS1341_BIT_DOSF;
-+
-+			if (of_property_read_bool(client->dev.of_node,
-+						  "enable-glitch-filter"))
-+				ds1307->regs[0] |= DS1341_BIT_EGFIL;
-+			else
-+				ds1307->regs[0] &= ~DS1341_BIT_EGFIL;
-+
-+			/*
-+			 * Write status register. Control register
-+			 * would be set by the code below
-+			 */
-+			i2c_smbus_write_byte_data(client, DS1337_REG_STATUS,
-+						  ds1307->regs[1]);
-+		}
-+
- 		/*
- 		 * Disable the square wave and both alarms.
- 		 * For some variants, be sure alarms can trigger when we're
+ 	tps@24 {
+ 		compatible = "ti,tps65218";
 -- 
-2.5.5
+1.9.1
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
