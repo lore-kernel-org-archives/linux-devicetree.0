@@ -1,83 +1,69 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v5 1/3] dt/bindings: display: Add DT bindings for Mali Display
- Processors.
-Date: Wed, 15 Jun 2016 15:51:33 +0100
-Message-ID: <1466002295-24813-2-git-send-email-Liviu.Dudau@arm.com>
-References: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
+From: Marcin Niestroj <m.niestroj@grinn-global.com>
+Subject: Re: [PATCH v2 4/5] mfd: tps65217: Add power button as subdevice
+Date: Wed, 15 Jun 2016 16:51:43 +0200
+Message-ID: <61c57049-04e3-434c-6293-58a9297c73c9@grinn-global.com>
+References: <20160614132927.3309-1-m.niestroj@grinn-global.com>
+ <20160614132927.3309-5-m.niestroj@grinn-global.com>
+ <20160615141242.GK4948@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Brian Starkey <brian.starkey@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160615141242.GK4948@dell>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIERUIGJpbmRpbmdzIGRvY3VtZW50YXRpb24gZm9yIHRoZSBNYWxpIERpc3BsYXkgUHJvY2Vz
-c29yLiBUaGUgYmluZGluZ3MKZGVzY3JpYmUgdGhlIE1hbGkgRFA1MDAsIERQNTUwIGFuZCBEUDY1
-MCBwcm9jZXNzb3JzIGZyb20gQVJNIEx0ZC4KCkNjOiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFy
-bS5jb20+CkNjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPgpDYzogSWFuIENh
-bXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IEt1bWFyIEdhbGEgPGdh
-bGFrQGNvZGVhdXJvcmEub3JnPgoKU2lnbmVkLW9mZi1ieTogTGl2aXUgRHVkYXUgPExpdml1LkR1
-ZGF1QGFybS5jb20+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0K
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQgICAgIHwgNjUg
-KysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDY1IGluc2VydGlvbnMoKykK
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9hcm0sbWFsaWRwLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
-aW5kZXggMDAwMDAwMC4uMmY3ODcwOQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0CkBAIC0wLDAgKzEsNjUg
-QEAKK0FSTSBNYWxpLURQCisKK1RoZSBmb2xsb3dpbmcgYmluZGluZ3MgYXBwbHkgdG8gYSBmYW1p
-bHkgb2YgRGlzcGxheSBQcm9jZXNzb3JzIHNvbGQgYXMKK2xpY2Vuc2FibGUgSVAgYnkgQVJNIEx0
-ZC4gVGhlIGJpbmRpbmdzIGRlc2NyaWJlIHRoZSBNYWxpIERQNTAwLCBEUDU1MCBhbmQKK0RQNjUw
-IHByb2Nlc3NvcnMgdGhhdCBvZmZlciBtdWx0aXBsZSBjb21wb3NpdGlvbiBsYXllcnMsIHN1cHBv
-cnQgZm9yCityb3RhdGlvbiBhbmQgc2NhbGluZyBvdXRwdXQuCisKK1JlcXVpcmVkIHByb3BlcnRp
-ZXM6CisgIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZgorCSJhcm0sbWFsaS1kcDUwMCIK
-KwkiYXJtLG1hbGktZHA1NTAiCisJImFybSxtYWxpLWRwNjUwIgorICAgIGRlcGVuZGluZyBvbiB0
-aGUgcGFydGljdWxhciBpbXBsZW1lbnRhdGlvbiBwcmVzZW50IGluIHRoZSBoYXJkd2FyZQorICAt
-IHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBibG9jayBvZiByZWdp
-c3RlcnMgdXNlZCBieQorICAgIHRoZSBwcm9jZXNzb3IuCisgIC0gaW50ZXJydXB0czogSW50ZXJy
-dXB0IGxpc3QsIGFzIGRlZmluZWQgaW4gLi4vaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0
-cy50eHQsCisgICAgaW50ZXJydXB0IGNsaWVudCBub2Rlcy4KKyAgLSBpbnRlcnJ1cHQtbmFtZXM6
-IG5hbWUgb2YgdGhlIGVuZ2luZSBpbnNpZGUgdGhlIHByb2Nlc3NvciB0aGF0IHdpbGwKKyAgICB1
-c2UgdGhlIGNvcnJlc3BvbmRpbmcgaW50ZXJydXB0LiBTaG91bGQgYmUgb25lIG9mICJERSIgb3Ig
-IlNFIi4KKyAgLSBjbG9ja3M6IEEgbGlzdCBvZiBwaGFuZGxlICsgY2xvY2stc3BlY2lmaWVyIHBh
-aXJzLCBvbmUgZm9yIGVhY2ggZW50cnkKKyAgICBpbiAnY2xvY2stbmFtZXMnCisgIC0gY2xvY2st
-bmFtZXM6IEEgbGlzdCBvZiBjbG9jayBuYW1lcy4gSXQgc2hvdWxkIGNvbnRhaW46CisgICAgICAt
-ICJwY2xrIjogZm9yIHRoZSBBUEIgaW50ZXJmYWNlIGNsb2NrCisgICAgICAtICJhY2xrIjogZm9y
-IHRoZSBBWEkgaW50ZXJmYWNlIGNsb2NrCisgICAgICAtICJtY2xrIjogZm9yIHRoZSBtYWluIHBy
-b2Nlc3NvciBjbG9jaworICAgICAgLSAicHhsY2xrIjogZm9yIHRoZSBwaXhlbCBjbG9jayBmZWVk
-aW5nIHRoZSBvdXRwdXQgUExMIG9mIHRoZSBwcm9jZXNzb3IuCisgIC0gYXJtLG1hbGlkcC1vdXRw
-dXQtcG9ydC1saW5lczogQXJyYXkgb2YgdTggdmFsdWVzIGRlc2NyaWJpbmcgdGhlIG51bWJlcgor
-ICAgIG9mIG91dHB1dCBsaW5lcyBwZXIgY2hhbm5lbCAoUiwgRyBhbmQgQikuCisKK1JlcXVpcmVk
-IHN1Yi1ub2RlczoKKyAgLSBwb3J0OiBUaGUgTWFsaSBEUCBjb25uZWN0aW9uIHRvIGFuIGVuY29k
-ZXIgaW5wdXQgcG9ydC4gVGhlIGNvbm5lY3Rpb24KKyAgICBpcyBtb2RlbGxlZCB1c2luZyB0aGUg
-T0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCisgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorICAtIG1lbW9y
-eS1yZWdpb246IHBoYW5kbGUgdG8gYSBub2RlIGRlc2NyaWJpbmcgbWVtb3J5IChzZWUKKyAgICBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3Jlc2VydmVk
-LW1lbW9yeS50eHQpCisgICAgdG8gYmUgdXNlZCBmb3IgdGhlIGZyYW1lYnVmZmVyOyBpZiBub3Qg
-cHJlc2VudCwgdGhlIGZyYW1lYnVmZmVyIG1heQorICAgIGJlIGxvY2F0ZWQgYW55d2hlcmUgaW4g
-bWVtb3J5LgorCisKK0V4YW1wbGU6CisKKy8geworCS4uLgorCisJZHAwOiBtYWxpZHBANmYyMDAw
-MDAgeworCQljb21wYXRpYmxlID0gImFybSxtYWxpLWRwNjUwIjsKKwkJcmVnID0gPDAgMHg2ZjIw
-MDAwMCAwIDB4MjAwMDA+OworCQltZW1vcnktcmVnaW9uID0gPCZkaXNwbGF5X3Jlc2VydmVkPjsK
-KwkJaW50ZXJydXB0cyA9IDwwIDE2OCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCSAgICAgPDAg
-MTY4IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQlpbnRlcnJ1cHQtbmFtZXMgPSAiREUiLCAiU0Ui
-OworCQljbG9ja3MgPSA8Jm9zY2NsazI+LCA8JmZwZ2Fvc2MwPiwgPCZmcGdhb3NjMT4sIDwmZnBn
-YW9zYzE+OworCQljbG9jay1uYW1lcyA9ICJweGxjbGsiLCAibWNsayIsICJhY2xrIiwgInBjbGsi
-OworCQlhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxpbmVzID0gL2JpdHMvIDggPDggOCA4PjsKKwkJ
-cG9ydCB7CisJCQlkcDBfb3V0cHV0OiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0g
-PCZ0ZGE5OTh4XzJfaW5wdXQ+OworCQkJfTsKKwkJfTsKKwl9OworCisJLi4uCit9OwotLSAKMi44
-LjIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+On 15.06.2016 16:12, Lee Jones wrote:
+> On Tue, 14 Jun 2016, Marcin Niestroj wrote:
+>
+>> Add tps65217 power buttor subdevice with assigned IRQ resources.
+>>
+>> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+>> ---
+>> depends on patch 1 in series
+>>
+>>  drivers/mfd/tps65217.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>
+> Applied, thanks.
+
+Did you also apply patch 1? As I stated above, this patch depends on
+patch 1.
+
+>
+>> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
+>> index d49f94e..68cf431 100644
+>> --- a/drivers/mfd/tps65217.c
+>> +++ b/drivers/mfd/tps65217.c
+>> @@ -38,6 +38,10 @@ static struct resource charger_resources[] = {
+>>  	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
+>>  };
+>>
+>> +static struct resource pb_resources[] = {
+>> +	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_PB, "PB"),
+>> +};
+>> +
+>>  struct tps65217_irq {
+>>  	int mask;
+>>  	int interrupt;
+>> @@ -122,6 +126,12 @@ static struct mfd_cell tps65217s[] = {
+>>  		.resources = charger_resources,
+>>  		.of_compatible = "ti,tps65217-charger",
+>>  	},
+>> +	{
+>> +		.name = "tps65217-pwrbutton",
+>> +		.num_resources = ARRAY_SIZE(pb_resources),
+>> +		.resources = pb_resources,
+>> +		.of_compatible = "ti,tps65217-pwrbutton",
+>> +	},
+>>  };
+>>
+>>  static irqreturn_t tps65217_irq_thread(int irq, void *data)
+>
+
+-- 
+Marcin Niestroj
