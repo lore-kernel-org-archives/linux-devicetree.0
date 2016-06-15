@@ -1,283 +1,90 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: [PATCH v11 3/3] ARM: dts: add dts files for Hi3519
-Date: Wed, 15 Jun 2016 10:19:07 +0800
-Message-ID: <1465957147-32314-4-git-send-email-xuejiancheng@hisilicon.com>
-References: <1465957147-32314-1-git-send-email-xuejiancheng@hisilicon.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Add MediaTek USB3 DRD Driver
+Date: Wed, 15 Jun 2016 11:07:15 +0800
+Message-ID: <1465960040-768-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465957147-32314-1-git-send-email-xuejiancheng@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, arnd@arndb.de
-Cc: robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jiancheng Xue <xuejiancheng@huawei.com>
+>From 48552e96e4e33f8830cb6a59154fe148425532fd Mon Sep 17 00:00:00 2001
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Date: Wed, 15 Jun 2016 10:58:10 +0800
+Subject: [PATCH v4,0/5] Add MediaTek USB3 DRD Driver
 
-add dts files for Hi3519
+These patches introduce the MediaTek USB3 dual-role controller
+driver.
 
-Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
----
- arch/arm/boot/dts/Makefile        |   2 +
- arch/arm/boot/dts/hi3519-demb.dts |  42 +++++++++
- arch/arm/boot/dts/hi3519.dtsi     | 187 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 231 insertions(+)
- create mode 100644 arch/arm/boot/dts/hi3519-demb.dts
- create mode 100644 arch/arm/boot/dts/hi3519.dtsi
+The driver can be configured as Dual-Role Device (DRD),
+Peripheral Only and Host Only (xHCI) modes. It works well
+with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
+tested on MT8173 platform which only contains USB2.0 device IP,
+and on MT6290 platform which contains USB3.0 device IP.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 06b6c2d..b47b975 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -146,6 +146,8 @@ dtb-$(CONFIG_ARCH_EXYNOS5) += \
- 	exynos5800-peach-pi.dtb
- dtb-$(CONFIG_ARCH_HI3xxx) += \
- 	hi3620-hi4511.dtb
-+dtb-$(CONFIG_ARCH_HISI) += \
-+	hi3519-demb.dtb
- dtb-$(CONFIG_ARCH_HIX5HD2) += \
- 	hisi-x5hd2-dkb.dtb
- dtb-$(CONFIG_ARCH_HIGHBANK) += \
-diff --git a/arch/arm/boot/dts/hi3519-demb.dts b/arch/arm/boot/dts/hi3519-demb.dts
-new file mode 100644
-index 0000000..6991ab6
---- /dev/null
-+++ b/arch/arm/boot/dts/hi3519-demb.dts
-@@ -0,0 +1,42 @@
-+/*
-+ * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ */
-+
-+/dts-v1/;
-+#include "hi3519.dtsi"
-+
-+/ {
-+	model = "HiSilicon HI3519 DEMO Board";
-+	compatible = "hisilicon,hi3519";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x40000000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&dual_timer0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/hi3519.dtsi b/arch/arm/boot/dts/hi3519.dtsi
-new file mode 100644
-index 0000000..5729ecf
---- /dev/null
-+++ b/arch/arm/boot/dts/hi3519.dtsi
-@@ -0,0 +1,187 @@
-+/*
-+ * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ */
-+
-+#include <dt-bindings/clock/hi3519-clock.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	chosen { };
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0>;
-+		};
-+	};
-+
-+	gic: interrupt-controller@10300000 {
-+		compatible = "arm,cortex-a7-gic";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0x10301000 0x1000>, <0x10302000 0x1000>;
-+	};
-+
-+	clk_3m: clk_3m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <3000000>;
-+	};
-+
-+	crg: clock-reset-controller@12010000 {
-+		compatible = "hisilicon,hi3519-crg";
-+		#clock-cells = <1>;
-+		#reset-cells = <2>;
-+		reg = <0x12010000 0x10000>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+		ranges;
-+
-+		uart0: serial@12100000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12100000 0x1000>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART0_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
-+
-+		uart1: serial@12101000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12101000 0x1000>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART1_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
-+
-+		uart2: serial@12102000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12102000 0x1000>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART2_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
-+
-+		uart3: serial@12103000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12103000 0x1000>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART3_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
-+
-+		uart4: serial@12104000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x12104000 0x1000>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_UART4_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
-+
-+		dual_timer0: timer@12000000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x12000000 0x1000>;
-+			clocks = <&clk_3m>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
-+
-+		dual_timer1: timer@12001000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x12001000 0x1000>;
-+			clocks = <&clk_3m>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
-+
-+		dual_timer2: timer@12002000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x12002000 0x1000>;
-+			clocks = <&clk_3m>;
-+			clock-names = "apb_pclk";
-+			status = "disable";
-+		};
-+
-+		spi_bus0: spi@12120000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x12120000 0x1000>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_SPI0_CLK>;
-+			clock-names = "apb_pclk";
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disable";
-+		};
-+
-+		spi_bus1: spi@12121000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x12121000 0x1000>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_SPI1_CLK>;
-+			clock-names = "apb_pclk";
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disable";
-+		};
-+
-+		spi_bus2: spi@12122000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x12122000 0x1000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HI3519_SPI2_CLK>;
-+			clock-names = "apb_pclk";
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disable";
-+		};
-+
-+		sysctrl: system-controller@12020000 {
-+			compatible = "hisilicon,hi3519-sysctrl", "syscon";
-+			reg = <0x12020000 0x1000>;
-+		};
-+
-+		reboot {
-+			compatible = "syscon-reboot";
-+			regmap = <&sysctrl>;
-+			offset = <0x4>;
-+			mask = <0xdeadbeef>;
-+		};
-+	};
-+};
--- 
-1.9.1
+Change in v4:
+1. fix build errors on non-mediatek platforms
+2. provide manual dual-role switch via debugfs instead of sysfs
+
+Change in v3:
+1. fix some typo error
+2. rename mtu3.txt to mt8173-mtu3.txt
+
+Change in v2:
+1. modify binding docs according to suggestions
+2. modify some comments and remove some dummy blank lines
+3. fix memory leakage
+
+Chunfeng Yun (5):
+  dt-bindings: mt8173-xhci: support host side of dual-role mode
+  dt-bindings: mt8173-mtu3: add devicetree bindings
+  usb: xhci-mtk: make IPPC register optional
+  usb: Add MediaTek USB3 DRD Driver
+  arm64: dts: mediatek: add USB3 DRD driver
+
+ .../devicetree/bindings/usb/mt8173-mtu3.txt        |   86 ++
+ .../devicetree/bindings/usb/mt8173-xhci.txt        |   48 ++
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |   46 +-
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   28 +-
+ drivers/usb/Kconfig                                |    2 +
+ drivers/usb/Makefile                               |    1 +
+ drivers/usb/host/xhci-mtk.c                        |   32 +-
+ drivers/usb/mtu3/Kconfig                           |   48 ++
+ drivers/usb/mtu3/Makefile                          |   21 +
+ drivers/usb/mtu3/mtu3.h                            |  424 ++++++++++
+ drivers/usb/mtu3/mtu3_core.c                       |  879 ++++++++++++++++++++
+ drivers/usb/mtu3/mtu3_dr.c                         |  375 +++++++++
+ drivers/usb/mtu3/mtu3_dr.h                         |  108 +++
+ drivers/usb/mtu3/mtu3_gadget.c                     |  731 ++++++++++++++++
+ drivers/usb/mtu3/mtu3_gadget_ep0.c                 |  879 ++++++++++++++++++++
+ drivers/usb/mtu3/mtu3_host.c                       |  294 +++++++
+ drivers/usb/mtu3/mtu3_hw_regs.h                    |  474 +++++++++++
+ drivers/usb/mtu3/mtu3_plat.c                       |  490 +++++++++++
+ drivers/usb/mtu3/mtu3_qmu.c                        |  599 +++++++++++++
+ drivers/usb/mtu3/mtu3_qmu.h                        |   43 +
+ 20 files changed, 5594 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+ create mode 100644 drivers/usb/mtu3/Kconfig
+ create mode 100644 drivers/usb/mtu3/Makefile
+ create mode 100644 drivers/usb/mtu3/mtu3.h
+ create mode 100644 drivers/usb/mtu3/mtu3_core.c
+ create mode 100644 drivers/usb/mtu3/mtu3_dr.c
+ create mode 100644 drivers/usb/mtu3/mtu3_dr.h
+ create mode 100644 drivers/usb/mtu3/mtu3_gadget.c
+ create mode 100644 drivers/usb/mtu3/mtu3_gadget_ep0.c
+ create mode 100644 drivers/usb/mtu3/mtu3_host.c
+ create mode 100644 drivers/usb/mtu3/mtu3_hw_regs.h
+ create mode 100644 drivers/usb/mtu3/mtu3_plat.c
+ create mode 100644 drivers/usb/mtu3/mtu3_qmu.c
+ create mode 100644 drivers/usb/mtu3/mtu3_qmu.h
+
+--
+1.7.9.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
