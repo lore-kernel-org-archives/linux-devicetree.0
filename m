@@ -1,128 +1,109 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for
- Rockchip usb2phy
-Date: Wed, 15 Jun 2016 18:58:43 +0800
-Message-ID: <da45cb15-4823-0992-0b83-475f1ad4c8aa@rock-chips.com>
-References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
- <7225720.0AClDW7eQ6@diego>
- <44bb6bf0-cf86-c440-665a-b0d441ce4427@rock-chips.com>
- <20086422.3ieDmpZrvB@diego>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 4/7] iommu/of: Handle iommu-map property for PCI
+Date: Wed, 15 Jun 2016 12:21:27 +0100
+Message-ID: <57613A37.6080600@arm.com>
+References: <cover.1464966939.git.robin.murphy@arm.com>
+	<69952eda726c370ed6e5739bdd2e32cdc4466bfb.1464966939.git.robin.murphy@arm.com>
+	<20160614144559.GK19407@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20086422.3ieDmpZrvB@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com, frank.wang@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20160614144559.GK19407-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-On 2016/6/15 17:04, Heiko St=C3=BCbner wrote:
-> Hi Frank,
+On 14/06/16 15:45, Will Deacon wrote:
+> On Fri, Jun 03, 2016 at 06:15:39PM +0100, Robin Murphy wrote:
+>> Now that we have a way to pick up the RID translation and target IOMMU,
+>> hook up of_iommu_configure() to bring PCI devices into the of_xlate
+>> mechanism and allow them IOMMU-backed DMA ops without the need for
+>> driver-specific handling.
+>>
+>> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> CC: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>
+>> v2: Skip disabled IOMMUs.
+>>
+>>   drivers/iommu/of_iommu.c | 44 +++++++++++++++++++++++++++++++++++++-------
+>>   1 file changed, 37 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+>> index 662f9a600f4f..5716131199b3 100644
+>> --- a/drivers/iommu/of_iommu.c
+>> +++ b/drivers/iommu/of_iommu.c
+>> @@ -22,6 +22,7 @@
+>>   #include <linux/limits.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_iommu.h>
+>> +#include <linux/of_pci.h>
+>>   #include <linux/slab.h>
+>>
+>>   static const struct of_device_id __iommu_of_table_sentinel
+>> @@ -134,20 +135,49 @@ const struct iommu_ops *of_iommu_get_ops(struct device_node *np)
+>>   	return ops;
+>>   }
+>>
+>> +static int __get_pci_rid(struct pci_dev *pdev, u16 alias, void *data)
+>> +{
+>> +	struct of_phandle_args *iommu_spec = data;
+>> +
+>> +	iommu_spec->args[0] = alias;
+>> +	return iommu_spec->np == pdev->bus->dev.of_node;
+>> +}
+>> +
+>>   const struct iommu_ops *of_iommu_configure(struct device *dev,
+>>   					   struct device_node *master_np)
+>>   {
+>>   	struct of_phandle_args iommu_spec;
+>> -	struct device_node *np;
+>> +	struct device_node *np = NULL;
+>>   	const struct iommu_ops *ops = NULL;
+>>   	int idx;
+>>
+>> -	/*
+>> -	 * We can't do much for PCI devices without knowing how
+>> -	 * device IDs are wired up from the PCI bus to the IOMMU.
+>> -	 */
+>> -	if (dev_is_pci(dev))
+>> -		return NULL;
+>> +	if (dev_is_pci(dev)) {
+>> +		/*
+>> +		 * Start by tracing the RID alias down the PCI topology as
+>> +		 * far as the host bridge whose OF node we have...
+>> +		 */
+>> +		iommu_spec.np = master_np;
+>> +		pci_for_each_dma_alias(to_pci_dev(dev), __get_pci_rid,
+>> +				       &iommu_spec);
+>> +		/*
+>> +		 * ...then find out what that becomes once it escapes the PCI
+>> +		 * bus into the system beyond, and which IOMMU it ends up at.
+>> +		 */
+>> +		if (of_pci_map_rid(master_np, "iommu-map", iommu_spec.args[0],
+>> +				   &np, iommu_spec.args) ||
+>> +		    !of_device_is_available(np))
+>> +			return NULL;
 >
-> Am Mittwoch, 15. Juni 2016, 11:23:26 schrieb Frank Wang:
->> On 2016/6/14 21:27, Heiko St=C3=BCbner wrote:
->>> Am Montag, 13. Juni 2016, 10:10:10 schrieb Frank Wang:
->>>> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
->>>> than rk3288 and before, and most of phy-related registers are also
->>>> different from the past, so a new phy driver is required necessari=
-ly.
->>>>
->>>> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
->>>> ---
->>>>
->>>> Changes in v5:
->>>>    - Added 'reg' in the data block to match the different phy-bloc=
-ks in
->>>>    dt.
->>>>
->>>> Changes in v4:
->>>>    - Removed some processes related to 'vbus_host-supply'.
->>>>
->>>> Changes in v3:
->>>>    - Resolved the mapping defect between fixed value in driver and=
- the
->>>>
->>>> property in devicetree.
->>>>
->>>>    - Optimized 480m output clock register function.
->>>>    - Code cleanup.
->>>>
->>>> Changes in v2:
->>>>    - Changed vbus_host operation from gpio to regulator in *_probe=
-=2E
->>>>    - Improved the fault treatment relate to 480m clock register.
->>>>    - Cleaned up some meaningless codes in *_clk480m_disable.
->>>>    - made more clear the comment of *_sm_work.
->>>>   =20
->>>>    drivers/phy/Kconfig                  |    7 +
->>>>    drivers/phy/Makefile                 |    1 +
->>>>    drivers/phy/phy-rockchip-inno-usb2.c |  645
->>>>
->>>> ++++++++++++++++++++++++++++++++++ 3 files changed, 653 insertions=
-(+)
->>>>
->>>> [...]
->>>>
->>>> +
->>>> +static int rockchip_usb2phy_exit(struct phy *phy)
->>>> +{
->>>> +	struct rockchip_usb2phy_port *rport =3D phy_get_drvdata(phy);
->>>> +
->>>>
->>> 	if (!rport->port_cfg)
->>> =09
->>> 		return 0;
->>>> +	if (rport->port_id =3D=3D USB2PHY_PORT_HOST)
->>>> +		cancel_delayed_work_sync(&rport->sm_work);
->>>> +
->>> you will also need to resume the port here, if it is suspended at t=
-his
->>> point, as phy_power_off gets called after phy_exit and would probab=
-ly
->>> produce clk enable/disable mismatches otherwise.
->> Hmm, from my personal point of view, when canceling sm_work here, it=
- may
->> not cause the port goes to suspend, isn't it? besides, clk only prep=
-ared
->> in *_usb2phy_resume(), and unprepared in *_usb2phy_suspend(), so if =
-we
->> resume port here,  the prepare_count of clk will be increased again,=
- I
->> am afraid this is not correct, and am I wrong? would you like to tel=
-l me
->> more details?
-> usb2phy_resume gets called both initially through phy_power_on as wel=
-l.
-> So it's on but through the first scheduled work call, might get suspe=
-nded when
-> nothing is connected. (clk_enable and clk_disable will run).
-> If nothing is connected on unload phy_power_off will get called while=
- the
-> clock actually is still disabled.
->
-> So I think it's either resuming on exit, or at least making sure to d=
-o nothing
-> in that case in the phy_power_off callback of the driver.
->
->
+> Hmm, do we need to of_node_put(np) in the case that it's not available?
 
-Well, I got what you mean. I saw phy_power_on() gets called  twice at=20
-ehci/ohci driver probe time, one is at pdata->power_on(); another is at=
-=20
-usb_add_hcd(), so after that, the power_count of phy increases to two.=20
-however, when ehci/ohci driver goes to suspend, there is only once to=20
-call phy_power_off(), and the power_count of phy decreases to 1, so our=
-=20
-usb2phy_resume() could not be invoked :-) .
+Ah yes, now I see; I moved the put into the loop iteration for the 
+non-PCI case so that a "continue" does the job, but I've not handled the 
+equivalent here.
 
-If so, is it still need to care it? How about use suspended member of=20
-rockchip_usb2phy_port as a conditional to check in *_usb2phy_suspend(),=
-=20
-if necessary.
+Robin.
 
-BR.
-=46rank
+>
+> Will
+>
