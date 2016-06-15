@@ -1,58 +1,44 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [PATCH v5 4/8] arm64: parse cpu capacity-dmips-mhz from DT
-Date: Wed, 15 Jun 2016 15:48:21 +0100
-Message-ID: <20160615144821.GF5981@e106622-lin>
-References: <1465985877-18271-1-git-send-email-juri.lelli@arm.com>
- <1465985877-18271-5-git-send-email-juri.lelli@arm.com>
- <20160615134938.GA2282@sirena.org.uk>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v5 3/3] MAINTAINERS: Add entry for Mali-DP driver
+Date: Wed, 15 Jun 2016 15:51:35 +0100
+Message-ID: <1466002295-24813-4-git-send-email-Liviu.Dudau@arm.com>
+References: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160615134938.GA2282@sirena.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, sgurrappadi@nvidia.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Brian Starkey <brian.starkey@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: LAKML <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/06/16 14:49, Mark Brown wrote:
-> On Wed, Jun 15, 2016 at 11:17:53AM +0100, Juri Lelli wrote:
-> 
-> > +		if (!raw_capacity) {
-> > +			raw_capacity = kzalloc(sizeof(*raw_capacity) *
-> > +					num_possible_cpus(), GFP_KERNEL);
-> 
-> kcalloc()?
-> 
-
-Right. Will change.
-
-> > +			if (!raw_capacity) {
-> > +				pr_err("cpu_capacity: failed to allocate memory"
-> > +				       " for raw capacities\n");
-> 
-> It's normally better to avoid splitting errors message so people can
-> grep if they see the error.
-> 
-
-Tried to avoid breaking 80 columns. But, we seem to have longer pr_err
-strings already. I'll change that.
-
-> > +	} else {
-> > +		pr_err("cpu_capacity: missing %s raw capacity "
-> > +		       "(fallback to 1024 for all CPUs)\n",
-> > +				cpu_node->full_name);
-> 
-> That's going to complain fairly loudly for all existing DTs isn't it and
-> it's kind of redundant if all the cores have the same capacity (which is
-> a very common case)?  How about printing an error only if we already
-> found one, or printing a single warning at the end if we didn't get
-> anything?
-
-Right, I'll change the condition for which pr_err is emitted. I think
-the situation for which we care the most about is when we find partial
-information in DT.
-
-Thanks,
-
-- Juri
+QWRkIE1BSU5UQUlORVJTIGVudHJ5IGZvciBBUk0gTWFsaS1EUCBkcml2ZXIgYW5kIHVwZGF0ZSB0
+aGUKSERMQ0QgZmlsZSBtYXRjaGluZyBwYXR0ZXJuIHRvIGNvdmVyIG9ubHkgSERMQ0QgcmF0aGVy
+IHRoYW4KdGhlIHdob2xlIGRyaXZlcnMvZ3B1L2RybS9hcm0gZGlyZWN0b3J5LgoKU2lnbmVkLW9m
+Zi1ieTogTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+Ci0tLQogTUFJTlRBSU5FUlMg
+fCAxMCArKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAxIGRlbGV0
+aW9uKC0pCgpkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwppbmRleCAwYmYx
+MTljLi4xNmRlYjA3IDEwMDY0NAotLS0gYS9NQUlOVEFJTkVSUworKysgYi9NQUlOVEFJTkVSUwpA
+QCAtODY1LDkgKzg2NSwxNyBAQCBGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9zbnBzLGFyY3BndS50eHQKIEFSTSBIRExDRCBEUk0gRFJJVkVSCiBNOglMaXZpdSBE
+dWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KIFM6CVN1cHBvcnRlZAotRjoJZHJpdmVycy9ncHUv
+ZHJtL2FybS8KK0Y6CWRyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfKgogRjoJRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLGhkbGNkLnR4dAogCitBUk0gTUFMSS1E
+UCBEUk0gRFJJVkVSCitNOglMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KK006CUJy
+aWFuIFN0YXJrZXkgPGJyaWFuLnN0YXJrZXlAYXJtLmNvbT4KK006CU1hbGkgRFAgTWFpbnRhaW5l
+cnMgPG1hbGlkcEBmb3NzLmFybS5jb20+CitTOglTdXBwb3J0ZWQKK0Y6CWRyaXZlcnMvZ3B1L2Ry
+bS9hcm0vCitGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0s
+bWFsaWRwLnR4dAorCiBBUk0gTUZNIEFORCBGTE9QUFkgRFJJVkVSUwogTToJSWFuIE1vbHRvbiA8
+c3B5cm9AZjJzLmNvbT4KIFM6CU1haW50YWluZWQKLS0gCjIuOC4yCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
