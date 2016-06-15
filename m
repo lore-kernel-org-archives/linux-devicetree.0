@@ -1,52 +1,104 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 4/4] arm64: dts: marvell: add XOR engine description for Armada 7K/8K CP
-Date: Wed, 15 Jun 2016 16:03:14 +0200
-Message-ID: <1465999394-14334-5-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1465999394-14334-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v3 0/4] dmaengine driver for Marvell XOR v2 engine
+Date: Wed, 15 Jun 2016 16:03:10 +0200
+Message-ID: <1465999394-14334-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465999394-14334-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the Device Tree description for the two XOR engines
-found in the CP part of the Armada 7K/8K SoC.
+Hello,
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Here is the third version of the mv_xor_v2 driver, which allows to use
+the XOR engines available on the Marvell Armada 7K/8K ARM64 SoCs.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-index 367138b..da31bbb 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-@@ -107,6 +107,24 @@
- 				status = "disabled";
- 			};
- 
-+			cpm_xor0: xor@6a0000 {
-+				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
-+				reg = <0x6a0000 0x1000>,
-+				      <0x6b0000 0x1000>;
-+				dma-coherent;
-+				msi-parent = <&gic_v2m0>;
-+				clocks = <&cpm_syscon0 1 8>;
-+			};
-+
-+			cpm_xor1: xor@6c0000 {
-+				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
-+				reg = <0x6c0000 0x1000>,
-+				      <0x6d0000 0x1000>;
-+				dma-coherent;
-+				msi-parent = <&gic_v2m0>;
-+				clocks = <&cpm_syscon0 1 7>;
-+			};
-+
- 			cpm_spi0: spi@700600 {
- 				compatible = "marvell,armada-380-spi";
- 				reg = <0x700600 0x50>;
+Changes since v2:
+
+ - Add a SoC-specific compatible string to the DT binding,
+   "marvell,armada-7k-xor". Suggested by Rob Herring.
+
+ - Rename the original compatible string from "marvell,mv-xor-v2" to
+   "marvell,xor-v2", since the "marvell" and "mv" are
+   redondant. Suggested by Rob Herring.
+
+ - Move the DT binding documentation in a separate patch, as requested
+   by Vinod Koul and Rob Herring.
+
+ - Replace BUG_ON(src_cnt > MV_XOR_V2_CMD_LINE_NUM_MAX_D_BUF ||
+   src_cnt < 1); in mv_xor_v2_prep_dma_xor() by a non-crashing test,
+   i.e. we simply return NULL. Suggested by Vinod Koul.
+
+ - Add support for an optional clock to the Device Tree binding and
+   the driver. This is needed since there are two XOR units in the CP
+   part of the Armada 7K/8K that use a gatable clock.
+
+ - Fix the mv_xor_v2_prep_sw_desc() function to not crash when the
+   list of available descriptors is empty.
+
+ - Add MV_XOR_V2_ as the prefix of all register offset/bits
+   definitions, as requested by Vinod Koul.
+
+ - Clearly indicate what MV_XOR_V2_DESC_NUM is, after a question from
+   Vinod Koul.
+
+ - Switch from three spinlocks to only one spinlock, as suggested by
+   Vinod Koul.
+
+ - Remove the CONFIG_ARCH_DMA_ADDR_T_64BIT conditionals, since the
+   driver depends on ARM64, and CONFIG_ARCH_DMA_ADDR_T_64BIT is always
+   enabled on ARM64. Follows a discussion with Vinod Koul.
+
+ - Remove useless empty mv_xor_v2_alloc_chan_resources() and
+   mv_xor_v2_free_chan_resources() functions, as noticed by Vinod
+   Koul.
+
+ - Add a check in mv_xor_v2_interrupt_handler() to make sure we really
+   have something to do. Suggested by Vinod Koul.
+
+ - Simplify:
+
+     dest_hw_desc = ((void *)xor_dev->hw_desq_virt +
+                     (xor_dev->desc_size * desq_ptr));
+
+   into just:
+
+     dest_hw_desc = xor_dev->hw_desq_virt + desq_ptr;
+
+   After adding a BUILD_BUG_ON() that makes sure that the size of
+   "struct mv_xor_v2_descriptor" is equal to MV_XOR_V2_EXT_DESC_SIZE.
+
+   Follows a question from Vinod Koul.
+
+ - Remove mv_xor_v2_tx_status() and use dma_cookie_status()
+   directly. Suggested by Vinod Koul.
+
+ - Add a patch that adjust the existing Device Tree description of
+   Armada 7K/8K to use the modified Device Tree binding.
+
+ - Add a patch that adds the Device Tree description for the XOR v2
+   engines available in the CP part of the Armada 7K/8K.
+
+Thanks!
+
+Thomas
+
+Thomas Petazzoni (4):
+  dt-bindings: dma: add binding for the Marvell XOR v2 engine
+  dma: mv_xor_v2: new driver
+  arm64: dts: marvell: adjust to the latest mv-xor-v2 DT binding
+  arm64: dts: marvell: add XOR engine description for Armada 7K/8K CP
+
+ .../devicetree/bindings/dma/mv-xor-v2.txt          |  24 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |   8 +-
+ .../boot/dts/marvell/armada-cp110-master.dtsi      |  18 +
+ drivers/dma/Kconfig                                |  14 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/mv_xor_v2.c                            | 866 +++++++++++++++++++++
+ 6 files changed, 927 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/mv-xor-v2.txt
+ create mode 100644 drivers/dma/mv_xor_v2.c
+
 -- 
 2.7.4
 
