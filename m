@@ -1,60 +1,76 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v5 2/3] drm/arm: Add support for Mali Display Processors
-Date: Wed, 15 Jun 2016 22:30:36 +0200
-Message-ID: <CAKMK7uFwXzRmLp_werouyvFrb-qEZi+xg32bO48r51rHmvT3Vw@mail.gmail.com>
-References: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
- <1466002295-24813-3-git-send-email-Liviu.Dudau@arm.com>
- <20160615152309.GI1338@phenom.ffwll.local>
- <20160615161758.GF9711@e106497-lin.cambridge.arm.com>
- <CAKMK7uENW3cU8LccHcqffX3cbzax2-5mzY0101yLfR7vtD4CoA@mail.gmail.com>
- <20160615172104.GI9711@e106497-lin.cambridge.arm.com>
- <CAKMK7uGFTmQERWcDeQ=V-ntbgQv6K1avGx1LKCGLcAWacmHKnA@mail.gmail.com>
- <20160615200539.GH1041@n2100.armlinux.org.uk>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: fix memory leak related to safe_name()
+Date: Wed, 15 Jun 2016 13:34:57 -0700
+Message-ID: <5761BBF1.2010604@gmail.com>
+References: <57619AE5.70102@gmail.com>
+ <CAL_JsqL7zT3HF4P0WP9_=JwaZis4X1Bbp9t2ydNj1gyddVcjkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160615200539.GH1041@n2100.armlinux.org.uk>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: devicetree <devicetree@vger.kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL7zT3HF4P0WP9_=JwaZis4X1Bbp9t2ydNj1gyddVcjkA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mathieu Malaterre <mathieu.malaterre@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTUsIDIwMTYgYXQgMTA6MDUgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51
-eAo8bGludXhAYXJtbGludXgub3JnLnVrPiB3cm90ZToKPiBPbiBXZWQsIEp1biAxNSwgMjAxNiBh
-dCAwOToyOTozOFBNICswMjAwLCBEYW5pZWwgVmV0dGVyIHdyb3RlOgo+PiBPbiBXZWQsIEp1biAx
-NSwgMjAxNiBhdCA3OjIxIFBNLCBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4gd3Jv
-dGU6Cj4+ID4gQ291bGQgYmUgdGhlIHRkYTk5OHhfZHJ2IGZhdWx0LCBidXQgSSdtIGdldHRpbmcg
-dGhpcyBzcGxhdDoKPj4KPj4gWWVhaCwgdGRhOTk5OHggbmVlZHMgdG8gYmUgZml4ZWQgdG8gX25v
-dF8gcmVnaXN0ZXIgaXQncyBjb25uZWN0b3IKPj4gYmVmb3JlIHRoZSBvdmVyYWxsIChjb21wb25l
-bnRpemVkKSBkcml2ZXIgaXMgcmVhZHkuIFdlIG5lZWQgdG8gbWFrZQo+PiBzdXJlIGZpcnN0IG9m
-YyB0aGF0IGFsbCB1c2VycyBvZiB0aGF0IGRyaXZlciBkbyByZWdpc3RlciBjb25uZWN0b3JzLAo+
-PiBidXQgQ2hyaXMnIHBhdGNoIHNlcmllcyB3aWxsIHRha2UgY2FyZSBvZiB0aGF0LiBCdXQgdGRh
-OTk5OHggbmVlZHMgdG8KPj4gYmUgZml4ZWQgZWl0aGVyIHdheS4KPgo+IENvbXBvbmVudGlzZWQg
-ZHJpdmVycyBvbmx5IGdldCBvbmUgYmluZCBjYWxsYmFjaywgdGhleSBkb24ndCBnZXQgYQo+IHR3
-by1zdGFnZSBpbml0aWFsaXNhdGlvbiBhdCBiaW5kIHRpbWUuCgpXZSBkb24ndCBuZWVkIHR3by1z
-dGFnZSBpbml0IGluIHRoZSBjb21wb25lbnQgZnJhbWV3b3JrLiBUaGVyZSdzCnBhdGNoZXMgaW4t
-ZmxpZ2h0IHRvIHNpbXBsaWZ5IHRoaXMgYSBsb3QgKGFuZCBwcm92aWRlIGNhbGxiYWNrcyB0bwpy
-ZWdpc3RlciBhZGRpdGlvbmFsIGNvbm5lY3RvciBpbnRlcmZhY2VzIGxpa2UgYmFja2xpZ2h0KS4g
-QnV0IGluCmdlbmVyYWwgY29tcG9uZW50cyBzaG91bGQgbm90IGNhbGwgZHJtX2Nvbm5lY3Rvcl9y
-ZWdpc3RlciwgaW5zdGVhZCB0aGUKbWFzdGVyIHNob3VsZCBjYWxsIGRybV9jb25uZWN0b3JfcmVn
-aXN0ZXJfYWxsIGF0IHRoZSB2ZXJ5IGVuZC4gWWVzCnRoaXMgaXMgYSBjaGFuZ2UgZnJvbSBob3cg
-YWxsIHRoZSBvcmlnaW5hbCBrbXMgZHJpdmVycyBoYXZlIGRvbmUgaXQsCmJ1dCB0aGF0IHdheSB3
-YXMgYWxzbyByYWN5IChzaW5jZSBpdCBleHBvc2VkIGludGVyZmFjZXMgdG8gdXNlcnNwYWNlCmJl
-Zm9yZSB0aGV5J3JlIGZ1bGx5IHNldCB1cCkuIFdlJ3JlIGdyYWR1YWxseSBzd2l0Y2hpbmcgZWFj
-aCBkcml2ZXIKb3ZlciwgYnV0IGZvciBzaGFyZWQgYml0cyBsaWtlIHRkYTk5OTh4IGl0J3MgYSBi
-aXQgbW9yZSBjb21wbGljYXRlZCAtCmFsbCB0aGUgZHJpdmVycyB1c2luZyBpdCBuZWVkIHRvIHN3
-aXRjaCBhdCB0aGUgc2FtZSB0aW1lLgotRGFuaWVsCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJl
-IEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgorNDEgKDApIDc5IDM2NSA1NyA0OCAtIGh0dHA6
-Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On 06/15/16 12:12, Rob Herring wrote:
+> On Wed, Jun 15, 2016 at 1:13 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> From: Frank Rowand <frank.rowand@am.sony.com>
+>>
+>> Fix a memory leak resulting from memory allocation in safe_name().
+>> This patch fixes all call sites of safe_name().
+>>
+>> Mathieu Malaterre reported the memory leak on boot:
+>>
+>> On my PowerMac device-tree would generate a duplicate name:
+>>
+>> [    0.023043] device-tree: Duplicate name in PowerPC,G4@0, renamed to "l2-cache#1"
+>>
+>> in this case a newly allocated name is generated by `safe_name`. However
+>> in this case it is never deallocated.
+>>
+>> The bug was found using kmemleak reported as:
+>>
+>> unreferenced object 0xdf532e60 (size 32):
+>>   comm "swapper", pid 1, jiffies 4294892300 (age 1993.532s)
+>>   hex dump (first 32 bytes):
+>>     6c 32 2d 63 61 63 68 65 23 31 00 dd e4 dd 1e c2  l2-cache#1......
+>>     ec d4 ba ce 04 ec cc de 8e 85 e9 ca c4 ec cc 9e  ................
+>>   backtrace:
+>>     [<c02d3350>] kvasprintf+0x64/0xc8
+>>     [<c02d3400>] kasprintf+0x4c/0x5c
+>>     [<c0453814>] safe_name.isra.1+0x80/0xc4
+>>     [<c04545d8>] __of_attach_node_sysfs+0x6c/0x11c
+>>     [<c075f21c>] of_core_init+0x8c/0xf8
+>>     [<c0729594>] kernel_init_freeable+0xd4/0x208
+>>     [<c00047e8>] kernel_init+0x24/0x11c
+>>     [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
+>>
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=120331
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
+>> Reported-by: mathieu.malaterre@gmail.com
+> 
+> [...]
+> 
+>> Index: b/include/linux/of.h
+>> ===================================================================
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -121,6 +121,8 @@ static inline int of_node_is_attached(st
+>>  #ifdef CONFIG_OF_DYNAMIC
+>>  extern struct device_node *of_node_get(struct device_node *node);
+>>  extern void of_node_put(struct device_node *node);
+>> +extern void __of_sysfs_remove_bin_file(struct device_node *np,
+>> +                                      struct property *prop);
+> 
+> Should be internal to DT code, right?Yes.
+
+Yes, thanks.  v2 on the way, moved prototype to of_private.h
+
+> 
+>>  #else /* CONFIG_OF_DYNAMIC */
+>>  /* Dummy ref counting routines - to be implemented later */
+>>  static inline struct device_node *of_node_get(struct device_node *node)
+> 
