@@ -1,66 +1,50 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v3 3/6] iommu/rockchip: support virtual iommu slave device
-Date: Wed, 15 Jun 2016 23:21:28 +0900
-Message-ID: <CAAFQd5AHj8dNrpXXP80k9qguBjEyGehbnGO=rCQU499Nm23yew@mail.gmail.com>
-References: <1465992285-16187-1-git-send-email-zhengsq@rock-chips.com>
- <1465992285-16187-4-git-send-email-zhengsq@rock-chips.com>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 1/8] Documentation: arm: define DT cpu
+ capacity-dmips-mhz bindings
+Date: Wed, 15 Jun 2016 15:22:39 +0100
+Message-ID: <20160615142239.GD5981@e106622-lin>
+References: <1465985877-18271-1-git-send-email-juri.lelli@arm.com>
+ <1465985877-18271-2-git-send-email-juri.lelli@arm.com>
+ <20160615140447.GB2282@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465992285-16187-4-git-send-email-zhengsq@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shunqian Zheng <zhengsq@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux@armlinux.org.uk, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, simon xue <xxm@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160615140447.GB2282-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, sgurrappadi-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2h1bnFpYW4sCgpPbiBXZWQsIEp1biAxNSwgMjAxNiBhdCA5OjA0IFBNLCBTaHVucWlhbiBa
-aGVuZyA8emhlbmdzcUByb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4gQW4gdmlydHVhbCBtYXN0ZXIg
-ZGV2aWNlIGxpa2UgRFJNIG5lZWQgdG8gYXR0YWNoIHRvIGlvbW11Cj4gZG9tYWluIHRvIHNoYXJl
-IHRoZSBtYXBwaW5nIHdpdGggVk9Qcyh0aGUgb25lIHdpdGggYWN0dWFsCj4gaW9tbXUgc2xhdmVz
-KS4KPiBEUk0gYXR0YWNoZXMgdG8gaW9tbXUgYW5kIGFsbG9jYXRlcyBidWZmZXJzIGJlZm9yZSBW
-T1BzIGVuYWJsZWQsCj4gd2hpY2ggbWVhbnMgdGhlcmUgbWF5IGhhdmUgbm90IHJlYWwgaW9tbXUg
-ZGV2aWNlcyBjYW4gYmUgdXNlZAo+IHRvIGRvIGRtYSBtYXBwaW5nLgo+Cj4gVGhpcyBwYXRjaCBj
-cmVhdGVzIGEgaW9tbXUgd2hlbiB2aXJ0dWFsIG1hc3Rlcihncm91cCBpcyBOVUxMKQo+IGF0dGFj
-aGluZywgc28gaXQgY2FuIHVzZSB0aGlzIGlvbW11IGV2ZW4gdGhlIHJlYWwgaW9tbXVzIGRpc2Fi
-bGVkLgo+Cj4gQ2hhbmdlcyBvZiBWMzoKPiAtIEluc3RlYWQgb2YgcmVnaXN0ZXJpbmcgdmlydHVh
-bCBpb21tdSBpbiBEVFMsIHRoaXMgcGF0Y2gKPiAgIGNyZWF0ZXMgYSBpb21tdSB3aGVuIGF0dGFj
-aGluZy4KPgo+IFNpZ25lZC1vZmYtYnk6IFNodW5xaWFuIFpoZW5nIDx6aGVuZ3NxQHJvY2stY2hp
-cHMuY29tPgo+IFN1Z2dlc3RlZC1ieTogVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4K
-ClRvIGNsYXJpZnksIEkgZG9uJ3QgcmVhbGx5IGxpa2UgdGhlIGlkZWEgb2YgdmlydHVhbCBJT01N
-VSwgaG93ZXZlciBpdAppcyByZWdpc3RlcmVkLCBkdHMgb3IgbWFudWFsbHksIGJ1dCBJIGRvbid0
-IHRoaW5rIHRoZXJlIGlzIGFueSBvdGhlcgpyZWFzb25hYmxlIHdheSBvZiBkZWFsaW5nIHdpdGgg
-YWxsb2NhdGlvbnMgZm9yIHN1YnN5c3RlbXMgc3VjaCBhcyBEUk0sCndoZXJlIHRoZXJlIGFyZSBt
-dWx0aXBsZSBkZXZpY2VzIGluIG9uZSBJT01NVSBkb21haW4uIEhhdmluZyBzYWlkCnRoYXQsIHBs
-ZWFzZSBzZWUgc29tZSBtaW5vciBjb21tZW50cyBpbmxpbmUuCgo+IC0tLQo+ICBkcml2ZXJzL2lv
-bW11L3JvY2tjaGlwLWlvbW11LmMgfCAxMzMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKy0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDEyMiBpbnNlcnRpb25zKCspLCAxMSBkZWxl
-dGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L3JvY2tjaGlwLWlvbW11LmMg
-Yi9kcml2ZXJzL2lvbW11L3JvY2tjaGlwLWlvbW11LmMKPiBpbmRleCAzYzE2ZWMzLi44MmVjYzk5
-IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUuYwo+ICsrKyBiL2Ry
-aXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUuYwpbc25pcF0KPiBAQCAtODc4LDYgKzk3NSw5IEBA
-IHN0YXRpYyBzdHJ1Y3QgaW9tbXVfZG9tYWluICpya19pb21tdV9kb21haW5fYWxsb2ModW5zaWdu
-ZWQgdHlwZSkKPiAgICAgICAgIGlmICghcmtfZG9tYWluKQo+ICAgICAgICAgICAgICAgICByZXR1
-cm4gTlVMTDsKPgo+ICsgICAgICAgaWYgKGlvbW11X2dldF9kbWFfY29va2llKCZya19kb21haW4t
-PmRvbWFpbikpCj4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyX2R0Owo+ICsKClNob3VsZG4ndCB0
-aGlzIGJlbG9uZyB0byBhIHNlcGFyYXRlIHBhdGNoPyBBY3R1YWxseSwgaXMgdGhpcyByZXF1aXJl
-ZD8KSWYgc28sIGhvdyB0aGlzIHdvcmtlZCBiZWZvcmU/Cgo+ICAgICAgICAgLyoKPiAgICAgICAg
-ICAqIHJrMzJ4eCBpb21tdXMgdXNlIGEgMiBsZXZlbCBwYWdldGFibGUuCj4gICAgICAgICAgKiBF
-YWNoIGxldmVsMSAoZHQpIGFuZCBsZXZlbDIgKHB0KSB0YWJsZSBoYXMgMTAyNCA0LWJ5dGUgZW50
-cmllcy4KPiBAQCAtOTE3LDYgKzEwMTcsOSBAQCBzdGF0aWMgdm9pZCBya19pb21tdV9kb21haW5f
-ZnJlZShzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4pCj4gICAgICAgICB9Cj4KPiAgICAgICAg
-IGZyZWVfcGFnZSgodW5zaWduZWQgbG9uZylya19kb21haW4tPmR0KTsKPiArCj4gKyAgICAgICBp
-b21tdV9wdXRfZG1hX2Nvb2tpZSgmcmtfZG9tYWluLT5kb21haW4pOwo+ICsKClNlZSBhYm92ZS4K
-Ck90aGVyd2lzZSwgd2l0aCB0aGUgYWJvdmUgYWRkcmVzc2VkLCB5b3UgY2FuIGFkZCBteSBSZXZp
-ZXdlZC1ieS4KCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 15/06/16 15:04, Mark Brown wrote:
+> On Wed, Jun 15, 2016 at 11:17:50AM +0100, Juri Lelli wrote:
+> 
+> > +CPU capacities are obtained by running a suitable benchmark. This binding makes
+> > +no aspersions on the validity or suitability of any particular benchmark, the
+> > +final capacity should, however, be:
+> 
+> Makes no guarantees.  An aspersion is an insult!
+> 
+
+Whoops! :-/
+
+Sure, I'll change that.
+
+> > +CPU capacities are obtained by running the Dhrystone benchmark on each CPU at
+> > +max frequency. The obtained DMIPS score is then divided by the frequency (in
+> > +MHz) at which the benchmark has been run, so that DMIPS/MHz are obtained.
+> > +Such values are then normalized w.r.t. the highest score obtained in the
+> > +system.
+> 
+> Perhaps worth mentioning that caches and so on should be enabled (based
+> on previous experience with people doing bringup)?
+
+OK. I'll add something along this line.
+
+Thanks,
+
+- Juri
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
