@@ -1,103 +1,48 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
-Date: Wed, 15 Jun 2016 11:04:20 +0200
-Message-ID: <20086422.3ieDmpZrvB@diego>
-References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com> <7225720.0AClDW7eQ6@diego> <44bb6bf0-cf86-c440-665a-b0d441ce4427@rock-chips.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 1/2] ASoC: msm8916: Add codec Device Tree bindings.
+Date: Wed, 15 Jun 2016 10:16:12 +0100
+Message-ID: <57611CDC.3040508@linaro.org>
+References: <1465582725-30183-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1465582725-30183-2-git-send-email-srinivas.kandagatla@linaro.org>
+ <20160614152318.GR2282@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <44bb6bf0-cf86-c440-665a-b0d441ce4427@rock-chips.com>
+In-Reply-To: <20160614152318.GR2282@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wang <frank.wang@rock-chips.com>
-Cc: dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kwestfie@codeaurora.org, plai@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+Thanks for review comments,
 
-Am Mittwoch, 15. Juni 2016, 11:23:26 schrieb Frank Wang:
-> On 2016/6/14 21:27, Heiko St=FCbner wrote:
-> > Am Montag, 13. Juni 2016, 10:10:10 schrieb Frank Wang:
-> >> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
-> >> than rk3288 and before, and most of phy-related registers are also
-> >> different from the past, so a new phy driver is required necessari=
-ly.
-> >>=20
-> >> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
-> >> ---
-> >>=20
-> >> Changes in v5:
-> >>   - Added 'reg' in the data block to match the different phy-block=
-s in
-> >>   dt.
-> >>=20
-> >> Changes in v4:
-> >>   - Removed some processes related to 'vbus_host-supply'.
-> >>=20
-> >> Changes in v3:
-> >>   - Resolved the mapping defect between fixed value in driver and =
-the
-> >>=20
-> >> property in devicetree.
-> >>=20
-> >>   - Optimized 480m output clock register function.
-> >>   - Code cleanup.
-> >>=20
-> >> Changes in v2:
-> >>   - Changed vbus_host operation from gpio to regulator in *_probe.
-> >>   - Improved the fault treatment relate to 480m clock register.
-> >>   - Cleaned up some meaningless codes in *_clk480m_disable.
-> >>   - made more clear the comment of *_sm_work.
-> >>  =20
-> >>   drivers/phy/Kconfig                  |    7 +
-> >>   drivers/phy/Makefile                 |    1 +
-> >>   drivers/phy/phy-rockchip-inno-usb2.c |  645
-> >>=20
-> >> ++++++++++++++++++++++++++++++++++ 3 files changed, 653 insertions=
-(+)
-> >>=20
-> >> [...]
-> >>=20
-> >> +
-> >> +static int rockchip_usb2phy_exit(struct phy *phy)
-> >> +{
-> >> +	struct rockchip_usb2phy_port *rport =3D phy_get_drvdata(phy);
-> >> +
-> >>=20
-> > 	if (!rport->port_cfg)
-> > =09
-> > 		return 0;
-> >>=20
-> >> +	if (rport->port_id =3D=3D USB2PHY_PORT_HOST)
-> >> +		cancel_delayed_work_sync(&rport->sm_work);
-> >> +
-> >=20
-> > you will also need to resume the port here, if it is suspended at t=
-his
-> > point, as phy_power_off gets called after phy_exit and would probab=
-ly
-> > produce clk enable/disable mismatches otherwise.
->=20
-> Hmm, from my personal point of view, when canceling sm_work here, it =
-may
-> not cause the port goes to suspend, isn't it? besides, clk only prepa=
-red
-> in *_usb2phy_resume(), and unprepared in *_usb2phy_suspend(), so if w=
-e
-> resume port here,  the prepare_count of clk will be increased again, =
-I
-> am afraid this is not correct, and am I wrong? would you like to tell=
- me
-> more details?
+On 14/06/16 16:23, Mark Brown wrote:
+> On Fri, Jun 10, 2016 at 07:18:44PM +0100, Srinivas Kandagatla wrote:
+>
+>> +Codec IP is divided into two parts, first analog which is integrated in pmic pm8916
+>> +and secondly digital part which is integrated into application processor. Codec register
+>> +controls are also split across pmic an lpass. Analog part is controlled via spmi bus to pmic.
+>
+> Please keep things wrapped at less than 80 columns.
+Yep, will fix it in next version.
+>
+>> + - interrupt-parent : The parent interrupt controller.
+>> + - interrupts: List of interrupts in given SPMI peripheral.
+>> + - interrupt-names: Names specified to above list of interrupts in same
+>> +		    order. List of supported interrupt names are:
+>> +  "spk_cnp_int" - Speaker click and pop interrupt
+>
+> Please format this more clearly so these don't look like properties,
+> more indentation would be good.
+Ok, will do it in next version.
+>
+>> + - vddio-supply: phandle to VDD_CDC_IO regulator device tree node.
+>> + - vdd-tx-rx-supply: phandle to VDD_CDC_TX/RX/CX regulator device tree node.
+>
+> You should name the supplies with the same name as the datasheet uses.
+>
+Yep, I will rename them to match the hw specs.
 
-usb2phy_resume gets called both initially through phy_power_on as well.
-So it's on but through the first scheduled work call, might get suspend=
-ed when=20
-nothing is connected. (clk_enable and clk_disable will run).
-If nothing is connected on unload phy_power_off will get called while t=
-he=20
-clock actually is still disabled.
-
-So I think it's either resuming on exit, or at least making sure to do =
-nothing=20
-in that case in the phy_power_off callback of the driver.
+thanks,
+srini
