@@ -1,82 +1,37 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: [PATCH v5 3/8] arm, dts: add TC2 cpu capacity-dmips-mhz information
-Date: Wed, 15 Jun 2016 11:17:52 +0100
-Message-ID: <1465985877-18271-4-git-send-email-juri.lelli@arm.com>
-References: <1465985877-18271-1-git-send-email-juri.lelli@arm.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: clocksource: Add Add Oxford
+ Semiconductor RPS Timer bindings
+Date: Wed, 15 Jun 2016 12:23:10 +0200
+Message-ID: <57612C8E.1030405@linaro.org>
+References: <1465985607-21231-1-git-send-email-narmstrong@baylibre.com>
+ <1465985607-21231-3-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465985877-18271-1-git-send-email-juri.lelli@arm.com>
+In-Reply-To: <1465985607-21231-3-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, juri.lelli@arm.com, broonie@kernel.org, sgurrappadi@nvidia.com, Liviu Dudau <liviu.dudau@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add TC2 cpu capacity binding information.
+On 06/15/2016 12:13 PM, Neil Armstrong wrote:
+> Add DT bindings for the Oxford Semiconductor RPS dual Timer.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
 
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Juri Lelli <juri.lelli@arm.com>
----
+Waiting for Rob's acked before picking the series.
 
-Changes from v1:
-  - capacity-scale removed
+Thanks !
 
-Changes from v4:
-  - binding changed to capacity-dmips-mhz
----
- arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+   -- Daniel
 
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-index 0205c97..45d08cc 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-@@ -39,6 +39,7 @@
- 			reg = <0>;
- 			cci-control-port = <&cci_control1>;
- 			cpu-idle-states = <&CLUSTER_SLEEP_BIG>;
-+			capacity-dmips-mhz = <1024>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -47,6 +48,7 @@
- 			reg = <1>;
- 			cci-control-port = <&cci_control1>;
- 			cpu-idle-states = <&CLUSTER_SLEEP_BIG>;
-+			capacity-dmips-mhz = <1024>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -55,6 +57,7 @@
- 			reg = <0x100>;
- 			cci-control-port = <&cci_control2>;
- 			cpu-idle-states = <&CLUSTER_SLEEP_LITTLE>;
-+			capacity-dmips-mhz = <516>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -63,6 +66,7 @@
- 			reg = <0x101>;
- 			cci-control-port = <&cci_control2>;
- 			cpu-idle-states = <&CLUSTER_SLEEP_LITTLE>;
-+			capacity-dmips-mhz = <516>;
- 		};
- 
- 		cpu4: cpu@4 {
-@@ -71,6 +75,7 @@
- 			reg = <0x102>;
- 			cci-control-port = <&cci_control2>;
- 			cpu-idle-states = <&CLUSTER_SLEEP_LITTLE>;
-+			capacity-dmips-mhz = <516>;
- 		};
- 
- 		idle-states {
--- 
-2.7.0
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
