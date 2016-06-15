@@ -1,90 +1,103 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: Re: [PATCH] rtc: omap: Support ext_wakeup configuration
-Date: Wed, 15 Jun 2016 10:37:47 +0200
-Message-ID: <65595642-33fb-368b-f47f-8e62b885c0a2@grinn-global.com>
-References: <1459785403-1725-1-git-send-email-m.niestroj@grinn-global.com>
- <20160404224046.GA17042@atomide.com> <57078A89.3080809@ti.com>
- <20160408151408.GS16484@atomide.com> <5707E764.7050204@ti.com>
- <570D2F79.9040202@grinn-global.com> <57111AF4.6070505@ti.com>
- <fe6ab23a-5f0d-a317-14d9-f538c3ad4052@grinn-global.com>
- <20160426153948.GR5995@atomide.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
+Date: Wed, 15 Jun 2016 11:04:20 +0200
+Message-ID: <20086422.3ieDmpZrvB@diego>
+References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com> <7225720.0AClDW7eQ6@diego> <44bb6bf0-cf86-c440-665a-b0d441ce4427@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <rtc-linux+bncBD7N3SEV2QCRBXVHQS5QKGQEEY4P7ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160426153948.GR5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <44bb6bf0-cf86-c440-665a-b0d441ce4427@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wang <frank.wang@rock-chips.com>
+Cc: dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Frank,
 
-Sorry for such delay in response. Please see my comments/questions on
-using pinctrl below.
+Am Mittwoch, 15. Juni 2016, 11:23:26 schrieb Frank Wang:
+> On 2016/6/14 21:27, Heiko St=FCbner wrote:
+> > Am Montag, 13. Juni 2016, 10:10:10 schrieb Frank Wang:
+> >> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+> >> than rk3288 and before, and most of phy-related registers are also
+> >> different from the past, so a new phy driver is required necessari=
+ly.
+> >>=20
+> >> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+> >> ---
+> >>=20
+> >> Changes in v5:
+> >>   - Added 'reg' in the data block to match the different phy-block=
+s in
+> >>   dt.
+> >>=20
+> >> Changes in v4:
+> >>   - Removed some processes related to 'vbus_host-supply'.
+> >>=20
+> >> Changes in v3:
+> >>   - Resolved the mapping defect between fixed value in driver and =
+the
+> >>=20
+> >> property in devicetree.
+> >>=20
+> >>   - Optimized 480m output clock register function.
+> >>   - Code cleanup.
+> >>=20
+> >> Changes in v2:
+> >>   - Changed vbus_host operation from gpio to regulator in *_probe.
+> >>   - Improved the fault treatment relate to 480m clock register.
+> >>   - Cleaned up some meaningless codes in *_clk480m_disable.
+> >>   - made more clear the comment of *_sm_work.
+> >>  =20
+> >>   drivers/phy/Kconfig                  |    7 +
+> >>   drivers/phy/Makefile                 |    1 +
+> >>   drivers/phy/phy-rockchip-inno-usb2.c |  645
+> >>=20
+> >> ++++++++++++++++++++++++++++++++++ 3 files changed, 653 insertions=
+(+)
+> >>=20
+> >> [...]
+> >>=20
+> >> +
+> >> +static int rockchip_usb2phy_exit(struct phy *phy)
+> >> +{
+> >> +	struct rockchip_usb2phy_port *rport =3D phy_get_drvdata(phy);
+> >> +
+> >>=20
+> > 	if (!rport->port_cfg)
+> > =09
+> > 		return 0;
+> >>=20
+> >> +	if (rport->port_id =3D=3D USB2PHY_PORT_HOST)
+> >> +		cancel_delayed_work_sync(&rport->sm_work);
+> >> +
+> >=20
+> > you will also need to resume the port here, if it is suspended at t=
+his
+> > point, as phy_power_off gets called after phy_exit and would probab=
+ly
+> > produce clk enable/disable mismatches otherwise.
+>=20
+> Hmm, from my personal point of view, when canceling sm_work here, it =
+may
+> not cause the port goes to suspend, isn't it? besides, clk only prepa=
+red
+> in *_usb2phy_resume(), and unprepared in *_usb2phy_suspend(), so if w=
+e
+> resume port here,  the prepare_count of clk will be increased again, =
+I
+> am afraid this is not correct, and am I wrong? would you like to tell=
+ me
+> more details?
 
-On 26.04.2016 17:39, Tony Lindgren wrote:
-> * Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> [160426 00:40]:
->> In below code we check reg resource size in order to know if we
->> should update RTC_PMIC or it is pinctrl responsibility. It's a little
->> hack, but we make sure, that every device with not modified device-tree
->> will work as previously. If we want to add support for ext_wakeup, we
->> just change reg resouce size in device-tree in order to not overlap
->> requested memory regions in rtc-omap and pinctrl.
->>
->> I used am335x-chilisom instead of dra7 and updated
->> pinctrl-single,funcion-mask so the EXT_WAKEUP_STATUS is always cleared
->> after boot.
->>
->> So the question now is: is this acceptable? Do we want to continue with
->> this approach?
->
-> Well the concern I have here is that we not use pinctrl-single
-> as a separate driver if any of the registers are shared with
-> the RTC driver. If the registers are shared, the pinctrl
-> functionality should be implemented in the RTC driver.
+usb2phy_resume gets called both initially through phy_power_on as well.
+So it's on but through the first scheduled work call, might get suspend=
+ed when=20
+nothing is connected. (clk_enable and clk_disable will run).
+If nothing is connected on unload phy_power_off will get called while t=
+he=20
+clock actually is still disabled.
 
-We can use pinctrl generic params for:
-  * enable wakeup inputs - with 'input-enable'
-  * input debounce enable/configuration - with 'input-debounce'
-
-However I don't see any generic way for setting wakeup input polarity.
-So I guess we should add some driver specific devicetree binding to
-handle hat. I also didn't find any other driver that implements it.
-
-In case of pinctrl-single we have just written custom register values to
-set polarity.
-
-So the question is: how should we proceed? Is pinctrl still and option?
-If yes, what is your idea about configuring input polarity?
-
->
-> The pinctrl driver can also implement a chained IRQ later
-> on for consumer device drivers to use with the wakeirq API.
-> Maybe eventually we'll have real chained interrupt for the
-> RTC to use from Linux side of the C-M3 driver.
->
-> Regards,
->
-> Tony
->
-
-
--- 
-Marcin Niestroj
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+So I think it's either resuming on exit, or at least making sure to do =
+nothing=20
+in that case in the phy_power_off callback of the driver.
