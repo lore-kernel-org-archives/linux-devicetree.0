@@ -1,133 +1,90 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2] backlight: lp855x: Add enable regulator
-Date: Wed, 15 Jun 2016 09:34:45 +0100
-Message-ID: <20160615083445.GA1579@dell>
-References: <1465587597-131467-1-git-send-email-briannorris@chromium.org>
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: Re: [PATCH] rtc: omap: Support ext_wakeup configuration
+Date: Wed, 15 Jun 2016 10:37:47 +0200
+Message-ID: <65595642-33fb-368b-f47f-8e62b885c0a2@grinn-global.com>
+References: <1459785403-1725-1-git-send-email-m.niestroj@grinn-global.com>
+ <20160404224046.GA17042@atomide.com> <57078A89.3080809@ti.com>
+ <20160408151408.GS16484@atomide.com> <5707E764.7050204@ti.com>
+ <570D2F79.9040202@grinn-global.com> <57111AF4.6070505@ti.com>
+ <fe6ab23a-5f0d-a317-14d9-f538c3ad4052@grinn-global.com>
+ <20160426153948.GR5995@atomide.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465587597-131467-1-git-send-email-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Milo Kim <milo.kim@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Stephen Barber <smbarber@chromium.org>, Doug Anderson <dianders@chromium.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <rtc-linux+bncBD7N3SEV2QCRBXVHQS5QKGQEEY4P7ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160426153948.GR5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 Jun 2016, Brian Norris wrote:
+Hi,
 
-> The LP8556 datasheet describes an EN/VDDIO input, which serves "both =
-as
-> a chip enable and as a power supply reference for PWM, SDA, and SCL
-> inputs." The LP8556 that I'm testing doesn't respond properly if I tr=
-y
-> to talk I2C to it too quickly after enabling VDDIO, and the LP8555
-> datasheet mentions a t_RESPONSE delay of up to 1 millisecond.
->=20
-> Support this EN/VDDIO by adding a regulator property to the binding;
-> enabling this regulator at probe time; and sleeping for 1 to 2ms, if =
-the
-> EN/VDDIO regulator was provided.
->=20
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> v2: s/TS8555/LP8555/ in comment (typo)
->=20
->  .../devicetree/bindings/leds/backlight/lp855x.txt  |  2 ++
->  drivers/video/backlight/lp855x_bl.c                | 29 ++++++++++++=
-++++++++++
->  2 files changed, 31 insertions(+)
+Sorry for such delay in response. Please see my comments/questions on
+using pinctrl below.
 
-Collected Acks and applied, thanks.
+On 26.04.2016 17:39, Tony Lindgren wrote:
+> * Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> [160426 00:40]:
+>> In below code we check reg resource size in order to know if we
+>> should update RTC_PMIC or it is pinctrl responsibility. It's a little
+>> hack, but we make sure, that every device with not modified device-tree
+>> will work as previously. If we want to add support for ext_wakeup, we
+>> just change reg resouce size in device-tree in order to not overlap
+>> requested memory regions in rtc-omap and pinctrl.
+>>
+>> I used am335x-chilisom instead of dra7 and updated
+>> pinctrl-single,funcion-mask so the EXT_WAKEUP_STATUS is always cleared
+>> after boot.
+>>
+>> So the question now is: is this acceptable? Do we want to continue with
+>> this approach?
+>
+> Well the concern I have here is that we not use pinctrl-single
+> as a separate driver if any of the registers are shared with
+> the RTC driver. If the registers are shared, the pinctrl
+> functionality should be implemented in the RTC driver.
 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/lp855x.=
-txt b/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-> index 0a3ecbc3a1b9..88f56641fc28 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/lp855x.txt
-> @@ -13,6 +13,7 @@ Optional properties:
->    - rom-addr: Register address of ROM area to be updated (u8)
->    - rom-val: Register value to be updated (u8)
->    - power-supply: Regulator which controls the 3V rail
-> +  - enable-supply: Regulator which controls the EN/VDDIO input
-> =20
->  Example:
-> =20
-> @@ -57,6 +58,7 @@ Example:
->  	backlight@2c {
->  		compatible =3D "ti,lp8557";
->  		reg =3D <0x2c>;
-> +		enable-supply =3D <&backlight_vddio>;
->  		power-supply =3D <&backlight_vdd>;
-> =20
->  		dev-ctrl =3D /bits/ 8 <0x41>;
-> diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/back=
-light/lp855x_bl.c
-> index e5b14f52628f..939f057836e1 100644
-> --- a/drivers/video/backlight/lp855x_bl.c
-> +++ b/drivers/video/backlight/lp855x_bl.c
-> @@ -13,6 +13,7 @@
->  #include <linux/slab.h>
->  #include <linux/i2c.h>
->  #include <linux/backlight.h>
-> +#include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/of.h>
->  #include <linux/platform_data/lp855x.h>
-> @@ -74,6 +75,7 @@ struct lp855x {
->  	struct lp855x_platform_data *pdata;
->  	struct pwm_device *pwm;
->  	struct regulator *supply;	/* regulator for VDD input */
-> +	struct regulator *enable;	/* regulator for EN/VDDIO input */
->  };
-> =20
->  static int lp855x_write_byte(struct lp855x *lp, u8 reg, u8 data)
-> @@ -433,6 +435,19 @@ static int lp855x_probe(struct i2c_client *cl, c=
-onst struct i2c_device_id *id)
->  		lp->supply =3D NULL;
->  	}
-> =20
-> +	lp->enable =3D devm_regulator_get_optional(lp->dev, "enable");
-> +	if (IS_ERR(lp->enable)) {
-> +		ret =3D PTR_ERR(lp->enable);
-> +		if (ret =3D=3D -ENODEV) {
-> +			lp->enable =3D NULL;
-> +		} else {
-> +			if (ret !=3D -EPROBE_DEFER)
-> +				dev_err(lp->dev, "error getting enable regulator: %d\n",
-> +					ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	if (lp->supply) {
->  		ret =3D regulator_enable(lp->supply);
->  		if (ret < 0) {
-> @@ -441,6 +456,20 @@ static int lp855x_probe(struct i2c_client *cl, c=
-onst struct i2c_device_id *id)
->  		}
->  	}
-> =20
-> +	if (lp->enable) {
-> +		ret =3D regulator_enable(lp->enable);
-> +		if (ret < 0) {
-> +			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		/*
-> +		 * LP8555 datasheet says t_RESPONSE (time between VDDIO and
-> +		 * I2C) is 1ms.
-> +		 */
-> +		usleep_range(1000, 2000);
-> +	}
-> +
->  	i2c_set_clientdata(cl, lp);
-> =20
->  	ret =3D lp855x_configure(lp);
+We can use pinctrl generic params for:
+  * enable wakeup inputs - with 'input-enable'
+  * input debounce enable/configuration - with 'input-debounce'
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+However I don't see any generic way for setting wakeup input polarity.
+So I guess we should add some driver specific devicetree binding to
+handle hat. I also didn't find any other driver that implements it.
+
+In case of pinctrl-single we have just written custom register values to
+set polarity.
+
+So the question is: how should we proceed? Is pinctrl still and option?
+If yes, what is your idea about configuring input polarity?
+
+>
+> The pinctrl driver can also implement a chained IRQ later
+> on for consumer device drivers to use with the wakeirq API.
+> Maybe eventually we'll have real chained interrupt for the
+> RTC to use from Linux side of the C-M3 driver.
+>
+> Regards,
+>
+> Tony
+>
+
+
+-- 
+Marcin Niestroj
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
