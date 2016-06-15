@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 09/10] ARM: dts: sun9i: a80-optimus: Order
- nodes by alphabetical order
-Date: Wed, 15 Jun 2016 18:27:46 +0800
-Message-ID: <1465986467-14802-10-git-send-email-wens@csie.org>
+Subject: [PATCH v2 10/10] ARM: dts: sun9i: Switch to the AC100 RTC
+ clock outputs for osc32k
+Date: Wed, 15 Jun 2016 18:27:47 +0800
+Message-ID: <1465986467-14802-11-git-send-email-wens@csie.org>
 References: <1465986467-14802-1-git-send-email-wens@csie.org>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -20,81 +20,74 @@ To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move the mmc nodes above the ohci nodes for proper ordering by name.
+The 32.768 kHz clock inside the A80 SoC is fed from an external source,
+typically the AC100 RTC module.
+
+Make the osc32k placeholder a fixed-factor clock so board dts files can
+specify its source.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80-optimus.dts | 50 ++++++++++++++++-----------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 5 +++++
+ arch/arm/boot/dts/sun9i-a80-optimus.dts     | 5 +++++
+ arch/arm/boot/dts/sun9i-a80.dtsi            | 9 +++------
+ 3 files changed, 13 insertions(+), 6 deletions(-)
 
+diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+index 65f4f32f89ad..b6299a9c14e3 100644
+--- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
++++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+@@ -103,6 +103,11 @@
+ 	allwinner,drive = <SUN4I_PINCTRL_40_MA>;
+ };
+ 
++&osc32k {
++	/* osc32k input is from AC100 */
++	clocks = <&ac100_rtc 0>;
++};
++
+ &pio {
+ 	led_pins_cubieboard4: led-pins@0 {
+ 		allwinner,pins = "PH6", "PH17";
 diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-index 24ef8e65a975..3b013dc5fef1 100644
+index 3b013dc5fef1..2f079cbd2025 100644
 --- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
 +++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-@@ -119,6 +119,31 @@
+@@ -152,6 +152,11 @@
  	status = "okay";
  };
  
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>, <&mmc0_cd_pin_optimus>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 18 GPIO_ACTIVE_HIGH>; /* PH8 */
-+	cd-inverted;
-+	status = "okay";
++&osc32k {
++	/* osc32k input is from AC100 */
++	clocks = <&ac100_rtc 0>;
 +};
 +
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&mmc2_8bit_pins {
-+	/* Increase drive strength for DDR modes */
-+	allwinner,drive = <SUN4I_PINCTRL_40_MA>;
-+};
-+
- &ohci0 {
- 	status = "okay";
- };
-@@ -157,31 +182,6 @@
- 	};
- };
+ &pio {
+ 	led_pins_optimus: led-pins@0 {
+ 		allwinner,pins = "PH0", "PH1";
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index f68b3242b33a..dd11115ec087 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -148,15 +148,12 @@
  
--&mmc0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins>, <&mmc0_cd_pin_optimus>;
--	vmmc-supply = <&reg_dcdc1>;
--	bus-width = <4>;
--	cd-gpios = <&pio 7 18 GPIO_ACTIVE_HIGH>; /* PH8 */
--	cd-inverted;
--	status = "okay";
--};
--
--&mmc2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&mmc2_8bit_pins>;
--	vmmc-supply = <&reg_dcdc1>;
--	bus-width = <8>;
--	non-removable;
--	cap-mmc-hw-reset;
--	status = "okay";
--};
--
--&mmc2_8bit_pins {
--	/* Increase drive strength for DDR modes */
--	allwinner,drive = <SUN4I_PINCTRL_40_MA>;
--};
--
- &r_ir {
- 	status = "okay";
- };
+ 		/*
+ 		 * The 32k clock is from an external source, normally the
+-		 * AC100 codec/RTC chip. This clock is by default enabled
+-		 * and clocked at 32768 Hz, from the oscillator connected
+-		 * to the AC100. It is configurable, but no such driver or
+-		 * bindings exist yet.
++		 * AC100 codec/RTC chip. This serves as a placeholder for
++		 * board dts files to specify the source.
+ 		 */
+ 		osc32k: osc32k_clk {
+ 			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <32768>;
++			compatible = "fixed-factor-clock";
+ 			clock-output-names = "osc32k";
+ 		};
+ 
 -- 
 2.8.1
 
