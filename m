@@ -1,45 +1,60 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
+From: Daniel Vetter <daniel@ffwll.ch>
 Subject: Re: [PATCH v5 2/3] drm/arm: Add support for Mali Display Processors
-Date: Wed, 15 Jun 2016 21:11:16 +0100
-Message-ID: <20160615201116.GI1041@n2100.armlinux.org.uk>
+Date: Wed, 15 Jun 2016 22:30:36 +0200
+Message-ID: <CAKMK7uFwXzRmLp_werouyvFrb-qEZi+xg32bO48r51rHmvT3Vw@mail.gmail.com>
 References: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
  <1466002295-24813-3-git-send-email-Liviu.Dudau@arm.com>
  <20160615152309.GI1338@phenom.ffwll.local>
  <20160615161758.GF9711@e106497-lin.cambridge.arm.com>
  <CAKMK7uENW3cU8LccHcqffX3cbzax2-5mzY0101yLfR7vtD4CoA@mail.gmail.com>
  <20160615172104.GI9711@e106497-lin.cambridge.arm.com>
+ <CAKMK7uGFTmQERWcDeQ=V-ntbgQv6K1avGx1LKCGLcAWacmHKnA@mail.gmail.com>
+ <20160615200539.GH1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20160615172104.GI9711@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Emil Velikov <emil.l.velikov@gmail.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, David Brown <David.Brown@arm.com>, Brian Starkey <brian.starkey@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160615200539.GH1041@n2100.armlinux.org.uk>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: devicetree <devicetree@vger.kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 06:21:04PM +0100, Liviu Dudau wrote:
-> Could be the tda998x_drv fault, but I'm getting this splat:
-> 
-> [    1.347687] kobject_add_internal failed for card0-HDMI-A-1 (error: -2 parent: card0)
-
-Right, so this is -ENOENT - I expect that it's complaining that the
-parent does not exist before a child is attempted to be added.
-
-Hopefully, this isn't with -rc kernels, but is with -next.  I think
-some folk need to Cc me with patches to tda998x, or at least talk to
-me about what's changed in DRM so that tda998x can get fixed.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+T24gV2VkLCBKdW4gMTUsIDIwMTYgYXQgMTA6MDUgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51
+eAo8bGludXhAYXJtbGludXgub3JnLnVrPiB3cm90ZToKPiBPbiBXZWQsIEp1biAxNSwgMjAxNiBh
+dCAwOToyOTozOFBNICswMjAwLCBEYW5pZWwgVmV0dGVyIHdyb3RlOgo+PiBPbiBXZWQsIEp1biAx
+NSwgMjAxNiBhdCA3OjIxIFBNLCBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4gd3Jv
+dGU6Cj4+ID4gQ291bGQgYmUgdGhlIHRkYTk5OHhfZHJ2IGZhdWx0LCBidXQgSSdtIGdldHRpbmcg
+dGhpcyBzcGxhdDoKPj4KPj4gWWVhaCwgdGRhOTk5OHggbmVlZHMgdG8gYmUgZml4ZWQgdG8gX25v
+dF8gcmVnaXN0ZXIgaXQncyBjb25uZWN0b3IKPj4gYmVmb3JlIHRoZSBvdmVyYWxsIChjb21wb25l
+bnRpemVkKSBkcml2ZXIgaXMgcmVhZHkuIFdlIG5lZWQgdG8gbWFrZQo+PiBzdXJlIGZpcnN0IG9m
+YyB0aGF0IGFsbCB1c2VycyBvZiB0aGF0IGRyaXZlciBkbyByZWdpc3RlciBjb25uZWN0b3JzLAo+
+PiBidXQgQ2hyaXMnIHBhdGNoIHNlcmllcyB3aWxsIHRha2UgY2FyZSBvZiB0aGF0LiBCdXQgdGRh
+OTk5OHggbmVlZHMgdG8KPj4gYmUgZml4ZWQgZWl0aGVyIHdheS4KPgo+IENvbXBvbmVudGlzZWQg
+ZHJpdmVycyBvbmx5IGdldCBvbmUgYmluZCBjYWxsYmFjaywgdGhleSBkb24ndCBnZXQgYQo+IHR3
+by1zdGFnZSBpbml0aWFsaXNhdGlvbiBhdCBiaW5kIHRpbWUuCgpXZSBkb24ndCBuZWVkIHR3by1z
+dGFnZSBpbml0IGluIHRoZSBjb21wb25lbnQgZnJhbWV3b3JrLiBUaGVyZSdzCnBhdGNoZXMgaW4t
+ZmxpZ2h0IHRvIHNpbXBsaWZ5IHRoaXMgYSBsb3QgKGFuZCBwcm92aWRlIGNhbGxiYWNrcyB0bwpy
+ZWdpc3RlciBhZGRpdGlvbmFsIGNvbm5lY3RvciBpbnRlcmZhY2VzIGxpa2UgYmFja2xpZ2h0KS4g
+QnV0IGluCmdlbmVyYWwgY29tcG9uZW50cyBzaG91bGQgbm90IGNhbGwgZHJtX2Nvbm5lY3Rvcl9y
+ZWdpc3RlciwgaW5zdGVhZCB0aGUKbWFzdGVyIHNob3VsZCBjYWxsIGRybV9jb25uZWN0b3JfcmVn
+aXN0ZXJfYWxsIGF0IHRoZSB2ZXJ5IGVuZC4gWWVzCnRoaXMgaXMgYSBjaGFuZ2UgZnJvbSBob3cg
+YWxsIHRoZSBvcmlnaW5hbCBrbXMgZHJpdmVycyBoYXZlIGRvbmUgaXQsCmJ1dCB0aGF0IHdheSB3
+YXMgYWxzbyByYWN5IChzaW5jZSBpdCBleHBvc2VkIGludGVyZmFjZXMgdG8gdXNlcnNwYWNlCmJl
+Zm9yZSB0aGV5J3JlIGZ1bGx5IHNldCB1cCkuIFdlJ3JlIGdyYWR1YWxseSBzd2l0Y2hpbmcgZWFj
+aCBkcml2ZXIKb3ZlciwgYnV0IGZvciBzaGFyZWQgYml0cyBsaWtlIHRkYTk5OTh4IGl0J3MgYSBi
+aXQgbW9yZSBjb21wbGljYXRlZCAtCmFsbCB0aGUgZHJpdmVycyB1c2luZyBpdCBuZWVkIHRvIHN3
+aXRjaCBhdCB0aGUgc2FtZSB0aW1lLgotRGFuaWVsCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJl
+IEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgorNDEgKDApIDc5IDM2NSA1NyA0OCAtIGh0dHA6
+Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
