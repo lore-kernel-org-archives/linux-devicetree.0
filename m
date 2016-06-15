@@ -1,110 +1,106 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Subject: Re: [PATCH v2 03/10] mfd: ac100: Add driver for X-Powers
  AC100 audio codec / RTC combo IC
-Date: Wed, 15 Jun 2016 13:36:46 +0100
-Message-ID: <20160615123646.GD4948@dell>
+Date: Wed, 15 Jun 2016 20:41:35 +0800
+Message-ID: <CAGb2v669g6G4aK5UssyLLve1a-AbdVfo4CPYrt+YWmCUURz9qQ@mail.gmail.com>
 References: <1465986467-14802-1-git-send-email-wens@csie.org>
- <1465986467-14802-4-git-send-email-wens@csie.org>
+ <1465986467-14802-4-git-send-email-wens@csie.org> <20160615123646.GD4948@dell>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <rtc-linux+bncBDA7X7F2WUEBBN4XQW5QKGQER43DQVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCMILY6JWQBBBF42QW5QKGQEWREDT7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1465986467-14802-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20160615123646.GD4948@dell>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
 List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 15 Jun 2016, Chen-Yu Tsai wrote:
+On Wed, Jun 15, 2016 at 8:36 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, 15 Jun 2016, Chen-Yu Tsai wrote:
+>
+>> The AC100 is a multifunction device with an audio codec subsystem and
+>> an RTC subsystem. These two subsystems share a common register space
+>> and host interface.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>
+> Change log?
 
-> The AC100 is a multifunction device with an audio codec subsystem and
-> an RTC subsystem. These two subsystems share a common register space
-> and host interface.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
+Change log was in the cover letter. Changes were the addition of the
+codec related register macros and regmap ranges.
 
-Change log?
+>>  drivers/mfd/Kconfig       |  10 +++
+>>  drivers/mfd/Makefile      |   2 +
+>>  drivers/mfd/ac100.c       | 135 +++++++++++++++++++++++++++++++++++
+>>  include/linux/mfd/ac100.h | 176 ++++++++++++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 323 insertions(+)
+>>  create mode 100644 drivers/mfd/ac100.c
+>>  create mode 100644 include/linux/mfd/ac100.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 1bcf601de5bc..bd83849a0c8d 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -101,6 +101,16 @@ config MFD_BCM590XX
+>>       help
+>>         Support for the BCM590xx PMUs from Broadcom
+>>
+>> +config MFD_AC100
+>> +     tristate "X-Powers AC100"
+>> +     select MFD_CORE
+>> +     depends on SUNXI_RSB
+>> +     help
+>> +       If you say Y here you get support for the X-Powers AC100 audio codec
+>> +       IC.
+>> +       This driver include only the core APIs. You have to select individual
+>> +       components like codecs or RTC under the corresponding menus.
+>> +
+>>  config MFD_AXP20X
+>>       tristate
+>>       select MFD_CORE
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index 42a66e19e191..60f9a6b0557c 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -113,6 +113,8 @@ obj-$(CONFIG_PMIC_DA9052) += da9052-irq.o
+>>  obj-$(CONFIG_PMIC_DA9052)    += da9052-core.o
+>>  obj-$(CONFIG_MFD_DA9052_SPI) += da9052-spi.o
+>>  obj-$(CONFIG_MFD_DA9052_I2C) += da9052-i2c.o
+>> +
+>> +obj-$(CONFIG_MFD_AC100)              += ac100.o
+>>  obj-$(CONFIG_MFD_AXP20X)     += axp20x.o
+>>  obj-$(CONFIG_MFD_AXP20X_I2C) += axp20x-i2c.o
+>>  obj-$(CONFIG_MFD_AXP20X_RSB) += axp20x-rsb.o
+>> diff --git a/drivers/mfd/ac100.c b/drivers/mfd/ac100.c
+>> new file mode 100644
+>> index 000000000000..15d24fa77771
+>> --- /dev/null
+>> +++ b/drivers/mfd/ac100.c
+>> @@ -0,0 +1,135 @@
+>> +/*
+>> + * ac100.c - MFD core driver for X-Powers' AC100 Audio Codec IC
+>
+> Nit: Drop the filename here.
+>
+> Apart from that:
+>   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
->  drivers/mfd/Kconfig       |  10 +++
->  drivers/mfd/Makefile      |   2 +
->  drivers/mfd/ac100.c       | 135 +++++++++++++++++++++++++++++++++++
->  include/linux/mfd/ac100.h | 176 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  4 files changed, 323 insertions(+)
->  create mode 100644 drivers/mfd/ac100.c
->  create mode 100644 include/linux/mfd/ac100.h
->=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 1bcf601de5bc..bd83849a0c8d 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -101,6 +101,16 @@ config MFD_BCM590XX
->  	help
->  	  Support for the BCM590xx PMUs from Broadcom
-> =20
-> +config MFD_AC100
-> +	tristate "X-Powers AC100"
-> +	select MFD_CORE
-> +	depends on SUNXI_RSB
-> +	help
-> +	  If you say Y here you get support for the X-Powers AC100 audio codec
-> +	  IC.
-> +	  This driver include only the core APIs. You have to select individual
-> +	  components like codecs or RTC under the corresponding menus.
-> +
->  config MFD_AXP20X
->  	tristate
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 42a66e19e191..60f9a6b0557c 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -113,6 +113,8 @@ obj-$(CONFIG_PMIC_DA9052)	+=3D da9052-irq.o
->  obj-$(CONFIG_PMIC_DA9052)	+=3D da9052-core.o
->  obj-$(CONFIG_MFD_DA9052_SPI)	+=3D da9052-spi.o
->  obj-$(CONFIG_MFD_DA9052_I2C)	+=3D da9052-i2c.o
-> +
-> +obj-$(CONFIG_MFD_AC100)		+=3D ac100.o
->  obj-$(CONFIG_MFD_AXP20X)	+=3D axp20x.o
->  obj-$(CONFIG_MFD_AXP20X_I2C)	+=3D axp20x-i2c.o
->  obj-$(CONFIG_MFD_AXP20X_RSB)	+=3D axp20x-rsb.o
-> diff --git a/drivers/mfd/ac100.c b/drivers/mfd/ac100.c
-> new file mode 100644
-> index 000000000000..15d24fa77771
-> --- /dev/null
-> +++ b/drivers/mfd/ac100.c
-> @@ -0,0 +1,135 @@
-> +/*
-> + * ac100.c - MFD core driver for X-Powers' AC100 Audio Codec IC
+Thanks.
+ChenYu
 
-Nit: Drop the filename here.
-
-Apart from that:
-  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
+-- 
 You received this message because you are subscribed to "rtc-linux".
 Membership options at http://groups.google.com/group/rtc-linux .
 Please read http://groups.google.com/group/rtc-linux/web/checklist
 before submitting a driver.
----=20
-You received this message because you are subscribed to the Google Groups "=
-rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
