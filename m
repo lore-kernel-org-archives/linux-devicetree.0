@@ -1,62 +1,178 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v10 03/14] usb: hcd.h: Add OTG to HCD interface
-Date: Wed, 15 Jun 2016 10:14:39 +0300
-Message-ID: <5761005F.4060303@ti.com>
-References: <Pine.LNX.4.44L0.1606141018530.1574-100000@iolanthe.rowland.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 02/48] ARM: at91: Document new TCB bindings
+Date: Wed, 15 Jun 2016 09:29:55 +0200
+Message-ID: <20160615092955.261f14fb@bbrezillon>
+References: <1465596231-21766-1-git-send-email-alexandre.belloni@free-electrons.com>
+	<1465596231-21766-3-git-send-email-alexandre.belloni@free-electrons.com>
+	<20160614214737.GA10294@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.44L0.1606141018530.1574-100000@iolanthe.rowland.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: peter.chen@freescale.com, balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20160614214737.GA10294@rob-hp-laptop>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/06/16 17:21, Alan Stern wrote:
-> On Tue, 14 Jun 2016, Roger Quadros wrote:
-> 
->> +Alan
->>
->> On 10/06/16 16:07, Roger Quadros wrote:
->>> The OTG core will use struct otg_hcd_ops to interface
->>> with the HCD (Host Controller Driver).
->>>
->>> The main purpose of this interface is to avoid directly
->>> calling HCD APIs from the OTG core as they
->>> wouldn't be defined in the built-in symbol table if
->>> CONFIG_USB is m.
->>>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> Acked-by: Peter Chen <peter.chen@nxp.com>
->>> ---
->>>  include/linux/usb/hcd.h | 24 ++++++++++++++++++++++++
->>>  1 file changed, 24 insertions(+)
->>>
->>> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
->>> index 66fc137..7729c1f 100644
->>> --- a/include/linux/usb/hcd.h
->>> +++ b/include/linux/usb/hcd.h
->>> @@ -400,6 +400,30 @@ struct hc_driver {
->>>  
->>>  };
->>>  
->>> +/**
->>> + * struct otg_hcd_ops - Interface between OTG core and HCD
->>> + *
->>> + * Provided by the HCD core to allow the OTG core to interface with the HCD
-> 
-> Add:  * in case the OTG core is built-in and the HCD core is built as a module.
+On Tue, 14 Jun 2016 16:47:37 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-OK.
+> On Sat, Jun 11, 2016 at 12:03:05AM +0200, Alexandre Belloni wrote:
+> > The current binding for the TCB is not flexible enough for some use cases
+> > and prevents proper utilization of all the channels.
+> > 
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: linux-pwm@vger.kernel.org
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> > ---
+> >  .../devicetree/bindings/arm/atmel-at91.txt         | 32 -----------
+> >  .../devicetree/bindings/mfd/atmel-tcb.txt          | 62 ++++++++++++++++++++++
+> >  .../devicetree/bindings/pwm/atmel-tcb-pwm.txt      | 12 +++--
+> >  3 files changed, 69 insertions(+), 37 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt  
+> 
+> [...]
+> 
+> > diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> > new file mode 100644
+> > index 000000000000..48196752c78f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> > @@ -0,0 +1,62 @@
+> > +* Device tree bindings for Atmel Timer Counter Blocks
+> > +- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
+> > +  <chip> can be "at91rm9200" or "at91sam9x5"
+> > +- reg: Should contain registers location and length
+> > +- #address-cells: has to be 1
+> > +- #size-cells: has to be 0
+> > +- interrupts: Should contain all interrupts for the TC block
+> > +  Note that you can specify several interrupt cells if the TC
+> > +  block has one interrupt per channel.
+> > +- clock-names: tuple listing input clock names.
+> > +	Required elements: "t0_clk", "slow_clk"
+> > +	Optional elements: "t1_clk", "t2_clk"
+> > +- clocks: phandles to input clocks.  
+> 
+> What is the order of clocks?
+> 
+> > +
+> > +The TCB can expose multiple subdevices:
+> > + * a clocksource and clockevent device  
+> 
+> No. These compatible names are linuxisms. Describe features of the 
+> timers to be able to select which timer to use if you need to pick 
+> certain timers. For example, interrupt capability could be used to 
+> select the clkevt.
+
+Would 'atmel,tcb-free-running-timer' (to replace 'atmel,tcb-clksrc') and
+'atmel,tcb-programmable-timer' (to replace 'atmel,tcb-clkevt') be
+acceptable?
 
 > 
-> Otherwise, for patches 1, 3, and 12:
+> > +   - compatible: Should be "atmel,tcb-clksrc"
+> > +   - reg: Should contain the TCB channels to be used. If the
+> > +     counter width is 16 bits (at91rm9200-tcb), two consecutive
+> > +     channels are needed. Else, only one channel will be used.
+> > +
+> > + * a clockevent device
+> > +   - compatible: Should be "atmel,tcb-clkevt"
+> > +   - reg: Should contain the TCB channel to be used
+> > +
+> > + * a PWM chip: see ../pwm/atmel-tcb-pwm.txt
+> > +
+> > +Examples:
+> > +
+> > +One interrupt per TC block:
+> > +	tcb0: timer@fff7c000 {
+> > +		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		reg = <0xfff7c000 0x100>;
+> > +		interrupts = <18 4>;
+> > +		clocks = <&tcb0_clk>;
+> > +		clock-names = "t0_clk";  
 > 
-> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+> Missing slow_clk
 > 
+> > +
+> > +		timer@0 {
+> > +			compatible = "atmel,tcb-clksrc";
+> > +			reg = <0>, <1>;
+> > +		};
+> > +
+> > +		timer@2 {
+> > +			compatible = "atmel,tcb-clkevt";
+> > +			reg = <2>;
+> > +		};
+> > +	};
+> > +
+> > +One interrupt per TC channel in a TC block:
+> > +	tcb1: timer@fffdc000 {
+> > +		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		reg = <0xfffdc000 0x100>;
+> > +		interrupts = <26 4>, <27 4>, <28 4>;
+> > +		clocks = <&tcb1_clk>;
+> > +		clock-names = "t0_clk";
+> > +	};
+> > +
+> > +
+> > diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> > index 8031148bcf85..ab8fbd5ba184 100644
+> > --- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> > @@ -2,15 +2,17 @@ Atmel TCB PWM controller
+> >  
+> >  Required properties:
+> >  - compatible: should be "atmel,tcb-pwm"
+> > +- reg: tcb channel to use. Each channel can export 2 PWMs  
+> 
+> Is there a difference in channels? If not, then this compatible should 
+> go.
 
-Thanks.
+This one I don't understand.
+The TCB (Timer Counter Block) is an MFD containing 3 Timer Counter
+devices. Each of these devices (also called channels) can be assigned a
+specific mode:
+- timer mode (free-running of programmable)
+- waveform generator mode (IOW, a PWM)
+- capture mode (an IIO device, but we don't have any driver for that
+  right now)
 
-cheers,
--roger
+So each sub-device of the TCB is represented as a sub-node with its own
+compatible. Is there a problem with that?
+
+> 
+> >  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+> >    the cells format. The only third cell flag supported by this binding is
+> >    PWM_POLARITY_INVERTED.
+> > -- tc-block: The Timer Counter block to use as a PWM chip.
+> >  
+> >  Example:
+> >  
+> > -pwm {
+> > -	compatible = "atmel,tcb-pwm";
+> > -	#pwm-cells = <3>;
+> > -	tc-block = <1>;
+> > +tcb0: timer@f800c000 {
+> > +	pwm@0 {
+> > +		compatible = "atmel,tcb-pwm";
+> > +		reg = <0>;
+> > +		#pwm-cells = <3>;
+> > +	};
+> >  };
+> > -- 
+> > 2.8.1
+> >   
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
