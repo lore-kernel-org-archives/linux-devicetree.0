@@ -1,64 +1,102 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v5 2/3] drm/arm: Add support for Mali Display Processors
-Date: Wed, 15 Jun 2016 21:29:38 +0200
-Message-ID: <CAKMK7uGFTmQERWcDeQ=V-ntbgQv6K1avGx1LKCGLcAWacmHKnA@mail.gmail.com>
-References: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
- <1466002295-24813-3-git-send-email-Liviu.Dudau@arm.com>
- <20160615152309.GI1338@phenom.ffwll.local>
- <20160615161758.GF9711@e106497-lin.cambridge.arm.com>
- <CAKMK7uENW3cU8LccHcqffX3cbzax2-5mzY0101yLfR7vtD4CoA@mail.gmail.com>
- <20160615172104.GI9711@e106497-lin.cambridge.arm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] musb: sunxi: Simplify dr_mode handling
+Date: Wed, 15 Jun 2016 21:30:23 +0200
+Message-ID: <20160615193023.GB5144@lukather>
+References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
+ <1465138776-6003-4-git-send-email-hdegoede@redhat.com>
+ <20160608102325.GI14179@lukather>
+ <08af737c-f1f1-0966-0eca-24d4daa7423b@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160615172104.GI9711@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <08af737c-f1f1-0966-0eca-24d4daa7423b-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTUsIDIwMTYgYXQgNzoyMSBQTSwgTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1
-QGFybS5jb20+IHdyb3RlOgo+IE9uIFdlZCwgSnVuIDE1LCAyMDE2IGF0IDA3OjEzOjE1UE0gKzAy
-MDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4+IE9uIFdlZCwgSnVuIDE1LCAyMDE2IGF0IDY6MTcg
-UE0sIExpdml1IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPiB3cm90ZToKPj4gPiBPbiBXZWQs
-IEp1biAxNSwgMjAxNiBhdCAwNToyMzoxMFBNICswMjAwLCBEYW5pZWwgVmV0dGVyIHdyb3RlOgo+
-PiA+PiBPbiBXZWQsIEp1biAxNSwgMjAxNiBhdCAwMzo1MTozNFBNICswMTAwLCBMaXZpdSBEdWRh
-dSB3cm90ZToKPj4gPj4gPiBBZGQgc3VwcG9ydCBmb3IgdGhlIG5ldyBmYW1pbHkgb2YgRGlzcGxh
-eSBQcm9jZXNzb3JzIGZyb20gQVJNIEx0ZC4KPj4gPj4gPiBUaGlzIGNvbW1pdCBhZGRzIGJhc2lj
-IHN1cHBvcnQgZm9yIE1hbGkgRFA1MDAsIERQNTUwIGFuZCBEUDY1MAo+PiA+PiA+IHBhcnRzLCB3
-aXRoIG9ubHkgdGhlIGRpc3BsYXkgZW5naW5lIGJlaW5nIHN1cHBvcnRlZCBhdCB0aGUgbW9tZW50
-Lgo+PiA+PiA+Cj4+ID4+ID4gQ2M6IERhdmlkIEJyb3duIDxEYXZpZC5Ccm93bkBhcm0uY29tPgo+
-PiA+PiA+IENjOiBCcmlhbiBTdGFya2V5IDxCcmlhbi5TdGFya2V5QGFybS5jb20+Cj4+ID4+ID4K
-Pj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4K
-Pj4gPj4KPj4gPj4gU21hbGwgdGhpbmcgSSBub3RpY2VkOiBkcm1fZGV2X3JlZ2lzdGVyL2Nvbm5l
-Y3Rvcl9yZWdpc3Rlcl9hbGwgc2hvdWxkIGJlCj4+ID4+IHRoZSBsYXN0IHN0ZXAgaW4geW91ciBp
-bml0IGNvZGUsIGFuZCB1bnJlZ2lzdGVyIHRoZSBmaXJzdC4gQXRtIGl0J3MKPj4gPj4gc29tZXdo
-ZXJlIGluIHRoZSBtaWRkbGUuIEJ1dCBwZXJmZWN0bHkgZmluZSB0byBkbyB0aGF0IGFzIGEgZm9s
-bG93LXVwLgo+PiA+Cj4+ID4gSSd2ZSB0cmllZCB0aGF0LCBidXQgdGhlIGNvbm5lY3RvciBhbmQg
-ZW5jb2RlciB0aGF0IGdldHMgcmVnaXN0ZXJlZCBhcyBwYXJ0Cj4+ID4gb2YgdGhlIGNvbXBvbmVu
-dF9iaW5kX2FsbCgpIGZhaWxzIGlmIHRoZXJlIGlzIG5vIGRybSBkZXYgcmVnaXN0ZXJlZC4gWW91
-IGRpZAo+PiA+IGNvbW1lbnQgb24gdGhlIHY0IHZlcnNpb24gYWJvdXQgdGhhdCBhbmQgSSBkaWQg
-dGVzdCB5b3VyIGlkZWEsIHNvcnJ5IGZvcgo+PiA+IGZvcmdldGluZyB0byB1cGRhdGUgeW91IG9u
-IHRoYXQuCj4+Cj4+IFdoeSBkb2VzIGl0IGZhaWw/IFRoYXQgc2hvdWxkbid0IGhhcHBlbiAuLi4g
-d2UgbmVlZCB0byBiZSBhYmxlIHRvIHNldAo+PiB1cCBldmVyeXRoaW5nIGZpcnN0LCBiZWZvcmUg
-d2UgcmVnaXN0ZXIuCj4KPiBDb3VsZCBiZSB0aGUgdGRhOTk4eF9kcnYgZmF1bHQsIGJ1dCBJJ20g
-Z2V0dGluZyB0aGlzIHNwbGF0OgoKWWVhaCwgdGRhOTk5OHggbmVlZHMgdG8gYmUgZml4ZWQgdG8g
-X25vdF8gcmVnaXN0ZXIgaXQncyBjb25uZWN0b3IKYmVmb3JlIHRoZSBvdmVyYWxsIChjb21wb25l
-bnRpemVkKSBkcml2ZXIgaXMgcmVhZHkuIFdlIG5lZWQgdG8gbWFrZQpzdXJlIGZpcnN0IG9mYyB0
-aGF0IGFsbCB1c2VycyBvZiB0aGF0IGRyaXZlciBkbyByZWdpc3RlciBjb25uZWN0b3JzLApidXQg
-Q2hyaXMnIHBhdGNoIHNlcmllcyB3aWxsIHRha2UgY2FyZSBvZiB0aGF0LiBCdXQgdGRhOTk5OHgg
-bmVlZHMgdG8KYmUgZml4ZWQgZWl0aGVyIHdheS4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpT
-b2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KKzQxICgwKSA3OSAzNjUgNTcgNDgg
-LSBodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+
+--WYTEVAkct0FjGQmd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, Jun 08, 2016 at 12:30:20PM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 08-06-16 12:23, Maxime Ripard wrote:
+> >Hi,
+> >
+> >On Sun, Jun 05, 2016 at 04:59:36PM +0200, Hans de Goede wrote:
+> >>phy-sun4i-usb now has proper dr_mode handling, it always registers an
+> >>extcon, and sends a notify with the mode (even when in peripheral- /
+> >>host-only mode) at least once.
+> >>
+> >>So we can simply the sunxi musb glue by always registering its extcon
+> >>notifier and relying on sunxi_musb_work() to enable vbus when in
+> >>host-only mode.
+> >>
+> >>This also enables host- and peripheral-only mode with vbus monitoring.
+> >>
+> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >
+> >It's been a bit painful to track all the patches needed so that it
+> >applies properly, but I've finally been able to test it on a Sinlinx
+> >SinA33 with peripheral-only mUSB, and it works like a charm.
+> >
+> >You can add my Tested-by.
+>=20
+> Great, thanks for testing.
+>=20
+> This is the board which has an otg connector with vbus not connected,
+> right? Yet it does have a functional id-pin, right ?
+
+It's that one, yes.
+
+> In that case you should be able to put it in dual-role mode (only
+> specify the id-pin in the phy dts node, no vbus / vbus-monitoring)
+> and then it _should_ work in host mode if you use a powered hub.
+>=20
+> I'm fine with putting in peripheral-only mode, but as said
+> dual-role might work with a powered hub.
+
+Good point, I'll test that.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--WYTEVAkct0FjGQmd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXYazPAAoJEBx+YmzsjxAg8YEP/2I/LQf7lS0Sg+uZa8VsPYuY
++1qRTCl9K/FZz/GmBGdizVh1prh2EYvxDBZlVes+BqL3Hax1TSHYxnjy6Hv5MePe
+AaOVXjT+pqSK0qZ4Jn8rXbso/R+zyzmTjOwyhqCXXCjv7R/WF3mk38dXJ1UpzYPF
+W1E2iZgu7qGWF/KQWGeoDDDmupj0wBaJQiEShlYoF2F/mG83OG3DF2xzCEmx/CAd
+EotvZmkxzH0IaguMbDIm1NMPtX/Ef8wS/JeKqm9hzxb6aEKTZlwS8ck0iGP1P1LY
+Fc8xudtsWuFdIAe+P2CGdaPHXPOjvNLy5LELvcDvzu9jS3dpcbhQJ8rG8VjyBGNA
+HgD4Emep0EK/7dqtN3SQ1AQP8OI9rbtNQ+G2QAVQUkMymS5raJgfcMyyIySyLX3k
+hUxwyIsT2jXJ2G56TllK5bbrrQr1xSzyqAxjvd3/bU/uHFfeJRM5dhJ4yFypLxrz
+OEFuaAYd606KKNweZuy8GEanP69pF8MlAfxwRFpV0TCcbKuDZadlm0a2JsNR01Wu
+H5Bgfv19NNtRDL2U7bC7EJkJ0YjiIpVt90kDCK1ngvuhfVQRSgn0PLmG/Wgs7EaK
+nj9cS+VogPTPA8lvz9wldfqVZOzS+N1qojkvqDyXad8Om2uI9iDPDVnTJOursNNf
+lHl266fvIlEOVOjJaad8
+=jpVJ
+-----END PGP SIGNATURE-----
+
+--WYTEVAkct0FjGQmd--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
