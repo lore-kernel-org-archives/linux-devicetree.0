@@ -1,56 +1,136 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v5 3/3] MAINTAINERS: Add entry for Mali-DP driver
-Date: Wed, 15 Jun 2016 18:12:08 +0200
-Message-ID: <20160615161208.GQ1338@phenom.ffwll.local>
-References: <1466002295-24813-1-git-send-email-Liviu.Dudau@arm.com>
- <1466002295-24813-4-git-send-email-Liviu.Dudau@arm.com>
- <20160615153524.GA21140@imgtec.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 04/15] drivers: net: cpsw: ethtool: fix accessing to
+ suspended device
+Date: Wed, 15 Jun 2016 09:14:07 -0700
+Message-ID: <57617ECF.2010902@gmail.com>
+References: <20160615115603.4897-1-grygorii.strashko@ti.com>
+ <20160615115603.4897-5-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20160615153524.GA21140@imgtec.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Engestrom <eric.engestrom@imgtec.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160615115603.4897-5-grygorii.strashko@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTUsIDIwMTYgYXQgMDQ6MzU6MjRQTSArMDEwMCwgRXJpYyBFbmdlc3Ryb20g
-d3JvdGU6Cj4gT24gV2VkLCBKdW4gMTUsIDIwMTYgYXQgMDM6NTE6MzVQTSArMDEwMCwgTGl2aXUg
-RHVkYXUgd3JvdGU6Cj4gPiBBZGQgTUFJTlRBSU5FUlMgZW50cnkgZm9yIEFSTSBNYWxpLURQIGRy
-aXZlciBhbmQgdXBkYXRlIHRoZQo+ID4gSERMQ0QgZmlsZSBtYXRjaGluZyBwYXR0ZXJuIHRvIGNv
-dmVyIG9ubHkgSERMQ0QgcmF0aGVyIHRoYW4KPiA+IHRoZSB3aG9sZSBkcml2ZXJzL2dwdS9kcm0v
-YXJtIGRpcmVjdG9yeS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTGl2aXUgRHVkYXUgPExpdml1
-LkR1ZGF1QGFybS5jb20+Cj4gPiAtLS0KPiA+ICBNQUlOVEFJTkVSUyB8IDEwICsrKysrKysrKy0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiAK
-PiA+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCj4gPiBpbmRleCAwYmYx
-MTljLi4xNmRlYjA3IDEwMDY0NAo+ID4gLS0tIGEvTUFJTlRBSU5FUlMKPiA+ICsrKyBiL01BSU5U
-QUlORVJTCj4gPiBAQCAtODY1LDkgKzg2NSwxNyBAQCBGOglEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9zbnBzLGFyY3BndS50eHQKPiA+ICBBUk0gSERMQ0QgRFJNIERS
-SVZFUgo+ID4gIE06CUxpdml1IER1ZGF1IDxsaXZpdS5kdWRhdUBhcm0uY29tPgo+ID4gIFM6CVN1
-cHBvcnRlZAo+ID4gLUY6CWRyaXZlcnMvZ3B1L2RybS9hcm0vCj4gPiArRjoJZHJpdmVycy9ncHUv
-ZHJtL2FybS9oZGxjZF8qCj4gPiAgRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvYXJtLGhkbGNkLnR4dAo+ID4gIAo+ID4gK0FSTSBNQUxJLURQIERSTSBEUklWRVIK
-PiA+ICtNOglMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KPiA+ICtNOglCcmlhbiBT
-dGFya2V5IDxicmlhbi5zdGFya2V5QGFybS5jb20+Cj4gPiArTToJTWFsaSBEUCBNYWludGFpbmVy
-cyA8bWFsaWRwQGZvc3MuYXJtLmNvbT4KPiA+ICtTOglTdXBwb3J0ZWQKPiA+ICtGOglkcml2ZXJz
-L2dwdS9kcm0vYXJtLwo+IAo+IElJVUMgdGhpcyB3aWxsIGFsc28gY2F0Y2ggYGRyaXZlcnMvZ3B1
-L2RybS9hcm0vaGRsY2RfKmAuCj4gRGlkIHlvdSBtZWFuIGBkcml2ZXJzL2dwdS9kcm0vYXJtL21h
-bGlkcF8qYCA/CgpPciBqdXN0IG1lcmdlIGl0IGFuZCBjcmVhdGUgb25lIGVudHJ5IGZvciBhbGwg
-QVJNIGRybSBkcml2ZXJzPwotRGFuaWVsCgo+IAo+ID4gK0Y6CURvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0Cj4gPiArCj4gPiAgQVJNIE1GTSBB
-TkQgRkxPUFBZIERSSVZFUlMKPiA+ICBNOglJYW4gTW9sdG9uIDxzcHlyb0BmMnMuY29tPgo+ID4g
-IFM6CU1haW50YWluZWQKPiA+IC0tIAo+ID4gMi44LjIKCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3
-YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 06/15/2016 04:55 AM, Grygorii Strashko wrote:
+> The CPSW might be suspended by RPM if all ethX interfaces are down,
+> but it still could be accesible through ethtool interfce. In this case
+> ethtool operations, requiring registers access, will cause L3 errors and
+> CPSW crash.
+> 
+> Hence, fix it by adding RPM get/put calls in ethtool callbcaks which
+> can access CPSW registers: .set_coalesce(), .get_ethtool_stats(),
+> .set_pauseparam(), .get_regs()
+
+Provided that you implement an ethtool_ops::begin, it will be called
+before each ethtool operation runs, so that could allow you to eliminate
+some of the duplication here. Conversely ethtool_ops::end terminates
+each operation and can be used for that purpose.
+
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  drivers/net/ethernet/ti/cpsw.c | 36 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 35 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+> index ba81d4e..1ba0c09 100644
+> --- a/drivers/net/ethernet/ti/cpsw.c
+> +++ b/drivers/net/ethernet/ti/cpsw.c
+> @@ -931,6 +931,13 @@ static int cpsw_set_coalesce(struct net_device *ndev,
+>  	u32 prescale = 0;
+>  	u32 addnl_dvdr = 1;
+>  	u32 coal_intvl = 0;
+> +	int ret;
+> +
+> +	ret = pm_runtime_get_sync(&priv->pdev->dev);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(&priv->pdev->dev);
+> +		return ret;
+> +	}
+>  
+>  	coal_intvl = coal->rx_coalesce_usecs;
+>  
+> @@ -985,6 +992,8 @@ update_return:
+>  		priv->coal_intvl = coal_intvl;
+>  	}
+>  
+> +	pm_runtime_put(&priv->pdev->dev);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1022,7 +1031,13 @@ static void cpsw_get_ethtool_stats(struct net_device *ndev,
+>  	struct cpdma_chan_stats tx_stats;
+>  	u32 val;
+>  	u8 *p;
+> -	int i;
+> +	int i, ret;
+> +
+> +	ret = pm_runtime_get_sync(&priv->pdev->dev);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(&priv->pdev->dev);
+> +		return;
+> +	}
+>  
+>  	/* Collect Davinci CPDMA stats for Rx and Tx Channel */
+>  	cpdma_chan_get_stats(priv->rxch, &rx_stats);
+> @@ -1049,6 +1064,8 @@ static void cpsw_get_ethtool_stats(struct net_device *ndev,
+>  			break;
+>  		}
+>  	}
+> +
+> +	pm_runtime_put(&priv->pdev->dev);
+>  }
+>  
+>  static int cpsw_common_res_usage_state(struct cpsw_priv *priv)
+> @@ -1780,11 +1797,20 @@ static void cpsw_get_regs(struct net_device *ndev,
+>  {
+>  	struct cpsw_priv *priv = netdev_priv(ndev);
+>  	u32 *reg = p;
+> +	int ret;
+> +
+> +	ret = pm_runtime_get_sync(&priv->pdev->dev);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(&priv->pdev->dev);
+> +		return;
+> +	}
+>  
+>  	/* update CPSW IP version */
+>  	regs->version = priv->version;
+>  
+>  	cpsw_ale_dump(priv->ale, reg);
+> +
+> +	pm_runtime_put(&priv->pdev->dev);
+>  }
+>  
+>  static void cpsw_get_drvinfo(struct net_device *ndev,
+> @@ -1902,12 +1928,20 @@ static int cpsw_set_pauseparam(struct net_device *ndev,
+>  {
+>  	struct cpsw_priv *priv = netdev_priv(ndev);
+>  	bool link;
+> +	int ret;
+> +
+> +	ret = pm_runtime_get_sync(&priv->pdev->dev);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(&priv->pdev->dev);
+> +		return ret;
+> +	}
+>  
+>  	priv->rx_pause = pause->rx_pause ? true : false;
+>  	priv->tx_pause = pause->tx_pause ? true : false;
+>  
+>  	for_each_slave(priv, _cpsw_adjust_link, priv, &link);
+>  
+> +	pm_runtime_put(&priv->pdev->dev);
+>  	return 0;
+>  }
+>  
+> 
+
+
+-- 
+Florian
