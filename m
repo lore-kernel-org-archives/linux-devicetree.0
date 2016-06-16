@@ -1,34 +1,71 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2 2/2] arm64: dts: apm: Remove leading '0x' from unit
- addresses
-Date: Thu, 16 Jun 2016 17:29:15 -0500
-Message-ID: <20160616222915.GB25357@rob-hp-laptop>
-References: <20160614125756.22169.50783.stgit@bhelgaas-glaptop2.roam.corp.google.com>
- <20160614130030.22169.93519.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: [PATCH 1/2] arm64: dts: ls1043a: Add cache nodes for cacheinfo support
+Date: Thu, 16 Jun 2016 18:35:03 -0500
+Message-ID: <1466120104-12023-1-git-send-email-leoyang.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160614130030.22169.93519.stgit-1RhO1Y9PlrlHTL0Zs8A6p/gx64E7kk8eUsxypvmhUTTZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Li Yang <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 08:00:30AM -0500, Bjorn Helgaas wrote:
-> Unit addresses should not have a leading '0x'.  Remove them.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/apm/apm-shadowcat.dtsi |   32 ++++++++++++++--------------
->  1 file changed, 16 insertions(+), 16 deletions(-)
+Adds the cache nodes and next-level-cache property for the
+cacheinfo to work.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Thanks for the clean-ups.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index de0323b..2b4aa2a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -65,6 +65,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0 0x0>;
+ 			clocks = <&clockgen 1 0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -72,6 +73,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0 0x1>;
+ 			clocks = <&clockgen 1 0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -79,6 +81,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0 0x2>;
+ 			clocks = <&clockgen 1 0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -86,6 +89,11 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0 0x3>;
+ 			clocks = <&clockgen 1 0>;
++			next-level-cache = <&l2>;
++		};
++
++		l2: l2-cache {
++			compatible = "cache";
+ 		};
+ 	};
+ 
+-- 
+1.9.0
