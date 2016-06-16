@@ -1,112 +1,111 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 1/8] Documentation: arm: define DT cpu
- capacity-dmips-mhz bindings
-Date: Wed, 15 Jun 2016 17:11:16 -0500
-Message-ID: <CAL_JsqJwQVsn3=6vQus4Q2OhnLUsJVN70j2+f3QoJejcb=p9YA@mail.gmail.com>
-References: <1465985877-18271-1-git-send-email-juri.lelli@arm.com> <1465985877-18271-2-git-send-email-juri.lelli@arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
+Date: Thu, 16 Jun 2016 09:06:49 +0900
+Message-ID: <20160616000649.GA2709@verge.net.au>
+References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
+ <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
+ <20160601005751.GG20527@verge.net.au>
+ <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
+ <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
+ <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
+ <20160610010245.GA10152@verge.net.au>
+ <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
+ <20160614004317.GC6456@verge.net.au>
+ <efac403f-3709-6a1a-aa02-a8ab26b21ffc@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1465985877-18271-2-git-send-email-juri.lelli@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, peterz@infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, dietmar.eggemann@arm.com, Mark Brown <broonie@kernel.org>, sgurrappadi@nvidia.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <efac403f-3709-6a1a-aa02-a8ab26b21ffc@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 5:17 AM, Juri Lelli <juri.lelli@arm.com> wrote:
-> ARM systems may be configured to have cpus with different power/performance
-> characteristics within the same chip. In this case, additional information
-> has to be made available to the kernel (the scheduler in particular) for it
-> to be aware of such differences and take decisions accordingly.
->
-> Therefore, this patch aims at standardizing cpu capacities device tree
-> bindings for ARM platforms. Bindings define cpu capacity-dmips-mhz
-> parameter, to allow operating systems to retrieve such information from
-> the device tree and initialize related kernel structures, paving the way
-> for common code in the kernel to deal with heterogeneity.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> Cc: Paul Walmsley <paul@pwsan.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Juri Lelli <juri.lelli@arm.com>
-> ---
->
-> Changes from v1:
->  - removed section regarding capacity-scale
->  - added information regarding normalization
->
-> Changes from v4:
->  - binding changed to capacity-dmips-mhz
->  - sections and changelod updated accordingly
-> ---
->  .../devicetree/bindings/arm/cpu-capacity.txt       | 236 +++++++++++++++++++++
->  Documentation/devicetree/bindings/arm/cpus.txt     |  10 +
->  2 files changed, 246 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/cpu-capacity.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> new file mode 100644
-> index 0000000..7582a13
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> @@ -0,0 +1,236 @@
-> +==========================================
-> +ARM CPUs capacity bindings
-> +==========================================
-> +
-> +==========================================
-> +1 - Introduction
-> +==========================================
-> +
-> +ARM systems may be configured to have cpus with different power/performance
-> +characteristics within the same chip. In this case, additional information
-> +has to be made available to the kernel (the scheduler in particular) for
-> +it to be aware of such differences and take decisions accordingly.
-> +
-> +==========================================
-> +2 - CPU capacity definition
-> +==========================================
-> +
-> +CPU capacity is a number that provides the scheduler information about CPUs
-> +heterogeneity. Such heterogeneity can come from micro-architectural differences
-> +(e.g., ARM big.LITTLE systems) or maximum frequency at which CPUs can run
-> +(e.g., SMP systems with multiple frequency domains). Heterogeneity in this
-> +context is about differing performance characteristics; this binding tries to
-> +capture a first-order approximation of the relative performance of CPUs.
-> +
-> +CPU capacities are obtained by running a suitable benchmark. This binding makes
-> +no aspersions on the validity or suitability of any particular benchmark, the
-> +final capacity should, however, be:
-> +
-> +* A "single-threaded" or CPU affine benchmark
-> +* Divided by the running frequency of the CPU executing the benchmark
-> +* Not subject to dynamic frequency scaling of the CPU
-> +
-> +For the time being we however advise usage of the Dhrystone benchmark. What
-> +above thus becomes:
-> +
-> +CPU capacities are obtained by running the Dhrystone benchmark on each CPU at
-> +max frequency. The obtained DMIPS score is then divided by the frequency (in
-> +MHz) at which the benchmark has been run, so that DMIPS/MHz are obtained.
-> +Such values are then normalized w.r.t. the highest score obtained in the
-> +system.
+On Wed, Jun 15, 2016 at 12:08:21AM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 06/14/2016 03:43 AM, Simon Horman wrote:
+> 
+> >>>>[...]
+> >>>>
+> >>>>>>>And that the system behaves sanely on suspend/resume.
+> >>>>>>
+> >>>>>> I'd be thankful if you told me how to test that. :-)
+> >>>>>
+> >>>>>System suspend:
+> >>>>>
+> >>>>>  echo mem > /sys/power/state
+> >>>>
+> >>>>  Oh. I know that one! :-)
+> >>>>
+> >>>>>System resume: You're gonna need a "wakeup-source" in your DTS, e.g. gpio-keys.
+> >>>>>Serial should work too, echo "enabled" to the corresponding wakeup
+> >>>>>file in /sys first.
+> >>>>
+> >>>>  I'm afraid I couldn't find that file. All I saw were RPM controls...
+> >>>>
+> >>>>>In case of issues, try "echo 0 > /sys/module/printk/parameters/console_suspend".
+> >>>>
+> >>>>  There's no problems suspending, it's the resuming that's a problem for me.
+> >>>>
+> >>>>>Good luck!
+> >>>>
+> >>>>  As usual, there was no luck. :-)
+> >>>>
+> >>>>WBR, Sergei
+> >>>
+> >>>Does resume work for UP (i.e. without SMP)?
+> >>
+> >>   No. My problem with resume is I can't wake up the remote system. I don't
+> >>see the needed 'wakeup' file in
+> >>/sys/devices/platform/soc/e6e60000.serial/...
+> >>    However, if I enable CONFIG_PM_[ADVANCED_]DEBUG and do
+> >>
+> >>$ echo -n core /sys/.power/pm_test
+> >>
+> >>the system happily wakes up after a small delay (5 s), w/either SMP or UP kernel.
+> >
+> >That seems promising but it seems curious that there is no wakeup file.
+> >
+> >On Lager the following procedure works for me using
+> >renesas-devel-20160613-v4.7-rc3 and shmobile defconfig.
+> >
+> >0. Add wakeup-source property to serial@e6ce0000 node in DT
+> 
+>    Ah, stupid me, it was the piece that I'd overlooked!
+> 
+> >1. echo enabled > /sys/devices/platform/e6e60000.serial/tty/ttySC0/power/wakeup
+> >2. echo mem > /sys/power/state
+> >3. Provide input on serial console
+> >
+> >* Success! *
+> 
+>    Yeah, works now!
+>    Sorry, I had no previous experience with the PM. Was unsupported feature
+> back in MontaVista... :-)
 
-So the property says it represents DMIPS/MHz, but we take that and
-"normalize" them back to a made up numbers? Perhaps that step should
-be optional. Then paranoid Si vendors can put their fake numbers in
-and end users can update the dts files with real numbers.
+Great, thanks for your persistence.
 
-Is there any point in allowing people to pick their own scale? Why not
-just 100 (as in percent)?
+FWIW, I always have to refer to some notes in order to exercise PM.
 
-Rob
+> >>>How did testing CPU hotplug go? Did it work for all CPUs?
+> >>
+> >>   Sure!
+> >
+> >Great!
+> >
+> >>   The only problem I'm seeing (again) is the RCAN clock failing to register:
+> >>
+> >>rcar_gen2_cpg_clocks_init: failed to register cpg_clocks rcan clock (-12)
+> >>
+> >>   I was going to look at it yesterday but (wrongly) thought it somehow
+> >>cured itself... I'll look at it now.
+> >
+> >Is this resolved? If not perhaps you could consider removing the node
+> >in question for now.
+> 
+>    That's what I did in v5, i.e. removed the RCAN CPG clock (not the whole
+> node)...
+
+Great.
