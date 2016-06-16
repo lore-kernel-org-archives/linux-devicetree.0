@@ -1,7 +1,7 @@
 From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding of STiH4xx platforms
-Date: Thu, 16 Jun 2016 11:20:22 +0200
-Message-ID: <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [RESEND PATCH v2 05/13] drivers: clk: st: Handle clk synchronous mode for video clocks
+Date: Thu, 16 Jun 2016 11:20:25 +0200
+Message-ID: <1466068833-5055-6-git-send-email-gabriel.fernandez@linaro.org>
 References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
@@ -10,313 +10,146 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian C
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, arnaud.pouliquen@st.com, benjamin.gaignard@st.com, vincent.abriou@st.com, gabriel.fernandez@st.com
 List-Id: devicetree@vger.kernel.org
 
-This patch reworks the clock binding to avoid too much detail in DT.
-Now we have only compatible string per type of clock
-(remark from Rob https://lkml.org/lkml/2016/5/25/492)
+This patch configures the semi-synchronous mode of the video clocks
+of clkgenD2.
 
+Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- .../devicetree/bindings/clock/st/st,clkgen-mux.txt |  2 +-
- .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
- .../devicetree/bindings/clock/st/st,clkgen.txt     |  2 +-
- .../devicetree/bindings/clock/st/st,quadfs.txt     |  6 +--
- drivers/clk/st/clkgen-fsyn.c                       | 41 ++++++--------
- drivers/clk/st/clkgen-mux.c                        | 28 ++++------
- drivers/clk/st/clkgen-pll.c                        | 62 ++++++++++------------
- 7 files changed, 65 insertions(+), 87 deletions(-)
+ .../devicetree/bindings/clock/st/st,flexgen.txt    |  2 ++
+ drivers/clk/st/clk-flexgen.c                       | 37 ++++++++++++++++++++--
+ 2 files changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
-index 4d277d6..9a46cb1d7 100644
---- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
-@@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
- Required properties:
+diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+index d68f6a5f..7ff77fc 100644
+--- a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
++++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+@@ -62,6 +62,8 @@ Required properties:
+   "st,flexgen"
+   "st,flexgen-audio", "st,flexgen" (enable clock propagation on parent for
+   audio use case)
++  "st,flexgen-video", "st,flexgen" (enable clock propagation on parent
++					and activate synchronous mode)
  
- - compatible : shall be:
--	"st,stih407-clkgen-a9-mux",	"st,clkgen-mux"
-+	"st,stih407-clkgen-a9-mux"
+ - #clock-cells : from common clock binding; shall be set to 1 (multiple clock
+   outputs).
+diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+index 33d6ced..9878666 100644
+--- a/drivers/clk/st/clk-flexgen.c
++++ b/drivers/clk/st/clk-flexgen.c
+@@ -17,6 +17,7 @@
  
- - #clock-cells : from common clock binding; shall be set to 0.
- 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-index c9fd674..be0b043 100644
---- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-@@ -9,11 +9,10 @@ Base address is located to the parent node. See clock binding[2]
- Required properties:
- 
- - compatible : shall be:
--	"st,stih407-plls-c32-a0",	"st,clkgen-plls-c32"
--	"st,stih407-plls-c32-a9",	"st,clkgen-plls-c32"
--	"sst,plls-c32-cx_0",		"st,clkgen-plls-c32"
--	"sst,plls-c32-cx_1",		"st,clkgen-plls-c32"
--	"st,stih418-plls-c28-a9",	"st,clkgen-plls-c32"
-+	"st,clkgen-pll0"
-+	"st,clkgen-pll0"
-+	"st,stih407-clkgen-plla9"
-+	"st,stih418-clkgen-plla9"
- 
- - #clock-cells : From common clock binding; shall be set to 1.
- 
-@@ -29,7 +28,7 @@ Example:
- 
- 		clockgen_a9_pll: clockgen-a9-pll {
- 			#clock-cells = <1>;
--			compatible = "st,stih407-plls-c32-a9", "st,clkgen-plls-c32";
-+			compatible = "st,stih407-clkgen-plla9";
- 
- 			clocks = <&clk_sysin>;
- 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-index c764d6b..c35390f 100644
---- a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-@@ -48,7 +48,7 @@ Example:
- 
- 		clk_s_a0_pll: clk-s-a0-pll {
- 			#clock-cells = <1>;
--			compatible = "st,stih407-plls-c32-a0", "st,clkgen-plls-c32";
-+			compatible = "st,clkgen-pll0";
- 
- 			clocks = <&clk_sysin>;
- 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,quadfs.txt b/Documentation/devicetree/bindings/clock/st/st,quadfs.txt
-index 6d81b11..d93d493 100644
---- a/Documentation/devicetree/bindings/clock/st/st,quadfs.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,quadfs.txt
-@@ -11,8 +11,8 @@ This binding uses the common clock binding[1].
- 
- Required properties:
- - compatible : shall be:
--  "st,stih407-quadfs660-C",	"st,quadfs"
--  "st,stih407-quadfs660-D",	"st,quadfs"
-+  "st,quadfs"
-+  "st,quadfs-pll"
- 
- 
- - #clock-cells : from common clock binding; shall be set to 1.
-@@ -33,7 +33,7 @@ Example:
- 
- 	clk_s_c0_quadfs: clk-s-c0-quadfs@9103000 {
- 		#clock-cells = <1>;
--		compatible = "st,stih407-quadfs660-C", "st,quadfs";
-+		compatible = "st,quadfs-pll";
- 		reg = <0x9103000 0x1000>;
- 
- 		clocks = <&clk_sysin>;
-diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
-index 4f43b2e..53fd047 100644
---- a/drivers/clk/st/clkgen-fsyn.c
-+++ b/drivers/clk/st/clkgen-fsyn.c
-@@ -819,18 +819,6 @@ static struct clk * __init st_clk_register_quadfs_fsynth(
- 	return clk;
- }
- 
--static const struct of_device_id quadfs_of_match[] = {
--	{
--		.compatible = "st,stih407-quadfs660-C",
--		.data = &st_fs660c32_C
--	},
--	{
--		.compatible = "st,stih407-quadfs660-D",
--		.data = &st_fs660c32_D
--	},
--	{}
--};
--
- static void __init st_of_create_quadfs_fsynths(
- 		struct device_node *np, const char *pll_name,
- 		struct clkgen_quadfs_data *quadfs, void __iomem *reg,
-@@ -886,18 +874,14 @@ static void __init st_of_create_quadfs_fsynths(
- 	of_clk_add_provider(np, of_clk_src_onecell_get, clk_data);
- }
- 
--static void __init st_of_quadfs_setup(struct device_node *np)
-+static void __init st_of_quadfs_setup(struct device_node *np,
-+		struct clkgen_quadfs_data *data)
- {
--	const struct of_device_id *match;
- 	struct clk *clk;
- 	const char *pll_name, *clk_parent_name;
- 	void __iomem *reg;
- 	spinlock_t *lock;
- 
--	match = of_match_node(quadfs_of_match, np);
--	if (WARN_ON(!match))
--		return;
--
- 	reg = of_iomap(np, 0);
- 	if (!reg)
- 		return;
-@@ -916,8 +900,8 @@ static void __init st_of_quadfs_setup(struct device_node *np)
- 
- 	spin_lock_init(lock);
- 
--	clk = st_clk_register_quadfs_pll(pll_name, clk_parent_name,
--			(struct clkgen_quadfs_data *) match->data, reg, lock);
-+	clk = st_clk_register_quadfs_pll(pll_name, clk_parent_name, data,
-+			reg, lock);
- 	if (IS_ERR(clk))
- 		goto err_exit;
- 	else
-@@ -926,11 +910,20 @@ static void __init st_of_quadfs_setup(struct device_node *np)
- 			__clk_get_name(clk_get_parent(clk)),
- 			(unsigned int)clk_get_rate(clk));
- 
--	st_of_create_quadfs_fsynths(np, pll_name,
--				    (struct clkgen_quadfs_data *)match->data,
--				    reg, lock);
-+	st_of_create_quadfs_fsynths(np, pll_name, data, reg, lock);
- 
- err_exit:
- 	kfree(pll_name); /* No longer need local copy of the PLL name */
- }
--CLK_OF_DECLARE(quadfs, "st,quadfs", st_of_quadfs_setup);
-+
-+static void __init st_of_quadfs660C_setup(struct device_node *np)
-+{
-+	st_of_quadfs_setup(np, (struct clkgen_quadfs_data *) &st_fs660c32_C);
-+}
-+CLK_OF_DECLARE(quadfs660C, "st,quadfs-pll", st_of_quadfs660C_setup);
-+
-+static void __init st_of_quadfs660D_setup(struct device_node *np)
-+{
-+	st_of_quadfs_setup(np, (struct clkgen_quadfs_data *) &st_fs660c32_D);
-+}
-+CLK_OF_DECLARE(quadfs660D, "st,quadfs", st_of_quadfs660D_setup);
-diff --git a/drivers/clk/st/clkgen-mux.c b/drivers/clk/st/clkgen-mux.c
-index 6fdb1ab..c514d39 100644
---- a/drivers/clk/st/clkgen-mux.c
-+++ b/drivers/clk/st/clkgen-mux.c
-@@ -53,29 +53,13 @@ static struct clkgen_mux_data stih407_a9_mux_data = {
- 	.lock = &clkgen_a9_lock,
+ struct clkgen_data {
+ 	unsigned long flags;
++	bool mode;
  };
  
--static const struct of_device_id mux_of_match[] = {
--	{
--		.compatible = "st,stih407-clkgen-a9-mux",
--		.data = &stih407_a9_mux_data,
--	},
--	{}
--};
--static void __init st_of_clkgen_mux_setup(struct device_node *np)
-+static void __init st_of_clkgen_mux_setup(struct device_node *np,
-+		struct clkgen_mux_data *data)
+ struct flexgen {
+@@ -32,9 +33,14 @@ struct flexgen {
+ 	struct clk_gate fgate;
+ 	/* Final divisor */
+ 	struct clk_divider fdiv;
++	/* Asynchronous mode control */
++	struct clk_gate sync;
++	/* hw control flags */
++	bool control_mode;
+ };
+ 
+ #define to_flexgen(_hw) container_of(_hw, struct flexgen, hw)
++#define to_clk_gate(_hw) container_of(_hw, struct clk_gate, hw)
+ 
+ static int flexgen_enable(struct clk_hw *hw)
  {
--	const struct of_device_id *match;
+@@ -143,12 +149,21 @@ static int flexgen_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	struct flexgen *flexgen = to_flexgen(hw);
+ 	struct clk_hw *pdiv_hw = &flexgen->pdiv.hw;
+ 	struct clk_hw *fdiv_hw = &flexgen->fdiv.hw;
++	struct clk_hw *sync_hw = &flexgen->sync.hw;
++	struct clk_gate *config = to_clk_gate(sync_hw);
+ 	unsigned long div = 0;
+ 	int ret = 0;
++	u32 reg;
+ 
+ 	__clk_hw_set_clk(pdiv_hw, hw);
+ 	__clk_hw_set_clk(fdiv_hw, hw);
+ 
++	if (flexgen->control_mode) {
++		reg = readl(config->reg);
++		reg &= ~BIT(config->bit_idx);
++		writel(reg, config->reg);
++	}
++
+ 	div = clk_best_div(parent_rate, rate);
+ 
+ 	/*
+@@ -182,7 +197,7 @@ static const struct clk_ops flexgen_ops = {
+ static struct clk *clk_register_flexgen(const char *name,
+ 				const char **parent_names, u8 num_parents,
+ 				void __iomem *reg, spinlock_t *lock, u32 idx,
+-				unsigned long flexgen_flags) {
++				unsigned long flexgen_flags, bool mode) {
+ 	struct flexgen *fgxbar;
  	struct clk *clk;
- 	void __iomem *reg;
- 	const char **parents;
- 	int num_parents = 0;
--	const struct clkgen_mux_data *data;
--
--	match = of_match_node(mux_of_match, np);
--	if (!match) {
--		pr_err("%s: No matching data\n", __func__);
--		return;
--	}
--
--	data = match->data;
+ 	struct clk_init_data init;
+@@ -231,6 +246,13 @@ static struct clk *clk_register_flexgen(const char *name,
+ 	fgxbar->fdiv.reg = fdiv_reg;
+ 	fgxbar->fdiv.width = 6;
  
- 	reg = of_iomap(np, 0);
- 	if (!reg) {
-@@ -112,4 +96,10 @@ err:
- err_parents:
- 	iounmap(reg);
- }
--CLK_OF_DECLARE(clkgen_mux, "st,clkgen-mux", st_of_clkgen_mux_setup);
++	/* Final divider sync config */
++	fgxbar->sync.lock = lock;
++	fgxbar->sync.reg = fdiv_reg;
++	fgxbar->sync.bit_idx = 7;
 +
-+static void __init st_of_clkgen_a9_mux_setup(struct device_node *np)
-+{
-+	st_of_clkgen_mux_setup(np, &stih407_a9_mux_data);
-+}
-+CLK_OF_DECLARE(clkgen_a9mux, "st,stih407-clkgen-a9-mux",
-+		st_of_clkgen_a9_mux_setup);
-diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
-index 224ce9f..8dea6ab 100644
---- a/drivers/clk/st/clkgen-pll.c
-+++ b/drivers/clk/st/clkgen-pll.c
-@@ -702,47 +702,17 @@ static struct clk * __init clkgen_odf_register(const char *parent_name,
- 	return clk;
- }
- 
--static const struct of_device_id c32_pll_of_match[] = {
--	{
--		.compatible = "st,stih407-plls-c32-a0",
--		.data = &st_pll3200c32_407_a0,
--	},
--	{
--		.compatible = "st,plls-c32-cx_0",
--		.data = &st_pll3200c32_cx_0,
--	},
--	{
--		.compatible = "st,plls-c32-cx_1",
--		.data = &st_pll3200c32_cx_1,
--	},
--	{
--		.compatible = "st,stih407-plls-c32-a9",
--		.data = &st_pll3200c32_407_a9,
--	},
--	{
--		.compatible = "st,stih418-plls-c28-a9",
--		.data = &st_pll4600c28_418_a9,
--	},
--	{}
--};
- 
--static void __init clkgen_c32_pll_setup(struct device_node *np)
-+static void __init clkgen_c32_pll_setup(struct device_node *np,
-+		struct clkgen_pll_data *data)
- {
--	const struct of_device_id *match;
- 	struct clk *clk;
- 	const char *parent_name, *pll_name;
- 	void __iomem *pll_base;
- 	int num_odfs, odf;
- 	struct clk_onecell_data *clk_data;
--	struct clkgen_pll_data	*data;
- 
--	match = of_match_node(c32_pll_of_match, np);
--	if (!match) {
--		pr_err("%s: No matching data\n", __func__);
--		return;
--	}
- 
--	data = (struct clkgen_pll_data *) match->data;
- 
- 	parent_name = of_clk_get_parent_name(np, 0);
- 	if (!parent_name)
-@@ -796,4 +766,30 @@ err:
- 	kfree(clk_data->clks);
- 	kfree(clk_data);
- }
--CLK_OF_DECLARE(clkgen_c32_pll, "st,clkgen-plls-c32", clkgen_c32_pll_setup);
-+static void __init clkgen_c32_pll0_setup(struct device_node *np)
-+{
-+	clkgen_c32_pll_setup(np,
-+			(struct clkgen_pll_data *) &st_pll3200c32_cx_0);
-+}
-+CLK_OF_DECLARE(c32_pll0, "st,clkgen-pll0", clkgen_c32_pll0_setup);
++	fgxbar->control_mode = mode;
 +
-+static void __init clkgen_c32_pll1_setup(struct device_node *np)
-+{
-+	clkgen_c32_pll_setup(np,
-+			(struct clkgen_pll_data *) &st_pll3200c32_cx_1);
-+}
-+CLK_OF_DECLARE(c32_pll1, "st,clkgen-pll1", clkgen_c32_pll1_setup);
+ 	fgxbar->hw.init = &init;
+ 
+ 	clk = clk_register(NULL, &fgxbar->hw);
+@@ -267,11 +289,20 @@ static const struct clkgen_data clkgen_audio = {
+ 	.flags = CLK_SET_RATE_PARENT,
+ };
+ 
++static const struct clkgen_data clkgen_video = {
++	.flags = CLK_SET_RATE_PARENT,
++	.mode = 1,
++};
 +
-+static void __init clkgen_c32_plla9_setup(struct device_node *np)
-+{
-+	clkgen_c32_pll_setup(np,
-+			(struct clkgen_pll_data *) &st_pll3200c32_407_a9);
-+}
-+CLK_OF_DECLARE(c32_plla9, "st,stih407-clkgen-plla9", clkgen_c32_plla9_setup);
-+
-+static void __init clkgen_c28_plla9_setup(struct device_node *np)
-+{
-+	clkgen_c32_pll_setup(np,
-+			(struct clkgen_pll_data *) &st_pll4600c28_418_a9);
-+}
-+CLK_OF_DECLARE(c28_plla9, "st,stih418-clkgen-plla9", clkgen_c28_plla9_setup);
+ static const struct of_device_id flexgen_of_match[] = {
+ 	{
+ 		.compatible = "st,flexgen-audio",
+ 		.data = &clkgen_audio,
+ 	},
++	{
++		.compatible = "st,flexgen-video",
++		.data = &clkgen_video,
++	},
+ 	{}
+ };
+ 
+@@ -287,6 +318,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 	struct clkgen_data *data = NULL;
+ 	unsigned long flex_flags = 0;
+ 	int ret;
++	bool clk_mode = 0;
+ 
+ 	pnode = of_get_parent(np);
+ 	if (!pnode)
+@@ -304,6 +336,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 	if (match) {
+ 		data = (struct clkgen_data *)match->data;
+ 		flex_flags = data->flags;
++		clk_mode = data->mode;
+ 	}
+ 
+ 	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+@@ -345,7 +378,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 			continue;
+ 
+ 		clk = clk_register_flexgen(clk_name, parents, num_parents,
+-					   reg, rlock, i, flex_flags);
++					   reg, rlock, i, flex_flags, clk_mode);
+ 
+ 		if (IS_ERR(clk))
+ 			goto err;
 -- 
 1.9.1
