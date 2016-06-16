@@ -1,80 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 4/5] mfd: tps65217: Add power button as subdevice
-Date: Thu, 16 Jun 2016 11:36:22 +0100
-Message-ID: <20160616103622.GS4948@dell>
-References: <20160614132927.3309-1-m.niestroj@grinn-global.com>
- <20160614132927.3309-5-m.niestroj@grinn-global.com>
- <20160615141242.GK4948@dell>
- <61c57049-04e3-434c-6293-58a9297c73c9@grinn-global.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH 3/3] ARM: dts: imx7: add Toradex Colibri iMX7S/iMX7D
+ support
+Date: Thu, 16 Jun 2016 10:44:18 +0000
+Message-ID: <1466073856.3884.11.camel@toradex.com>
+References: <20160608023709.32090-1-stefan@agner.ch>
+ <20160608023709.32090-4-stefan@agner.ch> <20160612023100.GW20243@tiger>
+ <59f88a185c67034087f3eabf88da6c8c@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <61c57049-04e3-434c-6293-58a9297c73c9@grinn-global.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>
-Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <59f88a185c67034087f3eabf88da6c8c@agner.ch>
+Content-Language: en-US
+Content-ID: <C05D0495056C324DBE655C76E57CD784@eurprd05.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "stefan@agner.ch" <stefan@agner.ch>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Max Krummenacher <max.krummenacher@toradex.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 15 Jun 2016, Marcin Niestroj wrote:
+Sali Stefan
 
-> Hi,
->=20
-> On 15.06.2016 16:12, Lee Jones wrote:
-> >On Tue, 14 Jun 2016, Marcin Niestroj wrote:
-> >
-> >>Add tps65217 power buttor subdevice with assigned IRQ resources.
-> >>
-> >>Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
-> >>---
-> >>depends on patch 1 in series
-> >>
-> >> drivers/mfd/tps65217.c | 10 ++++++++++
-> >> 1 file changed, 10 insertions(+)
-> >
-> >Applied, thanks.
->=20
-> Did you also apply patch 1? As I stated above, this patch depends on
-> patch 1.
+On Wed, 2016-06-15 at 22:37 -0700, Stefan Agner wrote:
+> On 2016-06-11 19:31, Shawn Guo wrote:
+> > 
+> > On Tue, Jun 07, 2016 at 07:37:09PM -0700, Stefan Agner wrote:
+> > > 
+> > <snip>
+> > > 
+> > > +/ {
+> > > +	model = "Toradex Colibri iMX7D on Colibri Evaluation
+> > > Board V3";
+> > > +	compatible = "toradex,colibri_imx7d-eval",
+> > > "toradex,colibri_imx7d", \
+> > We always use hyphen than underscore in compatible string.
+> We always used underscores, this goes back to the first Colibri
+> specific
+> device tree: tegra20-iris-512.dts.
+> 
+> I would rather prefer to not change this for the sake of
+> consistency...
+> What do you think?
 
-Nope.  It looks like you still have changes to make.
+I have been there before when submitting a first Apalis TK1 version:
 
-What does it rely on?  The IRQ define?
+https://lkml.org/lkml/2016/5/16/288
 
-> >>diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
-> >>index d49f94e..68cf431 100644
-> >>--- a/drivers/mfd/tps65217.c
-> >>+++ b/drivers/mfd/tps65217.c
-> >>@@ -38,6 +38,10 @@ static struct resource charger_resources[] =3D {
-> >> 	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
-> >> };
-> >>
-> >>+static struct resource pb_resources[] =3D {
-> >>+	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_PB, "PB"),
-> >>+};
-> >>+
-> >> struct tps65217_irq {
-> >> 	int mask;
-> >> 	int interrupt;
-> >>@@ -122,6 +126,12 @@ static struct mfd_cell tps65217s[] =3D {
-> >> 		.resources =3D charger_resources,
-> >> 		.of_compatible =3D "ti,tps65217-charger",
-> >> 	},
-> >>+	{
-> >>+		.name =3D "tps65217-pwrbutton",
-> >>+		.num_resources =3D ARRAY_SIZE(pb_resources),
-> >>+		.resources =3D pb_resources,
-> >>+		.of_compatible =3D "ti,tps65217-pwrbutton",
-> >>+	},
-> >> };
-> >>
-> >> static irqreturn_t tps65217_irq_thread(int irq, void *data)
-> >
->=20
+Upon Rob Herring's suggestion I changed it now all to dashes:
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+https://lkml.org/lkml/2016/5/27/399
+
+Even in our downstream U-Boot:
+
+http://git.toradex.com/cgit/u-boot-toradex.git/commit/?h=2015.04-torade
+x-next&id=4ae2e657f3350422ad81b1632de156bdd9517206
+
+Of course for Colibri iMX7 one could argue that we already sold a
+couple hundred pieces still using underscores. However I guess we could
+still change to dashes now as those were all prototype, sample and/or
+beta.
+
+Cheers
+
+Marcel
