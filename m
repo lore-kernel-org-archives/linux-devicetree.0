@@ -1,50 +1,59 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 5/5] ARM: config: Get rid of config COMMON_CLK_MAX77802
-Date: Thu, 16 Jun 2016 18:38:14 +0530
-Message-ID: <5762A4BE.3010408@nvidia.com>
-References: <1466000018-16784-1-git-send-email-ldewangan@nvidia.com> <1466000018-16784-6-git-send-email-ldewangan@nvidia.com> <3fa0a098-3b28-9baa-8950-a944cce86b65@osg.samsung.com> <57629AB9.2090506@samsung.com> <ef0359c5-ecf2-cd31-4dd8-ed4f169c22be@osg.samsung.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: Re: [PATCH 04/15] drivers: net: cpsw: ethtool: fix accessing to
+ suspended device
+Date: Thu, 16 Jun 2016 16:32:27 +0300
+Message-ID: <5762AA6B.9060003@linaro.org>
+References: <20160615115603.4897-1-grygorii.strashko@ti.com>
+ <20160615115603.4897-5-grygorii.strashko@ti.com> <57617ECF.2010902@gmail.com>
+ <5761860C.2020502@ti.com> <5762A010.2070201@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ef0359c5-ecf2-cd31-4dd8-ed4f169c22be@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, mturquette@baylibre.com, robh+dt@kernel.org, linux@armlinux.org.uk
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Javier Martinez Canillas <javier@dowhile0.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <5762A010.2070201@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Thursday 16 June 2016 06:36 PM, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
+
+On 16.06.16 15:48, Ivan Khoronzhuk wrote:
 >
-> On 06/16/2016 08:25 AM, Krzysztof Kozlowski wrote:
->> On 06/15/2016 05:39 PM, Javier Martinez Canillas wrote:
->>> Hello Laxman,
+>
+> On 15.06.16 19:45, Grygorii Strashko wrote:
+>> On 06/15/2016 07:14 PM, Florian Fainelli wrote:
+>>> On 06/15/2016 04:55 AM, Grygorii Strashko wrote:
+>>>> The CPSW might be suspended by RPM if all ethX interfaces are down,
+>>>> but it still could be accesible through ethtool interfce. In this case
+>>>> ethtool operations, requiring registers access, will cause L3 errors and
+>>>> CPSW crash.
+>>>>
+>>>> Hence, fix it by adding RPM get/put calls in ethtool callbcaks which
+>>>> can access CPSW registers: .set_coalesce(), .get_ethtool_stats(),
+>>>> .set_pauseparam(), .get_regs()
 >>>
->>> On 06/15/2016 10:13 AM, Laxman Dewangan wrote:
->>>> The clock driver used by Maxim PMIC MAX77802 is clk-max77686
->>>> which can be enabled with config CONFIG_COMMON_CLK_MAX77686.
->>>>
->>>> Hence the config CONFIG_COMMON_CLK_MAX77802 is not required.
->>>>
->>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->>>> CC: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>>> CC: Javier Martinez Canillas <javier@dowhile0.org>
->>>> ---
->>>>   arch/arm/configs/exynos_defconfig   | 1 -
->>>>   arch/arm/configs/multi_v7_defconfig | 1 -
->>> Please split these two changes in separate patches, there are just
->>> cleanups needed after 1/5 and they can be picked separately.
->> Not entirely separately. If we do not want to loose max77802 clocks on
->> defconfigs, then it should go with the same tree or after driver get
->> merged. I prefer the latter, similar case to 1898994229f8 ("ARM:
->> multi_v7_defconfig: Switch max77693 to module").
+>>> Provided that you implement an ethtool_ops::begin, it will be called
+>>> before each ethtool operation runs, so that could allow you to eliminate
+>>> some of the duplication here. Conversely ethtool_ops::end terminates
+>>> each operation and can be used for that purpose.
 >>
-> Agreed. Your latter example is what I tried to say (that can be picked
-> as cleanups separately once 1/5 hits mainline). I just didn't express
-> clearly.
->   
+>> Ah. Thanks for the advice. (assume you've meant .complete())
+>
+> Maybe better leave as is, I'm going to add two additional ehttool ops
+> containing RPM sensitive part and not, better to split code on those,
+> if possible...and hiding put/get in begin op can call rpm when it's not
+> needed at all..
+
+But it's not a big deal, ethtool operations are rarelly anyway, and have
+impact only when interface is down that makes it even more rarely.
+
+>
+>>
+>>
+>>
 >
 
-OK, I will drop this from series when will send V2.
-The changes can be done later on once clock changes get merged.
+-- 
+Regards,
+Ivan Khoronzhuk
