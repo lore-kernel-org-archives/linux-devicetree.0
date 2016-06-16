@@ -1,38 +1,33 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 1/2] nxp/dts: add pcie aer interrupt-name property in
- the dts
-Date: Thu, 16 Jun 2016 08:36:27 +0800
-Message-ID: <20160616003627.GJ20243@tiger>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-1-git-send-email-po.liu@nxp.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] PCI: layerscape: Add 'dma-coherent' property
+Date: Thu, 16 Jun 2016 08:43:41 +0800
+Message-ID: <20160616004341.GK20243@tiger>
+References: <1465282546-28256-1-git-send-email-Gang.Liu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1465892645-32381-1-git-send-email-po.liu@nxp.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Po Liu <po.liu@nxp.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>
+In-Reply-To: <1465282546-28256-1-git-send-email-Gang.Liu-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liu Gang <Gang.Liu-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, minghuan.lian-3arQi8VN3Tc@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, mingkai.hu-3arQi8VN3Tc@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 04:24:04PM +0800, Po Liu wrote:
-> NXP some platforms aer interrupt was not MSI/MSI-X/INTx
-> but using interrupt line independently. This patch add a "aer"
-> interrupt-names for aer interrupt.
+On Tue, Jun 07, 2016 at 02:55:45PM +0800, Liu Gang wrote:
+> Add 'dma-coherent' description for PCI nodes.
 > 
-> Signed-off-by: Po Liu <po.liu@nxp.com>
-> ---
-> changes for v3:
-> 	- None;
+> The 'dma-coherent' indicates that the hardware IP block can ensure
+> the coherency of the data transferred from/to the IP block. This
+> can avoid the software cache flush/invalid actions, and improve
+> the performance significantly.
 > 
->  .../devicetree/bindings/pci/layerscape-pci.txt         |  4 ++--
+> The PCI IP block of ls1043a has this capability, so adding
+> this feature to improve the PCI performance.
+> 
+> Signed-off-by: Liu Gang <Gang.Liu-3arQi8VN3Tc@public.gmane.org>
 
-The bindings shouldn't be part of dts patch but the driver patch who
-is actually using it.
-
-Shawn
-
->  arch/arm/boot/dts/ls1021a.dtsi                         |  6 ++++--
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi         | 18 +++++++++---------
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi         | 16 ++++++++--------
->  4 files changed, 23 insertions(+), 21 deletions(-)
+Applied both, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
