@@ -1,43 +1,36 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: dts: r8a7792: add JPU support
-Date: Fri, 17 Jun 2016 01:03:53 +0300
-Message-ID: <2415204.YUO4drecC0@wasted.cogentembedded.com>
-References: <7346244.CEZI3u99oZ@wasted.cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] nxp/dts: add pcie aer interrupt-name property in
+ the dts
+Date: Thu, 16 Jun 2016 17:19:14 -0500
+Message-ID: <20160616221914.GA2602@rob-hp-laptop>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-1-git-send-email-po.liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <7346244.CEZI3u99oZ@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465892645-32381-1-git-send-email-po.liu@nxp.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Po Liu <po.liu@nxp.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Describe JPEG Processing Unit (JPU) in the R8A7792 device tree.
+On Tue, Jun 14, 2016 at 04:24:04PM +0800, Po Liu wrote:
+> NXP some platforms aer interrupt was not MSI/MSI-X/INTx
+> but using interrupt line independently. This patch add a "aer"
+> interrupt-names for aer interrupt.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Please put your explanation why this is okay to change in the commit 
+message.
 
----
- arch/arm/boot/dts/r8a7792.dtsi |    9 +++++++++
- 1 file changed, 9 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-@@ -246,6 +246,15 @@
- 			status = "disabled";
- 		};
- 
-+		jpu: jpeg-codec@fe980000 {
-+			compatible = "renesas,jpu-r8a7792",
-+				     "renesas,rcar-gen2-jpu";
-+			reg = <0 0xfe980000 0 0x10300>;
-+			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp1_clks R8A7792_CLK_JPU>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
- 		/* Special CPG clocks */
- 		cpg_clocks: cpg_clocks@e6150000 {
- 			compatible = "renesas,r8a7792-cpg-clocks",
+> 
+> Signed-off-by: Po Liu <po.liu@nxp.com>
+> ---
+> changes for v3:
+> 	- None;
+> 
+>  .../devicetree/bindings/pci/layerscape-pci.txt         |  4 ++--
+>  arch/arm/boot/dts/ls1021a.dtsi                         |  6 ++++--
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi         | 18 +++++++++---------
+>  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi         | 16 ++++++++--------
+>  4 files changed, 23 insertions(+), 21 deletions(-)
