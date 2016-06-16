@@ -1,31 +1,65 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH v5] ASoC: rockchip: Add machine driver for RK3399 GRU
- Boards
-Date: Thu, 16 Jun 2016 08:40:45 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D4643174@SW-EX-MBX01.diasemi.com>
-References: <1465807339-1100-1-git-send-email-zhengxing@rock-chips.com>
- <CADR9n49m7anZpDbbb3=ZGBaacOuXc4F=Yid0eyMey1LfEJx8Pw@mail.gmail.com>
- <5761FDAA.1070802@rock-chips.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH] arm64: dts: berlin4ct: Add L2 cache topology
+Date: Thu, 16 Jun 2016 16:40:18 +0800
+Message-ID: <1466066418-1141-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5761FDAA.1070802@rock-chips.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xing Zheng <zhengxing@rock-chips.com>, Steve Barber <smbarber@google.com>
-Cc: "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Douglas Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?utf-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYgSnVuZSAyMDE2IDAyOjE1LCBYaW5nIFpoZW5nIHdyb3RlOg0KDQo+ID4+ICsgICAgICAg
-LyogRW5hYmxlIEhlYWRzZXQgYW5kIDQgQnV0dG9ucyBKYWNrIGRldGVjdGlvbiAqLw0KPiA+PiAr
-ICAgICAgIHJldCA9IHNuZF9zb2NfY2FyZF9qYWNrX25ldyhydGQtPmNhcmQsICJIZWFkc2V0IEph
-Y2siLA0KPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTTkRfSkFDS19I
-RUFEU0VUIHwNCj4gPiBTaG91bGQgdGhpcyBhbHNvIGluY2x1ZGUgU05EX0pBQ0tfTElORU9VVD8g
-ZGE3MjE5IGRpZmZlcmVudGlhdGVzDQo+ID4gYmV0d2VlbiB0aGUgdHdvIHNvIG5vdCBpbmNsdWRp
-bmcgbGluZW91dCBtZWFucywgZm9yIGV4YW1wbGUsIHdlIGNhbg0KPiA+IG1pc3MgamFjayBpbnNl
-cnRpb24vcmVtb3ZhbCBldmVudHMuDQo+ID4NCj4gSGkgQWRhbSwNCj4gDQo+IENvdWxkIHlvdSBw
-bGVhc2UgY29uZmlybSBTdGV2ZSBzYXlzIHRoYXQgYWJvdXQgU05EX0pBQ0tfTElORU9VVD8NCj4g
-DQo+IFRoYW5rcy4NCg0KSGkgWGluZyBaaGVuZywNCg0KWWVzLCBhcyBTdGV2ZSBtZW50aW9uZWQg
-REE3MjE5IGRvZXMgc3VwcG9ydCBTTkRfSkFDS19MSU5FT1VUIHNvIHdlIHNob3VsZCByZWFsbHkN
-CmluY2x1ZGUgdGhpcyBoZXJlLg0K
+This patch adds the L2 cache topology for berlin4ct which has 1MB L2
+cache.
+
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+index 099ad93..c9e3a98 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -68,6 +68,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0>;
+ 			enable-method = "psci";
++			next-level-cache = <&L2_0>;
+ 			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+@@ -76,6 +77,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x1>;
+ 			enable-method = "psci";
++			next-level-cache = <&L2_0>;
+ 			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+@@ -84,6 +86,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x2>;
+ 			enable-method = "psci";
++			next-level-cache = <&L2_0>;
+ 			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+@@ -92,9 +95,14 @@
+ 			device_type = "cpu";
+ 			reg = <0x3>;
+ 			enable-method = "psci";
++			next-level-cache = <&L2_0>;
+ 			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
++		L2_0: l2-cache0 {
++			compatible = "cache";
++		};
++
+ 		idle-states {
+ 			entry-method = "psci";
+ 			CPU_SLEEP_0: cpu-sleep-0 {
+-- 
+2.8.1
