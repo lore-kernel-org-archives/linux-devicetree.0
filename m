@@ -1,7 +1,7 @@
 From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: [RESEND PATCH v2 06/13] ARM: DT: STiH407: Enable clock propagation for audio clocks
-Date: Thu, 16 Jun 2016 11:20:26 +0200
-Message-ID: <1466068833-5055-7-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [RESEND PATCH v2 10/13] ARM: DT: STiH410: Enable synchronous clock mode for video clocks
+Date: Thu, 16 Jun 2016 11:20:30 +0200
+Message-ID: <1466068833-5055-11-git-send-email-gabriel.fernandez@linaro.org>
 References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
@@ -10,28 +10,28 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian C
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, arnaud.pouliquen@st.com, benjamin.gaignard@st.com, vincent.abriou@st.com, gabriel.fernandez@st.com
 List-Id: devicetree@vger.kernel.org
 
-This patch is used in the clock driver to apply a clock propagation
-flag on the audio clocks of STiH407
+This patch enables the synchronous clock mode for video clocks
+on STiH410 board.
 
 Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- arch/arm/boot/dts/stih407-clock.dtsi | 2 +-
+ arch/arm/boot/dts/stih410-clock.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
-index ad45f5e..86c91cd 100644
---- a/arch/arm/boot/dts/stih407-clock.dtsi
-+++ b/arch/arm/boot/dts/stih407-clock.dtsi
-@@ -216,7 +216,7 @@
+diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
+index 5a9a487..f1d56ba 100644
+--- a/arch/arm/boot/dts/stih410-clock.dtsi
++++ b/arch/arm/boot/dts/stih410-clock.dtsi
+@@ -268,7 +268,7 @@
  
- 			clk_s_d0_flexgen: clk-s-d0-flexgen {
+ 			clk_s_d2_flexgen: clk-s-d2-flexgen {
  				#clock-cells = <1>;
 -				compatible = "st,flexgen";
-+				compatible = "st,flexgen-audio", "st,flexgen";
++				compatible = "st,flexgen-video", "st,flexgen";
  
- 				clocks = <&clk_s_d0_quadfs 0>,
- 					 <&clk_s_d0_quadfs 1>,
+ 				clocks = <&clk_s_d2_quadfs 0>,
+ 					 <&clk_s_d2_quadfs 1>,
 -- 
 1.9.1
 
