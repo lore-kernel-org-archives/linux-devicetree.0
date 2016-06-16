@@ -1,67 +1,70 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH V2 4/4] clk: max77686: Add support for MAX77620 clocks
-Date: Thu, 16 Jun 2016 10:07:52 -0400
-Message-ID: <77dde1c3-c4da-faa6-ecd4-ba318abf5ed4@osg.samsung.com>
-References: <1466083407-28793-1-git-send-email-ldewangan@nvidia.com>
- <1466083407-28793-5-git-send-email-ldewangan@nvidia.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 0/4] clocksource: rockchip/timer: Support rktimer for
+ rk3399
+Date: Thu, 16 Jun 2016 16:26:22 +0200
+Message-ID: <5762B70E.7090909@linaro.org>
+References: <1465275273-22076-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466083407-28793-5-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1465275273-22076-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, k.kozlowski@samsung.com, mturquette@baylibre.com, robh+dt@kernel.org, linux@armlinux.org.uk
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Javier Martinez Canillas <javier@dowhile0.org>
+To: Caesar Wang <wxt@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, cf@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Laxman,
-
-On 06/16/2016 09:23 AM, Laxman Dewangan wrote:
-> Maxim Max77620 has one 32KHz clock output and the clock HW
-> IP used on this PMIC is same as what it is there in the MAX77686.
-> 
-> Add clock driver support for MAX77620 on the MAX77686 driver.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> CC: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> CC: Javier Martinez Canillas <javier@dowhile0.org>
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+On 06/07/2016 06:54 AM, Caesar Wang wrote:
+> This series patches had been tested on rockchip inside kernel.
+> In order to support the rk3399 SoC timer and turn off interrupts and =
+IPIs to
+> save power in idle.
+> Okay, it still works bootup on rk3288/other SoCs, even though many so=
+cs hasn't used
+> the broadcast timer.
 >
+> History version:
+> v1:
+> https://lkml.org/lkml/2016/5/25/186
+>
+> Easy to test for my borad.
+> localhost / # cat /proc/interrupts
+> CPU0       CPU1       CPU2       CPU3       CPU4       CPU5
+> 1:          0          0          0          0          0          0 =
+    GICv3  29 Edge      arch_timer
+> ...
+> 5:          0          0          0          0          0          0 =
+    GICv3 113 Level     rk_timer
+> ..
+>
+> localhost / # cat /proc/timer_list | grep event_handler
+> get "event_handler:  hrtimer_interrupt"
+> event_handler:  tick_handle_oneshot_broadcast
+> event_handler:  hrtimer_interrupt
+>
+> That should work for my board.
 
-I already gave you my Reviewed-by for v1 but it seems you missed:
+Hi Caesar,
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
- 
-> ---
-> Changes from V1:
-> - Updated based on changes done in first patch.
-> ---
->  drivers/clk/Kconfig        |  7 ++++---
->  drivers/clk/clk-max77686.c | 18 ++++++++++++++++++
->  2 files changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 6afad74..d75f4c5 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -32,10 +32,11 @@ config COMMON_CLK_WM831X
->  source "drivers/clk/versatile/Kconfig"
->  
->  config COMMON_CLK_MAX77686
-> -	tristate "Clock driver for Maxim 77686/77802 MFD"
-> -	depends on MFD_MAX77686
-> +	tristate "Clock driver for Maxim 77686/77802/MAX77620 MFD"
-> +	depends on MFD_MAX77686 || MFD_MAX77620
->  	---help---
-> -	  This driver supports Maxim 77686/77802 crystal oscillator clock.
-> +	  This driver supports Maxim 77686/77802/MAX77620 crystal oscillator
+I applied the patches on my tree. I humbly reworded the changelog, if=20
+you disagree with the content, let me know.
 
-And it seems you also missed the minor nit I mentioned in v1 about using
-77620 instead of MAX77620 here for naming consistency with the other IP.
+Please, in the future, take care of the following:
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+  - patch prefix is 'clocksource/driver/<driver_name>: [A-Z].*'
+
+  - the change log is important, it deserves some love.
+
+Thanks.
+
+   -- Daniel
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
