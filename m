@@ -1,111 +1,85 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
-Date: Thu, 16 Jun 2016 09:06:49 +0900
-Message-ID: <20160616000649.GA2709@verge.net.au>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <2539026.OyU5nvpxa6@wasted.cogentembedded.com>
- <20160601005751.GG20527@verge.net.au>
- <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com>
- <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
- <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com>
- <20160610010245.GA10152@verge.net.au>
- <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com>
- <20160614004317.GC6456@verge.net.au>
- <efac403f-3709-6a1a-aa02-a8ab26b21ffc@cogentembedded.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [v2 PATCH 1/4] Documentation: bindings: add dt doc for Rockchip
+ USB Type-C PHY
+Date: Thu, 16 Jun 2016 08:31:11 +0800
+Message-ID: <5761F34F.8040202@rock-chips.com>
+References: <1465810789-22303-1-git-send-email-zyw@rock-chips.com>
+ <1465810789-22303-2-git-send-email-zyw@rock-chips.com>
+ <2262175.XUeGlE1YsE@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <efac403f-3709-6a1a-aa02-a8ab26b21ffc@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2262175.XUeGlE1YsE@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: dianders@chromium.org, tfiga@chromium.org, yzq@rock-chips.com, groeck@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 12:08:21AM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 06/14/2016 03:43 AM, Simon Horman wrote:
-> 
-> >>>>[...]
-> >>>>
-> >>>>>>>And that the system behaves sanely on suspend/resume.
-> >>>>>>
-> >>>>>> I'd be thankful if you told me how to test that. :-)
-> >>>>>
-> >>>>>System suspend:
-> >>>>>
-> >>>>>  echo mem > /sys/power/state
-> >>>>
-> >>>>  Oh. I know that one! :-)
-> >>>>
-> >>>>>System resume: You're gonna need a "wakeup-source" in your DTS, e.g. gpio-keys.
-> >>>>>Serial should work too, echo "enabled" to the corresponding wakeup
-> >>>>>file in /sys first.
-> >>>>
-> >>>>  I'm afraid I couldn't find that file. All I saw were RPM controls...
-> >>>>
-> >>>>>In case of issues, try "echo 0 > /sys/module/printk/parameters/console_suspend".
-> >>>>
-> >>>>  There's no problems suspending, it's the resuming that's a problem for me.
-> >>>>
-> >>>>>Good luck!
-> >>>>
-> >>>>  As usual, there was no luck. :-)
-> >>>>
-> >>>>WBR, Sergei
-> >>>
-> >>>Does resume work for UP (i.e. without SMP)?
-> >>
-> >>   No. My problem with resume is I can't wake up the remote system. I don't
-> >>see the needed 'wakeup' file in
-> >>/sys/devices/platform/soc/e6e60000.serial/...
-> >>    However, if I enable CONFIG_PM_[ADVANCED_]DEBUG and do
-> >>
-> >>$ echo -n core /sys/.power/pm_test
-> >>
-> >>the system happily wakes up after a small delay (5 s), w/either SMP or UP kernel.
-> >
-> >That seems promising but it seems curious that there is no wakeup file.
-> >
-> >On Lager the following procedure works for me using
-> >renesas-devel-20160613-v4.7-rc3 and shmobile defconfig.
-> >
-> >0. Add wakeup-source property to serial@e6ce0000 node in DT
-> 
->    Ah, stupid me, it was the piece that I'd overlooked!
-> 
-> >1. echo enabled > /sys/devices/platform/e6e60000.serial/tty/ttySC0/power/wakeup
-> >2. echo mem > /sys/power/state
-> >3. Provide input on serial console
-> >
-> >* Success! *
-> 
->    Yeah, works now!
->    Sorry, I had no previous experience with the PM. Was unsupported feature
-> back in MontaVista... :-)
+Hi Heiko
 
-Great, thanks for your persistence.
+On 06/16/2016 06:11 AM, Heiko Stuebner wrote:
+> Am Montag, 13. Juni 2016, 17:39:46 schrieb Chris Zhong:
+>> This patch adds a binding that describes the Rockchip USB Type-C PHY
+>> for rk3399
+>>
+>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v2:
+>> - add some registers description
+>>
+>> Changes in v1:
+>> - add extcon node description
+>> - move the registers in phy driver
+>> - remove the suffix of reset
+>>
+>>   .../devicetree/bindings/phy/phy-rockchip-typec.txt | 77
+>> ++++++++++++++++++++++ 1 file changed, 77 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt new file
+>> mode 100644
+>> index 0000000..430920c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>> @@ -0,0 +1,77 @@
+>> +* ROCKCHIP type-c PHY
+>> +---------------------
+>> +
+>> +Required properties:
+>> + - compatible : should be "rockchip,rk3399-typec-phy0" or
+>> +			 "rockchip,rk3399-typec-phy1"
+>> + - reg: Address and length of the usb phy control register set
+>> + - rockchip,grf : phandle to the syscon managing the "general
+>> +   register files"
+>> + - clocks : phandle + clock specifier for the phy clocks
+>> + - clock-names : string, clock name, must be "tcpdcore", "tcpdphy_ref";
+>> + - resets : a list of phandle + reset specifier pairs
+>> + - reset-names : string reset name, must be:
+>> +		 "tcphy", "tcphy_pipe", "uphy_tcphy"
+>> + - #phy-cells : Must be 0.  See ./phy-bindings.txt for details.
+>> + - extcon : extcon specifier for the Power Delivery
+>> +
+>> +Note, there are 2 type-c phys for RK3399, and they are almost identical,
+>> except +these registers(description below), every register node contains
+>> 3 sections: +offset, enable bit, write mask bit.
+>> + - rockchip,typec_conn_dir : the register of type-c connector direction,
+>> +   for type-c phy0, it must be <0xe580 0 16>;
+>> +   for type-c phy1, it must be <0xe58c 0 16>;
+> I think I said this already, but these register-lists would be much happier
+> being defined inside the driver - see how Frank managed this on his usb2phy
+> please.
+>
+> Heiko
+>
+Yes, I move them into driver in v1 patch, but Rob Herring and Guenter 
+Roeck recommend to put them back to dts.
+These phy0 and phy1 are exactly the same, except these grf registers.
 
-FWIW, I always have to refer to some notes in order to exercise PM.
 
-> >>>How did testing CPU hotplug go? Did it work for all CPUs?
-> >>
-> >>   Sure!
-> >
-> >Great!
-> >
-> >>   The only problem I'm seeing (again) is the RCAN clock failing to register:
-> >>
-> >>rcar_gen2_cpg_clocks_init: failed to register cpg_clocks rcan clock (-12)
-> >>
-> >>   I was going to look at it yesterday but (wrongly) thought it somehow
-> >>cured itself... I'll look at it now.
-> >
-> >Is this resolved? If not perhaps you could consider removing the node
-> >in question for now.
-> 
->    That's what I did in v5, i.e. removed the RCAN CPG clock (not the whole
-> node)...
 
-Great.
+>
