@@ -1,100 +1,243 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [v2 PATCH 1/4] Documentation: bindings: add dt doc for Rockchip
- USB Type-C PHY
-Date: Thu, 16 Jun 2016 16:49:42 +0900
-Message-ID: <CAAFQd5BY23zdKCxUnLDz6TT+6ro3qnQPP+bH-uu3KDCzdO50nw@mail.gmail.com>
-References: <1465810789-22303-1-git-send-email-zyw@rock-chips.com>
- <1465810789-22303-2-git-send-email-zyw@rock-chips.com> <2262175.XUeGlE1YsE@phil>
- <5761F34F.8040202@rock-chips.com>
+From: Mathieu Malaterre <mathieu.malaterre@gmail.com>
+Subject: Re: [PATCH v2] of: fix memory leak related to safe_name()
+Date: Thu, 16 Jun 2016 09:51:41 +0200
+Message-ID: <CA+7wUsz0OnOHVyGTE=nzAbCi_GbmLvU-Q4wQHjs=SOLRUB4E5w@mail.gmail.com>
+References: <5761BDAD.3060107@gmail.com> <CA+7wUszph+weTn=bu24d6YdkChOk39ae_dOkQXJQxykkQH0PNg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5761F34F.8040202@rock-chips.com>
+In-Reply-To: <CA+7wUszph+weTn=bu24d6YdkChOk39ae_dOkQXJQxykkQH0PNg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Douglas Anderson <dianders@chromium.org>, yzq@rock-chips.com, groeck@chromium.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2016 at 9:31 AM, Chris Zhong <zyw@rock-chips.com> wrote:
-> Hi Heiko
+Sorry, symptoms not solved. According to kmemleak, I have now:
+
+[  661.323100] kmemleak: 100 new suspected memory leaks (see
+/sys/kernel/debug/kmemleak)
+[ 1260.226120] kmemleak: 1 new suspected memory leaks (see
+/sys/kernel/debug/kmemleak)
+
+# head -40 /sys/kernel/debug/kmemleak
+unreferenced object 0xdf5326a0 (size 32):
+  comm "swapper", pid 1, jiffies 4294892300 (age 2564.708s)
+  hex dump (first 32 bytes):
+    62 61 73 65 00 00 4c d8 c5 78 df dc cc 43 e4 bc  base..L..x...C..
+    c4 c8 ec 8c ee de ce cf e8 c9 8a ea dc cc c6 fd  ................
+  backtrace:
+    [<c014d4d8>] kstrdup+0x48/0x88
+    [<c0454678>] __of_attach_node_sysfs+0xf0/0x100
+    [<c075f21c>] of_core_init+0x8c/0xf8
+    [<c0729594>] kernel_init_freeable+0xd4/0x208
+    [<c00047e8>] kernel_init+0x24/0x11c
+    [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
+unreferenced object 0xdf532240 (size 32):
+  comm "swapper", pid 1, jiffies 4294892300 (age 2564.708s)
+  hex dump (first 32 bytes):
+    63 70 75 73 00 68 65 2d 73 69 7a 65 00 c6 dc ac  cpus.he-size....
+    ac 6f 48 ec ec 99 86 78 ac eb c9 ac 4c 4c ee db  .oH....x....LL..
+  backtrace:
+    [<c014d4d8>] kstrdup+0x48/0x88
+    [<c04545f4>] __of_attach_node_sysfs+0x6c/0x100
+    [<c075f21c>] of_core_init+0x8c/0xf8
+    [<c0729594>] kernel_init_freeable+0xd4/0x208
+    [<c00047e8>] kernel_init+0x24/0x11c
+    [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
+unreferenced object 0xdf5320a0 (size 32):
+  comm "swapper", pid 1, jiffies 4294892300 (age 2564.708s)
+  hex dump (first 32 bytes):
+    50 6f 77 65 72 50 43 2c 47 34 40 30 00 4f 5c 5c  PowerPC,G4@0.O\\
+    c4 4d c0 d8 0e ec ed cc 9e cc 4d ce a8 2c cc c6  .M........M..,..
+  backtrace:
+    [<c014d4d8>] kstrdup+0x48/0x88
+    [<c04545f4>] __of_attach_node_sysfs+0x6c/0x100
+    [<c075f21c>] of_core_init+0x8c/0xf8
+    [<c0729594>] kernel_init_freeable+0xd4/0x208
+    [<c00047e8>] kernel_init+0x24/0x11c
+    [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
+unreferenced object 0xdf5586c0 (size 32):
+  comm "swapper", pid 1, jiffies 4294892300 (age 2564.708s)
+  hex dump (first 32 bytes):
+    6c 32 2d 63 61 63 68 65 23 31 00 ac c0 21 02 f4  l2-cache#1...!..
+
+
+On Thu, Jun 16, 2016 at 9:15 AM, Mathieu Malaterre
+<mathieu.malaterre@gmail.com> wrote:
+> I only tested v2. I confirm this solve the symptoms I was seeing in
+> the bug report.
+>
+> Tested-by: Mathieu Malaterre <mathieu.malaterre@gmail.com>
+>
+> thanks, your patch is actually much cleaner!
+>
+> On Wed, Jun 15, 2016 at 10:42 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> From: Frank Rowand <frank.rowand@am.sony.com>
+>>
+>> Fix a memory leak resulting from memory allocation in safe_name().
+>> This patch fixes all call sites of safe_name().
+>>
+>> Mathieu Malaterre reported the memory leak on boot:
+>>
+>> On my PowerMac device-tree would generate a duplicate name:
+>>
+>> [    0.023043] device-tree: Duplicate name in PowerPC,G4@0, renamed to "l2-cache#1"
+>>
+>> in this case a newly allocated name is generated by `safe_name`. However
+>> in this case it is never deallocated.
+>>
+>> The bug was found using kmemleak reported as:
+>>
+>> unreferenced object 0xdf532e60 (size 32):
+>>   comm "swapper", pid 1, jiffies 4294892300 (age 1993.532s)
+>>   hex dump (first 32 bytes):
+>>     6c 32 2d 63 61 63 68 65 23 31 00 dd e4 dd 1e c2  l2-cache#1......
+>>     ec d4 ba ce 04 ec cc de 8e 85 e9 ca c4 ec cc 9e  ................
+>>   backtrace:
+>>     [<c02d3350>] kvasprintf+0x64/0xc8
+>>     [<c02d3400>] kasprintf+0x4c/0x5c
+>>     [<c0453814>] safe_name.isra.1+0x80/0xc4
+>>     [<c04545d8>] __of_attach_node_sysfs+0x6c/0x11c
+>>     [<c075f21c>] of_core_init+0x8c/0xf8
+>>     [<c0729594>] kernel_init_freeable+0xd4/0x208
+>>     [<c00047e8>] kernel_init+0x24/0x11c
+>>     [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
+>>
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=120331
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
+>> Reported-by: mathieu.malaterre@gmail.com
+>> ---
+>>
+>> changes from v1
+>>   Move the prototype of __of_sysfs_remove_bin_file() into of_private.h
+>>
+>>  drivers/of/base.c       |   29 ++++++++++++++++++++---------
+>>  drivers/of/dynamic.c    |    2 +-
+>>  drivers/of/of_private.h |    3 +++
+>>  3 files changed, 24 insertions(+), 10 deletions(-)
+>>
+>> Index: b/drivers/of/base.c
+>> ===================================================================
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -112,6 +112,7 @@ static ssize_t of_node_property_read(str
+>>         return memory_read_from_buffer(buf, count, &offset, pp->value, pp->length);
+>>  }
+>>
+>> +/* always return newly allocated name, caller must free after use */
+>>  static const char *safe_name(struct kobject *kobj, const char *orig_name)
+>>  {
+>>         const char *name = orig_name;
+>> @@ -126,9 +127,12 @@ static const char *safe_name(struct kobj
+>>                 name = kasprintf(GFP_KERNEL, "%s#%i", orig_name, ++i);
+>>         }
+>>
+>> -       if (name != orig_name)
+>> +       if (name == orig_name) {
+>> +               name = kstrdup(orig_name, GFP_KERNEL);
+>> +       } else {
+>>                 pr_warn("device-tree: Duplicate name in %s, renamed to \"%s\"\n",
+>>                         kobject_name(kobj), name);
+>> +       }
+>>         return name;
+>>  }
+>>
+>> @@ -159,6 +163,7 @@ int __of_add_property_sysfs(struct devic
+>>  int __of_attach_node_sysfs(struct device_node *np)
+>>  {
+>>         const char *name;
+>> +       struct kobject *parent;
+>>         struct property *pp;
+>>         int rc;
+>>
+>> @@ -171,15 +176,15 @@ int __of_attach_node_sysfs(struct device
+>>         np->kobj.kset = of_kset;
+>>         if (!np->parent) {
+>>                 /* Nodes without parents are new top level trees */
+>> -               rc = kobject_add(&np->kobj, NULL, "%s",
+>> -                                safe_name(&of_kset->kobj, "base"));
+>> +               name = safe_name(&of_kset->kobj, "base");
+>> +               parent = NULL;
+>>         } else {
+>>                 name = safe_name(&np->parent->kobj, kbasename(np->full_name));
+>> -               if (!name || !name[0])
+>> -                       return -EINVAL;
+>> -
+>> -               rc = kobject_add(&np->kobj, &np->parent->kobj, "%s", name);
+>> +               parent = &np->parent->kobj;
+>>         }
+>> +       if (!name)
+>> +               return -ENOMEM;
+>> +       rc = kobject_add(&np->kobj, parent, "%s", name);
+>>         if (rc)
+>>                 return rc;
+>>
+>> @@ -1815,6 +1820,12 @@ int __of_remove_property(struct device_n
+>>         return 0;
+>>  }
+>>
+>> +void __of_sysfs_remove_bin_file(struct device_node *np, struct property *prop)
+>> +{
+>> +       sysfs_remove_bin_file(&np->kobj, &prop->attr);
+>> +       kfree(prop->attr.attr.name);
+>> +}
+>> +
+>>  void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
+>>  {
+>>         if (!IS_ENABLED(CONFIG_SYSFS))
+>> @@ -1822,7 +1833,7 @@ void __of_remove_property_sysfs(struct d
+>>
+>>         /* at early boot, bail here and defer setup to of_init() */
+>>         if (of_kset && of_node_is_attached(np))
+>> -               sysfs_remove_bin_file(&np->kobj, &prop->attr);
+>> +               __of_sysfs_remove_bin_file(np, prop);
+>>  }
+>>
+>>  /**
+>> @@ -1895,7 +1906,7 @@ void __of_update_property_sysfs(struct d
+>>                 return;
+>>
+>>         if (oldprop)
+>> -               sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+>> +               __of_sysfs_remove_bin_file(np, oldprop);
+>>         __of_add_property_sysfs(np, newprop);
+>>  }
+>>
+>> Index: b/drivers/of/dynamic.c
+>> ===================================================================
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -55,7 +55,7 @@ void __of_detach_node_sysfs(struct devic
+>>         /* only remove properties if on sysfs */
+>>         if (of_node_is_attached(np)) {
+>>                 for_each_property_of_node(np, pp)
+>> -                       sysfs_remove_bin_file(&np->kobj, &pp->attr);
+>> +                       __of_sysfs_remove_bin_file(np, pp);
+>>                 kobject_del(&np->kobj);
+>>         }
+>>
+>> Index: b/drivers/of/of_private.h
+>> ===================================================================
+>> --- a/drivers/of/of_private.h
+>> +++ b/drivers/of/of_private.h
+>> @@ -83,6 +83,9 @@ extern int __of_attach_node_sysfs(struct
+>>  extern void __of_detach_node(struct device_node *np);
+>>  extern void __of_detach_node_sysfs(struct device_node *np);
+>>
+>> +extern void __of_sysfs_remove_bin_file(struct device_node *np,
+>> +                                      struct property *prop);
+>> +
+>>  /* iterators for transactions, used for overlays */
+>>  /* forward iterator */
+>>  #define for_each_transaction_entry(_oft, _te) \
 >
 >
-> On 06/16/2016 06:11 AM, Heiko Stuebner wrote:
->>
->> Am Montag, 13. Juni 2016, 17:39:46 schrieb Chris Zhong:
->>>
->>> This patch adds a binding that describes the Rockchip USB Type-C PHY
->>> for rk3399
->>>
->>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->>>
->>> ---
->>>
->>> Changes in v2:
->>> - add some registers description
->>>
->>> Changes in v1:
->>> - add extcon node description
->>> - move the registers in phy driver
->>> - remove the suffix of reset
->>>
->>>   .../devicetree/bindings/phy/phy-rockchip-typec.txt | 77
->>> ++++++++++++++++++++++ 1 file changed, 77 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt new file
->>> mode 100644
->>> index 0000000..430920c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->>> @@ -0,0 +1,77 @@
->>> +* ROCKCHIP type-c PHY
->>> +---------------------
->>> +
->>> +Required properties:
->>> + - compatible : should be "rockchip,rk3399-typec-phy0" or
->>> +                        "rockchip,rk3399-typec-phy1"
->>> + - reg: Address and length of the usb phy control register set
->>> + - rockchip,grf : phandle to the syscon managing the "general
->>> +   register files"
->>> + - clocks : phandle + clock specifier for the phy clocks
->>> + - clock-names : string, clock name, must be "tcpdcore", "tcpdphy_ref";
->>> + - resets : a list of phandle + reset specifier pairs
->>> + - reset-names : string reset name, must be:
->>> +                "tcphy", "tcphy_pipe", "uphy_tcphy"
->>> + - #phy-cells : Must be 0.  See ./phy-bindings.txt for details.
->>> + - extcon : extcon specifier for the Power Delivery
->>> +
->>> +Note, there are 2 type-c phys for RK3399, and they are almost identical,
->>> except +these registers(description below), every register node contains
->>> 3 sections: +offset, enable bit, write mask bit.
->>> + - rockchip,typec_conn_dir : the register of type-c connector direction,
->>> +   for type-c phy0, it must be <0xe580 0 16>;
->>> +   for type-c phy1, it must be <0xe58c 0 16>;
->>
->> I think I said this already, but these register-lists would be much
->> happier
->> being defined inside the driver - see how Frank managed this on his
->> usb2phy
->> please.
->>
->> Heiko
->>
-> Yes, I move them into driver in v1 patch, but Rob Herring and Guenter Roeck
-> recommend to put them back to dts.
-> These phy0 and phy1 are exactly the same, except these grf registers.
+>
+> --
+> Mathieu
 
-I think having the registers in dts isn't a bad idea. It might be
-actually even useful to bring up this PHY on new SoCs, if they happen
-to have the same PHY, just different plumbing.
 
-But I suppose we don't need two separate compatible strings for phy0
-and phy1 anymore as Rob pointed, just one "rockchip,rk3399-typec-phy".
 
-After the above is fixed and underscores in property names are
-replaced with dashes, feel free to add my Reviewed-by.
-
-Best regards,
-Tomasz
+-- 
+Mathieu
