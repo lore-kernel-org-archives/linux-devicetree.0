@@ -1,138 +1,128 @@
-From: Kever Yang <ellisys-9Onoh4P/yGk@public.gmane.org>
-Subject: Re: [v2 PATCH 1/4] Documentation: bindings: add dt doc for Rockchip
- USB Type-C PHY
-Date: Thu, 16 Jun 2016 20:43:33 +0800
-Message-ID: <57629EF5.2050508@163.com>
-References: <1465810789-22303-1-git-send-email-zyw@rock-chips.com>
- <1465810789-22303-2-git-send-email-zyw@rock-chips.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] regulator: axp20x: Add support for the (external)
+ drivebus regulator
+Date: Thu, 16 Jun 2016 16:27:34 +0100
+Message-ID: <20160616152734.GB21702@dell>
+References: <1464973184-17244-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1465810789-22303-2-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1464973184-17244-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+Since we're reviewing documentation ...
 
-On 06/13/2016 05:39 PM, Chris Zhong wrote:
-> This patch adds a binding that describes the Rockchip USB Type-C PHY
-> for rk3399
->
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
+On Fri, 03 Jun 2016, Hans de Goede wrote:
+> The axp20x pmics have 2 power inputs, one called ACIN which is intend=
+ed
+
+s/pmics/PMICs/
+
+> for to be supplied via a powerbarrel on the board and one called VBUS
+
+s/for //
+
+s/powerbarrel/barrel jack/
+
+> which is intended to be supplied via an otg connector.
+
+s/otg/OTG/
+
+> In the VBUS case the pmic needs to know if the board is supplying pow=
+er
+> to the otg connector, because then it should not take any power from
+
+s/pmic/PMIC/ and s/otg/OTG/ throughout
+
+> its VBUS pin. The axp209 pmic has a N_VBUSEN input pin via which the
+
+s/a/an/
+
+> board can signal to the pmic whether the board is supplying power to =
+the
+> otg connector or not.
+>=20
+> On the axp221/axp223 this pin can alternatively be used as an output
+> which controls an external regulator which (optionally) supplies
+> power to the otg connector from the board. When the pin is used as
+> output it is called DRIVEVBUS in the datasheet.
+>=20
+> This commit adds support for the DRIVEVBUS pin as an extra pmic
+> controlled regulator. Since this is optional a new x-powers,drivebus =
+dt
+
+s/a/when a/
+
+s/dt/DT/
+
+> property is added. When this is present the misc-control register is
+> written to change the N_VBUSEN input pin to DRIVEVBUS output pin mode=
+ and
+> the extra drivebus regulator is registered with the regulator subsyst=
+em.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > ---
->
 > Changes in v2:
-> - add some registers description
->
-> Changes in v1:
-> - add extcon node description
-> - move the registers in phy driver
-> - remove the suffix of reset
->
->   .../devicetree/bindings/phy/phy-rockchip-typec.txt | 77 ++++++++++++++++++++++
->   1 file changed, 77 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
->
-> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> new file mode 100644
-> index 0000000..430920c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> @@ -0,0 +1,77 @@
-> +* ROCKCHIP type-c PHY
-> +---------------------
+> -Set supply_name to just drivebus instead of drivevbus-supply
+> -Fix some whitespace errors in the docs
+>=20
+> Changes in v2:
+> -Rename the dt property to drive-vbus-en
+> -s/drivebus/drivevbus/
+> -Add a line describing the drivevbus regulator to the table in
+>  Documentation/devicetree/bindings/mfd/axp20x.txt
+> -Set supply_name to drivevbus-supply
+> ---
+>  Documentation/devicetree/bindings/mfd/axp20x.txt |  6 +++++
+>  drivers/regulator/axp20x-regulator.c             | 30 ++++++++++++++=
+++++++++++
+>  2 files changed, 36 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Docum=
+entation/devicetree/bindings/mfd/axp20x.txt
+> index d20b103..585a955 100644
+> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -22,6 +22,11 @@ Optional properties:
+>  		      AXP152/20X: range:  750-1875, Default: 1.5 MHz
+>  		      AXP22X/80X: range: 1800-4050, Default: 3   MHz
+> =20
+> +- x-powers,drive-vbus-en: axp221 / axp223 only boolean, set this whe=
+n the
+> +		  N_VBUSEN pin is used as an output pin to control an external
+> +		  regulator to drive the OTG VBus, rather then as an input pin
+> +		  which signals whether the board is driving OTG VBus or not.
 > +
-> +Required properties:
-> + - compatible : should be "rockchip,rk3399-typec-phy0" or
-> +			 "rockchip,rk3399-typec-phy1"
-should be "rockchip,rk3399-typec-phy"
-> + - reg: Address and length of the usb phy control register set
-> + - rockchip,grf : phandle to the syscon managing the "general
-> +   register files"
-> + - clocks : phandle + clock specifier for the phy clocks
-> + - clock-names : string, clock name, must be "tcpdcore", "tcpdphy_ref";
-> + - resets : a list of phandle + reset specifier pairs
-> + - reset-names : string reset name, must be:
-> +		 "tcphy", "tcphy_pipe", "uphy_tcphy"
-> + - #phy-cells : Must be 0.  See ./phy-bindings.txt for details.
-> + - extcon : extcon specifier for the Power Delivery
-> +
-> +Note, there are 2 type-c phys for RK3399, and they are almost identical, except
-> +these registers(description below), every register node contains 3 sections:
-> +offset, enable bit, write mask bit.
-> + - rockchip,typec_conn_dir : the register of type-c connector direction,
-> +   for type-c phy0, it must be <0xe580 0 16>;
-> +   for type-c phy1, it must be <0xe58c 0 16>;
-> + - rockchip,usb3tousb2_en : the register of type-c force usb3 to usb2 enable
-> +   control.
-> +   for type-c phy0, it must be <0xe580 3 19>;
-> +   for type-c phy1, it must be <0xe58c 3 19>;
-> + - rockchip,external_psm : the register of type-c phy external psm clock
-> +   selection.
-> +   for type-c phy0, it must be <0xe588 14 30>;
-> +   for type-c phy1, it must be <0xe594 14 30>;
-> + - rockchip,pipe_status : the register of type-c phy pipe status.
-> +   for type-c phy0, it must be <0xe5c0 0 0>;
-> +   for type-c phy1, it must be <0xe5c0 16 16>;
-> + - rockchip,uphy_dp_sel : the register of type-c phy selection for DP
-> +   for type-c phy0, it must be <0x6268 19 19>;
-> +   for type-c phy1, it must be <0x6268 3 19>;
-> +
-> +Example:
-> +	tcphy0: phy@ff7c0000 {
-> +		compatible = "rockchip,rk3399-typec-phy0";
-should be "rockchip,rk3399-typec-phy"
-> +		reg = <0x0 0xff7c0000 0x0 0x40000>;
-> +		#phy-cells = <0>;
-> +		extcon = <&fusb1>;
-> +		rockchip,grf = <&grf>;
-> +		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
-> +			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
-> +		clock-names = "tcpdcore", "tcpdphy_ref";
-> +		resets = <&cru SRST_UPHY0>,
-> +			 <&cru SRST_UPHY0_PIPE_L00>,
-> +			 <&cru SRST_P_UPHY0_TCPHY>;
-> +		reset-names = "tcphy", "tcphy_pipe", "uphy_tcphy";
-> +		rockchip,typec_conn_dir = <0xe580 0 16>;
-> +		rockchip,usb3tousb2_en = <0xe580 3 19>;
-> +		rockchip,external_psm = <0xe588 14 30>;
-> +		rockchip,pipe_status = <0xe5c0 0 0>;
-> +		rockchip,uphy_dp_sel = <0x6268 19 19>;
-> +	};
-> +
-> +	tcphy1: phy@ff800000 {
-> +		compatible = "rockchip,rk3399-typec-phy1";
-should be "rockchip,rk3399-typec-phy"
+>  - <input>-supply: a phandle to the regulator supply node. May be omi=
+tted if
+>  		  inputs are unregulated, such as using the IPSOUT output
+>  		  from the PMIC.
+> @@ -79,6 +84,7 @@ ELDO3		: LDO		: eldoin-supply		: shared supply
+>  LDO_IO0		: LDO		: ips-supply		: GPIO 0
+>  LDO_IO1		: LDO		: ips-supply		: GPIO 1
+>  RTC_LDO		: LDO		: ips-supply		: always on
+> +DRIVEVBUS	: Enable output	: drivevbus-supply	: external regulator
+> =20
+>  AXP809 regulators, type, and corresponding input supply names:
 
-Feel free to ad my Reviewed-by after these update.
+Ironically, the doc looks good. :)
 
-Thanks,
-- Kever
-> +		reg = <0x0 0xff800000 0x0 0x40000>;
-> +		#phy-cells = <0>;
-> +		rockchip,grf = <&grf>;
-> +		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
-> +			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
-> +		clock-names = "tcpdcore", "tcpdphy_ref";
-> +		resets = <&cru SRST_UPHY1>,
-> +		         <&cru SRST_UPHY1_PIPE_L00>,
-> +			 <&cru SRST_P_UPHY1_TCPHY>;
-> +		reset-names = "tcphy", "tcphy_pipe", "uphy_tcphy";
-> +		rockchip,typec_conn_dir = <0xe58c 0 16>;
-> +		rockchip,usb3tousb2_en = <0xe58c 3 19>;
-> +		rockchip,external_psm = <0xe594 14 30>;
-> +		rockchip,pipe_status = <0xe5c0 16 16>;
-> +		rockchip,uphy_dp_sel = <0x6268 3 19>;
-> +	};
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
