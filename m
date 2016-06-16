@@ -1,374 +1,186 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for
- Bananapi M1 Plus board
-Date: Thu, 16 Jun 2016 15:13:54 +0800
-Message-ID: <CAGb2v66xFZteSM9NQFrCFAg08rTb_JpqxjTit--AWDiLiQ5HrA@mail.gmail.com>
-References: <20160530123013.11575-1-luoyi.ly@gmail.com> <20160530194340.GE4908@lukather>
- <574CA1ED.8050007@web.de> <20160531170957.GM4908@lukather> <CAFfxPQss6M4dR_=fPCamZ08A3gPyC0523f+qFTYm1e16O4t_KQ@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Mathieu Malaterre <mathieu.malaterre@gmail.com>
+Subject: Re: [PATCH v2] of: fix memory leak related to safe_name()
+Date: Thu, 16 Jun 2016 09:15:07 +0200
+Message-ID: <CA+7wUszph+weTn=bu24d6YdkChOk39ae_dOkQXJQxykkQH0PNg@mail.gmail.com>
+References: <5761BDAD.3060107@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBSNDRG5QKGQEIO53DIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAFfxPQss6M4dR_=fPCamZ08A3gPyC0523f+qFTYm1e16O4t_KQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bernhard Nortmann <bernhard.nortmann-S0/GAf8tV78@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5761BDAD.3060107@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+I only tested v2. I confirm this solve the symptoms I was seeing in
+the bug report.
 
-On Wed, Jun 1, 2016 at 10:40 AM, luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This is the new version of the patch.  and I think maybe every board
-> should have their own dtb files. and we can you some cpp  macro tricks
-> to merge their coressponding dts file.
+Tested-by: Mathieu Malaterre <mathieu.malaterre@gmail.com>
+
+thanks, your patch is actually much cleaner!
+
+On Wed, Jun 15, 2016 at 10:42 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@am.sony.com>
 >
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index e06a5ab..fde407f 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -685,6 +685,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
->      sun6i-a31s-yones-toptech-bs1078-v2.dtb
->  dtb-$(CONFIG_MACH_SUN7I) += \
->      sun7i-a20-bananapi.dtb \
-> +    sun7i-a20-bananapi-m1-plus.dtb \
->      sun7i-a20-bananapro.dtb \
->      sun7i-a20-cubieboard2.dtb \
->      sun7i-a20-cubietruck.dtb \
-> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> new file mode 100644
-> index 0000000..548ed31
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> @@ -0,0 +1,266 @@
-> +/*
-> + * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * Thanks to the original work by Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
+> Fix a memory leak resulting from memory allocation in safe_name().
+> This patch fixes all call sites of safe_name().
+>
+> Mathieu Malaterre reported the memory leak on boot:
+>
+> On my PowerMac device-tree would generate a duplicate name:
+>
+> [    0.023043] device-tree: Duplicate name in PowerPC,G4@0, renamed to "l2-cache#1"
+>
+> in this case a newly allocated name is generated by `safe_name`. However
+> in this case it is never deallocated.
+>
+> The bug was found using kmemleak reported as:
+>
+> unreferenced object 0xdf532e60 (size 32):
+>   comm "swapper", pid 1, jiffies 4294892300 (age 1993.532s)
+>   hex dump (first 32 bytes):
+>     6c 32 2d 63 61 63 68 65 23 31 00 dd e4 dd 1e c2  l2-cache#1......
+>     ec d4 ba ce 04 ec cc de 8e 85 e9 ca c4 ec cc 9e  ................
+>   backtrace:
+>     [<c02d3350>] kvasprintf+0x64/0xc8
+>     [<c02d3400>] kasprintf+0x4c/0x5c
+>     [<c0453814>] safe_name.isra.1+0x80/0xc4
+>     [<c04545d8>] __of_attach_node_sysfs+0x6c/0x11c
+>     [<c075f21c>] of_core_init+0x8c/0xf8
+>     [<c0729594>] kernel_init_freeable+0xd4/0x208
+>     [<c00047e8>] kernel_init+0x24/0x11c
+>     [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=120331
+>
+> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
+> Reported-by: mathieu.malaterre@gmail.com
+> ---
+>
+> changes from v1
+>   Move the prototype of __of_sysfs_remove_bin_file() into of_private.h
+>
+>  drivers/of/base.c       |   29 ++++++++++++++++++++---------
+>  drivers/of/dynamic.c    |    2 +-
+>  drivers/of/of_private.h |    3 +++
+>  3 files changed, 24 insertions(+), 10 deletions(-)
+>
+> Index: b/drivers/of/base.c
+> ===================================================================
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -112,6 +112,7 @@ static ssize_t of_node_property_read(str
+>         return memory_read_from_buffer(buf, count, &offset, pp->value, pp->length);
+>  }
+>
+> +/* always return newly allocated name, caller must free after use */
+>  static const char *safe_name(struct kobject *kobj, const char *orig_name)
+>  {
+>         const char *name = orig_name;
+> @@ -126,9 +127,12 @@ static const char *safe_name(struct kobj
+>                 name = kasprintf(GFP_KERNEL, "%s#%i", orig_name, ++i);
+>         }
+>
+> -       if (name != orig_name)
+> +       if (name == orig_name) {
+> +               name = kstrdup(orig_name, GFP_KERNEL);
+> +       } else {
+>                 pr_warn("device-tree: Duplicate name in %s, renamed to \"%s\"\n",
+>                         kobject_name(kobj), name);
+> +       }
+>         return name;
+>  }
+>
+> @@ -159,6 +163,7 @@ int __of_add_property_sysfs(struct devic
+>  int __of_attach_node_sysfs(struct device_node *np)
+>  {
+>         const char *name;
+> +       struct kobject *parent;
+>         struct property *pp;
+>         int rc;
+>
+> @@ -171,15 +176,15 @@ int __of_attach_node_sysfs(struct device
+>         np->kobj.kset = of_kset;
+>         if (!np->parent) {
+>                 /* Nodes without parents are new top level trees */
+> -               rc = kobject_add(&np->kobj, NULL, "%s",
+> -                                safe_name(&of_kset->kobj, "base"));
+> +               name = safe_name(&of_kset->kobj, "base");
+> +               parent = NULL;
+>         } else {
+>                 name = safe_name(&np->parent->kobj, kbasename(np->full_name));
+> -               if (!name || !name[0])
+> -                       return -EINVAL;
+> -
+> -               rc = kobject_add(&np->kobj, &np->parent->kobj, "%s", name);
+> +               parent = &np->parent->kobj;
+>         }
+> +       if (!name)
+> +               return -ENOMEM;
+> +       rc = kobject_add(&np->kobj, parent, "%s", name);
+>         if (rc)
+>                 return rc;
+>
+> @@ -1815,6 +1820,12 @@ int __of_remove_property(struct device_n
+>         return 0;
+>  }
+>
+> +void __of_sysfs_remove_bin_file(struct device_node *np, struct property *prop)
+> +{
+> +       sysfs_remove_bin_file(&np->kobj, &prop->attr);
+> +       kfree(prop->attr.attr.name);
+> +}
 > +
-> +/dts-v1/;
-> +#include "sun7i-a20.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>  void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
+>  {
+>         if (!IS_ENABLED(CONFIG_SYSFS))
+> @@ -1822,7 +1833,7 @@ void __of_remove_property_sysfs(struct d
+>
+>         /* at early boot, bail here and defer setup to of_init() */
+>         if (of_kset && of_node_is_attached(np))
+> -               sysfs_remove_bin_file(&np->kobj, &prop->attr);
+> +               __of_sysfs_remove_bin_file(np, prop);
+>  }
+>
+>  /**
+> @@ -1895,7 +1906,7 @@ void __of_update_property_sysfs(struct d
+>                 return;
+>
+>         if (oldprop)
+> -               sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+> +               __of_sysfs_remove_bin_file(np, oldprop);
+>         __of_add_property_sysfs(np, newprop);
+>  }
+>
+> Index: b/drivers/of/dynamic.c
+> ===================================================================
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -55,7 +55,7 @@ void __of_detach_node_sysfs(struct devic
+>         /* only remove properties if on sysfs */
+>         if (of_node_is_attached(np)) {
+>                 for_each_property_of_node(np, pp)
+> -                       sysfs_remove_bin_file(&np->kobj, &pp->attr);
+> +                       __of_sysfs_remove_bin_file(np, pp);
+>                 kobject_del(&np->kobj);
+>         }
+>
+> Index: b/drivers/of/of_private.h
+> ===================================================================
+> --- a/drivers/of/of_private.h
+> +++ b/drivers/of/of_private.h
+> @@ -83,6 +83,9 @@ extern int __of_attach_node_sysfs(struct
+>  extern void __of_detach_node(struct device_node *np);
+>  extern void __of_detach_node_sysfs(struct device_node *np);
+>
+> +extern void __of_sysfs_remove_bin_file(struct device_node *np,
+> +                                      struct property *prop);
 > +
-> +/ {
-> +    model = "Banana Pi BPI-M1-Plus";
-> +    compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
-> +
-> +    aliases {
-> +        serial0 = &uart0;
-> +    };
-> +
-> +    chosen {
-> +        stdout-path = "serial0:115200n8";
-> +    };
-> +
-> +    leds {
-
-Extra space at end of line.
-
-> +        compatible = "gpio-leds";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&led_pins_bananapi>;
-> +
-> +        green {
-> +            label = "bananapi:green:usr";
-
-The led labels should use the board name.
-
-> +            gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
-> +        };
-> +
-> +        red {
-> +            label = "bananapi:red:usr";
-> +            gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
-> +            linux,default-trigger = "default-on";
-> +        };
-> +
-> +    };
-> +
-> +    mmc3_pwrseq: mmc3_pwrseq {
-> +        compatible = "mmc-pwrseq-simple";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&mmc3_pwrseq_pin_bananapim1plus>;
-> +        reset-gpios = <&pio 7 22 GPIO_ACTIVE_LOW>; /* PH22 WL-PMU-EN */
-> +    };
-> +
-> +    reg_gmac_3v3: gmac-3v3 {
-> +        compatible = "regulator-fixed";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&gmac_power_pin_bananapi>;
-> +        regulator-name = "gmac-3v3";
-> +        regulator-min-microvolt = <3300000>;
-> +        regulator-max-microvolt = <3300000>;
-> +        startup-delay-us = <100000>;
-> +        enable-active-high;
-> +        gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
-> +    };
-> +
-> +};
-> +
-> +&ahci {
-> +    status = "okay";
-> +};
-> +
-> +&codec {
-> +    status = "okay";
-> +};
-> +
-> +&ehci0 {
-> +    status = "okay";
-> +};
-> +
-> +&ehci1 {
-> +    status = "okay";
-> +};
-> +
-> +&gmac {
-> +    pinctrl-names = "default";
-> +    pinctrl-0 = <&gmac_pins_rgmii_a>;
-> +    phy = <&phy1>;
-> +    phy-mode = "rgmii";
-> +    phy-supply = <&reg_gmac_3v3>;
-> +    status = "okay";
-> +
-> +    phy1: ethernet-phy@1 {
-> +        reg = <1>;
-> +    };
-> +};
-> +
-> +&i2c0 {
-> +    pinctrl-names = "default";
-> +    pinctrl-0 = <&i2c0_pins_a>;
-> +    status = "okay";
-> +
-> +    axp209: pmic@34 {
-> +        compatible = "x-powers,axp209";
-> +        reg = <0x34>;
-> +        interrupt-parent = <&nmi_intc>;
-> +        interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +    };
-> +};
-> +
-> +&ir0 {
-> +    pinctrl-names = "default";
-> +    pinctrl-0 = <&ir0_rx_pins_a>;
-> +    status = "okay";
-> +};
-> +
-> +&mmc0 {
-> +    pinctrl-names = "default";
-> +    pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
-> +    vmmc-supply = <&reg_vcc3v3>;
-> +    bus-width = <4>;
-> +    cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-> +    cd-inverted;
-> +    status = "okay";
-> +};
-> +
-> +&mmc3 {
-> +
-> +    #address-cells = <1>;
-> +    #size-cells = <0>;
-> +    pinctrl-names = "default";
-> +    pinctrl-0 = <&mmc3_pins_a>;
-> +    vmmc-supply = <&reg_vcc3v3>;
-> +    mmc-pwrseq = <&mmc3_pwrseq>;
-> +    bus-width = <4>;
-> +    non-removable;
-> +    enable-sdio-wakeup;
-> +    status = "okay";
-> +
-> +    brcmf: bcrmf@1 {
-> +        reg = <1>;
-> +        compatible = "brcm,bcm4329-fmac";
-> +        interrupt-parent = <&pio>;
-> +        interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
-> +        interrupt-names = "host-wake";
-> +    };
-> +
-> +};
-> +
-> +&mmc3_pins_a {
-> +    /* AP6210 requires pull-up */
-> +    allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +};
-> +
-> +&ohci0 {
-> +    status = "okay";
-> +};
-> +
-> +&ohci1 {
-> +    status = "okay";
-> +};
-> +
-> +&pio {
-> +    gmac_power_pin_bananapi: gmac_power_pin@0 {
-> +        allwinner,pins = "PH23";
-> +        allwinner,function = "gpio_out";
-> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +    };
-> +
-> +    led_pins_bananapi: led_pins@0 {
-> +        allwinner,pins = "PH24", "PG2";
-> +        allwinner,function = "gpio_out";
-> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +    };
-> +
-> +    mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
-> +        allwinner,pins = "PH10";
-> +        allwinner,function = "gpio_in";
-> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +        allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +    };
-> +
-> +    mmc3_pwrseq_pin_bananapim1plus: mmc3_pwrseq_pin@0 {
-> +        allwinner,pins = "PH22";
-> +        allwinner,function = "gpio_out";
-> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +    };
-> +
-> +    usb1_vbus_pin_bananapi: usb1_vbus_pin@0 {
-> +        allwinner,pins = "PH0";
-> +        allwinner,function = "gpio_out";
-> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +    };
-> +
-> +    usb2_vbus_pin_bananapi: usb2_vbus_pin@0 {
-> +        allwinner,pins = "PH1";
-> +        allwinner,function = "gpio_out";
-> +        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +    };
-
-The schematics say USB1/2 VBUS is always on. No GPIO
-controls them.
-
-> +
-
-Extra line.
-
-> +};
-> +
-> +&reg_usb1_vbus {
-> +    pinctrl-0 = <&usb1_vbus_pin_bananapi>;
-> +    gpio = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
-> +    status = "okay";
-> +};
-> +
-> +&reg_usb2_vbus {
-> +    pinctrl-0 = <&usb2_vbus_pin_bananapi>;
-> +    gpio = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-> +    status = "okay";
-> +};
-
-See above.
-
-> +
-> +&uart0 {
-> +    pinctrl-names = "default";
-> +    pinctrl-0 = <&uart0_pins_a>;
-> +    status = "okay";
-> +};
-> +
-> +&usbphy {
-> +    usb1_vbus-supply = <&reg_usb1_vbus>;
-> +    usb2_vbus-supply = <&reg_usb2_vbus>;
-
-You can leave these out.
-
-> +    status = "okay";
-> +};
-
-Please send this patch, with the above comments fixed, as v3.
+>  /* iterators for transactions, used for overlays */
+>  /* forward iterator */
+>  #define for_each_transaction_entry(_oft, _te) \
 
 
-Thanks,
-ChenYu
 
-
-> 2016-06-01 1:09 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->> On Mon, May 30, 2016 at 10:26:21PM +0200, Bernhard Nortmann wrote:
->>> Am 30.05.2016 um 21:43 schrieb Maxime Ripard:
->>> >Hi,
->>> >
->>> >On Mon, May 30, 2016 at 08:30:13PM +0800, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>> >>From: luoyi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> >>
->>> >>Add support for the Bananapi M1 Plus A20 development board from sinovoip.com.cn .
->>> >>This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for
->>> >>OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiver,
->>> >>3.5 mm jack for stero sound out, on board microphone, 40 gpio pins and sdio wifi.
->>> >What is the difference between the M1+ and the M1?
->>>
->>> The M1+ is an updated version of the original Banana Pi. If you're
->>> interested in the details, have a look at
->>> http://linux-sunxi.org/Banana_Pi#Variants .  "BPi-M1+" is SinoVoip's
->>> counterpart of LeMaker's "Banana Pro", for which a .dts already
->>> exists. Judging from .fex files, only a single pin assignment seems
->>> to differ between the two (audio_pa_ctrl, PH26 vs. PH15).
->>
->> Gee, that's confusing :)
->>
->> I guess we should just include the banana pro DTB and change that pin
->> (and the i2s pins Luo was mentionning).
->>
->> Maxime
->>
->> --
->> Maxime Ripard, Free Electrons
->> Embedded Linux, Kernel and Android engineering
->> http://free-electrons.com
+-- 
+Mathieu
