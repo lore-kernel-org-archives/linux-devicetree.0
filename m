@@ -1,45 +1,46 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] ata: ahci_platform: Add ACPI support for APM X-Gene AHCI controller v3 hardware.
-Date: Thu, 16 Jun 2016 08:54:09 +0200
-Message-ID: <6691907.FIx2xYmxSs@wuerfel>
-References: <stripathi@apm.com> <1466034240-22694-1-git-send-email-stripathi@apm.com>
+Subject: Re: [PATCH v3 1/2] Documentation: bindings: add dt doc for Rockchip PCIe controller
+Date: Thu, 16 Jun 2016 09:00:41 +0200
+Message-ID: <5811436.gqkV56Lax5@wuerfel>
+References: <1466041821-1649-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1466034240-22694-1-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: suman-tripathi <stripathi@apm.com>
-Cc: olof@lixom.net, tj@kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1466041821-1649-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 15, 2016 5:44:00 PM CEST suman-tripathi wrote:
-> This patch adds ACPI support for APM X-Gene AHCI controller in
-> ahci_platform driver for v3 hardware. APM X-Gene AHCI controller
-> v3 hardware is fully compliant with ahci_platform driver and requires
-> no workaround quirk.
-> 
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> ---
->  drivers/ata/ahci_platform.c |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-> index 62a04c8..3395baf 100644
-> --- a/drivers/ata/ahci_platform.c
-> +++ b/drivers/ata/ahci_platform.c
-> @@ -86,6 +86,7 @@ MODULE_DEVICE_TABLE(of, ahci_of_match);
-> 
->  static const struct acpi_device_id ahci_acpi_match[] = {
->         { ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
-> +       { "APMC0D33", 0},
->         {},
->  };
->  MODULE_DEVICE_TABLE(acpi, ahci_acpi_match);
+On Thursday, June 16, 2016 9:50:21 AM CEST Shawn Lin wrote:
+
+> +	reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
+> +	phys = <&pcie_phy>;
+> +	phy-names = "pcie-phy";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie_clkreq>;
+> +	#interrupt-cells = <1>;
+> +	interrupt-controller;
+> +	interrupt-map-mask = <0 0 0 7>;
+> +	interrupt-map = <0 0 0 1 &pcie0 1>,
+> +			<0 0 0 2 &pcie0 2>,
+> +			<0 0 0 3 &pcie0 3>,
+> +			<0 0 0 4 &pcie0 4>;
+> +};
 > 
 
-Doesn't the ACPI_DEVICE_CLASS entry take care of this? I thought it had been
-added specifically for this purpose. It doesn't seem right to add vendor
-specific entries for generic hardware in each generic driver.
+One thing that came up in the review of the new Marvell PCIe driver is that it's
+most likely invalid for a device node to have both "interrupt-controller"
+and "interrupt-map" properties. I originally thought this was a nice way to
+handle embedded irqchips within the PCIe host, but it only really works
+by coincidence with the current kernel, and only as long as the hwirq number
+of the irqchip matches the integer representation of the irq line in the root
+bridge (which it does in the example above).
+
+For that driver we concluded that it would be less of a hack to have the
+irqchip as a child node of the PCIe host after all (just not with
+device_type="pci" of course), and that makes the translation work as
+expected.
 
 	Arnd
