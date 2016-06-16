@@ -1,58 +1,45 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH RFC 6/6] ASoC: samsung: Add DT bindings
- documentation for TM2 sound subsystem
-Date: Thu, 16 Jun 2016 18:45:46 +0200
-Message-ID: <5762D7BA.7050400@metafoo.de>
-References: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
- <1465815160-28504-7-git-send-email-s.nawrocki@samsung.com>
- <57612295.7070203@metafoo.de> <5762D652.5030507@samsung.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2] of: fix memory leak related to safe_name()
+Date: Thu, 16 Jun 2016 10:47:21 -0700
+Message-ID: <5762E629.8060301@gmail.com>
+References: <5761BDAD.3060107@gmail.com>
+ <CA+7wUszph+weTn=bu24d6YdkChOk39ae_dOkQXJQxykkQH0PNg@mail.gmail.com>
+ <CA+7wUsz0OnOHVyGTE=nzAbCi_GbmLvU-Q4wQHjs=SOLRUB4E5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <5762D652.5030507@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, inki.dae@samsung.com, beomho.seo@samsung.com, ideal.song@samsung.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+7wUsz0OnOHVyGTE=nzAbCi_GbmLvU-Q4wQHjs=SOLRUB4E5w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <mathieu.malaterre@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2016 06:39 PM, Sylwester Nawrocki wrote:
-> On 06/15/2016 11:40 AM, Lars-Peter Clausen wrote:
->> On 06/13/2016 12:52 PM, Sylwester Nawrocki wrote:
->> [...]
->>>> + - compatible : "samsung,tm2-audio"
->>>> + - samsung,model : the user-visible name of this sound complex
->>>> + - clocks : must contain an entry for each entry in clock-names,
->>>> +   see ../clocks/clock-bindings.txt for details
->>>> + - clock-names : must include the following entries:
->>>> +   "mclk1", "mclk2"
->>
->> If these are the MCLKs that go to the CODEC they should be properties of the
->> CODEC node.
+On 06/16/16 00:51, Mathieu Malaterre wrote:
+> Sorry, symptoms not solved. According to kmemleak, I have now:
 > 
-> Yes, these are both CODEC clocks. I couldn't find any related clk code in
-> the wm5110 arizona codec driver and indeed the clocks stay disabled when
-> I specify them in the wm5110 DT node. AFAICS from other thread in this
-> mailing list it is going to take some time until the CODEC drivers are
-> updated. How about minimizing the requirement of those clocks, making them
-> optional and then when the CODEC driver gets updated specifying the clocks
-> in the codec node instead of the sound card one?
-> The MCLK1 rate could be just hard coded instead of using clk_get_rate(),
-> but without clk enable calls nothing works.
+> [  661.323100] kmemleak: 100 new suspected memory leaks (see
+> /sys/kernel/debug/kmemleak)
+> [ 1260.226120] kmemleak: 1 new suspected memory leaks (see
+> /sys/kernel/debug/kmemleak)
+> 
+> # head -40 /sys/kernel/debug/kmemleak
+> unreferenced object 0xdf5326a0 (size 32):
+>   comm "swapper", pid 1, jiffies 4294892300 (age 2564.708s)
+>   hex dump (first 32 bytes):
+>     62 61 73 65 00 00 4c d8 c5 78 df dc cc 43 e4 bc  base..L..x...C..
+>     c4 c8 ec 8c ee de ce cf e8 c9 8a ea dc cc c6 fd  ................
+>   backtrace:
+>     [<c014d4d8>] kstrdup+0x48/0x88
+>     [<c0454678>] __of_attach_node_sysfs+0xf0/0x100
+>     [<c075f21c>] of_core_init+0x8c/0xf8
+>     [<c0729594>] kernel_init_freeable+0xd4/0x208
+>     [<c00047e8>] kernel_init+0x24/0x11c
+>     [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
 
-You can still handle the clocks in the machine driver, but they should be
-specified in the node of the CODEC to accurately represent the hardware.
+< snip >
 
-The simple-card driver e.g. does this, requests the clock of the CODEC and
-uses it to configure the CODEC input frequency based on it with
-snd_soc_dai_set_sysclk().
+Brown paper bag time.  I left out the kfree() in the one place that
+your first patch added it.  Version 3 on the way.
 
-- Lars
+-Frank
