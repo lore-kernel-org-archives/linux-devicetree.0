@@ -1,90 +1,178 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/6] mfd: max8997: Use regmap to access registers
-Date: Thu, 16 Jun 2016 16:07:27 +0100
-Message-ID: <20160616150727.GF4948@dell>
-References: <1464773339-756-1-git-send-email-k.kozlowski@samsung.com>
- <1464774841-1439-1-git-send-email-k.kozlowski@samsung.com>
- <20160608142621.GG14888@dell>
- <57582C1F.5040306@samsung.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] mfd: twl6040: Handle mclk used for HPPLL and optional
+ internal clock source
+Date: Thu, 16 Jun 2016 16:16:58 +0100
+Message-ID: <20160616151658.GA21702@dell>
+References: <1462965209-6955-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <rtc-linux+bncBDA7X7F2WUEBBBMBRO5QKGQE7QLYCDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <57582C1F.5040306-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, r.baldyga-anjuHVi6/WSaMJb+Lgu22Q@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1462965209-6955-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 08 Jun 2016, Krzysztof Kozlowski wrote:
+On Wed, 11 May 2016, Peter Ujfalusi wrote:
 
-> On 06/08/2016 04:26 PM, Lee Jones wrote:
-> > On Wed, 01 Jun 2016, Krzysztof Kozlowski wrote:
-> >=20
-> >> From: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >>
-> >> This patch modifies max8997 driver and each associated function driver=
-,
-> >> to use regmap instead of operating directly on i2c bus. It will allow =
-to
-> >> simplify IRQ handling using regmap-irq.
-> >>
-> >> Signed-off-by: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >>
-> >> Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> Acked-by: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> Acked-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> Acked-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> [k.kozlowski: Collect acks, rebase on v4.6-rc6]
-> >> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> Acked-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> >>  drivers/extcon/extcon-max8997.c       |  31 ++++----
-> >>  drivers/input/misc/max8997_haptic.c   |  34 ++++----
-> >>  drivers/leds/leds-max8997.c           |  13 ++--
-> >>  drivers/mfd/Kconfig                   |   1 +
-> >>  drivers/mfd/max8997-irq.c             |  64 ++++++---------
-> >>  drivers/mfd/max8997.c                 | 141 +++++++++++++++----------=
----------
-> >>  drivers/power/max8997_charger.c       |  33 ++++----
-> >>  drivers/regulator/max8997-regulator.c |  87 ++++++++++-----------
-> >=20
-> > Is it just Mark's Ack you require?
+> On some boards, like omap5-uevm the MCLK is gated by default and in o=
+rder
+> to be able to use the High performance modes of twl6040 it need to be
+> enabled by SW.
+> Add support for handling the MCLK source clock via CCF.
+> At the same time lover the print priority of the notification that th=
+e 32K
+
+Mr Lover Lover!
+
+> clock is not proveded so it is not going to be handled by the driver.
 >=20
-> Yes, only Mark's is missing here. All other patches got everything they
-> need.
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/twl6040.txt |  4 +--
+>  drivers/mfd/twl6040.c                             | 34 +++++++++++++=
+++++------
+>  include/linux/mfd/twl6040.h                       |  3 +-
+>  3 files changed, 29 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Docu=
+mentation/devicetree/bindings/mfd/twl6040.txt
+> index a41157b5d930..e6afdfa3543d 100644
+> --- a/Documentation/devicetree/bindings/mfd/twl6040.txt
+> +++ b/Documentation/devicetree/bindings/mfd/twl6040.txt
+> @@ -19,8 +19,8 @@ Required properties:
+> =20
+>  Optional properties, nodes:
+>  - enable-active-high: To power on the twl6040 during boot.
+> -- clocks: phandle to the clk32k clock provider
+> -- clock-names: Must be "clk32k"
+> +- clocks: phandle to the clk32k and/or to mclk clock provider
+> +- clock-names: Must be "clk32k" for the 32K clock and "mclk" for the=
+ MCLK.
+> =20
+>  Vibra functionality
+>  Required properties:
+> diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
+> index 852d5874aabb..f3dcf3a85e84 100644
+> --- a/drivers/mfd/twl6040.c
+> +++ b/drivers/mfd/twl6040.c
+> @@ -291,7 +291,7 @@ int twl6040_power(struct twl6040 *twl6040, int on=
+)
+>  		if (twl6040->power_count++)
+>  			goto out;
+> =20
+> -		ret =3D clk_prepare_enable(twl6040->clk32k);
+> +		ret =3D clk_prepare_enable(twl6040->clk32k_clk);
+>  		if (ret) {
+>  			twl6040->power_count =3D 0;
+>  			goto out;
+> @@ -304,7 +304,7 @@ int twl6040_power(struct twl6040 *twl6040, int on=
+)
+>  			/* use automatic power-up sequence */
+>  			ret =3D twl6040_power_up_automatic(twl6040);
+>  			if (ret) {
+> -				clk_disable_unprepare(twl6040->clk32k);
+> +				clk_disable_unprepare(twl6040->clk32k_clk);
+>  				twl6040->power_count =3D 0;
+>  				goto out;
+>  			}
+> @@ -312,7 +312,7 @@ int twl6040_power(struct twl6040 *twl6040, int on=
+)
+>  			/* use manual power-up sequence */
+>  			ret =3D twl6040_power_up_manual(twl6040);
+>  			if (ret) {
+> -				clk_disable_unprepare(twl6040->clk32k);
+> +				clk_disable_unprepare(twl6040->clk32k_clk);
+>  				twl6040->power_count =3D 0;
+>  				goto out;
+>  			}
+> @@ -355,7 +355,10 @@ int twl6040_power(struct twl6040 *twl6040, int o=
+n)
+>  		twl6040->sysclk =3D 0;
+>  		twl6040->mclk =3D 0;
+> =20
+> -		clk_disable_unprepare(twl6040->clk32k);
+> +		if (twl6040->pll =3D=3D TWL6040_SYSCLK_SEL_HPPLL)
+> +			clk_disable_unprepare(twl6040->mclk_clk);
+> +
+> +		clk_disable_unprepare(twl6040->clk32k_clk);
+>  	}
+> =20
+>  out:
+> @@ -427,6 +430,8 @@ int twl6040_set_pll(struct twl6040 *twl6040, int =
+pll_id,
+>  			ret =3D -EINVAL;
+>  			goto pll_out;
+>  		}
+> +
+> +		clk_disable_unprepare(twl6040->mclk_clk);
+>  		break;
+>  	case TWL6040_SYSCLK_SEL_HPPLL:
+>  		/* high-performance PLL can provide only 19.2 MHz */
+> @@ -468,6 +473,9 @@ int twl6040_set_pll(struct twl6040 *twl6040, int =
+pll_id,
+>  				goto pll_out;
+>  			}
+> =20
+> +			/* When switching to HPPLL, enable the mclk first */
+> +			if (pll_id !=3D twl6040->pll)
+> +				clk_prepare_enable(twl6040->mclk_clk);
+>  			/*
+>  			 * enable clock slicer to ensure input waveform is
+>  			 * square
+> @@ -651,12 +659,20 @@ static int twl6040_probe(struct i2c_client *cli=
+ent,
+> =20
+>  	i2c_set_clientdata(client, twl6040);
+> =20
+> -	twl6040->clk32k =3D devm_clk_get(&client->dev, "clk32k");
+> -	if (IS_ERR(twl6040->clk32k)) {
+> -		if (PTR_ERR(twl6040->clk32k) =3D=3D -EPROBE_DEFER)
+> +	twl6040->clk32k_clk =3D devm_clk_get(&client->dev, "clk32k");
+> +	if (IS_ERR(twl6040->clk32k_clk)) {
+> +		if (PTR_ERR(twl6040->clk32k_clk) =3D=3D -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +		dev_dbg(&client->dev, "clk32k is not handled\n");
+> +		twl6040->clk32k_clk =3D NULL;
+> +	}
+> +
+> +	twl6040->mclk_clk =3D devm_clk_get(&client->dev, "mclk");
+> +	if (IS_ERR(twl6040->mclk_clk)) {
+> +		if (PTR_ERR(twl6040->mclk_clk) =3D=3D -EPROBE_DEFER)
+>  			return -EPROBE_DEFER;
+> -		dev_info(&client->dev, "clk32k is not handled\n");
+> -		twl6040->clk32k =3D NULL;
+> +		dev_dbg(&client->dev, "mclk is not handled\n");
+> +		twl6040->mclk_clk =3D NULL;
+>  	}
+> =20
+>  	twl6040->supplies[0].supply =3D "vio";
+> diff --git a/include/linux/mfd/twl6040.h b/include/linux/mfd/twl6040.=
+h
+> index 8f9fc3d26e6d..a7c50e54f3e0 100644
+> --- a/include/linux/mfd/twl6040.h
+> +++ b/include/linux/mfd/twl6040.h
+> @@ -224,7 +224,8 @@ struct twl6040 {
+>  	struct regmap *regmap;
+>  	struct regmap_irq_chip_data *irq_data;
+>  	struct regulator_bulk_data supplies[2]; /* supplies for vio, v2v1 *=
+/
+> -	struct clk *clk32k;
+> +	struct clk *clk32k_clk;
+> +	struct clk *mclk_clk;
 
-I think you'd better re-submit and get Mark's attention.
+Not sure I get the naming here.
 
-Also indicate that his Ack is all you need.
+What's wrong with clk32k and mclk?
 
-Once received, I can take the set.
+>  	struct mutex mutex;
+>  	struct mutex irq_mutex;
+>  	struct mfd_cell cells[TWL6040_CELLS];
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
----=20
-You received this message because you are subscribed to the Google Groups "=
-rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+=46ollow Linaro: Facebook | Twitter | Blog
