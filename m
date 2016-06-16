@@ -1,82 +1,49 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [RFC PATCH 1/2] Input: rotary-encoder- Add support for absolute
- encoder
-Date: Thu, 16 Jun 2016 16:17:11 +0530
-Message-ID: <576283AF.9090107@ti.com>
-References: <1463648641-6931-1-git-send-email-vigneshr@ti.com>
- <1463648641-6931-2-git-send-email-vigneshr@ti.com>
- <20160520163404.GC14951@dtor-ws> <5742CB03.8010805@ti.com>
- <574565ED.3060205@ti.com>
+From: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v3 1/2] nxp/dts: add pcie aer interrupt-name property in
+ the dts
+Date: Thu, 16 Jun 2016 10:50:23 +0000
+Message-ID: <VI1PR0401MB1709B98EC43F035158CF022E92560@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-1-git-send-email-po.liu@nxp.com>
+ <20160616003627.GJ20243@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <574565ED.3060205@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Guido Martinez <guido@vanguardiasur.com.ar>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Masanari Iida <standby24x7@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Timo Teras <timo.teras@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Moritz Fischer <moritz.fischer@ettus.com>linu
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160616003627.GJ20243@tiger>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
-
-On Wednesday 25 May 2016 02:14 PM, Vignesh R wrote:
-> Hi Dmitry,
-> 
-> On 05/23/2016 02:48 PM, R, Vignesh wrote:
->>
->>
->> On 5/20/2016 10:04 PM, Dmitry Torokhov wrote:
->>> On Thu, May 19, 2016 at 02:34:00PM +0530, Vignesh R wrote:
->>>> There are rotary-encoders where GPIO lines reflect the actual position
->>>> of the rotary encoder dial. For example, if dial points to 9, then four
->>>> GPIO lines connected to the rotary encoder will read HLLH(1001b = 9).
->>>> Add support for such rotary-encoder.
->>>> The driver relies on rotary-encoder,absolute-encoder DT property to
->>>> detect such encoders.
->>>> Since, GPIO IRQs are not necessary to work with
->>>> such encoders, optional polling mode support is added using
->>>> input_poll_dev skeleton. This is can be used by enabling
->>>> CONFIG_INPUT_GPIO_ROTARY_ENCODER_POLL_MODE_SUPPORT.
->>>
->>> Does this really belong to a rotary encoder and not a new driver that
->>> simply translates gpio-encoded value into ABS* event?
->>>
->>
->> Currently rotary encoder driver only supports incremental/step counting
->> rotary devices. However, the device that is there on am335x-ice is an
->> absolute encoder but, IMO, nevertheless a kind of rotary encoder. The
->> only difference is that there is no need to count steps and the absolute
->> position value is always available as binary encoded state of connected
->> GPIOs.
->> The hardware on am335x-ice is a mechanical rotary encoder switch
->> connected over 4 GPIOs. It is same as binary encoder described at [1]
->> (except there are 4 GPIO lines), so this lead me to add support in
->> rotary-encoder.
->>
->> [1]https://en.wikipedia.org/wiki/Rotary_encoder#Standard_binary_encoding
->>
-> 
-> Could you please comment on how would you like to support above
-> described encoder: As a new driver or with existing driver with new
-> compatible/mode setting via DT or as suggest by Uwe in another reply?
-> IMHO, supporting using existing driver with new mode/compatible string
-> looks a better option as the hardware is a kind of rotary-encoder.
-> 
-
-It would be great if you could comment on how would you like to see
-support for absolute rotary-encoder(the one I described above)? As a new
-driver or handle it by adding new compatible to existing rotary-encoder
-driver?
-
-
--- 
-Regards
-Vignesh
+SGkgU2hhd24sDQoNCj4gIC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ICBGcm9tOiBTaGF3
+biBHdW8gW21haWx0bzpzaGF3bmd1b0BrZXJuZWwub3JnXQ0KPiAgU2VudDogVGh1cnNkYXksIEp1
+bmUgMTYsIDIwMTYgODozNiBBTQ0KPiAgVG86IFBvIExpdQ0KPiAgQ2M6IGxpbnV4LXBjaUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gIGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBS
+b3kgWmFuZzsgQXJuZA0KPiAgQmVyZ21hbm47IE1hcmMgWnluZ2llcjsgU3R1YXJ0IFlvZGVyOyBZ
+YW5nLUxlbyBMaTsgTWluZ2h1YW4gTGlhbjsgTXVyYWxpDQo+ICBLYXJpY2hlcmk7IEJqb3JuIEhl
+bGdhYXM7IE1pbmdrYWkgSHUNCj4gIFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS8yXSBueHAvZHRz
+OiBhZGQgcGNpZSBhZXIgaW50ZXJydXB0LW5hbWUNCj4gIHByb3BlcnR5IGluIHRoZSBkdHMNCj4g
+IA0KPiAgT24gVHVlLCBKdW4gMTQsIDIwMTYgYXQgMDQ6MjQ6MDRQTSArMDgwMCwgUG8gTGl1IHdy
+b3RlOg0KPiAgPiBOWFAgc29tZSBwbGF0Zm9ybXMgYWVyIGludGVycnVwdCB3YXMgbm90IE1TSS9N
+U0ktWC9JTlR4IGJ1dCB1c2luZw0KPiAgPiBpbnRlcnJ1cHQgbGluZSBpbmRlcGVuZGVudGx5LiBU
+aGlzIHBhdGNoIGFkZCBhICJhZXIiDQo+ICA+IGludGVycnVwdC1uYW1lcyBmb3IgYWVyIGludGVy
+cnVwdC4NCj4gID4NCj4gID4gU2lnbmVkLW9mZi1ieTogUG8gTGl1IDxwby5saXVAbnhwLmNvbT4N
+Cj4gID4gLS0tDQo+ICA+IGNoYW5nZXMgZm9yIHYzOg0KPiAgPiAJLSBOb25lOw0KPiAgPg0KPiAg
+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dCAgICAgICAg
+IHwgIDQgKystLQ0KPiAgDQo+ICBUaGUgYmluZGluZ3Mgc2hvdWxkbid0IGJlIHBhcnQgb2YgZHRz
+IHBhdGNoIGJ1dCB0aGUgZHJpdmVyIHBhdGNoIHdobyBpcw0KPiAgYWN0dWFsbHkgdXNpbmcgaXQu
+DQo+ICANCj4gIFNoYXduDQoNCk9rLCBJJ2xsIG1vdmUgdGhlIGRvYyBwYXJ0IHRvIHRoZSBkcml2
+ZXIgcGF0Y2guDQoNClBvIExpdQ0KRnJvbSBOWFANCj4gIA0KPiAgPiAgYXJjaC9hcm0vYm9vdC9k
+dHMvbHMxMDIxYS5kdHNpICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDYgKysrKy0tDQo+ICA+
+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQzYS5kdHNpICAgICAgICAg
+fCAxOA0KPiAgKysrKysrKysrLS0tLS0tLS0tDQo+ICA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9mc2wtbHMyMDgwYS5kdHNpICAgICAgICAgfCAxNiArKysrKysrKy0NCj4gIC0tLS0t
+LS0NCj4gID4gIDQgZmlsZXMgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKSwgMjEgZGVsZXRpb25z
+KC0pDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
