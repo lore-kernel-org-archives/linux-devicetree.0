@@ -1,70 +1,54 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 0/4] clocksource: rockchip/timer: Support rktimer for
- rk3399
-Date: Thu, 16 Jun 2016 16:26:22 +0200
-Message-ID: <5762B70E.7090909@linaro.org>
-References: <1465275273-22076-1-git-send-email-wxt@rock-chips.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/5] mfd: tps65217: Add support for IRQs
+Date: Thu, 16 Jun 2016 15:30:18 +0100
+Message-ID: <20160616143018.GY4948@dell>
+References: <20160616114110.23455-1-m.niestroj@grinn-global.com>
+ <20160616114110.23455-2-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465275273-22076-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, cf@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160616114110.23455-2-m.niestroj@grinn-global.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Marcin Niestroj <m.niestroj@grinn-global.com>
+Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2016 06:54 AM, Caesar Wang wrote:
-> This series patches had been tested on rockchip inside kernel.
-> In order to support the rk3399 SoC timer and turn off interrupts and =
-IPIs to
-> save power in idle.
-> Okay, it still works bootup on rk3288/other SoCs, even though many so=
-cs hasn't used
-> the broadcast timer.
->
-> History version:
-> v1:
-> https://lkml.org/lkml/2016/5/25/186
->
-> Easy to test for my borad.
-> localhost / # cat /proc/interrupts
-> CPU0       CPU1       CPU2       CPU3       CPU4       CPU5
-> 1:          0          0          0          0          0          0 =
-    GICv3  29 Edge      arch_timer
-> ...
-> 5:          0          0          0          0          0          0 =
-    GICv3 113 Level     rk_timer
-> ..
->
-> localhost / # cat /proc/timer_list | grep event_handler
-> get "event_handler:  hrtimer_interrupt"
-> event_handler:  tick_handle_oneshot_broadcast
-> event_handler:  hrtimer_interrupt
->
-> That should work for my board.
+On Thu, 16 Jun 2016, Marcin Niestroj wrote:
 
-Hi Caesar,
+> Add support for handling IRQs: power button, AC and USB power state
+> changes. Mask and interrupt bits are shared within one register, whic=
+h
+> prevents us to use regmap_irq implementation. New irq_domain is creat=
+ed in
+> order to add interrupt handling for each tps65217's subsystem. IRQ
+> resources have been added for charger subsystem to be able to notify =
+about
+> AC and USB state changes.
+>=20
+> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+> ---
 
-I applied the patches on my tree. I humbly reworded the changelog, if=20
-you disagree with the content, let me know.
+Please insert a change-log here in future.
 
-Please, in the future, take care of the following:
+>  drivers/mfd/Kconfig          |   1 +
+>  drivers/mfd/tps65217.c       | 194 +++++++++++++++++++++++++++++++++=
+++++++++--
+>  include/linux/mfd/tps65217.h |  11 +++
+>  3 files changed, 198 insertions(+), 8 deletions(-)
 
-  - patch prefix is 'clocksource/driver/<driver_name>: [A-Z].*'
+Once you've fixed Grygorii's comments, you may add my:
 
-  - the change log is important, it deserves some love.
-
-Thanks.
-
-   -- Daniel
-
+  Acked-by: Lee Jones <lee.jones@linaro.org>
 
 --=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
