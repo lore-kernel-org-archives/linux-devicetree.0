@@ -1,49 +1,101 @@
-From: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v3 1/2] nxp/dts: add pcie aer interrupt-name property in
- the dts
-Date: Thu, 16 Jun 2016 10:50:23 +0000
-Message-ID: <VI1PR0401MB1709B98EC43F035158CF022E92560@VI1PR0401MB1709.eurprd04.prod.outlook.com>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-1-git-send-email-po.liu@nxp.com>
- <20160616003627.GJ20243@tiger>
+From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
+Date: Thu, 16 Jun 2016 07:54:28 -0300
+Message-ID: <20160616075428.0fde4aaa@recife.lan>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+	<20160607112235.475c2e4c@recife.lan>
+	<575746EE.3030706@cisco.com>
+	<1465902488.27938.7.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160616003627.GJ20243@tiger>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465902488.27938.7.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tiffany lin <tiffany.lin@mediatek.com>
+Cc: Hans Verkuil <hansverk@cisco.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2hhd24sDQoNCj4gIC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ICBGcm9tOiBTaGF3
-biBHdW8gW21haWx0bzpzaGF3bmd1b0BrZXJuZWwub3JnXQ0KPiAgU2VudDogVGh1cnNkYXksIEp1
-bmUgMTYsIDIwMTYgODozNiBBTQ0KPiAgVG86IFBvIExpdQ0KPiAgQ2M6IGxpbnV4LXBjaUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gIGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBS
-b3kgWmFuZzsgQXJuZA0KPiAgQmVyZ21hbm47IE1hcmMgWnluZ2llcjsgU3R1YXJ0IFlvZGVyOyBZ
-YW5nLUxlbyBMaTsgTWluZ2h1YW4gTGlhbjsgTXVyYWxpDQo+ICBLYXJpY2hlcmk7IEJqb3JuIEhl
-bGdhYXM7IE1pbmdrYWkgSHUNCj4gIFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS8yXSBueHAvZHRz
-OiBhZGQgcGNpZSBhZXIgaW50ZXJydXB0LW5hbWUNCj4gIHByb3BlcnR5IGluIHRoZSBkdHMNCj4g
-IA0KPiAgT24gVHVlLCBKdW4gMTQsIDIwMTYgYXQgMDQ6MjQ6MDRQTSArMDgwMCwgUG8gTGl1IHdy
-b3RlOg0KPiAgPiBOWFAgc29tZSBwbGF0Zm9ybXMgYWVyIGludGVycnVwdCB3YXMgbm90IE1TSS9N
-U0ktWC9JTlR4IGJ1dCB1c2luZw0KPiAgPiBpbnRlcnJ1cHQgbGluZSBpbmRlcGVuZGVudGx5LiBU
-aGlzIHBhdGNoIGFkZCBhICJhZXIiDQo+ICA+IGludGVycnVwdC1uYW1lcyBmb3IgYWVyIGludGVy
-cnVwdC4NCj4gID4NCj4gID4gU2lnbmVkLW9mZi1ieTogUG8gTGl1IDxwby5saXVAbnhwLmNvbT4N
-Cj4gID4gLS0tDQo+ICA+IGNoYW5nZXMgZm9yIHYzOg0KPiAgPiAJLSBOb25lOw0KPiAgPg0KPiAg
-PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dCAgICAgICAg
-IHwgIDQgKystLQ0KPiAgDQo+ICBUaGUgYmluZGluZ3Mgc2hvdWxkbid0IGJlIHBhcnQgb2YgZHRz
-IHBhdGNoIGJ1dCB0aGUgZHJpdmVyIHBhdGNoIHdobyBpcw0KPiAgYWN0dWFsbHkgdXNpbmcgaXQu
-DQo+ICANCj4gIFNoYXduDQoNCk9rLCBJJ2xsIG1vdmUgdGhlIGRvYyBwYXJ0IHRvIHRoZSBkcml2
-ZXIgcGF0Y2guDQoNClBvIExpdQ0KRnJvbSBOWFANCj4gIA0KPiAgPiAgYXJjaC9hcm0vYm9vdC9k
-dHMvbHMxMDIxYS5kdHNpICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDYgKysrKy0tDQo+ICA+
-ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQzYS5kdHNpICAgICAgICAg
-fCAxOA0KPiAgKysrKysrKysrLS0tLS0tLS0tDQo+ICA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9mc2wtbHMyMDgwYS5kdHNpICAgICAgICAgfCAxNiArKysrKysrKy0NCj4gIC0tLS0t
-LS0NCj4gID4gIDQgZmlsZXMgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKSwgMjEgZGVsZXRpb25z
-KC0pDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Em Tue, 14 Jun 2016 19:08:08 +0800
+tiffany lin <tiffany.lin@mediatek.com> escreveu:
+
+> Hi Mauro,
+> 
+> 
+> On Wed, 2016-06-08 at 07:13 +0900, Hans Verkuil wrote:
+> > 
+> > On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:  
+> > > Em Mon, 30 May 2016 20:29:14 +0800
+> > > Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
+> > >  
+> > >> ==============
+> > >>   Introduction
+> > >> ==============
+> > >>
+> > >> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+> > >> Mediatek Video Codec is able to handle video decoding of in a range of formats.
+> > >>
+> > >> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
+> > >> V4L2_PIX_FMT_MT21 format.
+> > >>
+> > >> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
+> > >> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
+> > >> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
+> > >>
+> > >> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
+> > >>
+> > >> [1]https://patchwork.linuxtv.org/patch/33734/
+> > >> [2]https://chromium-review.googlesource.com/#/c/245241/  
+> > >
+> > > Hmm... I'm not seeing the firmware for this driver at the
+> > > linux-firmware tree:
+> > > 	https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
+> > >
+> > > Nor I'm seeing any pull request for them. Did you send it?
+> > > I'll only merge the driver upstream after seeing such pull request.  
+> >   
+> Sorry, I am not familiar with how to upstream firmware.
+> Do you mean we need to upstream vpu firmware first before merge encoder
+> driver upstream?
+
+Please look at this page:
+	https://linuxtv.org/wiki/index.php/Development:_How_to_submit_patches#Firmware_submission
+
+The information here can also be useful:
+	https://www.kernel.org/doc/readme/firmware-README.AddingFirmware
+
+In summary, you need to provide redistribution rights for the
+firmware blob. You can either submit it to me or directly to
+linux-firmware. In the latter, please c/c me on such patch.
+
+Thanks!
+Mauro
+
+> 
+> In
+> https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/tree/README, it mentions that 
+> "To submit firmware to this repository, please send either a git binary
+> diff or preferably a git pull request to: linux-firmware@kernel.org and
+> also cc: to related mailing lists."
+> 
+> How we made a git pull request to linux-firmware@kernel.org? 
+> How we find out related mailing lists?
+> 
+> best regards,
+> Tiffany
+> 
+> > Mauro, are you confusing the decoder and encoder driver? I haven't thoroughly reviewed the decoder driver
+> > yet, so there is no pull request for the decoder driver.
+> > 
+> > The only pull request I made was for the encoder driver.
+> > 
+> > Regards,
+> > 
+> > 	Hans  
+> 
+> 
+
+
+-- 
+Thanks,
+Mauro
