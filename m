@@ -1,99 +1,36 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 2/4] mfd: cros_ec: add EC_PWM function definitions
-Date: Thu, 16 Jun 2016 08:51:45 -0700
-Message-ID: <CAD=FV=X8eOQLbdAseL2_JwpOFNjSLDAi9hX=NrE=CfrrTZfAmA@mail.gmail.com>
-References: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
- <1464916904-37554-3-git-send-email-briannorris@chromium.org> <20160616153817.GD21702@dell>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC 2/6] ASoC: samsung: Add DT bindings documentation for
+ LPASS
+Date: Thu, 16 Jun 2016 18:13:14 +0200
+Message-ID: <5762D01A.2050802@samsung.com>
+References: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
+ <1465815160-28504-3-git-send-email-s.nawrocki@samsung.com>
+ <20160614232856.GA3240@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20160616153817.GD21702@dell>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Brian Norris <briannorris@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20160614232856.GA3240@rob-hp-laptop>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, ideal.song@samsung.com, beomho.seo@samsung.com, inki.dae@samsung.com, k.kozlowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Lee,
+On 06/15/2016 01:28 AM, Rob Herring wrote:
+> On Mon, Jun 13, 2016 at 12:52:36PM +0200, Sylwester Nawrocki wrote:
+>> > This patch add documentation of the DT bindings for the Samsung
+>> > Exynos SoC Low Power Audio Subsystem.
+>> > 
+>> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> > ---
+>> >  .../devicetree/bindings/sound/samsung,exynos5433-lpass.txt        | 8 ++++++++
+>> >  1 file changed, 8 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/sound/samsung,exynos5433-lpass.txt
+> Seems kind of incomplete, but for what's here:
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-On Thu, Jun 16, 2016 at 8:38 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Thu, 02 Jun 2016, Brian Norris wrote:
->
->> The EC_CMD_PWM_{GET,SET}_DUTY commands allow us to control a PWM that is
->> attached to the EC, rather than the main host SoC. The API provides
->> functionality-based (e.g., keyboard light, backlight) or index-based
->> addressing of the PWM(s). Duty cycles are represented by a 16-bit value,
->> where 0 maps to 0% duty cycle and U16_MAX maps to 100%. The period
->> cannot be controlled.
->>
->> This command set is more generic than, e.g.,
->> EC_CMD_PWM_{GET,SET}_KEYBOARD_BACKLIGHT and could possibly used to
->> replace it on future products.
->>
->> Let's update the command header to include the definitions.
->>
->> Signed-off-by: Brian Norris <briannorris@chromium.org>
->> ---
->> v2: no change
->>
->>  include/linux/mfd/cros_ec_commands.h | 31 +++++++++++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>
->> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
->> index 13b630c10d4c..d673575e0ada 100644
->> --- a/include/linux/mfd/cros_ec_commands.h
->> +++ b/include/linux/mfd/cros_ec_commands.h
->> @@ -949,6 +949,37 @@ struct ec_params_pwm_set_fan_duty {
->>       uint32_t percent;
->>  } __packed;
->>
->> +#define EC_CMD_PWM_SET_DUTY 0x25
->> +/* 16 bit duty cycle, 65535 = 100% */
->> +#define EC_PWM_MAX_DUTY 65535
->
-> Any reason this isn't represented in hex, like we do normally?
->
->> +enum ec_pwm_type {
->> +     /* All types, indexed by board-specific enum pwm_channel */
->> +     EC_PWM_TYPE_GENERIC = 0,
->> +     /* Keyboard backlight */
->> +     EC_PWM_TYPE_KB_LIGHT,
->> +     /* Display backlight */
->> +     EC_PWM_TYPE_DISPLAY_LIGHT,
->> +     EC_PWM_TYPE_COUNT,
->> +};
->
-> Are these comments really necessary?  I'd recommend that if your
-> defines require comments, then they are not adequately named.  In this
-> case however, I'd suggest that they are and the comments are
-> superfluous.
->
->> +struct ec_params_pwm_set_duty {
->> +     uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY = 100% */
->> +     uint8_t pwm_type;  /* ec_pwm_type */
->> +     uint8_t index;     /* Type-specific index, or 0 if unique */
->> +} __packed;
->
-> Please use kerneldoc format.
->
->> +#define EC_CMD_PWM_GET_DUTY 0x26
->> +
->> +struct ec_params_pwm_get_duty {
->> +     uint8_t pwm_type;  /* ec_pwm_type */
->> +     uint8_t index;     /* Type-specific index, or 0 if unique */
->> +} __packed;
-
-Probably the reason for all of these non-kernel-isms is that this
-isn't a kernel file.  From the top of the file:
-
- * NOTE: This file is copied verbatim from the ChromeOS EC Open Source
- * project in an attempt to make future updates easy to make.
-
-So the source of truth for this file is
-<https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h>.
-
-Someone could probably submit a CL to that project to make it a little
-more kernel-ish and then we'd have to see if the EC team would accept
-such changes...
-
-
--Doug
+Thanks, it's indeed a bit incomplete. Most of the functionality is
+already covered by existing bindings of sub-IPs like I2S, DMAC, UART.
+I'd expect more detailed binding be specified for newer SoCs and that
+would be a different compatible string.
