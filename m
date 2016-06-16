@@ -1,243 +1,363 @@
-From: Mathieu Malaterre <mathieu.malaterre@gmail.com>
-Subject: Re: [PATCH v2] of: fix memory leak related to safe_name()
-Date: Thu, 16 Jun 2016 09:51:41 +0200
-Message-ID: <CA+7wUsz0OnOHVyGTE=nzAbCi_GbmLvU-Q4wQHjs=SOLRUB4E5w@mail.gmail.com>
-References: <5761BDAD.3060107@gmail.com> <CA+7wUszph+weTn=bu24d6YdkChOk39ae_dOkQXJQxykkQH0PNg@mail.gmail.com>
+From: Marcin Niestroj <m.niestroj@grinn-global.com>
+Subject: Re: [PATCH v2 1/5] mfd: tps65217: Add support for IRQs
+Date: Thu, 16 Jun 2016 09:55:21 +0200
+Message-ID: <a0bf75c0-26cf-e351-0046-a5f4d3303c29@grinn-global.com>
+References: <20160614132927.3309-1-m.niestroj@grinn-global.com>
+ <20160614132927.3309-2-m.niestroj@grinn-global.com>
+ <20160615151358.GL4948@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+7wUszph+weTn=bu24d6YdkChOk39ae_dOkQXJQxykkQH0PNg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160615151358.GL4948@dell>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry, symptoms not solved. According to kmemleak, I have now:
+Hi,
 
-[  661.323100] kmemleak: 100 new suspected memory leaks (see
-/sys/kernel/debug/kmemleak)
-[ 1260.226120] kmemleak: 1 new suspected memory leaks (see
-/sys/kernel/debug/kmemleak)
-
-# head -40 /sys/kernel/debug/kmemleak
-unreferenced object 0xdf5326a0 (size 32):
-  comm "swapper", pid 1, jiffies 4294892300 (age 2564.708s)
-  hex dump (first 32 bytes):
-    62 61 73 65 00 00 4c d8 c5 78 df dc cc 43 e4 bc  base..L..x...C..
-    c4 c8 ec 8c ee de ce cf e8 c9 8a ea dc cc c6 fd  ................
-  backtrace:
-    [<c014d4d8>] kstrdup+0x48/0x88
-    [<c0454678>] __of_attach_node_sysfs+0xf0/0x100
-    [<c075f21c>] of_core_init+0x8c/0xf8
-    [<c0729594>] kernel_init_freeable+0xd4/0x208
-    [<c00047e8>] kernel_init+0x24/0x11c
-    [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
-unreferenced object 0xdf532240 (size 32):
-  comm "swapper", pid 1, jiffies 4294892300 (age 2564.708s)
-  hex dump (first 32 bytes):
-    63 70 75 73 00 68 65 2d 73 69 7a 65 00 c6 dc ac  cpus.he-size....
-    ac 6f 48 ec ec 99 86 78 ac eb c9 ac 4c 4c ee db  .oH....x....LL..
-  backtrace:
-    [<c014d4d8>] kstrdup+0x48/0x88
-    [<c04545f4>] __of_attach_node_sysfs+0x6c/0x100
-    [<c075f21c>] of_core_init+0x8c/0xf8
-    [<c0729594>] kernel_init_freeable+0xd4/0x208
-    [<c00047e8>] kernel_init+0x24/0x11c
-    [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
-unreferenced object 0xdf5320a0 (size 32):
-  comm "swapper", pid 1, jiffies 4294892300 (age 2564.708s)
-  hex dump (first 32 bytes):
-    50 6f 77 65 72 50 43 2c 47 34 40 30 00 4f 5c 5c  PowerPC,G4@0.O\\
-    c4 4d c0 d8 0e ec ed cc 9e cc 4d ce a8 2c cc c6  .M........M..,..
-  backtrace:
-    [<c014d4d8>] kstrdup+0x48/0x88
-    [<c04545f4>] __of_attach_node_sysfs+0x6c/0x100
-    [<c075f21c>] of_core_init+0x8c/0xf8
-    [<c0729594>] kernel_init_freeable+0xd4/0x208
-    [<c00047e8>] kernel_init+0x24/0x11c
-    [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
-unreferenced object 0xdf5586c0 (size 32):
-  comm "swapper", pid 1, jiffies 4294892300 (age 2564.708s)
-  hex dump (first 32 bytes):
-    6c 32 2d 63 61 63 68 65 23 31 00 ac c0 21 02 f4  l2-cache#1...!..
-
-
-On Thu, Jun 16, 2016 at 9:15 AM, Mathieu Malaterre
-<mathieu.malaterre@gmail.com> wrote:
-> I only tested v2. I confirm this solve the symptoms I was seeing in
-> the bug report.
+On 15.06.2016 17:13, Lee Jones wrote:
+> On Tue, 14 Jun 2016, Marcin Niestroj wrote:
 >
-> Tested-by: Mathieu Malaterre <mathieu.malaterre@gmail.com>
->
-> thanks, your patch is actually much cleaner!
->
-> On Wed, Jun 15, 2016 at 10:42 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->> From: Frank Rowand <frank.rowand@am.sony.com>
+>> Add support for handling IRQs: power button, AC and USB power state
+>> changes. Mask and interrupt bits are shared within one register, which
+>> prevents us to use regmap_irq implementation. New irq_domain is created in
+>> order to add interrupt handling for each tps65217's subsystem. IRQ
+>> resources have been added for charger subsystem to be able to notify about
+>> AC and USB state changes.
 >>
->> Fix a memory leak resulting from memory allocation in safe_name().
->> This patch fixes all call sites of safe_name().
->>
->> Mathieu Malaterre reported the memory leak on boot:
->>
->> On my PowerMac device-tree would generate a duplicate name:
->>
->> [    0.023043] device-tree: Duplicate name in PowerPC,G4@0, renamed to "l2-cache#1"
->>
->> in this case a newly allocated name is generated by `safe_name`. However
->> in this case it is never deallocated.
->>
->> The bug was found using kmemleak reported as:
->>
->> unreferenced object 0xdf532e60 (size 32):
->>   comm "swapper", pid 1, jiffies 4294892300 (age 1993.532s)
->>   hex dump (first 32 bytes):
->>     6c 32 2d 63 61 63 68 65 23 31 00 dd e4 dd 1e c2  l2-cache#1......
->>     ec d4 ba ce 04 ec cc de 8e 85 e9 ca c4 ec cc 9e  ................
->>   backtrace:
->>     [<c02d3350>] kvasprintf+0x64/0xc8
->>     [<c02d3400>] kasprintf+0x4c/0x5c
->>     [<c0453814>] safe_name.isra.1+0x80/0xc4
->>     [<c04545d8>] __of_attach_node_sysfs+0x6c/0x11c
->>     [<c075f21c>] of_core_init+0x8c/0xf8
->>     [<c0729594>] kernel_init_freeable+0xd4/0x208
->>     [<c00047e8>] kernel_init+0x24/0x11c
->>     [<c00158ec>] ret_from_kernel_thread+0x5c/0x64
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=120331
->>
->> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
->> Reported-by: mathieu.malaterre@gmail.com
+>> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
 >> ---
+>>  drivers/mfd/Kconfig          |   1 +
+>>  drivers/mfd/tps65217.c       | 182 ++++++++++++++++++++++++++++++++++++++++++-
+>>  include/linux/mfd/tps65217.h |  11 +++
+>>  3 files changed, 192 insertions(+), 2 deletions(-)
 >>
->> changes from v1
->>   Move the prototype of __of_sysfs_remove_bin_file() into of_private.h
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 1bcf601..f8c9580 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -1200,6 +1200,7 @@ config MFD_TPS65217
+>>  	depends on I2C
+>>  	select MFD_CORE
+>>  	select REGMAP_I2C
+>> +	select IRQ_DOMAIN
+>>  	help
+>>  	  If you say yes here you get support for the TPS65217 series of
+>>  	  Power Management / White LED chips.
+>> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
+>> index 049a6fc..d49f94e 100644
+>> --- a/drivers/mfd/tps65217.c
+>> +++ b/drivers/mfd/tps65217.c
+>> @@ -23,6 +23,9 @@
+>>  #include <linux/i2c.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/regmap.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/irqdomain.h>
+>
+> Header includes should be alphabetical.
+>
+> Please take the opportunity to recorder them.
+
+Ok, will do that.
+
+>
+>>  #include <linux/err.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_device.h>
+>> @@ -30,7 +33,81 @@
+>>  #include <linux/mfd/core.h>
+>>  #include <linux/mfd/tps65217.h>
 >>
->>  drivers/of/base.c       |   29 ++++++++++++++++++++---------
->>  drivers/of/dynamic.c    |    2 +-
->>  drivers/of/of_private.h |    3 +++
->>  3 files changed, 24 insertions(+), 10 deletions(-)
->>
->> Index: b/drivers/of/base.c
->> ===================================================================
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -112,6 +112,7 @@ static ssize_t of_node_property_read(str
->>         return memory_read_from_buffer(buf, count, &offset, pp->value, pp->length);
->>  }
->>
->> +/* always return newly allocated name, caller must free after use */
->>  static const char *safe_name(struct kobject *kobj, const char *orig_name)
->>  {
->>         const char *name = orig_name;
->> @@ -126,9 +127,12 @@ static const char *safe_name(struct kobj
->>                 name = kasprintf(GFP_KERNEL, "%s#%i", orig_name, ++i);
->>         }
->>
->> -       if (name != orig_name)
->> +       if (name == orig_name) {
->> +               name = kstrdup(orig_name, GFP_KERNEL);
->> +       } else {
->>                 pr_warn("device-tree: Duplicate name in %s, renamed to \"%s\"\n",
->>                         kobject_name(kobj), name);
->> +       }
->>         return name;
->>  }
->>
->> @@ -159,6 +163,7 @@ int __of_add_property_sysfs(struct devic
->>  int __of_attach_node_sysfs(struct device_node *np)
->>  {
->>         const char *name;
->> +       struct kobject *parent;
->>         struct property *pp;
->>         int rc;
->>
->> @@ -171,15 +176,15 @@ int __of_attach_node_sysfs(struct device
->>         np->kobj.kset = of_kset;
->>         if (!np->parent) {
->>                 /* Nodes without parents are new top level trees */
->> -               rc = kobject_add(&np->kobj, NULL, "%s",
->> -                                safe_name(&of_kset->kobj, "base"));
->> +               name = safe_name(&of_kset->kobj, "base");
->> +               parent = NULL;
->>         } else {
->>                 name = safe_name(&np->parent->kobj, kbasename(np->full_name));
->> -               if (!name || !name[0])
->> -                       return -EINVAL;
->> -
->> -               rc = kobject_add(&np->kobj, &np->parent->kobj, "%s", name);
->> +               parent = &np->parent->kobj;
->>         }
->> +       if (!name)
->> +               return -ENOMEM;
->> +       rc = kobject_add(&np->kobj, parent, "%s", name);
->>         if (rc)
->>                 return rc;
->>
->> @@ -1815,6 +1820,12 @@ int __of_remove_property(struct device_n
->>         return 0;
->>  }
->>
->> +void __of_sysfs_remove_bin_file(struct device_node *np, struct property *prop)
+>> -static const struct mfd_cell tps65217s[] = {
+>> +static struct resource charger_resources[] = {
+>> +	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_AC, "AC"),
+>> +	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
+>> +};
+>> +
+>> +struct tps65217_irq {
+>> +	int mask;
+>> +	int interrupt;
+>> +};
+>> +
+>> +static const struct tps65217_irq tps65217_irqs[] = {
+>
+> Not sure how this compiles, since you have this struct and the enums
+> in the header named the same.  Better to differentiate between them.
+
+I think that in C these two names are in different namespaces. The name
+in the header is just a enum tag name, but tps65217_irqs object here is
+an ordinary identifier. Similarly we use "struct regmap *regmap;"
+declaration in other places in the kernel.
+I also tried to be consistent with other drivers: tps65218, tps65086,
+tps65912.
+
+Please confirm if I should change these names.
+
+>
+>> +	[TPS65217_IRQ_PB] = {
+>> +		.mask = TPS65217_INT_PBM,
+>> +		.interrupt = TPS65217_INT_PBI,
+>> +	},
+>> +	[TPS65217_IRQ_AC] = {
+>> +		.mask = TPS65217_INT_ACM,
+>> +		.interrupt = TPS65217_INT_ACI,
+>> +	},
+>> +	[TPS65217_IRQ_USB] = {
+>> +		.mask = TPS65217_INT_USBM,
+>> +		.interrupt = TPS65217_INT_USBI,
+>> +	},
+>> +};
+>> +
+>> +static void tps65217_irq_lock(struct irq_data *data)
 >> +{
->> +       sysfs_remove_bin_file(&np->kobj, &prop->attr);
->> +       kfree(prop->attr.attr.name);
+>> +	struct tps65217 *tps = irq_data_get_irq_chip_data(data);
+>> +
+>> +	mutex_lock(&tps->irq_lock);
 >> +}
 >> +
->>  void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
->>  {
->>         if (!IS_ENABLED(CONFIG_SYSFS))
->> @@ -1822,7 +1833,7 @@ void __of_remove_property_sysfs(struct d
->>
->>         /* at early boot, bail here and defer setup to of_init() */
->>         if (of_kset && of_node_is_attached(np))
->> -               sysfs_remove_bin_file(&np->kobj, &prop->attr);
->> +               __of_sysfs_remove_bin_file(np, prop);
->>  }
->>
->>  /**
->> @@ -1895,7 +1906,7 @@ void __of_update_property_sysfs(struct d
->>                 return;
->>
->>         if (oldprop)
->> -               sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
->> +               __of_sysfs_remove_bin_file(np, oldprop);
->>         __of_add_property_sysfs(np, newprop);
->>  }
->>
->> Index: b/drivers/of/dynamic.c
->> ===================================================================
->> --- a/drivers/of/dynamic.c
->> +++ b/drivers/of/dynamic.c
->> @@ -55,7 +55,7 @@ void __of_detach_node_sysfs(struct devic
->>         /* only remove properties if on sysfs */
->>         if (of_node_is_attached(np)) {
->>                 for_each_property_of_node(np, pp)
->> -                       sysfs_remove_bin_file(&np->kobj, &pp->attr);
->> +                       __of_sysfs_remove_bin_file(np, pp);
->>                 kobject_del(&np->kobj);
->>         }
->>
->> Index: b/drivers/of/of_private.h
->> ===================================================================
->> --- a/drivers/of/of_private.h
->> +++ b/drivers/of/of_private.h
->> @@ -83,6 +83,9 @@ extern int __of_attach_node_sysfs(struct
->>  extern void __of_detach_node(struct device_node *np);
->>  extern void __of_detach_node_sysfs(struct device_node *np);
->>
->> +extern void __of_sysfs_remove_bin_file(struct device_node *np,
->> +                                      struct property *prop);
+>> +static void tps65217_irq_sync_unlock(struct irq_data *data)
+>> +{
+>> +	struct tps65217 *tps = irq_data_get_irq_chip_data(data);
+>> +	int ret;
 >> +
->>  /* iterators for transactions, used for overlays */
->>  /* forward iterator */
->>  #define for_each_transaction_entry(_oft, _te) \
+>> +	ret = tps65217_reg_write(tps, TPS65217_REG_INT, tps->irq_mask,
+>> +				TPS65217_PROTECT_NONE);
+>> +	if (ret != 0)
+>> +		dev_err(tps->dev, "Failed to sync IRQ masks\n");
+>> +
+>> +	mutex_unlock(&tps->irq_lock);
+>> +}
+>> +
+>> +static const inline struct tps65217_irq *
+>> +irq_to_tps65217_irq(struct tps65217 *tps, struct irq_data *data)
+>> +{
+>> +	return &tps65217_irqs[data->hwirq];
+>> +}
+>> +
+>> +static void tps65217_irq_enable(struct irq_data *data)
+>> +{
+>> +	struct tps65217 *tps = irq_data_get_irq_chip_data(data);
+>> +	const struct tps65217_irq *irq_data = irq_to_tps65217_irq(tps, data);
+>> +
+>> +	tps->irq_mask &= ~irq_data->mask;
+>> +}
+>> +
+>> +static void tps65217_irq_disable(struct irq_data *data)
+>> +{
+>> +	struct tps65217 *tps = irq_data_get_irq_chip_data(data);
+>> +	const struct tps65217_irq *irq_data = irq_to_tps65217_irq(tps, data);
+>> +
+>> +	tps->irq_mask |= irq_data->mask;
+>> +}
 >
->
->
-> --
-> Mathieu
+> Nit: Swap this with enable, either here or in the struct below.
 
+Sure
 
+>
+>> +static struct irq_chip tps65217_irq_chip = {
+>> +	.irq_bus_lock		= tps65217_irq_lock,
+>> +	.irq_bus_sync_unlock	= tps65217_irq_sync_unlock,
+>> +	.irq_disable		= tps65217_irq_disable,
+>> +	.irq_enable		= tps65217_irq_enable,
+>> +};
+>> +
+>> +static struct mfd_cell tps65217s[] = {
+>>  	{
+>>  		.name = "tps65217-pmic",
+>>  		.of_compatible = "ti,tps65217-pmic",
+>> @@ -41,10 +118,89 @@ static const struct mfd_cell tps65217s[] = {
+>>  	},
+>>  	{
+>>  		.name = "tps65217-charger",
+>> +		.num_resources = ARRAY_SIZE(charger_resources),
+>> +		.resources = charger_resources,
+>>  		.of_compatible = "ti,tps65217-charger",
+>>  	},
+>>  };
+>>
+>> +static irqreturn_t tps65217_irq_thread(int irq, void *data)
+>> +{
+>> +	struct tps65217 *tps = data;
+>> +	unsigned int status;
+>> +	bool handled = false;
+>> +	int i;
+>> +	int ret;
+>> +
+>> +	ret = tps65217_reg_read(tps, TPS65217_REG_INT, &status);
+>> +	if (ret < 0) {
+>> +		dev_err(tps->dev, "Failed to read IRQ status: %d\n",
+>> +			ret);
+>> +		return IRQ_NONE;
+>> +	}
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(tps65217_irqs); i++) {
+>> +		if (status & tps65217_irqs[i].interrupt) {
+>> +			handle_nested_irq(irq_find_mapping(tps->irq_domain, i));
+>> +			handled = true;
+>> +		}
+>> +	}
+>> +
+>> +	if (handled)
+>> +		return IRQ_HANDLED;
+>> +	else
+>> +		return IRQ_NONE;
+>
+> The else is kinda redundant here.
+>
+> ... and I think it's possible to get a warning saying something about
+> coming to the end of a non-void function.
+
+Will change that in new patch version.
+
+>
+>> +}
+>> +
+>> +static int tps65217_irq_map(struct irq_domain *h, unsigned int virq,
+>> +			irq_hw_number_t hw)
+>> +{
+>> +	struct tps65217 *tps = h->host_data;
+>> +
+>> +	irq_set_chip_data(virq, tps);
+>> +	irq_set_chip_and_handler(virq, &tps65217_irq_chip, handle_edge_irq);
+>> +	irq_set_nested_thread(virq, 1);
+>> +	irq_set_noprobe(virq);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct irq_domain_ops tps65217_irq_domain_ops = {
+>> +	.map = tps65217_irq_map,
+>> +};
+>> +
+>> +static int tps65217_irq_init(struct tps65217 *tps, int irq)
+>> +{
+>> +	int ret;
+>> +
+>> +	mutex_init(&tps->irq_lock);
+>> +
+>> +	/* Mask all interrupt sources */
+>> +	tps->irq_mask = (TPS65217_INT_RESERVEDM | TPS65217_INT_PBM
+>> +			| TPS65217_INT_ACM | TPS65217_INT_USBM);
+>> +	tps65217_reg_write(tps, TPS65217_REG_INT, tps->irq_mask,
+>> +			TPS65217_PROTECT_NONE);
+>> +
+>> +	tps->irq_domain = irq_domain_add_linear(tps->dev->of_node,
+>
+> I think it's suggested that you use *add_simple() these days.
+
+In Documentation/IRQ-domain.txt they are both described.
+*add_simple() is under 'Legacy' section and "It is used when the
+driver cannot be immediately converted to use the linear mapping."
+
+>
+>> +		TPS65217_NUM_IRQ, &tps65217_irq_domain_ops, tps);
+>> +	if (!tps->irq_domain) {
+>> +		dev_err(tps->dev, "Could not create IRQ domain\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	ret = devm_request_threaded_irq(tps->dev, irq, NULL,
+>> +					tps65217_irq_thread,
+>> +					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+>> +					"tps65217-irq", tps);
+>> +	if (ret) {
+>> +		dev_err(tps->dev, "Failed to request IRQ %d: %d\n",
+>> +			irq, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  /**
+>>   * tps65217_reg_read: Read a single tps65217 register.
+>>   *
+>> @@ -149,11 +305,22 @@ int tps65217_clear_bits(struct tps65217 *tps, unsigned int reg,
+>>  }
+>>  EXPORT_SYMBOL_GPL(tps65217_clear_bits);
+>>
+>> +static bool tps65217_volatile_reg(struct device *dev, unsigned int reg)
+>> +{
+>> +	switch (reg) {
+>> +	case TPS65217_REG_INT:
+>> +		return true;
+>> +	default:
+>> +		return false;
+>> +	}
+>> +}
+>> +
+>>  static const struct regmap_config tps65217_regmap_config = {
+>>  	.reg_bits = 8,
+>>  	.val_bits = 8,
+>>
+>>  	.max_register = TPS65217_REG_MAX,
+>> +	.volatile_reg = tps65217_volatile_reg,
+>>  };
+>>
+>>  static const struct of_device_id tps65217_of_match[] = {
+>> @@ -205,8 +372,19 @@ static int tps65217_probe(struct i2c_client *client,
+>>  		return ret;
+>>  	}
+>>
+>> +	if (client->irq) {
+>> +		tps65217_irq_init(tps, client->irq);
+>> +	} else {
+>> +		int i;
+>> +
+>> +		/* Don't tell children about IRQ resources which won't fire */
+>> +		for (i = 0; i < ARRAY_SIZE(tps65217s); i++)
+>> +			tps65217s[i].num_resources = 0;
+>> +	}
+>> +
+>>  	ret = devm_mfd_add_devices(tps->dev, -1, tps65217s,
+>> -				   ARRAY_SIZE(tps65217s), NULL, 0, NULL);
+>> +				   ARRAY_SIZE(tps65217s), NULL, 0,
+>> +				   tps->irq_domain);
+>>  	if (ret < 0) {
+>>  		dev_err(tps->dev, "mfd_add_devices failed: %d\n", ret);
+>>  		return ret;
+>> diff --git a/include/linux/mfd/tps65217.h b/include/linux/mfd/tps65217.h
+>> index ac7fba4..f80a5d3 100644
+>> --- a/include/linux/mfd/tps65217.h
+>> +++ b/include/linux/mfd/tps65217.h
+>> @@ -73,6 +73,7 @@
+>>  #define TPS65217_PPATH_AC_CURRENT_MASK	0x0C
+>>  #define TPS65217_PPATH_USB_CURRENT_MASK	0x03
+>>
+>> +#define TPS65217_INT_RESERVEDM		BIT(7)
+>>  #define TPS65217_INT_PBM		BIT(6)
+>>  #define TPS65217_INT_ACM		BIT(5)
+>>  #define TPS65217_INT_USBM		BIT(4)
+>> @@ -233,6 +234,13 @@ struct tps65217_bl_pdata {
+>>  	int dft_brightness;
+>>  };
+>>
+>> +enum tps65217_irqs {
+>> +	TPS65217_IRQ_PB,
+>> +	TPS65217_IRQ_AC,
+>> +	TPS65217_IRQ_USB,
+>> +	TPS65217_NUM_IRQ
+>> +};
+>> +
+>>  /**
+>>   * struct tps65217_board - packages regulator init data
+>>   * @tps65217_regulator_data: regulator initialization values
+>> @@ -257,6 +265,9 @@ struct tps65217 {
+>>  	unsigned long id;
+>>  	struct regulator_desc desc[TPS65217_NUM_REGULATOR];
+>>  	struct regmap *regmap;
+>> +	struct irq_domain *irq_domain;
+>> +	struct mutex irq_lock;
+>> +	u8 irq_mask;
+>>  };
+>>
+>>  static inline struct tps65217 *dev_to_tps65217(struct device *dev)
+>
 
 -- 
-Mathieu
+Marcin Niestroj
