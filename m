@@ -1,82 +1,89 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt documentation for
- Rockchip PCIe PHY
-Date: Thu, 16 Jun 2016 13:46:32 -0500
-Message-ID: <20160616184632.GA1112@rob-hp-laptop>
-References: <1465865072-25833-1-git-send-email-shawn.lin@rock-chips.com>
- <CAD=FV=Ubm8goQ4J=T11mWmAZrP+J7YYWdxACGjAhdsONyzPdKQ@mail.gmail.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv3 4/7] Documentation: dt: socfpga: Add Arria10 Ethernet
+ binding
+Date: Thu, 16 Jun 2016 14:12:29 -0500
+Message-ID: <5762FA1D.7020606@opensource.altera.com>
+References: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
+ <1465852752-11018-5-git-send-email-tthayer@opensource.altera.com>
+ <20160616183953.GA6667@rob-hp-laptop>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=Ubm8goQ4J=T11mWmAZrP+J7YYWdxACGjAhdsONyzPdKQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160616183953.GA6667@rob-hp-laptop>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 10:27:46AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Mon, Jun 13, 2016 at 5:44 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> > This patch adds a binding that describes the Rockchip PCIe PHY
-> > found on Rockchip SoCs PCIe interface.
-> >
-> > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> >
-> > ---
-> >
-> > Changes in v2:
-> > - add clk and reset description
-> > - remove unit-address
-> >
-> >  .../devicetree/bindings/phy/rockchip-pcie-phy.txt  | 32 ++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-> > new file mode 100644
-> > index 0000000..ad55c67
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-> > @@ -0,0 +1,32 @@
-> > +Rockchip PCIE PHY
-> > +-----------------------
-> > +
-> > +Required properties:
-> > + - compatible: rockchip,rk3399-pcie-phy
-> > + - #phy-cells: must be 0
-> > + - clocks: Must contain an entry in clock-names.
-> > +       See ../clocks/clock-bindings.txt for details.
-> > + - clock-names: Must be "refclk"
-> > + - resets: Must contain an entry in reset-names.
-> > +       See ../reset/reset.txt for details.
-> > + - reset-names: Must be "phy"
-> > +
-> > +Example:
-> > +
-> > +grf: syscon@ff770000 {
-> > +       compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-> > +       #address-cells = <1>;
-> > +       #size-cells = <1>;
-> > +
-> > +       ...
-> > +
-> > +       pcie-phy: phy {
-> 
-> Just calling this node "phy" isn't a good idea.  There will be
-> multiple PHYs under the GRF and they can't all have a subnode named
-> "phy".
+Hi Rob,
 
-There's no register range that can be associated with the phy?
-> 
-> Also: at least in Rockchip device trees usually aliases use
-> underscores whereas node names use dashes.  I'm not actually sure what
-> the official device tree policy is on this, but it's what I've seen
-> done.  So this should actually be:
+On 06/16/2016 01:39 PM, Rob Herring wrote:
+> On Mon, Jun 13, 2016 at 04:19:09PM -0500, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> Add the device tree bindings needed to support the Altera Ethernet
+>> FIFO buffers on the Arria10 chip.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>> ---
+>> v2  No Change
+>> v3  Change to common compatible string based on maintainer comments
+>>      Add local IRQ values.
+>> ---
+>>   .../bindings/arm/altera/socfpga-eccmgr.txt         |   24 ++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+>> index 15eb0df..e9febbb 100644
+>> --- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+>> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+>> @@ -82,6 +82,14 @@ Required Properties:
+>>   - interrupts : Should be single bit error interrupt, then double bit error
+>>   	interrupt, in this order.
+>>
+>> +Ethernet FIFO ECC
+>> +Required Properties:
+>> +- compatible : Should be "altr,socfpga-eth-mac-ecc"
+>> +- reg        : Address and size for ECC block registers.
+>>
+>
+> parent is too vague. How about altr,ethernet-mac.
+>
+OK. I'll change to this.
 
-Labels don't matter as they don't end up in the dtb. Node names should 
-be generic. though we've only defined a small set of generic names. And 
-yes, use '-' not '_'.
++- parent     : phandle to parent altr,ethernet-mac node
 
-Rob
+Thanks for reviewing!
+
+>> +- interrupts : Should be single bit error interrupt, then double bit error
+>> +	interrupt, in this order.
+>> +
+>>   Example:
+>>
+>>   	eccmgr: eccmgr@ffd06000 {
+>> @@ -108,4 +116,20 @@ Example:
+>>   			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>,
+>>   				     <33 IRQ_TYPE_LEVEL_HIGH> ;
+>>   		};
+>> +
+>> +		emac0-rx-ecc@ff8c0800 {
+>> +			compatible = "altr,socfpga-eth-mac-ecc";
+>> +			reg = <0xff8c0800 0x400>;
+>> +			parent = <&gmac0>;
+>> +			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <36 IRQ_TYPE_LEVEL_HIGH>;
+>> +		};
+>> +
+>> +		emac0-tx-ecc@ff8c0c00 {
+>> +			compatible = "altr,socfpga-eth-mac-ecc";
+>> +			reg = <0xff8c0c00 0x400>;
+>> +			parent = <&gmac0>;
+>> +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <37 IRQ_TYPE_LEVEL_HIGH>;
+>> +		};
+>>   	};
+>> --
+>> 1.7.9.5
+>>
