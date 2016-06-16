@@ -1,178 +1,138 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] mfd: twl6040: Handle mclk used for HPPLL and optional
- internal clock source
-Date: Thu, 16 Jun 2016 16:16:58 +0100
-Message-ID: <20160616151658.GA21702@dell>
-References: <1462965209-6955-1-git-send-email-peter.ujfalusi@ti.com>
+From: Kever Yang <ellisys-9Onoh4P/yGk@public.gmane.org>
+Subject: Re: [v2 PATCH 1/4] Documentation: bindings: add dt doc for Rockchip
+ USB Type-C PHY
+Date: Thu, 16 Jun 2016 20:43:33 +0800
+Message-ID: <57629EF5.2050508@163.com>
+References: <1465810789-22303-1-git-send-email-zyw@rock-chips.com>
+ <1465810789-22303-2-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462965209-6955-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1465810789-22303-2-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 May 2016, Peter Ujfalusi wrote:
+Hi Chris,
 
-> On some boards, like omap5-uevm the MCLK is gated by default and in o=
-rder
-> to be able to use the High performance modes of twl6040 it need to be
-> enabled by SW.
-> Add support for handling the MCLK source clock via CCF.
-> At the same time lover the print priority of the notification that th=
-e 32K
-
-Mr Lover Lover!
-
-> clock is not proveded so it is not going to be handled by the driver.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On 06/13/2016 05:39 PM, Chris Zhong wrote:
+> This patch adds a binding that describes the Rockchip USB Type-C PHY
+> for rk3399
+>
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
 > ---
->  Documentation/devicetree/bindings/mfd/twl6040.txt |  4 +--
->  drivers/mfd/twl6040.c                             | 34 +++++++++++++=
-++++------
->  include/linux/mfd/twl6040.h                       |  3 +-
->  3 files changed, 29 insertions(+), 12 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Docu=
-mentation/devicetree/bindings/mfd/twl6040.txt
-> index a41157b5d930..e6afdfa3543d 100644
-> --- a/Documentation/devicetree/bindings/mfd/twl6040.txt
-> +++ b/Documentation/devicetree/bindings/mfd/twl6040.txt
-> @@ -19,8 +19,8 @@ Required properties:
-> =20
->  Optional properties, nodes:
->  - enable-active-high: To power on the twl6040 during boot.
-> -- clocks: phandle to the clk32k clock provider
-> -- clock-names: Must be "clk32k"
-> +- clocks: phandle to the clk32k and/or to mclk clock provider
-> +- clock-names: Must be "clk32k" for the 32K clock and "mclk" for the=
- MCLK.
-> =20
->  Vibra functionality
->  Required properties:
-> diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
-> index 852d5874aabb..f3dcf3a85e84 100644
-> --- a/drivers/mfd/twl6040.c
-> +++ b/drivers/mfd/twl6040.c
-> @@ -291,7 +291,7 @@ int twl6040_power(struct twl6040 *twl6040, int on=
-)
->  		if (twl6040->power_count++)
->  			goto out;
-> =20
-> -		ret =3D clk_prepare_enable(twl6040->clk32k);
-> +		ret =3D clk_prepare_enable(twl6040->clk32k_clk);
->  		if (ret) {
->  			twl6040->power_count =3D 0;
->  			goto out;
-> @@ -304,7 +304,7 @@ int twl6040_power(struct twl6040 *twl6040, int on=
-)
->  			/* use automatic power-up sequence */
->  			ret =3D twl6040_power_up_automatic(twl6040);
->  			if (ret) {
-> -				clk_disable_unprepare(twl6040->clk32k);
-> +				clk_disable_unprepare(twl6040->clk32k_clk);
->  				twl6040->power_count =3D 0;
->  				goto out;
->  			}
-> @@ -312,7 +312,7 @@ int twl6040_power(struct twl6040 *twl6040, int on=
-)
->  			/* use manual power-up sequence */
->  			ret =3D twl6040_power_up_manual(twl6040);
->  			if (ret) {
-> -				clk_disable_unprepare(twl6040->clk32k);
-> +				clk_disable_unprepare(twl6040->clk32k_clk);
->  				twl6040->power_count =3D 0;
->  				goto out;
->  			}
-> @@ -355,7 +355,10 @@ int twl6040_power(struct twl6040 *twl6040, int o=
-n)
->  		twl6040->sysclk =3D 0;
->  		twl6040->mclk =3D 0;
-> =20
-> -		clk_disable_unprepare(twl6040->clk32k);
-> +		if (twl6040->pll =3D=3D TWL6040_SYSCLK_SEL_HPPLL)
-> +			clk_disable_unprepare(twl6040->mclk_clk);
+>
+> Changes in v2:
+> - add some registers description
+>
+> Changes in v1:
+> - add extcon node description
+> - move the registers in phy driver
+> - remove the suffix of reset
+>
+>   .../devicetree/bindings/phy/phy-rockchip-typec.txt | 77 ++++++++++++++++++++++
+>   1 file changed, 77 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> new file mode 100644
+> index 0000000..430920c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> @@ -0,0 +1,77 @@
+> +* ROCKCHIP type-c PHY
+> +---------------------
 > +
-> +		clk_disable_unprepare(twl6040->clk32k_clk);
->  	}
-> =20
->  out:
-> @@ -427,6 +430,8 @@ int twl6040_set_pll(struct twl6040 *twl6040, int =
-pll_id,
->  			ret =3D -EINVAL;
->  			goto pll_out;
->  		}
+> +Required properties:
+> + - compatible : should be "rockchip,rk3399-typec-phy0" or
+> +			 "rockchip,rk3399-typec-phy1"
+should be "rockchip,rk3399-typec-phy"
+> + - reg: Address and length of the usb phy control register set
+> + - rockchip,grf : phandle to the syscon managing the "general
+> +   register files"
+> + - clocks : phandle + clock specifier for the phy clocks
+> + - clock-names : string, clock name, must be "tcpdcore", "tcpdphy_ref";
+> + - resets : a list of phandle + reset specifier pairs
+> + - reset-names : string reset name, must be:
+> +		 "tcphy", "tcphy_pipe", "uphy_tcphy"
+> + - #phy-cells : Must be 0.  See ./phy-bindings.txt for details.
+> + - extcon : extcon specifier for the Power Delivery
 > +
-> +		clk_disable_unprepare(twl6040->mclk_clk);
->  		break;
->  	case TWL6040_SYSCLK_SEL_HPPLL:
->  		/* high-performance PLL can provide only 19.2 MHz */
-> @@ -468,6 +473,9 @@ int twl6040_set_pll(struct twl6040 *twl6040, int =
-pll_id,
->  				goto pll_out;
->  			}
-> =20
-> +			/* When switching to HPPLL, enable the mclk first */
-> +			if (pll_id !=3D twl6040->pll)
-> +				clk_prepare_enable(twl6040->mclk_clk);
->  			/*
->  			 * enable clock slicer to ensure input waveform is
->  			 * square
-> @@ -651,12 +659,20 @@ static int twl6040_probe(struct i2c_client *cli=
-ent,
-> =20
->  	i2c_set_clientdata(client, twl6040);
-> =20
-> -	twl6040->clk32k =3D devm_clk_get(&client->dev, "clk32k");
-> -	if (IS_ERR(twl6040->clk32k)) {
-> -		if (PTR_ERR(twl6040->clk32k) =3D=3D -EPROBE_DEFER)
-> +	twl6040->clk32k_clk =3D devm_clk_get(&client->dev, "clk32k");
-> +	if (IS_ERR(twl6040->clk32k_clk)) {
-> +		if (PTR_ERR(twl6040->clk32k_clk) =3D=3D -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		dev_dbg(&client->dev, "clk32k is not handled\n");
-> +		twl6040->clk32k_clk =3D NULL;
-> +	}
+> +Note, there are 2 type-c phys for RK3399, and they are almost identical, except
+> +these registers(description below), every register node contains 3 sections:
+> +offset, enable bit, write mask bit.
+> + - rockchip,typec_conn_dir : the register of type-c connector direction,
+> +   for type-c phy0, it must be <0xe580 0 16>;
+> +   for type-c phy1, it must be <0xe58c 0 16>;
+> + - rockchip,usb3tousb2_en : the register of type-c force usb3 to usb2 enable
+> +   control.
+> +   for type-c phy0, it must be <0xe580 3 19>;
+> +   for type-c phy1, it must be <0xe58c 3 19>;
+> + - rockchip,external_psm : the register of type-c phy external psm clock
+> +   selection.
+> +   for type-c phy0, it must be <0xe588 14 30>;
+> +   for type-c phy1, it must be <0xe594 14 30>;
+> + - rockchip,pipe_status : the register of type-c phy pipe status.
+> +   for type-c phy0, it must be <0xe5c0 0 0>;
+> +   for type-c phy1, it must be <0xe5c0 16 16>;
+> + - rockchip,uphy_dp_sel : the register of type-c phy selection for DP
+> +   for type-c phy0, it must be <0x6268 19 19>;
+> +   for type-c phy1, it must be <0x6268 3 19>;
 > +
-> +	twl6040->mclk_clk =3D devm_clk_get(&client->dev, "mclk");
-> +	if (IS_ERR(twl6040->mclk_clk)) {
-> +		if (PTR_ERR(twl6040->mclk_clk) =3D=3D -EPROBE_DEFER)
->  			return -EPROBE_DEFER;
-> -		dev_info(&client->dev, "clk32k is not handled\n");
-> -		twl6040->clk32k =3D NULL;
-> +		dev_dbg(&client->dev, "mclk is not handled\n");
-> +		twl6040->mclk_clk =3D NULL;
->  	}
-> =20
->  	twl6040->supplies[0].supply =3D "vio";
-> diff --git a/include/linux/mfd/twl6040.h b/include/linux/mfd/twl6040.=
-h
-> index 8f9fc3d26e6d..a7c50e54f3e0 100644
-> --- a/include/linux/mfd/twl6040.h
-> +++ b/include/linux/mfd/twl6040.h
-> @@ -224,7 +224,8 @@ struct twl6040 {
->  	struct regmap *regmap;
->  	struct regmap_irq_chip_data *irq_data;
->  	struct regulator_bulk_data supplies[2]; /* supplies for vio, v2v1 *=
-/
-> -	struct clk *clk32k;
-> +	struct clk *clk32k_clk;
-> +	struct clk *mclk_clk;
+> +Example:
+> +	tcphy0: phy@ff7c0000 {
+> +		compatible = "rockchip,rk3399-typec-phy0";
+should be "rockchip,rk3399-typec-phy"
+> +		reg = <0x0 0xff7c0000 0x0 0x40000>;
+> +		#phy-cells = <0>;
+> +		extcon = <&fusb1>;
+> +		rockchip,grf = <&grf>;
+> +		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+> +			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+> +		clock-names = "tcpdcore", "tcpdphy_ref";
+> +		resets = <&cru SRST_UPHY0>,
+> +			 <&cru SRST_UPHY0_PIPE_L00>,
+> +			 <&cru SRST_P_UPHY0_TCPHY>;
+> +		reset-names = "tcphy", "tcphy_pipe", "uphy_tcphy";
+> +		rockchip,typec_conn_dir = <0xe580 0 16>;
+> +		rockchip,usb3tousb2_en = <0xe580 3 19>;
+> +		rockchip,external_psm = <0xe588 14 30>;
+> +		rockchip,pipe_status = <0xe5c0 0 0>;
+> +		rockchip,uphy_dp_sel = <0x6268 19 19>;
+> +	};
+> +
+> +	tcphy1: phy@ff800000 {
+> +		compatible = "rockchip,rk3399-typec-phy1";
+should be "rockchip,rk3399-typec-phy"
 
-Not sure I get the naming here.
+Feel free to ad my Reviewed-by after these update.
 
-What's wrong with clk32k and mclk?
-
->  	struct mutex mutex;
->  	struct mutex irq_mutex;
->  	struct mfd_cell cells[TWL6040_CELLS];
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks,
+- Kever
+> +		reg = <0x0 0xff800000 0x0 0x40000>;
+> +		#phy-cells = <0>;
+> +		rockchip,grf = <&grf>;
+> +		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+> +			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
+> +		clock-names = "tcpdcore", "tcpdphy_ref";
+> +		resets = <&cru SRST_UPHY1>,
+> +		         <&cru SRST_UPHY1_PIPE_L00>,
+> +			 <&cru SRST_P_UPHY1_TCPHY>;
+> +		reset-names = "tcphy", "tcphy_pipe", "uphy_tcphy";
+> +		rockchip,typec_conn_dir = <0xe58c 0 16>;
+> +		rockchip,usb3tousb2_en = <0xe58c 3 19>;
+> +		rockchip,external_psm = <0xe594 14 30>;
+> +		rockchip,pipe_status = <0xe5c0 16 16>;
+> +		rockchip,uphy_dp_sel = <0x6268 3 19>;
+> +	};
