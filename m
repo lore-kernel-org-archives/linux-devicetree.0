@@ -1,69 +1,76 @@
-From: Wenrui Li <wenrui.li@rock-chips.com>
-Subject: Re: [PATCH v3 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Thu, 16 Jun 2016 16:01:12 +0800
-Message-ID: <da207bdc-738f-f2b1-7026-e368355936e9@rock-chips.com>
-References: <1466041821-1649-1-git-send-email-shawn.lin@rock-chips.com>
- <5811436.gqkV56Lax5@wuerfel>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 09/10] ARM: dts: sun9i: a80-optimus: Order
+ nodes by alphabetical order
+Date: Thu, 16 Jun 2016 10:14:27 +0200
+Message-ID: <20160616081427.GG5144@lukather>
+References: <1465986467-14802-1-git-send-email-wens@csie.org>
+ <1465986467-14802-10-git-send-email-wens@csie.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5811436.gqkV56Lax5@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gm5TwAJMO0F2iVRz"
+Return-path: <rtc-linux+bncBDSJBYGBRIMBBZF7RG5QKGQEFSZIOIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1465986467-14802-10-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--gm5TwAJMO0F2iVRz
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-=E5=9C=A8 2016/6/16 15:00, Arnd Bergmann =E5=86=99=E9=81=93:
-> On Thursday, June 16, 2016 9:50:21 AM CEST Shawn Lin wrote:
->
->> +	reset-names =3D "core", "mgmt", "mgmt-sticky", "pipe";
->> +	phys =3D <&pcie_phy>;
->> +	phy-names =3D "pcie-phy";
->> +	pinctrl-names =3D "default";
->> +	pinctrl-0 =3D <&pcie_clkreq>;
->> +	#interrupt-cells =3D <1>;
->> +	interrupt-controller;
->> +	interrupt-map-mask =3D <0 0 0 7>;
->> +	interrupt-map =3D <0 0 0 1 &pcie0 1>,
->> +			<0 0 0 2 &pcie0 2>,
->> +			<0 0 0 3 &pcie0 3>,
->> +			<0 0 0 4 &pcie0 4>;
->> +};
->>
->
-> One thing that came up in the review of the new Marvell PCIe driver i=
-s that it's
-> most likely invalid for a device node to have both "interrupt-control=
-ler"
-> and "interrupt-map" properties. I originally thought this was a nice =
-way to
-> handle embedded irqchips within the PCIe host, but it only really wor=
-ks
-> by coincidence with the current kernel, and only as long as the hwirq=
- number
-> of the irqchip matches the integer representation of the irq line in =
-the root
-> bridge (which it does in the example above).
->
-> For that driver we concluded that it would be less of a hack to have =
-the
-> irqchip as a child node of the PCIe host after all (just not with
-> device_type=3D"pci" of course), and that makes the translation work a=
-s
-> expected.
->
-> 	Arnd
->
+On Wed, Jun 15, 2016 at 06:27:46PM +0800, Chen-Yu Tsai wrote:
+> Move the mmc nodes above the ohci nodes for proper ordering by name.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Original driver have an irqchip as child node. But Marc suggested don't=
-=20
-need an intermediate node here.
-Now the conclusion is to retain the child node?
+Applied, thanks!
 
->
->
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--gm5TwAJMO0F2iVRz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXYl/jAAoJEBx+YmzsjxAgd1MP/idSUAw5syl9OYAtiKeJ7RNr
+W9AUz+wc0pHjra9Ui7Y8TDXtRYOKnw15lSpw1KCIXCSfFUV+zfc/vZH0Ed8NPeAr
+RSb2zR6D+YEMf+oOGJbD+AM/9GxzuaCqiHBh93rOeeWo0sa31ns2wIdD2DInJRU1
+MasoUVWkgGDA2F/p5cbj70UPiIjjahRgk8Tk4VRKfgBFCeLEsZMkUKi48EjqCrCn
+zibYKucH3v1qKgzI2Gd3557xzpewiO8Pdf2KHiwzDqmL9DTcfyXpoNG7bTUXJmRd
+hWj5RqZEfngNPaIr+MtmsrYZf4JV4Nbq2joHIvpBwRxLBx2l/xZxl52VI9gD1Zt1
+yap0Se+IDjVB5LQbeEFtbIEP5p1BGGkVOltHK6pj5iJu306gyNNrEueXfqXzlneT
+L9njjQvD14V+VE9gyqeytdeVkwOjWlHShUtkng8GWYnC3wSh9OB1vZjLpZvsvTqx
+O/WbxmBleUGgrvHUTJxBpXcHjZe/5UtD9ALKX9djNGCbYY4GlWZrtnR+e4nDJ9BD
+fFj29BzO5l0UOtwbmkTYx8elSJNG28lYP6Tk5i6mWnqq37uQP5+LmfhxEo7SQXR/
+z7lfEg8hCZCa0etJ2HOau7bHQ9ET32+o0oxr9unyglTUPQ0yWDx1FmFZYiSo0SlW
+jH0YPQqhQJH0khuyje0d
+=S8IS
+-----END PGP SIGNATURE-----
+
+--gm5TwAJMO0F2iVRz--
