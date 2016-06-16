@@ -1,26 +1,28 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 0/7] Add SATA3 support for Broadcom NSP SoC
-Date: Thu, 16 Jun 2016 16:25:35 -0400
-Message-ID: <20160616202535.GG3262@mtj.duckdns.org>
-References: <1466085215-10246-1-git-send-email-yendapally.reddy@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] Document: DT: Add bindings for mediatek MT6755 SoC
+ Platform
+Date: Thu, 16 Jun 2016 16:06:57 -0500
+Message-ID: <20160616210657.GA16085@rob-hp-laptop>
+References: <1465870805-10451-1-git-send-email-mars.cheng@mediatek.com>
+ <1465870805-10451-2-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466085215-10246-1-git-send-email-yendapally.reddy@broadcom.com>
+In-Reply-To: <1465870805-10451-2-git-send-email-mars.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Kishon Vijay Abraham I <kishon@ti.com>, Jaedon Shin <jaedon.shin@gmail.com>, Anup Patel <anup.patel@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-ide@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Choui <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Scott Shu <scott.shu@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2016 at 09:53:28AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
-> This patch set adds support for SATA3 interface available in Broadcom
-> NSP SoC.
+On Tue, Jun 14, 2016 at 10:20:04AM +0800, Mars Cheng wrote:
+> This adds DT binding documentation for Mediatek MT6755.
+> 
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/arm/mediatek.txt |    4 ++++
+>  .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+>  .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+>  3 files changed, 6 insertions(+)
 
-Applied 1-7 to libata/for-4.8.  If any should be routed differently,
-please let me know.
-
-Thanks.
-
--- 
-tejun
+Acked-by: Rob Herring <robh@kernel.org>
