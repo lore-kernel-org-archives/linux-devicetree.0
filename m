@@ -1,118 +1,94 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 4/4] clk: max77686: Add support for MAX77620 clocks
-Date: Thu, 16 Jun 2016 18:53:27 +0530
-Message-ID: <1466083407-28793-5-git-send-email-ldewangan@nvidia.com>
-References: <1466083407-28793-1-git-send-email-ldewangan@nvidia.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH RESEND 1/3] dt-bindings: add bindings documentation for
+ PDC driver.
+Date: Thu, 16 Jun 2016 14:51:44 +0100
+Message-ID: <5762AEF0.9030203@arm.com>
+References: <1465912965-35500-1-git-send-email-rob.rice@broadcom.com>
+ <1465912965-35500-2-git-send-email-rob.rice@broadcom.com>
+ <576017C7.50609@arm.com>
+ <CAG4BRpnP_qqffLF9X+RusNQGnrtARap9HmK4RE4_jSVfO5juGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1466083407-28793-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: k.kozlowski@samsung.com, javier@osg.samsung.com, mturquette@baylibre.com, robh+dt@kernel.org, linux@armlinux.org.uk
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAG4BRpnP_qqffLF9X+RusNQGnrtARap9HmK4RE4_jSVfO5juGQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Rice <rob.rice@broadcom.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Anup Patel <anup.patel@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Rice <rrice@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Maxim Max77620 has one 32KHz clock output and the clock HW
-IP used on this PMIC is same as what it is there in the MAX77686.
 
-Add clock driver support for MAX77620 on the MAX77686 driver.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-CC: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-CC: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+On 16/06/16 14:50, Rob Rice wrote:
+>
+>
+> On Tue, Jun 14, 2016 at 10:42 AM, Sudeep Holla <sudeep.holla@arm.com
+> <mailto:sudeep.holla@arm.com>> wrote:
+>
+>
+>
+>     On 14/06/16 15:02, Rob Rice wrote:
+>
+>         From: Rob Rice <rrice@broadcom.com <mailto:rrice@broadcom.com>>
+>
+>         Add the device tree binding documentation for the PDC hardware
+>         in Broadcom iProc SoCs.
+>
+>         Signed-off-by: Rob Rice <rob.rice@broadcom.com
+>         <mailto:rob.rice@broadcom.com>>
+>         Acked-by: Rob Herring <robh@kernel.org <mailto:robh@kernel.org>>
+>         Reviewed-by: Ray Jui <ray.jui@broadcom.com
+>         <mailto:ray.jui@broadcom.com>>
+>         Reviewed-by: Anup Patel <anup.patel@broadcom.com
+>         <mailto:anup.patel@broadcom.com>>
+>         Reviewed-by: Scott Branden <scott.branden@broadcom.com
+>         <mailto:scott.branden@broadcom.com>>
+>         ---
+>            .../bindings/mailbox/brcm,iproc-pdc-mbox.txt       | 23
+>         ++++++++++++++++++++++
+>            1 file changed, 23 insertions(+)
+>            create mode 100644
+>         Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
+>
+>         diff --git
+>         a/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
+>         b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
+>         new file mode 100644
+>         index 0000000..411ccf4
+>         --- /dev/null
+>         +++
+>         b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
+>         @@ -0,0 +1,23 @@
+>         +The PDC driver manages data transfer to and from various
+>         offload engines
+>         +on some Broadcom SoCs. An SoC may have multiple PDC hardware
+>         blocks. There is
+>         +one device tree entry per block.
+>         +
+>         +Required properties:
+>         +- compatible : Should be "brcm,iproc-pdc-mbox".
+>         +- reg: Should contain PDC registers location and length.
+>         +- interrupts: Should contain the IRQ line for the PDC.
+>         +- #mbox-cells: 1
+>         +- brcm,rx-status-len: Length of metadata preceding received
+>         frames, in bytes.
+>         +
+>
+>
+>     Ideally the metadata is more associated with the software protocol built
+>     on top of the mailbox controller.
+>
+>     Is this metadata added by the hardware ?
+>
+>     Otherwise it's better to make it part of the protocol rather than the
+>     associating with the controller.
+>
+>
+> Yes, in fact this metadata is added by the PDC hardware itself. So it
+> seems correct for the DT property to be on the controller.
 
----
-Changes from V1:
-- Updated based on changes done in first patch.
----
- drivers/clk/Kconfig        |  7 ++++---
- drivers/clk/clk-max77686.c | 18 ++++++++++++++++++
- 2 files changed, 22 insertions(+), 3 deletions(-)
+In that case, it's fine.
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 6afad74..d75f4c5 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -32,10 +32,11 @@ config COMMON_CLK_WM831X
- source "drivers/clk/versatile/Kconfig"
- 
- config COMMON_CLK_MAX77686
--	tristate "Clock driver for Maxim 77686/77802 MFD"
--	depends on MFD_MAX77686
-+	tristate "Clock driver for Maxim 77686/77802/MAX77620 MFD"
-+	depends on MFD_MAX77686 || MFD_MAX77620
- 	---help---
--	  This driver supports Maxim 77686/77802 crystal oscillator clock.
-+	  This driver supports Maxim 77686/77802/MAX77620 crystal oscillator
-+	  clock.
- 
- config COMMON_CLK_RK808
- 	tristate "Clock driver for RK808"
-diff --git a/drivers/clk/clk-max77686.c b/drivers/clk/clk-max77686.c
-index 9aba3a8..19f6208 100644
---- a/drivers/clk/clk-max77686.c
-+++ b/drivers/clk/clk-max77686.c
-@@ -25,6 +25,7 @@
- #include <linux/err.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/mfd/max77620.h>
- #include <linux/mfd/max77686.h>
- #include <linux/mfd/max77686-private.h>
- #include <linux/clk-provider.h>
-@@ -35,12 +36,14 @@
- 
- #include <dt-bindings/clock/maxim,max77686.h>
- #include <dt-bindings/clock/maxim,max77802.h>
-+#include <dt-bindings/clock/maxim,max77620.h>
- 
- #define MAX77802_CLOCK_LOW_JITTER_SHIFT 0x3
- 
- enum max77686_chip_name {
- 	CHIP_MAX77686,
- 	CHIP_MAX77802,
-+	CHIP_MAX77620,
- };
- 
- struct max77686_hw_clk_info {
-@@ -97,6 +100,15 @@ max77686_hw_clk_info max77802_hw_clks_info[MAX77802_CLKS_NUM] = {
- 	},
- };
- 
-+static const struct
-+max77686_hw_clk_info max77620_hw_clks_info[MAX77620_CLKS_NUM] = {
-+	[MAX77620_CLK_32K_OUT0] = {
-+		.name = "32khz_out0",
-+		.clk_reg = MAX77620_REG_CNFG1_32K,
-+		.clk_enable_mask = MAX77620_CNFG1_32K_OUT0_EN,
-+	},
-+};
-+
- static struct max77686_clk_init_data *to_max77686_clk_init_data(
- 				struct clk_hw *hw)
- {
-@@ -181,6 +193,11 @@ static int max77686_clk_probe(struct platform_device *pdev)
- 		hw_clks = max77802_hw_clks_info;
- 		break;
- 
-+	case CHIP_MAX77620:
-+		num_clks = MAX77620_CLKS_NUM;
-+		hw_clks = max77620_hw_clks_info;
-+		break;
-+
- 	default:
- 		dev_err(dev, "Unknown Chip ID\n");
- 		return -EINVAL;
-@@ -284,6 +301,7 @@ static int max77686_clk_remove(struct platform_device *pdev)
- static const struct platform_device_id max77686_clk_id[] = {
- 	{ "max77686-clk", .driver_data = CHIP_MAX77686, },
- 	{ "max77802-clk", .driver_data = CHIP_MAX77802, },
-+	{ "max77620-clock", .driver_data = CHIP_MAX77620, },
- 	{},
- };
- MODULE_DEVICE_TABLE(platform, max77686_clk_id);
 -- 
-2.1.4
-
+Regards,
+Sudeep
