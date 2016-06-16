@@ -1,76 +1,35 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] ARM: dts: sun9i: cubieboard4: Order
- nodes by alphabetical order
-Date: Thu, 16 Jun 2016 10:14:41 +0200
-Message-ID: <20160616081441.GH5144@lukather>
-References: <1465986467-14802-1-git-send-email-wens@csie.org>
- <1465986467-14802-9-git-send-email-wens@csie.org>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH] dt-bindings: ci-hdrc-usb2: s/gadget-itc-setting/itc-setting in example
+Date: Thu, 16 Jun 2016 16:13:18 +0800
+Message-ID: <1466064798-867-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ik0NlRzMGhMnxrMX"
-Return-path: <rtc-linux+bncBDSJBYGBRIMBB4V7RG5QKGQEDJJP3GA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1465986467-14802-9-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, peter.chen@nxp.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+What the code expect is "itc-setting" rather than "gadget-itc-setting",
+and this is also correctly described in the optional properties.
 
---ik0NlRzMGhMnxrMX
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, Jun 15, 2016 at 06:27:45PM +0800, Chen-Yu Tsai wrote:
-> Move the &pio node below the mmc nodes for proper ordering by name.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-Applied, thanks!
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index 1084e2b..341dc67 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -93,7 +93,7 @@ Example:
+ 		phys = <&usb_phy0>;
+ 		phy-names = "usb-phy";
+ 		vbus-supply = <&reg_usb0_vbus>;
+-		gadget-itc-setting = <0x4>; /* 4 micro-frames */
++		itc-setting = <0x4>; /* 4 micro-frames */
+ 		 /* Incremental burst of unspecified length */
+ 		ahb-burst-config = <0x0>;
+ 		tx-burst-size-dword = <0x10>; /* 64 bytes */
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---ik0NlRzMGhMnxrMX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXYl/xAAoJEBx+YmzsjxAg+rIQAIJic/Ica37/xWQ52n0hfxdm
-NCMUa0uLNknxve8+zrFkLymH8HgebpWC7VJHM9uuycXXcyNOboVjAUzsrO1IHZxq
-SXxROc6fYuEUXVFY0ZO58vDwaK/m5Oo1D3oe+6HRgMbB5c4DVmMy99sxRh5/m93U
-gWWfyHSsLrHuAJBuUgW0y0p26kPcsnstOSO+njZSBOCbzZtty1gSogh5kbVmcGNi
-IburNSZ5k9J7VSFb6hMbQV3L9hwBv+n1jyEWQf/F/cPfZsBAVwlxbMLnI6snrjVm
-si8xwfuqsF7gm7l39qME6P9gtGDGI0a+ffKOT1SQ9ks0qblPGq4+QIJFp8DEJwLp
-oPBa+LkuiOFcJrZdB7fufE/TFQsewpfST5E/G76R6yDM53PBINgfb+zM+J5hs3pa
-StcMjiQ4A6Xy1GJyLr6miqwt/69Re3Ba6ubZnVcWGxeMSkw8cMWbmb2o+Ok1PDmv
-njDqNhBn5zjR1X+Eq9WIVY25eDtX8tL8rTK20kQwoa0Y+7gh3XccjCG0dzUOy6UP
-pOiYDk1CNuFGWjTJtosFxKONUDlQ+6xdyiCVdSy/uMSxZ9czQDKvImXZ19CmyPMb
-2jYHQzb3+prcVHmazcz3iksoqwEqKqepB7F3McjFVXKmmPtHx1W2fIkEqv0hOCHW
-baGgBDXIkZNeyyNfdM6G
-=fciQ
------END PGP SIGNATURE-----
-
---ik0NlRzMGhMnxrMX--
+2.8.1
