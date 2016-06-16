@@ -1,37 +1,26 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RFC 3/6] ASoC: max98504: Add max98504 speaker amplifier
- driver
-Date: Thu, 16 Jun 2016 18:17:35 +0200
-Message-ID: <5762D11F.8030403@samsung.com>
-References: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
- <1465815160-28504-4-git-send-email-s.nawrocki@samsung.com>
- <20160613151429.GI2282@sirena.org.uk> <57601A1F.5030906@samsung.com>
- <20160615092527.GU2282@sirena.org.uk>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: ata: rename brcm,sata-brcmstb.txt to
+ brcm,sata-brcm.txt
+Date: Thu, 16 Jun 2016 09:22:27 -0700
+Message-ID: <5762D243.6040108@gmail.com>
+References: <1466085215-10246-1-git-send-email-yendapally.reddy@broadcom.com>
+ <1466085215-10246-2-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20160615092527.GU2282@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, robh@kernel.org, linux-samsung-soc@vger.kernel.org, ideal.song@samsung.com, beomho.seo@samsung.com, inki.dae@samsung.com, k.kozlowski@samsung.com, b.zolnierkie@samsung.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466085215-10246-2-git-send-email-yendapally.reddy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Jaedon Shin <jaedon.shin@gmail.com>, Anup Patel <anup.patel@broadcom.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/15/2016 11:25 AM, Mark Brown wrote:
-> On Tue, Jun 14, 2016 at 04:52:15PM +0200, Sylwester Nawrocki wrote:
->> > On 06/13/2016 05:14 PM, Mark Brown wrote:
->>> > > Removed the regulator handling code?  Why?
->> > Because it was effectively a dead code (disabled by a DT flag property)
->> > and didn't make any sense on our test board. It was setting regulator's
->> > load and voltage on a shared fixed voltage regulator. Even if calls like
->> > regulator_set_optimum_mode() were added that wouldn't make any difference,
->> > since the corresponding PMIC driver ops were not implemented.
->> > I started more or less with something like this [1].
->
-> The mode and voltage setting code there are just obviously broken but
-> having the get and enable is useful, even if it doesn't do anything on
-> your board it's nice to have them there already to avoid any transition
-> issues adding them later and help get more complete and accurate DTs in
-> from the get go.
+On 06/16/2016 06:53 AM, Yendapally Reddy Dhananjaya Reddy wrote:
+> Renames the dt bindings document of Broadcom STB ahci driver to
+> common Broadcom ahci driver bindings document
+> 
+> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 
-OK, I've added regulator supply related code and properties to the DT binding.
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
