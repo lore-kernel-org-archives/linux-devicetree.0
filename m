@@ -1,58 +1,23 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH V2 01/63] of: Add a new macro to declare_of for one parameter function returning a value
-Date: Thu, 16 Jun 2016 23:26:20 +0200
-Message-ID: <1466112442-31105-2-git-send-email-daniel.lezcano@linaro.org>
-References: <1466112442-31105-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466112442-31105-1-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/2] Add R8A7792 JPEG codec support
+Date: Fri, 17 Jun 2016 01:00:36 +0300
+Message-ID: <7346244.CEZI3u99oZ@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The macro OF_DECLARE_1 expect a void (*func)(struct device_node *) while the
-OF_DECLARE_2 expect a int (*func)(struct device_node *, struct device_node *).
+Hello.
 
-The second one allows to pass an init function returning a value, which make
-possible to call the functions in the table and check the return value in order
-to catch at a higher level the errors and handle them from there instead of
-doing a panic in each driver (well at least this is the case for the clkevt).
+   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20160616-v4.7-rc3' tag. We add the device tree support for
+the R8A7792 JPEG Processing Unit (JPU).
 
-Unfortunately the OF_DECLARE_1 does not allow that and that lead to some code
-duplication and crappyness in the drivers.
+[1/2] ARM: dts: r8a7792: add JPU clocks
+[2/2] ARM: dts: r8a7792: add JPU support
 
-The OF_DECLARE_1 is used by all the clk drivers and the clocksource/clockevent
-drivers. It is not possible to do the change in one shot as we have to change
-all the init functions.
-
-The OF_DECLARE_2 specifies an init function prototype with two parameters with
-the node and its parent. The latter won't be used, ever, in the timer drivers.
-
-Introduce a OF_DECLARE_1_RET macro to be used, and hopefully we can smoothly
-and iteratively change the users of OF_DECLARE_1 to use the new macro instead.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- include/linux/of.h | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index c7292e8..552943d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1009,10 +1009,13 @@ static inline int of_get_available_child_count(const struct device_node *np)
- #endif
- 
- typedef int (*of_init_fn_2)(struct device_node *, struct device_node *);
-+typedef int (*of_init_fn_1_ret)(struct device_node *);
- typedef void (*of_init_fn_1)(struct device_node *);
- 
- #define OF_DECLARE_1(table, name, compat, fn) \
- 		_OF_DECLARE(table, name, compat, fn, of_init_fn_1)
-+#define OF_DECLARE_1_RET(table, name, compat, fn) \
-+		_OF_DECLARE(table, name, compat, fn, of_init_fn_1_ret)
- #define OF_DECLARE_2(table, name, compat, fn) \
- 		_OF_DECLARE(table, name, compat, fn, of_init_fn_2)
- 
--- 
-1.9.1
+WBR, Sergei
