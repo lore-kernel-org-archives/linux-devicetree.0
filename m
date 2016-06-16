@@ -1,69 +1,59 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v8 2/4] power: reset: add reboot mode driver
-Date: Thu, 16 Jun 2016 16:36:17 +0200
-Message-ID: <20160616143616.GA11677@earth>
-References: <1461567051-21734-1-git-send-email-andy.yan@rock-chips.com>
- <1461567336-21834-1-git-send-email-andy.yan@rock-chips.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm64: dts: juno: add arm,primecell-periphid override
+Date: Thu, 16 Jun 2016 15:42:27 +0100
+Message-ID: <5762BAD3.6050405@arm.com>
+References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
+ <1465228765-14038-3-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461567336-21834-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: robh+dt@kernel.org, heiko@sntech.de, k.kozlowski@samsung.com, john.stultz@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, alexandre.belloni@free-electrons.com, moritz.fischer@ettus.com, f.fainelli@gmail.com, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465228765-14038-3-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 06/06/16 16:59, Sudeep Holla wrote:
+> The Linux AMBA framework probes the peripheral ids when adding the amba
+> devices very early on the boot. Generally they are on APB bus and just
+> require APB clocks to be on even when most of the core logic of the IP
+> is powered down.
+>
+> However on Juno, the entire debugsys domain needs to be ON to access
+> those CID/PID registers and hence broken by design. Accessing those
+> while debugsys power domain is off will lead to the bridge stalling the
+> transactions instead of returning the slave error.
+>
+> Since keeping the power domain on by default affects the core power(by
+> preventing cores entering deeper idle states), it's not feasible
+> solution. Instead we can provide arm,primecell-periphid override in the
+> device tree that prevents accessing the device early in the boot.
+>
 
-On Mon, Apr 25, 2016 at 02:55:36PM +0800, Andy Yan wrote:
-> This driver parses the reboot commands like "reboot bootloader"
-> and "reboot recovery" to get a boot mode described in the
-> device tree , then call the write interfae to store the boot
-> mode in some place like special register or sram, which can
-> be read by the bootloader after system reboot, then the bootloader
-> can take different action according to the mode stored.
->=20
-> This is commonly used on Android based devices, in order to
-> reboot the device into fastboot or recovery mode.
->=20
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> Acked-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+OK, I recently found out that AMBA bus/infrastructure can deal with 
+powered off domains even while adding the devices. That makes this patch 
+redundant. I had missed it initially as I tested with !CONFIG_PM
+option.
 
-What's the status of this patchset? It still has a few open
-comments/issues, but I did not see a newer version.
+So I raised the issue with !CONFIG_PM option[1] and it was suggested to 
+make platform select the same[2] as there's no simple way to deal with
+that.
 
--- Sebastian
+Hence I will drop this patch but will post patch to select PM from
+ARCH_VEXPRESS to ensure we always have it enabled to deal with this
+platform issue.
 
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Regards,
+Sudeep
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBCgAGBQJXYrldAAoJENju1/PIO/qaY6AP/0xIWgWuP7aA4I76hiYNaZ4t
-lU/C5xUFpQWP4biGM0sG3VcMdyi2ZpyCM0gDpuD4Sx4GPH9Lmzc21Cr6b38V6WlB
-80q/kAkb5s+Fw47xoH1lPJWp95jJeaRhxcTvJHDRvvK6nhjzs6JJhxCMlfky9baS
-wJMAQPWLu5wv3pPFA7mbkPIy7e/FVFjbQvgjT5hKZo1qknp5UeOQe9bi7AsJJHfw
-1qoYKsLLx/x0JtErc1EoYQjAoGLd1eTGAkbY9kvbghz9adPypkeXmu/Zh+/+CYIW
-GX0zThWoajTUDkUZ+Ri48Uznx1LaLVhQWc4nW5nZVC8mqZ/iO0hEglnirLVljifA
-0bDS2J4h9B47kInUbeCd8nlAZ7i/G32+yByhl4GmXVcU1bPaKz9wdjMgFdkjfYSa
-0IIRhUdqtYvroE8Rb+yWESraE47hfXLMIO5qYzQIQW4xQR2Y5h7DRayCvx2p21Ac
-9bkztSe6lWkK6lrPDlajbzxJwM8S4IrILQJvs8dl73+urNI0YF4AL4/K92mjco4u
-tLF7DJR4wYZDQjEUvzbI1pOuHMlhoJ1Hy/ccIGMYYSWOmwBLfYB5YpSxqNlH5WDw
-4bY1yJ2cUVhD17Iy4qLgvzvokjpKooDyqUEfVEV5UirVsCGuUQS/B/eoeX7jfK2h
-lpyg9XOlrg2utCLM7Jz3
-=i4Pg
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
+[1] http://marc.info/?l=linux-pm&m=146607608629880&w=2
+[2] http://marc.info/?l=linux-pm&m=146608125731479&w=2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
