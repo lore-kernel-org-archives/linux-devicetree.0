@@ -1,36 +1,31 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 0/11] Changes to support 150 MHz eMMC on rk3399
-Date: Fri, 17 Jun 2016 01:39:55 +0200
-Message-ID: <2340840.IUG4rtlpvT@phil>
-References: <1465859076-4868-1-git-send-email-dianders@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1465859076-4868-1-git-send-email-dianders@chromium.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: ulf.hansson@linaro.org, kishon@ti.com, robh+dt@kernel.org, shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, zhengxing@rock-chips.com, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, jay.xu@rock-chips.com, wxt@rock-chips.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, soren.brinkmann@xilinx.com, linux-kernel@vger.kernel.org, galak@codeaurora.org
+From: Hoan Tran <hotran@apm.com>
+Subject: [PATCH 0/2] clk: Add fractional scale clock support
+Date: Thu, 16 Jun 2016 16:40:31 -0700
+Message-ID: <1466120433-30648-1-git-send-email-hotran@apm.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, lho@apm.com, Duc Dang <dhdang@apm.com>, Hoan Tran <hotran@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 13. Juni 2016, 16:04:24 schrieb Douglas Anderson:
-> The theme of this series of patches is to try to allow running the eMMC
-> at 150 MHz on the rk3399 SoC, though the changes should still be correct
-> and have merit on their own.  The motivation for running at 150 MHz is
-> that doing so improves signal integrity and (with some eMMC devices)
-> doesn't affect throughput.
-> 
-> These patches have been structured to keep things as separate as
-> possible, but nevertheless there are still some dependencies between
-> patches.  It probably makes the most sense for all of the non-device
-> tree patches to go through a single tree.  If others agree, perhaps the
-> most sane would be to get Acks from PHY maintainers and then to land the
-> patches in the MMC tree.  Device tree patches should be able to be
-> landed separately and the worst what would happen is a warning in the
-> kernel log if you have the code without the device tree.
+This patch adds fractional scale clock support.
+Fractional scale clock is implemented for a single register field.
+  Output rate = parent_rate * scale / denominator
+For example, for 1 / 8 fractional scale, denominator will be 8 and scale
+will be computed and programmed accordingly.
 
-while my evaluation board does not seem to have an enhanced strobe emmc, it 
-nevertheless still runs fine with these patches applied, for the series 
-(including the separate v2.1) on a rk3399-evb:
+Hoan Tran (2):
+  Documentation: dt: clock: Add fractional scale binding
+  clk: Add fractional scale clock support
 
-Tested-by: Heiko Stuebner <heiko@sntech.de>
+ .../bindings/clock/fractional-scale-clock.txt      |  31 +++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-fractional-scale.c                 | 253 +++++++++++++++++++++
+ include/linux/clk-provider.h                       |  41 ++++
+ 4 files changed, 326 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fractional-scale-clock.txt
+ create mode 100644 drivers/clk/clk-fractional-scale.c
+
+-- 
+1.9.1
+
