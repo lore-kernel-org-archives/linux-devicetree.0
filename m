@@ -1,50 +1,50 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 2/2] ASoC: msm8916: Add msm8916-wcd codec driver
-Date: Thu, 16 Jun 2016 14:19:19 +0100
-Message-ID: <5762A757.2020706@linaro.org>
-References: <1465582725-30183-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1465582725-30183-3-git-send-email-srinivas.kandagatla@linaro.org>
- <20160614155938.GS2282@sirena.org.uk> <57611CEB.4030401@linaro.org>
- <20160615093136.GW2282@sirena.org.uk>
- <20160615200752.GA26173@kwestfie-linux.qualcomm.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 5/5] ARM: config: Get rid of config COMMON_CLK_MAX77802
+Date: Thu, 16 Jun 2016 18:38:14 +0530
+Message-ID: <5762A4BE.3010408@nvidia.com>
+References: <1466000018-16784-1-git-send-email-ldewangan@nvidia.com> <1466000018-16784-6-git-send-email-ldewangan@nvidia.com> <3fa0a098-3b28-9baa-8950-a944cce86b65@osg.samsung.com> <57629AB9.2090506@samsung.com> <ef0359c5-ecf2-cd31-4dd8-ed4f169c22be@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160615200752.GA26173@kwestfie-linux.qualcomm.com>
+In-Reply-To: <ef0359c5-ecf2-cd31-4dd8-ed4f169c22be@osg.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, mturquette@baylibre.com, robh+dt@kernel.org, linux@armlinux.org.uk
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Javier Martinez Canillas <javier@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 15/06/16 21:07, Kenneth Westfield wrote:
-> On Wed, Jun 15, 2016 at 10:31:36AM +0100, Mark Brown wrote:
->> On Wed, Jun 15, 2016 at 10:16:27AM +0100, Srinivas Kandagatla wrote:
->>> On 14/06/16 16:59, Mark Brown wrote:
->>>> On Fri, Jun 10, 2016 at 07:18:45PM +0100, Srinivas Kandagatla wrote:
+On Thursday 16 June 2016 06:36 PM, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
 >
->>> In theory there are 3 devices,
->>> one is the pmic-spmi driver, which provides regmap access to analog part of
->>> codec registers.
->>> second is syscon driver which provides regmap access to digital parts of
->>> codec to codec driver.
->>> third is the codec driver which uses both the above.
+> On 06/16/2016 08:25 AM, Krzysztof Kozlowski wrote:
+>> On 06/15/2016 05:39 PM, Javier Martinez Canillas wrote:
+>>> Hello Laxman,
+>>>
+>>> On 06/15/2016 10:13 AM, Laxman Dewangan wrote:
+>>>> The clock driver used by Maxim PMIC MAX77802 is clk-max77686
+>>>> which can be enabled with config CONFIG_COMMON_CLK_MAX77686.
+>>>>
+>>>> Hence the config CONFIG_COMMON_CLK_MAX77802 is not required.
+>>>>
+>>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>>>> CC: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>>> CC: Javier Martinez Canillas <javier@dowhile0.org>
+>>>> ---
+>>>>   arch/arm/configs/exynos_defconfig   | 1 -
+>>>>   arch/arm/configs/multi_v7_defconfig | 1 -
+>>> Please split these two changes in separate patches, there are just
+>>> cleanups needed after 1/5 and they can be picked separately.
+>> Not entirely separately. If we do not want to loose max77802 clocks on
+>> defconfigs, then it should go with the same tree or after driver get
+>> merged. I prefer the latter, similar case to 1898994229f8 ("ARM:
+>> multi_v7_defconfig: Switch max77693 to module").
 >>
->>> Codec registers range is just split into two, range 0x0- 0x200 sits in pmic
->>> address space and range 0x201 - 0x4ff in the SOC address space,
->>
->>> Are there any other better ways to model this kinda driver?
->>
->> Why not just have separate devices for each of the register maps?
+> Agreed. Your latter example is what I tried to say (that can be picked
+> as cleanups separately once 1/5 hits mainline). I just didn't express
+> clearly.
+>   
 >
-> Srinivas,
->
-> Mark has a good point.  Also, by having distinct devices and drivers;
-> you should make use of ASoC's supporting wrappers for regmap accesses.
 
-Yep, Let to try that and see how it looks.
-
-thanks,
-srini
->
+OK, I will drop this from series when will send V2.
+The changes can be done later on once clock changes get merged.
