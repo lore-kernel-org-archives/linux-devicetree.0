@@ -1,54 +1,51 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] dma: mv_xor_v2: new driver
-Date: Thu, 16 Jun 2016 14:42:24 +0200
-Message-ID: <20160616144224.2e687a14@free-electrons.com>
-References: <1455523083-25506-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160222032730.GU19598@localhost>
-	<20160615160837.64377829@free-electrons.com>
-	<20160615164131.GB16910@localhost>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: Re: [PATCH 04/15] drivers: net: cpsw: ethtool: fix accessing to
+ suspended device
+Date: Thu, 16 Jun 2016 15:48:16 +0300
+Message-ID: <5762A010.2070201@linaro.org>
+References: <20160615115603.4897-1-grygorii.strashko@ti.com>
+ <20160615115603.4897-5-grygorii.strashko@ti.com> <57617ECF.2010902@gmail.com>
+ <5761860C.2020502@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160615164131.GB16910@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5761860C.2020502@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On Wed, 15 Jun 2016 22:11:31 +0530, Vinod Koul wrote:
 
-> > This is probably the only thing that I have not changed. The mv_xor
-> > driver is already using the same strategy, and enqueuing in
-> > issue_pending() would force us to add the request to a temporary linked
-> > list, which would be dequeued in issue_pending(). This is quite a bit
-> > of additional processing, while pushing the new requests directly to
-> > the engine works fine.  
-> 
-> Well that is wrong! And patch is welcome for mv_xor as well :)
-> 
-> The DMAengine API mandates that we should submit a descriptor to a queue and
-> then push them by invoking issue_pending.
-> 
-> The users are also expected to follow this
+On 15.06.16 19:45, Grygorii Strashko wrote:
+> On 06/15/2016 07:14 PM, Florian Fainelli wrote:
+>> On 06/15/2016 04:55 AM, Grygorii Strashko wrote:
+>>> The CPSW might be suspended by RPM if all ethX interfaces are down,
+>>> but it still could be accesible through ethtool interfce. In this case
+>>> ethtool operations, requiring registers access, will cause L3 errors and
+>>> CPSW crash.
+>>>
+>>> Hence, fix it by adding RPM get/put calls in ethtool callbcaks which
+>>> can access CPSW registers: .set_coalesce(), .get_ethtool_stats(),
+>>> .set_pauseparam(), .get_regs()
+>>
+>> Provided that you implement an ethtool_ops::begin, it will be called
+>> before each ethtool operation runs, so that could allow you to eliminate
+>> some of the duplication here. Conversely ethtool_ops::end terminates
+>> each operation and can be used for that purpose.
+>
+> Ah. Thanks for the advice. (assume you've meant .complete())
 
-I have just sent a v4 that fixes this for the mv_xor_v2 driver. Now, in
-->tx_submit() we only fill in the HW descriptors, but do not tell the
-engine to process them. It's only at ->issue_pending() time that we
-tell the engine that there N new descriptors to process.
+Maybe better leave as is, I'm going to add two additional ehttool ops
+containing RPM sensitive part and not, better to split code on those,
+if possible...and hiding put/get in begin op can call rpm when it's not
+needed at all..
 
-I'll have a look at mv_xor a bit later.
+>
+>
+>
 
-Thanks!
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Ivan Khoronzhuk
