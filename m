@@ -1,92 +1,66 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 0/2] Add support for SYSCON reset
-Date: Wed, 15 Jun 2016 21:13:40 -0500
-Message-ID: <CAL_JsqKL+njqxTUB3MPgX=qJK72bmXXWH4gOuYMC2NFg5u7eqg@mail.gmail.com>
-References: <20160601184125.20241-1-afd@ti.com> <576178C7.4040204@ti.com> <1466009144.3539.77.camel@pengutronix.de>
+From: Ben Zhang <benzh@chromium.org>
+Subject: Re: [alsa-devel] [PATCH v5] ASoC: rockchip: Add machine driver for
+ RK3399 GRU Boards
+Date: Wed, 15 Jun 2016 19:36:17 -0700
+Message-ID: <CAOV7By+hU3c0CVzW0_V+g6iwpzVk_A4GMR5ie6afkhLO9Lv0tQ@mail.gmail.com>
+References: <1465807339-1100-1-git-send-email-zhengxing@rock-chips.com>
+ <20160614223810.GA7925@rob-hp-laptop> <20160615095312.GY2282@sirena.org.uk> <CAL_JsqKEDw14HmbW=78_4P03nFDfmT7kOn4RsTF-PrBi+jWr0g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466009144.3539.77.camel@pengutronix.de>
+In-Reply-To: <CAL_JsqKEDw14HmbW=78_4P03nFDfmT7kOn4RsTF-PrBi+jWr0g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: "Andrew F. Davis" <afd@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Xing Zheng <zhengxing@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Doug Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, smbarber@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 11:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> Hi Andrew,
->
-> Am Mittwoch, den 15.06.2016, 10:48 -0500 schrieb Andrew F. Davis:
->> On 06/01/2016 01:41 PM, Andrew F. Davis wrote:
->> > Some SoCs contain reset controls for modules that are memory-mapped to
->> > areas shared with other module configuration settings. This requires
->> > synchronization across all drivers accessing this memory area. This
->> > series adds a generic SYSCON reset driver to allow resets toggled
->> > by bits in memory-mapped registers through SYSCON.
->> >
->> > Changes from v2:
->> >  - Rebased on v4.7-rc1
->> >  - Removed the need to give reset specifier nodes an index address
->> >
->> > Changes from v1:
->> >  - Reset control information is now described in the reset node, this
->> >    keeps the reset information centralized for easy verification
->> >  - Other small fixups
->> >
->> > Andrew F. Davis (2):
->> >   Documentation: dt: reset: Add syscon reset binding
->> >   reset: add a SYSCON based reset driver
->> >
->> >  .../devicetree/bindings/reset/syscon-reset.txt     | 105 ++++++++
->> >  drivers/reset/Kconfig                              |  10 +
->> >  drivers/reset/Makefile                             |   1 +
->> >  drivers/reset/reset-syscon.c                       | 289 +++++++++++++++++++++
->> >  include/dt-bindings/reset/syscon.h                 |  23 ++
->> >  5 files changed, 428 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/reset/syscon-reset.txt
->> >  create mode 100644 drivers/reset/reset-syscon.c
->> >  create mode 100644 include/dt-bindings/reset/syscon.h
->> >
+On Wed, Jun 15, 2016 at 5:44 AM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jun 15, 2016 at 4:53 AM, Mark Brown <broonie@kernel.org> wrote:
+>> On Tue, Jun 14, 2016 at 05:38:10PM -0500, Rob Herring wrote:
+>>> On Mon, Jun 13, 2016 at 04:42:18PM +0800, Xing Zheng wrote:
 >>
->> Is there any additional feedback for this driver? I normally try to
->> refrain from pings, but this may begin to block further upstreaming of
->> IPs that uses this reset if it can not be taken this cycle.
+>>> > +sound {
+>>> > +   compatible = "rockchip,rk3399-gru-sound";
+>>> > +   rockchip,cpu = <&i2s0>;
+>>> > +   rockchip,codec = <&max98357a &rt5514 &da7219>;
+>>
+>>> These seem fairly standard though a variety of versions in the bindings.
+>>> Can we use audio-codec and audio-cpu (or cpu or audio-dai) here? Mark?
+>>
+>> Well, the roles aren't actually that standard (the fact that there's
+>> multiple CODECs and one CPU DAI here is really odd and definitely needs
+>> a very system specific interpretation).  If they were standard we
+>> already have the simple-card binding that things should be using.
+>> There's no point in standard property names if the interpretation has to
+>> be non-standard.
 >
-> There's still Rob's concern that this binding needs a device tree node
-> per single register bit in the worst case, which seems a bit overkill.
-
-Yes, that's still my concern with this.
-
-> I'd still prefer to have this information hidden in the drivers, but if
-> you absolutely have to put it in the device tree, maybe an approach more
-> similar to pinctrl-simple, where you could list all resets, one per
-> line, in a single property, would be more acceptable:
+> Okay, I agree with the system specific interpretation part. However, I
+> don't think using simple-card or not determines using common
+> properties.
 >
-> pscrst: reset-controller {
->         compatible = "ti,<chip>-pscrst", "syscon-reset";
+
+Hi Mark, I have a question for the one CPU DAI + multiple CODECs
+setup. The machine driver defines 3 DAI links, connecting the same CPU
+DAI to 3 different CODEC DAIs. Does ASoC/DAPM support
+enabling/disabling an individual DAI link based on the status of the
+endpoint widget (e.g. DAPM_SPK) connected to the corresponding CODEC?
+
+The goal is to let user select either headphone(da7219) or
+speaker(max98357a) as output. max98357a driver does not expose a
+kcontrol for mute. It sets a shutdown GPIO on PCM_TRIGGER_START/STOP.
+And it seems soc_pcm_trigger calls the trigger op of all 3 CODEC DAIs,
+even when the DAPM_SPK widget is disabled by its pin switch.
+
+>> The vendor specific prefixes are there because all bindings are supposed
+>> to add prefixes to property names.
 >
->         /* syscon-reset,bits = <ctrl_reg ctrl_bit stat_reg stat_bit flags>; */
-
-ti,reset-bits
-
->         syscon-reset,bits = <0xa3c 8 0x83c 8 RESET_ASSERT_CLEAR  /* 0: pcrst-dsp */
->                              0xa40 5 0     0 RESET_TRIGGER_SET>; /* 1: pcrst-example */
-> };
+> ...unless they are common.
 >
-> dsp0: dsp {
->         resets = <&pscrst 0>;
-> };
+> Rob
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
 
-Otherwise, this seems okay. It is more concise.
-
->
->> If there is still an objection to calling this a generic reset solution
->> we would not strongly object to relabeling this to something implying
->> more TI exclusivity.
->
-> Good. Right now there don't seem to be that many reset controllers in
-> the wild for which this binding would be a good fit. If this turns out
-> to be useful for others, we can add more compatibles to the driver.
-
-Certainly other users would make a generic solution more compelling.
-
-Rob
+Thanks,
+Ben
