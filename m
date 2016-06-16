@@ -1,145 +1,104 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Thu, 16 Jun 2016 08:31:25 -0700
-Message-ID: <CAD=FV=Vw_+HJc+onc6h+b3Fv5faRc0+=W+e3sJv2OLQJeysQLQ@mail.gmail.com>
-References: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com> <20160610083210.17f4fdd6@arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/4] mfd: cros_ec: add EC_PWM function definitions
+Date: Thu, 16 Jun 2016 16:38:17 +0100
+Message-ID: <20160616153817.GD21702@dell>
+References: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
+ <1464916904-37554-3-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160610083210.17f4fdd6@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1464916904-37554-3-git-send-email-briannorris@chromium.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Marc,
+On Thu, 02 Jun 2016, Brian Norris wrote:
 
-On Fri, Jun 10, 2016 at 12:32 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On Wed, 8 Jun 2016 16:05:17 +0800
-> Shawn Lin <shawn.lin@rock-chips.com> wrote:
->
->> This patch adds a binding that describes the Rockchip PCIe controller
->> found on Rockchip SoCs PCIe interface.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>
->> ---
->>
->> Changes in v2:
->> - fix lots clk/reset stuff suggested by Heiko
->> - remove msi-parent and add msi-map suggested by Marc
->
-> I noticed this ^^^^ ...
->
->> - drop phy related stuff
->> - some others minor fixes
->>
->>  .../devicetree/bindings/pci/rockchip-pcie.txt      | 86 ++++++++++++++++++++++
->>  1 file changed, 86 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> new file mode 100644
->> index 0000000..eb92e29
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> @@ -0,0 +1,86 @@
->> +* Rockchip AXI PCIe Root Port Bridge DT description
->> +
->> +Required properties:
->> +- #address-cells: Address representation for root ports, set to <3>
->> +- #size-cells: Size representation for root ports, set to <2>
->> +- #interrupt-cells: specifies the number of cells needed to encode an
->> +             interrupt source. The value must be 1.
->> +- compatible: Should contain "rockchip,rk3399-pcie"
->> +- reg: Two register ranges as listed in the reg-names property
->> +- reg-names: Must include the following names
->> +     - "axi-base"
->> +     - "apb-base"
->> +- clocks: Must contain an entry for each entry in clock-names.
->> +             See ../clocks/clock-bindings.txt for details.
->> +- clock-names: Must include the following entries:
->> +     - "aclk"
->> +     - "aclk-perf"
->> +     - "hclk"
->> +     - "pm"
->> +- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
->> +- phy-names:  MUST be "pcie-phy".
->> +- interrupts: Three interrupt entries must be specified.
->> +- interrupt-names: Must include the following names
->> +     - "sys"
->> +     - "legacy"
->> +     - "client"
->> +- resets: Must contain five entries for each entry in reset-names.
->> +        See ../reset/reset.txt for details.
->> +- reset-names: Must include the following names
->> +     - "core"
->> +     - "mgmt"
->> +     - "mgmt-sticky"
->> +     - "pipe"
->> +- pinctrl-names : The pin control state names
->> +- pinctrl-0: The "default" pinctrl state
->> +- interrupt-map-mask and interrupt-map: standard PCI properties
->> +- interrupt-controller: identifies the node as an interrupt controller
->> +
->> +Optional Property:
->> +- ep-gpios: contain the entry for pre-reset gpio
->> +- num-lanes: number of lanes to use
->> +- vpcie3v3-supply: The phandle to the 3.3v regulator to use for pcie. If this
->> +  is specified we'll defer probe until we can find this regulator.
->> +- vpcie1v8-supply: The phandle to the 1.8v regulator to use for pcie. If this
->> +  is specified we'll defer probe until we can find this regulator.
->> +- vpcie0v9-supply: The phandle to the 0.9v regulator to use for pcie. If this
->> +  is specified we'll defer probe until we can find this regulator.
->> +
->> +Example:
->> +
->> +pcie0: pcie@f8000000 {
->> +     compatible = "rockchip,rk3399-pcie";
->> +     #address-cells = <3>;
->> +     #size-cells = <2>;
->> +     clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
->> +              <&cru PCLK_PCIE>;
->> +     clock-names = "aclk", "aclk-perf",
->> +                   "hclk";
->> +     bus-range = <0x0 0x1>;
->> +     interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
->> +                  <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
->> +     interrupt-names: "sys", "legacy", "client";
->> +     assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
->> +     assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
->> +     assigned-clock-rates = <100000000>;
->> +     ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
->> +     ranges = < 0x82000000 0 0xfa000000 0x0 0xfa000000 0 0x600000
->> +                0x81000000 0 0xfa600000 0x0 0xfa600000 0 0x100000 >;
->> +     num-lanes = <4>;
->> +     reg = < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0x0 0x1000000 >;
->> +     reg-name = "axi-base", "apb-base";
->> +     resets = <&cru SRST_PCIEPHY>, <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
->> +              <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
->> +     reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
->> +     phys = <&pcie_phy>;
->> +     phy-names = "pcie-phy";
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pcie_clkreq>;
->> +     #interrupt-cells = <1>;
->> +     interrupt-controller;
->> +     interrupt-map-mask = <0 0 0 7>;
->> +     interrupt-map = <0 0 0 1 &pcie0 1>,
->> +                     <0 0 0 2 &pcie0 2>,
->> +                     <0 0 0 3 &pcie0 3>,
->> +                     <0 0 0 4 &pcie0 4>;
->> +};
->
->
-> And yet I don't see anything related to msi-map in the binding or in
-> the example. As Doug mentioned issues with MSIs being delivered, I
-> wonder if the two are related...
+> The EC_CMD_PWM_{GET,SET}_DUTY commands allow us to control a PWM that=
+ is
+> attached to the EC, rather than the main host SoC. The API provides
+> functionality-based (e.g., keyboard light, backlight) or index-based
+> addressing of the PWM(s). Duty cycles are represented by a 16-bit val=
+ue,
+> where 0 maps to 0% duty cycle and U16_MAX maps to 100%. The period
+> cannot be controlled.
+>=20
+> This command set is more generic than, e.g.,
+> EC_CMD_PWM_{GET,SET}_KEYBOARD_BACKLIGHT and could possibly used to
+> replace it on future products.
+>=20
+> Let's update the command header to include the definitions.
+>=20
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
+> v2: no change
+>=20
+>  include/linux/mfd/cros_ec_commands.h | 31 ++++++++++++++++++++++++++=
++++++
+>  1 file changed, 31 insertions(+)
+>=20
+> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd=
+/cros_ec_commands.h
+> index 13b630c10d4c..d673575e0ada 100644
+> --- a/include/linux/mfd/cros_ec_commands.h
+> +++ b/include/linux/mfd/cros_ec_commands.h
+> @@ -949,6 +949,37 @@ struct ec_params_pwm_set_fan_duty {
+>  	uint32_t percent;
+>  } __packed;
+> =20
+> +#define EC_CMD_PWM_SET_DUTY 0x25
+> +/* 16 bit duty cycle, 65535 =3D 100% */
+> +#define EC_PWM_MAX_DUTY 65535
 
-With Shawn's latest patches and following his latest example dts
-snippet (which includes the msi-map), things worked much better.  :)
+Any reason this isn't represented in hex, like we do normally?
 
-Thank you for your help!
+> +enum ec_pwm_type {
+> +	/* All types, indexed by board-specific enum pwm_channel */
+> +	EC_PWM_TYPE_GENERIC =3D 0,
+> +	/* Keyboard backlight */
+> +	EC_PWM_TYPE_KB_LIGHT,
+> +	/* Display backlight */
+> +	EC_PWM_TYPE_DISPLAY_LIGHT,
+> +	EC_PWM_TYPE_COUNT,
+> +};
 
--Doug
+Are these comments really necessary?  I'd recommend that if your
+defines require comments, then they are not adequately named.  In this
+case however, I'd suggest that they are and the comments are
+superfluous.
+
+> +struct ec_params_pwm_set_duty {
+> +	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY =3D 100% */
+> +	uint8_t pwm_type;  /* ec_pwm_type */
+> +	uint8_t index;     /* Type-specific index, or 0 if unique */
+> +} __packed;
+
+Please use kerneldoc format.
+
+> +#define EC_CMD_PWM_GET_DUTY 0x26
+> +
+> +struct ec_params_pwm_get_duty {
+> +	uint8_t pwm_type;  /* ec_pwm_type */
+> +	uint8_t index;     /* Type-specific index, or 0 if unique */
+> +} __packed;
+
+As above.
+
+> +struct ec_response_pwm_get_duty {
+> +	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY =3D 100% */
+> +} __packed;
+> +
+>  /*******************************************************************=
+**********/
+>  /*
+>   * Lightbar commands. This looks worse than it is. Since we only use=
+ one HOST
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
