@@ -1,51 +1,54 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: Re: [PATCH 04/15] drivers: net: cpsw: ethtool: fix accessing to
- suspended device
-Date: Thu, 16 Jun 2016 15:48:16 +0300
-Message-ID: <5762A010.2070201@linaro.org>
-References: <20160615115603.4897-1-grygorii.strashko@ti.com>
- <20160615115603.4897-5-grygorii.strashko@ti.com> <57617ECF.2010902@gmail.com>
- <5761860C.2020502@ti.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 1/5] clk: max77686: Combine Maxim max77686 and max77802
+ driver
+Date: Thu, 16 Jun 2016 15:02:02 +0200
+Message-ID: <5762A34A.3060309@samsung.com>
+References: <1466000018-16784-1-git-send-email-ldewangan@nvidia.com>
+ <1466000018-16784-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5761860C.2020502@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <1466000018-16784-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, javier@osg.samsung.com, mturquette@baylibre.com, robh+dt@kernel.org, linux@armlinux.org.uk
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Javier Martinez Canillas <javier@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/15/2016 04:13 PM, Laxman Dewangan wrote:
+> The clock IP used on the Maxim PMICs max77686 and max77802 are
+> same. The configuration of clock register is also same except
+> the number of clocks.
+> 
+> Part of common code utilisation, there is 3 files for these chips
+> clock driver, one for common and two files for driver registration.
+> 
+> Combine both drivers into single file and move common code into
+> same common file reduces the 2 files and make max77686 and max77802
+> clock driver in single fine. This driver does not depends on the
+> parent driver structure. The regmap handle is acquired through
+> regmap APIs for the register access.
+> 
+> This combination of driver helps on adding clock driver for different
+> Maxim PMICs which has similar clock IP like MAX77620 and MAX20024.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> CC: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> CC: Javier Martinez Canillas <javier@dowhile0.org>
+> ---
+>  drivers/clk/Kconfig        |  15 +--
+>  drivers/clk/Makefile       |   2 -
+>  drivers/clk/clk-max-gen.c  | 194 ------------------------------------
+>  drivers/clk/clk-max-gen.h  |  32 ------
+>  drivers/clk/clk-max77686.c | 241 +++++++++++++++++++++++++++++++++++++++++----
+>  drivers/clk/clk-max77802.c |  96 ------------------
+>  6 files changed, 225 insertions(+), 355 deletions(-)
+>  delete mode 100644 drivers/clk/clk-max-gen.c
+>  delete mode 100644 drivers/clk/clk-max-gen.h
+>  delete mode 100644 drivers/clk/clk-max77802.c
 
+Tested on max77686 and max77802:
+Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-On 15.06.16 19:45, Grygorii Strashko wrote:
-> On 06/15/2016 07:14 PM, Florian Fainelli wrote:
->> On 06/15/2016 04:55 AM, Grygorii Strashko wrote:
->>> The CPSW might be suspended by RPM if all ethX interfaces are down,
->>> but it still could be accesible through ethtool interfce. In this case
->>> ethtool operations, requiring registers access, will cause L3 errors and
->>> CPSW crash.
->>>
->>> Hence, fix it by adding RPM get/put calls in ethtool callbcaks which
->>> can access CPSW registers: .set_coalesce(), .get_ethtool_stats(),
->>> .set_pauseparam(), .get_regs()
->>
->> Provided that you implement an ethtool_ops::begin, it will be called
->> before each ethtool operation runs, so that could allow you to eliminate
->> some of the duplication here. Conversely ethtool_ops::end terminates
->> each operation and can be used for that purpose.
->
-> Ah. Thanks for the advice. (assume you've meant .complete())
-
-Maybe better leave as is, I'm going to add two additional ehttool ops
-containing RPM sensitive part and not, better to split code on those,
-if possible...and hiding put/get in begin op can call rpm when it's not
-needed at all..
-
->
->
->
-
--- 
-Regards,
-Ivan Khoronzhuk
+Best regards,
+Krzysztof
