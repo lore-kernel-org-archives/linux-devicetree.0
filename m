@@ -1,88 +1,137 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 2/2] pci/aer: interrupt fixup in the quirk
-Date: Thu, 16 Jun 2016 08:54:20 -0500
-Message-ID: <20160616135420.GA31343@localhost>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465884747-1517-1-git-send-email-po.liu@nxp.com>
- <1465884747-1517-2-git-send-email-po.liu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Subject: [PATCH 5/7] ata: ahci_brcm: Add support for Broadcom NSP SoC
+Date: Thu, 16 Jun 2016 09:53:33 -0400
+Message-ID: <1466085215-10246-6-git-send-email-yendapally.reddy@broadcom.com>
+References: <1466085215-10246-1-git-send-email-yendapally.reddy@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465884747-1517-2-git-send-email-po.liu@nxp.com>
+In-Reply-To: <1466085215-10246-1-git-send-email-yendapally.reddy@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Po Liu <po.liu@nxp.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh@kernel.org>, Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Jaedon Shin <jaedon.shin@gmail.com>, Anup Patel <anup.patel@broadcom.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-ide@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 02:12:27PM +0800, Po Liu wrote:
-> On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
-> When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
-> maybe there is interrupt line for aer pme etc. Search the interrupt
-> number in the fdt file. Then fixup the dev->irq with it.
-> 
-> Signed-off-by: Po Liu <po.liu@nxp.com>
-> ---
-> changes for V2:
-> 	- Move to the quirk file
-> 
->  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index ee72ebe..909d479 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
+Add SATA3 support for Broadcom NSP SoC
 
-Is there any possibility of this part being used on different arches,
-or will it only ever be on arm64 (or whatever it is)?  If the latter,
-it could go somewhere like arch/arm64/kernel/quirks.c (which doesn't
-exist yet).
+Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+---
+ drivers/ata/Kconfig     |  2 +-
+ drivers/ata/ahci_brcm.c | 46 ++++++++++++++++++++++++++++++++++++----------
+ 2 files changed, 37 insertions(+), 11 deletions(-)
 
-> @@ -25,6 +25,7 @@
->  #include <linux/sched.h>
->  #include <linux/ktime.h>
->  #include <linux/mm.h>
-> +#include <linux/of_irq.h>
->  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
->  #include "pci.h"
->  
-> @@ -4419,3 +4420,25 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
->  	}
->  }
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-> +
-> +/* If root port doesn't support MSI/MSI-X/INTx in RC mode,
-> + * but use standalone irq. Read the device tree for the aer
-> + * interrupt number.
-> + */
-> +static void quirk_aer_interrupt(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +	struct device_node *np = NULL;
-> +
-> +	if (dev->bus->dev.of_node)
-> +		np = dev->bus->dev.of_node;
-> +
-> +	if (IS_ENABLED(CONFIG_OF_IRQ) && np) {
-> +		ret = of_irq_get_byname(np, "aer");
-> +		if (ret > 0) {
-> +			dev->no_msi = 1;
-> +			dev->irq = ret;
-> +		}
-> +	}
-
-What does this mean for the other PCIe services, e.g., PME?  I
-guess this makes the existing AER code work unchanged.  But I thought
-PME had a similar situation and was connected up to a different
-interrupt than AER was.
-
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_aer_interrupt);
-> -- 
-> 2.1.0.27.g96db324
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+index 8fe06e6..2c8be74 100644
+--- a/drivers/ata/Kconfig
++++ b/drivers/ata/Kconfig
+@@ -100,7 +100,7 @@ config SATA_AHCI_PLATFORM
+ 
+ config AHCI_BRCM
+ 	tristate "Broadcom AHCI SATA support"
+-	depends on ARCH_BRCMSTB || BMIPS_GENERIC
++	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP
+ 	help
+ 	  This option enables support for the AHCI SATA3 controller found on
+ 	  Broadcom SoC's.
+diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
+index e87bcec..6f8a734 100644
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -71,6 +71,12 @@
+ 	(DATA_ENDIAN << DMADESC_ENDIAN_SHIFT) |		\
+ 	(MMIO_ENDIAN << MMIO_ENDIAN_SHIFT))
+ 
++enum brcm_ahci_version {
++	BRCM_SATA_BCM7425 = 1,
++	BRCM_SATA_BCM7445,
++	BRCM_SATA_NSP,
++};
++
+ enum brcm_ahci_quirks {
+ 	BRCM_AHCI_QUIRK_NO_NCQ		= BIT(0),
+ 	BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE	= BIT(1),
+@@ -81,6 +87,7 @@ struct brcm_ahci_priv {
+ 	void __iomem *top_ctrl;
+ 	u32 port_mask;
+ 	u32 quirks;
++	enum brcm_ahci_version version;
+ };
+ 
+ static const struct ata_port_info ahci_brcm_port_info = {
+@@ -247,9 +254,19 @@ static u32 brcm_ahci_get_portmask(struct platform_device *pdev,
+ 
+ static void brcm_sata_init(struct brcm_ahci_priv *priv)
+ {
++	void __iomem *ctrl = priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL;
++
+ 	/* Configure endianness */
+-	brcm_sata_writereg(BUS_CTRL_ENDIAN_CONF,
+-			   priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL);
++	if (priv->version ==  BRCM_SATA_NSP) {
++		u32 data = brcm_sata_readreg(ctrl);
++
++		data &= ~((0x03 << DMADATA_ENDIAN_SHIFT) |
++			(0x03 << DMADESC_ENDIAN_SHIFT));
++		data |= (0x02 << DMADATA_ENDIAN_SHIFT) |
++			(0x02 << DMADESC_ENDIAN_SHIFT);
++		brcm_sata_writereg(data, ctrl);
++	} else
++		brcm_sata_writereg(BUS_CTRL_ENDIAN_CONF, ctrl);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -282,8 +299,17 @@ static struct scsi_host_template ahci_platform_sht = {
+ 	AHCI_SHT(DRV_NAME),
+ };
+ 
++static const struct of_device_id ahci_of_match[] = {
++	{.compatible = "brcm,bcm7425-ahci", .data = (void *)BRCM_SATA_BCM7425},
++	{.compatible = "brcm,bcm7445-ahci", .data = (void *)BRCM_SATA_BCM7445},
++	{.compatible = "brcm,bcm-nsp-ahci", .data = (void *)BRCM_SATA_NSP},
++	{},
++};
++MODULE_DEVICE_TABLE(of, ahci_of_match);
++
+ static int brcm_ahci_probe(struct platform_device *pdev)
+ {
++	const struct of_device_id *of_id;
+ 	struct device *dev = &pdev->dev;
+ 	struct brcm_ahci_priv *priv;
+ 	struct ahci_host_priv *hpriv;
+@@ -293,6 +319,12 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
++
++	of_id = of_match_node(ahci_of_match, pdev->dev.of_node);
++	if (!of_id)
++		return -ENODEV;
++
++	priv->version = (enum brcm_ahci_version)of_id->data;
+ 	priv->dev = dev;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "top-ctrl");
+@@ -300,7 +332,8 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->top_ctrl))
+ 		return PTR_ERR(priv->top_ctrl);
+ 
+-	if (of_device_is_compatible(dev->of_node, "brcm,bcm7425-ahci")) {
++	if ((priv->version == BRCM_SATA_BCM7425) ||
++		(priv->version == BRCM_SATA_NSP)) {
+ 		priv->quirks |= BRCM_AHCI_QUIRK_NO_NCQ;
+ 		priv->quirks |= BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE;
+ 	}
+@@ -354,13 +387,6 @@ static int brcm_ahci_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id ahci_of_match[] = {
+-	{.compatible = "brcm,bcm7425-ahci"},
+-	{.compatible = "brcm,bcm7445-ahci"},
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, ahci_of_match);
+-
+ static SIMPLE_DEV_PM_OPS(ahci_brcm_pm_ops, brcm_ahci_suspend, brcm_ahci_resume);
+ 
+ static struct platform_driver brcm_ahci_driver = {
+-- 
+2.1.0
