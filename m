@@ -1,167 +1,100 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v10 2/2] dmaengine: Add Xilinx zynqmp dma engine driver
- support
-Date: Thu, 16 Jun 2016 07:19:38 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5B6CAD@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1464765839-29018-1-git-send-email-appanad@xilinx.com>
- <1464765839-29018-2-git-send-email-appanad@xilinx.com>
- <20160607070841.GJ16910@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A5B4FA9@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160613055012.GC16910@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A5B6441@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160615165004.GC16910@localhost>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [v2 PATCH 1/4] Documentation: bindings: add dt doc for Rockchip
+ USB Type-C PHY
+Date: Thu, 16 Jun 2016 16:49:42 +0900
+Message-ID: <CAAFQd5BY23zdKCxUnLDz6TT+6ro3qnQPP+bH-uu3KDCzdO50nw@mail.gmail.com>
+References: <1465810789-22303-1-git-send-email-zyw@rock-chips.com>
+ <1465810789-22303-2-git-send-email-zyw@rock-chips.com> <2262175.XUeGlE1YsE@phil>
+ <5761F34F.8040202@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160615165004.GC16910@localhost>
-Content-Language: en-US
+In-Reply-To: <5761F34F.8040202@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Srikanth Vemula <svemula@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Douglas Anderson <dianders@chromium.org>, yzq@rock-chips.com, groeck@chromium.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Thu, Jun 16, 2016 at 9:31 AM, Chris Zhong <zyw@rock-chips.com> wrote:
+> Hi Heiko
+>
+>
+> On 06/16/2016 06:11 AM, Heiko Stuebner wrote:
+>>
+>> Am Montag, 13. Juni 2016, 17:39:46 schrieb Chris Zhong:
+>>>
+>>> This patch adds a binding that describes the Rockchip USB Type-C PHY
+>>> for rk3399
+>>>
+>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>>>
+>>> ---
+>>>
+>>> Changes in v2:
+>>> - add some registers description
+>>>
+>>> Changes in v1:
+>>> - add extcon node description
+>>> - move the registers in phy driver
+>>> - remove the suffix of reset
+>>>
+>>>   .../devicetree/bindings/phy/phy-rockchip-typec.txt | 77
+>>> ++++++++++++++++++++++ 1 file changed, 77 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt new file
+>>> mode 100644
+>>> index 0000000..430920c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>> @@ -0,0 +1,77 @@
+>>> +* ROCKCHIP type-c PHY
+>>> +---------------------
+>>> +
+>>> +Required properties:
+>>> + - compatible : should be "rockchip,rk3399-typec-phy0" or
+>>> +                        "rockchip,rk3399-typec-phy1"
+>>> + - reg: Address and length of the usb phy control register set
+>>> + - rockchip,grf : phandle to the syscon managing the "general
+>>> +   register files"
+>>> + - clocks : phandle + clock specifier for the phy clocks
+>>> + - clock-names : string, clock name, must be "tcpdcore", "tcpdphy_ref";
+>>> + - resets : a list of phandle + reset specifier pairs
+>>> + - reset-names : string reset name, must be:
+>>> +                "tcphy", "tcphy_pipe", "uphy_tcphy"
+>>> + - #phy-cells : Must be 0.  See ./phy-bindings.txt for details.
+>>> + - extcon : extcon specifier for the Power Delivery
+>>> +
+>>> +Note, there are 2 type-c phys for RK3399, and they are almost identical,
+>>> except +these registers(description below), every register node contains
+>>> 3 sections: +offset, enable bit, write mask bit.
+>>> + - rockchip,typec_conn_dir : the register of type-c connector direction,
+>>> +   for type-c phy0, it must be <0xe580 0 16>;
+>>> +   for type-c phy1, it must be <0xe58c 0 16>;
+>>
+>> I think I said this already, but these register-lists would be much
+>> happier
+>> being defined inside the driver - see how Frank managed this on his
+>> usb2phy
+>> please.
+>>
+>> Heiko
+>>
+> Yes, I move them into driver in v1 patch, but Rob Herring and Guenter Roeck
+> recommend to put them back to dts.
+> These phy0 and phy1 are exactly the same, except these grf registers.
 
-	Thanks for the review...
+I think having the registers in dts isn't a bad idea. It might be
+actually even useful to bring up this PHY on new SoCs, if they happen
+to have the same PHY, just different plumbing.
 
-> 
-> On Tue, Jun 14, 2016 at 08:18:09AM +0000, Appana Durga Kedareswara Rao
-> wrote:
-> > > > Yes it is HW capability. It can be either in simple mode or SG
-> > > > mode Earlier In the driver this configuration is read from the
-> > > > device-tree But as per lars and your suggestion moved it as runtime config
-> parameters.
-> > >
-> > > If sg mode is available why would anyone _not_ want it?
-> > >
-> > > I do not think there is point to have this
-> >
-> > You mean always keep the device in SG mode and provide an option For
-> > simple dma mode if user want to use simple DMA mode??
-> 
-> Yes, why would anyone want to use single if sg is available?
-> 
-> >
-> > There are few features that are available in the simple DMA mode won't
-> > Available in SG mode like write only DMA , read only DMA mode etc...
-> 
-> Can you explain what these are, how they are used by clients?
+But I suppose we don't need two separate compatible strings for phy0
+and phy1 anymore as Rob pointed, just one "rockchip,rk3399-typec-phy".
 
-Currently it is not implemented but there are cases like,
+After the above is fixed and underscores in property names are
+replaced with dashes, feel free to add my Reviewed-by.
 
-We want to initialize the some region with known value, then write only dma helps
-We want to read dummy data from the fifo, then read only dma helps.
-Best case is SPI fifo.
-
-> 
-> > > > > > +	chan->config.ratectrl = cfg->ratectrl;
-> > > > > > +	chan->config.src_issue = cfg->src_issue;
-> > > > > > +	chan->config.src_burst_len = cfg->src_burst_len;
-> > > > > > +	chan->config.dst_burst_len = cfg->dst_burst_len;
-> > > > >
-> > > > > can you describe these parameters?
-> > > > ratectl:
-> > > > Rate control can be independently enabled per channel. When rate
-> > > > control is enabled, the DMA channel uses the rate control count to
-> > > > schedule
-> > > successive data read transactions.
-> > >
-> > > And how is this used by client?
-> >
-> > When rate control is enabled, ZDMA channel uses the rate control count
-> > To schedule successive data read transactions I mean kind of flow
-> > control to schedule Transactions at fixed intervals instead of pumping
-> > the transfers without delay or whenever bus is available
-> >
-> > Rate control count register definition (11:0):
-> > Scheduling interval for SRC AXI transaction, only used if rate control
-> > is enabled
-> 
-> Okay, why would anyone want transactions at fixed interval. We are talking
-> about DMA, so please give me transfers without delay or whenever bus is
-> available!
-
-Could be that there are certain IPs that requires delay in b/w transactions.
-Since IP is providing this feature we are exploring it to the user.
-
-> 
-> 
-> > > > src_issue:
-> > > > Tells outstanding transaction on SRC.
-> > >
-> > > This should be read only then, right?
-> >
-> > It is a Read/Write register
-> > http://www.xilinx.com/html_docs/registers/ug1087/ug1087-zynq-ultrascal
-> > e-registers.html By default it is configured for Max transactions.
-> > If user want to limit it they can limit it using this config option.
-> 
-> And why would they want that?
-
-Could be that there are certain IPs that my not support burst operations or
-May not support all burst lengths it will be helpful.
-Since IP is providing the feature, we are exploring it to the user.
-
-> 
-> > > > Burst_len:
-> > > > Configures the burst length of the src and dst transfers...
-> > >
-> > > Hmmm, but you are on memcpy, so that should be programmed for
-> throughput?
-> >
-> > Yes...
-> 
-> So max burst lengths then, why would anyone configure lesser?
-
-Depends on the destination and source IPs.
-
-> 
-> > > > > How would a client know how to configure them?
-> > > >
-> > > > With the default values of the config parameters driver will work.
-> > >
-> > > But how will client know what is default!
-> >
-> > Default values means IP default state after reset.
-> > If user not aware of the above parameters also still the driver will work for
-> basic functionality.
-> > Do you want me to implement one more API get_config so that Whenever
-> > user will call the get_config he will know the default values Of the
-> > config parameters?
-> 
-> Looking at above I think we do not warrant programming them. Assume defaults
-> in your driver for performance. Like max burst lengths, Max transactions,
-> without delay scheduling.
-> 
-> If you disagree, which is fine, please provide the cases where a client would
-> need to program these to different values.
-
-As said above there are use cases for SPI and others but currently we didn't tested
-It.
-
-> 
-> > > > If user has specific requirement to change these parameters they
-> > > > can pass It to the driver using set_config API and all these
-> > > > parameters are Documented in the include/linux/dma/xilinx_dma.h file...
-> > >
-> > > Can you give me an example where user would like to do that
-> >
-> > I am using customized dma test client.
-> > There I am calling this set_config API before triggering memcpy/SG
-> operations.
-> 
-> Well that is precisely a  problem. The generic applications wont know "your"
-> custom API and will not configure that!
-
-As said above, generic application can work with default values. 
-These are not custom parameters and we can say these are the dma parameters.
-i.e we can generalize these and provide it to user as generic API.
-
-
-Regards,
-Kedar.
-
-> 
-> --
-> ~Vinod
+Best regards,
+Tomasz
