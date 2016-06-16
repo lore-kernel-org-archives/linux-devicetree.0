@@ -1,115 +1,145 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/4] mfd: cros_ec: Add cros_ec_cmd_xfer_status helper
-Date: Thu, 16 Jun 2016 16:30:32 +0100
-Message-ID: <20160616153032.GC21702@dell>
-References: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
- <1464916904-37554-2-git-send-email-briannorris@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/2] Documentation: bindings: add dt doc for Rockchip
+ PCIe controller
+Date: Thu, 16 Jun 2016 08:31:25 -0700
+Message-ID: <CAD=FV=Vw_+HJc+onc6h+b3Fv5faRc0+=W+e3sJv2OLQJeysQLQ@mail.gmail.com>
+References: <1465373117-823-1-git-send-email-shawn.lin@rock-chips.com> <20160610083210.17f4fdd6@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1464916904-37554-2-git-send-email-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160610083210.17f4fdd6@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 02 Jun 2016, Brian Norris wrote:
+Marc,
 
-> From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->=20
-> So that callers of cros_ec_cmd_xfer don't have to repeat boilerplate
-> code when checking for errors from the EC side.
->=20
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> Reviewed-by: Benson Leung <bleung@chromium.org>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> v2: no change
->=20
->  drivers/platform/chrome/cros_ec_proto.c | 15 +++++++++++++++
->  include/linux/mfd/cros_ec.h             | 18 ++++++++++++++++++
->  2 files changed, 33 insertions(+)
->=20
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platfo=
-rm/chrome/cros_ec_proto.c
-> index b6e161f71b26..ecc544c728f0 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -380,3 +380,18 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_d=
-ev,
->  	return ret;
->  }
->  EXPORT_SYMBOL(cros_ec_cmd_xfer);
-> +
-> +int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> +			    struct cros_ec_command *msg)
-> +{
-> +	int ret;
-> +
-> +	ret =3D cros_ec_cmd_xfer(ec_dev, msg);
-> +	if (ret < 0)
-> +		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
-> +	else if (msg->result !=3D EC_RES_SUCCESS)
-> +		return -EECRESULT - msg->result;
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
-> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.=
-h
-> index 64184d27e3cd..b1e48dfbf50a 100644
-> --- a/include/linux/mfd/cros_ec.h
-> +++ b/include/linux/mfd/cros_ec.h
-> @@ -40,6 +40,9 @@
->  #define EC_MAX_REQUEST_OVERHEAD		1
->  #define EC_MAX_RESPONSE_OVERHEAD	2
-> =20
-> +/* ec_command return value for non-success result from EC */
-> +#define EECRESULT 1000
-> +
->  /*
->   * Command interface between EC and AP, for LPC, I2C and SPI interfa=
-ces.
->   */
-> @@ -226,6 +229,21 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_d=
-ev,
->  		     struct cros_ec_command *msg);
-> =20
->  /**
-> + * cros_ec_cmd_xfer_status - Send a command to the ChromeOS EC
-> + *
-> + * This function is identical to cros_ec_cmd_xfer, except it returns=
- succes
+On Fri, Jun 10, 2016 at 12:32 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On Wed, 8 Jun 2016 16:05:17 +0800
+> Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>
+>> This patch adds a binding that describes the Rockchip PCIe controller
+>> found on Rockchip SoCs PCIe interface.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v2:
+>> - fix lots clk/reset stuff suggested by Heiko
+>> - remove msi-parent and add msi-map suggested by Marc
+>
+> I noticed this ^^^^ ...
+>
+>> - drop phy related stuff
+>> - some others minor fixes
+>>
+>>  .../devicetree/bindings/pci/rockchip-pcie.txt      | 86 ++++++++++++++++++++++
+>>  1 file changed, 86 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> new file mode 100644
+>> index 0000000..eb92e29
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> @@ -0,0 +1,86 @@
+>> +* Rockchip AXI PCIe Root Port Bridge DT description
+>> +
+>> +Required properties:
+>> +- #address-cells: Address representation for root ports, set to <3>
+>> +- #size-cells: Size representation for root ports, set to <2>
+>> +- #interrupt-cells: specifies the number of cells needed to encode an
+>> +             interrupt source. The value must be 1.
+>> +- compatible: Should contain "rockchip,rk3399-pcie"
+>> +- reg: Two register ranges as listed in the reg-names property
+>> +- reg-names: Must include the following names
+>> +     - "axi-base"
+>> +     - "apb-base"
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +             See ../clocks/clock-bindings.txt for details.
+>> +- clock-names: Must include the following entries:
+>> +     - "aclk"
+>> +     - "aclk-perf"
+>> +     - "hclk"
+>> +     - "pm"
+>> +- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
+>> +- phy-names:  MUST be "pcie-phy".
+>> +- interrupts: Three interrupt entries must be specified.
+>> +- interrupt-names: Must include the following names
+>> +     - "sys"
+>> +     - "legacy"
+>> +     - "client"
+>> +- resets: Must contain five entries for each entry in reset-names.
+>> +        See ../reset/reset.txt for details.
+>> +- reset-names: Must include the following names
+>> +     - "core"
+>> +     - "mgmt"
+>> +     - "mgmt-sticky"
+>> +     - "pipe"
+>> +- pinctrl-names : The pin control state names
+>> +- pinctrl-0: The "default" pinctrl state
+>> +- interrupt-map-mask and interrupt-map: standard PCI properties
+>> +- interrupt-controller: identifies the node as an interrupt controller
+>> +
+>> +Optional Property:
+>> +- ep-gpios: contain the entry for pre-reset gpio
+>> +- num-lanes: number of lanes to use
+>> +- vpcie3v3-supply: The phandle to the 3.3v regulator to use for pcie. If this
+>> +  is specified we'll defer probe until we can find this regulator.
+>> +- vpcie1v8-supply: The phandle to the 1.8v regulator to use for pcie. If this
+>> +  is specified we'll defer probe until we can find this regulator.
+>> +- vpcie0v9-supply: The phandle to the 0.9v regulator to use for pcie. If this
+>> +  is specified we'll defer probe until we can find this regulator.
+>> +
+>> +Example:
+>> +
+>> +pcie0: pcie@f8000000 {
+>> +     compatible = "rockchip,rk3399-pcie";
+>> +     #address-cells = <3>;
+>> +     #size-cells = <2>;
+>> +     clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
+>> +              <&cru PCLK_PCIE>;
+>> +     clock-names = "aclk", "aclk-perf",
+>> +                   "hclk";
+>> +     bus-range = <0x0 0x1>;
+>> +     interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
+>> +                  <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+>> +     interrupt-names: "sys", "legacy", "client";
+>> +     assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
+>> +     assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
+>> +     assigned-clock-rates = <100000000>;
+>> +     ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
+>> +     ranges = < 0x82000000 0 0xfa000000 0x0 0xfa000000 0 0x600000
+>> +                0x81000000 0 0xfa600000 0x0 0xfa600000 0 0x100000 >;
+>> +     num-lanes = <4>;
+>> +     reg = < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0x0 0x1000000 >;
+>> +     reg-name = "axi-base", "apb-base";
+>> +     resets = <&cru SRST_PCIEPHY>, <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
+>> +              <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
+>> +     reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
+>> +     phys = <&pcie_phy>;
+>> +     phy-names = "pcie-phy";
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&pcie_clkreq>;
+>> +     #interrupt-cells = <1>;
+>> +     interrupt-controller;
+>> +     interrupt-map-mask = <0 0 0 7>;
+>> +     interrupt-map = <0 0 0 1 &pcie0 1>,
+>> +                     <0 0 0 2 &pcie0 2>,
+>> +                     <0 0 0 3 &pcie0 3>,
+>> +                     <0 0 0 4 &pcie0 4>;
+>> +};
+>
+>
+> And yet I don't see anything related to msi-map in the binding or in
+> the example. As Doug mentioned issues with MSIs being delivered, I
+> wonder if the two are related...
 
-s/succes/success/
+With Shawn's latest patches and following his latest example dts
+snippet (which includes the msi-map), things worked much better.  :)
 
-I guess whoever takes this patch can do a quick fix-up job on it, so:
+Thank you for your help!
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
-> + * status only if both the command was transmitted successfully and =
-the EC
-> + * replied with success status. It's not necessary to check msg->res=
-ult when
-> + * using this function.
-> + *
-> + * @ec_dev: EC device
-> + * @msg: Message to write
-> + * @return: Num. of bytes transferred on success, <0 on failure
-> + */
-> +int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> +			    struct cros_ec_command *msg);
-> +
-> +/**
->   * cros_ec_remove - Remove a ChromeOS EC
->   *
->   * Call this to deregister a ChromeOS EC, then clean up any private =
-data.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-Doug
