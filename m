@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 09/10] ARM: dts: sun9i: a80-optimus: Order
+Subject: Re: [PATCH v2 08/10] ARM: dts: sun9i: cubieboard4: Order
  nodes by alphabetical order
-Date: Thu, 16 Jun 2016 10:14:27 +0200
-Message-ID: <20160616081427.GG5144@lukather>
+Date: Thu, 16 Jun 2016 10:14:41 +0200
+Message-ID: <20160616081441.GH5144@lukather>
 References: <1465986467-14802-1-git-send-email-wens@csie.org>
- <1465986467-14802-10-git-send-email-wens@csie.org>
+ <1465986467-14802-9-git-send-email-wens@csie.org>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gm5TwAJMO0F2iVRz"
-Return-path: <rtc-linux+bncBDSJBYGBRIMBBZF7RG5QKGQEFSZIOIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="ik0NlRzMGhMnxrMX"
+Return-path: <rtc-linux+bncBDSJBYGBRIMBB4V7RG5QKGQEDJJP3GA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1465986467-14802-10-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1465986467-14802-9-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
@@ -24,12 +24,12 @@ Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee
 List-Id: devicetree@vger.kernel.org
 
 
---gm5TwAJMO0F2iVRz
+--ik0NlRzMGhMnxrMX
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Wed, Jun 15, 2016 at 06:27:46PM +0800, Chen-Yu Tsai wrote:
-> Move the mmc nodes above the ohci nodes for proper ordering by name.
+On Wed, Jun 15, 2016 at 06:27:45PM +0800, Chen-Yu Tsai wrote:
+> Move the &pio node below the mmc nodes for proper ordering by name.
 > 
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
@@ -52,25 +52,25 @@ You received this message because you are subscribed to the Google Groups "rtc-l
 To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---gm5TwAJMO0F2iVRz
+--ik0NlRzMGhMnxrMX
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXYl/jAAoJEBx+YmzsjxAgd1MP/idSUAw5syl9OYAtiKeJ7RNr
-W9AUz+wc0pHjra9Ui7Y8TDXtRYOKnw15lSpw1KCIXCSfFUV+zfc/vZH0Ed8NPeAr
-RSb2zR6D+YEMf+oOGJbD+AM/9GxzuaCqiHBh93rOeeWo0sa31ns2wIdD2DInJRU1
-MasoUVWkgGDA2F/p5cbj70UPiIjjahRgk8Tk4VRKfgBFCeLEsZMkUKi48EjqCrCn
-zibYKucH3v1qKgzI2Gd3557xzpewiO8Pdf2KHiwzDqmL9DTcfyXpoNG7bTUXJmRd
-hWj5RqZEfngNPaIr+MtmsrYZf4JV4Nbq2joHIvpBwRxLBx2l/xZxl52VI9gD1Zt1
-yap0Se+IDjVB5LQbeEFtbIEP5p1BGGkVOltHK6pj5iJu306gyNNrEueXfqXzlneT
-L9njjQvD14V+VE9gyqeytdeVkwOjWlHShUtkng8GWYnC3wSh9OB1vZjLpZvsvTqx
-O/WbxmBleUGgrvHUTJxBpXcHjZe/5UtD9ALKX9djNGCbYY4GlWZrtnR+e4nDJ9BD
-fFj29BzO5l0UOtwbmkTYx8elSJNG28lYP6Tk5i6mWnqq37uQP5+LmfhxEo7SQXR/
-z7lfEg8hCZCa0etJ2HOau7bHQ9ET32+o0oxr9unyglTUPQ0yWDx1FmFZYiSo0SlW
-jH0YPQqhQJH0khuyje0d
-=S8IS
+iQIcBAEBAgAGBQJXYl/xAAoJEBx+YmzsjxAg+rIQAIJic/Ica37/xWQ52n0hfxdm
+NCMUa0uLNknxve8+zrFkLymH8HgebpWC7VJHM9uuycXXcyNOboVjAUzsrO1IHZxq
+SXxROc6fYuEUXVFY0ZO58vDwaK/m5Oo1D3oe+6HRgMbB5c4DVmMy99sxRh5/m93U
+gWWfyHSsLrHuAJBuUgW0y0p26kPcsnstOSO+njZSBOCbzZtty1gSogh5kbVmcGNi
+IburNSZ5k9J7VSFb6hMbQV3L9hwBv+n1jyEWQf/F/cPfZsBAVwlxbMLnI6snrjVm
+si8xwfuqsF7gm7l39qME6P9gtGDGI0a+ffKOT1SQ9ks0qblPGq4+QIJFp8DEJwLp
+oPBa+LkuiOFcJrZdB7fufE/TFQsewpfST5E/G76R6yDM53PBINgfb+zM+J5hs3pa
+StcMjiQ4A6Xy1GJyLr6miqwt/69Re3Ba6ubZnVcWGxeMSkw8cMWbmb2o+Ok1PDmv
+njDqNhBn5zjR1X+Eq9WIVY25eDtX8tL8rTK20kQwoa0Y+7gh3XccjCG0dzUOy6UP
+pOiYDk1CNuFGWjTJtosFxKONUDlQ+6xdyiCVdSy/uMSxZ9czQDKvImXZ19CmyPMb
+2jYHQzb3+prcVHmazcz3iksoqwEqKqepB7F3McjFVXKmmPtHx1W2fIkEqv0hOCHW
+baGgBDXIkZNeyyNfdM6G
+=fciQ
 -----END PGP SIGNATURE-----
 
---gm5TwAJMO0F2iVRz--
+--ik0NlRzMGhMnxrMX--
