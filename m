@@ -1,107 +1,62 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH V12 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
- Flash Controller
-Date: Thu, 16 Jun 2016 15:21:42 +0200
-Message-ID: <5762A7E6.8000109@denx.de>
-References: <1465000774-7762-1-git-send-email-marex@denx.de> <1465000774-7762-2-git-send-email-marex@denx.de> <575F91B2.7010304@ti.com> <575FFF97.7040104@denx.de> <57624A98.4060308@ti.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 0/4] clk: Combine MAX77686 and MAX77802 driver and extend for MAX77620
+Date: Thu, 16 Jun 2016 18:53:23 +0530
+Message-ID: <1466083407-28793-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57624A98.4060308-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: k.kozlowski@samsung.com, javier@osg.samsung.com, mturquette@baylibre.com, robh+dt@kernel.org, linux@armlinux.org.uk
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2016 08:43 AM, Vignesh R wrote:
-> 
-> 
-> On Tuesday 14 June 2016 06:29 PM, Marek Vasut wrote:
-> 
->>> I was wondering if its better to use direct access mode[1].
->>
->> The link leads to altera documentation front page, but I have an idea
->> what you mean. You might want to refer to [2] instead.
->>
->> [2] https://www.altera.com/en_US/pdfs/literature/hb/cyclone-v/cv_5v4.pdf
->>
-> 
-> My link was suppose to point to html edition of above document.
+The clock IP used on the Maxim PMICs max77686 and max77802 are
+same. The configuration of clock register is also same except
+the number of clocks.
+    
+Part of common code utilisation, there is 3 files for these chips
+clock driver, one for common and two files for driver registration.
+    
+Combine both drivers into single file and move common code into
+same common file reduces the 2 files and make max77686 and max77802
+clock driver in single fine. This driver does not depends on the
+parent driver structure. The regmap handle is acquired through
+regmap APIs for the register access.
 
-Ah, OK.
+After comining the driver and DT files, extend the support to MAX77620.
 
->>> With this
->>> mode there is no need to wait for IRQ or monitor sdram level. By setting
->>> up QSPI in direct access mode, this entire function can be replaced by:
->>> memcpy(buf, cqspi->ahb_base + from, n_rx)
->>
->> The altera docs, page 993, show how to use the direct access mode. The
->> idea is to map 1 MiB blocks of the flash in the address space, one at a
->> time and then do IO into those. I don't like such solution:
->>
->> - I didn't find any way to find when all the data in the current 1 MiB
->>   block were written and you can remap another 1 MiB block in place.
-> 
-> I believe this constraint only applies if enahbremap bit is set in cfg
-> register, if not, then the entire memory map can be accessed.
 
-And where is that memory window accessible then, at which address ?
-The SoCFPGA peripherals are stuffed in some 12 MiB of the address
-space, the rest is bootrom/sram/ram and the FPGA bridges, so I find
-it hard to believe you can place ie. 128 MiB SPI NOR mapping somewhere
-in there.
+This series is based on discussion from the series
+	clk: max77620: Add clock driver for MAX77620/MAX20024
+On this series, it is proposed to combine all files together.
 
-My impression is that in direct mode, the qspi will always overlay the
-address 0x0 on socfpga , but that might be configurable , I'm not sure.
+Changes form V1:
+- Incorporated all review comment.
+- Collected Testedby/reviewed by.
 
->> - Since the controller doesn't use the internal buffer in direct
->>   operation mode, it will block the AHB bus during it's operation.
-> 
-> I agree, this is a disadvantage.
-> 
->> - I didn't find how IO errors get handled in this case, but maybe I
->>   didn't drill deep enough on this one.
->>
->> Moreover, page 991 bottom of [2] states that the indirect mode is
->> "high-performance". I am inclined to believe that as it uses the
->> internal buffer of the QSPI controller, which is tightly coupled to the
->> block,
->> so the data are available immediately when the flash is ready instead
->> of having to wait for the next AHB turn.
->>
-> 
-> Indirect mode may be the better option when using DMA. But, my thinking
-> was that, for CPU copy, the interrupt overhead and the fact that sdram
-> level needs to be monitored constantly might affect throughput badly
-> while using indirect mode.
 
-Ah yeah, that's true, that's a good point. I was also pondering if the
-controller doesn't generate way too many interrupts.
+Laxman Dewangan (4):
+  clk: max77686: Combine Maxim max77686 and max77802 driver
+  clk: Combine DT binding doc for max77686 and max77802
+  clk: max77686: Add DT binding details for PMIC MAX77620
+  clk: max77686: Add support for MAX77620 clocks
 
->> My impression is that the Direct mode is great when the system boots
->> from the QSPI because it can "map" the flash and just execute code from
->> it. But for normal operation, the indirect mode seems the better choice.
->>
->>> IMO, this might give better throughput. Have tested this mode?
->>
->> I haven't tested it, no.
->>
-> 
-> Anyways, direct mode support can be added (if required) at later point
-> of time. I have no objection for current approach as such.
-
-OK, thanks!
-
-> Thanks for the reply!
-> 
-> 
-
+ .../devicetree/bindings/clock/maxim,max77686.txt   | 118 ++++++++--
+ .../devicetree/bindings/clock/maxim,max77802.txt   |  44 ----
+ drivers/clk/Kconfig                                |  18 +-
+ drivers/clk/Makefile                               |   2 -
+ drivers/clk/clk-max-gen.c                          | 194 ---------------
+ drivers/clk/clk-max-gen.h                          |  32 ---
+ drivers/clk/clk-max77686.c                         | 262 ++++++++++++++++++++-
+ drivers/clk/clk-max77802.c                         |  96 --------
+ include/dt-bindings/clock/maxim,max77620.h         |  21 ++
+ 9 files changed, 368 insertions(+), 419 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/maxim,max77802.txt
+ delete mode 100644 drivers/clk/clk-max-gen.c
+ delete mode 100644 drivers/clk/clk-max-gen.h
+ delete mode 100644 drivers/clk/clk-max77802.c
+ create mode 100644 include/dt-bindings/clock/maxim,max77620.h
 
 -- 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
+
