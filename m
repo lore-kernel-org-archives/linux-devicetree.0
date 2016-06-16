@@ -1,30 +1,28 @@
-From: David Miller <davem@davemloft.net>
+From: Timur Tabi <timur@codeaurora.org>
 Subject: Re: [PATCH] [v5] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 15 Jun 2016 21:41:42 -0700 (PDT)
-Message-ID: <20160615.214142.1092705919839921659.davem@davemloft.net>
+Date: Thu, 16 Jun 2016 00:05:45 -0500
+Message-ID: <576233A9.7060807@codeaurora.org>
 References: <1465942955-22988-1-git-send-email-timur@codeaurora.org>
+ <20160615.214142.1092705919839921659.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1465942955-22988-1-git-send-email-timur@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: timur@codeaurora.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160615.214142.1092705919839921659.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Timur Tabi <timur@codeaurora.org>
-Date: Tue, 14 Jun 2016 17:22:35 -0500
+David Miller wrote:
+> Please always order local variable declarations from longest to shortest
+> line.
+>
+> Audit your entire driver for this issue, thanks.
 
-> +/* Free all descriptors of given receive queue */
-> +static void emac_rx_q_free_descs(struct emac_adapter *adpt)
-> +{
-> +	struct emac_rx_queue *rx_q = &adpt->rx_q;
-> +	struct device *dev = adpt->netdev->dev.parent;
-> +	size_t size;
-> +	int i;
+I will fix this in v6.
 
-Please always order local variable declarations from longest to shortest
-line.
-
-Audit your entire driver for this issue, thanks.
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
