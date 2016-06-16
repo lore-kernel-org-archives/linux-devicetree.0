@@ -1,108 +1,109 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH 04/11] mmc: sdhci-of-arasan: Properly set
- corecfg_baseclkfreq on rk3399
-Date: Thu, 16 Jun 2016 09:06:14 +0800
-Message-ID: <15960cce-354b-5eb6-79b0-19f55e840b0d@rock-chips.com>
-References: <1465339484-969-1-git-send-email-dianders@chromium.org>
- <1465339484-969-5-git-send-email-dianders@chromium.org>
- <f5dcc018-bd60-87a7-798b-efc261e443dd@rock-chips.com>
- <CAD=FV=UzGZmwGTthqqO5Skxj5f0wsS5VKr4gYP2i9SUyGqvbjg@mail.gmail.com>
- <47a2dcd9-9c3c-8fde-2be0-40e305c25e8d@rock-chips.com>
- <CAD=FV=UL5tU8RWtHF=-pE8SA0jUcBsqQDOU0BrruXOF7yGh5xg@mail.gmail.com>
- <da1c9ae9-71d9-6e9d-7b9f-08485ee9178e@rock-chips.com>
- <CAD=FV=WGwiQqRNMSSX9OR6nAOwuu7CbULuz7BcNp-S=duqpLLQ@mail.gmail.com>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: Re: [PATCH v5] ASoC: rockchip: Add machine driver for RK3399 GRU
+ Boards
+Date: Thu, 16 Jun 2016 09:15:22 +0800
+Message-ID: <5761FDAA.1070802@rock-chips.com>
+References: <1465807339-1100-1-git-send-email-zhengxing@rock-chips.com> <CADR9n49m7anZpDbbb3=ZGBaacOuXc4F=Yid0eyMey1LfEJx8Pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WGwiQqRNMSSX9OR6nAOwuu7CbULuz7BcNp-S=duqpLLQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Ziyuan Xu <xzy.xu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Adrian Hunter <adrian.hunter@intel.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADR9n49m7anZpDbbb3=ZGBaacOuXc4F=Yid0eyMey1LfEJx8Pw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steve Barber <smbarber@google.com>, Adam Thomson <Adam.Thomson@diasemi.com>
+Cc: linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Douglas Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, linux-arm-kernel@lists.infradead.org, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/6/14 10:13, Doug Anderson wrote:
-> Shawn,
->
-> On Mon, Jun 13, 2016 at 5:59 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
->>> Even in the case that an SoC designer didn't put a value into
->>> corecfg_baseclkfreq that matched register[15:8], it seems very likely
->>> that the rate returned from the clk_get_rate() would match.
->>>
->>> I guess what I'm saying is that, to me, it seems like my patch isn't
->>> broken in any real systems.  If we ever find a system that needs this
->>> behavior in the future, we can add it.  Until then, it seems like my
->>> patch would be fine.  Do you agree?
->>
->>
->> I agree. But from the code itself, we should still use
->> SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN to see if we could get
->> it from internal register in case of some platforms don't
->> provide the clk stuff.. Sounds sane? :)
->
-> Could we wait until there exists a SoC that needs to provide
-> baseclkfreq in its sdhci_arasan_soc_ctl_map table and that needs this
-> value copied from register[15:8]?
+// + Adam,
 
-yes, I think the base clk got from clk framework shouldn't
-make any difference with that from register[15:8] if implemented. And
-we now decide how to get base clk in a certain variant driver which
-menas we know that this variant would never implement register[15:8], so
-it looks fine for your patch with only a nit that we should make sure
-we toggle up the COMMON_CLK. I saw your v2.1 to deal with it, so I think
-it's okay now to add
+On 2016=E5=B9=B406=E6=9C=8816=E6=97=A5 03:43, Steve Barber wrote:
+> On Mon, Jun 13, 2016 at 1:42 AM, Xing Zheng<zhengxing@rock-chips.com>=
+  wrote:
+>> +
+>> +static int rockchip_sound_da7219_hw_params(struct snd_pcm_substream=
+ *substream,
+>> +                            struct snd_pcm_hw_params *params)
+>> +{
+>> +       struct snd_soc_pcm_runtime *rtd =3D substream->private_data;
+>> +       struct snd_soc_dai *cpu_dai =3D rtd->cpu_dai;
+>> +       struct snd_soc_dai *codec_dai =3D rtd->codec_dai;
+>> +       struct snd_soc_dapm_context *dapm =3D&rtd->card->dapm;
+>> +       int mclk, ret;
+>> +
+>> +       snd_soc_dapm_disable_pin(dapm, "Speakers");
+>> +       snd_soc_dapm_disable_pin(dapm, "Int Mic");
+>> +       snd_soc_dapm_enable_pin(dapm, "Headphones");
+>> +       snd_soc_dapm_enable_pin(dapm, "Headset Mic");
+>> +       snd_soc_dapm_sync(dapm);
+>> +
+>> +       /* in bypass mode, the mclk has to be one of the frequencies=
+ below */
+>> +       switch (params_rate(params)) {
+>> +       case 8000:
+>> +       case 16000:
+>> +       case 24000:
+>> +       case 32000:
+>> +       case 48000:
+>> +       case 64000:
+>> +       case 96000:
+>> +               mclk =3D 12288000;
+>> +               break;
+>> +       case 11025:
+>> +       case 22050:
+>> +       case 44100:
+>> +       case 88200:
+>> +               mclk =3D 11289600;
+>> +               break;
+>> +       default:
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       ret =3D snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
+>> +                                    SND_SOC_CLOCK_OUT);
+>> +       if (ret<  0) {
+>> +               dev_err(codec_dai->dev, "Can't set cpu clock out %d\=
+n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       ret =3D snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
+>> +                                    SND_SOC_CLOCK_IN);
+>> +       if (ret<  0) {
+>> +               dev_err(codec_dai->dev, "Can't set codec clock in %d=
+\n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       ret =3D snd_soc_dai_set_pll(codec_dai, 0, DA7219_SYSCLK_MCLK=
+, 0, 0);
+>> +       if (ret<  0) {
+>> +               dev_err(codec_dai->dev, "Can't set pll sysclk mclk %=
+d\n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int rockchip_sound_da7219_init(struct snd_soc_pcm_runtime *r=
+td)
+>> +{
+>> +       struct snd_soc_codec *codec =3D rtd->codec_dais[0]->codec;
+>> +       int ret;
+>> +
+>> +       /* Enable Headset and 4 Buttons Jack detection */
+>> +       ret =3D snd_soc_card_jack_new(rtd->card, "Headset Jack",
+>> +                                   SND_JACK_HEADSET |
+> Should this also include SND_JACK_LINEOUT? da7219 differentiates
+> between the two so not including lineout means, for example, we can
+> miss jack insertion/removal events.
+>
+Hi Adam,
 
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+Could you please confirm Steve says that about SND_JACK_LINEOUT?
 
->
-> AKA:
->
-> A) If you have a SoC where clk_get_rate() is right and software needs
-> to set baseclkfreq manualy, then you should include "baseclkfreq" in
-> your sdhci_arasan_soc_ctl_map table.  This is like rk3399.  Note that
-> if _both_ clk_get_rate() and register[15:8] are right, that's fine.
-> We can still use clk_get_rate() since it will be exactly the same as
-> register[15:8].
->
-> B) If you have a SoC that doesn't even expose corecfg_baseclkfreq to
-> software control, just don't include "baseclkfreq" in your
-> sdhci_arasan_soc_ctl_map table.  Easy.  This is how my patch treats
-> anyone using the current "generic" bindings, but you could easily just
-> specify an offset of "-1" for baseclkfreq if you didn't want to use
-> the generic bindings but couldn't control baseclkfreq.
->
-> C) If you have a SoC that provides a valid value in register[15:8] and
-> clk_get_rate() is wrong and software is required to copy the value
-> from register[15:8] to baseclkfreq, technically we should fix
-> clk_get_rate() anyway.  It's good when common clock framework provides
-> correct values.  NOTE: It seems very unlikely to me that
-> register[15:8] would be right AND that software would be required to
-> copy this value to baseclkfreq, but I suppose there are some pretty
-> crazy hardware designs out there.
->
-> D) If you have a SoC that provides a valid value in register[15:8] and
-> clk_get_rate() is wrong and can't be fixed (REALLY?) and software is
-> required to copy the value from register[15:8] to baseclkfreq, we will
-> need to add new code.  My assertion is that such a SoC doesn't exist
-> and is unlikely to ever exist, so I am hesitant to add extra code to
-> support this SoC.
->
->
-> With my patch, A) and B) are certainly handled.  I think C) is
-> unlikely to exist, but if it did exist then I'd say we should fix
-> clk_get_rate().  I think D) is VERY unlikely to exist.  If I'm shown
-> proof of D) existing, I'm happy to submit a patch for it.  Until we
-> see proof of D)'s existence, I don't think we should clutter the code
-> with support for it.
->
->
-> -Doug
->
->
->
+Thanks.
 
-
--- 
-Best Regards
-Shawn Lin
-
+--=20
+- Xing Zheng
