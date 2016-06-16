@@ -1,212 +1,197 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH 20/22] dt-bindings: msm/mdp: Provide details on MDP interface ports
-Date: Thu, 16 Jun 2016 17:06:45 +0530
-Message-ID: <1466077007-26792-21-git-send-email-architt@codeaurora.org>
+Subject: [PATCH 22/22] arm64: dts: apq8016-sbc: Add HDMI display support
+Date: Thu, 16 Jun 2016 17:06:47 +0530
+Message-ID: <1466077007-26792-23-git-send-email-architt@codeaurora.org>
 References: <1466077007-26792-1-git-send-email-architt@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1466077007-26792-1-git-send-email-architt@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: robdclark@gmail.com
-Cc: robh@kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
+Cc: robh@kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, Archit Taneja <architt@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The MDP4/5 DT node now contains a list of ports that describe how it
-connects to external encoder interfaces like DSI and HDMI. These follow
-the standard of_graph bindings, and allow us to get rid of the 'connectors'
-phandle that contained a list of all the external encoders connected to
-MDP.
+The APQ8016-sbc provides a HDMI output. The APQ8016 display block only
+provides a MIPI DSI output. So, the board has a ADV7533 DSI to HDMI
+encoder chip that sits between the DSI PHY output and the HDMI
+connector.
 
-The GPU phandle is removed too until we figure out what's the right way
-to specify it in DT.
+Add the ADV7533 DT node under its I2C control bus, and tie the DSI
+output port to the ADV7533's input port.
 
+Cc: Andy Gross <andy.gross@linaro.org>
 Cc: Rob Herring <robh@kernel.org>
 Cc: devicetree@vger.kernel.org
 
 Signed-off-by: Archit Taneja <architt@codeaurora.org>
 ---
- .../devicetree/bindings/display/msm/mdp4.txt       | 68 ++++++++++++++++++++--
- .../devicetree/bindings/display/msm/mdp5.txt       | 48 ++++++++++++++-
- 2 files changed, 110 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi | 48 +++++++++++++
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          | 82 ++++++++++++++++++++++
+ 2 files changed, 130 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/mdp4.txt b/Documentation/devicetree/bindings/display/msm/mdp4.txt
-index 1de9b17..3c341a1 100644
---- a/Documentation/devicetree/bindings/display/msm/mdp4.txt
-+++ b/Documentation/devicetree/bindings/display/msm/mdp4.txt
-@@ -10,7 +10,6 @@ Required properties:
-   * "qcom,mdp4" - mdp4
- - reg: Physical base address and length of the controller's registers.
- - interrupts: The interrupt signal from the display controller.
--- connectors: array of phandles for output device(s)
- - clocks: device clocks
-   See ../clocks/clock-bindings.txt for details.
- - clock-names: the following clocks are required.
-@@ -20,9 +19,23 @@ Required properties:
-   * "lut_clk"
-   * "hdmi_clk"
-   * "tv_clk"
-+- ports: contains the list of output ports from MDP. These connect to interfaces
-+  that are external to the MDP hardware, such as HDMI, DSI, EDP etc (LVDS is a
-+  special case since it is a part of the MDP block itself).
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+index ee828a8..e1e6c6b 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
+@@ -24,4 +24,52 @@
+ 			bias-pull-up;
+ 		};
+ 	};
 +
-+  Each output port contains an endpoint that describes how it is connected to an
-+  external interface. These are described by the standard properties documented
-+  here:
-+	Documentation/devicetree/bindings/graph.txt
-+	Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+  The output port mappings are:
-+	Port 0 -> LCDC/LVDS
-+	Port 1 -> DSI1 Cmd/Video
-+	Port 2 -> DSI2 Cmd/Video
-+	Port 3 -> DTV
- 
- Optional properties:
--- gpus: phandle for gpu device
- - clock-names: the following clocks are optional:
-   * "lut_clk"
- 
-@@ -31,12 +44,27 @@ Example:
- / {
- 	...
- 
--	mdp: qcom,mdp@5100000 {
-+	hdmi: hdmi@4a00000 {
-+		...
-+		ports {
-+			...
-+			port@0 {
-+				reg = <0>;
-+				hdmi_in: endpoint {
-+					remote-endpoint = <&mdp_dtv_out>;
-+				};
-+			};
-+			...
++	adv7533_int_active: adv533_int_active {
++		pinmux {
++			function = "gpio";
++			pins = "gpio31";
 +		};
-+		...
++		pinconf {
++			pins = "gpio31";
++			drive-strength = <16>;
++			bias-disable;
++		};
 +	};
 +
-+	...
++	adv7533_int_suspend: adv7533_int_suspend {
++		pinmux {
++			function = "gpio";
++			pins = "gpio31";
++		};
++		pinconf {
++			pins = "gpio31";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
 +
-+	mdp: mdp@5100000 {
- 		compatible = "qcom,mdp4";
- 		reg = <0x05100000 0xf0000>;
- 		interrupts = <GIC_SPI 75 0>;
--		connectors = <&hdmi>;
--		gpus = <&gpu>;
- 		clock-names =
- 		    "core_clk",
- 		    "iface_clk",
-@@ -50,5 +78,35 @@ Example:
- 		    <&mmcc MDP_LUT_CLK>,
- 		    <&mmcc HDMI_TV_CLK>,
- 		    <&mmcc MDP_TV_CLK>;
++	adv7533_switch_active: adv7533_switch_active {
++		pinmux {
++			function = "gpio";
++			pins = "gpio32";
++		};
++		pinconf {
++			pins = "gpio32";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
 +
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++	adv7533_switch_suspend: adv7533_switch_suspend {
++		pinmux {
++			function = "gpio";
++			pins = "gpio32";
++		};
++		pinconf {
++			pins = "gpio32";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 205ef89..5045695 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -59,6 +59,47 @@
+ 		/* On High speed expansion */
+ 			label = "HS-I2C2";
+ 			status = "okay";
 +
-+				port@0 {
-+					reg = <0>;
-+					mdp_lvds_out: endpoint {
++			adv_bridge: bridge@39 {
++				status = "okay";
++
++				compatible = "adi,adv7533";
++				reg = <0x39>;
++
++				interrupt-parent = <&msmgpio>;
++				interrupts = <31 2>;
++
++				adi,dsi-lanes = <4>;
++
++				pd-gpios = <&msmgpio 32 0>;
++
++				avdd-supply = <&pm8916_l6>;
++				v1p2-supply = <&pm8916_l6>;
++				v3p3-supply = <&pm8916_l17>;
++
++				pinctrl-names = "default","sleep";
++				pinctrl-0 = <&adv7533_int_active &adv7533_switch_active>;
++				pinctrl-1 = <&adv7533_int_suspend &adv7533_switch_suspend>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						adv7533_in: endpoint {
++							remote-endpoint = <&dsi0_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						adv7533_out: endpoint {
++							remote-endpoint = <&hdmi_con>;
++						};
 +					};
 +				};
++			};
+ 		};
+ 
+ 		i2c@78ba000 {
+@@ -164,6 +205,36 @@
+ 		lpass@07708000 {
+ 			status = "okay";
+ 		};
 +
-+				port@1 {
-+					reg = <1>;
-+					mdp_dsi1_out: endpoint {
++		mdss@1a00000 {
++			status = "okay";
++
++			mdp@1a01000 {
++				status = "okay";
++			};
++
++			dsi@1a98000 {
++				status = "okay";
++
++				vdda-supply = <&pm8916_l2>;
++				vddio-supply = <&pm8916_l6>;
++
++				ports {
++					port@1 {
++						endpoint {
++							remote-endpoint = <&adv7533_in>;
++							data-lanes = <0 1 2 3>;
++						};
 +					};
 +				};
++			};
 +
-+				port@2 {
-+					reg = <2>;
-+					mdp_dsi2_out: endpoint {
-+					};
-+				};
++			dsi-phy@1a98300 {
++				status = "okay";
 +
-+				port@3 {
-+					reg = <3>;
-+					mdp_dtv_out: endpoint {
-+						remote-endpoint = <&hdmi_in>;
-+					};
-+				};
++				vddio-supply = <&pm8916_l6>;
++			};
 +		};
  	};
+ 
+ 	usb2513 {
+@@ -178,6 +249,17 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&usb_id_default>;
+ 	};
++
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&adv7533_out>;
++			};
++		};
++	};
  };
-diff --git a/Documentation/devicetree/bindings/display/msm/mdp5.txt b/Documentation/devicetree/bindings/display/msm/mdp5.txt
-index b395905..30c11ea 100644
---- a/Documentation/devicetree/bindings/display/msm/mdp5.txt
-+++ b/Documentation/devicetree/bindings/display/msm/mdp5.txt
-@@ -49,12 +49,36 @@ Required properties:
- -   * "iface_clk"
- -   * "core_clk"
- -   * "vsync_clk"
-+- ports: contains the list of output ports from MDP. These connect to interfaces
-+  that are external to the MDP hardware, such as HDMI, DSI, EDP etc (LVDS is a
-+  special case since it is a part of the MDP block itself).
-+
-+  Each output port contains an endpoint that describes how it is connected to an
-+  external interface. These are described by the standard properties documented
-+  here:
-+	Documentation/devicetree/bindings/graph.txt
-+	Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+  The availability of output ports can vary across SoC revisions:
-+
-+  For MSM8974 and APQ8084:
-+	 Port 0 -> MDP_INTF0 (eDP)
-+	 Port 1 -> MDP_INTF1 (DSI1)
-+	 Port 2 -> MDP_INTF2 (DSI2)
-+	 Port 3 -> MDP_INTF3 (HDMI)
-+
-+  For MSM8916:
-+	 Port 0 -> MDP_INTF1 (DSI1)
-+
-+  For MSM8994 and MSM8996:
-+	 Port 0 -> MDP_INTF1 (DSI1)
-+	 Port 1 -> MDP_INTF2 (DSI2)
-+	 Port 2 -> MDP_INTF3 (HDMI)
  
- Optional properties:
- - clock-names: the following clocks are optional:
-   * "lut_clk"
- 
--
- Example:
- 
- / {
-@@ -101,10 +125,32 @@ Example:
- 				      "core_clk",
- 				      "vsync_clk";
- 
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					mdp5_intf1_out: endpoint {
-+						remote-endpoint = <&dsi0_in>;
-+					};
-+				};
-+			};
- 		};
- 
- 		dsi0: dsi@1a98000 {
- 			...
-+			ports {
-+				...
-+				port@0 {
-+					reg = <0>;
-+					dsi0_in: endpoint {
-+						remote-endpoint = <&mdp5_intf1_out>;
-+					};
-+				};
-+				...
-+			};
-+			...
- 		};
- 
- 		dsi_phy0: dsi-phy@1a98300 {
+ &smd_rpm_regulators {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
