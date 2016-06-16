@@ -1,36 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] nxp/dts: add pcie aer interrupt-name property in
- the dts
-Date: Thu, 16 Jun 2016 17:19:14 -0500
-Message-ID: <20160616221914.GA2602@rob-hp-laptop>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-1-git-send-email-po.liu@nxp.com>
+Subject: Re: [PATCH v3 14/14] regulator: pwm: Document pwm-dutycycle-unit and
+ pwm-dutycycle-range
+Date: Thu, 16 Jun 2016 17:26:18 -0500
+Message-ID: <20160616222618.GA11073@rob-hp-laptop>
+References: <1465895602-31008-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1465895602-31008-15-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1465892645-32381-1-git-send-email-po.liu@nxp.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Po Liu <po.liu@nxp.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>
+In-Reply-To: <1465895602-31008-15-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Brian Norris <briannorris@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 04:24:04PM +0800, Po Liu wrote:
-> NXP some platforms aer interrupt was not MSI/MSI-X/INTx
-> but using interrupt line independently. This patch add a "aer"
-> interrupt-names for aer interrupt.
-
-Please put your explanation why this is okay to change in the commit 
-message.
-
+On Tue, Jun 14, 2016 at 11:13:22AM +0200, Boris Brezillon wrote:
+> Document the pwm-dutycycle-unit and pwm-dutycycle-range properties.
 > 
-> Signed-off-by: Po Liu <po.liu@nxp.com>
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> Acked-by: Brian Norris <briannorris@chromium.org>
 > ---
-> changes for v3:
-> 	- None;
-> 
->  .../devicetree/bindings/pci/layerscape-pci.txt         |  4 ++--
->  arch/arm/boot/dts/ls1021a.dtsi                         |  6 ++++--
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi         | 18 +++++++++---------
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi         | 16 ++++++++--------
->  4 files changed, 23 insertions(+), 21 deletions(-)
+>  .../devicetree/bindings/regulator/pwm-regulator.txt   | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+
+Acked-by: Rob Herring <robh@kernel.org>
