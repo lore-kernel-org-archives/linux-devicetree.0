@@ -1,142 +1,101 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] phy-sun4i-usb: Add workaround for missing Vbus det
- interrupts on A31
-Date: Fri, 17 Jun 2016 18:42:58 +0530
-Message-ID: <5763F75A.8080807@ti.com>
-References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
- <1465138776-6003-3-git-send-email-hdegoede@redhat.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v6 2/2] phy: rockchip-inno-usb2: add a new driver for
+ Rockchip usb2phy
+Date: Fri, 17 Jun 2016 06:20:45 -0700
+Message-ID: <5763F92D.80102@roeck-us.net>
+References: <1466129353-48063-1-git-send-email-frank.wang@rock-chips.com>
+ <1466129353-48063-3-git-send-email-frank.wang@rock-chips.com>
+ <576383C6.3050005@roeck-us.net>
+ <98bc69af-c597-d1ee-e83d-c7b5918e9ef4@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465138776-6003-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <98bc69af-c597-d1ee-e83d-c7b5918e9ef4@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wang <frank.wang@rock-chips.com>, heiko@sntech.de
+Cc: dianders@chromium.org, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Frank,
 
+On 06/16/2016 11:43 PM, Frank Wang wrote:
+> Hi Guenter,
+>
+> On 2016/6/17 12:59, Guenter Roeck wrote:
+>> On 06/16/2016 07:09 PM, Frank Wang wrote:
+>>> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+>>> than rk3288 and before, and most of phy-related registers are also
+>>> different from the past, so a new phy driver is required necessarily.
+>>>
+>>> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+>>> Suggested-by: Guenter Roeck <linux@roeck-us.net>
+>>> Suggested-by: Doug Anderson <dianders@chromium.org>
+>>> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+>>> Tested-by: Heiko Stuebner <heiko@sntech.de>
+>>> ---
+>>
+>> [ ... ]
+>>
+>>> +
+>>> +static int rockchip_usb2phy_resume(struct phy *phy)
+>>> +{
+>>> +    struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+>>> +    struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
+>>> +    int ret;
+>>> +
+>>> +    dev_dbg(&rport->phy->dev, "port resume\n");
+>>> +
+>>> +    ret = clk_prepare_enable(rphy->clk480m);
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>> If suspend can be called multiple times, resume can be called
+>> multiple times as well. Doesn't this cause a clock imbalance
+>> if you call clk_prepare_enable() multiple times on resume,
+>> but clk_disable_unprepare() only once on suspend ?
+>>
+>
+> Well, what you said is reasonable, How does something like below?
+>
+> @@ -307,6 +307,9 @@ static int rockchip_usb2phy_resume(struct phy *phy)
+>
+>          dev_dbg(&rport->phy->dev, "port resume\n");
+>
+> +       if (!rport->suspended)
+> +               return 0;
+> +
+>          ret = clk_prepare_enable(rphy->clk480m);
+>          if (ret)
+>                  return ret;
+> @@ -327,12 +330,16 @@ static int rockchip_usb2phy_suspend(struct phy *phy)
+>
+>          dev_dbg(&rport->phy->dev, "port suspend\n");
+>
+> +       if (rport->suspended)
+> +               return 0;
+> +
+>          ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
+>          if (ret)
+>                  return ret;
+>
+>          rport->suspended = true;
+>          clk_disable_unprepare(rphy->clk480m);
+> +
+>          return 0;
+>   }
+>
+> @@ -485,6 +492,7 @@ static int rockchip_usb2phy_host_port_init(struct rockchip_usb2phy *rphy,
+>
+>          rport->port_id = USB2PHY_PORT_HOST;
+>          rport->port_cfg = &rphy->phy_cfg->port_cfgs[USB2PHY_PORT_HOST];
+> +       rport->suspended = true;
+>
 
-On Sunday 05 June 2016 08:29 PM, Hans de Goede wrote:
-> The A31 companion pmic (axp221) does not generate vbus change interrupts
-> when the board is driving vbus, so we must poll when using the pmic for
-> vbus-det _and_ we're driving vbus.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Why does it start in suspended mode ? That seems odd.
 
-Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
-> Changes in v2:
-> -No changes
-> Changes in v3:
-> -No changes
-> ---
->  drivers/phy/phy-sun4i-usb.c | 34 ++++++++++++++++++++++++----------
->  1 file changed, 24 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-> index e3cbaae..a7abae6 100644
-> --- a/drivers/phy/phy-sun4i-usb.c
-> +++ b/drivers/phy/phy-sun4i-usb.c
-> @@ -95,6 +95,7 @@
->  
->  enum sun4i_usb_phy_type {
->  	sun4i_a10_phy,
-> +	sun6i_a31_phy,
->  	sun8i_a33_phy,
->  	sun8i_h3_phy,
->  };
-> @@ -125,7 +126,6 @@ struct sun4i_usb_phy_data {
->  	/* phy0 / otg related variables */
->  	struct extcon_dev *extcon;
->  	bool phy0_init;
-> -	bool phy0_poll;
->  	struct gpio_desc *id_det_gpio;
->  	struct gpio_desc *vbus_det_gpio;
->  	struct power_supply *vbus_power_supply;
-> @@ -353,6 +353,24 @@ static bool sun4i_usb_phy0_have_vbus_det(struct sun4i_usb_phy_data *data)
->  	return data->vbus_det_gpio || data->vbus_power_supply;
->  }
->  
-> +static bool sun4i_usb_phy0_poll(struct sun4i_usb_phy_data *data)
-> +{
-> +	if ((data->id_det_gpio && data->id_det_irq < 0) ||
-> +	    (data->vbus_det_gpio && data->vbus_det_irq < 0))
-> +		return true;
-> +
-> +	/*
-> +	 * The A31 companion pmic (axp221) does not generate vbus change
-> +	 * interrupts when the board is driving vbus, so we must poll
-> +	 * when using the pmic for vbus-det _and_ we're driving vbus.
-> +	 */
-> +	if (data->cfg->type == sun6i_a31_phy &&
-> +	    data->vbus_power_supply && data->phys[0].regulator_on)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  static int sun4i_usb_phy_power_on(struct phy *_phy)
->  {
->  	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-> @@ -374,7 +392,7 @@ static int sun4i_usb_phy_power_on(struct phy *_phy)
->  	phy->regulator_on = true;
->  
->  	/* We must report Vbus high within OTG_TIME_A_WAIT_VRISE msec. */
-> -	if (phy->index == 0 && data->vbus_det_gpio && data->phy0_poll)
-> +	if (phy->index == 0 && sun4i_usb_phy0_poll(data))
->  		mod_delayed_work(system_wq, &data->detect, DEBOUNCE_TIME);
->  
->  	return 0;
-> @@ -395,7 +413,7 @@ static int sun4i_usb_phy_power_off(struct phy *_phy)
->  	 * phy0 vbus typically slowly discharges, sometimes this causes the
->  	 * Vbus gpio to not trigger an edge irq on Vbus off, so force a rescan.
->  	 */
-> -	if (phy->index == 0 && data->vbus_det_gpio && !data->phy0_poll)
-> +	if (phy->index == 0 && !sun4i_usb_phy0_poll(data))
->  		mod_delayed_work(system_wq, &data->detect, POLL_TIME);
->  
->  	return 0;
-> @@ -483,7 +501,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
->  	if (vbus_notify)
->  		extcon_set_cable_state_(data->extcon, EXTCON_USB, vbus_det);
->  
-> -	if (data->phy0_poll)
-> +	if (sun4i_usb_phy0_poll(data))
->  		queue_delayed_work(system_wq, &data->detect, POLL_TIME);
->  }
->  
-> @@ -668,11 +686,6 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->  	}
->  
->  	data->id_det_irq = gpiod_to_irq(data->id_det_gpio);
-> -	data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
-> -	if ((data->id_det_gpio && data->id_det_irq < 0) ||
-> -	    (data->vbus_det_gpio && data->vbus_det_irq < 0))
-> -		data->phy0_poll = true;
-> -
->  	if (data->id_det_irq >= 0) {
->  		ret = devm_request_irq(dev, data->id_det_irq,
->  				sun4i_usb_phy0_id_vbus_det_irq,
-> @@ -684,6 +697,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	data->vbus_det_irq = gpiod_to_irq(data->vbus_det_gpio);
->  	if (data->vbus_det_irq >= 0) {
->  		ret = devm_request_irq(dev, data->vbus_det_irq,
->  				sun4i_usb_phy0_id_vbus_det_irq,
-> @@ -735,7 +749,7 @@ static const struct sun4i_usb_phy_cfg sun5i_a13_cfg = {
->  
->  static const struct sun4i_usb_phy_cfg sun6i_a31_cfg = {
->  	.num_phys = 3,
-> -	.type = sun4i_a10_phy,
-> +	.type = sun6i_a31_phy,
->  	.disc_thresh = 3,
->  	.phyctl_offset = REG_PHYCTL_A10,
->  	.dedicated_clocks = true,
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Guenter
+
+>          mutex_init(&rport->mutex);
+>          INIT_DELAYED_WORK(&rport->sm_work, rockchip_usb2phy_sm_work);
+>
