@@ -1,59 +1,33 @@
 From: Songjun Wu <songjun.wu@atmel.com>
-Subject: [PATCH v5 0/2] [media] atmel-isc: add driver for Atmel ISC
-Date: Fri, 17 Jun 2016 16:57:12 +0800
-Message-ID: <1466153854-30272-1-git-send-email-songjun.wu@atmel.com>
+Subject: [PATCH v5 2/2] [media] atmel-isc: DT binding for Image Sensor Controller driver
+Date: Fri, 17 Jun 2016 16:57:14 +0800
+Message-ID: <1466153854-30272-3-git-send-email-songjun.wu@atmel.com>
+References: <1466153854-30272-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466153854-30272-1-git-send-email-songjun.wu@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: laurent.pinchart@ideasonboard.com, nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, robh@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Songjun Wu <songjun.wu@atmel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, =?UTF-8?q?Niklas=20S=C3=83=C2=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, =?UTF-8?q?Richard=20R=C3=B6jfors?= <richard@puffinpack.se>, Benoit Parrot <bparrot@ti.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Peter Griffin <peter.griffin@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+Cc: linux-arm-kernel@lists.infradead.org, Songjun Wu <songjun.wu@atmel.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Image Sensor Controller driver includes two parts.
-1) Driver code to implement the ISC function.
-2) Device tree binding documentation, it describes how
-   to add the ISC in device tree.
+DT binding documentation for ISC driver.
+
+Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
+---
 
 Changes in v5:
-- Modify the macro definition and the related code.
 - Add clock names.
 
 Changes in v4:
-- Modify the isc clock code since the dt is changed.
 - Remove the isc clock nodes.
 
 Changes in v3:
-- Add pm runtime feature.
-- Modify the isc clock code since the dt is changed.
 - Remove the 'atmel,sensor-preferred'.
 - Modify the isc clock node according to the Rob's remarks.
 
 Changes in v2:
-- Add "depends on COMMON_CLK" and "VIDEO_V4L2_SUBDEV_API"
-  in Kconfig file.
-- Correct typos and coding style according to Laurent's remarks
-- Delete the loop while in 'isc_clk_enable' function.
-- Replace 'hsync_active', 'vsync_active' and 'pclk_sample'
-  with 'pfe_cfg0' in struct isc_subdev_entity.
-- Add the code to support VIDIOC_CREATE_BUFS in
-  'isc_queue_setup' function.
-- Invoke isc_config to configure register in
-  'isc_start_streaming' function.
-- Add the struct completion 'comp' to synchronize with
-  the frame end interrupt in 'isc_stop_streaming' function.
-- Check the return value of the clk_prepare_enable
-  in 'isc_open' function.
-- Set the default format in 'isc_open' function.
-- Add an exit condition in the loop while in 'isc_config'.
-- Delete the hardware setup operation in 'isc_set_format'.
-- Refuse format modification during streaming
-  in 'isc_s_fmt_vid_cap' function.
-- Invoke v4l2_subdev_alloc_pad_config to allocate and
-  initialize the pad config in 'isc_async_complete' function.
-- Remove the '.owner  = THIS_MODULE,' in atmel_isc_driver.
-- Replace the module_platform_driver_probe() with
-  module_platform_driver().
 - Remove the unit address of the endpoint.
 - Add the unit address to the clock node.
 - Avoid using underscores in node names.
@@ -61,23 +35,79 @@ Changes in v2:
 - Modify the description of 'atmel,sensor-preferred'.
 - Add the description for the ISC internal clock.
 
-Songjun Wu (2):
-  [media] atmel-isc: add the Image Sensor Controller code
-  [media] atmel-isc: DT binding for Image Sensor Controller driver
-
- .../devicetree/bindings/media/atmel-isc.txt        |   64 +
- drivers/media/platform/Kconfig                     |    1 +
- drivers/media/platform/Makefile                    |    2 +
- drivers/media/platform/atmel/Kconfig               |    9 +
- drivers/media/platform/atmel/Makefile              |    1 +
- drivers/media/platform/atmel/atmel-isc-regs.h      |  165 ++
- drivers/media/platform/atmel/atmel-isc.c           | 1569 ++++++++++++++++++++
- 7 files changed, 1811 insertions(+)
+ .../devicetree/bindings/media/atmel-isc.txt        | 64 ++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
- create mode 100644 drivers/media/platform/atmel/Kconfig
- create mode 100644 drivers/media/platform/atmel/Makefile
- create mode 100644 drivers/media/platform/atmel/atmel-isc-regs.h
- create mode 100644 drivers/media/platform/atmel/atmel-isc.c
 
+diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+new file mode 100644
+index 0000000..9558a77
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+@@ -0,0 +1,64 @@
++Atmel Image Sensor Controller (ISC)
++----------------------------------------------
++
++Required properties for ISC:
++- compatible
++	Must be "atmel,sama5d2-isc".
++- reg
++	Physical base address and length of the registers set for the device.
++- interrupts
++	Should contain IRQ line for the ISC.
++- clocks
++	List of clock specifiers, corresponding to entries in
++	the clock-names property;
++	Please refer to clock-bindings.txt.
++- clock-names
++	Required elements: "hclock".
++- #clock-cells
++	Should be 0.
++- clock-output-names
++	Should contain the name of the clock driving the sensor master clock.
++- pinctrl-names, pinctrl-0
++	Please refer to pinctrl-bindings.txt.
++
++ISC supports a single port node with parallel bus. It should contain one
++'port' child node with child 'endpoint' node. Please refer to the bindings
++defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++isc: isc@f0008000 {
++	compatible = "atmel,sama5d2-isc";
++	reg = <0xf0008000 0x4000>;
++	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
++	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
++	clock-names = "hclock", "iscck", "gck";
++	#clock-cells = <0>;
++	clock-output-names = "isc-mck";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_isc_base &pinctrl_isc_data_8bit &pinctrl_isc_data_9_10 &pinctrl_isc_data_11_12>;
++
++	port {
++		isc_0: endpoint {
++			remote-endpoint = <&ov7740_0>;
++			hsync-active = <1>;
++			vsync-active = <0>;
++			pclk-sample = <1>;
++		};
++	};
++};
++
++i2c1: i2c@fc028000 {
++	ov7740: camera@21 {
++	compatible = "ovti,ov7740";
++	reg = <0x21>;
++	clocks = <&isc>;
++	clock-names = "xvclk";
++	assigned-clocks = <&isc>;
++	assigned-clock-rates = <24000000>;
++
++	port {
++		ov7740_0: endpoint {
++			remote-endpoint = <&isc_0>;
++		};
++	};
++};
 -- 
 2.7.4
