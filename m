@@ -1,39 +1,47 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] of: fix reference counting in of_graph_get_endpoint_by_regs
-Date: Fri, 17 Jun 2016 12:05:29 +0200
-Message-ID: <1466157929-22594-1-git-send-email-l.stach@pengutronix.de>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/3] dt-bindings: clock: Update bindings for MDM9615 GCC and LCC
+Date: Fri, 17 Jun 2016 12:04:34 +0200
+Message-ID: <1466157875-14428-3-git-send-email-narmstrong@baylibre.com>
+References: <1466157875-14428-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466157875-14428-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The called of_graph_get_next_endpoint() already decrements the refcount
-of the prev node, so it is wrong to do it again in the calling function.
-
-Fixes: 8ccd0d0ca041
-(of: add helper for getting endpoint node of specific identifiers)
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Reported-by: David Jander <david-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- drivers/of/base.c | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/clock/qcom,gcc.txt | 1 +
+ Documentation/devicetree/bindings/clock/qcom,lcc.txt | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ebf84e3b56d5..6d8514c431f5 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2310,7 +2310,6 @@ struct device_node *of_graph_get_endpoint_by_regs(
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+index 9a60fde..869a2f0 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+@@ -15,6 +15,7 @@ Required properties :
+ 			"qcom,gcc-msm8974pro"
+ 			"qcom,gcc-msm8974pro-ac"
+ 			"qcom,gcc-msm8996"
++			"qcom,gcc-mdm9615"
  
- 	while (1) {
- 		node = of_graph_get_next_endpoint(parent, prev_node);
--		of_node_put(prev_node);
- 		if (!node)
- 			break;
+ - reg : shall contain base register location and length
+ - #clock-cells : shall contain 1
+diff --git a/Documentation/devicetree/bindings/clock/qcom,lcc.txt b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
+index dd755be..a3c78aa 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,lcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
+@@ -7,6 +7,7 @@ Required properties :
+ 			"qcom,lcc-msm8960"
+ 			"qcom,lcc-apq8064"
+ 			"qcom,lcc-ipq8064"
++			"qcom,lcc-mdm9615"
  
+ - reg : shall contain base register location and length
+ - #clock-cells : shall contain 1
 -- 
-2.8.1
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
