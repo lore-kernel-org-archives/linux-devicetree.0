@@ -1,233 +1,170 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
-Date: Fri, 17 Jun 2016 18:14:22 +0200
-Message-ID: <576421DE.7080203@gmail.com>
-References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
- <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
- <574C5CBF.7060002@gmail.com> <1464683762.14604.59.camel@mtksdaap41>
- <574DEE40.9010008@gmail.com> <1464775020.11122.40.camel@mtksdaap41>
- <574FF264.7050209@gmail.com> <1464934356.15175.31.camel@mtksdaap41>
- <57516774.5080008@gmail.com> <1464956037.16029.8.camel@mtksdaap41>
- <575181E5.6090603@gmail.com> <5756FD73.3050607@gmail.com>
- <1465364427.9963.13.camel@mtksdaap41> <5757F762.4020908@gmail.com>
- <1465388727.21326.8.camel@mtksdaap41> <57583B45.2080504@gmail.com>
- <1465890268.7191.13.camel@mtksdaap41> <575FD9BA.8040708@gmail.com>
- <1465906063.20796.20.camel@mtksdaap41>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC PATCH 04/13] drm/tegra: Add sor-safe clock for DPAUX on
+ Tegra210
+Date: Fri, 17 Jun 2016 18:18:19 +0200
+Message-ID: <20160617161819.GE27475@ulmo.ba.sec>
+References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
+ <1466165027-17917-5-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465906063.20796.20.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Horng-Shyang Liao <hs.liao@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, jassisinghbrar@gmail.com, jaswinder.singh@linaro.org
+Content-Type: multipart/mixed; boundary="===============0510888029=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1466165027-17917-5-git-send-email-jonathanh@nvidia.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--===============0510888029==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cPi+lWm09sJ+d57q"
+Content-Disposition: inline
 
-On 14/06/16 14:07, Horng-Shyang Liao wrote:
-> Hi Matthias,
->
-> On Tue, 2016-06-14 at 12:17 +0200, Matthias Brugger wrote:
->>
->> On 14/06/16 09:44, Horng-Shyang Liao wrote:
->>> Hi Matthias,
->>>
->>> On Wed, 2016-06-08 at 17:35 +0200, Matthias Brugger wrote:
->>>>
->>>> On 08/06/16 14:25, Horng-Shyang Liao wrote:
->>>>> Hi Matthias,
->>>>>
->>>>> On Wed, 2016-06-08 at 12:45 +0200, Matthias Brugger wrote:
->>>>>>
->>>>>> On 08/06/16 07:40, Horng-Shyang Liao wrote:
->>>>>>> Hi Matthias,
->>>>>>>
->>>>>>> On Tue, 2016-06-07 at 18:59 +0200, Matthias Brugger wrote:
->>>>>>>>
->>>>>>>> On 03/06/16 15:11, Matthias Brugger wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>> [...]
->>>>>>>>
->>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>> +            smp_mb(); /* modify jump before enable thread */
->>>>>>>>>>>>>>>>>> +        }
->>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>> +        cmdq_thread_writel(thread, task->pa_base +
->>>>>>>>>>>>>>>>>> task->command_size,
->>>>>>>>>>>>>>>>>> +                   CMDQ_THR_END_ADDR);
->>>>>>>>>>>>>>>>>> +        cmdq_thread_resume(thread);
->>>>>>>>>>>>>>>>>> +    }
->>>>>>>>>>>>>>>>>> +    list_move_tail(&task->list_entry, &thread->task_busy_list);
->>>>>>>>>>>>>>>>>> +    spin_unlock_irqrestore(&cmdq->exec_lock, flags);
->>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>> +static void cmdq_handle_error_done(struct cmdq *cmdq,
->>>>>>>>>>>>>>>>>> +                   struct cmdq_thread *thread, u32 irq_flag)
->>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>> +    struct cmdq_task *task, *tmp, *curr_task = NULL;
->>>>>>>>>>>>>>>>>> +    u32 curr_pa;
->>>>>>>>>>>>>>>>>> +    struct cmdq_cb_data cmdq_cb_data;
->>>>>>>>>>>>>>>>>> +    bool err;
->>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>> +    if (irq_flag & CMDQ_THR_IRQ_ERROR)
->>>>>>>>>>>>>>>>>> +        err = true;
->>>>>>>>>>>>>>>>>> +    else if (irq_flag & CMDQ_THR_IRQ_DONE)
->>>>>>>>>>>>>>>>>> +        err = false;
->>>>>>>>>>>>>>>>>> +    else
->>>>>>>>>>>>>>>>>> +        return;
->>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>> +    curr_pa = cmdq_thread_readl(thread, CMDQ_THR_CURR_ADDR);
->>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>> +    list_for_each_entry_safe(task, tmp, &thread->task_busy_list,
->>>>>>>>>>>>>>>>>> +                 list_entry) {
->>>>>>>>>>>>>>>>>> +        if (curr_pa >= task->pa_base &&
->>>>>>>>>>>>>>>>>> +            curr_pa < (task->pa_base + task->command_size))
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>> What are you checking here? It seems as if you make some implcit
->>>>>>>>>>>>>>>>> assumptions about pa_base and the order of execution of
->>>>>>>>>>>>>>>>> commands in the
->>>>>>>>>>>>>>>>> thread. Is it save to do so? Does dma_alloc_coherent give any
->>>>>>>>>>>>>>>>> guarantees
->>>>>>>>>>>>>>>>> about dma_handle?
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> 1. Check what is the current running task in this GCE thread.
->>>>>>>>>>>>>>>> 2. Yes.
->>>>>>>>>>>>>>>> 3. Yes, CMDQ doesn't use iommu, so physical address is continuous.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> Yes, physical addresses might be continous, but AFAIK there is no
->>>>>>>>>>>>>>> guarantee that the dma_handle address is steadily growing, when
->>>>>>>>>>>>>>> calling
->>>>>>>>>>>>>>> dma_alloc_coherent. And if I understand the code correctly, you
->>>>>>>>>>>>>>> use this
->>>>>>>>>>>>>>> assumption to decide if the task picked from task_busy_list is
->>>>>>>>>>>>>>> currently
->>>>>>>>>>>>>>> executing. So I think this mecanism is not working.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> I don't use dma_handle address, and just use physical addresses.
->>>>>>>>>>>>>>        From CPU's point of view, tasks are linked by the busy list.
->>>>>>>>>>>>>>        From GCE's point of view, tasks are linked by the JUMP command.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>>> In which cases does the HW thread raise an interrupt.
->>>>>>>>>>>>>>> In case of error. When does CMDQ_THR_IRQ_DONE get raised?
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> GCE will raise interrupt if any task is done or error.
->>>>>>>>>>>>>> However, GCE is fast, so CPU may get multiple done tasks
->>>>>>>>>>>>>> when it is running ISR.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> In case of error, that GCE thread will pause and raise interrupt.
->>>>>>>>>>>>>> So, CPU may get multiple done tasks and one error task.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> I think we should reimplement the ISR mechanism. Can't we just read
->>>>>>>>>>>>> CURR_IRQ_STATUS and THR_IRQ_STATUS in the handler and leave
->>>>>>>>>>>>> cmdq_handle_error_done to the thread_fn? You will need to pass
->>>>>>>>>>>>> information from the handler to thread_fn, but that shouldn't be an
->>>>>>>>>>>>> issue. AFAIK interrupts are disabled in the handler, so we should stay
->>>>>>>>>>>>> there as short as possible. Traversing task_busy_list is expensive, so
->>>>>>>>>>>>> we need to do it in a thread context.
->>>>>>>>>>>>
->>>>>>>>>>>> Actually, our initial implementation is similar to your suggestion,
->>>>>>>>>>>> but display needs CMDQ to return callback function very precisely,
->>>>>>>>>>>> else display will drop frame.
->>>>>>>>>>>> For display, CMDQ interrupt will be raised every 16 ~ 17 ms,
->>>>>>>>>>>> and CMDQ needs to call callback function in ISR.
->>>>>>>>>>>> If we defer callback to workqueue, the time interval may be larger than
->>>>>>>>>>>> 32 ms.sometimes.
->>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> I think the problem is, that you implemented the workqueue as a ordered
->>>>>>>>>>> workqueue, so there is no parallel processing. I'm still not sure why
->>>>>>>>>>> you need the workqueue to be ordered. Can you please explain.
->>>>>>>>>>
->>>>>>>>>> The order should be kept.
->>>>>>>>>> Let me use mouse cursor as an example.
->>>>>>>>>> If task 1 means move mouse cursor to point A, task 2 means point B,
->>>>>>>>>> and task 3 means point C, our expected result is A -> B -> C.
->>>>>>>>>> If the order is not kept, the result could become A -> C -> B.
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> Got it, thanks for the clarification.
->>>>>>>>>
->>>>>>>>
->>>>>>>> I think a way to get rid of the workqueue is to use a timer, which gets
->>>>>>>> programmed to the time a timeout in the first task in the busy list
->>>>>>>> would happen. Everytime we update the busy list (e.g. because of task
->>>>>>>> got finished by the thread), we update the timer. When the timer
->>>>>>>> triggers, which hopefully won't happen too often, we return timeout on
->>>>>>>> the busy list elements, until the time is lower then the actual time.
->>>>>>>>
->>>>>>>> At least with this we can reduce the data structures in this driver and
->>>>>>>> make it more lightweight.
->>>>>>>
->>>>>>>     From my understanding, your proposed method can handle timeout case.
->>>>>>>
->>>>>>> However, the workqueue is also in charge of releasing tasks.
->>>>>>> Do you take releasing tasks into consideration by using the proposed
->>>>>>> timer method?
->>>>>>> Furthermore, I think the code will become more complex if we also use
->>>>>>> timer to implement releasing tasks.
->>>>>>>
->>>>>>
->>>>>> Can't we call
->>>>>>             clk_disable_unprepare(cmdq->clock);
->>>>>>             cmdq_task_release(task);
->>>>>> after invoking the callback?
->>>>>
->>>>> Do you mean just call these two functions in ISR?
->>>>> My major concern is dma_free_coherent() and kfree() in
->>>>> cmdq_task_release(task).
->>>>
->>>> Why do we need the dma calls at all? Can't we just calculate the
->>>> physical address using __pa(x)?
->>>
->>> I prefer to use dma_map_single/dma_unmap_single.
->>>
->>
->> Can you please elaborate why you need this. We don't do dma, so we
->> should not use dma memory for this.
->
-> We need a buffer to share between CPU and GCE, so we do need DMA.
-> CPU is in charge of writing GCE commands into this buffer.
-> GCE is in charge of reading and running GCE commands from this buffer.
-> When we chain CMDQ tasks, we also need to modify GCE JUMP command.
-> Therefore, I prefer to use dma_alloc_coherent and dma_free_coherent.
->
-> However, if we want to use timer to handle timeout, we need to release
-> memory in ISR.
-> In this case, using kmalloc/kfree + dma_map_single/dma_unmap_single
-> instead of dma_alloc_coherent/dma_free_coherent is an alternative
-> solution, but taking care the synchronization between cache and memory
-> is the expected overhead.
->
->>>>> Therefore, your suggestion is to use GFP_ATOMIC for both
->>>>> dma_alloc_coherent() and kzalloc(). Right?
->>>>
->>>> I don't think we need GFP_ATOMIC, the critical path will just free the
->>>> memory.
->>>
->>> I tested these two functions, and kfree was safe.
->>> However, dma_free_coherent raised BUG.
->>> BUG: failure at
->>> /mnt/host/source/src/third_party/kernel/v3.18/mm/vmalloc.c:1514/vunmap()!
->>
->> Just a general hint. Please try to evaluate on a recent kernel. It looks
->> like as if you tried this on a v3.18 based one.
->
-> This driver should be backward compatible to v3.18 for a MTK project.
->
 
-That is something the Linux community can't use as argument for design 
-decisions. If the backporting get's cumbersome, I propose to tell your 
-boss, giving him the hint, that if the driver would have been in 
-mainline earlier, this would all be easier ;)
-No, seriously, that's why it makes a lot of sense for companies like 
-Mediatek to have their driver mainlined. A switch to a new kernel 
-version comes for free for all the mainlined drivers. Knowing the source 
-code of the Mediatek kernel, I suppose doing a kernel version switch 
-takes a good bunch of time and nerves. :)
+--cPi+lWm09sJ+d57q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Matthias
+On Fri, Jun 17, 2016 at 01:03:38PM +0100, Jon Hunter wrote:
+> For Tegra210 the 'sor-safe' clock needs to be enabled when using DPAUX.
+> Add support to the DPAUX driver for enabling this clock on Tegra210.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/gpu/drm/tegra/dpaux.c | 29 +++++++++++++++++++++++++++--
+>  1 file changed, 27 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/tegra/dpaux.c b/drivers/gpu/drm/tegra/dpaux.c
+> index aa3a037fcd3b..d696a7e45935 100644
+> --- a/drivers/gpu/drm/tegra/dpaux.c
+> +++ b/drivers/gpu/drm/tegra/dpaux.c
+> @@ -37,6 +37,7 @@ struct tegra_dpaux {
+> =20
+>  	struct reset_control *rst;
+>  	struct clk *clk_parent;
+> +	struct clk *clk_sor;
+
+Can we call this "clk_safe", please? On one hand that mirrors the name
+of the clock in the binding and on the other hand it avoids confusion
+with the real SOR clock.
+
+>  	struct clk *clk;
+> =20
+>  	struct regulator *vdd;
+> @@ -340,18 +341,37 @@ static int tegra_dpaux_probe(struct platform_device=
+ *pdev)
+>  		return PTR_ERR(dpaux->rst);
+>  	}
+> =20
+> +	if (of_device_is_compatible(pdev->dev.of_node,
+> +				    "nvidia,tegra210-dpaux")) {
+> +		dpaux->clk_sor =3D devm_clk_get(&pdev->dev, "sor-safe");
+> +		if (IS_ERR(dpaux->clk_sor)) {
+> +			dev_err(&pdev->dev,
+> +				"failed to get sor-safe clock: %ld\n",
+> +				PTR_ERR(dpaux->clk_sor));
+> +			return PTR_ERR(dpaux->clk_sor);
+> +		}
+> +
+> +		err =3D clk_prepare_enable(dpaux->clk_sor);
+> +		if (err < 0) {
+> +			dev_err(&pdev->dev,
+> +				"failed to enable sor-safe clock: %d\n", err);
+> +			return err;
+> +		}
+> +	}
+
+Please make this part of a struct tegra_dpaux_soc, so that we don't have
+to check the compatible string again here. This could look like:
+
+	struct tegra_dpaux_soc {
+		bool needs_safe_clock;
+	};
+
+	static const struct tegra_dpaux_soc tegra124_dpaux_soc =3D {
+		.needs_safe_clock =3D false,
+	};
+
+	static const struct tegra_dpaux_soc tegra210_dpaux_soc =3D {
+		.needs_safe_clock =3D true,
+	};
+
+	...
+
+	static const struct of_device_id tegra_dpaux_of_match[] =3D {
+		{ .compatible =3D "nvidia,tegra210-dpaux", .data =3D &tegra210_dpaux_soc =
+},
+		{ .compatible =3D "nvidia,tegra124-dpaux", .data =3D &tegra124_dpaux_soc =
+},
+		{ },
+	};
+
+> @@ -434,6 +454,9 @@ disable_parent_clk:
+>  assert_reset:
+>  	reset_control_assert(dpaux->rst);
+>  	clk_disable_unprepare(dpaux->clk);
+> +disable_sor_clk:
+> +	if (dpaux->clk_sor)
+> +		clk_disable_unprepare(dpaux->clk_sor);
+
+You can drop the extra check here, since the common clock framework
+ignores NULL or ERR_PTR() pointers.
+
+> =20
+>  	return err;
+>  }
+> @@ -456,6 +479,8 @@ static int tegra_dpaux_remove(struct platform_device =
+*pdev)
+>  	clk_disable_unprepare(dpaux->clk_parent);
+>  	reset_control_assert(dpaux->rst);
+>  	clk_disable_unprepare(dpaux->clk);
+> +	if (dpaux->clk_sor)
+> +		clk_disable_unprepare(dpaux->clk_sor);
+
+Same here.
+
+Thierry
+
+--cPi+lWm09sJ+d57q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXZCLLAAoJEN0jrNd/PrOhLSsQAKHzU68Pos6E0xy7QFWz8Gna
+vfuAajRu9Z8TWUvWpNpXeRghZ+WgEnWRB/3jBo7jLzIuhgGfnBy0F0LY6QN4xJYn
+1/mjXho0R5QWxktCpaQx8la8JaN7Y/XM2tB9WUOgsnEYuAjAreoRaXxCcBitJsVR
+0Nq1OtEUvSvE+sJEvvVuF4UE+bOh7wuK1Hmt4BrCeSMyH51pMgGs0L4BRyUwOxjY
+BuZaDSpuvmDxuVJ37adUwFgj0oRcXVeIa6qgvOCDk2NZFymwiEv4xsyGnx89YSN7
+t215h2dj9b4Bm94S8PNkHMxIc267OlcGCUSPjrxRyw7Rw6ZfMfqa9aVMFHgkLx7o
+TikpwR94tCgwZcc6RNC/SHEOqQDEBHuN6YqIN8hx3p//5wSugndcUeIc0euJvnKR
+zrM7PvtWiBq+vS+i4PyS+5AOSsrTFCcBVer6QVFIttQwnPmGrOa38nWVzBBLs4BM
+8bjq+S1eo662pqWwOoNsUN2asxtKF7jBCWyN75oe8ZzMS9M1pgV7L/+qIlEMZA/n
+HKadAX3xeDA8GEetIbeUuLbUb4yD82fXh8StoAwN7uHVl1ODku1HQ4k5m/wMfAoy
+I+0MhAxmGsKHov3H5FiCu70wlbs/cPqIgO8/ABffeoKgrjoJ4pJrqRCpRBApBsHt
+3HhEB57yE3igMD1fBUiX
+=4fL8
+-----END PGP SIGNATURE-----
+
+--cPi+lWm09sJ+d57q--
+
+--===============0510888029==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0510888029==--
