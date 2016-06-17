@@ -1,94 +1,67 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC PATCH 13/13] arm64: tegra: Add DPAUX pinctrl bindings
-Date: Fri, 17 Jun 2016 18:50:16 +0200
-Message-ID: <20160617165016.GN27475@ulmo.ba.sec>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <1466165027-17917-14-git-send-email-jonathanh@nvidia.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv3 2/7] EDAC, altera: Add panic flag check to A10 IRQ
+Date: Fri, 17 Jun 2016 18:51:31 +0200
+Message-ID: <20160617165131.GE3912@pd.tnic>
+References: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
+ <1465852752-11018-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0239372973=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1466165027-17917-14-git-send-email-jonathanh@nvidia.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1465852752-11018-3-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-
---===============0239372973==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qi3SIpffvxS/TM8d"
-Content-Disposition: inline
-
-
---qi3SIpffvxS/TM8d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 17, 2016 at 01:03:47PM +0100, Jon Hunter wrote:
-> Add the DPAUX pinctrl states for the DPAUX nodes defining all three
-> possible states of "aux", "i2c" and "off". Also add the 'i2c-bus'
-> node for the DPAUX nodes so that the I2C driver core does not attempt
-> to parse the pinctrl state nodes.
->=20
-> Populate the nodes for the pinctrl clients of the DPAUX pin controller.
-> There are two clients for each DPAUX instance, namely the SOR and one of
-> the I2C adapters. The SOR clients may used the DPAUX pins in either AUX
-> or I2C modes and so for these devices we don't define any of the generic
-> pinctrl states (default, idle, etc) because the SOR driver will directly
-> set the state needed. For I2C clients only the I2C mode is used and so
-> we can simplify matters by using the generic pinctrl states for default
-> and idle.
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+On Mon, Jun 13, 2016 at 04:19:07PM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> In preparation for additional memory module ECCs, the
+> IRQ function will check a panic flag before doing a
+> kernel panic on double bit errors. ECCs on buffers
+> will not cause a kernel panic on DBERRs.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 > ---
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 48 ++++++++++++++++++++++++++=
-++++++
->  1 file changed, 48 insertions(+)
+> v2  New patch. Add panic flag to IRQ function.
+> v3  No change
+> ---
+>  drivers/edac/altera_edac.c |    4 +++-
+>  drivers/edac/altera_edac.h |    1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+> index 926bcaf..a9d8fa7 100644
+> --- a/drivers/edac/altera_edac.c
+> +++ b/drivers/edac/altera_edac.c
+> @@ -897,7 +897,8 @@ static irqreturn_t altr_edac_a10_ecc_irq(int irq, void *dev_id)
+>  		writel(ALTR_A10_ECC_DERRPENA,
+>  		       base + ALTR_A10_ECC_INTSTAT_OFST);
+>  		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
+> -		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
+> +		if (dci->data->panic)
+> +			panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
+>  
+>  		return IRQ_HANDLED;
+>  	}
+> @@ -936,6 +937,7 @@ const struct edac_device_prv_data a10_ocramecc_data = {
+>  	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+>  	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+>  	.inject_fops = &altr_edac_a10_device_inject_fops,
+> +	.panic = true,
 
-Looks good to me. Thanks for driving this to conclusion.
+So I could use a bit more detailed explanation here why OCRAM must panic
+and the others don't. Consider me an external guy who doesn't know the
+hardware and is looking at the driver and is wondering why this IP must
+panic on double-bit errors and the others don't.
 
-Thierry
+:-)
 
---qi3SIpffvxS/TM8d
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+-- 
+Regards/Gruss,
+    Boris.
 
-iQIcBAABCAAGBQJXZCpHAAoJEN0jrNd/PrOhtMQQAIKiKWis2Mq9TkKioEu5QC2B
-ziRtOLZ74UClY9CyMv8GHCP7Mxqb50IMgBvuFgKBV2BAxdcw5Bjfaeq7vd5GYkYd
-JeA8eT8G12cXwsTJWEC5+PZWdbmI8/wTbWk6+QAs6FnwD+IGH5oaWWlOfxSDygOL
-e6HCgB8QWQIrggO/rTnI4y4G3ysVr6Oeno7POJcVHcQ+x0QeaHiBAjt4AqjGhnMc
-mppIYqdClD+9yj4AFMWq9q9TrfjlLynC2YKubOzHOFQ5Et5YJx1A1miMezooITyG
-ONechqStnZCHAalyTmew6m86QGHH323K5C/myCi2Z6E/z8+70kQyxTsrghgj0W5o
-w8DDW2DPRWI2nfrTY3E7Vyfr+5wSfaR+B824OVpcWMK+ogzd/wtK+PzmDPSdd6WF
-hDkeBTPhNAQFZapTDY1Cjx3RBp4nd+CoTq9eKxE1N9/XmIc6VYMhR9vFzpO69Rrt
-sh7YDzbWL7QwAHJKdm4tCFVhW31bJDWSj8Q8tyu17F9iy9TCXNZkVq9U74UD8h+Y
-Kr5iSLTXz9mFPiKy/xl/2F17S4sKnTEZ3e9Nq1NLJAcKXL1PSVwBVNAewJHRoyBR
-iIZbIaqiZ/jXnu41YU+c91oeQHscBASNyoN1ki9lqXaHWxKVGTpDHiPkK7ootFpP
-QJswOVn76Tl6/MSYI1gB
-=5K4k
------END PGP SIGNATURE-----
-
---qi3SIpffvxS/TM8d--
-
---===============0239372973==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0239372973==--
+ECO tip #101: Trim your mails when you reply.
