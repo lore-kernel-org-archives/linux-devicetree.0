@@ -1,282 +1,154 @@
-From: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH V3] ARM: dts: sun7i: Add dts file for Bananapi
- M1 Plus board
-Date: Fri, 17 Jun 2016 17:56:02 +0800
-Message-ID: <20160617095602.14612-1-luoyi.ly@gmail.com>
-Reply-To: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCLONWF5WQNBBEMQR65QKGQEOKCXP7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] gpio: sx150x: Update OF configuration
+Date: Fri, 17 Jun 2016 11:51:03 +0200
+Message-ID: <1466157063-10955-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In case of OF probing, the driver fails to initialize :
+- gpio_chip.base must be -1
+- irq_summary must be either -1 or valid
+- There is no way to use the other configurations
 
-Add support for the Bananapi M1 Plus A20 development board from
-sinovoip.com.cn . This board is nearly a clone of the Lemaker's
-Bananapro, but differ with the wlan chipset connection and i2s pinout.
-And I also enable the integrated audio codec on default.
+Add OF parsing function to complete the HW configuration, make
+OF configuration dynamic instead of static with #defines and
+update the DT bindings.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/Makefile                       |   1 +
- arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 230 +++++++++++++++++++++++
- 2 files changed, 231 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+ .../devicetree/bindings/gpio/gpio-sx150x.txt       | 17 ++++++
+ drivers/gpio/gpio-sx150x.c                         | 65 +++++++++++++++++++---
+ 2 files changed, 75 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e06a5ab..fde407f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -685,6 +685,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
- 	sun6i-a31s-yones-toptech-bs1078-v2.dtb
- dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-bananapi.dtb \
-+	sun7i-a20-bananapi-m1-plus.dtb \
- 	sun7i-a20-bananapro.dtb \
- 	sun7i-a20-cubieboard2.dtb \
- 	sun7i-a20-cubietruck.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-new file mode 100644
-index 0000000..89e38e9
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-@@ -0,0 +1,230 @@
-+/*
-+ * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Thanks to the original work by Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt b/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt
+index c809acb..d2b5bb3 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt
+@@ -22,6 +22,17 @@ Required properties:
+ 
+ - interrupt-controller: Marks the device as a interrupt controller.
+ 
++Optional Properties:
++- oscio-is-gpo: Boolean, Indicated the oscio pin can be used as additional
++		output gpo port.
 +
-+/dts-v1/;
-+#include "sun7i-a20.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
++- pull-up-ports: Array of port numbers which must have pull-up enabled.
++- pull-down-ports: Array of port numbers which must have pull-down enabled.
++- open-drain-ports: Array of port numbers which must be configured as open-drain,
++			Push-Pull mode is default.
++- polarity-invert-ports: Array of port numbers whih port polarity must be inverted.
++- probe-reset: Boolean, Indicates the expander must be resetted.
 +
-+/ {
-+    model = "Banana Pi BPI-M1-Plus";
-+    compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
+ The GPIO expander can optionally be used as an interrupt controller, in
+ which case it uses the default two cell specifier as described in
+ Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
+@@ -38,4 +49,10 @@ Example:
+ 
+ 		gpio-controller;
+ 		interrupt-controller;
 +
-+    aliases {
-+        serial0 = &uart0;
-+    };
++		pull-up-ports = <0 12>;
++		pull-down-ports = <1 8>;
++		open-drain-ports = <6 7 11>;
++		polarity-invert-ports = <3>;
++		probe-reset;
+ 	};
+diff --git a/drivers/gpio/gpio-sx150x.c b/drivers/gpio/gpio-sx150x.c
+index a177ebd..f7bfde8 100644
+--- a/drivers/gpio/gpio-sx150x.c
++++ b/drivers/gpio/gpio-sx150x.c
+@@ -588,13 +588,14 @@ static void sx150x_init_chip(struct sx150x_chip *chip,
+ 	chip->gpio_chip.get              = sx150x_gpio_get;
+ 	chip->gpio_chip.set              = sx150x_gpio_set;
+ 	chip->gpio_chip.set_single_ended = sx150x_gpio_set_single_ended;
+-	chip->gpio_chip.base             = pdata->gpio_base;
+ 	chip->gpio_chip.can_sleep        = true;
+ 	chip->gpio_chip.ngpio            = chip->dev_cfg->ngpios;
+-#ifdef CONFIG_OF_GPIO
+-	chip->gpio_chip.of_node          = client->dev.of_node;
+-	chip->gpio_chip.of_gpio_n_cells  = 2;
+-#endif
++	if (client->dev.of_node) {
++		chip->gpio_chip.of_node          = client->dev.of_node;
++		chip->gpio_chip.of_gpio_n_cells  = 2;
++		chip->gpio_chip.base             = -1;
++	} else
++		chip->gpio_chip.base             = pdata->gpio_base;
+ 	if (pdata->oscio_is_gpo)
+ 		++chip->gpio_chip.ngpio;
+ 
+@@ -735,16 +736,66 @@ static int sx150x_install_irq_chip(struct sx150x_chip *chip,
+ 	return err;
+ }
+ 
++static u16 sx150x_of_probe_pins(struct device *dev, char *attr_name)
++{
++	struct property *prop;
++	const __be32 *p;
++	u16 pins = 0;
++	u32 u;
 +
-+    chosen {
-+        stdout-path = "serial0:115200n8";
-+    };
++	if (!of_find_property(dev->of_node, attr_name, NULL))
++		return 0;
 +
-+    leds {
-+        compatible = "gpio-leds";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&led_pins_bananapi>;
++	of_property_for_each_u32(dev->of_node, attr_name, prop, p, u)
++		if (u < 16)
++			pins |= BIT(u);
 +
-+        green {
-+            label = "bananapi-m1-plus:green:usr";
-+            gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
-+        };
++	return pins;
++}
 +
-+        red {
-+            label = "bananapi-m1-plus:red:usr";
-+            gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
-+            linux,default-trigger = "default-on";
-+        };
++static struct sx150x_platform_data *sx150x_of_probe(struct device *dev)
++{
++	struct sx150x_platform_data *pdata = devm_kzalloc(dev, sizeof(*pdata),
++								GFP_KERNEL);
++	/* gpio_base is not needed with OF */
 +
-+    };
++	pdata->oscio_is_gpo = of_property_read_bool(dev->of_node,
++						    "oscio-is-gpo");
 +
-+    mmc3_pwrseq: mmc3_pwrseq {
-+        compatible = "mmc-pwrseq-simple";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&mmc3_pwrseq_pin_bananapim1plus>;
-+        reset-gpios = <&pio 7 22 GPIO_ACTIVE_LOW>; /* PH22 WL-PMU-EN */
-+    };
++	pdata->io_pullup_ena = sx150x_of_probe_pins(dev,
++						    "pull-up-ports");
 +
-+    reg_gmac_3v3: gmac-3v3 {
-+        compatible = "regulator-fixed";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&gmac_power_pin_bananapi>;
-+        regulator-name = "gmac-3v3";
-+        regulator-min-microvolt = <3300000>;
-+        regulator-max-microvolt = <3300000>;
-+        startup-delay-us = <100000>;
-+        enable-active-high;
-+        gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
-+    };
-+};
++	pdata->io_pulldn_ena = sx150x_of_probe_pins(dev,
++						    "pull-down-ports");
 +
-+&ahci {
-+    status = "okay";
-+};
++	pdata->io_polarity = sx150x_of_probe_pins(dev,
++						  "polarity-invert-ports");
 +
-+&codec {
-+    status = "okay";
-+};
++	pdata->irq_summary = of_irq_get(dev->of_node, 0);
 +
-+&ehci0 {
-+    status = "okay";
-+};
++	/* irq_base is not needed with OF */
 +
-+&ehci1 {
-+    status = "okay";
-+};
++	pdata->reset_during_probe = of_property_read_bool(dev->of_node,
++							  "probe-reset");
 +
-+&gmac {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&gmac_pins_rgmii_a>;
-+    phy = <&phy1>;
-+    phy-mode = "rgmii";
-+    phy-supply = <&reg_gmac_3v3>;
-+    status = "okay";
++	return pdata;
++}
 +
-+    phy1: ethernet-phy@1 {
-+        reg = <1>;
-+    };
-+};
+ static int sx150x_probe(struct i2c_client *client,
+ 				const struct i2c_device_id *id)
+ {
+ 	static const u32 i2c_funcs = I2C_FUNC_SMBUS_BYTE_DATA |
+ 				     I2C_FUNC_SMBUS_WRITE_WORD_DATA;
+-	struct sx150x_platform_data *pdata;
++	struct sx150x_platform_data *pdata = NULL;
+ 	struct sx150x_chip *chip;
+ 	int rc;
+ 
+-	pdata = dev_get_platdata(&client->dev);
++	if (client->dev.of_node)
++		pdata = sx150x_of_probe(&client->dev);
 +
-+&i2c0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&i2c0_pins_a>;
-+    status = "okay";
++	if (!pdata)
++		pdata = dev_get_platdata(&client->dev);
 +
-+    axp209: pmic@34 {
-+        compatible = "x-powers,axp209";
-+        reg = <0x34>;
-+        interrupt-parent = <&nmi_intc>;
-+        interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+    };
-+};
-+
-+&ir0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&ir0_rx_pins_a>;
-+    status = "okay";
-+};
-+
-+&mmc0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
-+    vmmc-supply = <&reg_vcc3v3>;
-+    bus-width = <4>;
-+    cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-+    cd-inverted;
-+    status = "okay";
-+};
-+
-+&mmc3 {
-+    #address-cells = <1>;
-+    #size-cells = <0>;
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&mmc3_pins_a>;
-+    vmmc-supply = <&reg_vcc3v3>;
-+    mmc-pwrseq = <&mmc3_pwrseq>;
-+    bus-width = <4>;
-+    non-removable;
-+    enable-sdio-wakeup;
-+    status = "okay";
-+
-+    brcmf: bcrmf@1 {
-+        reg = <1>;
-+        compatible = "brcm,bcm4329-fmac";
-+        interrupt-parent = <&pio>;
-+        interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
-+        interrupt-names = "host-wake";
-+    };
-+};
-+
-+&mmc3_pins_a {
-+    /* AP6210 requires pull-up */
-+    allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+};
-+
-+&ohci0 {
-+    status = "okay";
-+};
-+
-+&ohci1 {
-+    status = "okay";
-+};
-+
-+&pio {
-+    gmac_power_pin_bananapi: gmac_power_pin@0 {
-+        allwinner,pins = "PH23";
-+        allwinner,function = "gpio_out";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+    };
-+
-+    led_pins_bananapi: led_pins@0 {
-+        allwinner,pins = "PH24", "PG2";
-+        allwinner,function = "gpio_out";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+    };
-+
-+    mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
-+        allwinner,pins = "PH10";
-+        allwinner,function = "gpio_in";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+    };
-+
-+    mmc3_pwrseq_pin_bananapim1plus: mmc3_pwrseq_pin@0 {
-+        allwinner,pins = "PH22";
-+        allwinner,function = "gpio_out";
-+        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+    };
-+};
-+
-+&uart0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&uart0_pins_a>;
-+    status = "okay";
-+};
+ 	if (!pdata)
+ 		return -EINVAL;
+ 
 -- 
-2.8.3
+1.9.1
+
