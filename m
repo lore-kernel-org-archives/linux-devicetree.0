@@ -1,77 +1,105 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 3/7] max8903: cleans up confusing relationship between
- dc_valid, dok and dcm.
-Date: Fri, 17 Jun 2016 08:42:09 +0200
-Message-ID: <57639BC1.4060604@samsung.com>
-References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
- <1466139626-51434-1-git-send-email-chris@lapa.com.au>
- <1466139626-51434-4-git-send-email-chris@lapa.com.au>
- <57639832.6000201@samsung.com>
- <32bde516-87b5-bb63-c6a3-1ec043758904@lapa.com.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] clk: Add fractional scale clock support
+Date: Fri, 17 Jun 2016 08:43:27 +0200
+Message-ID: <CAMuHMdUMm5BWWEmKX3xOBkMX7HWTYgD6R0xz=uggs_Uya8=3Gw@mail.gmail.com>
+References: <1466120433-30648-1-git-send-email-hotran@apm.com> <1466120433-30648-3-git-send-email-hotran@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <32bde516-87b5-bb63-c6a3-1ec043758904@lapa.com.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: chris@lapa.com.au, dwmw2@infradead.org, dbaryshkov@gmail.com, sre@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1466120433-30648-3-git-send-email-hotran@apm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Hoan Tran <hotran@apm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, lho@apm.com, Duc Dang <dhdang@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2016 08:28 AM, Chris Lapa wrote:
-> On 17/06/2016 4:26 PM, Krzysztof Kozlowski wrote:
->> On 06/17/2016 07:00 AM, Chris Lapa wrote:
->>> From: Chris Lapa <chris@lapa.com.au>
->>>
->>> The max8903_charger.h file indicated that dcm and dok were not optional
->>> when dc_valid is set.
->>>
->>> It makes sense to have dok as a compulsory pin when dc_valid is given.
->>> However dcm can be optionally wired to a fixed level especially when the
->>> circuit is configured for dc power exclusively.
->>>
->>> The previous implementation already allowed for this somewhat,
->>> however no
->>> error was given if dok wasn't given whilst dc_valid was.
->>>
->>> The new implementation enforces dok presence when dc_valid is given.
->>> Whilst
->>> allowing dcm to be optional.
->>>
->>> Signed-off-by: Chris Lapa <chris@lapa.com.au>
->>> ---
->>>  drivers/power/max8903_charger.c       | 23 ++++++++++-------------
->>>  include/linux/power/max8903_charger.h |  6 +++---
->>>  2 files changed, 13 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/drivers/power/max8903_charger.c
->>> b/drivers/power/max8903_charger.c
->>> index 0a5b0e1..dbd911c4 100644
->>> --- a/drivers/power/max8903_charger.c
->>> +++ b/drivers/power/max8903_charger.c
->>> @@ -211,27 +211,24 @@ static int max8903_probe(struct platform_device
->>> *pdev)
->>>      }
->>>
->>>      if (pdata->dc_valid) {
->>> -        if (pdata->dok && gpio_is_valid(pdata->dok) &&
->>> -                pdata->dcm && gpio_is_valid(pdata->dcm)) {
->>> +        if (pdata->dok && gpio_is_valid(pdata->dok)) {
->>>              gpio = pdata->dok; /* PULL_UPed Interrupt */
->>>              ta_in = gpio_get_value(gpio) ? 0 : 1;
->>> +        } else {
->>> +            dev_err(dev, "When DC is wired, DOK should"
->>> +                    " be wired as well.\n");
->>
->> Just found one nit. Don't split the strings.
->>         dev_err(dev,
->>                 "When DC is wired, DOK should be wired as well.\n");
-> I saw that one as well when I ran checkpatch, however I thought if I
-> changed it then I would get a warning about the line being > 80 chars.
-> So wasn't sure which direction to go.
+On Fri, Jun 17, 2016 at 1:40 AM, Hoan Tran <hotran@apm.com> wrote:
+> This patch adds fractional scale clock support.
+> Fractional scale clock is implemented for a single register field.
+>   Output rate = parent_rate * scale / denominator
+> For example, for 1 / 8 fractional scale, denominator will be 8 and scale
+> will be computed and programmed accordingly.
+>
+> Signed-off-by: Hoan Tran <hotran@apm.com>
+> Signed-off-by: Loc Ho <lho@apm.com>
 
-Checkpatch shouldn't complain on strings so if you move the string to
-next line, it should be ok.
+> --- /dev/null
+> +++ b/drivers/clk/clk-fractional-scale.c
 
-Best regards,
-Krzysztof
+> +static long clk_fs_round_rate(struct clk_hw *hw, unsigned long rate,
+> +                             unsigned long *parent_rate)
+> +{
+> +       struct clk_fractional_scale *fd = to_clk_sf(hw);
+> +       u64 ret, scale;
+> +
+> +       if (!rate || rate >= *parent_rate)
+> +               return *parent_rate;
+> +
+> +       /* freq = parent_rate * scaler / denom */
+> +       ret = rate * fd->denom;
+
+Can this overflow? No, because fd->denom is u64.
+But if fd->denom is changed to u32, it needs a cast to u64 here.
+
+> +       scale = ret / *parent_rate;
+
+As detected by the kbuild test robot, this should use do_div().
+
+> +
+> +       ret = (u64) *parent_rate * scale;
+> +       do_div(ret, fd->denom);
+> +
+> +       return ret;
+> +}
+> +
+> +static int clk_fs_set_rate(struct clk_hw *hw, unsigned long rate,
+> +                          unsigned long parent_rate)
+> +{
+> +       struct clk_fractional_scale *fd = to_clk_sf(hw);
+> +       unsigned long flags = 0;
+> +       u64 scale, ret;
+> +       u32 val;
+> +
+> +       /*
+> +        * Compute the scaler:
+> +        *
+> +        * freq = parent_rate * scaler / denom, or
+> +        * scaler = freq * denom / parent_rate
+> +        */
+> +       ret = rate * fd->denom;
+
+Can this overflow? No, because fd->denom is u64.
+But if fd->denom is changed to u32, it needs a cast to u64 here.
+
+> +       scale = ret / (u64)parent_rate;
+
+Don't cast the divider to u64, as this will turn a 64-by-32 division into a
+64-by-64 division.
+As detected by the kbuild test robot, this should use do_div().
+
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+
+> +struct clk_fractional_scale {
+> +       struct clk_hw   hw;
+> +       void __iomem    *reg;
+> +       u8              shift;
+> +       u32             mask;
+> +       u64             denom;
+
+u64 sounds overkill to me, but it looks like that was done to avoid overflow in
+the multiplications?
+
+> +       u32             flags;
+> +       spinlock_t      *lock;
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
