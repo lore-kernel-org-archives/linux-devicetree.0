@@ -1,117 +1,756 @@
 From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v6 1/2] Documentation: bindings: add DT documentation for Rockchip USB2PHY
-Date: Fri, 17 Jun 2016 10:09:12 +0800
-Message-ID: <1466129353-48063-2-git-send-email-frank.wang@rock-chips.com>
+Subject: [PATCH v6 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip
+ usb2phy
+Date: Fri, 17 Jun 2016 10:09:13 +0800
+Message-ID: <1466129353-48063-3-git-send-email-frank.wang@rock-chips.com>
 References: <1466129353-48063-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 In-Reply-To: <1466129353-48063-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+than rk3288 and before, and most of phy-related registers are also
+different from the past, so a new phy driver is required necessarily.
+
 Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Suggested-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Suggested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
 
 Changes in v6:
- - Changed '_' to '-' for otg-id and otg-bvalid property.
+ - Fixed the output clock would be disabled more than once while phy-port was going to suspend.
+ - Improved the driver to avoid the currently empty otg-port would cause null-pointer dereferences.
 
 Changes in v5:
- - Added 'reg' property to identify the different phy-blocks.
+ - Added 'reg' in the data block to match the different phy-blocks in dt.
 
 Changes in v4:
- - Used 'phy-supply' instead of 'vbus_*-supply'.
+ - Removed some processes related to 'vbus_host-supply'.
 
 Changes in v3:
- - Added 'clocks' and 'clock-names' optional properties.
- - Specified 'otg-port' and 'host-port' as the sub-node name.
+ - Resolved the mapping defect between fixed value in driver and the property
+   in devicetree.
+ - Optimized 480m output clock register function.
+ - Code cleanup.
 
 Changes in v2:
- - Changed vbus_host optional property from gpio to regulator.
- - Specified vbus_otg-supply optional property.
- - Specified otg_id and otg_bvalid property.
+ - Changed vbus_host operation from gpio to regulator in *_probe.
+ - Improved the fault treatment relate to 480m clock register.
+ - Cleaned up some meaningless codes in *_clk480m_disable.
+ - made more clear the comment of *_sm_work.
 
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |   64 ++++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+ drivers/phy/Kconfig                  |    7 +
+ drivers/phy/Makefile                 |    1 +
+ drivers/phy/phy-rockchip-inno-usb2.c |  655 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 663 insertions(+)
+ create mode 100644 drivers/phy/phy-rockchip-inno-usb2.c
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index b869b98..29ef15c 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -347,6 +347,13 @@ config PHY_ROCKCHIP_USB
+ 	help
+ 	  Enable this to support the Rockchip USB 2.0 PHY.
+ 
++config PHY_ROCKCHIP_INNO_USB2
++	tristate "Rockchip INNO USB2PHY Driver"
++	depends on ARCH_ROCKCHIP && OF
++	select GENERIC_PHY
++	help
++	  Support for Rockchip USB2.0 PHY with Innosilicon IP block.
++
+ config PHY_ROCKCHIP_EMMC
+ 	tristate "Rockchip EMMC PHY Driver"
+ 	depends on ARCH_ROCKCHIP && OF
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 9c3e73c..4963fbc 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -38,6 +38,7 @@ phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)	+= phy-s5pv210-usb2.o
+ obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+ obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
+ obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
++obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
+ obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
+ obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
+ obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
 new file mode 100644
-index 0000000..3c29c77
+index 0000000..2ce3259
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-@@ -0,0 +1,64 @@
-+ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
++++ b/drivers/phy/phy-rockchip-inno-usb2.c
+@@ -0,0 +1,655 @@
++/*
++ * Rockchip USB2.0 PHY with Innosilicon IP block driver
++ *
++ * Copyright (C) 2016 Fuzhou Rockchip Electronics Co., Ltd
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+Required properties (phy (parent) node):
-+ - compatible : should be one of the listed compatibles:
-+	* "rockchip,rk3366-usb2phy"
-+	* "rockchip,rk3399-usb2phy"
-+ - reg : the address offset of grf for usb-phy configuration.
-+ - #clock-cells : should be 0.
-+ - clock-output-names : specify the 480m output clock name.
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/delay.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/gpio/consumer.h>
++#include <linux/jiffies.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
 +
-+Optional properties:
-+ - clocks : phandle + phy specifier pair, for the input clock of phy.
-+ - clock-names : input clock name of phy, must be "phyclk".
++#define BIT_WRITEABLE_SHIFT	16
++#define SCHEDULE_DELAY	(60 * HZ)
 +
-+Required nodes : a sub-node is required for each port the phy provides.
-+		 The sub-node name is used to identify host or otg port,
-+		 and shall be the following entries:
-+	* "otg-port" : the name of otg port.
-+	* "host-port" : the name of host port.
-+
-+Required properties (port (child) node):
-+ - #phy-cells : must be 0. See ./phy-bindings.txt for details.
-+ - interrupts : specify an interrupt for each entry in interrupt-names.
-+ - interrupt-names : a list which shall be the following entries:
-+	* "otg-id" : for the otg id interrupt.
-+	* "otg-bvalid" : for the otg vbus interrupt.
-+	* "linestate" : for the host/otg linestate interrupt.
-+
-+Optional properties:
-+ - phy-supply : phandle to a regulator that provides power to VBUS.
-+		See ./phy-bindings.txt for details.
-+
-+Example:
-+
-+grf: syscon@ff770000 {
-+	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+...
-+
-+	u2phy: usb2-phy@700 {
-+		compatible = "rockchip,rk3366-usb2phy";
-+		reg = <0x700 0x2c>;
-+		#clock-cells = <0>;
-+		clock-output-names = "sclk_otgphy0_480m";
-+
-+		u2phy_otg: otg-port {
-+			#phy-cells = <0>;
-+			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "otg-id", "otg-bvalid", "linestate";
-+			status = "okay";
-+		};
-+
-+		u2phy_host: host-port {
-+			#phy-cells = <0>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "linestate";
-+			status = "okay";
-+		};
-+	};
++enum rockchip_usb2phy_port_id {
++	USB2PHY_PORT_OTG,
++	USB2PHY_PORT_HOST,
++	USB2PHY_NUM_PORTS,
 +};
++
++enum rockchip_usb2phy_host_state {
++	PHY_STATE_HS_ONLINE	= 0,
++	PHY_STATE_DISCONNECT	= 1,
++	PHY_STATE_HS_CONNECT	= 2,
++	PHY_STATE_FS_CONNECT	= 4,
++};
++
++struct usb2phy_reg {
++	unsigned int	offset;
++	unsigned int	bitend;
++	unsigned int	bitstart;
++	unsigned int	disable;
++	unsigned int	enable;
++};
++
++/**
++ * struct rockchip_usb2phy_port_cfg: usb-phy port configuration.
++ * @phy_sus: phy suspend register.
++ * @ls_det_en: linestate detection enable register.
++ * @ls_det_st: linestate detection state register.
++ * @ls_det_clr: linestate detection clear register.
++ * @utmi_ls: utmi linestate state register.
++ * @utmi_hstdet: utmi host disconnect register.
++ */
++struct rockchip_usb2phy_port_cfg {
++	struct usb2phy_reg	phy_sus;
++	struct usb2phy_reg	ls_det_en;
++	struct usb2phy_reg	ls_det_st;
++	struct usb2phy_reg	ls_det_clr;
++	struct usb2phy_reg	utmi_ls;
++	struct usb2phy_reg	utmi_hstdet;
++};
++
++/**
++ * struct rockchip_usb2phy_cfg: usb-phy configuration.
++ * @reg: the address offset of grf for usb-phy config.
++ * @num_ports: specify how many ports that the phy has.
++ * @clkout_ctl: keep on/turn off output clk of phy.
++ */
++struct rockchip_usb2phy_cfg {
++	unsigned int	reg;
++	unsigned int	num_ports;
++	struct usb2phy_reg	clkout_ctl;
++	const struct rockchip_usb2phy_port_cfg	port_cfgs[USB2PHY_NUM_PORTS];
++};
++
++/**
++ * struct rockchip_usb2phy_port: usb-phy port data.
++ * @port_id: flag for otg port or host port.
++ * @suspended: phy suspended flag.
++ * @ls_irq: IRQ number assigned for linestate detection.
++ * @mutex: for register updating in sm_work.
++ * @sm_work: OTG state machine work.
++ * @phy_cfg: port register configuration, assigned by driver data.
++ */
++struct rockchip_usb2phy_port {
++	struct phy	*phy;
++	unsigned int	port_id;
++	bool		suspended;
++	int		ls_irq;
++	struct mutex	mutex;
++	struct		delayed_work sm_work;
++	const struct	rockchip_usb2phy_port_cfg *port_cfg;
++};
++
++/**
++ * struct rockchip_usb2phy: usb2.0 phy driver data.
++ * @grf: General Register Files regmap.
++ * @clk: clock struct of phy input clk.
++ * @clk480m: clock struct of phy output clk.
++ * @clk_hw: clock struct of phy output clk management.
++ * @phy_cfg: phy register configuration, assigned by driver data.
++ * @ports: phy port instance.
++ */
++struct rockchip_usb2phy {
++	struct device	*dev;
++	struct regmap	*grf;
++	struct clk	*clk;
++	struct clk	*clk480m;
++	struct clk_hw	clk480m_hw;
++	const struct rockchip_usb2phy_cfg	*phy_cfg;
++	struct rockchip_usb2phy_port	ports[USB2PHY_NUM_PORTS];
++};
++
++static inline int property_enable(struct rockchip_usb2phy *rphy,
++				  const struct usb2phy_reg *reg, bool en)
++{
++	unsigned int val, mask, tmp;
++
++	tmp = en ? reg->enable : reg->disable;
++	mask = GENMASK(reg->bitend, reg->bitstart);
++	val = (tmp << reg->bitstart) | (mask << BIT_WRITEABLE_SHIFT);
++
++	return regmap_write(rphy->grf, reg->offset, val);
++}
++
++static inline bool property_enabled(struct rockchip_usb2phy *rphy,
++				    const struct usb2phy_reg *reg)
++{
++	int ret;
++	unsigned int tmp, orig;
++	unsigned int mask = GENMASK(reg->bitend, reg->bitstart);
++
++	ret = regmap_read(rphy->grf, reg->offset, &orig);
++	if (ret)
++		return false;
++
++	tmp = (orig & mask) >> reg->bitstart;
++	return tmp == reg->enable;
++}
++
++static int rockchip_usb2phy_clk480m_enable(struct clk_hw *hw)
++{
++	struct rockchip_usb2phy *rphy =
++		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
++	int ret;
++
++	/* turn on 480m clk output if it is off */
++	if (!property_enabled(rphy, &rphy->phy_cfg->clkout_ctl)) {
++		ret = property_enable(rphy, &rphy->phy_cfg->clkout_ctl, true);
++		if (ret)
++			return ret;
++
++		/* waitting for the clk become stable */
++		mdelay(1);
++	}
++
++	return 0;
++}
++
++static void rockchip_usb2phy_clk480m_disable(struct clk_hw *hw)
++{
++	struct rockchip_usb2phy *rphy =
++		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
++
++	/* turn off 480m clk output */
++	property_enable(rphy, &rphy->phy_cfg->clkout_ctl, false);
++}
++
++static int rockchip_usb2phy_clk480m_enabled(struct clk_hw *hw)
++{
++	struct rockchip_usb2phy *rphy =
++		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
++
++	return property_enabled(rphy, &rphy->phy_cfg->clkout_ctl);
++}
++
++static unsigned long
++rockchip_usb2phy_clk480m_recalc_rate(struct clk_hw *hw,
++				     unsigned long parent_rate)
++{
++	return 480000000;
++}
++
++static const struct clk_ops rockchip_usb2phy_clkout_ops = {
++	.enable = rockchip_usb2phy_clk480m_enable,
++	.disable = rockchip_usb2phy_clk480m_disable,
++	.is_enabled = rockchip_usb2phy_clk480m_enabled,
++	.recalc_rate = rockchip_usb2phy_clk480m_recalc_rate,
++};
++
++static void rockchip_usb2phy_clk480m_unregister(void *data)
++{
++	struct rockchip_usb2phy *rphy = data;
++
++	of_clk_del_provider(rphy->dev->of_node);
++	clk_unregister(rphy->clk480m);
++
++	if (rphy->clk)
++		clk_put(rphy->clk);
++}
++
++static int
++rockchip_usb2phy_clk480m_register(struct rockchip_usb2phy *rphy)
++{
++	struct device_node *node = rphy->dev->of_node;
++	struct clk_init_data init;
++	const char *clk_name;
++	int ret;
++
++	init.flags = 0;
++	init.name = "clk_usbphy_480m";
++	init.ops = &rockchip_usb2phy_clkout_ops;
++
++	/* optional override of the clockname */
++	of_property_read_string(node, "clock-output-names", &init.name);
++
++	rphy->clk = of_clk_get_by_name(node, "phyclk");
++	if (IS_ERR(rphy->clk)) {
++		rphy->clk = NULL;
++		init.parent_names = NULL;
++		init.num_parents = 0;
++	} else {
++		clk_name = __clk_get_name(rphy->clk);
++		init.parent_names = &clk_name;
++		init.num_parents = 1;
++	}
++
++	rphy->clk480m_hw.init = &init;
++
++	/* register the clock */
++	rphy->clk480m = clk_register(rphy->dev, &rphy->clk480m_hw);
++	if (IS_ERR(rphy->clk480m)) {
++		ret = PTR_ERR(rphy->clk480m);
++		goto err_register;
++	}
++
++	ret = of_clk_add_provider(node, of_clk_src_simple_get, rphy->clk480m);
++	if (ret < 0)
++		goto err_clk_provider;
++
++	ret = devm_add_action(rphy->dev, rockchip_usb2phy_clk480m_unregister,
++			      rphy);
++	if (ret < 0)
++		goto err_unreg_action;
++
++	return 0;
++
++err_unreg_action:
++	of_clk_del_provider(node);
++err_clk_provider:
++	clk_unregister(rphy->clk480m);
++err_register:
++	if (rphy->clk)
++		clk_put(rphy->clk);
++	return ret;
++}
++
++static int rockchip_usb2phy_init(struct phy *phy)
++{
++	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
++	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
++	int ret;
++
++	if (rport->port_id == USB2PHY_PORT_HOST) {
++		/* clear linestate and enable linestate detect irq */
++		mutex_lock(&rport->mutex);
++
++		ret = property_enable(rphy, &rport->port_cfg->ls_det_clr, true);
++		if (ret) {
++			mutex_unlock(&rport->mutex);
++			return ret;
++		}
++
++		ret = property_enable(rphy, &rport->port_cfg->ls_det_en, true);
++		if (ret) {
++			mutex_unlock(&rport->mutex);
++			return ret;
++		}
++
++		mutex_unlock(&rport->mutex);
++		schedule_delayed_work(&rport->sm_work, SCHEDULE_DELAY);
++	}
++
++	return 0;
++}
++
++static int rockchip_usb2phy_resume(struct phy *phy)
++{
++	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
++	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
++	int ret;
++
++	dev_dbg(&rport->phy->dev, "port resume\n");
++
++	ret = clk_prepare_enable(rphy->clk480m);
++	if (ret)
++		return ret;
++
++	ret = property_enable(rphy, &rport->port_cfg->phy_sus, false);
++	if (ret)
++		return ret;
++
++	rport->suspended = false;
++	return 0;
++}
++
++static int rockchip_usb2phy_suspend(struct phy *phy)
++{
++	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
++	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
++	int ret;
++
++	dev_dbg(&rport->phy->dev, "port suspend\n");
++
++	if (rport->suspended)
++		goto exit;
++
++	ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
++	if (ret)
++		return ret;
++
++	rport->suspended = true;
++	clk_disable_unprepare(rphy->clk480m);
++
++exit:
++	return 0;
++}
++
++static int rockchip_usb2phy_exit(struct phy *phy)
++{
++	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
++
++	if (rport->port_id == USB2PHY_PORT_HOST)
++		cancel_delayed_work_sync(&rport->sm_work);
++
++	return 0;
++}
++
++static const struct phy_ops rockchip_usb2phy_ops = {
++	.init		= rockchip_usb2phy_init,
++	.exit		= rockchip_usb2phy_exit,
++	.power_on	= rockchip_usb2phy_resume,
++	.power_off	= rockchip_usb2phy_suspend,
++	.owner		= THIS_MODULE,
++};
++
++/*
++ * The function manage host-phy port state and suspend/resume phy port
++ * to save power.
++ *
++ * we rely on utmi_linestate and utmi_hostdisconnect to identify whether
++ * FS/HS is disconnect or not. Besides, we do not need care it is FS
++ * disconnected or HS disconnected, actually, we just only need get the
++ * device is disconnected at last through rearm the delayed work,
++ * to suspend the phy port in _PHY_STATE_DISCONNECT_ case.
++ *
++ * NOTE: It may invoke *phy_suspend or *phy_resume which will invoke some
++ * clk related APIs, so do not invoke it from interrupt context directly.
++ */
++static void rockchip_usb2phy_sm_work(struct work_struct *work)
++{
++	struct rockchip_usb2phy_port *rport =
++		container_of(work, struct rockchip_usb2phy_port, sm_work.work);
++	struct rockchip_usb2phy *rphy = dev_get_drvdata(rport->phy->dev.parent);
++	unsigned int sh = rport->port_cfg->utmi_hstdet.bitend -
++			  rport->port_cfg->utmi_hstdet.bitstart + 1;
++	unsigned int ul, uhd, state;
++	unsigned int ul_mask, uhd_mask;
++	int ret;
++
++	mutex_lock(&rport->mutex);
++
++	ret = regmap_read(rphy->grf, rport->port_cfg->utmi_ls.offset, &ul);
++	if (ret < 0)
++		goto next_schedule;
++
++	ret = regmap_read(rphy->grf, rport->port_cfg->utmi_hstdet.offset,
++			  &uhd);
++	if (ret < 0)
++		goto next_schedule;
++
++	uhd_mask = GENMASK(rport->port_cfg->utmi_hstdet.bitend,
++			   rport->port_cfg->utmi_hstdet.bitstart);
++	ul_mask = GENMASK(rport->port_cfg->utmi_ls.bitend,
++			  rport->port_cfg->utmi_ls.bitstart);
++
++	/* stitch on utmi_ls and utmi_hstdet as phy state */
++	state = ((uhd & uhd_mask) >> rport->port_cfg->utmi_hstdet.bitstart) |
++		(((ul & ul_mask) >> rport->port_cfg->utmi_ls.bitstart) << sh);
++
++	switch (state) {
++	case PHY_STATE_HS_ONLINE:
++		dev_dbg(&rport->phy->dev, "HS online\n");
++		break;
++	case PHY_STATE_FS_CONNECT:
++		/*
++		 * For FS device, the online state share with connect state
++		 * from utmi_ls and utmi_hstdet register, so we distinguish
++		 * them via suspended flag.
++		 */
++		if (!rport->suspended) {
++			dev_dbg(&rport->phy->dev, "FS online\n");
++			break;
++		}
++		/* fall through */
++	case PHY_STATE_HS_CONNECT:
++		if (rport->suspended) {
++			dev_dbg(&rport->phy->dev, "HS/FS connected\n");
++			rockchip_usb2phy_resume(rport->phy);
++			rport->suspended = false;
++		}
++		break;
++	case PHY_STATE_DISCONNECT:
++		if (!rport->suspended) {
++			dev_dbg(&rport->phy->dev, "HS/FS disconnected\n");
++			rockchip_usb2phy_suspend(rport->phy);
++			rport->suspended = true;
++		}
++
++		/*
++		 * activate the linestate detection to get the next device
++		 * plug-in irq.
++		 */
++		property_enable(rphy, &rport->port_cfg->ls_det_clr, true);
++		property_enable(rphy, &rport->port_cfg->ls_det_en, true);
++
++		/*
++		 * we don't need to rearm the delayed work when the phy port
++		 * is suspended.
++		 */
++		mutex_unlock(&rport->mutex);
++		return;
++	default:
++		dev_dbg(&rport->phy->dev, "unknown phy state\n");
++		break;
++	}
++
++next_schedule:
++	mutex_unlock(&rport->mutex);
++	schedule_delayed_work(&rport->sm_work, SCHEDULE_DELAY);
++}
++
++static irqreturn_t rockchip_usb2phy_linestate_irq(int irq, void *data)
++{
++	struct rockchip_usb2phy_port *rport = data;
++	struct rockchip_usb2phy *rphy = dev_get_drvdata(rport->phy->dev.parent);
++
++	if (!property_enabled(rphy, &rport->port_cfg->ls_det_st))
++		return IRQ_NONE;
++
++	mutex_lock(&rport->mutex);
++
++	/* disable linestate detect irq and clear its status */
++	property_enable(rphy, &rport->port_cfg->ls_det_en, false);
++	property_enable(rphy, &rport->port_cfg->ls_det_clr, true);
++
++	mutex_unlock(&rport->mutex);
++
++	/*
++	 * In this case for host phy port, a new device is plugged in,
++	 * meanwhile, if the phy port is suspended, we need rearm the work to
++	 * resume it and mange its states; otherwise, we do nothing about that.
++	 */
++	if (rport->suspended && rport->port_id == USB2PHY_PORT_HOST)
++		rockchip_usb2phy_sm_work(&rport->sm_work.work);
++
++	return IRQ_HANDLED;
++}
++
++static int rockchip_usb2phy_host_port_init(struct rockchip_usb2phy *rphy,
++					   struct rockchip_usb2phy_port *rport,
++					   struct device_node *child_np)
++{
++	int ret;
++
++	rport->port_id = USB2PHY_PORT_HOST;
++	rport->port_cfg = &rphy->phy_cfg->port_cfgs[USB2PHY_PORT_HOST];
++
++	mutex_init(&rport->mutex);
++	INIT_DELAYED_WORK(&rport->sm_work, rockchip_usb2phy_sm_work);
++
++	rport->ls_irq = of_irq_get_byname(child_np, "linestate");
++	if (rport->ls_irq < 0) {
++		dev_err(rphy->dev, "no linestate irq provided\n");
++		return rport->ls_irq;
++	}
++
++	ret = devm_request_threaded_irq(rphy->dev, rport->ls_irq, NULL,
++					rockchip_usb2phy_linestate_irq,
++					IRQF_ONESHOT,
++					"rockchip_usb2phy", rport);
++	if (ret) {
++		dev_err(rphy->dev, "failed to request irq handle\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int rockchip_usb2phy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct device_node *child_np;
++	struct phy_provider *provider;
++	struct rockchip_usb2phy *rphy;
++	const struct rockchip_usb2phy_cfg *phy_cfgs;
++	const struct of_device_id *match;
++	unsigned int reg;
++	int index, ret;
++
++	rphy = devm_kzalloc(dev, sizeof(*rphy), GFP_KERNEL);
++	if (!rphy)
++		return -ENOMEM;
++
++	match = of_match_device(dev->driver->of_match_table, dev);
++	if (!match || !match->data) {
++		dev_err(dev, "phy configs are not assigned!\n");
++		return -EINVAL;
++	}
++
++	if (!dev->parent || !dev->parent->of_node)
++		return -EINVAL;
++
++	rphy->grf = syscon_node_to_regmap(dev->parent->of_node);
++	if (IS_ERR(rphy->grf))
++		return PTR_ERR(rphy->grf);
++
++	if (of_property_read_u32(np, "reg", &reg)) {
++		dev_err(dev, "the reg property is not assigned in %s node\n",
++			np->name);
++		return -EINVAL;
++	}
++
++	rphy->dev = dev;
++	phy_cfgs = match->data;
++	platform_set_drvdata(pdev, rphy);
++
++	/* find out a proper config which can be matched with dt. */
++	index = 0;
++	while (phy_cfgs[index].reg) {
++		if (phy_cfgs[index].reg == reg) {
++			rphy->phy_cfg = &phy_cfgs[index];
++			break;
++		}
++
++		++index;
++	}
++
++	if (!rphy->phy_cfg) {
++		dev_err(dev, "no phy-config can be matched with %s node\n",
++			np->name);
++		return -EINVAL;
++	}
++
++	ret = rockchip_usb2phy_clk480m_register(rphy);
++	if (ret) {
++		dev_err(dev, "failed to register 480m output clock\n");
++		return ret;
++	}
++
++	index = 0;
++	for_each_available_child_of_node(np, child_np) {
++		struct rockchip_usb2phy_port *rport = &rphy->ports[index];
++		struct phy *phy;
++
++		/*
++		 * This driver aim to support both otg-port and host-port,
++		 * but unfortunately, the otg part is not ready in current,
++		 * so this comments and below codes are interim, which should
++		 * be changed after otg-port is supplied soon.
++		 */
++		if (of_node_cmp(child_np->name, "host-port"))
++			goto next_child;
++
++		phy = devm_phy_create(dev, child_np, &rockchip_usb2phy_ops);
++		if (IS_ERR(phy)) {
++			dev_err(dev, "failed to create phy\n");
++			ret = PTR_ERR(phy);
++			goto put_child;
++		}
++
++		rport->phy = phy;
++		phy_set_drvdata(rport->phy, rport);
++
++		ret = rockchip_usb2phy_host_port_init(rphy, rport, child_np);
++		if (ret)
++			goto put_child;
++
++next_child:
++		/* to prevent out of boundary */
++		if (++index >= rphy->phy_cfg->num_ports)
++			break;
++	}
++
++	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	return PTR_ERR_OR_ZERO(provider);
++
++put_child:
++	of_node_put(child_np);
++	return ret;
++}
++
++static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs[] = {
++	{
++		.reg = 0x700,
++		.num_ports	= 2,
++		.clkout_ctl	= { 0x0724, 15, 15, 1, 0 },
++		.port_cfgs	= {
++			[USB2PHY_PORT_HOST] = {
++				.phy_sus	= { 0x0728, 15, 0, 0, 0x1d1 },
++				.ls_det_en	= { 0x0680, 4, 4, 0, 1 },
++				.ls_det_st	= { 0x0690, 4, 4, 0, 1 },
++				.ls_det_clr	= { 0x06a0, 4, 4, 0, 1 },
++				.utmi_ls	= { 0x049c, 14, 13, 0, 1 },
++				.utmi_hstdet	= { 0x049c, 12, 12, 0, 1 }
++			}
++		},
++	},
++	{ /* sentinel */ }
++};
++
++static const struct of_device_id rockchip_usb2phy_dt_match[] = {
++	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
++	{}
++};
++MODULE_DEVICE_TABLE(of, rockchip_usb2phy_dt_match);
++
++static struct platform_driver rockchip_usb2phy_driver = {
++	.probe		= rockchip_usb2phy_probe,
++	.driver		= {
++		.name	= "rockchip-usb2phy",
++		.of_match_table = rockchip_usb2phy_dt_match,
++	},
++};
++module_platform_driver(rockchip_usb2phy_driver);
++
++MODULE_AUTHOR("Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
++MODULE_DESCRIPTION("Rockchip USB2.0 PHY driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
