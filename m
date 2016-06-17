@@ -1,113 +1,56 @@
-From: Songjun Wu <songjun.wu@atmel.com>
-Subject: [PATCH v5 2/2] [media] atmel-isc: DT binding for Image Sensor Controller driver
-Date: Fri, 17 Jun 2016 16:57:14 +0800
-Message-ID: <1466153854-30272-3-git-send-email-songjun.wu@atmel.com>
-References: <1466153854-30272-1-git-send-email-songjun.wu@atmel.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH V12 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller
+Date: Fri, 17 Jun 2016 11:09:27 +0200
+Message-ID: <5763BE47.8040209@denx.de>
+References: <1465000774-7762-1-git-send-email-marex@denx.de> <1465000774-7762-2-git-send-email-marex@denx.de> <575F91B2.7010304@ti.com> <575FFF97.7040104@denx.de> <57624A98.4060308@ti.com> <5762A7E6.8000109@denx.de> <57637FF1.9030802@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466153854-30272-1-git-send-email-songjun.wu@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: laurent.pinchart@ideasonboard.com, nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, robh@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Songjun Wu <songjun.wu@atmel.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57637FF1.9030802-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DT binding documentation for ISC driver.
+On 06/17/2016 06:43 AM, Vignesh R wrote:
+> 
+> 
+> On Thursday 16 June 2016 06:51 PM, Marek Vasut wrote:
+>> On 06/16/2016 08:43 AM, Vignesh R wrote:
+> [...]
+>>>> - I didn't find any way to find when all the data in the current 1 MiB
+>>>>   block were written and you can remap another 1 MiB block in place.
+>>>
+>>> I believe this constraint only applies if enahbremap bit is set in cfg
+>>> register, if not, then the entire memory map can be accessed.
+>>
+>> And where is that memory window accessible then, at which address ?
+>> The SoCFPGA peripherals are stuffed in some 12 MiB of the address
+>> space, the rest is bootrom/sram/ram and the FPGA bridges, so I find
+>> it hard to believe you can place ie. 128 MiB SPI NOR mapping somewhere
+>> in there.
+>>
+>> My impression is that in direct mode, the qspi will always overlay the
+>> address 0x0 on socfpga , but that might be configurable , I'm not sure.
+>>
+> 
+> Ah, socfgpa provides just 1MB window to access QSPI_DATA area. So direct
+> mode may not be practical as it will require remapping.
+> But, on TI EVM, QSPI_DATA area is 64MB in size, so looks like direct
+> mode(when added) needs to be tied to TI specific compatible.
+> 
 
-Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
----
+Ah, so that explains it. Thanks for looking into it.
 
-Changes in v5:
-- Add clock names.
+Still, keep in mind there are 128 MiB devices (N25Q00AA for example), so
+even with the 64 MiB data area, it won't be entirely seamless.
 
-Changes in v4:
-- Remove the isc clock nodes.
-
-Changes in v3:
-- Remove the 'atmel,sensor-preferred'.
-- Modify the isc clock node according to the Rob's remarks.
-
-Changes in v2:
-- Remove the unit address of the endpoint.
-- Add the unit address to the clock node.
-- Avoid using underscores in node names.
-- Drop the "0x" in the unit address of the i2c node.
-- Modify the description of 'atmel,sensor-preferred'.
-- Add the description for the ISC internal clock.
-
- .../devicetree/bindings/media/atmel-isc.txt        | 64 ++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-
-diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
-new file mode 100644
-index 0000000..9558a77
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-@@ -0,0 +1,64 @@
-+Atmel Image Sensor Controller (ISC)
-+----------------------------------------------
-+
-+Required properties for ISC:
-+- compatible
-+	Must be "atmel,sama5d2-isc".
-+- reg
-+	Physical base address and length of the registers set for the device.
-+- interrupts
-+	Should contain IRQ line for the ISC.
-+- clocks
-+	List of clock specifiers, corresponding to entries in
-+	the clock-names property;
-+	Please refer to clock-bindings.txt.
-+- clock-names
-+	Required elements: "hclock".
-+- #clock-cells
-+	Should be 0.
-+- clock-output-names
-+	Should contain the name of the clock driving the sensor master clock.
-+- pinctrl-names, pinctrl-0
-+	Please refer to pinctrl-bindings.txt.
-+
-+ISC supports a single port node with parallel bus. It should contain one
-+'port' child node with child 'endpoint' node. Please refer to the bindings
-+defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+isc: isc@f0008000 {
-+	compatible = "atmel,sama5d2-isc";
-+	reg = <0xf0008000 0x4000>;
-+	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
-+	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-+	clock-names = "hclock", "iscck", "gck";
-+	#clock-cells = <0>;
-+	clock-output-names = "isc-mck";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_isc_base &pinctrl_isc_data_8bit &pinctrl_isc_data_9_10 &pinctrl_isc_data_11_12>;
-+
-+	port {
-+		isc_0: endpoint {
-+			remote-endpoint = <&ov7740_0>;
-+			hsync-active = <1>;
-+			vsync-active = <0>;
-+			pclk-sample = <1>;
-+		};
-+	};
-+};
-+
-+i2c1: i2c@fc028000 {
-+	ov7740: camera@21 {
-+	compatible = "ovti,ov7740";
-+	reg = <0x21>;
-+	clocks = <&isc>;
-+	clock-names = "xvclk";
-+	assigned-clocks = <&isc>;
-+	assigned-clock-rates = <24000000>;
-+
-+	port {
-+		ov7740_0: endpoint {
-+			remote-endpoint = <&isc_0>;
-+		};
-+	};
-+};
 -- 
-2.7.4
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
