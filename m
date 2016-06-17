@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V3 2/4] clk: Combine DT binding doc for max77686 and max77802
-Date: Fri, 17 Jun 2016 16:21:05 +0530
-Message-ID: <1466160667-28451-3-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V3 4/4] clk: max77686: Add support for MAX77620 clocks
+Date: Fri, 17 Jun 2016 16:21:07 +0530
+Message-ID: <1466160667-28451-5-git-send-email-ldewangan@nvidia.com>
 References: <1466160667-28451-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,190 +12,116 @@ To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org
 Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
-The clock IP used on the Maxim PMICs max77686 and max77802 are
-same. The configuration of clock register is also same except
-the number of clocks.
+Maxim Max77620 has one 32KHz clock output and the clock HW
+IP used on this PMIC is same as what it is there in the MAX77686.
 
-Define the common DT binding file for the clocks of Maxim PMICs
-MAX77686 and MAX77802. For this, remove the separate DT binding
-document file for maxim,max77802 and move all information to
-maxim,max77686 DT binding document.
+Add clock driver support for MAX77620 on the MAX77686 driver.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 CC: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 CC: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Tested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
 ---
 Changes from V1:
-- Rewrite description to remvoe ref to driver.
-- Taken care of comment from Krzysztof on the supported clocks and
-  DT bindings.
+- Updated based on changes done in first patch.
+
+Changes from V2:
+- Collected RBs
+- Make uniformity on chip name like 77620/77686/77802 with sequences.
 
 Changes from V2:
 - Collected RBs.
+- Nit fixes.
 ---
- .../devicetree/bindings/clock/maxim,max77686.txt   | 82 ++++++++++++++++------
- .../devicetree/bindings/clock/maxim,max77802.txt   | 44 ------------
- 2 files changed, 59 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/maxim,max77802.txt
+ drivers/clk/Kconfig        |  7 ++++---
+ drivers/clk/clk-max77686.c | 18 ++++++++++++++++++
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/maxim,max77686.txt b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-index 9c40739..4d973b5 100644
---- a/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-+++ b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-@@ -1,11 +1,15 @@
--Binding for Maxim MAX77686 32k clock generator block
-+Binding for Maxim MAX77686/MAX77802 32k clock generator block
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 6afad74..936a443 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -32,10 +32,11 @@ config COMMON_CLK_WM831X
+ source "drivers/clk/versatile/Kconfig"
  
--This is a part of device tree bindings of MAX77686 multi-function device.
--More information can be found in bindings/mfd/max77686.txt file.
-+This is a part of device tree bindings of MAX77686/MAX77802 multi-function
-+device. More information can be found in bindings/mfd/max77686.txt file for
-+MAX77686 and bindings/mfd/max77802.txt for MAX77802.
+ config COMMON_CLK_MAX77686
+-	tristate "Clock driver for Maxim 77686/77802 MFD"
+-	depends on MFD_MAX77686
++	tristate "Clock driver for Maxim 77620/77686/77802 MFD"
++	depends on MFD_MAX77686 || MFD_MAX77620
+ 	---help---
+-	  This driver supports Maxim 77686/77802 crystal oscillator clock.
++	  This driver supports Maxim 77620/77686/77802 crystal oscillator
++	  clock.
  
- The MAX77686 contains three 32.768khz clock outputs that can be controlled
- (gated/ungated) over I2C.
+ config COMMON_CLK_RK808
+ 	tristate "Clock driver for RK808"
+diff --git a/drivers/clk/clk-max77686.c b/drivers/clk/clk-max77686.c
+index 9aba3a8..19f6208 100644
+--- a/drivers/clk/clk-max77686.c
++++ b/drivers/clk/clk-max77686.c
+@@ -25,6 +25,7 @@
+ #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/mfd/max77620.h>
+ #include <linux/mfd/max77686.h>
+ #include <linux/mfd/max77686-private.h>
+ #include <linux/clk-provider.h>
+@@ -35,12 +36,14 @@
  
-+The MAX77802 contains two 32.768khz clock outputs that can be controlled
-+(gated/ungated) over I2C.
+ #include <dt-bindings/clock/maxim,max77686.h>
+ #include <dt-bindings/clock/maxim,max77802.h>
++#include <dt-bindings/clock/maxim,max77620.h>
+ 
+ #define MAX77802_CLOCK_LOW_JITTER_SHIFT 0x3
+ 
+ enum max77686_chip_name {
+ 	CHIP_MAX77686,
+ 	CHIP_MAX77802,
++	CHIP_MAX77620,
+ };
+ 
+ struct max77686_hw_clk_info {
+@@ -97,6 +100,15 @@ max77686_hw_clk_info max77802_hw_clks_info[MAX77802_CLKS_NUM] = {
+ 	},
+ };
+ 
++static const struct
++max77686_hw_clk_info max77620_hw_clks_info[MAX77620_CLKS_NUM] = {
++	[MAX77620_CLK_32K_OUT0] = {
++		.name = "32khz_out0",
++		.clk_reg = MAX77620_REG_CNFG1_32K,
++		.clk_enable_mask = MAX77620_CNFG1_32K_OUT0_EN,
++	},
++};
 +
- Following properties should be presend in main device node of the MFD chip.
+ static struct max77686_clk_init_data *to_max77686_clk_init_data(
+ 				struct clk_hw *hw)
+ {
+@@ -181,6 +193,11 @@ static int max77686_clk_probe(struct platform_device *pdev)
+ 		hw_clks = max77802_hw_clks_info;
+ 		break;
  
- Required properties:
-@@ -17,30 +21,62 @@ Optional properties:
- 
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume. Following indices are allowed:
--    - 0: 32khz_ap clock,
--    - 1: 32khz_cp clock,
--    - 2: 32khz_pmic clock.
-+    - 0: 32khz_ap clock (max77686, max77802),
-+    - 1: 32khz_cp clock (max77686, max77802),
-+    - 2: 32khz_pmic clock (max77686).
- 
- Clocks are defined as preprocessor macros in dt-bindings/clock/maxim,max77686.h
--header and can be used in device tree sources.
-+header for MAX77686 and dt-bindings/clock/maxim,max77802.h for MAX77802 and can
-+be used in device tree sources.
++	case CHIP_MAX77620:
++		num_clks = MAX77620_CLKS_NUM;
++		hw_clks = max77620_hw_clks_info;
++		break;
 +
-+Example:
-+
-+1. With MAX77686:
-+
-+#include <dt-bindings/clock/maxim,max77686.h>
-+/* ... */
-+
-+	Node of the MFD chip
-+		max77686: max77686@09 {
-+			compatible = "maxim,max77686";
-+			interrupt-parent = <&wakeup_eint>;
-+			interrupts = <26 0>;
-+			reg = <0x09>;
-+			#clock-cells = <1>;
-+
-+			/* ... */
-+		};
-+
-+	Clock consumer node
-+
-+		foo@0 {
-+			compatible = "bar,foo";
-+			/* ... */
-+			clock-names = "my-clock";
-+			clocks = <&max77686 MAX77686_CLK_PMIC>;
-+		};
-+
-+2. With MAX77802:
- 
--Example: Node of the MFD chip
-+#include <dt-bindings/clock/maxim,max77802.h>
-+/* ... */
- 
--	max77686: max77686@09 {
--		compatible = "maxim,max77686";
--		interrupt-parent = <&wakeup_eint>;
--		interrupts = <26 0>;
--		reg = <0x09>;
--		#clock-cells = <1>;
-+	Node of the MFD chip
-+		max77802: max77802@09 {
-+			compatible = "maxim,max77802";
-+			interrupt-parent = <&wakeup_eint>;
-+			interrupts = <26 0>;
-+			reg = <0x09>;
-+			#clock-cells = <1>;
- 
--		/* ... */
--	};
-+			/* ... */
-+		};
- 
--Example: Clock consumer node
-+	Clock consumer node
- 
--	foo@0 {
--		compatible = "bar,foo";
--		/* ... */
--		clock-names = "my-clock";
--		clocks = <&max77686 MAX77686_CLK_PMIC>;
--	};
-+		foo@0 {
-+			compatible = "bar,foo";
-+			/* ... */
-+			clock-names = "my-clock";
-+			clocks = <&max77802 MAX77802_CLK_32K_AP>;
-+		};
-diff --git a/Documentation/devicetree/bindings/clock/maxim,max77802.txt b/Documentation/devicetree/bindings/clock/maxim,max77802.txt
-deleted file mode 100644
-index c6dc783..0000000
---- a/Documentation/devicetree/bindings/clock/maxim,max77802.txt
-+++ /dev/null
-@@ -1,44 +0,0 @@
--Binding for Maxim MAX77802 32k clock generator block
--
--This is a part of device tree bindings of MAX77802 multi-function device.
--More information can be found in bindings/mfd/max77802.txt file.
--
--The MAX77802 contains two 32.768khz clock outputs that can be controlled
--(gated/ungated) over I2C.
--
--Following properties should be present in main device node of the MFD chip.
--
--Required properties:
--- #clock-cells: From common clock binding; shall be set to 1.
--
--Optional properties:
--- clock-output-names: From common clock binding.
--
--Each clock is assigned an identifier and client nodes can use this identifier
--to specify the clock which they consume. Following indices are allowed:
--     - 0: 32khz_ap clock,
--     - 1: 32khz_cp clock.
--
--Clocks are defined as preprocessor macros in dt-bindings/clock/maxim,max77802.h
--header and can be used in device tree sources.
--
--Example: Node of the MFD chip
--
--	max77802: max77802@09 {
--		compatible = "maxim,max77802";
--		interrupt-parent = <&wakeup_eint>;
--		interrupts = <26 0>;
--		reg = <0x09>;
--		#clock-cells = <1>;
--
--		/* ... */
--	};
--
--Example: Clock consumer node
--
--	foo@0 {
--		compatible = "bar,foo";
--		/* ... */
--		clock-names = "my-clock";
--		clocks = <&max77802 MAX77802_CLK_32K_AP>;
--	};
+ 	default:
+ 		dev_err(dev, "Unknown Chip ID\n");
+ 		return -EINVAL;
+@@ -284,6 +301,7 @@ static int max77686_clk_remove(struct platform_device *pdev)
+ static const struct platform_device_id max77686_clk_id[] = {
+ 	{ "max77686-clk", .driver_data = CHIP_MAX77686, },
+ 	{ "max77802-clk", .driver_data = CHIP_MAX77802, },
++	{ "max77620-clock", .driver_data = CHIP_MAX77620, },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(platform, max77686_clk_id);
 -- 
 2.1.4
