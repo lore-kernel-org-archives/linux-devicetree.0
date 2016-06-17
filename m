@@ -1,189 +1,282 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 7/7] iommu/arm-smmu: Support non-PCI devices with SMMUv3
-Date: Fri, 17 Jun 2016 10:14:17 +0100
-Message-ID: <5763BF69.7010205@arm.com>
-References: <cover.1464966939.git.robin.murphy@arm.com>
-	<42a8a71932f766d70ea9dcae5d11d5f33dcc3652.1464966939.git.robin.murphy@arm.com>
-	<20160614151642.GC16531@arm.com> <5760ADC6.8000803@huawei.com>
-	<57635843.6000906@huawei.com>
+From: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH V3] ARM: dts: sun7i: Add dts file for Bananapi
+ M1 Plus board
+Date: Fri, 17 Jun 2016 17:56:02 +0800
+Message-ID: <20160617095602.14612-1-luoyi.ly@gmail.com>
+Reply-To: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <57635843.6000906-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCLONWF5WQNBBEMQR65QKGQEOKCXP7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/06/16 02:54, Leizhen (ThunderTown) wrote:
-> Hi,
-> I only applied these patch series on lastest 4.7-rc3, is there any patches I missed?
-> According to my test, it seems can not work. The problem is:
+From: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Thanks, that's helpful (if irritating) confirmation.
+Add support for the Bananapi M1 Plus A20 development board from
+sinovoip.com.cn . This board is nearly a clone of the Lemaker's
+Bananapro, but differ with the wlan chipset connection and i2s pinout.
+And I also enable the integrated audio codec on default.
+---
+ arch/arm/boot/dts/Makefile                       |   1 +
+ arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 230 +++++++++++++++++++++++
+ 2 files changed, 231 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
 
-Would you mind trying this patch on top to see if that helps: 
-http://article.gmane.org/gmane.linux.kernel.iommu/13991
-
-Failing that, we could go back to the forced-device-creation workaround 
-(although I was hoping we'd be able to avoid it):
-
------8<-----
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index e5acd601ee96..556a48f836b3 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2683,9 +2683,15 @@ module_exit(arm_smmu_exit);
-
-  static int __init arm_smmu_of_init(struct device_node *np)
-  {
-+	static bool registered;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e06a5ab..fde407f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -685,6 +685,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+ 	sun6i-a31s-yones-toptech-bs1078-v2.dtb
+ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-bananapi.dtb \
++	sun7i-a20-bananapi-m1-plus.dtb \
+ 	sun7i-a20-bananapro.dtb \
+ 	sun7i-a20-cubieboard2.dtb \
+ 	sun7i-a20-cubietruck.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+new file mode 100644
+index 0000000..89e38e9
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+@@ -0,0 +1,230 @@
++/*
++ * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * Thanks to the original work by Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
-  	of_iommu_set_ops(np, &arm_smmu_ops);
-
--	return 0;
-+	if (!registered)
-+		registered = !arm_smmu_init();
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
 +
-+	return PTR_ERR_OR_ZERO(of_platform_device_create(np, NULL,
-+					platform_bus_type.dev_root));
-  }
-  IOMMU_OF_DECLARE(arm_smmuv3, "arm,smmu-v3", arm_smmu_of_init);
-
------8<-----
-
-Robin.
-
->
-> [    0.916536] Call trace:
-> [    0.918967] [<ffff00000808882c>] dump_backtrace+0x0/0x1ac
-> [    0.924361] [<ffff0000080889ec>] show_stack+0x14/0x1c
-> [    0.929384] [<ffff00000833c290>] dump_stack+0x8c/0xac
-> [    0.934425] [<ffff000008093550>] do_iommu_attach.isra.11+0x24/0x7c				//called iommu_get_domain_for_dev, but currently dev->iommu_group is NULL
-> [    0.940589] [<ffff000008093604>] __iommu_attach_notifier.part.13+0x5c/0xc8
-> [    0.947443] [<ffff000008093690>] __iommu_attach_notifier+0x20/0x2c
-> [    0.953608] [<ffff0000080d4c88>] notifier_call_chain+0x4c/0x88
-> [    0.959408] [<ffff0000080d5010>] __blocking_notifier_call_chain+0x44/0x74
-> [    0.966159] [<ffff0000080d5054>] blocking_notifier_call_chain+0x14/0x1c
-> [    0.972754] [<ffff000008489600>] device_add+0x3ac/0x53c
-> [    0.977959] [<ffff000008671810>] of_device_add+0x58/0x64
-> [    0.983240] [<ffff0000086720c8>] of_platform_device_create_pdata+0x90/0xe8
-> [    0.990077] [<ffff00000867220c>] of_platform_bus_create+0xd0/0x31c
-> [    0.996265] [<ffff000008672574>] of_platform_populate+0x48/0xac
-> [    1.002169] [<ffff000008af2654>] arm64_device_init+0x30/0x58
-> [    1.007813] [<ffff000008081a14>] do_one_initcall+0x38/0x128
-> [    1.013354] [<ffff000008af0cc4>] kernel_init_freeable+0x14c/0x1ec
-> [    1.019439] [<ffff0000087a92d0>] kernel_init+0x10/0xfc
-> [    1.024556] [<ffff000008084e10>] ret_from_fork+0x10/0x40
->
-> [    0.906207] Failed to set up IOMMU for device tst_smmu; retaining platform DMA ops		//error info
->
-> [    0.963782] HugeTLB registered 2 MB page size, pre-allocated 0 pages
-> [    0.970442] ACPI: Interpreter disabled.
-> [    0.974429] arm-smmu-v3 d0040000.smmu_alg: ias 44-bit, oas 44-bit (features 0x00000f0d)
->
-> [    0.996948] Call trace:
-> [    0.999400] [<ffff00000808882c>] dump_backtrace+0x0/0x1ac
-> [    1.004787] [<ffff0000080889ec>] show_stack+0x14/0x1c
-> [    1.009846] [<ffff00000833c290>] dump_stack+0x8c/0xac
-> [    1.014905] [<ffff0000084829d4>] arm_smmu_add_device+0x44/0x160
-> [    1.020801] [<ffff00000847a218>] add_iommu_group+0x20/0x44
-> [    1.026291] [<ffff00000848a43c>] bus_for_each_dev+0x58/0x98
-> [    1.031866] [<ffff00000847b220>] bus_set_iommu+0x9c/0xf8
-> [    1.037150] [<ffff000008b1b420>] arm_smmu_init+0x78/0x84
-> [    1.042475] [<ffff000008081a14>] do_one_initcall+0x38/0x128
-> [    1.048043] [<ffff000008af0cc4>] kernel_init_freeable+0x14c/0x1ec
-> [    1.054138] [<ffff0000087a931c>] kernel_init+0x10/0xfc
-> [    1.059264] [<ffff000008084e10>] ret_from_fork+0x10/0x40
->
-> [    1.171026] iommu: Adding device tst_smmu to group 0						//It's already late.
->
-> On 2016/6/15 9:22, Leizhen (ThunderTown) wrote:
->>
->>
->> On 2016/6/14 23:16, Will Deacon wrote:
->>> [adding ThunderTown, since he might be able to test this for us]
->>
->> OK. I'm so glad to do it.
->>
->>>
->>> On Fri, Jun 03, 2016 at 06:15:42PM +0100, Robin Murphy wrote:
->>>> With the device <-> stream ID relationship suitably abstracted and
->>>> of_xlate() hooked up, we no longer have any PCI-specifics in play,
->>>> so adding support for the simpler kinds of platform device (a single
->>>> unique stream ID each) becomes trivial; let's do it!
->>>>
->>>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->>>> ---
->>>>
->>>> v2: New. Consider this one "extra bonus material" as I'm not sure there
->>>>      are even any suitable devices on our model to test it with (it
->>>>      _should_ be OK, given that I know the basic infrastructure on either
->>>>      side works...)
->>>>
->>>>   drivers/iommu/Kconfig       |  2 +-
->>>>   drivers/iommu/arm-smmu-v3.c | 36 ++++++++++++++++++++++++++++++------
->>>>   2 files changed, 31 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
->>>> index ad0860383cb3..d1c66afefeed 100644
->>>> --- a/drivers/iommu/Kconfig
->>>> +++ b/drivers/iommu/Kconfig
->>>> @@ -308,7 +308,7 @@ config ARM_SMMU
->>>>
->>>>   config ARM_SMMU_V3
->>>>   	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
->>>> -	depends on ARM64 && PCI
->>>> +	depends on ARM64
->>>>   	select IOMMU_API
->>>>   	select IOMMU_IO_PGTABLE_LPAE
->>>>   	select GENERIC_MSI_IRQ_DOMAIN
->>>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->>>> index 28dcc5ca237e..6379f0ab24fc 100644
->>>> --- a/drivers/iommu/arm-smmu-v3.c
->>>> +++ b/drivers/iommu/arm-smmu-v3.c
->>>> @@ -35,6 +35,8 @@
->>>>   #include <linux/pci.h>
->>>>   #include <linux/platform_device.h>
->>>>
->>>> +#include <linux/amba/bus.h>
->>>> +
->>>>   #include "io-pgtable.h"
->>>>
->>>>   /* MMIO registers */
->>>> @@ -1773,6 +1775,22 @@ static void arm_smmu_remove_device(struct device *dev)
->>>>   	iommu_group_remove_device(dev);
->>>>   }
->>>>
->>>> +static struct iommu_group *arm_smmu_device_group(struct device *dev)
->>>> +{
->>>> +	struct iommu_group *group;
->>>> +
->>>> +	/*
->>>> +	 * We've currently no means of grouping non-PCI masters, so
->>>> +	 * there'd better not be any non-unique stream IDs in the DT...
->>>> +	 */
->>>
->>> Worse: what if a SID in the DT aliases with a PCI master? It might be
->>> nice to have some basic snity checking, at least.
->>>
->>> Will
->>>
->>> .
->>>
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
++/ {
++    model = "Banana Pi BPI-M1-Plus";
++    compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
++
++    aliases {
++        serial0 = &uart0;
++    };
++
++    chosen {
++        stdout-path = "serial0:115200n8";
++    };
++
++    leds {
++        compatible = "gpio-leds";
++        pinctrl-names = "default";
++        pinctrl-0 = <&led_pins_bananapi>;
++
++        green {
++            label = "bananapi-m1-plus:green:usr";
++            gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
++        };
++
++        red {
++            label = "bananapi-m1-plus:red:usr";
++            gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
++            linux,default-trigger = "default-on";
++        };
++
++    };
++
++    mmc3_pwrseq: mmc3_pwrseq {
++        compatible = "mmc-pwrseq-simple";
++        pinctrl-names = "default";
++        pinctrl-0 = <&mmc3_pwrseq_pin_bananapim1plus>;
++        reset-gpios = <&pio 7 22 GPIO_ACTIVE_LOW>; /* PH22 WL-PMU-EN */
++    };
++
++    reg_gmac_3v3: gmac-3v3 {
++        compatible = "regulator-fixed";
++        pinctrl-names = "default";
++        pinctrl-0 = <&gmac_power_pin_bananapi>;
++        regulator-name = "gmac-3v3";
++        regulator-min-microvolt = <3300000>;
++        regulator-max-microvolt = <3300000>;
++        startup-delay-us = <100000>;
++        enable-active-high;
++        gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
++    };
++};
++
++&ahci {
++    status = "okay";
++};
++
++&codec {
++    status = "okay";
++};
++
++&ehci0 {
++    status = "okay";
++};
++
++&ehci1 {
++    status = "okay";
++};
++
++&gmac {
++    pinctrl-names = "default";
++    pinctrl-0 = <&gmac_pins_rgmii_a>;
++    phy = <&phy1>;
++    phy-mode = "rgmii";
++    phy-supply = <&reg_gmac_3v3>;
++    status = "okay";
++
++    phy1: ethernet-phy@1 {
++        reg = <1>;
++    };
++};
++
++&i2c0 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&i2c0_pins_a>;
++    status = "okay";
++
++    axp209: pmic@34 {
++        compatible = "x-powers,axp209";
++        reg = <0x34>;
++        interrupt-parent = <&nmi_intc>;
++        interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++
++        interrupt-controller;
++        #interrupt-cells = <1>;
++    };
++};
++
++&ir0 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&ir0_rx_pins_a>;
++    status = "okay";
++};
++
++&mmc0 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
++    vmmc-supply = <&reg_vcc3v3>;
++    bus-width = <4>;
++    cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
++    cd-inverted;
++    status = "okay";
++};
++
++&mmc3 {
++    #address-cells = <1>;
++    #size-cells = <0>;
++    pinctrl-names = "default";
++    pinctrl-0 = <&mmc3_pins_a>;
++    vmmc-supply = <&reg_vcc3v3>;
++    mmc-pwrseq = <&mmc3_pwrseq>;
++    bus-width = <4>;
++    non-removable;
++    enable-sdio-wakeup;
++    status = "okay";
++
++    brcmf: bcrmf@1 {
++        reg = <1>;
++        compatible = "brcm,bcm4329-fmac";
++        interrupt-parent = <&pio>;
++        interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
++        interrupt-names = "host-wake";
++    };
++};
++
++&mmc3_pins_a {
++    /* AP6210 requires pull-up */
++    allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++};
++
++&ohci0 {
++    status = "okay";
++};
++
++&ohci1 {
++    status = "okay";
++};
++
++&pio {
++    gmac_power_pin_bananapi: gmac_power_pin@0 {
++        allwinner,pins = "PH23";
++        allwinner,function = "gpio_out";
++        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++    };
++
++    led_pins_bananapi: led_pins@0 {
++        allwinner,pins = "PH24", "PG2";
++        allwinner,function = "gpio_out";
++        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++    };
++
++    mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
++        allwinner,pins = "PH10";
++        allwinner,function = "gpio_in";
++        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++        allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++    };
++
++    mmc3_pwrseq_pin_bananapim1plus: mmc3_pwrseq_pin@0 {
++        allwinner,pins = "PH22";
++        allwinner,function = "gpio_out";
++        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++    };
++};
++
++&uart0 {
++    pinctrl-names = "default";
++    pinctrl-0 = <&uart0_pins_a>;
++    status = "okay";
++};
+-- 
+2.8.3
