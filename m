@@ -1,16 +1,13 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5] ASoC: rockchip: Add machine driver for RK3399 GRU
- Boards
-Date: Fri, 17 Jun 2016 13:20:50 +0100
-Message-ID: <20160617122050.GL26099@sirena.org.uk>
-References: <1465807339-1100-1-git-send-email-zhengxing@rock-chips.com>
- <20160614223810.GA7925@rob-hp-laptop>
- <20160615095312.GY2282@sirena.org.uk>
- <CAL_JsqKEDw14HmbW=78_4P03nFDfmT7kOn4RsTF-PrBi+jWr0g@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 0/11] Changes to support 150 MHz eMMC on rk3399
+Date: Fri, 17 Jun 2016 18:09:04 +0530
+Message-ID: <5763EF68.1040307@ti.com>
+References: <1465859076-4868-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5180901128721785628=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAL_JsqKEDw14HmbW=78_4P03nFDfmT7kOn4RsTF-PrBi+jWr0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1465859076-4868-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -20,62 +17,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============5180901128721785628==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="iAzLNm1y1mIRgolD"
-Content-Disposition: inline
+On Tuesday 14 June 2016 04:34 AM, Douglas Anderson wrote:
+> The theme of this series of patches is to try to allow running the eMMC
+> at 150 MHz on the rk3399 SoC, though the changes should still be correct
+> and have merit on their own.  The motivation for running at 150 MHz is
+> that doing so improves signal integrity and (with some eMMC devices)
+> doesn't affect throughput.
+> 
+> These patches have been structured to keep things as separate as
+> possible, but nevertheless there are still some dependencies between
+> patches.  It probably makes the most sense for all of the non-device
+> tree patches to go through a single tree.  If others agree, perhaps the
+> most sane would be to get Acks from PHY maintainers and then to land the
+> patches in the MMC tree.  Device tree patches should be able to be
+> landed separately and the worst what would happen is a warning in the
+> kernel log if you have the code without the device tree.
+> 
+> The code patches are based on Ulf's mmc-next, then 4 patches that are
+> outstanding / ready to land.  Specifically:
+> - https://patchwork.kernel.org/patch/9086501/
+>   phy: rockchip-emmc: give DLL some extra time to be ready
+> - https://patchwork.kernel.org/patch/9093681/
+>   phy: rockchip-emmc: configure frequency range and drive impedance
+> - https://patchwork.kernel.org/patch/9086511/
+>   phy: rockchip-emmc: configure default output tap delay
+> - https://patchwork.kernel.org/patch/9086531/
+>   phy: rockchip-emmc: reindent the register definitions
 
+Do you want all these "phy: rockchip-emmc:" along with the patch in this series
+to go in MMC tree? Or I can take all the phy part in my linux-phy -next branch?
 
---iAzLNm1y1mIRgolD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Jun 15, 2016 at 07:44:32AM -0500, Rob Herring wrote:
-> On Wed, Jun 15, 2016 at 4:53 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-
-> > There's no point in standard property names if the interpretation has to
-> > be non-standard.
-
-> Okay, I agree with the system specific interpretation part. However, I
-> don't think using simple-card or not determines using common
-> properties.
-
-The point here is that if those properties were to have a standard
-meaning the system would be using simple-card anyway, the meaning is
-entirely in the context of the card.
-
---iAzLNm1y1mIRgolD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXY+shAAoJECTWi3JdVIfQe9IH/ju9XNHVtP+hk/XdCxhZQyRU
-69ODHdm0dvpOWvw8kjto7fSuAFvPcWAMAvGyDllk/MqWVny3SSC6YKR1r68dKY2P
-wZi+/BsFtWZgZeYzbH6obnP+FnjuXzS4sKFUljPpG3YOOZeuONE37fs1S95/AotW
-qU/MnmeprWtyS3vn2pQ7+YjXhRApYN72V4h5/Xzkkn8IFbMKP9A/0O83mjDaiwzu
-lyuXFlS/ajlElWlpqrdjQPNXv5ISZuQ8UXgVc+oguY0zK6QZh54S4k7JTmCJvI63
-nVpi4YdoyHB6pA/KiGcvyXbr8Ttx78ScingnnhJzbdbxrSrO4uh/UHUT9QOYJhQ=
-=Vyl7
------END PGP SIGNATURE-----
-
---iAzLNm1y1mIRgolD--
-
-
---===============5180901128721785628==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linux-rockchip mailing list
-Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
---===============5180901128721785628==--
+Thanks
+Kishon
+> 
+> The device tree patches are based on Heiko's v4.8-armsoc/dts64.
+> 
+> If requested, I could repost my series with the outstanding code patches
+> or I could try folding those patches into mine.  Since those patches
+> aren't in 4.7-rc1 presumably they would also make sense to take through
+> the MMC tree if others agree.
+> 
+> Changes in v2:
+> - Indicate that 5.1 ms is calculated (Shawn).
+> - Clean up description of rk3399 PHY (Shawn)
+> - Add Rob Herring's Ack.
+> - Reorder includes (Shawn)
+> - Adjust commit message wording (Rob)
+> - List out clocks and clock names (Rob)
+> - Move code cleanup before set phyctrl_frqsel based on card clock (Shawn)
+> - Warn if we're more than 15 MHz from ideal rate (Shawn)
+> - Fix typo USB => SDHCI (Shawn)
+> 
+> Douglas Anderson (11):
+>   phy: rockchip-emmc: Increase lock time allowance
+>   mmc: sdhci-of-arasan: Always power the PHY off/on when clock changes
+>   Documentation: mmc: sdhci-of-arasan: Add soc-ctl-syscon for corecfg
+>     regs
+>   mmc: sdhci-of-arasan: Properly set corecfg_baseclkfreq on rk3399
+>   arm64: dts: rockchip: Add soc-ctl-syscon to sdhci for rk3399
+>   Documentation: mmc: sdhci-of-arasan: Add ability to export card clock
+>   mmc: sdhci-of-arasan: Add ability to export card clock
+>   Documentation: phy: Let the rockchip eMMC PHY get an exported card
+>     clock
+>   phy: rockchip-emmc: Minor code cleanup in
+>     rockchip_emmc_phy_power_on/off()
+>   phy: rockchip-emmc: Set phyctrl_frqsel based on card clock
+>   arm64: dts: rockchip: Provide emmcclk to PHY for rk3399
+> 
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  35 ++-
+>  .../devicetree/bindings/phy/rockchip-emmc-phy.txt  |   9 +
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   5 +
+>  drivers/mmc/host/sdhci-of-arasan.c                 | 333 +++++++++++++++++++--
+>  drivers/phy/phy-rockchip-emmc.c                    | 120 ++++++--
+>  5 files changed, 442 insertions(+), 60 deletions(-)
+> 
