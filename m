@@ -1,55 +1,39 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dma: mv_xor_v2: new driver
-Date: Fri, 17 Jun 2016 08:09:20 +0530
-Message-ID: <20160617023920.GE16910@localhost>
-References: <1455523083-25506-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <20160222032730.GU19598@localhost>
- <20160615160837.64377829@free-electrons.com>
- <20160615164131.GB16910@localhost>
- <20160616144224.2e687a14@free-electrons.com>
+From: Duc Dang <dhdang@apm.com>
+Subject: Re: [PATCH 2 1/2] arm64: dts: apm: Use lowercase consistently for hex constants
+Date: Thu, 16 Jun 2016 20:06:39 -0700
+Message-ID: <CADaLNDn=U7FKX10Ww8oEpX0-4QDVcjh+c+0r=rG8SMBH+UBk3A@mail.gmail.com>
+References: <20160614125756.22169.50783.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+ <20160614130020.22169.51495.stgit@bhelgaas-glaptop2.roam.corp.google.com> <20160616222829.GA25357@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160616144224.2e687a14-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160616222829.GA25357@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2016 at 02:42:24PM +0200, Thomas Petazzoni wrote:
-> Hello,
-> 
-> On Wed, 15 Jun 2016 22:11:31 +0530, Vinod Koul wrote:
-> 
-> > > This is probably the only thing that I have not changed. The mv_xor
-> > > driver is already using the same strategy, and enqueuing in
-> > > issue_pending() would force us to add the request to a temporary linked
-> > > list, which would be dequeued in issue_pending(). This is quite a bit
-> > > of additional processing, while pushing the new requests directly to
-> > > the engine works fine.  
-> > 
-> > Well that is wrong! And patch is welcome for mv_xor as well :)
-> > 
-> > The DMAengine API mandates that we should submit a descriptor to a queue and
-> > then push them by invoking issue_pending.
-> > 
-> > The users are also expected to follow this
-> 
-> I have just sent a v4 that fixes this for the mv_xor_v2 driver. Now, in
-> ->tx_submit() we only fill in the HW descriptors, but do not tell the
-> engine to process them. It's only at ->issue_pending() time that we
-> tell the engine that there N new descriptors to process.
+On Thu, Jun 16, 2016 at 3:28 PM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Jun 14, 2016 at 08:00:20AM -0500, Bjorn Helgaas wrote:
+>> The convention in these files is to use lowercase for "0x" prefixes and for
+>> the hex constants themselves, but a few changes didn't follow that
+>> convention, which makes the file annoying to read.
+>>
+>> Use lowercase consistently for the hex constants.  No functional change
+>> intended.
+>>
+>> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>> ---
+>>  .../devicetree/bindings/net/apm-xgene-enet.txt     |    4 +-
+>>  arch/arm64/boot/dts/apm/apm-shadowcat.dtsi         |   40 ++++++++++----------
+>>  arch/arm64/boot/dts/apm/apm-storm.dtsi             |   36 +++++++++---------
+>>  3 files changed, 40 insertions(+), 40 deletions(-)
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Okay that sounds good to me, I will take a look at it..
-> 
-> I'll have a look at mv_xor a bit later.
+Thanks, Rob and Bjorn.
 
-Sounds fair enough
+I will pull this patch and the other one on the same series into xgene-next.
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Duc Dang.
