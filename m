@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 4/4] ARM: dts: Add WP8548 based MangOH Green board DTS
-Date: Fri, 17 Jun 2016 12:42:12 +0200
-Message-ID: <1466160132-24574-5-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH 3/4] ARM: dts: Add Sierra Wireless WP8548 dtsi
+Date: Fri, 17 Jun 2016 12:42:11 +0200
+Message-ID: <1466160132-24574-4-git-send-email-narmstrong@baylibre.com>
 References: <1466160132-24574-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1466160132-24574-1-git-send-email-narmstrong@baylibre.com>
@@ -10,38 +10,23 @@ To: linux@armlinux.org.uk, mark.rutland@arm.com
 Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the Sierra Wireless MangOH Green board with the
-Sierra Wireless WP8548 Module.
+In order to support the Sierra Wireless WP8548 module based on the
+Qualcomm MDM9615 SoC, add a dtsi file.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/Makefile                    |   3 +-
- arch/arm/boot/dts/swi-wp8548-mangoh-green.dts | 290 ++++++++++++++++++++++++++
- 2 files changed, 292 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/swi-wp8548-mangoh-green.dts
+ arch/arm/boot/dts/swi-wp8548.dtsi | 182 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 182 insertions(+)
+ create mode 100644 arch/arm/boot/dts/swi-wp8548.dtsi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 06b6c2d..5c5bcaf 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -584,7 +584,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-ipq8064-ap148.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb \
--	qcom-msm8974-sony-xperia-honami.dtb
-+	qcom-msm8974-sony-xperia-honami.dtb \
-+	swi-wp8548-mangoh-green.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pb1176.dtb \
- 	arm-realview-pb11mp.dtb \
-diff --git a/arch/arm/boot/dts/swi-wp8548-mangoh-green.dts b/arch/arm/boot/dts/swi-wp8548-mangoh-green.dts
+diff --git a/arch/arm/boot/dts/swi-wp8548.dtsi b/arch/arm/boot/dts/swi-wp8548.dtsi
 new file mode 100644
-index 0000000..a95d0e5
+index 0000000..7448915
 --- /dev/null
-+++ b/arch/arm/boot/dts/swi-wp8548-mangoh-green.dts
-@@ -0,0 +1,290 @@
++++ b/arch/arm/boot/dts/swi-wp8548.dtsi
+@@ -0,0 +1,182 @@
 +/*
-+ * Device Tree Source for mangOH Green Board with WP8548 Module
++ * Device Tree Source for Sierra Wireless WP8548 Module
 + *
 + * Copyright (C) 2016 BayLibre, SAS.
 + * Author : Neil Armstrong <narmstrong@baylibre.com>
@@ -85,250 +70,142 @@ index 0000000..a95d0e5
 + *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
-+#include <dt-bindings/input/input.h>
-+
-+#include "swi-wp8548.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/gpio/gpio.h>
++#include "qcom-mdm9615.dtsi"
 +
 +/ {
-+	model = "MangOH Green with WP8548 Module";
-+	compatible = "swi,mangoh-green-wp8548", "swi,wp8548", "qcom,mdm9615";
++	model = "Sierra Wireless WP8548 Module";
++	compatible = "swi,wp8548", "qcom,mdm9615";
 +
-+	aliases {
-+		spi0 = &gsbi3_spi;
-+		serial0 = &gsbi4_serial;
-+		serial1 = &gsbi5_serial;
-+		i2c0 = &gsbi5_i2c;
-+		mmc0 = &sdcc1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial1:115200n8";
++	memory {
++		reg = <0x48000000 0x7F00000>;
 +	};
 +};
 +
 +&msmgpio {
-+	/* MangOH GPIO Mapping :
-+	 * - 2 : GPIOEXP_INT2
-+	 * - 7 : IOT1_GPIO2
-+	 * - 8 : IOT0_GPIO4
-+	 * - 13: IOT0_GPIO3
-+	 * - 21: IOT1_GPIO4
-+	 * - 22: IOT2_GPIO1
-+	 * - 23: IOT2_GPIO2
-+	 * - 24: IOT2_GPIO3
-+	 * - 25: IOT1_GPIO1
-+	 * - 32: IOT1_GPIO3
-+	 * - 33: IOT0_GPIO2
-+	 * - 42: IOT0_GPIO1 and SD Card Detect
-+	 */
++	pinctrl-0 = <&reset_out_pins>;
++	pinctrl-names = "default";
 +
-+	gpioext1_pins: gpioext1_pins {
-+		pins {
-+			pins = "gpio2";
-+			function = "gpio";
-+			input-enable;
++	gsbi3_pins: gsbi3_pins {
++		mux {
++			pins = "gpio8", "gpio9", "gpio10", "gpio11";
++			function = "gsbi3";
++			drive-strength = <8>;
 +			bias-disable;
 +		};
 +	};
 +
-+	sdc_cd_pins: sdc_cd_pins {
++	gsbi4_pins: gsbi4_pins {
++		mux {
++			pins = "gpio12", "gpio13", "gpio14", "gpio15";
++			function = "gsbi4";
++			drive-strength = <8>;
++			bias-disable;
++		};
++	};
++
++	gsbi5_i2c_pins: gsbi5_i2c_pins {
++		pin16 {
++			pins = "gpio16";
++			function = "gsbi5_i2c";
++			drive-strength = <8>;
++			bias-disable;
++		};
++
++		pin17 {
++			pins = "gpio17";
++			function = "gsbi5_i2c";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	gsbi5_uart_pins: gsbi5_uart_pins {
++		mux {
++			pins = "gpio18", "gpio19";
++			function = "gsbi5_uart";
++			drive-strength = <8>;
++			bias-disable;
++		};
++	};
++
++	reset_out_pins: reset_out_pins {
 +		pins {
-+			pins = "gpio42";
++			pins = "gpio66";
 +			function = "gpio";
 +			drive-strength = <2>;
 +			bias-pull-up;
++			output-high;
 +		};
 +	};
++};
++
++&pmicgpio {
++	usb_vbus_5v_pins: usb_vbus_5v_pins {
++		pins = "gpio4";
++		function = "normal";
++		output-high;
++		bias-disable;
++		qcom,drive-strength = <1>;
++		power-source = <2>;
++	};
++};
++
++&gsbi3 {
++	status = "ok";
++	qcom,mode = <GSBI_PROT_SPI>;
 +};
 +
 +&gsbi3_spi {
-+	spi@0 {
-+		compatible = "swi,mangoh-iotport-spi", "spidev";
-+		spi-max-frequency = <24000000>;
-+		reg = <0>;
-+	};
++	status = "ok";
++	pinctrl-0 = <&gsbi3_pins>;
++	pinctrl-names = "default";
++	assigned-clocks = <&gcc GSBI3_QUP_CLK>;
++	assigned-clock-rates = <24000000>;
++};
++
++&gsbi4 {
++	status = "ok";
++	qcom,mode = <GSBI_PROT_UART_W_FC>;
++};
++
++&gsbi4_serial {
++	status = "ok";
++	pinctrl-0 = <&gsbi4_pins>;
++	pinctrl-names = "default";
++};
++
++&gsbi5 {
++	status = "ok";
++	qcom,mode = <GSBI_PROT_I2C_UART>;
 +};
 +
 +&gsbi5_i2c {
-+	mux@71 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x71>;
-+
-+		i2c_iot0: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		i2c_iot1: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		i2c_iot2: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+
-+			usbhub: hub@8 {
-+				compatible = "smsc,usb3503a";
-+				reg = <0x8>;
-+				connect-gpios = <&gpioext2 1 GPIO_ACTIVE_HIGH>;
-+				intn-gpios = <&gpioext2 0 GPIO_ACTIVE_LOW>;
-+				initial-mode = <1>;
-+			};
-+		};
-+
-+		i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <4>;
-+
-+			gpioext0: gpio@3e {
-+				/* GPIO Expander 0 Mapping :
-+				 * - 0: ARDUINO_RESET_Level shift
-+				 * - 1: BattChrgr_PG_N
-+				 * - 2: BattGauge_GPIO
-+				 * - 3: LED_ON (out active high)
-+				 * - 4: ATmega_reset_GPIO
-+				 * - 5: X
-+				 * - 6: PCM_ANALOG_SELECT (out active high)
-+				 * - 7: X
-+				 * - 8: Board_rev_res1 (in)
-+				 * - 9: Board_rev_res2 (in)
-+				 * - 10: UART_EXP1_ENn (out active low / pull-down)
-+				 * - 11: UART_EXP1_IN (out pull-down)
-+				 * - 12: UART_EXP2_IN (out pull-down)
-+				 * - 13: SDIO_SEL (out pull-down)
-+				 * - 14: SPI_EXP1_ENn (out active low / pull-down)
-+				 * - 15: SPI_EXP1_IN (out pull-down)
-+				 */
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+				compatible = "semtech,sx1509q";
-+				reg = <0x3e>;
-+				interrupt-parent = <&gpioext1>;
-+				interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+
-+				probe-reset;
-+
-+				gpio-controller;
-+				interrupt-controller;
-+			};
-+		};
-+
-+		i2c@5 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <5>;
-+
-+			gpioext1: gpio@3f {
-+				/* GPIO Expander 1 Mapping :
-+				 * - 0: GPIOEXP_INT1
-+				 * - 1: Battery detect
-+				 * - 2: GPIO_SCF3_RESET
-+				 * - 3: LED_CARD_DETECT_IOT0 (in)
-+				 * - 4: LED_CARD_DETECT_IOT1 (in)
-+				 * - 5: LED_CARD_DETECT_IOT2 (in)
-+				 * - 6: UIM2_PWM_SELECT
-+				 * - 7: UIM2_M2_S_SELECT
-+				 * - 8: TP900
-+				 * - 9: SENSOR_INT1 (in)
-+				 * - 10: SENSOR_INT2 (in)
-+				 * - 11: CARD_DETECT_IOT0 (in pull-up)
-+				 * - 12: CARD_DETECT_IOT2 (in pull-up)
-+				 * - 13: CARD_DETECT_IOT1 (in pull-up)
-+				 * - 14: GPIOEXP_INT3 (in active low / pull-up)
-+				 * - 15: BattChrgr_INT_N
-+				 */
-+				pinctrl-0 = <&gpioext1_pins>;
-+				pinctrl-names = "default";
-+
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+				compatible = "semtech,sx1509q";
-+				reg = <0x3f>;
-+				interrupt-parent = <&msmgpio>;
-+				interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+
-+				probe-reset;
-+
-+				gpio-controller;
-+				interrupt-controller;
-+			};
-+		};
-+
-+		i2c@6 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <6>;
-+
-+			gpioext2: gpio@70 {
-+				/* GPIO Expander 2 Mapping :
-+				 * - 0: USB_HUB_INTn
-+				 * - 1: HUB_CONNECT
-+				 * - 2: GPIO_IOT2_RESET (out active low / pull-up)
-+				 * - 3: GPIO_IOT1_RESET (out active low / pull-up)
-+				 * - 4: GPIO_IOT0_RESET (out active low / pull-up)
-+				 * - 5: TP901
-+				 * - 6: TP902
-+				 * - 7: TP903
-+				 * - 8: UART_EXP2_ENn (out active low / pull-down)
-+				 * - 9: PCM_EXP1_ENn (out active low)
-+				 * - 10: PCM_EXP1_SEL (out)
-+				 * - 11: ARD_FTDI
-+				 * - 12: TP904
-+				 * - 13: TP905
-+				 * - 14: TP906
-+				 * - 15: RS232_Enable (out active high / pull-up)
-+				 */
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+				compatible = "semtech,sx1509q";
-+				reg = <0x70>;
-+				interrupt-parent = <&gpioext1>;
-+				interrupts = <14 IRQ_TYPE_EDGE_FALLING>;
-+
-+				pull-down-ports = <9 10>;
-+				probe-reset;
-+
-+				gpio-controller;
-+				interrupt-controller;
-+			};
-+		};
-+
-+		i2c@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <7>;
-+		};
-+	};
++	status = "ok";
++	clock-frequency = <200000>;
++	pinctrl-0 = <&gsbi5_i2c_pins>;
++	pinctrl-names = "default";
 +};
 +
-+&usb2_phy {
++&gsbi5_serial {
 +	status = "ok";
-+};
-+
-+&usb2 {
-+	status = "ok";
++	pinctrl-0 = <&gsbi5_uart_pins>;
++	pinctrl-names = "default";
 +};
 +
 +&sdcc1 {
-+	pinctrl-0 = <&sdc_cd_pins>;
-+	pinctrl-names = "default";
-+	disable-wp;
-+	cd-gpios = <&msmgpio 42 GPIO_ACTIVE_LOW>; /* Active low CD */
++	status = "ok";
++};
++
++&usb1_phy {
++	status = "ok";
++};
++
++&usb1 {
++	status = "ok";
++};
++
++&gadget1 {
++	status = "ok";
 +};
 -- 
 1.9.1
