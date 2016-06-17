@@ -1,52 +1,98 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V12 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
- Flash Controller
-Date: Fri, 17 Jun 2016 10:13:29 +0530
-Message-ID: <57637FF1.9030802@ti.com>
-References: <1465000774-7762-1-git-send-email-marex@denx.de>
- <1465000774-7762-2-git-send-email-marex@denx.de> <575F91B2.7010304@ti.com>
- <575FFF97.7040104@denx.de> <57624A98.4060308@ti.com>
- <5762A7E6.8000109@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5762A7E6.8000109-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Chris Lapa <chris@lapa.com.au>
+Subject: [PATCH v3 2/7] max8903: store pointer to pdata instead of copying it.
+Date: Fri, 17 Jun 2016 15:00:21 +1000
+Message-ID: <1466139626-51434-3-git-send-email-chris@lapa.com.au>
+References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+ <1466139626-51434-1-git-send-email-chris@lapa.com.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466139626-51434-1-git-send-email-chris@lapa.com.au>
+In-Reply-To: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: k.kozlowski@samsung.com, dwmw2@infradead.org, dbaryshkov@gmail.com, sre@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Chris Lapa <chris@lapa.com.au>
 List-Id: devicetree@vger.kernel.org
 
+From: Chris Lapa <chris@lapa.com.au>
 
+Stores pointer to pdata because it easily allows pdata to reference
+either platform data or in the future device tree data.
 
-On Thursday 16 June 2016 06:51 PM, Marek Vasut wrote:
-> On 06/16/2016 08:43 AM, Vignesh R wrote:
-[...]
->>> - I didn't find any way to find when all the data in the current 1 MiB
->>>   block were written and you can remap another 1 MiB block in place.
->>
->> I believe this constraint only applies if enahbremap bit is set in cfg
->> register, if not, then the entire memory map can be accessed.
-> 
-> And where is that memory window accessible then, at which address ?
-> The SoCFPGA peripherals are stuffed in some 12 MiB of the address
-> space, the rest is bootrom/sram/ram and the FPGA bridges, so I find
-> it hard to believe you can place ie. 128 MiB SPI NOR mapping somewhere
-> in there.
-> 
-> My impression is that in direct mode, the qspi will always overlay the
-> address 0x0 on socfpga , but that might be configurable , I'm not sure.
-> 
+Signed-off-by: Chris Lapa <chris@lapa.com.au>
+---
+ drivers/power/max8903_charger.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-Ah, socfgpa provides just 1MB window to access QSPI_DATA area. So direct
-mode may not be practical as it will require remapping.
-But, on TI EVM, QSPI_DATA area is 64MB in size, so looks like direct
-mode(when added) needs to be tied to TI specific compatible.
-
+diff --git a/drivers/power/max8903_charger.c b/drivers/power/max8903_charger.c
+index 17876ca..0a5b0e1 100644
+--- a/drivers/power/max8903_charger.c
++++ b/drivers/power/max8903_charger.c
+@@ -29,7 +29,7 @@
+ #include <linux/power/max8903_charger.h>
+ 
+ struct max8903_data {
+-	struct max8903_pdata pdata;
++	struct max8903_pdata *pdata;
+ 	struct device *dev;
+ 	struct power_supply *psy;
+ 	struct power_supply_desc psy_desc;
+@@ -53,8 +53,8 @@ static int max8903_get_property(struct power_supply *psy,
+ 	switch (psp) {
+ 	case POWER_SUPPLY_PROP_STATUS:
+ 		val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
+-		if (data->pdata.chg) {
+-			if (gpio_get_value(data->pdata.chg) == 0)
++		if (data->pdata->chg) {
++			if (gpio_get_value(data->pdata->chg) == 0)
+ 				val->intval = POWER_SUPPLY_STATUS_CHARGING;
+ 			else if (data->usb_in || data->ta_in)
+ 				val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
+@@ -81,7 +81,7 @@ static int max8903_get_property(struct power_supply *psy,
+ static irqreturn_t max8903_dcin(int irq, void *_data)
+ {
+ 	struct max8903_data *data = _data;
+-	struct max8903_pdata *pdata = &data->pdata;
++	struct max8903_pdata *pdata = data->pdata;
+ 	bool ta_in;
+ 	enum power_supply_type old_type;
+ 
+@@ -122,7 +122,7 @@ static irqreturn_t max8903_dcin(int irq, void *_data)
+ static irqreturn_t max8903_usbin(int irq, void *_data)
+ {
+ 	struct max8903_data *data = _data;
+-	struct max8903_pdata *pdata = &data->pdata;
++	struct max8903_pdata *pdata = data->pdata;
+ 	bool usb_in;
+ 	enum power_supply_type old_type;
+ 
+@@ -161,7 +161,7 @@ static irqreturn_t max8903_usbin(int irq, void *_data)
+ static irqreturn_t max8903_fault(int irq, void *_data)
+ {
+ 	struct max8903_data *data = _data;
+-	struct max8903_pdata *pdata = &data->pdata;
++	struct max8903_pdata *pdata = data->pdata;
+ 	bool fault;
+ 
+ 	fault = gpio_get_value(pdata->flt) ? false : true;
+@@ -190,12 +190,18 @@ static int max8903_probe(struct platform_device *pdev)
+ 	int ta_in = 0;
+ 	int usb_in = 0;
+ 
++	if (pdata == NULL) {
++		dev_err(dev, "No platform data.\n");
++		return -EINVAL;
++	}
++
+ 	data = devm_kzalloc(dev, sizeof(struct max8903_data), GFP_KERNEL);
+ 	if (data == NULL) {
+ 		dev_err(dev, "Cannot allocate memory.\n");
+ 		return -ENOMEM;
+ 	}
+-	memcpy(&data->pdata, pdata, sizeof(struct max8903_pdata));
++
++	data->pdata = pdev->dev.platform_data;
+ 	data->dev = dev;
+ 	platform_set_drvdata(pdev, data);
+ 
 -- 
-Regards
-Vignesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
