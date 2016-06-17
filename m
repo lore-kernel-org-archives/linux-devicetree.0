@@ -1,88 +1,124 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v6 8/8] dt-bindings: drm/bridge: Update bindings for ADV7533
-Date: Fri, 17 Jun 2016 13:23:35 +0530
-Message-ID: <1466150015-882-9-git-send-email-architt@codeaurora.org>
-References: <1465381673-32471-1-git-send-email-architt@codeaurora.org>
- <1466150015-882-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1466150015-882-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, treding@nvidia.com, laurent.pinchart@ideasonboard.com, xinliang.liu@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, srinivas.kandagatla@linaro.org, lars@metafoo.de, amit.kucheria@linaro.org, robdclark@gmail.com, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/4] mfd: cros_ec: add EC_PWM function definitions
+Date: Fri, 17 Jun 2016 09:06:35 +0100
+Message-ID: <20160617080635.GG21702@dell>
+References: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
+ <1464916904-37554-3-git-send-email-briannorris@chromium.org>
+ <20160616153817.GD21702@dell>
+ <CAD=FV=X8eOQLbdAseL2_JwpOFNjSLDAi9hX=NrE=CfrrTZfAmA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=X8eOQLbdAseL2_JwpOFNjSLDAi9hX=NrE=CfrrTZfAmA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Brian Norris <briannorris@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Add description of ADV7533. Add the required and optional properties that
-are specific to it.
+On Thu, 16 Jun 2016, Doug Anderson wrote:
+> On Thu, Jun 16, 2016 at 8:38 AM, Lee Jones <lee.jones@linaro.org> wro=
+te:
+> > On Thu, 02 Jun 2016, Brian Norris wrote:
+> >
+> >> The EC_CMD_PWM_{GET,SET}_DUTY commands allow us to control a PWM t=
+hat is
+> >> attached to the EC, rather than the main host SoC. The API provide=
+s
+> >> functionality-based (e.g., keyboard light, backlight) or index-bas=
+ed
+> >> addressing of the PWM(s). Duty cycles are represented by a 16-bit =
+value,
+> >> where 0 maps to 0% duty cycle and U16_MAX maps to 100%. The period
+> >> cannot be controlled.
+> >>
+> >> This command set is more generic than, e.g.,
+> >> EC_CMD_PWM_{GET,SET}_KEYBOARD_BACKLIGHT and could possibly used to
+> >> replace it on future products.
+> >>
+> >> Let's update the command header to include the definitions.
+> >>
+> >> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> >> ---
+> >> v2: no change
+> >>
+> >>  include/linux/mfd/cros_ec_commands.h | 31 +++++++++++++++++++++++=
+++++++++
+> >>  1 file changed, 31 insertions(+)
+> >>
+> >> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/=
+mfd/cros_ec_commands.h
+> >> index 13b630c10d4c..d673575e0ada 100644
+> >> --- a/include/linux/mfd/cros_ec_commands.h
+> >> +++ b/include/linux/mfd/cros_ec_commands.h
+> >> @@ -949,6 +949,37 @@ struct ec_params_pwm_set_fan_duty {
+> >>       uint32_t percent;
+> >>  } __packed;
+> >>
+> >> +#define EC_CMD_PWM_SET_DUTY 0x25
+> >> +/* 16 bit duty cycle, 65535 =3D 100% */
+> >> +#define EC_PWM_MAX_DUTY 65535
+> >
+> > Any reason this isn't represented in hex, like we do normally?
+> >
+> >> +enum ec_pwm_type {
+> >> +     /* All types, indexed by board-specific enum pwm_channel */
+> >> +     EC_PWM_TYPE_GENERIC =3D 0,
+> >> +     /* Keyboard backlight */
+> >> +     EC_PWM_TYPE_KB_LIGHT,
+> >> +     /* Display backlight */
+> >> +     EC_PWM_TYPE_DISPLAY_LIGHT,
+> >> +     EC_PWM_TYPE_COUNT,
+> >> +};
+> >
+> > Are these comments really necessary?  I'd recommend that if your
+> > defines require comments, then they are not adequately named.  In t=
+his
+> > case however, I'd suggest that they are and the comments are
+> > superfluous.
+> >
+> >> +struct ec_params_pwm_set_duty {
+> >> +     uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY =3D 100% *=
+/
+> >> +     uint8_t pwm_type;  /* ec_pwm_type */
+> >> +     uint8_t index;     /* Type-specific index, or 0 if unique */
+> >> +} __packed;
+> >
+> > Please use kerneldoc format.
+> >
+> >> +#define EC_CMD_PWM_GET_DUTY 0x26
+> >> +
+> >> +struct ec_params_pwm_get_duty {
+> >> +     uint8_t pwm_type;  /* ec_pwm_type */
+> >> +     uint8_t index;     /* Type-specific index, or 0 if unique */
+> >> +} __packed;
+>=20
+> Probably the reason for all of these non-kernel-isms is that this
+> isn't a kernel file.  From the top of the file:
+>=20
+>  * NOTE: This file is copied verbatim from the ChromeOS EC Open Sourc=
+e
+>  * project in an attempt to make future updates easy to make.
+>=20
+> So the source of truth for this file is
+> <https://chromium.googlesource.com/chromiumos/platform/ec/+/master/in=
+clude/ec_commands.h>.
+>=20
+> Someone could probably submit a CL to that project to make it a littl=
+e
+> more kernel-ish and then we'd have to see if the EC team would accept
+> such changes...
 
-Cc: devicetree@vger.kernel.org
+Hmmm... that kinda puts me in a difficult position.  Do I except
+non-kernel code, which does not conform to our stands?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Naturally I'd be happier if you could try to make the code more
+'kernely'.  The practices I mention above are still good ones, even if
+you're not writing kernel specific code.
 
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
- .../bindings/display/bridge/adi,adv7511.txt        | 26 +++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-index 96c25ee..6532a59 100644
---- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-@@ -1,13 +1,19 @@
--Analog Device ADV7511(W)/13 HDMI Encoders
-+Analog Device ADV7511(W)/13/33 HDMI Encoders
- -----------------------------------------
- 
--The ADV7511, ADV7511W and ADV7513 are HDMI audio and video transmitters
-+The ADV7511, ADV7511W, ADV7513 and ADV7533 are HDMI audio and video transmitters
- compatible with HDMI 1.4 and DVI 1.0. They support color space conversion,
--S/PDIF, CEC and HDCP.
-+S/PDIF, CEC and HDCP. ADV7533 supports the DSI interface for input pixels, while
-+the others support RGB interface.
- 
- Required properties:
- 
--- compatible: Should be one of "adi,adv7511", "adi,adv7511w" or "adi,adv7513"
-+- compatible: Should be one of:
-+		"adi,adv7511"
-+		"adi,adv7511w"
-+		"adi,adv7513"
-+		"adi,adv7533"
-+
- - reg: I2C slave address
- 
- The ADV7511 supports a large number of input data formats that differ by their
-@@ -32,6 +38,11 @@ The following input format properties are required except in "rgb 1x" and
- - adi,input-justification: The input bit justification ("left", "evenly",
-   "right").
- 
-+The following properties are required for ADV7533:
-+
-+- adi,dsi-lanes: Number of DSI data lanes connected to the DSI host. It should
-+  be one of 1, 2, 3 or 4.
-+
- Optional properties:
- 
- - interrupts: Specifier for the ADV7511 interrupt
-@@ -42,13 +53,18 @@ Optional properties:
- - adi,embedded-sync: The input uses synchronization signals embedded in the
-   data stream (similar to BT.656). Defaults to separate H/V synchronization
-   signals.
-+- adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
-+  generator. The chip will rely on the sync signals in the DSI data lanes,
-+  rather than generate its own timings for HDMI output.
- 
- Required nodes:
- 
- The ADV7511 has two video ports. Their connections are modelled using the OF
- graph bindings specified in Documentation/devicetree/bindings/graph.txt.
- 
--- Video port 0 for the RGB or YUV input
-+- Video port 0 for the RGB, YUV or DSI input. In the case of ADV7533, the
-+  remote endpoint phandle should be a reference to a valid mipi_dsi_host device
-+  node.
- - Video port 1 for the HDMI output
- 
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
