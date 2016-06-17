@@ -1,60 +1,121 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 07/12] power: pwrseq: rename file name for generic driver
-Date: Fri, 17 Jun 2016 18:09:20 +0800
-Message-ID: <1466158165-9380-8-git-send-email-peter.chen@nxp.com>
-References: <1466158165-9380-1-git-send-email-peter.chen@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466158165-9380-1-git-send-email-peter.chen@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, stephen.boyd@linaro.org, oscar@naiandei.net, arnd@arndb.de, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, linux-usb@vger.kernel.org, linux-mmc@vger.kernel.org, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, javier@osg.samsung.com, Peter Chen <peter.chen@nxp.com>, p.zabel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 2/2] dt-bindings: phy: Add qcom,usb-hsic-phy bindings
+Date: Fri, 17 Jun 2016 12:25:19 +0200
+Message-ID: <1466159119-20310-3-git-send-email-narmstrong@baylibre.com>
+References: <1466159119-20310-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466159119-20310-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@kernel.org, gregkh@linuxfoundation.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The individual driver file name is better to contain module name.
-
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../power/pwrseq/{pwrseq-simple.txt => mmc-pwrseq-simple.txt}         | 0
- drivers/power/pwrseq/Makefile                                         | 4 ++--
- drivers/power/pwrseq/{pwrseq.c => core.c}                             | 0
- drivers/power/pwrseq/{pwrseq_simple.c => pwrseq_mmc_simple.c}         | 0
- 4 files changed, 2 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/power/pwrseq/{pwrseq-simple.txt => mmc-pwrseq-simple.txt} (100%)
- rename drivers/power/pwrseq/{pwrseq.c => core.c} (100%)
- rename drivers/power/pwrseq/{pwrseq_simple.c => pwrseq_mmc_simple.c} (100%)
+ .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  | 95 ++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-simple.txt b/Documentation/devicetree/bindings/power/pwrseq/mmc-pwrseq-simple.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/power/pwrseq/pwrseq-simple.txt
-rename to Documentation/devicetree/bindings/power/pwrseq/mmc-pwrseq-simple.txt
-diff --git a/drivers/power/pwrseq/Makefile b/drivers/power/pwrseq/Makefile
-index 9e40e4b..d475e01 100644
---- a/drivers/power/pwrseq/Makefile
-+++ b/drivers/power/pwrseq/Makefile
-@@ -1,3 +1,3 @@
--obj-$(CONFIG_POWER_SEQ)		+= pwrseq.o
--obj-$(CONFIG_POWER_SEQ_SIMPLE)	+= pwrseq_simple.o
-+obj-$(CONFIG_POWER_SEQ)		+= core.o
-+obj-$(CONFIG_POWER_SEQ_SIMPLE)	+= pwrseq_mmc_simple.o
- obj-$(CONFIG_POWER_SEQ_EMMC)	+= pwrseq_emmc.o
-diff --git a/drivers/power/pwrseq/pwrseq.c b/drivers/power/pwrseq/core.c
-similarity index 100%
-rename from drivers/power/pwrseq/pwrseq.c
-rename to drivers/power/pwrseq/core.c
-diff --git a/drivers/power/pwrseq/pwrseq_simple.c b/drivers/power/pwrseq/pwrseq_mmc_simple.c
-similarity index 100%
-rename from drivers/power/pwrseq/pwrseq_simple.c
-rename to drivers/power/pwrseq/pwrseq_mmc_simple.c
+diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+new file mode 100644
+index 0000000..79259a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+@@ -0,0 +1,95 @@
++Qualcomm's MDM9615 USB HISC transceiver controller
++
++- compatible:
++    Usage: required
++    Value type: <string>
++    Definition: Should contain "qcom,usb-hsic-phy".
++
++- reg:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: USB PHY base address and length of the register map
++
++- clocks:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: See clock-bindings.txt section "consumers". List of
++                5 clock specifiers for interface and core controller
++                clocks.
++
++- clock-names:
++    Usage: required
++    Value type: <string>
++    Definition: Must contain "core", "alt-core", "phy", "cal" and "iface" strings.
++
++- vddcx-supply:
++    Usage: required
++    Value type: <phandle>
++    Definition: phandle to the regulator VDCCX supply node.
++
++- resets:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: See reset.txt section "consumers". PHY reset specifier.
++
++- reset-names:
++    Usage: required
++    Value type: <string>
++    Definition: Must contain "link" string.
++
++- interrupts:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: Interrupt line definition for the PHY
++
++- dr_mode:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: Setup the PHY mode, either "host", "gadget" or "dual"
++
++- qcom,vdd-levels:
++    Usage: required for MDM9615
++    Value type: <prop-encoded-array>
++    Definition: Setup the valid vdd levers for the vddx-supply
++
++- phy_type:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: Shall be "hisc"
++
++- qcom,tlmm:
++    Usage: required for MDM961
++    Value type: <prop-encoded-array>
++    Definition: TLMM syscon phandle to setup the HSIC lines
++
++- qcom,tlmm-cfg:
++    Usage: required for MDM961
++    Value type: <prop-encoded-array>
++    Definition: Shall be two entries of offset, data of the HSIC lines setup
++
++Example:
++	usb_phy: phy@12540000 {
++		compatible = "qcom,usb-hsic-phy";
++		reg = <0x78d9000 0x400>;
++		interrupts      = <GIC_SPI 232 IRQ_TYPE_NONE>;
++		dr_mode         = "host";
++
++		vddcx-supply = <&pm8018_vdd_dig_corner>;
++
++		clocks = <&gcc USB_HSIC_SYSTEM_CLK>,
++		         <&gcc USB_HSIC_XCVR_FS_CLK>,
++			 <&gcc USB_HSIC_HSIC_CLK>,
++			 <&gcc USB_HSIC_HSIO_CAL_CLK>,
++			 <&gcc USB_HSIC_H_CLK>;
++		clock-names = "core", "alt-core", "phy", "cal", "iface";
++
++		resets = <&gcc USB_HSIC_RESET>;
++		reset-names = "link";
++		qcom,vdd-levels = <1 2 4>;
++		phy_type        = "hsic";
++
++		qcom,tlmm       = <&msmgpio>;
++		qcom,tlmm-cfg   = <0x20CC 0x034A4E10
++				   0x20C8 0x034A4E10>;
++	};
++
 -- 
 1.9.1
