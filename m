@@ -1,99 +1,80 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/11] Changes to support 150 MHz eMMC on rk3399
-Date: Fri, 17 Jun 2016 18:09:04 +0530
-Message-ID: <5763EF68.1040307@ti.com>
-References: <1465859076-4868-1-git-send-email-dianders@chromium.org>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3 1/4] dt-bindings: bus: Add documentation for Tegra210 ACONNECT
+Date: Fri, 17 Jun 2016 13:40:31 +0100
+Message-ID: <1466167234-8288-2-git-send-email-jonathanh@nvidia.com>
+References: <1466167234-8288-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1465859076-4868-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466167234-8288-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add binding documentation for the Tegra ACONNECT bus that is part of the
+Audio Processing Engine (APE) on Tegra210. The ACONNECT bus is used to
+access devices within the APE subsystem. The APE is located in a
+separate power domain and so accesses made to the ACONNECT require the
+power domain to be enabled as well as some platform specific clocks.
 
-On Tuesday 14 June 2016 04:34 AM, Douglas Anderson wrote:
-> The theme of this series of patches is to try to allow running the eMMC
-> at 150 MHz on the rk3399 SoC, though the changes should still be correct
-> and have merit on their own.  The motivation for running at 150 MHz is
-> that doing so improves signal integrity and (with some eMMC devices)
-> doesn't affect throughput.
-> 
-> These patches have been structured to keep things as separate as
-> possible, but nevertheless there are still some dependencies between
-> patches.  It probably makes the most sense for all of the non-device
-> tree patches to go through a single tree.  If others agree, perhaps the
-> most sane would be to get Acks from PHY maintainers and then to land the
-> patches in the MMC tree.  Device tree patches should be able to be
-> landed separately and the worst what would happen is a warning in the
-> kernel log if you have the code without the device tree.
-> 
-> The code patches are based on Ulf's mmc-next, then 4 patches that are
-> outstanding / ready to land.  Specifically:
-> - https://patchwork.kernel.org/patch/9086501/
->   phy: rockchip-emmc: give DLL some extra time to be ready
-> - https://patchwork.kernel.org/patch/9093681/
->   phy: rockchip-emmc: configure frequency range and drive impedance
-> - https://patchwork.kernel.org/patch/9086511/
->   phy: rockchip-emmc: configure default output tap delay
-> - https://patchwork.kernel.org/patch/9086531/
->   phy: rockchip-emmc: reindent the register definitions
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/bus/nvidia,tegra210-aconnect.txt      | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
 
-Do you want all these "phy: rockchip-emmc:" along with the patch in this series
-to go in MMC tree? Or I can take all the phy part in my linux-phy -next branch?
-
-Thanks
-Kishon
-> 
-> The device tree patches are based on Heiko's v4.8-armsoc/dts64.
-> 
-> If requested, I could repost my series with the outstanding code patches
-> or I could try folding those patches into mine.  Since those patches
-> aren't in 4.7-rc1 presumably they would also make sense to take through
-> the MMC tree if others agree.
-> 
-> Changes in v2:
-> - Indicate that 5.1 ms is calculated (Shawn).
-> - Clean up description of rk3399 PHY (Shawn)
-> - Add Rob Herring's Ack.
-> - Reorder includes (Shawn)
-> - Adjust commit message wording (Rob)
-> - List out clocks and clock names (Rob)
-> - Move code cleanup before set phyctrl_frqsel based on card clock (Shawn)
-> - Warn if we're more than 15 MHz from ideal rate (Shawn)
-> - Fix typo USB => SDHCI (Shawn)
-> 
-> Douglas Anderson (11):
->   phy: rockchip-emmc: Increase lock time allowance
->   mmc: sdhci-of-arasan: Always power the PHY off/on when clock changes
->   Documentation: mmc: sdhci-of-arasan: Add soc-ctl-syscon for corecfg
->     regs
->   mmc: sdhci-of-arasan: Properly set corecfg_baseclkfreq on rk3399
->   arm64: dts: rockchip: Add soc-ctl-syscon to sdhci for rk3399
->   Documentation: mmc: sdhci-of-arasan: Add ability to export card clock
->   mmc: sdhci-of-arasan: Add ability to export card clock
->   Documentation: phy: Let the rockchip eMMC PHY get an exported card
->     clock
->   phy: rockchip-emmc: Minor code cleanup in
->     rockchip_emmc_phy_power_on/off()
->   phy: rockchip-emmc: Set phyctrl_frqsel based on card clock
->   arm64: dts: rockchip: Provide emmcclk to PHY for rk3399
-> 
->  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  35 ++-
->  .../devicetree/bindings/phy/rockchip-emmc-phy.txt  |   9 +
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   5 +
->  drivers/mmc/host/sdhci-of-arasan.c                 | 333 +++++++++++++++++++--
->  drivers/phy/phy-rockchip-emmc.c                    | 120 ++++++--
->  5 files changed, 442 insertions(+), 60 deletions(-)
-> 
+diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
+new file mode 100644
+index 000000000000..7ff13be1750b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
+@@ -0,0 +1,45 @@
++NVIDIA Tegra ACONNECT Bus
++
++The Tegra ACONNECT bus is an AXI switch which is used to connnect various
++components inside the Audio Processing Engine (APE). All CPU accesses to
++the APE subsystem go through the ACONNECT via an APB to AXI wrapper.
++
++Required properties:
++- compatible: Must be "nvidia,tegra210-aconnect".
++- clocks: Must contain the entries for the APE clock (TEGRA210_CLK_APE),
++  and APE interface clock (TEGRA210_CLK_APB2APE).
++- clock-names: Must contain the names "ape" and "apb2ape" for the corresponding
++  'clocks' entries.
++- power-domains: Must contain a phandle that points to the audio powergate
++  (namely 'aud') for Tegra210.
++- #address-cells: The number of cells used to represent physical base addresses
++  in the aconnect address space. Should be 1.
++- #size-cells: The number of cells used to represent the size of an address
++  range in the aconnect address space. Should be 1.
++- ranges: Mapping of the aconnect address space to the CPU address space.
++
++All devices accessed via the ACONNNECT are described by child-nodes.
++
++Example:
++
++	aconnect@702c0000 {
++		compatible = "nvidia,tegra210-aconnect";
++		clocks = <&tegra_car TEGRA210_CLK_APE>,
++			 <&tegra_car TEGRA210_CLK_APB2APE>;
++		clock-names = "ape", "apb2ape";
++		power-domains = <&pd_audio>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x702c0000 0x0 0x702c0000 0x00040000>;
++
++		status = "disabled";
++
++		child1 {
++			...
++		};
++
++		child2 {
++			...
++		};
++	};
+-- 
+2.1.4
