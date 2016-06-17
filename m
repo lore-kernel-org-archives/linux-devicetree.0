@@ -1,56 +1,78 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 12/13] arm64: tegra: Add sor-safe clock to DPAUX
- binding
-Date: Fri, 17 Jun 2016 18:47:46 +0200
-Message-ID: <20160617164746.GM27475@ulmo.ba.sec>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <1466165027-17917-13-git-send-email-jonathanh@nvidia.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv3 1/7] EDAC, altera: Check parent status for Arria10 EDAC
+ block
+Date: Fri, 17 Jun 2016 11:54:04 -0500
+Message-ID: <57642B2C.3090109@opensource.altera.com>
+References: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
+ <1465852752-11018-2-git-send-email-tthayer@opensource.altera.com>
+ <20160617164632.GD3912@pd.tnic>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yklP1rR72f9kjNtc"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1466165027-17917-13-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160617164632.GD3912@pd.tnic>
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
---yklP1rR72f9kjNtc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, Jun 17, 2016 at 01:03:46PM +0100, Jon Hunter wrote:
-> Populate the 'sor-safe' clock for DPAUX devices on Tegra210 that require
-> this clock for operation. Update the compatability string for the DPAUX
-> instance at address 0x545c0000 to be "nvidia,tegra210-dpaux" to ensure
-> that the 'sor-safe' clock is enabled for this device.
-
-Does the second DPAUX need this, too? I have a vague recollection that
-they were both slightly different.
-
-Thierry
-
---yklP1rR72f9kjNtc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXZCmxAAoJEN0jrNd/PrOhlGcP/3Lcp5M8d5khqNCvcUOTw8ts
-XbTb3h2Zw3sWEBQdICczENHFnxo78VlAceLXkU4IEzmhTYIO6iMSFxS+tlqTSrx7
-rAmoBUb0KKDNCiXjDSGCJ5PYttpi6yhRngjRalVLJL2+XRIs55/JBmYqGPTZsD1C
-La92KTf+0U5NUv97+2nMrrfgcH9ue74Os6MfiN8H8/97RDo/omiWYch76HQkrbnn
-QRt6todDdlPDbeKWmpsrhCnyQLoVZo8Iefd7WH4W5BhFce2wP8F2Dnl7v6TAZJbn
-jJy9/lLkW/dtTnKB/xD52iqYwGCdat/o5Gcci00b0OwHLNsvTGR1EXEqsGQJRC9D
-YuU9LDbWrx+j1Kx3Dc3v1IZ3N+mFRTb4BFLt4gqsHJgAzlvCgNWeOhfBE0P9kTDP
-CYcIZQkabq8lt/wTKx4gxluB+C80v4DqQGmDewHnafinaQckJPP3v4k/kf41Xdb4
-sJ+KC3ufUNEDqumunfcuUV75s89kaK1RSCSiiS5VnfxLdY8BxHoAjirco1+YDozg
-4Hp4TMwTAAaf4it9UHHUgCrlC8u2lYH92wfqnba3J9377WSfkho0gk7Ap75pRBTJ
-sXAwkAqkakY6R0icuz3rjp8XYMnGUH0yMrxNjXqOB5s6QgEvczvop4jb74M9Jxer
-1OAorCPiPfrPnDJnnF/g
-=x/XS
------END PGP SIGNATURE-----
-
---yklP1rR72f9kjNtc--
+On 06/17/2016 11:46 AM, Borislav Petkov wrote:
+> On Mon, Jun 13, 2016 at 04:19:06PM -0500, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> In preparation for the Arria10 ECC modules, check the status
+>> of the parent in the device tree to ensure the block is enabled.
+>> Skip if no parent phandle is set in the device tree.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>> ---
+>> v2  No change
+>> v3  Move check into validate_parent_available().
+>> ---
+>>   drivers/edac/altera_edac.c |   17 +++++++++++++++++
+>>   1 file changed, 17 insertions(+)
+>>
+>> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+>> index 6f5d586..926bcaf 100644
+>> --- a/drivers/edac/altera_edac.c
+>> +++ b/drivers/edac/altera_edac.c
+>> @@ -1125,6 +1125,20 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+>>   	chained_irq_exit(chip, desc);
+>>   }
+>>
+>> +static int validate_parent_available(struct device_node *np)
+>> +{
+>> +	struct device_node *parent;
+>> +
+>> +	/* Ensure parent device is enabled if parent node exists */
+>> +	parent = of_parse_phandle(np, "parent", 0);
+>> +	if (parent && !of_device_is_available(parent)) {
+>> +		of_node_put(parent);
+>> +		return -ENODEV;
+>> +	}
+>> +	of_node_put(parent);
+>> +	return 0;
+>> +}
+>
+> How about this - it is a bit simpler:
+>
+> static int validate_parent_available(struct device_node *np)
+> {
+>          struct device_node *parent;
+>          int ret = 0;
+>
+>          /* Ensure parent device is enabled if parent node exists */
+>          parent = of_parse_phandle(np, "parent", 0);
+>          if (parent && !of_device_is_available(parent))
+>                  ret = -ENODEV;
+>
+>          of_node_put(parent);
+>          return ret;
+> }
+>
+> ?
+>
+Yes. Thanks! I will make the change.
