@@ -1,141 +1,66 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: Re: [PATCH v6 2/2] phy: rockchip-inno-usb2: add a new driver for
- Rockchip usb2phy
-Date: Fri, 17 Jun 2016 14:43:55 +0800
-Message-ID: <98bc69af-c597-d1ee-e83d-c7b5918e9ef4@rock-chips.com>
-References: <1466129353-48063-1-git-send-email-frank.wang@rock-chips.com>
- <1466129353-48063-3-git-send-email-frank.wang@rock-chips.com>
- <576383C6.3050005@roeck-us.net>
+From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 00/14] USB OTG/dual-role framework
+Date: Fri, 17 Jun 2016 10:17:51 +0300
+Message-ID: <87a8ikz3kw.fsf@linux.intel.com>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com> <5762887A.4060606@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <576383C6.3050005@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, heiko@sntech.de
-Cc: dianders@chromium.org, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com, frank.wang@rock-chips.com
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5762887A.4060606-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On 2016/6/17 12:59, Guenter Roeck wrote:
-> On 06/16/2016 07:09 PM, Frank Wang wrote:
->> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
->> than rk3288 and before, and most of phy-related registers are also
->> different from the past, so a new phy driver is required necessarily.
->>
->> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
->> Suggested-by: Guenter Roeck <linux@roeck-us.net>
->> Suggested-by: Doug Anderson <dianders@chromium.org>
->> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
->> Tested-by: Heiko Stuebner <heiko@sntech.de>
->> ---
+
+Hi Roger,
+
+Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> writes:
+>> This series centralizes OTG/Dual-role functionality in the kernel.
+>> As of now I've got Dual-role functionality working pretty reliably on
+>> dra7-evm and am437x-gp-evm.
 >
-> [ ... ]
->
->> +
->> +static int rockchip_usb2phy_resume(struct phy *phy)
->> +{
->> +    struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
->> +    struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
->> +    int ret;
->> +
->> +    dev_dbg(&rport->phy->dev, "port resume\n");
->> +
->> +    ret = clk_prepare_enable(rphy->clk480m);
->> +    if (ret)
->> +        return ret;
->> +
-> If suspend can be called multiple times, resume can be called
-> multiple times as well. Doesn't this cause a clock imbalance
-> if you call clk_prepare_enable() multiple times on resume,
-> but clk_disable_unprepare() only once on suspend ?
->
+> Do you have any comments on this series? If yes I can include them
+> before sending v11 with Acks from Peter and Alan. Thanks.
 
-Well, what you said is reasonable, How does something like below?
+I'll need some more time to look at this, have been real busy with some
+internal tasks. Frankly, though, I still think this is way more complex
+than what it needs to be and that's actually quite scary IMO.
 
-@@ -307,6 +307,9 @@ static int rockchip_usb2phy_resume(struct phy *phy)
+I'll try to dedicate some time today to review these patches, hopefully
+I'll find a few minutes. I know that I also owe you a look at the IRQ
+cleanup for dwc3, I'll see if I can get to that as well.
 
-         dev_dbg(&rport->phy->dev, "port resume\n");
+=2D-=20
+balbi
 
-+       if (!rport->suspended)
-+               return 0;
-+
-         ret = clk_prepare_enable(rphy->clk480m);
-         if (ret)
-                 return ret;
-@@ -327,12 +330,16 @@ static int rockchip_usb2phy_suspend(struct phy *phy)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-         dev_dbg(&rport->phy->dev, "port suspend\n");
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-+       if (rport->suspended)
-+               return 0;
-+
-         ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
-         if (ret)
-                 return ret;
-
-         rport->suspended = true;
-         clk_disable_unprepare(rphy->clk480m);
-+
-         return 0;
-  }
-
-@@ -485,6 +492,7 @@ static int rockchip_usb2phy_host_port_init(struct 
-rockchip_usb2phy *rphy,
-
-         rport->port_id = USB2PHY_PORT_HOST;
-         rport->port_cfg = &rphy->phy_cfg->port_cfgs[USB2PHY_PORT_HOST];
-+       rport->suspended = true;
-
-         mutex_init(&rport->mutex);
-         INIT_DELAYED_WORK(&rport->sm_work, rockchip_usb2phy_sm_work);
-
-
->> +    ret = property_enable(rphy, &rport->port_cfg->phy_sus, false);
->> +    if (ret)
->> +        return ret;
->> +
->> +    rport->suspended = false;
->> +    return 0;
->> +}
->> +
->> +static int rockchip_usb2phy_suspend(struct phy *phy)
->> +{
->> +    struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
->> +    struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
->> +    int ret;
->> +
->> +    dev_dbg(&rport->phy->dev, "port suspend\n");
->> +
->> +    if (rport->suspended)
->> +        goto exit;
->> +
->
-> I know I am nitpicking, but
->         return 0;
-> would be fine here, be more consistent with the rest of the code,
->
-
-Yeah, please see above changes.
-
-BR.
-Frank
-
->> +    ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
->> +    if (ret)
->> +        return ret;
->> +
->> +    rport->suspended = true;
->> +    clk_disable_unprepare(rphy->clk480m);
->> +
->> +exit:
->> +    return 0;
->
-> and this label is really unnecessary.
->
->> +}
->> +
->
-> [ ... ]
->
+iQIcBAEBCAAGBQJXY6QfAAoJEIaOsuA1yqREDzsP/20f0zzThBcB2ybCkG7naERd
+JLkqKUTB8u0tZh3l41z1kSU/Wk/r/BlRealmw6bszuTDLMGWV0MTEqSxHLwmGPhq
+ZtDBYSlhmh5o0HxNPEWzOhQ3YucifJFh5y1ksQY2UekbBaJXOK8eCgOSFSZthyvL
+dGyDKZD+wYZqdr7h30W6g0OH9kqA55rlGlCJrLUYFp/uWVnGkGsBybEdU1bW8/R3
+bs3ViPP0vp6k/BHZ+kxGo+hFjNbek7ZCbthBoqIu9I/7ICfIxJ36+7xP/yshX+oZ
+99z1qjI/+/vUcq4dwXdWEQ0cAmP4LzmW3LGHqJTmKlEY2+OBaqYyyouVI4vi3n3Z
+Ypi3THYhqE0X5TNjrBmnUbcxIeVndNc2I9LxQPXnlsATC5l7aiPMNGX0RqSbEWh2
+05Zy1+RxcaF1l9Ola66s4ULLBmaweyxwKiwrlLpZ6hyoodUqTcrD4dL79wmM3SIN
+ZWcwEadQWPfCVmqkcSpMRU1sMS5q1k71cBFnh6TMnPdSMmWQqChj+sM3VLluTe9B
+qHs/3GCtghupGXMAGhb0ApP3z/JoPwnQ6ipKQT+Kiy3Sf01Z20UFAlIjyMrsEM83
+vuuZYSTWQNHUJCjavCX7u5vrmaqFtXjFsOltU0o6pgAnPKkiOwjiRh3Ab3/rKeLe
+Hntd/qGGRyaslc7UQ/pI
+=yAGy
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
