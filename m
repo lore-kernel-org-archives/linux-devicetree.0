@@ -1,54 +1,173 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 08/12] doc: binding: pwrseq-usb-generic: add binding doc
- for generic usb power sequence driver
-Date: Fri, 17 Jun 2016 12:16:48 -0500
-Message-ID: <CAL_JsqLvs0s2TyfqPM5vtmyY81_X84VjCGjsGYbTgT4syOfp9Q@mail.gmail.com>
-References: <1466158165-9380-1-git-send-email-peter.chen@nxp.com> <1466158165-9380-9-git-send-email-peter.chen@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1466158165-9380-9-git-send-email-peter.chen@nxp.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Stephen Boyd <stephen.boyd@linaro.org>, oscar@naiandei.net, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Linux USB List <linux-usb@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, troy.kisky@boundarydevices.com, Javier Martinez Canillas <javier@osg.samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, Fabio Estevam <festevam@gmai>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2 2/2] dt-binding: remoteproc: Introduce Hexagon loader binding
+Date: Fri, 17 Jun 2016 10:17:19 -0700
+Message-ID: <1466183839-5968-2-git-send-email-bjorn.andersson@linaro.org>
+References: <1466183839-5968-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466183839-5968-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 5:09 AM, Peter Chen <peter.chen@nxp.com> wrote:
-> Add binding doc for generic usb power sequence driver, and update
-> generic usb device binding-doc accordingly.
->
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  .../bindings/power/pwrseq/pwrseq-usb-generic.txt   | 31 ++++++++++++++++++++++
->  .../devicetree/bindings/usb/usb-device.txt         |  2 ++
->  2 files changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
-> new file mode 100644
-> index 0000000..8ad98382
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
-> @@ -0,0 +1,31 @@
-> +The power sequence for generic USB Devices
-> +
-> +Some hard-wired USB devices need to do power sequence to let the
-> +device work normally, the typical power sequence like: enable USB
-> +PHY clock, toggle reset pin, etc. But current Linux USB driver
-> +lacks of such code to do it, it may cause some hard-wired USB devices
-> +works abnormal or can't be recognized by controller at all. The
-> +power sequence will be done before this device can be found at USB
-> +bus.
-> +
-> +Required properties:
-> +- compatible : contains "usb-pwrseq-generic".
+This document defines the binding for a component that loads firmware
+and control the life cycle of a self-authenticating Qualcomm Hexagon
+core.
 
-In case I have not been clear, no.
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-I am not going to accept anything along the lines of the current mmc
-pwrseq. I am basically okay with Krzysztof's proposal as it is *only*
-an added property and not a duplication of information. I'd suggest
-you figure out how to make the kernel work with that rather than
-trying to work-around whatever kernel limitations there are.
+Changes since v1:
+- Corrected reg-names in the example
 
-Rob
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   | 138 +++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+new file mode 100644
+index 000000000000..5b198c7e007b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+@@ -0,0 +1,138 @@
++Qualcomm Hexagon Peripheral Image Loader
++
++This document defines the binding for a component that loads and boots firmware
++on the Qualcomm Hexagon core.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,q6v5-pil"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must specify the base address and size of the qdsp6 and
++		    rmb register blocks
++
++- reg-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "q6dsp" and "rmb"
++
++- interrupts-extended:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must list the watchdog, fatal IRQs ready, handover and
++		    stop-ack IRQs
++
++- interrupt-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
++
++- clocks:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the iface, bus and mem clocks to be held on
++		    behalf of the booting of the Hexagon core
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "iface", "bus", "mem"
++
++- resets:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the reset-controller for the modem sub-system
++
++- reset-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "mss_restart"
++
++- cx-supply:
++- mss-supply:
++- mx-supply:
++- pll-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the regulators to be held on behalf of the
++		    booting of the Hexagon core
++
++- qcom,smem-states:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the smem state for requesting the Hexagon to
++		    shut down
++
++- qcom,smem-state-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "stop"
++
++- qcom,halt-regs:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: a phandle reference to a syscon representing TCSR followed
++		    by the three offsets within syscon for q6, modem and nc
++		    halt registers.
++
++= SUBNODES:
++The Hexagon node must contain two subnodes, named "mba" and "mpss" representing
++the memory regions used by the Hexagon firmware. Each sub-node must contain:
++
++- memory-region:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the reserved-memory for the region
++
++= EXAMPLE
++The following example describes the resources needed to boot control the
++Hexagon, as it is found on MSM8974 boards.
++
++	modem-rproc@fc880000 {
++		compatible = "qcom,q6v5-pil";
++		reg = <0xfc880000 0x100>,
++		      <0xfc820000 0x020>;
++		reg-names = "qdsp6", "rmb";
++
++		interrupts-extended = <&intc 0 24 1>,
++				      <&modem_smp2p_in 0 0>,
++				      <&modem_smp2p_in 1 0>,
++				      <&modem_smp2p_in 2 0>,
++				      <&modem_smp2p_in 3 0>;
++		interrupt-names = "wdog",
++				  "fatal",
++				  "ready",
++				  "handover",
++				  "stop-ack";
++
++		clocks = <&gcc GCC_MSS_Q6_BIMC_AXI_CLK>,
++			 <&gcc GCC_MSS_CFG_AHB_CLK>,
++			 <&gcc GCC_BOOT_ROM_AHB_CLK>;
++		clock-names = "iface", "bus", "mem";
++
++		qcom,halt-regs = <&tcsr_mutex_block 0x1180 0x1200 0x1280>;
++
++		resets = <&gcc GCC_MSS_RESTART>;
++		reset-names = "mss_restart";
++
++		cx-supply = <&pm8841_s2>;
++		mss-supply = <&pm8841_s3>;
++		mx-supply = <&pm8841_s1>;
++		pll-supply = <&pm8941_l12>;
++
++		qcom,smem-states = <&modem_smp2p_out 0>;
++		qcom,smem-state-names = "stop";
++
++		mba {
++			memory-region = <&mba_region>;
++		};
++
++		mpss {
++			memory-region = <&mpss_region>;
++		};
++	};
++
+-- 
+2.5.0
