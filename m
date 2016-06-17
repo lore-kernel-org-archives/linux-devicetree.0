@@ -1,104 +1,133 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v3 1/5] mfd: tps65217: Add support for IRQs
-Date: Fri, 17 Jun 2016 19:09:40 +0300
-Message-ID: <576420C4.4060002@ti.com>
-References: <20160616114110.23455-1-m.niestroj@grinn-global.com>
- <20160616114110.23455-2-m.niestroj@grinn-global.com>
- <5762A3AC.9010409@ti.com>
- <123e6759-fa44-48f0-860d-623aaa39f8ea@grinn-global.com>
- <57640C3C.1070001@ti.com>
- <062438af-c05f-00b3-adc6-ac27e7cec892@grinn-global.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC PATCH 02/13] drm/tegra: Add helper functions for setting up
+ DPAUX pads
+Date: Fri, 17 Jun 2016 18:11:38 +0200
+Message-ID: <20160617161138.GC27475@ulmo.ba.sec>
+References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
+ <1466165027-17917-3-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <062438af-c05f-00b3-adc6-ac27e7cec892@grinn-global.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1980073429=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1466165027-17917-3-git-send-email-jonathanh@nvidia.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2016 06:31 PM, Marcin Niestroj wrote:
-> 
-> 
-> On 17.06.2016 16:42, Grygorii Strashko wrote:
->> On 06/17/2016 05:05 PM, Marcin Niestroj wrote:
->>>
->>> On 16.06.2016 15:03, Grygorii Strashko wrote:
->>>> On 06/16/2016 02:41 PM, Marcin Niestroj wrote:
->>>>> Add support for handling IRQs: power button, AC and USB power state
->>>>> changes. Mask and interrupt bits are shared within one register, which
->>>>> prevents us to use regmap_irq implementation. New irq_domain is
->>>>> created in
->>>>> order to add interrupt handling for each tps65217's subsystem. IRQ
->>>>> resources have been added for charger subsystem to be able to notify
->>>>> about
->>>>> AC and USB state changes.
->>>>>
->>>>> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
->>>>> ---
->>>>>   drivers/mfd/Kconfig          |   1 +
->>>>>   drivers/mfd/tps65217.c       | 194
->>>>> +++++++++++++++++++++++++++++++++++++++++--
->>>>>   include/linux/mfd/tps65217.h |  11 +++
->>>>>   3 files changed, 198 insertions(+), 8 deletions(-)
->>
->> [...]
->>
->>>>> +{
->>>>> +    int ret;
->>>>> +
->>>>> +    mutex_init(&tps->irq_lock);
->>>>> +
->>>>> +    /* Mask all interrupt sources */
->>>>> +    tps->irq_mask = (TPS65217_INT_RESERVEDM | TPS65217_INT_PBM
->>>>> +            | TPS65217_INT_ACM | TPS65217_INT_USBM);
->>>>> +    tps65217_reg_write(tps, TPS65217_REG_INT, tps->irq_mask,
->>>>> +            TPS65217_PROTECT_NONE);
->>>>> +
->>>>> +    tps->irq_domain = irq_domain_add_linear(tps->dev->of_node,
->>>>> +        TPS65217_NUM_IRQ, &tps65217_irq_domain_ops, tps);
->>>>> +    if (!tps->irq_domain) {
->>>>> +        dev_err(tps->dev, "Could not create IRQ domain\n");
->>>>> +        return -ENOMEM;
->>>>> +    }
->>>>> +
->>>>> +    ret = devm_request_threaded_irq(tps->dev, irq, NULL,
->>>>> +                    tps65217_irq_thread,
->>>>> +                    IRQF_TRIGGER_RISING | IRQF_ONESHOT,
->>>>
->>>> Are there any reasons why IRQ trigger type specified here explicitly?
->>>
->>> Not really. I have configured it that way, it worked and I forgot about
->>> it when preparing patches. Could you give some hint here?
->>>
->>
->> It's better to get it from DT and in case of DT boot it will - the real
->> IRQ trigger type may depends on board.
->>
-> 
-> So what I understand, I need to remove IRQF_TRIGGER_RISING here.
-> Addidional flags will be passed by 'irq_flags' in
-> "interrupts = <irq_num irq_flags>" in DT, right?
 
-Indeed. And usually it is not "Addidional flags" - its mandatory cell for
- the most of IRQ controllers.
-
-The problem with hard-coded IRQ trigger type values in code is that on
-different boards IRQ can be wired on different way - to the GIC/INTC,
-to SoC GPIO, to GPIO expanders and .. And they can support different sets
-of allowed IRQ triggering types. More over, on some boards IRQ signal can be
-inverted, for example :P
-
-So, It's more generic to not hard-code it if your driver is expected to be
-used only with DT.
-Also as per TRM http://www.ti.com/lit/ds/symlink/tps65217.pdf
-nINT - interrupt output (active low, open drain). Pin is pulled low if an interrupt bit is set. The
-       output goes high after the bit causing the interrupt in register INT has been read.
-       The interrupt sources can be masked in register INT, so no interrupt is generated when the
-       corresponding interrupt bit is set
+--===============1980073429==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="OBd5C1Lgu00Gd/Tn"
+Content-Disposition: inline
 
 
--- 
-regards,
--grygorii
+--OBd5C1Lgu00Gd/Tn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jun 17, 2016 at 01:03:36PM +0100, Jon Hunter wrote:
+> In preparation for adding pinctrl support for the DPAUX pads, add
+> helpers functions for configuring the pads and controlling the power
+> for the pads.
+>=20
+> Please note that although a simple if-statement could be used instead
+> of a case statement for configuring the pads as there are only two
+> possible modes, a case statement is used because when integrating with
+> the pinctrl framework, we need to be able to handle invalid modes that
+> could be passed.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/gpu/drm/tegra/dpaux.c | 75 ++++++++++++++++++++++++++-----------=
+------
+>  1 file changed, 45 insertions(+), 30 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/tegra/dpaux.c b/drivers/gpu/drm/tegra/dpaux.c
+> index 0874a7e5b37b..aa3a037fcd3b 100644
+> --- a/drivers/gpu/drm/tegra/dpaux.c
+> +++ b/drivers/gpu/drm/tegra/dpaux.c
+> @@ -267,6 +267,45 @@ static irqreturn_t tegra_dpaux_irq(int irq, void *da=
+ta)
+>  	return ret;
+>  }
+> =20
+> +static void tegra_dpaux_powerdown(struct tegra_dpaux *dpaux, bool enable)
+> +{
+> +	u32 value =3D tegra_dpaux_readl(dpaux, DPAUX_HYBRID_SPARE);
+> +
+> +	if (enable)
+> +		value |=3D DPAUX_HYBRID_SPARE_PAD_POWER_DOWN;
+> +	else
+> +		value &=3D ~DPAUX_HYBRID_SPARE_PAD_POWER_DOWN;
+> +
+> +	tegra_dpaux_writel(dpaux, value, DPAUX_HYBRID_SPARE);
+> +}
+
+I'd like for this to be two functions without the boolean parameter. The
+reason is that without looking at the implementation there's no way to
+understand what the meaning of true and false is. If instead you call
+this:
+
+	static void tegra_dpaux_pad_power_down(struct tegra_dpaux *dpaux)
+	{
+		...
+	}
+
+and
+
+	static void tegra_dpaux_pad_power_up(struct tegra_dpaux *dpaux)
+	{
+		...
+	}
+
+you can easily deduce from the name what's going on.
+
+> +static int tegra_dpaux_config(struct tegra_dpaux *dpaux, int function)
+
+Can function not be unsigned?
+
+Thierry
+
+--OBd5C1Lgu00Gd/Tn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXZCE4AAoJEN0jrNd/PrOhP0UQAJ32riW1d8L3fg7oZpPdDyaV
+BeAEEIClUC1XmNI3ibaHBV6/9FfuKzaEtdJztOX4N09C2c+Gkj+LMOhkOcSGWhmy
+Y8m34LGX86F5eMsbPWWPmiu630bq8kv2HL5Q9jneWB62gimI9Rf2Edyzi7ZXx4xQ
+mGIHV4wCgW1JZBKU4L5B10807jIY6FQl5HEaEtNjwJhw68TKxjTIPYL0TYUi7Lai
+2GsaQs6A+TRthUkQpzGLPxt2b9dsQef6bpHlcHQIQ1m1cc66nmHLVjN/SfDjfAj3
+qFgzVAIvMLZ3rmMNOY1KkJ9ghF54K+1Mx+VVubeWBLK+Ezn69EA/PXc3caabhmx7
+sU9DOU7DzIUtfRAFc7Pbo73bGBeJ+vXZONwa9jrBwc1nKcKdKEarGgmTN0NF9Nap
+0kCHj0k21CytNcSZRquFI2aIbd/0fNemzIeLAQBracXER0egl3qC59ddUjNcJx8X
+OdnMIlgcF8+069p1/qcZmKYCcBHHo5WWWGRCwLqeWvrlnLdTM0X5Agy5rXwS1FAm
+BwqPEQn39z/l0gNX4YRqLqc7MWGBWQxnLa0bYWRRcq16y9H8qxT/C67uPO3Ij/op
+U9Xv4L5OEpVuH6yfuxJ8iCcfr0Onq1tVgFguIw13dlpgYBMudI3t6WD4BOLN8/aS
+HR4m1ME2eedBN54EjIyC
+=Rr8o
+-----END PGP SIGNATURE-----
+
+--OBd5C1Lgu00Gd/Tn--
+
+--===============1980073429==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1980073429==--
