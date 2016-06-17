@@ -1,55 +1,73 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 07/13] ARM: dts: r8a7792: initial SoC device tree
-Date: Fri, 17 Jun 2016 08:27:24 +0200
-Message-ID: <CAMuHMdVR9PgyhCnRU_zr2HJZp_CbXJLuxSSP7npu-6BhrJ+q4A@mail.gmail.com>
-References: <13205049.n7pM8utpHF@wasted.cogentembedded.com>
- <2539026.OyU5nvpxa6@wasted.cogentembedded.com> <20160601005751.GG20527@verge.net.au>
- <fdab2628-60bd-c41b-296b-38cd71a6c5da@cogentembedded.com> <CAMuHMdUkOpEp+YCbZVZppdN4C7KKpDS9_gEuXi_WKZXM9YHgEQ@mail.gmail.com>
- <ab5e3a98-7ff2-dc8f-d255-f6da26f43527@cogentembedded.com> <20160610010245.GA10152@verge.net.au>
- <8efb1c7e-5463-2556-744c-d327886d92d4@cogentembedded.com> <CAMuHMdUK=y2kZY1kA97QpCDyUZXFejpXTpO9ZVNQoBfDNoRgfg@mail.gmail.com>
- <1b9a4cf4-1101-ccbf-772b-49b8a689a1b6@cogentembedded.com> <CAMuHMdV6f5ZzPxySzCgi7L+Sr1_4Ph1sLLyQ_j-sJ0tmBOvrHg@mail.gmail.com>
- <87eg80d1m9.wl%kuninori.morimoto.gx@renesas.com> <87a8iko9dm.wl%kuninori.morimoto.gx@renesas.com>
+From: Chris Lapa <chris@lapa.com.au>
+Subject: Re: [PATCH v3 3/7] max8903: cleans up confusing relationship between
+ dc_valid, dok and dcm.
+Date: Fri, 17 Jun 2016 16:28:50 +1000
+Message-ID: <32bde516-87b5-bb63-c6a3-1ec043758904@lapa.com.au>
+References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+ <1466139626-51434-1-git-send-email-chris@lapa.com.au>
+ <1466139626-51434-4-git-send-email-chris@lapa.com.au>
+ <57639832.6000201@samsung.com>
+Reply-To: chris@lapa.com.au
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <87a8iko9dm.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57639832.6000201@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, dwmw2@infradead.org, dbaryshkov@gmail.com, sre@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
-
-On Fri, Jun 17, 2016 at 4:14 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->> > Right, I had forgotten about that.
->> > Fortunately the clk-rcar-gen2 driver has a sane failure mode for this case ;-)
->> >
->> > it seems the RCAN clock can just be modeled as a fixed clock. However,
->> > its divider value isn't clear to me, as 15.9 MHz cannot be generated from PLL1
->> > using an integer divider. Morimoto-san, can you please ask for clarification?
+On 17/06/2016 4:26 PM, Krzysztof Kozlowski wrote:
+> On 06/17/2016 07:00 AM, Chris Lapa wrote:
+>> From: Chris Lapa <chris@lapa.com.au>
 >>
->> OK.
->> Now, I asked to HW team about that.
->> Please wait.
+>> The max8903_charger.h file indicated that dcm and dok were not optional
+>> when dc_valid is set.
+>>
+>> It makes sense to have dok as a compulsory pin when dc_valid is given.
+>> However dcm can be optionally wired to a fixed level especially when the
+>> circuit is configured for dc power exclusively.
+>>
+>> The previous implementation already allowed for this somewhat, however no
+>> error was given if dok wasn't given whilst dc_valid was.
+>>
+>> The new implementation enforces dok presence when dc_valid is given. Whilst
+>> allowing dcm to be optional.
+>>
+>> Signed-off-by: Chris Lapa <chris@lapa.com.au>
+>> ---
+>>  drivers/power/max8903_charger.c       | 23 ++++++++++-------------
+>>  include/linux/power/max8903_charger.h |  6 +++---
+>>  2 files changed, 13 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/power/max8903_charger.c b/drivers/power/max8903_charger.c
+>> index 0a5b0e1..dbd911c4 100644
+>> --- a/drivers/power/max8903_charger.c
+>> +++ b/drivers/power/max8903_charger.c
+>> @@ -211,27 +211,24 @@ static int max8903_probe(struct platform_device *pdev)
+>>  	}
+>>
+>>  	if (pdata->dc_valid) {
+>> -		if (pdata->dok && gpio_is_valid(pdata->dok) &&
+>> -				pdata->dcm && gpio_is_valid(pdata->dcm)) {
+>> +		if (pdata->dok && gpio_is_valid(pdata->dok)) {
+>>  			gpio = pdata->dok; /* PULL_UPed Interrupt */
+>>  			ta_in = gpio_get_value(gpio) ? 0 : 1;
+>> +		} else {
+>> +			dev_err(dev, "When DC is wired, DOK should"
+>> +					" be wired as well.\n");
 >
-> RCAN divider is fixed for 1/49
+> Just found one nit. Don't split the strings.
+>         dev_err(dev,
+>                 "When DC is wired, DOK should be wired as well.\n");
+I saw that one as well when I ran checkpatch, however I thought if I 
+changed it then I would get a warning about the line being > 80 chars. 
+So wasn't sure which direction to go.
+
+Thanks
+Chris
 >
-> PLL1 (= 1560MHz)
->   -> 1/2 (= 780MHz)
->     -> RCAN divider 1/49 (= 15.9183..MHz)
+> Best regards,
+> Krzysztof
 >
-> Is this clear for you ?
-
-Thanks, that's exactly what we need to know.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
