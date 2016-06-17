@@ -1,222 +1,202 @@
 From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] phy: add a driver for the Rockchip SoC internal
- PCIe PHY
-Date: Fri, 17 Jun 2016 18:38:53 +0530
-Message-ID: <5763F665.6070403@ti.com>
-References: <1466040179-30973-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v3 2/4] phy-sun4i-usb: Add support for peripheral-only
+ mode
+Date: Fri, 17 Jun 2016 18:42:32 +0530
+Message-ID: <5763F740.1000700@ti.com>
+References: <1465138776-6003-1-git-send-email-hdegoede@redhat.com>
+ <1465138776-6003-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1466040179-30973-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465138776-6003-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thursday 16 June 2016 06:52 AM, Shawn Lin wrote:
-> This patch to add a generic PHY driver for rockchip PCIe PHY.
-> Access the PHY via registers provided by GRF (general register
-> files) module.
+
+On Sunday 05 June 2016 08:29 PM, Hans de Goede wrote:
+> Use the new of_usb_get_dr_mode_by_phy() function to get the dr_mode
+> from the musb controller node instead of assuming that having an id_det
+> gpio means otg mode, and not having one means host mode.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Implement peripheral-only mode by adding a sun4i_usb_phy0_get_id_det
+> helper which looks at the dr_mode, always registering our extcon and
+> always monitoring vbus.
+> 
+> If dr_mode is not specified in the dts, do not register phy0 as we then
+> do not know how to treat it. This is actually a good thing as this means
+> we will not be registering phy0 on devices where the otg controller is
+> not enabled in the devicetree.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 > ---
+> Changes in v2:
+> -Adjust for of_usb_get_dr_mode_by_phy now taking an args0 parameter
+> Changes in v3:
+> -Only toggle the phy vbus-det bit on id-change on systems without vbus-det
+>  when in otg mode
+> ---
+>  drivers/phy/phy-sun4i-usb.c | 68 ++++++++++++++++++++++++++++++---------------
+>  1 file changed, 46 insertions(+), 22 deletions(-)
 > 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  drivers/phy/Kconfig             |   7 +
->  drivers/phy/Makefile            |   1 +
->  drivers/phy/phy-rockchip-pcie.c | 378 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 386 insertions(+)
->  create mode 100644 drivers/phy/phy-rockchip-pcie.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index b869b98..d4fc293 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -361,6 +361,13 @@ config PHY_ROCKCHIP_DP
->  	help
->  	  Enable this to support the Rockchip Display Port PHY.
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> index bae54f7..e3cbaae 100644
+> --- a/drivers/phy/phy-sun4i-usb.c
+> +++ b/drivers/phy/phy-sun4i-usb.c
+> @@ -40,6 +40,7 @@
+>  #include <linux/power_supply.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/reset.h>
+> +#include <linux/usb/of.h>
+>  #include <linux/workqueue.h>
 >  
-> +config PHY_ROCKCHIP_PCIE
-> +	tristate "Rockchip PCIe PHY Driver"
-> +	depends on ARCH_ROCKCHIP && OF
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support the Rockchip PCIe PHY.
-> +
->  config PHY_ST_SPEAR1310_MIPHY
->  	tristate "ST SPEAR1310-MIPHY driver"
->  	select GENERIC_PHY
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 9c3e73c..725e55d 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -39,6 +39,7 @@ obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
->  obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
->  obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
->  obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
-> +obj-$(CONFIG_PHY_ROCKCHIP_PCIE) += phy-rockchip-pcie.o
->  obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
->  obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
->  obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
-> diff --git a/drivers/phy/phy-rockchip-pcie.c b/drivers/phy/phy-rockchip-pcie.c
-> new file mode 100644
-> index 0000000..bc6cd17
-> --- /dev/null
-> +++ b/drivers/phy/phy-rockchip-pcie.c
-> @@ -0,0 +1,378 @@
-> +/*
-> + * Rockchip PCIe PHY driver
-> + *
-> + * Copyright (C) 2016 Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> + * Copyright (C) 2016 ROCKCHIP, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +
-> +/*
-> + * The higher 16-bit of this register is used for write protection
-> + * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-> + */
-> +#define HIWORD_UPDATE(val, mask, shift) \
-> +		((val) << (shift) | (mask) << ((shift) + 16))
-> +
-> +#define PHY_MAX_LANE_NUM      4
-> +#define PHY_CFG_DATA_SHIFT    7
-> +#define PHY_CFG_ADDR_SHIFT    1
-> +#define PHY_CFG_DATA_MASK     0xf
-> +#define PHY_CFG_ADDR_MASK     0x3f
-> +#define PHY_CFG_RD_MASK       0x3ff
-> +#define PHY_CFG_WR_ENABLE     1
-> +#define PHY_CFG_WR_DISABLE    1
-> +#define PHY_CFG_WR_SHIFT      0
-> +#define PHY_CFG_WR_MASK       1
-> +#define PHY_CFG_PLL_LOCK      0x10
-> +#define PHY_CFG_CLK_TEST      0x10
-> +#define PHY_CFG_CLK_SCC       0x12
-> +#define PHY_CFG_SEPE_RATE     BIT(3)
-> +#define PHY_CFG_PLL_100M      BIT(3)
-> +#define PHY_PLL_LOCKED        BIT(9)
-> +#define PHY_PLL_OUTPUT        BIT(10)
-> +#define PHY_LANE_A_STATUS     0x30
-> +#define PHY_LANE_B_STATUS     0x31
-> +#define PHY_LANE_C_STATUS     0x32
-> +#define PHY_LANE_D_STATUS     0x33
-> +#define PHY_LANE_RX_DET_SHIFT 11
-> +#define PHY_LANE_RX_DET_TH    0x1
-> +#define PHY_LANE_IDLE_OFF     0x1
-> +#define PHY_LANE_IDLE_MASK    0x1
-> +#define PHY_LANE_IDLE_A_SHIFT 3
-> +#define PHY_LANE_IDLE_B_SHIFT 4
-> +#define PHY_LANE_IDLE_C_SHIFT 5
-> +#define PHY_LANE_IDLE_D_SHIFT 6
-> +
-> +struct rockchip_pcie_data {
-> +	unsigned int pcie_conf;
-> +	unsigned int pcie_status;
-> +	unsigned int pcie_laneoff;
-> +};
-> +
-> +struct rockchip_pcie_phy {
-> +	struct rockchip_pcie_data *phy_data;
-> +	struct regmap *reg_base;
-> +	struct reset_control *phy_rst;
-> +	struct clk *clk_pciephy_ref;
-> +};
-> +
-> +static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
-> +			      u32 addr, u32 data)
+>  #define REG_ISCR			0x00
+> @@ -109,6 +110,7 @@ struct sun4i_usb_phy_cfg {
+>  struct sun4i_usb_phy_data {
+>  	void __iomem *base;
+>  	const struct sun4i_usb_phy_cfg *cfg;
+> +	enum usb_dr_mode dr_mode;
+>  	struct mutex mutex;
+>  	struct sun4i_usb_phy {
+>  		struct phy *phy;
+> @@ -119,6 +121,7 @@ struct sun4i_usb_phy_data {
+>  		bool regulator_on;
+>  		int index;
+>  	} phys[MAX_PHYS];
+> +	int first_phy;
+>  	/* phy0 / otg related variables */
+>  	struct extcon_dev *extcon;
+>  	bool phy0_init;
+> @@ -285,16 +288,10 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>  		sun4i_usb_phy0_update_iscr(_phy, 0, ISCR_DPDM_PULLUP_EN);
+>  		sun4i_usb_phy0_update_iscr(_phy, 0, ISCR_ID_PULLUP_EN);
+>  
+> -		if (data->id_det_gpio) {
+> -			/* OTG mode, force ISCR and cable state updates */
+> -			data->id_det = -1;
+> -			data->vbus_det = -1;
+> -			queue_delayed_work(system_wq, &data->detect, 0);
+> -		} else {
+> -			/* Host only mode */
+> -			sun4i_usb_phy0_set_id_detect(_phy, 0);
+> -			sun4i_usb_phy0_set_vbus_detect(_phy, 1);
+> -		}
+> +		/* Force ISCR and cable state updates */
+> +		data->id_det = -1;
+> +		data->vbus_det = -1;
+> +		queue_delayed_work(system_wq, &data->detect, 0);
+>  	}
+>  
+>  	return 0;
+> @@ -319,6 +316,19 @@ static int sun4i_usb_phy_exit(struct phy *_phy)
+>  	return 0;
+>  }
+>  
+> +static int sun4i_usb_phy0_get_id_det(struct sun4i_usb_phy_data *data)
 > +{
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(data,
-> +				   PHY_CFG_DATA_MASK,
-> +				   PHY_CFG_DATA_SHIFT) |
-> +		     HIWORD_UPDATE(addr,
-> +				   PHY_CFG_ADDR_MASK,
-> +				   PHY_CFG_ADDR_SHIFT));
-> +	udelay(1);
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(PHY_CFG_WR_ENABLE,
-> +				   PHY_CFG_WR_MASK,
-> +				   PHY_CFG_WR_SHIFT));
-> +	udelay(1);
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
-> +				   PHY_CFG_WR_MASK,
-> +				   PHY_CFG_WR_SHIFT));
-> +}
-> +
-> +static inline u32 phy_rd_cfg(struct rockchip_pcie_phy *rk_phy,
-> +			     u32 addr)
-> +{
-> +	u32 val;
-> +
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(addr,
-> +				   PHY_CFG_RD_MASK,
-> +				   PHY_CFG_ADDR_SHIFT));
-> +	regmap_read(rk_phy->reg_base,
-> +		    rk_phy->phy_data->pcie_status,
-> +		    &val);
-> +	return val;
-> +}
-> +
-> +void rockchip_pcie_phy_laneoff(struct phy *phy)
-> +{
-> +	u32 status;
-> +	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-> +	int i;
-> +
-> +	for (i = 0; i < PHY_MAX_LANE_NUM; i++) {
-> +		status = phy_rd_cfg(rk_phy, PHY_LANE_A_STATUS + i);
-> +		if (!((status >> PHY_LANE_RX_DET_SHIFT) &
-> +		       PHY_LANE_RX_DET_TH))
-> +			pr_debug("lane %d is used\n", i);
-> +		else
-> +			regmap_write(rk_phy->reg_base,
-> +				     rk_phy->phy_data->pcie_laneoff,
-> +				     HIWORD_UPDATE(PHY_LANE_IDLE_OFF,
-> +						   PHY_LANE_IDLE_MASK,
-> +						   PHY_LANE_IDLE_A_SHIFT + i));
+> +	switch (data->dr_mode) {
+> +	case USB_DR_MODE_OTG:
+> +		return gpiod_get_value_cansleep(data->id_det_gpio);
+> +	case USB_DR_MODE_HOST:
+> +		return 0;
+> +	case USB_DR_MODE_PERIPHERAL:
+> +	default:
+> +		return 1;
 > +	}
 > +}
-> +EXPORT_SYMBOL_GPL(rockchip_pcie_phy_laneoff);
-
-Er.. don't use export symbols from phy driver. I think it would be nice if you
-can model the driver in such a way that the PCIe driver can control individual
-phy's.
-
-Thanks
-Kishon
+> +
+>  static int sun4i_usb_phy0_get_vbus_det(struct sun4i_usb_phy_data *data)
+>  {
+>  	if (data->vbus_det_gpio)
+> @@ -414,7 +424,10 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+>  	struct phy *phy0 = data->phys[0].phy;
+>  	int id_det, vbus_det, id_notify = 0, vbus_notify = 0;
+>  
+> -	id_det = gpiod_get_value_cansleep(data->id_det_gpio);
+> +	if (phy0 == NULL)
+> +		return;
+> +
+> +	id_det = sun4i_usb_phy0_get_id_det(data);
+>  	vbus_det = sun4i_usb_phy0_get_vbus_det(data);
+>  
+>  	mutex_lock(&phy0->mutex);
+> @@ -430,7 +443,8 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+>  		 * without vbus detection report vbus low for long enough for
+>  		 * the musb-ip to end the current device session.
+>  		 */
+> -		if (!sun4i_usb_phy0_have_vbus_det(data) && id_det == 0) {
+> +		if (data->dr_mode == USB_DR_MODE_OTG &&
+> +		    !sun4i_usb_phy0_have_vbus_det(data) && id_det == 0) {
+>  			sun4i_usb_phy0_set_vbus_detect(phy0, 0);
+>  			msleep(200);
+>  			sun4i_usb_phy0_set_vbus_detect(phy0, 1);
+> @@ -456,7 +470,8 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+>  		 * without vbus detection report vbus low for long enough to
+>  		 * the musb-ip to end the current host session.
+>  		 */
+> -		if (!sun4i_usb_phy0_have_vbus_det(data) && id_det == 1) {
+> +		if (data->dr_mode == USB_DR_MODE_OTG &&
+> +		    !sun4i_usb_phy0_have_vbus_det(data) && id_det == 1) {
+>  			mutex_lock(&phy0->mutex);
+>  			sun4i_usb_phy0_set_vbus_detect(phy0, 0);
+>  			msleep(1000);
+> @@ -501,7 +516,8 @@ static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+>  {
+>  	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
+>  
+> -	if (args->args[0] >= data->cfg->num_phys)
+> +	if (args->args[0] < data->first_phy ||
+> +	    args->args[0] >= data->cfg->num_phys)
+>  		return ERR_PTR(-ENODEV);
+>  
+>  	return data->phys[args->args[0]].phy;
+> @@ -575,13 +591,17 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  			return -EPROBE_DEFER;
+>  	}
+>  
+> -	/* vbus_det without id_det makes no sense, and is not supported */
+> -	if (sun4i_usb_phy0_have_vbus_det(data) && !data->id_det_gpio) {
+> -		dev_err(dev, "usb0_id_det missing or invalid\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	if (data->id_det_gpio) {
+> +	data->dr_mode = of_usb_get_dr_mode_by_phy(np, 0);
+> +	switch (data->dr_mode) {
+> +	case USB_DR_MODE_OTG:
+> +		/* otg without id_det makes no sense, and is not supported */
+> +		if (!data->id_det_gpio) {
+> +			dev_err(dev, "usb0_id_det missing or invalid\n");
+> +			return -ENODEV;
+> +		}
+> +		/* fall through */
+> +	case USB_DR_MODE_HOST:
+> +	case USB_DR_MODE_PERIPHERAL:
+>  		data->extcon = devm_extcon_dev_allocate(dev,
+>  							sun4i_usb_phy0_cable);
+>  		if (IS_ERR(data->extcon))
+> @@ -592,9 +612,13 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  			dev_err(dev, "failed to register extcon: %d\n", ret);
+>  			return ret;
+>  		}
+> +		break;
+> +	default:
+> +		dev_info(dev, "dr_mode unknown, not registering usb phy0\n");
+> +		data->first_phy = 1;
+>  	}
+>  
+> -	for (i = 0; i < data->cfg->num_phys; i++) {
+> +	for (i = data->first_phy; i < data->cfg->num_phys; i++) {
+>  		struct sun4i_usb_phy *phy = data->phys + i;
+>  		char name[16];
+>  
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
