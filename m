@@ -1,123 +1,222 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND v7 1/6] mfd: max8997: Use regmap to access registers
-Date: Fri, 17 Jun 2016 13:59:23 +0100
-Message-ID: <20160617125923.GQ26099@sirena.org.uk>
-References: <1466143833-5856-1-git-send-email-k.kozlowski@samsung.com>
- <1466143833-5856-2-git-send-email-k.kozlowski@samsung.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] phy: add a driver for the Rockchip SoC internal
+ PCIe PHY
+Date: Fri, 17 Jun 2016 18:38:53 +0530
+Message-ID: <5763F665.6070403@ti.com>
+References: <1466040179-30973-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rUztinBX/EQDJOOk"
-Return-path: <rtc-linux+bncBDQ2L75W5QGBBXHIR65QKGQERZKRBOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1466143833-5856-2-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, r.baldyga-anjuHVi6/WSaMJb+Lgu22Q@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1466040179-30973-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---rUztinBX/EQDJOOk
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Fri, Jun 17, 2016 at 08:10:28AM +0200, Krzysztof Kozlowski wrote:
-
->  drivers/extcon/extcon-max8997.c       |  31 ++++----
->  drivers/input/misc/max8997_haptic.c   |  34 ++++----
->  drivers/leds/leds-max8997.c           |  13 ++--
->  drivers/mfd/Kconfig                   |   1 +
->  drivers/mfd/max8997-irq.c             |  64 ++++++---------
->  drivers/mfd/max8997.c                 | 141 +++++++++++++++-------------------
->  drivers/power/max8997_charger.c       |  33 ++++----
->  drivers/regulator/max8997-regulator.c |  87 ++++++++++-----------
->  drivers/rtc/rtc-max8997.c             |  56 ++++++++------
->  include/linux/mfd/max8997-private.h   |  17 ++--
->  10 files changed, 228 insertions(+), 249 deletions(-)
-
-This is doing two things at once - it's changing the I/O mechanism over
-to regmap and updating all the client drivers in a single commit.
-Conversions like this are normally done by first converting the
-driver-specific I/O functions to use regmap internally and then
-subsequently updating the individual client drivers (if that's even
-useful, sometimes people don't bother as the static inlines you
-usually end up with in the header are not a real cost).  This makes for
-a set of smaller, more focused patches which are easier to get reviewed.
-
-As it is due to the subject line not looking at all relevant and these
-Maxim PMIC drivers generating an awful lot of resends this is the first
-time I actually looked at this enough to notice there's any regulator
-code, I suspect I've either deleted older versions unread or scanned
-the commit message and not seen that there was a regulator change.  I
-only saw it at all because it was mentioned to me on IRC and a copy
-forwarded on to me.
-
-> @@ -464,15 +449,15 @@ static int max8997_restore(struct device *dev)
->  	int i;
+On Thursday 16 June 2016 06:52 AM, Shawn Lin wrote:
+> This patch to add a generic PHY driver for rockchip PCIe PHY.
+> Access the PHY via registers provided by GRF (general register
+> files) module.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/phy/Kconfig             |   7 +
+>  drivers/phy/Makefile            |   1 +
+>  drivers/phy/phy-rockchip-pcie.c | 378 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 386 insertions(+)
+>  create mode 100644 drivers/phy/phy-rockchip-pcie.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index b869b98..d4fc293 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -361,6 +361,13 @@ config PHY_ROCKCHIP_DP
+>  	help
+>  	  Enable this to support the Rockchip Display Port PHY.
 >  
->  	for (i = 0; i < ARRAY_SIZE(max8997_dumpaddr_pmic); i++)
-> -		max8997_write_reg(i2c, max8997_dumpaddr_pmic[i],
-> +		regmap_write(max8997->regmap, max8997_dumpaddr_pmic[i],
->  				max8997->reg_dump[i]);
->  
+> +config PHY_ROCKCHIP_PCIE
+> +	tristate "Rockchip PCIe PHY Driver"
+> +	depends on ARCH_ROCKCHIP && OF
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the Rockchip PCIe PHY.
+> +
+>  config PHY_ST_SPEAR1310_MIPHY
+>  	tristate "ST SPEAR1310-MIPHY driver"
+>  	select GENERIC_PHY
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 9c3e73c..725e55d 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -39,6 +39,7 @@ obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+>  obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
+>  obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
+>  obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
+> +obj-$(CONFIG_PHY_ROCKCHIP_PCIE) += phy-rockchip-pcie.o
+>  obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
+>  obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+>  obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
+> diff --git a/drivers/phy/phy-rockchip-pcie.c b/drivers/phy/phy-rockchip-pcie.c
+> new file mode 100644
+> index 0000000..bc6cd17
+> --- /dev/null
+> +++ b/drivers/phy/phy-rockchip-pcie.c
+> @@ -0,0 +1,378 @@
+> +/*
+> + * Rockchip PCIe PHY driver
+> + *
+> + * Copyright (C) 2016 Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> + * Copyright (C) 2016 ROCKCHIP, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +
+> +/*
+> + * The higher 16-bit of this register is used for write protection
+> + * only if BIT(x + 16) set to 1 the BIT(x) can be written.
+> + */
+> +#define HIWORD_UPDATE(val, mask, shift) \
+> +		((val) << (shift) | (mask) << ((shift) + 16))
+> +
+> +#define PHY_MAX_LANE_NUM      4
+> +#define PHY_CFG_DATA_SHIFT    7
+> +#define PHY_CFG_ADDR_SHIFT    1
+> +#define PHY_CFG_DATA_MASK     0xf
+> +#define PHY_CFG_ADDR_MASK     0x3f
+> +#define PHY_CFG_RD_MASK       0x3ff
+> +#define PHY_CFG_WR_ENABLE     1
+> +#define PHY_CFG_WR_DISABLE    1
+> +#define PHY_CFG_WR_SHIFT      0
+> +#define PHY_CFG_WR_MASK       1
+> +#define PHY_CFG_PLL_LOCK      0x10
+> +#define PHY_CFG_CLK_TEST      0x10
+> +#define PHY_CFG_CLK_SCC       0x12
+> +#define PHY_CFG_SEPE_RATE     BIT(3)
+> +#define PHY_CFG_PLL_100M      BIT(3)
+> +#define PHY_PLL_LOCKED        BIT(9)
+> +#define PHY_PLL_OUTPUT        BIT(10)
+> +#define PHY_LANE_A_STATUS     0x30
+> +#define PHY_LANE_B_STATUS     0x31
+> +#define PHY_LANE_C_STATUS     0x32
+> +#define PHY_LANE_D_STATUS     0x33
+> +#define PHY_LANE_RX_DET_SHIFT 11
+> +#define PHY_LANE_RX_DET_TH    0x1
+> +#define PHY_LANE_IDLE_OFF     0x1
+> +#define PHY_LANE_IDLE_MASK    0x1
+> +#define PHY_LANE_IDLE_A_SHIFT 3
+> +#define PHY_LANE_IDLE_B_SHIFT 4
+> +#define PHY_LANE_IDLE_C_SHIFT 5
+> +#define PHY_LANE_IDLE_D_SHIFT 6
+> +
+> +struct rockchip_pcie_data {
+> +	unsigned int pcie_conf;
+> +	unsigned int pcie_status;
+> +	unsigned int pcie_laneoff;
+> +};
+> +
+> +struct rockchip_pcie_phy {
+> +	struct rockchip_pcie_data *phy_data;
+> +	struct regmap *reg_base;
+> +	struct reset_control *phy_rst;
+> +	struct clk *clk_pciephy_ref;
+> +};
+> +
+> +static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
+> +			      u32 addr, u32 data)
+> +{
+> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+> +		     HIWORD_UPDATE(data,
+> +				   PHY_CFG_DATA_MASK,
+> +				   PHY_CFG_DATA_SHIFT) |
+> +		     HIWORD_UPDATE(addr,
+> +				   PHY_CFG_ADDR_MASK,
+> +				   PHY_CFG_ADDR_SHIFT));
+> +	udelay(1);
+> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+> +		     HIWORD_UPDATE(PHY_CFG_WR_ENABLE,
+> +				   PHY_CFG_WR_MASK,
+> +				   PHY_CFG_WR_SHIFT));
+> +	udelay(1);
+> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+> +		     HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
+> +				   PHY_CFG_WR_MASK,
+> +				   PHY_CFG_WR_SHIFT));
+> +}
+> +
+> +static inline u32 phy_rd_cfg(struct rockchip_pcie_phy *rk_phy,
+> +			     u32 addr)
+> +{
+> +	u32 val;
+> +
+> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+> +		     HIWORD_UPDATE(addr,
+> +				   PHY_CFG_RD_MASK,
+> +				   PHY_CFG_ADDR_SHIFT));
+> +	regmap_read(rk_phy->reg_base,
+> +		    rk_phy->phy_data->pcie_status,
+> +		    &val);
+> +	return val;
+> +}
+> +
+> +void rockchip_pcie_phy_laneoff(struct phy *phy)
+> +{
+> +	u32 status;
+> +	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
+> +	int i;
+> +
+> +	for (i = 0; i < PHY_MAX_LANE_NUM; i++) {
+> +		status = phy_rd_cfg(rk_phy, PHY_LANE_A_STATUS + i);
+> +		if (!((status >> PHY_LANE_RX_DET_SHIFT) &
+> +		       PHY_LANE_RX_DET_TH))
+> +			pr_debug("lane %d is used\n", i);
+> +		else
+> +			regmap_write(rk_phy->reg_base,
+> +				     rk_phy->phy_data->pcie_laneoff,
+> +				     HIWORD_UPDATE(PHY_LANE_IDLE_OFF,
+> +						   PHY_LANE_IDLE_MASK,
+> +						   PHY_LANE_IDLE_A_SHIFT + i));
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(rockchip_pcie_phy_laneoff);
 
-Looks like a conversion to regcache is also useful but that can be done
-as a followup.
+Er.. don't use export symbols from phy driver. I think it would be nice if you
+can model the driver in such a way that the PCIe driver can control individual
+phy's.
 
-> @@ -257,15 +258,14 @@ static int max8997_get_enable_register(struct regulator_dev *rdev,
->  static int max8997_reg_is_enabled(struct regulator_dev *rdev)
->  {
->  	struct max8997_data *max8997 = rdev_get_drvdata(rdev);
-> -	struct i2c_client *i2c = max8997->iodev->i2c;
->  	int ret, reg, mask, pattern;
-> -	u8 val;
-> +	unsigned int val;
->  
->  	ret = max8997_get_enable_register(rdev, &reg, &mask, &pattern);
->  	if (ret)
->  		return ret;
->  
-> -	ret = max8997_read_reg(i2c, reg, &val);
-> +	ret = regmap_read(max8997->iodev->regmap, reg, &val);
->  	if (ret)
->  		return ret;
->  
-
-A proper regmap conversion of this driver would be to convert the
-driver to use the core regmap operations and remove all the driver
-specific code.  It's a step in the right direction but it's making a
-bunch of code that's obviously problematic so it's hard to get
-enthusiastic.  
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---rUztinBX/EQDJOOk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXY/QpAAoJECTWi3JdVIfQS8oIAIWyNG8L5BMcQ8vAOFQbbOo/
-ieB8e00FZLsG9ZaHLdT7ZL0ZhHAPjolUYzIW0lrgHuvSyX/vGjy25EIa/cGbeQ6M
-KSHtHVJRjiEPCO8WtKDZmml1niRLM8xpGne/D9ZzUTeRU0K/C2TbQSAdESkjyQ/L
-IRdyw8UEN2eYu4OQ9ZawBdrxUru4H5tU5AqCpcXe0v2P4Tv74l9n7vYuTEr0xz9/
-orfU5z8jU/6RDqXa72p+vqPHTKucLhM3KxF4I8MT1vAwDCyPbtGyQRVOJQ8RLOgp
-72S4A4X+1xKJsJUuUU4sBQ0cKs36982x/o4xhr6gtu+/LZQbi0+aJwNcIkER58E=
-=1Ep9
------END PGP SIGNATURE-----
-
---rUztinBX/EQDJOOk--
+Thanks
+Kishon
