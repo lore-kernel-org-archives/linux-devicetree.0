@@ -1,88 +1,54 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: dts: juno: add coresight support
-Date: Fri, 17 Jun 2016 16:33:53 +0100
-Message-ID: <57641861.7040408@arm.com>
-References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
- <1465228765-14038-2-git-send-email-sudeep.holla@arm.com>
- <CANLsYkyWhknAb9QeGGjM2Et0+VUVjz7W2xyUJGstxfNc2bC20Q@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 0/11] Changes to support 150 MHz eMMC on rk3399
+Date: Fri, 17 Jun 2016 08:37:15 -0700
+Message-ID: <CAD=FV=XK=YTyj=yfZ2bXq-W2OeEFi+h3X0SypXmLqVaEmNf5bQ@mail.gmail.com>
+References: <1465859076-4868-1-git-send-email-dianders@chromium.org> <5763EF68.1040307@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANLsYkyWhknAb9QeGGjM2Et0+VUVjz7W2xyUJGstxfNc2bC20Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <5763EF68.1040307@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Ziyuan Xu <xzy.xu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Adrian Hunter <adrian.hunter@intel.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Xing Zheng <zhengxing@rock-chips.com>, Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Xu Jianqun <jay.xu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, soren.brinkmann@xilinx.com, linux-kernel@vg
 List-Id: devicetree@vger.kernel.org
 
+Kishon,
 
-
-On 17/06/16 16:29, Mathieu Poirier wrote:
-> On 6 June 2016 at 09:59, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> Most of the debug-related components on Juno are located in the coreSight
->> subsystem while others are located in the Cortex-Axx clusters, the SCP
->> subsystem, and in the main system.
->>
->> Each core in the two processor clusters contain an Embedded Trace
->> Macrocell(ETM) which generates real-time trace information that trace
->> tools can use and an ATB trace output that is sent to a funnel before
->> going to the CoreSight subsystem.
->>
->> The trace output signals combine with two trace expansions using another
->> funnel and fed into the Embedded Trace FIFO(ETF0).
->>
->> The output trace data stream of the funnel is then replicated before it
->> is sent to either the:
->> - Trace Port Interface Unit(TPIU), that sends it out using the trace port.
->> - ETR that can write the trace data to memory located in the application
->>    memory space
->>
->> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
->> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>   arch/arm64/boot/dts/arm/juno-base.dtsi | 296 +++++++++++++++++++++++++++++++++
->>   arch/arm64/boot/dts/arm/juno-r1.dts    |  24 +++
->>   arch/arm64/boot/dts/arm/juno-r2.dts    |  24 +++
->>   arch/arm64/boot/dts/arm/juno.dts       |  24 +++
->>   4 files changed, 368 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
->> index dee2386d3b9b..90a8710f7032 100644
->> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
->> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-
-[...]
-
->> +
->> +       coresight-replicator {
->> +               /* non-configurable replicators don't show up on the
->> +                * AMBA bus.  As such no need to add "arm,primecell".
->> +                */
+On Fri, Jun 17, 2016 at 5:39 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi,
 >
-> Please use kernel documentation style.
->
-
-Ah, that's copy paste from arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts ;)
-
-
-[...]
-
+> On Tuesday 14 June 2016 04:34 AM, Douglas Anderson wrote:
+>> The theme of this series of patches is to try to allow running the eMMC
+>> at 150 MHz on the rk3399 SoC, though the changes should still be correct
+>> and have merit on their own.  The motivation for running at 150 MHz is
+>> that doing so improves signal integrity and (with some eMMC devices)
+>> doesn't affect throughput.
 >>
+>> These patches have been structured to keep things as separate as
+>> possible, but nevertheless there are still some dependencies between
+>> patches.  It probably makes the most sense for all of the non-device
+>> tree patches to go through a single tree.  If others agree, perhaps the
+>> most sane would be to get Acks from PHY maintainers and then to land the
+>> patches in the MMC tree.  Device tree patches should be able to be
+>> landed separately and the worst what would happen is a warning in the
+>> kernel log if you have the code without the device tree.
+>>
+>> The code patches are based on Ulf's mmc-next, then 4 patches that are
+>> outstanding / ready to land.  Specifically:
+>> - https://patchwork.kernel.org/patch/9086501/
+>>   phy: rockchip-emmc: give DLL some extra time to be ready
+>> - https://patchwork.kernel.org/patch/9093681/
+>>   phy: rockchip-emmc: configure frequency range and drive impedance
+>> - https://patchwork.kernel.org/patch/9086511/
+>>   phy: rockchip-emmc: configure default output tap delay
+>> - https://patchwork.kernel.org/patch/9086531/
+>>   phy: rockchip-emmc: reindent the register definitions
 >
-> With the above change:
->
-> Acked-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
+> Do you want all these "phy: rockchip-emmc:" along with the patch in this series
+> to go in MMC tree? Or I can take all the phy part in my linux-phy -next branch?
 
-Thanks.
+If Ulf is amenable, I was hoping that these could all go through the
+MMC tree with your blessing.  ...then "dts" patches would go through
+Heiko's tree.
 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Doug
