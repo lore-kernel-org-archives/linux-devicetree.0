@@ -1,29 +1,40 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [alsa-devel] [PATCH RFC 6/6] ASoC: samsung: Add DT bindings
- documentation for TM2 sound subsystem
-Date: Fri, 17 Jun 2016 13:08:36 +0200
-Message-ID: <5763DA34.20009@samsung.com>
-References: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
- <1465815160-28504-7-git-send-email-s.nawrocki@samsung.com>
- <57612295.7070203@metafoo.de> <5762D652.5030507@samsung.com>
- <5762D7BA.7050400@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5762D7BA.7050400@metafoo.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: broonie@kernel.org, robh@kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, inki.dae@samsung.com, beomho.seo@samsung.com, ideal.song@samsung.com
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: am335x-bone-common: use stdout-path in Beaglebone boards.
+Date: Fri, 17 Jun 2016 13:10:10 +0200
+Message-ID: <1466161810-17342-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2016 06:45 PM, Lars-Peter Clausen wrote:
-> You can still handle the clocks in the machine driver, but they should be
-> specified in the node of the CODEC to accurately represent the hardware.
-> 
-> The simple-card driver e.g. does this, requests the clock of the CODEC and
-> uses it to configure the CODEC input frequency based on it with
-> snd_soc_dai_set_sysclk().
+This commit adds the stdout-path propety in /chosen for all Beaglebone
+boards.
 
-I was assuming parsing the CODEC node was not preferred. Thanks for the
-clarification, I have reworked the machine driver to use the CODEC node.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index 0cc150b..b6c4010 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -18,6 +18,10 @@
+ 		reg = <0x80000000 0x10000000>; /* 256 MB */
+ 	};
+ 
++	chosen {
++		stdout-path = &uart0;
++	};
++
+ 	leds {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&user_leds_s0>;
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
