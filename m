@@ -1,184 +1,73 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V3 2/4] bus: Add support for Tegra ACONNECT
-Date: Fri, 17 Jun 2016 13:40:32 +0100
-Message-ID: <1466167234-8288-3-git-send-email-jonathanh@nvidia.com>
-References: <1466167234-8288-1-git-send-email-jonathanh@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466167234-8288-1-git-send-email-jonathanh@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v3] arm64: dts: r8a7795: Add CAN FD support
+Date: Fri, 17 Jun 2016 13:35:43 +0100
+Message-ID: <1466166943-17670-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+References: <1456906550-4849-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1456906550-4849-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, chris.paterson2@renesas.com, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a bus driver for the Tegra ACONNECT which is used to interface to
-various devices within the Audio Processing Engine (APE). The purpose
-of the bus driver is to register child devices that are accessed via
-the ACONNECT bus and through the device parent child relationship,
-ensure that the appropriate power domain and clocks are enabled for
-the ACONNECT when any of the child devices are active. Hence, the
-ACONNECT driver simply enables runtime-pm for the ACONNECT device
-so that when a child device is resumed, it will enable the power-domain
-and clocks associated with the ACONNECT.
+Adds CAN FD controller node for r8a7795.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Note: CAN FD controller register base address specified in R-Car Gen3
+Hardware User Manual v0.5E is incorrect. The correct address is:
+
+CAN FD - 0xe66c0000
+
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 ---
- drivers/bus/Kconfig          |   9 ++++
- drivers/bus/Makefile         |   1 +
- drivers/bus/tegra-aconnect.c | 113 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 123 insertions(+)
- create mode 100644 drivers/bus/tegra-aconnect.c
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index c5a7de9bc783..4ed7d26e0d19 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -132,6 +132,15 @@ config SUNXI_RSB
- 	  with various RSB based devices, such as AXP223, AXP8XX PMICs,
- 	  and AC100/AC200 ICs.
+Note:
+Bindings already Acked-by: Rob H on driver patch set
+(https://www.mail-archive.com/netdev@vger.kernel.org/msg102789.html)
+
+Changes since v2:
+	Rebased to Simon's latest tag:renesas-devel-20160616-v4.7-rc3
+
+Changes since v1:
+	As suggested by Sergei, Simon - changed node name from canfd@ to can@
+
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index fad6dd8..b902356 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -583,6 +583,30 @@
+ 			status = "disabled";
+ 		};
  
-+config TEGRA_ACONNECT
-+	tristate "Tegra ACONNECT Bus Driver"
-+	depends on ARCH_TEGRA_210_SOC
-+	depends on OF && PM
-+	select PM_CLK
-+	help
-+	  Driver for the Tegra ACONNECT bus which is used to interface with
-+	  the devices inside the Audio Processing Engine (APE) for Tegra210.
++		canfd: can@e66c0000 {
++			compatible = "renesas,r8a7795-canfd",
++				     "renesas,rcar-gen3-canfd";
++			reg = <0 0xe66c0000 0 0x8000>;
++			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				   <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 914>,
++			       <&cpg CPG_CORE R8A7795_CLK_CANFD>,
++			       <&can_clk>;
++			clock-names = "fck", "canfd", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A7795_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++			status = "disabled";
 +
- config UNIPHIER_SYSTEM_BUS
- 	tristate "UniPhier System Bus driver"
- 	depends on ARCH_UNIPHIER && OF
-diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-index ccff007ee7e8..ac84cc4348e3 100644
---- a/drivers/bus/Makefile
-+++ b/drivers/bus/Makefile
-@@ -17,5 +17,6 @@ obj-$(CONFIG_OMAP_INTERCONNECT)	+= omap_l3_smx.o omap_l3_noc.o
- obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
- obj-$(CONFIG_SUNXI_RSB)		+= sunxi-rsb.o
- obj-$(CONFIG_SIMPLE_PM_BUS)	+= simple-pm-bus.o
-+obj-$(CONFIG_TEGRA_ACONNECT)	+= tegra-aconnect.o
- obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)	+= uniphier-system-bus.o
- obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o
-diff --git a/drivers/bus/tegra-aconnect.c b/drivers/bus/tegra-aconnect.c
-new file mode 100644
-index 000000000000..bad9e39dc8b3
---- /dev/null
-+++ b/drivers/bus/tegra-aconnect.c
-@@ -0,0 +1,113 @@
-+/*
-+ * Tegra ACONNECT Bus Driver
-+ *
-+ * Copyright (C) 2016, NVIDIA CORPORATION.  All rights reserved.
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ */
++			channel0 {
++				status = "disabled";
++			};
 +
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_clock.h>
-+#include <linux/pm_runtime.h>
++			channel1 {
++				status = "disabled";
++			};
++		};
 +
-+static int tegra_aconnect_add_clock(struct device *dev, char *name)
-+{
-+	struct clk *clk;
-+	int ret;
-+
-+	clk = clk_get(dev, name);
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "%s clock not found\n", name);
-+		return PTR_ERR(clk);
-+	}
-+
-+	ret = pm_clk_add_clk(dev, clk);
-+	if (ret)
-+		clk_put(clk);
-+
-+	return ret;
-+}
-+
-+static int tegra_aconnect_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	if (!pdev->dev.of_node)
-+		return -EINVAL;
-+
-+	ret = pm_clk_create(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = tegra_aconnect_add_clock(&pdev->dev, "ape");
-+	if (ret)
-+		goto clk_destroy;
-+
-+	ret = tegra_aconnect_add_clock(&pdev->dev, "apb2ape");
-+	if (ret)
-+		goto clk_destroy;
-+
-+	pm_runtime_enable(&pdev->dev);
-+
-+	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-+
-+	dev_info(&pdev->dev, "Tegra ACONNECT bus registered\n");
-+
-+	return 0;
-+
-+clk_destroy:
-+	pm_clk_destroy(&pdev->dev);
-+
-+	return ret;
-+}
-+
-+static int tegra_aconnect_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+
-+	pm_clk_destroy(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static int tegra_aconnect_runtime_resume(struct device *dev)
-+{
-+	return pm_clk_resume(dev);
-+}
-+
-+static int tegra_aconnect_runtime_suspend(struct device *dev)
-+{
-+	return pm_clk_suspend(dev);
-+}
-+
-+static const struct dev_pm_ops tegra_aconnect_pm_ops = {
-+	SET_RUNTIME_PM_OPS(tegra_aconnect_runtime_suspend,
-+			   tegra_aconnect_runtime_resume, NULL)
-+};
-+
-+static const struct of_device_id tegra_aconnect_of_match[] = {
-+	{ .compatible = "nvidia,tegra210-aconnect", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, tegra_aconnect_of_match);
-+
-+static struct platform_driver tegra_aconnect_driver = {
-+	.probe = tegra_aconnect_probe,
-+	.remove = tegra_aconnect_remove,
-+	.driver = {
-+		.name = "tegra-aconnect",
-+		.of_match_table = tegra_aconnect_of_match,
-+		.pm = &tegra_aconnect_pm_ops,
-+	},
-+};
-+
-+module_platform_driver(tegra_aconnect_driver);
-+
-+MODULE_DESCRIPTION("Tegra ACONNECT Bus Driver");
-+MODULE_AUTHOR("Jon Hunter <jonathanh@nvidia.com>");
-+MODULE_LICENSE("GPL v2");
+ 		hscif0: serial@e6540000 {
+ 			compatible = "renesas,hscif-r8a7795",
+ 				     "renesas,rcar-gen3-hscif",
 -- 
-2.1.4
+1.9.1
