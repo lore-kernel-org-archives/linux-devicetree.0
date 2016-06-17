@@ -1,49 +1,178 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/3] dt-bindings: clock: Update bindings for MDM9615 GCC and LCC
-Date: Fri, 17 Jun 2016 12:04:34 +0200
-Message-ID: <1466157875-14428-3-git-send-email-narmstrong@baylibre.com>
-References: <1466157875-14428-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466157875-14428-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 2/2] dt-bindings: pinctrl: Add MDM9615 TLMM bindings
+Date: Fri, 17 Jun 2016 12:15:35 +0200
+Message-ID: <1466158535-17962-3-git-send-email-narmstrong@baylibre.com>
+References: <1466158535-17962-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466158535-17962-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, andy.gross@linaro.org, sricharan@codeaurora.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/clock/qcom,gcc.txt | 1 +
- Documentation/devicetree/bindings/clock/qcom,lcc.txt | 1 +
- 2 files changed, 2 insertions(+)
+ .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 152 +++++++++++++++++++++
+ 1 file changed, 152 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-index 9a60fde..869a2f0 100644
---- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-@@ -15,6 +15,7 @@ Required properties :
- 			"qcom,gcc-msm8974pro"
- 			"qcom,gcc-msm8974pro-ac"
- 			"qcom,gcc-msm8996"
-+			"qcom,gcc-mdm9615"
- 
- - reg : shall contain base register location and length
- - #clock-cells : shall contain 1
-diff --git a/Documentation/devicetree/bindings/clock/qcom,lcc.txt b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
-index dd755be..a3c78aa 100644
---- a/Documentation/devicetree/bindings/clock/qcom,lcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
-@@ -7,6 +7,7 @@ Required properties :
- 			"qcom,lcc-msm8960"
- 			"qcom,lcc-apq8064"
- 			"qcom,lcc-ipq8064"
-+			"qcom,lcc-mdm9615"
- 
- - reg : shall contain base register location and length
- - #clock-cells : shall contain 1
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
+new file mode 100644
+index 0000000..1b52f01
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
+@@ -0,0 +1,152 @@
++Qualcomm MDM9615 TLMM block
++
++This binding describes the Top Level Mode Multiplexer block found in the
++MDM9615 platform.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be "qcom,mdm9615-pinctrl"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of the TLMM register space.
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the TLMM summary IRQ.
++
++- interrupt-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as an interrupt controller
++
++- #interrupt-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/interrupt-controller/irq.h>
++
++- gpio-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as a gpio controller
++
++- #gpio-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/gpio/gpio.h>
++
++Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
++a general description of GPIO and interrupt bindings.
++
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
++
++The pin configuration nodes act as a container for an arbitrary number of
++subnodes. Each of these subnodes represents some desired configuration for a
++pin, a group, or a list of pins or groups. This configuration can include the
++mux function to select on those pin(s)/group(s), and various pin configuration
++parameters, such as pull-up, drive strength, etc.
++
++
++PIN CONFIGURATION NODES:
++
++The name of each subnode is not important; all subnodes should be enumerated
++and processed purely based on their content.
++
++Each subnode only affects those parameters that are explicitly listed. In
++other words, a subnode that lists a mux function but no pin configuration
++parameters implies no information about any pin configuration parameters.
++Similarly, a pin subnode that describes a pullup parameter implies no
++information about e.g. the mux function.
++
++
++The following generic properties as defined in pinctrl-bindings.txt are valid
++to specify in a pin configuration subnode:
++
++- pins:
++	Usage: required
++	Value type: <string-array>
++	Definition: List of gpio pins affected by the properties specified in
++		    this subnode.  Valid pins are:
++		    gpio0-gpio87
++
++- function:
++	Usage: required
++	Value type: <string>
++	Definition: Specify the alternative function to be configured for the
++		    specified pins.
++		    Valid values are:
++		    gpio, gsbi2_i2c, gsbi3, gsbi4, gsbi5_i2c, gsbi5_uart,
++		    sdc2, ebi2_lcdc, ps_hold, prim_audio, sec_audio,
++		    cdc_mclk
++
++- bias-disable:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configued as no pull.
++
++- bias-pull-down:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configued as pull down.
++
++- bias-pull-up:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configued as pull up.
++
++- output-high:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    high.
++
++- output-low:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    low.
++
++- drive-strength:
++	Usage: optional
++	Value type: <u32>
++	Definition: Selects the drive strength for the specified pins, in mA.
++		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
++
++Example:
++
++	msmgpio: pinctrl@800000 {
++		compatible = "qcom,mdm9615-pinctrl";
++		reg = <0x800000 0x4000>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <0 16 0x4>;
++
++		gsbi8_uart: gsbi8-uart {
++			mux {
++				pins = "gpio34", "gpio35";
++				function = "gsbi8";
++			};
++
++			tx {
++				pins = "gpio34";
++				drive-strength = <4>;
++				bias-disable;
++			};
++
++			rx {
++				pins = "gpio35";
++				drive-strength = <2>;
++				bias-pull-up;
++			};
++		};
++	};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
