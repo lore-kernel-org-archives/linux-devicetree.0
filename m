@@ -1,74 +1,115 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports while USB
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports while USB
  suspend
-Date: Fri, 17 Jun 2016 13:44:22 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A24364101650C3632@penmbx01>
+Date: Fri, 17 Jun 2016 15:54:48 +0200
+Message-ID: <20160617135448.GI5809@piout.net>
 References: <1465359311-14544-1-git-send-email-wenyou.yang@atmel.com>
  <1465359311-14544-2-git-send-email-wenyou.yang@atmel.com>
- <20160608202651.GA23604@rob-hp-laptop> <20160608203810.GF2466@piout.net>
+ <20160608202651.GA23604@rob-hp-laptop>
+ <20160608203810.GF2466@piout.net>
+ <B256D81BAE5131468A838E5D7A24364101650C3632@penmbx01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160608203810.GF2466@piout.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <B256D81BAE5131468A838E5D7A24364101650C3632@penmbx01>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh@kernel.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+To: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Cc: Rob Herring <robh@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxleGFuZHJlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFs
-ZXhhbmRyZSBCZWxsb25pIFttYWlsdG86YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMu
-Y29tXQ0KPiBTZW50OiAyMDE2xOo21MI5yNUgNDozOA0KPiBUbzogUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4NCj4gQ2M6IFlhbmcsIFdlbnlvdSA8V2VueW91LllhbmdAYXRtZWwuY29tPjsg
-QWxhbiBTdGVybg0KPiA8c3Rlcm5Acm93bGFuZC5oYXJ2YXJkLmVkdT47IEdyZWcgS3JvYWgtSGFy
-dG1hbg0KPiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBGZXJyZSwgTmljb2xhcyA8Tmlj
-b2xhcy5GRVJSRUBhdG1lbC5jb20+Ow0KPiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+
-OyBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+OyBJYW4NCj4gQ2FtcGJlbGwgPGlqYytk
-ZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5v
-cmc+Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgt
-dXNiQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvMl0gdXNiOiBv
-aGNpLWF0OTE6IEZvcmNpYmx5IHN1c3BlbmQgcG9ydHMgd2hpbGUgVVNCDQo+IHN1c3BlbmQNCj4g
-DQo+IE9uIDA4LzA2LzIwMTYgYXQgMTU6MjY6NTEgLTA1MDAsIFJvYiBIZXJyaW5nIHdyb3RlIDoN
-Cj4gPiBPbiBXZWQsIEp1biAwOCwgMjAxNiBhdCAxMjoxNToxMFBNICswODAwLCBXZW55b3UgWWFu
-ZyB3cm90ZToNCj4gPiA+IEluIG9yZGVyIHRvIHRoZSBzYXZlIHBvd2VyIGNvbnN1bXB0aW9uLCBh
-cyBhIHdvcmthcm91bmQsIHN1c3BlbmQNCj4gPiA+IGZvcmNpYmx5IHRoZSBVU0IgUE9SVEEvQi9D
-IHZpYSBzZXQgdGhlIFNVU1BFTkRfQS9CL0MgYml0cyBvZiBPSENJDQo+ID4gPiBJbnRlcnJ1cHQg
-Q29uZmlndXJhdGlvbiBSZWdpc3RlciBpbiB0aGUgU0ZScyB3aGlsZSBPSENJIFVTQiBzdXNwZW5k
-Lg0KPiA+ID4NCj4gPiA+IFRoaXMgc3VzcGVuZCBvcGVyYXRpb24gbXVzdCBiZSBkb25lIGJlZm9y
-ZSB0aGUgVVNCIGNsb2NrIGlzDQo+ID4gPiBkaXNhYmxlZCwgcmVzdW1lIGFmdGVyIHRoZSBVU0Ig
-Y2xvY2sgaXMgZW5hYmxlZC4NCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFu
-ZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPg0KPiA+ID4gLS0tDQo+ID4gPg0KPiA+ID4gQ2hhbmdl
-cyBpbiB2MzoNCj4gPiA+ICAtIENoYW5nZSB0aGUgY29tcGF0aWJsZSBkZXNjcmlwdGlvbiBmb3Ig
-bW9yZSBwcmVjaXNlLg0KPiA+ID4NCj4gPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gPiAgLSBBZGQg
-Y29tcGF0aWJsZSB0byBzdXBwb3J0IGZvcmNpYmx5IHN1c3BlbmQgdGhlIHBvcnRzLg0KPiA+ID4g
-IC0gQWRkIHNvYy9hdDkxL2F0OTFfc2ZyLmggdG8gYWNjb21tb2RhdGUgdGhlIGRlZmluZXMuDQo+
-ID4gPiAgLSBBZGQgZXJyb3IgY2hlY2tpbmcgZm9yIC5zZnJfcmVnbWFwLg0KPiA+ID4gIC0gUmVt
-b3ZlIHVubmVjZXNzYXJ5IHJlZ21hcF9yZWFkKCkgc3RhdGVtZW50Lg0KPiA+ID4NCj4gPiA+ICAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvYXRtZWwtdXNiLnR4dCAgICAgICAgICB8ICA2ICst
-DQo+ID4gPiAgZHJpdmVycy91c2IvaG9zdC9vaGNpLWF0OTEuYyAgICAgICAgICAgICAgICAgICAg
-ICAgfCA4MCArKysrKysrKysrKysrKysrKysrKystDQo+ID4gPiAgaW5jbHVkZS9zb2MvYXQ5MS9h
-dDkxX3Nmci5oICAgICAgICAgICAgICAgICAgICAgICAgfCAyOSArKysrKysrKw0KPiA+ID4gIDMg
-ZmlsZXMgY2hhbmdlZCwgMTEyIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pICBjcmVhdGUg
-bW9kZQ0KPiA+ID4gMTAwNjQ0IGluY2x1ZGUvc29jL2F0OTEvYXQ5MV9zZnIuaA0KPiA+ID4NCj4g
-PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2F0
-bWVsLXVzYi50eHQNCj4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vz
-Yi9hdG1lbC11c2IudHh0DQo+ID4gPiBpbmRleCA1ODgzYjczLi44ODhkZWFhIDEwMDY0NA0KPiA+
-ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9hdG1lbC11c2Iu
-dHh0DQo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2F0
-bWVsLXVzYi50eHQNCj4gPiA+IEBAIC0zLDggKzMsMTAgQEAgQXRtZWwgU09DIFVTQiBjb250cm9s
-bGVycyAgT0hDSQ0KPiA+ID4NCj4gPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ID4gLSAt
-IGNvbXBhdGlibGU6IFNob3VsZCBiZSAiYXRtZWwsYXQ5MXJtOTIwMC1vaGNpIiBmb3IgVVNCIGNv
-bnRyb2xsZXJzDQo+ID4gPiAtICAgdXNlZCBpbiBob3N0IG1vZGUuDQo+ID4gPiArIC0gY29tcGF0
-aWJsZTogU2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nDQo+ID4gPiArCSAgICAgICAiYXRt
-ZWwsYXQ5MXJtOTIwMC1vaGNpIiBmb3IgVVNCIGNvbnRyb2xsZXJzIHVzZWQgaW4gaG9zdCBtb2Rl
-Lg0KPiA+ID4gKwkgICAgICAgImF0bWVsLHNhbWE1ZDItb2hjaSIgZm9yIFVTQiBjb250cm9sbGVy
-cyB1c2VkIGluIGhvc3QgbW9kZQ0KPiA+ID4gKwkgICAgICAgb24gU0FNQTVEMiB3aGljaCBjYW4g
-Zm9yY2UgdG8gc3VzcGVuZC4NCj4gPg0KPiA+IEd1ZXNzIEkgd2Fzbid0IGNsZWFyIGVub3VnaCBi
-ZWZvcmUuIERyb3AgIndoaWNoIGNhbiBmb3JjZSB0byBzdXNwZW5kIi4NCj4gPg0KPiANCj4gV2Vs
-bCwgbXkgcG9pbnQgaXMgdGhhdCB3ZSBkb24ndCBuZWVkIGEgbmV3IGNvbXBhdGlibGUgYW55d2F5
-Lg0KDQpDb3VsZCB5b3UgZ2l2ZSBzb21lIGFkdmljZT8uDQoNCj4gDQo+IC0tDQo+IEFsZXhhbmRy
-ZSBCZWxsb25pLCBGcmVlIEVsZWN0cm9ucw0KPiBFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBB
-bmRyb2lkIGVuZ2luZWVyaW5nIGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20NCg0KDQpCZXN0IFJl
-Z2FyZHMsDQpXZW55b3UgWWFuZw0K
+On 17/06/2016 at 13:44:22 +0000, Yang, Wenyou wrote :
+> Hi Alexandre,
+>=20
+> > -----Original Message-----
+> > From: Alexandre Belloni [mailto:alexandre.belloni@free-electrons.co=
+m]
+> > Sent: 2016=E5=B9=B46=E6=9C=889=E6=97=A5 4:38
+> > To: Rob Herring <robh@kernel.org>
+> > Cc: Yang, Wenyou <Wenyou.Yang@atmel.com>; Alan Stern
+> > <stern@rowland.harvard.edu>; Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org>; Ferre, Nicolas <Nicolas.FERRE@atmel.c=
+om>;
+> > Pawel Moll <pawel.moll@arm.com>; Mark Brown <broonie@kernel.org>; I=
+an
+> > Campbell <ijc+devicetree@hellion.org.uk>; Kumar Gala <galak@codeaur=
+ora.org>;
+> > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm=
+-
+> > kernel@lists.infradead.org; linux-usb@vger.kernel.org
+> > Subject: Re: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports =
+while USB
+> > suspend
+> >=20
+> > On 08/06/2016 at 15:26:51 -0500, Rob Herring wrote :
+> > > On Wed, Jun 08, 2016 at 12:15:10PM +0800, Wenyou Yang wrote:
+> > > > In order to the save power consumption, as a workaround, suspen=
+d
+> > > > forcibly the USB PORTA/B/C via set the SUSPEND_A/B/C bits of OH=
+CI
+> > > > Interrupt Configuration Register in the SFRs while OHCI USB sus=
+pend.
+> > > >
+> > > > This suspend operation must be done before the USB clock is
+> > > > disabled, resume after the USB clock is enabled.
+> > > >
+> > > > Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+> > > > ---
+> > > >
+> > > > Changes in v3:
+> > > >  - Change the compatible description for more precise.
+> > > >
+> > > > Changes in v2:
+> > > >  - Add compatible to support forcibly suspend the ports.
+> > > >  - Add soc/at91/at91_sfr.h to accommodate the defines.
+> > > >  - Add error checking for .sfr_regmap.
+> > > >  - Remove unnecessary regmap_read() statement.
+> > > >
+> > > >  .../devicetree/bindings/usb/atmel-usb.txt          |  6 +-
+> > > >  drivers/usb/host/ohci-at91.c                       | 80 ++++++=
++++++++++++++++-
+> > > >  include/soc/at91/at91_sfr.h                        | 29 ++++++=
+++
+> > > >  3 files changed, 112 insertions(+), 3 deletions(-)  create mod=
+e
+> > > > 100644 include/soc/at91/at91_sfr.h
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.tx=
+t
+> > > > b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+> > > > index 5883b73..888deaa 100644
+> > > > --- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
+> > > > +++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+> > > > @@ -3,8 +3,10 @@ Atmel SOC USB controllers  OHCI
+> > > >
+> > > >  Required properties:
+> > > > - - compatible: Should be "atmel,at91rm9200-ohci" for USB contr=
+ollers
+> > > > -   used in host mode.
+> > > > + - compatible: Should be one of the following
+> > > > +	       "atmel,at91rm9200-ohci" for USB controllers used in ho=
+st mode.
+> > > > +	       "atmel,sama5d2-ohci" for USB controllers used in host =
+mode
+> > > > +	       on SAMA5D2 which can force to suspend.
+> > >
+> > > Guess I wasn't clear enough before. Drop "which can force to susp=
+end".
+> > >
+> >=20
+> > Well, my point is that we don't need a new compatible anyway.
+>=20
+> Could you give some advice?.
+>=20
+
+Sure, what I mean is that you can try to get the regmap for the SFR in
+every case. Depending on whether you were able to get it, you can decid=
+e
+to call ohci_at91_port_suspend/resume or not (just test for
+sfr_regmap !=3D NULL).
+
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
