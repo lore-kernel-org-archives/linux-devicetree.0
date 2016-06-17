@@ -1,91 +1,233 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC PATCH 03/13] dt-bindings: drm/tegra: Update DPAUX
- documentation
-Date: Fri, 17 Jun 2016 18:13:06 +0200
-Message-ID: <20160617161306.GD27475@ulmo.ba.sec>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <1466165027-17917-4-git-send-email-jonathanh@nvidia.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
+Date: Fri, 17 Jun 2016 18:14:22 +0200
+Message-ID: <576421DE.7080203@gmail.com>
+References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
+ <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
+ <574C5CBF.7060002@gmail.com> <1464683762.14604.59.camel@mtksdaap41>
+ <574DEE40.9010008@gmail.com> <1464775020.11122.40.camel@mtksdaap41>
+ <574FF264.7050209@gmail.com> <1464934356.15175.31.camel@mtksdaap41>
+ <57516774.5080008@gmail.com> <1464956037.16029.8.camel@mtksdaap41>
+ <575181E5.6090603@gmail.com> <5756FD73.3050607@gmail.com>
+ <1465364427.9963.13.camel@mtksdaap41> <5757F762.4020908@gmail.com>
+ <1465388727.21326.8.camel@mtksdaap41> <57583B45.2080504@gmail.com>
+ <1465890268.7191.13.camel@mtksdaap41> <575FD9BA.8040708@gmail.com>
+ <1465906063.20796.20.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NklN7DEeGtkPCoo3"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466165027-17917-4-git-send-email-jonathanh@nvidia.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: David Airlie <airlied@linux.ie>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465906063.20796.20.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Horng-Shyang Liao <hs.liao@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, jassisinghbrar@gmail.com, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 
---NklN7DEeGtkPCoo3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 17, 2016 at 01:03:37PM +0100, Jon Hunter wrote:
-> Update the DPAUX compatibility string information for Tegra124, Tegra132
-> and Tegra210. For Tegra210 an additional clock, 'sor-safe' is also
-> required for DPAUX and so add this clock information as well.
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  .../devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt    | 7 +=
-+++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra=
-20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegr=
-a20-host1x.txt
-> index a3bd8c050c4e..361a472eac4b 100644
-> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host=
-1x.txt
-> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host=
-1x.txt
-> @@ -226,9 +226,9 @@ of the following host1x client modules:
->    - nvidia,dpaux: phandle to a DispayPort AUX interface
-> =20
->  - dpaux: DisplayPort AUX interface
-> -  - compatible: For Tegra124, must contain "nvidia,tegra124-dpaux".  Oth=
-erwise,
-> -    must contain '"nvidia,<chip>-dpaux", "nvidia,tegra124-dpaux"', where
-> -    <chip> is tegra132.
-> +  - compatible : Should contain one of the following:
-> +    - "nvidia,tegra124-dpaux": for Tegra124 and Tegra132
-> +    - "nvidia,tegra210-dpaux": for Tegra210
->    - reg: Physical base address and length of the controller's registers.
->    - interrupts: The interrupt outputs from the controller.
->    - clocks: Must contain an entry for each entry in clock-names.
-> @@ -236,6 +236,7 @@ of the following host1x client modules:
->    - clock-names: Must include the following entries:
->      - dpaux: clock input for the DPAUX hardware
->      - parent: reference clock
-> +    - sor-safe: additional clock input for the DPAUX hardware on Tegra210
+On 14/06/16 14:07, Horng-Shyang Liao wrote:
+> Hi Matthias,
+>
+> On Tue, 2016-06-14 at 12:17 +0200, Matthias Brugger wrote:
+>>
+>> On 14/06/16 09:44, Horng-Shyang Liao wrote:
+>>> Hi Matthias,
+>>>
+>>> On Wed, 2016-06-08 at 17:35 +0200, Matthias Brugger wrote:
+>>>>
+>>>> On 08/06/16 14:25, Horng-Shyang Liao wrote:
+>>>>> Hi Matthias,
+>>>>>
+>>>>> On Wed, 2016-06-08 at 12:45 +0200, Matthias Brugger wrote:
+>>>>>>
+>>>>>> On 08/06/16 07:40, Horng-Shyang Liao wrote:
+>>>>>>> Hi Matthias,
+>>>>>>>
+>>>>>>> On Tue, 2016-06-07 at 18:59 +0200, Matthias Brugger wrote:
+>>>>>>>>
+>>>>>>>> On 03/06/16 15:11, Matthias Brugger wrote:
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>> [...]
+>>>>>>>>
+>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>> +            smp_mb(); /* modify jump before enable thread */
+>>>>>>>>>>>>>>>>>> +        }
+>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>> +        cmdq_thread_writel(thread, task->pa_base +
+>>>>>>>>>>>>>>>>>> task->command_size,
+>>>>>>>>>>>>>>>>>> +                   CMDQ_THR_END_ADDR);
+>>>>>>>>>>>>>>>>>> +        cmdq_thread_resume(thread);
+>>>>>>>>>>>>>>>>>> +    }
+>>>>>>>>>>>>>>>>>> +    list_move_tail(&task->list_entry, &thread->task_busy_list);
+>>>>>>>>>>>>>>>>>> +    spin_unlock_irqrestore(&cmdq->exec_lock, flags);
+>>>>>>>>>>>>>>>>>> +}
+>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>> +static void cmdq_handle_error_done(struct cmdq *cmdq,
+>>>>>>>>>>>>>>>>>> +                   struct cmdq_thread *thread, u32 irq_flag)
+>>>>>>>>>>>>>>>>>> +{
+>>>>>>>>>>>>>>>>>> +    struct cmdq_task *task, *tmp, *curr_task = NULL;
+>>>>>>>>>>>>>>>>>> +    u32 curr_pa;
+>>>>>>>>>>>>>>>>>> +    struct cmdq_cb_data cmdq_cb_data;
+>>>>>>>>>>>>>>>>>> +    bool err;
+>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>> +    if (irq_flag & CMDQ_THR_IRQ_ERROR)
+>>>>>>>>>>>>>>>>>> +        err = true;
+>>>>>>>>>>>>>>>>>> +    else if (irq_flag & CMDQ_THR_IRQ_DONE)
+>>>>>>>>>>>>>>>>>> +        err = false;
+>>>>>>>>>>>>>>>>>> +    else
+>>>>>>>>>>>>>>>>>> +        return;
+>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>> +    curr_pa = cmdq_thread_readl(thread, CMDQ_THR_CURR_ADDR);
+>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>> +    list_for_each_entry_safe(task, tmp, &thread->task_busy_list,
+>>>>>>>>>>>>>>>>>> +                 list_entry) {
+>>>>>>>>>>>>>>>>>> +        if (curr_pa >= task->pa_base &&
+>>>>>>>>>>>>>>>>>> +            curr_pa < (task->pa_base + task->command_size))
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> What are you checking here? It seems as if you make some implcit
+>>>>>>>>>>>>>>>>> assumptions about pa_base and the order of execution of
+>>>>>>>>>>>>>>>>> commands in the
+>>>>>>>>>>>>>>>>> thread. Is it save to do so? Does dma_alloc_coherent give any
+>>>>>>>>>>>>>>>>> guarantees
+>>>>>>>>>>>>>>>>> about dma_handle?
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> 1. Check what is the current running task in this GCE thread.
+>>>>>>>>>>>>>>>> 2. Yes.
+>>>>>>>>>>>>>>>> 3. Yes, CMDQ doesn't use iommu, so physical address is continuous.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Yes, physical addresses might be continous, but AFAIK there is no
+>>>>>>>>>>>>>>> guarantee that the dma_handle address is steadily growing, when
+>>>>>>>>>>>>>>> calling
+>>>>>>>>>>>>>>> dma_alloc_coherent. And if I understand the code correctly, you
+>>>>>>>>>>>>>>> use this
+>>>>>>>>>>>>>>> assumption to decide if the task picked from task_busy_list is
+>>>>>>>>>>>>>>> currently
+>>>>>>>>>>>>>>> executing. So I think this mecanism is not working.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> I don't use dma_handle address, and just use physical addresses.
+>>>>>>>>>>>>>>        From CPU's point of view, tasks are linked by the busy list.
+>>>>>>>>>>>>>>        From GCE's point of view, tasks are linked by the JUMP command.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> In which cases does the HW thread raise an interrupt.
+>>>>>>>>>>>>>>> In case of error. When does CMDQ_THR_IRQ_DONE get raised?
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> GCE will raise interrupt if any task is done or error.
+>>>>>>>>>>>>>> However, GCE is fast, so CPU may get multiple done tasks
+>>>>>>>>>>>>>> when it is running ISR.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> In case of error, that GCE thread will pause and raise interrupt.
+>>>>>>>>>>>>>> So, CPU may get multiple done tasks and one error task.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> I think we should reimplement the ISR mechanism. Can't we just read
+>>>>>>>>>>>>> CURR_IRQ_STATUS and THR_IRQ_STATUS in the handler and leave
+>>>>>>>>>>>>> cmdq_handle_error_done to the thread_fn? You will need to pass
+>>>>>>>>>>>>> information from the handler to thread_fn, but that shouldn't be an
+>>>>>>>>>>>>> issue. AFAIK interrupts are disabled in the handler, so we should stay
+>>>>>>>>>>>>> there as short as possible. Traversing task_busy_list is expensive, so
+>>>>>>>>>>>>> we need to do it in a thread context.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Actually, our initial implementation is similar to your suggestion,
+>>>>>>>>>>>> but display needs CMDQ to return callback function very precisely,
+>>>>>>>>>>>> else display will drop frame.
+>>>>>>>>>>>> For display, CMDQ interrupt will be raised every 16 ~ 17 ms,
+>>>>>>>>>>>> and CMDQ needs to call callback function in ISR.
+>>>>>>>>>>>> If we defer callback to workqueue, the time interval may be larger than
+>>>>>>>>>>>> 32 ms.sometimes.
+>>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> I think the problem is, that you implemented the workqueue as a ordered
+>>>>>>>>>>> workqueue, so there is no parallel processing. I'm still not sure why
+>>>>>>>>>>> you need the workqueue to be ordered. Can you please explain.
+>>>>>>>>>>
+>>>>>>>>>> The order should be kept.
+>>>>>>>>>> Let me use mouse cursor as an example.
+>>>>>>>>>> If task 1 means move mouse cursor to point A, task 2 means point B,
+>>>>>>>>>> and task 3 means point C, our expected result is A -> B -> C.
+>>>>>>>>>> If the order is not kept, the result could become A -> C -> B.
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Got it, thanks for the clarification.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> I think a way to get rid of the workqueue is to use a timer, which gets
+>>>>>>>> programmed to the time a timeout in the first task in the busy list
+>>>>>>>> would happen. Everytime we update the busy list (e.g. because of task
+>>>>>>>> got finished by the thread), we update the timer. When the timer
+>>>>>>>> triggers, which hopefully won't happen too often, we return timeout on
+>>>>>>>> the busy list elements, until the time is lower then the actual time.
+>>>>>>>>
+>>>>>>>> At least with this we can reduce the data structures in this driver and
+>>>>>>>> make it more lightweight.
+>>>>>>>
+>>>>>>>     From my understanding, your proposed method can handle timeout case.
+>>>>>>>
+>>>>>>> However, the workqueue is also in charge of releasing tasks.
+>>>>>>> Do you take releasing tasks into consideration by using the proposed
+>>>>>>> timer method?
+>>>>>>> Furthermore, I think the code will become more complex if we also use
+>>>>>>> timer to implement releasing tasks.
+>>>>>>>
+>>>>>>
+>>>>>> Can't we call
+>>>>>>             clk_disable_unprepare(cmdq->clock);
+>>>>>>             cmdq_task_release(task);
+>>>>>> after invoking the callback?
+>>>>>
+>>>>> Do you mean just call these two functions in ISR?
+>>>>> My major concern is dma_free_coherent() and kfree() in
+>>>>> cmdq_task_release(task).
+>>>>
+>>>> Why do we need the dma calls at all? Can't we just calculate the
+>>>> physical address using __pa(x)?
+>>>
+>>> I prefer to use dma_map_single/dma_unmap_single.
+>>>
+>>
+>> Can you please elaborate why you need this. We don't do dma, so we
+>> should not use dma memory for this.
+>
+> We need a buffer to share between CPU and GCE, so we do need DMA.
+> CPU is in charge of writing GCE commands into this buffer.
+> GCE is in charge of reading and running GCE commands from this buffer.
+> When we chain CMDQ tasks, we also need to modify GCE JUMP command.
+> Therefore, I prefer to use dma_alloc_coherent and dma_free_coherent.
+>
+> However, if we want to use timer to handle timeout, we need to release
+> memory in ISR.
+> In this case, using kmalloc/kfree + dma_map_single/dma_unmap_single
+> instead of dma_alloc_coherent/dma_free_coherent is an alternative
+> solution, but taking care the synchronization between cache and memory
+> is the expected overhead.
+>
+>>>>> Therefore, your suggestion is to use GFP_ATOMIC for both
+>>>>> dma_alloc_coherent() and kzalloc(). Right?
+>>>>
+>>>> I don't think we need GFP_ATOMIC, the critical path will just free the
+>>>> memory.
+>>>
+>>> I tested these two functions, and kfree was safe.
+>>> However, dma_free_coherent raised BUG.
+>>> BUG: failure at
+>>> /mnt/host/source/src/third_party/kernel/v3.18/mm/vmalloc.c:1514/vunmap()!
+>>
+>> Just a general hint. Please try to evaluate on a recent kernel. It looks
+>> like as if you tried this on a v3.18 based one.
+>
+> This driver should be backward compatible to v3.18 for a MTK project.
+>
 
-It might be worth calling this simply "safe" because that's the
-contextual role of the clock, whereas sor-safe is the system name of the
-clock.
+That is something the Linux community can't use as argument for design 
+decisions. If the backporting get's cumbersome, I propose to tell your 
+boss, giving him the hint, that if the driver would have been in 
+mainline earlier, this would all be easier ;)
+No, seriously, that's why it makes a lot of sense for companies like 
+Mediatek to have their driver mainlined. A switch to a new kernel 
+version comes for free for all the mainlined drivers. Knowing the source 
+code of the Mediatek kernel, I suppose doing a kernel version switch 
+takes a good bunch of time and nerves. :)
 
-Thierry
-
---NklN7DEeGtkPCoo3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXZCGSAAoJEN0jrNd/PrOhFvMQAKhOYcpls3CmecqieOZSo2Au
-k6hbK4I1mqoDnuqbblQfZxXhuqx9elwh5PMsHcRNKgkMzzp07svv0ihqa1WO9yd0
-IvEk4TDEEh1n7quTC+ul3MoWJDlyQlQhg49CJATWcn58N04d4+jOuQamUJSJvTCb
-hgpPyeiG5tv4wi9j14HYSxqNDE98AcQTGe9PazbfF4VP5XDN2MBGg85YxhxhfuX+
-FxG3IteNytoX7aJdzlmb+zqGscG0tJuhle86vtHi3dyJDkIKg+RHcnLUWCEkdnhv
-ztCJQ8CP+q7leYZA/9QDTPbRZr7EG8y6I98SpVFvywMRUcLnQ/esae/ZjaTIKN4u
-Wc97+4VyRja0op5Y/PNXnO8FCe2AUND7nbg5ui5x1fpQJ+n9NzAPVUxE4ewlDUoH
-4EZlDWRWChsmz0CUsn+TrURBfNQhYGiHQM80Bxvu8grhRwFgoY8xlIo0HMVuy0hn
-KXNM+QwOKSkqO9dJt+5gFGEBS5hbBmuFKf8oIdgY1vSJrYSV7XFIdyHmiO/Nio63
-yt0nmzJ00QIN27Ieo6i27uBc/6w4D1oMjhiyIBv1kLPCMuEbFCRENqh0M9PbEX8K
-nDrXz6tsU7Wwy0E1ccjwLfQ9pnkYf49p2Qz0B/w1I8PYkf3npLC+WpqFXpMWIPms
-H+Ke8fD+TsThKsOZmY6+
-=eZ/j
------END PGP SIGNATURE-----
-
---NklN7DEeGtkPCoo3--
+Best regards,
+Matthias
