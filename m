@@ -1,103 +1,48 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 02/16] arm64: dts: msm8996: add blsp2_uart1 pinctrl
-Date: Fri, 17 Jun 2016 16:13:59 +0100
-Message-ID: <1466176454-28084-3-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 12/16] arm64: dts: msm8996: add support to blsp1_spi0
+Date: Fri, 17 Jun 2016 16:14:09 +0100
+Message-ID: <1466176454-28084-13-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1466176454-28084-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1466176454-28084-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>
 Cc: Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds 2pin and 4 pin uart pinctrl support for blsp2_uart1
+This patch adds support to blsp1_spi0 which is used on some of APQ8096
+based boards.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996-pins.dtsi | 65 ++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi      |  1 +
- 2 files changed, 66 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-new file mode 100644
-index 0000000..4d1dba7
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-@@ -0,0 +1,65 @@
-+/*
-+ * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+&msmgpio {
-+
-+	blsp2_uart1_2pins_default: blsp2_uart1_2pins {
-+		pinmux {
-+			function = "blsp_uart8";
-+			pins = "gpio4", "gpio5";
-+		};
-+		pinconf {
-+			pins = "gpio4", "gpio5";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	blsp2_uart1_2pins_sleep: blsp2_uart1_2pins_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio4", "gpio5";
-+		};
-+		pinconf {
-+			pins = "gpio4", "gpio5";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
-+
-+	blsp2_uart1_4pins_default: blsp2_uart1_4pins {
-+		pinmux {
-+			function = "blsp_uart8";
-+			pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+		};
-+
-+		pinconf {
-+			pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	blsp2_uart1_4pins_sleep: blsp2_uart1_4pins_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio4", "gpio5", "gpio6", "gpio7";
-+		};
-+
-+		pinconf {
-+			pins = "gpio4", "gpiio5", "gpio6", "gpio7";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
-+};
 diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 8bf382f..22b770f 100644
+index 675888f..e009063 100644
 --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -267,3 +267,4 @@
+@@ -151,6 +151,21 @@
+ 			reg = <0x300000 0x90000>;
  		};
- 	};
- };
-+#include "msm8996-pins.dtsi"
+ 
++		blsp1_spi0: spi@07575000 {
++			compatible = "qcom,spi-qup-v2.2.1";
++			reg = <0x07575000 0x600>;
++			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&blsp1_spi0_default>;
++			pinctrl-1 = <&blsp1_spi0_sleep>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		blsp2_i2c0: i2c@075b5000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x075b5000 0x1000>;
 -- 
 2.7.4
