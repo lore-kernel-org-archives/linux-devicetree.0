@@ -1,105 +1,141 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] clk: Add fractional scale clock support
-Date: Fri, 17 Jun 2016 08:43:27 +0200
-Message-ID: <CAMuHMdUMm5BWWEmKX3xOBkMX7HWTYgD6R0xz=uggs_Uya8=3Gw@mail.gmail.com>
-References: <1466120433-30648-1-git-send-email-hotran@apm.com> <1466120433-30648-3-git-send-email-hotran@apm.com>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: Re: [PATCH v6 2/2] phy: rockchip-inno-usb2: add a new driver for
+ Rockchip usb2phy
+Date: Fri, 17 Jun 2016 14:43:55 +0800
+Message-ID: <98bc69af-c597-d1ee-e83d-c7b5918e9ef4@rock-chips.com>
+References: <1466129353-48063-1-git-send-email-frank.wang@rock-chips.com>
+ <1466129353-48063-3-git-send-email-frank.wang@rock-chips.com>
+ <576383C6.3050005@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1466120433-30648-3-git-send-email-hotran@apm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Hoan Tran <hotran@apm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, lho@apm.com, Duc Dang <dhdang@apm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <576383C6.3050005@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, heiko@sntech.de
+Cc: dianders@chromium.org, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com, frank.wang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 1:40 AM, Hoan Tran <hotran@apm.com> wrote:
-> This patch adds fractional scale clock support.
-> Fractional scale clock is implemented for a single register field.
->   Output rate = parent_rate * scale / denominator
-> For example, for 1 / 8 fractional scale, denominator will be 8 and scale
-> will be computed and programmed accordingly.
+Hi Guenter,
+
+On 2016/6/17 12:59, Guenter Roeck wrote:
+> On 06/16/2016 07:09 PM, Frank Wang wrote:
+>> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+>> than rk3288 and before, and most of phy-related registers are also
+>> different from the past, so a new phy driver is required necessarily.
+>>
+>> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+>> Suggested-by: Guenter Roeck <linux@roeck-us.net>
+>> Suggested-by: Doug Anderson <dianders@chromium.org>
+>> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+>> Tested-by: Heiko Stuebner <heiko@sntech.de>
+>> ---
 >
-> Signed-off-by: Hoan Tran <hotran@apm.com>
-> Signed-off-by: Loc Ho <lho@apm.com>
+> [ ... ]
+>
+>> +
+>> +static int rockchip_usb2phy_resume(struct phy *phy)
+>> +{
+>> +    struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+>> +    struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
+>> +    int ret;
+>> +
+>> +    dev_dbg(&rport->phy->dev, "port resume\n");
+>> +
+>> +    ret = clk_prepare_enable(rphy->clk480m);
+>> +    if (ret)
+>> +        return ret;
+>> +
+> If suspend can be called multiple times, resume can be called
+> multiple times as well. Doesn't this cause a clock imbalance
+> if you call clk_prepare_enable() multiple times on resume,
+> but clk_disable_unprepare() only once on suspend ?
+>
 
-> --- /dev/null
-> +++ b/drivers/clk/clk-fractional-scale.c
+Well, what you said is reasonable, How does something like below?
 
-> +static long clk_fs_round_rate(struct clk_hw *hw, unsigned long rate,
-> +                             unsigned long *parent_rate)
-> +{
-> +       struct clk_fractional_scale *fd = to_clk_sf(hw);
-> +       u64 ret, scale;
-> +
-> +       if (!rate || rate >= *parent_rate)
-> +               return *parent_rate;
-> +
-> +       /* freq = parent_rate * scaler / denom */
-> +       ret = rate * fd->denom;
+@@ -307,6 +307,9 @@ static int rockchip_usb2phy_resume(struct phy *phy)
 
-Can this overflow? No, because fd->denom is u64.
-But if fd->denom is changed to u32, it needs a cast to u64 here.
+         dev_dbg(&rport->phy->dev, "port resume\n");
 
-> +       scale = ret / *parent_rate;
++       if (!rport->suspended)
++               return 0;
++
+         ret = clk_prepare_enable(rphy->clk480m);
+         if (ret)
+                 return ret;
+@@ -327,12 +330,16 @@ static int rockchip_usb2phy_suspend(struct phy *phy)
 
-As detected by the kbuild test robot, this should use do_div().
+         dev_dbg(&rport->phy->dev, "port suspend\n");
 
-> +
-> +       ret = (u64) *parent_rate * scale;
-> +       do_div(ret, fd->denom);
-> +
-> +       return ret;
-> +}
-> +
-> +static int clk_fs_set_rate(struct clk_hw *hw, unsigned long rate,
-> +                          unsigned long parent_rate)
-> +{
-> +       struct clk_fractional_scale *fd = to_clk_sf(hw);
-> +       unsigned long flags = 0;
-> +       u64 scale, ret;
-> +       u32 val;
-> +
-> +       /*
-> +        * Compute the scaler:
-> +        *
-> +        * freq = parent_rate * scaler / denom, or
-> +        * scaler = freq * denom / parent_rate
-> +        */
-> +       ret = rate * fd->denom;
++       if (rport->suspended)
++               return 0;
++
+         ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
+         if (ret)
+                 return ret;
 
-Can this overflow? No, because fd->denom is u64.
-But if fd->denom is changed to u32, it needs a cast to u64 here.
+         rport->suspended = true;
+         clk_disable_unprepare(rphy->clk480m);
++
+         return 0;
+  }
 
-> +       scale = ret / (u64)parent_rate;
+@@ -485,6 +492,7 @@ static int rockchip_usb2phy_host_port_init(struct 
+rockchip_usb2phy *rphy,
 
-Don't cast the divider to u64, as this will turn a 64-by-32 division into a
-64-by-64 division.
-As detected by the kbuild test robot, this should use do_div().
+         rport->port_id = USB2PHY_PORT_HOST;
+         rport->port_cfg = &rphy->phy_cfg->port_cfgs[USB2PHY_PORT_HOST];
++       rport->suspended = true;
 
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
+         mutex_init(&rport->mutex);
+         INIT_DELAYED_WORK(&rport->sm_work, rockchip_usb2phy_sm_work);
 
-> +struct clk_fractional_scale {
-> +       struct clk_hw   hw;
-> +       void __iomem    *reg;
-> +       u8              shift;
-> +       u32             mask;
-> +       u64             denom;
 
-u64 sounds overkill to me, but it looks like that was done to avoid overflow in
-the multiplications?
+>> +    ret = property_enable(rphy, &rport->port_cfg->phy_sus, false);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    rport->suspended = false;
+>> +    return 0;
+>> +}
+>> +
+>> +static int rockchip_usb2phy_suspend(struct phy *phy)
+>> +{
+>> +    struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+>> +    struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
+>> +    int ret;
+>> +
+>> +    dev_dbg(&rport->phy->dev, "port suspend\n");
+>> +
+>> +    if (rport->suspended)
+>> +        goto exit;
+>> +
+>
+> I know I am nitpicking, but
+>         return 0;
+> would be fine here, be more consistent with the rest of the code,
+>
 
-> +       u32             flags;
-> +       spinlock_t      *lock;
-> +};
+Yeah, please see above changes.
 
-Gr{oetje,eeting}s,
+BR.
+Frank
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>> +    ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    rport->suspended = true;
+>> +    clk_disable_unprepare(rphy->clk480m);
+>> +
+>> +exit:
+>> +    return 0;
+>
+> and this label is really unnecessary.
+>
+>> +}
+>> +
+>
+> [ ... ]
+>
