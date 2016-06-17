@@ -1,35 +1,54 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv3 3/7] EDAC, altera: Share Arria10 check_deps & IRQ
- functions
-Date: Fri, 17 Jun 2016 19:11:20 +0200
-Message-ID: <20160617171120.GI3912@pd.tnic>
-References: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
- <1465852752-11018-4-git-send-email-tthayer@opensource.altera.com>
- <20160617170050.GG3912@pd.tnic>
- <57642EE7.4060109@opensource.altera.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 08/12] doc: binding: pwrseq-usb-generic: add binding doc
+ for generic usb power sequence driver
+Date: Fri, 17 Jun 2016 12:16:48 -0500
+Message-ID: <CAL_JsqLvs0s2TyfqPM5vtmyY81_X84VjCGjsGYbTgT4syOfp9Q@mail.gmail.com>
+References: <1466158165-9380-1-git-send-email-peter.chen@nxp.com> <1466158165-9380-9-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57642EE7.4060109@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1466158165-9380-9-git-send-email-peter.chen@nxp.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Peter Chen <peter.chen@nxp.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Stephen Boyd <stephen.boyd@linaro.org>, oscar@naiandei.net, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Linux USB List <linux-usb@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, troy.kisky@boundarydevices.com, Javier Martinez Canillas <javier@osg.samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, Fabio Estevam <festevam@gmai>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 12:09:59PM -0500, Thor Thayer wrote:
-> Since each peripheral's EDAC can be individually selected, the build
-> generates a warning of an unused function if just L2 cache was selected.
-> 
-> The ifdeffery is ugly but it removes that warning in the L2 only case.
+On Fri, Jun 17, 2016 at 5:09 AM, Peter Chen <peter.chen@nxp.com> wrote:
+> Add binding doc for generic usb power sequence driver, and update
+> generic usb device binding-doc accordingly.
+>
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> ---
+>  .../bindings/power/pwrseq/pwrseq-usb-generic.txt   | 31 ++++++++++++++++++++++
+>  .../devicetree/bindings/usb/usb-device.txt         |  2 ++
+>  2 files changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+> new file mode 100644
+> index 0000000..8ad98382
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+> @@ -0,0 +1,31 @@
+> +The power sequence for generic USB Devices
+> +
+> +Some hard-wired USB devices need to do power sequence to let the
+> +device work normally, the typical power sequence like: enable USB
+> +PHY clock, toggle reset pin, etc. But current Linux USB driver
+> +lacks of such code to do it, it may cause some hard-wired USB devices
+> +works abnormal or can't be recognized by controller at all. The
+> +power sequence will be done before this device can be found at USB
+> +bus.
+> +
+> +Required properties:
+> +- compatible : contains "usb-pwrseq-generic".
 
-You could add __maybe_unused to the function definition but I guess you
-don't want that code in there if only L2 is selected.
+In case I have not been clear, no.
 
-Ok.
+I am not going to accept anything along the lines of the current mmc
+pwrseq. I am basically okay with Krzysztof's proposal as it is *only*
+an added property and not a duplication of information. I'd suggest
+you figure out how to make the kernel work with that rather than
+trying to work-around whatever kernel limitations there are.
 
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
+Rob
