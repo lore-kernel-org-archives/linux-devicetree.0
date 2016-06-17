@@ -1,578 +1,662 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] gpio: sx150x: Update OF configuration
-Date: Fri, 17 Jun 2016 19:11:04 +0800
-Message-ID: <201606171942.RoI92C2Q%fengguang.wu@intel.com>
-References: <1466157063-10955-1-git-send-email-narmstrong@baylibre.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for
+ Rockchip usb2phy
+Date: Fri, 17 Jun 2016 17:24:46 +0530
+Message-ID: <5763E506.1060500@ti.com>
+References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
+ <1465783810-18756-3-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="CE+1k2dSO48ffgeK"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466157063-10955-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1465783810-18756-3-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
-
-
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
 Hi,
 
-[auto build test ERROR on gpio/for-next]
-[also build test ERROR on v4.7-rc3 next-20160617]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+On Monday 13 June 2016 07:40 AM, Frank Wang wrote:
+> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+> than rk3288 and before, and most of phy-related registers are also
+> different from the past, so a new phy driver is required necessarily.
+> 
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+> Changes in v5:
+>  - Added 'reg' in the data block to match the different phy-blocks in dt.
+> 
+> Changes in v4:
+>  - Removed some processes related to 'vbus_host-supply'.
+> 
+> Changes in v3:
+>  - Resolved the mapping defect between fixed value in driver and the property
+>    in devicetree.
+>  - Optimized 480m output clock register function.
+>  - Code cleanup.
+> 
+> Changes in v2:
+>  - Changed vbus_host operation from gpio to regulator in *_probe.
+>  - Improved the fault treatment relate to 480m clock register.
+>  - Cleaned up some meaningless codes in *_clk480m_disable.
+>  - made more clear the comment of *_sm_work.
+> 
+>  drivers/phy/Kconfig                  |    7 +
+>  drivers/phy/Makefile                 |    1 +
+>  drivers/phy/phy-rockchip-inno-usb2.c |  645 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 653 insertions(+)
+>  create mode 100644 drivers/phy/phy-rockchip-inno-usb2.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index b869b98..29ef15c 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -347,6 +347,13 @@ config PHY_ROCKCHIP_USB
+>  	help
+>  	  Enable this to support the Rockchip USB 2.0 PHY.
+>  
+> +config PHY_ROCKCHIP_INNO_USB2
+> +	tristate "Rockchip INNO USB2PHY Driver"
+> +	depends on ARCH_ROCKCHIP && OF
 
-url:    https://github.com/0day-ci/linux/commits/Neil-Armstrong/gpio-sx150x-Update-OF-configuration/20160617-175750
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git for-next
-config: x86_64-randconfig-s0-06171829 (attached as .config)
-compiler: gcc-6 (Debian 6.1.1-1) 6.1.1 20160430
-reproduce:
-        # save the attached .config to linux build tree
-        make ARCH=x86_64 
+depends on COMMON_CLK, since this is also a clock provider.
+> +	select GENERIC_PHY
+> +	help
+> +	  Support for Rockchip USB2.0 PHY with Innosilicon IP block.
+> +
+>  config PHY_ROCKCHIP_EMMC
+>  	tristate "Rockchip EMMC PHY Driver"
+>  	depends on ARCH_ROCKCHIP && OF
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 9c3e73c..4963fbc 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -38,6 +38,7 @@ phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)	+= phy-s5pv210-usb2.o
+>  obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+>  obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
+>  obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
+> +obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
+>  obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
+>  obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
+>  obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+> diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
+> new file mode 100644
+> index 0000000..fc599c7
+> --- /dev/null
+> +++ b/drivers/phy/phy-rockchip-inno-usb2.c
+> @@ -0,0 +1,645 @@
+> +/*
+> + * Rockchip USB2.0 PHY with Innosilicon IP block driver
+> + *
+> + * Copyright (C) 2016 Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +
+> +#define BIT_WRITEABLE_SHIFT	16
+> +#define SCHEDULE_DELAY	(60 * HZ)
+> +
+> +enum rockchip_usb2phy_port_id {
+> +	USB2PHY_PORT_OTG,
+> +	USB2PHY_PORT_HOST,
+> +	USB2PHY_NUM_PORTS,
+> +};
+> +
+> +enum rockchip_usb2phy_host_state {
+> +	PHY_STATE_HS_ONLINE	= 0,
+> +	PHY_STATE_DISCONNECT	= 1,
+> +	PHY_STATE_HS_CONNECT	= 2,
+> +	PHY_STATE_FS_CONNECT	= 4,
+> +};
+> +
+> +struct usb2phy_reg {
+> +	unsigned int	offset;
+> +	unsigned int	bitend;
+> +	unsigned int	bitstart;
+> +	unsigned int	disable;
+> +	unsigned int	enable;
+> +};
+> +
+> +/**
+> + * struct rockchip_usb2phy_port_cfg: usb-phy port configuration.
+> + * @phy_sus: phy suspend register.
+> + * @ls_det_en: linestate detection enable register.
+> + * @ls_det_st: linestate detection state register.
+> + * @ls_det_clr: linestate detection clear register.
+> + * @utmi_ls: utmi linestate state register.
+> + * @utmi_hstdet: utmi host disconnect register.
+> + */
+> +struct rockchip_usb2phy_port_cfg {
+> +	struct usb2phy_reg	phy_sus;
+> +	struct usb2phy_reg	ls_det_en;
+> +	struct usb2phy_reg	ls_det_st;
+> +	struct usb2phy_reg	ls_det_clr;
+> +	struct usb2phy_reg	utmi_ls;
+> +	struct usb2phy_reg	utmi_hstdet;
+> +};
+> +
+> +/**
+> + * struct rockchip_usb2phy_cfg: usb-phy configuration.
+> + * @reg: the address offset of grf for usb-phy config.
+> + * @num_ports: specify how many ports that the phy has.
+> + * @clkout_ctl: keep on/turn off output clk of phy.
+> + */
+> +struct rockchip_usb2phy_cfg {
+> +	unsigned int	reg;
+> +	unsigned int	num_ports;
+> +	struct usb2phy_reg	clkout_ctl;
+> +	const struct rockchip_usb2phy_port_cfg	port_cfgs[USB2PHY_NUM_PORTS];
+> +};
+> +
+> +/**
+> + * struct rockchip_usb2phy_port: usb-phy port data.
+> + * @port_id: flag for otg port or host port.
+> + * @suspended: phy suspended flag.
+> + * @ls_irq: IRQ number assigned for linestate detection.
+> + * @mutex: for register updating in sm_work.
+> + * @sm_work: OTG state machine work.
+> + * @phy_cfg: port register configuration, assigned by driver data.
+> + */
+> +struct rockchip_usb2phy_port {
+> +	struct phy	*phy;
+> +	unsigned int	port_id;
+> +	bool		suspended;
+> +	int		ls_irq;
+> +	struct mutex	mutex;
+> +	struct		delayed_work sm_work;
+> +	const struct	rockchip_usb2phy_port_cfg *port_cfg;
+> +};
+> +
+> +/**
+> + * struct rockchip_usb2phy: usb2.0 phy driver data.
+> + * @grf: General Register Files regmap.
+> + * @clk: clock struct of phy input clk.
+> + * @clk480m: clock struct of phy output clk.
+> + * @clk_hw: clock struct of phy output clk management.
+> + * @phy_cfg: phy register configuration, assigned by driver data.
+> + * @ports: phy port instance.
+> + */
+> +struct rockchip_usb2phy {
+> +	struct device	*dev;
+> +	struct regmap	*grf;
+> +	struct clk	*clk;
+> +	struct clk	*clk480m;
+> +	struct clk_hw	clk480m_hw;
+> +	const struct rockchip_usb2phy_cfg	*phy_cfg;
+> +	struct rockchip_usb2phy_port	ports[USB2PHY_NUM_PORTS];
+> +};
+> +
+> +static inline int property_enable(struct rockchip_usb2phy *rphy,
+> +				  const struct usb2phy_reg *reg, bool en)
+> +{
+> +	unsigned int val, mask, tmp;
+> +
+> +	tmp = en ? reg->enable : reg->disable;
+> +	mask = GENMASK(reg->bitend, reg->bitstart);
+> +	val = (tmp << reg->bitstart) | (mask << BIT_WRITEABLE_SHIFT);
+> +
+> +	return regmap_write(rphy->grf, reg->offset, val);
+> +}
+> +
+> +static inline bool property_enabled(struct rockchip_usb2phy *rphy,
+> +				    const struct usb2phy_reg *reg)
+> +{
+> +	int ret;
+> +	unsigned int tmp, orig;
+> +	unsigned int mask = GENMASK(reg->bitend, reg->bitstart);
+> +
+> +	ret = regmap_read(rphy->grf, reg->offset, &orig);
+> +	if (ret)
+> +		return false;
+> +
+> +	tmp = (orig & mask) >> reg->bitstart;
+> +	return tmp == reg->enable;
+> +}
+> +
+> +static int rockchip_usb2phy_clk480m_enable(struct clk_hw *hw)
+> +{
+> +	struct rockchip_usb2phy *rphy =
+> +		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
+> +	int ret;
+> +
+> +	/* turn on 480m clk output if it is off */
+> +	if (!property_enabled(rphy, &rphy->phy_cfg->clkout_ctl)) {
+> +		ret = property_enable(rphy, &rphy->phy_cfg->clkout_ctl, true);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* waitting for the clk become stable */
+> +		mdelay(1);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void rockchip_usb2phy_clk480m_disable(struct clk_hw *hw)
+> +{
+> +	struct rockchip_usb2phy *rphy =
+> +		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
+> +
+> +	/* turn off 480m clk output */
+> +	property_enable(rphy, &rphy->phy_cfg->clkout_ctl, false);
+> +}
+> +
+> +static int rockchip_usb2phy_clk480m_enabled(struct clk_hw *hw)
+> +{
+> +	struct rockchip_usb2phy *rphy =
+> +		container_of(hw, struct rockchip_usb2phy, clk480m_hw);
+> +
+> +	return property_enabled(rphy, &rphy->phy_cfg->clkout_ctl);
+> +}
+> +
+> +static unsigned long
+> +rockchip_usb2phy_clk480m_recalc_rate(struct clk_hw *hw,
+> +				     unsigned long parent_rate)
+> +{
+> +	return 480000000;
+> +}
+> +
+> +static const struct clk_ops rockchip_usb2phy_clkout_ops = {
+> +	.enable = rockchip_usb2phy_clk480m_enable,
+> +	.disable = rockchip_usb2phy_clk480m_disable,
+> +	.is_enabled = rockchip_usb2phy_clk480m_enabled,
+> +	.recalc_rate = rockchip_usb2phy_clk480m_recalc_rate,
+> +};
+> +
+> +static void rockchip_usb2phy_clk480m_unregister(void *data)
+> +{
+> +	struct rockchip_usb2phy *rphy = data;
+> +
+> +	of_clk_del_provider(rphy->dev->of_node);
+> +	clk_unregister(rphy->clk480m);
+> +
+> +	if (rphy->clk)
+> +		clk_put(rphy->clk);
+> +}
+> +
+> +static int
+> +rockchip_usb2phy_clk480m_register(struct rockchip_usb2phy *rphy)
+> +{
+> +	struct device_node *node = rphy->dev->of_node;
+> +	struct clk_init_data init;
+> +	const char *clk_name;
+> +	int ret;
+> +
+> +	init.flags = 0;
+> +	init.name = "clk_usbphy_480m";
+> +	init.ops = &rockchip_usb2phy_clkout_ops;
+> +
+> +	/* optional override of the clockname */
+> +	of_property_read_string(node, "clock-output-names", &init.name);
+> +
+> +	rphy->clk = of_clk_get_by_name(node, "phyclk");
+> +	if (IS_ERR(rphy->clk)) {
+> +		rphy->clk = NULL;
+> +		init.parent_names = NULL;
+> +		init.num_parents = 0;
+> +	} else {
+> +		clk_name = __clk_get_name(rphy->clk);
+> +		init.parent_names = &clk_name;
+> +		init.num_parents = 1;
+> +	}
+> +
+> +	rphy->clk480m_hw.init = &init;
+> +
+> +	/* register the clock */
+> +	rphy->clk480m = clk_register(rphy->dev, &rphy->clk480m_hw);
+> +	if (IS_ERR(rphy->clk480m)) {
+> +		ret = PTR_ERR(rphy->clk480m);
+> +		goto err_register;
+> +	}
+> +
+> +	ret = of_clk_add_provider(node, of_clk_src_simple_get, rphy->clk480m);
+> +	if (ret < 0)
+> +		goto err_clk_provider;
+> +
+> +	ret = devm_add_action(rphy->dev, rockchip_usb2phy_clk480m_unregister,
+> +			      rphy);
+> +	if (ret < 0)
+> +		goto err_unreg_action;
+> +
+> +	return 0;
+> +
+> +err_unreg_action:
+> +	of_clk_del_provider(node);
+> +err_clk_provider:
+> +	clk_unregister(rphy->clk480m);
+> +err_register:
+> +	if (rphy->clk)
+> +		clk_put(rphy->clk);
+> +	return ret;
+> +}
+I'm seeing lot of similarities specifically w.r.t to clock handling part in
+drivers/phy/phy-rockchip-usb.c. Why not just re-use that driver?
 
-All errors (new ones prefixed by >>):
+> +
+> +static int rockchip_usb2phy_init(struct phy *phy)
+> +{
+> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
+> +	int ret;
+> +
+> +	if (rport->port_id == USB2PHY_PORT_HOST) {
+> +		/* clear linestate and enable linestate detect irq */
+> +		mutex_lock(&rport->mutex);
+> +
+> +		ret = property_enable(rphy, &rport->port_cfg->ls_det_clr, true);
+> +		if (ret) {
+> +			mutex_unlock(&rport->mutex);
+> +			return ret;
+> +		}
+> +
+> +		ret = property_enable(rphy, &rport->port_cfg->ls_det_en, true);
+> +		if (ret) {
+> +			mutex_unlock(&rport->mutex);
+> +			return ret;
+> +		}
+> +
+> +		mutex_unlock(&rport->mutex);
+> +		schedule_delayed_work(&rport->sm_work, SCHEDULE_DELAY);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb2phy_resume(struct phy *phy)
+> +{
+> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
+> +	int ret;
+> +
+> +	dev_dbg(&rport->phy->dev, "port resume\n");
+> +
+> +	ret = clk_prepare_enable(rphy->clk480m);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = property_enable(rphy, &rport->port_cfg->phy_sus, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rport->suspended = false;
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb2phy_suspend(struct phy *phy)
+> +{
+> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
+> +	int ret;
+> +
+> +	dev_dbg(&rport->phy->dev, "port suspend\n");
+> +
+> +	ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rport->suspended = true;
+> +	clk_disable_unprepare(rphy->clk480m);
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb2phy_exit(struct phy *phy)
+> +{
+> +	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+> +
+> +	if (rport->port_id == USB2PHY_PORT_HOST)
+> +		cancel_delayed_work_sync(&rport->sm_work);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops rockchip_usb2phy_ops = {
+> +	.init		= rockchip_usb2phy_init,
+> +	.exit		= rockchip_usb2phy_exit,
+> +	.power_on	= rockchip_usb2phy_resume,
+> +	.power_off	= rockchip_usb2phy_suspend,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +/*
+> + * The function manage host-phy port state and suspend/resume phy port
+> + * to save power.
+> + *
+> + * we rely on utmi_linestate and utmi_hostdisconnect to identify whether
+> + * FS/HS is disconnect or not. Besides, we do not need care it is FS
+> + * disconnected or HS disconnected, actually, we just only need get the
+> + * device is disconnected at last through rearm the delayed work,
+> + * to suspend the phy port in _PHY_STATE_DISCONNECT_ case.
+> + *
+> + * NOTE: It may invoke *phy_suspend or *phy_resume which will invoke some
+> + * clk related APIs, so do not invoke it from interrupt context directly.
+> + */
+> +static void rockchip_usb2phy_sm_work(struct work_struct *work)
+> +{
+> +	struct rockchip_usb2phy_port *rport =
+> +		container_of(work, struct rockchip_usb2phy_port, sm_work.work);
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(rport->phy->dev.parent);
+> +	unsigned int sh = rport->port_cfg->utmi_hstdet.bitend -
+> +			  rport->port_cfg->utmi_hstdet.bitstart + 1;
+> +	unsigned int ul, uhd, state;
+> +	unsigned int ul_mask, uhd_mask;
+> +	int ret;
+> +
+> +	mutex_lock(&rport->mutex);
+> +
+> +	ret = regmap_read(rphy->grf, rport->port_cfg->utmi_ls.offset, &ul);
+> +	if (ret < 0)
+> +		goto next_schedule;
+> +
+> +	ret = regmap_read(rphy->grf, rport->port_cfg->utmi_hstdet.offset,
+> +			  &uhd);
+> +	if (ret < 0)
+> +		goto next_schedule;
+> +
+> +	uhd_mask = GENMASK(rport->port_cfg->utmi_hstdet.bitend,
+> +			   rport->port_cfg->utmi_hstdet.bitstart);
+> +	ul_mask = GENMASK(rport->port_cfg->utmi_ls.bitend,
+> +			  rport->port_cfg->utmi_ls.bitstart);
+> +
+> +	/* stitch on utmi_ls and utmi_hstdet as phy state */
+> +	state = ((uhd & uhd_mask) >> rport->port_cfg->utmi_hstdet.bitstart) |
+> +		(((ul & ul_mask) >> rport->port_cfg->utmi_ls.bitstart) << sh);
+> +
+> +	switch (state) {
+> +	case PHY_STATE_HS_ONLINE:
+> +		dev_dbg(&rport->phy->dev, "HS online\n");
+> +		break;
+> +	case PHY_STATE_FS_CONNECT:
+> +		/*
+> +		 * For FS device, the online state share with connect state
+> +		 * from utmi_ls and utmi_hstdet register, so we distinguish
+> +		 * them via suspended flag.
+> +		 */
+> +		if (!rport->suspended) {
+> +			dev_dbg(&rport->phy->dev, "FS online\n");
+> +			break;
+> +		}
+> +		/* fall through */
+> +	case PHY_STATE_HS_CONNECT:
+> +		if (rport->suspended) {
+> +			dev_dbg(&rport->phy->dev, "HS/FS connected\n");
+> +			rockchip_usb2phy_resume(rport->phy);
+> +			rport->suspended = false;
+> +		}
+> +		break;
+> +	case PHY_STATE_DISCONNECT:
+> +		if (!rport->suspended) {
+> +			dev_dbg(&rport->phy->dev, "HS/FS disconnected\n");
+> +			rockchip_usb2phy_suspend(rport->phy);
+> +			rport->suspended = true;
+> +		}
+> +
+> +		/*
+> +		 * activate the linestate detection to get the next device
+> +		 * plug-in irq.
+> +		 */
+> +		property_enable(rphy, &rport->port_cfg->ls_det_clr, true);
+> +		property_enable(rphy, &rport->port_cfg->ls_det_en, true);
+> +
+> +		/*
+> +		 * we don't need to rearm the delayed work when the phy port
+> +		 * is suspended.
+> +		 */
+> +		mutex_unlock(&rport->mutex);
+> +		return;
+> +	default:
+> +		dev_dbg(&rport->phy->dev, "unknown phy state\n");
+> +		break;
+> +	}
+> +
+> +next_schedule:
+> +	mutex_unlock(&rport->mutex);
+> +	schedule_delayed_work(&rport->sm_work, SCHEDULE_DELAY);
 
-   drivers/gpio/gpio-sx150x.c: In function 'sx150x_init_chip':
->> drivers/gpio/gpio-sx150x.c:594:18: error: 'struct gpio_chip' has no member named 'of_node'
-      chip->gpio_chip.of_node          = client->dev.of_node;
-                     ^
->> drivers/gpio/gpio-sx150x.c:595:18: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-      chip->gpio_chip.of_gpio_n_cells  = 2;
-                     ^
---
-   /kbuild/src/smoke/drivers/gpio/gpio-sx150x.c: In function 'sx150x_init_chip':
->> /kbuild/src/smoke/drivers/gpio/gpio-sx150x.c:594:18: error: 'struct gpio_chip' has no member named 'of_node'
-      chip->gpio_chip.of_node          = client->dev.of_node;
-                     ^
->> /kbuild/src/smoke/drivers/gpio/gpio-sx150x.c:595:18: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-      chip->gpio_chip.of_gpio_n_cells  = 2;
-                     ^
+Why are you scheduling the work again? Interrupt handlers can invoke this right?
+> +}
+> +
+> +static irqreturn_t rockchip_usb2phy_linestate_irq(int irq, void *data)
+> +{
+> +	struct rockchip_usb2phy_port *rport = data;
+> +	struct rockchip_usb2phy *rphy = dev_get_drvdata(rport->phy->dev.parent);
+> +
+> +	if (!property_enabled(rphy, &rport->port_cfg->ls_det_st))
+> +		return IRQ_NONE;
+> +
+> +	mutex_lock(&rport->mutex);
+> +
+> +	/* disable linestate detect irq and clear its status */
+> +	property_enable(rphy, &rport->port_cfg->ls_det_en, false);
+> +	property_enable(rphy, &rport->port_cfg->ls_det_clr, true);
+> +
+> +	mutex_unlock(&rport->mutex);
+> +
+> +	/*
+> +	 * In this case for host phy port, a new device is plugged in,
+> +	 * meanwhile, if the phy port is suspended, we need rearm the work to
+> +	 * resume it and mange its states; otherwise, we do nothing about that.
+> +	 */
+> +	if (rport->suspended && rport->port_id == USB2PHY_PORT_HOST)
+> +		rockchip_usb2phy_sm_work(&rport->sm_work.work);
 
-vim +594 drivers/gpio/gpio-sx150x.c
 
-c34f16b7 drivers/gpio/sx150x.c      Gregory Bean   2010-08-10  588  	chip->gpio_chip.get              = sx150x_gpio_get;
-c34f16b7 drivers/gpio/sx150x.c      Gregory Bean   2010-08-10  589  	chip->gpio_chip.set              = sx150x_gpio_set;
-04b86956 drivers/gpio/gpio-sx150x.c Linus Walleij  2016-04-09  590  	chip->gpio_chip.set_single_ended = sx150x_gpio_set_single_ended;
-9fb1f39e drivers/gpio/gpio-sx150x.c Linus Walleij  2013-12-04  591  	chip->gpio_chip.can_sleep        = true;
-c34f16b7 drivers/gpio/sx150x.c      Gregory Bean   2010-08-10  592  	chip->gpio_chip.ngpio            = chip->dev_cfg->ngpios;
-193ca3f8 drivers/gpio/gpio-sx150x.c Neil Armstrong 2016-06-17  593  	if (client->dev.of_node) {
-04d2264c drivers/gpio/gpio-sx150x.c Wei Chen       2015-01-15 @594  		chip->gpio_chip.of_node          = client->dev.of_node;
-04d2264c drivers/gpio/gpio-sx150x.c Wei Chen       2015-01-15 @595  		chip->gpio_chip.of_gpio_n_cells  = 2;
-193ca3f8 drivers/gpio/gpio-sx150x.c Neil Armstrong 2016-06-17  596  		chip->gpio_chip.base             = -1;
-193ca3f8 drivers/gpio/gpio-sx150x.c Neil Armstrong 2016-06-17  597  	} else
-193ca3f8 drivers/gpio/gpio-sx150x.c Neil Armstrong 2016-06-17  598  		chip->gpio_chip.base             = pdata->gpio_base;
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int rockchip_usb2phy_host_port_init(struct rockchip_usb2phy *rphy,
+> +					   struct rockchip_usb2phy_port *rport,
+> +					   struct device_node *child_np)
+> +{
+> +	int ret;
+> +
+> +	rport->port_id = USB2PHY_PORT_HOST;
+> +	rport->port_cfg = &rphy->phy_cfg->port_cfgs[USB2PHY_PORT_HOST];
+> +
+> +	mutex_init(&rport->mutex);
+> +	INIT_DELAYED_WORK(&rport->sm_work, rockchip_usb2phy_sm_work);
+> +
+> +	rport->ls_irq = of_irq_get_byname(child_np, "linestate");
+> +	if (rport->ls_irq < 0) {
+> +		dev_err(rphy->dev, "no linestate irq provided\n");
+> +		return rport->ls_irq;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(rphy->dev, rport->ls_irq, NULL,
+> +					rockchip_usb2phy_linestate_irq,
+> +					IRQF_ONESHOT,
+> +					"rockchip_usb2phy", rport);
+> +	if (ret) {
+> +		dev_err(rphy->dev, "failed to request irq handle\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb2phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *child_np;
+> +	struct phy_provider *provider;
+> +	struct rockchip_usb2phy *rphy;
+> +	const struct rockchip_usb2phy_cfg *phy_cfgs;
+> +	const struct of_device_id *match;
+> +	unsigned int reg;
+> +	int index, ret;
+> +
+> +	rphy = devm_kzalloc(dev, sizeof(*rphy), GFP_KERNEL);
+> +	if (!rphy)
+> +		return -ENOMEM;
+> +
+> +	match = of_match_device(dev->driver->of_match_table, dev);
+> +	if (!match || !match->data) {
+> +		dev_err(dev, "phy configs are not assigned!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!dev->parent || !dev->parent->of_node)
+> +		return -EINVAL;
+> +
+> +	rphy->grf = syscon_node_to_regmap(dev->parent->of_node);
+> +	if (IS_ERR(rphy->grf))
+> +		return PTR_ERR(rphy->grf);
+> +
+> +	if (of_property_read_u32(np, "reg", &reg)) {
+> +		dev_err(dev, "the reg property is not assigned in %s node\n",
+> +			np->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rphy->dev = dev;
+> +	phy_cfgs = match->data;
+> +	platform_set_drvdata(pdev, rphy);
+> +
+> +	/* find out a proper config which can be matched with dt. */
+> +	index = 0;
+> +	while (phy_cfgs[index].reg) {
+> +		if (phy_cfgs[index].reg == reg) {
 
-:::::: The code at line 594 was first introduced by commit
-:::::: 04d2264c3bf07f5c3d18165ba78de0a93360c6c0 gpio: sx150x: add dts support for sx150x driver
+Why not pass these config values from dt? Moreover finding the config using
+register offset is bound to break.
 
-:::::: TO: Wei Chen <Wei.Chen@csr.com>
-:::::: CC: Linus Walleij <linus.walleij@linaro.org>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---CE+1k2dSO48ffgeK
-Content-Type: application/octet-stream
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-AA==
-
---CE+1k2dSO48ffgeK--
+Thanks
+Kishon
