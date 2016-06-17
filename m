@@ -1,37 +1,54 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH v3 0/2] net: ethernet: ti: cpsw: delete rx_descs property
-Date: Fri, 17 Jun 2016 20:38:50 +0530
-Message-ID: <57641282.9070002@ti.com>
-References: <1466159140-3329-1-git-send-email-ivan.khoronzhuk@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466159140-3329-1-git-send-email-ivan.khoronzhuk@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, linux-kernel@vger.kernel.org
-Cc: grygorii.strashko@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/4] iio: pressure: bmp280: augment DT bindings
+Date: Fri, 17 Jun 2016 17:12:18 +0200
+Message-ID: <1466176341-17442-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 17 June 2016 03:55 PM, Ivan Khoronzhuk wrote:
-> There is no reason in rx_descs property because davinici_cpdma
-> driver splits pool of descriptors equally between tx and rx channels.
-> So, this patch series makes driver to use available number of
-> descriptors for rx channels.
-> 
-> Based on
-> git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
-> master
-> 
-> Since v2:
-> - add declaration of buf_num in correct order
-> 
-> Since v1:
-> - separate device tree and driver patches
-> - return number of rx buffers from cpdma driver
-> 
+This adds standard device tree bindings for a reset GPIO line, and
+the VDDD and VDDA power regulators.
 
-Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iio/pressure/bmp085.txt | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Regards
-Mugunthan V N
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+index d7a6deb6b21e..06ad5feaea28 100644
+--- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
++++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+@@ -1,7 +1,7 @@
+-BMP085/BMP18x digital pressure sensors
++BMP085/BMP18x/BMP28x digital pressure sensors
+ 
+ Required properties:
+-- compatible: bosch,bmp085
++- compatible: "bosch,bmp085" or "bosch,bmp180" or "bosch,bmp280"
+ 
+ Optional properties:
+ - chip-id: configurable chip id for non-default chip revisions
+@@ -10,6 +10,10 @@ Optional properties:
+   value range is 0-3 with rising sensitivity.
+ - interrupt-parent: should be the phandle for the interrupt controller
+ - interrupts: interrupt mapping for IRQ
++- reset-gpios: a GPIO line handling reset of the sensor: as the line is
++  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
++- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
++- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
+ 
+ Example:
+ 
+@@ -21,4 +25,7 @@ pressure@77 {
+ 	default-oversampling = <2>;
+ 	interrupt-parent = <&gpio0>;
+ 	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
++	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
++	vddd-supply = <&foo>;
++	vdda-supply = <&bar>;
+ };
+-- 
+2.4.11
