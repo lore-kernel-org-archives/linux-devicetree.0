@@ -1,178 +1,119 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] dt-bindings: pinctrl: Add MDM9615 TLMM bindings
-Date: Fri, 17 Jun 2016 12:15:35 +0200
-Message-ID: <1466158535-17962-3-git-send-email-narmstrong@baylibre.com>
-References: <1466158535-17962-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466158535-17962-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, andy.gross@linaro.org, sricharan@codeaurora.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 00/12] power: add generic power sequence framework
+Date: Fri, 17 Jun 2016 18:09:13 +0800
+Message-ID: <1466158165-9380-1-git-send-email-peter.chen@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 152 +++++++++++++++++++++
- 1 file changed, 152 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
-new file mode 100644
-index 0000000..1b52f01
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
-@@ -0,0 +1,152 @@
-+Qualcomm MDM9615 TLMM block
-+
-+This binding describes the Top Level Mode Multiplexer block found in the
-+MDM9615 platform.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "qcom,mdm9615-pinctrl"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the base address and size of the TLMM register space.
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the TLMM summary IRQ.
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <none>
-+	Definition: identifies this node as an interrupt controller
-+
-+- #interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 2. Specifying the pin number and flags, as defined
-+		    in <dt-bindings/interrupt-controller/irq.h>
-+
-+- gpio-controller:
-+	Usage: required
-+	Value type: <none>
-+	Definition: identifies this node as a gpio controller
-+
-+- #gpio-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 2. Specifying the pin number and flags, as defined
-+		    in <dt-bindings/gpio/gpio.h>
-+
-+Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
-+a general description of GPIO and interrupt bindings.
-+
-+Please refer to pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices, including the meaning of the
-+phrase "pin configuration node".
-+
-+The pin configuration nodes act as a container for an arbitrary number of
-+subnodes. Each of these subnodes represents some desired configuration for a
-+pin, a group, or a list of pins or groups. This configuration can include the
-+mux function to select on those pin(s)/group(s), and various pin configuration
-+parameters, such as pull-up, drive strength, etc.
-+
-+
-+PIN CONFIGURATION NODES:
-+
-+The name of each subnode is not important; all subnodes should be enumerated
-+and processed purely based on their content.
-+
-+Each subnode only affects those parameters that are explicitly listed. In
-+other words, a subnode that lists a mux function but no pin configuration
-+parameters implies no information about any pin configuration parameters.
-+Similarly, a pin subnode that describes a pullup parameter implies no
-+information about e.g. the mux function.
-+
-+
-+The following generic properties as defined in pinctrl-bindings.txt are valid
-+to specify in a pin configuration subnode:
-+
-+- pins:
-+	Usage: required
-+	Value type: <string-array>
-+	Definition: List of gpio pins affected by the properties specified in
-+		    this subnode.  Valid pins are:
-+		    gpio0-gpio87
-+
-+- function:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Specify the alternative function to be configured for the
-+		    specified pins.
-+		    Valid values are:
-+		    gpio, gsbi2_i2c, gsbi3, gsbi4, gsbi5_i2c, gsbi5_uart,
-+		    sdc2, ebi2_lcdc, ps_hold, prim_audio, sec_audio,
-+		    cdc_mclk
-+
-+- bias-disable:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configued as no pull.
-+
-+- bias-pull-down:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configued as pull down.
-+
-+- bias-pull-up:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configued as pull up.
-+
-+- output-high:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins are configured in output mode, driven
-+		    high.
-+
-+- output-low:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins are configured in output mode, driven
-+		    low.
-+
-+- drive-strength:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: Selects the drive strength for the specified pins, in mA.
-+		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
-+
-+Example:
-+
-+	msmgpio: pinctrl@800000 {
-+		compatible = "qcom,mdm9615-pinctrl";
-+		reg = <0x800000 0x4000>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <0 16 0x4>;
-+
-+		gsbi8_uart: gsbi8-uart {
-+			mux {
-+				pins = "gpio34", "gpio35";
-+				function = "gsbi8";
-+			};
-+
-+			tx {
-+				pins = "gpio34";
-+				drive-strength = <4>;
-+				bias-disable;
-+			};
-+
-+			rx {
-+				pins = "gpio35";
-+				drive-strength = <2>;
-+				bias-pull-up;
-+			};
-+		};
-+	};
+We have an well-known problem that the device needs to do some power
+sequence before it can be recognized by related host, the typical
+example like hard-wired mmc devices and usb devices. This power
+sequence is hard to be described at device tree and handled by
+related host driver, so we have created a common power sequence
+framework to handle this requirement. The generic code is supplied
+some common helpers from host driver, and individual power sequence
+driver handles kinds of power sequence for devices.
+
+Since the MMC has already done the similar things, and this power
+sequence handling can be generic, we use mmc power sequence code
+as base to create this framework.
+
+This patch set is based on Krzysztof Kozlowski's RFC patch set (v4.7-rc1)
+[1], and making some changes which can let it be generic. After that,
+we create a generic power sequence driver for USB devices which handles
+below things, it includes all input signals for devices I can consider.
+
+- Clock and its frequencies
+- GPIO for reset and the duration time
+- GPIO for enable
+- Regulator for power
+
+This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+two hot-plug devices to simulate this use case. The udoo board changes
+were tested using my last power sequence patch set. [2]
+
+@Maciej S. Szmigiero, Oscar, would you please test them on imx6qdl udoo
+boards?
+@Krzysztof Kozlowski, I have not written changes for your case since I
+find the other sequences have already at drivers/usb/misc/usb3503.c,
+this driver should be the place for your power sequence, I am not
+sure if enable regualator at usb core is suitable for you or not.
+@others, it is better you can help test this patch set for MMC devices
+and your USB devices with dts changes.
+
+Thank you for your time!
+
+[1] http://www.spinics.net/lists/linux-usb/msg142351.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-March/413580.html
+
+Krzysztof Kozlowski (5):
+  power/mmc: Move pwrseq drivers to power/pwrseq
+  MAINTAINERS: Retain Ulf Hansson as the same maintainer of pwrseq
+  power: pwrseq: Enable COMPILE_TEST for drivers
+  power: pwrseq: Remove mmc prefix from mmc_pwrseq
+  power: pwrseq: Generalize mmc_pwrseq operations by removing mmc prefix
+
+Peter Chen (7):
+  power: pwrseq: change common helpers as generic
+  power: pwrseq: rename file name for generic driver
+  doc: binding: pwrseq-usb-generic: add binding doc for generic usb
+    power sequence driver
+  power: pwrseq: pwrseq_usb_generic: add generic power sequence support
+    for USB deivces
+  usb: core: add power sequence handling for USB devices
+  usb: chipidea: host: let the hcd know's parent device node
+  ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
+
+ .../{mmc => power/pwrseq}/mmc-pwrseq-simple.txt    |   0
+ .../pwrseq/pwrseq-emmc.txt}                        |   0
+ .../bindings/power/pwrseq/pwrseq-usb-generic.txt   |  31 ++++
+ .../devicetree/bindings/usb/usb-device.txt         |   2 +
+ MAINTAINERS                                        |   9 +
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  30 +--
+ drivers/mmc/Kconfig                                |   2 -
+ drivers/mmc/core/Kconfig                           |  24 ---
+ drivers/mmc/core/Makefile                          |   3 -
+ drivers/mmc/core/core.c                            |   8 +-
+ drivers/mmc/core/host.c                            |  10 +-
+ drivers/mmc/core/pwrseq.h                          |  52 ------
+ drivers/power/Kconfig                              |   1 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/pwrseq/Kconfig                       |  43 +++++
+ drivers/power/pwrseq/Makefile                      |   4 +
+ drivers/{mmc/core/pwrseq.c => power/pwrseq/core.c} |  71 ++++----
+ drivers/{mmc/core => power/pwrseq}/pwrseq_emmc.c   |  17 +-
+ .../pwrseq/pwrseq_mmc_simple.c}                    |  33 ++--
+ drivers/power/pwrseq/pwrseq_usb_generic.c          | 202 +++++++++++++++++++++
+ drivers/usb/chipidea/host.c                        |  18 +-
+ drivers/usb/core/hub.c                             |  73 +++++++-
+ drivers/usb/core/hub.h                             |   1 +
+ include/linux/mmc/host.h                           |   4 +-
+ include/linux/pwrseq.h                             |  61 +++++++
+ 25 files changed, 527 insertions(+), 173 deletions(-)
+ rename Documentation/devicetree/bindings/{mmc => power/pwrseq}/mmc-pwrseq-simple.txt (100%)
+ rename Documentation/devicetree/bindings/{mmc/mmc-pwrseq-emmc.txt => power/pwrseq/pwrseq-emmc.txt} (100%)
+ create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+ delete mode 100644 drivers/mmc/core/Kconfig
+ delete mode 100644 drivers/mmc/core/pwrseq.h
+ create mode 100644 drivers/power/pwrseq/Kconfig
+ create mode 100644 drivers/power/pwrseq/Makefile
+ rename drivers/{mmc/core/pwrseq.c => power/pwrseq/core.c} (51%)
+ rename drivers/{mmc/core => power/pwrseq}/pwrseq_emmc.c (88%)
+ rename drivers/{mmc/core/pwrseq_simple.c => power/pwrseq/pwrseq_mmc_simple.c} (81%)
+ create mode 100644 drivers/power/pwrseq/pwrseq_usb_generic.c
+ create mode 100644 include/linux/pwrseq.h
+
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
