@@ -1,82 +1,51 @@
-From: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2 2/2] pci/aer: interrupt fixup in the quirk
-Date: Fri, 17 Jun 2016 03:30:56 +0000
-Message-ID: <VI1PR0401MB1709A9CA2424515B867940E392570@VI1PR0401MB1709.eurprd04.prod.outlook.com>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465884747-1517-1-git-send-email-po.liu@nxp.com>
- <1465884747-1517-2-git-send-email-po.liu@nxp.com>
- <20160616135420.GA31343@localhost>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V12 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller
+Date: Fri, 17 Jun 2016 10:13:29 +0530
+Message-ID: <57637FF1.9030802@ti.com>
+References: <1465000774-7762-1-git-send-email-marex@denx.de>
+ <1465000774-7762-2-git-send-email-marex@denx.de> <575F91B2.7010304@ti.com>
+ <575FFF97.7040104@denx.de> <57624A98.4060308@ti.com>
+ <5762A7E6.8000109@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160616135420.GA31343@localhost>
-Content-Language: en-US
+In-Reply-To: <5762A7E6.8000109-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gIC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ICBGcm9tOiBCam9ybiBIZWxnYWFz
-IFttYWlsdG86aGVsZ2Fhc0BrZXJuZWwub3JnXQ0KPiAgU2VudDogVGh1cnNkYXksIEp1bmUgMTYs
-IDIwMTYgOTo1NCBQTQ0KPiAgVG86IFBvIExpdQ0KPiAgQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gIGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBCam9ybiBI
-ZWxnYWFzOw0KPiAgU2hhd24gR3VvOyBNYXJjIFp5bmdpZXI7IFJvYiBIZXJyaW5nOyBSb3kgWmFu
-ZzsgTWluZ2thaSBIdTsgU3R1YXJ0IFlvZGVyOw0KPiAgWWFuZy1MZW8gTGk7IEFybmQgQmVyZ21h
-bm47IE1pbmdodWFuIExpYW47IE11cmFsaSBLYXJpY2hlcmkNCj4gIFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggdjIgMi8yXSBwY2kvYWVyOiBpbnRlcnJ1cHQgZml4dXAgaW4gdGhlIHF1aXJrDQo+ICANCj4g
-IE9uIFR1ZSwgSnVuIDE0LCAyMDE2IGF0IDAyOjEyOjI3UE0gKzA4MDAsIFBvIExpdSB3cm90ZToN
-Cj4gID4gT24gc29tZSBwbGF0Zm9ybXMsIHJvb3QgcG9ydCBkb2Vzbid0IHN1cHBvcnQgTVNJL01T
-SS1YL0lOVHggaW4gUkMgbW9kZS4NCj4gID4gV2hlbiBjaGlwIHN1cHBvcnQgdGhlIGFlciBpbnRl
-cnJ1cHQgd2l0aCBub25lIE1TSS9NU0ktWC9JTlR4IG1vZGUsDQo+ICA+IG1heWJlIHRoZXJlIGlz
-IGludGVycnVwdCBsaW5lIGZvciBhZXIgcG1lIGV0Yy4gU2VhcmNoIHRoZSBpbnRlcnJ1cHQNCj4g
-ID4gbnVtYmVyIGluIHRoZSBmZHQgZmlsZS4gVGhlbiBmaXh1cCB0aGUgZGV2LT5pcnEgd2l0aCBp
-dC4NCj4gID4NCj4gID4gU2lnbmVkLW9mZi1ieTogUG8gTGl1IDxwby5saXVAbnhwLmNvbT4NCj4g
-ID4gLS0tDQo+ICA+IGNoYW5nZXMgZm9yIFYyOg0KPiAgPiAJLSBNb3ZlIHRvIHRoZSBxdWlyayBm
-aWxlDQo+ICA+DQo+ICA+ICBkcml2ZXJzL3BjaS9xdWlya3MuYyB8IDIzICsrKysrKysrKysrKysr
-KysrKysrKysrDQo+ICA+ICAxIGZpbGUgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKQ0KPiAgPg0K
-PiAgPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcXVpcmtzLmMgYi9kcml2ZXJzL3BjaS9xdWly
-a3MuYyBpbmRleA0KPiAgPiBlZTcyZWJlLi45MDlkNDc5IDEwMDY0NA0KPiAgPiAtLS0gYS9kcml2
-ZXJzL3BjaS9xdWlya3MuYw0KPiAgPiArKysgYi9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiAgDQo+
-ICBJcyB0aGVyZSBhbnkgcG9zc2liaWxpdHkgb2YgdGhpcyBwYXJ0IGJlaW5nIHVzZWQgb24gZGlm
-ZmVyZW50IGFyY2hlcywgb3INCj4gIHdpbGwgaXQgb25seSBldmVyIGJlIG9uIGFybTY0IChvciB3
-aGF0ZXZlciBpdCBpcyk/ICBJZiB0aGUgbGF0dGVyLCBpdA0KPiAgY291bGQgZ28gc29tZXdoZXJl
-IGxpa2UgYXJjaC9hcm02NC9rZXJuZWwvcXVpcmtzLmMgKHdoaWNoIGRvZXNuJ3QgZXhpc3QNCj4g
-IHlldCkuDQoNCk5YUCBMYXllcnNjYXBlMSBpcyBiYXNlIG9uIHRoZSBhcm0gMzJiaXQgZGVzaWdu
-LiBBbHNvIG5lZWQgdGhlIGZpeHVwLg0KDQo+ICANCj4gID4gQEAgLTI1LDYgKzI1LDcgQEANCj4g
-ID4gICNpbmNsdWRlIDxsaW51eC9zY2hlZC5oPg0KPiAgPiAgI2luY2x1ZGUgPGxpbnV4L2t0aW1l
-Lmg+DQo+ICA+ICAjaW5jbHVkZSA8bGludXgvbW0uaD4NCj4gID4gKyNpbmNsdWRlIDxsaW51eC9v
-Zl9pcnEuaD4NCj4gID4gICNpbmNsdWRlIDxhc20vZG1hLmg+CS8qIGlzYV9kbWFfYnJpZGdlX2J1
-Z2d5ICovDQo+ICA+ICAjaW5jbHVkZSAicGNpLmgiDQo+ICA+DQo+ICA+IEBAIC00NDE5LDMgKzQ0
-MjAsMjUgQEAgc3RhdGljIHZvaWQgcXVpcmtfaW50ZWxfcWF0X3ZmX2NhcChzdHJ1Y3QNCj4gIHBj
-aV9kZXYgKnBkZXYpDQo+ICA+ICAJfQ0KPiAgPiAgfQ0KPiAgPiAgREVDTEFSRV9QQ0lfRklYVVBf
-RUFSTFkoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0NDMsDQo+ICA+IHF1aXJrX2ludGVsX3FhdF92
-Zl9jYXApOw0KPiAgPiArDQo+ICA+ICsvKiBJZiByb290IHBvcnQgZG9lc24ndCBzdXBwb3J0IE1T
-SS9NU0ktWC9JTlR4IGluIFJDIG1vZGUsDQo+ICA+ICsgKiBidXQgdXNlIHN0YW5kYWxvbmUgaXJx
-LiBSZWFkIHRoZSBkZXZpY2UgdHJlZSBmb3IgdGhlIGFlcg0KPiAgPiArICogaW50ZXJydXB0IG51
-bWJlci4NCj4gID4gKyAqLw0KPiAgPiArc3RhdGljIHZvaWQgcXVpcmtfYWVyX2ludGVycnVwdChz
-dHJ1Y3QgcGNpX2RldiAqZGV2KSB7DQo+ICA+ICsJaW50IHJldDsNCj4gID4gKwlzdHJ1Y3QgZGV2
-aWNlX25vZGUgKm5wID0gTlVMTDsNCj4gID4gKw0KPiAgPiArCWlmIChkZXYtPmJ1cy0+ZGV2Lm9m
-X25vZGUpDQo+ICA+ICsJCW5wID0gZGV2LT5idXMtPmRldi5vZl9ub2RlOw0KPiAgPiArDQo+ICA+
-ICsJaWYgKElTX0VOQUJMRUQoQ09ORklHX09GX0lSUSkgJiYgbnApIHsNCj4gID4gKwkJcmV0ID0g
-b2ZfaXJxX2dldF9ieW5hbWUobnAsICJhZXIiKTsNCj4gID4gKwkJaWYgKHJldCA+IDApIHsNCj4g
-ID4gKwkJCWRldi0+bm9fbXNpID0gMTsNCj4gID4gKwkJCWRldi0+aXJxID0gcmV0Ow0KPiAgPiAr
-CQl9DQo+ICA+ICsJfQ0KPiAgDQo+ICBXaGF0IGRvZXMgdGhpcyBtZWFuIGZvciB0aGUgb3RoZXIg
-UENJZSBzZXJ2aWNlcywgZS5nLiwgUE1FPyAgSSBndWVzcw0KPiAgdGhpcyBtYWtlcyB0aGUgZXhp
-c3RpbmcgQUVSIGNvZGUgd29yayB1bmNoYW5nZWQuICBCdXQgSSB0aG91Z2h0IFBNRSBoYWQNCj4g
-IGEgc2ltaWxhciBzaXR1YXRpb24gYW5kIHdhcyBjb25uZWN0ZWQgdXAgdG8gYSBkaWZmZXJlbnQg
-aW50ZXJydXB0IHRoYW4NCj4gIEFFUiB3YXMuDQoNClllcywgUE1FIGlzIHNpbWlsYXIsIEhQIGlz
-IG5vdCBzdXBwb3J0LiBJIHRoaW5rIGJldHRlciB0byBkaXNhYmxlIHRoZSBQTUUgc2VydmljZSBp
-cnEgaW4gdGhlIHF1aXJrLg0KQnV0IHNlZW1zIGl0IGlzIG5vIHVzZSBiZWNhdXNlIHF1aXJrIGZp
-eHVwIGlzIG9ubHkgcnVubmluZyBpbiBpbml0IHBoYXNlIHRpbWUoZXhjZXB0IHN1c3BlbmQsIHJl
-c3VtZSkuDQoNCj4gIA0KPiAgPiArfQ0KPiAgPiArREVDTEFSRV9QQ0lfRklYVVBfRklOQUwoUENJ
-X1ZFTkRPUl9JRF9GUkVFU0NBTEUsIFBDSV9BTllfSUQsDQo+ICA+ICtxdWlya19hZXJfaW50ZXJy
-dXB0KTsNCj4gID4gLS0NCj4gID4gMi4xLjAuMjcuZzk2ZGIzMjQNCj4gID4NCj4gID4gLS0NCj4g
-ID4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2Ny
-aWJlIGxpbnV4LXBjaSINCj4gID4gaW4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9t
-b0B2Z2VyLmtlcm5lbC5vcmcgTW9yZSBtYWpvcmRvbW8NCj4gID4gaW5mbyBhdCAgaHR0cDovL3Zn
-ZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sDQo=
+
+
+On Thursday 16 June 2016 06:51 PM, Marek Vasut wrote:
+> On 06/16/2016 08:43 AM, Vignesh R wrote:
+[...]
+>>> - I didn't find any way to find when all the data in the current 1 MiB
+>>>   block were written and you can remap another 1 MiB block in place.
+>>
+>> I believe this constraint only applies if enahbremap bit is set in cfg
+>> register, if not, then the entire memory map can be accessed.
+> 
+> And where is that memory window accessible then, at which address ?
+> The SoCFPGA peripherals are stuffed in some 12 MiB of the address
+> space, the rest is bootrom/sram/ram and the FPGA bridges, so I find
+> it hard to believe you can place ie. 128 MiB SPI NOR mapping somewhere
+> in there.
+> 
+> My impression is that in direct mode, the qspi will always overlay the
+> address 0x0 on socfpga , but that might be configurable , I'm not sure.
+> 
+
+Ah, socfgpa provides just 1MB window to access QSPI_DATA area. So direct
+mode may not be practical as it will require remapping.
+But, on TI EVM, QSPI_DATA area is 64MB in size, so looks like direct
+mode(when added) needs to be tied to TI specific compatible.
+
+-- 
+Regards
+Vignesh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
