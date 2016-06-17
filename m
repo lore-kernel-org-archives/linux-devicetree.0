@@ -1,120 +1,75 @@
-From: Hoan Tran <hotran@apm.com>
-Subject: Re: [PATCH 2/2] clk: Add fractional scale clock support
-Date: Fri, 17 Jun 2016 09:30:22 -0700
-Message-ID: <CAFHUOYxGqutv+Yr4sZUogVNEqRpyB0A9CcdadwJiac_Q=HQ-zw@mail.gmail.com>
-References: <1466120433-30648-1-git-send-email-hotran@apm.com>
-	<1466120433-30648-3-git-send-email-hotran@apm.com>
-	<CAMuHMdUMm5BWWEmKX3xOBkMX7HWTYgD6R0xz=uggs_Uya8=3Gw@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 07/13] dt-bindings: i2c: Add support for 'i2c-bus'
+ subnode
+Date: Fri, 17 Jun 2016 17:30:54 +0100
+Message-ID: <20160617163054.GD32754@leverpostej>
+References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
+ <1466165027-17917-8-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUMm5BWWEmKX3xOBkMX7HWTYgD6R0xz=uggs_Uya8=3Gw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Loc Ho <lho@apm.com>, Duc Dang <dhdang@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466165027-17917-8-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On Fri, Jun 17, 2016 at 01:03:41PM +0100, Jon Hunter wrote:
+> The I2C driver core for boards using device-tree assumes any subnode of
+> an I2C adapter in the device-tree blob as being a I2C slave device.
+> Although this makes complete sense, some I2C adapters may have subnodes
+> which are not I2C slaves but subnodes presenting other features. For
+> example some Tegra devices have an I2C interface which may share its
+> pins with other devices and to share these pins subnodes for
+> representing these pins so they have be shared via the pinctrl framework
+> are needed.
+> 
+> To allow I2C adapters to have non-I2C specific subnodes in device-tree
+> that are not parsed by the I2C driver core by adding support for a
+> 'i2c-bus' subnode where I2C slaves can be placed. If the 'i2c-bus'
+> subnode is present then all I2C slaves must be placed under this subnode.
+> 
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+> index f31b2ad1552b..ed56b08c7e6e 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+> @@ -32,6 +32,14 @@ wants to support one of the below features, it should adapt the bindings below.
+>  - clock-frequency
+>  	frequency of bus clock in Hz.
+>  
+> +- i2c-bus
+> +	For I2C adapters that have child nodes that are a mixture of both I2C
+> +	devices and non-I2C devices (such as a pin controller), the 'i2c-bus'
+> +	subnode can be used for populating I2C devices to prevent the I2C core
+> +	from attempting to add any non-i2c nodes as I2C devices. If 'i2c-bus'
+> +	subnode is present then all I2C slaves must be added under this
+> +	subnode.
 
-On Thu, Jun 16, 2016 at 11:43 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Fri, Jun 17, 2016 at 1:40 AM, Hoan Tran <hotran@apm.com> wrote:
->> This patch adds fractional scale clock support.
->> Fractional scale clock is implemented for a single register field.
->>   Output rate = parent_rate * scale / denominator
->> For example, for 1 / 8 fractional scale, denominator will be 8 and scale
->> will be computed and programmed accordingly.
->>
->> Signed-off-by: Hoan Tran <hotran@apm.com>
->> Signed-off-by: Loc Ho <lho@apm.com>
->
->> --- /dev/null
->> +++ b/drivers/clk/clk-fractional-scale.c
->
->> +static long clk_fs_round_rate(struct clk_hw *hw, unsigned long rate,
->> +                             unsigned long *parent_rate)
->> +{
->> +       struct clk_fractional_scale *fd = to_clk_sf(hw);
->> +       u64 ret, scale;
->> +
->> +       if (!rate || rate >= *parent_rate)
->> +               return *parent_rate;
->> +
->> +       /* freq = parent_rate * scaler / denom */
->> +       ret = rate * fd->denom;
->
-> Can this overflow? No, because fd->denom is u64.
-> But if fd->denom is changed to u32, it needs a cast to u64 here.
->
->> +       scale = ret / *parent_rate;
->
-> As detected by the kbuild test robot, this should use do_div().
+The general idea seems sound.
 
-Yes, my mistake. I'll fix it.
+It would be good if we could remove the mention of the I2C core,
+something like:
 
->
->> +
->> +       ret = (u64) *parent_rate * scale;
->> +       do_div(ret, fd->denom);
->> +
->> +       return ret;
->> +}
->> +
->> +static int clk_fs_set_rate(struct clk_hw *hw, unsigned long rate,
->> +                          unsigned long parent_rate)
->> +{
->> +       struct clk_fractional_scale *fd = to_clk_sf(hw);
->> +       unsigned long flags = 0;
->> +       u64 scale, ret;
->> +       u32 val;
->> +
->> +       /*
->> +        * Compute the scaler:
->> +        *
->> +        * freq = parent_rate * scaler / denom, or
->> +        * scaler = freq * denom / parent_rate
->> +        */
->> +       ret = rate * fd->denom;
->
-> Can this overflow? No, because fd->denom is u64.
-> But if fd->denom is changed to u32, it needs a cast to u64 here.
->
->> +       scale = ret / (u64)parent_rate;
->
-> Don't cast the divider to u64, as this will turn a 64-by-32 division into a
-> 64-by-64 division.
-> As detected by the kbuild test robot, this should use do_div().
+  - i2c-bus
+	For I2C adapters that have child nodes that are a mixture of both I2C
+	devices and non-I2C devices (such as a pin controller), the 'i2c-bus'
+	subnode can be used for populating I2C devices. If an 'i2c-bus'
+	subnode is present, only subnodes of this will be considered as
+	I2C slaves.
 
-Will fix it.
+How are #address-cells and #size-cells handled in this case? I assume
+that they should live under the i2c-bus subnode, which should be called
+out.
 
-Thanks
-Hoan
-
->
->> --- a/include/linux/clk-provider.h
->> +++ b/include/linux/clk-provider.h
->
->> +struct clk_fractional_scale {
->> +       struct clk_hw   hw;
->> +       void __iomem    *reg;
->> +       u8              shift;
->> +       u32             mask;
->> +       u64             denom;
->
-> u64 sounds overkill to me, but it looks like that was done to avoid overflow in
-> the multiplications?
->
->> +       u32             flags;
->> +       spinlock_t      *lock;
->> +};
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
