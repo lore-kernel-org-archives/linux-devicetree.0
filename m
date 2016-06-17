@@ -1,158 +1,331 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 2/4] mfd: cros_ec: add EC_PWM function definitions
-Date: Fri, 17 Jun 2016 17:55:52 +0200
-Message-ID: <20160617155552.GB27475@ulmo.ba.sec>
-References: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
- <1464916904-37554-3-git-send-email-briannorris@chromium.org>
- <20160616153817.GD21702@dell>
- <CAD=FV=X8eOQLbdAseL2_JwpOFNjSLDAi9hX=NrE=CfrrTZfAmA@mail.gmail.com>
- <20160617080635.GG21702@dell>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
+Date: Fri, 17 Jun 2016 17:57:53 +0200
+Message-ID: <57641E01.3070205@gmail.com>
+References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
+ <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
+ <574C5CBF.7060002@gmail.com> <1464683762.14604.59.camel@mtksdaap41>
+ <574DEE40.9010008@gmail.com> <1464775020.11122.40.camel@mtksdaap41>
+ <574FF264.7050209@gmail.com> <1464934356.15175.31.camel@mtksdaap41>
+ <57516774.5080008@gmail.com> <1464956037.16029.8.camel@mtksdaap41>
+ <575181E5.6090603@gmail.com> <5756FD73.3050607@gmail.com>
+ <1465364427.9963.13.camel@mtksdaap41> <5757F762.4020908@gmail.com>
+ <1465388727.21326.8.camel@mtksdaap41> <57583B45.2080504@gmail.com>
+ <1465890268.7191.13.camel@mtksdaap41> <575FD9BA.8040708@gmail.com>
+ <1465906063.20796.20.camel@mtksdaap41> <1466152107.11184.14.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2B/JsCI69OhZNC5r"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160617080635.GG21702@dell>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466152107.11184.14.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---2B/JsCI69OhZNC5r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 17, 2016 at 09:06:35AM +0100, Lee Jones wrote:
-> On Thu, 16 Jun 2016, Doug Anderson wrote:
-> > On Thu, Jun 16, 2016 at 8:38 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> > > On Thu, 02 Jun 2016, Brian Norris wrote:
-> > >
-> > >> The EC_CMD_PWM_{GET,SET}_DUTY commands allow us to control a PWM tha=
-t is
-> > >> attached to the EC, rather than the main host SoC. The API provides
-> > >> functionality-based (e.g., keyboard light, backlight) or index-based
-> > >> addressing of the PWM(s). Duty cycles are represented by a 16-bit va=
-lue,
-> > >> where 0 maps to 0% duty cycle and U16_MAX maps to 100%. The period
-> > >> cannot be controlled.
-> > >>
-> > >> This command set is more generic than, e.g.,
-> > >> EC_CMD_PWM_{GET,SET}_KEYBOARD_BACKLIGHT and could possibly used to
-> > >> replace it on future products.
-> > >>
-> > >> Let's update the command header to include the definitions.
-> > >>
-> > >> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> > >> ---
-> > >> v2: no change
-> > >>
-> > >>  include/linux/mfd/cros_ec_commands.h | 31 +++++++++++++++++++++++++=
-++++++
-> > >>  1 file changed, 31 insertions(+)
-> > >>
-> > >> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mf=
-d/cros_ec_commands.h
-> > >> index 13b630c10d4c..d673575e0ada 100644
-> > >> --- a/include/linux/mfd/cros_ec_commands.h
-> > >> +++ b/include/linux/mfd/cros_ec_commands.h
-> > >> @@ -949,6 +949,37 @@ struct ec_params_pwm_set_fan_duty {
-> > >>       uint32_t percent;
-> > >>  } __packed;
-> > >>
-> > >> +#define EC_CMD_PWM_SET_DUTY 0x25
-> > >> +/* 16 bit duty cycle, 65535 =3D 100% */
-> > >> +#define EC_PWM_MAX_DUTY 65535
-> > >
-> > > Any reason this isn't represented in hex, like we do normally?
-> > >
-> > >> +enum ec_pwm_type {
-> > >> +     /* All types, indexed by board-specific enum pwm_channel */
-> > >> +     EC_PWM_TYPE_GENERIC =3D 0,
-> > >> +     /* Keyboard backlight */
-> > >> +     EC_PWM_TYPE_KB_LIGHT,
-> > >> +     /* Display backlight */
-> > >> +     EC_PWM_TYPE_DISPLAY_LIGHT,
-> > >> +     EC_PWM_TYPE_COUNT,
-> > >> +};
-> > >
-> > > Are these comments really necessary?  I'd recommend that if your
-> > > defines require comments, then they are not adequately named.  In this
-> > > case however, I'd suggest that they are and the comments are
-> > > superfluous.
-> > >
-> > >> +struct ec_params_pwm_set_duty {
-> > >> +     uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY =3D 100% */
-> > >> +     uint8_t pwm_type;  /* ec_pwm_type */
-> > >> +     uint8_t index;     /* Type-specific index, or 0 if unique */
-> > >> +} __packed;
-> > >
-> > > Please use kerneldoc format.
-> > >
-> > >> +#define EC_CMD_PWM_GET_DUTY 0x26
-> > >> +
-> > >> +struct ec_params_pwm_get_duty {
-> > >> +     uint8_t pwm_type;  /* ec_pwm_type */
-> > >> +     uint8_t index;     /* Type-specific index, or 0 if unique */
-> > >> +} __packed;
-> >=20
-> > Probably the reason for all of these non-kernel-isms is that this
-> > isn't a kernel file.  From the top of the file:
-> >=20
-> >  * NOTE: This file is copied verbatim from the ChromeOS EC Open Source
-> >  * project in an attempt to make future updates easy to make.
-> >=20
-> > So the source of truth for this file is
-> > <https://chromium.googlesource.com/chromiumos/platform/ec/+/master/incl=
-ude/ec_commands.h>.
-> >=20
-> > Someone could probably submit a CL to that project to make it a little
-> > more kernel-ish and then we'd have to see if the EC team would accept
-> > such changes...
->=20
-> Hmmm... that kinda puts me in a difficult position.  Do I except
-> non-kernel code, which does not conform to our stands?
+On 17/06/16 10:28, Horng-Shyang Liao wrote:
+> Hi Matthias,
+>
+> On Tue, 2016-06-14 at 20:07 +0800, Horng-Shyang Liao wrote:
+>> Hi Matthias,
+>>
+>> On Tue, 2016-06-14 at 12:17 +0200, Matthias Brugger wrote:
+>>>
+>>> On 14/06/16 09:44, Horng-Shyang Liao wrote:
+>>>> Hi Matthias,
+>>>>
+>>>> On Wed, 2016-06-08 at 17:35 +0200, Matthias Brugger wrote:
+>>>>>
+>>>>> On 08/06/16 14:25, Horng-Shyang Liao wrote:
+>>>>>> Hi Matthias,
+>>>>>>
+>>>>>> On Wed, 2016-06-08 at 12:45 +0200, Matthias Brugger wrote:
+>>>>>>>
+>>>>>>> On 08/06/16 07:40, Horng-Shyang Liao wrote:
+>>>>>>>> Hi Matthias,
+>>>>>>>>
+>>>>>>>> On Tue, 2016-06-07 at 18:59 +0200, Matthias Brugger wrote:
+>>>>>>>>>
+>>>>>>>>> On 03/06/16 15:11, Matthias Brugger wrote:
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>> [...]
+>>>>>>>>>
+>>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>>> +            smp_mb(); /* modify jump before enable thread */
+>>>>>>>>>>>>>>>>>>> +        }
+>>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>>> +        cmdq_thread_writel(thread, task->pa_base +
+>>>>>>>>>>>>>>>>>>> task->command_size,
+>>>>>>>>>>>>>>>>>>> +                   CMDQ_THR_END_ADDR);
+>>>>>>>>>>>>>>>>>>> +        cmdq_thread_resume(thread);
+>>>>>>>>>>>>>>>>>>> +    }
+>>>>>>>>>>>>>>>>>>> +    list_move_tail(&task->list_entry, &thread->task_busy_list);
+>>>>>>>>>>>>>>>>>>> +    spin_unlock_irqrestore(&cmdq->exec_lock, flags);
+>>>>>>>>>>>>>>>>>>> +}
+>>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>>> +static void cmdq_handle_error_done(struct cmdq *cmdq,
+>>>>>>>>>>>>>>>>>>> +                   struct cmdq_thread *thread, u32 irq_flag)
+>>>>>>>>>>>>>>>>>>> +{
+>>>>>>>>>>>>>>>>>>> +    struct cmdq_task *task, *tmp, *curr_task = NULL;
+>>>>>>>>>>>>>>>>>>> +    u32 curr_pa;
+>>>>>>>>>>>>>>>>>>> +    struct cmdq_cb_data cmdq_cb_data;
+>>>>>>>>>>>>>>>>>>> +    bool err;
+>>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>>> +    if (irq_flag & CMDQ_THR_IRQ_ERROR)
+>>>>>>>>>>>>>>>>>>> +        err = true;
+>>>>>>>>>>>>>>>>>>> +    else if (irq_flag & CMDQ_THR_IRQ_DONE)
+>>>>>>>>>>>>>>>>>>> +        err = false;
+>>>>>>>>>>>>>>>>>>> +    else
+>>>>>>>>>>>>>>>>>>> +        return;
+>>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>>> +    curr_pa = cmdq_thread_readl(thread, CMDQ_THR_CURR_ADDR);
+>>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>>> +    list_for_each_entry_safe(task, tmp, &thread->task_busy_list,
+>>>>>>>>>>>>>>>>>>> +                 list_entry) {
+>>>>>>>>>>>>>>>>>>> +        if (curr_pa >= task->pa_base &&
+>>>>>>>>>>>>>>>>>>> +            curr_pa < (task->pa_base + task->command_size))
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>> What are you checking here? It seems as if you make some implcit
+>>>>>>>>>>>>>>>>>> assumptions about pa_base and the order of execution of
+>>>>>>>>>>>>>>>>>> commands in the
+>>>>>>>>>>>>>>>>>> thread. Is it save to do so? Does dma_alloc_coherent give any
+>>>>>>>>>>>>>>>>>> guarantees
+>>>>>>>>>>>>>>>>>> about dma_handle?
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> 1. Check what is the current running task in this GCE thread.
+>>>>>>>>>>>>>>>>> 2. Yes.
+>>>>>>>>>>>>>>>>> 3. Yes, CMDQ doesn't use iommu, so physical address is continuous.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Yes, physical addresses might be continous, but AFAIK there is no
+>>>>>>>>>>>>>>>> guarantee that the dma_handle address is steadily growing, when
+>>>>>>>>>>>>>>>> calling
+>>>>>>>>>>>>>>>> dma_alloc_coherent. And if I understand the code correctly, you
+>>>>>>>>>>>>>>>> use this
+>>>>>>>>>>>>>>>> assumption to decide if the task picked from task_busy_list is
+>>>>>>>>>>>>>>>> currently
+>>>>>>>>>>>>>>>> executing. So I think this mecanism is not working.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> I don't use dma_handle address, and just use physical addresses.
+>>>>>>>>>>>>>>>        From CPU's point of view, tasks are linked by the busy list.
+>>>>>>>>>>>>>>>        From GCE's point of view, tasks are linked by the JUMP command.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> In which cases does the HW thread raise an interrupt.
+>>>>>>>>>>>>>>>> In case of error. When does CMDQ_THR_IRQ_DONE get raised?
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> GCE will raise interrupt if any task is done or error.
+>>>>>>>>>>>>>>> However, GCE is fast, so CPU may get multiple done tasks
+>>>>>>>>>>>>>>> when it is running ISR.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> In case of error, that GCE thread will pause and raise interrupt.
+>>>>>>>>>>>>>>> So, CPU may get multiple done tasks and one error task.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> I think we should reimplement the ISR mechanism. Can't we just read
+>>>>>>>>>>>>>> CURR_IRQ_STATUS and THR_IRQ_STATUS in the handler and leave
+>>>>>>>>>>>>>> cmdq_handle_error_done to the thread_fn? You will need to pass
+>>>>>>>>>>>>>> information from the handler to thread_fn, but that shouldn't be an
+>>>>>>>>>>>>>> issue. AFAIK interrupts are disabled in the handler, so we should stay
+>>>>>>>>>>>>>> there as short as possible. Traversing task_busy_list is expensive, so
+>>>>>>>>>>>>>> we need to do it in a thread context.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Actually, our initial implementation is similar to your suggestion,
+>>>>>>>>>>>>> but display needs CMDQ to return callback function very precisely,
+>>>>>>>>>>>>> else display will drop frame.
+>>>>>>>>>>>>> For display, CMDQ interrupt will be raised every 16 ~ 17 ms,
+>>>>>>>>>>>>> and CMDQ needs to call callback function in ISR.
+>>>>>>>>>>>>> If we defer callback to workqueue, the time interval may be larger than
+>>>>>>>>>>>>> 32 ms.sometimes.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> I think the problem is, that you implemented the workqueue as a ordered
+>>>>>>>>>>>> workqueue, so there is no parallel processing. I'm still not sure why
+>>>>>>>>>>>> you need the workqueue to be ordered. Can you please explain.
+>>>>>>>>>>>
+>>>>>>>>>>> The order should be kept.
+>>>>>>>>>>> Let me use mouse cursor as an example.
+>>>>>>>>>>> If task 1 means move mouse cursor to point A, task 2 means point B,
+>>>>>>>>>>> and task 3 means point C, our expected result is A -> B -> C.
+>>>>>>>>>>> If the order is not kept, the result could become A -> C -> B.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Got it, thanks for the clarification.
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> I think a way to get rid of the workqueue is to use a timer, which gets
+>>>>>>>>> programmed to the time a timeout in the first task in the busy list
+>>>>>>>>> would happen. Everytime we update the busy list (e.g. because of task
+>>>>>>>>> got finished by the thread), we update the timer. When the timer
+>>>>>>>>> triggers, which hopefully won't happen too often, we return timeout on
+>>>>>>>>> the busy list elements, until the time is lower then the actual time.
+>>>>>>>>>
+>>>>>>>>> At least with this we can reduce the data structures in this driver and
+>>>>>>>>> make it more lightweight.
+>>>>>>>>
+>>>>>>>>     From my understanding, your proposed method can handle timeout case.
+>>>>>>>>
+>>>>>>>> However, the workqueue is also in charge of releasing tasks.
+>>>>>>>> Do you take releasing tasks into consideration by using the proposed
+>>>>>>>> timer method?
+>>>>>>>> Furthermore, I think the code will become more complex if we also use
+>>>>>>>> timer to implement releasing tasks.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Can't we call
+>>>>>>>             clk_disable_unprepare(cmdq->clock);
+>>>>>>>             cmdq_task_release(task);
+>>>>>>> after invoking the callback?
+>
+> After I put clk_disable_unprepare(cmdq->clock) into ISR, I encounter
+> another BUG.
+>
+> (Quote some Linux 4.7 source code.)
+>
+>   605 void clk_unprepare(struct clk *clk)
+>   606 {
+>   607         if (IS_ERR_OR_NULL(clk))
+>   608                 return;
+>   609
+>   610         clk_prepare_lock();                      // <-- Here
+>   611         clk_core_unprepare(clk->core);
+>   612         clk_prepare_unlock();
+>   613 }
+>   614 EXPORT_SYMBOL_GPL(clk_unprepare);
+>
+>    91 static void clk_prepare_lock(void)
+>    92 {
+>    93         if (!mutex_trylock(&prepare_lock)) {     // <-- Here
+>    94                 if (prepare_owner == current) {
+>    95                         prepare_refcnt++;
+>    96                         return;
+>    97                 }
+>    98                 mutex_lock(&prepare_lock);
+>    99         }
+>   100         WARN_ON_ONCE(prepare_owner != NULL);
+>   101         WARN_ON_ONCE(prepare_refcnt != 0);
+>   102         prepare_owner = current;
+>   103         prepare_refcnt = 1;
+>   104 }
+>
+> So, 'unprepare' can sleep and cannot be put into ISR.
+> I also try to put it into a timer, but the error is the same
+> since timer callback is executed by softirq.
+>
+> We need clk_disable_unprepare() since it can save power consumption
+> in idle.
 
-I think usually code that doesn't adhere to kernel coding style ends up
-in the staging tree until it's been cleaned up enough.
+We can call clk_prepare in probe and then use clk_enable/clk_disable, 
+which don't sleep.
 
-The rule doesn't quite apply here because cleaning up isn't the issue.
-But I don't know if we have any best practices for this kind of thing.
+Regards,
+Matthias
 
-One thing that I've seen done in the past is to have this kind of
-cross-OS header generated from some sort of definition file (XML, ...)
-with an output filter for all supported OSes. Is that something that
-could perhaps be done here?
-
-That said, this might not even be worth it in this case. While I see how
-it makes sense to avoid work updating this file for various coding
-styles, the content in this file defines an ABI, so really the only
-changes will be additions, and once they're merged they become set in
-stone anyway. The amount of work updating the header, even taking into
-account different coding styles should be very low.
-
-Thierry
-
---2B/JsCI69OhZNC5r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXZB2GAAoJEN0jrNd/PrOhqi4QAKd7TBMKoYEaYuwg58C6Ma8N
-NfpEqqwsHJXrkwnjWy24TGGko9RXluMHlVSxKjxa+ijaJJa2hDxfJ9Q3D13dYisi
-cK6ESyF5GDN6ikTUjt3Cm9mCmB9W/110oLTAgMkrLWpCbVFaOv0JNtVsvrQV+Xt8
-doRV//c/oymrFiecD6k31X7ab+DP5+Y7H5AO+1t8EjHfrDc22xVF1xsOZDzYly32
-K5XHQYgG1X8hcpUwKOdAzHln1X4nLoqEjXmNMdOVuvPQI8a384R+TeNGozCExPP+
-tnZUwM1wHp66w5FO42VhhVfhuDRM4xsh0l0u9tSecdu1/pSbBuf9qKdm/VoadaUt
-tyTI32WHBu/4MuINilxeq9hhJ6yzh70FCA1jIo+qbjL6i9qzb7hJ9zxL6SiOj1Ow
-MRZYovKCnBs3wRsmBj1jFoSiVnotyHSuea7LbhFGM242GAZjFeCmnlM93sQdMFOU
-spXepYfnXzs4xIAaVP2Zn7w+zZ6ja55EYbQRm2kaoIwOO9fiIF1xGjaz/JdTifTH
-fSR5T2QboD8ZFultL3tn3IbnGL9qI+6AFYiCrpX2e/koc8JBfaoEIJKj1gSSS9o9
-DiQdznfyepRKrg0MpP9NJ1dM/eruLOeEfhpvGx8z+gzhzhuOOa8yNHjofPmxY0qe
-g5qz62GcNRH9DNf5BjtE
-=IJXK
------END PGP SIGNATURE-----
-
---2B/JsCI69OhZNC5r--
+> Therefore, I plan to
+> (1) move releasing buffer and task into ISR,
+> (2) move timeout into timer, and
+> (3) keep workqueue for clk_disable_unprepare().
+>
+> What do you think?
+>
+> Thanks,
+> HS
+>
+>>>>>>
+>>>>>> Do you mean just call these two functions in ISR?
+>>>>>> My major concern is dma_free_coherent() and kfree() in
+>>>>>> cmdq_task_release(task).
+>>>>>
+>>>>> Why do we need the dma calls at all? Can't we just calculate the
+>>>>> physical address using __pa(x)?
+>>>>
+>>>> I prefer to use dma_map_single/dma_unmap_single.
+>>>>
+>>>
+>>> Can you please elaborate why you need this. We don't do dma, so we
+>>> should not use dma memory for this.
+>>
+>> We need a buffer to share between CPU and GCE, so we do need DMA.
+>> CPU is in charge of writing GCE commands into this buffer.
+>> GCE is in charge of reading and running GCE commands from this buffer.
+>> When we chain CMDQ tasks, we also need to modify GCE JUMP command.
+>> Therefore, I prefer to use dma_alloc_coherent and dma_free_coherent.
+>>
+>> However, if we want to use timer to handle timeout, we need to release
+>> memory in ISR.
+>> In this case, using kmalloc/kfree + dma_map_single/dma_unmap_single
+>> instead of dma_alloc_coherent/dma_free_coherent is an alternative
+>> solution, but taking care the synchronization between cache and memory
+>> is the expected overhead.
+>>
+>>>>>> Therefore, your suggestion is to use GFP_ATOMIC for both
+>>>>>> dma_alloc_coherent() and kzalloc(). Right?
+>>>>>
+>>>>> I don't think we need GFP_ATOMIC, the critical path will just free the
+>>>>> memory.
+>>>>
+>>>> I tested these two functions, and kfree was safe.
+>>>> However, dma_free_coherent raised BUG.
+>>>> BUG: failure at
+>>>> /mnt/host/source/src/third_party/kernel/v3.18/mm/vmalloc.c:1514/vunmap()!
+>>>
+>>> Just a general hint. Please try to evaluate on a recent kernel. It looks
+>>> like as if you tried this on a v3.18 based one.
+>>
+>> This driver should be backward compatible to v3.18 for a MTK project.
+>>
+>>> Best regards,
+>>> Matthias
+>>
+>> Thanks,
+>> HS
+>>
+>>>> 1512 void vunmap(const void *addr)
+>>>> 1513 {
+>>>> 1514         BUG_ON(in_interrupt());		// <-- here
+>>>> 1515         might_sleep();
+>>>> 1516         if (addr)
+>>>> 1517                 __vunmap(addr, 0);
+>>>> 1518 }
+>>>> 1519 EXPORT_SYMBOL(vunmap);
+>>>>
+>>>> Therefore, I plan to use kmalloc + dma_map_single instead of
+>>>> dma_alloc_coherent, and dma_unmap_single + kfree instead of
+>>>> dma_free_coherent.
+>>>>
+>>>> What do you think about the function replacement?
+>>>>
+>>>>>> If so, I can try to implement timeout by timer, and discuss with you
+>>>>>> if I have further questions.
+>>>>>>
+>>>>>
+>>>>> Sounds good :)
+>>>>>
+>>>>> Thanks,
+>>>>> Matthias
+>>>>
+>>>> Thanks,
+>>>> HS
+>>>>
+>>>>>>> Regrading the clock, wouldn't it be easier to handle the clock
+>>>>>>> enable/disable depending on the state of task_busy_list? I suppose we
+>>>>>>> can't as we would need to check the task_busy_list of all threads, right?
+>>>>>>>
+>>>>>>> Regards,
+>>>>>>> Matthias
+>>>>>>
+>>>>>> Thanks,
+>>>>>> HS
+>>>>>>
+>>>>
+>>>>
+>>
+>>
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
