@@ -1,79 +1,170 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv3 6/7] EDAC, altera: Add Arria10 Ethernet EDAC support
-Date: Fri, 17 Jun 2016 12:43:39 -0500
-Message-ID: <576436CB.6070002@opensource.altera.com>
-References: <1465852752-11018-1-git-send-email-tthayer@opensource.altera.com>
- <1465852752-11018-7-git-send-email-tthayer@opensource.altera.com>
- <20160617172928.GK3912@pd.tnic>
-Reply-To: <tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160617172928.GK3912@pd.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2] firmware: qcom: scm: Expose PAS command 10 as reset-controller
+Date: Fri, 17 Jun 2016 10:40:43 -0700
+Message-ID: <1466185243-31569-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+PAS command 10 is used to assert and deassert the MSS reset via
+TrustZone, expose this as a reset-controller to mimic the direct
+access case.
 
-On 06/17/2016 12:29 PM, Borislav Petkov wrote:
-> On Mon, Jun 13, 2016 at 04:19:11PM -0500, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> Add Altera Arria10 Ethernet FIFO memory EDAC support. Update
->> to support a common compatibility string for all ethernet
->> FIFOs in the DT.
->>
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> ---
->> v2  Remove (void *) cast from altr_edac_device_of_match[]
->>      Addition of panic flag to ethernet private data.
->> v3  Use common compatiblity string.
->>      Simplify socfpga_init_ethernet_ecc().
->> ---
->>   drivers/edac/Kconfig       |    7 +++++++
->>   drivers/edac/altera_edac.c |   38 ++++++++++++++++++++++++++++++++++++--
->>   drivers/edac/altera_edac.h |    3 +++
->>   3 files changed, 46 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
->> index 6ca7474..d0c1dab 100644
->> --- a/drivers/edac/Kconfig
->> +++ b/drivers/edac/Kconfig
->> @@ -391,6 +391,13 @@ config EDAC_ALTERA_OCRAM
->>   	  Support for error detection and correction on the
->>   	  Altera On-Chip RAM Memory for Altera SoCs.
->>
->> +config EDAC_ALTERA_ETHERNET
->> +	bool "Altera Ethernet FIFO ECC"
->> +	depends on EDAC_ALTERA=y
->> +	help
->> +	  Support for error detection and correction on the
->> +	  Altera Ethernet FIFO Memory for Altera SoCs.
->> +
->>   config EDAC_SYNOPSYS
->>   	tristate "Synopsys DDR Memory Controller"
->>   	depends on EDAC_MM_EDAC && ARCH_ZYNQ
->> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
->> index f27bb29..14f99ae 100644
->> --- a/drivers/edac/altera_edac.c
->> +++ b/drivers/edac/altera_edac.c
->> @@ -1260,6 +1260,34 @@ const struct edac_device_prv_data a10_l2ecc_data = {
->>
->>   #endif	/* CONFIG_EDAC_ALTERA_L2C */
->>
->> +/********************* Ethernet Device Functions ********************/
->> +
->> +#ifdef CONFIG_EDAC_ALTERA_ETHERNET
->> +
->> +const struct edac_device_prv_data a10_enet0rxecc_data = {
->
-> This needs to be "static const" and then you don't need to init panic to
-> false.
->
-> Your other edac_device_prv_data things are not static too, please
-> convert them in a separate patch too.
->
-OK, I'll make the change. Thanks!
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+Changes since v1:
+- Selecting RESET_CONTROLLER
+- Constifying reset_ops
+
+ drivers/firmware/Kconfig       |  1 +
+ drivers/firmware/qcom_scm-32.c | 13 +++++++++++++
+ drivers/firmware/qcom_scm-64.c | 14 ++++++++++++++
+ drivers/firmware/qcom_scm.c    | 30 ++++++++++++++++++++++++++++++
+ drivers/firmware/qcom_scm.h    |  2 ++
+ 5 files changed, 60 insertions(+)
+
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 6664f1108c7c..5e618058defe 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -184,6 +184,7 @@ config FW_CFG_SYSFS_CMDLINE
+ config QCOM_SCM
+ 	bool
+ 	depends on ARM || ARM64
++	select RESET_CONTROLLER
+ 
+ config QCOM_SCM_32
+ 	def_bool y
+diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+index 3df3798729c3..cf731b3452f3 100644
+--- a/drivers/firmware/qcom_scm-32.c
++++ b/drivers/firmware/qcom_scm-32.c
+@@ -564,3 +564,16 @@ int __qcom_scm_pas_shutdown(u32 peripheral)
+ 
+ 	return ret ? : le32_to_cpu(out);
+ }
++
++int __qcom_scm_pas_mss_reset(bool reset)
++{
++	__le32 out;
++	__le32 in = cpu_to_le32(reset);
++	int ret;
++
++	ret = qcom_scm_call(QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET,
++			&in, sizeof(in),
++			&out, sizeof(out));
++
++	return ret ? : le32_to_cpu(out);
++}
+diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+index 72c2f81b8fd3..45ee872b6e6d 100644
+--- a/drivers/firmware/qcom_scm-64.c
++++ b/drivers/firmware/qcom_scm-64.c
+@@ -565,6 +565,20 @@ int __qcom_scm_pas_shutdown(u32 peripheral)
+ 	return ret ? : scm_ret;
+ }
+ 
++int __qcom_scm_pas_mss_reset(bool reset)
++{
++	struct qcom_scm_desc desc = {0};
++	int ret;
++
++	desc.args[0] = reset;
++	desc.args[1] = 0;
++	desc.arginfo = QCOM_SCM_ARGS(2);
++
++	ret = qcom_scm_call(QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET, &desc);
++
++	return ret ? : desc.ret[0];
++}
++
+ int __qcom_scm_pil_init_image_cmd(u32 proc, u64 image_addr)
+ {
+ 	struct qcom_scm_desc desc = {0};
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 6fc9580a26bd..bfa9bfd9a62c 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -20,6 +20,7 @@
+ #include <linux/qcom_scm.h>
+ #include <linux/of.h>
+ #include <linux/clk.h>
++#include <linux/reset-controller.h>
+ 
+ #include "qcom_scm.h"
+ 
+@@ -28,6 +29,7 @@ struct qcom_scm {
+ 	struct clk *core_clk;
+ 	struct clk *iface_clk;
+ 	struct clk *bus_clk;
++	struct reset_controller_dev reset;
+ };
+ 
+ static struct qcom_scm *__scm;
+@@ -280,6 +282,29 @@ int qcom_scm_pas_shutdown(u32 peripheral)
+ }
+ EXPORT_SYMBOL(qcom_scm_pas_shutdown);
+ 
++static int qcom_scm_pas_reset_assert(struct reset_controller_dev *rcdev,
++				     unsigned long idx)
++{
++	if (idx != 0)
++		return -EINVAL;
++
++	return __qcom_scm_pas_mss_reset(1);
++}
++
++static int qcom_scm_pas_reset_deassert(struct reset_controller_dev *rcdev,
++				       unsigned long idx)
++{
++	if (idx != 0)
++		return -EINVAL;
++
++	return __qcom_scm_pas_mss_reset(0);
++}
++
++static const struct reset_control_ops qcom_scm_pas_reset_ops = {
++	.assert = qcom_scm_pas_reset_assert,
++	.deassert = qcom_scm_pas_reset_deassert,
++};
++
+ /**
+  * qcom_scm_is_available() - Checks if SCM is available
+  */
+@@ -322,6 +347,11 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ 		return PTR_ERR(scm->bus_clk);
+ 	}
+ 
++	scm->reset.ops = &qcom_scm_pas_reset_ops;
++	scm->reset.nr_resets = 1;
++	scm->reset.of_node = pdev->dev.of_node;
++	reset_controller_register(&scm->reset);
++
+ 	/* vote for max clk rate for highest performance */
+ 	rate = clk_round_rate(scm->core_clk, INT_MAX);
+ 	ret = clk_set_rate(scm->core_clk, rate);
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index 8f1207fca771..80752cbfd139 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -44,11 +44,13 @@ extern int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+ #define QCOM_SCM_PAS_AUTH_AND_RESET_CMD	0x5
+ #define QCOM_SCM_PAS_SHUTDOWN_CMD	0x6
+ #define QCOM_SCM_PAS_IS_SUPPORTED_CMD	0x7
++#define QCOM_SCM_PAS_MSS_RESET		0xa
+ extern bool __qcom_scm_pas_supported(u32 peripheral);
+ extern int  __qcom_scm_pas_init_image(u32 peripheral, dma_addr_t metadata_phys);
+ extern int  __qcom_scm_pas_mem_setup(u32 peripheral, phys_addr_t addr, phys_addr_t size);
+ extern int  __qcom_scm_pas_auth_and_reset(u32 peripheral);
+ extern int  __qcom_scm_pas_shutdown(u32 peripheral);
++extern int  __qcom_scm_pas_mss_reset(bool reset);
+ 
+ /* common error codes */
+ #define QCOM_SCM_ENOMEM		-5
+-- 
+2.5.0
