@@ -1,66 +1,46 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v3,1/4] mfd: cros_ec: Add cros_ec_cmd_xfer_status helper
-Date: Sat, 18 Jun 2016 10:09:46 -0700
-Message-ID: <5765805A.5070407@roeck-us.net>
-References: <1466193495-95801-2-git-send-email-briannorris@chromium.org>
- <20160617214151.GA1400@roeck-us.net> <20160618010855.GA67034@google.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 04/11] mmc: sdhci-of-arasan: Properly set corecfg_baseclkfreq on rk3399
+Date: Sat, 18 Jun 2016 19:59:47 +0200
+Message-ID: <2413456.oe4vm1F1Mq@phil>
+References: <1465859076-4868-1-git-send-email-dianders@chromium.org> <1465859076-4868-5-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160618010855.GA67034@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1465859076-4868-5-git-send-email-dianders@chromium.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: ulf.hansson@linaro.org, kishon@ti.com, robh+dt@kernel.org, shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2016 06:08 PM, Brian Norris wrote:
-> On Fri, Jun 17, 2016 at 02:41:51PM -0700, Guenter Roeck wrote:
->> On Fri, Jun 17, 2016 at 12:58:12PM -0700, Brian Norris wrote:
->>> +int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
->>> +			    struct cros_ec_command *msg)
->>> +{
->>> +	int ret;
->>> +
->>> +	ret = cros_ec_cmd_xfer(ec_dev, msg);
->>> +	if (ret < 0)
->>> +		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
->>> +	else if (msg->result != EC_RES_SUCCESS)
->>> +		return -EECRESULT - msg->result;
->>
->> I have been wondering about the error return codes here, and if they should be
->> converted to standard Linux error codes. For example, I just hit error -1003
->> with a driver I am working on. This translates to EC_RES_INVALID_PARAM, or,
->> in Linux terms, -EINVAL. I think it would be better to use standard error
->> codes, especially since some of the errors are logged.
->
-> How do you propose we do that? Do all of the following become EINVAL?
->
->          EC_RES_INVALID_COMMAND
+Am Montag, 13. Juni 2016, 16:04:28 schrieb Douglas Anderson:
+> In the the earlier change in this series ("Documentation: mmc:
+> sdhci-of-arasan: Add soc-ctl-syscon for corecfg regs") we can see the
+> mechansim for specifying a syscon to properly set corecfg registers in
+> sdhci-of-arasan.  Now let's use this mechanism to properly set
+> corecfg_baseclkfreq on rk3399.
+> 
+> From [1] the corecfg_baseclkfreq is supposed to be set to:
+>   Base Clock Frequency for SD Clock.
+>   This is the frequency of the xin_clk.
+> 
+> This is a relatively easy thing to do.  Note that we assume that xin_clk
+> is not dynamic and we can check the clock at probe time.  If any real
+> devices have a dynamic xin_clk future patches could register for
+> notifiers for the clock.
+> 
+> At the moment, setting corecfg_baseclkfreq is only supported for rk3399
+> since we need a specific map for each implementation.  The code is
+> written in a generic way that should make this easy to extend to other
+> SoCs.  Note that a specific compatible string for rk3399 is already in
+> use and so we add that to the table to match rk3399.
+> 
+> [1]:
+> https://arasan.com/wp-content/media/eMMC-5-1-Total-Solution_Rev-1-3.pdf
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-	-EOPNOTSUPP
+this looks nice and versatile for other socs hopefully using that in the 
+future.
 
->          EC_RES_INVALID_PARAM
-
-	-EINVAL or -EBADMSG
-
->          EC_RES_INVALID_VERSION
-
-	-EPROTO or -EBADR or -EBADE or -EBADRQC or -EPROTOOPT
-
->          EC_RES_INVALID_HEADER
-
-	-EPROTO or -EBADR or -EBADE
-
-Doesn't look that bad to me. Also, the raw error could still be logged,
-for example with dev_dbg().
-
-Guenter
-
->
-> We lose a lot of information that way. And particularly, cros_ec_num_pwms()
-> won't be able to count as accurately. But I can just go back to not using this
-> API if that's what you'd like...
->
-> Brian
->
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
