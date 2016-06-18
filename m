@@ -1,191 +1,106 @@
-From: Pavel Machek <pavel@ucw.cz>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
 Subject: Re: [PATCH v3 1/2] media: Driver for Toshiba et8ek8 5MP sensor
-Date: Sat, 18 Jun 2016 17:22:59 +0200
-Message-ID: <20160618152259.GC8392@amd>
-References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <1465659593-16858-2-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Date: Sat, 18 Jun 2016 17:37:33 +0200
+Message-ID: <201606181737.33116@pali>
+References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com> <1465659593-16858-2-git-send-email-ivo.g.dimitrov.75@gmail.com> <20160618152259.GC8392@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465659593-16858-2-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: sakari.ailus@iki.fi, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart1907418.FpRz28yNSr";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160618152259.GC8392@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, sakari.ailus@iki.fi, sre@kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+--nextPart1907418.FpRz28yNSr
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-> The sensor is found in Nokia N900 main camera
-> 
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+On Saturday 18 June 2016 17:22:59 Pavel Machek wrote:
+> > +/*
+> > + *
+> > + * Stingray sensor mode settings for Scooby
+> > + *
+> > + *
+> > + */
+>=20
+> I'd fix it to normal comment style... and possibly remove it. Can you
+> understand what it says?
+>=20
+> > +	},
+> > +	.regs =3D {
+> > +		{ ET8EK8_REG_8BIT, 0x1239, 0x4F },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x1238, 0x02 },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x123B, 0x70 },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x123A, 0x05 },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x121B, 0x63 },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x1220, 0x85 },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x1221, 0x00 },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x1222, 0x58 },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x1223, 0x00 },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x121D, 0x63 },	/*        */
+> > +		{ ET8EK8_REG_8BIT, 0x125D, 0x83 },	/*        */
+> > +		{ ET8EK8_REG_TERM, 0, 0}
+> > +	}
+>=20
+> I'd remove the empty comments...
+>=20
+> > +struct et8ek8_meta_reglist meta_reglist =3D {
+> > +	.version =3D "V14 03-June-2008",
+>=20
+> Do we need the version?
+>=20
+> > +	.reglist =3D {
+> > +		{ .ptr =3D &mode1_poweron_mode2_16vga_2592x1968_12_07fps },
+> > +		{ .ptr =3D &mode1_16vga_2592x1968_13_12fps_dpcm10_8 },
+> > +		{ .ptr =3D &mode3_4vga_1296x984_29_99fps_dpcm10_8 },
+> > +		{ .ptr =3D &mode4_svga_864x656_29_88fps },
+> > +		{ .ptr =3D &mode5_vga_648x492_29_93fps },
+> > +		{ .ptr =3D &mode2_16vga_2592x1968_3_99fps },
+> > +		{ .ptr =3D &mode_648x492_5fps },
+> > +		{ .ptr =3D &mode3_4vga_1296x984_5fps },
+> > +		{ .ptr =3D &mode_4vga_1296x984_25fps_dpcm10_8 },
+> > +		{ .ptr =3D 0 }
+> > +	}
+> > +};
+>=20
+> I'd say .ptr =3D NULL.
+>=20
 
-> +/*
-> + *
-> + * Register access helpers
-> + *
-> + */
-> +
-> +/*
-> + * Read a 8/16/32-bit i2c register.  The value is returned in 'val'.
-> + * Returns zero if successful, or non-zero otherwise.
-> + */
+Anyway, this code was generated from configuration ini files and perl=20
+script available from: https://gitorious.org/omap3camera/camera-firmware
 
-Turn the first comment into "normal" comment style, and merge the two
-comments?
+Originally in Maemo above C structure is compiled into binary file and=20
+via request_firmware() loaded from userspace to kernel driver.
 
+=46or me this sounds like a big overkill, so I included above reglist code=
+=20
+direcly into et8ek8 kernel driver to avoid request_firmware() and=20
+separate userspace storage...
 
-> +static int et8ek8_i2c_read_reg(struct i2c_client *client, u16 data_length,
-> +			       u16 reg, u32 *val)
-> +{
-> +	int r;
-> +	struct i2c_msg msg[1];
+And for smia-sensor (front webcam) in that gitorious repository is also=20
+reglist structure. It is not needed? Can somebody investigate why it is=20
+not needed?
 
-Uff. That's a bit non-traditional. Use plain "struct i2c_msg msg;" if
-you have just one?
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-> +		/* Now we start writing ... */
-> +		r = et8ek8_i2c_buffered_write_regs(client, regs, cnt);
-> +
-> +		/* ... and then check that everything was OK */
-> +		if (r < 0) {
-> +			dev_err(&client->dev, "i2c transfer error !!!\n");
-> +			return r;
+--nextPart1907418.FpRz28yNSr
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
-I'd reduce number of "!"s in the message.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-> +		/*
-> +		 * If we ran into a sleep statement when going through
-> +		 * the list, this is where we snooze for the required time
-> +		 */
-> +		if (next->type == ET8EK8_REG_DELAY) {
-> +			set_current_state(TASK_UNINTERRUPTIBLE);
-> +			schedule_timeout(msecs_to_jiffies(next->val));
+iEYEABECAAYFAldlar0ACgkQi/DJPQPkQ1KBuQCgu0c8x2fgI4qL1B2Nonw/pp3M
+QvkAoICf974NbSL1ZYOSgt7FA3PBtA3p
+=GWhf
+-----END PGP SIGNATURE-----
 
-Open-coded set_current_state(), and no restore, makes me
-suspicious. Can msleep() be used here?
-
-> +{
-> +	int r;
-> +	struct i2c_msg msg[1];
-
-I'd avoid array for single entry. (You'll need to make it &msg below,
-but...)
-
-> +/*
-> + * Return time of one row in microseconds, .8 fixed point format.
-> + * If the sensor is not set to any mode, return zero.
-> + */
-
-typedef int fixedfp; then use it where .8 fixed point is used?
-
-> +static int et8ek8_set_test_pattern(struct et8ek8_sensor *sensor, s32 mode)
-> +{
-...
-> +	rval = et8ek8_i2c_write_reg(client, ET8EK8_REG_8BIT, 0x111B,
-> +				    tp_mode << 4);
-> +	if (rval)
-> +		goto out;
-> +
-> +	rval = et8ek8_i2c_write_reg(client, ET8EK8_REG_8BIT, 0x1121,
-> +				    cbh_mode << 7);
-> +	if (rval)
-> +		goto out;
-> +
-> +	rval = et8ek8_i2c_write_reg(client, ET8EK8_REG_8BIT, 0x1124,
-> +				    cbv_mode << 7);
-> +	if (rval)
-> +		goto out;
-> +
-> +	rval = et8ek8_i2c_write_reg(client, ET8EK8_REG_8BIT, 0x112C, din_sw);
-> +	if (rval)
-> +		goto out;
-> +
-> +	rval = et8ek8_i2c_write_reg(client, ET8EK8_REG_8BIT, 0x1420, r1420);
-> +
-> +out:
-> +	return rval;
-> +}
-
-I'd avoid gotos when all it does is return.
-
-> +/*
-> + *
-> + * Stingray sensor mode settings for Scooby
-> + *
-> + *
-> + */
-
-I'd fix it to normal comment style... and possibly remove it. Can you
-understand what it says?
-
-> +	},
-> +	.regs = {
-> +		{ ET8EK8_REG_8BIT, 0x1239, 0x4F },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x1238, 0x02 },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x123B, 0x70 },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x123A, 0x05 },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x121B, 0x63 },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x1220, 0x85 },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x1221, 0x00 },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x1222, 0x58 },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x1223, 0x00 },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x121D, 0x63 },	/*        */
-> +		{ ET8EK8_REG_8BIT, 0x125D, 0x83 },	/*        */
-> +		{ ET8EK8_REG_TERM, 0, 0}
-> +	}
-
-I'd remove the empty comments...
-
-> +struct et8ek8_meta_reglist meta_reglist = {
-> +	.version = "V14 03-June-2008",
-
-Do we need the version?
-
-> +	.reglist = {
-> +		{ .ptr = &mode1_poweron_mode2_16vga_2592x1968_12_07fps },
-> +		{ .ptr = &mode1_16vga_2592x1968_13_12fps_dpcm10_8 },
-> +		{ .ptr = &mode3_4vga_1296x984_29_99fps_dpcm10_8 },
-> +		{ .ptr = &mode4_svga_864x656_29_88fps },
-> +		{ .ptr = &mode5_vga_648x492_29_93fps },
-> +		{ .ptr = &mode2_16vga_2592x1968_3_99fps },
-> +		{ .ptr = &mode_648x492_5fps },
-> +		{ .ptr = &mode3_4vga_1296x984_5fps },
-> +		{ .ptr = &mode_4vga_1296x984_25fps_dpcm10_8 },
-> +		{ .ptr = 0 }
-> +	}
-> +};
-
-I'd say .ptr = NULL.
-
-> +struct v4l2_mbus_framefmt;
-> +struct v4l2_subdev_pad_mbus_code_enum;
-> +
-> +struct et8ek8_mode {
-> +	/* Physical sensor resolution and current image window */
-> +	__u16 sensor_width;
-> +	__u16 sensor_height;
-> +	__u16 sensor_window_origin_x;
-> +	__u16 sensor_window_origin_y;
-> +	__u16 sensor_window_width;
-> +	__u16 sensor_window_height;
-
-If this can not be included from userland, convert __uX -> uX.
-
-> +#define ET8EK8_MAX_LEN			32
-> +struct et8ek8_meta_reglist {
-> +	char version[ET8EK8_MAX_LEN];
-> +	union {
-> +		struct et8ek8_reglist *ptr;
-> +	} reglist[];
-> +};
-
-What is going on here? union with single entry is strange...
-
-(And thanks for doing all the work.)
-
-Best regards,
-							Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--nextPart1907418.FpRz28yNSr--
