@@ -1,48 +1,45 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v13 11/16] OF/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Fri, 17 Jun 2016 19:24:56 -0700
-Message-ID: <20160618022501.15648-12-yinghai@kernel.org>
-References: <20160618022501.15648-1-yinghai@kernel.org>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v8 2/4] power: reset: add reboot mode driver
+Date: Sat, 18 Jun 2016 11:08:40 +0800
+Message-ID: <5764BB38.10503@rock-chips.com>
+References: <1461567051-21734-1-git-send-email-andy.yan@rock-chips.com>
+ <1461567336-21834-1-git-send-email-andy.yan@rock-chips.com>
+ <20160616143616.GA11677@earth>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160618022501.15648-1-yinghai@kernel.org>
+In-Reply-To: <20160616143616.GA11677@earth>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, David Miller <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Wei Yang <weiyang@linux.vnet.ibm.com>, Khalid Aziz <khalid.aziz@oracle.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: robh+dt@kernel.org, heiko@sntech.de, k.kozlowski@samsung.com, john.stultz@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, alexandre.belloni@free-electrons.com, moritz.fischer@ettus.com, f.fainelli@gmail.com, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For device resource PREF bit setting under bridge 64-bit pref resource,
-we need to make sure only set PREF for 64bit resource.
+Hi Sebastian:
 
-This patch set IORESOUCE_MEM_64 for 64bit resource during OF device resource
-flags parsing.
+On 2016=E5=B9=B406=E6=9C=8816=E6=97=A5 22:36, Sebastian Reichel wrote:
+> Hi,
+>
+> On Mon, Apr 25, 2016 at 02:55:36PM +0800, Andy Yan wrote:
+>> This driver parses the reboot commands like "reboot bootloader"
+>> and "reboot recovery" to get a boot mode described in the
+>> device tree , then call the write interfae to store the boot
+>> mode in some place like special register or sram, which can
+>> be read by the bootloader after system reboot, then the bootloader
+>> can take different action according to the mode stored.
+>>
+>> This is commonly used on Android based devices, in order to
+>> reboot the device into fastboot or recovery mode.
+>>
+>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
+>> Tested-by: John Stultz <john.stultz@linaro.org>
+>> Acked-by: John Stultz <john.stultz@linaro.org>
+>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> What's the status of this patchset? It still has a few open
+> comments/issues, but I did not see a newer version.
+>
+> -- Sebastian
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Tested-by: Khalid Aziz <khalid.aziz@oracle.com>
----
- drivers/of/address.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 0a553c0..fa10b99 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -129,9 +129,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- 		flags |= IORESOURCE_IO;
- 		break;
- 	case 0x02: /* 32 bits */
--	case 0x03: /* 64 bits */
- 		flags |= IORESOURCE_MEM;
- 		break;
-+	case 0x03: /* 64 bits */
-+		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-+		break;
- 	}
- 	if (w & 0x40000000)
- 		flags |= IORESOURCE_PREFETCH;
--- 
-2.8.3
+   Sorry for the delay, I will send a new version next week.
