@@ -1,126 +1,161 @@
-From: Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
-Date: Sun, 19 Jun 2016 01:20:55 +0200
-Message-ID: <20160618232054.GB29476@makrotopia.org>
+From: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ubi: open volumes define in device tree
+Date: Sun, 19 Jun 2016 01:36:54 +0200
+Message-ID: <20160618233654.GC29476@makrotopia.org>
 References: <1466277476-14853-1-git-send-email-hauke@hauke-m.de>
- <5765A14F.6020201@nod.at>
- <48242f26-7812-6957-6bf5-c12989b875b4@hauke-m.de>
+ <1466277476-14853-2-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <48242f26-7812-6957-6bf5-c12989b875b4@hauke-m.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dedekind1@gmail.com, Richard Weinberger <richard@nod.at>, robh+dt@kernel.org, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org
+In-Reply-To: <1466277476-14853-2-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On Sat, Jun 18, 2016 at 09:35:42PM +0200, Hauke Mehrtens wrote:
-> On 06/18/2016 09:30 PM, Richard Weinberger wrote:
-> > Am 18.06.2016 um 21:17 schrieb Hauke Mehrtens:
-> >> This makes it possible to open a ubi layer in device tree, this is
-> >> helpful when the rootfs is on a ubi layer. It loops though all mtd
-> >> partitions and mounts the partition which is compatible with
-> >> "ubi,volume". The same was only possible with kernel command line
-> >> arguments before.
-> >>
-> >> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-> >> ---
-> >>  Documentation/devicetree/bindings/mtd/ubi.txt | 33 ++++++++++++++
-> >>  drivers/mtd/ubi/block.c                       | 63 +++++++++++++++++++++++++++
-> >>  2 files changed, 96 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mtd/ubi.txt
-> > 
-> > Some time ago I thought about an UBI DT binding too, but
-> > I have been told that device tree is only for describing the hardware
-> > and nothing else.
-> > So I fear this will be rejected by DT folks.
+On Sat, Jun 18, 2016 at 09:17:56PM +0200, Hauke Mehrtens wrote:
+> This makes it possible to define a volume to open in device tree. This
+> is helpful when a root file system is on a ubi layer. Without this
+> patch it is only possible to device with with kernel command line
+> parameters.
 > 
-> There are some devices on the market that are storing the root file
-> system in an ubi layer.
-> To make this work there are currently two options.
-> 1. patch the kernel to specify which partitions to open in the code.
-> 2. provide some kernel command line parameter which specifies what to open.
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+
+The example in the documentation doesn't belong to that patch, see
+below. Apart from this single [PATCH 2/2]:
+Acked-by: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/mtd/ubi.txt | 22 +++++++++++++++++
+>  drivers/mtd/ubi/build.c                       | 34 +++++++++++++++++++++++++++
+>  2 files changed, 56 insertions(+)
 > 
-> I would like to specify this in device tree.
+> diff --git a/Documentation/devicetree/bindings/mtd/ubi.txt b/Documentation/devicetree/bindings/mtd/ubi.txt
+> index 5fcd47e..f87a7d8 100644
+> --- a/Documentation/devicetree/bindings/mtd/ubi.txt
+> +++ b/Documentation/devicetree/bindings/mtd/ubi.txt
+> @@ -13,6 +13,16 @@ Describe of a UBI layer in device tree.
+>   			which have to be assigned to the newly created UBI
+>   			device (assigned automatically by default)
+>  
+> +Partitions on a UBI layer can be defined:
+> +
+> + - compatible: 		"ubi,volume"
+> + - name:		name of the ubi volume to open
+> + - ubi-mode:		mode of the ubi volume to open value:
+> + 			UBI_READONLY:	1
+> + 			UBI_READWRITE:	2
+> + 			UBI_EXCLUSIVE:	3
+> + 			UBI_METAONLY:	4
+> +
+>  Example:
+>  
+>  partitions {
+> @@ -29,5 +39,17 @@ partitions {
+>  		label = "system_sw";
+>  		reg = <0x1c0000 0xc800000>;
+>  		compatible = "ubi,device";
+> +
+> +		rootfsA@0 {
+> +			compatible = "ubi,volume";
+> +			name = "rootfsA";
+> +			ubi-mode = <1>;
+> +		};
+> +
+> +		data_vol@0 {
+> +			compatible = "ubi,volume";
+> +			name = "data_vol";
+> +			ubi-mode = <2>;
+> +		};
 
-In MBR there used to be an 'active' flag stored for each partition.
-Maybe it'd be nice to introduce something similar to mark UBI volumes
-to be the default rootfs.
-Currently we solve this issue by convention: If a volume is named
-'rootfs' it is automatically mounted during boot. Depending on the
-filesystem in use a ubiblock device has to be created as well.
-This is mostly just the continuation of the existing naming convention
-of mtd partitions, a patch OpenWrt is carrying around for a long
-while already.
-To support the same on UBI, another set of patches was made.
-
-I agree that there should be a way to pass this through the of_node
-of the mtd partition which is defined in the device tree.
-Selecting to-be-ubi-attached mtd partitions in device-tree would
-replace patch:
-
-https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/490-ubi-auto-attach-mtd-device-named-ubi-or-data-on-boot.patch
-
-To auto-select the rootfs, we currently carry another bunch of patches
-
-https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/491-ubi-auto-create-ubiblock-device-for-rootfs.patch
-
-https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/492-try-auto-mounting-ubi0-rootfs-in-init-do_mounts.c.patch
-
-https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/493-ubi-set-ROOT_DEV-to-ubiblock-rootfs-if-unset.patch
-
-This is more or less filesystem-agnostic and works fine as long as
-there is only one volume called 'rootfs' and this volume is always
-used as rootfs.
-
-Dual-boot setups will need some way to pass the active rootfs volume to
-the kernel. While I agree that this is possible by appending or
-prepending to the cmdline string passed to the kernel, this either
-limits the users' ability to manually specify the rootfs using the
-cmdline or becomes a more complex task to only append/prepend the
-cmdline in case the user-defined string doesn't already contain
-relevant parameters...
-Thus it'd be nicer to flag the default rootfs volume via the device-
-tree.
-
-However, I realize that other than mtd partitions, ubi volumes are
-obviously dynamic and thus don't occur in the device-tree...
-Modifying the volume on every boot to select whether it is active
-also doesn't seem to be the right way. A non-standard cmdline
-parameter is the most common solution implemented by many vendors,
-that's also far from beautiful.
+This is an example for the 'ubi,volume' while the patch introduces
+support for 'ubi,device'.
 
 
-Just my 2 cents...
-
-
-Cheers
-
-
-Daniel
-
-
-
+>  	};
+>  };
+> diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+> index 16baeb5..1c22533 100644
+> --- a/drivers/mtd/ubi/build.c
+> +++ b/drivers/mtd/ubi/build.c
+> @@ -1,6 +1,7 @@
+>  /*
+>   * Copyright (c) International Business Machines Corp., 2006
+>   * Copyright (c) Nokia Corporation, 2007
+> + * Copyright (c) 2016 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>   *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License as published by
+> @@ -33,6 +34,7 @@
+>  #include <linux/module.h>
+>  #include <linux/moduleparam.h>
+>  #include <linux/stringify.h>
+> +#include <linux/of.h>
+>  #include <linux/namei.h>
+>  #include <linux/stat.h>
+>  #include <linux/miscdevice.h>
+> @@ -43,6 +45,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/major.h>
+>  #include "ubi.h"
+> +#include "../mtdcore.h"
+>  
+>  /* Maximum length of the 'mtd=' parameter */
+>  #define MTD_PARAM_LEN_MAX 64
+> @@ -1205,6 +1208,7 @@ static struct mtd_info * __init open_mtd_device(const char *mtd_dev)
+>  static int __init ubi_init(void)
+>  {
+>  	int err, i, k;
+> +	struct mtd_info *mtd_it;
+>  
+>  	/* Ensure that EC and VID headers have correct size */
+>  	BUILD_BUG_ON(sizeof(struct ubi_ec_hdr) != 64);
+> @@ -1285,6 +1289,36 @@ static int __init ubi_init(void)
+>  		}
+>  	}
+>  
+> +	mtd_for_each_device(mtd_it) {
+> +		struct mtd_info *mtd;
+> +		u32 ubi_num = 0;
+> +		u32 vid_hdr_offs = 0;
+> +		u32 max_beb_per1024 = CONFIG_MTD_UBI_BEB_LIMIT;
+> +
+> +		mtd = get_mtd_device(mtd_it, -1);
+> +
+> +		if (!of_device_is_compatible(mtd->dev.of_node, "ubi,device")) {
+> +			put_mtd_device(mtd);
+> +			continue;
+> +		}
+> +
+> +		of_property_read_u32(mtd->dev.of_node, "vid_hdr_offs",
+> +				     &vid_hdr_offs);
+> +		of_property_read_u32(mtd->dev.of_node, "max_beb_per1024",
+> +				     &max_beb_per1024);
+> +		of_property_read_u32(mtd->dev.of_node, "ubi_num", &ubi_num);
+> +
+> +		mutex_lock(&ubi_devices_mutex);
+> +		err = ubi_attach_mtd_dev(mtd, ubi_num, vid_hdr_offs,
+> +					 max_beb_per1024);
+> +		mutex_unlock(&ubi_devices_mutex);
+> +		if (err < 0) {
+> +			pr_err("UBI error: cannot attach mtd%d",
+> +			       mtd->index);
+> +		}
+> +		put_mtd_device(mtd);
+> +	}
+> +
+>  	err = ubiblock_init();
+>  	if (err) {
+>  		pr_err("UBI error: block: cannot initialize, error %d", err);
+> -- 
+> 2.8.1
 > 
-> Hauke
 > 
-
 > ______________________________________________________
 > Linux MTD discussion mailing list
 > http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
