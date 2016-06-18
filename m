@@ -1,32 +1,37 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v3 0/2] net: ethernet: ti: cpsw: delete rx_descs
- property
-Date: Fri, 17 Jun 2016 21:28:11 -0700 (PDT)
-Message-ID: <20160617.212811.1535969626992239666.davem@davemloft.net>
-References: <1466159140-3329-1-git-send-email-ivan.khoronzhuk@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: sx150x: Update OF configuration
+Date: Sat, 18 Jun 2016 11:02:02 +0200
+Message-ID: <CACRpkdbDMo=cV5bmcWNbeHU+c-AyokpaFNNZJF4UPY+twDX8bw@mail.gmail.com>
+References: <1466157063-10955-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466159140-3329-1-git-send-email-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <1466157063-10955-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ivan.khoronzhuk@linaro.org
-Cc: mugunthanvnm@ti.com, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Date: Fri, 17 Jun 2016 13:25:38 +0300
+On Fri, Jun 17, 2016 at 11:51 AM, Neil Armstrong
+<narmstrong@baylibre.com> wrote:
 
-> There is no reason in rx_descs property because davinici_cpdma
-> driver splits pool of descriptors equally between tx and rx channels.
-> So, this patch series makes driver to use available number of
-> descriptors for rx channels.
-> 
-> Based on
-> git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
-> master
-> 
-> Since v2:
-> - add declaration of buf_num in correct order
+> In case of OF probing, the driver fails to initialize :
+> - gpio_chip.base must be -1
+> - irq_summary must be either -1 or valid
+> - There is no way to use the other configurations
+>
+> Add OF parsing function to complete the HW configuration, make
+> OF configuration dynamic instead of static with #defines and
+> update the DT bindings.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Series applied, thanks.
+As you can see from the result of the build robot, the removal
+of #ifdef CONFIG_OF_GPIO does not play well with non-DT
+configurarions.
+
+You need to figure something out here so that it builds for
+both.
+
+Yours,
+Linus Walleij
