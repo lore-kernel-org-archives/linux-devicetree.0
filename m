@@ -1,52 +1,56 @@
 From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] userspace API definitions for auto-focus coil
-Date: Sat, 18 Jun 2016 17:38:46 +0200
-Message-ID: <20160618153846.GA15662@amd>
-References: <20160602074544.GR26360@valkosipuli.retiisi.org.uk>
- <20160602193027.GB7984@amd>
- <20160602212746.GT26360@valkosipuli.retiisi.org.uk>
- <20160605190716.GA11321@amd>
- <575512E5.5030000@gmail.com>
- <20160611220654.GC26360@valkosipuli.retiisi.org.uk>
- <20160612084811.GA27446@amd>
- <20160612112253.GD26360@valkosipuli.retiisi.org.uk>
- <20160613191753.GA17459@amd>
- <20160617213545.GH24980@valkosipuli.retiisi.org.uk>
+Subject: Re: [PATCH v3 1/2] media: Driver for Toshiba et8ek8 5MP sensor
+Date: Sat, 18 Jun 2016 18:04:23 +0200
+Message-ID: <20160618160423.GB16792@amd>
+References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1465659593-16858-2-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <20160618152259.GC8392@amd>
+ <201606181737.33116@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160617213545.GH24980@valkosipuli.retiisi.org.uk>
+In-Reply-To: <201606181737.33116@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, patrikbachan@gmail.com, serge@hallyn.com, linux-media@vger.kernel.org, mchehab@osg.samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, sakari.ailus@iki.fi, sre@kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi!
 
-> > Not V4L2_CID_USER_AD5820...?
+> > > +	.reglist = {
+> > > +		{ .ptr = &mode1_poweron_mode2_16vga_2592x1968_12_07fps },
+> > > +		{ .ptr = &mode1_16vga_2592x1968_13_12fps_dpcm10_8 },
+> > > +		{ .ptr = &mode3_4vga_1296x984_29_99fps_dpcm10_8 },
+> > > +		{ .ptr = &mode4_svga_864x656_29_88fps },
+> > > +		{ .ptr = &mode5_vga_648x492_29_93fps },
+> > > +		{ .ptr = &mode2_16vga_2592x1968_3_99fps },
+> > > +		{ .ptr = &mode_648x492_5fps },
+> > > +		{ .ptr = &mode3_4vga_1296x984_5fps },
+> > > +		{ .ptr = &mode_4vga_1296x984_25fps_dpcm10_8 },
+> > > +		{ .ptr = 0 }
+> > > +	}
+> > > +};
+> > 
+> > I'd say .ptr = NULL.
+> > 
 > 
-> The rest of the controls have no USER as part of the macro name, so I
-> wouldn't use it here either.
-
-Ok.
-
-> > Ok, separate header file for 2 lines seemed like a bit of overkill,
-> > but why not.
+> Anyway, this code was generated from configuration ini files and perl 
+> script available from: https://gitorious.org/omap3camera/camera-firmware
 > 
-> That follows an existing pattern of how controls have been implemented in
-> other drivers.
+> Originally in Maemo above C structure is compiled into binary file and 
+> via request_firmware() loaded from userspace to kernel driver.
+> 
+> For me this sounds like a big overkill, so I included above reglist code 
+> direcly into et8ek8 kernel driver to avoid request_firmware() and 
+> separate userspace storage...
 
-Ok.
+Yep, that makes sense, thanks for explanation. I guess that means that
+we should put a comment on top of the file explaining what is going
+on.
 
-> Could you merge this with the driver patch? I've dropped that from my ad5820
-> branch as it does not compile.
-
-Yes, merged patch should be in your inbox now.
-
-Thanks,
+Best regards,
 									Pavel
-
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
