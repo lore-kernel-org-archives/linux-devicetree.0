@@ -1,88 +1,66 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3 1/2] media: Driver for Toshiba et8ek8 5MP sensor
-Date: Sat, 18 Jun 2016 18:11:10 +0200
-Message-ID: <201606181811.10233@pali>
-References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com> <201606181737.33116@pali> <20160618160423.GB16792@amd>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v3,1/4] mfd: cros_ec: Add cros_ec_cmd_xfer_status helper
+Date: Sat, 18 Jun 2016 10:09:46 -0700
+Message-ID: <5765805A.5070407@roeck-us.net>
+References: <1466193495-95801-2-git-send-email-briannorris@chromium.org>
+ <20160617214151.GA1400@roeck-us.net> <20160618010855.GA67034@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart6194889.uIyB03IYbj";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160618160423.GB16792@amd>
+In-Reply-To: <20160618010855.GA67034@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, sakari.ailus@iki.fi
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, sre@kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
---nextPart6194889.uIyB03IYbj
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On 06/17/2016 06:08 PM, Brian Norris wrote:
+> On Fri, Jun 17, 2016 at 02:41:51PM -0700, Guenter Roeck wrote:
+>> On Fri, Jun 17, 2016 at 12:58:12PM -0700, Brian Norris wrote:
+>>> +int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>>> +			    struct cros_ec_command *msg)
+>>> +{
+>>> +	int ret;
+>>> +
+>>> +	ret = cros_ec_cmd_xfer(ec_dev, msg);
+>>> +	if (ret < 0)
+>>> +		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
+>>> +	else if (msg->result != EC_RES_SUCCESS)
+>>> +		return -EECRESULT - msg->result;
+>>
+>> I have been wondering about the error return codes here, and if they should be
+>> converted to standard Linux error codes. For example, I just hit error -1003
+>> with a driver I am working on. This translates to EC_RES_INVALID_PARAM, or,
+>> in Linux terms, -EINVAL. I think it would be better to use standard error
+>> codes, especially since some of the errors are logged.
+>
+> How do you propose we do that? Do all of the following become EINVAL?
+>
+>          EC_RES_INVALID_COMMAND
 
-On Saturday 18 June 2016 18:04:23 Pavel Machek wrote:
-> Hi!
->=20
-> > > > +	.reglist =3D {
-> > > > +		{ .ptr =3D &mode1_poweron_mode2_16vga_2592x1968_12_07fps },
-> > > > +		{ .ptr =3D &mode1_16vga_2592x1968_13_12fps_dpcm10_8 },
-> > > > +		{ .ptr =3D &mode3_4vga_1296x984_29_99fps_dpcm10_8 },
-> > > > +		{ .ptr =3D &mode4_svga_864x656_29_88fps },
-> > > > +		{ .ptr =3D &mode5_vga_648x492_29_93fps },
-> > > > +		{ .ptr =3D &mode2_16vga_2592x1968_3_99fps },
-> > > > +		{ .ptr =3D &mode_648x492_5fps },
-> > > > +		{ .ptr =3D &mode3_4vga_1296x984_5fps },
-> > > > +		{ .ptr =3D &mode_4vga_1296x984_25fps_dpcm10_8 },
-> > > > +		{ .ptr =3D 0 }
-> > > > +	}
-> > > > +};
-> > >=20
-> > > I'd say .ptr =3D NULL.
-> >=20
-> > Anyway, this code was generated from configuration ini files and
-> > perl script available from:
-> > https://gitorious.org/omap3camera/camera-firmware
-> >=20
-> > Originally in Maemo above C structure is compiled into binary file
-> > and via request_firmware() loaded from userspace to kernel driver.
-> >=20
-> > For me this sounds like a big overkill, so I included above reglist
-> > code direcly into et8ek8 kernel driver to avoid request_firmware()
-> > and separate userspace storage...
->=20
-> Yep, that makes sense, thanks for explanation. I guess that means
-> that we should put a comment on top of the file explaining what is
-> going on.
->=20
-> Best regards,
-> 									Pavel
+	-EOPNOTSUPP
 
-Here is that original stingraytsb_v14_simple.ini file:
+>          EC_RES_INVALID_PARAM
 
-https://gitorious.org/omap3camera/camera-firmware?p=3Domap3camera:camera-fi=
-rmware.git;a=3Dtree;f=3Dini
+	-EINVAL or -EBADMSG
 
-Looks like are are some "non simple" stingraytsb_v14 files too, but I
-have no idea which modes defines...
+>          EC_RES_INVALID_VERSION
 
-Sakari, any idea?
-Which we should include into kernel et8ek8 kernel driver?
+	-EPROTO or -EBADR or -EBADE or -EBADRQC or -EPROTOOPT
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+>          EC_RES_INVALID_HEADER
 
---nextPart6194889.uIyB03IYbj
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+	-EPROTO or -EBADR or -EBADE
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Doesn't look that bad to me. Also, the raw error could still be logged,
+for example with dev_dbg().
 
-iEYEABECAAYFAldlcp4ACgkQi/DJPQPkQ1L5HwCgr7HP4/6vTTmSMKOANyjuk0bE
-NG4An0r9jCqrBo4xzuUh8BX44aELhATK
-=LlkO
------END PGP SIGNATURE-----
+Guenter
 
---nextPart6194889.uIyB03IYbj--
+>
+> We lose a lot of information that way. And particularly, cros_ec_num_pwms()
+> won't be able to count as accurately. But I can just go back to not using this
+> API if that's what you'd like...
+>
+> Brian
+>
