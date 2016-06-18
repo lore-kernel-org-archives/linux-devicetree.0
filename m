@@ -1,35 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5] phy-sun4i-usb: Fix irq free conditions to match
- request conditions
-Date: Sat, 18 Jun 2016 14:33:22 +0300
-Message-ID: <720c35c7-eb9a-2881-cb95-39fa6aa61dee@cogentembedded.com>
-References: <1466242293-22393-1-git-send-email-hdegoede@redhat.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: add i2c nodes for rk3399
+Date: Sat, 18 Jun 2016 14:01:08 +0200
+Message-ID: <1633653.D0508meTWe@diego>
+References: <1463429371-10950-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466242293-22393-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463429371-10950-1-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: linux-rockchip@lists.infradead.org, david.wu@rock-chips.com, jay.xu@rock-chips.com, briannorris@chromium.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/18/2016 12:31 PM, Hans de Goede wrote:
+Am Montag, 16. Mai 2016, 13:09:31 schrieb Douglas Anderson:
+> From: David Wu <david.wu@rock-chips.com>
+> 
+> We've got 9 (count em!) i2c controllers on rk3399, some of which are in
+> the PMU power domain and some of which are normal peripherals.  Add them
+> all to the main rk3399 dtsi file so future patches can turn them on in
+> the board dts files.
+> 
+> Note: by default we try to set the i2c clock rate to 200 MHz so that we
+> can achieve good i2c functional clock rates.  200 MHz gives us the
+> ability to make very close to 100 kHz / 400 kHz / 1 MHz rates.  If
+> boards want to tune clock rates further they can always override.
+> Possibly boards could want to tune this if:
+> - they wanted to save an infinitesimal amount of power and they knew
+>   their i2c bus was slow anyway.  Since we gate the functional clock
+>   when the i2c bus is not active, power savings would only be while i2c
+>   transfers were happening and probably won't be very big anyway.
+> - they wanted to eek out a bit more speed by carefully tuning the source
+>   clock to make divisions work out perfectly, accounting for the rise /
+>   fall time measured on an actual board.
+> 
+> Note also that we still request 200 MHz for the PMU i2c busses even
+> though we expect that we won't make that exactly (currently PPLL is 676
+> MHz which gives us 169 MHz).
+> 
+> Signed-off-by: David Wu <david.wu@rock-chips.com>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> [dianders: wrote desc; put in assigned-clocks; reordered nodes]
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-> commit 5cf700ac9d50("phy: phy-sun4i-usb: Fix optional gpios failing probe")
-> changed the condition under which irqs are requested, but omitted matching
-> changes to sun4i_usb_phy_remove(). This commit fixes this.
->
-> Fixes: commit 5cf700ac9d50("phy: phy-sun4i-usb: Fix optional gpios failing probe")
+applied to my dts64 branch for 4.8
 
-    "Commit" not needed here, this tag has a standardized format.
-
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-[...]
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Heiko
