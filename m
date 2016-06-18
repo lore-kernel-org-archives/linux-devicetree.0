@@ -1,45 +1,57 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v8 2/4] power: reset: add reboot mode driver
-Date: Sat, 18 Jun 2016 11:08:40 +0800
-Message-ID: <5764BB38.10503@rock-chips.com>
-References: <1461567051-21734-1-git-send-email-andy.yan@rock-chips.com>
- <1461567336-21834-1-git-send-email-andy.yan@rock-chips.com>
- <20160616143616.GA11677@earth>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v3,1/4] mfd: cros_ec: Add cros_ec_cmd_xfer_status helper
+Date: Fri, 17 Jun 2016 21:12:20 -0700
+Message-ID: <5764CA24.1080803@roeck-us.net>
+References: <1466193495-95801-2-git-send-email-briannorris@chromium.org>
+ <20160617214151.GA1400@roeck-us.net> <20160618010855.GA67034@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160616143616.GA11677@earth>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: robh+dt@kernel.org, heiko@sntech.de, k.kozlowski@samsung.com, john.stultz@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, alexandre.belloni@free-electrons.com, moritz.fischer@ettus.com, f.fainelli@gmail.com, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20160618010855.GA67034@google.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian:
-
-On 2016=E5=B9=B406=E6=9C=8816=E6=97=A5 22:36, Sebastian Reichel wrote:
-> Hi,
->
-> On Mon, Apr 25, 2016 at 02:55:36PM +0800, Andy Yan wrote:
->> This driver parses the reboot commands like "reboot bootloader"
->> and "reboot recovery" to get a boot mode described in the
->> device tree , then call the write interfae to store the boot
->> mode in some place like special register or sram, which can
->> be read by the bootloader after system reboot, then the bootloader
->> can take different action according to the mode stored.
+On 06/17/2016 06:08 PM, Brian Norris wrote:
+> On Fri, Jun 17, 2016 at 02:41:51PM -0700, Guenter Roeck wrote:
+>> On Fri, Jun 17, 2016 at 12:58:12PM -0700, Brian Norris wrote:
+>>> +int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>>> +			    struct cros_ec_command *msg)
+>>> +{
+>>> +	int ret;
+>>> +
+>>> +	ret = cros_ec_cmd_xfer(ec_dev, msg);
+>>> +	if (ret < 0)
+>>> +		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
+>>> +	else if (msg->result != EC_RES_SUCCESS)
+>>> +		return -EECRESULT - msg->result;
 >>
->> This is commonly used on Android based devices, in order to
->> reboot the device into fastboot or recovery mode.
->>
->> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
->> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
->> Tested-by: John Stultz <john.stultz@linaro.org>
->> Acked-by: John Stultz <john.stultz@linaro.org>
->> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> What's the status of this patchset? It still has a few open
-> comments/issues, but I did not see a newer version.
+>> I have been wondering about the error return codes here, and if they should be
+>> converted to standard Linux error codes. For example, I just hit error -1003
+>> with a driver I am working on. This translates to EC_RES_INVALID_PARAM, or,
+>> in Linux terms, -EINVAL. I think it would be better to use standard error
+>> codes, especially since some of the errors are logged.
 >
-> -- Sebastian
+> How do you propose we do that? Do all of the following become EINVAL?
+>
+>          EC_RES_INVALID_COMMAND
+>          EC_RES_INVALID_PARAM
+>          EC_RES_INVALID_VERSION
+>          EC_RES_INVALID_HEADER
+>
 
-   Sorry for the delay, I will send a new version next week.
+Personal preference, but yes.
+
+> We lose a lot of information that way. And particularly, cros_ec_num_pwms()
+> won't be able to count as accurately. But I can just go back to not using this
+
+You lost me there, sorry.
+
+> API if that's what you'd like...
+>
+
+That isn't what I suggested.
+
+Guenter
