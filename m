@@ -1,217 +1,278 @@
-From: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
-Date: Sun, 19 Jun 2016 23:52:25 +0200
-Message-ID: <20160619215223.GC1222@makrotopia.org>
-References: <1466277476-14853-1-git-send-email-hauke@hauke-m.de>
- <20160618235634.GD29476@makrotopia.org>
- <ecb7950d-9e07-5c5d-6668-1c67ba170ddf@hauke-m.de>
+Date: Mon, 20 Jun 2016 00:21:07 +0200
+Message-ID: <c00ff150-9197-7bcf-8ea7-7ebba979d058@hauke-m.de>
+References: <20160619130514.GB820@makrotopia.org> <57669BEA.5030306@nod.at>
+ <20160619140952.GC820@makrotopia.org> <5766AD99.1040809@nod.at>
+ <20160619152445.GG820@makrotopia.org> <5766BAB8.9090707@nod.at>
+ <20160619161334.GH820@makrotopia.org> <20160619185343.14ef0669@bbrezillon>
+ <20160619194236.GA1222@makrotopia.org> <20160619221434.6d0202ad@bbrezillon>
+ <20160619214820.GB1222@makrotopia.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ecb7950d-9e07-5c5d-6668-1c67ba170ddf-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+In-Reply-To: <20160619214820.GB1222-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+To: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 19, 2016 at 11:36:19PM +0200, Hauke Mehrtens wrote:
-> On 06/19/2016 01:56 AM, Daniel Golle wrote:
-> > Hi!
-> > 
-> > I got some remarks here:
-> > 
-> > On Sat, Jun 18, 2016 at 09:17:55PM +0200, Hauke Mehrtens wrote:
-> >> This makes it possible to open a ubi layer in device tree, this is
-> >> helpful when the rootfs is on a ubi layer. It loops though all mtd
-> >> partitions and mounts the partition which is compatible with
-> >> "ubi,volume". The same was only possible with kernel command line
-> >> arguments before.
-> > 
-> > Strictly speaking this doesn't describe what this change does.
-> > Rather than mounting anything you are creating ubiblock devices...
-> > 
-> > More comments in-line.
-> > 
-> >>
-> >> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/mtd/ubi.txt | 33 ++++++++++++++
-> >>  drivers/mtd/ubi/block.c                       | 63 +++++++++++++++++++++++++++
-> >>  2 files changed, 96 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mtd/ubi.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mtd/ubi.txt b/Documentation/devicetree/bindings/mtd/ubi.txt
-> >> new file mode 100644
-> >> index 0000000..5fcd47e
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mtd/ubi.txt
-> >> @@ -0,0 +1,33 @@
-> >> +UBI - Unsorted block images
-> >> +
-> >> +Describe of a UBI layer in device tree.
-> >> +
-> >> + - compatible:		"ubi,device", This marks a partition that contains
-> >> + 			a ubi layer.
-> >> + - vid_hdr_offs:	Optional parameter specifies UBI VID header position
-> >> + 			to be used by UBI. (default value if 0)
-> >> + - max_beb_per1024:	Optional parameter specifies the maximum expected bad
-> >> + 			eraseblock per 1024 eraseblocks.
-> >> + 			(default value CONFIG_MTD_UBI_BEB_LIMIT)
-> >> + -ubi_num:		Optional parameter specifies UBI device number
-> >> + 			which have to be assigned to the newly created UBI
-> >> + 			device (assigned automatically by default)
-> >> +
-> >> +Example:
-> >> +
-> >> +partitions {
-> >> +	compatible = "fixed-partitions";
-> >> +	#address-cells = <1>;
-> >> +	#size-cells = <1>;
-> >> +
-> >> +	partition@0 {
-> >> +		label = "uboot";
-> >> +		reg = <0x00000 0x100000>;
-> >> +	};
-> >> +
-> >> +	partition@1c0000 {
-> >> +		label = "system_sw";
-> >> +		reg = <0x1c0000 0xc800000>;
-> >> +		compatible = "ubi,device";
-> >> +	};
-> >> +};
-> > 
-> > Similar to the other patch, the example in the documentation is
-> > swapped and doesn't match with the code added by the patch.
-> > 
-> > 
-> > 
-> >> diff --git a/drivers/mtd/ubi/block.c b/drivers/mtd/ubi/block.c
-> >> index ebf46ad..5ed390d 100644
-> >> --- a/drivers/mtd/ubi/block.c
-> >> +++ b/drivers/mtd/ubi/block.c
-> > 
-> > Wait a moment: What about ubifs being the root filesystem? That
-> > doesn't need a ubiblock device to be created...
+On 06/19/2016 11:48 PM, Daniel Golle wrote:
+> Hi Boris,
 > 
-> Should I write an error message and do nothing when this is a ubifs
-> partition?
+> On Sun, Jun 19, 2016 at 10:14:34PM +0200, Boris Brezillon wrote:
+>> On Sun, 19 Jun 2016 21:42:39 +0200
+>> Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org> wrote:
+>>
+>>> Hi Boris,
+>>>
+>>> On Sun, Jun 19, 2016 at 06:53:43PM +0200, Boris Brezillon wrote:
+>>>> On Sun, 19 Jun 2016 18:13:36 +0200
+>>>> Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org> wrote:
+>>>>   
+>>>>> Hi Richard,
+>>>>>
+>>>>> On Sun, Jun 19, 2016 at 05:31:04PM +0200, Richard Weinberger wrote:  
+>>>>>> Am 19.06.2016 um 17:24 schrieb Daniel Golle:    
+>>>>>>>> You mean marking a MTD partition in DT and UBI will attach from it?
+>>>>>>>> That makes sense.    
+>>>>>>>
+>>>>>>> Yes. Currently we just use a naming convention (the first MTD partition
+>>>>>>> named 'ubi' will be auto-attached), that's obviously not very clean...    
+>>>>>>
+>>>>>> I was about to reply to my own mail that you can still attach by name.
+>>>>>> Boris reminded me of that, I forgot that feature.^^
+>>>>>> Why is it not clean?    
+>>>>>
+>>>>> That's nice and I also didn't know that.
+>>>>> It's still not perfect because I got to add it to the cmdline (in DT),
+>>>>> and should have it only on devices where a partition with that given
+>>>>> name actually exists. A flag for the mtd partition would still be
+>>>>> nicer.
 
-Just do nothing if you find a UBIFS magic. I reckon there shouldn't
-be any error message because it's not an error but rather just another
-valid case. Maybe an info message could be useful for starters...
+Is it possible to addend the kernel command line with device tree? Some
+vendor boot loaders are adding the mac address to the kernel command
+line and I would like to get it. Like Daniel said replacing the vendor
+boot loader is dangerous because sometimes recovery means to desolder
+the flash chip.
 
+>>>>>   
+>>>>>>     
+>>>>>>>>
+>>>>>>>> To sum up, I asked a lot of questions to understand your use case(s).
+>>>>>>>> Everything you described can be done with existing facilities.
+>>>>>>>> But I agree that at least some UBI DT machinery would be nice to have
+>>>>>>>> although we need to check with DT folks first.
+>>>>>>>> At least marking an MTD partition should be fine, hopefully.    
+>>>>>>>
+>>>>>>> Great. That'd already greatly improve things.    
+>>>>>>
+>>>>>> How is that better than attach by name? You mark the to be attached
+>>>>>> MTD by its name...    
+>>>>>
+>>>>> See above. We'd then still need to have that ubi.mtd=name in the
+>>>>> cmdline for NAND devices using UBI and *not* have it for other devices
+>>>>> within the same family which may use SPI or NOR flash without UBI.
+>>>>> I'd prefer to have one place inside the device-tree for everything
+>>>>> flash-storage related, eg.
+>>>>> &nand {
+>>>>> 	status = "okay";
+>>>>> 	partition@0 {
+>>>>> 		label = "boot";
+>>>>> 		reg = <0x00000000 0x00e00000>;
+>>>>> 		read-only;
+>>>>> 	};
+>>>>>
+>>>>> 	partition@e00000 {
+>>>>> 		label = "data";
+>>>>> 		compatible = "ubi,device";  
+>>>>
+>>>> So, if we follow your logic we should also have
+>>>>
+>>>> 		compatible = "jffs2,file-system";
+>>>>
+>>>> Because JFFS2 is an MTD user, just as UBI is.  
+>>>
+>>> Well, if there was any use for that, then yes, we should have that.
+>>> However, if root=/dev/mtdblockX is set, the filesystem type simply
+>>> doesn't matter as it is being probed and thus there simply is no
+>>> real need for that.
+>>>
+>>> In some rare cases the bootloader may make use of JFFS2 and a certain
+>>> (/boot) partition is thus required to be JFFS2 no-matter-what. In that
+>>> case I'd agree, there should be such a thing as "jffs2,file-system" set
+>>> in DT (but that's a very rare corner case and abuse would probably
+>>> prevail over ligitimate use-cases).
+>>>
+>>> In the end, the classication as "is an MTD user" isn't relevant for
+>>> this debate imho.
+>>
+>> It is, because supporting the UBI specific case is just an open door to
+>> supporting any specific cases people might have, and how should we
+>> justify that UBI is more legitimate than others.
+> 
+> That could be true, if there actually are other things which require
+> device-specific information about MTD partitions. In a way something
+> similar already exists in a reverse-fashion for in-flash WiFi EEPROMs,
+> eg.
+> fpi@10000000 {
+>         ...
+>         ath9k_eep {
+>                 compatible = "ath9k,eeprom";
+>                 ath,eep-flash = <&ath9k_cal 0x985>;
+>                 ath,eep-endian;
+>                 ath,eep-swap;
+>         };
+>         ...
+> };
+> 
+> &spi {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pins_spi_default>;
+> 
+>         status = "ok";
+> 
+>         m25p80@4 {
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+>                 compatible = "jedec,spi-nor";
+>                 reg = <4 0>;
+>                 spi-max-frequency = <1000000>;
+> 
+>                 ath9k_cal: partition@0 {
+>                         reg = <0x0 0x20000>;
+>                         label = "urlader";
+>                         read-only;
+>                 };
+>         ...
+> };
+> 
+> (excerpt from FRITZ3370.dts)
+> 
+> 
+>>
+>>>
+>>>>
+>>>> Let's see what Rob and other DT maintainers think about that.
+>>>>
+>>>> Still, it seems to me that you're trying to solve a problem in the
+>>>> kernel when it should actually be solved in an upper layer.  
+>>>
+>>> It's definitely inside the grey-zone of early-userland... Doing things
+>>> which need to be done to mount the root filesystem are traditionally
+>>> the exceptions of things which are user-land and yet happen inside
+>>> the kernel before executing init.
+>>
+>> But I've never seen any DT properties specifying which FS should be
+>> used on a block device...
+> 
+> No, because that's not needed for filesystems. UBI sitting on top of
+> a specific MTD partition is kinda part of the general way a device is
+> supposed to be used, bootloaders may assume UBI to be present in a
+> certain area and if used by the stock firmware, the partition used
+> for UBI by a third party firmware should be within the same
+> boundaries. To me it looks like a device-specific convention, similar
+> to flash areas used for WiFi EEPROMs or bootloader environments.
+> (to detect the bootloader environment in user-space we are currently
+> appending the device-tree by having per-board defaults. That's also
+> not that nice, but it's not as problematic because usually uneeded
+> during normal runtime, see
+> https://git.lede-project.org/?p=source.git;a=blob;f=package/boot/uboot-envtools/files/lantiq
+> )
 
+In the end I would like to be able to specify from where to mount the
+root filesystem in device tree. The partition layout directly on the
+flash chip is already defined in device tree.
+
+The U-Boot from the Intel / Lantiq SDK currently loads the kernel from
+an UBI partition and then the kernel should also load the rootfs from an
+UBI partition. You can also flash the images from the boot loader the
+boot loader takes care of placing your image into the correct UBI
+partitions. In this case the boot loader is aware of the partition
+schema and also the UBI schema.
+
+>> I know, partitions on block devices are stored in a dedicated partition
+>> table, and MTD partitions are not (or let's say that most of the time
+>> they are not).
+>>
+>> But still, I think the software stack you put on top of your storage
+>> device should not appear in the DT.
 > 
-> >> @@ -1,6 +1,7 @@
-> >>  /*
-> >>   * Copyright (c) 2014 Ezequiel Garcia
-> >>   * Copyright (c) 2011 Free Electrons
-> >> + * Copyright (c) 2016 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> >>   *
-> >>   * Driver parameter handling strongly based on drivers/mtd/ubi/build.c
-> >>   *   Copyright (c) International Business Machines Corp., 2006
-> >> @@ -41,6 +42,7 @@
-> >>  #include <linux/kernel.h>
-> >>  #include <linux/list.h>
-> >>  #include <linux/mutex.h>
-> >> +#include <linux/of.h>
-> >>  #include <linux/slab.h>
-> >>  #include <linux/mtd/ubi.h>
-> >>  #include <linux/workqueue.h>
-> >> @@ -628,6 +630,64 @@ static void __init ubiblock_create_from_param(void)
-> >>  	}
-> >>  }
-> >>  
-> >> +static void __init ubiblock_create_from_device_tree(void)
-> >> +{
-> >> +	int ubi_num;
-> >> +	const char *name;
-> >> +	u32 mode;
-> >> +	struct ubi_device *ubi;
-> >> +	struct ubi_volume_desc *desc;
-> >> +	struct ubi_volume_info vi;
-> >> +	struct mtd_info *mtd;
-> >> +	struct device_node *volume;
-> >> +	int ret;
-> >> +
-> >> +	for (ubi_num = 0; ubi_num < UBI_MAX_DEVICES; ubi_num++) {
-> >> +		ubi = ubi_get_device(ubi_num);
-> >> +		if (!ubi)
-> >> +			continue;
-> >> +		mtd = ubi->mtd;
-> >> +		if (!mtd || !of_device_is_compatible(mtd->dev.of_node,
-> >> +						     "ubi,device")) {
-> >> +			ubi_put_device(ubi);
-> >> +			continue;
-> >> +		}
-> >> +
-> >> +		for_each_child_of_node(mtd->dev.of_node, volume) {
-> >> +			if (!of_device_is_compatible(volume, "ubi,volume"))
-> >> +				continue;
-> >> +
-> >> +			ret = of_property_read_string(volume, "name", &name);
-> >> +			if (ret)
-> >> +				continue;
-> >> +
-> >> +			ret = of_property_read_u32(volume, "ubi-mode", &mode);
-> >> +			if (ret)
-> >> +				continue;
-> >> +
-> >> +			desc = ubi_open_volume_nm(ubi_num, name, mode);
-> >> +			if (IS_ERR(desc)) {
-> >> +				pr_err(
-> >> +				       "UBI: block: can't open volume %s on ubi%d, err=%ld",
-> >> +				       name, ubi_num, PTR_ERR(desc));
-> >> +				continue;
-> >> +			}
-> >> +
-> >> +			ubi_get_volume_info(desc, &vi);
-> >> +			ubi_close_volume(desc);
-> >> +
-> >> +			ret = ubiblock_create(&vi);
-> >> +			if (ret) {
-> >> +				pr_err(
-> >> +				       "UBI: block: can't add '%s' volume on ubi%d, err=%d",
-> >> +				       vi.name, ubi_num, ret);
-> >> +				continue;
-> >> +			}
-> >> +		}
-> >> +		ubi_put_device(ubi);
-> >> +	}
-> >> +}
-> >> +
-> >>  static void ubiblock_remove_all(void)
-> >>  {
-> >>  	struct ubiblock *next;
-> >> @@ -658,6 +718,9 @@ int __init ubiblock_init(void)
-> >>  	 */
-> >>  	ubiblock_create_from_param();
-> >>  
-> >> +	/* Attach block devices from device tree */
-> >> +	ubiblock_create_from_device_tree();
-> >> +
-> > 
-> > Probably you also want to set ROOT_DEV similar to what we currently
-> > do in
-> > 
-> > https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/493-ubi-set-ROOT_DEV-to-ubiblock-rootfs-if-unset.patch
-> > 
-> >>  	/*
-> >>  	 * Block devices are only created upon user requests, so we ignore
-> >>  	 * existing volumes.
-> >> -- 
-> >> 2.8.1
-> >>
-> >>
-> >> ______________________________________________________
-> >> Linux MTD discussion mailing list
-> >> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> I agree, with the exception of whatever is the minimum needed for the
+> device to boot. LVM2, cryptsetup or FUSE are optional luxury and I
+> agree there shouldn't be any volume-manager or filesystem specifics in
+> the device tree. However, while I believe that this includes 
+> 
+>>
+>> Now, if all other people think this is sane to do it, I won't block it.
+>>
+>>>
+>>>>
+>>>> Another option would be to try attaching UBI (along with all possible
+>>>> MTD users) to all the the MTD partitions. That's what's done for block
+>>>> filesystems when rootfstype is not specified.  
+>>>
+>>> Correct, but in case of filesystems, it is only done for the specified
+>>> partition/device. Probing all partitions sounds nice, however, please
+>>> keep in mind that MTD partitions may overlap and there may be
+>>> left-overs from previous UBI devices.
+>>
+>> Overlapping partitions are unsafe in general, no matter what you want to
+>> do with it. The only valid case would be 1 RW partition and several RO
+>> partitions overlapping with the RW one.
+>> The other accepted use case is exposing the master device (the real MTD
+>> device under MTD partitions). But in any case, using 2 overlapping
+>> partitions in // and both in RW mode is unsafe and should be avoided.
+> 
+> That second case is quite common, and also having a MTD partition
+> defined for the whole firmware-region (ie. usually starting at an
+> offset above the bootloader and it's environment and ending just
+> before the WiFi EEPROM which is commonly stored at the high end of
+> flash chips). Accidentally ubi-attaching that firmware partition may
+> end up quite unlucky if it starts with a UBI device...
+> 
+>>
+>>> Simply trying to ubiattach *all*
+>>> available MTD devices will need quite some extra work to handle all
+>>> potential outcomes of trying to attach non-UBI or
+>>> broken/corrupted/wrongly-sized UBI partitions.
+>>
+>> Attaching broken/corrupted/wrongly-sized partitions will still fail,
+>> except they might be detected as valid UBI partition by the
+>> auto-detection code, which would trigger a full attach step.
+>> The only drawback is that you might try something that has been
+>> corrupted, but this is already the case with the current approach.
+> 
+> Not quite, because you are only probing the partition selected rather
+> than all of them.
+> 
+>>
+>> BTW, I don't expect to see a lot of systems defining several UBI
+>> devices attached to a single MTD device. So this only leaves the
+>> multi-devices case. And of course this auto-detection logic would have
+>> to be explicitly enabled, so the penalty would only impact those
+>> enabling this feature.
+>>
+>>> Generally, I believe that's actually the only good alternative, but I
+>>> doubt it can easily made as robust and reliable compared to hinting
+>>> which mtd device to ubiattach via the devicetree.
+>>
+>> As I said, I'm not in favor of putting this kind of information in the
+>> DT, so I'm trying to find other approaches to solve your problem ;).
+> 
+> Making it safe to auto-probe all MTD devices is indeed a sound option,
+> I just expected it to be more effort and more pitfalls compared to
+> an optional marker in the device-tree which is just a convenience
+> replacement for the cmdline syntax.
 > 
 > 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> Cheers
+> 
+> 
+> Daniel
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
