@@ -1,77 +1,82 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v3 2/2] mtd: nand: sunxi: add reset line support
-Date: Sun, 19 Jun 2016 23:01:28 +0800
-Message-ID: <20160619150128.44443-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding
+ of STiH4xx platforms
+Date: Sun, 19 Jun 2016 10:04:58 -0500
+Message-ID: <20160619150458.GA26824@rob-hp-laptop>
+References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBXHHTK5QKGQEEGWZXEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, Geert Uytterhoeven <geert+renesas@glider.be>, arnaud.pouliquen@st.com, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, benjamin.gaignard@st.com, Olivier Bideau <olivier.bideau@st.com>, Russell King <linux@armlinux.org.uk>, Peter Griffin <peter.griffin@linaro.org>, Thierry Reding <treding@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, vincent.abriou@st.com, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <maxime.coquelin@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Patrice Chotard <patrice.chotard@st.com>Pa
 List-Id: devicetree@vger.kernel.org
 
-The NAND controller on some sun8i chips needs its reset line to be deasserted
-before they can enter working state. This commit added the reset line process
-to the driver.
+On Thu, Jun 16, 2016 at 11:20:22AM +0200, Gabriel Fernandez wrote:
+> This patch reworks the clock binding to avoid too much detail in DT.
+> Now we have only compatible string per type of clock
+> (remark from Rob https://lkml.org/lkml/2016/5/25/492)
+>
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
-Changes in v1:
-  - Corrected the error checking code of reset line.
-
-Changes in v2:
-  - Corrected a more serious error brought in the "fix" of v1.
-
- drivers/mtd/nand/sunxi_nand.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunxi_nand.c
-index a83a690..8fb5899 100644
---- a/drivers/mtd/nand/sunxi_nand.c
-+++ b/drivers/mtd/nand/sunxi_nand.c
-@@ -39,6 +39,7 @@
- #include <linux/gpio.h>
- #include <linux/interrupt.h>
- #include <linux/iopoll.h>
-+#include <linux/reset.h>
+I have no idea what the clock trees and clock controller in these chips 
+look like, so it's hard to say if the changes here are good. It still 
+looks like things are somewhat fine grained clocks in DT. I'll leave 
+it up to the platform maintainers to decide...
  
- #define NFC_REG_CTL		0x0000
- #define NFC_REG_ST		0x0004
-@@ -269,6 +270,7 @@ struct sunxi_nfc {
- 	void __iomem *regs;
- 	struct clk *ahb_clk;
- 	struct clk *mod_clk;
-+	struct reset_control *reset;
- 	unsigned long assigned_cs;
- 	unsigned long clk_rate;
- 	struct list_head chips;
-@@ -1871,6 +1873,20 @@ static int sunxi_nfc_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_ahb_clk_unprepare;
- 
-+	nfc->reset = devm_reset_control_get_optional(dev, "ahb");
-+
-+	if (!IS_ERR(nfc->reset)) {
-+		ret = reset_control_deassert(nfc->reset);
-+		if (ret) {
-+			dev_err(dev, "reset err %d\n", ret);
-+			goto out_mod_clk_unprepare;
-+		}
-+	}
-+	else {
-+		if (PTR_ERR(nfc->reset) != -ENOENT)
-+			return PTR_ERR(nfc->reset);
-+	}
-+
- 	ret = sunxi_nfc_rst(nfc);
- 	if (ret)
- 		goto out_mod_clk_unprepare;
--- 
-2.9.0
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> ---
+>  .../devicetree/bindings/clock/st/st,clkgen-mux.txt |  2 +-
+>  .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
+>  .../devicetree/bindings/clock/st/st,clkgen.txt     |  2 +-
+>  .../devicetree/bindings/clock/st/st,quadfs.txt     |  6 +--
+>  drivers/clk/st/clkgen-fsyn.c                       | 41 ++++++--------
+>  drivers/clk/st/clkgen-mux.c                        | 28 ++++------
+>  drivers/clk/st/clkgen-pll.c                        | 62 ++++++++++------------
+>  7 files changed, 65 insertions(+), 87 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> index 4d277d6..9a46cb1d7 100644
+> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> @@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
+>  Required properties:
+>  
+>  - compatible : shall be:
+> -	"st,stih407-clkgen-a9-mux",	"st,clkgen-mux"
+> +	"st,stih407-clkgen-a9-mux"
+>  
+>  - #clock-cells : from common clock binding; shall be set to 0.
+>  
+> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> index c9fd674..be0b043 100644
+> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> @@ -9,11 +9,10 @@ Base address is located to the parent node. See clock binding[2]
+>  Required properties:
+>  
+>  - compatible : shall be:
+> -	"st,stih407-plls-c32-a0",	"st,clkgen-plls-c32"
+> -	"st,stih407-plls-c32-a9",	"st,clkgen-plls-c32"
+> -	"sst,plls-c32-cx_0",		"st,clkgen-plls-c32"
+> -	"sst,plls-c32-cx_1",		"st,clkgen-plls-c32"
+> -	"st,stih418-plls-c28-a9",	"st,clkgen-plls-c32"
+
+> +	"st,clkgen-pll0"
+> +	"st,clkgen-pll0"
+
+Repeated. Supposed to be 0 and 1? This seems a bit generic, too.
+
+> +	"st,stih407-clkgen-plla9"
+> +	"st,stih418-clkgen-plla9"
