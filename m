@@ -1,244 +1,356 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 2/5] mfd: add Ricoh RN5T567 PMIC support
-Date: Sat, 18 Jun 2016 17:57:23 -0700
-Message-ID: <b7fdeb7bc1c66424d00a5ed12439687d@agner.ch>
-References: <20160608010429.19618-1-stefan@agner.ch>
- <20160608010429.19618-3-stefan@agner.ch> <20160616145558.GB4948@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160616145558.GB4948@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org, b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+From: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 1/3] ASoC: tegra: add tegra sgtl5000 machine driver
+Date: Sun, 19 Jun 2016 03:00:00 +0200
+Message-ID: <1466298002-12576-2-git-send-email-marcel.ziswiler@toradex.com>
+References: <1466298002-12576-1-git-send-email-marcel.ziswiler@toradex.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466298002-12576-1-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-06-16 07:55, Lee Jones wrote:
-> On Tue, 07 Jun 2016, Stefan Agner wrote:
-> 
->> The Ricoh RN5T567 is from the same family as the Ricoh RN5T618 is,
->> the differences are:
->>
->> + DCDC4
->> + Slightly different output voltage/currents
->> + 32kHz Output
->> - ADC/Charger capabilities
->>
->> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> ---
->>  Documentation/devicetree/bindings/mfd/rn5t618.txt | 19 ++++++++++-------
->>  drivers/mfd/Kconfig                               |  7 +++---
->>  drivers/mfd/rn5t618.c                             | 26 +++++++++++++++++------
->>  include/linux/mfd/rn5t618.h                       | 12 +++++++++++
->>  4 files changed, 46 insertions(+), 18 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/rn5t618.txt b/Documentation/devicetree/bindings/mfd/rn5t618.txt
->> index 937785a..5b493ed 100644
->> --- a/Documentation/devicetree/bindings/mfd/rn5t618.txt
->> +++ b/Documentation/devicetree/bindings/mfd/rn5t618.txt
->> @@ -1,18 +1,21 @@
->> -* Ricoh RN5T618 PMIC
->> +* Ricoh RN5T567/RN5T618 PMIC
->>
->> -Ricoh RN5T618 is a power management IC which integrates 3 step-down
->> -DCDC converters, 7 low-dropout regulators, a Li-ion battery charger,
->> -fuel gauge, ADC, GPIOs and a watchdog timer. It can be controlled
->> -through a I2C interface.
->> +Ricoh RN5T567/RN5T618 is a power management IC family which integrates
->> +3 to 5 step-down DCDC converters, 7 low-dropout regulators, GPIOs and
->> +a watchdog timer. The RN5T618 provides additionally a Li-ion battery
->> +charger, fuel gauge and an ADC. It can be controlled through a I2C
-> 
-> Nit: s/a I2C/an I2C/
-> 
->> +interface.
->>
->>  Required properties:
->> - - compatible: should be "ricoh,rn5t618"
->> + - compatible: must be one of
->> +		"ricoh,rn5t567"
->> +		"ricoh,rn5t618"
->>   - reg: the I2C slave address of the device
->>
->>  Sub-nodes:
->>   - regulators: the node is required if the regulator functionality is
->> -   needed. The valid regulator names are: DCDC1, DCDC2, DCDC3, LDO1,
->> -   LDO2, LDO3, LDO4, LDO5, LDORTC1 and LDORTC2.
->> +   needed. The valid regulator names are: DCDC1, DCDC2, DCDC3, DCDC4
->> +   (RN5T567), LDO1, LDO2, LDO3, LDO4, LDO5, LDORTC1 and LDORTC2.
->>     The common bindings for each individual regulator can be found in:
->>     Documentation/devicetree/bindings/regulator/regulator.txt
->>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 1bcf601..ff031a7 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -852,13 +852,14 @@ config MFD_RK808
->>  	  including interrupts, RTC, LDO & DCDC regulators, and onkey.
->>
->>  config MFD_RN5T618
->> -	tristate "Ricoh RN5T5618 PMIC"
->> +	tristate "Ricoh RN5T567/618 PMIC"
->>  	depends on I2C
->> +	depends on OF
->>  	select MFD_CORE
->>  	select REGMAP_I2C
->>  	help
->> -	  Say yes here to add support for the Ricoh RN5T618 PMIC. This
->> -	  driver provides common support for accessing the device,
->> +	  Say yes here to add support for the Ricoh RN5T567 or R5T618 PMIC.
->> +	  This driver provides common support for accessing the device,
->>  	  additional drivers must be enabled in order to use the
->>  	  functionality of the device.
->>
->> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
->> index 0ad51d7..7607ced 100644
->> --- a/drivers/mfd/rn5t618.c
->> +++ b/drivers/mfd/rn5t618.c
->> @@ -2,6 +2,7 @@
->>   * MFD core driver for Ricoh RN5T618 PMIC
->>   *
->>   * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
->> + * Copyright (C) 2016 Toradex AG
->>   *
->>   * This program is free software; you can redistribute it and/or
->>   * modify it under the terms of the GNU General Public License
->> @@ -15,6 +16,7 @@
->>  #include <linux/mfd/core.h>
->>  #include <linux/mfd/rn5t618.h>
->>  #include <linux/module.h>
->> +#include <linux/of_device.h>
->>  #include <linux/regmap.h>
->>
->>  static const struct mfd_cell rn5t618_cells[] = {
->> @@ -59,12 +61,26 @@ static void rn5t618_power_off(void)
->>  			   RN5T618_SLPCNT_SWPWROFF, RN5T618_SLPCNT_SWPWROFF);
->>  }
->>
->> +static const struct of_device_id rn5t618_of_match[] = {
->> +	{ .compatible = "ricoh,rn5t567", .data = (void *)RN5T567 },
->> +	{ .compatible = "ricoh,rn5t618", .data = (void *)RN5T618 },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, rn5t618_of_match);
->> +
->>  static int rn5t618_i2c_probe(struct i2c_client *i2c,
->>  			     const struct i2c_device_id *id)
->>  {
->> +	const struct of_device_id *of_id =
->> +		of_match_device(rn5t618_of_match, &i2c->dev);
-> 
-> I'd prefer you did the call *after* the variable declarations.
-> 
->>  	struct rn5t618 *priv;
->>  	int ret;
-> 
-> So here ->
->> +	if (!of_id) {
->> +		dev_err(&i2c->dev, "Failed to find matching dt id\n");
-> 
-> s/dt id/DT ID/
->> +		return -EINVAL;
->> +	}
->> +
->>  	priv = devm_kzalloc(&i2c->dev, sizeof(*priv), GFP_KERNEL);
->>  	if (!priv)
->>  		return -ENOMEM;
->> @@ -78,6 +94,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
->>  		return ret;
->>  	}
->>
->> +	priv->variant = (long)of_id->data;
->> +
-> 
-> Why here and not directly after the of_id check?
-> 
->>  	ret = devm_mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
->>  				   ARRAY_SIZE(rn5t618_cells), NULL, 0, NULL);
->>  	if (ret) {
->> @@ -105,12 +123,6 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
->>  	return 0;
->>  }
->>
->> -static const struct of_device_id rn5t618_of_match[] = {
->> -	{ .compatible = "ricoh,rn5t618" },
->> -	{ }
->> -};
->> -MODULE_DEVICE_TABLE(of, rn5t618_of_match);
->> -
->>  static const struct i2c_device_id rn5t618_i2c_id[] = {
->>  	{ }
->>  };
->> @@ -129,5 +141,5 @@ static struct i2c_driver rn5t618_i2c_driver = {
->>  module_i2c_driver(rn5t618_i2c_driver);
->>
->>  MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
->> -MODULE_DESCRIPTION("Ricoh RN5T618 MFD driver");
->> +MODULE_DESCRIPTION("Ricoh RN5T567/618 MFD driver");
->>  MODULE_LICENSE("GPL v2");
->> diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
->> index c72d534..54179c2 100644
->> --- a/include/linux/mfd/rn5t618.h
->> +++ b/include/linux/mfd/rn5t618.h
->> @@ -20,6 +20,7 @@
->>  #define RN5T618_OTPVER			0x01
->>  #define RN5T618_IODAC			0x02
->>  #define RN5T618_VINDAC			0x03
->> +#define RN5T618_OUT32KEN		0x05
->>  #define RN5T618_CPUCNT			0x06
->>  #define RN5T618_PSWR			0x07
->>  #define RN5T618_PONHIS			0x09
->> @@ -38,6 +39,7 @@
->>  #define RN5T618_DC1_SLOT		0x16
->>  #define RN5T618_DC2_SLOT		0x17
->>  #define RN5T618_DC3_SLOT		0x18
->> +#define RN5T618_DC4_SLOT		0x19
->>  #define RN5T618_LDO1_SLOT		0x1b
->>  #define RN5T618_LDO2_SLOT		0x1c
->>  #define RN5T618_LDO3_SLOT		0x1d
->> @@ -54,12 +56,16 @@
->>  #define RN5T618_DC2CTL2			0x2f
->>  #define RN5T618_DC3CTL			0x30
->>  #define RN5T618_DC3CTL2			0x31
->> +#define RN5T618_DC4CTL			0x32
->> +#define RN5T618_DC4CTL2			0x33
->>  #define RN5T618_DC1DAC			0x36
->>  #define RN5T618_DC2DAC			0x37
->>  #define RN5T618_DC3DAC			0x38
->> +#define RN5T618_DC4DAC			0x39
->>  #define RN5T618_DC1DAC_SLP		0x3b
->>  #define RN5T618_DC2DAC_SLP		0x3c
->>  #define RN5T618_DC3DAC_SLP		0x3d
->> +#define RN5T618_DC4DAC_SLP		0x3e
->>  #define RN5T618_DCIREN			0x40
->>  #define RN5T618_DCIRQ			0x41
->>  #define RN5T618_DCIRMON			0x42
->> @@ -221,8 +227,14 @@ enum {
->>  	RN5T618_REG_NUM,
->>  };
->>
->> +enum {
->> +	RN5T567 = 0,
->> +	RN5T618,
->> +};
->> +
->>  struct rn5t618 {
->>  	struct regmap *regmap;
->> +	long variant;
-> 
-> What do you use this for?
+This binding and driver describe/support playback to headphones, and
+capture from line-in and microphone.
 
-This is used in the regulator driver to detect which variant we are
-dealing with...
+This driver is useful for the Toradex Apalis T30, Apalis TK1 and
+Colibri T30 modules.
 
-Ack on all the other stuff, will send a v3 for this.
+Signed-off-by: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---
-Stefan
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+---
 
-> 
->>  };
->>
->>  #endif /* __LINUX_MFD_RN5T618_H */
+Changes in v4:
+- simple-audio-card does still not allow for more advanced use cases
+  like Tegra SoCs
+- further platform drivers have been accepted since my last attempt
+  (e.g. rt5677 one)
+- relevance for one further board the new Toradex Apalis TK1
+- drop unused sound/jack.h include
+- in tegra_sgtl5000_driver_remove() pass return value of
+  snd_soc_unregister_card() on to caller
+- no longer set owner property in platform_driver to THIS_MODULE
+- re-based/resend
+
+Changes in v3:
+- revert to not using simple-audio-card being incompatible with tegra
+- rebased to for-next
+
+Changes in v2:
+- using simple-audio-card as suggested by Fabio
+
+ .../bindings/sound/nvidia,tegra-audio-sgtl5000.txt |  42 ++++
+ sound/soc/tegra/Kconfig                            |  11 ++
+ sound/soc/tegra/Makefile                           |   2 +
+ sound/soc/tegra/tegra_sgtl5000.c                   | 212 +++++++++++++++++++++
+ 4 files changed, 267 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra-audio-sgtl5000.txt
+ create mode 100644 sound/soc/tegra/tegra_sgtl5000.c
+
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-sgtl5000.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-sgtl5000.txt
+new file mode 100644
+index 0000000..5da7da4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-sgtl5000.txt
+@@ -0,0 +1,42 @@
++NVIDIA Tegra audio complex, with SGTL5000 CODEC
++
++Required properties:
++- compatible : "nvidia,tegra-audio-sgtl5000"
++- clocks : Must contain an entry for each entry in clock-names.
++  See ../clocks/clock-bindings.txt for details.
++- clock-names : Must include the following entries:
++  - pll_a
++  - pll_a_out0
++  - mclk (The Tegra cdev1/extern1 clock, which feeds the CODEC's mclk)
++- nvidia,model : The user-visible name of this sound complex.
++- nvidia,audio-routing : A list of the connections between audio components.
++  Each entry is a pair of strings, the first being the connection's sink,
++  the second being the connection's source. Valid names for sources and
++  sinks are the SGTL5000's pins (as documented in its binding), and the jacks
++  on the board:
++
++  * Headphone Jack
++  * Line In Jack
++  * Mic Jack
++
++- nvidia,i2s-controller : The phandle of the Tegra I2S controller that's
++  connected to the CODEC.
++- nvidia,audio-codec : The phandle of the SGTL5000 audio codec.
++
++Example:
++
++sound {
++	compatible = "toradex,tegra-audio-sgtl5000-apalis_t30",
++		     "nvidia,tegra-audio-sgtl5000";
++	nvidia,model = "Toradex Apalis T30";
++	nvidia,audio-routing =
++		"Headphone Jack", "HP_OUT",
++		"LINE_IN", "Line In Jack",
++		"MIC_IN", "Mic Jack";
++	nvidia,i2s-controller = <&tegra_i2s2>;
++	nvidia,audio-codec = <&sgtl5000>;
++	clocks = <&tegra_car TEGRA30_CLK_PLL_A>,
++		 <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
++		 <&tegra_car TEGRA30_CLK_EXTERN1>;
++	clock-names = "pll_a", "pll_a_out0", "mclk";
++};
+diff --git a/sound/soc/tegra/Kconfig b/sound/soc/tegra/Kconfig
+index a6768f8..efbe8d4 100644
+--- a/sound/soc/tegra/Kconfig
++++ b/sound/soc/tegra/Kconfig
+@@ -138,3 +138,14 @@ config SND_SOC_TEGRA_RT5677
+ 	help
+ 	  Say Y or M here if you want to add support for SoC audio on Tegra
+ 	  boards using the RT5677 codec, such as Ryu.
++
++config SND_SOC_TEGRA_SGTL5000
++	tristate "SoC Audio support for Tegra boards using a SGTL5000 codec"
++	depends on SND_SOC_TEGRA && I2C && GPIOLIB
++	select SND_SOC_TEGRA20_I2S if ARCH_TEGRA_2x_SOC
++	select SND_SOC_TEGRA30_I2S if ARCH_TEGRA_3x_SOC
++	select SND_SOC_SGTL5000
++	help
++	  Say Y or M here if you want to add support for SoC audio on Tegra
++	  boards using the SGTL5000 codec, such as Apalis T30, Apalis TK1 or
++	  Colibri T30.
+diff --git a/sound/soc/tegra/Makefile b/sound/soc/tegra/Makefile
+index 9171655..f214a3f 100644
+--- a/sound/soc/tegra/Makefile
++++ b/sound/soc/tegra/Makefile
+@@ -26,6 +26,7 @@ snd-soc-tegra-wm9712-objs := tegra_wm9712.o
+ snd-soc-tegra-trimslice-objs := trimslice.o
+ snd-soc-tegra-alc5632-objs := tegra_alc5632.o
+ snd-soc-tegra-max98090-objs := tegra_max98090.o
++snd-soc-tegra-sgtl5000-objs := tegra_sgtl5000.o
+ 
+ obj-$(CONFIG_SND_SOC_TEGRA_RT5640) += snd-soc-tegra-rt5640.o
+ obj-$(CONFIG_SND_SOC_TEGRA_RT5677) += snd-soc-tegra-rt5677.o
+@@ -35,3 +36,4 @@ obj-$(CONFIG_SND_SOC_TEGRA_WM9712) += snd-soc-tegra-wm9712.o
+ obj-$(CONFIG_SND_SOC_TEGRA_TRIMSLICE) += snd-soc-tegra-trimslice.o
+ obj-$(CONFIG_SND_SOC_TEGRA_ALC5632) += snd-soc-tegra-alc5632.o
+ obj-$(CONFIG_SND_SOC_TEGRA_MAX98090) += snd-soc-tegra-max98090.o
++obj-$(CONFIG_SND_SOC_TEGRA_SGTL5000) += snd-soc-tegra-sgtl5000.o
+\ No newline at end of file
+diff --git a/sound/soc/tegra/tegra_sgtl5000.c b/sound/soc/tegra/tegra_sgtl5000.c
+new file mode 100644
+index 0000000..1e76869
+--- /dev/null
++++ b/sound/soc/tegra/tegra_sgtl5000.c
+@@ -0,0 +1,212 @@
++/*
++ * tegra_sgtl5000.c - Tegra machine ASoC driver for boards using SGTL5000 codec
++ *
++ * Author: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Based on code copyright/by:
++ *
++ * Copyright (C) 2010-2012 - NVIDIA, Inc.
++ * (c) 2009, 2010 Nvidia Graphics Pvt. Ltd.
++ * Copyright 2007 Wolfson Microelectronics PLC.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/gpio.h>
++#include <linux/of_gpio.h>
++
++#include <sound/core.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++
++#include "../codecs/sgtl5000.h"
++
++#include "tegra_asoc_utils.h"
++
++#define DRV_NAME "tegra-snd-sgtl5000"
++
++struct tegra_sgtl5000 {
++	struct tegra_asoc_utils_data util_data;
++};
++
++static int tegra_sgtl5000_hw_params(struct snd_pcm_substream *substream,
++					struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++	struct snd_soc_card *card = rtd->card;
++	struct tegra_sgtl5000 *machine = snd_soc_card_get_drvdata(card);
++	int srate, mclk;
++	int err;
++
++	srate = params_rate(params);
++	switch (srate) {
++	case 11025:
++	case 22050:
++	case 44100:
++	case 88200:
++		mclk = 11289600;
++		break;
++	default:
++		mclk = 12288000;
++		break;
++	}
++
++	err = tegra_asoc_utils_set_rate(&machine->util_data, srate, mclk);
++	if (err < 0) {
++		dev_err(card->dev, "Can't configure clocks\n");
++		return err;
++	}
++
++	err = snd_soc_dai_set_sysclk(codec_dai, SGTL5000_SYSCLK, mclk,
++				     SND_SOC_CLOCK_IN);
++	if (err < 0) {
++		dev_err(card->dev, "codec_dai clock not set\n");
++		return err;
++	}
++
++	return 0;
++}
++
++static struct snd_soc_ops tegra_sgtl5000_ops = {
++	.hw_params = tegra_sgtl5000_hw_params,
++};
++
++static const struct snd_soc_dapm_widget tegra_sgtl5000_dapm_widgets[] = {
++	SND_SOC_DAPM_HP("Headphone Jack", NULL),
++	SND_SOC_DAPM_LINE("Line In Jack", NULL),
++	SND_SOC_DAPM_MIC("Mic Jack", NULL),
++};
++
++static struct snd_soc_dai_link tegra_sgtl5000_dai = {
++	.name = "sgtl5000",
++	.stream_name = "HiFi",
++	.codec_dai_name = "sgtl5000",
++	.ops = &tegra_sgtl5000_ops,
++	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
++			SND_SOC_DAIFMT_CBS_CFS,
++};
++
++static struct snd_soc_card snd_soc_tegra_sgtl5000 = {
++	.name = "tegra-sgtl5000",
++	.owner = THIS_MODULE,
++	.dai_link = &tegra_sgtl5000_dai,
++	.num_links = 1,
++	.dapm_widgets = tegra_sgtl5000_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(tegra_sgtl5000_dapm_widgets),
++	.fully_routed = true,
++};
++
++static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct snd_soc_card *card = &snd_soc_tegra_sgtl5000;
++	struct tegra_sgtl5000 *machine;
++	int ret;
++
++	machine = devm_kzalloc(&pdev->dev, sizeof(struct tegra_sgtl5000),
++			       GFP_KERNEL);
++	if (!machine) {
++		dev_err(&pdev->dev, "Can't allocate tegra_sgtl5000 struct\n");
++		return -ENOMEM;
++	}
++
++	card->dev = &pdev->dev;
++	platform_set_drvdata(pdev, card);
++	snd_soc_card_set_drvdata(card, machine);
++
++	ret = snd_soc_of_parse_card_name(card, "nvidia,model");
++	if (ret)
++		goto err;
++
++	ret = snd_soc_of_parse_audio_routing(card, "nvidia,audio-routing");
++	if (ret)
++		goto err;
++
++	tegra_sgtl5000_dai.codec_of_node = of_parse_phandle(np,
++			"nvidia,audio-codec", 0);
++	if (!tegra_sgtl5000_dai.codec_of_node) {
++		dev_err(&pdev->dev,
++			"Property 'nvidia,audio-codec' missing or invalid\n");
++		ret = -EINVAL;
++		goto err;
++	}
++
++	tegra_sgtl5000_dai.cpu_of_node = of_parse_phandle(np,
++			"nvidia,i2s-controller", 0);
++	if (!tegra_sgtl5000_dai.cpu_of_node) {
++		dev_err(&pdev->dev,
++			"Property 'nvidia,i2s-controller' missing/invalid\n");
++		ret = -EINVAL;
++		goto err;
++	}
++
++	tegra_sgtl5000_dai.platform_of_node = tegra_sgtl5000_dai.cpu_of_node;
++
++	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
++	if (ret)
++		goto err;
++
++	ret = snd_soc_register_card(card);
++	if (ret) {
++		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
++			ret);
++		goto err_fini_utils;
++	}
++
++	return 0;
++
++err_fini_utils:
++	tegra_asoc_utils_fini(&machine->util_data);
++err:
++	return ret;
++}
++
++static int tegra_sgtl5000_driver_remove(struct platform_device *pdev)
++{
++	struct snd_soc_card *card = platform_get_drvdata(pdev);
++	struct tegra_sgtl5000 *machine = snd_soc_card_get_drvdata(card);
++	int ret;
++
++	ret = snd_soc_unregister_card(card);
++
++	tegra_asoc_utils_fini(&machine->util_data);
++
++	return ret;
++}
++
++static const struct of_device_id tegra_sgtl5000_of_match[] = {
++	{ .compatible = "nvidia,tegra-audio-sgtl5000", },
++	{ /* sentinel */ },
++};
++
++static struct platform_driver tegra_sgtl5000_driver = {
++	.driver = {
++		.name = DRV_NAME,
++		.pm = &snd_soc_pm_ops,
++		.of_match_table = tegra_sgtl5000_of_match,
++	},
++	.probe = tegra_sgtl5000_driver_probe,
++	.remove = tegra_sgtl5000_driver_remove,
++};
++module_platform_driver(tegra_sgtl5000_driver);
++
++MODULE_AUTHOR("Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>");
++MODULE_DESCRIPTION("Tegra SGTL5000 machine ASoC driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:" DRV_NAME);
++MODULE_DEVICE_TABLE(of, tegra_sgtl5000_of_match);
+-- 
+2.5.5
