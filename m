@@ -1,201 +1,174 @@
-From: Chris Lapa <chris@lapa.com.au>
-Subject: Re: [PATCH v3 7/7] max8903: adds support for initiation via device
- tree.
-Date: Sun, 19 Jun 2016 23:52:27 +1000
-Message-ID: <9e2fe4a3-05b0-1382-2932-151231ccecd3@lapa.com.au>
-References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
- <1466139626-51434-1-git-send-email-chris@lapa.com.au>
- <1466139626-51434-8-git-send-email-chris@lapa.com.au>
- <57639B8A.1030109@samsung.com>
-Reply-To: chris@lapa.com.au
+From: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
+Date: Sun, 19 Jun 2016 16:09:53 +0200
+Message-ID: <20160619140952.GC820@makrotopia.org>
+References: <1466277476-14853-1-git-send-email-hauke@hauke-m.de>
+ <5765A14F.6020201@nod.at>
+ <48242f26-7812-6957-6bf5-c12989b875b4@hauke-m.de>
+ <20160618232054.GB29476@makrotopia.org>
+ <57665D96.1070804@nod.at>
+ <20160619112510.GA820@makrotopia.org>
+ <576689CC.3030809@nod.at>
+ <20160619130514.GB820@makrotopia.org>
+ <57669BEA.5030306@nod.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <57639B8A.1030109@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, dwmw2@infradead.org, dbaryshkov@gmail.com, sre@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57669BEA.5030306-/L3Ra7n9ekc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/06/2016 4:41 PM, Krzysztof Kozlowski wrote:
-> On 06/17/2016 07:00 AM, Chris Lapa wrote:
->> From: Chris Lapa <chris@lapa.com.au>
->>
->> Adds support for device tree to setup a max8903 battery charger. DC and USB
->> validity are determined by looking the presence of the dok and uok gpios.
->>
->> Signed-off-by: Chris Lapa <chris@lapa.com.au>
->> ---
->>  drivers/power/max8903_charger.c | 217 +++++++++++++++++++++++++++-------------
->>  1 file changed, 145 insertions(+), 72 deletions(-)
->>
->> diff --git a/drivers/power/max8903_charger.c b/drivers/power/max8903_charger.c
->> index 5ddc667..3c59213 100644
->> --- a/drivers/power/max8903_charger.c
->> +++ b/drivers/power/max8903_charger.c
->> @@ -23,6 +23,9 @@
->>  #include <linux/gpio.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_gpio.h>
->>  #include <linux/slab.h>
->>  #include <linux/power_supply.h>
->>  #include <linux/platform_device.h>
->> @@ -75,6 +78,7 @@ static int max8903_get_property(struct power_supply *psy,
->>  	default:
->>  		return -EINVAL;
->>  	}
->> +
->>  	return 0;
->>  }
->>
->> @@ -179,48 +183,116 @@ static irqreturn_t max8903_fault(int irq, void *_data)
->>  	return IRQ_HANDLED;
->>  }
->>
->> +static struct max8903_pdata *max8903_parse_dt_data(
->> +		struct device *dev)
->> +{
->> +	struct device_node *of_node = dev->of_node;
->
-> Common naming convention for device_node is just 'np':
-> 	struct device_node *np = dev->of_node;
->
-> It is shorter and already spread in the kernel.
->
->> +	struct max8903_pdata *pdata = NULL;
->> +
->> +	if (!of_node)
->> +		return NULL;
->> +
->> +	pdata = devm_kzalloc(dev, sizeof(*pdata),
->> +				GFP_KERNEL);
->
-> No need to break the line.
->
->> +	if (!pdata)
->> +		return NULL;
->> +
->> +	pdata->dc_valid = false;
->> +	pdata->usb_valid = false;
->> +
->> +	pdata->cen = of_get_named_gpio(of_node, "cen-gpios", 0);
->> +	if (!gpio_is_valid(pdata->cen))
->> +		pdata->cen = -EINVAL;
->> +
->> +	pdata->chg = of_get_named_gpio(of_node, "chg-gpios", 0);
->> +	if (!gpio_is_valid(pdata->chg))
->> +		pdata->chg = -EINVAL;
->> +
->> +	pdata->flt = of_get_named_gpio(of_node, "flt-gpios", 0);
->> +	if (!gpio_is_valid(pdata->flt))
->> +		pdata->flt = -EINVAL;
->> +
->> +	pdata->usus = of_get_named_gpio(of_node, "usus-gpios", 0);
->> +	if (!gpio_is_valid(pdata->usus))
->> +		pdata->usus = -EINVAL;
->> +
->> +	pdata->dcm = of_get_named_gpio(of_node, "dcm-gpios", 0);
->> +	if (!gpio_is_valid(pdata->dcm))
->> +		pdata->dcm = -EINVAL;
->> +
->> +	pdata->dok = of_get_named_gpio(of_node, "dok-gpios", 0);
->> +	if (!gpio_is_valid(pdata->dok))
->> +		pdata->dok = -EINVAL;
->> +	else
->> +		pdata->dc_valid = true;
->> +
->> +	pdata->uok = of_get_named_gpio(of_node, "uok-gpios", 0);
->> +	if (!gpio_is_valid(pdata->uok))
->> +		pdata->uok = -EINVAL;
->> +	else
->> +		pdata->usb_valid = true;
->> +
->> +	return pdata;
->> +}
->> +
->>  static int max8903_probe(struct platform_device *pdev)
->>  {
->> -	struct max8903_data *data;
->> +	struct max8903_data *charger;
->>  	struct device *dev = &pdev->dev;
->> -	struct max8903_pdata *pdata = pdev->dev.platform_data;
->>  	struct power_supply_config psy_cfg = {};
->>  	int ret = 0;
->>  	int gpio;
->>  	int ta_in = 0;
->>  	int usb_in = 0;
->>
->> -	if (pdata == NULL) {
->> +	charger = devm_kzalloc(dev, sizeof(struct max8903_data), GFP_KERNEL);
->> +	if (!charger)
->> +		return -ENOMEM;
->> +
->> +	charger->pdata = pdev->dev.platform_data;
->> +	if (IS_ENABLED(CONFIG_OF) && !charger->pdata && dev->of_node)
->> +		charger->pdata = max8903_parse_dt_data(dev);
->> +
->> +	if (!charger->pdata) {
->>  		dev_err(dev, "No platform data.\n");
->>  		return -EINVAL;
->>  	}
->>
->> -	data = devm_kzalloc(dev, sizeof(struct max8903_data), GFP_KERNEL);
->> -	if (!data)
->> -		return -ENOMEM;
->> +	charger->dev = dev;
->>
->> -	data->pdata = pdev->dev.platform_data;
->> -	data->dev = dev;
->> -	platform_set_drvdata(pdev, data);
->> +	charger->fault = false;
->> +	charger->ta_in = ta_in;
->> +	charger->usb_in = usb_in;
->>
->> -	if (pdata->dc_valid == false && pdata->usb_valid == false) {
->> +	charger->psy_desc.name = "max8903_charger";
->> +	charger->psy_desc.type = (ta_in) ? POWER_SUPPLY_TYPE_MAINS :
->> +			((usb_in) ? POWER_SUPPLY_TYPE_USB :
->> +			 POWER_SUPPLY_TYPE_BATTERY);
->> +	charger->psy_desc.get_property = max8903_get_property;
->> +	charger->psy_desc.properties = max8903_charger_props;
->> +	charger->psy_desc.num_properties = ARRAY_SIZE(max8903_charger_props);
->> +
->> +	platform_set_drvdata(pdev, charger);
->> +
->> +	if (charger->pdata->dc_valid == false && charger->pdata->usb_valid == false) {
->>  		dev_err(dev, "No valid power sources.\n");
->>  		return -EINVAL;
->>  	}
->>
->> -	if (pdata->dc_valid) {
->> -		if (gpio_is_valid(pdata->dok)) {
->> +
->> +	if (charger->pdata->dc_valid) {
->> +		if (gpio_is_valid(charger->pdata->dok)) {
->>  			ret = devm_gpio_request(dev,
->> -						pdata->dok,
->> -						data->psy_desc.name);
->> +						charger->pdata->dok,
->> +						charger->psy_desc.name);
->>  			if (ret) {
->>  				dev_err(dev,
->>  						"Failed GPIO request for dok: %d err %d\n",
->> -						pdata->dok, ret);
->> +						charger->pdata->dok, ret);
->
->
-> I pointed the weird indentation in 4/7. Just a reminder: after fixing it
-> in 4/7 you also have to adjust it in consecutive patches.
->
-> Best regards,
-> Krzysztof
->
+Hi Richard,
 
-Fixed in v4. Will send later once I have a chance to test on the hardware.
 
-Thanks,
-Chris
+On Sun, Jun 19, 2016 at 03:19:38PM +0200, Richard Weinberger wrote:
+> Daniel,
+> 
+> Am 19.06.2016 um 15:05 schrieb Daniel Golle:
+> >>> The same kernel gets used on many devices having different $vendor
+> >>> mtd-partition layouts. A way other than the kernel cmdline allows
+> >>> to specify the default behaviour without restricting the user to
+> >>> manually use those cmdline options.
+> >>
+> >> You can put the cmdline into the per-device device tree.
+> >> This is the concept of a multi-device kernel. One kernel and
+> >> many device trees.
+> > 
+> > Exactly true. However, as the mtd partitions are defined in the tree
+> > itself rather than using 'mtdparts=...' in the cmdline built-into the
+> > device-tree, it'd be nice to also select that a specific partition
+> > should be ubiattached.
+> 
+> DT already offer all you need and nothing hinders you from
+> using mtdparts=.
+
+I know. However, it's much nicer to define partitions for a specific
+flash chip inside the device tree (I've sent a link to the DTS of the
+BTHOMEHUBV2B to illustrate that, please have a look at it and tell
+me if you'd really like that partitioning currently stored as
+device-tree nodes to be migrated back to 'mtdparts=...'.)
+
+
+> 
+> >>
+> >>>>
+> >>>>> To auto-select the rootfs, we currently carry another bunch of patches
+> >>>>>
+> >>>>> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/491-ubi-auto-create-ubiblock-device-for-rootfs.patch
+> >>>>
+> >>>> Same question here.
+> >>>>
+> >>>>> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/492-try-auto-mounting-ubi0-rootfs-in-init-do_mounts.c.patch
+> >>>>
+> >>>> Ditto.
+> >>>>
+> >>>>> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/493-ubi-set-ROOT_DEV-to-ubiblock-rootfs-if-unset.patch
+> >>>>
+> >>>> Ditto.
+> >>>>
+> >>>
+> >>> Same arguments as above. In addition, we do not want to hard-code the
+> >>> filesystem type used for the rootfs volume, as it can either be UBIFS
+> >>> or a read-only filesystem needing a ubiblock device. Thus we would
+> >>> need the bootloader to know which filesystem *type* is being used and
+> >>> then decide wether to pass 'rootfs=ubiX:Y' or
+> >>> 'ubiblock=... rootfs=/dev/ubiblock0'.
+> >>
+> >> What is wrong with having a very minimal initramfs to do such an
+> >> auto discovery logic?
+> > 
+> > Sorry, but we are not talking about traditional desktop or server
+> > systems. OpenWrt/LEDE runs on devices with as little as 32 MB of RAM
+> > and 4 MB of Flash. Devices with UBI will typically have at least
+> > 32 MB of NAND Flash, but still not necessarily a lot of RAM.
+> > Have a look at
+> > https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/lantiq/dts/BTHOMEHUBV2B.dts
+> > for a good example of the type of hardware we are talking about.
+> 
+> I didn't recommend adding glibc+systemd in the initramfs. It can be very, very small
+> and trivial.
+
+Again, please understand that the whole production firmware can be as
+small as 3.5 megs for kernel and rootfs. Of course we never use glibc
+or systemd anywhere.
+What you imagine to be the ways to make a initramfs really small is
+what we already do for *all* our system, ie. we use busybox on top of
+a very tiny libc.
+
+> At least it would be much more clean than your pile of not so fancy MTD/UBI patches.
+> 
+
+In the end, do_mounts.c is already running in user-space, just the
+source-code happens to be part of the kernel tree. Sure, that could
+become a seperate executable binary which mounts the rootfs and then
+passes control to /sbin/init. On the other hand that would add quite
+some redundant infrastructure, because we already got ROOT_DEV and lots
+of automagic mounting going on in the kernel.
+
+
+> > Apart from that we already automatically generate initramfs-based
+> > images for devices to be used in situations where you cannot or don't
+> > want to touch the devices' flash.
+> 
+> The initramfs can be part of the kernel image. No additional file needed.
+
+That's excatctly what we've already been doing for initramfs-only
+images, see e.g.
+http://downloads.lede-project.org/snapshots/targets/lantiq/xway/lede-lantiq-xway-BTHOMEHUBV2B-uImage-initramfs
+
+So if we need an initramfs to mount the on-flash rootfs and *another*
+initfamfs containing the whole system for other cases, things become
+even more fishy on our side. But yes, I'm aware that this would be
+possible.
+
+
+> 
+> >> This is something you need to discuss wit DT folks.
+> >> I'm not per se against UBI DT bindings it just does not feel right
+> >> and contradicts my understanding of it.
+> > 
+> > I agree with your view when it comes to describing UBI volumes
+> > in the device tree. That's wrong just as it would be wrong to add
+> > DT bindings for LVM2.
+> > As said previously, the situation is different for flash chips having
+> > partitions defined for use with UBI on some boards.
+> 
+> Everything can be done with the existing framework. DT binding maybe be nice
+> for your use case but I fear it is not applicable.
+
+Yes, it can be done. But you would have to define your flash chips in
+device-tree, you may define the mtd partitions either in DT or by using
+mtdparts=... in the cmdline. Now to define which MTD device to
+ubiattach you will have to use ubi.mtd=X on the cmdline. If you defined
+your partitions inside the of_node of the flash chip, changes there
+(which do happen) may change the index of the partition you want to
+ubi-attach. C'mon. This *is* messy. Just having a compatible-flag to
+attach the partition would already greatly improve things.
+
+Hauke: Maybe we should discuss the two patches individually, as I feel
+that ubiattaching specific mtd partitions flagged in DT is quite
+straight forward, while specifying volumes inside the ubi device might
+be out-of-scope.
+
+
+Cheers
+
+
+Daniel
+
+
+
+> 
+> Thanks,
+> //richard
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
