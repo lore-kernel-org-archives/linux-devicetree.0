@@ -1,48 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 12/15] net: davinci_mdio: document missed
- "ti,am4372-mdio" compat string
-Date: Sun, 19 Jun 2016 09:35:43 -0500
-Message-ID: <20160619143543.GA14844@rob-hp-laptop>
-References: <20160615115603.4897-1-grygorii.strashko@ti.com>
- <20160615115603.4897-13-grygorii.strashko@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] ASoC: sunxi: Add A10 I2S controller binding
+ documentation
+Date: Sun, 19 Jun 2016 09:37:54 -0500
+Message-ID: <20160619143738.GA15829@rob-hp-laptop>
+References: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
+ <20160615211123.31068-2-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160615115603.4897-13-grygorii.strashko@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, devicetree@vger.kernel.org
+In-Reply-To: <20160615211123.31068-2-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gianfranco-25KmuZRQ+wx0ubjbjo6WXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 02:56:00PM +0300, Grygorii Strashko wrote:
-> Document missed "ti,am4372-mdio" compat string used for TI am437x SoC
-> (am4372.dtsi).
+On Wed, Jun 15, 2016 at 11:11:20PM +0200, Maxime Ripard wrote:
+> Introduce the device tree binding for the I2S controller found in the
+> Allwinner A10 and later SoCs.
 > 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/net/davinci-mdio.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/davinci-mdio.txt b/Documentation/devicetree/bindings/net/davinci-mdio.txt
-> index 0369e25..f2bba50 100644
-> --- a/Documentation/devicetree/bindings/net/davinci-mdio.txt
-> +++ b/Documentation/devicetree/bindings/net/davinci-mdio.txt
-> @@ -2,7 +2,8 @@ TI SoC Davinci/Keystone2 MDIO Controller Device Tree Bindings
->  ---------------------------------------------------
->  
->  Required properties:
-> -- compatible		: Should be "ti,davinci_mdio" or "ti,keystone_mdio"
-> +- compatible		: Should be "ti,davinci_mdio", "ti,keystone_mdio",
-> +			  "ti,am4372-mdio"
+>  .../devicetree/bindings/sound/sun4i-i2s.txt        | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/sun4i-i2s.txt
 
-This is still an OR relationship?
-
-It's preferred to list one per line.
-
->  - reg			: physical base address and size of the davinci mdio
->  			  registers map
->  - bus_freq		: Mdio Bus frequency
-> -- 
-> 2.8.4
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
