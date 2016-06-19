@@ -1,90 +1,104 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH v10 06/14] usb: gadget.h: Add OTG to gadget interface
-Date: Mon, 20 Jun 2016 10:21:22 +0300
-Message-ID: <87k2hkxr4d.fsf@linux.intel.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com> <1465564043-27163-7-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465564043-27163-7-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: peter.chen@freescale.com
-Cc: tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+From: Chris Lapa <chris@lapa.com.au>
+Subject: [PATCH v4 3/7] max8903: cleans up confusing relationship between dc_valid, dok and dcm.
+Date: Mon, 20 Jun 2016 08:27:18 +1000
+Message-ID: <1466375242-38354-4-git-send-email-chris@cpdesign.com.au>
+References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+ <1466375242-38354-1-git-send-email-chris@cpdesign.com.au>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1466375242-38354-1-git-send-email-chris@cpdesign.com.au>
+In-Reply-To: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+Sender: linux-pm-owner@vger.kernel.org
+To: k.kozlowski@samsung.com, dwmw2@infradead.org, dbaryshkov@gmail.com, sre@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Chris Lapa <chris@lapa.com.au>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+From: Chris Lapa <chris@lapa.com.au>
 
+The max8903_charger.h file indicated that dcm and dok were not optional
+when dc_valid is set.
 
-Hi,
+It makes sense to have dok as a compulsory pin when dc_valid is given.
+However dcm can be optionally wired to a fixed level especially when the
+circuit is configured for dc power exclusively.
 
-Roger Quadros <rogerq@ti.com> writes:
-> The OTG core will use struct otg_gadget_ops to
-> start/stop the gadget controller.
->
-> The main purpose of this interface is to avoid directly
-> calling usb_gadget_start/stop() from the OTG core as they
-> wouldn't be defined in the built-in symbol table if
-> CONFIG_USB_GADGET is m.
->
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  include/linux/usb/gadget.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-> index 2dd9e6b..f4fc0aa 100644
-> --- a/include/linux/usb/gadget.h
-> +++ b/include/linux/usb/gadget.h
-> @@ -639,6 +639,22 @@ struct usb_gadget_driver {
->  };
->=20=20
->=20=20
-> +/*----------------------------------------------------------------------=
----*/
-> +
-> +/**
-> + * struct otg_gadget_ops - Interface between OTG core and gadget
-> + *
-> + * Provided by the gadget core to allow the OTG core to start/stop the g=
-adget
-> + *
-> + * @start: function to start the gadget
-> + * @stop: function to stop the gadget
-> + * @connect_control: function to connect/disconnect from the bus
-> + */
-> +struct otg_gadget_ops {
-> +	int (*start)(struct usb_gadget *gadget);
-> +	int (*stop)(struct usb_gadget *gadget);
-> +	int (*connect_control)(struct usb_gadget *gadget, bool connect);
-> +};
+The previous implementation already allowed for this somewhat, however no
+error was given if dok wasn't given whilst dc_valid was.
 
-you shouldn't need these at all. They are already part of the gadget
-framework as ->udc_start(), ->udc_stop() and ->pullup()
+The new implementation enforces dok presence when dc_valid is given. Whilst
+allowing dcm to be optional.
 
-=2D-=20
-balbi
+Signed-off-by: Chris Lapa <chris@lapa.com.au>
+---
+ drivers/power/max8903_charger.c       | 22 +++++++++-------------
+ include/linux/power/max8903_charger.h |  6 +++---
+ 2 files changed, 12 insertions(+), 16 deletions(-)
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/power/max8903_charger.c b/drivers/power/max8903_charger.c
+index 0a5b0e1..6ec705f 100644
+--- a/drivers/power/max8903_charger.c
++++ b/drivers/power/max8903_charger.c
+@@ -211,27 +211,23 @@ static int max8903_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (pdata->dc_valid) {
+-		if (pdata->dok && gpio_is_valid(pdata->dok) &&
+-				pdata->dcm && gpio_is_valid(pdata->dcm)) {
++		if (pdata->dok && gpio_is_valid(pdata->dok)) {
+ 			gpio = pdata->dok; /* PULL_UPed Interrupt */
+ 			ta_in = gpio_get_value(gpio) ? 0 : 1;
++		} else {
++			dev_err(dev, "When DC is wired, DOK should be wired as well.\n");
++			return -EINVAL;
++		}
++	}
+ 
++	if (pdata->dcm) {
++		if (gpio_is_valid(pdata->dcm)) {
+ 			gpio = pdata->dcm; /* Output */
+ 			gpio_set_value(gpio, ta_in);
+ 		} else {
+-			dev_err(dev, "When DC is wired, DOK and DCM should"
+-					" be wired as well.\n");
++			dev_err(dev, "Invalid pin: dcm.\n");
+ 			return -EINVAL;
+ 		}
+-	} else {
+-		if (pdata->dcm) {
+-			if (gpio_is_valid(pdata->dcm))
+-				gpio_set_value(pdata->dcm, 0);
+-			else {
+-				dev_err(dev, "Invalid pin: dcm.\n");
+-				return -EINVAL;
+-			}
+-		}
+ 	}
+ 
+ 	if (pdata->usb_valid) {
+diff --git a/include/linux/power/max8903_charger.h b/include/linux/power/max8903_charger.h
+index 24f51db..89d3f1c 100644
+--- a/include/linux/power/max8903_charger.h
++++ b/include/linux/power/max8903_charger.h
+@@ -26,8 +26,8 @@
+ struct max8903_pdata {
+ 	/*
+ 	 * GPIOs
+-	 * cen, chg, flt, and usus are optional.
+-	 * dok, dcm, and uok are not optional depending on the status of
++	 * cen, chg, flt, dcm and usus are optional.
++	 * dok and uok are not optional depending on the status of
+ 	 * dc_valid and usb_valid.
+ 	 */
+ 	int cen;	/* Charger Enable input */
+@@ -41,7 +41,7 @@ struct max8903_pdata {
+ 	/*
+ 	 * DC(Adapter/TA) is wired
+ 	 * When dc_valid is true,
+-	 *	dok and dcm should be valid.
++	 *	dok should be valid.
+ 	 *
+ 	 * At least one of dc_valid or usb_valid should be true.
+ 	 */
+-- 
+1.9.1
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXZ5lyAAoJEIaOsuA1yqRETboQAKD/5pMHlxy9SVH5j0c+5/YM
-W91O3OsnVtXin3ELm35oFuGHOok3NjWNwwPdrAmDzWboI1YFjcBfPRssYeolv9mY
-nkP5Onz1WuKEHqesdKNnmL7KorpL4wuvS0d/azFn3couqlOr0y+1D9e5x1brJ7w+
-OCo0HH9LZ3oY6C2wx9wkmQ7kg7wzPZHVafmmP717fVqyo51hgwtuVT0VU2VEZG5R
-Sag9kamMD75hmSWyCY/OI3UuAbIGr0KcOdmxnlPh1os/V7CM1QMtR9BDMHIV2tuG
-mNMQb0kGOvRQLoKSDPq2hXPJa1Cg4IvkzSL85zcHv6dUGVHzC1haZSXXXCKr7m+M
-+dw5f3Vuf9qzucJiKd/dMCbRX501rZ2U+PoVAP5GljyBvsv3WUzQxMIrnTRzwH5x
-aJyvR+WP2E/J0npJqrN2ishNikzVycwC87oP3KKCT45mm6iMCb6F3K4RlrAwnyby
-CfdIWsm2STxgz2vft9DiObAcG4HHXOJidB8V2vzm67fsgeV8kU4yasBkFTgeH/Lf
-pydf6tnj7a7/PjSoig0yNN8ZocSY5RTaPlh8rIrpDkKABuBsQAaowuaKWNgplKEE
-/QRHlaVy6TRuIp9oCFLPpHnyaxnthlvIqW0xhMSkyBoecSlJVJdoY5GbLFS0d1Gz
-rbN8fRK+BXrYxW8ey3pi
-=YxXK
------END PGP SIGNATURE-----
---=-=-=--
