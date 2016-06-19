@@ -1,83 +1,47 @@
-From: andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] tpm: Add TPM 2.0 support to the Nuvoton
-	i2c driver (NPCT6xx family)
-Date: Sun, 19 Jun 2016 11:20:01 +0300
-Message-ID: <1466324401-5054-3-git-send-email-andrew.zamansky@nuvoton.com>
-References: <1466324401-5054-1-git-send-email-andrew.zamansky@nuvoton.com>
+From: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
+Date: Sun, 19 Jun 2016 10:41:06 +0200
+Message-ID: <57665AA2.7080505@nod.at>
+References: <1466277476-14853-1-git-send-email-hauke@hauke-m.de>
+ <5765A14F.6020201@nod.at> <48242f26-7812-6957-6bf5-c12989b875b4@hauke-m.de>
+ <5765A4F9.3050107@nod.at> <8697ff77-218b-2bc6-5d36-bfb02360d223@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1466324401-5054-1-git-send-email-andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8697ff77-218b-2bc6-5d36-bfb02360d223-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSmFzb24gR3VudGhvcnBlIDxqZ3VudGhvcnBlQG9ic2lkaWFucmVzZWFyY2guY29tPgoK
-VGhlIGNvbW1hbmQgZmxvdyBpcyBleGFjdGx5IHRoZSBzYW1lLCB0aGUgY29yZSBzaW1wbHkgbmVl
-ZHMgdG8gcHJvYmUKZm9yIFRQTSAyLjAgY2FwYWJpbGl0eS4KClNpZ25lZC1vZmYtYnk6IEFuZHJl
-dyBBem1hbnNreSA8YW5kcmV3LnphbWFuc2t5QG51dm90b24uY29tPgpTaWduZWQtb2ZmLWJ5OiBK
-YXNvbiBHdW50aG9ycGUgPGpndW50aG9ycGVAb2JzaWRpYW5yZXNlYXJjaC5jb20+Ci0tLQogRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0IHwg
-MSArCiBkcml2ZXJzL2NoYXIvdHBtL3RwbV9pMmNfbnV2b3Rvbi5jICAgICAgICAgICAgICAgICAg
-ICAgICAgfCA3ICsrKystLS0KIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAzIGRl
-bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dAppbmRleCA1Mzk4NzQ0OS4uZDRmNjU0MiAxMDA2
-NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRl
-dmljZXMudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvdHJp
-dmlhbC1kZXZpY2VzLnR4dApAQCAtNjIsNiArNjIsNyBAQCBuYXRpb25hbCxsbTgwCQlTZXJpYWwg
-SW50ZXJmYWNlIEFDUEktQ29tcGF0aWJsZSBNaWNyb3Byb2Nlc3NvciBTeXN0ZW0gSGFyZHdhcmUg
-TQogbmF0aW9uYWwsbG04NQkJVGVtcGVyYXR1cmUgc2Vuc29yIHdpdGggaW50ZWdyYXRlZCBmYW4g
-Y29udHJvbAogbmF0aW9uYWwsbG05MgkJwrEwLjMzwrBDIEFjY3VyYXRlLCAxMi1CaXQgKyBTaWdu
-IFRlbXBlcmF0dXJlIFNlbnNvciBhbmQgVGhlcm1hbCBXaW5kb3cgQ29tcGFyYXRvciB3aXRoIFR3
-by1XaXJlIEludGVyZmFjZQogbnV2b3RvbixucGN0NTAxCQlpMmMgdHJ1c3RlZCBwbGF0Zm9ybSBt
-b2R1bGUgKFRQTSkKK251dm90b24sbnBjdDYwMQkJaTJjIHRydXN0ZWQgcGxhdGZvcm0gbW9kdWxl
-IChUUE0yKQogbnhwLHBjYTk1NTYJCU9jdGFsIFNNQnVzIGFuZCBJMkMgcmVnaXN0ZXJlZCBpbnRl
-cmZhY2UKIG54cCxwY2E5NTU3CQk4LWJpdCBJMkMtYnVzIGFuZCBTTUJ1cyBJL08gcG9ydCB3aXRo
-IHJlc2V0CiBueHAscGNmODU2MwkJUmVhbC10aW1lIGNsb2NrL2NhbGVuZGFyCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL2NoYXIvdHBtL3RwbV9pMmNfbnV2b3Rvbi5jIGIvZHJpdmVycy9jaGFyL3RwbS90
-cG1faTJjX251dm90b24uYwppbmRleCBiNjRlZmZjLi5kYmY2MDk1IDEwMDY0NAotLS0gYS9kcml2
-ZXJzL2NoYXIvdHBtL3RwbV9pMmNfbnV2b3Rvbi5jCisrKyBiL2RyaXZlcnMvY2hhci90cG0vdHBt
-X2kyY19udXZvdG9uLmMKQEAgLTEsNSArMSw1IEBACiAvKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqCi0g
-KiBOdXZvdG9uIFRQTSBJMkMgRGV2aWNlIERyaXZlciBJbnRlcmZhY2UgZm9yIFdQQ1QzMDEvTlBD
-VDUwMSwKKyAqIE51dm90b24gVFBNIEkyQyBEZXZpY2UgRHJpdmVyIEludGVyZmFjZSBmb3IgV1BD
-VDMwMS9OUENUNTAxL05QQ1Q2WFgsCiAgKiBiYXNlZCBvbiB0aGUgVENHIFRQTSBJbnRlcmZhY2Ug
-U3BlYyB2ZXJzaW9uIDEuMi4KICAqIFNwZWNpZmljYXRpb25zIGF0IHd3dy50cnVzdGVkY29tcHV0
-aW5nZ3JvdXAub3JnCiAgKgpAQCAtMTYzLDcgKzE2Myw3IEBAIHN0YXRpYyBpbnQgaTJjX251dm90
-b25fZ2V0X2J1cnN0Y291bnQoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKIH0KIAogLyoKLSAq
-IFdQQ1QzMDEvTlBDVDUwMSBTSU5UIyBzdXBwb3J0cyBvbmx5IGRhdGFBdmFpbAorICogV1BDVDMw
-MS9OUENUNTAxL05QQ1Q2WFggU0lOVCMgc3VwcG9ydHMgb25seSBkYXRhQXZhaWwKICAqIGFueSBj
-YWxsIHRvIHRoaXMgZnVuY3Rpb24gd2hpY2ggaXMgbm90IHdhaXRpbmcgZm9yIGRhdGFBdmFpbCB3
-aWxsCiAgKiBzZXQgcXVldWUgdG8gTlVMTCB0byBhdm9pZCB3YWl0aW5nIGZvciBpbnRlcnJ1cHQK
-ICAqLwpAQCAtNDU2LDcgKzQ1Niw3IEBAIHN0YXRpYyBib29sIGkyY19udXZvdG9uX3JlcV9jYW5j
-ZWxlZChzdHJ1Y3QgdHBtX2NoaXAgKmNoaXAsIHU4IHN0YXR1cykKIH0KIAogc3RhdGljIGNvbnN0
-IHN0cnVjdCB0cG1fY2xhc3Nfb3BzIHRwbV9pMmMgPSB7Ci0JLmZsYWdzID0gVFBNX09QU19BVVRP
-X1NUQVJUVVAsCisJLmZsYWdzID0gVFBNX09QU19BVVRPX1NUQVJUVVAgfCBUUE1fT1BTX1BST0JF
-X1RQTTIsCiAJLnN0YXR1cyA9IGkyY19udXZvdG9uX3JlYWRfc3RhdHVzLAogCS5yZWN2ID0gaTJj
-X251dm90b25fcmVjdiwKIAkuc2VuZCA9IGkyY19udXZvdG9uX3NlbmQsCkBAIC02MjMsNiArNjIz
-LDcgQEAgTU9EVUxFX0RFVklDRV9UQUJMRShpMmMsIGkyY19udXZvdG9uX2lkKTsKIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGkyY19udXZvdG9uX29mX21hdGNoW10gPSB7CiAJey5j
-b21wYXRpYmxlID0gIm51dm90b24sbnBjdDUwMSJ9LAogCXsuY29tcGF0aWJsZSA9ICJ3aW5ib25k
-LHdwY3QzMDEifSwKKwl7LmNvbXBhdGlibGUgPSAibnV2b3RvbixucGN0NjAxIn0sCiAJe30sCiB9
-OwogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgaTJjX251dm90b25fb2ZfbWF0Y2gpOwotLSAKMS45
-LjEKCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KV2hhdCBOZXRGbG93IEFuYWx5emVyIGNhbiBkbyBm
-b3IgeW91PyBNb25pdG9ycyBuZXR3b3JrIGJhbmR3aWR0aCBhbmQgdHJhZmZpYwpwYXR0ZXJucyBh
-dCBhbiBpbnRlcmZhY2UtbGV2ZWwuIFJldmVhbHMgd2hpY2ggdXNlcnMsIGFwcHMsIGFuZCBwcm90
-b2NvbHMgYXJlIApjb25zdW1pbmcgdGhlIG1vc3QgYmFuZHdpZHRoLiBQcm92aWRlcyBtdWx0aS12
-ZW5kb3Igc3VwcG9ydCBmb3IgTmV0RmxvdywgCkotRmxvdywgc0Zsb3cgYW5kIG90aGVyIGZsb3dz
-LiBNYWtlIGluZm9ybWVkIGRlY2lzaW9ucyB1c2luZyBjYXBhY2l0eSBwbGFubmluZwpyZXBvcnRz
-LiBodHRwOi8vc2RtLmxpbmsvem9ob21hbmFnZWVuZ2luZQpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwp0cG1kZC1kZXZlbCBtYWlsaW5nIGxpc3QKdHBtZGQt
-ZGV2ZWxAbGlzdHMuc291cmNlZm9yZ2UubmV0Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0
-L2xpc3RzL2xpc3RpbmZvL3RwbWRkLWRldmVsCg==
+Am 19.06.2016 um 00:54 schrieb Hauke Mehrtens:
+> On 06/18/2016 09:46 PM, Richard Weinberger wrote:
+>> Am 18.06.2016 um 21:35 schrieb Hauke Mehrtens:
+>>> There are some devices on the market that are storing the root file
+>>> system in an ubi layer.
+>>> To make this work there are currently two options.
+>>> 1. patch the kernel to specify which partitions to open in the code.
+>>> 2. provide some kernel command line parameter which specifies what to open.
+>>>
+>>> I would like to specify this in device tree.
+>>
+>> What is wrong with command line parameters? If there is some parameter
+>> the UBI module misses I'll happily add it.
+>> You can also put your kernel command line into device tree.
+> 
+> I would like to configure this in device tree. When I install a third
+> party firmware on a router normally the kernel command line is taken
+> from the boot loader and the device tree is appended to the kernel.
+
+Let me get this straight, your use case is booting Linux in an environment
+where you can't control the bootloader?
+You can still set the command line by building it into the kernel.
+And, as noted before, via device tree.
+
+Thanks,
+//richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
