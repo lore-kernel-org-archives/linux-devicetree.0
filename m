@@ -1,299 +1,114 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
-Date: Sun, 19 Jun 2016 12:19:50 +0200
-Message-ID: <11bf3b5c-f244-69ff-9c14-5e61db84c5ec@redhat.com>
-References: <1466249342-13255-1-git-send-email-stefan.mavrodiev@gmail.com>
+Subject: Auto-detecting touchscreen controller and dealing with
+ hw configuration differences on q8 tablets
+Date: Sun, 19 Jun 2016 13:04:58 +0200
+Message-ID: <7875aa56-2fa1-16f6-7410-d36bf93f1f89@redhat.com>
 Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBUPDTG5QKGQELYI5TPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBY7YTG5QKGQEXFF6NMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1466249342-13255-1-git-send-email-stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stefan.Mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: "u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org" <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou@konsulko>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi All,
 
-On 18-06-16 13:29, Stefan Mavrodiev wrote:
-> A33-OLinuXino is A33 development board designed by Olimex LTD.
->
-> It has AXP233 PMU, 1GB DRAM, a micro SD card, one USB-OTG connector,
-> headphone and mic jacks, connector for LiPo battery and optional
-> 4GB NAND Flash.
->
-> It has two 40-pin headers. One for LCD panel, and one for
-> additional modules. Also there is CSI/DSI connector.
->
-> Signed-off-by: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile                |   1 +
->  arch/arm/boot/dts/sun8i-a33-olinuxino.dts | 223 ++++++++++++++++++++++++++++++
->  2 files changed, 224 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-a33-olinuxino.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 970e906..b78f363 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -760,6 +760,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->  	sun8i-a33-ippo-q8h-v1.2.dtb \
->  	sun8i-a33-q8-tablet.dtb \
->  	sun8i-a33-sinlinx-sina33.dtb \
-> +	sun8i-a33-olinuxino.dtb \
->  	sun8i-a83t-allwinner-h8homlet-v2.dtb \
->  	sun8i-a83t-cubietruck-plus.dtb \
->  	sun8i-h3-orangepi-2.dtb \
-> diff --git a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-> new file mode 100644
-> index 0000000..2eaeb55
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-> @@ -0,0 +1,223 @@
-> +/*
-> + * Copyright 2016 - Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *                  Olimex LTD. <support-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun8i-a33.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
-> +
-> +/ {
-> +	model = "A33-OLinuXino";
-> +	compatible = "allwinner,sun8i-a33";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&led_pin_olinuxino>;
-> +
-> +		green {
-> +			label = "olinuxino:green:usr";
-> +			gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LED2 */
-> +			linux,default-trigger = "heartbeat";
+The sunxi support in the kernel supports (amongst many other devices) the quite
+popular low cost q8 form factor 7" tablets.
 
-As a general rule of thumb we do not set default-triggers for
-sunxi boards in the kernel.
+These are all based on the same case, with an allwinner SoC inside (there
+are non allwinner versions, but those are out of scope) and typically all based on
+the same reference design.
 
-> +		};
-> +	};
-> +};
-> +
-> +&ehci0 {
-> +	status = "okay";
-> +};
-> +
-> +&ohci0 {
-> +	status = "okay";
-> +};
-> +
-> +&mmc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_olinuxino>;
-> +	vmmc-supply = <&reg_dcdc1>;
-> +	bus-width = <4>;
-> +	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
-> +	cd-inverted;
-> +	status = "okay";
-> +};
-> +
-> +&pio {
-> +	mmc0_cd_pin_olinuxino: mmc0_cd_pin@0 {
-> +		allwinner,pins = "PB4";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
-> +
-> +	led_pin_olinuxino: led_pins@0 {
-> +		allwinner,pins = "PB7";
-> +		allwinner,function = "gpio_out";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
-> +};
-> +
-> +&r_rsb {
-> +	status = "okay";
-> +
-> +	axp22x: pmic@3a3 {
-> +		compatible = "x-powers,axp223";
-> +		reg = <0x3a3>;
-> +		interrupt-parent = <&nmi_intc>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +		eldoin-supply = <&reg_dcdc1>;
-> +	};
-> +};
-> +
-> +#include "axp22x.dtsi"
-> +
-> +&reg_dcdc1 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-dsi";
-> +};
-> +
-> +&reg_dc1sw {
-> +	regulator-always-on;
-> +	regulator-name = "vcc-lcd";
-> +};
-> +
+Currently we support any such tablet with 4 u-boot defconfigs / 4 dts files:
 
-Since you specify this as simplefb supply I do not think
-you need always-on here.
+q8_a13_tablet
+q8_a23_tablet_800x480
+q8_a33_tablet_800x480
+q8_a33_tablet_1026x600
 
-> +&reg_dcdc2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <900000>;
-> +	regulator-max-microvolt = <1400000>;
-> +	regulator-name = "vdd-sys";
-> +};
-> +
-> +&reg_dcdc3 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <900000>;
-> +	regulator-max-microvolt = <1400000>;
-> +	regulator-name = "vdd-cpu";
-> +};
-> +
-> +&reg_dcdc5 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1500000>;
-> +	regulator-max-microvolt = <1500000>;
-> +	regulator-name = "vcc-dram";
-> +};
-> +
-> +&reg_dc5ldo {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <900000>;
-> +	regulator-max-microvolt = <1400000>;
-> +	regulator-name = "vdd-cpus";
-> +};
-> +
-> +&reg_aldo1 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-io";
-> +};
-> +
-> +&reg_aldo2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <2350000>;
-> +	regulator-max-microvolt = <2650000>;
-> +	regulator-name = "vdd-dll";
-> +};
-> +
-> +&reg_aldo3 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-avcc";
-> +};
-> +
-> +&reg_dldo3 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <2800000>;
-> +	regulator-max-microvolt = <2800000>;
-> +	regulator-name = "vcc-csi";
-> +};
-> +
-> +&reg_eldo2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1800000>;
-> +	regulator-max-microvolt = <1800000>;
-> +	regulator-name = "vcc-dvdd-csi";
-> +};
+So all the user needs to know to get mainline running on these is which SoC his
+tablet is using and which resolution his lcd has.
 
-Since we do not have a csi driver yet marking these 2
-always-on seems unnecessary. Once we get a csi driver
-they should get turned on by this driver when
-necessary.
+However the reference design gets completed by the manufacturers with whatever
+accelerometer, wifi chip and touchscreen controller are cheapest for the batch
+being produced that week.
 
-> +
-> +&reg_rtc_ldo {
-> +	regulator-name = "vcc-rtc";
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins_b>;
-> +	status = "okay";
-> +};
-> +
-> +&usb_otg {
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
-> +
-> +&usbphy {
-> +	usb0_vbus-supply = <&reg_vcc5v0>;
-> +	status = "okay";
-> +
-> +};
-> +
-> +&simplefb_lcd {
-> +	vcc-lcd-supply = <&reg_dc1sw>;
-> +};
->
+The plan is (was ?) to use auto-detection to figure out which components are
+used and adjust the dts using e.g. overlays.
+
+Recently I've been working together with some students from my local university
+to get a driver for the gsl1680 touchscreen controller used in most of these
+tablets upstream.
+
+So now I've been testing the touschscreen on all q8 tablets I own and
+unfortunately things are not so easy. The gsl1680 is quite flexible, it features
+a number of capacitive sense pins and these can be routed in random order to
+sense lines in the display, during init the controller gets feed a configuration
+data file with which pins go where and various lookup tables.
+
+Here is a table of all tablets I've tested:
+
+a13-94v-0:		a082 a23-tj-a23-q88-v4.0_20140815/GSL1680E_700_FW.fw	1024x600 inverted-x
+a13-tzx-713b-v2.1:	a082 a23-tj-a23-q88-v4.0_20140815/GSL1680E_700_FW.fw	1024x600
+a23-q8h-v3:		a082 a23-tj-a23-q88-v4.0_20140815/GSL1688_A70_FW.fw	 800x480 swapped-x-y
+a23-tj-a23-q88-v4.0:	a082 a23-tj-a23-q88-v4.0_20140815/GSL1680E_700_FW.fw	1024x600
+a23-ippo-q8h-v1.2:	a082 a23-tj-a23-q88-v4.0_20140815/GSL1688_A70_FW.fw	 800x480 swapped-x-y
+a33-ippo-q8h-v1.2:	a082 a23-tj-a23-q88-v4.0_20140815/GSL1688_A70_FW.fw	 800x480 swapped-x-y
+a33-tzx-723q4:		b482 a33-Q8_V2.4_1118/GSL1680_FW_D702.fw		 960x480 inverted-x
+a33-q8-v2.4-1118:	b482 a33-Q8_V2.4_1118/GSL1680_FW_D702.fw		 960x480
+a33-q8h-v1.5:		b482 a33-q8h-v1.5/GSL1688_A70_FW.fw			 960x480
+
+
+The first column is <soc>-<pcb-marking>, the second is the chip-id from the gsl1680 (this can be read
+via i2c), the third column is the configdata file used for testing, the directory-name it is prefixed
+with is from which board's android image the firmware file was extracted. The 4th column shows
+the resolution of the reported coordinates and any necessary flags.
+
+Note that the resolution and if we need swapped-x-y actually is fixed for a given fw file, so
+we need to keep this information paired.
+
+So as you can see which fw file to use, and whether x is inverted or not vary from board to board.
+
+This leaves us with 2 options:
+
+1) Move to 1 dts file per PCB variant solution, of ALL the q8 tablets I've seen I've only ever
+had 2 with identical PCB-s and those were from the same batch, so this seems unmaintainable.
+Which leaves us with:
+
+2) Give the user some way to override the dts settings.
+
+Which after a somewhat long intro brings me to the actual purpose of this thread, discuss
+how to best deal with this. I again see 2 options:
+
+1) Put a disabled gsl1680 node in the dts file, have a q8_autodetect.c in u-boot
+which probes i2c and if it finds the gsl1680 nodes enables it, and patches in a best-effort
+default for which fw file to use. Allow the user to set a touchscreen_fw u-boot env
+variable which will override this. Also allow the user to set a touchscreen_inverted_x env
+variable to add inverted-x to the dt node for the gsl1680.
+
+2) Write an in kernel overlay manager which does auto-detect as described by 1, and
+loads an overlay for the detected touchscreen controller, with module options to allow
+specifying the fw-file, x-inversion, etc.
+
+One things which worries me about 2. is that we would need to have 2 overlay files
+per fw-file, one regular config, one inverted-x, or is it possible for the overlay
+manager to modify an overlay before applying it ?
+
+I tend towards doing the auto-detect in u-boot, since that will give the greatest
+flexibility (the dtb is fully read-writable in u-boot) and I can easily access
+things like i2c-busses, soc id/version register, etc. there.
+
+But before syncing a lot of time in either one of these I first wanted to discuss
+this, if the consensus is that an in kernel overlay manager is the way to go
+I will take a shot at that instead.
 
 Regards,
 
