@@ -1,114 +1,129 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Auto-detecting touchscreen controller and dealing with hw
- configuration differences on q8 tablets
-Date: Sun, 19 Jun 2016 13:06:10 +0200
-Message-ID: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
+From: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
+Date: Sun, 19 Jun 2016 13:25:10 +0200
+Message-ID: <20160619112510.GA820@makrotopia.org>
+References: <1466277476-14853-1-git-send-email-hauke@hauke-m.de>
+ <5765A14F.6020201@nod.at>
+ <48242f26-7812-6957-6bf5-c12989b875b4@hauke-m.de>
+ <20160618232054.GB29476@makrotopia.org>
+ <57665D96.1070804@nod.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57665D96.1070804-/L3Ra7n9ekc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: "u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org" <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+To: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-<resend with Pantelis' email address fixed>
+Hi Richard,
 
-Hi All,
+On Sun, Jun 19, 2016 at 10:53:42AM +0200, Richard Weinberger wrote:
+> Am 19.06.2016 um 01:20 schrieb Daniel Golle:
+> > In MBR there used to be an 'active' flag stored for each partition.
+> > Maybe it'd be nice to introduce something similar to mark UBI volumes
+> > to be the default rootfs.
+> > Currently we solve this issue by convention: If a volume is named
+> > 'rootfs' it is automatically mounted during boot. Depending on the
+> > filesystem in use a ubiblock device has to be created as well.
+> > This is mostly just the continuation of the existing naming convention
+> > of mtd partitions, a patch OpenWrt is carrying around for a long
+> > while already.
+> > To support the same on UBI, another set of patches was made.
+> 
+> Sorry, I still have troubles to understand your use case.
+> Both of you seem to hate the kernel command line for reasons
+> I don't fully understand so far.
 
-The sunxi support in the kernel supports (amongst many other devices) the quite
-popular low cost q8 form factor 7" tablets.
+I like the kernel command line a lot :)
+And *being the end-user* I like to be the one defining and modifying it
+according to my current needs. For that reason I do *not* like firmware
+bootloaders to prepend/append or even overwrite the cmdline for things
+like selecting the rootfs, because usually that restricts the use of
+the relevant parameters by device owners.
+Imagine: The device runs a bootloader which already sets rootfs= or
+overwrites the cmdline of the stock firmware. How will an end-user
+who cannot change the bootloader use an alternative OS which uses e.g.
+a USB pendrive as it's rootfs? This is why we end up with things like
+renaming kernel cmdline parameters in alternative firmware projects,
+e.g. rootfs2=...., so end-users can re-gain access to cmdline
+parameters augmented by the bootloader.
+For that reason I believe that using the cmdline to pass
+*non-user-defined* details from the bootloader to the kernel is just
+not such a nice thing to do.
 
-These are all based on the same case, with an allwinner SoC inside (there
-are non allwinner versions, but those are out of scope) and typically all based on
-the same reference design.
+> 
+> > I agree that there should be a way to pass this through the of_node
+> > of the mtd partition which is defined in the device tree.
+> > Selecting to-be-ubi-attached mtd partitions in device-tree would
+> > replace patch:
+> > 
+> > https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/490-ubi-auto-attach-mtd-device-named-ubi-or-data-on-boot.patch
+> 
+> What is the need of this? Use use the kernel command line to tell UBI from which MTD to attach.
 
-Currently we support any such tablet with 4 u-boot defconfigs / 4 dts files:
+The same kernel gets used on many devices having different $vendor
+mtd-partition layouts. A way other than the kernel cmdline allows
+to specify the default behaviour without restricting the user to
+manually use those cmdline options.
 
-q8_a13_tablet
-q8_a23_tablet_800x480
-q8_a33_tablet_800x480
-q8_a33_tablet_1026x600
+> 
+> > To auto-select the rootfs, we currently carry another bunch of patches
+> > 
+> > https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/491-ubi-auto-create-ubiblock-device-for-rootfs.patch
+> 
+> Same question here.
+> 
+> > https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/492-try-auto-mounting-ubi0-rootfs-in-init-do_mounts.c.patch
+> 
+> Ditto.
+> 
+> > https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/493-ubi-set-ROOT_DEV-to-ubiblock-rootfs-if-unset.patch
+> 
+> Ditto.
+> 
 
-So all the user needs to know to get mainline running on these is which SoC his
-tablet is using and which resolution his lcd has.
-
-However the reference design gets completed by the manufacturers with whatever
-accelerometer, wifi chip and touchscreen controller are cheapest for the batch
-being produced that week.
-
-The plan is (was ?) to use auto-detection to figure out which components are
-used and adjust the dts using e.g. overlays.
-
-Recently I've been working together with some students from my local university
-to get a driver for the gsl1680 touchscreen controller used in most of these
-tablets upstream.
-
-So now I've been testing the touschscreen on all q8 tablets I own and
-unfortunately things are not so easy. The gsl1680 is quite flexible, it features
-a number of capacitive sense pins and these can be routed in random order to
-sense lines in the display, during init the controller gets feed a configuration
-data file with which pins go where and various lookup tables.
-
-Here is a table of all tablets I've tested:
-
-a13-94v-0:		a082 a23-tj-a23-q88-v4.0_20140815/GSL1680E_700_FW.fw	1024x600 inverted-x
-a13-tzx-713b-v2.1:	a082 a23-tj-a23-q88-v4.0_20140815/GSL1680E_700_FW.fw	1024x600
-a23-q8h-v3:		a082 a23-tj-a23-q88-v4.0_20140815/GSL1688_A70_FW.fw	 800x480 swapped-x-y
-a23-tj-a23-q88-v4.0:	a082 a23-tj-a23-q88-v4.0_20140815/GSL1680E_700_FW.fw	1024x600
-a23-ippo-q8h-v1.2:	a082 a23-tj-a23-q88-v4.0_20140815/GSL1688_A70_FW.fw	 800x480 swapped-x-y
-a33-ippo-q8h-v1.2:	a082 a23-tj-a23-q88-v4.0_20140815/GSL1688_A70_FW.fw	 800x480 swapped-x-y
-a33-tzx-723q4:		b482 a33-Q8_V2.4_1118/GSL1680_FW_D702.fw		 960x480 inverted-x
-a33-q8-v2.4-1118:	b482 a33-Q8_V2.4_1118/GSL1680_FW_D702.fw		 960x480
-a33-q8h-v1.5:		b482 a33-q8h-v1.5/GSL1688_A70_FW.fw			 960x480
+Same arguments as above. In addition, we do not want to hard-code the
+filesystem type used for the rootfs volume, as it can either be UBIFS
+or a read-only filesystem needing a ubiblock device. Thus we would
+need the bootloader to know which filesystem *type* is being used and
+then decide wether to pass 'rootfs=ubiX:Y' or
+'ubiblock=... rootfs=/dev/ubiblock0'.
 
 
-The first column is <soc>-<pcb-marking>, the second is the chip-id from the gsl1680 (this can be read
-via i2c), the third column is the configdata file used for testing, the directory-name it is prefixed
-with is from which board's android image the firmware file was extracted. The 4th column shows
-the resolution of the reported coordinates and any necessary flags.
+> > This is more or less filesystem-agnostic and works fine as long as
+> > there is only one volume called 'rootfs' and this volume is always
+> > used as rootfs.
+> > 
+> > Dual-boot setups will need some way to pass the active rootfs volume to
+> > the kernel. While I agree that this is possible by appending or
+> > prepending to the cmdline string passed to the kernel, this either
+> > limits the users' ability to manually specify the rootfs using the
+> > cmdline or becomes a more complex task to only append/prepend the
+> > cmdline in case the user-defined string doesn't already contain
+> > relevant parameters...
+> 
+> Sorry, but this is just a tooling problem and not to be addressed in the kernel.
+> There is also the possibility to use an initramfs (either as file or embedded in the kernel)
+> if the mount/attach logic becomes *really* complicated...
+> 
+> > Thus it'd be nicer to flag the default rootfs volume via the device-
+> > tree.
+> 
+> As I said, as far I'm informed device tree is for configuring Linux, it describes
+> the hardware. We also don't have LVM, DM or iSCSI bindings in DT. ;)
+> Maybe device tree folks will tell more...
 
-Note that the resolution and if we need swapped-x-y actually is fixed for a given fw file, so
-we need to keep this information paired.
+But we do have MTD and MTD partitions in DT. To me it'd feel more
+consistent if MTD devices, partitioning and which MTD partition(s) to
+use as UBI would be defined in the same place.
 
-So as you can see which fw file to use, and whether x is inverted or not vary from board to board.
 
-This leaves us with 2 options:
+Cheers
 
-1) Move to 1 dts file per PCB variant solution, of ALL the q8 tablets I've seen I've only ever
-had 2 with identical PCB-s and those were from the same batch, so this seems unmaintainable.
-Which leaves us with:
 
-2) Give the user some way to override the dts settings.
-
-Which after a somewhat long intro brings me to the actual purpose of this thread, discuss
-how to best deal with this. I again see 2 options:
-
-1) Put a disabled gsl1680 node in the dts file, have a q8_autodetect.c in u-boot
-which probes i2c and if it finds the gsl1680 nodes enables it, and patches in a best-effort
-default for which fw file to use. Allow the user to set a touchscreen_fw u-boot env
-variable which will override this. Also allow the user to set a touchscreen_inverted_x env
-variable to add inverted-x to the dt node for the gsl1680.
-
-2) Write an in kernel overlay manager which does auto-detect as described by 1, and
-loads an overlay for the detected touchscreen controller, with module options to allow
-specifying the fw-file, x-inversion, etc.
-
-One things which worries me about 2. is that we would need to have 2 overlay files
-per fw-file, one regular config, one inverted-x, or is it possible for the overlay
-manager to modify an overlay before applying it ?
-
-I tend towards doing the auto-detect in u-boot, since that will give the greatest
-flexibility (the dtb is fully read-writable in u-boot) and I can easily access
-things like i2c-busses, soc id/version register, etc. there.
-
-But before sinking a lot of time in either one of these I first wanted to discuss
-this, if the consensus is that an in kernel overlay manager is the way to go
-I will take a shot at that instead.
-
-Regards,
-
-Hans
+Daniel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
