@@ -1,85 +1,45 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 4/5] mfd: rn5t618: register power off callback
- optionally
-Date: Sat, 18 Jun 2016 18:08:54 -0700
-Message-ID: <876c6fc0a1e300e95eda616c8c71a3ec@agner.ch>
-References: <20160608010429.19618-1-stefan@agner.ch>
- <20160608010429.19618-5-stefan@agner.ch> <20160616145907.GD4948@dell>
+From: Khiem Nguyen <khiem.nguyen.xt@rvc.renesas.com>
+Subject: [PATCH 0/4] thermal: rcar_gen3_thermal: Add R-Car Gen3 thermal
+ support
+Date: Sun, 19 Jun 2016 10:31:29 +0700
+Message-ID: <57661211.7010900@rvc.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160616145907.GD4948@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org, b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <damm+renesas@opensource.se>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb@rvc.renesas.com>, "Hien Duy. Dang" <hien.dang.eb@rvc.renesas.com>, Toru Oishi <toru.oishi.zj@rvc.renesas.com>, "Khiem Trong. Nguyen" <khiem.nguyen.xt@rvc.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-06-16 07:59, Lee Jones wrote:
-> On Tue, 07 Jun 2016, Stefan Agner wrote:
-> 
->> Only register power off if the PMIC is defined as system power
->> controller (see Documentation/devicetree/bindings/power/
->> power-controller.txt).
->>
->> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> 
-> These should be chronological.
-> 
+This patchset adds new thermal sensor driver to support 3 sensors
+found in R-Car Gen3 series.
 
-Has been discussed already here:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/345835.html
+It has been decided to create new driver, instead of using the existing
+thermal driver due to many differences in HW setting flows, the method
+to calculate temperatures value and some newly supported features.
 
-It's an artifact of my development process, I keep the commits in my
-local branches without signed off lines and add them before sending out
-patches. So whenever I prepare a new revision, collected acks, sobs are
-chronological, but end up before my sob.
+The new driver can support both polling mode and interrupt mode.
+It has been tested with R-Car H3.
 
-But since you are the second maintainer which has objection to that
-style I probably should change that...
+This driver is developed based on early work of Hien Dang and Thao Nguyen.
+All comments are welcome.
 
->> ---
->>  drivers/mfd/rn5t618.c | 10 +++++++---
->>  1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
->> index 7607ced..d9b4d40 100644
->> --- a/drivers/mfd/rn5t618.c
->> +++ b/drivers/mfd/rn5t618.c
->> @@ -103,9 +103,13 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
->>  		return ret;
->>  	}
->>
->> -	if (!pm_power_off) {
->> -		rn5t618_pm_power_off = priv;
->> -		pm_power_off = rn5t618_power_off;
->> +	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
->> +		if (!pm_power_off) {
->> +			rn5t618_pm_power_off = priv;
->> +			pm_power_off = rn5t618_power_off;
->> +		} else {
->> +			dev_err(&i2c->dev, "Failed to set poweroff capability, already defined\n");
-> 
-> This is not an error.  Please use dev_warn() instead.
-> 
+Khiem Nguyen (4):
+  thermal: rcar_gen3_thermal: Document the R-Car Gen3 thermal bindings
+  thermal: rcar_gen3_thermal: Add R-Car Gen3 thermal driver support
+  arm64: dts: r8a7795: Add R-Car Gen3 thermal support
+  arm64: defconfig: Enable R-Car Gen3 thermal support
 
-Hm, I agree... FWIW, I copied the code (and that message) from here,
-where dev_err is probably also not appropriate:
-drivers/regulator/act8865-regulator.c
+ .../bindings/thermal/rcar-gen3-thermal.txt         |  79 ++++
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  86 ++++
+ arch/arm64/configs/defconfig                       |   2 +
+ drivers/thermal/Kconfig                            |   9 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/rcar_gen3_thermal.c                | 524 +++++++++++++++++++++
+ 6 files changed, 701 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+ create mode 100644 drivers/thermal/rcar_gen3_thermal.c
 
-
-> Also, is this message actually accurate?  Your commit message would
-> indicate that it's not.
-
-Hm, maybe we should bail out with an error in that case since DT
-explicitly asks to be power controller... Is that what you mean?
-
---
-Stefan
-
-> 
->> +		}
->>  	}
->>
->>  	return 0;
+-- 
+1.9.1
