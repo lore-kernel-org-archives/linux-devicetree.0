@@ -1,105 +1,90 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
-Date: Sun, 19 Jun 2016 18:53:43 +0200
-Message-ID: <20160619185343.14ef0669@bbrezillon>
-References: <20160618232054.GB29476@makrotopia.org> <57665D96.1070804@nod.at>
- <20160619112510.GA820@makrotopia.org> <576689CC.3030809@nod.at>
- <20160619130514.GB820@makrotopia.org> <57669BEA.5030306@nod.at>
- <20160619140952.GC820@makrotopia.org> <5766AD99.1040809@nod.at>
- <20160619152445.GG820@makrotopia.org> <5766BAB8.9090707@nod.at>
- <20160619161334.GH820@makrotopia.org>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific
+ power-saving options
+Date: Sun, 19 Jun 2016 11:12:55 -0700
+Message-ID: <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
+References: <1465970379-14703-1-git-send-email-andrew.smirnov@gmail.com>
+ <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com> <20160619142934.GA8522@rob-hp-laptop>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20160619161334.GH820@makrotopia.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dedekind1@gmail.com, Richard Weinberger <richard@nod.at>, robh+dt@kernel.org, linux-mtd@lists.infradead.org, Hauke Mehrtens <hauke@hauke-m.de>, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDKOBWPM5ABRBKGBTO5QKGQEUWXTPTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160619142934.GA8522@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 19 Jun 2016 18:13:36 +0200
-Daniel Golle <daniel@makrotopia.org> wrote:
+On Sun, Jun 19, 2016 at 7:29 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Jun 14, 2016 at 10:59:29PM -0700, Andrey Smirnov wrote:
+>> Add DS1341 specific power-saving options that allow to disable certain
+>> functional aspects of the chip in order to minimize its power
+>> consumption.
+>
+> This description doesn't match that you are adding a new binding. It is
+> preferred that bindings are a separate patch.
 
-> Hi Richard,
-> 
-> On Sun, Jun 19, 2016 at 05:31:04PM +0200, Richard Weinberger wrote:
-> > Am 19.06.2016 um 17:24 schrieb Daniel Golle:  
-> > >> You mean marking a MTD partition in DT and UBI will attach from it?
-> > >> That makes sense.  
-> > > 
-> > > Yes. Currently we just use a naming convention (the first MTD partition
-> > > named 'ubi' will be auto-attached), that's obviously not very clean...  
-> > 
-> > I was about to reply to my own mail that you can still attach by name.
-> > Boris reminded me of that, I forgot that feature.^^
-> > Why is it not clean?  
-> 
-> That's nice and I also didn't know that.
-> It's still not perfect because I got to add it to the cmdline (in DT),
-> and should have it only on devices where a partition with that given
-> name actually exists. A flag for the mtd partition would still be
-> nicer.
-> 
-> >   
-> > >>
-> > >> To sum up, I asked a lot of questions to understand your use case(s).
-> > >> Everything you described can be done with existing facilities.
-> > >> But I agree that at least some UBI DT machinery would be nice to have
-> > >> although we need to check with DT folks first.
-> > >> At least marking an MTD partition should be fine, hopefully.  
-> > > 
-> > > Great. That'd already greatly improve things.  
-> > 
-> > How is that better than attach by name? You mark the to be attached
-> > MTD by its name...  
-> 
-> See above. We'd then still need to have that ubi.mtd=name in the
-> cmdline for NAND devices using UBI and *not* have it for other devices
-> within the same family which may use SPI or NOR flash without UBI.
-> I'd prefer to have one place inside the device-tree for everything
-> flash-storage related, eg.
-> &nand {
-> 	status = "okay";
-> 	partition@0 {
-> 		label = "boot";
-> 		reg = <0x00000000 0x00e00000>;
-> 		read-only;
-> 	};
-> 
-> 	partition@e00000 {
-> 		label = "data";
-> 		compatible = "ubi,device";
+OK, will split this patch into two in v2.
 
-So, if we follow your logic we should also have
+>
+>>
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/rtc/dallas,ds1341.txt      | 23 ++++++++++++++++++
+>>  drivers/rtc/rtc-ds1307.c                           | 28 ++++++++++++++++++++++
+>>  2 files changed, 51 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
+>> new file mode 100644
+>> index 0000000..b8be7a4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
+>> @@ -0,0 +1,23 @@
+>> +* Dallas DS1341              I2C Serial Real-Time Clock
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: Should contain "dallas,ds1341".
+>> +
+>> +- reg: I2C address for chip
+>> +
+>> +Optional properties:
+>> +
+>> +- disable-oscillator-stop-flag : Configure chip to disable oscillator
+>> +  fault detection circuitry
+>> +
+>> +- enable-glitch-filter : Configure chip to enable crystal oscillator
+>> +  output glitch filtering
+>
+> What determines setting these properties or not?
 
-		compatible = "jffs2,file-system";
+Setting those properties allows drastically reduce RTC's power
+consumption at the expense of reliability and quality of service. In
+my use case, DS1341 is powered by a supercap and enabling those two
+setting allows to increase holdup from less than a day do 2+ weeks.
 
-Because JFFS2 is an MTD user, just as UBI is.
+>
+> They should have vendor prefix and be explicit that they are boolean.
 
-Let's see what Rob and other DT maintainers think about that.
+I was trying to be consistent with ds1339 and ds1390 bindings which do
+not have vendor prefixes. Will fix in v2.
 
-Still, it seems to me that you're trying to solve a problem in the
-kernel when it should actually be solved in an upper layer.
+Thank you,
+Andrey Smirnov
 
-Another option would be to try attaching UBI (along with all possible
-MTD users) to all the the MTD partitions. That's what's done for block
-filesystems when rootfstype is not specified.
-
-
-> 		reg = <0x00e00000 0x07200000>;
-> 	};
-> };
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
