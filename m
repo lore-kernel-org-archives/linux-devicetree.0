@@ -1,141 +1,111 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: nand: sunxi: add reset line support
-Date: Sun, 19 Jun 2016 15:16:19 +0200
-Message-ID: <20160619151619.4edc64f6@bbrezillon>
-References: <20160619113739.30362-1-icenowy@aosc.xyz>
-	<20160619113739.30362-2-icenowy@aosc.xyz>
-	<20160619140652.07ab03c9@bbrezillon>
-	<2686901466340069@web27g.yandex.ru>
-	<20160619145303.0bdf59ea@bbrezillon>
-	<2748041466341860@web7m.yandex.ru>
-Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Richard Weinberger <richard@nod.at>
+Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
+Date: Sun, 19 Jun 2016 15:19:38 +0200
+Message-ID: <57669BEA.5030306@nod.at>
+References: <1466277476-14853-1-git-send-email-hauke@hauke-m.de>
+ <5765A14F.6020201@nod.at> <48242f26-7812-6957-6bf5-c12989b875b4@hauke-m.de>
+ <20160618232054.GB29476@makrotopia.org> <57665D96.1070804@nod.at>
+ <20160619112510.GA820@makrotopia.org> <576689CC.3030809@nod.at>
+ <20160619130514.GB820@makrotopia.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCK63FO5TUHRBJ5WTK5QKGQEIXMBW4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <2748041466341860-74mQwxeXopFuio3avFS2gg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-ymACFijhrKM@public.gmane.org
-Cc: "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20160619130514.GB820@makrotopia.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dedekind1@gmail.com, Hauke Mehrtens <hauke@hauke-m.de>, robh+dt@kernel.org, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 19 Jun 2016 21:11:00 +0800
-icenowy-ymACFijhrKM@public.gmane.org wrote:
+Daniel,
 
-> Then I will soon make the v2 patch set, with the error detection part fix=
-ed.
->=20
-> But why does sunxi-mmc check only EPROBE_DEFER?
+Am 19.06.2016 um 15:05 schrieb Daniel Golle:
+>>> The same kernel gets used on many devices having different $vendor
+>>> mtd-partition layouts. A way other than the kernel cmdline allows
+>>> to specify the default behaviour without restricting the user to
+>>> manually use those cmdline options.
+>>
+>> You can put the cmdline into the per-device device tree.
+>> This is the concept of a multi-device kernel. One kernel and
+>> many device trees.
+> 
+> Exactly true. However, as the mtd partitions are defined in the tree
+> itself rather than using 'mtdparts=...' in the cmdline built-into the
+> device-tree, it'd be nice to also select that a specific partition
+> should be ubiattached.
 
-I guess someone had a probe-dependency problem and fixed this case but
-ignored all the possible errors. But there may be other reasons for
-devm_reset_control_get_optional() to fail. The only one that is really
-reflecting that the reset line is not defined in the DT is -ENOENT.
+DT already offer all you need and nothing hinders you from
+using mtdparts=.
 
->=20
-> 19.06.2016, 20:53, "Boris Brezillon" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=
-:
-> > On Sun, 19 Jun 2016 20:41:09 +0800
-> > icenowy-ymACFijhrKM@public.gmane.org wrote:
-> > =20
-> >> =C2=A0To be honest, I copied them from sunxi-mmc.c.
-> >>
-> >> =C2=A0What function should be chosen better? =20
-> >
-> > You did the right thing (except for the error detection part). My
-> > question was addressed to Philipp (the reset subsystem maintainer).
-> > =20
-> >> =C2=A019.06.2016, 20:06, "Boris Brezillon" <boris.brezillon@free-elect=
-rons.com>: =20
-> >> =C2=A0> +Philipp
-> >> =C2=A0>
-> >> =C2=A0> On Sun, 19 Jun 2016 19:37:39 +0800
-> >> =C2=A0> Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-> >> =C2=A0> =20
-> >> =C2=A0>> =C2=A0The NAND controller on some sun8i chips needs its reset=
- line to be deasserted
-> >> =C2=A0>> =C2=A0before they can enter working state. This commit added =
-the reset line process
-> >> =C2=A0>> =C2=A0to the driver.
-> >> =C2=A0>>
-> >> =C2=A0>> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> >> =C2=A0>> =C2=A0---
-> >> =C2=A0>> =C2=A0=C2=A0drivers/mtd/nand/sunxi_nand.c | 14 ++++++++++++++
-> >> =C2=A0>> =C2=A0=C2=A01 file changed, 14 insertions(+)
-> >> =C2=A0>>
-> >> =C2=A0>> =C2=A0diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mt=
-d/nand/sunxi_nand.c
-> >> =C2=A0>> =C2=A0index a83a690..1502748 100644
-> >> =C2=A0>> =C2=A0--- a/drivers/mtd/nand/sunxi_nand.c
-> >> =C2=A0>> =C2=A0+++ b/drivers/mtd/nand/sunxi_nand.c
-> >> =C2=A0>> =C2=A0@@ -39,6 +39,7 @@
-> >> =C2=A0>> =C2=A0=C2=A0#include <linux/gpio.h>
-> >> =C2=A0>> =C2=A0=C2=A0#include <linux/interrupt.h>
-> >> =C2=A0>> =C2=A0=C2=A0#include <linux/iopoll.h>
-> >> =C2=A0>> =C2=A0+#include <linux/reset.h>
-> >> =C2=A0>>
-> >> =C2=A0>> =C2=A0=C2=A0#define NFC_REG_CTL 0x0000
-> >> =C2=A0>> =C2=A0=C2=A0#define NFC_REG_ST 0x0004
-> >> =C2=A0>> =C2=A0@@ -269,6 +270,7 @@ struct sunxi_nfc {
-> >> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0v=
-oid __iomem *regs;
-> >> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0s=
-truct clk *ahb_clk;
-> >> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0s=
-truct clk *mod_clk;
-> >> =C2=A0>> =C2=A0+ struct reset_control *reset;
-> >> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u=
-nsigned long assigned_cs;
-> >> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u=
-nsigned long clk_rate;
-> >> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0s=
-truct list_head chips;
-> >> =C2=A0>> =C2=A0@@ -1871,6 +1873,18 @@ static int sunxi_nfc_probe(struc=
-t platform_device *pdev)
-> >> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0i=
-f (ret)
-> >> =C2=A0>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0goto out_ahb_clk_unprepare;
-> >> =C2=A0>>
-> >> =C2=A0>> =C2=A0+ nfc->reset =3D devm_reset_control_get_optional(dev, "=
-ahb");
-> >> =C2=A0>> =C2=A0+ if (PTR_ERR(nfc->reset) =3D=3D -EPROBE_DEFER)
-> >> =C2=A0>> =C2=A0+ return PTR_ERR(nfc->reset); =20
-> >> =C2=A0>
-> >> =C2=A0> Actually you should test for !=3D -ENOENT, because all error c=
-odes except
-> >> =C2=A0> this one should stop the ->probe().
-> >> =C2=A0>
-> >> =C2=A0> BTW, this devm_reset_control_get_optional() is really weird. W=
-hile most
-> >> =C2=A0> _optional() methods return NULL when the element is not define=
-d in the
-> >> =C2=A0> DT, this one returns -ENOTENT, which makes it impossible to
-> >> =C2=A0> differentiate a real error from a undefined reset line (which =
-is a
-> >> =C2=A0> valid case for _optional()).
-> >> =C2=A0>
-> >> =C2=A0> Philipp, is there a good reason for doing that?
-> >> =C2=A0> =20
-> >> =C2=A0>> =C2=A0+
-> >> =C2=A0>> =C2=A0+ if (!IS_ERR(nfc->reset)) {
-> >> =C2=A0>> =C2=A0+ ret =3D reset_control_deassert(nfc->reset);
-> >> =C2=A0>> =C2=A0+ if (ret) {
-> >> =C2=A0>> =C2=A0+ dev_err(dev, "reset err %d\n", ret);
-> >> =C2=A0>> =C2=A0+ goto out_mod_clk_unprepare;
-> >> =C2=A0>> =C2=A0+ }
-> >> =C2=A0>> =C2=A0+ }
-> >> =C2=A0>> =C2=A0+ =20
+>>
+>>>>
+>>>>> To auto-select the rootfs, we currently carry another bunch of patches
+>>>>>
+>>>>> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/491-ubi-auto-create-ubiblock-device-for-rootfs.patch
+>>>>
+>>>> Same question here.
+>>>>
+>>>>> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/492-try-auto-mounting-ubi0-rootfs-in-init-do_mounts.c.patch
+>>>>
+>>>> Ditto.
+>>>>
+>>>>> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/493-ubi-set-ROOT_DEV-to-ubiblock-rootfs-if-unset.patch
+>>>>
+>>>> Ditto.
+>>>>
+>>>
+>>> Same arguments as above. In addition, we do not want to hard-code the
+>>> filesystem type used for the rootfs volume, as it can either be UBIFS
+>>> or a read-only filesystem needing a ubiblock device. Thus we would
+>>> need the bootloader to know which filesystem *type* is being used and
+>>> then decide wether to pass 'rootfs=ubiX:Y' or
+>>> 'ubiblock=... rootfs=/dev/ubiblock0'.
+>>
+>> What is wrong with having a very minimal initramfs to do such an
+>> auto discovery logic?
+> 
+> Sorry, but we are not talking about traditional desktop or server
+> systems. OpenWrt/LEDE runs on devices with as little as 32 MB of RAM
+> and 4 MB of Flash. Devices with UBI will typically have at least
+> 32 MB of NAND Flash, but still not necessarily a lot of RAM.
+> Have a look at
+> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/lantiq/dts/BTHOMEHUBV2B.dts
+> for a good example of the type of hardware we are talking about.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+I didn't recommend adding glibc+systemd in the initramfs. It can be very, very small
+and trivial.
+At least it would be much more clean than your pile of not so fancy MTD/UBI patches.
+
+> Apart from that we already automatically generate initramfs-based
+> images for devices to be used in situations where you cannot or don't
+> want to touch the devices' flash.
+
+The initramfs can be part of the kernel image. No additional file needed.
+
+>> This is something you need to discuss wit DT folks.
+>> I'm not per se against UBI DT bindings it just does not feel right
+>> and contradicts my understanding of it.
+> 
+> I agree with your view when it comes to describing UBI volumes
+> in the device tree. That's wrong just as it would be wrong to add
+> DT bindings for LVM2.
+> As said previously, the situation is different for flash chips having
+> partitions defined for use with UBI on some boards.
+
+Everything can be done with the existing framework. DT binding maybe be nice
+for your use case but I fear it is not applicable.
+
+Thanks,
+//richard
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
