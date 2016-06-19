@@ -1,67 +1,57 @@
-From: Khiem Nguyen <khiem.nguyen.xt-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>
-Subject: [PATCH/RFC 3/3] arm64: dts: r8a7795: Support shared irq for thermal
- sensors
-Date: Sun, 19 Jun 2016 11:16:45 +0700
-Message-ID: <57661CAD.8040807@rvc.renesas.com>
-References: <57661211.7010900@rvc.renesas.com>
- <57661BB1.3060401@rvc.renesas.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/3] ARM: dts: imx7d: create i.MX 7Solo base device tree
+Date: Sat, 18 Jun 2016 21:20:05 -0700
+Message-ID: <9d870fb1be40772a50f08d467df048dc@agner.ch>
+References: <20160608023709.32090-1-stefan@agner.ch>
+ <20160608023709.32090-2-stefan@agner.ch> <20160612013526.GV20243@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57661BB1.3060401-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>, "Hien Duy. Dang" <hien.dang.eb-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>, Toru Oishi <toru.oishi.zj-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gaku Inami <gaku.inami.xw-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "Khiem Trong. Nguyen" <khiem.nguyen.xt@rvc.r>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160612013526.GV20243@tiger>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: kernel@pengutronix.de, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marcel.ziswiler@toradex.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, max.krummenacher@toradex.com, galak@codeaurora.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the shared interrupts for thermal sensors
-TSC1/TSC2/TSC3.
+On 2016-06-11 18:35, Shawn Guo wrote:
+> On Tue, Jun 07, 2016 at 07:37:07PM -0700, Stefan Agner wrote:
+>> The i.MX 7 series currently consists of two SoCs: i.MX 7Solo and
+>> 7Dual. The i.MX 7Solo implements a subset of features available on
+>> i.MX 7Dual, hence create imx7s.dtsi as the base device tree. The
+>> i.MX 7Dual's additional features over i.MX 7Solo are:
+>> - Second Cortex-A7 core
+>> - Second Gigabit Ethernet controller
+>> - EPD (Electronc Paper Display, not yet part of the device tree)
+>> - PCIe (not yet part of the device tree)
+>> - Additional USB2.0 OTG controller
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>  arch/arm/boot/dts/imx7d.dtsi | 923 +++----------------------------------------
+>>  arch/arm/boot/dts/imx7s.dtsi | 880 +++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 928 insertions(+), 875 deletions(-)
+> 
+> We should probably have a beforehand patch to rename the file, so that
+> we can avoid this dramatic diffstat.
 
-Signed-off-by: Gaku Inami <gaku.inami.xw-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Signed-off-by: Khiem Nguyen <khiem.nguyen.xt-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+If I delete imx7d.dtsi and add imx7s.dtsi in a single commit, and then
+readd imx7d.dtsi in a second commit, it would break bisect-ability. All
+existing device trees which include imx7d.dtsi would fail to build.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index db203db..761df2b 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -1628,7 +1628,8 @@
- 			compatible = "renesas,thermal-r8a7795",
- 				"renesas,rcar-gen3-thermal";
- 			reg = <0 0xe6198000 0 0x5c>;
--			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 522>;
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 			#thermal-sensor-cells = <0>;
-@@ -1639,7 +1640,8 @@
- 			compatible = "renesas,thermal-r8a7795",
- 				"renesas,rcar-gen3-thermal";
- 			reg = <0 0xe61a0000 0 0x5c>;
--			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 522>;
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 			#thermal-sensor-cells = <0>;
-@@ -1650,7 +1652,8 @@
- 			compatible = "renesas,thermal-r8a7795",
- 				"renesas,rcar-gen3-thermal";
- 			reg = <0 0xe61a8000 0 0x5c>;
--			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 522>;
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 			#thermal-sensor-cells = <0>;
--- 
-1.9.1
+As soon as I keep imx7d.dtsi around, even if it only includes
+imx7s.dtsi, git diff stats look dramatic with git default options.
+
+Using -B -M makes the diff stat a bit less dramatic:
+
+ arch/arm/boot/dts/imx7d.dtsi                 | 1083
++++++++++++---------------------------------------------------------------------------
+ arch/arm/boot/dts/{imx7d.dtsi => imx7s.dtsi} |   79 +------
+ 2 files changed, 130 insertions(+), 1032 deletions(-)
+
+However, that is only for stats, and only when using those options...
+
+I would rather prefer to keep it in a single commit. What do you think?
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
