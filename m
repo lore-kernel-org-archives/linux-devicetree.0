@@ -1,7 +1,7 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 6/6] ARM64: dts: amlogic: gxbb: Enable NVMEM
-Date: Sun, 19 Jun 2016 14:39:04 +0200
-Message-ID: <1466339944-602-7-git-send-email-carlo@caione.org>
+Subject: [PATCH 5/6] documentation: Add nvmem bindings documentation
+Date: Sun, 19 Jun 2016 14:39:03 +0200
+Message-ID: <1466339944-602-6-git-send-email-carlo@caione.org>
 References: <1466339944-602-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1466339944-602-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
@@ -12,21 +12,31 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Add the NVMEM device node in the DTSI.
+This patch add the bindings document of Amlogic eFuse driver.
 
 Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ .../devicetree/bindings/nvmem/amlogic-efuse.txt    | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 407f24c..0e0f7c0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -104,6 +104,24 @@
- 		};
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+new file mode 100644
+index 0000000..fafd85b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+@@ -0,0 +1,39 @@
++= Amlogic eFuse device tree bindings =
++
++Required properties:
++- compatible: should be "amlogic,meson-gxbb-efuse"
++
++= Data cells =
++Are child nodes of eFuse, bindings of which as described in
++bindings/nvmem/nvmem.txt
++
++Example:
++
 +	efuse: efuse {
 +		compatible = "amlogic,meson-gxbb-efuse";
 +		#address-cells = <1>;
@@ -45,9 +55,16 @@ index 407f24c..0e0f7c0 100644
 +		};
 +	};
 +
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
++= Data consumers =
++Are device nodes which consume nvmem data cells.
++
++For example:
++
++	eth_mac {
++		...
++		nvmem-cells = <&eth_mac>;
++		nvmem-cell-names = "eth_mac";
++	};
 -- 
 2.7.4
 
