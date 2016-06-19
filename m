@@ -1,84 +1,198 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: nand: sunxi: add reset line support
-Date: Sun, 19 Jun 2016 14:06:52 +0200
-Message-ID: <20160619140652.07ab03c9@bbrezillon>
-References: <20160619113739.30362-1-icenowy@aosc.xyz>
-	<20160619113739.30362-2-icenowy@aosc.xyz>
-Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCK63FO5TUHRBXUVTK5QKGQEKCTRNHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160619113739.30362-2-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 4/6] nvmem: amlogic: Add Amlogic Meson EFUSE driver
+Date: Sun, 19 Jun 2016 14:39:02 +0200
+Message-ID: <1466339944-602-5-git-send-email-carlo@caione.org>
+References: <1466339944-602-1-git-send-email-carlo@caione.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466339944-602-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+Philipp
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-On Sun, 19 Jun 2016 19:37:39 +0800
-Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+Add Amlogic EFUSE driver to access hardware data like ethernet address,
+serial number or IDs.
 
-> The NAND controller on some sun8i chips needs its reset line to be deasserted
-> before they can enter working state. This commit added the reset line process
-> to the driver.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  drivers/mtd/nand/sunxi_nand.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunxi_nand.c
-> index a83a690..1502748 100644
-> --- a/drivers/mtd/nand/sunxi_nand.c
-> +++ b/drivers/mtd/nand/sunxi_nand.c
-> @@ -39,6 +39,7 @@
->  #include <linux/gpio.h>
->  #include <linux/interrupt.h>
->  #include <linux/iopoll.h>
-> +#include <linux/reset.h>
->  
->  #define NFC_REG_CTL		0x0000
->  #define NFC_REG_ST		0x0004
-> @@ -269,6 +270,7 @@ struct sunxi_nfc {
->  	void __iomem *regs;
->  	struct clk *ahb_clk;
->  	struct clk *mod_clk;
-> +	struct reset_control *reset;
->  	unsigned long assigned_cs;
->  	unsigned long clk_rate;
->  	struct list_head chips;
-> @@ -1871,6 +1873,18 @@ static int sunxi_nfc_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto out_ahb_clk_unprepare;
->  
-> +	nfc->reset = devm_reset_control_get_optional(dev, "ahb");
-> +	if (PTR_ERR(nfc->reset) == -EPROBE_DEFER)
-> +		return PTR_ERR(nfc->reset);
+Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+---
+ drivers/nvmem/Kconfig       |  11 ++++
+ drivers/nvmem/Makefile      |   2 +
+ drivers/nvmem/meson-efuse.c | 130 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 143 insertions(+)
+ create mode 100644 drivers/nvmem/meson-efuse.c
 
-Actually you should test for != -ENOENT, because all error codes except
-this one should stop the ->probe().
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index ca52952..ef17bc9 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -102,4 +102,15 @@ config NVMEM_VF610_OCOTP
+ 	  This driver can also be build as a module. If so, the module will
+ 	  be called nvmem-vf610-ocotp.
+ 
++config MESON_EFUSE
++	tristate "Amlogic eFuse Support"
++	depends on ARCH_MESON || COMPILE_TEST
++	select REGMAP_MMIO
++	help
++	  This is a driver to retrieve specific values from the eFuse found on
++	  the Amlogic Meson SoCs.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called nvmem_meson_efuse.
++
+ endif
+diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+index 45ab1ae..8f942a0 100644
+--- a/drivers/nvmem/Makefile
++++ b/drivers/nvmem/Makefile
+@@ -22,3 +22,5 @@ obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
+ nvmem_sunxi_sid-y		:= sunxi_sid.o
+ obj-$(CONFIG_NVMEM_VF610_OCOTP)	+= nvmem-vf610-ocotp.o
+ nvmem-vf610-ocotp-y		:= vf610-ocotp.o
++obj-$(CONFIG_MESON_EFUSE)	+= nvmem_meson_efuse.o
++nvmem_meson_efuse-y		:= meson-efuse.o
+diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
+new file mode 100644
+index 0000000..7c80e1c
+--- /dev/null
++++ b/drivers/nvmem/meson-efuse.c
+@@ -0,0 +1,130 @@
++/*
++ * Amlogic eFuse Driver
++ *
++ * Copyright (c) 2016 Endless Computers, Inc.
++ * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of version 2 of the GNU General Public License as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
++ * more details.
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/nvmem-provider.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#include <linux/firmware/meson/meson_sm.h>
++
++static struct meson_sm_firmware *fw;
++
++static int meson_efuse_write(void *context, const void *data, size_t count)
++{
++	/* Nothing TBD, Read-Only */
++	return 0;
++}
++
++static int meson_efuse_read(void *context,
++			    const void *reg, size_t reg_size,
++			    void *val, size_t val_size)
++{
++	unsigned int offset = *(u32 *)reg;
++	u8 *buf = val;
++	int ret;
++
++	ret = meson_sm_call_read(fw, buf, SM_EFUSE_READ, offset,
++				 val_size, 0, 0, 0);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static struct nvmem_config econfig = {
++	.name = "meson-efuse",
++	.owner = THIS_MODULE,
++	.read_only = true,
++};
++
++static struct regmap_bus meson_efuse_bus = {
++	.read = meson_efuse_read,
++	.write = meson_efuse_write,
++	.reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
++	.val_format_endian_default = REGMAP_ENDIAN_NATIVE,
++};
++
++static struct regmap_config meson_efuse_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 1,
++	.val_bits = 8,
++};
++
++static const struct of_device_id meson_efuse_match[] = {
++	{ .compatible = "amlogic,meson-gxbb-efuse", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, meson_efuse_match);
++
++static int meson_efuse_probe(struct platform_device *pdev)
++{
++	struct nvmem_device *nvmem;
++	struct regmap *regmap;
++	unsigned int size;
++
++	fw = meson_sm_get_fw();
++	if (!fw)
++		return -EPROBE_DEFER;
++
++	if (meson_sm_call(fw, SM_EFUSE_USER_MAX, &size, 0, 0, 0, 0, 0) < 0)
++		return -EINVAL;
++	meson_efuse_regmap_config.max_register = size - 1;
++
++	regmap = devm_regmap_init(&pdev->dev, &meson_efuse_bus,
++				  NULL, &meson_efuse_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(&pdev->dev, "regmap init failed\n");
++		return PTR_ERR(regmap);
++	}
++
++	econfig.dev = &pdev->dev;
++	nvmem = nvmem_register(&econfig);
++	if (IS_ERR(nvmem))
++		return PTR_ERR(nvmem);
++
++	platform_set_drvdata(pdev, nvmem);
++
++	return 0;
++}
++
++static int meson_efuse_remove(struct platform_device *pdev)
++{
++	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
++
++	return nvmem_unregister(nvmem);
++}
++
++static struct platform_driver meson_efuse_driver = {
++	.probe = meson_efuse_probe,
++	.remove = meson_efuse_remove,
++	.driver = {
++		.name = "meson-efuse",
++		.of_match_table = meson_efuse_match,
++	},
++};
++
++module_platform_driver(meson_efuse_driver);
++
++MODULE_AUTHOR("Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>");
++MODULE_DESCRIPTION("Amlogic Meson NVMEM driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
 
-BTW, this devm_reset_control_get_optional() is really weird. While most
-_optional() methods return NULL when the element is not defined in the
-DT, this one returns -ENOTENT, which makes it impossible to
-differentiate a real error from a undefined reset line (which is a
-valid case for _optional()).
-
-Philipp, is there a good reason for doing that?
-
-> +
-> +	if (!IS_ERR(nfc->reset)) {
-> +		ret = reset_control_deassert(nfc->reset);
-> +		if (ret) {
-> +			dev_err(dev, "reset err %d\n", ret);
-> +			goto out_mod_clk_unprepare;
-> +		}
-> +	}
-> +
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
