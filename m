@@ -1,90 +1,56 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific
- power-saving options
-Date: Sun, 19 Jun 2016 11:12:55 -0700
-Message-ID: <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
-References: <1465970379-14703-1-git-send-email-andrew.smirnov@gmail.com>
- <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com> <20160619142934.GA8522@rob-hp-laptop>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDKOBWPM5ABRBKGBTO5QKGQEUWXTPTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160619142934.GA8522@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/9] iio: pressure: bmp280: augment DT bindings
+Date: Sun, 19 Jun 2016 20:33:54 +0200
+Message-ID: <1466361242-2994-2-git-send-email-linus.walleij@linaro.org>
+References: <1466361242-2994-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466361242-2994-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Mair <christoph.mair-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vlad Dogaru <vlad.dogaru-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Eric Andersson <eric.andersson-TStm8jYLEPpl57MIdRCFDg@public.gmane.org>, Neil Brown <neilb-l3A5Bk7waGM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 19, 2016 at 7:29 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Jun 14, 2016 at 10:59:29PM -0700, Andrey Smirnov wrote:
->> Add DS1341 specific power-saving options that allow to disable certain
->> functional aspects of the chip in order to minimize its power
->> consumption.
->
-> This description doesn't match that you are adding a new binding. It is
-> preferred that bindings are a separate patch.
+This adds standard device tree bindings for a reset GPIO line, and
+the VDDD and VDDA power regulators.
 
-OK, will split this patch into two in v2.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iio/pressure/bmp085.txt | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
->
->>
->> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/rtc/dallas,ds1341.txt      | 23 ++++++++++++++++++
->>  drivers/rtc/rtc-ds1307.c                           | 28 ++++++++++++++++++++++
->>  2 files changed, 51 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
->> new file mode 100644
->> index 0000000..b8be7a4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
->> @@ -0,0 +1,23 @@
->> +* Dallas DS1341              I2C Serial Real-Time Clock
->> +
->> +Required properties:
->> +
->> +- compatible: Should contain "dallas,ds1341".
->> +
->> +- reg: I2C address for chip
->> +
->> +Optional properties:
->> +
->> +- disable-oscillator-stop-flag : Configure chip to disable oscillator
->> +  fault detection circuitry
->> +
->> +- enable-glitch-filter : Configure chip to enable crystal oscillator
->> +  output glitch filtering
->
-> What determines setting these properties or not?
-
-Setting those properties allows drastically reduce RTC's power
-consumption at the expense of reliability and quality of service. In
-my use case, DS1341 is powered by a supercap and enabling those two
-setting allows to increase holdup from less than a day do 2+ weeks.
-
->
-> They should have vendor prefix and be explicit that they are boolean.
-
-I was trying to be consistent with ds1339 and ds1390 bindings which do
-not have vendor prefixes. Will fix in v2.
-
-Thank you,
-Andrey Smirnov
-
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+index d7a6deb6b21e..06ad5feaea28 100644
+--- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
++++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+@@ -1,7 +1,7 @@
+-BMP085/BMP18x digital pressure sensors
++BMP085/BMP18x/BMP28x digital pressure sensors
+ 
+ Required properties:
+-- compatible: bosch,bmp085
++- compatible: "bosch,bmp085" or "bosch,bmp180" or "bosch,bmp280"
+ 
+ Optional properties:
+ - chip-id: configurable chip id for non-default chip revisions
+@@ -10,6 +10,10 @@ Optional properties:
+   value range is 0-3 with rising sensitivity.
+ - interrupt-parent: should be the phandle for the interrupt controller
+ - interrupts: interrupt mapping for IRQ
++- reset-gpios: a GPIO line handling reset of the sensor: as the line is
++  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
++- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
++- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
+ 
+ Example:
+ 
+@@ -21,4 +25,7 @@ pressure@77 {
+ 	default-oversampling = <2>;
+ 	interrupt-parent = <&gpio0>;
+ 	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
++	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
++	vddd-supply = <&foo>;
++	vdda-supply = <&bar>;
+ };
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+2.4.11
