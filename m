@@ -1,7 +1,7 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/6] ARM64: dts: amlogic: gxbb: Enable secure monitor
-Date: Sun, 19 Jun 2016 14:39:01 +0200
-Message-ID: <1466339944-602-4-git-send-email-carlo@caione.org>
+Subject: [PATCH 6/6] ARM64: dts: amlogic: gxbb: Enable NVMEM
+Date: Sun, 19 Jun 2016 14:39:04 +0200
+Message-ID: <1466339944-602-7-git-send-email-carlo@caione.org>
 References: <1466339944-602-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1466339944-602-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
@@ -12,25 +12,36 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Add the secure monitor node in the Amlogic Meson GXBB DTSI file to
-enable it.
+Add the NVMEM device node in the DTSI.
 
 Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 76b3b6d..407f24c 100644
+index 407f24c..0e0f7c0 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -98,6 +98,12 @@
- 		method = "smc";
+@@ -104,6 +104,24 @@
+ 		};
  	};
  
-+	firmware {
-+		sm: secure-monitor {
-+			compatible = "amlogic,meson-gxbb-sm";
++	efuse: efuse {
++		compatible = "amlogic,meson-gxbb-efuse";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		sn: sn@14 {
++			reg = <0x14 0x10>;
++		};
++
++		eth_mac: eth_mac@34 {
++			reg = <0x34 0x10>;
++		};
++
++		bid: bid@46 {
++			reg = <0x46 0x30>;
 +		};
 +	};
 +
