@@ -1,174 +1,197 @@
-From: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
-Date: Sun, 19 Jun 2016 16:09:53 +0200
-Message-ID: <20160619140952.GC820@makrotopia.org>
-References: <1466277476-14853-1-git-send-email-hauke@hauke-m.de>
- <5765A14F.6020201@nod.at>
- <48242f26-7812-6957-6bf5-c12989b875b4@hauke-m.de>
- <20160618232054.GB29476@makrotopia.org>
- <57665D96.1070804@nod.at>
- <20160619112510.GA820@makrotopia.org>
- <576689CC.3030809@nod.at>
- <20160619130514.GB820@makrotopia.org>
- <57669BEA.5030306@nod.at>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] [v5] net: emac: emac gigabit ethernet controller driver
+Date: Sun, 19 Jun 2016 09:17:57 -0500
+Message-ID: <20160619141757.GA4249@rob-hp-laptop>
+References: <1465942955-22988-1-git-send-email-timur@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <57669BEA.5030306-/L3Ra7n9ekc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+In-Reply-To: <1465942955-22988-1-git-send-email-timur@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
-
-
-On Sun, Jun 19, 2016 at 03:19:38PM +0200, Richard Weinberger wrote:
-> Daniel,
+On Tue, Jun 14, 2016 at 05:22:35PM -0500, Timur Tabi wrote:
+> Add supports for ethernet controller HW on Qualcomm Technologies, Inc. SoC.
+> This driver supports the following features:
+> 1) Checksum offload.
+> 2) Interrupt coalescing support.
+> 3) SGMII phy.
+> 4) phylib interface for external phy
 > 
-> Am 19.06.2016 um 15:05 schrieb Daniel Golle:
-> >>> The same kernel gets used on many devices having different $vendor
-> >>> mtd-partition layouts. A way other than the kernel cmdline allows
-> >>> to specify the default behaviour without restricting the user to
-> >>> manually use those cmdline options.
-> >>
-> >> You can put the cmdline into the per-device device tree.
-> >> This is the concept of a multi-device kernel. One kernel and
-> >> many device trees.
-> > 
-> > Exactly true. However, as the mtd partitions are defined in the tree
-> > itself rather than using 'mtdparts=...' in the cmdline built-into the
-> > device-tree, it'd be nice to also select that a specific partition
-> > should be ubiattached.
+> Based on original work by
+> 	Niranjana Vishwanathapura <nvishwan@codeaurora.org>
+> 	Gilad Avidov <gavidov@codeaurora.org>
 > 
-> DT already offer all you need and nothing hinders you from
-> using mtdparts=.
-
-I know. However, it's much nicer to define partitions for a specific
-flash chip inside the device tree (I've sent a link to the DTS of the
-BTHOMEHUBV2B to illustrate that, please have a look at it and tell
-me if you'd really like that partitioning currently stored as
-device-tree nodes to be migrated back to 'mtdparts=...'.)
-
-
+> Signed-off-by: Timur Tabi <timur@codeaurora.org>
+> ---
 > 
-> >>
-> >>>>
-> >>>>> To auto-select the rootfs, we currently carry another bunch of patches
-> >>>>>
-> >>>>> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/491-ubi-auto-create-ubiblock-device-for-rootfs.patch
-> >>>>
-> >>>> Same question here.
-> >>>>
-> >>>>> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/492-try-auto-mounting-ubi0-rootfs-in-init-do_mounts.c.patch
-> >>>>
-> >>>> Ditto.
-> >>>>
-> >>>>> https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/generic/patches-4.4/493-ubi-set-ROOT_DEV-to-ubiblock-rootfs-if-unset.patch
-> >>>>
-> >>>> Ditto.
-> >>>>
-> >>>
-> >>> Same arguments as above. In addition, we do not want to hard-code the
-> >>> filesystem type used for the rootfs volume, as it can either be UBIFS
-> >>> or a read-only filesystem needing a ubiblock device. Thus we would
-> >>> need the bootloader to know which filesystem *type* is being used and
-> >>> then decide wether to pass 'rootfs=ubiX:Y' or
-> >>> 'ubiblock=... rootfs=/dev/ubiblock0'.
-> >>
-> >> What is wrong with having a very minimal initramfs to do such an
-> >> auto discovery logic?
-> > 
-> > Sorry, but we are not talking about traditional desktop or server
-> > systems. OpenWrt/LEDE runs on devices with as little as 32 MB of RAM
-> > and 4 MB of Flash. Devices with UBI will typically have at least
-> > 32 MB of NAND Flash, but still not necessarily a lot of RAM.
-> > Have a look at
-> > https://git.lede-project.org/?p=source.git;a=blob;f=target/linux/lantiq/dts/BTHOMEHUBV2B.dts
-> > for a good example of the type of hardware we are talking about.
+> v5:
+>  - changed author to Timur, added MAINTAINERS entry
+>  - use phylib, replacing internal phy code
+>  - added support for EMAC internal SGMII v2
+>  - fix ~DIS_INT warning
+>  - update DT bindings, including removing unused properties
+>  - removed interrupt handler for internal sgmii
+>  - removed link status check handler/state (replaced with phylib)
+>  - removed periodic timer handler (replaced with phylib)
+>  - removed power management code (will be rewritten later)
+>  - external phy is now required, not optional
+>  - removed redundant EMAC_STATUS_DOWN status flag
+>  - removed redundant link status and speed variables
+>  - removed redundant status bits (vlan strip, promiscuous, loopback, etc)
+>  - removed useless watchdog status
+>  - removed command-line parameters
+>  - cleaned up probe messages
+>  - removed redundant params from emac_sgmii_link_init()
+>  - always call netdev_completed_queue() (per review comment)
+>  - fix emac_napi_rtx() (per review comment)
+>  - removed max_ints loop in interrupt handler
+>  - removed redundant mutex around phy read/write calls
+>  - added lock for reading emac status (per review comment)
+>  - generate random MAC address if it can't be read from firmware
+>  - replace EMAC_DMA_ADDR_HI/LO with upper/lower_32_bits
+>  - don't test return value from platform_get_resource (per review comment)
+>  - use net_warn_ratelimited (per review comment)
+>  - don't set the dma masks (will be set by DT or IORT code)
+>  - remove unused emac_tx_tpd_ts_save()
+>  - removed redundant local MTU variable
 > 
-> I didn't recommend adding glibc+systemd in the initramfs. It can be very, very small
-> and trivial.
-
-Again, please understand that the whole production firmware can be as
-small as 3.5 megs for kernel and rootfs. Of course we never use glibc
-or systemd anywhere.
-What you imagine to be the ways to make a initramfs really small is
-what we already do for *all* our system, ie. we use busybox on top of
-a very tiny libc.
-
-> At least it would be much more clean than your pile of not so fancy MTD/UBI patches.
+> v4:
+>  - add missing ipv6 header file
+>  - correct compatible string
+>  - fix spacing in emac_reg_write arrays
+>  - drop unnecessary cell-index property
+>  - remove unsupported DT properties from docs
+>  - remove GPIO initialization and update docs
 > 
-
-In the end, do_mounts.c is already running in user-space, just the
-source-code happens to be part of the kernel tree. Sure, that could
-become a seperate executable binary which mounts the rootfs and then
-passes control to /sbin/init. On the other hand that would add quite
-some redundant infrastructure, because we already got ROOT_DEV and lots
-of automagic mounting going on in the kernel.
-
-
-> > Apart from that we already automatically generate initramfs-based
-> > images for devices to be used in situations where you cannot or don't
-> > want to touch the devices' flash.
+> v3:
+>  - remove most of the memory barriers by using the non xxx_relaxed() api.
+>  - remove RSS and WOL support.
+>  - correct comments from physical address to dma address.
+>  - rearrange structs to make them packed.
+>  - replace polling loops with readl_poll_timeout().
+>  - remove unnecessary wrapper functions from phy layer.
+>  - add blank line before return statements.
+>  - set to null clocks after clk_put().
+>  - use module_platform_driver() and dma_set_mask_and_coherent()
+>  - replace long hex bitmasks with BIT() macro.
 > 
-> The initramfs can be part of the kernel image. No additional file needed.
-
-That's excatctly what we've already been doing for initramfs-only
-images, see e.g.
-http://downloads.lede-project.org/snapshots/targets/lantiq/xway/lede-lantiq-xway-BTHOMEHUBV2B-uImage-initramfs
-
-So if we need an initramfs to mount the on-flash rootfs and *another*
-initfamfs containing the whole system for other cases, things become
-even more fishy on our side. But yes, I'm aware that this would be
-possible.
-
-
+> v2:
+>  - replace hw bit fields to macros with bitwise operations.
+>  - change all iterators to unsized types (int)
+>  - some minor code flow improvements.
+>  - change return type to void for functions which return value is never
+>    used.
+>  - replace instance of xxxxl_relaxed() io followed by mb() with a
+>    readl()/writel().
 > 
-> >> This is something you need to discuss wit DT folks.
-> >> I'm not per se against UBI DT bindings it just does not feel right
-> >> and contradicts my understanding of it.
-> > 
-> > I agree with your view when it comes to describing UBI volumes
-> > in the device tree. That's wrong just as it would be wrong to add
-> > DT bindings for LVM2.
-> > As said previously, the situation is different for flash chips having
-> > partitions defined for use with UBI on some boards.
 > 
-> Everything can be done with the existing framework. DT binding maybe be nice
-> for your use case but I fear it is not applicable.
-
-Yes, it can be done. But you would have to define your flash chips in
-device-tree, you may define the mtd partitions either in DT or by using
-mtdparts=... in the cmdline. Now to define which MTD device to
-ubiattach you will have to use ubi.mtd=X on the cmdline. If you defined
-your partitions inside the of_node of the flash chip, changes there
-(which do happen) may change the index of the partition you want to
-ubi-attach. C'mon. This *is* messy. Just having a compatible-flag to
-attach the partition would already greatly improve things.
-
-Hauke: Maybe we should discuss the two patches individually, as I feel
-that ubiattaching specific mtd partitions flagged in DT is quite
-straight forward, while specifying volumes inside the ubi device might
-be out-of-scope.
-
-
-Cheers
-
-
-Daniel
-
-
-
+>  .../devicetree/bindings/net/qcom-emac.txt          |   66 +
+>  MAINTAINERS                                        |    6 +
+>  drivers/net/ethernet/qualcomm/Kconfig              |   11 +
+>  drivers/net/ethernet/qualcomm/Makefile             |    2 +
+>  drivers/net/ethernet/qualcomm/emac/Makefile        |    7 +
+>  drivers/net/ethernet/qualcomm/emac/emac-mac.c      | 1674 ++++++++++++++++++++
+>  drivers/net/ethernet/qualcomm/emac/emac-mac.h      |  284 ++++
+>  drivers/net/ethernet/qualcomm/emac/emac-phy.c      |  211 +++
+>  drivers/net/ethernet/qualcomm/emac/emac-phy.h      |   32 +
+>  drivers/net/ethernet/qualcomm/emac/emac-sgmii.c    |  699 ++++++++
+>  drivers/net/ethernet/qualcomm/emac/emac-sgmii.h    |   24 +
+>  drivers/net/ethernet/qualcomm/emac/emac.c          |  798 ++++++++++
+>  drivers/net/ethernet/qualcomm/emac/emac.h          |  370 +++++
+>  13 files changed, 4184 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qcom-emac.txt
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/Makefile
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-mac.c
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-mac.h
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-phy.c
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-phy.h
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-sgmii.h
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac.c
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac.h
 > 
-> Thanks,
-> //richard
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/net/qcom-emac.txt b/Documentation/devicetree/bindings/net/qcom-emac.txt
+> new file mode 100644
+> index 0000000..e48a9b9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/qcom-emac.txt
+> @@ -0,0 +1,66 @@
+> +Qualcomm EMAC Gigabit Ethernet Controller
+> +
+> +Required properties:
+> +- compatible : Should be "qcom,fsm9900-emac".
+> +- reg : Offset and length of the register regions for the device
+> +- reg-names : Register region names referenced in 'reg' above.
+> +	Required register resource entries are:
+> +	"base"   : EMAC controller base register block.
+> +	"csr"    : EMAC wrapper register block.
+> +	"sgmii"  : EMAC SGMII PHY register block.
+> +	Optional register resource entries are:
+> +	"ptp"    : EMAC PTP (1588) register block.
+> +- interrupts : Interrupt numbers used by this controller
+> +- interrupt-names : Interrupt resource names referenced in 'interrupts' above.
+> +	Required interrupt resource entries are:
+> +	"emac_core0"   : EMAC core0 interrupt.
+> +	"sgmii_irq"   : EMAC SGMII interrupt.
+> +- mac-address               : The 6-byte MAC address. If present, it is the
+> +			      default MAC address.
+> +
+> +Optional properties:
+> +The external phy child node:
+> +- compatible : Should be "qcom,fsm9900-emac-phy".
+> +- reg : The phy address
+> +
+> +Example:
+> +soc {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	emac0: qcom,emac@feb20000 {
+
+ethernet@...
+
+> +		compatible = "qcom,fsm9900-emac";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg-names = "base", "csr", "ptp", "sgmii";
+> +		reg =   <0xfeb20000 0x10000>,
+> +			<0xfeb36000 0x1000>,
+> +			<0xfeb3c000 0x4000>,
+> +			<0xfeb38000 0x400>;
+> +		dma-ranges = <0 0 0xffffffff>;
+
+I believe dma-ranges is supposed to be in the bus (parent) node.
+
+> +		interrupt-parent = <&emac0>;
+> +		#interrupt-cells = <1>;
+> +		interrupts = <0 1>;
+> +		interrupt-map-mask = <0xffffffff>;
+> +		interrupt-map = <0 &intc 0 76 0
+> +				 1 &intc 0 80 0>;
+
+Why? This looks unnecessary.
+
+> +		interrupt-names = "emac_core0", "sgmii_irq";
+> +		phy0: ethernet-phy@0 {
+> +			compatible = "qcom,fsm9900-emac-phy";
+> +			reg = <0>;
+> +		}
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&mdio_pins_a>;
+> +	};
+> +
+> +	tlmm: pinctrl@fd510000 {
+> +		compatible = "qcom,fsm9900-pinctrl";
+> +
+> +		mdio_pins_a: mdio {
+> +			state {
+> +				pins = "gpio123", "gpio124";
+> +				function = "mdio";
+> +			};
+> +		};
+> +	};
