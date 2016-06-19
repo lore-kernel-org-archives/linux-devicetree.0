@@ -1,66 +1,44 @@
-From: Richard Weinberger <richard@nod.at>
-Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
-Date: Sun, 19 Jun 2016 17:31:04 +0200
-Message-ID: <5766BAB8.9090707@nod.at>
-References: <5765A14F.6020201@nod.at>
- <48242f26-7812-6957-6bf5-c12989b875b4@hauke-m.de>
- <20160618232054.GB29476@makrotopia.org> <57665D96.1070804@nod.at>
- <20160619112510.GA820@makrotopia.org> <576689CC.3030809@nod.at>
- <20160619130514.GB820@makrotopia.org> <57669BEA.5030306@nod.at>
- <20160619140952.GC820@makrotopia.org> <5766AD99.1040809@nod.at>
- <20160619152445.GG820@makrotopia.org>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v4 1/2] mtd: nand: sunxi: update DT bindings
+Date: Sun, 19 Jun 2016 23:40:34 +0800
+Message-ID: <20160619154035.45658-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20160619152445.GG820@makrotopia.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Hauke Mehrtens <hauke@hauke-m.de>, dedekind1@gmail.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBCX2TK5QKGQEGU5OUKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 19.06.2016 um 17:24 schrieb Daniel Golle:
->> You mean marking a MTD partition in DT and UBI will attach from it?
->> That makes sense.
-> 
-> Yes. Currently we just use a naming convention (the first MTD partition
-> named 'ubi' will be auto-attached), that's obviously not very clean...
+Document the reset lines
 
-I was about to reply to my own mail that you can still attach by name.
-Boris reminded me of that, I forgot that feature.^^
-Why is it not clean?
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+Changes since v2:
+  - Nothing.
 
->>
->> To sum up, I asked a lot of questions to understand your use case(s).
->> Everything you described can be done with existing facilities.
->> But I agree that at least some UBI DT machinery would be nice to have
->> although we need to check with DT folks first.
->> At least marking an MTD partition should be fine, hopefully.
-> 
-> Great. That'd already greatly improve things.
+ Documentation/devicetree/bindings/mtd/sunxi-nand.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-How is that better than attach by name? You mark the to be attached
-MTD by its name...
-
-> I can see that sooner or later we will need some way to reference UBI
-> volumes in DT, independently of the whole rootfs selection. Vendors do
-> use UBI volumes also for things like WiFi EEPROM data. Currentlhy, we
-> extract that in user-space and save a copy in /lib/firmware/... for
-> things more crazy than plain offsets inside MTD partitions.
-
-Really, please append a decent root= kernel parameter.
-
-Thanks,
-//richard
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+index 086d6f4..a328fbb 100644
+--- a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+@@ -15,6 +15,8 @@ Optional children nodes:
+ Children nodes represent the available nand chips.
+ 
+ Optional properties:
++- reset : phandle + reset specifier pair
++- reset-names : must contain "ahb"
+ - allwinner,rb : shall contain the native Ready/Busy ids.
+  or
+ - rb-gpios : shall contain the gpios used as R/B pins.
+-- 
+2.9.0
