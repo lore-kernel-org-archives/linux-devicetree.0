@@ -1,53 +1,83 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 01/13] devicetree: bindings: Renesas APMU and SMP
- Enable method
-Date: Sun, 19 Jun 2016 10:06:55 -0500
-Message-ID: <20160619150655.GA31189@rob-hp-laptop>
-References: <1466072862-28030-1-git-send-email-geert+renesas@glider.be>
- <1466072862-28030-2-git-send-email-geert+renesas@glider.be>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] mtd: nand: sunxi: add reset line support
+Date: Sun, 19 Jun 2016 17:20:30 +0200
+Message-ID: <20160619172030.4a329db1@bbrezillon>
+References: <20160619150128.44443-1-icenowy@aosc.xyz>
+Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1466072862-28030-2-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Magnus Damm <damm+renesas@opensource.se>, Magnus Damm <magnus.damm@gmail.com>, Keita Kobayashi <keita.kobayashi.ym@renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCK63FO5TUHRBQPQTK5QKGQEHVSV77Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160619150128.44443-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2016 at 12:27:30PM +0200, Geert Uytterhoeven wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
-> 
-> Add DT binding documentation for the APMU hardware and add "renesas,apmu"
-> to the list of enable methods for the ARM cpus.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
-> v4:
->   - s/reigsters/registers/,
->   - Use "renesas,<soctype>-apmu" instead of "renesas,apmu-<soctype>",
-> 
-> v3:
->   - s/Until/Unit/g,
-> 
-> v2:
->   - No changes.
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->  .../devicetree/bindings/power/renesas,apmu.txt     | 31 ++++++++++++++++++++++
->  2 files changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/renesas,apmu.txt
+On Sun, 19 Jun 2016 23:01:28 +0800
+Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> The NAND controller on some sun8i chips needs its reset line to be deasserted
+> before they can enter working state. This commit added the reset line process
+> to the driver.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+> Changes in v1:
+>   - Corrected the error checking code of reset line.
+> 
+> Changes in v2:
+>   - Corrected a more serious error brought in the "fix" of v1.
+> 
+>  drivers/mtd/nand/sunxi_nand.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunxi_nand.c
+> index a83a690..8fb5899 100644
+> --- a/drivers/mtd/nand/sunxi_nand.c
+> +++ b/drivers/mtd/nand/sunxi_nand.c
+> @@ -39,6 +39,7 @@
+>  #include <linux/gpio.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/reset.h>
+>  
+>  #define NFC_REG_CTL		0x0000
+>  #define NFC_REG_ST		0x0004
+> @@ -269,6 +270,7 @@ struct sunxi_nfc {
+>  	void __iomem *regs;
+>  	struct clk *ahb_clk;
+>  	struct clk *mod_clk;
+> +	struct reset_control *reset;
+>  	unsigned long assigned_cs;
+>  	unsigned long clk_rate;
+>  	struct list_head chips;
+> @@ -1871,6 +1873,20 @@ static int sunxi_nfc_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto out_ahb_clk_unprepare;
+>  
+> +	nfc->reset = devm_reset_control_get_optional(dev, "ahb");
+> +
+> +	if (!IS_ERR(nfc->reset)) {
+> +		ret = reset_control_deassert(nfc->reset);
+> +		if (ret) {
+> +			dev_err(dev, "reset err %d\n", ret);
+> +			goto out_mod_clk_unprepare;
+> +		}
+> +	}
+> +	else {
+> +		if (PTR_ERR(nfc->reset) != -ENOENT)
+
+	} else if (PTR_ERR(nfc->reset) != -ENOENT) {
+
+> +			return PTR_ERR(nfc->reset);
+> +	}
+> +
+>  	ret = sunxi_nfc_rst(nfc);
+>  	if (ret)
+>  		goto out_mod_clk_unprepare;
