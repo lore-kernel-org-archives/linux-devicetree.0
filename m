@@ -1,76 +1,68 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 4/5] mfd: rn5t618: register power off callback
- optionally
-Date: Mon, 20 Jun 2016 10:00:46 +0100
-Message-ID: <20160620090046.GC1465@dell>
-References: <20160608010429.19618-1-stefan@agner.ch>
- <20160608010429.19618-5-stefan@agner.ch>
- <20160616145907.GD4948@dell>
- <876c6fc0a1e300e95eda616c8c71a3ec@agner.ch>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 7/9] mfd: tps65218: add version check to the PMIC probe
+Date: Mon, 20 Jun 2016 14:13:36 +0530
+Message-ID: <1466412218-5906-8-git-send-email-j-keerthy@ti.com>
+References: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <876c6fc0a1e300e95eda616c8c71a3ec@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, max.oss.09@gmail.com, khilman@baylibre.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, robh+dt@kernel.org, linux@armlinux.org.uk, b.galvani@gmail.com, broonie@kernel.org, marcel@ziswiler.com, galak@codeaurora.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, broonie@kernel.org, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, j-keerthy@ti.com, linux@armlinux.org.uk, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCAxOCBKdW4gMjAxNiwgU3RlZmFuIEFnbmVyIHdyb3RlOgoKPiBPbiAyMDE2LTA2LTE2
-IDA3OjU5LCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiBPbiBUdWUsIDA3IEp1biAyMDE2LCBTdGVmYW4g
-QWduZXIgd3JvdGU6Cj4gPiAKPiA+PiBPbmx5IHJlZ2lzdGVyIHBvd2VyIG9mZiBpZiB0aGUgUE1J
-QyBpcyBkZWZpbmVkIGFzIHN5c3RlbSBwb3dlcgo+ID4+IGNvbnRyb2xsZXIgKHNlZSBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvCj4gPj4gcG93ZXItY29udHJvbGxlci50
-eHQpLgo+ID4+Cj4gPj4gUmV2aWV3ZWQtYnk6IE1hcmNlbCBaaXN3aWxlciA8bWFyY2VsLnppc3dp
-bGVyQHRvcmFkZXguY29tPgo+ID4+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFu
-QGFnbmVyLmNoPgo+ID4gCj4gPiBUaGVzZSBzaG91bGQgYmUgY2hyb25vbG9naWNhbC4KPiA+IAo+
-IAo+IEhhcyBiZWVuIGRpc2N1c3NlZCBhbHJlYWR5IGhlcmU6Cj4gaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNS1NYXkvMzQ1ODM1Lmh0bWwK
-PiAKPiBJdCdzIGFuIGFydGlmYWN0IG9mIG15IGRldmVsb3BtZW50IHByb2Nlc3MsIEkga2VlcCB0
-aGUgY29tbWl0cyBpbiBteQo+IGxvY2FsIGJyYW5jaGVzIHdpdGhvdXQgc2lnbmVkIG9mZiBsaW5l
-cyBhbmQgYWRkIHRoZW0gYmVmb3JlIHNlbmRpbmcgb3V0Cj4gcGF0Y2hlcy4gU28gd2hlbmV2ZXIg
-SSBwcmVwYXJlIGEgbmV3IHJldmlzaW9uLCBjb2xsZWN0ZWQgYWNrcywgc29icyBhcmUKPiBjaHJv
-bm9sb2dpY2FsLCBidXQgZW5kIHVwIGJlZm9yZSBteSBzb2IuCj4gCj4gQnV0IHNpbmNlIHlvdSBh
-cmUgdGhlIHNlY29uZCBtYWludGFpbmVyIHdoaWNoIGhhcyBvYmplY3Rpb24gdG8gdGhhdAo+IHN0
-eWxlIEkgcHJvYmFibHkgc2hvdWxkIGNoYW5nZSB0aGF0Li4uCgpJdCB3b3VsZCBtYWtlIHlvdXIg
-bGlmZSBlYXNpZXIgaW4gdGhlIGxvbmcgcnVuLiA6KQoKPiA+PiAtLS0KPiA+PiAgZHJpdmVycy9t
-ZmQvcm41dDYxOC5jIHwgMTAgKysrKysrKy0tLQo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNl
-cnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-bWZkL3JuNXQ2MTguYyBiL2RyaXZlcnMvbWZkL3JuNXQ2MTguYwo+ID4+IGluZGV4IDc2MDdjZWQu
-LmQ5YjRkNDAgMTAwNjQ0Cj4gPj4gLS0tIGEvZHJpdmVycy9tZmQvcm41dDYxOC5jCj4gPj4gKysr
-IGIvZHJpdmVycy9tZmQvcm41dDYxOC5jCj4gPj4gQEAgLTEwMyw5ICsxMDMsMTMgQEAgc3RhdGlj
-IGludCBybjV0NjE4X2kyY19wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqaTJjLAo+ID4+ICAJCXJl
-dHVybiByZXQ7Cj4gPj4gIAl9Cj4gPj4KPiA+PiAtCWlmICghcG1fcG93ZXJfb2ZmKSB7Cj4gPj4g
-LQkJcm41dDYxOF9wbV9wb3dlcl9vZmYgPSBwcml2Owo+ID4+IC0JCXBtX3Bvd2VyX29mZiA9IHJu
-NXQ2MThfcG93ZXJfb2ZmOwo+ID4+ICsJaWYgKG9mX2RldmljZV9pc19zeXN0ZW1fcG93ZXJfY29u
-dHJvbGxlcihpMmMtPmRldi5vZl9ub2RlKSkgewo+ID4+ICsJCWlmICghcG1fcG93ZXJfb2ZmKSB7
-Cj4gPj4gKwkJCXJuNXQ2MThfcG1fcG93ZXJfb2ZmID0gcHJpdjsKPiA+PiArCQkJcG1fcG93ZXJf
-b2ZmID0gcm41dDYxOF9wb3dlcl9vZmY7Cj4gPj4gKwkJfSBlbHNlIHsKPiA+PiArCQkJZGV2X2Vy
-cigmaTJjLT5kZXYsICJGYWlsZWQgdG8gc2V0IHBvd2Vyb2ZmIGNhcGFiaWxpdHksIGFscmVhZHkg
-ZGVmaW5lZFxuIik7Cj4gPiAKPiA+IFRoaXMgaXMgbm90IGFuIGVycm9yLiAgUGxlYXNlIHVzZSBk
-ZXZfd2FybigpIGluc3RlYWQuCj4gPiAKPiAKPiBIbSwgSSBhZ3JlZS4uLiBGV0lXLCBJIGNvcGll
-ZCB0aGUgY29kZSAoYW5kIHRoYXQgbWVzc2FnZSkgZnJvbSBoZXJlLAo+IHdoZXJlIGRldl9lcnIg
-aXMgcHJvYmFibHkgYWxzbyBub3QgYXBwcm9wcmlhdGU6Cj4gZHJpdmVycy9yZWd1bGF0b3IvYWN0
-ODg2NS1yZWd1bGF0b3IuYwoKTWFyayAoUmVndWxhdG9yIG1haW50YWluZXIpIGFsc28gYWNjZXB0
-cyBwYXRjaGVzLgoKPiA+IEFsc28sIGlzIHRoaXMgbWVzc2FnZSBhY3R1YWxseSBhY2N1cmF0ZT8g
-IFlvdXIgY29tbWl0IG1lc3NhZ2Ugd291bGQKPiA+IGluZGljYXRlIHRoYXQgaXQncyBub3QuCj4g
-Cj4gSG0sIG1heWJlIHdlIHNob3VsZCBiYWlsIG91dCB3aXRoIGFuIGVycm9yIGluIHRoYXQgY2Fz
-ZSBzaW5jZSBEVAo+IGV4cGxpY2l0bHkgYXNrcyB0byBiZSBwb3dlciBjb250cm9sbGVyLi4uIElz
-IHRoYXQgd2hhdCB5b3UgbWVhbj8KCkkgdGhpbmsgSSBtaXN1bmRlcnN0b29kIHRoZSBtZXNzYWdl
-LiAgVG8gZml4IHRoaXMgSSB3b3VsZCByZXdvcmQgaXQuCgoiUG93ZXJvZmYgY2FsbC1iYWNrIGFs
-cmVhZHkgZGVmaW5lZCIKCi0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBM
-YW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3Ig
-QVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+From: Tero Kristo <t-kristo@ti.com>
+
+Version information will be needed to handle some error cases under the
+regulator driver, so store the information once during MFD probe.
+
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ drivers/mfd/tps65218.c       | 9 +++++++++
+ include/linux/mfd/tps65218.h | 1 +
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+index 80b9dc3..ba610ad 100644
+--- a/drivers/mfd/tps65218.c
++++ b/drivers/mfd/tps65218.c
+@@ -219,6 +219,7 @@ static int tps65218_probe(struct i2c_client *client,
+ 	struct tps65218 *tps;
+ 	const struct of_device_id *match;
+ 	int ret;
++	unsigned int chipid;
+ 
+ 	match = of_match_device(of_tps65218_match_table, &client->dev);
+ 	if (!match) {
+@@ -250,6 +251,14 @@ static int tps65218_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = tps65218_reg_read(tps, TPS65218_REG_CHIPID, &chipid);
++	if (ret) {
++		dev_err(tps->dev, "Failed to read chipid: %d\n", ret);
++		return ret;
++	}
++
++	tps->rev = chipid & TPS65218_CHIPID_REV_MASK;
++
+ 	ret = of_platform_populate(client->dev.of_node, NULL, NULL,
+ 				   &client->dev);
+ 	if (ret < 0)
+diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
+index 7fdf532..85e464e 100644
+--- a/include/linux/mfd/tps65218.h
++++ b/include/linux/mfd/tps65218.h
+@@ -267,6 +267,7 @@ struct tps_info {
+ struct tps65218 {
+ 	struct device *dev;
+ 	unsigned int id;
++	u8 rev;
+ 
+ 	struct mutex tps_lock;		/* lock guarding the data structure */
+ 	/* IRQ Data */
+-- 
+1.9.1
