@@ -1,78 +1,57 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] mfd: twl6040: Handle mclk used for HPPLL and optional
- internal clock source
-Date: Mon, 20 Jun 2016 11:53:57 +0300
-Message-ID: <b4bd5fed-fd64-26b6-45ce-976169ec7208@ti.com>
-References: <1462965209-6955-1-git-send-email-peter.ujfalusi@ti.com>
- <20160616151658.GA21702@dell>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [RFC PATCH 08/13] i2c: core: Add support for 'i2c-bus' subnode
+Date: Mon, 20 Jun 2016 09:57:46 +0100
+Message-ID: <5767B00A.4040708@nvidia.com>
+References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
+ <1466165027-17917-9-git-send-email-jonathanh@nvidia.com>
+ <20160617162429.GG27475@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160616151658.GA21702@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160617162429.GG27475@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2016 06:16 PM, Lee Jones wrote:
-> On Wed, 11 May 2016, Peter Ujfalusi wrote:
->=20
->> On some boards, like omap5-uevm the MCLK is gated by default and in =
-order
->> to be able to use the High performance modes of twl6040 it need to b=
-e
->> enabled by SW.
->> Add support for handling the MCLK source clock via CCF.
->> At the same time lover the print priority of the notification that t=
-he 32K
->=20
-> Mr Lover Lover!
-
-Oh. :D
-
->>  	twl6040->supplies[0].supply =3D "vio";
->> diff --git a/include/linux/mfd/twl6040.h b/include/linux/mfd/twl6040=
-=2Eh
->> index 8f9fc3d26e6d..a7c50e54f3e0 100644
->> --- a/include/linux/mfd/twl6040.h
->> +++ b/include/linux/mfd/twl6040.h
->> @@ -224,7 +224,8 @@ struct twl6040 {
->>  	struct regmap *regmap;
->>  	struct regmap_irq_chip_data *irq_data;
->>  	struct regulator_bulk_data supplies[2]; /* supplies for vio, v2v1 =
-*/
->> -	struct clk *clk32k;
->> +	struct clk *clk32k_clk;
->> +	struct clk *mclk_clk;
->
-> Not sure I get the naming here.
->=20
-> What's wrong with clk32k and mclk?
-
-The struct already have mclk (unsigned int) member to store the rate of=
- the
-reference clock (32768 in case of LPPLL or the rate of the mclk clock i=
-n case
-of HPPLL). I could use clk32k and mclk for the clk and rename the curre=
-nt mclk
-to refclk_rate or something if that is better. This value is only impor=
-tant
-for the HPPLL usage, if I restructure the driver I might be able to ren=
-ame it
-as mclk_rate and store only the MCLK freq there.
-
->=20
->>  	struct mutex mutex;
->>  	struct mutex irq_mutex;
->>  	struct mfd_cell cells[TWL6040_CELLS];
->=20
-
-
---=20
-P=E9ter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ck9uIDE3LzA2LzE2IDE3OjI0LCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiAqIFBHUCBTaWduZWQg
+YnkgYW4gdW5rbm93biBrZXkKPiAKPiBPbiBGcmksIEp1biAxNywgMjAxNiBhdCAwMTowMzo0MlBN
+ICswMTAwLCBKb24gSHVudGVyIHdyb3RlOgo+PiBJZiB0aGUgJ2kyYy1idXMnIGRldmljZS10cmVl
+IG5vZGUgaXMgcHJlc2VudCBmb3IgYW4gSTJDIGFkYXB0ZXIgdGhlbgo+PiBwYXJzZSB0aGlzIHN1
+Ym5vZGUgZm9yIEkyQyBzbGF2ZXMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEpvbiBIdW50ZXIgPGpv
+bmF0aGFuaEBudmlkaWEuY29tPgo+PiAtLS0KPj4gIGRyaXZlcnMvaTJjL2kyYy1jb3JlLmMgfCAx
+MSArKysrKysrKystLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
+dGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaTJjL2kyYy1jb3JlLmMgYi9kcml2
+ZXJzL2kyYy9pMmMtY29yZS5jCj4+IGluZGV4IDk1MmQyZjBjMDJjNS4uZjU1MmQ5N2JhZDMyIDEw
+MDY0NAo+PiAtLS0gYS9kcml2ZXJzL2kyYy9pMmMtY29yZS5jCj4+ICsrKyBiL2RyaXZlcnMvaTJj
+L2kyYy1jb3JlLmMKPj4gQEAgLTE0NTIsNyArMTQ1Miw3IEBAIHN0YXRpYyBzdHJ1Y3QgaTJjX2Ns
+aWVudCAqb2ZfaTJjX3JlZ2lzdGVyX2RldmljZShzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXAsCj4+
+ICAKPj4gIHN0YXRpYyB2b2lkIG9mX2kyY19yZWdpc3Rlcl9kZXZpY2VzKHN0cnVjdCBpMmNfYWRh
+cHRlciAqYWRhcCkKPj4gIHsKPj4gLQlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGU7Cj4+ICsJc3Ry
+dWN0IGRldmljZV9ub2RlICpidXMsICpub2RlOwo+PiAgCj4+ICAJLyogT25seSByZWdpc3RlciBj
+aGlsZCBkZXZpY2VzIGlmIHRoZSBhZGFwdGVyIGhhcyBhIG5vZGUgcG9pbnRlciBzZXQgKi8KPj4g
+IAlpZiAoIWFkYXAtPmRldi5vZl9ub2RlKQo+PiBAQCAtMTQ2MCwxMSArMTQ2MCwxOCBAQCBzdGF0
+aWMgdm9pZCBvZl9pMmNfcmVnaXN0ZXJfZGV2aWNlcyhzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXAp
+Cj4+ICAKPj4gIAlkZXZfZGJnKCZhZGFwLT5kZXYsICJvZl9pMmM6IHdhbGtpbmcgY2hpbGQgbm9k
+ZXNcbiIpOwo+PiAgCj4+IC0JZm9yX2VhY2hfYXZhaWxhYmxlX2NoaWxkX29mX25vZGUoYWRhcC0+
+ZGV2Lm9mX25vZGUsIG5vZGUpIHsKPj4gKwlidXMgPSBvZl9nZXRfY2hpbGRfYnlfbmFtZShhZGFw
+LT5kZXYub2Zfbm9kZSwgImkyYy1idXMiKTsKPj4gKwlpZiAoIWJ1cykKPj4gKwkJYnVzID0gYWRh
+cC0+ZGV2Lm9mX25vZGU7Cj4gCj4gTWF5YmUKPiAJCWJ1cyA9IG9mX25vZGVfZ2V0KGFkYXAtPmRl
+di5vZl9ub2RlKTsKPiAKPiBoZXJlLi4uCj4gCj4+ICsKPj4gKwlmb3JfZWFjaF9hdmFpbGFibGVf
+Y2hpbGRfb2Zfbm9kZShidXMsIG5vZGUpIHsKPj4gIAkJaWYgKG9mX25vZGVfdGVzdF9hbmRfc2V0
+X2ZsYWcobm9kZSwgT0ZfUE9QVUxBVEVEKSkKPj4gIAkJCWNvbnRpbnVlOwo+PiAgCQlvZl9pMmNf
+cmVnaXN0ZXJfZGV2aWNlKGFkYXAsIG5vZGUpOwo+PiAgCX0KPj4gKwo+PiArCWlmIChidXMgIT0g
+YWRhcC0+ZGV2Lm9mX25vZGUpCj4+ICsJCW9mX25vZGVfcHV0KGJ1cyk7Cj4gCj4gLi4uIGFuZCBk
+cm9wIHRoZSBleHRyYSBjaGVjayBoZXJlPwoKWWVzIG1ha2VzIHNlbnNlLgoKSm9uCgotLSAKbnZw
+dWJsaWMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
