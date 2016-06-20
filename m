@@ -1,74 +1,125 @@
-From: Richard Weinberger <richard@nod.at>
-Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
-Date: Mon, 20 Jun 2016 10:26:11 +0200
-Message-ID: <5767A8A3.4030004@nod.at>
-References: <20160619130514.GB820@makrotopia.org>
- <20160619214820.GB1222@makrotopia.org>
- <c00ff150-9197-7bcf-8ea7-7ebba979d058@hauke-m.de>
- <6411961.soYuJ4Ixfs@wuerfel>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v9 2/4] power: reset: add reboot mode driver
+Date: Mon, 20 Jun 2016 16:28:30 +0800
+Message-ID: <5767A92E.5040602@rock-chips.com>
+References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
+ <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
+ <5767A4C0.3080902@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <6411961.soYuJ4Ixfs@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: mark.rutland@arm.com, Boris Brezillon <boris.brezillon@free-electrons.com>, dedekind1@gmail.com, Daniel Golle <daniel@makrotopia.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5767A4C0.3080902@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at
 List-Id: devicetree@vger.kernel.org
 
-Am 20.06.2016 um 10:09 schrieb Arnd Bergmann:
-> A few more thoughts on various things that came up in the discussion
-> so far (so I don't have to reply to each of them separately)
-> 
-> - The /chosen and /aliases nodes do configure the OS to some degree,
->   and historically we have used them to specify the device names that
->   show up in the kernel (e.g. on MacOS and AIX) as well as the rootfs
->   itself
-> 
-> - The device tree should give us enough information to identify the
->   root partition by a GUID from the kernel. This works on all block
->   devices (at least with MBR and EFI partition tables, probably many
->   of the lesser known ones as well) and it should really also work
->   on UBI.
+Hi Krzysztof:
 
-It does.
+On 2016=E5=B9=B406=E6=9C=8820=E6=97=A5 16:09, Krzysztof Kozlowski wrote=
+:
+> On 06/20/2016 08:38 AM, Andy Yan wrote:
+>> This driver parses the reboot commands like "reboot bootloader"
+>> and "reboot recovery" to get a boot mode described in the
+>> device tree , then call the write interfae to store the boot
+>> mode in some place like special register or sram, which can
+>> be read by the bootloader after system reboot, then the bootloader
+>> can take different action according to the mode stored.
+>>
+>> This is commonly used on Android based devices, in order to
+>> reboot the device into fastboot or recovery mode.
+>>
+>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
+>> Tested-by: John Stultz <john.stultz@linaro.org>
+>> Acked-by: John Stultz <john.stultz@linaro.org>
+>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v9:
+>> - select MFD_SYSCON when syscon-reboot-mode driver enabled
+>> - refactoring error handling in reboot_mode_register
+>>
+>> Changes in v8:
+>> - do some cleanup when driver ubind
+>>
+>> Changes in v7:
+>> - address some suggestions from Krzysztof, make syscon-reboot-mode d=
+river data self-contained.
+>>
+>> Changes in v6: None
+>> Changes in v5:
+>> - use two blank space under help in Kconfig
+>> - use unsigned int instead of int for member magic in struct mode_in=
+fo
+>>
+>> Changes in v4:
+>> - make this driver depends on OF to avoid kbuild test error
+>>
+>> Changes in v3:
+>> - scan multi properities
+>> - add mask value for some platform which only use some bits of the r=
+egister
+>>    to store boot mode magic value
+>>
+>> Changes in v2:
+>> - move to dir drivers/power/reset/
+>> - make syscon-reboot-mode a generic driver
+>>
+>> Changes in v1:
+>> - fix the embarrassed compile warning
+>> - correct the maskrom magic number
+>> - check for the normal reboot
+>>
+>>   drivers/power/reset/Kconfig              |  14 ++++
+>>   drivers/power/reset/Makefile             |   2 +
+>>   drivers/power/reset/reboot-mode.c        | 128 +++++++++++++++++++=
+++++++++++++
+>>   drivers/power/reset/reboot-mode.h        |  14 ++++
+>>   drivers/power/reset/syscon-reboot-mode.c | 100 +++++++++++++++++++=
++++++
+>>   5 files changed, 258 insertions(+)
+>>   create mode 100644 drivers/power/reset/reboot-mode.c
+>>   create mode 100644 drivers/power/reset/reboot-mode.h
+>>   create mode 100644 drivers/power/reset/syscon-reboot-mode.c
+>>
+>> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconf=
+ig
+>> index 9bb2622..4ceaf74 100644
+>> --- a/drivers/power/reset/Kconfig
+>> +++ b/drivers/power/reset/Kconfig
+>> @@ -183,5 +183,19 @@ config POWER_RESET_ZX
+>>   	help
+>>   	  Reboot support for ZTE SoCs.
+>>  =20
+>> +config REBOOT_MODE
+>> +	tristate
+>> +
+>> +config SYSCON_REBOOT_MODE
+>> +	bool "Generic SYSCON regmap reboot mode driver"
+> Why not tristate?
 
-> - MTD partitioning unfortunately does not seem to have a widely used
->   method for identifying partitions from what's stored on the flash,
->   unlike block devices, so whatever we normally have in the partition
->   table has to be stored in DT. This really sucks, but I don't know
->   what else to do about it.
-
-Since blocks on a MTD can render bad you'd lose the table sooner or later.
-That's why we cannot store it on the MTD directly.
-Defining the table in DT is at least less ugly than using the mtdparts=
-kernel parameter.
-
-> - The UBI design was originally meant to cover the entire flash
->   device and provide the partitioning information inside. I have not
->   looked at UBI in a long time (actually not since before embedded
->   PPC moved to DT), but I would hope that this case works without
->   any DT magic.
-
-Of course it works without DT magic.
-
-So, I don't see a urge to have UBI DT bindings.
-First I thought having an attach flag would be handy but it turned out
-that this behavior can easily achieved by naming. i.e. you a kernel
-command line such as "ubi.mtd=UBI" and name the to be attached MTD "UBI"
-in your DT.
-
-Thanks,
-//richard
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+    I see many reset drivers in this directories  use bool, so I follow=
+=20
+them.
+>
+> Beside that the patch looks good.
+>
+> Best regards,
+> Krzysztof
+>
+>> +	depends on OF
+>> +	select REBOOT_MODE
+>> +	select MFD_SYSCON
+>> +	help
+>> +	  Say y here will enable reboot mode driver. This will
+>> +	  get reboot mode arguments and store it in SYSCON mapped
+>> +	  register, then the bootloader can read it to take different
+>> +	  action according to the mode.
+>> +
+>
+>
+>
