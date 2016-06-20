@@ -1,126 +1,87 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 1/2] media: Driver for Toshiba et8ek8 5MP sensor
-Date: Tue, 21 Jun 2016 00:59:39 +0300
-Message-ID: <20160620215938.GN24980@valkosipuli.retiisi.org.uk>
-References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <1465659593-16858-2-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160618152259.GC8392@amd>
- <201606181737.33116@pali>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 1/2] NET: PHY: Add PHY LED control binding.
+Date: Tue, 21 Jun 2016 00:17:29 +0200
+Message-ID: <78ce16eb-824c-dfe8-2c28-04f3f05a2fd2@hauke-m.de>
+References: <1465163150-21429-1-git-send-email-hauke@hauke-m.de>
+ <1465163150-21429-2-git-send-email-hauke@hauke-m.de>
+ <20160608193008.GA20738@rob-hp-laptop> <3869397.kzojzy3Xzu@ws-stein>
+ <f1e22176-d30a-be66-a4ea-dd0666775597@phrozen.org>
+ <cf8ba323-5d15-b5b6-fe7c-9f9a7da2c18a@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201606181737.33116@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, sre@kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cf8ba323-5d15-b5b6-fe7c-9f9a7da2c18a-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, openwrt-zg6vgJgm1sizQB+pC5nmwQ@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, daniel.schwierzeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eckert.florian-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.langer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pali,
+On 06/09/2016 10:13 PM, Hauke Mehrtens wrote:
+> On 06/09/2016 08:12 AM, John Crispin wrote:
+>>
+>>
+>> On 09/06/2016 08:06, Alexander Stein wrote:
+>>> On Wednesday 08 June 2016 14:30:08, Rob Herring wrote:
+>>>>> diff --git a/Documentation/devicetree/bindings/phy/phy-leds.txt
+>>>>> b/Documentation/devicetree/bindings/phy/phy-leds.txt new file mode 100644
+>>>>> index 0000000..1a35e3d
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/phy/phy-leds.txt
+>>>>> @@ -0,0 +1,52 @@
+>>>>> +LED configuration for Ethernet phys
+>>>>> +
+>>>>> +All these properties are optional, not all properties are supported by
+>>>>> +all PHYs. When more then one property name is define for one LED the
+>>>>> +order they get applied is device depended.
+>>>>> +Property names:
+>>>>> +	led-const-on: conditions the LED should be constant on
+>>>>> +	led-pulse: condition the LED should be pulsed on
+>>>>> +	led-blink-slow: condition the LED should slowly blink
+>>>>
+>>>> How slow is slow?
+>>>
+>>> This depends on the MMD.INTERNAL.LEDCH.SBF setting which is 2 Hz by default.
+>>>
+>>>>> +	led-blink-fast: condition the LED should fast blink
+>>>>
+>>>> How fast is fast?
+>>>
+>>> This depends on the MMD.INTERNAL.LEDCH.FBF setting which is 16 Hz by default.
+>>>
+>>> Both can be set independently to 2, 4, 8 or 16 Hz.
+>>>
+>>
+>> and both are intel/lantiq implementation specific and hence should not
+>> be part of a generic led-phy binding.
+> 
+> Ok, I can remove them, I think the constant on and the pulse are used by
+> many Ethernet PHYs.
+> 
+>> imho these leds should be exposed via a led driver and the configurtion
+>> should be exposed via a led driver specific trigger, in the same manner
+>> in which wireless macs do it.
+> 
+> Where is a good example on how this is done?
+> Is this then also triggered by the hardware or does the software has to
+> trigger it?
+> 
+> Hauke
+> 
 
-On Sat, Jun 18, 2016 at 05:37:33PM +0200, Pali Roh=E1r wrote:
-> On Saturday 18 June 2016 17:22:59 Pavel Machek wrote:
-> > > +/*
-> > > + *
-> > > + * Stingray sensor mode settings for Scooby
-> > > + *
-> > > + *
-> > > + */
-> >=20
-> > I'd fix it to normal comment style... and possibly remove it. Can y=
-ou
-> > understand what it says?
-> >=20
-> > > +	},
-> > > +	.regs =3D {
-> > > +		{ ET8EK8_REG_8BIT, 0x1239, 0x4F },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x1238, 0x02 },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x123B, 0x70 },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x123A, 0x05 },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x121B, 0x63 },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x1220, 0x85 },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x1221, 0x00 },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x1222, 0x58 },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x1223, 0x00 },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x121D, 0x63 },	/*        */
-> > > +		{ ET8EK8_REG_8BIT, 0x125D, 0x83 },	/*        */
-> > > +		{ ET8EK8_REG_TERM, 0, 0}
-> > > +	}
-> >=20
-> > I'd remove the empty comments...
-> >=20
-> > > +struct et8ek8_meta_reglist meta_reglist =3D {
-> > > +	.version =3D "V14 03-June-2008",
-> >=20
-> > Do we need the version?
-> >=20
-> > > +	.reglist =3D {
-> > > +		{ .ptr =3D &mode1_poweron_mode2_16vga_2592x1968_12_07fps },
-> > > +		{ .ptr =3D &mode1_16vga_2592x1968_13_12fps_dpcm10_8 },
-> > > +		{ .ptr =3D &mode3_4vga_1296x984_29_99fps_dpcm10_8 },
-> > > +		{ .ptr =3D &mode4_svga_864x656_29_88fps },
-> > > +		{ .ptr =3D &mode5_vga_648x492_29_93fps },
-> > > +		{ .ptr =3D &mode2_16vga_2592x1968_3_99fps },
-> > > +		{ .ptr =3D &mode_648x492_5fps },
-> > > +		{ .ptr =3D &mode3_4vga_1296x984_5fps },
-> > > +		{ .ptr =3D &mode_4vga_1296x984_25fps_dpcm10_8 },
-> > > +		{ .ptr =3D 0 }
-> > > +	}
-> > > +};
-> >=20
-> > I'd say .ptr =3D NULL.
-> >=20
->=20
-> Anyway, this code was generated from configuration ini files and perl=
-=20
-> script available from: https://gitorious.org/omap3camera/camera-firmw=
-are
->=20
-> Originally in Maemo above C structure is compiled into binary file an=
-d=20
-> via request_firmware() loaded from userspace to kernel driver.
->=20
-> For me this sounds like a big overkill, so I included above reglist c=
-ode=20
-> direcly into et8ek8 kernel driver to avoid request_firmware() and=20
-> separate userspace storage...
+I looked into ath9k and could only find a normal LED device which gets
+triggered by the software here:
+http://lxr.free-electrons.com/source/drivers/net/wireless/ath/ath9k/gpio.c#L45
+This also registers a LED trigger in mac80211, but that also looks like
+it triggers it by software:
+http://lxr.free-electrons.com/source/net/mac80211/led.c#L286
 
-The idea at the time was that it'd be possible to support changes in th=
-e
-register list without software changes as well as using different regis=
-ter
-lists on a different device.
+In the PHY use case using software to trigger the LEDs is not so good
+because the PHYs could on a hardware switch and it could be that the
+traffic is not seen by the CPU.
 
-That's not really how device drivers are written. Considering that the =
-use
-cases for this very sensor driver seem rather different now than they d=
-id
-then, I think it's safe to assume there won't be significant (if any at=
- all)
-changes to these configurations going forward.
-
-I don't think there's really any value as such in maintaining the
-compatibility with the data structures used in the camera-firmware
-repository above.
-
->=20
-> And for smia-sensor (front webcam) in that gitorious repository is al=
-so=20
-> reglist structure. It is not needed? Can somebody investigate why it =
-is=20
-> not needed?
-
-The front camera is SMIA compliant and works (at least should!) with th=
-e
-smiapp driver. I vaguely remember using it with platform data long, lon=
-g
-time ago. And I'm sure someone was working on it, I just don't remember=
- now
-who. :-)
-
---=20
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Hauke
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
