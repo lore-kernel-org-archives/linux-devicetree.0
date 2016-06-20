@@ -1,85 +1,62 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports while USB
- suspend
-Date: Mon, 20 Jun 2016 07:49:24 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A24364101650C53B8@penmbx01>
-References: <1465359311-14544-1-git-send-email-wenyou.yang@atmel.com>
- <1465359311-14544-2-git-send-email-wenyou.yang@atmel.com>
- <5757EDB4.3020806@atmel.com> <5757F753.8010408@atmel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 0/4] thermal: rcar_gen3_thermal: Add R-Car Gen3 thermal support
+Date: Mon, 20 Jun 2016 09:40:26 +0200
+Message-ID: <CAMuHMdU3_O9YA6cjR=-ub6drKu8g-s4hmem4uggZeNBMJrC8qQ@mail.gmail.com>
+References: <57661211.7010900@rvc.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5757F753.8010408-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <57661211.7010900@rvc.renesas.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Khiem Nguyen <khiem.nguyen.xt@rvc.renesas.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <damm+renesas@opensource.se>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb@rvc.renesas.com>, "Hien Duy. Dang" <hien.dang.eb@rvc.renesas.com>, Toru Oishi <toru.oishi.zj@rvc.renesas.com>, Simon Horman <horms@verge.net.au>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGZXJyZSwgTmljb2xhcw0KPiBT
-ZW50OiAyMDE2xOo21MI4yNUgMTg6NDYNCj4gVG86IFlhbmcsIFdlbnlvdSA8V2VueW91LllhbmdA
-YXRtZWwuY29tPjsgQWxhbiBTdGVybg0KPiA8c3Rlcm5Acm93bGFuZC5oYXJ2YXJkLmVkdT47IEdy
-ZWcgS3JvYWgtSGFydG1hbg0KPiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBSb2IgSGVy
-cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgQWxleGFuZHJlDQo+IEJlbGxvbmkgPGFsZXhhbmRy
-ZS5iZWxsb25pQGZyZWUtZWxlY3Ryb25zLmNvbT4NCj4gQ2M6IFBhd2VsIE1vbGwgPHBhd2VsLm1v
-bGxAYXJtLmNvbT47IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz47IElhbg0KPiBDYW1w
-YmVsbCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hciBHYWxhIDxnYWxha0Bj
-b2RlYXVyb3JhLm9yZz47DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMg
-MS8yXSB1c2I6IG9oY2ktYXQ5MTogRm9yY2libHkgc3VzcGVuZCBwb3J0cyB3aGlsZSBVU0INCj4g
-c3VzcGVuZA0KPiANCj4gTGUgMDgvMDYvMjAxNiAxMjowNCwgTmljb2xhcyBGZXJyZSBhIKimY3Jp
-dCA6DQo+ID4gTGUgMDgvMDYvMjAxNiAwNjoxNSwgV2VueW91IFlhbmcgYSCopmNyaXQgOg0KPiA+
-PiBJbiBvcmRlciB0byB0aGUgc2F2ZSBwb3dlciBjb25zdW1wdGlvbiwgYXMgYSB3b3JrYXJvdW5k
-LCBzdXNwZW5kDQo+ID4+IGZvcmNpYmx5IHRoZSBVU0IgUE9SVEEvQi9DIHZpYSBzZXQgdGhlIFNV
-U1BFTkRfQS9CL0MgYml0cyBvZiBPSENJDQo+ID4+IEludGVycnVwdCBDb25maWd1cmF0aW9uIFJl
-Z2lzdGVyIGluIHRoZSBTRlJzIHdoaWxlIE9IQ0kgVVNCIHN1c3BlbmQuDQo+ID4+DQo+ID4+IFRo
-aXMgc3VzcGVuZCBvcGVyYXRpb24gbXVzdCBiZSBkb25lIGJlZm9yZSB0aGUgVVNCIGNsb2NrIGlz
-IGRpc2FibGVkLA0KPiA+PiByZXN1bWUgYWZ0ZXIgdGhlIFVTQiBjbG9jayBpcyBlbmFibGVkLg0K
-PiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwu
-Y29tPg0KPiA+DQo+ID4gTGl0dGxlIG5pdHBpY2tpbmcgYmVsb3cuLi4NCj4gPg0KPiA+PiAtLS0N
-Cj4gPj4NCj4gPj4gQ2hhbmdlcyBpbiB2MzoNCj4gPj4gIC0gQ2hhbmdlIHRoZSBjb21wYXRpYmxl
-IGRlc2NyaXB0aW9uIGZvciBtb3JlIHByZWNpc2UuDQo+ID4+DQo+ID4+IENoYW5nZXMgaW4gdjI6
-DQo+ID4+ICAtIEFkZCBjb21wYXRpYmxlIHRvIHN1cHBvcnQgZm9yY2libHkgc3VzcGVuZCB0aGUg
-cG9ydHMuDQo+ID4+ICAtIEFkZCBzb2MvYXQ5MS9hdDkxX3Nmci5oIHRvIGFjY29tbW9kYXRlIHRo
-ZSBkZWZpbmVzLg0KPiA+PiAgLSBBZGQgZXJyb3IgY2hlY2tpbmcgZm9yIC5zZnJfcmVnbWFwLg0K
-PiA+PiAgLSBSZW1vdmUgdW5uZWNlc3NhcnkgcmVnbWFwX3JlYWQoKSBzdGF0ZW1lbnQuDQo+ID4+
-DQo+ID4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvYXRtZWwtdXNiLnR4dCAgICAgICAg
-ICB8ICA2ICstDQo+ID4+ICBkcml2ZXJzL3VzYi9ob3N0L29oY2ktYXQ5MS5jICAgICAgICAgICAg
-ICAgICAgICAgICB8IDgwICsrKysrKysrKysrKysrKysrKysrKy0NCj4gPj4gIGluY2x1ZGUvc29j
-L2F0OTEvYXQ5MV9zZnIuaCAgICAgICAgICAgICAgICAgICAgICAgIHwgMjkgKysrKysrKysNCj4g
-DQo+IE9vcHMgc29ycnksIGFkZGl0aW9uYWwgY29tbWVudCB3aGljaCBpcyBub3Qgbml0cGlja2lu
-ZywgdGhpcyBvbmU6DQo+IA0KPiBXZSBhbHJlYWR5IGhhdmUgU0ZSIGhlYWRlciBmaWxlIGluIHRo
-aXMgcGF0Y2g6DQo+IA0KPiBBdXRob3I6IEN5cmlsbGUgUGl0Y2hlbiA8Y3lyaWxsZS5waXRjaGVu
-QGF0bWVsLmNvbT4NCj4gRGF0ZTogICBUaHUgTWFyIDE3IDE3OjA0OjAwIDIwMTYgKzAxMDANCj4g
-DQo+ICAgICBBUk06IGR0czogYXQ5MTogc2FtYTVkMjogYWRkIFNGUiBub2RlDQo+IA0KPiAgICAg
-VGhpcyBTRlIgbm9kZSBpcyBsb29rZWQgdXAgYnkgdGhlIEkyUyBjb250cm9sbGVyIGRyaXZlciB0
-byB0dW5lIHRoZQ0KPiAgICAgU0ZSX0kyU0NMS1NFTCByZWdpc3Rlci4NCj4gDQo+ICAgICBTaWdu
-ZWQtb2ZmLWJ5OiBDeXJpbGxlIFBpdGNoZW4gPGN5cmlsbGUucGl0Y2hlbkBhdG1lbC5jb20+DQo+
-ICAgICBTaWduZWQtb2ZmLWJ5OiBMdWRvdmljIERlc3JvY2hlcyA8bHVkb3ZpYy5kZXNyb2NoZXNA
-YXRtZWwuY29tPg0KPiAgICAgQWNrZWQtYnk6IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUu
-YmVsbG9uaUBmcmVlLWVsZWN0cm9ucy5jb20+DQo+ICAgICBBY2tlZC1ieTogUm9iIEhlcnJpbmcg
-PHJvYmhAa2VybmVsLm9yZz4NCj4gICAgIFNpZ25lZC1vZmYtYnk6IE5pY29sYXMgRmVycmUgPG5p
-Y29sYXMuZmVycmVAYXRtZWwuY29tPg0KPiANCj4gV2hpY2ggaXMgYWxyZWFkeSBhY2NlcHRlZCBi
-eSBhcm0tc29jIGd1eXMgZm9yIDQuNy4uLiBTbyBteSBhY2sgdHJhbnNmb3JtcyBpbnRvIGENCj4g
-bmFjaywgc29ycnkuLi4NCj4gDQo+IFdlIHdpbGwgaGF2ZSB0byBjb29yZGluYXRlIHRoZSBlZmZv
-cnQgYW5kIG1heWJlIHRha2UgdGhlIHdob2xlIHNlcmllcyB3aXRoIHVzLiBCdXQNCj4gZm9yIHN1
-cmUsIHlvdSdsbCBoYXZlIHRvIHVzZSB0aGUgZXhpc3RpbmcgaW5jbHVkZS9zb2MvYXQ5MS9hdG1l
-bC1zZnIuaCBmaWxlIGFuZCBidWlsZA0KPiBvbiB0b3Agb2YgaXQuLi4NCg0KU29ycnksIG5vdCBu
-b3RpY2UgdGhpcyBmaWxlLg0KDQpJIHdpbGwgYnVpbHQgaXQgb24gdGhpcyBmaWxlLg0KDQo+IA0K
-PiBCeWUsDQo+IA0KPiA+PiAgMyBmaWxlcyBjaGFuZ2VkLCAxMTIgaW5zZXJ0aW9ucygrKSwgMyBk
-ZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4+IDEwMDY0NCBpbmNsdWRlL3NvYy9hdDkxL2F0
-OTFfc2ZyLmgNCj4gDQo+IFsuLl0NCj4gDQo+ID4NCj4gPiBCdXQgeW91IGNhbiB0YWtlIG15Og0K
-PiA+DQo+ID4gQWNrZWQtYnk6IE5pY29sYXMgRmVycmUgPG5pY29sYXMuZmVycmVAYXRtZWwuY29t
-Pg0KPiA+DQo+ID4gd2l0aCB0aGUgbGl0dGxlIGNvcnJlY3Rpb25zIGxpc3RlZC4NCj4gPg0KPiA+
-IEFsYW4sIFdlIHBsYW4gdG8gdGFrZSB0aGUgc2Vjb25kIHBhdGNoIG9mIHRoaXMgc2VyaWVzIHdp
-dGggQVQ5MSBnaXQNCj4gPiB0cmVlIHRocm91Z2ggYXJtLXNvYy4gRG8geW91IGFncmVlIHRvIHRh
-a2UgdGhpcyBvbmUgdGhyb3VnaCB5b3Vycz8NCj4gDQo+IEFsYW4sIGZvcmdldCB0aGlzIHJlcXVl
-c3QsIHdlJ2xsIGhhdmUgdG8gY29vcmRpbmF0ZSBkaWZmZXJlbnRseS4NCj4gDQo+IFNvcnJ5IGZv
-ciB0aGUgbm9pc2UuIEJ5ZSwNCj4gLS0NCj4gTmljb2xhcyBGZXJyZQ0KDQoNCkJlc3QgUmVnYXJk
-cywNCldlbnlvdSBZYW5nDQo=
+Hi Khiem,
+
+On Sun, Jun 19, 2016 at 5:31 AM, Khiem Nguyen
+<khiem.nguyen.xt@rvc.renesas.com> wrote:
+> This patchset adds new thermal sensor driver to support 3 sensors
+> found in R-Car Gen3 series.
+>
+> It has been decided to create new driver, instead of using the existing
+> thermal driver due to many differences in HW setting flows, the method
+> to calculate temperatures value and some newly supported features.
+>
+> The new driver can support both polling mode and interrupt mode.
+> It has been tested with R-Car H3.
+>
+> This driver is developed based on early work of Hien Dang and Thao Nguyen.
+> All comments are welcome.
+
+Thanks for your series!
+
+Please CC linux-renesas-soc for drivers related to Renesas SoCs.
+Please CC Simon for dts and defconfig updates that should go through his tree.
+
+> Khiem Nguyen (4):
+>   thermal: rcar_gen3_thermal: Document the R-Car Gen3 thermal bindings
+>   thermal: rcar_gen3_thermal: Add R-Car Gen3 thermal driver support
+>   arm64: dts: r8a7795: Add R-Car Gen3 thermal support
+>   arm64: defconfig: Enable R-Car Gen3 thermal support
+>
+>  .../bindings/thermal/rcar-gen3-thermal.txt         |  79 ++++
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  86 ++++
+>  arch/arm64/configs/defconfig                       |   2 +
+>  drivers/thermal/Kconfig                            |   9 +
+>  drivers/thermal/Makefile                           |   1 +
+>  drivers/thermal/rcar_gen3_thermal.c                | 524 +++++++++++++++++++++
+>  6 files changed, 701 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+>  create mode 100644 drivers/thermal/rcar_gen3_thermal.c
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
