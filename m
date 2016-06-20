@@ -1,161 +1,136 @@
-From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
-Date: Mon, 20 Jun 2016 19:22:00 +0800
-Message-ID: <1466421720.1918.11.camel@mtksdaap41>
-References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
-	 <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
-	 <1466419311.27959.12.camel@mtksdaap41>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: Auto-detecting touchscreen controller and dealing
+ with hw configuration differences on q8 tablets
+Date: Mon, 20 Jun 2016 19:22:57 +0800
+Message-ID: <314411466421777@web20m.yandex.ru>
+References: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
+	 <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7@konsulko.com> <17e69e9e-06be-dc4f-cd47-152f6290d2ec@redhat.com>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466419311.27959.12.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBF5ET65QKGQEYNH2MXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <17e69e9e-06be-dc4f-cd47-152f6290d2ec-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, "u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org" <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-06-20 at 18:41 +0800, CK Hu wrote:
-> Hi, HS:
-> 
-> One comment inline.
-> 
-> On Mon, 2016-05-30 at 11:19 +0800, HS Liao wrote:
-> > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> > CMDQ is used to help read/write registers with critical time limitation,
-> > such as updating display configuration during the vblank. It controls
-> > Global Command Engine (GCE) hardware to achieve this requirement.
-> > Currently, CMDQ only supports display related hardwares, but we expect
-> > it can be extended to other hardwares for future requirements.
-> > 
-> > Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/soc/mediatek/Kconfig    |  10 +
-> >  drivers/soc/mediatek/Makefile   |   1 +
-> >  drivers/soc/mediatek/mtk-cmdq.c | 943 ++++++++++++++++++++++++++++++++++++++++
-> >  include/soc/mediatek/cmdq.h     | 197 +++++++++
-> >  4 files changed, 1151 insertions(+)
-> >  create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
-> >  create mode 100644 include/soc/mediatek/cmdq.h
-> > 
-> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> > index 0a4ea80..c4ad75c 100644
-> > --- a/drivers/soc/mediatek/Kconfig
-> > +++ b/drivers/soc/mediatek/Kconfig
-> > @@ -1,6 +1,16 @@
-> >  #
-> >  # MediaTek SoC drivers
-> >  #
-> > +config MTK_CMDQ
-> > +	bool "MediaTek CMDQ Support"
-> > +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> > +	select MTK_INFRACFG
-> > +	help
-> > +	  Say yes here to add support for the MediaTek Command Queue (CMDQ)
-> > +	  driver. The CMDQ is used to help read/write registers with critical
-> > +	  time limitation, such as updating display configuration during the
-> > +	  vblank.
-> > +
-> >  config MTK_INFRACFG
-> >  	bool "MediaTek INFRACFG Support"
-> >  	depends on ARCH_MEDIATEK || COMPILE_TEST
-> > diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> > index 12998b0..f7397ef 100644
-> > --- a/drivers/soc/mediatek/Makefile
-> > +++ b/drivers/soc/mediatek/Makefile
-> 
-> [Snip...]
-> 
-> > +
-> > +static int cmdq_eng_get_thread(u64 flag)
-> > +{
-> > +	if (flag & BIT_ULL(CMDQ_ENG_DISP_DSI0))
-> > +		return CMDQ_THR_DISP_MAIN_IDX;
-> > +	else if (flag & BIT_ULL(CMDQ_ENG_DISP_DPI0))
-> > +		return CMDQ_THR_DISP_SUB_IDX;
-> > +	else
-> > +		return CMDQ_THR_DISP_MISC_IDX;
-> > +}
-> 
-> I think cmdq should not have knowledge of client. These statement show
-> that cmdq know that DSI0-tasks is different with DPI0-tasks. I propose
-> the 'session' to replace engine flag. For example, main display create
-> one cmdq_session and external display create another cmdq_session. For
-> client driver, every tasks created by main display is bound to main
-> display session. For cmdq driver, it should dynamically bind a session
-> to a HW thread, and then dispatch tasks of this session to this HW
-> thread. After HW thread run out of tasks of this session, detach this
-> session with this thread.
-> For the problem of remove wfe cmd, I think a session can have a property
-> of merge_wfe_cmd. For display session, session->merge_wfe_cmd = true.
-> For other client, it's false.
+I'm also a user of an A33 Q8 tablet with GSL1680.
 
-Hi CK,
+However, I think a devicetree-per-device structure is not unacceptable...
 
-I think your suggestion is similar to CMDQ 'scenarios',
-which was removed from CMDQ v2.
+We can still have sun{5,8}i-q8.common.dtsi, and write most of the q8 codes =
+there.
 
-Daniel suggests to use engine flags instead of scenarios.
-Quote from https://patchwork.kernel.org/patch/8068311/ .
-'Instead of encoding policy (these arbitrary "scenarios"), perhaps the
- cmdq driver should just provide these flag bits, and the display
- subsystem can use them to build the "flag" parameter itself.
+Then the device dt can only contain wifi, touchscreen, accelerometer. (afte=
+r including sun{5,8}i-q8-common.dtsi)
 
- After all, the exact configuration of mmsys components is somewhat
- flexible.'
-
-Therefore, it would be better to discuss with Daniel before we change
-it.
+(On my tablet,
+wifi(esp8089) should use "broken-cd" instead of "non-removable".
+Touchscreen have a weird chip/firmware that cannot even set a correct STATU=
+S.
+And mma8452 iio driver will refuse to work if the chip number in dt is the =
+same as the real chip, even the chip id can be probed)
 
 
-Hi Daniel,
+20.06.2016, 19:07, "Hans de Goede" <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
+> Hi,
+>
+> On 20-06-16 11:27, Pantelis Antoniou wrote:
+>> =C2=A0Hi Hans,
+>>
+>> =C2=A0I=E2=80=99m going to commend only on the overlay related parts sin=
+ce I=E2=80=99m not I
+>> =C2=A0get all the nuances right.
+>
+> No problem and thanks for the answer anyways!
+>
+>>> =C2=A0On Jun 19, 2016, at 14:06 , Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> w=
+rote:
+>
+> <snip>
+>
+>>> =C2=A02) Give the user some way to override the dts settings.
+>>>
+>>> =C2=A0Which after a somewhat long intro brings me to the actual purpose=
+ of this thread, discuss
+>>> =C2=A0how to best deal with this. I again see 2 options:
+>>>
+>>> =C2=A01) Put a disabled gsl1680 node in the dts file, have a q8_autodet=
+ect.c in u-boot
+>>> =C2=A0which probes i2c and if it finds the gsl1680 nodes enables it, an=
+d patches in a best-effort
+>>> =C2=A0default for which fw file to use. Allow the user to set a touchsc=
+reen_fw u-boot env
+>>> =C2=A0variable which will override this. Also allow the user to set a t=
+ouchscreen_inverted_x env
+>>> =C2=A0variable to add inverted-x to the dt node for the gsl1680.
+>>
+>> =C2=A0That can work. The problem is that having anything requiring smart=
+s in u-boot always
+>> =C2=A0leads to trouble with users. It all depends on your user=E2=80=99s=
+ technical proficiency, if
+>> =C2=A0they are comfortable tweaking things in u-boot it=E2=80=99s fine. =
+If it=E2=80=99s not, expect lots of
+>> =C2=A0bricked boards when they mess up.
+>>
+>>> =C2=A02) Write an in kernel overlay manager which does auto-detect as d=
+escribed by 1, and
+>>> =C2=A0loads an overlay for the detected touchscreen controller, with mo=
+dule options to allow
+>>> =C2=A0specifying the fw-file, x-inversion, etc.
+>>>
+>>> =C2=A0One things which worries me about 2. is that we would need to hav=
+e 2 overlay files
+>>> =C2=A0per fw-file, one regular config, one inverted-x, or is it possibl=
+e for the overlay
+>>> =C2=A0manager to modify an overlay before applying it ?
+>>
+>> =C2=A0Yes, it=E2=80=99s quite possible. You can even have stacked overla=
+ys.
+>
+> Ok, is there any example code how to change an overlay before applying it=
+ out there,
+> or if not can you point to the functions to use to do this ?
+>
+> Specifically my plan is to:
+>
+> 1) Have a single overlay for q8 tablets with gsl1680 tablets
+>
+> 2) Write an in kernel overlay manager which when it detects a gsl1680 tou=
+chscreen
+> will pick a best-default firmware-file + matching resolution + swap-x-y b=
+ased on
+> which SoC (A13/A23/A33) the tablet is based on as well as the gsl1680's c=
+hip-id
+> and will then "patch" this info into the overlay before applying it. This
+> means being able to set / modify several string, int and bool dt properti=
+es.
+>
+> 3) Offer a kernel-module option for the overlaymanager which will allows
+> overriding the defaults for the firmware-filename, etc. This is also
+> why I want to go with the patch approach instead of having multiple
+> dt-overlay files.
+>
+> Thanks & Regards,
+>
+> Hans
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Do you think we should use scenarios or sessions instead of flags?
-
-Thanks,
-HS
-
-> Here is the sample code to create cmdq_rec with session.
-> 
-> merge_wfe_cmd = true;
-> cmdq_session_create(merge_wfe_cmd, &primary_display_session);
-> cmdq_rec_create(dev, primary_display_session, &rec);
-> 
-> 
-> Therefore, the below definition can be removed.
-> 
-> > +
-> > +enum cmdq_eng {
-> > +	CMDQ_ENG_DISP_AAL,
-> > +	CMDQ_ENG_DISP_COLOR0,
-> > +	CMDQ_ENG_DISP_COLOR1,
-> > +	CMDQ_ENG_DISP_DPI0,
-> > +	CMDQ_ENG_DISP_DSI0,
-> > +	CMDQ_ENG_DISP_DSI1,
-> > +	CMDQ_ENG_DISP_GAMMA,
-> > +	CMDQ_ENG_DISP_OD,
-> > +	CMDQ_ENG_DISP_OVL0,
-> > +	CMDQ_ENG_DISP_OVL1,
-> > +	CMDQ_ENG_DISP_PWM0,
-> > +	CMDQ_ENG_DISP_PWM1,
-> > +	CMDQ_ENG_DISP_RDMA0,
-> > +	CMDQ_ENG_DISP_RDMA1,
-> > +	CMDQ_ENG_DISP_RDMA2,
-> > +	CMDQ_ENG_DISP_UFOE,
-> > +	CMDQ_ENG_DISP_WDMA0,
-> > +	CMDQ_ENG_DISP_WDMA1,
-> > +	CMDQ_ENG_MAX,
-> > +};
-> > +
-> 
-> 
-> Regards,
-> CK
-> 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
