@@ -1,110 +1,71 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 00/14] fix some type infos and bugs for arm64/of numa
-Date: Mon, 20 Jun 2016 14:39:11 +0800
-Message-ID: <57678F8F.6060303@huawei.com>
-References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
- <20160607135852.GA20477@arm.com> <5757DE57.10700@huawei.com>
- <20160614142220.GC14654@e104818-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160614142220.GC14654-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v9 4/4] ARM64: dts: rockchip: add syscon-reboot-mode DT node
+Date: Mon, 20 Jun 2016 14:40:12 +0800
+Message-ID: <1466404812-3590-1-git-send-email-andy.yan@rock-chips.com>
+References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+Add syscon-reboot-mode driver DT node for rk3368 platform
+
+Tested-by: Caesar Wang <caesar.upstream@gmail.com>
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
+---
+
+Changes in v9: None
+Changes in v8: None
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3:
+- descirbe all reboot mode as property instead of subnode
+
+Changes in v2:
+- make this node as a subnode of pmugrf
+
+Changes in v1: None
+
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index 8b4a7c9..8041067 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -45,6 +45,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/soc/rockchip_boot-mode.h>
+ #include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+@@ -632,8 +633,17 @@
+ 	};
+ 
+ 	pmugrf: syscon@ff738000 {
+-		compatible = "rockchip,rk3368-pmugrf", "syscon";
++		compatible = "rockchip,rk3368-pmugrf", "syscon", "simple-mfd";
+ 		reg = <0x0 0xff738000 0x0 0x1000>;
++
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x200>;
++			mode-normal = <BOOT_NORMAL>;
++			mode-recovery = <BOOT_RECOVERY>;
++			mode-bootloader = <BOOT_FASTBOOT>;
++			mode-loader = <BOOT_BL_DOWNLOAD>;
++		};
+ 	};
+ 
+ 	cru: clock-controller@ff760000 {
+-- 
+2.7.4
 
 
-On 2016/6/14 22:22, Catalin Marinas wrote:
-> On Wed, Jun 08, 2016 at 04:59:03PM +0800, Leizhen (ThunderTown) wrote:
->> On 2016/6/7 21:58, Will Deacon wrote:
->>> On Tue, Jun 07, 2016 at 04:08:04PM +0800, Zhen Lei wrote:
->>>> v3 -> v4:
->>>> 1. Packed three patches of Kefeng Wang, patch6-8.
->>>> 2. Add 6 new patches(9-15) to enhance the numa on arm64.
->>>>
->>>> v2 -> v3:
->>>> 1. Adjust patch2 and patch5 according to Matthias Brugger's advice, to make the
->>>>    patches looks more well. The final code have no change. 
->>>>
->>>> v1 -> v2:
->>>> 1. Base on https://lkml.org/lkml/2016/5/24/679
->>>
->>> If you want bug fixes to land in 4.7, you'll need to base them on a
->>> mainline kernel.
->>
->> I heared that David Daney's acpi numa patch series was accepted and
->> put into next branch(Linux 4.8).
->> Otherwise I will suggest him sending his patch6-7 to mainline first.
->> So that, only a very small conflict will be exist.
->>
->> I also tested that:
->> 1. git am David Daney's patch6-7, then git am all of my patches on a
->> branch, named branch A.
->> 2. git am David Daney's patch6-7 on another branch, named branch B.
->> 3. when I git merge B into branch A, it's still conflict. So I guess
->> git merge is based on source code, rather than patches.
->>
->> So at present, unless the maintainers are willing to resolve the
->> conflict, otherwise I update my patches will not work.
-> 
-> It usually depends on how complex the conflict is and whether your
-> patches functionally depend on the other patches. I have no idea what
-> the dependency is here since I haven't tried applying them to mainline.
-> 
->> Fortunately, these patches are not particularly urgent. So I think I
->> can wait until Linux 4.8 start, then send these patches again. But I'm
->> not sure whether these patches can be merged into Linux 4.8, I really
->> hope.
-> 
-> If there are fixes to the arm64 ACPI NUMA patches that Rafael queued
-> into linux-next, they should be sent to him and potentially being queued
-> on top ahead of the 4.8 merging window or shortly after 4.8-rc1.
-> Non-ACPI NUMA patches (as I can see, most of these patches are DT
-> specific) could be merged independently.
-> 
-> So how many patches do you have in each category below:
-> 
-> 1. NUMA fixes against current mainline (4.7-rc3)
-> 2. NUMA fixes against the arm64 ACPI NUMA patches queued by Rafael
-My patches have not fixed any bugs for ACPI NUMA, but just based on it.
-There are only three related patches:
-[PATCH v7 06_15] arm64, numa  rework numa_add_memblk()
-[PATCH v7 07_15] arm64, numa  Cleanup NUMA disabled messages.
-[PATCH v7 14_15] arm64, acpi, numa  NUMA support based on SRAT and SLIT
-
-arch/arm64/mm/numa.c          |  28 ++++--
-drivers/of/of_numa.c          |   4 +-
-
-My patches 1-5, 8, 11 will confict with it.
-
-> 3. New functionality or clean-up. Are these against mainline or ACPI
->    NUMA patches?
-Hi, Catalin
-I'm sorry to reply this email too late. Because I have been thinking if
-there are any other solutions.
-
-I try to adjust the sequence of my patches as below:
-1. New functionality 		//queued in your branch  (my patches 9-14, and 6, 6 is clean-up)
-2. 4.8-rc1			//apci numa series and my new functionality had been merged
-3. bug fixes			//other 4.8-rc versions	 (my patches 1-5)
-4. clean-up (pr_fmt)		//queued in 4.9		 (my patches 7-8)
-
-And there only one confliction exist:
-++<<<<<<< HEAD
- +static u8 numa_distance[MAX_NUMNODES][MAX_NUMNODES];			//choose this
- +static int numa_off;
-++=======
-+ static int numa_distance_cnt;
-+ static u8 *numa_distance;
-+ static bool numa_off;							//choose this
-++>>>>>>> acpi
-
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
