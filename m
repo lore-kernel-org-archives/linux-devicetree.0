@@ -1,45 +1,89 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 14/15] phy: rockchip-emmc: Set phyctrl_frqsel based on card clock
-Date: Mon, 20 Jun 2016 20:14:52 +0200
-Message-ID: <2890767.K8G0sjVPM4@diego>
-References: <1466445414-11974-1-git-send-email-dianders@chromium.org> <1466445414-11974-15-git-send-email-dianders@chromium.org>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [v3,1/4] mfd: cros_ec: Add cros_ec_cmd_xfer_status helper
+Date: Mon, 20 Jun 2016 11:10:22 -0700
+Message-ID: <20160620181020.GA46079@google.com>
+References: <1466193495-95801-2-git-send-email-briannorris@chromium.org>
+ <20160617214151.GA1400@roeck-us.net>
+ <20160618010855.GA67034@google.com>
+ <5765805A.5070407@roeck-us.net>
+ <3eac0aed-58ed-8376-dc29-ab374c67ebc0@osg.samsung.com>
+ <20160620174455.GB40678@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466445414-11974-15-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: ulf.hansson@linaro.org, kishon@ti.com, robh+dt@kernel.org, shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, groeck@chromium.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160620174455.GB40678@google.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 20. Juni 2016, 10:56:53 schrieb Douglas Anderson:
-> The "phyctrl_frqsel" is described in the Arasan datasheet [1] as "the
-> frequency range of DLL operation".  Although the Rockchip variant of
-> this PHY has different ranges than the reference Arasan PHY it appears
-> as if the functionality is similar.  We should set this phyctrl field
-> properly.
-> 
-> Note: as per Rockchip engineers, apparently the "phyctrl_frqsel" is
-> actually only useful in HS200 / HS400 modes even though the DLL itself
-> it used for some purposes in all modes.  See the discussion in the
-> earlier change in this series: ("mmc: sdhci-of-arasan: Always power the
-> PHY off/on when clock changes").  In any case, it shouldn't hurt to set
-> this always.
-> 
-> Note that this change should allow boards to run at HS200 / HS400 speed
-> modes while running at 100 MHz or 150 MHz.  In fact, running HS400 at
-> 150 MHz (giving 300 MB/s) is the main motivation of this series, since
-> performance is still good but signal integrity problems are less
-> prevelant at 150 MHz.
-> 
-> [1]: https://arasan.com/wp-content/media/eMMC-5-1-Total-Solution_Rev-1-3.pdf
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Hi,
 
-> ---
-> Changes in v3:
-> - Use phy_init / phy_exit (Heiko)
+On Mon, Jun 20, 2016 at 10:44:55AM -0700, Brian Norris wrote:
+> On Mon, Jun 20, 2016 at 09:46:57AM -0400, Javier Martinez Canillas wrote:
+> > On 06/18/2016 01:09 PM, Guenter Roeck wrote:
+> > > On 06/17/2016 06:08 PM, Brian Norris wrote:
+> > >> How do you propose we do that? Do all of the following become EINVAL?
+> > >>
+> > 
+> > Yes, I would just do that.
+> > 
+> > The idea of this helper is to remove duplicated code and AFAICT what most EC
+> > drivers do is something similar to the following:
+> > 
+> >         ret = cros_ec_cmd_xfer(ec, msg);
+> >         if (ret < 0)
+> > 	   	return ret;
+> > 
+> >         if (msg->result != EC_RES_SUCCESS) {
+> >                 dev_dbg(ec->dev, "EC result %d\n", msg->result);
+> >                 return -EINVAL;
+> >         }
+> > 
+> > So in practice what most drivers really care is if the result was successful
+> > or not, I don't see specific EC error handling in the EC drivers.  The real
+> > EC error code is still in the message anyways so drivers that do cares about
+> > the real EC error can look at msg->result instead.
+[...]
+> > >>          EC_RES_INVALID_COMMAND
+> > > 
+> > >     -EOPNOTSUPP
+> > > 
+> > >>          EC_RES_INVALID_PARAM
+> > > 
+> > >     -EINVAL or -EBADMSG
+> > > 
+> > >>          EC_RES_INVALID_VERSION
+> > > 
+> > >     -EPROTO or -EBADR or -EBADE or -EBADRQC or -EPROTOOPT
+> > > 
+> > >>          EC_RES_INVALID_HEADER
+> > > 
+> > >     -EPROTO or -EBADR or -EBADE
+> > > 
+> > > Doesn't look that bad to me. Also, the raw error could still be logged,
+> > > for example with dev_dbg().
+> > >
+> > 
+> > Yes, I think that adding a dev_dbg() with the real EC error code should
+> > be enough, that's basically what drivers do since they can't propagate
+> > the EC error to higher layers anyways.
+> 
+> I'll take a look at adding an error code translation table when I get a
+> chance. Hopefully that doesn't delay the others who are planning to use
+> this API shortly...
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Actually, I had some second thoughts, and others brought similar
+concerns up to me:
+
+What do we really win by doing the translation? It'll be difficult to do
+a 1:1 translation, and any time the EC adds additional error types,
+we'll have to update the translation. What's more, AFAICT, no one will
+really be looking at the translated error codes now, and will just be
+blindly passing them on. So maybe it makes more sense to just pick a
+single error code and pass that on instead. Possibly just -EPROTO (or
+nominate your favorite) for all EC error results, and if someone cares,
+they decode msg->result in their driver, or check the dev_dbg() log?
+
+Brian
