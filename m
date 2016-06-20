@@ -1,69 +1,67 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [RFC PATCH 10/13] drm/tegra: Add pinctrl support for DPAUX
-Date: Mon, 20 Jun 2016 11:45:26 +0100
-Message-ID: <5767C946.3010209@nvidia.com>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <1466165027-17917-11-git-send-email-jonathanh@nvidia.com>
- <20160617163752.GI27475@ulmo.ba.sec>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160617163752.GI27475@ulmo.ba.sec>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
+From: Marcin Niestroj <m.niestroj@grinn-global.com>
+Subject: [PATCH v4 2/5] power_supply: tps65217-charger: Fix NULL deref during property export
+Date: Mon, 20 Jun 2016 12:50:53 +0200
+Message-ID: <20160620105056.25843-3-m.niestroj@grinn-global.com>
+References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160620105056.25843-1-m.niestroj@grinn-global.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Marcin Niestroj <m.niestroj@grinn-global.com>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDE3LzA2LzE2IDE3OjM3LCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiAqIFBHUCBTaWduZWQg
-YnkgYW4gdW5rbm93biBrZXkKPiAKPiBPbiBGcmksIEp1biAxNywgMjAxNiBhdCAwMTowMzo0NFBN
-ICswMTAwLCBKb24gSHVudGVyIHdyb3RlOgo+PiBUaGUgRFBBVVggcGlucyBhcmUgc2hhcmVkIHdp
-dGggYW4gaW50ZXJuYWwgSTJDIGNvbnRyb2xsZXIuIFRvIGFsbG93Cj4+IHRoZXNlIHBpbnMgdG8g
-YmUgbXV4ZWQgdG8gdGhlIEkyQyBjb250cm9sbGVyLCByZWdpc3RlciBhIHBpbmN0cmwgZGV2aWNl
-Cj4+IGZvciB0aGUgRFBBVVggZGV2aWNlLiBNYWtlIFRlZ3JhIERSTSBzdXBwb3J0IGRlcGVuZGVu
-dCBvbiBQSU5DVFJMIHRvCj4+IGF2b2lkIGFueSBjb21waWxhdGlvbiBpc3N1ZXMuCj4+Cj4+IFNp
-Z25lZC1vZmYtYnk6IEpvbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPgo+PiAtLS0KPj4g
-IGRyaXZlcnMvZ3B1L2RybS90ZWdyYS9LY29uZmlnIHwgICAxICsKPj4gIGRyaXZlcnMvZ3B1L2Ry
-bS90ZWdyYS9kcGF1eC5jIHwgMTE3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKystLQo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAxMTUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlv
-bnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9LY29uZmlnIGIv
-ZHJpdmVycy9ncHUvZHJtL3RlZ3JhL0tjb25maWcKPj4gaW5kZXggNjNlYmIxNTRiOWI1Li5kMzQ5
-MzdhOTZmOTQgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9LY29uZmlnCj4+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9LY29uZmlnCj4+IEBAIC00LDYgKzQsNyBAQCBj
-b25maWcgRFJNX1RFR1JBCj4+ICAJZGVwZW5kcyBvbiBDT01NT05fQ0xLCj4+ICAJZGVwZW5kcyBv
-biBEUk0KPj4gIAlkZXBlbmRzIG9uIFJFU0VUX0NPTlRST0xMRVIKPj4gKwlkZXBlbmRzIG9uIFBJ
-TkNUUkwKPiAKPiBDb3VsZCB3ZSBpbnN0ZWFkIG1ha2UgdGhlIGNvZGUgb3B0aW9uYWw/IEkgZG9u
-J3QgY2FyZSBtdWNoIGFib3V0IHB1bGxpbmcKPiBpbiB0aGUgZXh0cmEgZGVwZW5kZW5jeSAoZm9y
-IFRlZ3JhIHdlIGFsd2F5cyBlbmFibGUgUElOQ1RSTCBhbnl3YXkpLCBidXQKPiBJIHdvcnJ5IHRo
-YXQgc29tZWJvZHkgbWF5IGVuZCB1cCBzZWFyY2hpbmcgZm9yIERSTV9URUdSQSBhbmQgbm90IGZp
-bmQgaXQKPiBiZWNhdXNlIFBJTkNUUkwgaGFwcGVucyB0byBiZSBkaXNhYmxlZCBpbiB0aGV5IC5j
-b25maWcuCgpZZXMgd2UgY291bGQgaWYgeW91IGRvbid0IG1pbmQgdGhlICNpZmRlZiBpbiB0aGUg
-c291cmNlIGZpbGUuIFRoZQphbHRlcm5hdGl2ZSBoZXJlIHdvdWxkIGJlIHRvIHNlbGVjdCBQSU5D
-VFJMIGFuZCBsaWtlIHlvdSBzYWlkIHRoaXMKc2hvdWxkIGFsd2F5cyBiZSB0aGUgY2FzZSBhcyBU
-ZWdyYSBzZWxlY3RzIGluIGFueXdheS4KCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-dGVncmEvZHBhdXguYyBiL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9kcGF1eC5jCj4gWy4uLl0KPj4g
-QEAgLTQzOSw2ICs1MzcsMTkgQEAgc3RhdGljIGludCB0ZWdyYV9kcGF1eF9wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+PiAgCWlmIChlcnIgPCAwKQo+PiAgCQlyZXR1cm4gZXJy
-Owo+PiAgCj4+ICsJZHBhdXgtPmRlc2MubmFtZSA9IGRldl9uYW1lKCZwZGV2LT5kZXYpOwo+PiAr
-CWRwYXV4LT5kZXNjLnBpbnMgPSB0ZWdyYV9kcGF1eF9waW5zOwo+PiArCWRwYXV4LT5kZXNjLm5w
-aW5zID0gQVJSQVlfU0laRSh0ZWdyYV9kcGF1eF9waW5zKTsKPj4gKwlkcGF1eC0+ZGVzYy5wY3Rs
-b3BzID0gJnRlZ3JhX2RwYXV4X3BpbmN0cmxfb3BzOwo+PiArCWRwYXV4LT5kZXNjLnBteG9wcyA9
-ICZ0ZWdyYV9kcGF1eF9waW5tdXhfb3BzOwo+PiArCWRwYXV4LT5kZXNjLm93bmVyID0gVEhJU19N
-T0RVTEU7Cj4+ICsKPj4gKwlkcGF1eC0+cGluY3RybCA9IHBpbmN0cmxfcmVnaXN0ZXIoJmRwYXV4
-LT5kZXNjLCAmcGRldi0+ZGV2LCBkcGF1eCk7Cj4+ICsJaWYgKCFkcGF1eC0+cGluY3RybCkgewo+
-PiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVnaXN0ZXIgcGluY29udHJvbFxu
-Iik7Cj4+ICsJCXJldHVybiAtRU5PREVWOwo+PiArCX0KPiAKPiBEaWQgeW91IG1lYW4gdG8gdXNl
-IHRoZSBkZXZtXyB2YXJpYW50IGhlcmU/IEJlY2F1c2UgSSBkb24ndCBzZWUgYQo+IHBpbmN0cmxf
-dW5yZWdpc3RlcigpIGluIHRlZ3JhX2RwYXV4X3JlbW92ZSgpLgoKWWVzIGdvb2QgY2F0Y2guIFdp
-bGwgZml4LgoKSm9uCgotLSAKbnZwdWJsaWMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+This bug leads to:
+
+[    1.906411] Unable to handle kernel NULL pointer dereference at virtual address 0000000c
+[    1.914878] pgd = c0004000
+[    1.917786] [0000000c] *pgd=00000000
+[    1.921536] Internal error: Oops: 5 [#1] SMP ARM
+[    1.926357] Modules linked in:
+[    1.929556] CPU: 0 PID: 14 Comm: kworker/0:1 Not tainted 4.4.5 #18
+[    1.936006] Hardware name: Generic AM33XX (Flattened Device Tree)
+[    1.942383] Workqueue: events power_supply_changed_work
+[    1.947842] task: de2c41c0 ti: de2c8000 task.ti: de2c8000
+[    1.953483] PC is at tps65217_ac_get_property+0x14/0x28
+[    1.958937] LR is at tps65217_ac_get_property+0x10/0x28
+
+Driver was trying to use drv_data in property get handler. However drv_data
+was not set, so it caused NULL pointer dereference. This patch properly
+sets drv_data during probe by power_supply_config parameter, so the
+property get handler works as desired.
+
+Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+---
+Changes v1 -> v4: none
+
+ drivers/power/tps65217_charger.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/power/tps65217_charger.c b/drivers/power/tps65217_charger.c
+index d9f5673..73dfae4 100644
+--- a/drivers/power/tps65217_charger.c
++++ b/drivers/power/tps65217_charger.c
+@@ -197,6 +197,7 @@ static int tps65217_charger_probe(struct platform_device *pdev)
+ {
+ 	struct tps65217 *tps = dev_get_drvdata(pdev->dev.parent);
+ 	struct tps65217_charger *charger;
++	struct power_supply_config cfg = {};
+ 	int ret;
+ 
+ 	dev_dbg(&pdev->dev, "%s\n", __func__);
+@@ -208,9 +209,12 @@ static int tps65217_charger_probe(struct platform_device *pdev)
+ 	charger->tps = tps;
+ 	charger->dev = &pdev->dev;
+ 
++	cfg.of_node = pdev->dev.of_node;
++	cfg.drv_data = charger;
++
+ 	charger->ac = devm_power_supply_register(&pdev->dev,
+ 						 &tps65217_charger_desc,
+-						 NULL);
++						 &cfg);
+ 	if (IS_ERR(charger->ac)) {
+ 		dev_err(&pdev->dev, "failed: power supply register\n");
+ 		return PTR_ERR(charger->ac);
+-- 
+2.9.0
+
