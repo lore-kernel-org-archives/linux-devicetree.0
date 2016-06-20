@@ -1,41 +1,86 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 20/22] dt-bindings: msm/mdp: Provide details on MDP
- interface ports
-Date: Mon, 20 Jun 2016 08:01:11 -0500
-Message-ID: <20160620130111.GC31965@rob-hp-laptop>
-References: <1466077007-26792-1-git-send-email-architt@codeaurora.org>
- <1466077007-26792-21-git-send-email-architt@codeaurora.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [linux-sunxi] Re: Auto-detecting touchscreen
+ controller and dealing with hw configuration differences on q8 tablets
+Date: Mon, 20 Jun 2016 15:02:36 +0200
+Message-ID: <b16c2b42-5628-c0b9-6486-f8a4728a0a33@redhat.com>
+References: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
+ <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7@konsulko.com>
+ <17e69e9e-06be-dc4f-cd47-152f6290d2ec@redhat.com>
+ <7FA186CB-9BF2-47A6-835C-06AD63CF8837@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466077007-26792-21-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: robdclark@gmail.com, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <7FA186CB-9BF2-47A6-835C-06AD63CF8837@konsulko.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: devicetree <devicetree@vger.kernel.org>, "u-boot@lists.denx.de" <u-boot@lists.denx.de>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2016 at 05:06:45PM +0530, Archit Taneja wrote:
-> The MDP4/5 DT node now contains a list of ports that describe how it
-> connects to external encoder interfaces like DSI and HDMI. These follow
-> the standard of_graph bindings, and allow us to get rid of the 'connectors'
-> phandle that contained a list of all the external encoders connected to
-> MDP.
-> 
-> The GPU phandle is removed too until we figure out what's the right way
-> to specify it in DT.
-
-You typically only have one instance, so just find it by compatible 
-string.
-
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> 
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
-> ---
->  .../devicetree/bindings/display/msm/mdp4.txt       | 68 ++++++++++++++++++++--
->  .../devicetree/bindings/display/msm/mdp5.txt       | 48 ++++++++++++++-
->  2 files changed, 110 insertions(+), 6 deletions(-)
-
-Acked-by: Rob Herring <robh@kernel.org>
+SGksCgpPbiAyMC0wNi0xNiAxNDoyMiwgUGFudGVsaXMgQW50b25pb3Ugd3JvdGU6Cj4gSGkgSGFu
+cywKPgo+PiBPbiBKdW4gMjAsIDIwMTYsIGF0IDE0OjAzICwgSGFucyBkZSBHb2VkZSA8aGRlZ29l
+ZGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4+Cj4+IEhpLAo+Pgo+PiBPbiAyMC0wNi0xNiAxMToyNywg
+UGFudGVsaXMgQW50b25pb3Ugd3JvdGU6Cgo8c25pcD4KCj4+PiBZZXMsIGl04oCZcyBxdWl0ZSBw
+b3NzaWJsZS4gWW91IGNhbiBldmVuIGhhdmUgc3RhY2tlZCBvdmVybGF5cy4KPj4KPj4gT2ssIGlz
+IHRoZXJlIGFueSBleGFtcGxlIGNvZGUgaG93IHRvIGNoYW5nZSBhbiBvdmVybGF5IGJlZm9yZSBh
+cHBseWluZyBpdCBvdXQgdGhlcmUsCj4+IG9yIGlmIG5vdCBjYW4geW91IHBvaW50IHRvIHRoZSBm
+dW5jdGlvbnMgdG8gdXNlIHRvIGRvIHRoaXMgPwo+Pgo+Cj4gVGhlIGNhbm9uaWNhbCBwbGFjZSBm
+b3IgYWxsIHRoZSBkeW5hbWljIERUIHN0dWZmIGlzCj4KPiBodHRwczovL2dpdGh1Yi5jb20vcGFu
+dG9uaW91L2xpbnV4LWJlYWdsZS10cmFjay1tYWlubGluZS90cmVlL2JiYi1vdmVybGF5cwo+Cj4g
+VGhlIGJlYWdsZWJvbmUgY2FwZSBtYW5hZ2VyIGlzIGhlcmUuCj4KPiBodHRwczovL2dpdGh1Yi5j
+b20vcGFudG9uaW91L2xpbnV4LWJlYWdsZS10cmFjay1tYWlubGluZS9jb21taXQvNTAyOGQxZWQz
+YmViOGM3NWIyOGZjZTM3YjFiYjVlZTU1MWIyYWU5ZQo+Cj4+IFNwZWNpZmljYWxseSBteSBwbGFu
+IGlzIHRvOgo+Pgo+PiAxKSBIYXZlIGEgc2luZ2xlIG92ZXJsYXkgZm9yIHE4IHRhYmxldHMgd2l0
+aCBnc2wxNjgwIHRhYmxldHMKPj4KPj4gMikgV3JpdGUgYW4gaW4ga2VybmVsIG92ZXJsYXkgbWFu
+YWdlciB3aGljaCB3aGVuIGl0IGRldGVjdHMgYSBnc2wxNjgwIHRvdWNoc2NyZWVuCj4+IHdpbGwg
+cGljayBhIGJlc3QtZGVmYXVsdCBmaXJtd2FyZS1maWxlICsgbWF0Y2hpbmcgcmVzb2x1dGlvbiAr
+IHN3YXAteC15IGJhc2VkIG9uCj4+IHdoaWNoIFNvQyAoQTEzL0EyMy9BMzMpIHRoZSB0YWJsZXQg
+aXMgYmFzZWQgb24gYXMgd2VsbCBhcyB0aGUgZ3NsMTY4MCdzIGNoaXAtaWQKPj4gYW5kIHdpbGwg
+dGhlbiAicGF0Y2giIHRoaXMgaW5mbyBpbnRvIHRoZSBvdmVybGF5IGJlZm9yZSBhcHBseWluZyBp
+dC4gVGhpcwo+PiBtZWFucyBiZWluZyBhYmxlIHRvIHNldCAvIG1vZGlmeSBzZXZlcmFsIHN0cmlu
+ZywgaW50IGFuZCBib29sIGR0IHByb3BlcnRpZXMuCj4+Cj4+IDMpIE9mZmVyIGEga2VybmVsLW1v
+ZHVsZSBvcHRpb24gZm9yIHRoZSBvdmVybGF5bWFuYWdlciB3aGljaCB3aWxsIGFsbG93cwo+PiBv
+dmVycmlkaW5nIHRoZSBkZWZhdWx0cyBmb3IgdGhlIGZpcm13YXJlLWZpbGVuYW1lLCBldGMuIFRo
+aXMgaXMgYWxzbwo+PiB3aHkgSSB3YW50IHRvIGdvIHdpdGggdGhlIHBhdGNoIGFwcHJvYWNoIGlu
+c3RlYWQgb2YgaGF2aW5nIG11bHRpcGxlCj4+IGR0LW92ZXJsYXkgZmlsZXMuCj4+Cj4KPiBIbW0s
+IHlvdXIgcHJvYmxlbSBhcHBlYXJzIHRvIGJlIHNpbXBsZXIuIFlvdSBhbHJlYWR5IGtub3cgYWxs
+IHRoZSBwb3NzaWJsZQo+IHBhcnRzIHRoYXQgeW91ciB0b3VjaHNjcmVlbi92aWRlby90aGluZ3kg
+aXMgZ29pbmcgdG8gdXNlLgo+Cj4gWW91IGRvbuKAmXQgaGF2ZSB0byB1c2UgYW4gb3ZlcmxheSB0
+aGVuLiBPdmVybGF5cyBhcmUgYnVpbHQgb24gdG9wIG9mCj4gY2hhbmdlc2V0cy4KPgo+IEZvciBl
+eGFtcGxlLCBsZXTigJlzIHNheSB0aGF0IHlvdSBoYXZlIHZhcmlvdXMgb3B0aW9ucyBmb3IgYSB0
+b3VjaHNjcmVlbiBvdXQKPiBvZiBhIGZpbml0ZSBzZXQuCj4KPiBZb3UganVzdCBwdXQgdGhlIGJh
+c2ljIGNvbmZpZ3VyYXRpb24gZm9yIGVhY2ggaW4gYSBkaXNhYmxlIG5vZGUgYW5kIHlvdXIKPiBt
+YW5hZ2VyIG9ubHkgbmVlZHMgdG8gdXBkYXRlIHRoZSBwcm9wZXJ0aWVzIGFuZCBzZXQgdGhlIHN0
+YXR1cyB0byBlbmFibGVkCj4gZm9yIGl0IHRvIGJlIGVuYWJsZWQuCj4KPiBGb3IgaW5zdGFuY2Ug
+bGV04oCZcyBzYXkgeW91IGhhdmUgYW4gb3B0aW9uIG9mIHR3byBkZXZpY2VzIChvbmx5IG9uZSBv
+ZiB0aGVtCj4gYmVpbmcgcHJlc2VudCkuCj4KPiBkZXZBIHsKPiAJc3RhdHVzID0g4oCcZGlzYWJs
+ZWTigJ07Cj4gCWNvbXBhdGlibGUgPSDigJxmb28sQeKAnTsKPiB9Owo+Cj4gZGV2QiB7Cj4gCXN0
+YXR1cyA9IOKAnGRpc2FibGVk4oCdOwo+IAljb21wYXRpYmxlID0g4oCcYmFyLELigJ07Cj4gfTsK
+Pgo+IFlvdXIgbWFuYWdlciBjYW4gc2ltcGx5IHVzZSBhIGNoYW5nZXNldCB0byBlbmFibGUgQSBh
+bmQgcHV0IGEgcHJvcGVydHkgdGhlcmUKPiAoZXhhbXBsZSBkb25lIHVzaW5nIHRoZSBleHRlbmRl
+ZCBoZWxwZXIgQVBJIGZvciBjbGFyaXR5KS4KPgo+IAlzdHJ1Y3Qgb2ZfY2hhbmdlc2V0IGNzZXQ7
+Cj4gCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBvZl9maW5kX25vZGVfYnlfcGF0aCjigJwvZGV2
+QeKAnSk7Cj4KPiAJb2ZfY2hhbmdlc2V0X2luaXQoJmNzZXQpOwo+IAlvZl9jaGFuZ2VzZXRfYWRk
+X3Byb3BlcnR5X2Jvb2woJmNzZXQsIG5wLCDigJxpbnZlcnQteOKAnSk7Cj4gCW9mX2NoYW5nZXNl
+dF91cGRhdGVfcHJvcGVydHlfc3RyaW5nKCZjc2V0LCBucCwg4oCcc3RhdHVz4oCdLCDigJxva2F5
+4oCdKTsKPgo+IAlvZl9jaGFuZ2VzZXRfYXBwbHkoJmNzZXQpOwoKQ29vbCB0aGF0IGxvb2tzIHF1
+aXRlIG5pY2UgLyBlYXN5LiAyIHF1ZXN0aW9ucyBvbiB0aGUgYWJvdmU6CgoxKSBJcyB0aGUgZnVu
+Y3Rpb25hbGl0eSBuZWVkZWQgYnkgdGhlIGFib3ZlIHNuaXBwZXQgaW4gbWFpbmxpbmUgPwoyKSBJ
+IGFzc3VtZSB5b3UndmMgZSBsZWZ0IG91dCBlcnJvciBoYW5kbGluZyBmcm9tIHRoZSBhYm92ZQpm
+b3Igc2ltcGxpY2l0eS4gSSBhc3N1bWUgdGhhdCBvZl9jaGFuZ2VzZXRfYXBwbHkoKSBuZWVkcyBz
+b21lCmVycm9yIHJldHVybiBjaGVja2luZyA/IFdoYXQgYWJvdXQgdGhlIG90aGVycyA/CgpBbmQg
+b25lIG5ldyBxdWVzdGlvbiwgdGhlIG92ZXJsYXkgbWFuYWdlciB3aWxsIG5lZWQgYWNjZXNzCnRv
+IChzZXZlcmFsKSBpMmMgYnVzc2VzLCBwcmVmZXJhYmx5IEkgY2FuIHBhc3MgaW4gYSBwaGFuZGxl
+CnRvIHRoZXNlIGluIGRldmljZXRyZWUsIGRvIHlvdSBoYXZlIGFueSBleHBlcmllbmNlIHdpdGgg
+LwpleGFtcGxlcyBvZiBkb2luZyBzdWNoIGEgdGhpbmcgPwoKUmVnYXJkcywKCkhhbnMKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KVS1Cb290IG1haWxpbmcg
+bGlzdApVLUJvb3RAbGlzdHMuZGVueC5kZQpodHRwOi8vbGlzdHMuZGVueC5kZS9tYWlsbWFuL2xp
+c3RpbmZvL3UtYm9vdAo=
