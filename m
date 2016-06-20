@@ -1,150 +1,125 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] arm64: dts: Add device-tree for ARM's AEMv8A-AEMv8A
- FVP Base model
-Date: Mon, 20 Jun 2016 13:39:06 +0100
-Message-ID: <20160620123906.GC26152@leverpostej>
-References: <1466424796-13769-1-git-send-email-tixy@linaro.org>
- <1466424796-13769-2-git-send-email-tixy@linaro.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v9 2/4] power: reset: add reboot mode driver
+Date: Mon, 20 Jun 2016 14:31:43 +0200
+Message-ID: <5767E22F.5030207@samsung.com>
+References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
+ <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
+ <5767A4C0.3080902@samsung.com> <5767A92E.5040602@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1466424796-13769-2-git-send-email-tixy@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Medhurst <tixy@linaro.org>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <5767A92E.5040602@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>, robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at, Paul Gortmaker <paul.gortmaker@windriver.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 06/20/2016 10:28 AM, Andy Yan wrote:
+> Hi Krzysztof:
+>=20
+> On 2016=E5=B9=B406=E6=9C=8820=E6=97=A5 16:09, Krzysztof Kozlowski wro=
+te:
+>> On 06/20/2016 08:38 AM, Andy Yan wrote:
+>>> This driver parses the reboot commands like "reboot bootloader"
+>>> and "reboot recovery" to get a boot mode described in the
+>>> device tree , then call the write interfae to store the boot
+>>> mode in some place like special register or sram, which can
+>>> be read by the bootloader after system reboot, then the bootloader
+>>> can take different action according to the mode stored.
+>>>
+>>> This is commonly used on Android based devices, in order to
+>>> reboot the device into fastboot or recovery mode.
+>>>
+>>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
+>>> Tested-by: John Stultz <john.stultz@linaro.org>
+>>> Acked-by: John Stultz <john.stultz@linaro.org>
+>>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>>>
+>>> ---
+>>>
+>>> Changes in v9:
+>>> - select MFD_SYSCON when syscon-reboot-mode driver enabled
+>>> - refactoring error handling in reboot_mode_register
+>>>
+>>> Changes in v8:
+>>> - do some cleanup when driver ubind
+>>>
+>>> Changes in v7:
+>>> - address some suggestions from Krzysztof, make syscon-reboot-mode
+>>> driver data self-contained.
+>>>
+>>> Changes in v6: None
+>>> Changes in v5:
+>>> - use two blank space under help in Kconfig
+>>> - use unsigned int instead of int for member magic in struct mode_i=
+nfo
+>>>
+>>> Changes in v4:
+>>> - make this driver depends on OF to avoid kbuild test error
+>>>
+>>> Changes in v3:
+>>> - scan multi properities
+>>> - add mask value for some platform which only use some bits of the
+>>> register
+>>>    to store boot mode magic value
+>>>
+>>> Changes in v2:
+>>> - move to dir drivers/power/reset/
+>>> - make syscon-reboot-mode a generic driver
+>>>
+>>> Changes in v1:
+>>> - fix the embarrassed compile warning
+>>> - correct the maskrom magic number
+>>> - check for the normal reboot
+>>>
+>>>   drivers/power/reset/Kconfig              |  14 ++++
+>>>   drivers/power/reset/Makefile             |   2 +
+>>>   drivers/power/reset/reboot-mode.c        | 128
+>>> +++++++++++++++++++++++++++++++
+>>>   drivers/power/reset/reboot-mode.h        |  14 ++++
+>>>   drivers/power/reset/syscon-reboot-mode.c | 100
+>>> ++++++++++++++++++++++++
+>>>   5 files changed, 258 insertions(+)
+>>>   create mode 100644 drivers/power/reset/reboot-mode.c
+>>>   create mode 100644 drivers/power/reset/reboot-mode.h
+>>>   create mode 100644 drivers/power/reset/syscon-reboot-mode.c
+>>>
+>>> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kcon=
+fig
+>>> index 9bb2622..4ceaf74 100644
+>>> --- a/drivers/power/reset/Kconfig
+>>> +++ b/drivers/power/reset/Kconfig
+>>> @@ -183,5 +183,19 @@ config POWER_RESET_ZX
+>>>       help
+>>>         Reboot support for ZTE SoCs.
+>>>   +config REBOOT_MODE
+>>> +    tristate
+>>> +
+>>> +config SYSCON_REBOOT_MODE
+>>> +    bool "Generic SYSCON regmap reboot mode driver"
+>> Why not tristate?
+>=20
+>    I see many reset drivers in this directories  use bool, so I follo=
+w
+> them.
 
-On Mon, Jun 20, 2016 at 01:13:16PM +0100, Jon Medhurst wrote:
-> Fixed Virtual Platform (FVP) Base models are simulations of systems
-> that resemble Versatile Express or Juno hardware.
-> 
-> This adds a device-tree for the model variant that has two clusters of
-> Architecture Envelope Model (AEM) v8-A CPUs. The peripheral devices that
-> are common to all variants of Base models have been placed in a separate
-> file (fvp-base.dtsi) to facilitate creating device-trees for other
-> models.
-> 
-> It is desirable to use simulations for code testing purposes and so it
-> is beneficial to include nodes for things that are timing and power
-> consumption related, even when these don't otherwise have relevance or
-> accuracy. Where these have been included here (e.g. idle-states) entries
-> have been copied from real hardware platforms such as Juno.
++Cc Paul,
 
-Which firmware are you using, and what precisely does it do w.r.t.
-those idle states? Judging by the FVP ATF pm code [1], those state IDs
-aren't valid (though perhaps the comment is wrong, or I've misunderstood
-something).
+I don't mind that although I don't see any particular objections for
+making it module-capable. In the same time I just reminded myself about
+Paul Gortmaker's long effort (like [1] [2]) about removing module
+capability from non-modular drivers.
 
-People use the FVPs with a variety of FW and bootloaders, so I'm not
-keen on putting anything FW or bootloader specific into the canonical
-FVP DT files.
+=46ollowing his rationale, I think either this should be a tristate or =
+the
+module stuff should be removed.
 
-> Signed-off-by: Jon Medhurst <tixy@linaro.org>
-> ---
->  arch/arm64/boot/dts/arm/Makefile                   |   1 +
->  arch/arm64/boot/dts/arm/fvp-base-aemv8a-aemv8a.dts | 221 +++++++++++++++++
->  arch/arm64/boot/dts/arm/fvp-base.dtsi              | 267 +++++++++++++++++++++
->  3 files changed, 489 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/arm/Makefile b/arch/arm64/boot/dts/arm/Makefile
-> index 75cc2aa..7531001 100644
-> --- a/arch/arm64/boot/dts/arm/Makefile
-> +++ b/arch/arm64/boot/dts/arm/Makefile
-> @@ -1,4 +1,5 @@
->  dtb-$(CONFIG_ARCH_VEXPRESS) += foundation-v8.dtb foundation-v8-gicv3.dtb
-> +dtb-$(CONFIG_ARCH_VEXPRESS) += fvp-base-aemv8a-aemv8a.dtb
->  dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb juno-r1.dtb juno-r2.dtb
->  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb
->  dtb-$(CONFIG_ARCH_VEXPRESS) += vexpress-v2f-1xv7-ca53x2.dtb
-> diff --git a/arch/arm64/boot/dts/arm/fvp-base-aemv8a-aemv8a.dts b/arch/arm64/boot/dts/arm/fvp-base-aemv8a-aemv8a.dts
-> new file mode 100644
-> index 0000000..2acfd26
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/arm/fvp-base-aemv8a-aemv8a.dts
-> @@ -0,0 +1,221 @@
-> +/*
-> + * ARM Ltd. Fixed Virtual Platform (FVP) Base model with dual cluster
-> + * Architecture Envelope Model (AEM) v8-A CPUs
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "arm,fvp-base,aemv8a-aemv8a", "arm,fvp-base", "arm,vexpress";
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	chosen { };
+Best regards,
+Krzysztof
 
-Please add stdout-path, e.g.
+[1] https://lkml.org/lkml/2016/2/21/180
+[2] https://lkml.org/lkml/2016/6/13/682
 
-	stdout-path = "serial0:115200";
 
-> +
-> +	aliases {
-> +		serial0 = &bp_serial0;
-> +		serial1 = &bp_serial1;
-> +		serial2 = &bp_serial2;
-> +		serial3 = &bp_serial3;
-> +	};
-
-[...]
-
-> +		idle-states {
-> +			entry-method = "arm,psci";
-> +
-> +			CPU_SLEEP_0: cpu-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x0010000>;
-> +				local-timer-stop;
-> +				entry-latency-us = <300>;
-> +				exit-latency-us = <1200>;
-> +				min-residency-us = <2000>;
-> +			};
-> +
-> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x1010000>;
-> +				local-timer-stop;
-> +				entry-latency-us = <300>;
-> +				exit-latency-us = <1200>;
-> +				min-residency-us = <2500>;
-> +			};
-> +		};
-
-[...]
-
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-
-The cpumask shouldn't be there (it's not valid for GICv3).
-
-> +		clock-frequency = <100000000>;
-
-FW should program CNTFRQ correctly, so we should drop the
-clock-frequency property. We should never have had it in the first place
-for the original RTSM DT.
-
-Thanks,
-Mark.
-
-[1] https://github.com/ARM-software/arm-trusted-firmware/commit/6355f2347aec8bf6ad74867c2b0c996e10546ad4#L53
