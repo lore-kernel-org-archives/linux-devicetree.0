@@ -1,109 +1,160 @@
 From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] Add support for SYSCON reset
-Date: Mon, 20 Jun 2016 13:44:44 -0500
-Message-ID: <5768399C.30201@ti.com>
-References: <20160601184125.20241-1-afd@ti.com> <576178C7.4040204@ti.com>
- <1466009144.3539.77.camel@pengutronix.de>
- <CAL_JsqKL+njqxTUB3MPgX=qJK72bmXXWH4gOuYMC2NFg5u7eqg@mail.gmail.com>
+Subject: [PATCH v4 1/2] Documentation: dt: reset: Add TI syscon reset binding
+Date: Mon, 20 Jun 2016 13:46:06 -0500
+Message-ID: <20160620184607.4380-2-afd@ti.com>
+References: <20160620184607.4380-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKL+njqxTUB3MPgX=qJK72bmXXWH4gOuYMC2NFg5u7eqg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20160620184607.4380-1-afd-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/15/2016 09:13 PM, Rob Herring wrote:
-> On Wed, Jun 15, 2016 at 11:45 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->> Hi Andrew,
->>
->> Am Mittwoch, den 15.06.2016, 10:48 -0500 schrieb Andrew F. Davis:
->>> On 06/01/2016 01:41 PM, Andrew F. Davis wrote:
->>>> Some SoCs contain reset controls for modules that are memory-mapped to
->>>> areas shared with other module configuration settings. This requires
->>>> synchronization across all drivers accessing this memory area. This
->>>> series adds a generic SYSCON reset driver to allow resets toggled
->>>> by bits in memory-mapped registers through SYSCON.
->>>>
->>>> Changes from v2:
->>>>  - Rebased on v4.7-rc1
->>>>  - Removed the need to give reset specifier nodes an index address
->>>>
->>>> Changes from v1:
->>>>  - Reset control information is now described in the reset node, this
->>>>    keeps the reset information centralized for easy verification
->>>>  - Other small fixups
->>>>
->>>> Andrew F. Davis (2):
->>>>   Documentation: dt: reset: Add syscon reset binding
->>>>   reset: add a SYSCON based reset driver
->>>>
->>>>  .../devicetree/bindings/reset/syscon-reset.txt     | 105 ++++++++
->>>>  drivers/reset/Kconfig                              |  10 +
->>>>  drivers/reset/Makefile                             |   1 +
->>>>  drivers/reset/reset-syscon.c                       | 289 +++++++++++++++++++++
->>>>  include/dt-bindings/reset/syscon.h                 |  23 ++
->>>>  5 files changed, 428 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/reset/syscon-reset.txt
->>>>  create mode 100644 drivers/reset/reset-syscon.c
->>>>  create mode 100644 include/dt-bindings/reset/syscon.h
->>>>
->>>
->>> Is there any additional feedback for this driver? I normally try to
->>> refrain from pings, but this may begin to block further upstreaming of
->>> IPs that uses this reset if it can not be taken this cycle.
->>
->> There's still Rob's concern that this binding needs a device tree node
->> per single register bit in the worst case, which seems a bit overkill.
-> 
-> Yes, that's still my concern with this.
-> 
->> I'd still prefer to have this information hidden in the drivers, but if
->> you absolutely have to put it in the device tree, maybe an approach more
->> similar to pinctrl-simple, where you could list all resets, one per
->> line, in a single property, would be more acceptable:
->>
->> pscrst: reset-controller {
->>         compatible = "ti,<chip>-pscrst", "syscon-reset";
->>
->>         /* syscon-reset,bits = <ctrl_reg ctrl_bit stat_reg stat_bit flags>; */
-> 
-> ti,reset-bits
-> 
->>         syscon-reset,bits = <0xa3c 8 0x83c 8 RESET_ASSERT_CLEAR  /* 0: pcrst-dsp */
->>                              0xa40 5 0     0 RESET_TRIGGER_SET>; /* 1: pcrst-example */
->> };
->>
->> dsp0: dsp {
->>         resets = <&pscrst 0>;
->> };
-> 
-> Otherwise, this seems okay. It is more concise.
-> 
+Add TI syscon reset controller binding. This will hook to the reset
+framework and use syscon/regmap to set reset bits. This allows reset
+control of individual SoC subsytems and devices with memory-mapped
+reset registers in a common register memory space.
 
-If this is what you would both be okay with then I'll do it this way,
-pushing v4 in a moment.
+Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+[s-anna-l0cyMroinI0@public.gmane.org: revise the binding format]
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/reset/ti-syscon-reset.txt  | 83 ++++++++++++++++++++++
+ include/dt-bindings/reset/ti-syscon.h              | 30 ++++++++
+ 2 files changed, 113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+ create mode 100644 include/dt-bindings/reset/ti-syscon.h
 
->>
->>> If there is still an objection to calling this a generic reset solution
->>> we would not strongly object to relabeling this to something implying
->>> more TI exclusivity.
->>
->> Good. Right now there don't seem to be that many reset controllers in
->> the wild for which this binding would be a good fit. If this turns out
->> to be useful for others, we can add more compatibles to the driver.
-> 
-> Certainly other users would make a generic solution more compelling.
-> 
+diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+new file mode 100644
+index 0000000..eb95bb5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+@@ -0,0 +1,83 @@
++TI SysCon Reset Controller
++=======================
++
++Almost all SoCs have hardware modules that require reset control in addition
++to clock and power control for their functionality. The reset control is
++typically provided by means of memory-mapped I/O registers. These registers are
++sometimes a part of a larger register space region implementing various
++functionalities. This register range is best represented as a syscon node to
++allow multiple entities to access their relevant registers in the common
++register space.
++
++A SysCon Reset Controller node defines a device that uses a syscon node
++and provides reset management functionality for various hardware modules
++present on the SoC.
++
++SysCon Reset Controller Node
++============================
++Each of the reset provider/controller nodes should be a child of a syscon
++node and have the following properties.
++
++Required properties:
++--------------------
++ - compatible		: Should be "syscon-reset"
++ - #reset-cells		: Should be 1. Please see the reset consumer node below
++			  for usage details
++ - ti,reset-bits	: Contains the reset control register information
++			  Should contain 5 cells for each reset exposed to
++			  consumers, defined as:
++			    Cell #1 : register offset of the reset control
++			              register from the syscon register base
++			    Cell #2 : bit shift value for the reset in the
++			              respective reset control register
++			    Cell #3 : register offset of the reset status
++			              register from the syscon register base
++			    Cell #4 : bit shift value for the reset in the
++			              respective reset status register
++			    Cell #5 : Flags used to control reset behavior,
++			              availible flags defined in the DT include
++			              file <dt-bindings/reset/ti-syscon.h>
++
++SysCon Reset Consumer Nodes
++===========================
++Each of the reset consumer nodes should have the following properties,
++in addition to their own properties.
++
++Required properties:
++--------------------
++ - resets	: A phandle to the reset controller node and a phandle to a
++		  reset specifier node as defined above.
++
++Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
++common reset controller usage by consumers.
++
++Example:
++--------
++The following example demonstrates a syscon node, the reset controller node
++using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
++Edison SoC.
++
++/ {
++	soc {
++		psc: power-sleep-controller@02350000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x02350000 0x1000>;
++
++			pscrst: psc-reset {
++				compatible = "ti,k2l-pscrst", "syscon-reset";
++				#reset-cells = <1>;
++
++				ti,reset-bits = <
++					0xa3c 8 0x83c 8 RESET_ASSERT_CLEAR  /* 0: pcrst-dsp0 */
++					0xa40 5 0     0 RESET_TRIGGER_SET   /* 1: pcrst-example */
++				>;
++			};
++		};
++
++		dsp0: dsp0 {
++			...
++			resets = <&pscrst 0>;
++			...
++		};
++	};
++};
+diff --git a/include/dt-bindings/reset/ti-syscon.h b/include/dt-bindings/reset/ti-syscon.h
+new file mode 100644
+index 0000000..fedcfb7
+--- /dev/null
++++ b/include/dt-bindings/reset/ti-syscon.h
+@@ -0,0 +1,30 @@
++/*
++ * TI Syscon Reset definitions
++ *
++ * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __DT_BINDINGS_RESET_TI_SYSCON_H__
++#define __DT_BINDINGS_RESET_TI_SYSCON_H__
++
++/* The reset is asserted by setting (vs clearing) the described bit */
++#define RESET_SET		(1 << 0)
++/* This reset does not have a readable status bit */
++#define RESET_TRIGGER		(1 << 1)
++
++#define RESET_ASSERT_CLEAR	0
++#define RESET_ASSERT_SET	RESET_SET
++#define RESET_TRIGGER_CLEAR	RESET_TRIGGER
++#define RESET_TRIGGER_SET	(RESET_TRIGGER | RESET_SET)
++
++#endif
+-- 
+2.9.0
 
-I believe some other current reset drivers could have made use of this
-without having resorted to new drivers, I guess we will have to just
-wait to see if it gets traction with new platforms or not, before we can
-decide if this solution is really as general as I think it can be.
-
-Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
