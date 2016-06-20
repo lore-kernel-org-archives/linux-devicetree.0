@@ -1,30 +1,25 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] arm: tegra124: remove commas from unit addresses
-Date: Mon, 20 Jun 2016 09:50:26 -0600
-Message-ID: <576810C2.1030401@wwwdotorg.org>
-References: <1466298275-15753-1-git-send-email-marcel.ziswiler@toradex.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: clock: Update bindings for MDM9615 GCC
+ and LCC
+Date: Mon, 20 Jun 2016 10:59:12 -0500
+Message-ID: <20160620155912.GA10735@rob-hp-laptop>
+References: <1466157875-14428-1-git-send-email-narmstrong@baylibre.com>
+ <1466157875-14428-3-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466298275-15753-1-git-send-email-marcel.ziswiler@toradex.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1466157875-14428-3-git-send-email-narmstrong@baylibre.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2016 07:04 PM, Marcel Ziswiler wrote:
-> Remove commas from unit addresses as suggested by Rob Herring upon me
-> posting initial Apalis TK1 support:
->
-> http://article.gmane.org/gmane.linux.ports.tegra/26608
+On Fri, Jun 17, 2016 at 12:04:34PM +0200, Neil Armstrong wrote:
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/clock/qcom,gcc.txt | 1 +
+>  Documentation/devicetree/bindings/clock/qcom,lcc.txt | 1 +
+>  2 files changed, 2 insertions(+)
 
-Acked-by: Stephen Warren <swarren@nvidia.com>
+Acked-by: Rob Herring <robh@kernel.org>
