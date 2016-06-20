@@ -1,214 +1,85 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 4/6] nvmem: amlogic: Add Amlogic Meson EFUSE driver
-Date: Mon, 20 Jun 2016 12:13:52 +0100
-Message-ID: <5767CFF0.5040102@linaro.org>
-References: <1466339944-602-1-git-send-email-carlo@caione.org>
- <1466339944-602-5-git-send-email-carlo@caione.org>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 07/13] dt-bindings: i2c: Add support for 'i2c-bus'
+ subnode
+Date: Mon, 20 Jun 2016 12:15:39 +0100
+Message-ID: <5767D05B.5000709@nvidia.com>
+References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
+ <1466165027-17917-8-git-send-email-jonathanh@nvidia.com>
+ <20160617163054.GD32754@leverpostej> <20160617164525.GL27475@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466339944-602-5-git-send-email-carlo@caione.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux@endlessm.com, devicetree@vger.kernel.org, khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org, matthias.bgg@gmail.com, narmstrong@baylibre.com, bjdooks@googlemail.com, maxime.ripard@free-electrons.com
-Cc: Carlo Caione <carlo@endlessm.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160617164525.GL27475-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Carlo,
 
-On 19/06/16 13:39, Carlo Caione wrote:
-> From: Carlo Caione <carlo@endlessm.com>
->
-> Add Amlogic EFUSE driver to access hardware data like ethernet address,
-> serial number or IDs.
->
-> Signed-off-by: Carlo Caione <carlo@endlessm.com>
-> ---
->   drivers/nvmem/Kconfig       |  11 ++++
->   drivers/nvmem/Makefile      |   2 +
->   drivers/nvmem/meson-efuse.c | 130 ++++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 143 insertions(+)
->   create mode 100644 drivers/nvmem/meson-efuse.c
->
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index ca52952..ef17bc9 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -102,4 +102,15 @@ config NVMEM_VF610_OCOTP
->   	  This driver can also be build as a module. If so, the module will
->   	  be called nvmem-vf610-ocotp.
->
-> +config MESON_EFUSE
-> +	tristate "Amlogic eFuse Support"
-> +	depends on ARCH_MESON || COMPILE_TEST
-> +	select REGMAP_MMIO
+On 17/06/16 17:45, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Fri, Jun 17, 2016 at 05:30:54PM +0100, Mark Rutland wrote:
+>> On Fri, Jun 17, 2016 at 01:03:41PM +0100, Jon Hunter wrote:
+>>> The I2C driver core for boards using device-tree assumes any subnode of
+>>> an I2C adapter in the device-tree blob as being a I2C slave device.
+>>> Although this makes complete sense, some I2C adapters may have subnodes
+>>> which are not I2C slaves but subnodes presenting other features. For
+>>> example some Tegra devices have an I2C interface which may share its
+>>> pins with other devices and to share these pins subnodes for
+>>> representing these pins so they have be shared via the pinctrl framework
+>>> are needed.
+>>>
+>>> To allow I2C adapters to have non-I2C specific subnodes in device-tree
+>>> that are not parsed by the I2C driver core by adding support for a
+>>> 'i2c-bus' subnode where I2C slaves can be placed. If the 'i2c-bus'
+>>> subnode is present then all I2C slaves must be placed under this subnode.
+>>>
+>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/i2c/i2c.txt | 8 ++++++++
+>>>  1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+>>> index f31b2ad1552b..ed56b08c7e6e 100644
+>>> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+>>> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+>>> @@ -32,6 +32,14 @@ wants to support one of the below features, it should adapt the bindings below.
+>>>  - clock-frequency
+>>>  	frequency of bus clock in Hz.
+>>>  
+>>> +- i2c-bus
+>>> +	For I2C adapters that have child nodes that are a mixture of both I2C
+>>> +	devices and non-I2C devices (such as a pin controller), the 'i2c-bus'
+>>> +	subnode can be used for populating I2C devices to prevent the I2C core
+>>> +	from attempting to add any non-i2c nodes as I2C devices. If 'i2c-bus'
+>>> +	subnode is present then all I2C slaves must be added under this
+>>> +	subnode.
+>>
+>> The general idea seems sound.
+>>
+>> It would be good if we could remove the mention of the I2C core,
+>> something like:
+>>
+>>   - i2c-bus
+>> 	For I2C adapters that have child nodes that are a mixture of both I2C
+>> 	devices and non-I2C devices (such as a pin controller), the 'i2c-bus'
+>> 	subnode can be used for populating I2C devices. If an 'i2c-bus'
+>> 	subnode is present, only subnodes of this will be considered as
+>> 	I2C slaves.
+>>
+>> How are #address-cells and #size-cells handled in this case? I assume
+>> that they should live under the i2c-bus subnode, which should be called
+>> out.
+> 
+> Good catch. Yes, I think the i2c-bus subnode would be the right place
+> for #address-cells and #size-cells.
 
-NVMEM recently moved out of using regmap, as regmap did not provide 
-better abstraction, could you rebase your patch on top of mainline.
+Yes, indeed. Thanks. Will fix.
 
-Thanks,
-srini
+Cheers
+Jon
 
-> +	help
-> +	  This is a driver to retrieve specific values from the eFuse found on
-> +	  the Amlogic Meson SoCs.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nvmem_meson_efuse.
-> +
->   endif
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index 45ab1ae..8f942a0 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -22,3 +22,5 @@ obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
->   nvmem_sunxi_sid-y		:= sunxi_sid.o
->   obj-$(CONFIG_NVMEM_VF610_OCOTP)	+= nvmem-vf610-ocotp.o
->   nvmem-vf610-ocotp-y		:= vf610-ocotp.o
-> +obj-$(CONFIG_MESON_EFUSE)	+= nvmem_meson_efuse.o
-> +nvmem_meson_efuse-y		:= meson-efuse.o
-> diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
-> new file mode 100644
-> index 0000000..7c80e1c
-> --- /dev/null
-> +++ b/drivers/nvmem/meson-efuse.c
-> @@ -0,0 +1,130 @@
-> +/*
-> + * Amlogic eFuse Driver
-> + *
-> + * Copyright (c) 2016 Endless Computers, Inc.
-> + * Author: Carlo Caione <carlo@endlessm.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of version 2 of the GNU General Public License as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-> + * more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/firmware/meson/meson_sm.h>
-> +
-> +static struct meson_sm_firmware *fw;
-> +
-> +static int meson_efuse_write(void *context, const void *data, size_t count)
-> +{
-> +	/* Nothing TBD, Read-Only */
-> +	return 0;
-> +}
-> +
-> +static int meson_efuse_read(void *context,
-> +			    const void *reg, size_t reg_size,
-> +			    void *val, size_t val_size)
-> +{
-> +	unsigned int offset = *(u32 *)reg;
-> +	u8 *buf = val;
-> +	int ret;
-> +
-> +	ret = meson_sm_call_read(fw, buf, SM_EFUSE_READ, offset,
-> +				 val_size, 0, 0, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct nvmem_config econfig = {
-> +	.name = "meson-efuse",
-> +	.owner = THIS_MODULE,
-> +	.read_only = true,
-> +};
-> +
-> +static struct regmap_bus meson_efuse_bus = {
-> +	.read = meson_efuse_read,
-> +	.write = meson_efuse_write,
-> +	.reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
-> +	.val_format_endian_default = REGMAP_ENDIAN_NATIVE,
-> +};
-> +
-> +static struct regmap_config meson_efuse_regmap_config = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 1,
-> +	.val_bits = 8,
-> +};
-> +
-> +static const struct of_device_id meson_efuse_match[] = {
-> +	{ .compatible = "amlogic,meson-gxbb-efuse", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, meson_efuse_match);
-> +
-> +static int meson_efuse_probe(struct platform_device *pdev)
-> +{
-> +	struct nvmem_device *nvmem;
-> +	struct regmap *regmap;
-> +	unsigned int size;
-> +
-> +	fw = meson_sm_get_fw();
-> +	if (!fw)
-> +		return -EPROBE_DEFER;
-> +
-> +	if (meson_sm_call(fw, SM_EFUSE_USER_MAX, &size, 0, 0, 0, 0, 0) < 0)
-> +		return -EINVAL;
-> +	meson_efuse_regmap_config.max_register = size - 1;
-> +
-> +	regmap = devm_regmap_init(&pdev->dev, &meson_efuse_bus,
-> +				  NULL, &meson_efuse_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_err(&pdev->dev, "regmap init failed\n");
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	econfig.dev = &pdev->dev;
-> +	nvmem = nvmem_register(&econfig);
-> +	if (IS_ERR(nvmem))
-> +		return PTR_ERR(nvmem);
-> +
-> +	platform_set_drvdata(pdev, nvmem);
-> +
-> +	return 0;
-> +}
-> +
-> +static int meson_efuse_remove(struct platform_device *pdev)
-> +{
-> +	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
-> +
-> +	return nvmem_unregister(nvmem);
-> +}
-> +
-> +static struct platform_driver meson_efuse_driver = {
-> +	.probe = meson_efuse_probe,
-> +	.remove = meson_efuse_remove,
-> +	.driver = {
-> +		.name = "meson-efuse",
-> +		.of_match_table = meson_efuse_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(meson_efuse_driver);
-> +
-> +MODULE_AUTHOR("Carlo Caione <carlo@endlessm.com>");
-> +MODULE_DESCRIPTION("Amlogic Meson NVMEM driver");
-> +MODULE_LICENSE("GPL v2");
->
+-- 
+nvpublic
