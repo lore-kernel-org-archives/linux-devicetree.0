@@ -1,76 +1,49 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 01/20] clk: fixed-factor: Pass clk rates change to the
- parent
-Date: Mon, 20 Jun 2016 12:57:36 -0700
-Message-ID: <20160620195736.24587.45566@quark.deferred.io>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
- <1463402840-17062-2-git-send-email-maxime.ripard@free-electrons.com>
- <20160617230533.27203.82622@quark.deferred.io>
- <20160620085458.GI26668@lukather>
+From: Richard Weinberger <richard@nod.at>
+Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
+Date: Mon, 20 Jun 2016 21:57:45 +0200
+Message-ID: <57684AB9.5040607@nod.at>
+References: <20160619130514.GB820@makrotopia.org> <6411961.soYuJ4Ixfs@wuerfel>
+ <5767A8A3.4030004@nod.at> <4012191.NTCe8d2REM@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160620085458.GI26668@lukather>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <4012191.NTCe8d2REM@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dedekind1@gmail.com, Hauke Mehrtens <hauke@hauke-m.de>, Daniel Golle <daniel@makrotopia.org>, robh+dt@kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBNYXhpbWUgUmlwYXJkICgyMDE2LTA2LTIwIDAxOjU0OjU4KQo+IE9uIEZyaSwgSnVu
-IDE3LCAyMDE2IGF0IDA0OjA1OjMzUE0gLTA3MDAsIE1pY2hhZWwgVHVycXVldHRlIHdyb3RlOgo+
-ID4gUXVvdGluZyBNYXhpbWUgUmlwYXJkICgyMDE2LTA1LTE2IDA1OjQ3OjAxKQo+ID4gPiBBIGZp
-eGVkIGZhY3RvciBjbG9jaywgaWYgaXQgbmVlZHMgdG8gY2hhbmdlIGl0cyByYXRlLCBieSBkZWZp
-bml0aW9uIGRvIG5vdAo+ID4gPiBoYXZlIGFueSBjaG9pY2UgYnV0IHRvIG1vZGlmeSBpdHMgcGFy
-ZW50IHJhdGUuCj4gPiAKPiA+IExvZ2ljYWxseSBpdCBtYWtlcyBzZW5zZSB0byBhbHdheXMgcHJv
-cGFnYXRlIHRoZSByYXRlLWNoYW5nZSByZXF1ZXN0IHVwCj4gPiB0byB0aGUgcGFyZW50IGZvciBh
-IGZpeGVkLWZhY3RvciBjbG9jayBpZiB3ZSBkZXNpcmUgdG8gY2hhbmdlIGl0cyByYXRlLgo+ID4g
-SG93ZXZlciwgSSB3b25kZXIgaWYgZG9pbmcgdGhpcyBmb3IgYWxsIHVzZXJzIG9mIGZpeGVkLWZh
-Y3Rvci1jbG9jayBpbgo+ID4gRFQgaXMgc2FmZT8gU29tZSB1c2VycyBtYXkgYmUgY291bnRpbmcg
-b24gaXQgbm90IGNoYW5naW5nLgo+ID4gCj4gPiBUaGVyZSBhcmUgMzk3IGluc3RhbmNlcyBvZiBm
-aXhlZC1mYWN0b3ItY2xvY2sgaW4gLmR0c1tpXSB0b2RheSwgc28gdGhpcwo+ID4gY2hhbmdlIHdv
-cnJpZXMgbWUgYSBiaXQuCj4gCj4gVW5kZXJzdG9vZC4KPiAKPiA+IAo+ID4gPiAKPiA+ID4gQWRk
-IHRoZSBDTEtfU0VUX1JBVEVfUEFSRU5UIGZsYWcgdG8gdGhhdCBjbG9jayBzbyB0aGF0IGl0IGNh
-biBoYXBwZW4KPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGlt
-ZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4gPiAtLS0KPiA+ID4gIGRyaXZlcnMvY2xr
-L2Nsay1maXhlZC1mYWN0b3IuYyB8IDMgKystCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
-cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9jbGsvY2xrLWZpeGVkLWZhY3Rvci5jIGIvZHJpdmVycy9jbGsvY2xrLWZpeGVkLWZhY3Rvci5j
-Cj4gPiA+IGluZGV4IDc1Y2Q2Yzc5MmNiOC4uMzM2M2FiZDliNGFlIDEwMDY0NAo+ID4gPiAtLS0g
-YS9kcml2ZXJzL2Nsay9jbGstZml4ZWQtZmFjdG9yLmMKPiA+ID4gKysrIGIvZHJpdmVycy9jbGsv
-Y2xrLWZpeGVkLWZhY3Rvci5jCj4gPiA+IEBAIC0xNjcsNyArMTY3LDggQEAgdm9pZCBfX2luaXQg
-b2ZfZml4ZWRfZmFjdG9yX2Nsa19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpCj4gPiA+
-ICAgICAgICAgb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmcobm9kZSwgImNsb2NrLW91dHB1dC1uYW1l
-cyIsICZjbGtfbmFtZSk7Cj4gPiA+ICAgICAgICAgcGFyZW50X25hbWUgPSBvZl9jbGtfZ2V0X3Bh
-cmVudF9uYW1lKG5vZGUsIDApOwo+ID4gPiAgCj4gPiA+IC0gICAgICAgY2xrID0gY2xrX3JlZ2lz
-dGVyX2ZpeGVkX2ZhY3RvcihOVUxMLCBjbGtfbmFtZSwgcGFyZW50X25hbWUsIDAsCj4gPiA+ICsg
-ICAgICAgY2xrID0gY2xrX3JlZ2lzdGVyX2ZpeGVkX2ZhY3RvcihOVUxMLCBjbGtfbmFtZSwgcGFy
-ZW50X25hbWUsCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBD
-TEtfU0VUX1JBVEVfUEFSRU5ULAo+ID4gCj4gPiBBbiBhbHRlcm5hdGl2ZSB3b3VsZCBiZSB0byBw
-YXNzIGluIHRoZSBmbGFncyB5b3Ugd2FudCwgc29tZWhvdy4gRm9yIHRoZQo+ID4gY2xvY2sgeW91
-IGFyZSB0cnlpbmcgdG8gZml4LCBpcyBpdCBpbnNpZGUgb2YgdGhlIFNvQyBvciBleHRlcm5hbD8g
-SWYgaXQKPiA+IGlzIGludGVybmFsLCBhbmQgcGFydCBvZiBhIGxhcmdlciBjbG9jayBjb250cm9s
-bGVyIGRyaXZlciwgaXMgdGhpcyBmb3IKPiA+IHRoZSBsZWdhY3kgc3R5bGUgYWxsd2lubmVyIGNs
-b2NrIGRyaXZlcnMgdGhhdCBwdXQgZXZlcnl0aGluZyBpbiBEVD8KPiAKPiBJdCBpcyA6KAo+IAo+
-IFdoYXQgd2UgY291bGQgZG8sIGlzIGhhdmUgYW4gZXh0cmEgY29tcGF0aWJsZSBmb3IgdGhhdCBj
-bG9jayAobGlrZQo+ICJhbGx3aW5uZXIsc3VuNGktYTEwLXBsbDMteDIiIGluIHRoYXQgY2FzZSks
-IGFuZCBzZXQgdGhlIGZsYWcgb25seSBmb3IKPiB0aGF0IGNvbXBhdGlibGUuCj4gCj4gV291bGQg
-dGhhdCB3b3JrIGZvciB5b3UKClllcywgSSB0aGluayB0aGF0IGlzIHRoZSBiZXN0IHdheSBmb3J3
-YXJkLgoKPiAKPiA+IElmIG5vdCwgaXQgd291bGQgYmV0dGVyIHRvIGluaXRpYWxpemUgaXQgc3Rh
-dGljYWxseSBhbmQgc2hvdmUgdGhpcwo+ID4gZmxhZyBpbnRvIHRoZSBzdHJ1Y3QgY2xrX2luaXRf
-ZGF0YSBzdG9yYWdlLgo+IAo+IEhvcGVmdWxseSwgeWVzLCB0aGF0IHNob3VsZCBiZSBhZGRyZXNz
-ZWQgYnkgdGhlIG5ldyBmcmFtZXdvcmssIGJ1dCBJCj4gbmVlZCByZXZpZXdzIHRvIGdldCBpdCBt
-ZXJnZWQgOykKCldpbGwgZG8hCgpSZWdhcmRzLApNaWtlCgo+IAo+IFRoYW5rcyEKPiBNYXhpbWUK
-PiAKPiAtLSAKPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9ucwo+IEVtYmVkZGVkIExpbnV4
-LCBLZXJuZWwgYW5kIEFuZHJvaWQgZW5naW5lZXJpbmcKPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMu
-Y29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Am 20.06.2016 um 17:08 schrieb Arnd Bergmann:
+>> Since blocks on a MTD can render bad you'd lose the table sooner or later.
+>> That's why we cannot store it on the MTD directly.
+>> Defining the table in DT is at least less ugly than using the mtdparts=
+>> kernel parameter.
+> 
+> Right, there would be no benefit in using the kernel command line,
+> it just moves the information to another place inside of the same DT
+> (the /chosen property).
+> 
+> I think you can normally rely on the first block being readable
+> on flash, in particular if you write it very rarely (when updating
+> the partition information), so it would be technically possible to
+> have a partition table in there, but in practice that's not how
+> things are done, so the argument is useless.
+
+Speaking of NAND, only SLC (and also here not all) chips guarantee that the first
+block is better than the other ones.
+
+Thanks,
+//richard
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
