@@ -1,82 +1,87 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: [PATCH v9 2/4] power: reset: add reboot mode driver
-Date: Mon, 20 Jun 2016 10:40:02 -0400
-Message-ID: <20160620144002.GY12567@windriver.com>
-References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
- <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
- <5767A4C0.3080902@samsung.com>
- <5767A92E.5040602@rock-chips.com>
- <5767E22F.5030207@samsung.com>
+From: <tthayer@opensource.altera.com>
+Subject: [PATCHv4 1/7] EDAC, altera: Add panic flag check to A10 IRQ
+Date: Mon, 20 Jun 2016 09:50:46 -0500
+Message-ID: <1466434252-26107-2-git-send-email-tthayer@opensource.altera.com>
+References: <1466434252-26107-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5767E22F.5030207@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Andy Yan <andy.yan@rock-chips.com>, robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1466434252-26107-1-git-send-email-tthayer@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[Re: [PATCH v9 2/4] power: reset: add reboot mode driver] On 20/06/2016=
- (Mon 14:31) Krzysztof Kozlowski wrote:
+From: Thor Thayer <tthayer@opensource.altera.com>
 
-> On 06/20/2016 10:28 AM, Andy Yan wrote:
-> > Hi Krzysztof:
-> >=20
-> > On 2016=E5=B9=B406=E6=9C=8820=E6=97=A5 16:09, Krzysztof Kozlowski w=
-rote:
-> >> On 06/20/2016 08:38 AM, Andy Yan wrote:
+In preparation for additional memory module ECCs, the
+IRQ function will check a panic flag before doing a
+kernel panic on double bit errors.
 
-[...]
+OCRAM uncorrectable errors cause a panic because sleep/resume
+functions and FPGA contents during sleep are stored in OCRAM.
 
-> >>> +
-> >>> +config SYSCON_REBOOT_MODE
-> >>> +    bool "Generic SYSCON regmap reboot mode driver"
-> >> Why not tristate?
-> >=20
-> >    I see many reset drivers in this directories  use bool, so I fol=
-low
-> > them.
+ECCs on peripheral FIFO buffers will not cause a kernel panic
+on DBERRs because the packet can be retried and therefore
+recovered.
 
-Andy - understood, but mistakes done in the past do not justify
-repeating them again in the present.  OK, this is not strictly a mistak=
-e
-in that it causes an error, but it isn't an ideal approach.
+Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+---
+v2  New patch. Add panic flag to IRQ function.
+v3  No change
+v4  Add reasons to panic on DBERR in OCRAM.
+---
+ drivers/edac/altera_edac.c |    9 ++++++++-
+ drivers/edac/altera_edac.h |    1 +
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
->=20
-> +Cc Paul,
->=20
-> I don't mind that although I don't see any particular objections for
-> making it module-capable. In the same time I just reminded myself abo=
-ut
-> Paul Gortmaker's long effort (like [1] [2]) about removing module
-> capability from non-modular drivers.
-
-Thanks -- it is nice to see that people are starting to add this to
-their review checklist ; early on they were getting added faster than I
-could remove them.  :-(   But I think we are making ground now.
-
-=46or this case, I don't have any bias for it being built-in vs. being
-modular, so long as the code is actually consistent with the Kconfig.=20
-
-=46or existing bool settings I just remove the modular references, sinc=
-e I
-can't be extending the functionality to include a modular usage when I
-can't test it or even be sure if a module has a sensible use case.
-
-Paul.
---
-
->=20
-> Following his rationale, I think either this should be a tristate or =
-the
-> module stuff should be removed.
->=20
-> Best regards,
-> Krzysztof
->=20
-> [1] https://lkml.org/lkml/2016/2/21/180
-> [2] https://lkml.org/lkml/2016/6/13/682
->=20
->=20
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 926bcaf..ced7c55 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -897,7 +897,8 @@ static irqreturn_t altr_edac_a10_ecc_irq(int irq, void *dev_id)
+ 		writel(ALTR_A10_ECC_DERRPENA,
+ 		       base + ALTR_A10_ECC_INTSTAT_OFST);
+ 		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
+-		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
++		if (dci->data->panic)
++			panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
+ 
+ 		return IRQ_HANDLED;
+ 	}
+@@ -936,6 +937,12 @@ const struct edac_device_prv_data a10_ocramecc_data = {
+ 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+ 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+ 	.inject_fops = &altr_edac_a10_device_inject_fops,
++	/*
++	 * OCRAM panic on uncorrectable error because sleep/resume
++	 * functions and FPGA contents are stored in OCRAM. Prefer
++	 * a kernel panic over executing/loading corrupted data.
++	 */
++	.panic = true,
+ };
+ 
+ #endif	/* CONFIG_EDAC_ALTERA_OCRAM */
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index 62b0fa0..cf4e8cb 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -298,6 +298,7 @@ struct edac_device_prv_data {
+ 	irqreturn_t (*ecc_irq_handler)(int irq, void *dev_id);
+ 	int trig_alloc_sz;
+ 	const struct file_operations *inject_fops;
++	bool panic;
+ };
+ 
+ struct altr_edac_device_dev {
+-- 
+1.7.9.5
