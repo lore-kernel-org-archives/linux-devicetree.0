@@ -1,136 +1,102 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: Auto-detecting touchscreen controller and dealing
- with hw configuration differences on q8 tablets
-Date: Mon, 20 Jun 2016 19:22:57 +0800
-Message-ID: <314411466421777@web20m.yandex.ru>
-References: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
-	 <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7@konsulko.com> <17e69e9e-06be-dc4f-cd47-152f6290d2ec@redhat.com>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH 08/12] doc: binding: pwrseq-usb-generic: add binding doc
+ for generic usb power sequence driver
+Date: Mon, 20 Jun 2016 19:26:51 +0800
+Message-ID: <20160620112651.GA26936@shlinux2>
+References: <1466158165-9380-1-git-send-email-peter.chen@nxp.com>
+ <1466158165-9380-9-git-send-email-peter.chen@nxp.com>
+ <CAL_JsqLvs0s2TyfqPM5vtmyY81_X84VjCGjsGYbTgT4syOfp9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBF5ET65QKGQEYNH2MXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <17e69e9e-06be-dc4f-cd47-152f6290d2ec-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, "u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org" <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLvs0s2TyfqPM5vtmyY81_X84VjCGjsGYbTgT4syOfp9Q@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof =?utf-8?Q?Koz=C5=82owski?= <k.kozlowski@samsung.com>, Stephen Boyd <stephen.boyd@linaro.org>, oscar@naiandei.net, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Linux USB List <linux-usb@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, troy.kisky@boundarydevices.com, Javier Martinez Canillas <javier@osg.samsung.com>, Philipp Zabel <p.zabel@pengutronix.>
 List-Id: devicetree@vger.kernel.org
 
-I'm also a user of an A33 Q8 tablet with GSL1680.
+On Fri, Jun 17, 2016 at 12:16:48PM -0500, Rob Herring wrote:
+> On Fri, Jun 17, 2016 at 5:09 AM, Peter Chen <peter.chen@nxp.com> wrote:
+> > Add binding doc for generic usb power sequence driver, and update
+> > generic usb device binding-doc accordingly.
+> >
+> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> > ---
+> >  .../bindings/power/pwrseq/pwrseq-usb-generic.txt   | 31 ++++++++++++++++++++++
+> >  .../devicetree/bindings/usb/usb-device.txt         |  2 ++
+> >  2 files changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+> > new file mode 100644
+> > index 0000000..8ad98382
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+> > @@ -0,0 +1,31 @@
+> > +The power sequence for generic USB Devices
+> > +
+> > +Some hard-wired USB devices need to do power sequence to let the
+> > +device work normally, the typical power sequence like: enable USB
+> > +PHY clock, toggle reset pin, etc. But current Linux USB driver
+> > +lacks of such code to do it, it may cause some hard-wired USB devices
+> > +works abnormal or can't be recognized by controller at all. The
+> > +power sequence will be done before this device can be found at USB
+> > +bus.
+> > +
+> > +Required properties:
+> > +- compatible : contains "usb-pwrseq-generic".
+> 
+> In case I have not been clear, no.
+> 
+> I am not going to accept anything along the lines of the current mmc
+> pwrseq. I am basically okay with Krzysztof's proposal as it is *only*
+> an added property and not a duplication of information. I'd suggest
+> you figure out how to make the kernel work with that rather than
+> trying to work-around whatever kernel limitations there are.
+> 
 
-However, I think a devicetree-per-device structure is not unacceptable...
+I see.
 
-We can still have sun{5,8}i-q8.common.dtsi, and write most of the q8 codes =
-there.
+Would you agree with below:
 
-Then the device dt can only contain wifi, touchscreen, accelerometer. (afte=
-r including sun{5,8}i-q8-common.dtsi)
+&usbotg1 {
+	vbus-supply = <&reg_usb_otg1_vbus>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+	status = "okay";
 
-(On my tablet,
-wifi(esp8089) should use "broken-cd" instead of "non-removable".
-Touchscreen have a weird chip/firmware that cannot even set a correct STATU=
-S.
-And mma8452 iio driver will refuse to work if the chip number in dt is the =
-same as the real chip, even the chip id can be probed)
+	#address-cells = <1>;
+	#size-cells = <0>;
+	hub: genesys@1 {
+		compatible = "usb5e3,608";
+		reg = <1>;
 
+		power-sequence;
+		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
+		reset-duration-us = <10>;
+		clocks = <&clks IMX6SX_CLK_CKO>;
 
-20.06.2016, 19:07, "Hans de Goede" <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
-> Hi,
->
-> On 20-06-16 11:27, Pantelis Antoniou wrote:
->> =C2=A0Hi Hans,
->>
->> =C2=A0I=E2=80=99m going to commend only on the overlay related parts sin=
-ce I=E2=80=99m not I
->> =C2=A0get all the nuances right.
->
-> No problem and thanks for the answer anyways!
->
->>> =C2=A0On Jun 19, 2016, at 14:06 , Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> w=
-rote:
->
-> <snip>
->
->>> =C2=A02) Give the user some way to override the dts settings.
->>>
->>> =C2=A0Which after a somewhat long intro brings me to the actual purpose=
- of this thread, discuss
->>> =C2=A0how to best deal with this. I again see 2 options:
->>>
->>> =C2=A01) Put a disabled gsl1680 node in the dts file, have a q8_autodet=
-ect.c in u-boot
->>> =C2=A0which probes i2c and if it finds the gsl1680 nodes enables it, an=
-d patches in a best-effort
->>> =C2=A0default for which fw file to use. Allow the user to set a touchsc=
-reen_fw u-boot env
->>> =C2=A0variable which will override this. Also allow the user to set a t=
-ouchscreen_inverted_x env
->>> =C2=A0variable to add inverted-x to the dt node for the gsl1680.
->>
->> =C2=A0That can work. The problem is that having anything requiring smart=
-s in u-boot always
->> =C2=A0leads to trouble with users. It all depends on your user=E2=80=99s=
- technical proficiency, if
->> =C2=A0they are comfortable tweaking things in u-boot it=E2=80=99s fine. =
-If it=E2=80=99s not, expect lots of
->> =C2=A0bricked boards when they mess up.
->>
->>> =C2=A02) Write an in kernel overlay manager which does auto-detect as d=
-escribed by 1, and
->>> =C2=A0loads an overlay for the detected touchscreen controller, with mo=
-dule options to allow
->>> =C2=A0specifying the fw-file, x-inversion, etc.
->>>
->>> =C2=A0One things which worries me about 2. is that we would need to hav=
-e 2 overlay files
->>> =C2=A0per fw-file, one regular config, one inverted-x, or is it possibl=
-e for the overlay
->>> =C2=A0manager to modify an overlay before applying it ?
->>
->> =C2=A0Yes, it=E2=80=99s quite possible. You can even have stacked overla=
-ys.
->
-> Ok, is there any example code how to change an overlay before applying it=
- out there,
-> or if not can you point to the functions to use to do this ?
->
-> Specifically my plan is to:
->
-> 1) Have a single overlay for q8 tablets with gsl1680 tablets
->
-> 2) Write an in kernel overlay manager which when it detects a gsl1680 tou=
-chscreen
-> will pick a best-default firmware-file + matching resolution + swap-x-y b=
-ased on
-> which SoC (A13/A23/A33) the tablet is based on as well as the gsl1680's c=
-hip-id
-> and will then "patch" this info into the overlay before applying it. This
-> means being able to set / modify several string, int and bool dt properti=
-es.
->
-> 3) Offer a kernel-module option for the overlaymanager which will allows
-> overriding the defaults for the firmware-filename, etc. This is also
-> why I want to go with the patch approach instead of having multiple
-> dt-overlay files.
->
-> Thanks & Regards,
->
-> Hans
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+		#address-cells = <1>;
+		#size-cells = <0>;
+		ethernet: asix@1 {
+			compatible = "usbb95,1708";
+			reg = <1>;
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+			power-sequence;
+			reset-gpios = <&gpio4 6 GPIO_ACTIVE_LOW>; /* ethernet_rst */
+			reset-duration-us = <15>;
+			clocks = <&clks IMX6SX_CLK_IPG>;
+		};
+	};
+};
+
+If the node has property "power-sequence", the pwrseq core will create
+related platform device, and the driver under pwrseq driver will handle
+power sequence stuffs. The property below "power-sequence" will be
+handled at pwrseq driver.
+
+-- 
+
+Best Regards,
+Peter Chen
