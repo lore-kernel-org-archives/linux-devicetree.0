@@ -1,102 +1,65 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] mfd: cros_ec: add EC_PWM function definitions
-Date: Mon, 20 Jun 2016 09:00:51 +0100
-Message-ID: <20160620080051.GJ21702@dell>
-References: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
- <1464916904-37554-3-git-send-email-briannorris@chromium.org>
- <20160616153817.GD21702@dell>
- <CAD=FV=X8eOQLbdAseL2_JwpOFNjSLDAi9hX=NrE=CfrrTZfAmA@mail.gmail.com>
- <20160617080635.GG21702@dell>
- <CAD=FV=UUJt4vBwHJrUYrKN56dv2YqdW3R7wah7-_PqyQ=YYr7Q@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 03/13] dt-bindings: drm/tegra: Update DPAUX
+ documentation
+Date: Mon, 20 Jun 2016 09:02:44 +0100
+Message-ID: <5767A324.5020305@nvidia.com>
+References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
+ <1466165027-17917-4-git-send-email-jonathanh@nvidia.com>
+ <20160617161306.GD27475@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=UUJt4vBwHJrUYrKN56dv2YqdW3R7wah7-_PqyQ=YYr7Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Enric Balletbo <enric.balletbo-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Randall Spangler <rspangler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Nematbakhsh <shawnn-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Todd Broch <tbroch-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gwendal Grignou <gwendal-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160617161306.GD27475-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Jun 2016, Doug Anderson wrote:
 
-> Lee,
->=20
-> On Fri, Jun 17, 2016 at 1:06 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
-te:
-> >> Probably the reason for all of these non-kernel-isms is that this
-> >> isn't a kernel file.  From the top of the file:
-> >>
-> >>  * NOTE: This file is copied verbatim from the ChromeOS EC Open So=
-urce
-> >>  * project in an attempt to make future updates easy to make.
-> >>
-> >> So the source of truth for this file is
-> >> <https://chromium.googlesource.com/chromiumos/platform/ec/+/master=
-/include/ec_commands.h>.
-> >>
-> >> Someone could probably submit a CL to that project to make it a li=
-ttle
-> >> more kernel-ish and then we'd have to see if the EC team would acc=
-ept
-> >> such changes...
-> >
-> > Hmmm... that kinda puts me in a difficult position.  Do I except
-> > non-kernel code, which does not conform to our stands?
->=20
-> What about if Brian made sure to just fully copy the latest version o=
-f
-> "cros_ec_commands.h" from the EC codebase and changed this commit
-> message to say:
->=20
-> Copy the latest version of "cros_ec_commands.h" from the Chrome OS EC
-> code base, which is the source of truth for this file.  See
-> <https://chromium.googlesource.com/chromiumos/platform/ec/+/master/in=
-clude/ec_commands.h>.
->=20
-> From the commit message it would be clear that this is an external
-> file linked into the kernel for convenience.
->=20
->=20
-> > Naturally I'd be happier if you could try to make the code more
-> > 'kernely'.  The practices I mention above are still good ones, even=
- if
-> > you're not writing kernel specific code.
->=20
-> In general requesting that code from outside the kernel conform to
-> "kerneldoc" seems like a bit of a stretch.  In general having some
-> type of parse-able format for comments is nice, but I could see that
-> in the Chrome OS EC codebase it would be a bit overkill.
+On 17/06/16 17:13, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Fri, Jun 17, 2016 at 01:03:37PM +0100, Jon Hunter wrote:
+>> Update the DPAUX compatibility string information for Tegra124, Tegra132
+>> and Tegra210. For Tegra210 an additional clock, 'sor-safe' is also
+>> required for DPAUX and so add this clock information as well.
+>>
+>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt    | 7 ++++---
+>>  1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> index a3bd8c050c4e..361a472eac4b 100644
+>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> @@ -226,9 +226,9 @@ of the following host1x client modules:
+>>    - nvidia,dpaux: phandle to a DispayPort AUX interface
+>>  
+>>  - dpaux: DisplayPort AUX interface
+>> -  - compatible: For Tegra124, must contain "nvidia,tegra124-dpaux".  Otherwise,
+>> -    must contain '"nvidia,<chip>-dpaux", "nvidia,tegra124-dpaux"', where
+>> -    <chip> is tegra132.
+>> +  - compatible : Should contain one of the following:
+>> +    - "nvidia,tegra124-dpaux": for Tegra124 and Tegra132
+>> +    - "nvidia,tegra210-dpaux": for Tegra210
+>>    - reg: Physical base address and length of the controller's registers.
+>>    - interrupts: The interrupt outputs from the controller.
+>>    - clocks: Must contain an entry for each entry in clock-names.
+>> @@ -236,6 +236,7 @@ of the following host1x client modules:
+>>    - clock-names: Must include the following entries:
+>>      - dpaux: clock input for the DPAUX hardware
+>>      - parent: reference clock
+>> +    - sor-safe: additional clock input for the DPAUX hardware on Tegra210
+> 
+> It might be worth calling this simply "safe" because that's the
+> contextual role of the clock, whereas sor-safe is the system name of the
+> clock.
 
-It's unfortunate that kerneldoc is named so, since I think it's a nice
-way to write structure/function headers regardless of code base and
-not overkill at all.  It's certainly harder to convince !kernel code
-to use the format, or at least easier for others to push back due to
-the fact that is has 'kernel' in the name.
+Yes that is fine with me.
 
-> Also: it would be awfully strange if we suddenly started changing the
-> coding convention of this file or we had half the file in one
-> convention and half in another.  The rest of this file is in EC
-> convention and it seems sane to keep it that way...
+Jon
 
-Right.  It's also a shame we're only catching this now.  Really we
-should have had this discussion in the first instance.
-
-Taking into consideration that this file is already in the kernel and
-that it's current format is also represented, I'm willing to keep
-adding to it.  I would like to see an internal request to adopt
-so-called kerneldoc.  Not because I am wish to blindly push our
-standards to other code-bases, but because I am an advocate of the
-format in general.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+nvpublic
