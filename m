@@ -1,65 +1,51 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 03/13] dt-bindings: drm/tegra: Update DPAUX
- documentation
-Date: Mon, 20 Jun 2016 09:02:44 +0100
-Message-ID: <5767A324.5020305@nvidia.com>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <1466165027-17917-4-git-send-email-jonathanh@nvidia.com>
- <20160617161306.GD27475@ulmo.ba.sec>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports while USB
+ suspend
+Date: Mon, 20 Jun 2016 10:03:34 +0200
+Message-ID: <20160620080334.GL5809@piout.net>
+References: <1465359311-14544-1-git-send-email-wenyou.yang@atmel.com>
+ <1465359311-14544-2-git-send-email-wenyou.yang@atmel.com>
+ <20160608202651.GA23604@rob-hp-laptop>
+ <20160608203810.GF2466@piout.net>
+ <B256D81BAE5131468A838E5D7A24364101650C3632@penmbx01>
+ <20160617135448.GI5809@piout.net>
+ <B256D81BAE5131468A838E5D7A24364101650C5253@penmbx01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160617161306.GD27475-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <B256D81BAE5131468A838E5D7A24364101650C5253@penmbx01>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "Ferre,
+ Nicolas" <Nicolas.FERRE@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 17/06/16 17:13, Thierry Reding wrote:
-> * PGP Signed by an unknown key
+On 20/06/2016 at 03:16:35 +0000, Yang, Wenyou wrote :
+> > Sure, what I mean is that you can try to get the regmap for the SFR in every case.
+> > Depending on whether you were able to get it, you can decide to call
+> > ohci_at91_port_suspend/resume or not (just test for sfr_regmap != NULL).
 > 
-> On Fri, Jun 17, 2016 at 01:03:37PM +0100, Jon Hunter wrote:
->> Update the DPAUX compatibility string information for Tegra124, Tegra132
->> and Tegra210. For Tegra210 an additional clock, 'sor-safe' is also
->> required for DPAUX and so add this clock information as well.
->>
->> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt    | 7 ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> index a3bd8c050c4e..361a472eac4b 100644
->> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> @@ -226,9 +226,9 @@ of the following host1x client modules:
->>    - nvidia,dpaux: phandle to a DispayPort AUX interface
->>  
->>  - dpaux: DisplayPort AUX interface
->> -  - compatible: For Tegra124, must contain "nvidia,tegra124-dpaux".  Otherwise,
->> -    must contain '"nvidia,<chip>-dpaux", "nvidia,tegra124-dpaux"', where
->> -    <chip> is tegra132.
->> +  - compatible : Should contain one of the following:
->> +    - "nvidia,tegra124-dpaux": for Tegra124 and Tegra132
->> +    - "nvidia,tegra210-dpaux": for Tegra210
->>    - reg: Physical base address and length of the controller's registers.
->>    - interrupts: The interrupt outputs from the controller.
->>    - clocks: Must contain an entry for each entry in clock-names.
->> @@ -236,6 +236,7 @@ of the following host1x client modules:
->>    - clock-names: Must include the following entries:
->>      - dpaux: clock input for the DPAUX hardware
->>      - parent: reference clock
->> +    - sor-safe: additional clock input for the DPAUX hardware on Tegra210
+> I don't think so. The SFR includes a lot of miscellaneous functions, more than this one.
 > 
-> It might be worth calling this simply "safe" because that's the
-> contextual role of the clock, whereas sor-safe is the system name of the
-> clock.
 
-Yes that is fine with me.
+I know but this is irrelevant to this discussion. If you need to use the
+SFR from another driver you will simply get it from that other driver.
 
-Jon
+I that case, you will try to get "atmel,sama5d2-sfr". It is only present
+on sama5d2 so you have enough information to know whether or not you can
+use it to suspend/resume.
 
 -- 
-nvpublic
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
