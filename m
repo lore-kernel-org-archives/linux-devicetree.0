@@ -1,24 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: Add MDM9615 TLMM bindings
-Date: Mon, 20 Jun 2016 11:19:27 -0500
-Message-ID: <20160620161927.GA20053@rob-hp-laptop>
-References: <1466158535-17962-1-git-send-email-narmstrong@baylibre.com>
- <1466158535-17962-3-git-send-email-narmstrong@baylibre.com>
+From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Subject: [PATCH v3 3/5] ARM: dts: Add I2C1 support for STM32F429 SoC
+Date: Mon, 20 Jun 2016 18:20:07 +0200
+Message-ID: <1466439609-1814-4-git-send-email-cedric.madianga@gmail.com>
+References: <1466439609-1814-1-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466158535-17962-3-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: linus.walleij@linaro.org, andy.gross@linaro.org, sricharan@codeaurora.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1466439609-1814-1-git-send-email-cedric.madianga@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: patrice.chotard@st.com, mcoquelin.stm32@gmail.com, wsa@the-dreams.de, robh+dt@kernel.org, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 12:15:35PM +0200, Neil Armstrong wrote:
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 152 +++++++++++++++++++++
->  1 file changed, 152 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.txt
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 434d4b9..4eaa107 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -323,6 +323,16 @@
+ 					slew-rate = <2>;
+ 				};
+ 			};
++
++			i2c1_pins_b: i2c1@0 {
++				pins1 {
++					pinmux = <STM32F429_PB9_FUNC_I2C1_SDA>;
++					drive-open-drain;
++				};
++				pins2 {
++					pinmux = <STM32F429_PB6_FUNC_I2C1_SCL>;
++				};
++			};
+ 		};
+ 
+ 		rcc: rcc@40023800 {
+@@ -395,6 +405,18 @@
+ 			interrupts = <80>;
+ 			clocks = <&rcc 0 38>;
+ 		};
++
++		i2c1: i2c@40005400 {
++			compatible = "st,stm32f4-i2c";
++			reg = <0x40005400 0x400>;
++			interrupts = <31>,
++				     <32>;
++			resets = <&rcc 277>;
++			clocks = <&rcc 0 149>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
+ 	};
+ };
+ 
+-- 
+1.9.1
