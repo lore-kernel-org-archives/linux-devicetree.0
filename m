@@ -1,131 +1,50 @@
-From: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] phy: rockchip-inno-usb2: add a new driver for
- Rockchip usb2phy
-Date: Sun, 19 Jun 2016 21:56:41 -0700
-Message-ID: <CABXOdTcz9zjJ1iN2D9UXeYgd0y-kzh+fV3=+kmB=8j2jYqTQkg@mail.gmail.com>
-References: <1466129353-48063-1-git-send-email-frank.wang@rock-chips.com>
- <1466129353-48063-3-git-send-email-frank.wang@rock-chips.com>
- <576383C6.3050005@roeck-us.net>
- <98bc69af-c597-d1ee-e83d-c7b5918e9ef4@rock-chips.com>
- <5763F92D.80102@roeck-us.net>
- <ab59a324-d5e1-730a-28a7-01f8af664eb7@rock-chips.com>
- <CABXOdTd0baqMt7LqsmVk1S8VNpzEhQ7kBeKiqTaR4+Ov01NwDA@mail.gmail.com>
- <3b65b363-72a8-7985-7da1-9045583c90b8@rock-chips.com>
+From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: Add mt6755 basic chip support
+Date: Mon, 20 Jun 2016 13:33:05 +0800
+Message-ID: <1466400785.29789.2.camel@mtkswgap22>
+References: <1465870805-10451-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <3b65b363-72a8-7985-7da1-9045583c90b8-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465870805-10451-1-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Choui <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssCgpPbiBTdW4sIEp1biAxOSwgMjAxNiBhdCA4OjMyIFBNLCBGcmFuayBXYW5nIDxm
-cmFuay53YW5nQHJvY2stY2hpcHMuY29tPiB3cm90ZToKPiBIaSBIZWlrbyAmIEd1ZW50ZXIsCj4K
-Pgo+IE9uIDIwMTYvNi8yMCAxMTowMCwgR3VlbnRlciBSb2VjayB3cm90ZToKPj4KPj4gT24gU3Vu
-LCBKdW4gMTksIDIwMTYgYXQgNjoyNyBQTSwgRnJhbmsgV2FuZyA8ZnJhbmsud2FuZ0Byb2NrLWNo
-aXBzLmNvbT4KPj4gd3JvdGU6Cj4+Pgo+Pj4gSGkgR3VlbnRlciwKPj4+Cj4+Pgo+Pj4gT24gMjAx
-Ni82LzE3IDIxOjIwLCBHdWVudGVyIFJvZWNrIHdyb3RlOgo+Pj4+Cj4+Pj4gSGkgRnJhbmssCj4+
-Pj4KPj4+PiBPbiAwNi8xNi8yMDE2IDExOjQzIFBNLCBGcmFuayBXYW5nIHdyb3RlOgo+Pj4+Pgo+
-Pj4+PiBIaSBHdWVudGVyLAo+Pj4+Pgo+Pj4+PiBPbiAyMDE2LzYvMTcgMTI6NTksIEd1ZW50ZXIg
-Um9lY2sgd3JvdGU6Cj4+Pj4+Pgo+Pj4+Pj4gT24gMDYvMTYvMjAxNiAwNzowOSBQTSwgRnJhbmsg
-V2FuZyB3cm90ZToKPj4+Pj4+Pgo+Pj4+Pj4+IFRoZSBuZXdlciBTb0NzIChyazMzNjYsIHJrMzM5
-OSkgdGFrZSBhIGRpZmZlcmVudCB1c2ItcGh5IElQIGJsb2NrCj4+Pj4+Pj4gdGhhbiByazMyODgg
-YW5kIGJlZm9yZSwgYW5kIG1vc3Qgb2YgcGh5LXJlbGF0ZWQgcmVnaXN0ZXJzIGFyZSBhbHNvCj4+
-Pj4+Pj4gZGlmZmVyZW50IGZyb20gdGhlIHBhc3QsIHNvIGEgbmV3IHBoeSBkcml2ZXIgaXMgcmVx
-dWlyZWQgbmVjZXNzYXJpbHkuCj4+Pj4+Pj4KPj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBGcmFuayBX
-YW5nIDxmcmFuay53YW5nQHJvY2stY2hpcHMuY29tPgo+Pj4+Pj4+IFN1Z2dlc3RlZC1ieTogR3Vl
-bnRlciBSb2VjayA8bGludXhAcm9lY2stdXMubmV0Pgo+Pj4+Pj4+IFN1Z2dlc3RlZC1ieTogRG91
-ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+Pj4+Pj4+IFJldmlld2VkLWJ5OiBI
-ZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+Pj4+Pj4+IFRlc3RlZC1ieTogSGVpa28g
-U3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPj4+Pj4+PiAtLS0KPj4+Pj4+Cj4+Pj4+Pgo+Pj4+
-Pj4gWyAuLi4gXQo+Pj4+Pj4KPj4+Pj4+PiArCj4+Pj4+Pj4gK3N0YXRpYyBpbnQgcm9ja2NoaXBf
-dXNiMnBoeV9yZXN1bWUoc3RydWN0IHBoeSAqcGh5KQo+Pj4+Pj4+ICt7Cj4+Pj4+Pj4gKyAgICBz
-dHJ1Y3Qgcm9ja2NoaXBfdXNiMnBoeV9wb3J0ICpycG9ydCA9IHBoeV9nZXRfZHJ2ZGF0YShwaHkp
-Owo+Pj4+Pj4+ICsgICAgc3RydWN0IHJvY2tjaGlwX3VzYjJwaHkgKnJwaHkgPQo+Pj4+Pj4+IGRl
-dl9nZXRfZHJ2ZGF0YShwaHktPmRldi5wYXJlbnQpOwo+Pj4+Pj4+ICsgICAgaW50IHJldDsKPj4+
-Pj4+PiArCj4+Pj4+Pj4gKyAgICBkZXZfZGJnKCZycG9ydC0+cGh5LT5kZXYsICJwb3J0IHJlc3Vt
-ZVxuIik7Cj4+Pj4+Pj4gKwo+Pj4+Pj4+ICsgICAgcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHJw
-aHktPmNsazQ4MG0pOwo+Pj4+Pj4+ICsgICAgaWYgKHJldCkKPj4+Pj4+PiArICAgICAgICByZXR1
-cm4gcmV0Owo+Pj4+Pj4+ICsKPj4+Pj4+Cj4+Pj4+PiBJZiBzdXNwZW5kIGNhbiBiZSBjYWxsZWQg
-bXVsdGlwbGUgdGltZXMsIHJlc3VtZSBjYW4gYmUgY2FsbGVkCj4+Pj4+PiBtdWx0aXBsZSB0aW1l
-cyBhcyB3ZWxsLiBEb2Vzbid0IHRoaXMgY2F1c2UgYSBjbG9jayBpbWJhbGFuY2UKPj4+Pj4+IGlm
-IHlvdSBjYWxsIGNsa19wcmVwYXJlX2VuYWJsZSgpIG11bHRpcGxlIHRpbWVzIG9uIHJlc3VtZSwK
-Pj4+Pj4+IGJ1dCBjbGtfZGlzYWJsZV91bnByZXBhcmUoKSBvbmx5IG9uY2Ugb24gc3VzcGVuZCA/
-Cj4+Pj4+Pgo+Pj4+PiBXZWxsLCB3aGF0IHlvdSBzYWlkIGlzIHJlYXNvbmFibGUsIEhvdyBkb2Vz
-IHNvbWV0aGluZyBsaWtlIGJlbG93Pwo+Pj4+Pgo+Pj4+PiBAQCAtMzA3LDYgKzMwNyw5IEBAIHN0
-YXRpYyBpbnQgcm9ja2NoaXBfdXNiMnBoeV9yZXN1bWUoc3RydWN0IHBoeSAqcGh5KQo+Pj4+Pgo+
-Pj4+PiAgICAgICAgICAgZGV2X2RiZygmcnBvcnQtPnBoeS0+ZGV2LCAicG9ydCByZXN1bWVcbiIp
-Owo+Pj4+Pgo+Pj4+PiArICAgICAgIGlmICghcnBvcnQtPnN1c3BlbmRlZCkKPj4+Pj4gKyAgICAg
-ICAgICAgICAgIHJldHVybiAwOwo+Pj4+PiArCj4+Pj4+ICAgICAgICAgICByZXQgPSBjbGtfcHJl
-cGFyZV9lbmFibGUocnBoeS0+Y2xrNDgwbSk7Cj4+Pj4+ICAgICAgICAgICBpZiAocmV0KQo+Pj4+
-PiAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Owo+Pj4+PiBAQCAtMzI3LDEyICszMzAsMTYg
-QEAgc3RhdGljIGludCByb2NrY2hpcF91c2IycGh5X3N1c3BlbmQoc3RydWN0IHBoeQo+Pj4+PiAq
-cGh5KQo+Pj4+Pgo+Pj4+PiAgICAgICAgICAgZGV2X2RiZygmcnBvcnQtPnBoeS0+ZGV2LCAicG9y
-dCBzdXNwZW5kXG4iKTsKPj4+Pj4KPj4+Pj4gKyAgICAgICBpZiAocnBvcnQtPnN1c3BlbmRlZCkK
-Pj4+Pj4gKyAgICAgICAgICAgICAgIHJldHVybiAwOwo+Pj4+PiArCj4+Pj4+ICAgICAgICAgICBy
-ZXQgPSBwcm9wZXJ0eV9lbmFibGUocnBoeSwgJnJwb3J0LT5wb3J0X2NmZy0+cGh5X3N1cywgdHJ1
-ZSk7Cj4+Pj4+ICAgICAgICAgICBpZiAocmV0KQo+Pj4+PiAgICAgICAgICAgICAgICAgICByZXR1
-cm4gcmV0Owo+Pj4+Pgo+Pj4+PiAgICAgICAgICAgcnBvcnQtPnN1c3BlbmRlZCA9IHRydWU7Cj4+
-Pj4+ICAgICAgICAgICBjbGtfZGlzYWJsZV91bnByZXBhcmUocnBoeS0+Y2xrNDgwbSk7Cj4+Pj4+
-ICsKPj4+Pj4gICAgICAgICAgIHJldHVybiAwOwo+Pj4+PiAgICB9Cj4+Pj4+Cj4+Pj4+IEBAIC00
-ODUsNiArNDkyLDcgQEAgc3RhdGljIGludCByb2NrY2hpcF91c2IycGh5X2hvc3RfcG9ydF9pbml0
-KHN0cnVjdAo+Pj4+PiByb2NrY2hpcF91c2IycGh5ICpycGh5LAo+Pj4+Pgo+Pj4+PiAgICAgICAg
-ICAgcnBvcnQtPnBvcnRfaWQgPSBVU0IyUEhZX1BPUlRfSE9TVDsKPj4+Pj4gICAgICAgICAgIHJw
-b3J0LT5wb3J0X2NmZyA9Cj4+Pj4+ICZycGh5LT5waHlfY2ZnLT5wb3J0X2NmZ3NbVVNCMlBIWV9Q
-T1JUX0hPU1RdOwo+Pj4+PiArICAgICAgIHJwb3J0LT5zdXNwZW5kZWQgPSB0cnVlOwo+Pj4+Pgo+
-Pj4+IFdoeSBkb2VzIGl0IHN0YXJ0IGluIHN1c3BlbmRlZCBtb2RlID8gVGhhdCBzZWVtcyBvZGQu
-Cj4+Pj4KPj4+IFRoaXMgaXMgYW4gaW5pdGlhbGl6YXRpb24uIFVzaW5nIGFib3ZlIGRlc2lnbiB3
-aGljaCBtYWtlICdzdXNwZW5kZWQnIGFzIGEKPj4+IGNvbmRpdGlvbiBib3RoIGluICpfdXNiMnBo
-eV9yZXN1bWUgYW5kICpfdXNiMnBoeV9zdXNwZW5kLCBJIGJlbGlldmUgaWYgaXQKPj4+IGlzCj4+
-PiBub3QgaW5pdGlhbGl6ZWQgYXMgc3VzcGVuZGVkIG1vZGUsIHRoZSBmaXJzdCByZXN1bWUgcHJv
-Y2VzcyB3aWxsIGJlCj4+PiBza2lwcGVkLgo+Pgo+PiBJIGhhZCB0byByZS1yZWFkIHRoZSBlbnRp
-cmUgcGF0Y2guCj4+Cj4+IFR1cm5zIG91dCBteSBwcm9ibGVtIHdhcyBvbmUgb2YgdGVybWlub2xv
-Z3kuIFVzaW5nICJzdXNwZW5kIiBhbmQKPj4gInJlc3VtZSIgdG8gbWUgc3VnZ2VzdGVkIHRoZSBj
-b21tb24gdXNlIG9mIHN1c3BlbmQgYW5kIHJlc3VtZQo+PiBmdW5jdGlvbnMuIFRoYXQgaXMgbm90
-IHRoZSBjYXNlIGhlcmUuIEFmdGVyIG1lbnRhbGx5IHJlcGxhY2luZwo+PiAic3VzcGVuZCIgd2l0
-aCAicG93ZXJfb2ZmIiBhbmQgInJlc3VtZSIgd2l0aCAicG93ZXJfb24iLCB5b3UgYXJlCj4+IHJp
-Z2h0LCBubyBwcm9ibGVtIGV4aXN0cy4gU29ycnkgZm9yIHRoZSBub2lzZS4KPj4KPj4gTWF5YmUg
-aXQgd291bGQgYmUgdXNlZnVsIHRvIHJlcGxhY2UgInJlc3VtZSIgd2l0aCAicG93ZXJfb24iIGFu
-ZAo+PiAic3VzcGVuZCIgd2l0aCAicG93ZXJfb2ZmIiBpbiB0aGUgZnVuY3Rpb24gYW5kIHZhcmlh
-YmxlIG5hbWVzIHRvCj4+IHJlZHVjZSBjb25mdXNpb24gYW5kIG1pc3VuZGVyc3RhbmRpbmdzLgo+
-Pgo+PiBUaGFua3MsCj4+IEd1ZW50ZXIKPgo+Cj4gV2VsbCwgaXQgZG9lcyBoYXZlIGEgYml0cyBj
-b25mdXNpb24sIGhvd2V2ZXIsIHRoZSBwaHktcG9ydCBhbHdheXMganVzdCBnb2VzCj4gdG8gc3Vz
-cGVuZCBhbmQgcmVzdW1lIG1vZGUgKE5vdCBwb3dlciBvZmYgYW5kIHBvd2VyIG9uKSBpbiBhIGZh
-Y3QuIFNvIG11c3QKPiBpdCBiZSByZW5hbWVkPwo+CgpPdGhlciBwaHkgZHJpdmVycyBuYW1lIHRo
-ZSBmdW5jdGlvbnMgX3Bvd2VyX29mZiBhbmQgX3Bvd2VyX29uIGFuZAphdm9pZCB0aGUgY29uZnVz
-aW9uLiBUaGUgY2FsbGJhY2tzIGFyZSBuYW1lZCAucG93ZXJfb2ZmIGFuZCAucG93ZXJfb24sCndo
-aWNoIGdpdmVzIGEgY2xlYXIgaW5kaWNhdGlvbiBvZiBpdHMgaW50ZW5kZWQgcHVycG9zZS4gT3Ro
-ZXIgZHJpdmVycwppbXBsZW1lbnRpbmcgc3VzcGVuZC9yZXN1bWUgKHN1Y2ggYXMgdGhlIG9tYXAg
-dXNiIHBoeSBkcml2ZXIpIHRpZQp0aG9zZSBmdW5jdGlvbnMgbm90IGludG8gdGhlIHBvd2VyX29m
-Zi9wb3dlcl9vbiBjYWxsYmFja3MsIGJ1dCBpbnRvCnRoZSBkcml2ZXIncyBzdXNwZW5kL3Jlc3Vt
-ZSBjYWxsYmFja3MuIEF0IGxlYXN0IHRoZSBvbWFwIGRyaXZlciBoYXMKc2VwYXJhdGUgcG93ZXIg
-bWFuYWdlbWVudCBmdW5jdGlvbnMuCgpEbyB0aGUgZnVuY3Rpb25zIF9oYXZlXyB0byBiZSByZW5h
-bWVkID8gU3VyZWx5IG5vdC4gQnV0LCBpZiB0aGUKZnVuY3Rpb25zIGFyZSByZWFsbHkgc3VzcGVu
-ZC9yZXN1bWUgZnVuY3Rpb25zIGFuZCBub3QKcG93ZXJfb2ZmL3Bvd2VyX29uIGZ1bmN0aW9ucywg
-bWF5YmUgdGhleSBzaG91bGQgdGllIHRvIHRoZQpzdXNwZW5kL3Jlc3VtZSBmdW5jdGlvbnMgYW5k
-IG5vdCByZWdpc3RlciB0aGVtc2VsdmVzIGFzCnBvd2VyX29mZi9wb3dlcl9vbiBmdW5jdGlvbnMg
-PwoKVGhhbmtzLApHdWVudGVyCgo+IEBIZWlrbyBTdMO8Ym5lci4gSGV5IEhlaWtvLCB3aGF0IGlz
-IHlvdXIgdW5pcXVlIHBlcmNlcHRpb25zPyA7LSkKPgo+Cj4gQlIuCj4gRnJhbmsKPgo+Cj4+Cj4+
-PiBUaGVvcmV0aWNhbGx5LCB0aGUgcGh5LXBvcnQgaW4gc3VzcGVuZGVkIG1vZGUgbWFrZSBzZW5z
-ZSB3aGVuIGl0IGlzIGF0Cj4+PiBzdGFydAo+Pj4gdGltZSwgdGhlbiB0aGUgdXBwZXIgbGF5ZXIg
-Y29udHJvbGxlciB3aWxsIGludm9rZSBwaHlfcG93ZXJfb24gKFNlZQo+Pj4gcGh5LWNvcmUuYyks
-IGFuZCBpdCBmdXJ0aGVyIGNhbGwgYmFjayAqX3VzYjJwaHlfcmVzdW1lIHRvIG1ha2UgcGh5LXBv
-cnQKPj4+IHdvcmsKPj4+IHByb3Blcmx5Lgo+Pj4KPj4+IFNvIGNvdWxkIHlvdSB0ZWxsIG1lIHdo
-YXQgbWFrZSB5b3UgZmVlbGluZyBvZGQgb3Igd291bGQgeW91IGxpa2UgdG8gZ2l2ZQo+Pj4gYW5v
-dGhlciBhcHByb3ByaWF0ZSB3YXkgcGxlYXNlPyA6LSkKPj4+Cj4+PiBCUi4KPj4+IEZyYW5rCj4+
-Pgo+Pj4KPj4+Pj4gICAgICAgICAgIG11dGV4X2luaXQoJnJwb3J0LT5tdXRleCk7Cj4+Pj4+ICAg
-ICAgICAgICBJTklUX0RFTEFZRURfV09SSygmcnBvcnQtPnNtX3dvcmssIHJvY2tjaGlwX3VzYjJw
-aHlfc21fd29yayk7Cj4+Pj4+Cj4+Pgo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2No
-aXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
+On Tue, 2016-06-14 at 10:20 +0800, Mars Cheng wrote:
+> This patch adds basic support for Mediatek's new 8-core chip, mt6755.
+> It is also named as Helio P10. It is based on 4.7-rc1
+> 
+> Mars Cheng (2):
+>   Document: DT: Add bindings for mediatek MT6755 SoC Platform
+>   arm64: dts: mediatek: add mt6755 support
+> 
+>  Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
+>  .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+>  .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+>  arch/arm64/boot/dts/mediatek/Makefile              |    1 +
+>  arch/arm64/boot/dts/mediatek/mt6755-phone.dts      |   39 ++++++
+>  arch/arm64/boot/dts/mediatek/mt6755.dtsi           |  143 ++++++++++++++++++++
+>  6 files changed, 189 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6755-phone.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6755.dtsi
+> 
+Hi Matthias
+
+Would you like to merge this patch? If there is any suggestions or
+issues, I will fix them ASAP.
+
+Thanks a lot.
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
