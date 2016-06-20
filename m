@@ -1,70 +1,94 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 02/20] clk: multiplier: Prevent the multiplier from under
- / over flowing
-Date: Mon, 20 Jun 2016 13:50:30 -0700
-Message-ID: <20160620205030.24587.98159@quark.deferred.io>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
- <1463402840-17062-3-git-send-email-maxime.ripard@free-electrons.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 0/1] ARM: dts: sunxi: Fix simplefb not working in 4.7-rc1
+Date: Mon, 20 Jun 2016 22:56:59 +0200
+Message-ID: <d239fb49-61a1-a574-8fa8-205b6a51a595@redhat.com>
+References: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
+ <20160609074643.GA5242@lukather>
+ <21258fc0-0250-951b-2ee7-d022fb3c09ac@redhat.com>
+ <20160613080124.GA4481@lukather>
+ <1a9a0d76-5bbf-4b79-abee-1c9dd0436567@redhat.com>
+ <20160620074610.GH26668@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1463402840-17062-3-git-send-email-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160620074610.GH26668@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBNYXhpbWUgUmlwYXJkICgyMDE2LTA1LTE2IDA1OjQ3OjAyKQo+IEluIHRoZSBjdXJy
-ZW50IG11bHRpcGxpZXIgYmFzZSBjbG9jayBpbXBsZW1lbnRhdGlvbiwgaWYgdGhlCj4gQ0xLX1NF
-VF9SQVRFX1BBUkVOVCBmbGFnIGlzbid0IHNldCwgdGhlIGNvZGUgd2lsbCBub3QgbWFrZSBzdXJl
-IHRoYXQgdGhlCj4gbXVsdGlwbGllciBjb21wdXRlZCByZW1haW5zIHdpdGhpbiB0aGUgYm91bmRh
-cmllcyBvZiBvdXIgY2xvY2suCj4gCj4gVGhpcyBtZWFucyB0aGF0IGlmIHRoZSBjbG9jayB3ZSB3
-YW50IHRvIHJlYWNoIGlzIGJlbG93IHRoZSBwYXJlbnQgcmF0ZSwKPiBvciBpZiB0aGUgbXVsdGlw
-bGllciBpcyBhYm92ZSB0aGUgbWF4aW11bSB0aGF0IHdlIGNhbiByZWFjaCwgd2Ugd2lsbCBlbmQg
-dXAKPiB3aXRoIGEgY29tcGxldGVseSBib2d1cyBvbmUgdGhhdCB0aGUgY2xvY2sgY2Fubm90IGFj
-aGlldmUuCj4gCj4gRml4ZXM6IGYyZTBhNTMyNzFhNCAoImNsazogQWRkIGEgYmFzaWMgbXVsdGlw
-bGllciBjbG9jayIpCj4gU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFy
-ZEBmcmVlLWVsZWN0cm9ucy5jb20+CgpBcHBsaWVkLgoKUmVnYXJkcywKTWlrZQoKPiAtLS0KPiAg
-ZHJpdmVycy9jbGsvY2xrLW11bHRpcGxpZXIuYyB8IDIwICsrKysrKysrKysrKysrKysrLS0tCj4g
-IDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+IAo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9jbGstbXVsdGlwbGllci5jIGIvZHJpdmVycy9jbGsvY2xr
-LW11bHRpcGxpZXIuYwo+IGluZGV4IDllNDQ5YzdiNzUxYy4uZGMwMzdjOTU3YWNkIDEwMDY0NAo+
-IC0tLSBhL2RyaXZlcnMvY2xrL2Nsay1tdWx0aXBsaWVyLmMKPiArKysgYi9kcml2ZXJzL2Nsay9j
-bGstbXVsdGlwbGllci5jCj4gQEAgLTUyLDE0ICs1MiwyOCBAQCBzdGF0aWMgdW5zaWduZWQgbG9u
-ZyBfX2Jlc3RtdWx0KHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nICpiZXN0X3BhcmVudF9y
-YXRlLAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdTggd2lkdGgsIHVuc2lnbmVk
-IGxvbmcgZmxhZ3MpCj4gIHsKPiArICAgICAgIHN0cnVjdCBjbGtfbXVsdGlwbGllciAqbXVsdCA9
-IHRvX2Nsa19tdWx0aXBsaWVyKGh3KTsKPiAgICAgICAgIHVuc2lnbmVkIGxvbmcgb3JpZ19wYXJl
-bnRfcmF0ZSA9ICpiZXN0X3BhcmVudF9yYXRlOwo+ICAgICAgICAgdW5zaWduZWQgbG9uZyBwYXJl
-bnRfcmF0ZSwgY3VycmVudF9yYXRlLCBiZXN0X3JhdGUgPSB+MDsKPiAgICAgICAgIHVuc2lnbmVk
-IGludCBpLCBiZXN0bXVsdCA9IDA7Cj4gKyAgICAgICB1bnNpZ25lZCBpbnQgbWF4bXVsdCA9ICgx
-IDw8IHdpZHRoKSAtIDE7Cj4gKwo+ICsgICAgICAgaWYgKCEoY2xrX2h3X2dldF9mbGFncyhodykg
-JiBDTEtfU0VUX1JBVEVfUEFSRU5UKSkgewo+ICsgICAgICAgICAgICAgICBiZXN0bXVsdCA9IHJh
-dGUgLyBvcmlnX3BhcmVudF9yYXRlOwo+ICsKPiArICAgICAgICAgICAgICAgLyogTWFrZSBzdXJl
-IHdlIGRvbid0IGVuZCB1cCB3aXRoIGEgMCBtdWx0aXBsaWVyICovCj4gKyAgICAgICAgICAgICAg
-IGlmICgoYmVzdG11bHQgPT0gMCkgJiYKPiArICAgICAgICAgICAgICAgICAgICEobXVsdC0+Zmxh
-Z3MgJiBDTEtfTVVMVElQTElFUl9aRVJPX0JZUEFTUykpCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgYmVzdG11bHQgPSAxOwo+ICAKPiAtICAgICAgIGlmICghKGNsa19od19nZXRfZmxhZ3MoaHcp
-ICYgQ0xLX1NFVF9SQVRFX1BBUkVOVCkpCj4gLSAgICAgICAgICAgICAgIHJldHVybiByYXRlIC8g
-KmJlc3RfcGFyZW50X3JhdGU7Cj4gKyAgICAgICAgICAgICAgIC8qIE1ha2Ugc3VyZSB3ZSBkb24n
-dCBvdmVyZmxvdyB0aGUgbXVsdGlwbGllciAqLwo+ICsgICAgICAgICAgICAgICBpZiAoYmVzdG11
-bHQgPiBtYXhtdWx0KQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJlc3RtdWx0ID0gbWF4bXVs
-dDsKPiArCj4gKyAgICAgICAgICAgICAgIHJldHVybiBiZXN0bXVsdDsKPiArICAgICAgIH0KPiAg
-Cj4gLSAgICAgICBmb3IgKGkgPSAxOyBpIDwgKCgxIDw8IHdpZHRoKSAtIDEpOyBpKyspIHsKPiAr
-ICAgICAgIGZvciAoaSA9IDE7IGkgPCBtYXhtdWx0OyBpKyspIHsKPiAgICAgICAgICAgICAgICAg
-aWYgKHJhdGUgPT0gb3JpZ19wYXJlbnRfcmF0ZSAqIGkpIHsKPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAvKgo+ICAgICAgICAgICAgICAgICAgICAgICAgICAqIFRoaXMgaXMgdGhlIGJlc3QgY2Fz
-ZSBmb3IgdXMgaWYgd2UgaGF2ZSBhCj4gLS0gCj4gMi44LjIKPiAKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+On 20-06-16 09:46, Maxime Ripard wrote:
+> On Mon, Jun 13, 2016 at 10:30:57AM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 13-06-16 10:01, Maxime Ripard wrote:
+>>> On Thu, Jun 09, 2016 at 12:47:36PM +0200, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 09-06-16 09:46, Maxime Ripard wrote:
+>>>>> Hi Hans,
+>>>>>
+>>>>> On Sat, Jun 04, 2016 at 08:05:23PM +0200, Hans de Goede wrote:
+>>>>>> Hi Maxime,
+>>>>>>
+>>>>>> While testing 4.7-rc1 / linux-sunxi/sunxi-next on a A10s I noticed that
+>>>>>> hdmi out is no longer working (screen goes black when the kernel turns
+>>>>>> of unused clocks).
+>>>>>>
+>>>>>> This is caused by the dtsi for sun4i / sun5i / sun7i based boards now
+>>>>>> listing pll3, without pll3 being added to the clocks list for the
+>>>>>> simplefb nodes.
+>>>>>
+>>>>> Why not do just that then? It's more appropriate for a fix imho.
+>>>>
+>>>> You mean just for sun5i-a10s, or for all of sun4i / sun5i-a10s and
+>>>> sun7i ?
+>>>>
+>>>> For sun4i and sun7i things are already fixed in next:
+>>>>
+>>>> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=5a7f2310cc847a73852e70bc720a61ca9bf986a6
+>>>> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=c79255ca4d7b67cce4eac4dd532e097ce49f3679
+>>>>
+>>>> It seems best to use those fixes, rather then come up with a separate
+>>>> fix for 4.7.
+>>>>
+>>>> My patch for fixing sun5i-a10s is inline with the 2 above patches,
+>>>> which seems best, rather then doing something special for just sun5i-a10s.
+>>>
+>>> Well, you are doing something special for just the A10s: the patches
+>>> quoted above just add a bunch of clocks and add the handles to the
+>>> list of clocks managed by simplefb.
+>>>
+>>> For the A10s, you also declare the whole display engine block without
+>>> anyone having tested that it was actually working.
+>>
+>> A10s is the same SoC as A13 / R8, just in a different package / with
+>> different pins routed to the outside and it features a parallel LCD
+>> interface just like the A13 / R8. We've had this confirmed by
+>> Allwinner multiple times now, A13 / A10s / R8 literary are the same
+>> chip, there simply is no way the displayblock on the A10s somehow
+>> is magically different.
+>>
+>> Given all this, clearly having this identical displayblock in the
+>> shared sun5i.dtsi is the right thing to do.
+>
+> Maybe, but this is not a patch for an 4.7-rc* release, but for the
+> next merge window.
+
+Ok, I'll send out a patch with the simple fix for 4.7 for sun4i / sun5i-a10s / sun7i
+then.
+
+Regards,
+
+Hans
