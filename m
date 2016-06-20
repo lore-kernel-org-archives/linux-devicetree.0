@@ -1,52 +1,126 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v9 3/4] ARM: dts: rockchip: add syscon-reboot-mode DT node
-Date: Mon, 20 Jun 2016 14:55:46 -0700
-Message-ID: <20160620215545.GE1256@tuxbot>
-References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
- <1466404769-3534-1-git-send-email-andy.yan@rock-chips.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 1/2] media: Driver for Toshiba et8ek8 5MP sensor
+Date: Tue, 21 Jun 2016 00:59:39 +0300
+Message-ID: <20160620215938.GN24980@valkosipuli.retiisi.org.uk>
+References: <1465659593-16858-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1465659593-16858-2-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <20160618152259.GC8392@amd>
+ <201606181737.33116@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466404769-3534-1-git-send-email-andy.yan@rock-chips.com>
+In-Reply-To: <201606181737.33116@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, sre@kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun 19 Jun 23:39 PDT 2016, Andy Yan wrote:
+Hi Pali,
 
-> Rockchip platform use a SYSCON mapped register store
-> the reboot mode magic value for bootloader to use when
-> system reboot. So add syscon-reboot-mode driver DT node
-> for rk3xxx/rk3036/rk3288 based platform
-> 
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> 
-[..]
-> diff --git a/include/dt-bindings/soc/rockchip_boot-mode.h b/include/dt-bindings/soc/rockchip_boot-mode.h
-> new file mode 100644
-> index 0000000..ae7c867
-> --- /dev/null
-> +++ b/include/dt-bindings/soc/rockchip_boot-mode.h
-> @@ -0,0 +1,15 @@
-> +#ifndef __ROCKCHIP_BOOT_MODE_H
-> +#define __ROCKCHIP_BOOT_MODE_H
-> +
-> +/*high 24 bits is tag, low 8 bits is type*/
-> +#define REBOOT_FLAG		0x5242C300
-> +/* normal boot */
-> +#define BOOT_NORMAL		(REBOOT_FLAG + 0)
-> +/* enter bootloader rockusb mode */
-> +#define BOOT_BL_DOWNLOAD	(REBOOT_FLAG + 1)
-> +/* enter recovery */
-> +#define BOOT_RECOVERY		(REBOOT_FLAG + 3)
-> + /* enter fastboot mode */
-> +#define BOOT_FASTBOOT		(REBOOT_FLAG + 9)
+On Sat, Jun 18, 2016 at 05:37:33PM +0200, Pali Roh=E1r wrote:
+> On Saturday 18 June 2016 17:22:59 Pavel Machek wrote:
+> > > +/*
+> > > + *
+> > > + * Stingray sensor mode settings for Scooby
+> > > + *
+> > > + *
+> > > + */
+> >=20
+> > I'd fix it to normal comment style... and possibly remove it. Can y=
+ou
+> > understand what it says?
+> >=20
+> > > +	},
+> > > +	.regs =3D {
+> > > +		{ ET8EK8_REG_8BIT, 0x1239, 0x4F },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x1238, 0x02 },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x123B, 0x70 },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x123A, 0x05 },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x121B, 0x63 },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x1220, 0x85 },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x1221, 0x00 },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x1222, 0x58 },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x1223, 0x00 },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x121D, 0x63 },	/*        */
+> > > +		{ ET8EK8_REG_8BIT, 0x125D, 0x83 },	/*        */
+> > > +		{ ET8EK8_REG_TERM, 0, 0}
+> > > +	}
+> >=20
+> > I'd remove the empty comments...
+> >=20
+> > > +struct et8ek8_meta_reglist meta_reglist =3D {
+> > > +	.version =3D "V14 03-June-2008",
+> >=20
+> > Do we need the version?
+> >=20
+> > > +	.reglist =3D {
+> > > +		{ .ptr =3D &mode1_poweron_mode2_16vga_2592x1968_12_07fps },
+> > > +		{ .ptr =3D &mode1_16vga_2592x1968_13_12fps_dpcm10_8 },
+> > > +		{ .ptr =3D &mode3_4vga_1296x984_29_99fps_dpcm10_8 },
+> > > +		{ .ptr =3D &mode4_svga_864x656_29_88fps },
+> > > +		{ .ptr =3D &mode5_vga_648x492_29_93fps },
+> > > +		{ .ptr =3D &mode2_16vga_2592x1968_3_99fps },
+> > > +		{ .ptr =3D &mode_648x492_5fps },
+> > > +		{ .ptr =3D &mode3_4vga_1296x984_5fps },
+> > > +		{ .ptr =3D &mode_4vga_1296x984_25fps_dpcm10_8 },
+> > > +		{ .ptr =3D 0 }
+> > > +	}
+> > > +};
+> >=20
+> > I'd say .ptr =3D NULL.
+> >=20
+>=20
+> Anyway, this code was generated from configuration ini files and perl=
+=20
+> script available from: https://gitorious.org/omap3camera/camera-firmw=
+are
+>=20
+> Originally in Maemo above C structure is compiled into binary file an=
+d=20
+> via request_firmware() loaded from userspace to kernel driver.
+>=20
+> For me this sounds like a big overkill, so I included above reglist c=
+ode=20
+> direcly into et8ek8 kernel driver to avoid request_firmware() and=20
+> separate userspace storage...
 
-The names of these defines are too generic for being in a header file.
-You should likely make them include "ROCKCHIP" and "BOOT_MODE".
+The idea at the time was that it'd be possible to support changes in th=
+e
+register list without software changes as well as using different regis=
+ter
+lists on a different device.
 
-Regards,
-Bjorn
+That's not really how device drivers are written. Considering that the =
+use
+cases for this very sensor driver seem rather different now than they d=
+id
+then, I think it's safe to assume there won't be significant (if any at=
+ all)
+changes to these configurations going forward.
+
+I don't think there's really any value as such in maintaining the
+compatibility with the data structures used in the camera-firmware
+repository above.
+
+>=20
+> And for smia-sensor (front webcam) in that gitorious repository is al=
+so=20
+> reglist structure. It is not needed? Can somebody investigate why it =
+is=20
+> not needed?
+
+The front camera is SMIA compliant and works (at least should!) with th=
+e
+smiapp driver. I vaguely remember using it with platform data long, lon=
+g
+time ago. And I'm sure someone was working on it, I just don't remember=
+ now
+who. :-)
+
+--=20
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
