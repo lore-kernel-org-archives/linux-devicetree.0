@@ -1,60 +1,76 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 01/15] phy: rockchip-emmc: give DLL some extra time to
- be ready
-Date: Mon, 20 Jun 2016 12:38:37 -0700
-Message-ID: <CAD=FV=XLExFZEoDbj+CMvkWkf_Tp2MLCo20X8RWQQPFzPxAXWg@mail.gmail.com>
-References: <1466445414-11974-1-git-send-email-dianders@chromium.org>
- <1466445414-11974-2-git-send-email-dianders@chromium.org>
- <CABXOdTeQhOSUeX+-as_6S5H1mnVnyBsEDU9ZsiC97Yb+qWiFew@mail.gmail.com>
- <CAD=FV=UMFEDzKT0VkVYxmzxKkFVKREhhXhm+McmdQDriHKhPKg@mail.gmail.com>
- <CABXOdTccLMbspfprfLP9CTkD9YbfJsPKOXV7RsVKfU94zPLhNg@mail.gmail.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH 01/20] clk: fixed-factor: Pass clk rates change to the
+ parent
+Date: Mon, 20 Jun 2016 12:57:36 -0700
+Message-ID: <20160620195736.24587.45566@quark.deferred.io>
+References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1463402840-17062-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20160617230533.27203.82622@quark.deferred.io>
+ <20160620085458.GI26668@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CABXOdTccLMbspfprfLP9CTkD9YbfJsPKOXV7RsVKfU94zPLhNg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160620085458.GI26668@lukather>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Jun 20, 2016 at 12:36 PM, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
-> On Mon, Jun 20, 2016 at 12:30 PM, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> Hi,
->>
->> On Mon, Jun 20, 2016 at 12:23 PM, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
->>> On Mon, Jun 20, 2016 at 10:56 AM, Douglas Anderson
->>> <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>> From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>
->>>> According to the databook, 10.2us is the max time for dll to be ready to
->>>> work. However in testing, some chips need 20us for dll to be ready. This
->>>
->>> Nitpick, but description (20uS) and code (more than 25 uS) don't match.
->>
->> Good catch.  If I spin the series I'll fix this, otherwise I'll assume
->> that the person applying this (Ulf?) can fix the description at their
->> discretion.
->>
->
-> Not that it matters much, as the code is replaced in a later patch
-> anyway. It might make more sense to merge the two patches into one.
-
-Yes.  At the time I wrote it it was unclear what the status of the
-original patch was (whether it would be applied sooner vs. later).  At
-this point it seemed expedient to continue to keep the patches
-separate since they had been reviewed and tested separately.  Earlier
-I made the offer to combine and re-spin and I'm happy to do that if
-requested.
-
--Doug
+UXVvdGluZyBNYXhpbWUgUmlwYXJkICgyMDE2LTA2LTIwIDAxOjU0OjU4KQo+IE9uIEZyaSwgSnVu
+IDE3LCAyMDE2IGF0IDA0OjA1OjMzUE0gLTA3MDAsIE1pY2hhZWwgVHVycXVldHRlIHdyb3RlOgo+
+ID4gUXVvdGluZyBNYXhpbWUgUmlwYXJkICgyMDE2LTA1LTE2IDA1OjQ3OjAxKQo+ID4gPiBBIGZp
+eGVkIGZhY3RvciBjbG9jaywgaWYgaXQgbmVlZHMgdG8gY2hhbmdlIGl0cyByYXRlLCBieSBkZWZp
+bml0aW9uIGRvIG5vdAo+ID4gPiBoYXZlIGFueSBjaG9pY2UgYnV0IHRvIG1vZGlmeSBpdHMgcGFy
+ZW50IHJhdGUuCj4gPiAKPiA+IExvZ2ljYWxseSBpdCBtYWtlcyBzZW5zZSB0byBhbHdheXMgcHJv
+cGFnYXRlIHRoZSByYXRlLWNoYW5nZSByZXF1ZXN0IHVwCj4gPiB0byB0aGUgcGFyZW50IGZvciBh
+IGZpeGVkLWZhY3RvciBjbG9jayBpZiB3ZSBkZXNpcmUgdG8gY2hhbmdlIGl0cyByYXRlLgo+ID4g
+SG93ZXZlciwgSSB3b25kZXIgaWYgZG9pbmcgdGhpcyBmb3IgYWxsIHVzZXJzIG9mIGZpeGVkLWZh
+Y3Rvci1jbG9jayBpbgo+ID4gRFQgaXMgc2FmZT8gU29tZSB1c2VycyBtYXkgYmUgY291bnRpbmcg
+b24gaXQgbm90IGNoYW5naW5nLgo+ID4gCj4gPiBUaGVyZSBhcmUgMzk3IGluc3RhbmNlcyBvZiBm
+aXhlZC1mYWN0b3ItY2xvY2sgaW4gLmR0c1tpXSB0b2RheSwgc28gdGhpcwo+ID4gY2hhbmdlIHdv
+cnJpZXMgbWUgYSBiaXQuCj4gCj4gVW5kZXJzdG9vZC4KPiAKPiA+IAo+ID4gPiAKPiA+ID4gQWRk
+IHRoZSBDTEtfU0VUX1JBVEVfUEFSRU5UIGZsYWcgdG8gdGhhdCBjbG9jayBzbyB0aGF0IGl0IGNh
+biBoYXBwZW4KPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGlt
+ZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4gPiAtLS0KPiA+ID4gIGRyaXZlcnMvY2xr
+L2Nsay1maXhlZC1mYWN0b3IuYyB8IDMgKystCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
+cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9jbGsvY2xrLWZpeGVkLWZhY3Rvci5jIGIvZHJpdmVycy9jbGsvY2xrLWZpeGVkLWZhY3Rvci5j
+Cj4gPiA+IGluZGV4IDc1Y2Q2Yzc5MmNiOC4uMzM2M2FiZDliNGFlIDEwMDY0NAo+ID4gPiAtLS0g
+YS9kcml2ZXJzL2Nsay9jbGstZml4ZWQtZmFjdG9yLmMKPiA+ID4gKysrIGIvZHJpdmVycy9jbGsv
+Y2xrLWZpeGVkLWZhY3Rvci5jCj4gPiA+IEBAIC0xNjcsNyArMTY3LDggQEAgdm9pZCBfX2luaXQg
+b2ZfZml4ZWRfZmFjdG9yX2Nsa19zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpCj4gPiA+
+ICAgICAgICAgb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmcobm9kZSwgImNsb2NrLW91dHB1dC1uYW1l
+cyIsICZjbGtfbmFtZSk7Cj4gPiA+ICAgICAgICAgcGFyZW50X25hbWUgPSBvZl9jbGtfZ2V0X3Bh
+cmVudF9uYW1lKG5vZGUsIDApOwo+ID4gPiAgCj4gPiA+IC0gICAgICAgY2xrID0gY2xrX3JlZ2lz
+dGVyX2ZpeGVkX2ZhY3RvcihOVUxMLCBjbGtfbmFtZSwgcGFyZW50X25hbWUsIDAsCj4gPiA+ICsg
+ICAgICAgY2xrID0gY2xrX3JlZ2lzdGVyX2ZpeGVkX2ZhY3RvcihOVUxMLCBjbGtfbmFtZSwgcGFy
+ZW50X25hbWUsCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBD
+TEtfU0VUX1JBVEVfUEFSRU5ULAo+ID4gCj4gPiBBbiBhbHRlcm5hdGl2ZSB3b3VsZCBiZSB0byBw
+YXNzIGluIHRoZSBmbGFncyB5b3Ugd2FudCwgc29tZWhvdy4gRm9yIHRoZQo+ID4gY2xvY2sgeW91
+IGFyZSB0cnlpbmcgdG8gZml4LCBpcyBpdCBpbnNpZGUgb2YgdGhlIFNvQyBvciBleHRlcm5hbD8g
+SWYgaXQKPiA+IGlzIGludGVybmFsLCBhbmQgcGFydCBvZiBhIGxhcmdlciBjbG9jayBjb250cm9s
+bGVyIGRyaXZlciwgaXMgdGhpcyBmb3IKPiA+IHRoZSBsZWdhY3kgc3R5bGUgYWxsd2lubmVyIGNs
+b2NrIGRyaXZlcnMgdGhhdCBwdXQgZXZlcnl0aGluZyBpbiBEVD8KPiAKPiBJdCBpcyA6KAo+IAo+
+IFdoYXQgd2UgY291bGQgZG8sIGlzIGhhdmUgYW4gZXh0cmEgY29tcGF0aWJsZSBmb3IgdGhhdCBj
+bG9jayAobGlrZQo+ICJhbGx3aW5uZXIsc3VuNGktYTEwLXBsbDMteDIiIGluIHRoYXQgY2FzZSks
+IGFuZCBzZXQgdGhlIGZsYWcgb25seSBmb3IKPiB0aGF0IGNvbXBhdGlibGUuCj4gCj4gV291bGQg
+dGhhdCB3b3JrIGZvciB5b3UKClllcywgSSB0aGluayB0aGF0IGlzIHRoZSBiZXN0IHdheSBmb3J3
+YXJkLgoKPiAKPiA+IElmIG5vdCwgaXQgd291bGQgYmV0dGVyIHRvIGluaXRpYWxpemUgaXQgc3Rh
+dGljYWxseSBhbmQgc2hvdmUgdGhpcwo+ID4gZmxhZyBpbnRvIHRoZSBzdHJ1Y3QgY2xrX2luaXRf
+ZGF0YSBzdG9yYWdlLgo+IAo+IEhvcGVmdWxseSwgeWVzLCB0aGF0IHNob3VsZCBiZSBhZGRyZXNz
+ZWQgYnkgdGhlIG5ldyBmcmFtZXdvcmssIGJ1dCBJCj4gbmVlZCByZXZpZXdzIHRvIGdldCBpdCBt
+ZXJnZWQgOykKCldpbGwgZG8hCgpSZWdhcmRzLApNaWtlCgo+IAo+IFRoYW5rcyEKPiBNYXhpbWUK
+PiAKPiAtLSAKPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9ucwo+IEVtYmVkZGVkIExpbnV4
+LCBLZXJuZWwgYW5kIEFuZHJvaWQgZW5naW5lZXJpbmcKPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMu
+Y29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
