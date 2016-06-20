@@ -1,287 +1,108 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
-Date: Mon, 20 Jun 2016 15:46:29 +0300
-Message-ID: <87ziqgownu.fsf@linux.intel.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com> <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com> <87h9coxq04.fsf@linux.intel.com> <5767C1B9.2060805@ti.com> <878ty0qd7q.fsf@linux.intel.com> <5767E0EB.3020602@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] mtd: nand: sunxi: add reset line support
+Date: Mon, 20 Jun 2016 14:51:56 +0200
+Message-ID: <20160620145156.2f65cfd8@bbrezillon>
+References: <20160619113739.30362-1-icenowy@aosc.xyz>
+	<20160619113739.30362-2-icenowy@aosc.xyz>
+	<20160619140652.07ab03c9@bbrezillon>
+	<1466424354.6070.41.camel@pengutronix.de>
+Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5767E0EB.3020602@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, peter.chen@freescale.com, yoshihiro.shimoda.uh@renesas.com
-Cc: tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCK63FO5TUHRB3WNT65QKGQEQ72IVHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1466424354.6070.41.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Philipp,
 
+On Mon, 20 Jun 2016 14:05:54 +0200
+Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
 
-Hi,
+> Am Sonntag, den 19.06.2016, 14:06 +0200 schrieb Boris Brezillon:
+> > +Philipp
+> > 
+> > On Sun, 19 Jun 2016 19:37:39 +0800
+> > Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> >   
+> > > The NAND controller on some sun8i chips needs its reset line to be deasserted
+> > > before they can enter working state. This commit added the reset line process
+> > > to the driver.
+> > > 
+> > > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> > > ---
+> > >  drivers/mtd/nand/sunxi_nand.c | 14 ++++++++++++++
+> > >  1 file changed, 14 insertions(+)
+> > > 
+> > > diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunxi_nand.c
+> > > index a83a690..1502748 100644
+> > > --- a/drivers/mtd/nand/sunxi_nand.c
+> > > +++ b/drivers/mtd/nand/sunxi_nand.c
+> > > @@ -39,6 +39,7 @@
+> > >  #include <linux/gpio.h>
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/iopoll.h>
+> > > +#include <linux/reset.h>
+> > >  
+> > >  #define NFC_REG_CTL		0x0000
+> > >  #define NFC_REG_ST		0x0004
+> > > @@ -269,6 +270,7 @@ struct sunxi_nfc {
+> > >  	void __iomem *regs;
+> > >  	struct clk *ahb_clk;
+> > >  	struct clk *mod_clk;
+> > > +	struct reset_control *reset;
+> > >  	unsigned long assigned_cs;
+> > >  	unsigned long clk_rate;
+> > >  	struct list_head chips;
+> > > @@ -1871,6 +1873,18 @@ static int sunxi_nfc_probe(struct platform_device *pdev)
+> > >  	if (ret)
+> > >  		goto out_ahb_clk_unprepare;
+> > >  
+> > > +	nfc->reset = devm_reset_control_get_optional(dev, "ahb");
+> > > +	if (PTR_ERR(nfc->reset) == -EPROBE_DEFER)
+> > > +		return PTR_ERR(nfc->reset);  
+> > 
+> > Actually you should test for != -ENOENT, because all error codes except
+> > this one should stop the ->probe().
+> > 
+> > BTW, this devm_reset_control_get_optional() is really weird. While most
+> > _optional() methods return NULL when the element is not defined in the
+> > DT, this one returns -ENOTENT, which makes it impossible to
+> > differentiate a real error from a undefined reset line (which is a
+> > valid case for _optional()).  
+> 
+> Of course it's possible, -ENOENT is only returned if the reset line is
+> not defined in the device tree.
 
-Roger Quadros <rogerq@ti.com> writes:
->>>>> diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
->>>>> index 8689dcb..ed596ec 100644
->>>>> --- a/drivers/usb/Kconfig
->>>>> +++ b/drivers/usb/Kconfig
->>>>> @@ -32,6 +32,23 @@ if USB_SUPPORT
->>>>>  config USB_COMMON
->>>>>  	tristate
->>>>>=20=20
->>>>> +config USB_OTG_CORE
->>>>> +	tristate
->>>>
->>>> why tristate if you can never set it to 'M'?
->>>
->>> This gets internally set to M if either USB or GADGET is M.
->>> We select it in USB and GADGET.
->>> This was the only way I could get usb-otg.c to build as
->>>
->>> m if USB OR GADGET is m
->>> built-in if USB and GADGET are built in.
->>=20
->> I could only see a "select USB_OTG_CORE", select will always set it 'y'
->> and disregard dependencies. Maybe I missed something else.
->
-> Not always. See how USB_COMMON works.
+Okay, testing for err != -ENOENT is the right thing to do here. Maybe
+this could be documented.
 
-USB_COMMON is always 'y'. That could be changes a bool as well.
+> 
+> Note that gpiod_get_(index_)optional do nothing more that replacing
+> -ENOENT with NULL. And phydev_optional_get replaces -ENODEV with NULL.
+> And regulator_get_optional, if I understand it correctly, never returns
+> NULL.
+> 
+> > Philipp, is there a good reason for doing that?  
+> 
+> Historically, NULL has not been a valid value for rstc. I suppose we
+> could add NULL checks to the reset_control_assert/deassert/reset/status
+> functions and align the reset API a bit with gpiod. I just wouldn't want
+> to see any IS_ERR_OR_NULL error handling in the drivers.
 
-Do you have any defconfig where USB_COMMON or USB_OTG_CORE gets set to
-'m'?
+Well, returning NULL is mainly a convenient way to differentiate real
+errors from missing optional reset lines (which are not errors). Now,
+if you say checking for -ENOENT is the right thing to do here, I'm
+fine with that.
 
->>>>> +static DEFINE_MUTEX(otg_list_mutex);
->>>>> +
->>>>> +static int usb_otg_hcd_is_primary_hcd(struct usb_hcd *hcd)
->>>>> +{
->>>>> +	if (!hcd->primary_hcd)
->>>>> +		return 1;
->>>>
->>>> these seems inverted. If hcd->primary is NULL (meaning, there's no
->>>> ->primary_hcd), then we tell caller that this _is_ a primary hcd? Care
->>>> to explain?
->>>
->>> hcd->primary_hcd is a link used by the shared hcd to point to the
->>> primary_hcd.  primary_hcd's have this link as NULL.
->>=20
->> So the following check is unnecessary and should always evaluate to
->> false, right ?
->
-> Actually primary_hcd's not having a shared HCD have hcd->primary_hcd as N=
-ULL
-> and those having a shared HCD do have it pointing to the primary hcd.
+Regards,
 
-But look at your check:
-
-is_primary(struct usb_hcd *hcd)
-{
-	if (!hcd->primary_hcd)
-        	return true;
-
-	return hcd =3D=3D hcd->primary_hcd;
-}
-
-if you're passing a primary hcd, you're gonna return on the first
-branch. If you're passing a secondary hcd, then your equality will
-always be false.=20
-
-IOW, this can be reduced to:
-
-is_primary(struct usb_hcd *hcd)
-{
-	return !hcd->primary_hcd;
-}
-
-right?
-
->>>>> +int usb_otg_start_host(struct usb_otg *otg, int on)
->>>>> +{
->>>>> +	struct otg_hcd_ops *hcd_ops =3D otg->hcd_ops;
->>>>> +	int ret;
->>>>> +
->>>>> +	dev_dbg(otg->dev, "otg: %s %d\n", __func__, on);
->>>>> +	if (!otg->host) {
->>>>> +		WARN_ONCE(1, "otg: fsm running without host\n");
->>>>
->>>> if (WARN_ONCE(!otg->host, "otg: fsm running without host\n"))
->>>> 	return 0;
->>>>
->>>> but, frankly, if you require a 'host' and a 'gadget' don't start this
->>>> layer until you have both.
->>>
->>> We don't start the layer till we have both host and gadget. But
->>> this API is for external use and might be called at any time.
->>=20
->> well, if callers call this at the wrong time, it's callers' fault. Let
->> them oops so we catch the error.
->
-> So you suggest we allow a NULL pointer dereference here?
-
-yes, it's a clear violation of the API contract. The only situation
-where this would ever trigger, is if somebody is calling
-usb_otg_start_host() without calling start_fsm() first. That shouldn't
-be valid.
-
->>>>> +		return 0;
->>>>> +	}
->>>>> +
->>>>> +	if (on) {
->>>>> +		if (otg->flags & OTG_FLAG_HOST_RUNNING)
->>>>> +			return 0;
->>>>> +
->>>>> +		/* start host */
->>>>> +		ret =3D hcd_ops->add(otg->primary_hcd.hcd,
->>>>> +				   otg->primary_hcd.irqnum,
->>>>> +				   otg->primary_hcd.irqflags);
->>>>
->>>> this is usb_add_hcd(), is it not? Why add an indirection?
->>>
->>> I've introduced the host and gadget ops interface to get around the
->>> circular dependency issue we can't avoid.
->>> otg needs to call host/gadget functions and host/gadget also needs to
->>> call otg functions.
->>=20
->> IMO, this shows a fragility of your design. You're, now, lying to
->> usb_hcd and usb_udc and making them register into a virtual layer that
->> doesn't exist. And that layer will end up calling the real registration
->> function when some magic event happens.
->>=20
->> This is only really needed for quirky devices like dwc3 (but see more on
->> dwc3 below) where host and peripheral registers shadow each
->> other. Otherwise we would be able to always keep hcd and udc always
->> registered. They would get different interrupt statuses anyway and
->> nothing would ever break.
->
-> Well I only had the opportunity to work with dwc3 so I had to ensure
-> the design worked with it.
-
-but this is exactly what I'm pointing you to. DWC3 does not need to go
-through this because the HW maintains state machine for you.
-
->> However, when it comes to dwc3, we already have all the code necessary
->> to workaround this issue by destroying the XHCI pdev when OTG interrupt
->> says we should be peripheral (and vice-versa). DWC3 also keeps track of
->> the OTG states for those folks who really care about OTG (Hint: nobody
->> has cared for the past 10 years, why would they do so now?) and we don't
->> need a SW state machine when the HW handles that for us, right?
->
-> Where is the code? I'd like to test dual-role on TI platforms.
-
-Well, we just need an OTG IRQ handler to call dwc3_gadget_suspend() (or
-that function renamed to match the usage) and something similar for the
-host side.
-
-It's all doable in a day or two.
-
->>> why? The kick could be triggered from an interrupt
->>> context. e.g. otg_irq.
->>=20
->> We have threaded IRQ handlers in the kernel, right? Make use of that
->> and, with a little smart locking and IRQ masking, you can run the OTG
->> IRQ thread almost completely lockless ;-)
->
-> Not a problem if we have the constraint that usb_otg_sync_inputs()
-> needs to be called in thread context only.
-
-that should be the case, right? If you're registering/unregistering
-devices, you can't possibly call this from hardirq context.
-
->>>>> +	if (config->otg_work)	/* custom otg_work ? */
->>>>> +		INIT_WORK(&otg->work, config->otg_work);
->>>>> +	else
->>>>> +		INIT_WORK(&otg->work, usb_drd_work);
->>>>
->>>> why do you need to cope with custom work handlers?
->>>
->>> It was just a provision to provide your own state machine if the generic
->>> one does not meet your needs. But i'm OK to get rid of it as well.
->>=20
->> If you allow for this, every time there is a limitation, people will
->> just provide a copy of the state machine with a small change here and
->> there instead of fixing the real issue.
->
-> I agree with you here. I'll get rid of the custom_otg_work.
-
-thanks
-
->>>>> +static void usb_otg_start_fsm(struct usb_otg *otg)
->>>>> +{
->>>>> +	struct otg_fsm *fsm =3D &otg->fsm;
->>>>> +
->>>>> +	if (fsm->running)
->>>>> +		goto kick_fsm;
->>>>> +
->>>>> +	if (!otg->host) {
->>>>> +		dev_info(otg->dev, "otg: can't start till host registers\n");
->>>>> +		return;
->>>>> +	}
->>>>> +
->>>>> +	if (!otg->gadget) {
->>>>> +		dev_info(otg->dev,
->>>>> +			 "otg: can't start till gadget UDC registers\n");
->>>>> +		return;
->>>>> +	}
->>>>
->>>> okay, so you never kick the FSM until host and gadget are
->>>> registered. Why do you need to test for the case where the FSM is
->>>> running without host/gadget?
->>>
->>> That message in the test was misleading. It could also be a
->>> used as a warning if users did something wrong.
->>=20
->> this usb_otg_start_fsm() establishes a contract. That contract says that
->> the USB OTG FSM won't start until host and gadget are running and
->> registered, yada yada yada. Drivers trying to kicking the FSM without
->> calling usb_otg_start_fsm() first deserve to oops.
->
-> I'm considering the worst case where OTG controller, host controller
-> and gadget controller are 3 independent entities which can get probed
-> in any order.
-
-there is no such thing as OTG controller :-) Even in our wildest dreams,
-the most we get is a multiplexer inside the SoC to mux signals to HCD or
-UDC. DWC3, when configured as a dual-role-capable IP, has its own OTG
-block. But that's all self-contained inside DWC3 itself :-)
-
-> OTG controller driver doesn't really know when host and gadget
-> register.  All it cares about is getting the hardware events and
-> kicking the OTG machine.
-
-Nothing should be kicking the OTG state machine anyways, until all parts
-are ready, registered, running, etc.
-
-> (NOTE: when I say OTG controller it might as well be just the
-> dual-role bits that handle the ID and VBUS interrupts).
-
-right
-
-> usb_otg_start_fsm() is not public.
-> usb_otg_sync_inputs() is the public function that the OTG driver will use.
-
-the outcome is the same, right?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXZ+WlAAoJEIaOsuA1yqREoSwP/3yoysdwnuOIuMYI6UHvNKfQ
-6sIXDS13sgfM4YbjDZ+CBob2pCA+O8gJ1/jZ1UtrZzmOg7c9rpeQmRWJFaoU6zG4
-OhivdMAOSCzAzMQ63160IgPOT+yLsTjSjbgnXJiD35LluOb+o0bs7kcGHBuXrj3P
-V1gaTQ59MJ/x4ay8GI6wQ1VJDPWVTXB+mzKUfqe398DgTKn9PO8zd65bPts6L7qc
-JBuYis2vsax3jPLt+76FFpeFTIlQoanEWPk9y+/+nnu4Vwcj/vSGEXfXvPhtS1gJ
-B1CA5+EJ4A4OwFmT6idx/SsekrFCe8/EikoVt5SGXsH96D9Djgx262zNb5OIpjwJ
-TO0zg1V3jdqeInylDhxXMVpAivp+NSJRJOwE0/rZvjbJxCqxKfe2X6kjUmfoqnlg
-Kl0S4YT5Io72q5FYAK3Lng7SZYvgkDBUpwfqWAgH8hGtao2UQn3hGf9YsnYL8UCw
-WGhvWVQcqI7BN94NstJICc9nlmWRQS4qv7c/Avo4v/t6nbCPfGNLmGc6DYdu28cA
-DKX8IZZM1gI5Hn3aZPVkg9ubnESoBVUr41/iDfPgmWFzfJK9U0GUUDKmCKynSlAg
-H8b7d3Ge60+SoG6o5gfh4tcT2w8lOBm2v/ffgHpfVE2iicecdoGQ1/LAqSsLDC/n
-EN0hSNO1QYUB0PB2QtfE
-=Ymgw
------END PGP SIGNATURE-----
---=-=-=--
+Boris
