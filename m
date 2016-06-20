@@ -1,83 +1,44 @@
-From: andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/4 v2] tpm: Add TPM 2.0 support to the
-	Nuvoton i2c driver (NPCT6xx family)
-Date: Mon, 20 Jun 2016 13:07:07 +0300
-Message-ID: <1466417229-16734-3-git-send-email-andrew.zamansky@nuvoton.com>
-References: <1466417229-16734-1-git-send-email-andrew.zamansky@nuvoton.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 4/4] ARM: dts: meson8b: Add Meson8b PWM Controller nodes
+Date: Mon, 20 Jun 2016 12:06:34 +0200
+Message-ID: <5767C02A.50700@baylibre.com>
+References: <201606180219.HabMMLCO%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1466417229-16734-1-git-send-email-andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201606180219.HabMMLCO%fengguang.wu@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, thierry.reding@gmail.com, carlo@caione.org, khilman@baylibre.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSmFzb24gR3VudGhvcnBlIDxqZ3VudGhvcnBlQG9ic2lkaWFucmVzZWFyY2guY29tPgoK
-VGhlIGNvbW1hbmQgZmxvdyBpcyBleGFjdGx5IHRoZSBzYW1lLCB0aGUgY29yZSBzaW1wbHkgbmVl
-ZHMgdG8gcHJvYmUKZm9yIFRQTSAyLjAgY2FwYWJpbGl0eS4KClNpZ25lZC1vZmYtYnk6IEFuZHJl
-dyBBem1hbnNreSA8YW5kcmV3LnphbWFuc2t5QG51dm90b24uY29tPgpTaWduZWQtb2ZmLWJ5OiBK
-YXNvbiBHdW50aG9ycGUgPGpndW50aG9ycGVAb2JzaWRpYW5yZXNlYXJjaC5jb20+Ci0tLQogRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0IHwg
-MSArCiBkcml2ZXJzL2NoYXIvdHBtL3RwbV9pMmNfbnV2b3Rvbi5jICAgICAgICAgICAgICAgICAg
-ICAgICAgfCA3ICsrKystLS0KIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAzIGRl
-bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9pMmMvdHJpdmlhbC1kZXZpY2VzLnR4dAppbmRleCA1Mzk4NzQ0OS4uZDRmNjU0MiAxMDA2
-NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRl
-dmljZXMudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvdHJp
-dmlhbC1kZXZpY2VzLnR4dApAQCAtNjIsNiArNjIsNyBAQCBuYXRpb25hbCxsbTgwCQlTZXJpYWwg
-SW50ZXJmYWNlIEFDUEktQ29tcGF0aWJsZSBNaWNyb3Byb2Nlc3NvciBTeXN0ZW0gSGFyZHdhcmUg
-TQogbmF0aW9uYWwsbG04NQkJVGVtcGVyYXR1cmUgc2Vuc29yIHdpdGggaW50ZWdyYXRlZCBmYW4g
-Y29udHJvbAogbmF0aW9uYWwsbG05MgkJwrEwLjMzwrBDIEFjY3VyYXRlLCAxMi1CaXQgKyBTaWdu
-IFRlbXBlcmF0dXJlIFNlbnNvciBhbmQgVGhlcm1hbCBXaW5kb3cgQ29tcGFyYXRvciB3aXRoIFR3
-by1XaXJlIEludGVyZmFjZQogbnV2b3RvbixucGN0NTAxCQlpMmMgdHJ1c3RlZCBwbGF0Zm9ybSBt
-b2R1bGUgKFRQTSkKK251dm90b24sbnBjdDYwMQkJaTJjIHRydXN0ZWQgcGxhdGZvcm0gbW9kdWxl
-IChUUE0yKQogbnhwLHBjYTk1NTYJCU9jdGFsIFNNQnVzIGFuZCBJMkMgcmVnaXN0ZXJlZCBpbnRl
-cmZhY2UKIG54cCxwY2E5NTU3CQk4LWJpdCBJMkMtYnVzIGFuZCBTTUJ1cyBJL08gcG9ydCB3aXRo
-IHJlc2V0CiBueHAscGNmODU2MwkJUmVhbC10aW1lIGNsb2NrL2NhbGVuZGFyCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL2NoYXIvdHBtL3RwbV9pMmNfbnV2b3Rvbi5jIGIvZHJpdmVycy9jaGFyL3RwbS90
-cG1faTJjX251dm90b24uYwppbmRleCBiNjRlZmZjLi5kYmY2MDk1IDEwMDY0NAotLS0gYS9kcml2
-ZXJzL2NoYXIvdHBtL3RwbV9pMmNfbnV2b3Rvbi5jCisrKyBiL2RyaXZlcnMvY2hhci90cG0vdHBt
-X2kyY19udXZvdG9uLmMKQEAgLTEsNSArMSw1IEBACiAvKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqCi0g
-KiBOdXZvdG9uIFRQTSBJMkMgRGV2aWNlIERyaXZlciBJbnRlcmZhY2UgZm9yIFdQQ1QzMDEvTlBD
-VDUwMSwKKyAqIE51dm90b24gVFBNIEkyQyBEZXZpY2UgRHJpdmVyIEludGVyZmFjZSBmb3IgV1BD
-VDMwMS9OUENUNTAxL05QQ1Q2WFgsCiAgKiBiYXNlZCBvbiB0aGUgVENHIFRQTSBJbnRlcmZhY2Ug
-U3BlYyB2ZXJzaW9uIDEuMi4KICAqIFNwZWNpZmljYXRpb25zIGF0IHd3dy50cnVzdGVkY29tcHV0
-aW5nZ3JvdXAub3JnCiAgKgpAQCAtMTYzLDcgKzE2Myw3IEBAIHN0YXRpYyBpbnQgaTJjX251dm90
-b25fZ2V0X2J1cnN0Y291bnQoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKIH0KIAogLyoKLSAq
-IFdQQ1QzMDEvTlBDVDUwMSBTSU5UIyBzdXBwb3J0cyBvbmx5IGRhdGFBdmFpbAorICogV1BDVDMw
-MS9OUENUNTAxL05QQ1Q2WFggU0lOVCMgc3VwcG9ydHMgb25seSBkYXRhQXZhaWwKICAqIGFueSBj
-YWxsIHRvIHRoaXMgZnVuY3Rpb24gd2hpY2ggaXMgbm90IHdhaXRpbmcgZm9yIGRhdGFBdmFpbCB3
-aWxsCiAgKiBzZXQgcXVldWUgdG8gTlVMTCB0byBhdm9pZCB3YWl0aW5nIGZvciBpbnRlcnJ1cHQK
-ICAqLwpAQCAtNDU2LDcgKzQ1Niw3IEBAIHN0YXRpYyBib29sIGkyY19udXZvdG9uX3JlcV9jYW5j
-ZWxlZChzdHJ1Y3QgdHBtX2NoaXAgKmNoaXAsIHU4IHN0YXR1cykKIH0KIAogc3RhdGljIGNvbnN0
-IHN0cnVjdCB0cG1fY2xhc3Nfb3BzIHRwbV9pMmMgPSB7Ci0JLmZsYWdzID0gVFBNX09QU19BVVRP
-X1NUQVJUVVAsCisJLmZsYWdzID0gVFBNX09QU19BVVRPX1NUQVJUVVAgfCBUUE1fT1BTX1BST0JF
-X1RQTTIsCiAJLnN0YXR1cyA9IGkyY19udXZvdG9uX3JlYWRfc3RhdHVzLAogCS5yZWN2ID0gaTJj
-X251dm90b25fcmVjdiwKIAkuc2VuZCA9IGkyY19udXZvdG9uX3NlbmQsCkBAIC02MjMsNiArNjIz
-LDcgQEAgTU9EVUxFX0RFVklDRV9UQUJMRShpMmMsIGkyY19udXZvdG9uX2lkKTsKIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGkyY19udXZvdG9uX29mX21hdGNoW10gPSB7CiAJey5j
-b21wYXRpYmxlID0gIm51dm90b24sbnBjdDUwMSJ9LAogCXsuY29tcGF0aWJsZSA9ICJ3aW5ib25k
-LHdwY3QzMDEifSwKKwl7LmNvbXBhdGlibGUgPSAibnV2b3RvbixucGN0NjAxIn0sCiAJe30sCiB9
-OwogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgaTJjX251dm90b25fb2ZfbWF0Y2gpOwotLSAKMS45
-LjEKCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KV2hhdCBOZXRGbG93IEFuYWx5emVyIGNhbiBkbyBm
-b3IgeW91PyBNb25pdG9ycyBuZXR3b3JrIGJhbmR3aWR0aCBhbmQgdHJhZmZpYwpwYXR0ZXJucyBh
-dCBhbiBpbnRlcmZhY2UtbGV2ZWwuIFJldmVhbHMgd2hpY2ggdXNlcnMsIGFwcHMsIGFuZCBwcm90
-b2NvbHMgYXJlIApjb25zdW1pbmcgdGhlIG1vc3QgYmFuZHdpZHRoLiBQcm92aWRlcyBtdWx0aS12
-ZW5kb3Igc3VwcG9ydCBmb3IgTmV0RmxvdywgCkotRmxvdywgc0Zsb3cgYW5kIG90aGVyIGZsb3dz
-LiBNYWtlIGluZm9ybWVkIGRlY2lzaW9ucyB1c2luZyBjYXBhY2l0eSBwbGFubmluZwpyZXBvcnRz
-LiBodHRwOi8vc2RtLmxpbmsvem9ob21hbmFnZWVuZ2luZQpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwp0cG1kZC1kZXZlbCBtYWlsaW5nIGxpc3QKdHBtZGQt
-ZGV2ZWxAbGlzdHMuc291cmNlZm9yZ2UubmV0Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0
-L2xpc3RzL2xpc3RpbmZvL3RwbWRkLWRldmVsCg==
+On 06/17/2016 08:21 PM, kbuild test robot wrote:
+> Hi,
+> 
+> [auto build test ERROR on next-20160617]
+> [cannot apply to pwm/for-next robh/for-next v4.7-rc3 v4.7-rc2 v4.7-rc1 v4.7-rc3]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Neil-Armstrong/pwm-Add-Amlogic-Meson-SoC-PWM-Controller/20160617-223758
+> config: arm-multi_v7_defconfig (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (Debian 5.3.1-8) 5.3.1 20160205
+> reproduce:
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> Error: arch/arm/boot/dts/meson8b.dtsi:167.17-18 syntax error
+>    FATAL ERROR: Unable to parse input tree
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+
+I'll fix this for V2.
+
+Neil
