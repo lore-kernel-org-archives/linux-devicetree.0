@@ -1,85 +1,183 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 07/13] dt-bindings: i2c: Add support for 'i2c-bus'
- subnode
-Date: Mon, 20 Jun 2016 12:15:39 +0100
-Message-ID: <5767D05B.5000709@nvidia.com>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <1466165027-17917-8-git-send-email-jonathanh@nvidia.com>
- <20160617163054.GD32754@leverpostej> <20160617164525.GL27475@ulmo.ba.sec>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2] firmware: qcom: scm: Expose PAS command 10 as
+ reset-controller
+Date: Mon, 20 Jun 2016 12:20:01 +0100
+Message-ID: <5767D161.9040605@linaro.org>
+References: <1466185243-31569-1-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160617164525.GL27475-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1466185243-31569-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 17/06/16 17:45, Thierry Reding wrote:
-> * PGP Signed by an unknown key
-> 
-> On Fri, Jun 17, 2016 at 05:30:54PM +0100, Mark Rutland wrote:
->> On Fri, Jun 17, 2016 at 01:03:41PM +0100, Jon Hunter wrote:
->>> The I2C driver core for boards using device-tree assumes any subnode of
->>> an I2C adapter in the device-tree blob as being a I2C slave device.
->>> Although this makes complete sense, some I2C adapters may have subnodes
->>> which are not I2C slaves but subnodes presenting other features. For
->>> example some Tegra devices have an I2C interface which may share its
->>> pins with other devices and to share these pins subnodes for
->>> representing these pins so they have be shared via the pinctrl framework
->>> are needed.
->>>
->>> To allow I2C adapters to have non-I2C specific subnodes in device-tree
->>> that are not parsed by the I2C driver core by adding support for a
->>> 'i2c-bus' subnode where I2C slaves can be placed. If the 'i2c-bus'
->>> subnode is present then all I2C slaves must be placed under this subnode.
->>>
->>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/i2c/i2c.txt | 8 ++++++++
->>>  1 file changed, 8 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
->>> index f31b2ad1552b..ed56b08c7e6e 100644
->>> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
->>> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
->>> @@ -32,6 +32,14 @@ wants to support one of the below features, it should adapt the bindings below.
->>>  - clock-frequency
->>>  	frequency of bus clock in Hz.
->>>  
->>> +- i2c-bus
->>> +	For I2C adapters that have child nodes that are a mixture of both I2C
->>> +	devices and non-I2C devices (such as a pin controller), the 'i2c-bus'
->>> +	subnode can be used for populating I2C devices to prevent the I2C core
->>> +	from attempting to add any non-i2c nodes as I2C devices. If 'i2c-bus'
->>> +	subnode is present then all I2C slaves must be added under this
->>> +	subnode.
->>
->> The general idea seems sound.
->>
->> It would be good if we could remove the mention of the I2C core,
->> something like:
->>
->>   - i2c-bus
->> 	For I2C adapters that have child nodes that are a mixture of both I2C
->> 	devices and non-I2C devices (such as a pin controller), the 'i2c-bus'
->> 	subnode can be used for populating I2C devices. If an 'i2c-bus'
->> 	subnode is present, only subnodes of this will be considered as
->> 	I2C slaves.
->>
->> How are #address-cells and #size-cells handled in this case? I assume
->> that they should live under the i2c-bus subnode, which should be called
->> out.
-> 
-> Good catch. Yes, I think the i2c-bus subnode would be the right place
-> for #address-cells and #size-cells.
 
-Yes, indeed. Thanks. Will fix.
+On 17/06/16 18:40, Bjorn Andersson wrote:
+> PAS command 10 is used to assert and deassert the MSS reset via
+> TrustZone, expose this as a reset-controller to mimic the direct
+> access case.
+>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-Cheers
-Jon
+Good stuff!
 
--- 
-nvpublic
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+>
+> Changes since v1:
+> - Selecting RESET_CONTROLLER
+> - Constifying reset_ops
+>
+>   drivers/firmware/Kconfig       |  1 +
+>   drivers/firmware/qcom_scm-32.c | 13 +++++++++++++
+>   drivers/firmware/qcom_scm-64.c | 14 ++++++++++++++
+>   drivers/firmware/qcom_scm.c    | 30 ++++++++++++++++++++++++++++++
+>   drivers/firmware/qcom_scm.h    |  2 ++
+>   5 files changed, 60 insertions(+)
+>
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index 6664f1108c7c..5e618058defe 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -184,6 +184,7 @@ config FW_CFG_SYSFS_CMDLINE
+>   config QCOM_SCM
+>   	bool
+>   	depends on ARM || ARM64
+> +	select RESET_CONTROLLER
+>
+>   config QCOM_SCM_32
+>   	def_bool y
+> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+> index 3df3798729c3..cf731b3452f3 100644
+> --- a/drivers/firmware/qcom_scm-32.c
+> +++ b/drivers/firmware/qcom_scm-32.c
+> @@ -564,3 +564,16 @@ int __qcom_scm_pas_shutdown(u32 peripheral)
+>
+>   	return ret ? : le32_to_cpu(out);
+>   }
+> +
+> +int __qcom_scm_pas_mss_reset(bool reset)
+> +{
+> +	__le32 out;
+> +	__le32 in = cpu_to_le32(reset);
+> +	int ret;
+> +
+> +	ret = qcom_scm_call(QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET,
+> +			&in, sizeof(in),
+> +			&out, sizeof(out));
+> +
+> +	return ret ? : le32_to_cpu(out);
+> +}
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+> index 72c2f81b8fd3..45ee872b6e6d 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -565,6 +565,20 @@ int __qcom_scm_pas_shutdown(u32 peripheral)
+>   	return ret ? : scm_ret;
+>   }
+>
+> +int __qcom_scm_pas_mss_reset(bool reset)
+> +{
+> +	struct qcom_scm_desc desc = {0};
+> +	int ret;
+> +
+> +	desc.args[0] = reset;
+> +	desc.args[1] = 0;
+> +	desc.arginfo = QCOM_SCM_ARGS(2);
+> +
+> +	ret = qcom_scm_call(QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET, &desc);
+> +
+> +	return ret ? : desc.ret[0];
+> +}
+> +
+>   int __qcom_scm_pil_init_image_cmd(u32 proc, u64 image_addr)
+>   {
+>   	struct qcom_scm_desc desc = {0};
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 6fc9580a26bd..bfa9bfd9a62c 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/qcom_scm.h>
+>   #include <linux/of.h>
+>   #include <linux/clk.h>
+> +#include <linux/reset-controller.h>
+>
+>   #include "qcom_scm.h"
+>
+> @@ -28,6 +29,7 @@ struct qcom_scm {
+>   	struct clk *core_clk;
+>   	struct clk *iface_clk;
+>   	struct clk *bus_clk;
+> +	struct reset_controller_dev reset;
+>   };
+>
+>   static struct qcom_scm *__scm;
+> @@ -280,6 +282,29 @@ int qcom_scm_pas_shutdown(u32 peripheral)
+>   }
+>   EXPORT_SYMBOL(qcom_scm_pas_shutdown);
+>
+> +static int qcom_scm_pas_reset_assert(struct reset_controller_dev *rcdev,
+> +				     unsigned long idx)
+> +{
+> +	if (idx != 0)
+> +		return -EINVAL;
+> +
+> +	return __qcom_scm_pas_mss_reset(1);
+> +}
+> +
+> +static int qcom_scm_pas_reset_deassert(struct reset_controller_dev *rcdev,
+> +				       unsigned long idx)
+> +{
+> +	if (idx != 0)
+> +		return -EINVAL;
+> +
+> +	return __qcom_scm_pas_mss_reset(0);
+> +}
+> +
+> +static const struct reset_control_ops qcom_scm_pas_reset_ops = {
+> +	.assert = qcom_scm_pas_reset_assert,
+> +	.deassert = qcom_scm_pas_reset_deassert,
+> +};
+> +
+>   /**
+>    * qcom_scm_is_available() - Checks if SCM is available
+>    */
+> @@ -322,6 +347,11 @@ static int qcom_scm_probe(struct platform_device *pdev)
+>   		return PTR_ERR(scm->bus_clk);
+>   	}
+>
+> +	scm->reset.ops = &qcom_scm_pas_reset_ops;
+> +	scm->reset.nr_resets = 1;
+> +	scm->reset.of_node = pdev->dev.of_node;
+> +	reset_controller_register(&scm->reset);
+> +
+>   	/* vote for max clk rate for highest performance */
+>   	rate = clk_round_rate(scm->core_clk, INT_MAX);
+>   	ret = clk_set_rate(scm->core_clk, rate);
+> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+> index 8f1207fca771..80752cbfd139 100644
+> --- a/drivers/firmware/qcom_scm.h
+> +++ b/drivers/firmware/qcom_scm.h
+> @@ -44,11 +44,13 @@ extern int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+>   #define QCOM_SCM_PAS_AUTH_AND_RESET_CMD	0x5
+>   #define QCOM_SCM_PAS_SHUTDOWN_CMD	0x6
+>   #define QCOM_SCM_PAS_IS_SUPPORTED_CMD	0x7
+> +#define QCOM_SCM_PAS_MSS_RESET		0xa
+>   extern bool __qcom_scm_pas_supported(u32 peripheral);
+>   extern int  __qcom_scm_pas_init_image(u32 peripheral, dma_addr_t metadata_phys);
+>   extern int  __qcom_scm_pas_mem_setup(u32 peripheral, phys_addr_t addr, phys_addr_t size);
+>   extern int  __qcom_scm_pas_auth_and_reset(u32 peripheral);
+>   extern int  __qcom_scm_pas_shutdown(u32 peripheral);
+> +extern int  __qcom_scm_pas_mss_reset(bool reset);
+>
+>   /* common error codes */
+>   #define QCOM_SCM_ENOMEM		-5
+>
