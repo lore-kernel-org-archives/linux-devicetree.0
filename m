@@ -1,106 +1,47 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 4/9] ARM: dts: AM437X-GP-EVM: AM437X-SK-EVM: Make dcdc3 dcdc5 and dcdc6 enable during suspend
-Date: Mon, 20 Jun 2016 14:13:33 +0530
-Message-ID: <1466412218-5906-5-git-send-email-j-keerthy@ti.com>
-References: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] gpio: sx150x: Update OF configuration
+Date: Mon, 20 Jun 2016 11:03:41 +0200
+Message-ID: <5767B16D.8080600@baylibre.com>
+References: <1466157063-10955-1-git-send-email-narmstrong@baylibre.com>
+ <CACRpkdbDMo=cV5bmcWNbeHU+c-AyokpaFNNZJF4UPY+twDX8bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, broonie@kernel.org, devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, j-keerthy@ti.com, linux@armlinux.org.uk
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbDMo=cV5bmcWNbeHU+c-AyokpaFNNZJF4UPY+twDX8bw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-dcdc3, dcdc5, dcdc6 supply ddr and rtc respectively. These
-are required to be on during suspend. Hence set the state accordingly.
+On 06/18/2016 11:02 AM, Linus Walleij wrote:
+> On Fri, Jun 17, 2016 at 11:51 AM, Neil Armstrong
+> <narmstrong@baylibre.com> wrote:
+> 
+>> In case of OF probing, the driver fails to initialize :
+>> - gpio_chip.base must be -1
+>> - irq_summary must be either -1 or valid
+>> - There is no way to use the other configurations
+>>
+>> Add OF parsing function to complete the HW configuration, make
+>> OF configuration dynamic instead of static with #defines and
+>> update the DT bindings.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> 
+> As you can see from the result of the build robot, the removal
+> of #ifdef CONFIG_OF_GPIO does not play well with non-DT
+> configurarions.
+> 
+> You need to figure something out here so that it builds for
+> both.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- arch/arm/boot/dts/am437x-gp-evm.dts | 10 ++++++++++
- arch/arm/boot/dts/am437x-sk-evm.dts | 27 +++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+OK, I'll find out.
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 84832bf..7b7ccc0 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -537,7 +537,11 @@
- 			regulator-max-microvolt = <1500000>;
- 			regulator-boot-on;
- 			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
- 		};
-+
- 		dcdc5: regulator-dcdc5 {
- 			compatible = "ti,tps65218-dcdc5";
- 			regulator-name = "v1_0bat";
-@@ -545,6 +549,9 @@
- 			regulator-max-microvolt = <1000000>;
- 			regulator-boot-on;
- 			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
- 		};
- 
- 		dcdc6: regulator-dcdc6 {
-@@ -554,6 +561,9 @@
- 			regulator-max-microvolt = <1800000>;
- 			regulator-boot-on;
- 			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
- 		};
- 
- 		ldo1: regulator-ldo1 {
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index d82dd6e..03e3d02 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -454,6 +454,9 @@
- 			regulator-max-microvolt = <1500000>;
- 			regulator-boot-on;
- 			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
- 		};
- 
- 		dcdc4: regulator-dcdc4 {
-@@ -465,6 +468,30 @@
- 			regulator-always-on;
- 		};
- 
-+		dcdc5: regulator-dcdc5 {
-+			compatible = "ti,tps65218-dcdc5";
-+			regulator-name = "v1_0bat";
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
-+		};
-+
-+		dcdc6: regulator-dcdc6 {
-+			compatible = "ti,tps65218-dcdc6";
-+			regulator-name = "v1_8bat";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
-+		};
-+
- 		ldo1: regulator-ldo1 {
- 			compatible = "ti,tps65218-ldo1";
- 			regulator-name = "v1_8d";
--- 
-1.9.1
+Thanks,
+Neil
+
+> Yours,
+> Linus Walleij
+> 
+
