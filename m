@@ -1,69 +1,102 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [RFC PATCH 02/13] drm/tegra: Add helper functions for setting up
- DPAUX pads
-Date: Mon, 20 Jun 2016 08:59:19 +0100
-Message-ID: <5767A257.6080106@nvidia.com>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <1466165027-17917-3-git-send-email-jonathanh@nvidia.com>
- <20160617161138.GC27475@ulmo.ba.sec>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] mfd: cros_ec: add EC_PWM function definitions
+Date: Mon, 20 Jun 2016 09:00:51 +0100
+Message-ID: <20160620080051.GJ21702@dell>
+References: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
+ <1464916904-37554-3-git-send-email-briannorris@chromium.org>
+ <20160616153817.GD21702@dell>
+ <CAD=FV=X8eOQLbdAseL2_JwpOFNjSLDAi9hX=NrE=CfrrTZfAmA@mail.gmail.com>
+ <20160617080635.GG21702@dell>
+ <CAD=FV=UUJt4vBwHJrUYrKN56dv2YqdW3R7wah7-_PqyQ=YYr7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160617161138.GC27475@ulmo.ba.sec>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=UUJt4vBwHJrUYrKN56dv2YqdW3R7wah7-_PqyQ=YYr7Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Enric Balletbo <enric.balletbo-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Randall Spangler <rspangler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Nematbakhsh <shawnn-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Todd Broch <tbroch-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gwendal Grignou <gwendal-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDE3LzA2LzE2IDE3OjExLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiAqIFBHUCBTaWduZWQg
-YnkgYW4gdW5rbm93biBrZXkKPiAKPiBPbiBGcmksIEp1biAxNywgMjAxNiBhdCAwMTowMzozNlBN
-ICswMTAwLCBKb24gSHVudGVyIHdyb3RlOgo+PiBJbiBwcmVwYXJhdGlvbiBmb3IgYWRkaW5nIHBp
-bmN0cmwgc3VwcG9ydCBmb3IgdGhlIERQQVVYIHBhZHMsIGFkZAo+PiBoZWxwZXJzIGZ1bmN0aW9u
-cyBmb3IgY29uZmlndXJpbmcgdGhlIHBhZHMgYW5kIGNvbnRyb2xsaW5nIHRoZSBwb3dlcgo+PiBm
-b3IgdGhlIHBhZHMuCj4+Cj4+IFBsZWFzZSBub3RlIHRoYXQgYWx0aG91Z2ggYSBzaW1wbGUgaWYt
-c3RhdGVtZW50IGNvdWxkIGJlIHVzZWQgaW5zdGVhZAo+PiBvZiBhIGNhc2Ugc3RhdGVtZW50IGZv
-ciBjb25maWd1cmluZyB0aGUgcGFkcyBhcyB0aGVyZSBhcmUgb25seSB0d28KPj4gcG9zc2libGUg
-bW9kZXMsIGEgY2FzZSBzdGF0ZW1lbnQgaXMgdXNlZCBiZWNhdXNlIHdoZW4gaW50ZWdyYXRpbmcg
-d2l0aAo+PiB0aGUgcGluY3RybCBmcmFtZXdvcmssIHdlIG5lZWQgdG8gYmUgYWJsZSB0byBoYW5k
-bGUgaW52YWxpZCBtb2RlcyB0aGF0Cj4+IGNvdWxkIGJlIHBhc3NlZC4KPj4KPj4gU2lnbmVkLW9m
-Zi1ieTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+Cj4+IC0tLQo+PiAgZHJpdmVy
-cy9ncHUvZHJtL3RlZ3JhL2RwYXV4LmMgfCA3NSArKysrKysrKysrKysrKysrKysrKysrKysrKy0t
-LS0tLS0tLS0tLS0tLS0tCj4+ICAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKSwgMzAg
-ZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGVncmEvZHBh
-dXguYyBiL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9kcGF1eC5jCj4+IGluZGV4IDA4NzRhN2U1YjM3
-Yi4uYWEzYTAzN2ZjZDNiIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdGVncmEvZHBh
-dXguYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdGVncmEvZHBhdXguYwo+PiBAQCAtMjY3LDYg
-KzI2Nyw0NSBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgdGVncmFfZHBhdXhfaXJxKGludCBpcnEsIHZv
-aWQgKmRhdGEpCj4+ICAJcmV0dXJuIHJldDsKPj4gIH0KPj4gIAo+PiArc3RhdGljIHZvaWQgdGVn
-cmFfZHBhdXhfcG93ZXJkb3duKHN0cnVjdCB0ZWdyYV9kcGF1eCAqZHBhdXgsIGJvb2wgZW5hYmxl
-KQo+PiArewo+PiArCXUzMiB2YWx1ZSA9IHRlZ3JhX2RwYXV4X3JlYWRsKGRwYXV4LCBEUEFVWF9I
-WUJSSURfU1BBUkUpOwo+PiArCj4+ICsJaWYgKGVuYWJsZSkKPj4gKwkJdmFsdWUgfD0gRFBBVVhf
-SFlCUklEX1NQQVJFX1BBRF9QT1dFUl9ET1dOOwo+PiArCWVsc2UKPj4gKwkJdmFsdWUgJj0gfkRQ
-QVVYX0hZQlJJRF9TUEFSRV9QQURfUE9XRVJfRE9XTjsKPj4gKwo+PiArCXRlZ3JhX2RwYXV4X3dy
-aXRlbChkcGF1eCwgdmFsdWUsIERQQVVYX0hZQlJJRF9TUEFSRSk7Cj4+ICt9Cj4gCj4gSSdkIGxp
-a2UgZm9yIHRoaXMgdG8gYmUgdHdvIGZ1bmN0aW9ucyB3aXRob3V0IHRoZSBib29sZWFuIHBhcmFt
-ZXRlci4gVGhlCj4gcmVhc29uIGlzIHRoYXQgd2l0aG91dCBsb29raW5nIGF0IHRoZSBpbXBsZW1l
-bnRhdGlvbiB0aGVyZSdzIG5vIHdheSB0bwo+IHVuZGVyc3RhbmQgd2hhdCB0aGUgbWVhbmluZyBv
-ZiB0cnVlIGFuZCBmYWxzZSBpcy4gSWYgaW5zdGVhZCB5b3UgY2FsbAo+IHRoaXM6Cj4gCj4gCXN0
-YXRpYyB2b2lkIHRlZ3JhX2RwYXV4X3BhZF9wb3dlcl9kb3duKHN0cnVjdCB0ZWdyYV9kcGF1eCAq
-ZHBhdXgpCj4gCXsKPiAJCS4uLgo+IAl9Cj4gCj4gYW5kCj4gCj4gCXN0YXRpYyB2b2lkIHRlZ3Jh
-X2RwYXV4X3BhZF9wb3dlcl91cChzdHJ1Y3QgdGVncmFfZHBhdXggKmRwYXV4KQo+IAl7Cj4gCQku
-Li4KPiAJfQo+IAo+IHlvdSBjYW4gZWFzaWx5IGRlZHVjZSBmcm9tIHRoZSBuYW1lIHdoYXQncyBn
-b2luZyBvbi4KCk9LLCBmaW5lIHdpdGggbWUuIEkgd2FzIG5vdCBzdXJlIGlmIGl0IHdhcyBvYnZp
-b3VzIG9yIG5vdC4KCj4+ICtzdGF0aWMgaW50IHRlZ3JhX2RwYXV4X2NvbmZpZyhzdHJ1Y3QgdGVn
-cmFfZHBhdXggKmRwYXV4LCBpbnQgZnVuY3Rpb24pCj4gCj4gQ2FuIGZ1bmN0aW9uIG5vdCBiZSB1
-bnNpZ25lZD8KClllcyBpdCBjYW4gYW5kIGluIGZhY3Qgc2hvdWxkIGJlLiBJIGhhZCB0aG91Z2h0
-IHRoYXQgaXQgbmVlZGVkIHRvIGJlCnNpZ25lZCB0byBtYXRjaCB3aXRoIHRoZSBwaW5jdHJsLW9w
-cyBidXQgb24gY2xvc2VyIGluc3BlY3Rpb24gdGhhdCBpcwpub3QgdGhlIGNhc2UuCgpKb24KCi0t
-IApudnB1YmxpYwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, 17 Jun 2016, Doug Anderson wrote:
+
+> Lee,
+>=20
+> On Fri, Jun 17, 2016 at 1:06 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
+te:
+> >> Probably the reason for all of these non-kernel-isms is that this
+> >> isn't a kernel file.  From the top of the file:
+> >>
+> >>  * NOTE: This file is copied verbatim from the ChromeOS EC Open So=
+urce
+> >>  * project in an attempt to make future updates easy to make.
+> >>
+> >> So the source of truth for this file is
+> >> <https://chromium.googlesource.com/chromiumos/platform/ec/+/master=
+/include/ec_commands.h>.
+> >>
+> >> Someone could probably submit a CL to that project to make it a li=
+ttle
+> >> more kernel-ish and then we'd have to see if the EC team would acc=
+ept
+> >> such changes...
+> >
+> > Hmmm... that kinda puts me in a difficult position.  Do I except
+> > non-kernel code, which does not conform to our stands?
+>=20
+> What about if Brian made sure to just fully copy the latest version o=
+f
+> "cros_ec_commands.h" from the EC codebase and changed this commit
+> message to say:
+>=20
+> Copy the latest version of "cros_ec_commands.h" from the Chrome OS EC
+> code base, which is the source of truth for this file.  See
+> <https://chromium.googlesource.com/chromiumos/platform/ec/+/master/in=
+clude/ec_commands.h>.
+>=20
+> From the commit message it would be clear that this is an external
+> file linked into the kernel for convenience.
+>=20
+>=20
+> > Naturally I'd be happier if you could try to make the code more
+> > 'kernely'.  The practices I mention above are still good ones, even=
+ if
+> > you're not writing kernel specific code.
+>=20
+> In general requesting that code from outside the kernel conform to
+> "kerneldoc" seems like a bit of a stretch.  In general having some
+> type of parse-able format for comments is nice, but I could see that
+> in the Chrome OS EC codebase it would be a bit overkill.
+
+It's unfortunate that kerneldoc is named so, since I think it's a nice
+way to write structure/function headers regardless of code base and
+not overkill at all.  It's certainly harder to convince !kernel code
+to use the format, or at least easier for others to push back due to
+the fact that is has 'kernel' in the name.
+
+> Also: it would be awfully strange if we suddenly started changing the
+> coding convention of this file or we had half the file in one
+> convention and half in another.  The rest of this file is in EC
+> convention and it seems sane to keep it that way...
+
+Right.  It's also a shame we're only catching this now.  Really we
+should have had this discussion in the first instance.
+
+Taking into consideration that this file is already in the kernel and
+that it's current format is also represented, I'm willing to keep
+adding to it.  I would like to see an internal request to adopt
+so-called kerneldoc.  Not because I am wish to blindly push our
+standards to other code-bases, but because I am an advocate of the
+format in general.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
