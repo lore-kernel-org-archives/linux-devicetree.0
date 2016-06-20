@@ -1,112 +1,66 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Auto-detecting touchscreen controller and dealing
- with hw configuration differences on q8 tablets
-Date: Mon, 20 Jun 2016 13:03:18 +0200
-Message-ID: <17e69e9e-06be-dc4f-cd47-152f6290d2ec@redhat.com>
-References: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
- <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7@konsulko.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 08/20] pwm: Add PWM Capture support
+Date: Mon, 20 Jun 2016 12:14:42 +0100
+Message-ID: <20160620111442.GA4490@dell>
+References: <20160608092135.21184-1-lee.jones@linaro.org>
+ <20160608092135.21184-9-lee.jones@linaro.org>
+ <20160610135302.GK27142@ulmo.ba.sec>
+ <20160610143854.GE1537@dell>
+ <20160610163956.GA8696@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB7U2T65QKGQE46BASGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org" <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160610163956.GA8696@ulmo.ba.sec>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, patrice.chotard@st.com, robh+dt@kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 10 Jun 2016, Thierry Reding wrote:
 
-On 20-06-16 11:27, Pantelis Antoniou wrote:
-> Hi Hans,
->
-> I=E2=80=99m going to commend only on the overlay related parts since I=E2=
-=80=99m not I
-> get all the nuances right.
+> On Fri, Jun 10, 2016 at 03:38:54PM +0100, Lee Jones wrote:
+> > On Fri, 10 Jun 2016, Thierry Reding wrote:
+> >=20
+> > > On Wed, Jun 08, 2016 at 10:21:23AM +0100, Lee Jones wrote:
+> > > > Supply a PWM Capture call-back Op in order to pass back
+> > > > information obtained by running analysis on PWM a signal.
+> > > > This would normally (at least during testing) be called from
+> > > > the Sysfs routines with a view to printing out PWM Capture
+> > > > data which has been encoded into a string.
+> > > >=20
+> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > ---
+> > > >  drivers/pwm/core.c  | 27 +++++++++++++++++++++++++++
+> > > >  include/linux/pwm.h | 25 +++++++++++++++++++++++++
+> > > >  2 files changed, 52 insertions(+)
+> >=20
+> > So do you want me to re-spin?
+> >=20
+> > Before you said you'd make adjustments on patches 8 through 10, so =
+I'm
+> > a little confused.
+>=20
+> Yeah, I only realized that it might be quicker to make these adjustme=
+nts
+> myself when I had finished looking at patch 10. I've pushed the adjus=
+ted
+> patches to a for-4.8/pwm-capture branch, so if you're going to re-spi=
+n
+> the remainder of the patches, perhaps that could be your base?
+>=20
+> 	https://git.kernel.org/cgit/linux/kernel/git/thierry.reding/linux-pw=
+m.git/log/?h=3Dfor-4.8/pwm-capture
+>=20
+> If you don't have any objections I can put those into linux-next earl=
+y
+> next week.
 
-No problem and thanks for the answer anyways!
-
->> On Jun 19, 2016, at 14:06 , Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-
-<snip>
-
->> 2) Give the user some way to override the dts settings.
->>
->> Which after a somewhat long intro brings me to the actual purpose of thi=
-s thread, discuss
->> how to best deal with this. I again see 2 options:
->>
->> 1) Put a disabled gsl1680 node in the dts file, have a q8_autodetect.c i=
-n u-boot
->> which probes i2c and if it finds the gsl1680 nodes enables it, and patch=
-es in a best-effort
->> default for which fw file to use. Allow the user to set a touchscreen_fw=
- u-boot env
->> variable which will override this. Also allow the user to set a touchscr=
-een_inverted_x env
->> variable to add inverted-x to the dt node for the gsl1680.
->>
->
-> That can work. The problem is that having anything requiring smarts in u-=
-boot always
-> leads to trouble with users. It all depends on your user=E2=80=99s techni=
-cal proficiency, if
-> they are comfortable tweaking things in u-boot it=E2=80=99s fine. If it=
-=E2=80=99s not, expect lots of
-> bricked boards when they mess up.
->
->> 2) Write an in kernel overlay manager which does auto-detect as describe=
-d by 1, and
->> loads an overlay for the detected touchscreen controller, with module op=
-tions to allow
->> specifying the fw-file, x-inversion, etc.
->>
->> One things which worries me about 2. is that we would need to have 2 ove=
-rlay files
->> per fw-file, one regular config, one inverted-x, or is it possible for t=
-he overlay
->> manager to modify an overlay before applying it ?
->>
->
-> Yes, it=E2=80=99s quite possible. You can even have stacked overlays.
-
-Ok, is there any example code how to change an overlay before applying it o=
-ut there,
-or if not can you point to the functions to use to do this ?
-
-Specifically my plan is to:
-
-1) Have a single overlay for q8 tablets with gsl1680 tablets
-
-2) Write an in kernel overlay manager which when it detects a gsl1680 touch=
-screen
-will pick a best-default firmware-file + matching resolution + swap-x-y bas=
-ed on
-which SoC (A13/A23/A33) the tablet is based on as well as the gsl1680's chi=
-p-id
-and will then "patch" this info into the overlay before applying it. This
-means being able to set / modify several string, int and bool dt properties=
-.
-
-3) Offer a kernel-module option for the overlaymanager which will allows
-overriding the defaults for the firmware-filename, etc. This is also
-why I want to go with the patch approach instead of having multiple
-dt-overlay files.
-
-Thanks & Regards,
-
-Hans
+That's fine by me.  I will rebase.
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
