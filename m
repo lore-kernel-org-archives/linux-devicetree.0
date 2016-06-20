@@ -1,183 +1,138 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 1/9] regulator: tps65217: Enable suspend configuration
-Date: Mon, 20 Jun 2016 14:13:30 +0530
-Message-ID: <1466412218-5906-2-git-send-email-j-keerthy@ti.com>
-References: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 01/20] clk: fixed-factor: Pass clk rates change to the
+ parent
+Date: Mon, 20 Jun 2016 10:54:58 +0200
+Message-ID: <20160620085458.GI26668@lukather>
+References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1463402840-17062-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20160617230533.27203.82622@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, broonie@kernel.org, devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, j-keerthy@ti.com, linux@armlinux.org.uk, Russ Dill <Russ.Dill@ti.com>
+Content-Type: multipart/mixed; boundary="===============2097931137=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160617230533.27203.82622@quark.deferred.io>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Russ Dill <Russ.Dill@ti.com>
 
-This allows platform data to specify which power rails should be on or off
-during RTC only suspend. This is necessary to keep DDR state while in RTC
-only suspend.
+--===============2097931137==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="h22Fi9ANawrtbNPX"
+Content-Disposition: inline
 
-Signed-off-by: Russ Dill <Russ.Dill@ti.com>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- drivers/regulator/tps65217-regulator.c | 74 +++++++++++++++++++++++++++++-----
- 1 file changed, 65 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/regulator/tps65217-regulator.c b/drivers/regulator/tps65217-regulator.c
-index adbe4fc..c15659c 100644
---- a/drivers/regulator/tps65217-regulator.c
-+++ b/drivers/regulator/tps65217-regulator.c
-@@ -28,7 +28,7 @@
- #include <linux/mfd/tps65217.h>
- 
- #define TPS65217_REGULATOR(_name, _id, _of_match, _ops, _n, _vr, _vm, _em, \
--                           _t, _lr, _nlr) \
-+			   _t, _lr, _nlr,  _sr, _sm)	\
- 	{						\
- 		.name		= _name,		\
- 		.id		= _id,			\
-@@ -45,6 +45,8 @@
- 		.volt_table	= _t,			\
- 		.linear_ranges	= _lr,			\
- 		.n_linear_ranges = _nlr,		\
-+		.bypass_reg	= _sr,			\
-+		.bypass_mask	= _sm,			\
- 	}						\
- 
- static const unsigned int LDO1_VSEL_table[] = {
-@@ -118,6 +120,42 @@ static int tps65217_pmic_set_voltage_sel(struct regulator_dev *dev,
- 	return ret;
- }
- 
-+struct tps65217_regulator_data {
-+	int strobe;
-+};
-+
-+static struct tps65217_regulator_data regulator_data[TPS65217_NUM_REGULATOR];
-+
-+static int tps65217_pmic_set_suspend_enable(struct regulator_dev *dev)
-+{
-+	struct tps65217 *tps = rdev_get_drvdata(dev);
-+	unsigned int rid = rdev_get_id(dev);
-+
-+	if (rid < TPS65217_DCDC_1 || rid > TPS65217_LDO_4)
-+		return -EINVAL;
-+
-+	return tps65217_clear_bits(tps, dev->desc->bypass_reg,
-+				   dev->desc->bypass_mask,
-+				   TPS65217_PROTECT_L1);
-+}
-+
-+static int tps65217_pmic_set_suspend_disable(struct regulator_dev *dev)
-+{
-+	struct tps65217 *tps = rdev_get_drvdata(dev);
-+	unsigned int rid = rdev_get_id(dev);
-+
-+	if (rid < TPS65217_DCDC_1 || rid > TPS65217_LDO_4)
-+		return -EINVAL;
-+
-+	if (!regulator_data[rid].strobe)
-+		return -EINVAL;
-+
-+	return tps65217_set_bits(tps, dev->desc->bypass_reg,
-+				 dev->desc->bypass_mask,
-+				 regulator_data[rid].strobe,
-+				 TPS65217_PROTECT_L1);
-+}
-+
- /* Operations permitted on DCDCx, LDO2, LDO3 and LDO4 */
- static struct regulator_ops tps65217_pmic_ops = {
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -127,6 +165,8 @@ static struct regulator_ops tps65217_pmic_ops = {
- 	.set_voltage_sel	= tps65217_pmic_set_voltage_sel,
- 	.list_voltage		= regulator_list_voltage_linear_range,
- 	.map_voltage		= regulator_map_voltage_linear_range,
-+	.set_suspend_enable	= tps65217_pmic_set_suspend_enable,
-+	.set_suspend_disable	= tps65217_pmic_set_suspend_disable,
- };
- 
- /* Operations permitted on LDO1 */
-@@ -138,41 +178,50 @@ static struct regulator_ops tps65217_pmic_ldo1_ops = {
- 	.set_voltage_sel	= tps65217_pmic_set_voltage_sel,
- 	.list_voltage		= regulator_list_voltage_table,
- 	.map_voltage		= regulator_map_voltage_ascend,
-+	.set_suspend_enable	= tps65217_pmic_set_suspend_enable,
-+	.set_suspend_disable	= tps65217_pmic_set_suspend_disable,
- };
- 
- static const struct regulator_desc regulators[] = {
- 	TPS65217_REGULATOR("DCDC1", TPS65217_DCDC_1, "dcdc1",
- 			   tps65217_pmic_ops, 64, TPS65217_REG_DEFDCDC1,
- 			   TPS65217_DEFDCDCX_DCDC_MASK, TPS65217_ENABLE_DC1_EN,
--			   NULL, tps65217_uv1_ranges, 2),
-+			   NULL, tps65217_uv1_ranges, 2, TPS65217_REG_SEQ1,
-+			   TPS65217_SEQ1_DC1_SEQ_MASK),
- 	TPS65217_REGULATOR("DCDC2", TPS65217_DCDC_2, "dcdc2",
- 			   tps65217_pmic_ops, 64, TPS65217_REG_DEFDCDC2,
- 			   TPS65217_DEFDCDCX_DCDC_MASK, TPS65217_ENABLE_DC2_EN,
- 			   NULL, tps65217_uv1_ranges,
--			   ARRAY_SIZE(tps65217_uv1_ranges)),
-+			   ARRAY_SIZE(tps65217_uv1_ranges), TPS65217_REG_SEQ1,
-+			   TPS65217_SEQ1_DC2_SEQ_MASK),
- 	TPS65217_REGULATOR("DCDC3", TPS65217_DCDC_3, "dcdc3",
- 			   tps65217_pmic_ops, 64, TPS65217_REG_DEFDCDC3,
- 			   TPS65217_DEFDCDCX_DCDC_MASK, TPS65217_ENABLE_DC3_EN,
--			   NULL, tps65217_uv1_ranges, 1),
-+			   NULL, tps65217_uv1_ranges, 1, TPS65217_REG_SEQ2,
-+			   TPS65217_SEQ2_DC3_SEQ_MASK),
- 	TPS65217_REGULATOR("LDO1", TPS65217_LDO_1, "ldo1",
- 			   tps65217_pmic_ldo1_ops, 16, TPS65217_REG_DEFLDO1,
- 			   TPS65217_DEFLDO1_LDO1_MASK, TPS65217_ENABLE_LDO1_EN,
--			   LDO1_VSEL_table, NULL, 0),
-+			   LDO1_VSEL_table, NULL, 0, TPS65217_REG_SEQ2,
-+			   TPS65217_SEQ2_LDO1_SEQ_MASK),
- 	TPS65217_REGULATOR("LDO2", TPS65217_LDO_2, "ldo2", tps65217_pmic_ops,
- 			   64, TPS65217_REG_DEFLDO2,
- 			   TPS65217_DEFLDO2_LDO2_MASK, TPS65217_ENABLE_LDO2_EN,
- 			   NULL, tps65217_uv1_ranges,
--			   ARRAY_SIZE(tps65217_uv1_ranges)),
-+			   ARRAY_SIZE(tps65217_uv1_ranges), TPS65217_REG_SEQ3,
-+			   TPS65217_SEQ3_LDO2_SEQ_MASK),
- 	TPS65217_REGULATOR("LDO3", TPS65217_LDO_3, "ldo3", tps65217_pmic_ops,
- 			   32, TPS65217_REG_DEFLS1, TPS65217_DEFLDO3_LDO3_MASK,
- 			   TPS65217_ENABLE_LS1_EN | TPS65217_DEFLDO3_LDO3_EN,
- 			   NULL, tps65217_uv2_ranges,
--			   ARRAY_SIZE(tps65217_uv2_ranges)),
-+			   ARRAY_SIZE(tps65217_uv2_ranges), TPS65217_REG_SEQ3,
-+			   TPS65217_SEQ3_LDO3_SEQ_MASK),
- 	TPS65217_REGULATOR("LDO4", TPS65217_LDO_4, "ldo4", tps65217_pmic_ops,
- 			   32, TPS65217_REG_DEFLS2, TPS65217_DEFLDO4_LDO4_MASK,
- 			   TPS65217_ENABLE_LS2_EN | TPS65217_DEFLDO4_LDO4_EN,
- 			   NULL, tps65217_uv2_ranges,
--			   ARRAY_SIZE(tps65217_uv2_ranges)),
-+			   ARRAY_SIZE(tps65217_uv2_ranges), TPS65217_REG_SEQ4,
-+			   TPS65217_SEQ4_LDO4_SEQ_MASK),
- };
- 
- static int tps65217_regulator_probe(struct platform_device *pdev)
-@@ -181,7 +230,8 @@ static int tps65217_regulator_probe(struct platform_device *pdev)
- 	struct tps65217_board *pdata = dev_get_platdata(tps->dev);
- 	struct regulator_dev *rdev;
- 	struct regulator_config config = { };
--	int i;
-+	int i, ret;
-+	unsigned int val;
- 
- 	if (tps65217_chip_id(tps) != TPS65217) {
- 		dev_err(&pdev->dev, "Invalid tps chip version\n");
-@@ -200,6 +250,12 @@ static int tps65217_regulator_probe(struct platform_device *pdev)
- 
- 		rdev = devm_regulator_register(&pdev->dev, &regulators[i],
- 					       &config);
-+
-+		/* Store default strobe info */
-+		ret = tps65217_reg_read(tps, regulators[i].bypass_reg, &val);
-+
-+		regulator_data[i].strobe = val & regulators[i].bypass_mask;
-+
- 		if (IS_ERR(rdev)) {
- 			dev_err(tps->dev, "failed to register %s regulator\n",
- 				pdev->name);
--- 
-1.9.1
+--h22Fi9ANawrtbNPX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jun 17, 2016 at 04:05:33PM -0700, Michael Turquette wrote:
+> Quoting Maxime Ripard (2016-05-16 05:47:01)
+> > A fixed factor clock, if it needs to change its rate, by definition do =
+not
+> > have any choice but to modify its parent rate.
+>=20
+> Logically it makes sense to always propagate the rate-change request up
+> to the parent for a fixed-factor clock if we desire to change its rate.
+> However, I wonder if doing this for all users of fixed-factor-clock in
+> DT is safe? Some users may be counting on it not changing.
+>=20
+> There are 397 instances of fixed-factor-clock in .dts[i] today, so this
+> change worries me a bit.
+
+Understood.
+
+>=20
+> >=20
+> > Add the CLK_SET_RATE_PARENT flag to that clock so that it can happen
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > ---
+> >  drivers/clk/clk-fixed-factor.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-fac=
+tor.c
+> > index 75cd6c792cb8..3363abd9b4ae 100644
+> > --- a/drivers/clk/clk-fixed-factor.c
+> > +++ b/drivers/clk/clk-fixed-factor.c
+> > @@ -167,7 +167,8 @@ void __init of_fixed_factor_clk_setup(struct device=
+_node *node)
+> >         of_property_read_string(node, "clock-output-names", &clk_name);
+> >         parent_name =3D of_clk_get_parent_name(node, 0);
+> > =20
+> > -       clk =3D clk_register_fixed_factor(NULL, clk_name, parent_name, =
+0,
+> > +       clk =3D clk_register_fixed_factor(NULL, clk_name, parent_name,
+> > +                                       CLK_SET_RATE_PARENT,
+>=20
+> An alternative would be to pass in the flags you want, somehow. For the
+> clock you are trying to fix, is it inside of the SoC or external? If it
+> is internal, and part of a larger clock controller driver, is this for
+> the legacy style allwinner clock drivers that put everything in DT?
+
+It is :(
+
+What we could do, is have an extra compatible for that clock (like
+"allwinner,sun4i-a10-pll3-x2" in that case), and set the flag only for
+that compatible.
+
+Would that work for you?
+
+> If not, it would better to initialize it statically and shove this
+> flag into the struct clk_init_data storage.
+
+Hopefully, yes, that should be addressed by the new framework, but I
+need reviews to get it merged ;)
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--h22Fi9ANawrtbNPX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXZ69iAAoJEBx+YmzsjxAg2nIP/jqAmrV0fPnvXUghpO55krlt
+rT4Ex4ie58emrWyyJXWfS84eOEbQl1y0GCdKfY3Q07cPMxgZFK4c64TfkGqhD53k
+F0NcIDVVi4oHqkDwhBlO7V9ZQ9LALhFhH1CD2MY0mnkCEA/cFaGiY7z/jU03QQ19
+3RYVysWPdocRB377+Yn+moTSKiMPNII0Gf3gUKitwSf5SCMegbKTbNJ8J2fcE6HF
+3E57v+YDStzMXd1rMxlmyNUgqocgshO8sxTgwLIfxsF31WOs3DL6sc7jF5IRWEFY
+K1+moF82uqX0oY6rOeSeIS7K4YwX6NG0ox5btGPLeGvdkR+SkYPvWsT3A1gyJ63x
+I8Bu40aC8sQoJvpxnDqma/TAf4jMTBPYv65SvC/Cy5yIfaNM7eEGH3isYPw64F2L
+aBbAKs8tpGRxbcfRH7t9V/582AXxpaaygJsNsnKJ2D4qocAvt8R9Fdd0/2Mu9ehT
+wnvQb6mKSALL0I7Md+ue4Yka9877sJVOblExk5Rm8lDsH1+gm5zwGcU+Ckvc6N4H
+xSrPL4+iAj1HbjT87Y3qKkokdFHEHn/Y8zM1KSTSclNVfF4XykfBbuEvVIOcEB96
+8dwgoo8BmLSa99D6LyAoBUudBgby4rxeCIFy0OCBdSKybSlK/sJbQnOJt1wvXdYf
+a49pZTIoW2IIDiw9TQSX
+=FcfY
+-----END PGP SIGNATURE-----
+
+--h22Fi9ANawrtbNPX--
+
+--===============2097931137==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============2097931137==--
