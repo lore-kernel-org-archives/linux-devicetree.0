@@ -1,123 +1,83 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v10 06/14] usb: gadget.h: Add OTG to gadget interface
-Date: Mon, 20 Jun 2016 10:28:48 +0300
-Message-ID: <57679B30.6030809@ti.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
- <1465564043-27163-7-git-send-email-rogerq@ti.com>
- <87k2hkxr4d.fsf@linux.intel.com>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding
+ of STiH4xx platforms
+Date: Mon, 20 Jun 2016 09:29:18 +0200
+Message-ID: <CAG374jD+qChVC+6QJEHSXSzXGVVtAxvZ3V6zNpQDUyuJ2yCjMw@mail.gmail.com>
+References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org> <20160619150458.GA26824@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="NmORdVcQ5RW4s9GPuF1k0s77mGCKd5o3J"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87k2hkxr4d.fsf@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, peter.chen@freescale.com
-Cc: tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160619150458.GA26824@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>linux-clk <l>
 List-Id: devicetree@vger.kernel.org
 
---NmORdVcQ5RW4s9GPuF1k0s77mGCKd5o3J
-Content-Type: multipart/mixed; boundary="brMpXhEskQR4Hu6nVfvwxwc4OII2vxKSP"
-From: Roger Quadros <rogerq@ti.com>
-To: Felipe Balbi <balbi@kernel.org>, peter.chen@freescale.com
-Cc: tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com,
- mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com,
- sergei.shtylyov@cogentembedded.com, jun.li@freescale.com,
- grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org,
- nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org,
- linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Message-ID: <57679B30.6030809@ti.com>
-Subject: Re: [PATCH v10 06/14] usb: gadget.h: Add OTG to gadget interface
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
- <1465564043-27163-7-git-send-email-rogerq@ti.com>
- <87k2hkxr4d.fsf@linux.intel.com>
-In-Reply-To: <87k2hkxr4d.fsf@linux.intel.com>
+Hi Rob,
 
---brMpXhEskQR4Hu6nVfvwxwc4OII2vxKSP
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-On 20/06/16 10:21, Felipe Balbi wrote:
->=20
-> Hi,
->=20
-> Roger Quadros <rogerq@ti.com> writes:
->> The OTG core will use struct otg_gadget_ops to
->> start/stop the gadget controller.
+On 19 June 2016 at 17:04, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Jun 16, 2016 at 11:20:22AM +0200, Gabriel Fernandez wrote:
+>> This patch reworks the clock binding to avoid too much detail in DT.
+>> Now we have only compatible string per type of clock
+>> (remark from Rob https://lkml.org/lkml/2016/5/25/492)
 >>
->> The main purpose of this interface is to avoid directly
->> calling usb_gadget_start/stop() from the OTG core as they
->> wouldn't be defined in the built-in symbol table if
->> CONFIG_USB_GADGET is m.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>
+> I have no idea what the clock trees and clock controller in these chips
+> look like, so it's hard to say if the changes here are good. It still
+> looks like things are somewhat fine grained clocks in DT. I'll leave
+> it up to the platform maintainers to decide...
+>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 >> ---
->>  include/linux/usb/gadget.h | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
+>>  .../devicetree/bindings/clock/st/st,clkgen-mux.txt |  2 +-
+>>  .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
+>>  .../devicetree/bindings/clock/st/st,clkgen.txt     |  2 +-
+>>  .../devicetree/bindings/clock/st/st,quadfs.txt     |  6 +--
+>>  drivers/clk/st/clkgen-fsyn.c                       | 41 ++++++--------
+>>  drivers/clk/st/clkgen-mux.c                        | 28 ++++------
+>>  drivers/clk/st/clkgen-pll.c                        | 62 ++++++++++------------
+>>  7 files changed, 65 insertions(+), 87 deletions(-)
 >>
->> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
->> index 2dd9e6b..f4fc0aa 100644
->> --- a/include/linux/usb/gadget.h
->> +++ b/include/linux/usb/gadget.h
->> @@ -639,6 +639,22 @@ struct usb_gadget_driver {
->>  };
->> =20
->> =20
->> +/*-------------------------------------------------------------------=
-------*/
->> +
->> +/**
->> + * struct otg_gadget_ops - Interface between OTG core and gadget
->> + *
->> + * Provided by the gadget core to allow the OTG core to start/stop th=
-e gadget
->> + *
->> + * @start: function to start the gadget
->> + * @stop: function to stop the gadget
->> + * @connect_control: function to connect/disconnect from the bus
->> + */
->> +struct otg_gadget_ops {
->> +	int (*start)(struct usb_gadget *gadget);
->> +	int (*stop)(struct usb_gadget *gadget);
->> +	int (*connect_control)(struct usb_gadget *gadget, bool connect);
->> +};
->=20
-> you shouldn't need these at all. They are already part of the gadget
-> framework as ->udc_start(), ->udc_stop() and ->pullup()
->=20
+>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>> index 4d277d6..9a46cb1d7 100644
+>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>> @@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
+>>  Required properties:
+>>
+>>  - compatible : shall be:
+>> -     "st,stih407-clkgen-a9-mux",     "st,clkgen-mux"
+>> +     "st,stih407-clkgen-a9-mux"
+>>
+>>  - #clock-cells : from common clock binding; shall be set to 0.
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>> index c9fd674..be0b043 100644
+>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>> @@ -9,11 +9,10 @@ Base address is located to the parent node. See clock binding[2]
+>>  Required properties:
+>>
+>>  - compatible : shall be:
+>> -     "st,stih407-plls-c32-a0",       "st,clkgen-plls-c32"
+>> -     "st,stih407-plls-c32-a9",       "st,clkgen-plls-c32"
+>> -     "sst,plls-c32-cx_0",            "st,clkgen-plls-c32"
+>> -     "sst,plls-c32-cx_1",            "st,clkgen-plls-c32"
+>> -     "st,stih418-plls-c28-a9",       "st,clkgen-plls-c32"
+>
+>> +     "st,clkgen-pll0"
+>> +     "st,clkgen-pll0"
+>
+> Repeated. Supposed to be 0 and 1? This seems a bit generic, too.
+Yes you are right, it's 0 and 1.
+I wait remarks from Mike or Stephen before send a V3.
 
-This is to avoid the undefined symbol errors during build when OTG has is=
+Thanks Rob
 
-built-in because USB (host) is built-in but GADGET is still a module.
+BR
+Gabriel
 
-cheers,
--roger
-
-
---brMpXhEskQR4Hu6nVfvwxwc4OII2vxKSP--
-
---NmORdVcQ5RW4s9GPuF1k0s77mGCKd5o3J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXZ5szAAoJENJaa9O+djCTvwYQAJQ4nx6KVmNTnl/V28SQcPNZ
-F2QEdfvGUHcLMYHxMd0BqGSoJ2KqbgyVG4mfORbD/jrMhEcXoEZf1vrDFIoi1WFJ
-aOUNbO2GcmGMfbs5TEGjL/cyrCUKEeuof3Pb/BPdS0CrUtMM6stNc93G+uUb6z6F
-cPXMse5kENlZCxkta/OFlKPzYmyeunRzeLf1dYbfwjC9qSBu/7lVVFTISLC0RoxJ
-qpccGwXafFVTPIKmBn1zAhBGmCCs8267WVLkck3iBsBweyLpWb4KhE7CYrMz1Vz0
-G8TJUl7exX1pmy3ULQkZxsbEhF3wyo0l9Qh/BvMqHWEHMLDyTcBwNErFuuoi+tSS
-VIlozRvbV999WctE0w+jxQ/7MgIInHzogNq5crYXJ4EYnE1gEV/yaJ94K9tyWMA/
-ifhLKDdLNEYDnh9x1L6jOeT3h1FI9aHnIt6B521V11goXWYt7Pat+fnOsFnIesJl
-k7VUMm7IQcQsMiE5L43EEvCbLZ55r6hry+iVQ1XgLczYFFpcQF/UTUCtT8JtQKgx
-SlG4eEJ7ipAUPXgt0CdtwRge0E4Q0wGHjZpKdD3HuKOwH2MBXcYihMkb/AL8dYxe
-y8uRL8APzgyijuolxHnX2sHftKqdg0ZiL24DoR7bp95Mjz0sxUfRnEDSObaluxNK
-eB+BPQL950OKJ+uuTGqx
-=NGB4
------END PGP SIGNATURE-----
-
---NmORdVcQ5RW4s9GPuF1k0s77mGCKd5o3J--
+>
+>> +     "st,stih407-clkgen-plla9"
+>> +     "st,stih418-clkgen-plla9"
