@@ -1,162 +1,65 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 4.7 fix] ARM: dts: sunxi: Add pll3 to simplefb nodes clocks
- lists
-Date: Mon, 20 Jun 2016 22:57:22 +0200
-Message-ID: <1466456242-22841-1-git-send-email-hdegoede@redhat.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 1/2] tpm: Factor out common startup code
+Date: Mon, 20 Jun 2016 15:07:57 -0600
+Message-ID: <20160620210757.GB11746@obsidianresearch.com>
+References: <1466324401-5054-1-git-send-email-andrew.zamansky@nuvoton.com>
+	<1466324401-5054-2-git-send-email-andrew.zamansky@nuvoton.com>
+	<20160619123923.GA31053@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Hans de Goede <hdegoede@redhat.com>
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160619123923.GA31053-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we've a clock node describing pll3 we must add it to the
-simplefb nodes clocks lists to avoid it getting turned off when
-simplefb is used.
+On Sun, Jun 19, 2016 at 02:39:24PM +0200, Jarkko Sakkinen wrote:
+> > Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> > Tested-by: Andrew Zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
+> 
+> Couldn't tpm?_auto_startup() be static functions inside tpm-chip.c?
 
-This fixes the screen going black when using simplefb.
+Why? tpm-chip is for chip functions and tpm-interface is for command
+issuing functions, the startup command sequencors seem appropriately
+placed...
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- arch/arm/boot/dts/sun4i-a10.dtsi  | 21 ++++++++++++---------
- arch/arm/boot/dts/sun5i-a10s.dtsi | 11 ++++++-----
- arch/arm/boot/dts/sun7i-a20.dtsi  | 11 ++++++-----
- 3 files changed, 24 insertions(+), 19 deletions(-)
+These are still module private functions.
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index a03e56f..ca58eb2 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -65,8 +65,9 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-hdmi";
--			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
--				 <&ahb_gates 44>, <&dram_gates 26>;
-+			clocks = <&pll3>, <&pll5 1>, <&ahb_gates 36>,
-+				 <&ahb_gates 43>, <&ahb_gates 44>,
-+				 <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 
-@@ -74,8 +75,9 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_fe0-de_be0-lcd0-hdmi";
--			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
--				 <&ahb_gates 44>, <&ahb_gates 46>,
-+			clocks = <&pll3>, <&pll5 1>, <&ahb_gates 36>,
-+				 <&ahb_gates 43>, <&ahb_gates 44>,
-+				 <&ahb_gates 46>,
- 				 <&dram_gates 25>, <&dram_gates 26>;
- 			status = "disabled";
- 		};
-@@ -84,9 +86,9 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_fe0-de_be0-lcd0";
--			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>,
--				 <&ahb_gates 46>, <&dram_gates 25>,
--				 <&dram_gates 26>;
-+			clocks = <&pll3>, <&pll5 1>, <&ahb_gates 36>,
-+				 <&ahb_gates 44>, <&ahb_gates 46>,
-+				 <&dram_gates 25>, <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 
-@@ -94,8 +96,9 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_fe0-de_be0-lcd0-tve0";
--			clocks = <&pll5 1>, <&ahb_gates 34>, <&ahb_gates 36>,
--				 <&ahb_gates 44>, <&ahb_gates 46>,
-+			clocks = <&pll3>, <&pll5 1>, <&ahb_gates 34>,
-+				 <&ahb_gates 36>, <&ahb_gates 44>,
-+				 <&ahb_gates 46>,
- 				 <&dram_gates 5>, <&dram_gates 25>, <&dram_gates 26>;
- 			status = "disabled";
- 		};
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index bddd0de..367f330 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -65,8 +65,8 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-hdmi";
--			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
--				 <&ahb_gates 44>;
-+			clocks = <&pll3>, <&pll5 1>, <&ahb_gates 36>,
-+				 <&ahb_gates 43>, <&ahb_gates 44>;
- 			status = "disabled";
- 		};
- 
-@@ -74,7 +74,8 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0";
--			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>;
-+			clocks = <&pll3>, <&pll5 1>, <&ahb_gates 36>,
-+				 <&ahb_gates 44>;
- 			status = "disabled";
- 		};
- 
-@@ -82,8 +83,8 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-tve0";
--			clocks = <&pll5 1>, <&ahb_gates 34>, <&ahb_gates 36>,
--				 <&ahb_gates 44>;
-+			clocks = <&pll3>, <&pll5 1>, <&ahb_gates 34>,
-+				 <&ahb_gates 36>, <&ahb_gates 44>;
- 			status = "disabled";
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index febdf4c..f480051 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -67,8 +67,9 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-hdmi";
--			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
--				 <&ahb_gates 44>, <&dram_gates 26>;
-+			clocks = <&pll3>, <&pll5 1>, <&ahb_gates 36>,
-+				 <&ahb_gates 43>, <&ahb_gates 44>,
-+				 <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 
-@@ -76,8 +77,8 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0";
--			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>,
--				 <&dram_gates 26>;
-+			clocks = <&pll3>, <&pll5 1>, <&ahb_gates 36>,
-+				 <&ahb_gates 44>, <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 
-@@ -85,7 +86,7 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-tve0";
--			clocks = <&pll5 1>,
-+			clocks = <&pll3>, <&pll5 1>,
- 				 <&ahb_gates 34>, <&ahb_gates 36>, <&ahb_gates 44>,
- 				 <&dram_gates 5>, <&dram_gates 26>;
- 			status = "disabled";
--- 
-2.7.4
+> > +enum TPM_OPS_FLAGS {
+> > +	TPM_OPS_PROBE_TPM2 = BIT(0),
+> 
+> I see two alternatives here:
+> 
+> 1. Make this work for tpm_tis.c if it is doable.
+> 2. Remove this flag and call tpm2_probe() inside tpm_i2c_nuvoton.c.
+> 
+> If this flag works only for a single driver, it does not bring any value.
+
+We already have two drivers that auto probe, you don't think there
+will be more? The idea is to try and remove these low level entry
+points so drivers are simpler.
+
+TIS doesn't use it because it needs to get things setup in advance for
+interrupt auto-probing, which is a very TIS unique thing.
+
+Alternatively we can drop the auto-probe from nuvoton and force it to
+rely on compatible string matching to enter TPM2 mode.
+
+Jason
+
+------------------------------------------------------------------------------
+What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
+patterns at an interface-level. Reveals which users, apps, and protocols are 
+consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
+J-Flow, sFlow and other flows. Make informed decisions using capacity planning
+reports. http://sdm.link/zohomanageengine
