@@ -1,119 +1,99 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/1] ARM: dts: sunxi: Fix simplefb not working in 4.7-rc1
-Date: Mon, 20 Jun 2016 09:46:10 +0200
-Message-ID: <20160620074610.GH26668@lukather>
-References: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
- <20160609074643.GA5242@lukather>
- <21258fc0-0250-951b-2ee7-d022fb3c09ac@redhat.com>
- <20160613080124.GA4481@lukather>
- <1a9a0d76-5bbf-4b79-abee-1c9dd0436567@redhat.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/4] thermal: rcar_gen3_thermal: Document the R-Car Gen3
+ thermal bindings
+Date: Mon, 20 Jun 2016 09:49:38 +0200
+Message-ID: <CAMuHMdX5UuFTwXHY08DJyGS_deK5iyf1QkGW1OeG5QPD4K3k+A@mail.gmail.com>
+References: <57661211.7010900@rvc.renesas.com> <57661290.9000501@rvc.renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="X+8siUETKMkW99st"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1a9a0d76-5bbf-4b79-abee-1c9dd0436567-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <57661290.9000501-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Khiem Nguyen <khiem.nguyen.xt-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>, "Hien Duy. Dang" <hien.dang.eb-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>, Toru Oishi <toru.oishi.zj-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Khiem,
 
---X+8siUETKMkW99st
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jun 19, 2016 at 5:33 AM, Khiem Nguyen
+<khiem.nguyen.xt-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org> wrote:
+>
+> Signed-off-by: Hien Dang <hien.dang.eb-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>
+> Signed-off-by: Khiem Nguyen <khiem.nguyen.xt-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>
 
-On Mon, Jun 13, 2016 at 10:30:57AM +0200, Hans de Goede wrote:
-> Hi,
->=20
-> On 13-06-16 10:01, Maxime Ripard wrote:
-> >On Thu, Jun 09, 2016 at 12:47:36PM +0200, Hans de Goede wrote:
-> >>Hi,
-> >>
-> >>On 09-06-16 09:46, Maxime Ripard wrote:
-> >>>Hi Hans,
-> >>>
-> >>>On Sat, Jun 04, 2016 at 08:05:23PM +0200, Hans de Goede wrote:
-> >>>>Hi Maxime,
-> >>>>
-> >>>>While testing 4.7-rc1 / linux-sunxi/sunxi-next on a A10s I noticed th=
-at
-> >>>>hdmi out is no longer working (screen goes black when the kernel turns
-> >>>>of unused clocks).
-> >>>>
-> >>>>This is caused by the dtsi for sun4i / sun5i / sun7i based boards now
-> >>>>listing pll3, without pll3 being added to the clocks list for the
-> >>>>simplefb nodes.
-> >>>
-> >>>Why not do just that then? It's more appropriate for a fix imho.
-> >>
-> >>You mean just for sun5i-a10s, or for all of sun4i / sun5i-a10s and
-> >>sun7i ?
-> >>
-> >>For sun4i and sun7i things are already fixed in next:
-> >>
-> >>https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?=
-id=3D5a7f2310cc847a73852e70bc720a61ca9bf986a6
-> >>https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?=
-id=3Dc79255ca4d7b67cce4eac4dd532e097ce49f3679
-> >>
-> >>It seems best to use those fixes, rather then come up with a separate
-> >>fix for 4.7.
-> >>
-> >>My patch for fixing sun5i-a10s is inline with the 2 above patches,
-> >>which seems best, rather then doing something special for just sun5i-a1=
-0s.
-> >
-> >Well, you are doing something special for just the A10s: the patches
-> >quoted above just add a bunch of clocks and add the handles to the
-> >list of clocks managed by simplefb.
-> >
-> >For the A10s, you also declare the whole display engine block without
-> >anyone having tested that it was actually working.
->=20
-> A10s is the same SoC as A13 / R8, just in a different package / with
-> different pins routed to the outside and it features a parallel LCD
-> interface just like the A13 / R8. We've had this confirmed by
-> Allwinner multiple times now, A13 / A10s / R8 literary are the same
-> chip, there simply is no way the displayblock on the A10s somehow
-> is magically different.
->=20
-> Given all this, clearly having this identical displayblock in the
-> shared sun5i.dtsi is the right thing to do.
+Thanks for your patch!
 
-Maybe, but this is not a patch for an 4.7-rc* release, but for the
-next merge window.
+> ---
+>  .../bindings/thermal/rcar-gen3-thermal.txt         | 79 ++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+> new file mode 100644
+> index 0000000..ed6ce45
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+> @@ -0,0 +1,79 @@
+> +* DT bindings for Renesas R-Car Gen3 Thermal Sensor driver
+> +
+> +Required properties:
+> +- compatible           : "renesas,thermal-<soctype>",
 
-Maxime
+Please use "renesas,<soctype>-thermal", as this is the preferred order for
+new bindings.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> +                         Examples with soctypes are:
+> +                           - "renesas,thermal-r8a7795" (R-Car H3)
 
---X+8siUETKMkW99st
-Content-Type: application/pgp-signature; name="signature.asc"
+renesas,r8a7795-thermal
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> +                           - "renesas,thermal-r8a7796" (R-Car M3)
 
-iQIcBAEBAgAGBQJXZ59CAAoJEBx+YmzsjxAgm44QAI48tn1GG71g4v/YZgfhq4Mh
-BNRc/ix09icyGi6/K/yZrwdFMrHGa/NmHfSGCSMykQUPZMAbrA3WbISGpToiMvjY
-tDTnuHPkwIAmLQLW6i+2N1AvUpS+AGYVvqFI2+UTv2mhS83dGmWzVAJTNOebyDL8
-U8Xyv1ty+YiJGLfTkeJXIyPA4y9TzQztiaN1MteOGDfX8KM9ggHZKITbLxvCtn84
-NA0dyCeF/IH2Fi2620qu76i868CjwvnbPiQP2OhHd06WMxP4EaODQRirQwUtshsN
-u8UNlS9AYwe8uevTGQDeFnaDcOkGpiw41WG8dUpOYktWdh8UWKXxWza+VoUuXwFp
-QqmU5Nx2UhpRQ/4Y82b/Y7i/BltSKgKpYjVUhtMynjf1v+KQNcmMx+RgmnE+dWpS
-cVK91ZuKVn/X4VXg+w3uXXniMBcAqqmYrK9LSKxGXZAkqit5m9JOQEeeiI/waB3S
-p4Dxp2b4Nro2brb7rtz0ZW/nxIDRnYHMtQXHgw4cM1CM0DAGlhTu6VuoRHno2NGc
-sBiTaBHaFemdqLelWwEztdSxrxG2Y/jzBZOUcA0mZRjEqOAghzfW8yJg8AwERLUL
-pN4PU8pZ5H3zb3PvvO14MWYkHrN6axjgejjB9OE/SaEbt8LznHxghKSE17XzoQGV
-wXFsF2rrRlnprTbMWXbB
-=pkDM
------END PGP SIGNATURE-----
+renesas,r8a7796-thermal, M3-W
 
---X+8siUETKMkW99st--
+> +                           - "renesas,rcar-gen3-thermal" as fallback
+> +- reg                  : Address range of the thermal registers.
+> +- clocks               : Must contain a reference to the functional clock.
+
+According to the datasheet, the USB_EXTAL clock is also an input for the
+thermal block. Should it be added?
+
+> +- #thermal-sensor-cells : Please see ./thermal.txt
+> +
+> +Option properties:
+
+Optional
+
+> +
+> +- interrupts           : Use interrupt
+> +- power-domain         : Must contain a reference to the power domain. This property is
+> +                         mandatory if the thermal sensor instance is part of a controllable power
+> +                         domain.
+> +
+> +Example (non interrupt support):
+
+Is there a good reason why you wouldn't want to use interrupts?
+If not, please make it mandatory.
+
+> +
+> +       tsc1: thermal@e6198000 {
+> +               compatible = "renesas,thermal-r8a7795",
+> +                       "renesas,rcar-gen3-thermal";
+> +               reg = <0 0xe6198000 0 0x5c>;
+
+According to the datasheet, there are more registers beyond this range.
+Shouldn't it be "reg = <0 0xe6198000 0 0x68>;"?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
