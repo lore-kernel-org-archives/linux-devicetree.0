@@ -1,85 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 3/4] clk: max77686: Add DT binding details for PMIC
- MAX77620
-Date: Mon, 20 Jun 2016 11:41:43 -0500
-Message-ID: <20160620164143.GB27492@rob-hp-laptop>
-References: <1466160667-28451-1-git-send-email-ldewangan@nvidia.com>
- <1466160667-28451-4-git-send-email-ldewangan@nvidia.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2] arm: tegra124: remove commas from unit addresses
+Date: Mon, 20 Jun 2016 18:40:57 +0200
+Message-ID: <20160620164057.GD6175@ulmo.ba.sec>
+References: <1466298275-15753-1-git-send-email-marcel.ziswiler@toradex.com>
+ <576810C2.1030401@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AbQceqfdZEv+FvjW"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466160667-28451-4-git-send-email-ldewangan@nvidia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
+In-Reply-To: <576810C2.1030401@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 04:21:06PM +0530, Laxman Dewangan wrote:
-> Maxim has used the same clock IP on multiple PMICs like MAX77686,
-> MAX77802, MAX77620. Only differences are the number of clocks
-> from these PMICs like MAX77686 has 3 clocks output, MAX776802 have
-> two clock output and MAX77620 has one clock output.
-> 
-> Add clock binding details and DT example for the MAX77620.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> CC: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> CC: Javier Martinez Canillas <javier@dowhile0.org>
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> 
-> ---
-> Changes from V1:
-> - Use proper comment for the ::::
-> - Added dt binding preprocessor file as maxim,max77620.h for max77620
->   inline with the other chip.
-> - Refer the dt binding header for the supported clock index.
-> 
-> Changes from V2:
-> - Collected RBs.
-> ---
->  .../devicetree/bindings/clock/maxim,max77686.txt   | 52 +++++++++++++++++-----
->  include/dt-bindings/clock/maxim,max77620.h         | 21 +++++++++
->  2 files changed, 63 insertions(+), 10 deletions(-)
->  create mode 100644 include/dt-bindings/clock/maxim,max77620.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/maxim,max77686.txt b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-> index 4d973b5..8398a3a 100644
-> --- a/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-> +++ b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-> @@ -1,14 +1,24 @@
-> -Binding for Maxim MAX77686/MAX77802 32k clock generator block
-> +Binding for Maxim MAX77686/MAX77802/MAX77620 32k clock generator block
->  
-> -This is a part of device tree bindings of MAX77686/MAX77802 multi-function
-> -device. More information can be found in bindings/mfd/max77686.txt file for
-> -MAX77686 and bindings/mfd/max77802.txt for MAX77802.
-> +This is a part of device tree bindings of MAX77686/MAX77802/MAX77620
-> +multi-function device. More information can be found in MFD DT binding
-> +doc as follows:
-> +	bindings/mfd/max77686.txt for MAX77686 and
-> +	bindings/mfd/max77802.txt for MAX77802 and
-> +	bindings/mfd/max77620.txt for MAX77620.
->  
->  The MAX77686 contains three 32.768khz clock outputs that can be controlled
-> -(gated/ungated) over I2C.
-> +(gated/ungated) over I2C. Clocks are defined as preprocessor macros in
-> +dt-bindings/clock/maxim,max77686.h.
-> +
->  
->  The MAX77802 contains two 32.768khz clock outputs that can be controlled
-> -(gated/ungated) over I2C.
-> +(gated/ungated) over I2C. Clocks are defined as preprocessor macros in
-> +dt-bindings/clock/maxim,max77802.h.
-> +
-> +The MAX77686 contains one 32.768khz clock outputs that can be controlled
-> +(gated/ungated) over I2C. Clocks are defined as preprocessor macros in
-> +dt-bindings/clock/maxim,max77620.h.
->  
->  Following properties should be presend in main device node of the MFD chip.
 
-Same here. compatible string? Examples are not sufficient to document 
-things.
+--AbQceqfdZEv+FvjW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On Mon, Jun 20, 2016 at 09:50:26AM -0600, Stephen Warren wrote:
+> On 06/18/2016 07:04 PM, Marcel Ziswiler wrote:
+> > Remove commas from unit addresses as suggested by Rob Herring upon me
+> > posting initial Apalis TK1 support:
+> >=20
+> > http://article.gmane.org/gmane.linux.ports.tegra/26608
+>=20
+> Acked-by: Stephen Warren <swarren@nvidia.com>
+
+I'm confused now. I posted almost exactly the same patch a while ago and
+we agreed that we couldn't do this because the node names were to be
+considered part of the ABI.
+
+Is it or is it not?
+
+Thierry
+
+--AbQceqfdZEv+FvjW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXaByZAAoJEN0jrNd/PrOhqLQP+wdyBbLN1YA4SEWBvnYRMDGG
+wqepxPhkPEqeM4l2tYB+Z4E7QzCzB5W/lD7ZKg1rnN488d9DNr0dk2LpdZaiA3Q4
+g/DCHDGYonuKNJsSsQiRALmW7o/j2LjxjQFKR3mKLmv5YNObBwIGfzJTyWEhg9zK
+m6dkWB/U47oolJp1DaD274dGIBU6+uBOph0SG2R+Idi9095a8VlRVGtHIdAiPPpK
+cBBugIK4Tk97HZKZ55TT4WrIcJCblJMmX2zqJKCr0mbyy8cjHc2avuV22Sbl7gfS
+GPgu0dUloEyxuHZHa7/T9bZm2l2YZdvZfkwiLYDccm9x3l35Ss5fg748f7f7Ped4
+1We6qMbw27msTA436/NcuKlKnoSFIyl6tC9Ym1a+iNb9y1Bf4yBbpnb//j9UmtQN
+uf+IRASWxo7GfigNCCB31R9J018TBCrAac1JDiJ6bTMEWyRdoTGwyaFCDoO+tglQ
+xuilhQ/weg/xlvTY5tbXUq1zRX+5l/2MKlilhdFbDaI1Y0kWCrQ1HUESYpAire/e
+ZJCZQqihu9Wbtx67f9aMotuC4gM7AWqIkB3YSC+UC0j5Rq8xbuC+2Pfp0Xe7Gnn8
+PwXNS/du3811Zt0L7vm1qyPO03dDUhGXwm1dwko+R77AMnWwI9tRr+Wyu9p2RYL4
+iZzVjcYHsKlp3JlbWJnC
+=Qlew
+-----END PGP SIGNATURE-----
+
+--AbQceqfdZEv+FvjW--
