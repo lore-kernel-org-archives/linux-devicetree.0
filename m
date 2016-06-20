@@ -1,62 +1,161 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2] arm: tegra124: remove commas from unit addresses
-Date: Mon, 20 Jun 2016 18:40:57 +0200
-Message-ID: <20160620164057.GD6175@ulmo.ba.sec>
-References: <1466298275-15753-1-git-send-email-marcel.ziswiler@toradex.com>
- <576810C2.1030401@wwwdotorg.org>
+From: <Paul.Handrigan@cirrus.com>
+Subject: [PATCH v7 2/2] ASoC: cs35l33: Add device tree bindings
+	file for cs35l33
+Date: Mon, 20 Jun 2016 11:45:19 -0500
+Message-ID: <1466441119-8488-2-git-send-email-Paul.Handrigan@cirrus.com>
+References: <1466441119-8488-1-git-send-email-Paul.Handrigan@cirrus.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AbQceqfdZEv+FvjW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <576810C2.1030401@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1466441119-8488-1-git-send-email-Paul.Handrigan@cirrus.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org, brian.austin@cirrus.com, lgirdwood@gmail.com, Paul Handrigan <Paul.Handrigan@cirrus.com>, robh+dt@kernel.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Paul Handrigan <Paul.Handrigan@cirrus.com>
 
---AbQceqfdZEv+FvjW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add device tree bindings file for the cs35l33 8V boosted
+class D amplifier.
 
-On Mon, Jun 20, 2016 at 09:50:26AM -0600, Stephen Warren wrote:
-> On 06/18/2016 07:04 PM, Marcel Ziswiler wrote:
-> > Remove commas from unit addresses as suggested by Rob Herring upon me
-> > posting initial Apalis TK1 support:
-> >=20
-> > http://article.gmane.org/gmane.linux.ports.tegra/26608
->=20
-> Acked-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Paul Handrigan <Paul.Handrigan@cirrus.com>
+---
+ .../devicetree/bindings/sound/cs35l33.txt          | 118 +++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs35l33.txt
 
-I'm confused now. I posted almost exactly the same patch a while ago and
-we agreed that we couldn't do this because the node names were to be
-considered part of the ABI.
-
-Is it or is it not?
-
-Thierry
-
---AbQceqfdZEv+FvjW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXaByZAAoJEN0jrNd/PrOhqLQP+wdyBbLN1YA4SEWBvnYRMDGG
-wqepxPhkPEqeM4l2tYB+Z4E7QzCzB5W/lD7ZKg1rnN488d9DNr0dk2LpdZaiA3Q4
-g/DCHDGYonuKNJsSsQiRALmW7o/j2LjxjQFKR3mKLmv5YNObBwIGfzJTyWEhg9zK
-m6dkWB/U47oolJp1DaD274dGIBU6+uBOph0SG2R+Idi9095a8VlRVGtHIdAiPPpK
-cBBugIK4Tk97HZKZ55TT4WrIcJCblJMmX2zqJKCr0mbyy8cjHc2avuV22Sbl7gfS
-GPgu0dUloEyxuHZHa7/T9bZm2l2YZdvZfkwiLYDccm9x3l35Ss5fg748f7f7Ped4
-1We6qMbw27msTA436/NcuKlKnoSFIyl6tC9Ym1a+iNb9y1Bf4yBbpnb//j9UmtQN
-uf+IRASWxo7GfigNCCB31R9J018TBCrAac1JDiJ6bTMEWyRdoTGwyaFCDoO+tglQ
-xuilhQ/weg/xlvTY5tbXUq1zRX+5l/2MKlilhdFbDaI1Y0kWCrQ1HUESYpAire/e
-ZJCZQqihu9Wbtx67f9aMotuC4gM7AWqIkB3YSC+UC0j5Rq8xbuC+2Pfp0Xe7Gnn8
-PwXNS/du3811Zt0L7vm1qyPO03dDUhGXwm1dwko+R77AMnWwI9tRr+Wyu9p2RYL4
-iZzVjcYHsKlp3JlbWJnC
-=Qlew
------END PGP SIGNATURE-----
-
---AbQceqfdZEv+FvjW--
+diff --git a/Documentation/devicetree/bindings/sound/cs35l33.txt b/Documentation/devicetree/bindings/sound/cs35l33.txt
+new file mode 100644
+index 0000000..bea6de7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs35l33.txt
+@@ -0,0 +1,118 @@
++CS35L33 Speaker Amplifier
++
++Required properties:
++
++  - compatible : "cirrus,cs35l33"
++
++  - reg : the I2C address of the device for I2C
++
++  - VA-supply, VP-supply : power supplies for the device,
++    as covered in
++    Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Optional properties:
++
++  - reset-gpios : gpio used to reset the amplifier
++
++  - interrupt-parent : Specifies the phandle of the interrupt controller to
++    which the IRQs from CS35L33 are delivered to.
++ -  interrupts : IRQ line info CS35L33.
++    (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++    for further information relating to interrupt properties)
++
++  - cirrus,boost-ctl : Booster voltage use to supply the amp. If the value is
++    0, then VBST = VP. If greater than 0, the boost voltage will be 3300mV with
++    a value of 1 and will increase at a step size of 100mV until a maximum of
++    8000mV.
++
++  - cirrus,ramp-rate : On power up, it affects the time from when the power
++    up sequence begins to the time the audio reaches a full-scale output.
++    On power down, it affects the time from when the power-down sequence
++    begins to when the amplifier disables the PWM outputs. If this property
++    is not set then soft ramping will be disabled and ramp time would be
++    20ms. If this property is set to 0,1,2,3 then ramp times would be 40ms,
++    60ms,100ms,175ms respectively for 48KHz sample rate.
++
++  - cirrus,boost-ipk : The maximum current allowed for the boost converter.
++    The range starts at 1850000uA and goes to a maximum of 3600000uA
++    with a step size of 15625uA. The default is 2500000uA.
++
++  - cirrus,imon-adc-scale : Configures the scaling of data bits from the IMON
++    ADC data word. This property can be set as a value of 0 for bits 15 down
++    to 0, 6 for 21 down to 6, 7, for 22 down to 7, 8 for 23 down to 8.
++
++  - cirrus,hg-algo : Parameters for internal Class H/G algorithm that
++    controls the amplifier supplies.
++
++  - cirrus,mem-depth : Memory depth for the Class H/G algorithm measured in
++    LRCLK cycles. If this property is set to 0, 1, 2, or 3 then the memory
++    depths will be 1, 4, 8, 16 LRCLK cycles.  The default is 16 LRCLK cycles.
++
++    cirrus,release-rate : The number of consecutive LRCLK periods before
++    allowing release condition tracking updates. The number of LRCLK periods
++    start at 3 to a maximum of 255.
++
++  - cirrus,ldo-thld : Configures the signal threshold at which the PWM output
++    stage enters LDO operation. Starts as a default value of 50mV for a value
++    of 1 and increases with a step size of 50mV to a maximum of 750mV (value of
++    0xF).
++
++  - cirrus,ldo-path-disable : This is a boolean property. If present, the H/G
++    algorithm uses the max detection path.  If not present, the LDO
++    detection path is used.
++
++  - cirrus,ldo-entry-delay : The LDO entry delay in milliseconds before the H/G
++    algorithm switches to the LDO voltage.  This property can be set to values
++    from 0 to 7 for delays of 5ms, 10ms, 50ms, 100ms, 200ms, 500ms, 1000ms.
++    The default is 100ms.
++
++  - cirrus,vp-hg-auto : This is a boolean property.  When set, class H/G VPhg
++    automatic updating is enabled.
++
++  - cirrus,vp-hg :  Class H/G algorithm VPhg.  Controls the H/G algorithm's
++    reference to the VP voltage for when to start generating a boosted VBST.
++    The reference voltage starts at 3000mV with a value of 0x3 and is increased
++    by 100mV per step to a maximum of 5500mV.
++
++  - cirrus,vp-hg-rate : The rate (number of LRCLK periods) at which the VPhg is
++    allowed to increase to a higher voltage when using VPhg automatic
++    tracking. This property can be set to values from 0 to 3 with rates of 128
++    periods, 2048 periods, 32768 periods, and 524288 periods.
++    The default is 32768 periods.
++
++  - cirrus,vp-hg-va : VA calculation reference for automatic VPhg tracking
++    using VPMON. This property can be set to values from 0 to 6 starting at
++    1800mV with a step size of 50mV up to a maximum value of 1750mV.
++    Default is 1800mV.
++
++Example:
++
++cs35l33: cs35l33@40 {
++	compatible = "cirrus,cs35l33";
++	reg = <0x40>;
++
++	VA-supply = <&ldo5_reg>;
++	VP-supply = <&ldo5_reg>;
++
++	interrupt-parent = <&gpio8>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++	reset-gpios = <&cs47l91 34 0>;
++
++	cirrus,ramp-rate = <0x0>;
++	cirrus,boost-ctl = <0x30>;  /* VBST = 8000mV */
++	cirrus,boost-ipk = <0xE0>; /* 3600mA */
++	cirrus,imon-adc-scale = <0> /* Bits 15 down to 0 */
++
++	cirrus,hg-algo {
++		cirrus,mem-depth = <0x3>;
++		cirrus,release-rate = <0x3>;
++		cirrus,ldo-thld = <0x1>;
++		cirrus,ldo-path-disable = <0x0>;
++		cirrus,ldo-entry-delay=<0x4>;
++		cirrus,vp-hg-auto;
++		cirrus,vp-hg=<0xF>;
++		cirrus,vp-hg-rate=<0x2>;
++		cirrus,vp-hg-va=<0x0>;
++	};
++};
+-- 
+1.9.1
