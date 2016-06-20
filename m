@@ -1,132 +1,69 @@
-From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
-Date: Mon, 20 Jun 2016 18:41:51 +0800
-Message-ID: <1466419311.27959.12.camel@mtksdaap41>
-References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
-	 <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [RFC PATCH 10/13] drm/tegra: Add pinctrl support for DPAUX
+Date: Mon, 20 Jun 2016 11:45:26 +0100
+Message-ID: <5767C946.3010209@nvidia.com>
+References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
+ <1466165027-17917-11-git-send-email-jonathanh@nvidia.com>
+ <20160617163752.GI27475@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464578397-29743-3-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160617163752.GI27475@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, HS:
-
-One comment inline.
-
-On Mon, 2016-05-30 at 11:19 +0800, HS Liao wrote:
-> This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> CMDQ is used to help read/write registers with critical time limitation,
-> such as updating display configuration during the vblank. It controls
-> Global Command Engine (GCE) hardware to achieve this requirement.
-> Currently, CMDQ only supports display related hardwares, but we expect
-> it can be extended to other hardwares for future requirements.
-> 
-> Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/soc/mediatek/Kconfig    |  10 +
->  drivers/soc/mediatek/Makefile   |   1 +
->  drivers/soc/mediatek/mtk-cmdq.c | 943 ++++++++++++++++++++++++++++++++++++++++
->  include/soc/mediatek/cmdq.h     | 197 +++++++++
->  4 files changed, 1151 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
->  create mode 100644 include/soc/mediatek/cmdq.h
-> 
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index 0a4ea80..c4ad75c 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -1,6 +1,16 @@
->  #
->  # MediaTek SoC drivers
->  #
-> +config MTK_CMDQ
-> +	bool "MediaTek CMDQ Support"
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	select MTK_INFRACFG
-> +	help
-> +	  Say yes here to add support for the MediaTek Command Queue (CMDQ)
-> +	  driver. The CMDQ is used to help read/write registers with critical
-> +	  time limitation, such as updating display configuration during the
-> +	  vblank.
-> +
->  config MTK_INFRACFG
->  	bool "MediaTek INFRACFG Support"
->  	depends on ARCH_MEDIATEK || COMPILE_TEST
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index 12998b0..f7397ef 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-
-[Snip...]
-
-> +
-> +static int cmdq_eng_get_thread(u64 flag)
-> +{
-> +	if (flag & BIT_ULL(CMDQ_ENG_DISP_DSI0))
-> +		return CMDQ_THR_DISP_MAIN_IDX;
-> +	else if (flag & BIT_ULL(CMDQ_ENG_DISP_DPI0))
-> +		return CMDQ_THR_DISP_SUB_IDX;
-> +	else
-> +		return CMDQ_THR_DISP_MISC_IDX;
-> +}
-
-I think cmdq should not have knowledge of client. These statement show
-that cmdq know that DSI0-tasks is different with DPI0-tasks. I propose
-the 'session' to replace engine flag. For example, main display create
-one cmdq_session and external display create another cmdq_session. For
-client driver, every tasks created by main display is bound to main
-display session. For cmdq driver, it should dynamically bind a session
-to a HW thread, and then dispatch tasks of this session to this HW
-thread. After HW thread run out of tasks of this session, detach this
-session with this thread.
-For the problem of remove wfe cmd, I think a session can have a property
-of merge_wfe_cmd. For display session, session->merge_wfe_cmd = true.
-For other client, it's false.
-
-Here is the sample code to create cmdq_rec with session.
-
-merge_wfe_cmd = true;
-cmdq_session_create(merge_wfe_cmd, &primary_display_session);
-cmdq_rec_create(dev, primary_display_session, &rec);
-
-
-Therefore, the below definition can be removed.
-
-> +
-> +enum cmdq_eng {
-> +	CMDQ_ENG_DISP_AAL,
-> +	CMDQ_ENG_DISP_COLOR0,
-> +	CMDQ_ENG_DISP_COLOR1,
-> +	CMDQ_ENG_DISP_DPI0,
-> +	CMDQ_ENG_DISP_DSI0,
-> +	CMDQ_ENG_DISP_DSI1,
-> +	CMDQ_ENG_DISP_GAMMA,
-> +	CMDQ_ENG_DISP_OD,
-> +	CMDQ_ENG_DISP_OVL0,
-> +	CMDQ_ENG_DISP_OVL1,
-> +	CMDQ_ENG_DISP_PWM0,
-> +	CMDQ_ENG_DISP_PWM1,
-> +	CMDQ_ENG_DISP_RDMA0,
-> +	CMDQ_ENG_DISP_RDMA1,
-> +	CMDQ_ENG_DISP_RDMA2,
-> +	CMDQ_ENG_DISP_UFOE,
-> +	CMDQ_ENG_DISP_WDMA0,
-> +	CMDQ_ENG_DISP_WDMA1,
-> +	CMDQ_ENG_MAX,
-> +};
-> +
-
-
-Regards,
-CK
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ck9uIDE3LzA2LzE2IDE3OjM3LCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiAqIFBHUCBTaWduZWQg
+YnkgYW4gdW5rbm93biBrZXkKPiAKPiBPbiBGcmksIEp1biAxNywgMjAxNiBhdCAwMTowMzo0NFBN
+ICswMTAwLCBKb24gSHVudGVyIHdyb3RlOgo+PiBUaGUgRFBBVVggcGlucyBhcmUgc2hhcmVkIHdp
+dGggYW4gaW50ZXJuYWwgSTJDIGNvbnRyb2xsZXIuIFRvIGFsbG93Cj4+IHRoZXNlIHBpbnMgdG8g
+YmUgbXV4ZWQgdG8gdGhlIEkyQyBjb250cm9sbGVyLCByZWdpc3RlciBhIHBpbmN0cmwgZGV2aWNl
+Cj4+IGZvciB0aGUgRFBBVVggZGV2aWNlLiBNYWtlIFRlZ3JhIERSTSBzdXBwb3J0IGRlcGVuZGVu
+dCBvbiBQSU5DVFJMIHRvCj4+IGF2b2lkIGFueSBjb21waWxhdGlvbiBpc3N1ZXMuCj4+Cj4+IFNp
+Z25lZC1vZmYtYnk6IEpvbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPgo+PiAtLS0KPj4g
+IGRyaXZlcnMvZ3B1L2RybS90ZWdyYS9LY29uZmlnIHwgICAxICsKPj4gIGRyaXZlcnMvZ3B1L2Ry
+bS90ZWdyYS9kcGF1eC5jIHwgMTE3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKystLQo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAxMTUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlv
+bnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9LY29uZmlnIGIv
+ZHJpdmVycy9ncHUvZHJtL3RlZ3JhL0tjb25maWcKPj4gaW5kZXggNjNlYmIxNTRiOWI1Li5kMzQ5
+MzdhOTZmOTQgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9LY29uZmlnCj4+
+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9LY29uZmlnCj4+IEBAIC00LDYgKzQsNyBAQCBj
+b25maWcgRFJNX1RFR1JBCj4+ICAJZGVwZW5kcyBvbiBDT01NT05fQ0xLCj4+ICAJZGVwZW5kcyBv
+biBEUk0KPj4gIAlkZXBlbmRzIG9uIFJFU0VUX0NPTlRST0xMRVIKPj4gKwlkZXBlbmRzIG9uIFBJ
+TkNUUkwKPiAKPiBDb3VsZCB3ZSBpbnN0ZWFkIG1ha2UgdGhlIGNvZGUgb3B0aW9uYWw/IEkgZG9u
+J3QgY2FyZSBtdWNoIGFib3V0IHB1bGxpbmcKPiBpbiB0aGUgZXh0cmEgZGVwZW5kZW5jeSAoZm9y
+IFRlZ3JhIHdlIGFsd2F5cyBlbmFibGUgUElOQ1RSTCBhbnl3YXkpLCBidXQKPiBJIHdvcnJ5IHRo
+YXQgc29tZWJvZHkgbWF5IGVuZCB1cCBzZWFyY2hpbmcgZm9yIERSTV9URUdSQSBhbmQgbm90IGZp
+bmQgaXQKPiBiZWNhdXNlIFBJTkNUUkwgaGFwcGVucyB0byBiZSBkaXNhYmxlZCBpbiB0aGV5IC5j
+b25maWcuCgpZZXMgd2UgY291bGQgaWYgeW91IGRvbid0IG1pbmQgdGhlICNpZmRlZiBpbiB0aGUg
+c291cmNlIGZpbGUuIFRoZQphbHRlcm5hdGl2ZSBoZXJlIHdvdWxkIGJlIHRvIHNlbGVjdCBQSU5D
+VFJMIGFuZCBsaWtlIHlvdSBzYWlkIHRoaXMKc2hvdWxkIGFsd2F5cyBiZSB0aGUgY2FzZSBhcyBU
+ZWdyYSBzZWxlY3RzIGluIGFueXdheS4KCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
+dGVncmEvZHBhdXguYyBiL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9kcGF1eC5jCj4gWy4uLl0KPj4g
+QEAgLTQzOSw2ICs1MzcsMTkgQEAgc3RhdGljIGludCB0ZWdyYV9kcGF1eF9wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+PiAgCWlmIChlcnIgPCAwKQo+PiAgCQlyZXR1cm4gZXJy
+Owo+PiAgCj4+ICsJZHBhdXgtPmRlc2MubmFtZSA9IGRldl9uYW1lKCZwZGV2LT5kZXYpOwo+PiAr
+CWRwYXV4LT5kZXNjLnBpbnMgPSB0ZWdyYV9kcGF1eF9waW5zOwo+PiArCWRwYXV4LT5kZXNjLm5w
+aW5zID0gQVJSQVlfU0laRSh0ZWdyYV9kcGF1eF9waW5zKTsKPj4gKwlkcGF1eC0+ZGVzYy5wY3Rs
+b3BzID0gJnRlZ3JhX2RwYXV4X3BpbmN0cmxfb3BzOwo+PiArCWRwYXV4LT5kZXNjLnBteG9wcyA9
+ICZ0ZWdyYV9kcGF1eF9waW5tdXhfb3BzOwo+PiArCWRwYXV4LT5kZXNjLm93bmVyID0gVEhJU19N
+T0RVTEU7Cj4+ICsKPj4gKwlkcGF1eC0+cGluY3RybCA9IHBpbmN0cmxfcmVnaXN0ZXIoJmRwYXV4
+LT5kZXNjLCAmcGRldi0+ZGV2LCBkcGF1eCk7Cj4+ICsJaWYgKCFkcGF1eC0+cGluY3RybCkgewo+
+PiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVnaXN0ZXIgcGluY29udHJvbFxu
+Iik7Cj4+ICsJCXJldHVybiAtRU5PREVWOwo+PiArCX0KPiAKPiBEaWQgeW91IG1lYW4gdG8gdXNl
+IHRoZSBkZXZtXyB2YXJpYW50IGhlcmU/IEJlY2F1c2UgSSBkb24ndCBzZWUgYQo+IHBpbmN0cmxf
+dW5yZWdpc3RlcigpIGluIHRlZ3JhX2RwYXV4X3JlbW92ZSgpLgoKWWVzIGdvb2QgY2F0Y2guIFdp
+bGwgZml4LgoKSm9uCgotLSAKbnZwdWJsaWMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
