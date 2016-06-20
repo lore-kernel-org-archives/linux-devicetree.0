@@ -1,105 +1,183 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports while USB
- suspend
-Date: Mon, 20 Jun 2016 10:52:05 +0200
-Message-ID: <20160620085205.GN5809@piout.net>
-References: <1465359311-14544-1-git-send-email-wenyou.yang@atmel.com>
- <1465359311-14544-2-git-send-email-wenyou.yang@atmel.com>
- <20160608202651.GA23604@rob-hp-laptop>
- <20160608203810.GF2466@piout.net>
- <B256D81BAE5131468A838E5D7A24364101650C3632@penmbx01>
- <20160617135448.GI5809@piout.net>
- <B256D81BAE5131468A838E5D7A24364101650C5253@penmbx01>
- <20160620080334.GL5809@piout.net>
- <B256D81BAE5131468A838E5D7A24364101650C547F@penmbx01>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 1/9] regulator: tps65217: Enable suspend configuration
+Date: Mon, 20 Jun 2016 14:13:30 +0530
+Message-ID: <1466412218-5906-2-git-send-email-j-keerthy@ti.com>
+References: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <B256D81BAE5131468A838E5D7A24364101650C547F@penmbx01>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, broonie@kernel.org, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, j-keerthy@ti.com, linux@armlinux.org.uk, Russ Dill <Russ.Dill@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20/06/2016 at 08:46:02 +0000, Yang, Wenyou wrote :
-> Hi Alexandre & Nicolas,
->=20
-> > -----Original Message-----
-> > From: Alexandre Belloni [mailto:alexandre.belloni-wi1+55ScJUtKEb57/3fJTGGXanvQGlWp@public.gmane.org=
-m]
-> > Sent: 2016=E5=B9=B46=E6=9C=8820=E6=97=A5 16:04
-> > To: Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Alan Stern <stern-nwvwT67g6+6OqQnuSApjIw@public.gmane.org=
-d.edu>;
-> > Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Ferre, Nicolas
-> > <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>; Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>; Mark Br=
-own
-> > <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>;=
- Kumar
-> > Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; l=
-inux-
-> > usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Subject: Re: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports =
-while USB
-> > suspend
-> >=20
-> > On 20/06/2016 at 03:16:35 +0000, Yang, Wenyou wrote :
-> > > > Sure, what I mean is that you can try to get the regmap for the=
- SFR in every
-> > case.
-> > > > Depending on whether you were able to get it, you can decide to=
- call
-> > > > ohci_at91_port_suspend/resume or not (just test for sfr_regmap =
-!=3D NULL).
-> > >
-> > > I don't think so. The SFR includes a lot of miscellaneous functio=
-ns, more than
-> > this one.
-> > >
-> >=20
-> > I know but this is irrelevant to this discussion. If you need to us=
-e the SFR from
-> > another driver you will simply get it from that other driver.
-> >=20
-> > I that case, you will try to get "atmel,sama5d2-sfr". It is only pr=
-esent on sama5d2
-> > so you have enough information to know whether or not you can use i=
-t to
-> > suspend/resume.
->=20
-> I understand what your meaning :).
-> Use "atmel,sama5d2-sfr" compatible to distinguish whether forcibly su=
-spend USB port via SFR or not.
->=20
-> I am not sure if it is a better solution.
->=20
+From: Russ Dill <Russ.Dill@ti.com>
 
-It is definitively superior. There is only one lookup in the device tre=
-e
-instead of two because whatever happens, you will have to get the SFR
-regmap and you don't need to add a compatible string for an IP that
-didn't change.
+This allows platform data to specify which power rails should be on or off
+during RTC only suspend. This is necessary to keep DDR state while in RTC
+only suspend.
 
-> Nicolas, could you give your opinion?
->=20
-> >=20
-> > --
-> > Alexandre Belloni, Free Electrons
-> > Embedded Linux, Kernel and Android engineering http://free-electron=
-s.com
->=20
->=20
-> Best Regards,
-> Wenyou Yang
+Signed-off-by: Russ Dill <Russ.Dill@ti.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ drivers/regulator/tps65217-regulator.c | 74 +++++++++++++++++++++++++++++-----
+ 1 file changed, 65 insertions(+), 9 deletions(-)
 
---=20
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/regulator/tps65217-regulator.c b/drivers/regulator/tps65217-regulator.c
+index adbe4fc..c15659c 100644
+--- a/drivers/regulator/tps65217-regulator.c
++++ b/drivers/regulator/tps65217-regulator.c
+@@ -28,7 +28,7 @@
+ #include <linux/mfd/tps65217.h>
+ 
+ #define TPS65217_REGULATOR(_name, _id, _of_match, _ops, _n, _vr, _vm, _em, \
+-                           _t, _lr, _nlr) \
++			   _t, _lr, _nlr,  _sr, _sm)	\
+ 	{						\
+ 		.name		= _name,		\
+ 		.id		= _id,			\
+@@ -45,6 +45,8 @@
+ 		.volt_table	= _t,			\
+ 		.linear_ranges	= _lr,			\
+ 		.n_linear_ranges = _nlr,		\
++		.bypass_reg	= _sr,			\
++		.bypass_mask	= _sm,			\
+ 	}						\
+ 
+ static const unsigned int LDO1_VSEL_table[] = {
+@@ -118,6 +120,42 @@ static int tps65217_pmic_set_voltage_sel(struct regulator_dev *dev,
+ 	return ret;
+ }
+ 
++struct tps65217_regulator_data {
++	int strobe;
++};
++
++static struct tps65217_regulator_data regulator_data[TPS65217_NUM_REGULATOR];
++
++static int tps65217_pmic_set_suspend_enable(struct regulator_dev *dev)
++{
++	struct tps65217 *tps = rdev_get_drvdata(dev);
++	unsigned int rid = rdev_get_id(dev);
++
++	if (rid < TPS65217_DCDC_1 || rid > TPS65217_LDO_4)
++		return -EINVAL;
++
++	return tps65217_clear_bits(tps, dev->desc->bypass_reg,
++				   dev->desc->bypass_mask,
++				   TPS65217_PROTECT_L1);
++}
++
++static int tps65217_pmic_set_suspend_disable(struct regulator_dev *dev)
++{
++	struct tps65217 *tps = rdev_get_drvdata(dev);
++	unsigned int rid = rdev_get_id(dev);
++
++	if (rid < TPS65217_DCDC_1 || rid > TPS65217_LDO_4)
++		return -EINVAL;
++
++	if (!regulator_data[rid].strobe)
++		return -EINVAL;
++
++	return tps65217_set_bits(tps, dev->desc->bypass_reg,
++				 dev->desc->bypass_mask,
++				 regulator_data[rid].strobe,
++				 TPS65217_PROTECT_L1);
++}
++
+ /* Operations permitted on DCDCx, LDO2, LDO3 and LDO4 */
+ static struct regulator_ops tps65217_pmic_ops = {
+ 	.is_enabled		= regulator_is_enabled_regmap,
+@@ -127,6 +165,8 @@ static struct regulator_ops tps65217_pmic_ops = {
+ 	.set_voltage_sel	= tps65217_pmic_set_voltage_sel,
+ 	.list_voltage		= regulator_list_voltage_linear_range,
+ 	.map_voltage		= regulator_map_voltage_linear_range,
++	.set_suspend_enable	= tps65217_pmic_set_suspend_enable,
++	.set_suspend_disable	= tps65217_pmic_set_suspend_disable,
+ };
+ 
+ /* Operations permitted on LDO1 */
+@@ -138,41 +178,50 @@ static struct regulator_ops tps65217_pmic_ldo1_ops = {
+ 	.set_voltage_sel	= tps65217_pmic_set_voltage_sel,
+ 	.list_voltage		= regulator_list_voltage_table,
+ 	.map_voltage		= regulator_map_voltage_ascend,
++	.set_suspend_enable	= tps65217_pmic_set_suspend_enable,
++	.set_suspend_disable	= tps65217_pmic_set_suspend_disable,
+ };
+ 
+ static const struct regulator_desc regulators[] = {
+ 	TPS65217_REGULATOR("DCDC1", TPS65217_DCDC_1, "dcdc1",
+ 			   tps65217_pmic_ops, 64, TPS65217_REG_DEFDCDC1,
+ 			   TPS65217_DEFDCDCX_DCDC_MASK, TPS65217_ENABLE_DC1_EN,
+-			   NULL, tps65217_uv1_ranges, 2),
++			   NULL, tps65217_uv1_ranges, 2, TPS65217_REG_SEQ1,
++			   TPS65217_SEQ1_DC1_SEQ_MASK),
+ 	TPS65217_REGULATOR("DCDC2", TPS65217_DCDC_2, "dcdc2",
+ 			   tps65217_pmic_ops, 64, TPS65217_REG_DEFDCDC2,
+ 			   TPS65217_DEFDCDCX_DCDC_MASK, TPS65217_ENABLE_DC2_EN,
+ 			   NULL, tps65217_uv1_ranges,
+-			   ARRAY_SIZE(tps65217_uv1_ranges)),
++			   ARRAY_SIZE(tps65217_uv1_ranges), TPS65217_REG_SEQ1,
++			   TPS65217_SEQ1_DC2_SEQ_MASK),
+ 	TPS65217_REGULATOR("DCDC3", TPS65217_DCDC_3, "dcdc3",
+ 			   tps65217_pmic_ops, 64, TPS65217_REG_DEFDCDC3,
+ 			   TPS65217_DEFDCDCX_DCDC_MASK, TPS65217_ENABLE_DC3_EN,
+-			   NULL, tps65217_uv1_ranges, 1),
++			   NULL, tps65217_uv1_ranges, 1, TPS65217_REG_SEQ2,
++			   TPS65217_SEQ2_DC3_SEQ_MASK),
+ 	TPS65217_REGULATOR("LDO1", TPS65217_LDO_1, "ldo1",
+ 			   tps65217_pmic_ldo1_ops, 16, TPS65217_REG_DEFLDO1,
+ 			   TPS65217_DEFLDO1_LDO1_MASK, TPS65217_ENABLE_LDO1_EN,
+-			   LDO1_VSEL_table, NULL, 0),
++			   LDO1_VSEL_table, NULL, 0, TPS65217_REG_SEQ2,
++			   TPS65217_SEQ2_LDO1_SEQ_MASK),
+ 	TPS65217_REGULATOR("LDO2", TPS65217_LDO_2, "ldo2", tps65217_pmic_ops,
+ 			   64, TPS65217_REG_DEFLDO2,
+ 			   TPS65217_DEFLDO2_LDO2_MASK, TPS65217_ENABLE_LDO2_EN,
+ 			   NULL, tps65217_uv1_ranges,
+-			   ARRAY_SIZE(tps65217_uv1_ranges)),
++			   ARRAY_SIZE(tps65217_uv1_ranges), TPS65217_REG_SEQ3,
++			   TPS65217_SEQ3_LDO2_SEQ_MASK),
+ 	TPS65217_REGULATOR("LDO3", TPS65217_LDO_3, "ldo3", tps65217_pmic_ops,
+ 			   32, TPS65217_REG_DEFLS1, TPS65217_DEFLDO3_LDO3_MASK,
+ 			   TPS65217_ENABLE_LS1_EN | TPS65217_DEFLDO3_LDO3_EN,
+ 			   NULL, tps65217_uv2_ranges,
+-			   ARRAY_SIZE(tps65217_uv2_ranges)),
++			   ARRAY_SIZE(tps65217_uv2_ranges), TPS65217_REG_SEQ3,
++			   TPS65217_SEQ3_LDO3_SEQ_MASK),
+ 	TPS65217_REGULATOR("LDO4", TPS65217_LDO_4, "ldo4", tps65217_pmic_ops,
+ 			   32, TPS65217_REG_DEFLS2, TPS65217_DEFLDO4_LDO4_MASK,
+ 			   TPS65217_ENABLE_LS2_EN | TPS65217_DEFLDO4_LDO4_EN,
+ 			   NULL, tps65217_uv2_ranges,
+-			   ARRAY_SIZE(tps65217_uv2_ranges)),
++			   ARRAY_SIZE(tps65217_uv2_ranges), TPS65217_REG_SEQ4,
++			   TPS65217_SEQ4_LDO4_SEQ_MASK),
+ };
+ 
+ static int tps65217_regulator_probe(struct platform_device *pdev)
+@@ -181,7 +230,8 @@ static int tps65217_regulator_probe(struct platform_device *pdev)
+ 	struct tps65217_board *pdata = dev_get_platdata(tps->dev);
+ 	struct regulator_dev *rdev;
+ 	struct regulator_config config = { };
+-	int i;
++	int i, ret;
++	unsigned int val;
+ 
+ 	if (tps65217_chip_id(tps) != TPS65217) {
+ 		dev_err(&pdev->dev, "Invalid tps chip version\n");
+@@ -200,6 +250,12 @@ static int tps65217_regulator_probe(struct platform_device *pdev)
+ 
+ 		rdev = devm_regulator_register(&pdev->dev, &regulators[i],
+ 					       &config);
++
++		/* Store default strobe info */
++		ret = tps65217_reg_read(tps, regulators[i].bypass_reg, &val);
++
++		regulator_data[i].strobe = val & regulators[i].bypass_mask;
++
+ 		if (IS_ERR(rdev)) {
+ 			dev_err(tps->dev, "failed to register %s regulator\n",
+ 				pdev->name);
+-- 
+1.9.1
