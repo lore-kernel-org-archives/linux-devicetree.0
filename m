@@ -1,43 +1,93 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 0/15] Changes to support 150 MHz eMMC on rk3399
-Date: Mon, 20 Jun 2016 20:17:02 +0200
-Message-ID: <1805593.i4NJUkPJQz@diego>
-References: <1466445414-11974-1-git-send-email-dianders@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [linux-sunxi] Auto-detecting touchscreen controller
+ and dealing with hw configuration differences on q8 tablets
+Date: Mon, 20 Jun 2016 13:20:26 -0500
+Message-ID: <20160620182026.GA14012@rob-hp-laptop>
+References: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
+ <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7@konsulko.com>
+ <17e69e9e-06be-dc4f-cd47-152f6290d2ec@redhat.com>
+ <7FA186CB-9BF2-47A6-835C-06AD63CF8837@konsulko.com>
+ <b16c2b42-5628-c0b9-6486-f8a4728a0a33@redhat.com>
+ <19098CD8-6BC1-4FFE-858F-A6DF4BE655D5@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1466445414-11974-1-git-send-email-dianders@chromium.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: ulf.hansson@linaro.org, kishon@ti.com, robh+dt@kernel.org, shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, adrian.hunter@intel.com, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, groeck@chromium.org, mark.rutland@arm.com, catalin.marinas@arm.com, linus.walleij@linaro.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, wsa+renesas@sang-engineering.com, stefan.wahren@i2se.com, zhengxing@rock-chips.com, michal.simek@xilinx.com, geert@linux-m68k.org, linux-arm-kernel@lists.infradead.org, jay.xu@rock-chips.com, wxt@rock-chips.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, horms+renesas@verge.net.au, soren.brinkmann@xilinx.com, andrei.pistirica@microchip.com, ludovic.desroches@atmel.com, galak@codeaurora.org, yangbo.lu@freescale.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <u-boot-bounces@lists.denx.de>
+Content-Disposition: inline
+In-Reply-To: <19098CD8-6BC1-4FFE-858F-A6DF4BE655D5@konsulko.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: "u-boot@lists.denx.de" <u-boot@lists.denx.de>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 20. Juni 2016, 10:56:39 schrieb Douglas Anderson:
-> The theme of this series of patches is to try to allow running the eMMC
-> at 150 MHz on the rk3399 SoC, though the changes should still be correct
-> and have merit on their own.  The motivation for running at 150 MHz is
-> that doing so improves signal integrity and (with some eMMC devices)
-> doesn't affect throughput.
-> 
-> These patches have been structured to keep things as separate as
-> possible, but nevertheless there are still some dependencies between
-> patches.  It probably makes the most sense for all of the non-device
-> tree patches to go through a single tree.  PHY patches now have Acks
-> from Kishon so that means things should be clear for all non-DTS patches
-> to go through the MMC tree if Ulf agrees.  Device tree patches should be
-> able to be landed separately and the worst what would happen is a
-> warning in the kernel log if you have the code without the device tree.
-> 
-> The code patches are based on Ulf's mmc-next.  In v3 of the series I've
-> pulled in the latest version of a previous PHY series posted by Brian
-> Norris.
-> 
-> The device tree patches are based on Heiko's v4.8-armsoc/dts64.
-
-just so it doesn't get lost from v2->v3, I plan on picking up the dts patches 
-9 and 15 after the rest landed in the mmc tree - as they will only apply on 
-top of my general dts branch.
-
-
-Heiko
+T24gTW9uLCBKdW4gMjAsIDIwMTYgYXQgMDQ6MDg6NDdQTSArMDMwMCwgUGFudGVsaXMgQW50b25p
+b3Ugd3JvdGU6Cj4gSGkgSGFucywKPiAKPiA+IE9uIEp1biAyMCwgMjAxNiwgYXQgMTY6MDIgLCBI
+YW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPiB3cm90ZToKPiA+IAo+ID4gSGksCj4g
+PiAKPiA+IE9uIDIwLTA2LTE2IDE0OjIyLCBQYW50ZWxpcyBBbnRvbmlvdSB3cm90ZToKPiA+PiBI
+aSBIYW5zLAo+ID4+IAo+ID4+PiBPbiBKdW4gMjAsIDIwMTYsIGF0IDE0OjAzICwgSGFucyBkZSBH
+b2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPj4+IAo+ID4+PiBIaSwKPiA+Pj4g
+Cj4gPj4+IE9uIDIwLTA2LTE2IDExOjI3LCBQYW50ZWxpcyBBbnRvbmlvdSB3cm90ZToKPiA+IAo+
+ID4gPHNuaXA+Cj4gPiAKPiA+Pj4+IFllcywgaXTigJlzIHF1aXRlIHBvc3NpYmxlLiBZb3UgY2Fu
+IGV2ZW4gaGF2ZSBzdGFja2VkIG92ZXJsYXlzLgo+ID4+PiAKPiA+Pj4gT2ssIGlzIHRoZXJlIGFu
+eSBleGFtcGxlIGNvZGUgaG93IHRvIGNoYW5nZSBhbiBvdmVybGF5IGJlZm9yZSBhcHBseWluZyBp
+dCBvdXQgdGhlcmUsCj4gPj4+IG9yIGlmIG5vdCBjYW4geW91IHBvaW50IHRvIHRoZSBmdW5jdGlv
+bnMgdG8gdXNlIHRvIGRvIHRoaXMgPwo+ID4+PiAKPiA+PiAKPiA+PiBUaGUgY2Fub25pY2FsIHBs
+YWNlIGZvciBhbGwgdGhlIGR5bmFtaWMgRFQgc3R1ZmYgaXMKPiA+PiAKPiA+PiBodHRwczovL2dp
+dGh1Yi5jb20vcGFudG9uaW91L2xpbnV4LWJlYWdsZS10cmFjay1tYWlubGluZS90cmVlL2JiYi1v
+dmVybGF5cwo+ID4+IAo+ID4+IFRoZSBiZWFnbGVib25lIGNhcGUgbWFuYWdlciBpcyBoZXJlLgo+
+ID4+IAo+ID4+IGh0dHBzOi8vZ2l0aHViLmNvbS9wYW50b25pb3UvbGludXgtYmVhZ2xlLXRyYWNr
+LW1haW5saW5lL2NvbW1pdC81MDI4ZDFlZDNiZWI4Yzc1YjI4ZmNlMzdiMWJiNWVlNTUxYjJhZTll
+Cj4gPj4gCj4gPj4+IFNwZWNpZmljYWxseSBteSBwbGFuIGlzIHRvOgo+ID4+PiAKPiA+Pj4gMSkg
+SGF2ZSBhIHNpbmdsZSBvdmVybGF5IGZvciBxOCB0YWJsZXRzIHdpdGggZ3NsMTY4MCB0YWJsZXRz
+Cj4gPj4+IAo+ID4+PiAyKSBXcml0ZSBhbiBpbiBrZXJuZWwgb3ZlcmxheSBtYW5hZ2VyIHdoaWNo
+IHdoZW4gaXQgZGV0ZWN0cyBhIGdzbDE2ODAgdG91Y2hzY3JlZW4KPiA+Pj4gd2lsbCBwaWNrIGEg
+YmVzdC1kZWZhdWx0IGZpcm13YXJlLWZpbGUgKyBtYXRjaGluZyByZXNvbHV0aW9uICsgc3dhcC14
+LXkgYmFzZWQgb24KPiA+Pj4gd2hpY2ggU29DIChBMTMvQTIzL0EzMykgdGhlIHRhYmxldCBpcyBi
+YXNlZCBvbiBhcyB3ZWxsIGFzIHRoZSBnc2wxNjgwJ3MgY2hpcC1pZAo+ID4+PiBhbmQgd2lsbCB0
+aGVuICJwYXRjaCIgdGhpcyBpbmZvIGludG8gdGhlIG92ZXJsYXkgYmVmb3JlIGFwcGx5aW5nIGl0
+LiBUaGlzCj4gPj4+IG1lYW5zIGJlaW5nIGFibGUgdG8gc2V0IC8gbW9kaWZ5IHNldmVyYWwgc3Ry
+aW5nLCBpbnQgYW5kIGJvb2wgZHQgcHJvcGVydGllcy4KPiA+Pj4gCj4gPj4+IDMpIE9mZmVyIGEg
+a2VybmVsLW1vZHVsZSBvcHRpb24gZm9yIHRoZSBvdmVybGF5bWFuYWdlciB3aGljaCB3aWxsIGFs
+bG93cwo+ID4+PiBvdmVycmlkaW5nIHRoZSBkZWZhdWx0cyBmb3IgdGhlIGZpcm13YXJlLWZpbGVu
+YW1lLCBldGMuIFRoaXMgaXMgYWxzbwo+ID4+PiB3aHkgSSB3YW50IHRvIGdvIHdpdGggdGhlIHBh
+dGNoIGFwcHJvYWNoIGluc3RlYWQgb2YgaGF2aW5nIG11bHRpcGxlCj4gPj4+IGR0LW92ZXJsYXkg
+ZmlsZXMuCj4gPj4+IAo+ID4+IAo+ID4+IEhtbSwgeW91ciBwcm9ibGVtIGFwcGVhcnMgdG8gYmUg
+c2ltcGxlci4gWW91IGFscmVhZHkga25vdyBhbGwgdGhlIHBvc3NpYmxlCj4gPj4gcGFydHMgdGhh
+dCB5b3VyIHRvdWNoc2NyZWVuL3ZpZGVvL3RoaW5neSBpcyBnb2luZyB0byB1c2UuCj4gPj4gCj4g
+Pj4gWW91IGRvbuKAmXQgaGF2ZSB0byB1c2UgYW4gb3ZlcmxheSB0aGVuLiBPdmVybGF5cyBhcmUg
+YnVpbHQgb24gdG9wIG9mCj4gPj4gY2hhbmdlc2V0cy4KPiA+PiAKPiA+PiBGb3IgZXhhbXBsZSwg
+bGV04oCZcyBzYXkgdGhhdCB5b3UgaGF2ZSB2YXJpb3VzIG9wdGlvbnMgZm9yIGEgdG91Y2hzY3Jl
+ZW4gb3V0Cj4gPj4gb2YgYSBmaW5pdGUgc2V0Lgo+ID4+IAo+ID4+IFlvdSBqdXN0IHB1dCB0aGUg
+YmFzaWMgY29uZmlndXJhdGlvbiBmb3IgZWFjaCBpbiBhIGRpc2FibGUgbm9kZSBhbmQgeW91cgo+
+ID4+IG1hbmFnZXIgb25seSBuZWVkcyB0byB1cGRhdGUgdGhlIHByb3BlcnRpZXMgYW5kIHNldCB0
+aGUgc3RhdHVzIHRvIGVuYWJsZWQKPiA+PiBmb3IgaXQgdG8gYmUgZW5hYmxlZC4KPiA+PiAKPiA+
+PiBGb3IgaW5zdGFuY2UgbGV04oCZcyBzYXkgeW91IGhhdmUgYW4gb3B0aW9uIG9mIHR3byBkZXZp
+Y2VzIChvbmx5IG9uZSBvZiB0aGVtCj4gPj4gYmVpbmcgcHJlc2VudCkuCj4gPj4gCj4gPj4gZGV2
+QSB7Cj4gPj4gCXN0YXR1cyA9IOKAnGRpc2FibGVk4oCdOwo+ID4+IAljb21wYXRpYmxlID0g4oCc
+Zm9vLEHigJ07Cj4gPj4gfTsKPiA+PiAKPiA+PiBkZXZCIHsKPiA+PiAJc3RhdHVzID0g4oCcZGlz
+YWJsZWTigJ07Cj4gPj4gCWNvbXBhdGlibGUgPSDigJxiYXIsQuKAnTsKPiA+PiB9Owo+ID4+IAo+
+ID4+IFlvdXIgbWFuYWdlciBjYW4gc2ltcGx5IHVzZSBhIGNoYW5nZXNldCB0byBlbmFibGUgQSBh
+bmQgcHV0IGEgcHJvcGVydHkgdGhlcmUKPiA+PiAoZXhhbXBsZSBkb25lIHVzaW5nIHRoZSBleHRl
+bmRlZCBoZWxwZXIgQVBJIGZvciBjbGFyaXR5KS4KPiA+PiAKPiA+PiAJc3RydWN0IG9mX2NoYW5n
+ZXNldCBjc2V0Owo+ID4+IAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gb2ZfZmluZF9ub2RlX2J5
+X3BhdGgo4oCcL2RldkHigJ0pOwo+ID4+IAo+ID4+IAlvZl9jaGFuZ2VzZXRfaW5pdCgmY3NldCk7
+Cj4gPj4gCW9mX2NoYW5nZXNldF9hZGRfcHJvcGVydHlfYm9vbCgmY3NldCwgbnAsIOKAnGludmVy
+dC144oCdKTsKPiA+PiAJb2ZfY2hhbmdlc2V0X3VwZGF0ZV9wcm9wZXJ0eV9zdHJpbmcoJmNzZXQs
+IG5wLCDigJxzdGF0dXPigJ0sIOKAnG9rYXnigJ0pOwo+ID4+IAo+ID4+IAlvZl9jaGFuZ2VzZXRf
+YXBwbHkoJmNzZXQpOwo+ID4gCj4gPiBDb29sIHRoYXQgbG9va3MgcXVpdGUgbmljZSAvIGVhc3ku
+IDIgcXVlc3Rpb25zIG9uIHRoZSBhYm92ZToKPiA+IAo+ID4gMSkgSXMgdGhlIGZ1bmN0aW9uYWxp
+dHkgbmVlZGVkIGJ5IHRoZSBhYm92ZSBzbmlwcGV0IGluIG1haW5saW5lID8KPiAKPiBDaGFuZ2Vz
+ZXRzIGFyZSBpbiBtYWlubGluZTsgVGhlIGV4dGVuZGVkIEFQSSBmb3IgdGhlIGV4YW1wbGUgYWJv
+dmUgaXMgbm90LgoKVGhlIHJlYXNvbiBiZWluZyB0aGF0IHlvdSBzZW50IGl0IGp1c3QgYmVmb3Jl
+IHRoZSBtZXJnZSB3aW5kb3cgYW5kIHRoZXJlIAp3YXMgYSBjb21tZW50IG9uIGl0IHRoYXQgaGFz
+IG5vdCBiZWVuIGFkZHJlc3NlZC4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpVLUJvb3QgbWFpbGluZyBsaXN0ClUtQm9vdEBsaXN0cy5kZW54LmRl
+Cmh0dHA6Ly9saXN0cy5kZW54LmRlL21haWxtYW4vbGlzdGluZm8vdS1ib290Cg==
