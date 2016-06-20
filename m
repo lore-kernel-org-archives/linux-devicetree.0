@@ -1,48 +1,176 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 01/63] of: Add a new macro to declare_of for one
- parameter function returning a value
-Date: Mon, 20 Jun 2016 16:03:30 -0500
-Message-ID: <CAL_JsqJiFRm5ROsKDQ0ygVyehST-e3o8SiR4zWPq4Zj9RrWKdg@mail.gmail.com>
-References: <1466112442-31105-1-git-send-email-daniel.lezcano@linaro.org> <1466112442-31105-2-git-send-email-daniel.lezcano@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466112442-31105-2-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v3 2/2] dt-binding: remoteproc: Introduce Hexagon loader binding
+Date: Mon, 20 Jun 2016 14:28:42 -0700
+Message-ID: <1466458122-12180-2-git-send-email-bjorn.andersson@linaro.org>
+References: <1466458122-12180-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1466458122-12180-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2016 at 4:26 PM, Daniel Lezcano
-<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> The macro OF_DECLARE_1 expect a void (*func)(struct device_node *) while the
-> OF_DECLARE_2 expect a int (*func)(struct device_node *, struct device_node *).
->
-> The second one allows to pass an init function returning a value, which make
-> possible to call the functions in the table and check the return value in order
-> to catch at a higher level the errors and handle them from there instead of
-> doing a panic in each driver (well at least this is the case for the clkevt).
->
-> Unfortunately the OF_DECLARE_1 does not allow that and that lead to some code
-> duplication and crappyness in the drivers.
->
-> The OF_DECLARE_1 is used by all the clk drivers and the clocksource/clockevent
-> drivers. It is not possible to do the change in one shot as we have to change
-> all the init functions.
->
-> The OF_DECLARE_2 specifies an init function prototype with two parameters with
-> the node and its parent. The latter won't be used, ever, in the timer drivers.
->
-> Introduce a OF_DECLARE_1_RET macro to be used, and hopefully we can smoothly
-> and iteratively change the users of OF_DECLARE_1 to use the new macro instead.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  include/linux/of.h | 3 +++
->  1 file changed, 3 insertions(+)
+This document defines the binding for a component that loads firmware
+and control the life cycle of a self-authenticating Qualcomm Hexagon
+core.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+Changes since v2:
+- None
+
+Changes since v1:
+- Corrected reg-names in the example
+
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   | 138 +++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+new file mode 100644
+index 000000000000..5b198c7e007b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+@@ -0,0 +1,138 @@
++Qualcomm Hexagon Peripheral Image Loader
++
++This document defines the binding for a component that loads and boots firmware
++on the Qualcomm Hexagon core.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,q6v5-pil"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must specify the base address and size of the qdsp6 and
++		    rmb register blocks
++
++- reg-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "q6dsp" and "rmb"
++
++- interrupts-extended:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must list the watchdog, fatal IRQs ready, handover and
++		    stop-ack IRQs
++
++- interrupt-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
++
++- clocks:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the iface, bus and mem clocks to be held on
++		    behalf of the booting of the Hexagon core
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "iface", "bus", "mem"
++
++- resets:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the reset-controller for the modem sub-system
++
++- reset-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "mss_restart"
++
++- cx-supply:
++- mss-supply:
++- mx-supply:
++- pll-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the regulators to be held on behalf of the
++		    booting of the Hexagon core
++
++- qcom,smem-states:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the smem state for requesting the Hexagon to
++		    shut down
++
++- qcom,smem-state-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "stop"
++
++- qcom,halt-regs:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: a phandle reference to a syscon representing TCSR followed
++		    by the three offsets within syscon for q6, modem and nc
++		    halt registers.
++
++= SUBNODES:
++The Hexagon node must contain two subnodes, named "mba" and "mpss" representing
++the memory regions used by the Hexagon firmware. Each sub-node must contain:
++
++- memory-region:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the reserved-memory for the region
++
++= EXAMPLE
++The following example describes the resources needed to boot control the
++Hexagon, as it is found on MSM8974 boards.
++
++	modem-rproc@fc880000 {
++		compatible = "qcom,q6v5-pil";
++		reg = <0xfc880000 0x100>,
++		      <0xfc820000 0x020>;
++		reg-names = "qdsp6", "rmb";
++
++		interrupts-extended = <&intc 0 24 1>,
++				      <&modem_smp2p_in 0 0>,
++				      <&modem_smp2p_in 1 0>,
++				      <&modem_smp2p_in 2 0>,
++				      <&modem_smp2p_in 3 0>;
++		interrupt-names = "wdog",
++				  "fatal",
++				  "ready",
++				  "handover",
++				  "stop-ack";
++
++		clocks = <&gcc GCC_MSS_Q6_BIMC_AXI_CLK>,
++			 <&gcc GCC_MSS_CFG_AHB_CLK>,
++			 <&gcc GCC_BOOT_ROM_AHB_CLK>;
++		clock-names = "iface", "bus", "mem";
++
++		qcom,halt-regs = <&tcsr_mutex_block 0x1180 0x1200 0x1280>;
++
++		resets = <&gcc GCC_MSS_RESTART>;
++		reset-names = "mss_restart";
++
++		cx-supply = <&pm8841_s2>;
++		mss-supply = <&pm8841_s3>;
++		mx-supply = <&pm8841_s1>;
++		pll-supply = <&pm8941_l12>;
++
++		qcom,smem-states = <&modem_smp2p_out 0>;
++		qcom,smem-state-names = "stop";
++
++		mba {
++			memory-region = <&mba_region>;
++		};
++
++		mpss {
++			memory-region = <&mpss_region>;
++		};
++	};
++
+-- 
+2.5.0
