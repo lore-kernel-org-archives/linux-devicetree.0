@@ -1,93 +1,118 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [linux-sunxi] Auto-detecting touchscreen controller
- and dealing with hw configuration differences on q8 tablets
-Date: Mon, 20 Jun 2016 13:20:26 -0500
-Message-ID: <20160620182026.GA14012@rob-hp-laptop>
-References: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
- <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7@konsulko.com>
- <17e69e9e-06be-dc4f-cd47-152f6290d2ec@redhat.com>
- <7FA186CB-9BF2-47A6-835C-06AD63CF8837@konsulko.com>
- <b16c2b42-5628-c0b9-6486-f8a4728a0a33@redhat.com>
- <19098CD8-6BC1-4FFE-858F-A6DF4BE655D5@konsulko.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [v3,1/4] mfd: cros_ec: Add cros_ec_cmd_xfer_status helper
+Date: Mon, 20 Jun 2016 14:24:32 -0400
+Message-ID: <1092e8cd-33f0-888c-1e88-f996a262e1a9@osg.samsung.com>
+References: <1466193495-95801-2-git-send-email-briannorris@chromium.org>
+ <20160617214151.GA1400@roeck-us.net> <20160618010855.GA67034@google.com>
+ <5765805A.5070407@roeck-us.net>
+ <3eac0aed-58ed-8376-dc29-ab374c67ebc0@osg.samsung.com>
+ <20160620174455.GB40678@google.com> <20160620181020.GA46079@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <u-boot-bounces@lists.denx.de>
-Content-Disposition: inline
-In-Reply-To: <19098CD8-6BC1-4FFE-858F-A6DF4BE655D5@konsulko.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot/>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Errors-To: u-boot-bounces@lists.denx.de
-Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: "u-boot@lists.denx.de" <u-boot@lists.denx.de>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160620181020.GA46079-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Enric Balletbo <enric.balletbo-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Randall Spangler <rspangler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Nematbakhsh <shawnn-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Todd Broch <tbroch-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gwendal Grignou <gwendal-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMjAsIDIwMTYgYXQgMDQ6MDg6NDdQTSArMDMwMCwgUGFudGVsaXMgQW50b25p
-b3Ugd3JvdGU6Cj4gSGkgSGFucywKPiAKPiA+IE9uIEp1biAyMCwgMjAxNiwgYXQgMTY6MDIgLCBI
-YW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPiB3cm90ZToKPiA+IAo+ID4gSGksCj4g
-PiAKPiA+IE9uIDIwLTA2LTE2IDE0OjIyLCBQYW50ZWxpcyBBbnRvbmlvdSB3cm90ZToKPiA+PiBI
-aSBIYW5zLAo+ID4+IAo+ID4+PiBPbiBKdW4gMjAsIDIwMTYsIGF0IDE0OjAzICwgSGFucyBkZSBH
-b2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPj4+IAo+ID4+PiBIaSwKPiA+Pj4g
-Cj4gPj4+IE9uIDIwLTA2LTE2IDExOjI3LCBQYW50ZWxpcyBBbnRvbmlvdSB3cm90ZToKPiA+IAo+
-ID4gPHNuaXA+Cj4gPiAKPiA+Pj4+IFllcywgaXTigJlzIHF1aXRlIHBvc3NpYmxlLiBZb3UgY2Fu
-IGV2ZW4gaGF2ZSBzdGFja2VkIG92ZXJsYXlzLgo+ID4+PiAKPiA+Pj4gT2ssIGlzIHRoZXJlIGFu
-eSBleGFtcGxlIGNvZGUgaG93IHRvIGNoYW5nZSBhbiBvdmVybGF5IGJlZm9yZSBhcHBseWluZyBp
-dCBvdXQgdGhlcmUsCj4gPj4+IG9yIGlmIG5vdCBjYW4geW91IHBvaW50IHRvIHRoZSBmdW5jdGlv
-bnMgdG8gdXNlIHRvIGRvIHRoaXMgPwo+ID4+PiAKPiA+PiAKPiA+PiBUaGUgY2Fub25pY2FsIHBs
-YWNlIGZvciBhbGwgdGhlIGR5bmFtaWMgRFQgc3R1ZmYgaXMKPiA+PiAKPiA+PiBodHRwczovL2dp
-dGh1Yi5jb20vcGFudG9uaW91L2xpbnV4LWJlYWdsZS10cmFjay1tYWlubGluZS90cmVlL2JiYi1v
-dmVybGF5cwo+ID4+IAo+ID4+IFRoZSBiZWFnbGVib25lIGNhcGUgbWFuYWdlciBpcyBoZXJlLgo+
-ID4+IAo+ID4+IGh0dHBzOi8vZ2l0aHViLmNvbS9wYW50b25pb3UvbGludXgtYmVhZ2xlLXRyYWNr
-LW1haW5saW5lL2NvbW1pdC81MDI4ZDFlZDNiZWI4Yzc1YjI4ZmNlMzdiMWJiNWVlNTUxYjJhZTll
-Cj4gPj4gCj4gPj4+IFNwZWNpZmljYWxseSBteSBwbGFuIGlzIHRvOgo+ID4+PiAKPiA+Pj4gMSkg
-SGF2ZSBhIHNpbmdsZSBvdmVybGF5IGZvciBxOCB0YWJsZXRzIHdpdGggZ3NsMTY4MCB0YWJsZXRz
-Cj4gPj4+IAo+ID4+PiAyKSBXcml0ZSBhbiBpbiBrZXJuZWwgb3ZlcmxheSBtYW5hZ2VyIHdoaWNo
-IHdoZW4gaXQgZGV0ZWN0cyBhIGdzbDE2ODAgdG91Y2hzY3JlZW4KPiA+Pj4gd2lsbCBwaWNrIGEg
-YmVzdC1kZWZhdWx0IGZpcm13YXJlLWZpbGUgKyBtYXRjaGluZyByZXNvbHV0aW9uICsgc3dhcC14
-LXkgYmFzZWQgb24KPiA+Pj4gd2hpY2ggU29DIChBMTMvQTIzL0EzMykgdGhlIHRhYmxldCBpcyBi
-YXNlZCBvbiBhcyB3ZWxsIGFzIHRoZSBnc2wxNjgwJ3MgY2hpcC1pZAo+ID4+PiBhbmQgd2lsbCB0
-aGVuICJwYXRjaCIgdGhpcyBpbmZvIGludG8gdGhlIG92ZXJsYXkgYmVmb3JlIGFwcGx5aW5nIGl0
-LiBUaGlzCj4gPj4+IG1lYW5zIGJlaW5nIGFibGUgdG8gc2V0IC8gbW9kaWZ5IHNldmVyYWwgc3Ry
-aW5nLCBpbnQgYW5kIGJvb2wgZHQgcHJvcGVydGllcy4KPiA+Pj4gCj4gPj4+IDMpIE9mZmVyIGEg
-a2VybmVsLW1vZHVsZSBvcHRpb24gZm9yIHRoZSBvdmVybGF5bWFuYWdlciB3aGljaCB3aWxsIGFs
-bG93cwo+ID4+PiBvdmVycmlkaW5nIHRoZSBkZWZhdWx0cyBmb3IgdGhlIGZpcm13YXJlLWZpbGVu
-YW1lLCBldGMuIFRoaXMgaXMgYWxzbwo+ID4+PiB3aHkgSSB3YW50IHRvIGdvIHdpdGggdGhlIHBh
-dGNoIGFwcHJvYWNoIGluc3RlYWQgb2YgaGF2aW5nIG11bHRpcGxlCj4gPj4+IGR0LW92ZXJsYXkg
-ZmlsZXMuCj4gPj4+IAo+ID4+IAo+ID4+IEhtbSwgeW91ciBwcm9ibGVtIGFwcGVhcnMgdG8gYmUg
-c2ltcGxlci4gWW91IGFscmVhZHkga25vdyBhbGwgdGhlIHBvc3NpYmxlCj4gPj4gcGFydHMgdGhh
-dCB5b3VyIHRvdWNoc2NyZWVuL3ZpZGVvL3RoaW5neSBpcyBnb2luZyB0byB1c2UuCj4gPj4gCj4g
-Pj4gWW91IGRvbuKAmXQgaGF2ZSB0byB1c2UgYW4gb3ZlcmxheSB0aGVuLiBPdmVybGF5cyBhcmUg
-YnVpbHQgb24gdG9wIG9mCj4gPj4gY2hhbmdlc2V0cy4KPiA+PiAKPiA+PiBGb3IgZXhhbXBsZSwg
-bGV04oCZcyBzYXkgdGhhdCB5b3UgaGF2ZSB2YXJpb3VzIG9wdGlvbnMgZm9yIGEgdG91Y2hzY3Jl
-ZW4gb3V0Cj4gPj4gb2YgYSBmaW5pdGUgc2V0Lgo+ID4+IAo+ID4+IFlvdSBqdXN0IHB1dCB0aGUg
-YmFzaWMgY29uZmlndXJhdGlvbiBmb3IgZWFjaCBpbiBhIGRpc2FibGUgbm9kZSBhbmQgeW91cgo+
-ID4+IG1hbmFnZXIgb25seSBuZWVkcyB0byB1cGRhdGUgdGhlIHByb3BlcnRpZXMgYW5kIHNldCB0
-aGUgc3RhdHVzIHRvIGVuYWJsZWQKPiA+PiBmb3IgaXQgdG8gYmUgZW5hYmxlZC4KPiA+PiAKPiA+
-PiBGb3IgaW5zdGFuY2UgbGV04oCZcyBzYXkgeW91IGhhdmUgYW4gb3B0aW9uIG9mIHR3byBkZXZp
-Y2VzIChvbmx5IG9uZSBvZiB0aGVtCj4gPj4gYmVpbmcgcHJlc2VudCkuCj4gPj4gCj4gPj4gZGV2
-QSB7Cj4gPj4gCXN0YXR1cyA9IOKAnGRpc2FibGVk4oCdOwo+ID4+IAljb21wYXRpYmxlID0g4oCc
-Zm9vLEHigJ07Cj4gPj4gfTsKPiA+PiAKPiA+PiBkZXZCIHsKPiA+PiAJc3RhdHVzID0g4oCcZGlz
-YWJsZWTigJ07Cj4gPj4gCWNvbXBhdGlibGUgPSDigJxiYXIsQuKAnTsKPiA+PiB9Owo+ID4+IAo+
-ID4+IFlvdXIgbWFuYWdlciBjYW4gc2ltcGx5IHVzZSBhIGNoYW5nZXNldCB0byBlbmFibGUgQSBh
-bmQgcHV0IGEgcHJvcGVydHkgdGhlcmUKPiA+PiAoZXhhbXBsZSBkb25lIHVzaW5nIHRoZSBleHRl
-bmRlZCBoZWxwZXIgQVBJIGZvciBjbGFyaXR5KS4KPiA+PiAKPiA+PiAJc3RydWN0IG9mX2NoYW5n
-ZXNldCBjc2V0Owo+ID4+IAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gb2ZfZmluZF9ub2RlX2J5
-X3BhdGgo4oCcL2RldkHigJ0pOwo+ID4+IAo+ID4+IAlvZl9jaGFuZ2VzZXRfaW5pdCgmY3NldCk7
-Cj4gPj4gCW9mX2NoYW5nZXNldF9hZGRfcHJvcGVydHlfYm9vbCgmY3NldCwgbnAsIOKAnGludmVy
-dC144oCdKTsKPiA+PiAJb2ZfY2hhbmdlc2V0X3VwZGF0ZV9wcm9wZXJ0eV9zdHJpbmcoJmNzZXQs
-IG5wLCDigJxzdGF0dXPigJ0sIOKAnG9rYXnigJ0pOwo+ID4+IAo+ID4+IAlvZl9jaGFuZ2VzZXRf
-YXBwbHkoJmNzZXQpOwo+ID4gCj4gPiBDb29sIHRoYXQgbG9va3MgcXVpdGUgbmljZSAvIGVhc3ku
-IDIgcXVlc3Rpb25zIG9uIHRoZSBhYm92ZToKPiA+IAo+ID4gMSkgSXMgdGhlIGZ1bmN0aW9uYWxp
-dHkgbmVlZGVkIGJ5IHRoZSBhYm92ZSBzbmlwcGV0IGluIG1haW5saW5lID8KPiAKPiBDaGFuZ2Vz
-ZXRzIGFyZSBpbiBtYWlubGluZTsgVGhlIGV4dGVuZGVkIEFQSSBmb3IgdGhlIGV4YW1wbGUgYWJv
-dmUgaXMgbm90LgoKVGhlIHJlYXNvbiBiZWluZyB0aGF0IHlvdSBzZW50IGl0IGp1c3QgYmVmb3Jl
-IHRoZSBtZXJnZSB3aW5kb3cgYW5kIHRoZXJlIAp3YXMgYSBjb21tZW50IG9uIGl0IHRoYXQgaGFz
-IG5vdCBiZWVuIGFkZHJlc3NlZC4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpVLUJvb3QgbWFpbGluZyBsaXN0ClUtQm9vdEBsaXN0cy5kZW54LmRl
-Cmh0dHA6Ly9saXN0cy5kZW54LmRlL21haWxtYW4vbGlzdGluZm8vdS1ib290Cg==
+Hello Brian,
+
+On 06/20/2016 02:10 PM, Brian Norris wrote:
+> Hi,
+> 
+> On Mon, Jun 20, 2016 at 10:44:55AM -0700, Brian Norris wrote:
+>> On Mon, Jun 20, 2016 at 09:46:57AM -0400, Javier Martinez Canillas wrote:
+>>> On 06/18/2016 01:09 PM, Guenter Roeck wrote:
+>>>> On 06/17/2016 06:08 PM, Brian Norris wrote:
+>>>>> How do you propose we do that? Do all of the following become EINVAL?
+>>>>>
+>>>
+>>> Yes, I would just do that.
+>>>
+>>> The idea of this helper is to remove duplicated code and AFAICT what most EC
+>>> drivers do is something similar to the following:
+>>>
+>>>         ret = cros_ec_cmd_xfer(ec, msg);
+>>>         if (ret < 0)
+>>> 	   	return ret;
+>>>
+>>>         if (msg->result != EC_RES_SUCCESS) {
+>>>                 dev_dbg(ec->dev, "EC result %d\n", msg->result);
+>>>                 return -EINVAL;
+>>>         }
+>>>
+>>> So in practice what most drivers really care is if the result was successful
+>>> or not, I don't see specific EC error handling in the EC drivers.  The real
+>>> EC error code is still in the message anyways so drivers that do cares about
+>>> the real EC error can look at msg->result instead.
+> [...]
+>>>>>          EC_RES_INVALID_COMMAND
+>>>>
+>>>>     -EOPNOTSUPP
+>>>>
+>>>>>          EC_RES_INVALID_PARAM
+>>>>
+>>>>     -EINVAL or -EBADMSG
+>>>>
+>>>>>          EC_RES_INVALID_VERSION
+>>>>
+>>>>     -EPROTO or -EBADR or -EBADE or -EBADRQC or -EPROTOOPT
+>>>>
+>>>>>          EC_RES_INVALID_HEADER
+>>>>
+>>>>     -EPROTO or -EBADR or -EBADE
+>>>>
+>>>> Doesn't look that bad to me. Also, the raw error could still be logged,
+>>>> for example with dev_dbg().
+>>>>
+>>>
+>>> Yes, I think that adding a dev_dbg() with the real EC error code should
+>>> be enough, that's basically what drivers do since they can't propagate
+>>> the EC error to higher layers anyways.
+>>
+>> I'll take a look at adding an error code translation table when I get a
+>> chance. Hopefully that doesn't delay the others who are planning to use
+>> this API shortly...
+> 
+> Actually, I had some second thoughts, and others brought similar
+> concerns up to me:
+> 
+> What do we really win by doing the translation? It'll be difficult to do
+> a 1:1 translation, and any time the EC adds additional error types,
+> we'll have to update the translation. What's more, AFAICT, no one will
+> really be looking at the translated error codes now, and will just be
+> blindly passing them on. So maybe it makes more sense to just pick a
+> single error code and pass that on instead. Possibly just -EPROTO (or
+> nominate your favorite) for all EC error results, and if someone cares,
+
+
+I think I didn't make clear in my previous email but yes, I also think
+that a translate table for errors is not a good idea and that just a
+single -EINVAL (or another error if is more suitable for all EC errors)
+will be enough. I say -EINVAL because that's what you first mentioned
+in a previous email and that's what most EC clients drivers are using.
+
+I do believe that EC specific errors shouldn't be returned in a Linux
+function though for the reasons I explained before.
+
+> they decode msg->result in their driver, or check the dev_dbg() log?
+>
+
+And yes, I also think that a dev_dbg() is a good idea (the more data
+we have about an error, the better) and as mentioned the EC error can
+always be found in the EC message result field.
+ 
+> Brian
+> 
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
