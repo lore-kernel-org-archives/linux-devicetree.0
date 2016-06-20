@@ -1,101 +1,45 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 01/11] phy: rockchip-emmc: Increase lock time allowance
-Date: Mon, 20 Jun 2016 18:33:37 +0530
-Message-ID: <5767E9A9.5090308@ti.com>
-References: <1465859076-4868-1-git-send-email-dianders@chromium.org>
- <1465859076-4868-2-git-send-email-dianders@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 21/22] arm64: dts: msm8916: Add display support
+Date: Mon, 20 Jun 2016 08:04:20 -0500
+Message-ID: <20160620130420.GD31965@rob-hp-laptop>
+References: <1466077007-26792-1-git-send-email-architt@codeaurora.org>
+ <1466077007-26792-22-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1465859076-4868-2-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1466077007-26792-22-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Tuesday 14 June 2016 04:34 AM, Douglas Anderson wrote:
-> Previous PHY code waited a fixed amount of time for the DLL to lock at
-> power on time.  Unfortunately, the time for the DLL to lock is actually
-> a bit more dynamic and can be longer if the card clock is slower.
-> 
-> Instead of waiting a fixed 30 us, let's now dynamically wait until the
-> lock bit gets set.  We'll wait up to 10 ms which should be OK even if
-> the card clock is at the super slow 100 kHz.
-> 
-> On its own, this change makes the PHY power on code a little more
-> robust.  Before this change the PHY was relying on the eMMC code to make
-> sure the PHY was only powered on when the card clock was set to at least
-> 50 MHz before, though this reliance wasn't documented anywhere.
-> 
-> This change will be even more useful in future changes where we actually
-> need to be able to wait for a DLL lock at slower clock speeds.
-> 
-> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
-> Changes in v2:
-> - Indicate that 5.1 ms is calculated (Shawn).
-> 
->  drivers/phy/phy-rockchip-emmc.c | 28 ++++++++++++++++++++--------
->  1 file changed, 20 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockchip-emmc.c
-> index a69f53630e67..2d059c046978 100644
-> --- a/drivers/phy/phy-rockchip-emmc.c
-> +++ b/drivers/phy/phy-rockchip-emmc.c
-> @@ -85,6 +85,7 @@ static int rockchip_emmc_phy_power(struct rockchip_emmc_phy *rk_phy,
->  {
->  	unsigned int caldone;
->  	unsigned int dllrdy;
-> +	unsigned long timeout;
->  
->  	/*
->  	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-> @@ -137,15 +138,26 @@ static int rockchip_emmc_phy_power(struct rockchip_emmc_phy *rk_phy,
->  				   PHYCTRL_ENDLL_MASK,
->  				   PHYCTRL_ENDLL_SHIFT));
->  	/*
-> -	 * After enable analog DLL circuits, we need an extra 10.2us
-> -	 * for dll to be ready for work. But according to testing, we
-> -	 * find some chips need more than 25us.
-> +	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-> +	 * our source clock is at 50 MHz and that lock time scales linearly
-> +	 * with clock speed.  If we are powering on the PHY and the card clock
-> +	 * is super slow (like 100 kHZ) this could take as long as 5.1 ms as
-> +	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
-> +	 * Hopefully we won't be running at 100 kHz, but we should still make
-> +	 * sure we wait long enough.
->  	 */
-> -	udelay(30);
-> -	regmap_read(rk_phy->reg_base,
-> -		    rk_phy->reg_offset + GRF_EMMCPHY_STATUS,
-> -		    &dllrdy);
-> -	dllrdy = (dllrdy >> PHYCTRL_DLLRDY_SHIFT) & PHYCTRL_DLLRDY_MASK;
-> +	timeout = jiffies + msecs_to_jiffies(10);
-> +	do {
-> +		udelay(1);
-> +
-> +		regmap_read(rk_phy->reg_base,
-> +			rk_phy->reg_offset + GRF_EMMCPHY_STATUS,
-> +			&dllrdy);
-> +		dllrdy = (dllrdy >> PHYCTRL_DLLRDY_SHIFT) & PHYCTRL_DLLRDY_MASK;
-> +		if (dllrdy == PHYCTRL_DLLRDY_DONE)
-> +			break;
-> +	} while (!time_after(jiffies, timeout));
-> +
->  	if (dllrdy != PHYCTRL_DLLRDY_DONE) {
->  		pr_err("rockchip_emmc_phy_power: dllrdy timeout.\n");
->  		return -ETIMEDOUT;
-> 
+T24gVGh1LCBKdW4gMTYsIDIwMTYgYXQgMDU6MDY6NDZQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
+cm90ZToKPiBUaGUgTVNNODkxNiBTb0MgY29udGFpbnMgYSBNRFA1IGJhc2VkIGRpc3BsYXkgYmxv
+Y2ssIGFuZCBvbmUgRFNJIG91dHB1dC4KPiBBZGQgdGhlIHRvcCBsZXZlbCBNRFNTIERUIG5vZGUs
+IGFuZCB0aGUgTURQNSwgRFNJIGFuZCBEU0kgUEhZIGNoaWxkcmVuCj4gc3ViLWJsb2Nrcy4gRXN0
+YWJsaXNoIHRoZSBsaW5rIGJldHdlZW4gTURQNSdzIElOVEYxIG91dHB1dCBwb3J0IGFuZCBEU0kn
+cwo+IGlucHV0IHBvcnQuCj4gCj4gQ2M6IEFuZHkgR3Jvc3MgPGFuZHkuZ3Jvc3NAbGluYXJvLm9y
+Zz4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiBDYzogZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmcKPiAKPiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0
+QGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNtODkx
+Ni5kdHNpIHwgMTIwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxl
+IGNoYW5nZWQsIDEyMCBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvcWNvbS9tc204OTE2LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNt
+ODkxNi5kdHNpCj4gaW5kZXggOTY4MTIwMC4uZDhjY2NmYyAxMDA2NDQKPiAtLS0gYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3Fjb20vbXNtODkxNi5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0
+cy9xY29tL21zbTg5MTYuZHRzaQoKPiArCj4gKwkJCWRzaTA6IGRzaUAxYTk4MDAwIHsKPiArCQkJ
+CWNvbXBhdGlibGUgPSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPiArCQkJCXFjb20sZHNpLWhvc3Qt
+aW5kZXggPSA8MD47CgpIb3cgaXMgdGhpcyB1c2VkPyBJdCBzaG91bGQgcmVhbGx5IGdvLgoKUm9i
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
