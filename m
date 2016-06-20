@@ -1,86 +1,101 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [linux-sunxi] Re: Auto-detecting touchscreen
- controller and dealing with hw configuration differences on q8 tablets
-Date: Mon, 20 Jun 2016 15:02:36 +0200
-Message-ID: <b16c2b42-5628-c0b9-6486-f8a4728a0a33@redhat.com>
-References: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
- <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7@konsulko.com>
- <17e69e9e-06be-dc4f-cd47-152f6290d2ec@redhat.com>
- <7FA186CB-9BF2-47A6-835C-06AD63CF8837@konsulko.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 01/11] phy: rockchip-emmc: Increase lock time allowance
+Date: Mon, 20 Jun 2016 18:33:37 +0530
+Message-ID: <5767E9A9.5090308@ti.com>
+References: <1465859076-4868-1-git-send-email-dianders@chromium.org>
+ <1465859076-4868-2-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <7FA186CB-9BF2-47A6-835C-06AD63CF8837@konsulko.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot/>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Errors-To: u-boot-bounces@lists.denx.de
-Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "u-boot@lists.denx.de" <u-boot@lists.denx.de>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1465859076-4868-2-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAyMC0wNi0xNiAxNDoyMiwgUGFudGVsaXMgQW50b25pb3Ugd3JvdGU6Cj4gSGkgSGFu
-cywKPgo+PiBPbiBKdW4gMjAsIDIwMTYsIGF0IDE0OjAzICwgSGFucyBkZSBHb2VkZSA8aGRlZ29l
-ZGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4+Cj4+IEhpLAo+Pgo+PiBPbiAyMC0wNi0xNiAxMToyNywg
-UGFudGVsaXMgQW50b25pb3Ugd3JvdGU6Cgo8c25pcD4KCj4+PiBZZXMsIGl04oCZcyBxdWl0ZSBw
-b3NzaWJsZS4gWW91IGNhbiBldmVuIGhhdmUgc3RhY2tlZCBvdmVybGF5cy4KPj4KPj4gT2ssIGlz
-IHRoZXJlIGFueSBleGFtcGxlIGNvZGUgaG93IHRvIGNoYW5nZSBhbiBvdmVybGF5IGJlZm9yZSBh
-cHBseWluZyBpdCBvdXQgdGhlcmUsCj4+IG9yIGlmIG5vdCBjYW4geW91IHBvaW50IHRvIHRoZSBm
-dW5jdGlvbnMgdG8gdXNlIHRvIGRvIHRoaXMgPwo+Pgo+Cj4gVGhlIGNhbm9uaWNhbCBwbGFjZSBm
-b3IgYWxsIHRoZSBkeW5hbWljIERUIHN0dWZmIGlzCj4KPiBodHRwczovL2dpdGh1Yi5jb20vcGFu
-dG9uaW91L2xpbnV4LWJlYWdsZS10cmFjay1tYWlubGluZS90cmVlL2JiYi1vdmVybGF5cwo+Cj4g
-VGhlIGJlYWdsZWJvbmUgY2FwZSBtYW5hZ2VyIGlzIGhlcmUuCj4KPiBodHRwczovL2dpdGh1Yi5j
-b20vcGFudG9uaW91L2xpbnV4LWJlYWdsZS10cmFjay1tYWlubGluZS9jb21taXQvNTAyOGQxZWQz
-YmViOGM3NWIyOGZjZTM3YjFiYjVlZTU1MWIyYWU5ZQo+Cj4+IFNwZWNpZmljYWxseSBteSBwbGFu
-IGlzIHRvOgo+Pgo+PiAxKSBIYXZlIGEgc2luZ2xlIG92ZXJsYXkgZm9yIHE4IHRhYmxldHMgd2l0
-aCBnc2wxNjgwIHRhYmxldHMKPj4KPj4gMikgV3JpdGUgYW4gaW4ga2VybmVsIG92ZXJsYXkgbWFu
-YWdlciB3aGljaCB3aGVuIGl0IGRldGVjdHMgYSBnc2wxNjgwIHRvdWNoc2NyZWVuCj4+IHdpbGwg
-cGljayBhIGJlc3QtZGVmYXVsdCBmaXJtd2FyZS1maWxlICsgbWF0Y2hpbmcgcmVzb2x1dGlvbiAr
-IHN3YXAteC15IGJhc2VkIG9uCj4+IHdoaWNoIFNvQyAoQTEzL0EyMy9BMzMpIHRoZSB0YWJsZXQg
-aXMgYmFzZWQgb24gYXMgd2VsbCBhcyB0aGUgZ3NsMTY4MCdzIGNoaXAtaWQKPj4gYW5kIHdpbGwg
-dGhlbiAicGF0Y2giIHRoaXMgaW5mbyBpbnRvIHRoZSBvdmVybGF5IGJlZm9yZSBhcHBseWluZyBp
-dC4gVGhpcwo+PiBtZWFucyBiZWluZyBhYmxlIHRvIHNldCAvIG1vZGlmeSBzZXZlcmFsIHN0cmlu
-ZywgaW50IGFuZCBib29sIGR0IHByb3BlcnRpZXMuCj4+Cj4+IDMpIE9mZmVyIGEga2VybmVsLW1v
-ZHVsZSBvcHRpb24gZm9yIHRoZSBvdmVybGF5bWFuYWdlciB3aGljaCB3aWxsIGFsbG93cwo+PiBv
-dmVycmlkaW5nIHRoZSBkZWZhdWx0cyBmb3IgdGhlIGZpcm13YXJlLWZpbGVuYW1lLCBldGMuIFRo
-aXMgaXMgYWxzbwo+PiB3aHkgSSB3YW50IHRvIGdvIHdpdGggdGhlIHBhdGNoIGFwcHJvYWNoIGlu
-c3RlYWQgb2YgaGF2aW5nIG11bHRpcGxlCj4+IGR0LW92ZXJsYXkgZmlsZXMuCj4+Cj4KPiBIbW0s
-IHlvdXIgcHJvYmxlbSBhcHBlYXJzIHRvIGJlIHNpbXBsZXIuIFlvdSBhbHJlYWR5IGtub3cgYWxs
-IHRoZSBwb3NzaWJsZQo+IHBhcnRzIHRoYXQgeW91ciB0b3VjaHNjcmVlbi92aWRlby90aGluZ3kg
-aXMgZ29pbmcgdG8gdXNlLgo+Cj4gWW91IGRvbuKAmXQgaGF2ZSB0byB1c2UgYW4gb3ZlcmxheSB0
-aGVuLiBPdmVybGF5cyBhcmUgYnVpbHQgb24gdG9wIG9mCj4gY2hhbmdlc2V0cy4KPgo+IEZvciBl
-eGFtcGxlLCBsZXTigJlzIHNheSB0aGF0IHlvdSBoYXZlIHZhcmlvdXMgb3B0aW9ucyBmb3IgYSB0
-b3VjaHNjcmVlbiBvdXQKPiBvZiBhIGZpbml0ZSBzZXQuCj4KPiBZb3UganVzdCBwdXQgdGhlIGJh
-c2ljIGNvbmZpZ3VyYXRpb24gZm9yIGVhY2ggaW4gYSBkaXNhYmxlIG5vZGUgYW5kIHlvdXIKPiBt
-YW5hZ2VyIG9ubHkgbmVlZHMgdG8gdXBkYXRlIHRoZSBwcm9wZXJ0aWVzIGFuZCBzZXQgdGhlIHN0
-YXR1cyB0byBlbmFibGVkCj4gZm9yIGl0IHRvIGJlIGVuYWJsZWQuCj4KPiBGb3IgaW5zdGFuY2Ug
-bGV04oCZcyBzYXkgeW91IGhhdmUgYW4gb3B0aW9uIG9mIHR3byBkZXZpY2VzIChvbmx5IG9uZSBv
-ZiB0aGVtCj4gYmVpbmcgcHJlc2VudCkuCj4KPiBkZXZBIHsKPiAJc3RhdHVzID0g4oCcZGlzYWJs
-ZWTigJ07Cj4gCWNvbXBhdGlibGUgPSDigJxmb28sQeKAnTsKPiB9Owo+Cj4gZGV2QiB7Cj4gCXN0
-YXR1cyA9IOKAnGRpc2FibGVk4oCdOwo+IAljb21wYXRpYmxlID0g4oCcYmFyLELigJ07Cj4gfTsK
-Pgo+IFlvdXIgbWFuYWdlciBjYW4gc2ltcGx5IHVzZSBhIGNoYW5nZXNldCB0byBlbmFibGUgQSBh
-bmQgcHV0IGEgcHJvcGVydHkgdGhlcmUKPiAoZXhhbXBsZSBkb25lIHVzaW5nIHRoZSBleHRlbmRl
-ZCBoZWxwZXIgQVBJIGZvciBjbGFyaXR5KS4KPgo+IAlzdHJ1Y3Qgb2ZfY2hhbmdlc2V0IGNzZXQ7
-Cj4gCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBvZl9maW5kX25vZGVfYnlfcGF0aCjigJwvZGV2
-QeKAnSk7Cj4KPiAJb2ZfY2hhbmdlc2V0X2luaXQoJmNzZXQpOwo+IAlvZl9jaGFuZ2VzZXRfYWRk
-X3Byb3BlcnR5X2Jvb2woJmNzZXQsIG5wLCDigJxpbnZlcnQteOKAnSk7Cj4gCW9mX2NoYW5nZXNl
-dF91cGRhdGVfcHJvcGVydHlfc3RyaW5nKCZjc2V0LCBucCwg4oCcc3RhdHVz4oCdLCDigJxva2F5
-4oCdKTsKPgo+IAlvZl9jaGFuZ2VzZXRfYXBwbHkoJmNzZXQpOwoKQ29vbCB0aGF0IGxvb2tzIHF1
-aXRlIG5pY2UgLyBlYXN5LiAyIHF1ZXN0aW9ucyBvbiB0aGUgYWJvdmU6CgoxKSBJcyB0aGUgZnVu
-Y3Rpb25hbGl0eSBuZWVkZWQgYnkgdGhlIGFib3ZlIHNuaXBwZXQgaW4gbWFpbmxpbmUgPwoyKSBJ
-IGFzc3VtZSB5b3UndmMgZSBsZWZ0IG91dCBlcnJvciBoYW5kbGluZyBmcm9tIHRoZSBhYm92ZQpm
-b3Igc2ltcGxpY2l0eS4gSSBhc3N1bWUgdGhhdCBvZl9jaGFuZ2VzZXRfYXBwbHkoKSBuZWVkcyBz
-b21lCmVycm9yIHJldHVybiBjaGVja2luZyA/IFdoYXQgYWJvdXQgdGhlIG90aGVycyA/CgpBbmQg
-b25lIG5ldyBxdWVzdGlvbiwgdGhlIG92ZXJsYXkgbWFuYWdlciB3aWxsIG5lZWQgYWNjZXNzCnRv
-IChzZXZlcmFsKSBpMmMgYnVzc2VzLCBwcmVmZXJhYmx5IEkgY2FuIHBhc3MgaW4gYSBwaGFuZGxl
-CnRvIHRoZXNlIGluIGRldmljZXRyZWUsIGRvIHlvdSBoYXZlIGFueSBleHBlcmllbmNlIHdpdGgg
-LwpleGFtcGxlcyBvZiBkb2luZyBzdWNoIGEgdGhpbmcgPwoKUmVnYXJkcywKCkhhbnMKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KVS1Cb290IG1haWxpbmcg
-bGlzdApVLUJvb3RAbGlzdHMuZGVueC5kZQpodHRwOi8vbGlzdHMuZGVueC5kZS9tYWlsbWFuL2xp
-c3RpbmZvL3UtYm9vdAo=
+
+
+On Tuesday 14 June 2016 04:34 AM, Douglas Anderson wrote:
+> Previous PHY code waited a fixed amount of time for the DLL to lock at
+> power on time.  Unfortunately, the time for the DLL to lock is actually
+> a bit more dynamic and can be longer if the card clock is slower.
+> 
+> Instead of waiting a fixed 30 us, let's now dynamically wait until the
+> lock bit gets set.  We'll wait up to 10 ms which should be OK even if
+> the card clock is at the super slow 100 kHz.
+> 
+> On its own, this change makes the PHY power on code a little more
+> robust.  Before this change the PHY was relying on the eMMC code to make
+> sure the PHY was only powered on when the card clock was set to at least
+> 50 MHz before, though this reliance wasn't documented anywhere.
+> 
+> This change will be even more useful in future changes where we actually
+> need to be able to wait for a DLL lock at slower clock speeds.
+> 
+> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> ---
+> Changes in v2:
+> - Indicate that 5.1 ms is calculated (Shawn).
+> 
+>  drivers/phy/phy-rockchip-emmc.c | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockchip-emmc.c
+> index a69f53630e67..2d059c046978 100644
+> --- a/drivers/phy/phy-rockchip-emmc.c
+> +++ b/drivers/phy/phy-rockchip-emmc.c
+> @@ -85,6 +85,7 @@ static int rockchip_emmc_phy_power(struct rockchip_emmc_phy *rk_phy,
+>  {
+>  	unsigned int caldone;
+>  	unsigned int dllrdy;
+> +	unsigned long timeout;
+>  
+>  	/*
+>  	 * Keep phyctrl_pdb and phyctrl_endll low to allow
+> @@ -137,15 +138,26 @@ static int rockchip_emmc_phy_power(struct rockchip_emmc_phy *rk_phy,
+>  				   PHYCTRL_ENDLL_MASK,
+>  				   PHYCTRL_ENDLL_SHIFT));
+>  	/*
+> -	 * After enable analog DLL circuits, we need an extra 10.2us
+> -	 * for dll to be ready for work. But according to testing, we
+> -	 * find some chips need more than 25us.
+> +	 * After enabling analog DLL circuits docs say that we need 10.2 us if
+> +	 * our source clock is at 50 MHz and that lock time scales linearly
+> +	 * with clock speed.  If we are powering on the PHY and the card clock
+> +	 * is super slow (like 100 kHZ) this could take as long as 5.1 ms as
+> +	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
+> +	 * Hopefully we won't be running at 100 kHz, but we should still make
+> +	 * sure we wait long enough.
+>  	 */
+> -	udelay(30);
+> -	regmap_read(rk_phy->reg_base,
+> -		    rk_phy->reg_offset + GRF_EMMCPHY_STATUS,
+> -		    &dllrdy);
+> -	dllrdy = (dllrdy >> PHYCTRL_DLLRDY_SHIFT) & PHYCTRL_DLLRDY_MASK;
+> +	timeout = jiffies + msecs_to_jiffies(10);
+> +	do {
+> +		udelay(1);
+> +
+> +		regmap_read(rk_phy->reg_base,
+> +			rk_phy->reg_offset + GRF_EMMCPHY_STATUS,
+> +			&dllrdy);
+> +		dllrdy = (dllrdy >> PHYCTRL_DLLRDY_SHIFT) & PHYCTRL_DLLRDY_MASK;
+> +		if (dllrdy == PHYCTRL_DLLRDY_DONE)
+> +			break;
+> +	} while (!time_after(jiffies, timeout));
+> +
+>  	if (dllrdy != PHYCTRL_DLLRDY_DONE) {
+>  		pr_err("rockchip_emmc_phy_power: dllrdy timeout.\n");
+>  		return -ETIMEDOUT;
+> 
