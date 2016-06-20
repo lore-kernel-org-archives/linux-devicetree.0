@@ -1,57 +1,47 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
-Date: Mon, 20 Jun 2016 23:18:45 +0200
-Message-ID: <f7f47b9d-b37c-712d-3319-585474277b41@hauke-m.de>
-References: <20160619130514.GB820@makrotopia.org> <6411961.soYuJ4Ixfs@wuerfel>
- <5767A8A3.4030004@nod.at> <4012191.NTCe8d2REM@wuerfel>
- <57684AB9.5040607@nod.at>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 01/63] of: Add a new macro to declare_of for one
+ parameter function returning a value
+Date: Mon, 20 Jun 2016 16:03:30 -0500
+Message-ID: <CAL_JsqJiFRm5ROsKDQ0ygVyehST-e3o8SiR4zWPq4Zj9RrWKdg@mail.gmail.com>
+References: <1466112442-31105-1-git-send-email-daniel.lezcano@linaro.org> <1466112442-31105-2-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57684AB9.5040607-/L3Ra7n9ekc@public.gmane.org>
+In-Reply-To: <1466112442-31105-2-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2016 09:57 PM, Richard Weinberger wrote:
-> Am 20.06.2016 um 17:08 schrieb Arnd Bergmann:
->>> Since blocks on a MTD can render bad you'd lose the table sooner or later.
->>> That's why we cannot store it on the MTD directly.
->>> Defining the table in DT is at least less ugly than using the mtdparts=
->>> kernel parameter.
->>
->> Right, there would be no benefit in using the kernel command line,
->> it just moves the information to another place inside of the same DT
->> (the /chosen property).
->>
->> I think you can normally rely on the first block being readable
->> on flash, in particular if you write it very rarely (when updating
->> the partition information), so it would be technically possible to
->> have a partition table in there, but in practice that's not how
->> things are done, so the argument is useless.
-> 
-> Speaking of NAND, only SLC (and also here not all) chips guarantee that the first
-> block is better than the other ones.
+On Thu, Jun 16, 2016 at 4:26 PM, Daniel Lezcano
+<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The macro OF_DECLARE_1 expect a void (*func)(struct device_node *) while the
+> OF_DECLARE_2 expect a int (*func)(struct device_node *, struct device_node *).
+>
+> The second one allows to pass an init function returning a value, which make
+> possible to call the functions in the table and check the return value in order
+> to catch at a higher level the errors and handle them from there instead of
+> doing a panic in each driver (well at least this is the case for the clkevt).
+>
+> Unfortunately the OF_DECLARE_1 does not allow that and that lead to some code
+> duplication and crappyness in the drivers.
+>
+> The OF_DECLARE_1 is used by all the clk drivers and the clocksource/clockevent
+> drivers. It is not possible to do the change in one shot as we have to change
+> all the init functions.
+>
+> The OF_DECLARE_2 specifies an init function prototype with two parameters with
+> the node and its parent. The latter won't be used, ever, in the timer drivers.
+>
+> Introduce a OF_DECLARE_1_RET macro to be used, and hopefully we can smoothly
+> and iteratively change the users of OF_DECLARE_1 to use the new macro instead.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  include/linux/of.h | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Being able to define a rootfs the kernel should load with a /chosen
-property would also be nice.
-
-https://www.kernel.org/doc/Documentation/devicetree/bindings/chosen.txt
-
-These UBI patches were just one step to make it possible to define the
-root partition in device tree. It would probably be better to first look
-on how to do that with normal mtd partitions and then see how to extend
-that to UBI.
-
-Currently I have to extend the boot args with these parameters to boot a
-unmodified mainline kernel: "ubi.mtd=ubi ubi.block=0,rootfsA
-root=/dev/ubiblock0_1"
-This is a SquashFS in a UBI layer on a mtd partition. I know that I can
-put this into the bootargs in a device tree file.
-
-Hauke
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
