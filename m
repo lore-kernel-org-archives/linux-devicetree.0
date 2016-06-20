@@ -1,1242 +1,696 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/2] remoteproc: qcom: Driver for the
- self-authenticating Hexagon v5
-Date: Mon, 20 Jun 2016 15:48:21 +0100
-Message-ID: <57680235.2060402@linaro.org>
-References: <1466183839-5968-1-git-send-email-bjorn.andersson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1466183839-5968-1-git-send-email-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH] can: rcar_canfd: Add Classical CAN only mode support
+Date: Mon, 20 Jun 2016 15:46:47 +0100
+Message-ID: <1466434007-50873-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Bjorn for this patch,
+The controller can operate in one of the two global modes
+ - CAN FD only mode (default)
+ - Classical CAN (CAN2.0) only mode
 
-I will start playing with patch soon, but here are few comments.
+This patch adds support for Classical CAN only mode. It can be enabled
+by defining the optional device tree property "renesas,can-nofd" of this
+node.
 
-On 17/06/16 18:17, Bjorn Andersson wrote:
-> From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->
-> This initial hack powers the q6v5, boots and authenticate the mba and
-> use that to load the mdt and subsequent bXX files.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->
-> Changes since v1:
-> - Corrected boot address in relocation case
-> - Using rproc_da_to_va() to clean up mdt loader api
-> - Dynamically allocating scratch space for mdt verification
->
->   drivers/remoteproc/Kconfig           |  12 +
->   drivers/remoteproc/Makefile          |   2 +
->   drivers/remoteproc/qcom_mdt_loader.c | 166 +++++++
->   drivers/remoteproc/qcom_mdt_loader.h |  13 +
->   drivers/remoteproc/qcom_q6v5_pil.c   | 914 +++++++++++++++++++++++++++++++++++
+Note: R-Car Gen3 h/w manual v0.51E shows bit6 of RSCFDnCFDGCFG as
+reserved, which is incorrect. This bit is same as RSCFDnGCFG.
 
-We should probably split this patch into two one for mdt loader and 
-other for pil.
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+---
+Hi Marc, All,
 
-Also checkpatch reports:
+   This patch is based on top of can-next(tag:linux-can-next-for-4.8-20160617).
 
-total: 1 errors, 28 warnings, 1117 lines checked
+Thanks,
+Ramesh.
+---
+ .../devicetree/bindings/net/can/rcar_canfd.txt     |   9 +-
+ drivers/net/can/rcar/rcar_canfd.c                  | 355 ++++++++++++++-------
+ 2 files changed, 249 insertions(+), 115 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+index d45182b..a343359 100644
+--- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
++++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+@@ -32,6 +32,12 @@ below properties.
+ - assigned-clocks: phandle of canfd clock.
+ - assigned-clock-rates: maximum frequency of this clock.
+ 
++Optional property:
++The controller can operate in either CAN FD only mode (default) or
++Classical CAN only mode. The mode is global to both the channels. In order to
++enable the later, define the following optional property.
++ - renesas,can-nofd: puts the controller in Classical CAN only mode.
++
+ Example
+ -------
+ 
+@@ -63,11 +69,12 @@ SoC common .dtsi file:
+ 
+ Board specific .dts file:
+ 
+-E.g. below enables Channel 1 alone in the board.
++E.g. below enables Channel 1 alone in the board in Classical CAN only mode.
+ 
+ &canfd {
+         pinctrl-0 = <&canfd1_pins>;
+         pinctrl-names = "default";
++	renesas,can-nofd;
+         status = "okay";
+ 
+ 	channel1 {
+diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rcar_canfd.c
+index a39d922..747e576b 100644
+--- a/drivers/net/can/rcar/rcar_canfd.c
++++ b/drivers/net/can/rcar/rcar_canfd.c
+@@ -16,8 +16,9 @@
+  * mode, the controller acts as a CAN FD node that can also interoperate with
+  * CAN 2.0 nodes.
+  *
+- * As of now, this driver does not support the Classical CAN (CAN 2.0) mode,
+- * which is handled by a different register map compared to CAN FD only mode.
++ * To switch the controller to Classical CAN (CAN 2.0) only mode, add
++ * "renesas,can-nofd" optional property to the device tree node. A h/w reset is
++ * also required to switch modes.
+  *
+  * Note: The h/w manual register naming convention is clumsy and not acceptable
+  * to use as it is in the driver. However, those names are added as comments
+@@ -48,15 +49,16 @@
+ /* RSCFDnCFDGRMCFG */
+ #define RCANFD_GRMCFG_RCMC		BIT(0)
+ 
+-/* RSCFDnCFDGCFG */
+-#define RCANFD_GCFG_CMPOC		BIT(5)
++/* RSCFDnCFDGCFG / RSCFDnGCFG */
++#define RCANFD_GCFG_EEFE		BIT(6)
++#define RCANFD_GCFG_CMPOC		BIT(5)	/* CAN FD only */
+ #define RCANFD_GCFG_DCS			BIT(4)
+ #define RCANFD_GCFG_DCE			BIT(1)
+ #define RCANFD_GCFG_TPRI		BIT(0)
+ 
+-/* RSCFDnCFDGCTR */
++/* RSCFDnCFDGCTR / RSCFDnGCTR */
+ #define RCANFD_GCTR_TSRST		BIT(16)
+-#define RCANFD_GCTR_CFMPOFIE		BIT(11)
++#define RCANFD_GCTR_CFMPOFIE		BIT(11)	/* CAN FD only */
+ #define RCANFD_GCTR_THLEIE		BIT(10)
+ #define RCANFD_GCTR_MEIE		BIT(9)
+ #define RCANFD_GCTR_DEIE		BIT(8)
+@@ -66,7 +68,7 @@
+ #define RCANFD_GCTR_GMDC_GRESET		(0x1)
+ #define RCANFD_GCTR_GMDC_GTEST		(0x2)
+ 
+-/* RSCFDnCFDGSTS */
++/* RSCFDnCFDGSTS / RSCFDnGSTS */
+ #define RCANFD_GSTS_GRAMINIT		BIT(3)
+ #define RCANFD_GSTS_GSLPSTS		BIT(2)
+ #define RCANFD_GSTS_GHLTSTS		BIT(1)
+@@ -74,44 +76,50 @@
+ /* Non-operational status */
+ #define RCANFD_GSTS_GNOPM		(BIT(0) | BIT(1) | BIT(2) | BIT(3))
+ 
+-/* RSCFDnCFDGERFL */
++/* RSCFDnCFDGERFL / RSCFDnGERFL */
+ #define RCANFD_GERFL_EEF1		BIT(17)
+ #define RCANFD_GERFL_EEF0		BIT(16)
+-#define RCANFD_GERFL_CMPOF		BIT(3)
++#define RCANFD_GERFL_CMPOF		BIT(3)	/* CAN FD only */
+ #define RCANFD_GERFL_THLES		BIT(2)
+ #define RCANFD_GERFL_MES		BIT(1)
+ #define RCANFD_GERFL_DEF		BIT(0)
+ 
+-#define RCANFD_GERFL_ERR(x)		((x) & (RCANFD_GERFL_EEF1 |\
+-						RCANFD_GERFL_EEF0 |\
+-						RCANFD_GERFL_MES |\
+-						RCANFD_GERFL_CMPOF))
++#define RCANFD_GERFL_ERR(gpriv, x)	((x) & (RCANFD_GERFL_EEF1 |\
++					RCANFD_GERFL_EEF0 | RCANFD_GERFL_MES |\
++					(gpriv->fdmode ?\
++					 RCANFD_GERFL_CMPOF : 0)))
+ 
+ /* AFL Rx rules registers */
+ 
+-/* RSCFDnCFDGAFLCFG0 */
++/* RSCFDnCFDGAFLCFG0 / RSCFDnGAFLCFG0 */
+ #define RCANFD_GAFLCFG_SETRNC(n, x)	(((x) & 0xff) << (24 - n * 8))
+ #define RCANFD_GAFLCFG_GETRNC(n, x)	(((x) >> (24 - n * 8)) & 0xff)
+ 
+-/* RSCFDnCFDGAFLECTR */
++/* RSCFDnCFDGAFLECTR / RSCFDnGAFLECTR */
+ #define RCANFD_GAFLECTR_AFLDAE		BIT(8)
+ #define RCANFD_GAFLECTR_AFLPN(x)	((x) & 0x1f)
+ 
+-/* RSCFDnCFDGAFLIDj */
++/* RSCFDnCFDGAFLIDj / RSCFDnGAFLIDj */
+ #define RCANFD_GAFLID_GAFLLB		BIT(29)
+ 
+-/* RSCFDnCFDGAFLP1_j */
++/* RSCFDnCFDGAFLP1_j / RSCFDnGAFLP1_j */
+ #define RCANFD_GAFLP1_GAFLFDP(x)	(1 << (x))
+ 
+ /* Channel register bits */
+ 
+-/* RSCFDnCFDCmNCFG */
++/* RSCFDnCmCFG - Classical CAN only */
++#define RCANFD_CFG_SJW(x)		(((x) & 0x3) << 24)
++#define RCANFD_CFG_TSEG2(x)		(((x) & 0x7) << 20)
++#define RCANFD_CFG_TSEG1(x)		(((x) & 0xf) << 16)
++#define RCANFD_CFG_BRP(x)		(((x) & 0x3ff) << 0)
++
++/* RSCFDnCFDCmNCFG - CAN FD only */
+ #define RCANFD_NCFG_NTSEG2(x)		(((x) & 0x1f) << 24)
+ #define RCANFD_NCFG_NTSEG1(x)		(((x) & 0x7f) << 16)
+ #define RCANFD_NCFG_NSJW(x)		(((x) & 0x1f) << 11)
+ #define RCANFD_NCFG_NBRP(x)		(((x) & 0x3ff) << 0)
+ 
+-/* RSCFDnCFDCmCTR */
++/* RSCFDnCFDCmCTR / RSCFDnCmCTR */
+ #define RCANFD_CCTR_CTME		BIT(24)
+ #define RCANFD_CCTR_ERRD		BIT(23)
+ #define RCANFD_CCTR_BOM_MASK		(0x3 << 21)
+@@ -136,7 +144,7 @@
+ #define RCANFD_CCTR_CHDMC_CRESET	(0x1)
+ #define RCANFD_CCTR_CHDMC_CHLT		(0x2)
+ 
+-/* RSCFDnCFDCmSTS */
++/* RSCFDnCFDCmSTS / RSCFDnCmSTS */
+ #define RCANFD_CSTS_COMSTS		BIT(7)
+ #define RCANFD_CSTS_RECSTS		BIT(6)
+ #define RCANFD_CSTS_TRMSTS		BIT(5)
+@@ -149,7 +157,7 @@
+ #define RCANFD_CSTS_TECCNT(x)		(((x) >> 24) & 0xff)
+ #define RCANFD_CSTS_RECCNT(x)		(((x) >> 16) & 0xff)
+ 
+-/* RSCFDnCFDCmERFL */
++/* RSCFDnCFDCmERFL / RSCFDnCmERFL */
+ #define RCANFD_CERFL_ADERR		BIT(14)
+ #define RCANFD_CERFL_B0ERR		BIT(13)
+ #define RCANFD_CERFL_B1ERR		BIT(12)
+@@ -239,14 +247,14 @@
+ #define RCANFD_CFFDCSTS_CFBRS		BIT(1)
+ #define RCANFD_CFFDCSTS_CFESI		BIT(0)
+ 
+-/* This controller supports classical CAN only mode or CAN FD only mode. These
+- * modes are supported in two separate set of register maps & names. However,
+- * some of the register offsets are common for both modes. Those offsets are
+- * listed below as Common registers.
++/* This controller supports either Classical CAN only mode or CAN FD only mode.
++ * These modes are supported in two separate set of register maps & names.
++ * However, some of the register offsets are common for both modes. Those
++ * offsets are listed below as Common registers.
+  *
+- * The CAN FD only specific registers are listed separately and their names
+- * starts with RCANFD_F_xxx names. When classical CAN only specific registers
+- * are added, those specific registers can be prefixed as RCANFD_C_xxx.
++ * The CAN FD only mode specific registers & Classical CAN only mode specific
++ * registers are listed separately. Their register names starts with
++ * RCANFD_F_xxx & RCANFD_C_xxx respectively.
+  */
+ 
+ /* Common registers */
+@@ -353,7 +361,7 @@
+ #define RCANFD_GTSTCTR			(0x046c)
+ /* RSCFDnCFDGLOCKK / RSCFDnGLOCKK */
+ #define RCANFD_GLOCKK			(0x047c)
+-/* RSCFDnCFDGRMCFG / RSCFDnGRMCFG */
++/* RSCFDnCFDGRMCFG */
+ #define RCANFD_GRMCFG			(0x04fc)
+ 
+ /* RSCFDnCFDGAFLIDj / RSCFDnGAFLIDj */
+@@ -365,6 +373,46 @@
+ /* RSCFDnCFDGAFLP1j / RSCFDnGAFLP1j */
+ #define RCANFD_GAFLP1(offset, j)	((offset) + 0x0c + (0x10 * (j)))
+ 
++/* Classical CAN only mode register map */
++
++/* RSCFDnGAFLXXXj offset */
++#define RCANFD_C_GAFL_OFFSET		(0x0500)
++
++/* RSCFDnRMXXXq -> RCANFD_C_RMXXX(q) */
++#define RCANFD_C_RMID(q)		(0x0600 + (0x10 * (q)))
++#define RCANFD_C_RMPTR(q)		(0x0604 + (0x10 * (q)))
++#define RCANFD_C_RMDF0(q)		(0x0608 + (0x10 * (q)))
++#define RCANFD_C_RMDF1(q)		(0x060c + (0x10 * (q)))
++
++/* RSCFDnRFXXx -> RCANFD_C_RFXX(x) */
++#define RCANFD_C_RFOFFSET		(0x0e00)
++#define RCANFD_C_RFID(x)		(RCANFD_C_RFOFFSET + (0x10 * (x)))
++#define RCANFD_C_RFPTR(x)		(RCANFD_C_RFOFFSET + 0x04 + \
++					 (0x10 * (x)))
++#define RCANFD_C_RFDF(x, df)		(RCANFD_C_RFOFFSET + 0x08 + \
++					 (0x10 * (x)) + (0x04 * (df)))
++
++/* RSCFDnCFXXk -> RCANFD_C_CFXX(ch, k) */
++#define RCANFD_C_CFOFFSET		(0x0e80)
++#define RCANFD_C_CFID(ch, idx)		(RCANFD_C_CFOFFSET + (0x30 * (ch)) + \
++					 (0x10 * (idx)))
++#define RCANFD_C_CFPTR(ch, idx)		(RCANFD_C_CFOFFSET + 0x04 + \
++					 (0x30 * (ch)) + (0x10 * (idx)))
++#define RCANFD_C_CFDF(ch, idx, df)	(RCANFD_C_CFOFFSET + 0x08 + \
++					 (0x30 * (ch)) + (0x10 * (idx)) + \
++					 (0x04 * (df)))
++
++/* RSCFDnTMXXp -> RCANFD_C_TMXX(p) */
++#define RCANFD_C_TMID(p)		(0x1000 + (0x10 * (p)))
++#define RCANFD_C_TMPTR(p)		(0x1004 + (0x10 * (p)))
++#define RCANFD_C_TMDF0(p)		(0x1008 + (0x10 * (p)))
++#define RCANFD_C_TMDF1(p)		(0x100c + (0x10 * (p)))
++
++/* RSCFDnTHLACCm */
++#define RCANFD_C_THLACC(m)		(0x1800 + (0x04 * (m)))
++/* RSCFDnRPGACCr */
++#define RCANFD_C_RPGACC(r)		(0x1900 + (0x04 * (r)))
++
+ /* CAN FD mode specific regsiter map */
+ 
+ /* RSCFDnCFDCmXXX -> RCANFD_F_XXX(m) */
+@@ -468,6 +516,7 @@ struct rcar_canfd_global {
+ 	struct clk *can_clk;		/* fCAN clock */
+ 	enum rcar_canfd_fcanclk fcan;	/* CANFD or Ext clock */
+ 	unsigned long channels_mask;	/* Enabled channels mask */
++	bool fdmode;			/* CAN FD or Classical CAN only mode */
+ };
+ 
+ /* CAN FD mode nominal rate constants */
+@@ -496,6 +545,19 @@ static const struct can_bittiming_const rcar_canfd_data_bittiming_const = {
+ 	.brp_inc = 1,
+ };
+ 
++/* Classical CAN mode bitrate constants */
++static const struct can_bittiming_const rcar_canfd_bittiming_const = {
++	.name = RCANFD_DRV_NAME,
++	.tseg1_min = 4,
++	.tseg1_max = 16,
++	.tseg2_min = 2,
++	.tseg2_max = 8,
++	.sjw_max = 4,
++	.brp_min = 1,
++	.brp_max = 1024,
++	.brp_inc = 1,
++};
++
+ /* Helper functions */
+ static inline void rcar_canfd_update(u32 mask, u32 val, u32 __iomem *reg)
+ {
+@@ -593,8 +655,13 @@ static int rcar_canfd_reset_controller(struct rcar_canfd_global *gpriv)
+ 	/* Reset Global error flags */
+ 	rcar_canfd_write(gpriv->base, RCANFD_GERFL, 0x0);
+ 
+-	/* Set the controller into FD mode */
+-	rcar_canfd_set_bit(gpriv->base, RCANFD_GRMCFG, RCANFD_GRMCFG_RCMC);
++	/* Set the controller into appropriate mode */
++	if (gpriv->fdmode)
++		rcar_canfd_set_bit(gpriv->base, RCANFD_GRMCFG,
++				   RCANFD_GRMCFG_RCMC);
++	else
++		rcar_canfd_clear_bit(gpriv->base, RCANFD_GRMCFG,
++				     RCANFD_GRMCFG_RCMC);
+ 
+ 	/* Transition all Channels to reset mode */
+ 	for_each_set_bit(ch, &gpriv->channels_mask, RCANFD_NUM_CHANNELS) {
+@@ -624,8 +691,12 @@ static void rcar_canfd_configure_controller(struct rcar_canfd_global *gpriv)
+ 
+ 	/* Global configuration settings */
+ 
+-	/* Truncate payload to configured message size RFPLS */
+-	cfg = RCANFD_GCFG_CMPOC;
++	/* ECC Error flag Enable */
++	cfg = RCANFD_GCFG_EEFE;
++
++	if (gpriv->fdmode)
++		/* Truncate payload to configured message size RFPLS */
++		cfg |= RCANFD_GCFG_CMPOC;
+ 
+ 	/* Set External Clock if selected */
+ 	if (gpriv->fcan != RCANFD_CANFDCLK)
+@@ -647,7 +718,7 @@ static void rcar_canfd_configure_afl_rules(struct rcar_canfd_global *gpriv,
+ 					   u32 ch)
+ {
+ 	u32 cfg;
+-	int start, page, num_rules = RCANFD_CHANNEL_NUMRULES;
++	int offset, start, page, num_rules = RCANFD_CHANNEL_NUMRULES;
+ 	u32 ridx = ch + RCANFD_RFFIFO_IDX;
+ 
+ 	if (ch == 0) {
+@@ -667,19 +738,19 @@ static void rcar_canfd_configure_afl_rules(struct rcar_canfd_global *gpriv,
+ 	/* Write number of rules for channel */
+ 	rcar_canfd_set_bit(gpriv->base, RCANFD_GAFLCFG0,
+ 			   RCANFD_GAFLCFG_SETRNC(ch, num_rules));
++	if (gpriv->fdmode)
++		offset = RCANFD_F_GAFL_OFFSET;
++	else
++		offset = RCANFD_C_GAFL_OFFSET;
+ 
+ 	/* Accept all IDs */
+-	rcar_canfd_write(gpriv->base,
+-			 RCANFD_GAFLID(RCANFD_F_GAFL_OFFSET, start), 0);
++	rcar_canfd_write(gpriv->base, RCANFD_GAFLID(offset, start), 0);
+ 	/* IDE or RTR is not considered for matching */
+-	rcar_canfd_write(gpriv->base,
+-			 RCANFD_GAFLM(RCANFD_F_GAFL_OFFSET, start), 0);
++	rcar_canfd_write(gpriv->base, RCANFD_GAFLM(offset, start), 0);
+ 	/* Any data length accepted */
+-	rcar_canfd_write(gpriv->base,
+-			 RCANFD_GAFLP0(RCANFD_F_GAFL_OFFSET, start), 0);
++	rcar_canfd_write(gpriv->base, RCANFD_GAFLP0(offset, start), 0);
+ 	/* Place the msg in corresponding Rx FIFO entry */
+-	rcar_canfd_write(gpriv->base,
+-			 RCANFD_GAFLP1(RCANFD_F_GAFL_OFFSET, start),
++	rcar_canfd_write(gpriv->base, RCANFD_GAFLP1(offset, start),
+ 			 RCANFD_GAFLP1_GAFLFDP(ridx));
+ 
+ 	/* Disable write access to page */
+@@ -697,7 +768,10 @@ static void rcar_canfd_configure_rx(struct rcar_canfd_global *gpriv, u32 ch)
+ 	u32 ridx = ch + RCANFD_RFFIFO_IDX;
+ 
+ 	rfdc = 2;		/* b010 - 8 messages Rx FIFO depth */
+-	rfpls = 7;		/* b111 - Max 64 bytes payload */
++	if (gpriv->fdmode)
++		rfpls = 7;	/* b111 - Max 64 bytes payload */
++	else
++		rfpls = 0;	/* b000 - Max 8 bytes payload */
+ 
+ 	cfg = (RCANFD_RFCC_RFIM | RCANFD_RFCC_RFDC(rfdc) |
+ 		RCANFD_RFCC_RFPLS(rfpls) | RCANFD_RFCC_RFIE);
+@@ -718,16 +792,20 @@ static void rcar_canfd_configure_tx(struct rcar_canfd_global *gpriv, u32 ch)
+ 	cftml = 0;		/* 0th buffer */
+ 	cfm = 1;		/* b01 - Transmit mode */
+ 	cfdc = 2;		/* b010 - 8 messages Tx FIFO depth */
+-	cfpls = 7;		/* b111 - Max 64 bytes payload */
++	if (gpriv->fdmode)
++		cfpls = 7;	/* b111 - Max 64 bytes payload */
++	else
++		cfpls = 0;	/* b000 - Max 8 bytes payload */
+ 
+ 	cfg = (RCANFD_CFCC_CFTML(cftml) | RCANFD_CFCC_CFM(cfm) |
+ 		RCANFD_CFCC_CFIM | RCANFD_CFCC_CFDC(cfdc) |
+ 		RCANFD_CFCC_CFPLS(cfpls) | RCANFD_CFCC_CFTXIE);
+ 	rcar_canfd_write(gpriv->base, RCANFD_CFCC(ch, RCANFD_CFFIFO_IDX), cfg);
+ 
+-	/* Clear FD mode specific control/status register */
+-	rcar_canfd_write(gpriv->base,
+-			 RCANFD_F_CFFDCSTS(ch, RCANFD_CFFIFO_IDX), 0);
++	if (gpriv->fdmode)
++		/* Clear FD mode specific control/status register */
++		rcar_canfd_write(gpriv->base,
++				 RCANFD_F_CFFDCSTS(ch, RCANFD_CFFIFO_IDX), 0);
+ }
+ 
+ static void rcar_canfd_enable_global_interrupts(struct rcar_canfd_global *gpriv)
+@@ -739,7 +817,8 @@ static void rcar_canfd_enable_global_interrupts(struct rcar_canfd_global *gpriv)
+ 
+ 	/* Global interrupts setup */
+ 	ctr = RCANFD_GCTR_MEIE;
+-	ctr |= RCANFD_GCTR_CFMPOFIE;
++	if (gpriv->fdmode)
++		ctr |= RCANFD_GCTR_CFMPOFIE;
+ 
+ 	rcar_canfd_set_bit(gpriv->base, RCANFD_GCTR, ctr);
+ }
+@@ -790,6 +869,7 @@ static void rcar_canfd_disable_channel_interrupts(struct rcar_canfd_channel
+ static void rcar_canfd_global_error(struct net_device *ndev)
+ {
+ 	struct rcar_canfd_channel *priv = netdev_priv(ndev);
++	struct rcar_canfd_global *gpriv = priv->gpriv;
+ 	struct net_device_stats *stats = &ndev->stats;
+ 	u32 ch = priv->channel;
+ 	u32 gerfl, sts;
+@@ -823,7 +903,7 @@ static void rcar_canfd_global_error(struct net_device *ndev)
+ 					 sts & ~RCANFD_RFSTS_RFMLT);
+ 		}
+ 	}
+-	if (gerfl & RCANFD_GERFL_CMPOF) {
++	if (gpriv->fdmode && gerfl & RCANFD_GERFL_CMPOF) {
+ 		/* Message Lost flag will be set for respective channel
+ 		 * when this condition happens with counters and flags
+ 		 * already updated.
+@@ -1018,7 +1098,7 @@ static irqreturn_t rcar_canfd_global_interrupt(int irq, void *dev_id)
+ 
+ 		/* Global error interrupts */
+ 		gerfl = rcar_canfd_read(priv->base, RCANFD_GERFL);
+-		if (RCANFD_GERFL_ERR(gerfl))
++		if (RCANFD_GERFL_ERR(gpriv, gerfl))
+ 			rcar_canfd_global_error(ndev);
+ 
+ 		/* Handle Rx interrupts */
+@@ -1077,25 +1157,37 @@ static void rcar_canfd_set_bittiming(struct net_device *dev)
+ 	tseg1 = bt->prop_seg + bt->phase_seg1 - 1;
+ 	tseg2 = bt->phase_seg2 - 1;
+ 
+-	cfg = (RCANFD_NCFG_NTSEG1(tseg1) | RCANFD_NCFG_NBRP(brp) |
+-	       RCANFD_NCFG_NSJW(sjw) | RCANFD_NCFG_NTSEG2(tseg2));
++	if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
++		/* CAN FD only mode */
++		cfg = (RCANFD_NCFG_NTSEG1(tseg1) | RCANFD_NCFG_NBRP(brp) |
++		       RCANFD_NCFG_NSJW(sjw) | RCANFD_NCFG_NTSEG2(tseg2));
+ 
+-	rcar_canfd_write(priv->base, RCANFD_CCFG(ch), cfg);
+-	netdev_dbg(priv->ndev, "nrate: brp %u, sjw %u, tseg1 %u, tseg2 %u\n",
+-		   brp, sjw, tseg1, tseg2);
++		rcar_canfd_write(priv->base, RCANFD_CCFG(ch), cfg);
++		netdev_dbg(priv->ndev, "nrate: brp %u, sjw %u, tseg1 %u, tseg2 %u\n",
++			   brp, sjw, tseg1, tseg2);
+ 
+-	/* Data bit timing settings */
+-	brp = dbt->brp - 1;
+-	sjw = dbt->sjw - 1;
+-	tseg1 = dbt->prop_seg + dbt->phase_seg1 - 1;
+-	tseg2 = dbt->phase_seg2 - 1;
++		/* Data bit timing settings */
++		brp = dbt->brp - 1;
++		sjw = dbt->sjw - 1;
++		tseg1 = dbt->prop_seg + dbt->phase_seg1 - 1;
++		tseg2 = dbt->phase_seg2 - 1;
+ 
+-	cfg = (RCANFD_DCFG_DTSEG1(tseg1) | RCANFD_DCFG_DBRP(brp) |
+-	       RCANFD_DCFG_DSJW(sjw) | RCANFD_DCFG_DTSEG2(tseg2));
++		cfg = (RCANFD_DCFG_DTSEG1(tseg1) | RCANFD_DCFG_DBRP(brp) |
++		       RCANFD_DCFG_DSJW(sjw) | RCANFD_DCFG_DTSEG2(tseg2));
+ 
+-	rcar_canfd_write(priv->base, RCANFD_F_DCFG(ch), cfg);
+-	netdev_dbg(priv->ndev, "drate: brp %u, sjw %u, tseg1 %u, tseg2 %u\n",
+-		   brp, sjw, tseg1, tseg2);
++		rcar_canfd_write(priv->base, RCANFD_F_DCFG(ch), cfg);
++		netdev_dbg(priv->ndev, "drate: brp %u, sjw %u, tseg1 %u, tseg2 %u\n",
++			   brp, sjw, tseg1, tseg2);
++	} else {
++		/* Classical CAN only mode */
++		cfg = (RCANFD_CFG_TSEG1(tseg1) | RCANFD_CFG_BRP(brp) |
++			RCANFD_CFG_SJW(sjw) | RCANFD_CFG_TSEG2(tseg2));
++
++		rcar_canfd_write(priv->base, RCANFD_CCFG(ch), cfg);
++		netdev_dbg(priv->ndev,
++			   "rate: brp %u, sjw %u, tseg1 %u, tseg2 %u\n",
++			   brp, sjw, tseg1, tseg2);
++	}
+ }
+ 
+ static int rcar_canfd_start(struct net_device *ndev)
+@@ -1233,27 +1325,37 @@ static netdev_tx_t rcar_canfd_start_xmit(struct sk_buff *skb,
+ 	if (cf->can_id & CAN_RTR_FLAG)
+ 		id |= RCANFD_CFID_CFRTR;
+ 
+-	rcar_canfd_write(priv->base,
+-			 RCANFD_F_CFID(ch, RCANFD_CFFIFO_IDX), id);
+ 	dlc = RCANFD_CFPTR_CFDLC(can_len2dlc(cf->len));
+-	rcar_canfd_write(priv->base,
+-			 RCANFD_F_CFPTR(ch, RCANFD_CFFIFO_IDX), dlc);
+ 
+-	if (can_is_canfd_skb(skb)) {
+-		/* CAN FD frame format */
+-		sts |= RCANFD_CFFDCSTS_CFFDF;
+-		if (cf->flags & CANFD_BRS)
+-			sts |= RCANFD_CFFDCSTS_CFBRS;
++	if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
++		rcar_canfd_write(priv->base,
++				 RCANFD_F_CFID(ch, RCANFD_CFFIFO_IDX), id);
++		rcar_canfd_write(priv->base,
++				 RCANFD_F_CFPTR(ch, RCANFD_CFFIFO_IDX), dlc);
+ 
+-		if (priv->can.state == CAN_STATE_ERROR_PASSIVE)
+-			sts |= RCANFD_CFFDCSTS_CFESI;
+-	}
++		if (can_is_canfd_skb(skb)) {
++			/* CAN FD frame format */
++			sts |= RCANFD_CFFDCSTS_CFFDF;
++			if (cf->flags & CANFD_BRS)
++				sts |= RCANFD_CFFDCSTS_CFBRS;
+ 
+-	rcar_canfd_write(priv->base, RCANFD_F_CFFDCSTS(ch, RCANFD_CFFIFO_IDX),
+-			 sts);
++			if (priv->can.state == CAN_STATE_ERROR_PASSIVE)
++				sts |= RCANFD_CFFDCSTS_CFESI;
++		}
++
++		rcar_canfd_write(priv->base,
++				 RCANFD_F_CFFDCSTS(ch, RCANFD_CFFIFO_IDX), sts);
+ 
+-	rcar_canfd_put_data(priv, cf,
+-			    RCANFD_F_CFDF(ch, RCANFD_CFFIFO_IDX, 0));
++		rcar_canfd_put_data(priv, cf,
++				    RCANFD_F_CFDF(ch, RCANFD_CFFIFO_IDX, 0));
++	} else {
++		rcar_canfd_write(priv->base,
++				 RCANFD_C_CFID(ch, RCANFD_CFFIFO_IDX), id);
++		rcar_canfd_write(priv->base,
++				 RCANFD_C_CFPTR(ch, RCANFD_CFFIFO_IDX), dlc);
++		rcar_canfd_put_data(priv, cf,
++				    RCANFD_C_CFDF(ch, RCANFD_CFFIFO_IDX, 0));
++	}
+ 
+ 	priv->tx_len[priv->tx_head % RCANFD_FIFO_DEPTH] = cf->len;
+ 	can_put_echo_skb(skb, ndev, priv->tx_head % RCANFD_FIFO_DEPTH);
+@@ -1280,47 +1382,61 @@ static void rcar_canfd_rx_pkt(struct rcar_canfd_channel *priv)
+ 	struct net_device_stats *stats = &priv->ndev->stats;
+ 	struct canfd_frame *cf;
+ 	struct sk_buff *skb;
+-	u32 sts = 0, id, ptr;
++	u32 sts = 0, id, dlc;
+ 	u32 ch = priv->channel;
+ 	u32 ridx = ch + RCANFD_RFFIFO_IDX;
+ 
+-	id = rcar_canfd_read(priv->base, RCANFD_F_RFID(ridx));
+-	ptr = rcar_canfd_read(priv->base, RCANFD_F_RFPTR(ridx));
++	if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
++		id = rcar_canfd_read(priv->base, RCANFD_F_RFID(ridx));
++		dlc = rcar_canfd_read(priv->base, RCANFD_F_RFPTR(ridx));
+ 
+-	sts = rcar_canfd_read(priv->base, RCANFD_F_RFFDSTS(ridx));
+-	if (sts & RCANFD_RFFDSTS_RFFDF)
+-		skb = alloc_canfd_skb(priv->ndev, &cf);
+-	else
+-		skb = alloc_can_skb(priv->ndev,
+-				    (struct can_frame **)&cf);
++		sts = rcar_canfd_read(priv->base, RCANFD_F_RFFDSTS(ridx));
++		if (sts & RCANFD_RFFDSTS_RFFDF)
++			skb = alloc_canfd_skb(priv->ndev, &cf);
++		else
++			skb = alloc_can_skb(priv->ndev,
++					    (struct can_frame **)&cf);
++	} else {
++		id = rcar_canfd_read(priv->base, RCANFD_C_RFID(ridx));
++		dlc = rcar_canfd_read(priv->base, RCANFD_C_RFPTR(ridx));
++		skb = alloc_can_skb(priv->ndev, (struct can_frame **)&cf);
++	}
+ 
+ 	if (!skb) {
+ 		stats->rx_dropped++;
+ 		return;
+ 	}
+ 
+-	if (sts & RCANFD_RFFDSTS_RFFDF)
+-		cf->len = can_dlc2len(RCANFD_RFPTR_RFDLC(ptr));
+-	else
+-		cf->len = get_can_dlc(RCANFD_RFPTR_RFDLC(ptr));
+-
+-	if (sts & RCANFD_RFFDSTS_RFESI) {
+-		cf->flags |= CANFD_ESI;
+-		netdev_dbg(priv->ndev, "ESI Error\n");
+-	}
+-
+ 	if (id & RCANFD_RFID_RFIDE)
+ 		cf->can_id = (id & CAN_EFF_MASK) | CAN_EFF_FLAG;
+ 	else
+ 		cf->can_id = id & CAN_SFF_MASK;
+ 
+-	if (!(sts & RCANFD_RFFDSTS_RFFDF) && (id & RCANFD_RFID_RFRTR)) {
+-		cf->can_id |= CAN_RTR_FLAG;
+-	} else {
+-		if (sts & RCANFD_RFFDSTS_RFBRS)
+-			cf->flags |= CANFD_BRS;
++	if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
++		if (sts & RCANFD_RFFDSTS_RFFDF)
++			cf->len = can_dlc2len(RCANFD_RFPTR_RFDLC(dlc));
++		else
++			cf->len = get_can_dlc(RCANFD_RFPTR_RFDLC(dlc));
++
++		if (sts & RCANFD_RFFDSTS_RFESI) {
++			cf->flags |= CANFD_ESI;
++			netdev_dbg(priv->ndev, "ESI Error\n");
++		}
++
++		if (!(sts & RCANFD_RFFDSTS_RFFDF) && (id & RCANFD_RFID_RFRTR)) {
++			cf->can_id |= CAN_RTR_FLAG;
++		} else {
++			if (sts & RCANFD_RFFDSTS_RFBRS)
++				cf->flags |= CANFD_BRS;
+ 
+-		rcar_canfd_get_data(priv, cf, RCANFD_F_RFDF(ridx, 0));
++			rcar_canfd_get_data(priv, cf, RCANFD_F_RFDF(ridx, 0));
++		}
++	} else {
++		cf->len = get_can_dlc(RCANFD_RFPTR_RFDLC(dlc));
++		if (id & RCANFD_RFID_RFRTR)
++			cf->can_id |= CAN_RTR_FLAG;
++		else
++			rcar_canfd_get_data(priv, cf, RCANFD_C_RFDF(ridx, 0));
+ 	}
+ 
+ 	/* Write 0xff to RFPC to increment the CPU-side
+@@ -1428,13 +1544,19 @@ static int rcar_canfd_channel_probe(struct rcar_canfd_global *gpriv, u32 ch,
+ 	priv->can.clock.freq = fcan_freq;
+ 	dev_info(&pdev->dev, "can_clk rate is %u\n", priv->can.clock.freq);
+ 
+-	priv->can.bittiming_const = &rcar_canfd_nom_bittiming_const;
+-	priv->can.data_bittiming_const =
+-		&rcar_canfd_data_bittiming_const;
++	if (gpriv->fdmode) {
++		priv->can.bittiming_const = &rcar_canfd_nom_bittiming_const;
++		priv->can.data_bittiming_const =
++			&rcar_canfd_data_bittiming_const;
+ 
+-	/* Controller starts in CAN FD only mode */
+-	can_set_static_ctrlmode(ndev, CAN_CTRLMODE_FD);
+-	priv->can.ctrlmode_supported = CAN_CTRLMODE_BERR_REPORTING;
++		/* Controller starts in CAN FD only mode */
++		can_set_static_ctrlmode(ndev, CAN_CTRLMODE_FD);
++		priv->can.ctrlmode_supported = CAN_CTRLMODE_BERR_REPORTING;
++	} else {
++		/* Controller starts in Classical CAN only mode */
++		priv->can.bittiming_const = &rcar_canfd_bittiming_const;
++		priv->can.ctrlmode_supported = CAN_CTRLMODE_BERR_REPORTING;
++	}
+ 
+ 	priv->can.do_set_mode = rcar_canfd_do_set_mode;
+ 	priv->can.do_get_berr_counter = rcar_canfd_get_berr_counter;
+@@ -1482,6 +1604,10 @@ static int rcar_canfd_probe(struct platform_device *pdev)
+ 	struct device_node *of_child;
+ 	unsigned long channels_mask = 0;
+ 	int err, ch_irq, g_irq;
++	bool fdmode = true;			/* CAN FD only mode - default */
++
++	if (of_property_read_bool(pdev->dev.of_node, "renesas,can-nofd"))
++		fdmode = false;			/* Classical CAN only mode */
+ 
+ 	of_child = of_get_child_by_name(pdev->dev.of_node, "channel0");
+ 	if (of_child && of_device_is_available(of_child))
+@@ -1513,6 +1639,7 @@ static int rcar_canfd_probe(struct platform_device *pdev)
+ 	}
+ 	gpriv->pdev = pdev;
+ 	gpriv->channels_mask = channels_mask;
++	gpriv->fdmode = fdmode;
+ 
+ 	/* Peripheral clock */
+ 	gpriv->clkp = devm_clk_get(&pdev->dev, "fck");
+@@ -1623,8 +1750,8 @@ static int rcar_canfd_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	platform_set_drvdata(pdev, gpriv);
+-	dev_info(&pdev->dev, "global operational state (clk %d)\n",
+-		 gpriv->fcan);
++	dev_info(&pdev->dev, "global operational state (clk %d, fdmode %d)\n",
++		 gpriv->fcan, gpriv->fdmode);
+ 	return 0;
+ 
+ fail_channel:
+-- 
+1.9.1
 
->   5 files changed, 1107 insertions(+)
->   create mode 100644 drivers/remoteproc/qcom_mdt_loader.c
->   create mode 100644 drivers/remoteproc/qcom_mdt_loader.h
->   create mode 100644 drivers/remoteproc/qcom_q6v5_pil.c
->
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 72e97d7a5209..9ec66d99b978 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -77,6 +77,18 @@ config DA8XX_REMOTEPROC
->   	  It's safe to say n here if you're not interested in multimedia
->   	  offloading.
->
-> +config QCOM_MDT_LOADER
-> +	tristate
-> +
-> +config QCOM_Q6V5_PIL
-> +	tristate "Qualcomm Hexagon V5 Peripherial Image Loader"
-> +	depends on OF && ARCH_QCOM
-> +	select REMOTEPROC
-> +	select QCOM_MDT_LOADER
-> +	help
-> +	  Say y here to support the Qualcomm Peripherial Image Loader for the
-> +	  Hexagon V5 based remote processors.
-> +
->   config ST_REMOTEPROC
->   	tristate "ST remoteproc support"
->   	depends on ARCH_STI
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index 279cb2edc880..92d3758bd15c 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -11,4 +11,6 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->   obj-$(CONFIG_STE_MODEM_RPROC)	 	+= ste_modem_rproc.o
->   obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
->   obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
-> +obj-$(CONFIG_QCOM_MDT_LOADER)		+= qcom_mdt_loader.o
-> +obj-$(CONFIG_QCOM_Q6V5_PIL)		+= qcom_q6v5_pil.o
->   obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
-> diff --git a/drivers/remoteproc/qcom_mdt_loader.c b/drivers/remoteproc/qcom_mdt_loader.c
-> new file mode 100644
-> index 000000000000..4efeda908d9a
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_mdt_loader.c
-> @@ -0,0 +1,166 @@
-> +/*
-> + * Qualcomm Peripheral Image Loader
-> + *
-> + * Copyright (C) 2016 Linaro Ltd
-> + * Copyright (C) 2015 Sony Mobile Communications Inc
-> + * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/elf.h>
-> +#include <linux/firmware.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/qcom_scm.h>
-
-??
-
-> +#include <linux/remoteproc.h>
-> +#include <linux/slab.h>
-??
-
-> +
-> +#include "remoteproc_internal.h"
-> +#include "qcom_mdt_loader.h"
-> +
-> +/**
-> + * qcom_mdt_find_rsc_table() - provide dummy resource table for remoteproc
-> + * @rproc:	remoteproc handle
-> + * @fw:		firmware header
-> + * @tablesz:	outgoing size of the table
-> + *
-> + * Returns a dummy table.
-> + */
-> +struct resource_table *qcom_mdt_find_rsc_table(struct rproc *rproc,
-> +					       const struct firmware *fw,
-> +					       int *tablesz)
-> +{
-> +	static struct resource_table table = { .ver = 1, };
-> +
-> +	*tablesz = sizeof(table);
-> +	return &table;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_mdt_find_rsc_table);
-> +
-> +int qcom_mdt_parse(const struct firmware *fw, phys_addr_t *fw_addr, size_t *fw_size, bool *fw_relocate)
-Missing doc for this function?
-
-> +{
-> +	const struct elf32_phdr *phdrs;
-> +	const struct elf32_phdr *phdr;
-> +	const struct elf32_hdr *ehdr;
-> +	phys_addr_t min_addr = (phys_addr_t)ULLONG_MAX;
-> +	phys_addr_t max_addr = 0;
-> +	bool relocate = false;
-> +	int i;
-> +
-> +	ehdr = (struct elf32_hdr *)fw->data;
-> +	phdrs = (struct elf32_phdr *)(ehdr + 1);
-> +
-> +	for (i = 0; i < ehdr->e_phnum; i++) {
-> +		phdr = &phdrs[i];
-> +
-> +		if (phdr->p_type != PT_LOAD)
-> +			continue;
-> +
-> +		if ((phdr->p_flags & QCOM_MDT_TYPE_MASK) == QCOM_MDT_TYPE_HASH)
-> +			continue;
-> +
-> +		if (!phdr->p_memsz)
-> +			continue;
-> +
-> +		if (phdr->p_flags & QCOM_MDT_RELOCATABLE)
-> +			relocate = true;
-> +
-> +		if (phdr->p_paddr < min_addr)
-> +			min_addr = phdr->p_paddr;
-> +
-> +		if (phdr->p_paddr + phdr->p_memsz > max_addr)
-> +			max_addr = round_up(phdr->p_paddr + phdr->p_memsz, SZ_4K);
-> +	}
-> +
-> +	if (fw_addr)
-> +		*fw_addr = min_addr;
-> +	if (fw_size)
-> +		*fw_size = max_addr - min_addr;
-> +	if (fw_relocate)
-> +		*fw_relocate = relocate;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_mdt_parse);
-> +
-> +/**
-> + * qcom_mdt_load() - load the firmware which header is defined in fw
-> + * @rproc:	rproc handle
-> + * @pas_id:	PAS identifier to load this firmware into
-
-??
-
-> + * @fw:		frimware object for the header
-
-s/frimware/firmware
-
-> + *
-> + * Returns 0 on success, negative errno otherwise.
-> + */
-> +int qcom_mdt_load(struct rproc *rproc,
-> +		  const struct firmware *fw,
-> +		  const char *firmware)
-> +{
-> +	const struct elf32_phdr *phdrs;
-> +	const struct elf32_phdr *phdr;
-> +	const struct elf32_hdr *ehdr;
-> +	unsigned fw_name_len;
-> +	char *fw_name;
-> +	void *ptr;
-> +	int ret;
-> +	int i;
-> +
-> +	ehdr = (struct elf32_hdr *)fw->data;
-> +	phdrs = (struct elf32_phdr *)(ehdr + 1);
-> +
-> +	fw_name_len = strlen(firmware);
-> +	if (fw_name_len <= 4)
-> +		return -EINVAL;
-> +
-> +	fw_name = kstrdup(firmware, GFP_KERNEL);
-> +	if (!fw_name)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < ehdr->e_phnum; i++) {
-> +		phdr = &phdrs[i];
-> +
-> +		if (phdr->p_type != PT_LOAD)
-> +			continue;
-> +
-> +		if ((phdr->p_flags & QCOM_MDT_TYPE_MASK) == QCOM_MDT_TYPE_HASH)
-> +			continue;
-> +
-> +		if (!phdr->p_memsz)
-> +			continue;
-> +
-> +		ptr = rproc_da_to_va(rproc, phdr->p_paddr, phdr->p_memsz);
-> +		if (!ptr) {
-> +			dev_err(&rproc->dev, "segment outside memory range\n");
-> +			ret = -EINVAL;
-> +			break;
-> +		}
-> +
-> +		if (phdr->p_filesz) {
-> +			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
-> +			ret = request_firmware(&fw, fw_name, &rproc->dev);
-> +			if (ret) {
-> +				dev_err(&rproc->dev, "failed to load %s\n", fw_name);
-> +				break;
-> +			}
-> +
-> +			memcpy(ptr, fw->data, fw->size);
-> +
-> +			release_firmware(fw);
-> +		}
-> +
-> +		if (phdr->p_memsz > phdr->p_filesz)
-> +			memset(ptr + phdr->p_filesz, 0, phdr->p_memsz - phdr->p_filesz);
-> +	}
-> +
-> +	kfree(fw_name);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_mdt_load);
-
-Module Licence info?
-
-> diff --git a/drivers/remoteproc/qcom_mdt_loader.h b/drivers/remoteproc/qcom_mdt_loader.h
-> new file mode 100644
-> index 000000000000..c5d7122755b6
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_mdt_loader.h
-> @@ -0,0 +1,13 @@
-> +#ifndef __QCOM_MDT_LOADER_H__
-> +#define __QCOM_MDT_LOADER_H__
-> +
-> +#define QCOM_MDT_TYPE_MASK	(7 << 24)
-> +#define QCOM_MDT_TYPE_HASH	(2 << 24)
-> +#define QCOM_MDT_RELOCATABLE	BIT(27)
-> +
-> +struct resource_table * qcom_mdt_find_rsc_table(struct rproc *rproc, const struct firmware *fw, int *tablesz);
-> +int qcom_mdt_load(struct rproc *rproc, const struct firmware *fw, const char *fw_name);
-> +
-> +int qcom_mdt_parse(const struct firmware *fw, phys_addr_t *fw_addr, size_t *fw_size, bool *fw_relocate);
-> +
-> +#endif
-> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-> new file mode 100644
-> index 000000000000..7b1a8269a008
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_q6v5_pil.c
-> @@ -0,0 +1,914 @@
-> +/*
-> + * Qualcomm Peripheral Image Loader
-> + *
-> + * Copyright (C) 2016 Linaro Ltd.
-> + * Copyright (C) 2014 Sony Mobile Communications AB
-> + * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/remoteproc.h>
-> +#include <linux/reset.h>
-> +#include <linux/soc/qcom/smem.h>
-> +#include <linux/soc/qcom/smem_state.h>
-> +
-> +#include "remoteproc_internal.h"
-> +#include "qcom_mdt_loader.h"
-> +
-> +#include <linux/qcom_scm.h>
-> +
-> +#define MBA_FIRMWARE_NAME		"mba.b00"
-> +#define MPSS_FIRMWARE_NAME		"modem.mdt"
-> +
-> +#define MPSS_CRASH_REASON_SMEM		421
-> +
-> +/* RMB Status Register Values */
-> +#define RMB_PBL_SUCCESS			0x1
-> +
-> +#define RMB_MBA_XPU_UNLOCKED		0x1
-> +#define RMB_MBA_XPU_UNLOCKED_SCRIBBLED	0x2
-> +#define RMB_MBA_META_DATA_AUTH_SUCCESS	0x3
-> +#define RMB_MBA_AUTH_COMPLETE		0x4
-> +
-> +/* PBL/MBA interface registers */
-> +#define RMB_MBA_IMAGE_REG		0x00
-> +#define RMB_PBL_STATUS_REG		0x04
-> +#define RMB_MBA_COMMAND_REG		0x08
-> +#define RMB_MBA_STATUS_REG		0x0C
-> +#define RMB_PMI_META_DATA_REG		0x10
-> +#define RMB_PMI_CODE_START_REG		0x14
-> +#define RMB_PMI_CODE_LENGTH_REG		0x18
-> +
-> +#define RMB_CMD_META_DATA_READY		0x1
-> +#define RMB_CMD_LOAD_READY		0x2
-> +
-> +/* QDSP6SS Register Offsets */
-> +#define QDSP6SS_RESET_REG		0x014
-> +#define QDSP6SS_GFMUX_CTL_REG		0x020
-> +#define QDSP6SS_PWR_CTL_REG		0x030
-> +
-> +/* AXI Halt Register Offsets */
-> +#define AXI_HALTREQ_REG			0x0
-> +#define AXI_HALTACK_REG			0x4
-> +#define AXI_IDLE_REG			0x8
-> +
-> +#define HALT_ACK_TIMEOUT_MS		100
-> +
-> +/* QDSP6SS_RESET */
-> +#define Q6SS_STOP_CORE			BIT(0)
-> +#define Q6SS_CORE_ARES			BIT(1)
-> +#define Q6SS_BUS_ARES_ENABLE		BIT(2)
-> +
-> +/* QDSP6SS_GFMUX_CTL */
-> +#define Q6SS_CLK_ENABLE			BIT(1)
-> +
-> +/* QDSP6SS_PWR_CTL */
-> +#define Q6SS_L2DATA_SLP_NRET_N_0	BIT(0)
-> +#define Q6SS_L2DATA_SLP_NRET_N_1	BIT(1)
-> +#define Q6SS_L2DATA_SLP_NRET_N_2	BIT(2)
-> +#define Q6SS_L2TAG_SLP_NRET_N		BIT(16)
-> +#define Q6SS_ETB_SLP_NRET_N		BIT(17)
-> +#define Q6SS_L2DATA_STBY_N		BIT(18)
-> +#define Q6SS_SLP_RET_N			BIT(19)
-> +#define Q6SS_CLAMP_IO			BIT(20)
-> +#define QDSS_BHS_ON			BIT(21)
-> +#define QDSS_LDO_BYP			BIT(22)
-> +
-> +struct q6v5 {
-> +	struct device *dev;
-> +	struct rproc *rproc;
-> +
-> +	void __iomem *reg_base;
-> +	void __iomem *rmb_base;
-> +
-> +	struct regmap *halt_map;
-> +	u32 halt_q6;
-> +	u32 halt_modem;
-> +	u32 halt_nc;
-> +
-> +	struct reset_control *mss_restart;
-> +
-> +	struct qcom_smem_state *state;
-> +	unsigned stop_bit;
-> +
-> +	struct regulator_bulk_data supply[4];
-> +
-> +	struct clk *ahb_clk;
-> +	struct clk *axi_clk;
-> +	struct clk *rom_clk;
-> +
-> +	struct completion start_done;
-> +	struct completion stop_done;
-> +	bool running;
-> +
-> +	phys_addr_t mba_phys;
-> +	void *mba_region;
-> +	size_t mba_size;
-> +
-> +	phys_addr_t mpss_phys;
-> +	phys_addr_t mpss_reloc;
-> +	void *mpss_region;
-> +	size_t mpss_size;
-> +};
-> +
-> +enum {
-> +	Q6V5_SUPPLY_CX,
-> +	Q6V5_SUPPLY_MX,
-> +	Q6V5_SUPPLY_MSS,
-> +	Q6V5_SUPPLY_PLL,
-> +};
-> +
-> +static int q6v5_regulator_init(struct q6v5 *qproc)
-> +{
-> +	int ret;
-> +
-> +	qproc->supply[Q6V5_SUPPLY_CX].supply = "cx";
-> +	qproc->supply[Q6V5_SUPPLY_MX].supply = "mx";
-> +	qproc->supply[Q6V5_SUPPLY_MSS].supply = "mss";
-> +	qproc->supply[Q6V5_SUPPLY_PLL].supply = "pll";
-> +
-> +	ret = devm_regulator_bulk_get(qproc->dev,
-> +				      ARRAY_SIZE(qproc->supply), qproc->supply);
-> +	if (ret < 0) {
-> +		dev_err(qproc->dev, "failed to get supplies\n");
-> +		return ret;
-> +	}
-> +
-> +	regulator_set_load(qproc->supply[Q6V5_SUPPLY_CX].consumer, 100000);
-> +	regulator_set_load(qproc->supply[Q6V5_SUPPLY_MSS].consumer, 100000);
-> +	regulator_set_load(qproc->supply[Q6V5_SUPPLY_PLL].consumer, 10000);
-> +
-> +	return 0;
-> +}
-> +
-> +static int q6v5_regulator_enable(struct q6v5 *qproc)
-> +{
-> +	int ret;
-> +
-> +	/* TODO: Q6V5_SUPPLY_CX is supposed to be set to super-turbo here */
-> +	ret = regulator_set_voltage(qproc->supply[Q6V5_SUPPLY_MX].consumer,
-> +				    1050000, INT_MAX);
-> +	if (ret)
-> +		return ret;
-> +
-> +	regulator_set_voltage(qproc->supply[Q6V5_SUPPLY_MSS].consumer,
-> +			      1000000, 1150000);
-> +
-> +	return regulator_bulk_enable(ARRAY_SIZE(qproc->supply), qproc->supply);
-> +}
-> +
-> +static void q6v5_regulator_disable(struct q6v5 *qproc)
-> +{
-> +	regulator_bulk_disable(ARRAY_SIZE(qproc->supply), qproc->supply);
-> +	regulator_set_voltage(qproc->supply[Q6V5_SUPPLY_CX].consumer, 0, INT_MAX);
-> +	regulator_set_voltage(qproc->supply[Q6V5_SUPPLY_MX].consumer, 0, INT_MAX);
-
-we disable the regulators and then set voltage why?
-I think these should be moved to q6v5_regulator_enable() unless am 
-missing something here.
-
-> +	regulator_set_voltage(qproc->supply[Q6V5_SUPPLY_MSS].consumer, 0, 1150000);
-> +}
-> +
-> +static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
-> +{
-> +	struct q6v5 *qproc = rproc->priv;
-> +
-> +	memcpy(qproc->mba_region, fw->data, fw->size);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct rproc_fw_ops q6v5_fw_ops = {
-> +	.find_rsc_table = qcom_mdt_find_rsc_table,
-> +	.load = q6v5_load,
-> +};
-> +
-> +static int q6v5_rmb_pbl_wait(struct q6v5 *qproc, int ms)
-> +{
-> +	unsigned long timeout;
-> +	s32 val;
-> +
-> +	timeout = jiffies + msecs_to_jiffies(ms);
-> +	for (;;) {
-> +		val = readl(qproc->rmb_base + RMB_PBL_STATUS_REG);
-> +		if (val)
-
-I think making an explicit check for a bits of interest would be much 
-readable.
-Or a comment would be good.
-
-
-> +			break;
-> +
-> +		if (time_after(jiffies, timeout))
-> +			return -ETIMEDOUT;
-> +
-> +		msleep(1);
-> +	}
-> +
-> +	return val;
-> +}
-> +
-> +static int q6v5_rmb_mba_wait(struct q6v5 *qproc, u32 status, int ms)
-> +{
-> +
-> +	unsigned long timeout;
-> +	s32 val;
-> +
-> +	timeout = jiffies + msecs_to_jiffies(ms);
-> +	for (;;) {
-> +		val = readl(qproc->rmb_base + RMB_MBA_STATUS_REG);
-> +		if (val < 0)
-> +			break;
-> +
-> +		if (!status && val)
-> +			break;
-> +		else if (status && val == status)
-> +			break;
-> +
-> +		if (time_after(jiffies, timeout))
-> +			return -ETIMEDOUT;
-> +
-> +		msleep(1);
-> +	}
-> +
-> +	return val;
-> +}
-> +
-> +static void q6v5proc_reset(struct q6v5 *qproc)
-> +{
-> +	u32 val;
-> +
-> +	/* Assert resets, stop core */
-> +	val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
-> +	val |= (Q6SS_CORE_ARES | Q6SS_BUS_ARES_ENABLE | Q6SS_STOP_CORE);
-> +	writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
-> +
-> +	/* Enable power block headswitch, and wait for it to stabilize */
-> +	val = readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> +	val |= QDSS_BHS_ON | QDSS_LDO_BYP;
-> +	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> +	mb();
-> +	udelay(1);
-> +
-> +	/*
-> +	 * Turn on memories. L2 banks should be done individually
-> +	 * to minimize inrush current.
-> +	 */
-> +	val = readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> +	val |= Q6SS_SLP_RET_N | Q6SS_L2TAG_SLP_NRET_N |
-> +		Q6SS_ETB_SLP_NRET_N | Q6SS_L2DATA_STBY_N;
-> +	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> +	val |= Q6SS_L2DATA_SLP_NRET_N_2;
-> +	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> +	val |= Q6SS_L2DATA_SLP_NRET_N_1;
-> +	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> +	val |= Q6SS_L2DATA_SLP_NRET_N_0;
-> +	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> +
-> +	/* Remove IO clamp */
-> +	val &= ~Q6SS_CLAMP_IO;
-> +	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> +
-> +	/* Bring core out of reset */
-> +	val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
-> +	val &= ~Q6SS_CORE_ARES;
-> +	writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
-> +
-> +	/* Turn on core clock */
-> +	val = readl(qproc->reg_base + QDSP6SS_GFMUX_CTL_REG);
-> +	val |= Q6SS_CLK_ENABLE;
-> +	writel(val, qproc->reg_base + QDSP6SS_GFMUX_CTL_REG);
-> +
-> +	/* Start core execution */
-> +	val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
-> +	val &= ~Q6SS_STOP_CORE;
-> +	writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
-> +}
-> +
-> +static void q6v5proc_halt_axi_port(struct q6v5 *qproc,
-> +				   struct regmap *halt_map,
-> +				   u32 offset)
-> +{
-> +	unsigned long timeout;
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	/* Check if we're already idle */
-> +	ret = regmap_read(halt_map, offset + AXI_IDLE_REG, &val);
-> +	if (!ret && val)
-> +		return;
-> +
-> +	/* Assert halt request */
-> +	regmap_write(halt_map, offset + AXI_HALTREQ_REG, 1);
-> +
-> +	/* Wait for halt */
-> +	timeout = jiffies + msecs_to_jiffies(HALT_ACK_TIMEOUT_MS);
-> +	for (;;) {
-> +		ret = regmap_read(halt_map, offset + AXI_HALTACK_REG, &val);
-> +		if (ret || val || time_after(jiffies, timeout))
-> +			break;
-> +
-> +		msleep(1);
-> +	}
-> +
-> +	ret = regmap_read(halt_map, offset + AXI_IDLE_REG, &val);
-> +	if (ret || !val)
-> +		dev_err(qproc->dev, "port failed halt\n");
-> +
-> +	/* Clear halt request (port will remain halted until reset) */
-> +	regmap_write(halt_map, offset + AXI_HALTREQ_REG, 0);
-> +}
-> +
-> +static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
-> +{
-> +	DEFINE_DMA_ATTRS(attrs);
-> +	dma_addr_t phys;
-> +	void *ptr;
-> +	int ret;
-> +
-> +	dma_set_attr(DMA_ATTR_FORCE_CONTIGUOUS, &attrs);
-> +	ptr = dma_alloc_attrs(qproc->dev, fw->size, &phys, GFP_KERNEL, &attrs);
-> +	if (!ptr) {
-> +		dev_err(qproc->dev, "failed to allocate mdt buffer\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	memcpy(ptr, fw->data, fw->size);
-> +
-> +	writel(phys, qproc->rmb_base + RMB_PMI_META_DATA_REG);
-> +	writel(RMB_CMD_META_DATA_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
-> +
-> +	ret = q6v5_rmb_mba_wait(qproc, RMB_MBA_META_DATA_AUTH_SUCCESS, 1000);
-> +	if (ret == -ETIMEDOUT)
-> +		dev_err(qproc->dev, "MBA header authentication timed out\n");
-> +	else if (ret < 0)
-> +		dev_err(qproc->dev, "MBA returned error %d for MDT header\n", ret);
-> +
-> +	dma_free_attrs(qproc->dev, fw->size, ptr, phys, &attrs);
-> +
-> +	return ret < 0 ? ret : 0;
-> +}
-> +
-> +static int q6v5_mpss_validate(struct q6v5 *qproc, const struct firmware *fw)
-> +{
-> +	const struct elf32_phdr *phdrs;
-> +	const struct elf32_phdr *phdr;
-> +	struct elf32_hdr *ehdr;
-> +	phys_addr_t boot_addr;
-> +	phys_addr_t fw_addr;
-> +	bool relocate;
-> +	size_t size;
-> +	u32 val;
-> +	int ret;
-> +	int i;
-> +
-> +	ret = qcom_mdt_parse(fw, &fw_addr, NULL, &relocate);
-> +	if (ret) {
-> +		dev_err(qproc->dev, "failed to parse mdt header\n");
-> +		return ret;
-> +	}
-> +
-> +	if (relocate)
-> +		boot_addr = qproc->mpss_phys;
-> +	else
-> +		boot_addr = fw_addr;
-> +
-> +	ehdr = (struct elf32_hdr *)fw->data;
-> +	phdrs = (struct elf32_phdr *)(ehdr + 1);
-> +	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
-> +		phdr = &phdrs[i];
-> +
-> +		if (phdr->p_type != PT_LOAD)
-> +			continue;
-> +
-> +		if ((phdr->p_flags & QCOM_MDT_TYPE_MASK) == QCOM_MDT_TYPE_HASH)
-> +			continue;
-> +
-> +		if (!phdr->p_memsz)
-> +			continue;
-> +
-> +		size = readl(qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
-> +		if (!size) {
-> +			writel(boot_addr, qproc->rmb_base + RMB_PMI_CODE_START_REG);
-> +			writel(RMB_CMD_LOAD_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
-> +		}
-> +
-> +		size += phdr->p_memsz;
-> +		writel(size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
-> +	}
-> +
-> +	val = readl(qproc->rmb_base + RMB_MBA_STATUS_REG);
-> +	return val < 0 ? val : 0;
-> +}
-> +
-> +static int q6v5_mpss_load(struct q6v5 *qproc)
-> +{
-> +	const struct firmware *fw;
-> +	phys_addr_t fw_addr;
-> +	bool relocate;
-> +	int ret;
-> +
-> +	ret = request_firmware(&fw, MPSS_FIRMWARE_NAME, qproc->dev);
-> +	if (ret < 0) {
-> +		dev_err(qproc->dev, "unable to load " MPSS_FIRMWARE_NAME "\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = qcom_mdt_parse(fw, &fw_addr, NULL, &relocate);
-> +	if (ret) {
-> +		dev_err(qproc->dev, "failed to parse mdt header\n");
-> +		goto release_firmware;
-> +	}
-> +
-> +	if (relocate)
-> +		qproc->mpss_reloc = fw_addr;
-> +
-> +	/* Initialize the RMB validator */
-> +	writel(0, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
-> +
-> +	ret = q6v5_mpss_init_image(qproc, fw);
-> +	if (ret)
-> +		goto release_firmware;
-> +
-> +	ret = qcom_mdt_load(qproc->rproc, fw, MPSS_FIRMWARE_NAME);
-> +	if (ret)
-> +		goto release_firmware;
-> +
-> +	ret = q6v5_mpss_validate(qproc, fw);
-> +	if (ret)
-> +		goto release_firmware;
-> +
-> +	ret = q6v5_rmb_mba_wait(qproc, RMB_MBA_AUTH_COMPLETE, 10000);
-> +	if (ret == -ETIMEDOUT)
-> +		dev_err(qproc->dev, "MBA authentication timed out\n");
-> +	else if (ret < 0)
-> +		dev_err(qproc->dev, "MBA returned error %d\n", ret);
-> +
-> +release_firmware:
-> +	release_firmware(fw);
-> +
-> +	return ret < 0 ? ret : 0;
-> +}
-> +
-> +static int q6v5_start(struct rproc *rproc)
-> +{
-> +	struct q6v5 *qproc = (struct q6v5 *)rproc->priv;
-> +	int ret;
-> +
-> +	ret = q6v5_regulator_enable(qproc);
-> +	if (ret) {
-> +		dev_err(qproc->dev, "failed to enable supplies\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = reset_control_deassert(qproc->mss_restart);
-> +	if (ret) {
-> +		dev_err(qproc->dev, "failed to deassert mss restart\n");
-> +		goto disable_vdd;
-> +	}
-> +
-> +	ret = clk_prepare_enable(qproc->ahb_clk);
-> +	if (ret)
-> +		goto assert_reset;
-> +
-> +	ret = clk_prepare_enable(qproc->axi_clk);
-> +	if (ret)
-> +		goto disable_ahb_clk;
-> +
-> +	ret = clk_prepare_enable(qproc->rom_clk);
-> +	if (ret)
-> +		goto disable_axi_clk;
-> +
-> +	writel(qproc->mba_phys, qproc->rmb_base + RMB_MBA_IMAGE_REG);
-> +
-> +	q6v5proc_reset(qproc);
-> +
-> +	ret = q6v5_rmb_pbl_wait(qproc, 1000);
-> +	if (ret == -ETIMEDOUT) {
-> +		dev_err(qproc->dev, "PBL boot timed out\n");
-> +		goto halt_axi_ports;
-> +	} else if (ret != RMB_PBL_SUCCESS) {
-> +		dev_err(qproc->dev, "PBL returned unexpected status %d\n", ret);
-> +		ret = -EINVAL;
-> +		goto halt_axi_ports;
-> +	}
-> +
-> +	ret = q6v5_rmb_mba_wait(qproc, 0, 5000);
-> +	if (ret == -ETIMEDOUT) {
-> +		dev_err(qproc->dev, "MBA boot timed out\n");
-> +		goto halt_axi_ports;
-> +	} else if (ret != RMB_MBA_XPU_UNLOCKED && ret != RMB_MBA_XPU_UNLOCKED_SCRIBBLED) {
-> +		dev_err(qproc->dev, "MBA returned unexpected status %d\n", ret);
-> +		ret = -EINVAL;
-> +		goto halt_axi_ports;
-> +	}
-> +
-> +	dev_info(qproc->dev, "MBA booted, loading mpss\n");
-> +
-> +	ret = q6v5_mpss_load(qproc);
-> +	if (ret)
-> +		goto halt_axi_ports;
-> +
-> +	ret = wait_for_completion_timeout(&qproc->start_done,
-> +					  msecs_to_jiffies(5000));
-> +	if (ret == 0) {
-> +		dev_err(qproc->dev, "start timed out\n");
-> +		ret = -ETIMEDOUT;
-> +		goto halt_axi_ports;
-> +	}
-> +
-> +	qproc->running = true;
-> +
-> +	/* All done, release the handover resources */
-> +
-> +	return 0;
-> +
-> +halt_axi_ports:
-> +	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
-> +	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
-> +	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
-> +disable_axi_clk:
-> +	clk_disable_unprepare(qproc->axi_clk);
-> +disable_ahb_clk:
-> +	clk_disable_unprepare(qproc->ahb_clk);
-> +assert_reset:
-> +	reset_control_assert(qproc->mss_restart);
-> +disable_vdd:
-> +	q6v5_regulator_disable(qproc);
-> +
-> +	return ret;
-> +}
-> +
-> +static int q6v5_stop(struct rproc *rproc)
-> +{
-> +	struct q6v5 *qproc = (struct q6v5 *)rproc->priv;
-> +	int ret;
-> +
-> +	qproc->running = false;
-> +
-> +	qcom_smem_state_update_bits(qproc->state,
-> +				    BIT(qproc->stop_bit), BIT(qproc->stop_bit));
-> +
-> +	ret = wait_for_completion_timeout(&qproc->stop_done,
-> +					  msecs_to_jiffies(5000));
-> +	if (ret == 0)
-> +		dev_err(qproc->dev, "timed out on wait\n");
-> +
-> +	qcom_smem_state_update_bits(qproc->state, BIT(qproc->stop_bit), 0);
-> +
-> +	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
-> +	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
-> +	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
-> +
-> +	reset_control_assert(qproc->mss_restart);
-> +	clk_disable_unprepare(qproc->axi_clk);
-> +	clk_disable_unprepare(qproc->ahb_clk);
-> +	q6v5_regulator_disable(qproc);
-> +
-> +	return 0;
-> +}
-> +
-> +static void *q6v5_da_to_va(struct rproc *rproc, u64 da, int len)
-> +{
-> +	struct q6v5 *qproc = rproc->priv;
-> +	int offset;
-> +
-> +	offset = da - qproc->mpss_reloc;
-> +	if (offset < 0 || offset + len > qproc->mpss_size)
-> +		return NULL;
-> +
-> +	return qproc->mpss_region + offset;
-> +}
-> +
-> +static const struct rproc_ops q6v5_ops = {
-> +	.start = q6v5_start,
-> +	.stop = q6v5_stop,
-> +	.da_to_va = q6v5_da_to_va,
-> +};
-> +
-> +static irqreturn_t q6v5_wdog_interrupt(int irq, void *dev)
-> +{
-> +	struct q6v5 *qproc = dev;
-> +	size_t len;
-> +	char *msg;
-> +
-> +	/* Sometimes the stop triggers a watchdog rather than a stop-ack */
-> +	if (!qproc->running) {
-> +		complete(&qproc->stop_done);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	msg = qcom_smem_get(QCOM_SMEM_HOST_ANY, MPSS_CRASH_REASON_SMEM, &len);
-> +	if (!IS_ERR(msg) && len > 0 && msg[0])
-> +		dev_err(qproc->dev, "watchdog received: %s\n", msg);
-> +	else
-> +		dev_err(qproc->dev, "watchdog without message\n");
-> +
-> +	rproc_report_crash(qproc->rproc, RPROC_WATCHDOG);
-> +
-> +	if (!IS_ERR(msg))
-> +		msg[0] = '\0';
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t q6v5_fatal_interrupt(int irq, void *dev)
-> +{
-> +	struct q6v5 *qproc = dev;
-> +	size_t len;
-> +	char *msg;
-> +
-> +	msg = qcom_smem_get(QCOM_SMEM_HOST_ANY, MPSS_CRASH_REASON_SMEM, &len);
-> +	if (!IS_ERR(msg) && len > 0 && msg[0])
-> +		dev_err(qproc->dev, "fatal error received: %s\n", msg);
-> +	else
-> +		dev_err(qproc->dev, "fatal error without message\n");
-> +
-> +	rproc_report_crash(qproc->rproc, RPROC_FATAL_ERROR);
-> +
-> +	if (!IS_ERR(msg))
-> +		msg[0] = '\0';
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
-> +{
-> +	struct q6v5 *qproc = dev;
-> +
-> +	complete(&qproc->start_done);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t q6v5_stop_ack_interrupt(int irq, void *dev)
-> +{
-> +	struct q6v5 *qproc = dev;
-> +
-> +	complete(&qproc->stop_done);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int q6v5_init_mem(struct q6v5 *qproc, struct platform_device *pdev)
-> +{
-> +	struct device_node *halt_np;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qdsp6");
-> +	qproc->reg_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(qproc->reg_base)) {
-> +		dev_err(qproc->dev, "failed to get qdsp6_base\n");
-> +		return PTR_ERR(qproc->reg_base);
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rmb");
-> +	qproc->rmb_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(qproc->rmb_base)) {
-> +		dev_err(qproc->dev, "failed to get rmb_base\n");
-> +		return PTR_ERR(qproc->rmb_base);
-> +	}
-> +
-
-> +	halt_np = of_parse_phandle(pdev->dev.of_node, "qcom,halt-regs", 0);
-> +	if (!halt_np) {
-> +		dev_err(&pdev->dev, "no qcom,halt-regs node\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	qproc->halt_map = syscon_node_to_regmap(halt_np);
-> +	if (IS_ERR(qproc->halt_map))
-> +		return PTR_ERR(qproc->halt_map);
-> +
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "qcom,halt-regs",
-> +					 1, &qproc->halt_q6);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no q6 halt offset\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "qcom,halt-regs",
-> +					 2, &qproc->halt_modem);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no modem halt offset\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "qcom,halt-regs",
-> +					 3, &qproc->halt_nc);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no nc halt offset\n");
-> +		return -EINVAL;
-> +	}
-We could used of_parse_phandle_with_fixed_args() here.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int q6v5_init_clocks(struct q6v5 *qproc)
-> +{
-> +	qproc->ahb_clk = devm_clk_get(qproc->dev, "iface");
-> +	if (IS_ERR(qproc->ahb_clk)) {
-> +		dev_err(qproc->dev, "failed to get iface clock\n");
-> +		return PTR_ERR(qproc->ahb_clk);
-> +	}
-> +
-> +	qproc->axi_clk = devm_clk_get(qproc->dev, "bus");
-> +	if (IS_ERR(qproc->axi_clk)) {
-> +		dev_err(qproc->dev, "failed to get bus clock\n");
-> +		return PTR_ERR(qproc->axi_clk);
-> +	}
-> +
-> +	qproc->rom_clk = devm_clk_get(qproc->dev, "mem");
-> +	if (IS_ERR(qproc->rom_clk)) {
-> +		dev_err(qproc->dev, "failed to get mem clock\n");
-> +		return PTR_ERR(qproc->rom_clk);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int q6v5_init_reset(struct q6v5 *qproc)
-> +{
-> +	qproc->mss_restart = devm_reset_control_get(qproc->dev, NULL);
-> +	if (IS_ERR(qproc->mss_restart)) {
-> +		dev_err(qproc->dev, "failed to acquire mss restart\n");
-> +		return PTR_ERR(qproc->mss_restart);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int q6v5_request_irq(struct q6v5 *qproc,
-> +			     struct platform_device *pdev,
-> +			     const char *name,
-> +			     irq_handler_t thread_fn)
-> +{
-> +	int ret;
-> +
-> +	ret = platform_get_irq_byname(pdev, name);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no %s IRQ defined\n", name);
-> +		return ret;
-> +	}
-> +
-> +	ret = devm_request_threaded_irq(&pdev->dev, ret,
-> +					NULL, thread_fn,
-> +					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-> +					"q6v5", qproc);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "request %s IRQ failed\n", name);
-New line.
-> +	return ret;
-> +}
-> +
-> +static int q6v5_alloc_memory_region(struct q6v5 *qproc)
-> +{
-> +	struct device_node *child;
-> +	struct device_node *node;
-> +	struct resource r;
-> +	int ret;
-> +
-<---
-> +	child = of_get_child_by_name(qproc->dev->of_node, "mba");
-> +	node = of_parse_phandle(child, "memory-region", 0);
-> +	ret = of_address_to_resource(node, 0, &r);
-> +	if (ret) {
-> +		dev_err(qproc->dev, "unable to resolve mba region\n");
-> +		return ret;
-> +	}
-> +
-> +	qproc->mba_phys = r.start;
-> +	qproc->mba_size = resource_size(&r);
-> +	qproc->mba_region = devm_ioremap_wc(qproc->dev, qproc->mba_phys, qproc->mba_size);
-> +	if (!qproc->mba_region) {
-> +		dev_err(qproc->dev, "unable to map memory region: %pa+%zx\n",
-> +			&r.start, qproc->mba_size);
-> +		return -EBUSY;
-> +	}
-> +
--->
-
-Looks like same code below, we could add a function to do the same.
-
-> +	child = of_get_child_by_name(qproc->dev->of_node, "mpss");
-> +	node = of_parse_phandle(child, "memory-region", 0);
-> +	ret = of_address_to_resource(node, 0, &r);
-> +	if (ret) {
-> +		dev_err(qproc->dev, "unable to resolve mpss region\n");
-> +		return ret;
-> +	}
-> +
-> +	qproc->mpss_phys = qproc->mpss_reloc = r.start;
-> +	qproc->mpss_size = resource_size(&r);
-> +	qproc->mpss_region = devm_ioremap_wc(qproc->dev, qproc->mpss_phys, qproc->mpss_size);
-> +	if (!qproc->mpss_region) {
-> +		dev_err(qproc->dev, "unable to map memory region: %pa+%zx\n",
-> +			&r.start, qproc->mpss_size);
-> +		return -EBUSY;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int q6v5_probe(struct platform_device *pdev)
-> +{
-> +	struct q6v5 *qproc;
-> +	struct rproc *rproc;
-> +	int ret;
-> +
-> +	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_ops,
-> +			    MBA_FIRMWARE_NAME, sizeof(*qproc));
-> +	if (!rproc) {
-> +		dev_err(&pdev->dev, "failed to allocate rproc\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	rproc->fw_ops = &q6v5_fw_ops;
-> +
-> +	qproc = (struct q6v5 *)rproc->priv;
-> +	qproc->dev = &pdev->dev;
-> +	qproc->rproc = rproc;
-> +	platform_set_drvdata(pdev, qproc);
-> +
-> +	init_completion(&qproc->start_done);
-> +	init_completion(&qproc->stop_done);
-> +
-> +	ret = q6v5_init_mem(qproc, pdev);
-> +	if (ret)
-> +		goto free_rproc;
-> +
-> +	ret = q6v5_alloc_memory_region(qproc);
-> +	if (ret)
-> +		goto free_rproc;
-> +
-> +	ret = q6v5_init_clocks(qproc);
-> +	if (ret)
-> +		goto free_rproc;
-> +
-> +	ret = q6v5_regulator_init(qproc);
-> +	if (ret)
-> +		goto free_rproc;
-> +
-> +	ret = q6v5_init_reset(qproc);
-> +	if (ret)
-> +		goto free_rproc;
-> +
-> +	ret = q6v5_request_irq(qproc, pdev, "wdog", q6v5_wdog_interrupt);
-> +	if (ret < 0)
-> +		goto free_rproc;
-> +
-> +	ret = q6v5_request_irq(qproc, pdev, "fatal", q6v5_fatal_interrupt);
-> +	if (ret < 0)
-> +		goto free_rproc;
-> +
-> +	ret = q6v5_request_irq(qproc, pdev, "handover", q6v5_handover_interrupt);
-> +	if (ret < 0)
-> +		goto free_rproc;
-> +
-> +	ret = q6v5_request_irq(qproc, pdev, "stop-ack", q6v5_stop_ack_interrupt);
-> +	if (ret < 0)
-> +		goto free_rproc;
-> +
-> +	qproc->state = qcom_smem_state_get(&pdev->dev, "stop", &qproc->stop_bit);
-> +	if (IS_ERR(qproc->state))
-> +		goto free_rproc;
-> +
-> +	ret = rproc_add(rproc);
-> +	if (ret)
-> +		goto free_rproc;
-> +
-> +	return 0;
-> +
-> +free_rproc:
-> +	rproc_put(rproc);
-> +
-> +	return ret;
-> +}
-> +
-> +static int q6v5_remove(struct platform_device *pdev)
-> +{
-> +	struct q6v5 *qproc = platform_get_drvdata(pdev);
-> +
-> +	rproc_del(qproc->rproc);
-> +	rproc_put(qproc->rproc);
-clk_uprepare_disable of the used clks here?
-resets?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id q6v5_of_match[] = {
-> +	{ .compatible = "qcom,q6v5-pil", },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver q6v5_driver = {
-> +	.probe = q6v5_probe,
-> +	.remove = q6v5_remove,
-> +	.driver = {
-> +		.name = "qcom-q6v5-pil",
-> +		.of_match_table = q6v5_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(q6v5_driver);
-
-Module licence?
-
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
