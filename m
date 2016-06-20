@@ -1,63 +1,69 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 3/3] arm64: dts: r8a7795: Support shared irq for
- thermal sensors
-Date: Mon, 20 Jun 2016 09:53:56 +0200
-Message-ID: <CAMuHMdXvSYFcMzpptrN2AKdeO88P38Ts8-p1CXXYVaGiXvqw5Q@mail.gmail.com>
-References: <57661211.7010900@rvc.renesas.com>
- <57661BB1.3060401@rvc.renesas.com>
- <57661CAD.8040807@rvc.renesas.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [RFC PATCH 02/13] drm/tegra: Add helper functions for setting up
+ DPAUX pads
+Date: Mon, 20 Jun 2016 08:59:19 +0100
+Message-ID: <5767A257.6080106@nvidia.com>
+References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
+ <1466165027-17917-3-git-send-email-jonathanh@nvidia.com>
+ <20160617161138.GC27475@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <57661CAD.8040807@rvc.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Khiem Nguyen <khiem.nguyen.xt@rvc.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Hien Duy. Dang" <hien.dang.eb@rvc.renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Catalin Marinas <catalin.marinas@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Magnus Damm <damm+renesas@opensource.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Toru Oishi <toru.oishi.zj@rvc.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Gaku Inami <gaku.inami.xw@bp.renesas.com>, Zhang Rui <rui.zhang@intel.com>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb@rvc.renesas.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160617161138.GC27475@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Khiem,
-
-On Sun, Jun 19, 2016 at 6:16 AM, Khiem Nguyen
-<khiem.nguyen.xt@rvc.renesas.com> wrote:
-> This patch adds the shared interrupts for thermal sensors
-> TSC1/TSC2/TSC3.
->
-> Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
-> Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@rvc.renesas.com>
-> ---
->  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index db203db..761df2b 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -1628,7 +1628,8 @@
->                         compatible = "renesas,thermal-r8a7795",
->                                 "renesas,rcar-gen3-thermal";
->                         reg = <0 0xe6198000 0 0x5c>;
-> -                       interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-
-If you make this change, the DT bindings should be updated first.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Ck9uIDE3LzA2LzE2IDE3OjExLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiAqIFBHUCBTaWduZWQg
+YnkgYW4gdW5rbm93biBrZXkKPiAKPiBPbiBGcmksIEp1biAxNywgMjAxNiBhdCAwMTowMzozNlBN
+ICswMTAwLCBKb24gSHVudGVyIHdyb3RlOgo+PiBJbiBwcmVwYXJhdGlvbiBmb3IgYWRkaW5nIHBp
+bmN0cmwgc3VwcG9ydCBmb3IgdGhlIERQQVVYIHBhZHMsIGFkZAo+PiBoZWxwZXJzIGZ1bmN0aW9u
+cyBmb3IgY29uZmlndXJpbmcgdGhlIHBhZHMgYW5kIGNvbnRyb2xsaW5nIHRoZSBwb3dlcgo+PiBm
+b3IgdGhlIHBhZHMuCj4+Cj4+IFBsZWFzZSBub3RlIHRoYXQgYWx0aG91Z2ggYSBzaW1wbGUgaWYt
+c3RhdGVtZW50IGNvdWxkIGJlIHVzZWQgaW5zdGVhZAo+PiBvZiBhIGNhc2Ugc3RhdGVtZW50IGZv
+ciBjb25maWd1cmluZyB0aGUgcGFkcyBhcyB0aGVyZSBhcmUgb25seSB0d28KPj4gcG9zc2libGUg
+bW9kZXMsIGEgY2FzZSBzdGF0ZW1lbnQgaXMgdXNlZCBiZWNhdXNlIHdoZW4gaW50ZWdyYXRpbmcg
+d2l0aAo+PiB0aGUgcGluY3RybCBmcmFtZXdvcmssIHdlIG5lZWQgdG8gYmUgYWJsZSB0byBoYW5k
+bGUgaW52YWxpZCBtb2RlcyB0aGF0Cj4+IGNvdWxkIGJlIHBhc3NlZC4KPj4KPj4gU2lnbmVkLW9m
+Zi1ieTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+Cj4+IC0tLQo+PiAgZHJpdmVy
+cy9ncHUvZHJtL3RlZ3JhL2RwYXV4LmMgfCA3NSArKysrKysrKysrKysrKysrKysrKysrKysrKy0t
+LS0tLS0tLS0tLS0tLS0tCj4+ICAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKSwgMzAg
+ZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGVncmEvZHBh
+dXguYyBiL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9kcGF1eC5jCj4+IGluZGV4IDA4NzRhN2U1YjM3
+Yi4uYWEzYTAzN2ZjZDNiIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdGVncmEvZHBh
+dXguYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdGVncmEvZHBhdXguYwo+PiBAQCAtMjY3LDYg
+KzI2Nyw0NSBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgdGVncmFfZHBhdXhfaXJxKGludCBpcnEsIHZv
+aWQgKmRhdGEpCj4+ICAJcmV0dXJuIHJldDsKPj4gIH0KPj4gIAo+PiArc3RhdGljIHZvaWQgdGVn
+cmFfZHBhdXhfcG93ZXJkb3duKHN0cnVjdCB0ZWdyYV9kcGF1eCAqZHBhdXgsIGJvb2wgZW5hYmxl
+KQo+PiArewo+PiArCXUzMiB2YWx1ZSA9IHRlZ3JhX2RwYXV4X3JlYWRsKGRwYXV4LCBEUEFVWF9I
+WUJSSURfU1BBUkUpOwo+PiArCj4+ICsJaWYgKGVuYWJsZSkKPj4gKwkJdmFsdWUgfD0gRFBBVVhf
+SFlCUklEX1NQQVJFX1BBRF9QT1dFUl9ET1dOOwo+PiArCWVsc2UKPj4gKwkJdmFsdWUgJj0gfkRQ
+QVVYX0hZQlJJRF9TUEFSRV9QQURfUE9XRVJfRE9XTjsKPj4gKwo+PiArCXRlZ3JhX2RwYXV4X3dy
+aXRlbChkcGF1eCwgdmFsdWUsIERQQVVYX0hZQlJJRF9TUEFSRSk7Cj4+ICt9Cj4gCj4gSSdkIGxp
+a2UgZm9yIHRoaXMgdG8gYmUgdHdvIGZ1bmN0aW9ucyB3aXRob3V0IHRoZSBib29sZWFuIHBhcmFt
+ZXRlci4gVGhlCj4gcmVhc29uIGlzIHRoYXQgd2l0aG91dCBsb29raW5nIGF0IHRoZSBpbXBsZW1l
+bnRhdGlvbiB0aGVyZSdzIG5vIHdheSB0bwo+IHVuZGVyc3RhbmQgd2hhdCB0aGUgbWVhbmluZyBv
+ZiB0cnVlIGFuZCBmYWxzZSBpcy4gSWYgaW5zdGVhZCB5b3UgY2FsbAo+IHRoaXM6Cj4gCj4gCXN0
+YXRpYyB2b2lkIHRlZ3JhX2RwYXV4X3BhZF9wb3dlcl9kb3duKHN0cnVjdCB0ZWdyYV9kcGF1eCAq
+ZHBhdXgpCj4gCXsKPiAJCS4uLgo+IAl9Cj4gCj4gYW5kCj4gCj4gCXN0YXRpYyB2b2lkIHRlZ3Jh
+X2RwYXV4X3BhZF9wb3dlcl91cChzdHJ1Y3QgdGVncmFfZHBhdXggKmRwYXV4KQo+IAl7Cj4gCQku
+Li4KPiAJfQo+IAo+IHlvdSBjYW4gZWFzaWx5IGRlZHVjZSBmcm9tIHRoZSBuYW1lIHdoYXQncyBn
+b2luZyBvbi4KCk9LLCBmaW5lIHdpdGggbWUuIEkgd2FzIG5vdCBzdXJlIGlmIGl0IHdhcyBvYnZp
+b3VzIG9yIG5vdC4KCj4+ICtzdGF0aWMgaW50IHRlZ3JhX2RwYXV4X2NvbmZpZyhzdHJ1Y3QgdGVn
+cmFfZHBhdXggKmRwYXV4LCBpbnQgZnVuY3Rpb24pCj4gCj4gQ2FuIGZ1bmN0aW9uIG5vdCBiZSB1
+bnNpZ25lZD8KClllcyBpdCBjYW4gYW5kIGluIGZhY3Qgc2hvdWxkIGJlLiBJIGhhZCB0aG91Z2h0
+IHRoYXQgaXQgbmVlZGVkIHRvIGJlCnNpZ25lZCB0byBtYXRjaCB3aXRoIHRoZSBwaW5jdHJsLW9w
+cyBidXQgb24gY2xvc2VyIGluc3BlY3Rpb24gdGhhdCBpcwpub3QgdGhlIGNhc2UuCgpKb24KCi0t
+IApudnB1YmxpYwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
